@@ -1,10 +1,9 @@
 import { W3CTraceContextPropagator } from "@opentelemetry/core";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { HttpInstrumentation } from "@opentelemetry/instrumentation-http";
 import { Resource } from "@opentelemetry/resources";
 import { NodeSDK } from "@opentelemetry/sdk-node";
-import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-node";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
 
 import { env } from "@/env";
 
@@ -20,13 +19,9 @@ const sdk = new NodeSDK({
   }),
   textMapPropagator: new W3CTraceContextPropagator(),
   sampler: new OTELSampler(), // custom sampler to test allow all spans
-  spanProcessor: new BatchSpanProcessor(
-    new OTLPTraceExporter({
-      headers: {
-        "x-alb-access-token": env.OTEL_ACCESS_TOKEN,
-      },
-    }),
-  ),
+  spanProcessor: createBatchSpanProcessor({
+    accessToken: env.OTEL_ACCESS_TOKEN,
+  }),
   instrumentations: [
     new HttpInstrumentation({
       requireParentforIncomingSpans: true,
