@@ -4,20 +4,23 @@ import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-att
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 
-import { appRootTracer } from "@/lib/app-root-tracer";
-import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
-import { createLogger } from "@/logger";
-import { loggerContext } from "@/logger-context";
-import { RootConfig } from "@/modules/app-configuration/app-config";
-import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
-import { getFileDetails } from "@/modules/file-storage/s3/get-file-details";
-import { uploadFile } from "@/modules/file-storage/s3/upload-file";
-import { getDownloadUrl, getFileName } from "@/modules/file-storage/s3/urls-and-names";
-import { fetchProductData, ProductVariant } from "@/modules/google-feed/fetch-product-data";
-import { fetchShopData } from "@/modules/google-feed/fetch-shop-data";
-import { generateGoogleXmlFeed } from "@/modules/google-feed/generate-google-xml-feed";
-import { GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
-import { apl } from "@/saleor-app";
+import { appRootTracer } from "../../../../../lib/app-root-tracer";
+import { createInstrumentedGraphqlClient } from "../../../../../lib/create-instrumented-graphql-client";
+import { createLogger } from "../../../../../logger";
+import { loggerContext } from "../../../../../logger-context";
+import { RootConfig } from "../../../../../modules/app-configuration/app-config";
+import { createS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
+import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
+import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
+import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
+import {
+  fetchProductData,
+  ProductVariant,
+} from "../../../../../modules/google-feed/fetch-product-data";
+import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
+import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
+import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
+import { apl } from "../../../../../saleor-app";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
