@@ -1,26 +1,23 @@
 import { SpanStatusCode } from "@opentelemetry/api";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
-import { getOtelTracer } from "@saleor/apps-otel/src/otel-tracer";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 
-import { createInstrumentedGraphqlClient } from "../../../../../lib/create-instrumented-graphql-client";
-import { createLogger } from "../../../../../logger";
-import { loggerContext } from "../../../../../logger-context";
-import { RootConfig } from "../../../../../modules/app-configuration/app-config";
-import { createS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
-import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
-import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
-import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
-import {
-  fetchProductData,
-  ProductVariant,
-} from "../../../../../modules/google-feed/fetch-product-data";
-import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
-import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
-import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
-import { apl } from "../../../../../saleor-app";
+import { appRootTracer } from "@/lib/app-root-tracer";
+import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
+import { createLogger } from "@/logger";
+import { loggerContext } from "@/logger-context";
+import { RootConfig } from "@/modules/app-configuration/app-config";
+import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
+import { getFileDetails } from "@/modules/file-storage/s3/get-file-details";
+import { uploadFile } from "@/modules/file-storage/s3/upload-file";
+import { getDownloadUrl, getFileName } from "@/modules/file-storage/s3/urls-and-names";
+import { fetchProductData, ProductVariant } from "@/modules/google-feed/fetch-product-data";
+import { fetchShopData } from "@/modules/google-feed/fetch-shop-data";
+import { generateGoogleXmlFeed } from "@/modules/google-feed/generate-google-xml-feed";
+import { GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
+import { apl } from "@/saleor-app";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
@@ -35,8 +32,6 @@ const validateRequestParams = (req: NextApiRequest) => {
 
   queryShape.parse(req.query);
 };
-
-const tracer = getOtelTracer();
 
 /**
  * TODO Refactor and test
@@ -117,7 +112,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     titleTemplate = settings.titleTemplate;
     imageSize = settings.imageSize;
   } catch (error) {
-    logger.warn("The application has not been configured", { error });
+    logger.warn("The application has not been configured", { error: error });
 
     return res
       .status(400)
@@ -169,7 +164,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (feedLastModificationDate) {
       logger.info("Feed has been generated previously, checking the last modification date", {
-        feedLastModificationDate,
+        feedLastModificationDate: feedLastModificationDate,
       });
 
       const secondsSinceLastModification = (Date.now() - feedLastModificationDate.getTime()) / 1000;
@@ -208,7 +203,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       totalAttributes,
     });
   } catch (error) {
-    logger.error("Error during the product data fetch", { error });
+    logger.error("Error during the product data fetch", { error: error });
     return res.status(400).end();
   }
 
@@ -245,7 +240,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     channel,
   });
 
-  await tracer.startActiveSpan("upload to s3", async (span) => {
+  await appRootTracer.startActiveSpan("upload to s3", async (span) => {
     span.setAttribute("bucketName", bucketConfiguration!.bucketName);
     span.setAttribute("fileName", fileName);
 
@@ -269,7 +264,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       return res.redirect(downloadUrl);
     } catch (error) {
-      logger.error("Could not upload the feed to S3", { error });
+      logger.error("Could not upload the feed to S3", { error: error });
       span.setStatus({ code: SpanStatusCode.ERROR });
       return res.status(500).json({ error: "Could not upload the feed to S3" });
     } finally {
@@ -278,7 +273,4 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 };
 
-export default wrapWithLoggerContext(
-  withOtel(handler, "/api/feed/[url]/[channel]/google.xml"),
-  loggerContext,
-);
+export default wrapWithLoggerContext(wrapWithSpanAttributes(handler), loggerContext);
