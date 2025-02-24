@@ -1,7 +1,7 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
@@ -331,6 +331,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
 });
 
 export default wrapWithLoggerContext(
-  withOtel(withMetadataCache(handler), "/api/webhooks/order-confirmed"),
+  withMetadataCache(wrapWithSpanAttributes(handler)),
   loggerContext,
 );

@@ -1,5 +1,5 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";
 
@@ -11,7 +11,7 @@ import { createTrpcContext } from "../../../modules/trpc/trpc-context";
 const logger = createLogger("tRPC error");
 
 export default wrapWithLoggerContext(
-  withOtel(
+  wrapWithSpanAttributes(
     trpcNext.createNextApiHandler({
       /**
        * TODO: Add middleware that verifies permissions
@@ -27,7 +27,6 @@ export default wrapWithLoggerContext(
         logger.debug(`${path} returned error:`, error);
       },
     }),
-    "api/trpc",
   ),
   loggerContext,
 );

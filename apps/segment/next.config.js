@@ -24,6 +24,18 @@ const nextConfig = {
       "@saleor/apps-shared",
     ],
     bundlePagesExternals: true,
+    instrumentationHook: true,
+  },
+  /*
+   * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
+   * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
+   */
+  /** @type {import('next').NextConfig['webpack']} */
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.ignoreWarnings = [{ module: /opentelemetry/ }];
+    }
+    return config;
   },
 };
 

@@ -21,7 +21,8 @@
         "DYNAMODB_MAIN_TABLE_NAME",
         "AWS_REGION",
         "AWS_ACCESS_KEY_ID",
-        "AWS_SECRET_ACCESS_KEY"
+        "AWS_SECRET_ACCESS_KEY",
+        "OTEL_ACCESS_TOKEN"
       ]
     }
   }

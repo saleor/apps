@@ -1,6 +1,6 @@
 import { createProtectedHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import * as trpcNext from "@trpc/server/adapters/next";
 
 import { createLogger } from "../../../logger";
@@ -16,15 +16,15 @@ const handler = trpcNext.createNextApiHandler({
   createContext: createTrpcContext,
   onError: ({ path, error }) => {
     if (error.code === "INTERNAL_SERVER_ERROR") {
-      logger.error(`${path} returned error:`, { error });
+      logger.error(`${path} returned error:`, { error: error });
       return;
     }
-    logger.debug(`${path} returned error:`, { error });
+    logger.debug(`${path} returned error:`, { error: error });
   },
 });
 
 export default createProtectedHandler(
-  wrapWithLoggerContext(withOtel(handler, "/api/trpc"), loggerContext),
+  wrapWithLoggerContext(wrapWithSpanAttributes(handler), loggerContext),
   saleorApp.apl,
   ["MANAGE_APPS"],
 );
