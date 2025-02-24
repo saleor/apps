@@ -24,6 +24,7 @@ const nextConfig = {
       "@saleor/apps-shared",
     ],
     bundlePagesExternals: true,
+    instrumentationHook: true,
   },
 };
 

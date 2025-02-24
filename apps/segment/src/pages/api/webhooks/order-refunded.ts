@@ -1,7 +1,7 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 
 import { OrderRefundedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
@@ -105,6 +105,6 @@ const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> =
 };
 
 export default wrapWithLoggerContext(
-  withOtel(orderRefundedAsyncWebhook.createHandler(handler), "/api/webhooks/order-refunded"),
+  wrapWithSpanAttributes(orderRefundedAsyncWebhook.createHandler(handler)),
   loggerContext,
 );

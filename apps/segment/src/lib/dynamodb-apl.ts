@@ -1,9 +1,10 @@
 import { APL, AplConfiguredResult, AplReadyResult, AuthData } from "@saleor/app-sdk/APL";
-import { getOtelTracer } from "@saleor/apps-otel/src/otel-tracer";
 
 import { env } from "@/env";
 import { BaseError } from "@/errors";
 import { APLRepository } from "@/modules/db/types";
+
+import { appRootTracer } from "./app-root-tracer";
 
 export class DynamoAPL implements APL {
   static GetAuthDataError = BaseError.subclass("GetAuthDataError");
@@ -12,7 +13,7 @@ export class DynamoAPL implements APL {
   static GetAllAuthDataError = BaseError.subclass("GetAllAuthDataError");
   static MissingEnvVariablesError = BaseError.subclass("MissingEnvVariablesError");
 
-  private tracer = getOtelTracer();
+  private tracer = appRootTracer;
 
   constructor(private deps: { repository: APLRepository }) {}
 

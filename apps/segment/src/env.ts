@@ -31,6 +31,8 @@ export const env = createEnv({
     AWS_REGION: z.string(),
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
+    VERCEL_GIT_COMMIT_SHA: z.string().optional(),
+    OTEL_ACCESS_TOKEN: z.string().optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
@@ -59,6 +61,8 @@ export const env = createEnv({
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+    OTEL_ACCESS_TOKEN: process.env.OTEL_ACCESS_TOKEN,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });
