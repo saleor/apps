@@ -27,7 +27,8 @@ const nextConfig = {
       "@trpc/next",
       "@saleor/apps-shared",
     ],
-    bundlePagesExternals: true
+    bundlePagesExternals: true,
+    instrumentationHook: true,
   },
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
