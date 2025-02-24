@@ -1,6 +1,6 @@
 # @saleor/apps-otel
 
-Shared package with OTEL related helpers.
+Shared package with [Open Telemetry](https://opentelemetry.io/) (OTEL) related helpers.
 
 ## Running app with OTEL locally
 
@@ -55,3 +55,18 @@ const sdk = new NodeSDK({
 
 sdk.start();
 ```
+
+## Debugging OTEL
+
+If you need to debug OTEL configuration add this environment variable to your app `.env` file:
+
+```
+OTEL_LOG_LEVEL=debug
+```
+
+Other possible values of `OTEL_LOG_LEVEL` are:
+
+- none
+- error
+- warn
+- info (default)
