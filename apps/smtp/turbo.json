@@ -24,7 +24,8 @@
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",
         "SENTRY_ORG",
-        "NEXT_PUBLIC_SENTRY_DSN"
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "OTEL_ACCESS_TOKEN"
       ]
     }
   }

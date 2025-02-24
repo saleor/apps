@@ -1,11 +1,14 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import { captureException } from "@sentry/nextjs";
 import { gql } from "urql";
 
-import { OrderCreatedWebhookPayloadFragment , OrderDetailsFragmentDoc } from "../../../../generated/graphql";
+import {
+  OrderCreatedWebhookPayloadFragment,
+  OrderDetailsFragmentDoc,
+} from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
@@ -123,7 +126,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 };
 
 export default wrapWithLoggerContext(
-  withOtel(orderCreatedWebhook.createHandler(handler), "api/webhooks/order-created"),
+  wrapWithSpanAttributes(orderCreatedWebhook.createHandler(handler)),
   loggerContext,
 );
 

@@ -17,7 +17,8 @@
         "SENTRY_AUTH_TOKEN",
         "APP_API_BASE_URL",
         "APP_IFRAME_BASE_URL",
-        "NEXT_PUBLIC_SENTRY_DSN"
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "OTEL_ACCESS_TOKEN"
       ]
     }
   }

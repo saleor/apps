@@ -93,3 +93,7 @@ If you want to use your own database, you can implement your own APL. [Check the
 [Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
 
 [Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
+
+## OTEL
+
+Visit `@saleor/apps-otel` [README](../../packages/otel/README.md) to learn how to run app with OTEL locally.

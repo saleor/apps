@@ -1,7 +1,7 @@
 import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import { Client } from "urql";
 
 import { ChannelsDocument } from "../../../generated/graphql";
@@ -77,7 +77,7 @@ export const setupIndicesHandlerFactory =
   };
 
 export default wrapWithLoggerContext(
-  withOtel(
+  wrapWithSpanAttributes(
     createProtectedHandler(
       setupIndicesHandlerFactory({
         settingsManagerFactory: createSettingsManager,
@@ -91,7 +91,6 @@ export default wrapWithLoggerContext(
       saleorApp.apl,
       ["MANAGE_APPS"],
     ),
-    "api/setup-indices",
   ),
   loggerContext,
 );
