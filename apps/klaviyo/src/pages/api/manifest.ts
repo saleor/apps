@@ -1,7 +1,7 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 
 import pkg from "../../../package.json";
 import { loggerContext } from "../../logger-context";
@@ -11,7 +11,7 @@ import { orderCreatedWebhook } from "./webhooks/order-created";
 import { orderFullyPaidWebhook } from "./webhooks/order-fully-paid";
 
 const handler = wrapWithLoggerContext(
-  withOtel(
+  wrapWithSpanAttributes(
     createManifestHandler({
       async manifestFactory({ appBaseUrl }): Promise<AppManifest> {
         const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
@@ -43,7 +43,6 @@ const handler = wrapWithLoggerContext(
         };
       },
     }),
-    "/api/manifest",
   ),
   loggerContext,
 );

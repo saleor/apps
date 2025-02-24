@@ -121,3 +121,7 @@ AWS_REGION=us-east-1 # Region when DynamoDB was deployed
 AWS_ACCESS_KEY_ID=AK...
 AWS_SECRET_ACCESS_KEY=...
 ```
+
+## OTEL
+
+Visit `@saleor/apps-otel` [README](../../packages/otel/README.md) to learn how to run app with OTEL locally.

@@ -1,7 +1,7 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { withOtel } from "@saleor/apps-otel";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/lib/observability-attributes";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { gql } from "urql";
 
@@ -99,7 +99,7 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
 };
 
 export default wrapWithLoggerContext(
-  withOtel(orderFullyPaidWebhook.createHandler(handler), "/api/webhooks/order-fully-paid"),
+  wrapWithSpanAttributes(orderFullyPaidWebhook.createHandler(handler)),
   loggerContext,
 );
 

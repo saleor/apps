@@ -13,19 +13,20 @@ const nextConfig = {
     "@saleor/apps-logger",
     "@saleor/apps-shared",
     "@saleor/apps-ui",
-    "@saleor/react-hook-form-macaw"
+    "@saleor/react-hook-form-macaw",
   ],
   experimental: {
     serverComponentsExternalPackages: [
       /*
        * The deps below are have node-related features. When the flag "bundlePagesExternals" is enabled, They raise errors,
-       * So we must explicitly declare them as externals. 
+       * So we must explicitly declare them as externals.
        * more info: https://nextjs.org/docs/app/api-reference/next-config-js/serverExternalPackages
        */
       "handlebars",
       "handlebars-helpers",
     ],
     bundlePagesExternals: true,
+    instrumentationHook: true,
   },
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173

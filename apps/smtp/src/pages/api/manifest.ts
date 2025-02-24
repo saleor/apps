@@ -1,10 +1,10 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
-import { withOtel } from "@saleor/apps-otel";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 
 import packageJson from "../../../package.json";
 
-export default withOtel(
+export default wrapWithSpanAttributes(
   createManifestHandler({
     async manifestFactory({ appBaseUrl }) {
       const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
@@ -40,5 +40,4 @@ export default withOtel(
       return manifest;
     },
   }),
-  "/api/manifest",
 );
