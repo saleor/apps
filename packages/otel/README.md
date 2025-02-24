@@ -9,7 +9,7 @@ Shared package with [Open Telemetry](https://opentelemetry.io/) (OTEL) related h
 2. Add those env variables to `.env` file for given app:
 
 ```
-OTEL_SERVICE_NAME=saleor-app-* # name of the app - the same as in package.json
+OTEL_SERVICE_NAME=saleor-app- # name of the app - the same as in package.json
 OTEL_ENABLED=true
 OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 # OTEL collector endpoint
 OTEL_TRACES_SAMPLER=traceidratio

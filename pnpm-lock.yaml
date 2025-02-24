@@ -1267,36 +1267,15 @@ importers:
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
         version: link:../../node_modules/@opentelemetry/api
-      '@opentelemetry/api-logs':
-        specifier: ../../node_modules/@opentelemetry/api-logs
-        version: link:../../node_modules/@opentelemetry/api-logs
-      '@opentelemetry/core':
-        specifier: ../../node_modules/@opentelemetry/core
-        version: link:../../node_modules/@opentelemetry/core
-      '@opentelemetry/exporter-logs-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-logs-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-logs-otlp-http
       '@opentelemetry/exporter-trace-otlp-http':
         specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
         version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
-      '@opentelemetry/instrumentation-http':
-        specifier: ../../node_modules/@opentelemetry/instrumentation-http
-        version: link:../../node_modules/@opentelemetry/instrumentation-http
-      '@opentelemetry/instrumentation-winston':
-        specifier: ../../node_modules/@opentelemetry/instrumentation-winston
-        version: link:../../node_modules/@opentelemetry/instrumentation-winston
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-logs':
-        specifier: ../../node_modules/@opentelemetry/sdk-logs
-        version: link:../../node_modules/@opentelemetry/sdk-logs
       '@opentelemetry/sdk-node':
         specifier: ../../node_modules/@opentelemetry/sdk-node
         version: link:../../node_modules/@opentelemetry/sdk-node
-      '@opentelemetry/sdk-trace-base':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-base
-        version: link:../../node_modules/@opentelemetry/sdk-trace-base
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
