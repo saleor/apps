@@ -18,6 +18,8 @@ export default wrapWithLoggerContext(
 
         logger.info("Generating manifest");
 
+        fetch("https://saleor-app-products-feed-lm9js7sie-saleorcommerce.vercel.app/api/hello");
+
         const manifest: AppManifest = {
           about: "Generate feeds consumed by Merchant Platforms",
           appUrl: iframeBaseUrl,
