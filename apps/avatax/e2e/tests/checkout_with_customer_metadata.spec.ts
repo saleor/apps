@@ -25,13 +25,9 @@ describe("App should exempt taxes for checkout with metadata avataxCustomerCode 
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 15;
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.33;
 
-  const SHIPPING_GROSS_PRICE = 75.45;
   const SHIPPING_NET_PRICE = 69.31;
-  const SHIPPING_TAX_PRICE = 6.14;
 
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 91.79;
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 7.48;
 
   it("should have created a checkout", async () => {
     await testCase
@@ -58,35 +54,6 @@ describe("App should exempt taxes for checkout with metadata avataxCustomerCode 
       )
       .stores("CheckoutId", "data.checkoutCreate.checkout.id");
   });
-  it("should update delivery method and calculate shipping price", async () => {
-    await testCase
-      .step("Add delivery method")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(CheckoutUpdateDeliveryMethod)
-      .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "UpdateDeliveryMethod:USA",
-      })
-      .expectStatus(200)
-      .expectJson(
-        "data.checkoutDeliveryMethodUpdate.checkout.totalPrice",
-        getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
-          net: TOTAL_NET_PRICE_AFTER_SHIPPING,
-          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
-          currency: CURRENCY,
-        }),
-      )
-      .expectJson(
-        "data.checkoutDeliveryMethodUpdate.checkout.shippingPrice",
-        getCompleteMoney({
-          gross: SHIPPING_GROSS_PRICE,
-          net: SHIPPING_NET_PRICE,
-          tax: SHIPPING_TAX_PRICE,
-          currency: CURRENCY,
-        }),
-      );
-  });
   it("should apply the customer metadata to the checkout", async () => {
     await testCase
       .step("Update checkout with customer metadata")
@@ -100,9 +67,9 @@ describe("App should exempt taxes for checkout with metadata avataxCustomerCode 
       .expectStatus(200)
       .expectJson("data.updateMetadata.item.metadata", metadata);
   });
-  it("should update checkout to recalculate taxes after applying the metadata", async () => {
+  it("should update delivery method and calculate shipping price", async () => {
     await testCase
-      .step("Update shipping method to recalculate taxes")
+      .step("Add delivery method")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(CheckoutUpdateDeliveryMethod)
