@@ -1,5 +1,18 @@
 # saleor-app-products-feed
 
+## 1.22.0
+
+### Minor Changes
+
+- 3c4358ae: Setup OTEL via instrumentation hook. After this change app will use [official way](https://nextjs.org/docs/14/app/building-your-application/optimizing/open-telemetry) of setting up OTEL. There are no visible changes to the end user.
+
+### Patch Changes
+
+- Updated dependencies [3c4358ae]
+- Updated dependencies [23a31eb4]
+  - @saleor/apps-otel@2.0.0
+  - @saleor/apps-logger@1.5.0
+
 ## 1.21.1
 
 ### Patch Changes
