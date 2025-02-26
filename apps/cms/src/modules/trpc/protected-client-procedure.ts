@@ -1,4 +1,3 @@
-import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
 import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
 import { TRPCError } from "@trpc/server";

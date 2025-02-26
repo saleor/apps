@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
@@ -53,7 +53,7 @@ export const productVariantDeletedWebhook =
  * TODO: document that fields in Contentful should be unique
  * TODO: fetch metadata end decode it with payload, so we spare one call
  */
-const handler: NextWebhookApiHandler<ProductVariantDeletedWebhookPayloadFragment> = async (
+const handler: NextJsWebhookHandler<ProductVariantDeletedWebhookPayloadFragment> = async (
   req,
   res,
   context,

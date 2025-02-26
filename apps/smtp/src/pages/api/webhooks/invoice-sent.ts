@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
@@ -53,7 +53,7 @@ const InvoiceSentGraphqlSubscription = gql`
 export const invoiceSentWebhook = new SaleorAsyncWebhook<InvoiceSentWebhookPayloadFragment>({
   name: "Invoice sent in Saleor",
   webhookPath: "api/webhooks/invoice-sent",
-  asyncEvent: "INVOICE_SENT",
+  event: "INVOICE_SENT",
   apl: saleorApp.apl,
   query: InvoiceSentGraphqlSubscription,
 });
@@ -62,7 +62,7 @@ const logger = createLogger(invoiceSentWebhook.name);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
-const handler: NextWebhookApiHandler<InvoiceSentWebhookPayloadFragment> = async (
+const handler: NextJsWebhookHandler<InvoiceSentWebhookPayloadFragment> = async (
   req,
   res,
   context,

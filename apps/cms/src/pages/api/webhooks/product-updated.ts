@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import * as Sentry from "@sentry/nextjs";
@@ -48,7 +48,7 @@ export const productUpdatedWebhook = new SaleorAsyncWebhook<ProductUpdatedWebhoo
   query: Subscription,
 });
 
-const handler: NextWebhookApiHandler<ProductUpdatedWebhookPayloadFragment> = async (
+const handler: NextJsWebhookHandler<ProductUpdatedWebhookPayloadFragment> = async (
   req,
   res,
   context,

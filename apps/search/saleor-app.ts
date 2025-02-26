@@ -1,4 +1,6 @@
-import { APL, FileAPL, SaleorCloudAPL, UpstashAPL } from "@saleor/app-sdk/APL";
+import { APL } from "@saleor/app-sdk/APL";
+import { FileAPL } from "@saleor/app-sdk/APL/file";
+import { SaleorCloudAPL } from "@saleor/app-sdk/APL/saleor-cloud";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 /**
@@ -12,10 +14,6 @@ const aplType = process.env.APL ?? "file";
 let apl: APL;
 
 switch (aplType) {
-  case "upstash":
-    apl = new UpstashAPL();
-
-    break;
   case "file":
     apl = new FileAPL();
 

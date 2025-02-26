@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
@@ -67,6 +67,7 @@ const GiftCardSentGraphqlSubscription = gql`
 export const giftCardSentWebhook = new SaleorAsyncWebhook<GiftCardSentWebhookPayloadFragment>({
   name: "Gift card sent in Saleor",
   webhookPath: "api/webhooks/gift-card-sent",
+  // todo whats going on with that event?
   asyncEvent: "GIFT_CARD_SENT",
   apl: saleorApp.apl,
   query: GiftCardSentGraphqlSubscription,
@@ -76,7 +77,7 @@ const logger = createLogger(giftCardSentWebhook.webhookPath);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
-const handler: NextWebhookApiHandler<GiftCardSentWebhookPayloadFragment> = async (
+const handler: NextJsWebhookHandler<GiftCardSentWebhookPayloadFragment> = async (
   req,
   res,
   context,
