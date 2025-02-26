@@ -16,6 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # TODO: https://linear.app/saleor/issue/EXT-1989
+        # Currently it says it will run on 3.19 & 3/20 but under the hood it will run on 3.19 and latest main.
         saleor: [319, 320]
     env:
       ACCESS_TOKEN: ${{ secrets.saleor-token }}

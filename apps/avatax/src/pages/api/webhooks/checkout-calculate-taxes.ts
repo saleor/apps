@@ -46,10 +46,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
   try {
     const { payload, authData } = ctx;
 
-    logger.info("Received payload with taxBase", {
-      payload: payload.taxBase,
-    });
-
     subscriptionErrorChecker.checkPayload(payload);
 
     loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
