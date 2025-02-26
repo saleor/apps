@@ -28,6 +28,9 @@ importers:
       '@opentelemetry/core':
         specifier: 1.19.0
         version: 1.19.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/exporter-metrics-otlp-grpc':
+        specifier: 0.46.0
+        version: 0.46.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/exporter-trace-otlp-grpc':
         specifier: 0.46.0
         version: 0.46.0(@opentelemetry/api@1.7.0)
@@ -38,6 +41,9 @@ importers:
         specifier: 0.46.0
         version: 0.46.0(@opentelemetry/api@1.7.0)
       '@opentelemetry/resources':
+        specifier: 1.18.1
+        version: 1.18.1(@opentelemetry/api@1.7.0)
+      '@opentelemetry/sdk-metrics':
         specifier: 1.18.1
         version: 1.18.1(@opentelemetry/api@1.7.0)
       '@opentelemetry/sdk-node':
@@ -1557,6 +1563,9 @@ importers:
       '@opentelemetry/api':
         specifier: ../../node_modules/@opentelemetry/api
         version: link:../../node_modules/@opentelemetry/api
+      '@opentelemetry/exporter-metrics-otlp-grpc':
+        specifier: ../../node_modules/@opentelemetry/exporter-metrics-otlp-grpc
+        version: link:../../node_modules/@opentelemetry/exporter-metrics-otlp-grpc
       '@opentelemetry/exporter-trace-otlp-grpc':
         specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-grpc
         version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-grpc
@@ -1566,6 +1575,9 @@ importers:
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
+      '@opentelemetry/sdk-metrics':
+        specifier: ../../node_modules/@opentelemetry/sdk-metrics
+        version: link:../../node_modules/@opentelemetry/sdk-metrics
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
@@ -5135,6 +5147,18 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.8.0'
+
+  '@opentelemetry/exporter-metrics-otlp-grpc@0.46.0':
+    resolution: {integrity: sha512-BeYDu4nLOJC9LSfPRay1mM2+Pho6AGDIChrpg3D5A3ie7wYUW66lkyr5nMioLgG9EDZLeRsuHsEbVcv0AXpGQw==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.3.0
+
+  '@opentelemetry/exporter-metrics-otlp-http@0.46.0':
+    resolution: {integrity: sha512-7dyNATgM1LCKv4RGf3zsbHZMQNILQ6bxZ5/a56ptGDgg6Bz8Iz8jghonBx/K++A4QNMnu7Ppamm5qL2xlWEYjg==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@opentelemetry/api': ^1.3.0
 
   '@opentelemetry/exporter-trace-otlp-grpc@0.45.1':
     resolution: {integrity: sha512-c/Wrn6LUqPiRgKhvMydau6kPz4ih6b/uwospiavjXju98ZfVv+KjaIF13cblW+4cQ6ZR3lm7t66umQfXrGBhPQ==}
@@ -18415,6 +18439,26 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.7.0
       '@opentelemetry/semantic-conventions': 1.19.0
+
+  '@opentelemetry/exporter-metrics-otlp-grpc@0.46.0(@opentelemetry/api@1.7.0)':
+    dependencies:
+      '@grpc/grpc-js': 1.9.13
+      '@opentelemetry/api': 1.7.0
+      '@opentelemetry/core': 1.19.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/exporter-metrics-otlp-http': 0.46.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/otlp-grpc-exporter-base': 0.46.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/otlp-transformer': 0.46.0(patch_hash=cpcyf5iky73cdrvk2p52ejxrwu)(@opentelemetry/api@1.7.0)
+      '@opentelemetry/resources': 1.19.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/sdk-metrics': 1.19.0(@opentelemetry/api@1.7.0)
+
+  '@opentelemetry/exporter-metrics-otlp-http@0.46.0(@opentelemetry/api@1.7.0)':
+    dependencies:
+      '@opentelemetry/api': 1.7.0
+      '@opentelemetry/core': 1.19.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/otlp-exporter-base': 0.46.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/otlp-transformer': 0.46.0(patch_hash=cpcyf5iky73cdrvk2p52ejxrwu)(@opentelemetry/api@1.7.0)
+      '@opentelemetry/resources': 1.19.0(@opentelemetry/api@1.7.0)
+      '@opentelemetry/sdk-metrics': 1.19.0(@opentelemetry/api@1.7.0)
 
   '@opentelemetry/exporter-trace-otlp-grpc@0.45.1(@opentelemetry/api@1.7.0)':
     dependencies:

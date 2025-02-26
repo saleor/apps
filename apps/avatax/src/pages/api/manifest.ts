@@ -6,11 +6,17 @@ import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-att
 
 import { env } from "@/env";
 import { BaseError } from "@/error";
+import { externalMeter } from "@/lib/otel-metrics";
 import { externalTracer } from "@/lib/otel-tracers";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
+
+const requestCounter = externalMeter.createCounter("http.requests", {
+  description: "Count of HTTP requests",
+  unit: "{requests}",
+});
 
 export default wrapWithLoggerContext(
   wrapWithSpanAttributes(
@@ -18,6 +24,8 @@ export default wrapWithLoggerContext(
       async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
+
+        requestCounter.add(1);
 
         return externalTracer.startActiveSpan(
           "createManifestHandler",
