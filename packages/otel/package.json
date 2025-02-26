@@ -12,6 +12,7 @@
     "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
     "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
     "@opentelemetry/exporter-trace-otlp-http": "../../node_modules/@opentelemetry/exporter-trace-otlp-http",
+    "@opentelemetry/exporter-trace-otlp-grpc": "../../node_modules/@opentelemetry/exporter-trace-otlp-grpc",
     "urql": "4.0.4",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk"
   },

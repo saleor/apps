@@ -1,4 +1,4 @@
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-node";
 
 export const createBatchSpanProcessor = (args: { accessToken: string | undefined }) => {
