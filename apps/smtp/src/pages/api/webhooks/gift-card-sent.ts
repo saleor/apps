@@ -67,8 +67,7 @@ const GiftCardSentGraphqlSubscription = gql`
 export const giftCardSentWebhook = new SaleorAsyncWebhook<GiftCardSentWebhookPayloadFragment>({
   name: "Gift card sent in Saleor",
   webhookPath: "api/webhooks/gift-card-sent",
-  // todo whats going on with that event?
-  asyncEvent: "GIFT_CARD_SENT",
+  event: "GIFT_CARD_SENT",
   apl: saleorApp.apl,
   query: GiftCardSentGraphqlSubscription,
 });

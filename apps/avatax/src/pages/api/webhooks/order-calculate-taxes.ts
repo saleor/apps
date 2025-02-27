@@ -1,4 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
@@ -222,7 +223,9 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
       .mapErr(captureException)
       .map(logWriter.writeLog);
 
-    return res.status(200).json(ctx.buildResponse(calculatedTaxes));
+    return res
+      .status(200)
+      .json(buildSyncWebhookResponsePayload<"ORDER_CALCULATE_TAXES">(calculatedTaxes));
   } catch (error) {
     if (error instanceof AvataxGetTaxError) {
       logger.warn(

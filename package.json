@@ -32,7 +32,7 @@
     "@opentelemetry/sdk-node": "0.45.1",
     "@opentelemetry/sdk-trace-node": "1.18.1",
     "@opentelemetry/semantic-conventions": "1.18.1",
-    "@saleor/app-sdk": "0.0.0-pr-20250226101433",
+    "@saleor/app-sdk": "0.0.0-pr-20250227091946",
     "@sentry/cli": "2.32.1",
     "@sentry/nextjs": "7.117.0",
     "@sentry/node": "7.117.0",
