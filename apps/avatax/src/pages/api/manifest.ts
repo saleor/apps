@@ -62,7 +62,7 @@ export default wrapWithLoggerContext(
 
             const error = new BaseError("Test error for span!");
 
-            console.log("SPAN", span);
+            // console.log("SPAN", span);
 
             // serialize to avoid leaking stack trace
             span.recordException(BaseError.serialize(error));
