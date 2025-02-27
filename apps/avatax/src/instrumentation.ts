@@ -3,8 +3,6 @@
 export async function register() {
   // eslint-disable-next-line node/no-process-env
   if (process.env.NEXT_RUNTIME === "nodejs" && process.env.OTEL_ENABLED === "true") {
-    const instr = await import("./otel-instrumentation.node");
-
-    instr.initOTEL();
+    await import("./otel-instrumentation.node");
   }
 }
