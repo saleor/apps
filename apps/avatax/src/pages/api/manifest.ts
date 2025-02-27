@@ -7,7 +7,9 @@ import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-att
 import { env } from "@/env";
 import { BaseError } from "@/error";
 import { externalMeter } from "@/lib/otel-metrics";
+import { otelMetricsReader } from "@/lib/otel-metrics-reader";
 import { externalTracer } from "@/lib/otel-tracers";
+import { race } from "@/lib/race";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
@@ -32,7 +34,7 @@ export default wrapWithLoggerContext(
           {
             kind: SpanKind.CLIENT,
           },
-          (span) => {
+          async (span) => {
             const manifest: AppManifest = {
               about: "App connects with AvaTax to dynamically calculate taxes",
               appUrl: iframeBaseUrl,
@@ -72,6 +74,12 @@ export default wrapWithLoggerContext(
             // span.setStatus({ code: SpanStatusCode.ERROR });
 
             span.end();
+
+            await race({
+              promise: otelMetricsReader.forceFlush(),
+              error: new BaseError("Timeout error while flushing metrics"),
+              timeout: 1_000,
+            });
 
             return manifest;
           },
