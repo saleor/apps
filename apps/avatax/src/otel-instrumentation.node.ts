@@ -16,7 +16,7 @@ export const initOTEL = () => {
   if (!metricReader) {
     metricReader = createMetricReader({
       accessToken: env.OTEL_ACCESS_TOKEN,
-      exportIntervalMillis: 18_000,
+      exportIntervalMillis: 60_000,
     });
 
     const sdk = new NodeSDK({
