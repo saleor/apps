@@ -22,7 +22,7 @@ const sdk = new NodeSDK({
   }),
   metricReader: createMetricReader({
     accessToken: env.OTEL_ACCESS_TOKEN,
-    exportIntervalMillis: 20_000, // max lambda execution time
+    exportIntervalMillis: 19_000, // max lambda execution time
   }),
   instrumentations: [createHttpInstrumentation()],
 });
