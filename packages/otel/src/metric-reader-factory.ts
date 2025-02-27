@@ -11,5 +11,6 @@ export const createMetricReader = (args: {
         "x-alb-access-token": args.accessToken,
       },
     }),
+    exportIntervalMillis: args.exportIntervalMillis,
   });
 };
