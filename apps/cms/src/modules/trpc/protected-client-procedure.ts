@@ -86,7 +86,7 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
       });
     } catch (e) {
       logger.debug("JWT verification failed, throwing");
-      throw new ProtectedHandlerError("JWT verification failed: ", "JWT_VERIFICATION_FAILED");
+      throw new Error("JWT verification failed");
     }
   }
 
