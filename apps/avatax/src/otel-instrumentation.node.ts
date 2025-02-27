@@ -1,14 +1,13 @@
-import { metrics } from "@opentelemetry/api";
 import { W3CTraceContextPropagator } from "@opentelemetry/core";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
+import { createMetricReader } from "@saleor/apps-otel/src/metric-reader-factory";
 import { createResource } from "@saleor/apps-otel/src/resource-factory";
 
 import { env } from "@/env";
 
 import pkg from "../package.json";
-import { otelMeterProvider } from "./lib/otel-metrics-reader";
 
 const sdk = new NodeSDK({
   resource: createResource({
@@ -21,9 +20,11 @@ const sdk = new NodeSDK({
   spanProcessor: createBatchSpanProcessor({
     accessToken: env.OTEL_ACCESS_TOKEN,
   }),
+  metricReader: createMetricReader({
+    accessToken: env.OTEL_ACCESS_TOKEN,
+    exportIntervalMillis: 18_000,
+  }),
   instrumentations: [createHttpInstrumentation()],
 });
-
-metrics.setGlobalMeterProvider(otelMeterProvider);
 
 sdk.start();

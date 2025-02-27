@@ -3,7 +3,7 @@ import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
 
 export const createMetricReader = (args: {
   accessToken: string | undefined;
-  // exportIntervalMillis: number;
+  exportIntervalMillis: number;
 }) => {
   return new PeriodicExportingMetricReader({
     exporter: new OTLPMetricExporter({
@@ -11,6 +11,6 @@ export const createMetricReader = (args: {
         "x-alb-access-token": args.accessToken,
       },
     }),
-    // exportIntervalMillis: args.exportIntervalMillis,
+    exportIntervalMillis: args.exportIntervalMillis,
   });
 };

@@ -7,9 +7,7 @@ import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-att
 import { env } from "@/env";
 import { BaseError } from "@/error";
 import { externalMeter } from "@/lib/otel-metrics";
-import { otelMetricsReader } from "@/lib/otel-metrics-reader";
 import { externalTracer } from "@/lib/otel-tracers";
-import { race } from "@/lib/race";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
@@ -26,8 +24,6 @@ export default wrapWithLoggerContext(
       async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
-
-        requestCounter.add(1);
 
         return externalTracer.startActiveSpan(
           "createManifestHandler",
@@ -75,11 +71,7 @@ export default wrapWithLoggerContext(
 
             span.end();
 
-            await race({
-              promise: otelMetricsReader.forceFlush(),
-              error: new BaseError("Timeout error while flushing metrics"),
-              timeout: 1_000,
-            });
+            requestCounter.add(1);
 
             return manifest;
           },

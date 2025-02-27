@@ -19,7 +19,8 @@
     "migrate:dry-run": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts --dry-run",
     "start": "next start",
     "test": "vitest --project units",
-    "test:ci": "vitest run --coverage --project units"
+    "test:ci": "vitest run --coverage --project units",
+    "test:otel": "pnpm tsx ./scripts/run-otel-tests.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3.651.1",
