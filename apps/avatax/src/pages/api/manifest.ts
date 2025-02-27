@@ -9,6 +9,7 @@ import { BaseError } from "@/error";
 import { externalMeter } from "@/lib/otel-metrics";
 import { externalTracer } from "@/lib/otel-tracers";
 import { loggerContext } from "@/logger-context";
+import { getMetricReader } from "@/otel-instrumentation.node";
 
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
@@ -72,6 +73,8 @@ export default wrapWithLoggerContext(
             span.end();
 
             requestCounter.add(1);
+
+            await getMetricReader()?.forceFlush();
 
             return manifest;
           },

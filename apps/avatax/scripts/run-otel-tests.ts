@@ -1,4 +1,5 @@
-const url = "http://localhost:3000/api/manifest";
+const url =
+  "https://saleor-app-avatax-git-prod-112-otel-setup-saleorcommerce.vercel.app/api/manifest";
 const numberOfRequests = 10;
 const delayBetweenRequests = 20000; // 20 seconds in milliseconds
 
