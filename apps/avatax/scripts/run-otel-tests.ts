@@ -1,7 +1,7 @@
 const url =
   "https://saleor-app-avatax-git-prod-112-otel-setup-saleorcommerce.vercel.app/api/manifest";
-const numberOfRequests = 10;
-const delayBetweenRequests = 20000; // 20 seconds in milliseconds
+const numberOfRequests = 5;
+const delayBetweenRequests = 5_000;
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
