@@ -70,8 +70,10 @@ export default wrapWithLoggerContext(
             span.end();
 
             requestCounter.add(1);
-            // @ts-expect-error
-            await global.currentMetricReader.forceFlush();
+
+            console.log("Current metric reader", global.currentMetricReader);
+
+            await global.currentMetricReader?.forceFlush();
 
             return manifest;
           },

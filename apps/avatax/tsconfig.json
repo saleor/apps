@@ -25,7 +25,8 @@
     "**/*.tsx",
     "next.config.js",
     ".eslintrc.cjs",
-    "reset.d.ts"
+    "reset.d.ts",
+    "global.d.ts"
   ],
   "exclude": ["node_modules"]
 }
