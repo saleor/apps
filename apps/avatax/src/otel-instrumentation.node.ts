@@ -22,11 +22,9 @@ const sdk = new NodeSDK({
     serviceCommitSha: env.VERCEL_GIT_COMMIT_SHA,
   }),
   textMapPropagator: new W3CTraceContextPropagator(),
-  spanProcessors: [
-    createBatchSpanProcessor({
-      accessToken: env.OTEL_ACCESS_TOKEN!,
-    }),
-  ],
+  spanProcessor: createBatchSpanProcessor({
+    accessToken: env.OTEL_ACCESS_TOKEN!,
+  }),
   metricReader,
   instrumentations: [createHttpInstrumentation()],
 });
