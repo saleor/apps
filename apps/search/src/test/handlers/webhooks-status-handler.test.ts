@@ -1,4 +1,4 @@
-import { NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
+import { NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { createMocks } from "node-mocks-http";
 import { Client, OperationResult } from "urql";
@@ -60,7 +60,7 @@ describe("webhooksStatusHandler", () => {
     delete: vi.fn(),
   };
 
-  let handler: NextProtectedApiHandler;
+  let handler: NextJsProtectedApiHandler;
 
   beforeEach(() => {
     vi.resetAllMocks();

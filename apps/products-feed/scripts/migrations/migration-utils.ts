@@ -1,6 +1,6 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 
-import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
+import { SaleorCloudAPL } from "@saleor/app-sdk/APL/saleor-cloud";
 
 export const verifyRequiredEnvs = () => {
   const requiredEnvs = ["SALEOR_CLOUD_TOKEN", "SALEOR_CLOUD_RESOURCE_URL"];
