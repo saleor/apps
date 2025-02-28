@@ -18,10 +18,10 @@ const sdk = new NodeSDK({
   }),
   textMapPropagator: new W3CTraceContextPropagator(),
   spanProcessor: createBatchSpanProcessor({
-    accessToken: env.OTEL_ACCESS_TOKEN,
+    accessToken: env.OTEL_ACCESS_TOKEN!,
   }),
   metricReader: createMetricReader({
-    accessToken: env.OTEL_ACCESS_TOKEN,
+    accessToken: env.OTEL_ACCESS_TOKEN!,
     exportIntervalMillis: 5_000,
   }),
   instrumentations: [createHttpInstrumentation()],

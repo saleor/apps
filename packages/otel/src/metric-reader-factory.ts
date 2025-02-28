@@ -1,10 +1,7 @@
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-grpc";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
 
-export const createMetricReader = (args: {
-  accessToken: string | undefined;
-  exportIntervalMillis: number;
-}) => {
+export const createMetricReader = (args: { accessToken: string; exportIntervalMillis: number }) => {
   return new PeriodicExportingMetricReader({
     exporter: new OTLPMetricExporter({
       headers: {
