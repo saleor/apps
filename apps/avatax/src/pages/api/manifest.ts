@@ -12,6 +12,7 @@ import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
+import { meterProvider } from "@/lib/shared-metrics";
 
 const requestCounter = externalMeter.createCounter("http.requests", {
   description: "Count of HTTP requests",
@@ -63,15 +64,9 @@ const handler = createManifestHandler({
 
         span.addEvent("Fetched manifest");
 
-        // span.setStatus({ code: SpanStatusCode.ERROR });
-
         span.end();
 
         requestCounter.add(1);
-
-        // console.log("Current metric reader", global.currentMetricReader);
-
-        // await global.currentMetricReader?.forceFlush();
 
         return manifest;
       },
@@ -80,6 +75,6 @@ const handler = createManifestHandler({
 });
 
 export default wrapWithLoggerContext(
-  withOtel(handler, env.OTEL_ENABLED, global.currentMetricReader),
+  withOtel(handler, env.OTEL_ENABLED, meterProvider),
   loggerContext,
 );

@@ -1,5 +1,5 @@
 import { trace } from "@opentelemetry/api";
-import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
+import { MeterProvider } from "@opentelemetry/sdk-metrics";
 import { SALEOR_API_URL_HEADER, SALEOR_SCHEMA_VERSION } from "@saleor/app-sdk/const";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
@@ -11,7 +11,7 @@ import { race } from "./race";
 export const withOtel = (
   handler: NextApiHandler,
   isOtelEnabled: boolean,
-  metricReader: PeriodicExportingMetricReader | undefined,
+  meterProvider: MeterProvider | undefined,
 ): NextApiHandler => {
   if (!isOtelEnabled) {
     return handler;
@@ -55,10 +55,10 @@ export const withOtel = (
       // @ts-expect-error - this is a hack to get around Vercel freezing lambda's
       res.end = async function (this: unknown, ...args: unknown[]) {
         try {
-          if (metricReader) {
+          if (meterProvider) {
             console.log("Force flush of metrics");
             await race({
-              promise: metricReader.forceFlush(),
+              promise: meterProvider.forceFlush(),
               error: new BaseError("Timeout error while flushing metrics"),
               timeout: 1_000,
             });
