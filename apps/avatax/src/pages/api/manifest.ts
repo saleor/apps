@@ -13,17 +13,17 @@ import { loggerContext } from "@/logger-context";
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
 
+const requestCounter = externalMeter.createCounter("http.requests", {
+  description: "Count of HTTP requests",
+  unit: "{requests}",
+});
+
 export default wrapWithLoggerContext(
   wrapWithSpanAttributes(
     createManifestHandler({
       async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
         const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
-
-        const requestCounter = externalMeter.createCounter("http.requests", {
-          description: "Count of HTTP requests",
-          unit: "{requests}",
-        });
 
         return externalTracer.startActiveSpan(
           "createManifestHandler",
@@ -70,6 +70,8 @@ export default wrapWithLoggerContext(
             span.end();
 
             requestCounter.add(1);
+            // @ts-expect-error
+            await global.currentMetricReader.forceFlush();
 
             return manifest;
           },
