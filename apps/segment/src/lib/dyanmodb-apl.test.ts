@@ -19,11 +19,11 @@ describe("DynamoAPL", () => {
     const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
-    repository.setEntry({
+    await repository.setEntry({
       authData: mockedAuthData,
     });
 
-    const result = await apl.get("saleorApiUrl");
+    const result = await apl.get(mockedAuthData.saleorApiUrl);
 
     expect(result).toStrictEqual(mockedAuthData);
   });
@@ -91,7 +91,6 @@ describe("DynamoAPL", () => {
 
     expect(getEntryResult).toStrictEqual({
       saleorApiUrl: mockedAuthData.saleorApiUrl,
-      domain: "newSaleorDomain",
       appId: "newSaleorAppId",
       token: "newAppToken",
     });
