@@ -7,12 +7,12 @@ import { env } from "@/env";
 import { BaseError } from "@/error";
 import { externalMeter } from "@/lib/otel-metrics";
 import { externalTracer } from "@/lib/otel-tracers";
+import { meterProvider } from "@/lib/shared-metrics";
 import { withOtel } from "@/lib/with-otel";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
-import { meterProvider } from "@/lib/shared-metrics";
 
 const requestCounter = externalMeter.createCounter("http.requests", {
   description: "Count of HTTP requests",
@@ -75,6 +75,6 @@ const handler = createManifestHandler({
 });
 
 export default wrapWithLoggerContext(
-  withOtel(handler, env.OTEL_ENABLED, meterProvider),
+  withOtel({ handler, isOtelEnabled: env.OTEL_ENABLED, meterProvider }),
   loggerContext,
 );

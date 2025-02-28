@@ -8,11 +8,15 @@ import { BaseError } from "@/error";
 
 import { race } from "./race";
 
-export const withOtel = (
-  handler: NextApiHandler,
-  isOtelEnabled: boolean,
-  meterProvider: MeterProvider | undefined,
-): NextApiHandler => {
+export const withOtel = ({
+  handler,
+  isOtelEnabled,
+  meterProvider,
+}: {
+  handler: NextApiHandler;
+  isOtelEnabled: boolean;
+  meterProvider: MeterProvider;
+}): NextApiHandler => {
   if (!isOtelEnabled) {
     return handler;
   }
@@ -55,14 +59,12 @@ export const withOtel = (
       // @ts-expect-error - this is a hack to get around Vercel freezing lambda's
       res.end = async function (this: unknown, ...args: unknown[]) {
         try {
-          if (meterProvider) {
-            console.log("Force flush of metrics");
-            await race({
-              promise: meterProvider.forceFlush(),
-              error: new BaseError("Timeout error while flushing metrics"),
-              timeout: 1_000,
-            });
-          }
+          console.log("Force flush of metrics");
+          await race({
+            promise: meterProvider.forceFlush(),
+            error: new BaseError("Timeout error while flushing metrics"),
+            timeout: 1_000,
+          });
         } catch (e) {
           console.error("Failed to flush OTEL", { error: e });
           // noop - don't block return even if we loose traces

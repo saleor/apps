@@ -9,13 +9,6 @@ import { env } from "@/env";
 import { otelResource } from "./lib/otel-resource";
 import { meterProvider } from "./lib/shared-metrics";
 
-/*
- * const metricReader = createMetricReader({
- *   accessToken: env.OTEL_ACCESS_TOKEN!,
- *   exportIntervalMillis: 60_000,
- * });
- */
-
 const sdk = new NodeSDK({
   resource: otelResource,
   textMapPropagator: new W3CTraceContextPropagator(),
@@ -27,8 +20,4 @@ const sdk = new NodeSDK({
 
 sdk.start();
 
-/*
- * hack to make the metric reader available globally
- * global.currentMetricReader = metricReader;
- */
 metrics.setGlobalMeterProvider(meterProvider);

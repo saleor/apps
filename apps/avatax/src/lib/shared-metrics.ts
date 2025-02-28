@@ -10,8 +10,7 @@ export const meterProvider = new MeterProvider({
 });
 
 const metricReader = createMetricReader({
-  accessToken: env.OTEL_ACCESS_TOKEN!,
-  exportIntervalMillis: 60_000,
+  accessToken: env.OTEL_ACCESS_TOKEN,
 });
 
 meterProvider.addMetricReader(metricReader);
