@@ -1,21 +1,36 @@
+import { SpanKind } from "@opentelemetry/api";
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 
 import { env } from "@/env";
+import { BaseError } from "@/error";
+import { externalMeter } from "@/lib/otel/otel-metrics";
+import { externalTracer } from "@/lib/otel/otel-tracers";
+import { meterProvider } from "@/lib/otel/shared-metrics";
+import { spanProcessor } from "@/lib/otel/shared-span-processor";
+import { withOtel } from "@/lib/otel/with-otel";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
 
-export default wrapWithLoggerContext(
-  wrapWithSpanAttributes(
-    createManifestHandler({
-      async manifestFactory({ appBaseUrl }) {
-        const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
-        const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
+const requestCounter = externalMeter.createCounter("http.requests", {
+  description: "Count of HTTP requests",
+  unit: "{requests}",
+});
 
+const handler = createManifestHandler({
+  async manifestFactory({ appBaseUrl }) {
+    const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+    const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
+
+    return externalTracer.startActiveSpan(
+      "createManifestHandler",
+      {
+        kind: SpanKind.CLIENT,
+      },
+      async (span) => {
         const manifest: AppManifest = {
           about: "App connects with AvaTax to dynamically calculate taxes",
           appUrl: iframeBaseUrl,
@@ -38,9 +53,29 @@ export default wrapWithLoggerContext(
           webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
         };
 
+        /*
+         * span.setAttribute("http.method", "GET");
+         * span.setAttribute("http.status_code", 200);
+         */
+
+        const error = new BaseError("Test error for span!");
+
+        // serialize to avoid leaking stack trace
+        span.recordException(BaseError.serialize(error));
+
+        span.addEvent("Fetched manifest");
+
+        span.end();
+
+        requestCounter.add(1);
+
         return manifest;
       },
-    }),
-  ),
+    );
+  },
+});
+
+export default wrapWithLoggerContext(
+  withOtel({ handler, isOtelEnabled: env.OTEL_ENABLED, meterProvider, spanProcessor }),
   loggerContext,
 );
