@@ -1,5 +1,6 @@
 import { trace } from "@opentelemetry/api";
 import { MeterProvider } from "@opentelemetry/sdk-metrics";
+import { SpanProcessor } from "@opentelemetry/sdk-trace-node";
 import { SALEOR_API_URL_HEADER, SALEOR_SCHEMA_VERSION } from "@saleor/app-sdk/const";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
@@ -7,6 +8,7 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { BaseError } from "@/error";
 
 import { race } from "./race";
+import { spanProcessor } from "./shared-span-processor";
 
 export const withOtel = ({
   handler,
@@ -16,6 +18,7 @@ export const withOtel = ({
   handler: NextApiHandler;
   isOtelEnabled: boolean;
   meterProvider: MeterProvider;
+  spanProcessor: SpanProcessor;
 }): NextApiHandler => {
   if (!isOtelEnabled) {
     return handler;
@@ -59,10 +62,16 @@ export const withOtel = ({
       // @ts-expect-error - this is a hack to get around Vercel freezing lambda's
       res.end = async function (this: unknown, ...args: unknown[]) {
         try {
-          console.log("Force flush of metrics");
+          console.log("Force flush of metrics & traces");
           await race({
             promise: meterProvider.forceFlush(),
             error: new BaseError("Timeout error while flushing metrics"),
+            timeout: 1_000,
+          });
+
+          await race({
+            promise: spanProcessor.forceFlush(),
+            error: new BaseError("Timeout error while flushing traces"),
             timeout: 1_000,
           });
         } catch (e) {

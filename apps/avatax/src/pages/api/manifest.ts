@@ -5,10 +5,11 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 
 import { env } from "@/env";
 import { BaseError } from "@/error";
-import { externalMeter } from "@/lib/otel-metrics";
-import { externalTracer } from "@/lib/otel-tracers";
-import { meterProvider } from "@/lib/shared-metrics";
-import { withOtel } from "@/lib/with-otel";
+import { externalMeter } from "@/lib/otel/otel-metrics";
+import { externalTracer } from "@/lib/otel/otel-tracers";
+import { meterProvider } from "@/lib/otel/shared-metrics";
+import { spanProcessor } from "@/lib/otel/shared-span-processor";
+import { withOtel } from "@/lib/otel/with-otel";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
@@ -75,6 +76,6 @@ const handler = createManifestHandler({
 });
 
 export default wrapWithLoggerContext(
-  withOtel({ handler, isOtelEnabled: env.OTEL_ENABLED, meterProvider }),
+  withOtel({ handler, isOtelEnabled: env.OTEL_ENABLED, meterProvider, spanProcessor }),
   loggerContext,
 );

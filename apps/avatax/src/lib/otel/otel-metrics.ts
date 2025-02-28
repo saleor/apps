@@ -1,4 +1,4 @@
-import pkg from "../../package.json";
+import pkg from "../../../package.json";
 import { meterProvider } from "./shared-metrics";
 
 export const internalMeter = meterProvider.getMeter("saleor.app.avatax.core", pkg.version);
