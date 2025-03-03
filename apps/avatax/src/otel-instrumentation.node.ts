@@ -19,6 +19,7 @@ export function register() {
     spanProcessors: [new BatchSpanProcessor(new OTLPTraceExporter({}))],
     metricReader: new PeriodicExportingMetricReader({
       exporter: new OTLPMetricExporter({}),
+      exportIntervalMillis: 5_000,
     }),
   });
 }
