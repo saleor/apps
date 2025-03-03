@@ -1,7 +1,9 @@
-import { NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+"use client";
+
+import { WebhookContext } from "@saleor/app-sdk/handlers/shared";
+import { wrapWithLoggerContextAppRouter } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { wrapWithSpanAttributesAppRouter } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 
 import { OrderUpdatedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
@@ -13,12 +15,6 @@ import { TrackEventUseCase } from "@/modules/tracking-events/track-event.use-cas
 import { trackingEventFactory } from "@/modules/tracking-events/tracking-events";
 import { orderCancelledAsyncWebhook } from "@/modules/webhooks/definitions/order-cancelled";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const logger = createLogger("orderCancelledAsyncWebhook");
 
 const configRepository = DynamoConfigRepositoryFactory.create();
@@ -26,11 +22,13 @@ const configManager = DynamoAppConfigManager.create(configRepository);
 const segmentEventTrackerFactory = new SegmentEventTrackerFactory();
 const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
 
-const handler: NextJsWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = async (
-  req,
-  res,
-  context,
-) => {
+type Ctx = WebhookContext<OrderUpdatedSubscriptionPayloadFragment>;
+
+/*
+ * todo handler export is missing from sdk
+ * todo we need generics or something, to ensure response is NextResponse here
+ */
+const handler = async (req: Request, context: Ctx): Promise<Response> => {
   try {
     const { authData, payload } = context;
 
@@ -42,16 +40,17 @@ const handler: NextJsWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = a
     if (!config) {
       logger.warn("App config not found. Event won't be send to Segment");
 
-      return res.status(200).json({
+      return Response.json({
         message: "App config not found. Event won't be send to Segment",
       });
     }
 
     if (!payload.order) {
       logger.info("Payload does not contain order data. Skipping.");
-      return res
-        .status(200)
-        .json({ message: "Payload does not contain order data. It will be skipped by app" });
+
+      return Response.json({
+        message: "Payload does not contain order data. It will be skipped by app",
+      });
     }
 
     loggerContext.set(ObservabilityAttributes.ORDER_ID, payload.order.id);
@@ -66,9 +65,9 @@ const handler: NextJsWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = a
         () => {
           logger.info("Order cancelled event successfully sent to Segment");
 
-          return res
-            .status(200)
-            .json({ message: "Order cancelled event successfully sent to Segment" });
+          return Response.json({
+            message: "Order cancelled event successfully sent to Segment",
+          });
         },
         (error) => {
           switch (error.constructor) {
@@ -77,7 +76,7 @@ const handler: NextJsWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = a
                 error: error,
               });
 
-              return res.status(200).json({
+              return Response.json({
                 message:
                   "Error during creating connection with Segment. Event won't be send to Segment",
               });
@@ -88,9 +87,15 @@ const handler: NextJsWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = a
                 error: error,
               });
 
-              return res
-                .status(500)
-                .json({ message: "Error while sending order cancelled event to Segment" });
+              return Response.json(
+                { message: "Error while sending order cancelled event to Segment" },
+                {
+                  status: 500,
+                },
+              );
+            }
+            default: {
+              throw error;
             }
           }
         },
@@ -99,13 +104,21 @@ const handler: NextJsWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = a
   } catch (e) {
     logger.error("Unhandled error while sending order cancelled event to Segment", { error: e });
 
-    return res
-      .status(500)
-      .json({ message: "Error while sending order cancelled event to Segment" });
+    return Response.json(
+      {
+        message: "Error while sending order cancelled event to Segment",
+      },
+      { status: 500 },
+    );
   }
 };
 
-export default wrapWithLoggerContext(
-  wrapWithSpanAttributes(orderCancelledAsyncWebhook.createHandler(handler)),
-  loggerContext,
-);
+/*
+ * const wrapWithLogger = wrapWithLoggerContextAppRouter(loggerContext);
+ *
+ * const composedHandler = wrapWithLogger(
+ *   wrapWithSpanAttributesAppRouter(orderCancelledAsyncWebhook.createHandler(handler)),
+ * );
+ */
+
+export const POST = orderCancelledAsyncWebhook.createHandler(handler);
