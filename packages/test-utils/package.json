@@ -1,0 +1,21 @@
+{
+  "name": "@saleor/test-utils",
+  "version": "1.0.0",
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
+  },
+  "dependencies": {
+    "eslint": "../../node_modules/eslint",
+    "typescript": "5.5.4"
+  },
+  "devDependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "eslint-config-saleor": "workspace:*"
+  },
+  "main": "index.ts",
+  "peerDependencies": {
+  },
+  "type": "module"
+}
