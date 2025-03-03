@@ -30,7 +30,6 @@ registerOTel({
     [ATTR_SERVICE_VERSION]: pkg.version,
     [ATTR_DEPLOYMENT_ENVIRONMENT_NAME]: process.env.ENV,
     "commit-sha": process.env.VERCEL_GIT_COMMIT_SHA,
-    env: process.env.ENV,
   },
   spanProcessors: [
     createBatchSpanProcessor({
