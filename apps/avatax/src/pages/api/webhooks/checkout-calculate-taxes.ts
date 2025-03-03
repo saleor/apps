@@ -1,6 +1,8 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+/*
+ * import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+ * import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+ */
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
@@ -48,12 +50,16 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
 
     subscriptionErrorChecker.checkPayload(payload);
 
-    loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
-    loggerContext.set(ObservabilityAttributes.CHECKOUT_ID, ctx.payload.taxBase.sourceObject.id);
+    /*
+     * loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
+     * loggerContext.set(ObservabilityAttributes.CHECKOUT_ID, ctx.payload.taxBase.sourceObject.id);
+     */
 
     if (payload.version) {
-      Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-      loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+      /*
+       * Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+       * loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+       */
     }
 
     logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
@@ -151,7 +157,4 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
 /**
  * TODO: Add tests to handler
  */
-export default wrapWithLoggerContext(
-  withMetadataCache(wrapWithSpanAttributes(handler)),
-  loggerContext,
-);
+export default wrapWithLoggerContext(withMetadataCache(handler), loggerContext);

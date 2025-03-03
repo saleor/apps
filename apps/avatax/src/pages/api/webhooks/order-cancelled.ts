@@ -1,6 +1,8 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+/*
+ * import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+ * import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+ */
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
@@ -44,8 +46,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
   subscriptionErrorChecker.checkPayload(payload);
 
   if (payload.version) {
-    Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-    loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+    /*
+     * Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+     * loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+     */
   }
 
   logger.info("Handler called with payload");
@@ -249,7 +253,4 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
   return res.status(200).end();
 });
 
-export default wrapWithLoggerContext(
-  withMetadataCache(wrapWithSpanAttributes(handler)),
-  loggerContext,
-);
+export default wrapWithLoggerContext(withMetadataCache(handler), loggerContext);

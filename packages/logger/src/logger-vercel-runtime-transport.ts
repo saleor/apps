@@ -1,4 +1,4 @@
-import { trace } from "@opentelemetry/api";
+// import { trace } from "@opentelemetry/api";
 import * as Sentry from "@sentry/nextjs";
 import { ILogObj, Logger } from "tslog";
 
@@ -32,8 +32,10 @@ export const attachLoggerVercelRuntimeTransport = (
           environment: process.env.ENV,
         },
         otel: {
-          span_id: trace.getActiveSpan()?.spanContext().spanId,
-          trace_id: trace.getActiveSpan()?.spanContext().traceId,
+          /*
+           * span_id: trace.getActiveSpan()?.spanContext().spanId,
+           * trace_id: trace.getActiveSpan()?.spanContext().traceId,
+           */
           timestamp: _meta.date.getTime(),
         },
         "commit-sha": process.env.VERCEL_GIT_COMMIT_SHA,

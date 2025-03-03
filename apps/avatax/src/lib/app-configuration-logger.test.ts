@@ -1,4 +1,4 @@
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+// import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AppConfig } from "./app-config";
@@ -32,7 +32,7 @@ describe("AppConfigurationLogger", () => {
     );
 
     expect(mockWarn).toHaveBeenCalledWith("Failed to resolve configuration properly", {
-      [ObservabilityAttributes.CHANNEL_SLUG]: "default-channel",
+      // [ObservabilityAttributes.CHANNEL_SLUG]: "default-channel",
       error: expect.any(AppConfig.MissingConfigurationError),
     });
   });
