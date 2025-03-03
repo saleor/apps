@@ -7,6 +7,7 @@ import { env } from "@/env";
 import { BaseError } from "@/error";
 import { externalMeter } from "@/lib/otel/otel-metrics";
 import { externalTracer } from "@/lib/otel/otel-tracers";
+import { meterProvider } from "@/lib/otel/shared-metrics";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
@@ -65,6 +66,8 @@ const handler = createManifestHandler({
         span.end();
 
         requestCounter.add(1);
+
+        await meterProvider.forceFlush();
 
         return manifest;
       },

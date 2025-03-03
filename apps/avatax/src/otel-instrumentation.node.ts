@@ -1,12 +1,12 @@
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-grpc";
+import { metrics } from "@opentelemetry/api";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
-import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-node";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { registerOTel } from "@vercel/otel";
 
 import pkg from "../package.json";
 import { env } from "./env";
+import { meterProvider } from "./lib/otel/shared-metrics";
 
 export function register() {
   registerOTel({
@@ -17,9 +17,6 @@ export function register() {
       "commit-sha": env.VERCEL_GIT_COMMIT_SHA,
     },
     spanProcessors: [new BatchSpanProcessor(new OTLPTraceExporter({}))],
-    metricReader: new PeriodicExportingMetricReader({
-      exporter: new OTLPMetricExporter({}),
-      exportIntervalMillis: 5_000,
-    }),
   });
+  metrics.setGlobalMeterProvider(meterProvider);
 }
