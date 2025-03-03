@@ -1,4 +1,4 @@
-import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
+import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 import { Client } from "urql";
@@ -23,7 +23,7 @@ export type WebhooksStatusResponse = {
 };
 
 export const webhooksStatusHandlerFactory =
-  ({ graphqlClientFactory }: FactoryProps): NextProtectedApiHandler<WebhooksStatusResponse> =>
+  ({ graphqlClientFactory }: FactoryProps): NextJsProtectedApiHandler<WebhooksStatusResponse> =>
   async (req, res, { authData }) => {
     /**
      * Initialize services

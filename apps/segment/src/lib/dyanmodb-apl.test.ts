@@ -1,4 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import { mockAuthData } from "@saleor/test-utils";
 import { err } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -8,12 +9,7 @@ import { MemoryAPLRepository } from "../modules/db/__tests__/memory-apl-reposito
 import { DynamoAPL } from "./dynamodb-apl";
 
 describe("DynamoAPL", () => {
-  const mockedAuthData: AuthData = {
-    saleorApiUrl: "saleorApiUrl",
-    token: "appToken",
-    domain: "saleorDomain",
-    appId: "saleorAppId",
-  };
+  const mockedAuthData = mockAuthData;
 
   afterEach(() => {
     vi.restoreAllMocks();
@@ -23,11 +19,11 @@ describe("DynamoAPL", () => {
     const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
-    repository.setEntry({
+    await repository.setEntry({
       authData: mockedAuthData,
     });
 
-    const result = await apl.get("saleorApiUrl");
+    const result = await apl.get(mockedAuthData.saleorApiUrl);
 
     expect(result).toStrictEqual(mockedAuthData);
   });
@@ -88,7 +84,6 @@ describe("DynamoAPL", () => {
     apl.set({
       saleorApiUrl: mockedAuthData.saleorApiUrl,
       token: "newAppToken",
-      domain: "newSaleorDomain",
       appId: "newSaleorAppId",
     });
 
@@ -96,7 +91,6 @@ describe("DynamoAPL", () => {
 
     expect(getEntryResult).toStrictEqual({
       saleorApiUrl: mockedAuthData.saleorApiUrl,
-      domain: "newSaleorDomain",
       appId: "newSaleorAppId",
       token: "newAppToken",
     });
@@ -129,7 +123,6 @@ describe("DynamoAPL", () => {
     const secondEntry: AuthData = {
       saleorApiUrl: "saleorApiUrl2",
       token: "appToken2",
-      domain: "saleorDomain2",
       appId: "saleorAppId2",
     };
     const apl = new DynamoAPL({ repository });

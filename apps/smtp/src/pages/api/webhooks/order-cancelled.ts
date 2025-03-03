@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
@@ -36,7 +36,7 @@ const OrderCancelledGraphqlSubscription = gql`
 export const orderCancelledWebhook = new SaleorAsyncWebhook<OrderCancelledWebhookPayloadFragment>({
   name: "Order Cancelled in Saleor",
   webhookPath: "api/webhooks/order-cancelled",
-  asyncEvent: "ORDER_CANCELLED",
+  event: "ORDER_CANCELLED",
   apl: saleorApp.apl,
   query: OrderCancelledGraphqlSubscription,
 });
@@ -45,7 +45,7 @@ const logger = createLogger(orderCancelledWebhook.webhookPath);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
-const handler: NextWebhookApiHandler<OrderCancelledWebhookPayloadFragment> = async (
+const handler: NextJsWebhookHandler<OrderCancelledWebhookPayloadFragment> = async (
   req,
   res,
   context,
