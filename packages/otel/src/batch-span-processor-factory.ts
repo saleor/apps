@@ -1,7 +1,7 @@
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-node";
 
-export const createBatchSpanProcessor = (args: { accessToken: string | undefined }) => {
+export const createBatchSpanProcessor = (args: { accessToken: string }) => {
   return new BatchSpanProcessor(
     new OTLPTraceExporter({
       headers: {

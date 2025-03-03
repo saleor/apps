@@ -24,14 +24,15 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
-    "@opentelemetry/api": "1.7.0",
-    "@opentelemetry/core": "1.19.0",
-    "@opentelemetry/exporter-trace-otlp-http": "0.46.0",
-    "@opentelemetry/instrumentation-http": "0.46.0",
-    "@opentelemetry/resources": "1.18.1",
-    "@opentelemetry/sdk-node": "0.45.1",
-    "@opentelemetry/sdk-trace-node": "1.18.1",
-    "@opentelemetry/semantic-conventions": "1.18.1",
+    "@vercel/otel": "1.10.1",
+    "@opentelemetry/api": "1.9.0",
+    "@opentelemetry/api-logs": "0.57.2",
+    "@opentelemetry/instrumentation": "0.57.2",
+    "@opentelemetry/sdk-logs": "0.57.2",
+    "@opentelemetry/exporter-trace-otlp-http": "0.57.2",
+    "@opentelemetry/sdk-trace-node": "1.30.1",
+    "@opentelemetry/semantic-conventions": "1.30.0",
+    "@opentelemetry/resources": "1.30.1",
     "@saleor/app-sdk": "0.52.0",
     "@sentry/cli": "2.32.1",
     "@sentry/nextjs": "7.117.0",
@@ -60,14 +61,5 @@
     "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files"
   },
   "packageManager": "pnpm@9.12.3",
-  "pnpm": {
-    "overrides": {
-      "crypto-js@<4.2.0": ">=4.2.0"
-    },
-    "patchedDependencies": {
-      "@opentelemetry/otlp-transformer@0.45.1": "patches/@opentelemetry__otlp-transformer@0.45.1.patch",
-      "@opentelemetry/otlp-transformer@0.46.0": "patches/@opentelemetry__otlp-transformer@0.46.0.patch"
-    }
-  },
   "private": true
 }

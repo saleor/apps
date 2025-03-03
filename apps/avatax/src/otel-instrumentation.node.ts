@@ -1,25 +1,21 @@
-import { W3CTraceContextPropagator } from "@opentelemetry/core";
-import { NodeSDK } from "@opentelemetry/sdk-node";
+/* eslint-disable node/no-process-env */
+import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
+import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
-import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
-import { createResource } from "@saleor/apps-otel/src/resource-factory";
-
-import { env } from "@/env";
+import { registerOTel } from "@vercel/otel";
 
 import pkg from "../package.json";
 
-const sdk = new NodeSDK({
-  resource: createResource({
-    serviceName: env.OTEL_SERVICE_NAME,
-    serviceVersion: pkg.version,
-    serviceEnviroment: env.ENV,
-    serviceCommitSha: env.VERCEL_GIT_COMMIT_SHA,
-  }),
-  textMapPropagator: new W3CTraceContextPropagator(),
-  spanProcessor: createBatchSpanProcessor({
-    accessToken: env.OTEL_ACCESS_TOKEN,
-  }),
-  instrumentations: [createHttpInstrumentation()],
+registerOTel({
+  serviceName: process.env.OTEL_SERVICE_NAME,
+  attributes: {
+    [ATTR_SERVICE_VERSION]: pkg.version,
+    [ATTR_DEPLOYMENT_ENVIRONMENT_NAME]: process.env.ENV,
+    "commit-sha": process.env.VERCEL_GIT_COMMIT_SHA,
+  },
+  spanProcessors: [
+    createBatchSpanProcessor({
+      accessToken: process.env.OTEL_ACCESS_TOKEN!,
+    }),
+  ],
 });
-
-sdk.start();
