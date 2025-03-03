@@ -116,9 +116,6 @@ importers:
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-node
-        version: link:../../node_modules/@opentelemetry/sdk-node
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
@@ -176,6 +173,9 @@ importers:
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
+      '@vercel/otel':
+        specifier: ../../node_modules/@vercel/otel
+        version: link:../../node_modules/@vercel/otel
       avatax:
         specifier: ^23.7.0
         version: 23.7.0
