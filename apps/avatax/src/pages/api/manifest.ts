@@ -8,6 +8,7 @@ import { BaseError } from "@/error";
 import { externalMeter } from "@/lib/otel/otel-metrics";
 import { externalTracer } from "@/lib/otel/otel-tracers";
 import { meterProvider } from "@/lib/otel/shared-metrics";
+import { withResEnd } from "@/lib/otel/with-otel";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
@@ -67,7 +68,7 @@ const handler = createManifestHandler({
 
         requestCounter.add(1);
 
-        await meterProvider.forceFlush();
+        // await meterProvider.forceFlush();
 
         return manifest;
       },
@@ -75,4 +76,9 @@ const handler = createManifestHandler({
   },
 });
 
-export default wrapWithLoggerContext(handler, loggerContext);
+const flushMetrics = withResEnd(async () => {
+  console.log("Force flush of metrics & traces");
+  await meterProvider.forceFlush();
+});
+
+export default wrapWithLoggerContext(flushMetrics(handler), loggerContext);
