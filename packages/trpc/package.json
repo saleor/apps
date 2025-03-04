@@ -10,7 +10,7 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "eslint": "../../node_modules/eslint",
     "eslint-config-saleor": "workspace:*",
-    "next": "15.2.1",
+    "next": "14.2.3",
     "typescript": "5.5.4"
   },
   "main": "index.ts",
