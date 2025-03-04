@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.5.0
+
+### Minor Changes
+
+- 23a31eb4: Remove not used OTEL log transport
+
 ## 1.4.3
 
 ### Patch Changes

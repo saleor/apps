@@ -1,5 +1,18 @@
 # @saleor/apps-shared
 
+## 1.12.0
+
+### Minor Changes
+
+- defa0b60: Add `compose` function that can be used to compose multiple functions into one:
+
+  ```ts
+  // before
+  export default wrapWithLoggerContext(withSpanAttributes(handler));
+  // after
+  export default compose(withLoggerContext, withSpanAttributes)(handler);
+  ```
+
 ## 1.11.4
 
 ### Patch Changes
