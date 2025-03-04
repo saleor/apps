@@ -3,6 +3,6 @@
 
 export async function register() {
   if (process.env.OTEL_ENABLED === "true") {
-    await import("./otel-instrumentation");
+    await import("./instrumentations/otel");
   }
 }

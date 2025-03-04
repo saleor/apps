@@ -2,4 +2,4 @@ import { trace } from "@opentelemetry/api";
 
 import pkg from "../../package.json";
 
-export const appRootTracer = trace.getTracer("saleor-app-avatax", pkg.version);
+export const appRootTracer = trace.getTracer("saleor.app.avatax", pkg.version);

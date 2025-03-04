@@ -1,4 +1,3 @@
-/* eslint-disable node/no-process-env */
 // Use `process.env` here to avoid broken Next.js build
 import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
@@ -6,7 +5,7 @@ import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-proce
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
 import { registerOTel } from "@vercel/otel";
 
-import pkg from "../package.json";
+import pkg from "../../package.json";
 
 registerOTel({
   serviceName: process.env.OTEL_SERVICE_NAME,

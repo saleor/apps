@@ -342,9 +342,6 @@ importers:
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-node
-        version: link:../../node_modules/@opentelemetry/sdk-node
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
@@ -399,6 +396,9 @@ importers:
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
+      '@vercel/otel':
+        specifier: ../../node_modules/@vercel/otel
+        version: link:../../node_modules/@vercel/otel
       '@vitejs/plugin-react':
         specifier: 4.3.1
         version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
@@ -523,9 +523,6 @@ importers:
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-node
-        version: link:../../node_modules/@opentelemetry/sdk-node
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
@@ -562,6 +559,9 @@ importers:
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
+      '@vercel/otel':
+        specifier: ../../node_modules/@vercel/otel
+        version: link:../../node_modules/@vercel/otel
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
@@ -671,9 +671,6 @@ importers:
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-node
-        version: link:../../node_modules/@opentelemetry/sdk-node
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
@@ -731,6 +728,9 @@ importers:
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
+      '@vercel/otel':
+        specifier: ../../node_modules/@vercel/otel
+        version: link:../../node_modules/@vercel/otel
       '@vitejs/plugin-react':
         specifier: 4.3.1
         version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
@@ -849,9 +849,6 @@ importers:
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-node
-        version: link:../../node_modules/@opentelemetry/sdk-node
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
@@ -909,6 +906,9 @@ importers:
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
+      '@vercel/otel':
+        specifier: ../../node_modules/@vercel/otel
+        version: link:../../node_modules/@vercel/otel
       algoliasearch:
         specifier: 4.23.3
         version: 4.23.3
@@ -1036,9 +1036,6 @@ importers:
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-node
-        version: link:../../node_modules/@opentelemetry/sdk-node
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
@@ -1099,6 +1096,9 @@ importers:
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
+      '@vercel/otel':
+        specifier: ../../node_modules/@vercel/otel
+        version: link:../../node_modules/@vercel/otel
       '@vitejs/plugin-react':
         specifier: 4.3.1
         version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
@@ -1253,9 +1253,6 @@ importers:
       '@opentelemetry/resources':
         specifier: ../../node_modules/@opentelemetry/resources
         version: link:../../node_modules/@opentelemetry/resources
-      '@opentelemetry/sdk-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-node
-        version: link:../../node_modules/@opentelemetry/sdk-node
       '@opentelemetry/sdk-trace-node':
         specifier: ../../node_modules/@opentelemetry/sdk-trace-node
         version: link:../../node_modules/@opentelemetry/sdk-trace-node
@@ -1310,6 +1307,9 @@ importers:
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
+      '@vercel/otel':
+        specifier: ../../node_modules/@vercel/otel
+        version: link:../../node_modules/@vercel/otel
       '@vitejs/plugin-react':
         specifier: 4.3.1
         version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
