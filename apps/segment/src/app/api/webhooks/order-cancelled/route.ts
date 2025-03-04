@@ -29,6 +29,7 @@ type Ctx = WebhookContext<OrderUpdatedSubscriptionPayloadFragment>;
  * todo we need generics or something, to ensure response is NextResponse here
  */
 const handler = async (req: Request, context: Ctx): Promise<Response> => {
+  console.log("HANDLER");
   try {
     const { authData, payload } = context;
 
@@ -122,3 +123,4 @@ const handler = async (req: Request, context: Ctx): Promise<Response> => {
  */
 
 export const POST = orderCancelledAsyncWebhook.createHandler(handler);
+// export const POST = composedHandler;
