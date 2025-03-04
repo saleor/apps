@@ -439,8 +439,8 @@ importers:
         specifier: ^7.43.9
         version: 7.44.3(react@18.2.0)
       strapi-sdk-js:
-        specifier: 2.2.0
-        version: 2.2.0
+        specifier: 2.3.4
+        version: 2.3.4
       urql:
         specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
@@ -7559,8 +7559,8 @@ packages:
     resolution: {integrity: sha512-zIURGIS1E1Q4pcrMjp+nnEh+16G56eG/MUllJH8yEvw7asDo7Ac9uhC9KIH5jzpITueEZolfYglnCGIuSBz39g==}
     engines: {node: '>=4'}
 
-  axios@0.24.0:
-    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
+  axios@0.27.2:
+    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
 
   axios@1.5.1:
     resolution: {integrity: sha512-Q28iYCWzNHjAm+yEAot5QaAMxhMghWLFVf7rRdwhUI+c2jix2DUXjAHXVi+s1ibs3mjPO/cCgbA++3BjD0vP/A==}
@@ -12221,8 +12221,8 @@ packages:
     resolution: {integrity: sha512-HKi7NQQTZhBGEU3KUFxTNGtIZcG8+hokiO5TwcIr7s7smAVKdvj9vY5YGsVkiWF39o+5UtafW1B/i9D8lBFsYg==}
     hasBin: true
 
-  strapi-sdk-js@2.2.0:
-    resolution: {integrity: sha512-0cUy2zHPcBN9yY2jCO5Y7ZH7IqSNrdW8Ywh/s0keqP3RiQJlGsu4PcEPF/l/m99bAgFqfwUITZ/wJ8ciVgwT+g==}
+  strapi-sdk-js@2.3.4:
+    resolution: {integrity: sha512-y6olh5YC1EQrUTiIPUVTClSDZEIYUpUzBlvAdYzRBldvuwSyg++hmeayLqkHRGEeomeCnOLAdsMMcQiyKae+Tg==}
 
   stream-shift@1.0.1:
     resolution: {integrity: sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==}
@@ -21659,9 +21659,10 @@ snapshots:
 
   axe-core@4.7.2: {}
 
-  axios@0.24.0:
+  axios@0.27.2:
     dependencies:
       follow-redirects: 1.15.2
+      form-data: 4.0.0
     transitivePeerDependencies:
       - debug
 
@@ -27489,14 +27490,15 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  strapi-sdk-js@2.2.0:
+  strapi-sdk-js@2.3.4:
     dependencies:
       '@types/js-cookie': 3.0.3
       '@types/qs': 6.9.7
-      axios: 0.24.0
+      axios: 0.27.2
       defu: 5.0.1
       js-cookie: 3.0.5
       qs: 6.11.2
+      ufo: 1.4.0
     transitivePeerDependencies:
       - debug
 
