@@ -1,5 +1,5 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import * as trpcNext from "@trpc/server/adapters/next";
 
 import { createLogger } from "../../../logger";
@@ -10,7 +10,7 @@ import { createTrpcContext } from "../../../modules/trpc/trpc-context";
 const logger = createLogger("tRPC wrapper");
 
 export default wrapWithLoggerContext(
-  wrapWithSpanAttributes(
+  withSpanAttributes(
     trpcNext.createNextApiHandler({
       router: appRouter,
       createContext: createTrpcContext,

@@ -4,7 +4,7 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
 import { ObservabilityAttributes } from "./observability-attributes";
 
-export const wrapWithSpanAttributes = (handler: NextApiHandler) => {
+export const withSpanAttributes = (handler: NextApiHandler) => {
   return (req: NextApiRequest, res: NextApiResponse) => {
     const span = trace.getActiveSpan();
 

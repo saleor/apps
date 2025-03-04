@@ -1,31 +1,30 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { compose } from "@saleor/apps-shared";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
+import { AppConfigExtractor } from "@/lib/app-config-extractor";
+import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
+import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
+import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
+import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { createLogger } from "@/logger";
+import { loggerContext, withLoggerContext } from "@/logger-context";
+import { OrderMetadataManager } from "@/modules/app/order-metadata-manager";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
 import { createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter-factory";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
-
-import { AppConfigExtractor } from "../../../lib/app-config-extractor";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
-import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
-import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
-import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
-import { createLogger } from "../../../logger";
-import { loggerContext } from "../../../logger-context";
-import { OrderMetadataManager } from "../../../modules/app/order-metadata-manager";
-import { SaleorOrderConfirmedEvent } from "../../../modules/saleor";
+import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
 import {
   AvataxEntityNotFoundError,
   AvataxStringLengthError,
   TaxBadPayloadError,
-} from "../../../modules/taxes/tax-error";
-import { orderConfirmedAsyncWebhook } from "../../../modules/webhooks/definitions/order-confirmed";
+} from "@/modules/taxes/tax-error";
+import { orderConfirmedAsyncWebhook } from "@/modules/webhooks/definitions/order-confirmed";
 
 export const config = {
   api: {
@@ -330,7 +329,4 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
   }
 });
 
-export default wrapWithLoggerContext(
-  withMetadataCache(wrapWithSpanAttributes(handler)),
-  loggerContext,
-);
+export default compose(withLoggerContext, withMetadataCache, withSpanAttributes)(handler);
