@@ -13,8 +13,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@vercel/otel": "../../node_modules/@vercel/otel",
     "@opentelemetry/api": "../../node_modules/@opentelemetry/api",
-    "@opentelemetry/sdk-node": "../../node_modules/@opentelemetry/sdk-node",
     "@opentelemetry/resources": "../../node_modules/@opentelemetry/resources",
     "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
     "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
