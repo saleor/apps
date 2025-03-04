@@ -4,10 +4,16 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
 
 import { env } from "@/env";
+import { meter } from "@/lib/app-root-metric";
 import { loggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
+
+const requestCounter = meter.createCounter("api.manifest.http.requests", {
+  description: "Count of HTTP requests",
+  unit: "{requests}",
+});
 
 export default wrapWithLoggerContext(
   wrapWithSpanAttributes(
@@ -37,6 +43,8 @@ export default wrapWithLoggerContext(
           version: packageJson.version,
           webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
         };
+
+        requestCounter.add(1);
 
         return manifest;
       },
