@@ -1,5 +1,7 @@
 /* eslint-disable node/no-process-env */
 // Use `process.env` here to avoid broken Next.js build
+import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
+import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
 import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
@@ -24,4 +26,11 @@ registerOTel({
     }),
   ],
   instrumentations: [createHttpInstrumentation()],
+  metricReader: new PeriodicExportingMetricReader({
+    exporter: new OTLPMetricExporter({
+      headers: {
+        "x-alb-access-token": process.env.OTEL_ACCESS_TOKEN!,
+      },
+    }),
+  }),
 });
