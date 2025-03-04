@@ -1,6 +1,6 @@
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { compose } from "@saleor/apps-shared";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
@@ -9,7 +9,7 @@ import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
-import { loggerContext } from "@/logger-context";
+import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
@@ -151,7 +151,4 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
 /**
  * TODO: Add tests to handler
  */
-export default wrapWithLoggerContext(
-  withMetadataCache(wrapWithSpanAttributes(handler)),
-  loggerContext,
-);
+export default compose(withLoggerContext, withMetadataCache, withSpanAttributes)(handler);

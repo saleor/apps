@@ -1,6 +1,6 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
 
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";

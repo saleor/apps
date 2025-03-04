@@ -1,10 +1,16 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { compose } from "@saleor/apps-shared";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
+import { AppConfigExtractor } from "@/lib/app-config-extractor";
+import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
+import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
+import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { createLogger } from "@/logger";
+import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
@@ -19,22 +25,15 @@ import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules
 import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
-import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
-
-import { AppConfigExtractor } from "../../../lib/app-config-extractor";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
-import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
-import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
-import { createLogger } from "../../../logger";
-import { loggerContext } from "../../../logger-context";
 import {
   AvataxEntityNotFoundError,
   AvataxGetTaxError,
   AvataxInvalidAddressError,
   AvataxStringLengthError,
-} from "../../../modules/taxes/tax-error";
-import { orderCalculateTaxesSyncWebhook } from "../../../modules/webhooks/definitions/order-calculate-taxes";
-import { verifyCalculateTaxesPayload } from "../../../modules/webhooks/validate-webhook-payload";
+} from "@/modules/taxes/tax-error";
+import { orderCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/order-calculate-taxes";
+import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
+import { verifyCalculateTaxesPayload } from "@/modules/webhooks/validate-webhook-payload";
 
 export const config = {
   api: {
@@ -331,7 +330,4 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
   }
 });
 
-export default wrapWithLoggerContext(
-  withMetadataCache(wrapWithSpanAttributes(handler)),
-  loggerContext,
-);
+export default compose(withLoggerContext, withMetadataCache, withSpanAttributes)(handler);
