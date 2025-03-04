@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import * as Urql from 'urql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -25054,10 +25053,6 @@ export const UntypedUpdateAppMetadataDocument = gql`
   }
 }
     `;
-
-export function useUpdateAppMetadataMutation() {
-  return Urql.useMutation<UpdateAppMetadataMutation, UpdateAppMetadataMutationVariables>(UntypedUpdateAppMetadataDocument);
-};
 export const UntypedFetchChannelsDocument = gql`
     query FetchChannels {
   channels {
@@ -25067,10 +25062,6 @@ export const UntypedFetchChannelsDocument = gql`
   }
 }
     `;
-
-export function useFetchChannelsQuery(options?: Omit<Urql.UseQueryArgs<FetchChannelsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchChannelsQuery, FetchChannelsQueryVariables>({ query: UntypedFetchChannelsDocument, ...options });
-};
 export const UntypedFetchProductsPaginatedDocument = gql`
     query FetchProductsPaginated($channel: String, $after: String) {
   products(first: 100, channel: $channel, after: $after) {
@@ -25086,10 +25077,6 @@ export const UntypedFetchProductsPaginatedDocument = gql`
   }
 }
     ${UntypedBulkImportProductFragmentDoc}`;
-
-export function useFetchProductsPaginatedQuery(options?: Omit<Urql.UseQueryArgs<FetchProductsPaginatedQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchProductsPaginatedQuery, FetchProductsPaginatedQueryVariables>({ query: UntypedFetchProductsPaginatedDocument, ...options });
-};
 export const UntypedProductUpdatedDocument = gql`
     subscription ProductUpdated {
   event {
@@ -25098,10 +25085,6 @@ export const UntypedProductUpdatedDocument = gql`
 }
     ${UntypedProductUpdatedWebhookPayloadFragmentDoc}
 ${UntypedWebhookProductFragmentDoc}`;
-
-export function useProductUpdatedSubscription<TData = ProductUpdatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductUpdatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductUpdatedSubscription, TData>) {
-  return Urql.useSubscription<ProductUpdatedSubscription, TData, ProductUpdatedSubscriptionVariables>({ query: UntypedProductUpdatedDocument, ...options }, handler);
-};
 export const UntypedProductVariantCreatedDocument = gql`
     subscription ProductVariantCreated {
   event {
@@ -25110,10 +25093,6 @@ export const UntypedProductVariantCreatedDocument = gql`
 }
     ${UntypedProductVariantCreatedWebhookPayloadFragmentDoc}
 ${UntypedWebhookProductVariantFragmentDoc}`;
-
-export function useProductVariantCreatedSubscription<TData = ProductVariantCreatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductVariantCreatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductVariantCreatedSubscription, TData>) {
-  return Urql.useSubscription<ProductVariantCreatedSubscription, TData, ProductVariantCreatedSubscriptionVariables>({ query: UntypedProductVariantCreatedDocument, ...options }, handler);
-};
 export const UntypedProductVariantDeletedDocument = gql`
     subscription ProductVariantDeleted {
   event {
@@ -25122,10 +25101,6 @@ export const UntypedProductVariantDeletedDocument = gql`
 }
     ${UntypedProductVariantDeletedWebhookPayloadFragmentDoc}
 ${UntypedWebhookProductVariantFragmentDoc}`;
-
-export function useProductVariantDeletedSubscription<TData = ProductVariantDeletedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductVariantDeletedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductVariantDeletedSubscription, TData>) {
-  return Urql.useSubscription<ProductVariantDeletedSubscription, TData, ProductVariantDeletedSubscriptionVariables>({ query: UntypedProductVariantDeletedDocument, ...options }, handler);
-};
 export const UntypedProductVariantUpdatedDocument = gql`
     subscription ProductVariantUpdated {
   event {
@@ -25134,10 +25109,6 @@ export const UntypedProductVariantUpdatedDocument = gql`
 }
     ${UntypedProductVariantUpdatedWebhookPayloadFragmentDoc}
 ${UntypedWebhookProductVariantFragmentDoc}`;
-
-export function useProductVariantUpdatedSubscription<TData = ProductVariantUpdatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductVariantUpdatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductVariantUpdatedSubscription, TData>) {
-  return Urql.useSubscription<ProductVariantUpdatedSubscription, TData, ProductVariantUpdatedSubscriptionVariables>({ query: UntypedProductVariantUpdatedDocument, ...options }, handler);
-};
 export const BulkImportProductFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BulkImportProduct"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sku"}},{"kind":"Field","name":{"kind":"Name","value":"channelListings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}}]}}]}}]}}]} as unknown as DocumentNode<BulkImportProductFragment, unknown>;
 export const WebhookProductFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"WebhookProduct"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"channelListings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"channelListings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}}]}}]}}]}}]} as unknown as DocumentNode<WebhookProductFragment, unknown>;
 export const ProductUpdatedWebhookPayloadFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductUpdatedWebhookPayload"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductUpdated"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"WebhookProduct"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"WebhookProduct"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"channelListings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"channelListings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ProductUpdatedWebhookPayloadFragment, unknown>;

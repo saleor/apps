@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import * as Urql from 'urql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -25192,10 +25191,6 @@ export const UntypedUpdateAppMetadataDocument = gql`
   }
 }
     `;
-
-export function useUpdateAppMetadataMutation() {
-  return Urql.useMutation<UpdateAppMetadataMutation, UpdateAppMetadataMutationVariables>(UntypedUpdateAppMetadataDocument);
-};
 export const UntypedFetchAppDetailsDocument = gql`
     query FetchAppDetails {
   app {
@@ -25207,10 +25202,6 @@ export const UntypedFetchAppDetailsDocument = gql`
   }
 }
     `;
-
-export function useFetchAppDetailsQuery(options?: Omit<Urql.UseQueryArgs<FetchAppDetailsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAppDetailsQuery, FetchAppDetailsQueryVariables>({ query: UntypedFetchAppDetailsDocument, ...options });
-};
 export const UntypedCustomerCreatedDocument = gql`
     subscription CustomerCreated {
   event {
@@ -25220,10 +25211,6 @@ export const UntypedCustomerCreatedDocument = gql`
     ${UntypedCustomerCreatedWebhookPayloadFragmentDoc}
 ${UntypedAddressFragmentFragmentDoc}
 ${UntypedMetadataFragmentFragmentDoc}`;
-
-export function useCustomerCreatedSubscription<TData = CustomerCreatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<CustomerCreatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<CustomerCreatedSubscription, TData>) {
-  return Urql.useSubscription<CustomerCreatedSubscription, TData, CustomerCreatedSubscriptionVariables>({ query: UntypedCustomerCreatedDocument, ...options }, handler);
-};
 export const UntypedFulfillmentCreatedDocument = gql`
     subscription FulfillmentCreated {
   event {
@@ -25237,10 +25224,6 @@ ${UntypedMoneyFragmentFragmentDoc}
 ${UntypedOrderFragmentFragmentDoc}
 ${UntypedPaymentFragmentFragmentDoc}
 ${UntypedMetadataFragmentFragmentDoc}`;
-
-export function useFulfillmentCreatedSubscription<TData = FulfillmentCreatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<FulfillmentCreatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<FulfillmentCreatedSubscription, TData>) {
-  return Urql.useSubscription<FulfillmentCreatedSubscription, TData, FulfillmentCreatedSubscriptionVariables>({ query: UntypedFulfillmentCreatedDocument, ...options }, handler);
-};
 export const UntypedOrderCreatedDocument = gql`
     subscription OrderCreated {
   event {
@@ -25254,10 +25237,6 @@ ${UntypedTaxedMoneyFragmentFragmentDoc}
 ${UntypedMoneyFragmentFragmentDoc}
 ${UntypedPaymentFragmentFragmentDoc}
 ${UntypedMetadataFragmentFragmentDoc}`;
-
-export function useOrderCreatedSubscription<TData = OrderCreatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderCreatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderCreatedSubscription, TData>) {
-  return Urql.useSubscription<OrderCreatedSubscription, TData, OrderCreatedSubscriptionVariables>({ query: UntypedOrderCreatedDocument, ...options }, handler);
-};
 export const UntypedOrderFullyPaidDocument = gql`
     subscription OrderFullyPaid {
   event {
@@ -25271,10 +25250,6 @@ ${UntypedTaxedMoneyFragmentFragmentDoc}
 ${UntypedMoneyFragmentFragmentDoc}
 ${UntypedPaymentFragmentFragmentDoc}
 ${UntypedMetadataFragmentFragmentDoc}`;
-
-export function useOrderFullyPaidSubscription<TData = OrderFullyPaidSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderFullyPaidSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderFullyPaidSubscription, TData>) {
-  return Urql.useSubscription<OrderFullyPaidSubscription, TData, OrderFullyPaidSubscriptionVariables>({ query: UntypedOrderFullyPaidDocument, ...options }, handler);
-};
 export const UntypedRemovePrivateMetadataDocument = gql`
     mutation RemovePrivateMetadata($id: ID!, $keys: [String!]!) {
   deletePrivateMetadata(id: $id, keys: $keys) {
@@ -25284,10 +25259,6 @@ export const UntypedRemovePrivateMetadataDocument = gql`
   }
 }
     `;
-
-export function useRemovePrivateMetadataMutation() {
-  return Urql.useMutation<RemovePrivateMetadataMutation, RemovePrivateMetadataMutationVariables>(UntypedRemovePrivateMetadataDocument);
-};
 export const AddressFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AddressFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Address"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"companyName"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress1"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"cityArea"}},{"kind":"Field","name":{"kind":"Name","value":"postalCode"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"countryArea"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}}]} as unknown as DocumentNode<AddressFragmentFragment, unknown>;
 export const MetadataFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MetadataFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MetadataItem"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<MetadataFragmentFragment, unknown>;
 export const CustomerCreatedWebhookPayloadFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CustomerCreatedWebhookPayload"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"CustomerCreated"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"defaultShippingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AddressFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"defaultBillingAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AddressFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"addresses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AddressFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"privateMetadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MetadataFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MetadataFragment"}}]}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"dateJoined"}},{"kind":"Field","name":{"kind":"Name","value":"languageCode"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AddressFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Address"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"companyName"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress1"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"cityArea"}},{"kind":"Field","name":{"kind":"Name","value":"postalCode"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"countryArea"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MetadataFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"MetadataItem"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]} as unknown as DocumentNode<CustomerCreatedWebhookPayloadFragment, unknown>;

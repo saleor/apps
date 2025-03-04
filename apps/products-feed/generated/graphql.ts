@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import * as Urql from 'urql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -21401,10 +21400,6 @@ export const UntypedUpdateCategoryMappingDocument = gql`
   }
 }
     `;
-
-export function useUpdateCategoryMappingMutation() {
-  return Urql.useMutation<UpdateCategoryMappingMutation, UpdateCategoryMappingMutationVariables>(UntypedUpdateCategoryMappingDocument);
-};
 export const UntypedFetchAppDetailsDocument = gql`
     query FetchAppDetails {
   app {
@@ -21416,10 +21411,6 @@ export const UntypedFetchAppDetailsDocument = gql`
   }
 }
     `;
-
-export function useFetchAppDetailsQuery(options?: Omit<Urql.UseQueryArgs<FetchAppDetailsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAppDetailsQuery, FetchAppDetailsQueryVariables>({ query: UntypedFetchAppDetailsDocument, ...options });
-};
 export const UntypedFetchAttributesWithMappingDocument = gql`
     query FetchAttributesWithMapping($cursor: String) {
   attributes(first: 100, after: $cursor) {
@@ -21435,10 +21426,6 @@ export const UntypedFetchAttributesWithMappingDocument = gql`
   }
 }
     ${UntypedAttributeWithMappingFragmentFragmentDoc}`;
-
-export function useFetchAttributesWithMappingQuery(options?: Omit<Urql.UseQueryArgs<FetchAttributesWithMappingQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAttributesWithMappingQuery, FetchAttributesWithMappingQueryVariables>({ query: UntypedFetchAttributesWithMappingDocument, ...options });
-};
 export const UntypedFetchBasicProductDataDocument = gql`
     query FetchBasicProductData($first: Int!, $after: String, $channel: String!) {
   productVariants(first: $first, after: $after, channel: $channel) {
@@ -21454,10 +21441,6 @@ export const UntypedFetchBasicProductDataDocument = gql`
   }
 }
     ${UntypedBasicProductDataFragmentDoc}`;
-
-export function useFetchBasicProductDataQuery(options: Omit<Urql.UseQueryArgs<FetchBasicProductDataQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchBasicProductDataQuery, FetchBasicProductDataQueryVariables>({ query: UntypedFetchBasicProductDataDocument, ...options });
-};
 export const UntypedFetchCategoriesWithMappingDocument = gql`
     query FetchCategoriesWithMapping($cursor: String) {
   categories(first: 100, after: $cursor) {
@@ -21473,10 +21456,6 @@ export const UntypedFetchCategoriesWithMappingDocument = gql`
   }
 }
     ${UntypedCategoryWithMappingFragmentFragmentDoc}`;
-
-export function useFetchCategoriesWithMappingQuery(options?: Omit<Urql.UseQueryArgs<FetchCategoriesWithMappingQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchCategoriesWithMappingQuery, FetchCategoriesWithMappingQueryVariables>({ query: UntypedFetchCategoriesWithMappingDocument, ...options });
-};
 export const UntypedFetchProductAttributesDataDocument = gql`
     query FetchProductAttributesData($first: Int!, $after: String, $channel: String!) {
   productVariants(first: $first, after: $after, channel: $channel) {
@@ -21492,10 +21471,6 @@ export const UntypedFetchProductAttributesDataDocument = gql`
   }
 }
     ${UntypedProductAttributesFragmentDoc}`;
-
-export function useFetchProductAttributesDataQuery(options: Omit<Urql.UseQueryArgs<FetchProductAttributesDataQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchProductAttributesDataQuery, FetchProductAttributesDataQueryVariables>({ query: UntypedFetchProductAttributesDataDocument, ...options });
-};
 export const UntypedFetchProductCursorsDocument = gql`
     query FetchProductCursors($first: Int!, $after: String, $channel: String!) {
   productVariants(first: $first, after: $after, channel: $channel) {
@@ -21507,10 +21482,6 @@ export const UntypedFetchProductCursorsDocument = gql`
   }
 }
     `;
-
-export function useFetchProductCursorsQuery(options: Omit<Urql.UseQueryArgs<FetchProductCursorsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchProductCursorsQuery, FetchProductCursorsQueryVariables>({ query: UntypedFetchProductCursorsDocument, ...options });
-};
 export const UntypedFetchRelatedProductsDataDocument = gql`
     query FetchRelatedProductsData($ids: [ID!], $imageSize: Int = 1024) {
   products(filter: {ids: $ids}, first: 100) {
@@ -21522,10 +21493,6 @@ export const UntypedFetchRelatedProductsDataDocument = gql`
   }
 }
     ${UntypedRelatedProductsFragmentDoc}`;
-
-export function useFetchRelatedProductsDataQuery(options?: Omit<Urql.UseQueryArgs<FetchRelatedProductsDataQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchRelatedProductsDataQuery, FetchRelatedProductsDataQueryVariables>({ query: UntypedFetchRelatedProductsDataDocument, ...options });
-};
 export const UntypedShopDetailsDocument = gql`
     query ShopDetails {
   shop {
@@ -21534,10 +21501,6 @@ export const UntypedShopDetailsDocument = gql`
   }
 }
     `;
-
-export function useShopDetailsQuery(options?: Omit<Urql.UseQueryArgs<ShopDetailsQueryVariables>, 'query'>) {
-  return Urql.useQuery<ShopDetailsQuery, ShopDetailsQueryVariables>({ query: UntypedShopDetailsDocument, ...options });
-};
 export const UntypedUpdateAppMetadataDocument = gql`
     mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
   updatePrivateMetadata(id: $id, input: $input) {
@@ -21550,10 +21513,6 @@ export const UntypedUpdateAppMetadataDocument = gql`
   }
 }
     `;
-
-export function useUpdateAppMetadataMutation() {
-  return Urql.useMutation<UpdateAppMetadataMutation, UpdateAppMetadataMutationVariables>(UntypedUpdateAppMetadataDocument);
-};
 export const UntypedFetchChannelsDocument = gql`
     query FetchChannels {
   channels {
@@ -21561,10 +21520,6 @@ export const UntypedFetchChannelsDocument = gql`
   }
 }
     ${UntypedChannelFragmentDoc}`;
-
-export function useFetchChannelsQuery(options?: Omit<Urql.UseQueryArgs<FetchChannelsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchChannelsQuery, FetchChannelsQueryVariables>({ query: UntypedFetchChannelsDocument, ...options });
-};
 export const AttributeWithMappingFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AttributeWithMappingFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Attribute"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]} as unknown as DocumentNode<AttributeWithMappingFragmentFragment, unknown>;
 export const BasicProductDataFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"BasicProductData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ProductVariant"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"sku"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"weight"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unit"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pricing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"priceUndiscounted"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"quantityAvailable"}}]}}]} as unknown as DocumentNode<BasicProductDataFragment, unknown>;
 export const CategoryWithMappingFragmentFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CategoryWithMappingFragment"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Category"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"parent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"parent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","alias":{"kind":"Name","value":"googleCategoryId"},"name":{"kind":"Name","value":"metafield"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"key"},"value":{"kind":"StringValue","value":"google_category_id","block":false}}]}]}}]} as unknown as DocumentNode<CategoryWithMappingFragmentFragment, unknown>;

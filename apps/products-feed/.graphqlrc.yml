@@ -13,6 +13,7 @@ extensions:
           - typescript-urql:
               documentVariablePrefix: "Untyped"
               fragmentVariablePrefix: "Untyped"
+              withHooks: false
           - typed-document-node
       generated/schema.graphql:
         plugins:
