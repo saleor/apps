@@ -1,6 +1,6 @@
 {
   "name": "@saleor/trpc",
-  "version": "3.0.4",
+  "version": "4.0.0",
   "scripts": {
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
