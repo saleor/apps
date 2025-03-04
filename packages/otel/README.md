@@ -11,10 +11,10 @@ Shared package with [Open Telemetry](https://opentelemetry.io/) (OTEL) related h
 ```
 OTEL_SERVICE_NAME=saleor-app- # name of the app - the same as in package.json
 OTEL_ENABLED=true
-OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 # OTEL collector endpoint
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318 # OTEL collector endpoint (http protocol)
 OTEL_TRACES_SAMPLER=traceidratio
 OTEL_TRACES_SAMPLER_ARG=1 # Otherwise you won't see all traces
-NEXT_RUNTIME=nodejs
+OTEL_ACCESS_TOKEN=token
 ```
 
 > [!IMPORTANT]
