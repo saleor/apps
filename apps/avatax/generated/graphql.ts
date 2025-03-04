@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import * as Urql from 'urql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -34888,10 +34887,6 @@ export const UntypedUpdatePrivateMetadataDocument = gql`
   }
 }
     `;
-
-export function useUpdatePrivateMetadataMutation() {
-  return Urql.useMutation<UpdatePrivateMetadataMutation, UpdatePrivateMetadataMutationVariables>(UntypedUpdatePrivateMetadataDocument);
-};
 export const UntypedUpdatePublicMetadataDocument = gql`
     mutation UpdatePublicMetadata($id: ID!, $input: [MetadataInput!]!) {
   updateMetadata(id: $id, input: $input) {
@@ -34908,10 +34903,6 @@ export const UntypedUpdatePublicMetadataDocument = gql`
   }
 }
     `;
-
-export function useUpdatePublicMetadataMutation() {
-  return Urql.useMutation<UpdatePublicMetadataMutation, UpdatePublicMetadataMutationVariables>(UntypedUpdatePublicMetadataDocument);
-};
 export const UntypedFetchAppDetailsDocument = gql`
     query FetchAppDetails {
   app {
@@ -34923,10 +34914,6 @@ export const UntypedFetchAppDetailsDocument = gql`
   }
 }
     `;
-
-export function useFetchAppDetailsQuery(options?: Omit<Urql.UseQueryArgs<FetchAppDetailsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAppDetailsQuery, FetchAppDetailsQueryVariables>({ query: UntypedFetchAppDetailsDocument, ...options });
-};
 export const UntypedFetchAppMetafieldsDocument = gql`
     query FetchAppMetafields($keys: [String!]) {
   app {
@@ -34935,10 +34922,6 @@ export const UntypedFetchAppMetafieldsDocument = gql`
   }
 }
     `;
-
-export function useFetchAppMetafieldsQuery(options?: Omit<Urql.UseQueryArgs<FetchAppMetafieldsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAppMetafieldsQuery, FetchAppMetafieldsQueryVariables>({ query: UntypedFetchAppMetafieldsDocument, ...options });
-};
 export const UntypedChannelDocument = gql`
     query Channel($id: ID!) {
   channel(id: $id) {
@@ -34946,10 +34929,6 @@ export const UntypedChannelDocument = gql`
   }
 }
     ${UntypedChannelFragmentDoc}`;
-
-export function useChannelQuery(options: Omit<Urql.UseQueryArgs<ChannelQueryVariables>, 'query'>) {
-  return Urql.useQuery<ChannelQuery, ChannelQueryVariables>({ query: UntypedChannelDocument, ...options });
-};
 export const UntypedFetchChannelsDocument = gql`
     query FetchChannels {
   channels {
@@ -34957,10 +34936,6 @@ export const UntypedFetchChannelsDocument = gql`
   }
 }
     ${UntypedChannelFragmentDoc}`;
-
-export function useFetchChannelsQuery(options?: Omit<Urql.UseQueryArgs<FetchChannelsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchChannelsQuery, FetchChannelsQueryVariables>({ query: UntypedFetchChannelsDocument, ...options });
-};
 export const UntypedTaxClassesListDocument = gql`
     query TaxClassesList($before: String, $after: String, $first: Int, $last: Int, $filter: TaxClassFilterInput, $sortBy: TaxClassSortingInput) {
   taxClasses(
@@ -34979,10 +34954,6 @@ export const UntypedTaxClassesListDocument = gql`
   }
 }
     ${UntypedTaxClassFragmentDoc}`;
-
-export function useTaxClassesListQuery(options?: Omit<Urql.UseQueryArgs<TaxClassesListQueryVariables>, 'query'>) {
-  return Urql.useQuery<TaxClassesListQuery, TaxClassesListQueryVariables>({ query: UntypedTaxClassesListDocument, ...options });
-};
 export const UntypedTaxConfigurationsListDocument = gql`
     query TaxConfigurationsList($before: String, $after: String, $first: Int, $last: Int, $filter: TaxConfigurationFilterInput) {
   taxConfigurations(
@@ -35003,10 +34974,6 @@ export const UntypedTaxConfigurationsListDocument = gql`
   }
 }
     ${UntypedTaxConfigurationFragmentDoc}`;
-
-export function useTaxConfigurationsListQuery(options?: Omit<Urql.UseQueryArgs<TaxConfigurationsListQueryVariables>, 'query'>) {
-  return Urql.useQuery<TaxConfigurationsListQuery, TaxConfigurationsListQueryVariables>({ query: UntypedTaxConfigurationsListDocument, ...options });
-};
 export const UntypedCalculateTaxesDocument = gql`
     subscription CalculateTaxes {
   event {
@@ -35014,10 +34981,6 @@ export const UntypedCalculateTaxesDocument = gql`
   }
 }
     ${UntypedCalculateTaxesEventFragmentDoc}`;
-
-export function useCalculateTaxesSubscription<TData = CalculateTaxesSubscription>(options?: Omit<Urql.UseSubscriptionArgs<CalculateTaxesSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<CalculateTaxesSubscription, TData>) {
-  return Urql.useSubscription<CalculateTaxesSubscription, TData, CalculateTaxesSubscriptionVariables>({ query: UntypedCalculateTaxesDocument, ...options }, handler);
-};
 export const UntypedOrderCancelledSubscriptionDocument = gql`
     subscription OrderCancelledSubscription {
   event {
@@ -35025,10 +34988,6 @@ export const UntypedOrderCancelledSubscriptionDocument = gql`
   }
 }
     ${UntypedOrderCancelledEventSubscriptionFragmentDoc}`;
-
-export function useOrderCancelledSubscriptionSubscription<TData = OrderCancelledSubscriptionSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderCancelledSubscriptionSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderCancelledSubscriptionSubscription, TData>) {
-  return Urql.useSubscription<OrderCancelledSubscriptionSubscription, TData, OrderCancelledSubscriptionSubscriptionVariables>({ query: UntypedOrderCancelledSubscriptionDocument, ...options }, handler);
-};
 export const UntypedOrderConfirmedSubscriptionDocument = gql`
     subscription OrderConfirmedSubscription {
   event {
@@ -35036,10 +34995,6 @@ export const UntypedOrderConfirmedSubscriptionDocument = gql`
   }
 }
     ${UntypedOrderConfirmedEventSubscriptionFragmentDoc}`;
-
-export function useOrderConfirmedSubscriptionSubscription<TData = OrderConfirmedSubscriptionSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderConfirmedSubscriptionSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderConfirmedSubscriptionSubscription, TData>) {
-  return Urql.useSubscription<OrderConfirmedSubscriptionSubscription, TData, OrderConfirmedSubscriptionSubscriptionVariables>({ query: UntypedOrderConfirmedSubscriptionDocument, ...options }, handler);
-};
 export const UntypedUpdateAppMetadataDocument = gql`
     mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
   updatePrivateMetadata(id: $id, input: $input) {
@@ -35052,10 +35007,6 @@ export const UntypedUpdateAppMetadataDocument = gql`
   }
 }
     `;
-
-export function useUpdateAppMetadataMutation() {
-  return Urql.useMutation<UpdateAppMetadataMutation, UpdateAppMetadataMutationVariables>(UntypedUpdateAppMetadataDocument);
-};
 export const WebhookMetadataFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"WebhookMetadata"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"issuedAt"}},{"kind":"Field","name":{"kind":"Name","value":"version"}}]}}]} as unknown as DocumentNode<WebhookMetadataFragment, unknown>;
 export const TaxDiscountFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TaxDiscount"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TaxableObjectDiscount"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]} as unknown as DocumentNode<TaxDiscountFragment, unknown>;
 export const AddressFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Address"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Address"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"streetAddress1"}},{"kind":"Field","name":{"kind":"Name","value":"streetAddress2"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"countryArea"}},{"kind":"Field","name":{"kind":"Name","value":"postalCode"}},{"kind":"Field","name":{"kind":"Name","value":"country"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]} as unknown as DocumentNode<AddressFragment, unknown>;

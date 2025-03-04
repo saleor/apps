@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import * as Urql from 'urql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -23020,10 +23019,6 @@ export const UntypedCreateWebhookDocument = gql`
   }
 }
     `;
-
-export function useCreateWebhookMutation() {
-  return Urql.useMutation<CreateWebhookMutation, CreateWebhookMutationVariables>(UntypedCreateWebhookDocument);
-};
 export const UntypedDisableWebhookDocument = gql`
     mutation DisableWebhook($id: ID!) {
   webhookUpdate(id: $id, input: {isActive: false}) {
@@ -23037,10 +23032,6 @@ export const UntypedDisableWebhookDocument = gql`
   }
 }
     `;
-
-export function useDisableWebhookMutation() {
-  return Urql.useMutation<DisableWebhookMutation, DisableWebhookMutationVariables>(UntypedDisableWebhookDocument);
-};
 export const UntypedEnableWebhookDocument = gql`
     mutation EnableWebhook($id: ID!) {
   webhookUpdate(id: $id, input: {isActive: true}) {
@@ -23054,10 +23045,6 @@ export const UntypedEnableWebhookDocument = gql`
   }
 }
     `;
-
-export function useEnableWebhookMutation() {
-  return Urql.useMutation<EnableWebhookMutation, EnableWebhookMutationVariables>(UntypedEnableWebhookDocument);
-};
 export const UntypedRemoveWebhookDocument = gql`
     mutation RemoveWebhook($id: ID!) {
   webhookDelete(id: $id) {
@@ -23068,10 +23055,6 @@ export const UntypedRemoveWebhookDocument = gql`
   }
 }
     `;
-
-export function useRemoveWebhookMutation() {
-  return Urql.useMutation<RemoveWebhookMutation, RemoveWebhookMutationVariables>(UntypedRemoveWebhookDocument);
-};
 export const UntypedUpdateAppMetadataDocument = gql`
     mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
   updatePrivateMetadata(id: $id, input: $input) {
@@ -23084,10 +23067,6 @@ export const UntypedUpdateAppMetadataDocument = gql`
   }
 }
     `;
-
-export function useUpdateAppMetadataMutation() {
-  return Urql.useMutation<UpdateAppMetadataMutation, UpdateAppMetadataMutationVariables>(UntypedUpdateAppMetadataDocument);
-};
 export const UntypedChannelsDocument = gql`
     query Channels {
   channels {
@@ -23096,10 +23075,6 @@ export const UntypedChannelsDocument = gql`
   }
 }
     `;
-
-export function useChannelsQuery(options?: Omit<Urql.UseQueryArgs<ChannelsQueryVariables>, 'query'>) {
-  return Urql.useQuery<ChannelsQuery, ChannelsQueryVariables>({ query: UntypedChannelsDocument, ...options });
-};
 export const UntypedFetchAppDetailsDocument = gql`
     query FetchAppDetails {
   app {
@@ -23111,10 +23086,6 @@ export const UntypedFetchAppDetailsDocument = gql`
   }
 }
     `;
-
-export function useFetchAppDetailsQuery(options?: Omit<Urql.UseQueryArgs<FetchAppDetailsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAppDetailsQuery, FetchAppDetailsQueryVariables>({ query: UntypedFetchAppDetailsDocument, ...options });
-};
 export const UntypedFetchOwnWebhooksDocument = gql`
     query FetchOwnWebhooks($id: ID!) {
   app(id: $id) {
@@ -23127,10 +23098,6 @@ export const UntypedFetchOwnWebhooksDocument = gql`
   }
 }
     ${UntypedOwnWebhookFragmentDoc}`;
-
-export function useFetchOwnWebhooksQuery(options: Omit<Urql.UseQueryArgs<FetchOwnWebhooksQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchOwnWebhooksQuery, FetchOwnWebhooksQueryVariables>({ query: UntypedFetchOwnWebhooksDocument, ...options });
-};
 export const UntypedProductsDataForImportDocument = gql`
     query ProductsDataForImport($first: Int, $channel: String, $after: String) {
   products(first: $first, channel: $channel, after: $after) {
@@ -23149,10 +23116,6 @@ export const UntypedProductsDataForImportDocument = gql`
 ${UntypedProductVariantDataFragmentDoc}
 ${UntypedProductAttributesDataFragmentDoc}
 ${UntypedProductDataFragmentDoc}`;
-
-export function useProductsDataForImportQuery(options?: Omit<Urql.UseQueryArgs<ProductsDataForImportQueryVariables>, 'query'>) {
-  return Urql.useQuery<ProductsDataForImportQuery, ProductsDataForImportQueryVariables>({ query: UntypedProductsDataForImportDocument, ...options });
-};
 export const UntypedProductCreatedDocument = gql`
     subscription ProductCreated {
   event {
@@ -23174,10 +23137,6 @@ export const UntypedProductCreatedDocument = gql`
 ${UntypedProductVariantDataFragmentDoc}
 ${UntypedProductAttributesDataFragmentDoc}
 ${UntypedProductDataFragmentDoc}`;
-
-export function useProductCreatedSubscription<TData = ProductCreatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductCreatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductCreatedSubscription, TData>) {
-  return Urql.useSubscription<ProductCreatedSubscription, TData, ProductCreatedSubscriptionVariables>({ query: UntypedProductCreatedDocument, ...options }, handler);
-};
 export const UntypedProductDeletedDocument = gql`
     subscription ProductDeleted {
   event {
@@ -23202,10 +23161,6 @@ export const UntypedProductDeletedDocument = gql`
   }
 }
     `;
-
-export function useProductDeletedSubscription<TData = ProductDeletedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductDeletedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductDeletedSubscription, TData>) {
-  return Urql.useSubscription<ProductDeletedSubscription, TData, ProductDeletedSubscriptionVariables>({ query: UntypedProductDeletedDocument, ...options }, handler);
-};
 export const UntypedProductUpdatedDocument = gql`
     subscription ProductUpdated {
   event {
@@ -23227,10 +23182,6 @@ export const UntypedProductUpdatedDocument = gql`
 ${UntypedProductVariantDataFragmentDoc}
 ${UntypedProductAttributesDataFragmentDoc}
 ${UntypedProductDataFragmentDoc}`;
-
-export function useProductUpdatedSubscription<TData = ProductUpdatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductUpdatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductUpdatedSubscription, TData>) {
-  return Urql.useSubscription<ProductUpdatedSubscription, TData, ProductUpdatedSubscriptionVariables>({ query: UntypedProductUpdatedDocument, ...options }, handler);
-};
 export const UntypedProductVariantBackInStockDocument = gql`
     subscription ProductVariantBackInStock {
   event {
@@ -23252,10 +23203,6 @@ export const UntypedProductVariantBackInStockDocument = gql`
 ${UntypedProductVariantDataFragmentDoc}
 ${UntypedProductAttributesDataFragmentDoc}
 ${UntypedProductDataFragmentDoc}`;
-
-export function useProductVariantBackInStockSubscription<TData = ProductVariantBackInStockSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductVariantBackInStockSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductVariantBackInStockSubscription, TData>) {
-  return Urql.useSubscription<ProductVariantBackInStockSubscription, TData, ProductVariantBackInStockSubscriptionVariables>({ query: UntypedProductVariantBackInStockDocument, ...options }, handler);
-};
 export const UntypedProductVariantCreatedDocument = gql`
     subscription ProductVariantCreated {
   event {
@@ -23277,10 +23224,6 @@ export const UntypedProductVariantCreatedDocument = gql`
 ${UntypedProductVariantDataFragmentDoc}
 ${UntypedProductAttributesDataFragmentDoc}
 ${UntypedProductDataFragmentDoc}`;
-
-export function useProductVariantCreatedSubscription<TData = ProductVariantCreatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductVariantCreatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductVariantCreatedSubscription, TData>) {
-  return Urql.useSubscription<ProductVariantCreatedSubscription, TData, ProductVariantCreatedSubscriptionVariables>({ query: UntypedProductVariantCreatedDocument, ...options }, handler);
-};
 export const UntypedProductVariantDeletedDocument = gql`
     subscription ProductVariantDeleted {
   event {
@@ -23301,10 +23244,6 @@ export const UntypedProductVariantDeletedDocument = gql`
   }
 }
     `;
-
-export function useProductVariantDeletedSubscription<TData = ProductVariantDeletedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductVariantDeletedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductVariantDeletedSubscription, TData>) {
-  return Urql.useSubscription<ProductVariantDeletedSubscription, TData, ProductVariantDeletedSubscriptionVariables>({ query: UntypedProductVariantDeletedDocument, ...options }, handler);
-};
 export const UntypedProductVariantOutOfStockDocument = gql`
     subscription ProductVariantOutOfStock {
   event {
@@ -23326,10 +23265,6 @@ export const UntypedProductVariantOutOfStockDocument = gql`
 ${UntypedProductVariantDataFragmentDoc}
 ${UntypedProductAttributesDataFragmentDoc}
 ${UntypedProductDataFragmentDoc}`;
-
-export function useProductVariantOutOfStockSubscription<TData = ProductVariantOutOfStockSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductVariantOutOfStockSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductVariantOutOfStockSubscription, TData>) {
-  return Urql.useSubscription<ProductVariantOutOfStockSubscription, TData, ProductVariantOutOfStockSubscriptionVariables>({ query: UntypedProductVariantOutOfStockDocument, ...options }, handler);
-};
 export const UntypedProductVariantUpdatedDocument = gql`
     subscription ProductVariantUpdated {
   event {
@@ -23351,10 +23286,6 @@ export const UntypedProductVariantUpdatedDocument = gql`
 ${UntypedProductVariantDataFragmentDoc}
 ${UntypedProductAttributesDataFragmentDoc}
 ${UntypedProductDataFragmentDoc}`;
-
-export function useProductVariantUpdatedSubscription<TData = ProductVariantUpdatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<ProductVariantUpdatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<ProductVariantUpdatedSubscription, TData>) {
-  return Urql.useSubscription<ProductVariantUpdatedSubscription, TData, ProductVariantUpdatedSubscriptionVariables>({ query: UntypedProductVariantUpdatedDocument, ...options }, handler);
-};
 export const OwnWebhookFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OwnWebhook"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Webhook"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"targetUrl"}},{"kind":"Field","name":{"kind":"Name","value":"asyncEvents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}}]}},{"kind":"Field","name":{"kind":"Name","value":"eventDeliveries"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"attempts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"100"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"responseStatusCode"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<OwnWebhookFragment, unknown>;
 export const ProductAttributesDataFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductAttributesData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SelectedAttribute"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"attribute"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"values"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"boolean"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"inputType"}}]}}]}}]} as unknown as DocumentNode<ProductAttributesDataFragment, unknown>;
 export const ProductDataFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Product"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"variants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"parent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"parent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"parent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"parent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"thumbnail"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"media"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductAttributesData"}}]}},{"kind":"Field","name":{"kind":"Name","value":"channelListings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pricing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"priceRangeUndiscounted"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"start"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"net"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"stop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"net"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"priceRange"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"start"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"net"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"stop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"net"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"visibleInListings"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"currencyCode"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductAttributesData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SelectedAttribute"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"attribute"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"values"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"boolean"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"inputType"}}]}}]}}]} as unknown as DocumentNode<ProductDataFragment, unknown>;
