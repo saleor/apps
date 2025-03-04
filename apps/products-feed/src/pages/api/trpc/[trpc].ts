@@ -1,6 +1,6 @@
 import { createProtectedHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import * as trpcNext from "@trpc/server/adapters/next";
 
 import { createLogger } from "../../../logger";
@@ -24,7 +24,7 @@ const handler = trpcNext.createNextApiHandler({
 });
 
 export default createProtectedHandler(
-  wrapWithLoggerContext(wrapWithSpanAttributes(handler), loggerContext),
+  wrapWithLoggerContext(withSpanAttributes(handler), loggerContext),
   saleorApp.apl,
   ["MANAGE_APPS"],
 );

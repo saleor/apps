@@ -1,14 +1,14 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
 import { loggerContext } from "../../lib/logger-context";
 
 export default wrapWithLoggerContext(
-  wrapWithSpanAttributes(
+  withSpanAttributes(
     createManifestHandler({
       async manifestFactory({ appBaseUrl }) {
         const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;

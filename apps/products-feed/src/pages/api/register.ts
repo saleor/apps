@@ -1,6 +1,6 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import { loggerContext } from "../../logger-context";
 import { saleorApp } from "../../saleor-app";
@@ -12,7 +12,7 @@ const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
  * It will exchange tokens with app, so saleorApp.apl will contain token
  */
 export default wrapWithLoggerContext(
-  wrapWithSpanAttributes(
+  withSpanAttributes(
     createAppRegisterHandler({
       apl: saleorApp.apl,
       allowedSaleorUrls: [

@@ -2,7 +2,7 @@ import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { createGraphQLClient } from "@saleor/apps-shared";
 
 import { saleorApp } from "../../../saleor-app";
@@ -93,6 +93,6 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
 };
 
 export default wrapWithLoggerContext(
-  wrapWithSpanAttributes(createProtectedHandler(handler, saleorApp.apl, ["MANAGE_APPS"])),
+  withSpanAttributes(createProtectedHandler(handler, saleorApp.apl, ["MANAGE_APPS"])),
   loggerContext,
 );

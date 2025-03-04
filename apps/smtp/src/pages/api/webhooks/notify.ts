@@ -1,6 +1,6 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
 
 import { notifyEventMapping, NotifySubscriptionPayload } from "../../../lib/notify-event-types";
@@ -111,7 +111,7 @@ const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, re
 };
 
 export default wrapWithLoggerContext(
-  wrapWithSpanAttributes(notifyWebhook.createHandler(handler)),
+  withSpanAttributes(notifyWebhook.createHandler(handler)),
   loggerContext,
 );
 
