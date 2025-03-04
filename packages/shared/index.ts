@@ -1,3 +1,4 @@
+export * from "./src/compose";
 export * from "./src/create-graphql-client";
 export * from "./src/editor-js/editor-js-plaintext-renderer";
 export * from "./src/get-app-base-url";

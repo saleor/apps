@@ -1,6 +1,6 @@
 import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import { ProductVariantOutOfStock } from "../../../../../generated/graphql";
 import { createLogger } from "../../../../lib/logger";
@@ -62,6 +62,6 @@ export const handler: NextWebhookApiHandler<ProductVariantOutOfStock> = async (
 };
 
 export default wrapWithLoggerContext(
-  wrapWithSpanAttributes(webhookProductVariantOutOfStock.createHandler(handler)),
+  withSpanAttributes(webhookProductVariantOutOfStock.createHandler(handler)),
   loggerContext,
 );

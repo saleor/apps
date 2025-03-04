@@ -1,7 +1,7 @@
 import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
 import { gql } from "urql";
 
@@ -126,7 +126,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 };
 
 export default wrapWithLoggerContext(
-  wrapWithSpanAttributes(orderCreatedWebhook.createHandler(handler)),
+  withSpanAttributes(orderCreatedWebhook.createHandler(handler)),
   loggerContext,
 );
 

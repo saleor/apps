@@ -1,7 +1,7 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import packageJson from "../../../package.json";
 import { loggerContext } from "../../logger-context";
@@ -67,4 +67,4 @@ const handler = createManifestHandler({
   },
 });
 
-export default wrapWithLoggerContext(wrapWithSpanAttributes(handler), loggerContext);
+export default wrapWithLoggerContext(withSpanAttributes(handler), loggerContext);

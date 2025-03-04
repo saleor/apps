@@ -1,27 +1,26 @@
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { wrapWithSpanAttributes } from "@saleor/apps-otel/src/wrap-with-span-attributes";
+import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { compose } from "@saleor/apps-shared";
 import * as Sentry from "@sentry/nextjs";
 import { captureException } from "@sentry/nextjs";
 
+import { AppConfigExtractor } from "@/lib/app-config-extractor";
+import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
+import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
+import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { createLogger } from "@/logger";
+import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
 import { createAvaTaxOrderCancelledAdapterFromConfig } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter-factory";
 import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
-import { AvataxTransactionAlreadyCancelledError } from "@/modules/taxes/tax-error";
-
-import { AppConfigExtractor } from "../../../lib/app-config-extractor";
-import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
-import { metadataCache, wrapWithMetadataCache } from "../../../lib/app-metadata-cache";
-import { SubscriptionPayloadErrorChecker } from "../../../lib/error-utils";
-import { createLogger } from "../../../logger";
-import { loggerContext } from "../../../logger-context";
-import { SaleorCancelledOrderEvent } from "../../../modules/saleor";
+import { SaleorCancelledOrderEvent } from "@/modules/saleor";
 import {
   OrderCancelNoAvataxIdError,
   OrderCancelPayloadOrderError,
-} from "../../../modules/saleor/order-cancelled/errors";
-import { orderCancelledAsyncWebhook } from "../../../modules/webhooks/definitions/order-cancelled";
+} from "@/modules/saleor/order-cancelled/errors";
+import { AvataxTransactionAlreadyCancelledError } from "@/modules/taxes/tax-error";
+import { orderCancelledAsyncWebhook } from "@/modules/webhooks/definitions/order-cancelled";
 
 export const config = {
   api: {
@@ -249,7 +248,4 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
   return res.status(200).end();
 });
 
-export default wrapWithLoggerContext(
-  withMetadataCache(wrapWithSpanAttributes(handler)),
-  loggerContext,
-);
+export default compose(withLoggerContext, withMetadataCache, withSpanAttributes)(handler);
