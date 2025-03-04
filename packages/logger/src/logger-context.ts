@@ -1,7 +1,6 @@
 import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/const";
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { NextMiddleware, NextRequest, NextResponse } from "next/server";
 
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();

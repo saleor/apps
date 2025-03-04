@@ -1,5 +1,3 @@
-"use client";
-
 import { WebhookContext } from "@saleor/app-sdk/handlers/shared";
 import { wrapWithLoggerContextAppRouter } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
@@ -114,13 +112,11 @@ const handler = async (req: Request, context: Ctx): Promise<Response> => {
   }
 };
 
-/*
- * const wrapWithLogger = wrapWithLoggerContextAppRouter(loggerContext);
- *
- * const composedHandler = wrapWithLogger(
- *   wrapWithSpanAttributesAppRouter(orderCancelledAsyncWebhook.createHandler(handler)),
- * );
- */
+const wrapWithLogger = wrapWithLoggerContextAppRouter(loggerContext);
 
-export const POST = orderCancelledAsyncWebhook.createHandler(handler);
-// export const POST = composedHandler;
+const composedHandler = wrapWithLogger(
+  wrapWithSpanAttributesAppRouter(orderCancelledAsyncWebhook.createHandler(handler)),
+);
+
+// export const POST = orderCancelledAsyncWebhook.createHandler(handler);
+export const POST = composedHandler;

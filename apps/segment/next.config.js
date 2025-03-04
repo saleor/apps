@@ -12,6 +12,7 @@ const nextConfig = {
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
   ],
+
   experimental: {
     optimizePackageImports: [
       "@sentry/nextjs",
@@ -23,9 +24,8 @@ const nextConfig = {
       "@trpc/next",
       "@saleor/apps-shared",
     ],
-    bundlePagesExternals: true,
-    instrumentationHook: true,
   },
+  bundlePagesExternals: true,
   /*
    * Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
    * Remove when https://github.com/open-telemetry/opentelemetry-js/pull/4660 is released
