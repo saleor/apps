@@ -1,3 +1,4 @@
+import { NextAppRouterWebhookHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { WebhookContext } from "@saleor/app-sdk/handlers/shared";
 import { wrapWithLoggerContextAppRouter } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
@@ -26,8 +27,10 @@ type Ctx = WebhookContext<OrderUpdatedSubscriptionPayloadFragment>;
  * todo handler export is missing from sdk
  * todo we need generics or something, to ensure response is NextResponse here
  */
-const handler = async (req: Request, context: Ctx): Promise<Response> => {
-  console.log("HANDLER");
+const handler: NextAppRouterWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = async (
+  req: Request,
+  context: Ctx,
+): Promise<Response> => {
   try {
     const { authData, payload } = context;
 
@@ -118,5 +121,4 @@ const composedHandler = wrapWithLogger(
   wrapWithSpanAttributesAppRouter(orderCancelledAsyncWebhook.createHandler(handler)),
 );
 
-// export const POST = orderCancelledAsyncWebhook.createHandler(handler);
 export const POST = composedHandler;

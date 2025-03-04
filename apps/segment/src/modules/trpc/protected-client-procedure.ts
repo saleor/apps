@@ -1,5 +1,5 @@
+import { verifyJWT } from "@saleor/app-sdk/auth";
 import { Permission } from "@saleor/app-sdk/types";
-import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
 import { createGraphQLClient } from "@saleor/apps-shared";
 import { TRPCError } from "@trpc/server";
 
