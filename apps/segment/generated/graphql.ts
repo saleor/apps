@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import * as Urql from 'urql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -33244,10 +33243,6 @@ export const UntypedEnableWebhookDocument = gql`
   }
 }
     `;
-
-export function useEnableWebhookMutation() {
-  return Urql.useMutation<EnableWebhookMutation, EnableWebhookMutationVariables>(UntypedEnableWebhookDocument);
-};
 export const UntypedUpdateAppMetadataDocument = gql`
     mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
   updatePrivateMetadata(id: $id, input: $input) {
@@ -33260,10 +33255,6 @@ export const UntypedUpdateAppMetadataDocument = gql`
   }
 }
     `;
-
-export function useUpdateAppMetadataMutation() {
-  return Urql.useMutation<UpdateAppMetadataMutation, UpdateAppMetadataMutationVariables>(UntypedUpdateAppMetadataDocument);
-};
 export const UntypedFetchAppWebhooksDocument = gql`
     query FetchAppWebhooks($id: ID!) {
   app(id: $id) {
@@ -33274,10 +33265,6 @@ export const UntypedFetchAppWebhooksDocument = gql`
   }
 }
     `;
-
-export function useFetchAppWebhooksQuery(options: Omit<Urql.UseQueryArgs<FetchAppWebhooksQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAppWebhooksQuery, FetchAppWebhooksQueryVariables>({ query: UntypedFetchAppWebhooksDocument, ...options });
-};
 export const UntypedOrderCancelledDocument = gql`
     subscription OrderCancelled {
   event {
@@ -33285,10 +33272,6 @@ export const UntypedOrderCancelledDocument = gql`
   }
 }
     ${UntypedOrderCancelledSubscriptionPayloadFragmentDoc}`;
-
-export function useOrderCancelledSubscription<TData = OrderCancelledSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderCancelledSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderCancelledSubscription, TData>) {
-  return Urql.useSubscription<OrderCancelledSubscription, TData, OrderCancelledSubscriptionVariables>({ query: UntypedOrderCancelledDocument, ...options }, handler);
-};
 export const UntypedOrderConfirmedDocument = gql`
     subscription OrderConfirmed {
   event {
@@ -33296,10 +33279,6 @@ export const UntypedOrderConfirmedDocument = gql`
   }
 }
     ${UntypedOrderConfirmedSubscriptionPayloadFragmentDoc}`;
-
-export function useOrderConfirmedSubscription<TData = OrderConfirmedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderConfirmedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderConfirmedSubscription, TData>) {
-  return Urql.useSubscription<OrderConfirmedSubscription, TData, OrderConfirmedSubscriptionVariables>({ query: UntypedOrderConfirmedDocument, ...options }, handler);
-};
 export const UntypedOrderRefundedDocument = gql`
     subscription OrderRefunded {
   event {
@@ -33307,10 +33286,6 @@ export const UntypedOrderRefundedDocument = gql`
   }
 }
     ${UntypedOrderRefundedSubscriptionPayloadFragmentDoc}`;
-
-export function useOrderRefundedSubscription<TData = OrderRefundedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderRefundedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderRefundedSubscription, TData>) {
-  return Urql.useSubscription<OrderRefundedSubscription, TData, OrderRefundedSubscriptionVariables>({ query: UntypedOrderRefundedDocument, ...options }, handler);
-};
 export const UntypedOrderUpdatedDocument = gql`
     subscription OrderUpdated {
   event {
@@ -33318,10 +33293,6 @@ export const UntypedOrderUpdatedDocument = gql`
   }
 }
     ${UntypedOrderUpdatedSubscriptionPayloadFragmentDoc}`;
-
-export function useOrderUpdatedSubscription<TData = OrderUpdatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderUpdatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderUpdatedSubscription, TData>) {
-  return Urql.useSubscription<OrderUpdatedSubscription, TData, OrderUpdatedSubscriptionVariables>({ query: UntypedOrderUpdatedDocument, ...options }, handler);
-};
 export const OrderBaseFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrderBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Order"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userEmail"}},{"kind":"Field","name":{"kind":"Name","value":"total"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tax"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"undiscountedTotal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"shippingPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"voucherCode"}},{"kind":"Field","name":{"kind":"Name","value":"lines"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"voucherCode"}},{"kind":"Field","name":{"kind":"Name","value":"productSku"}},{"kind":"Field","name":{"kind":"Name","value":"variant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<OrderBaseFragment, unknown>;
 export const OrderCancelledSubscriptionPayloadFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrderCancelledSubscriptionPayload"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrderCancelled"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"issuedAt"}},{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrderBase"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrderBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Order"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userEmail"}},{"kind":"Field","name":{"kind":"Name","value":"total"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tax"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"undiscountedTotal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"shippingPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"voucherCode"}},{"kind":"Field","name":{"kind":"Name","value":"lines"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"voucherCode"}},{"kind":"Field","name":{"kind":"Name","value":"productSku"}},{"kind":"Field","name":{"kind":"Name","value":"variant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<OrderCancelledSubscriptionPayloadFragment, unknown>;
 export const OrderConfirmedSubscriptionPayloadFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrderConfirmedSubscriptionPayload"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrderConfirmed"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"issuedAt"}},{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrderBase"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrderBase"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Order"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"userEmail"}},{"kind":"Field","name":{"kind":"Name","value":"total"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tax"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"undiscountedTotal"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"shippingPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"voucherCode"}},{"kind":"Field","name":{"kind":"Name","value":"lines"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"totalPrice"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"voucherCode"}},{"kind":"Field","name":{"kind":"Name","value":"productSku"}},{"kind":"Field","name":{"kind":"Name","value":"variant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<OrderConfirmedSubscriptionPayloadFragment, unknown>;
