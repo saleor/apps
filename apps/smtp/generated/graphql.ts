@@ -1,5 +1,4 @@
 import gql from 'graphql-tag';
-import * as Urql from 'urql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -33529,10 +33528,6 @@ export const UntypedShopDetailsDocument = gql`
   }
 }
     `;
-
-export function useShopDetailsQuery(options?: Omit<Urql.UseQueryArgs<ShopDetailsQueryVariables>, 'query'>) {
-  return Urql.useQuery<ShopDetailsQuery, ShopDetailsQueryVariables>({ query: UntypedShopDetailsDocument, ...options });
-};
 export const UntypedFetchAppPermissionsDocument = gql`
     query FetchAppPermissions {
   app {
@@ -33542,10 +33537,6 @@ export const UntypedFetchAppPermissionsDocument = gql`
   }
 }
     `;
-
-export function useFetchAppPermissionsQuery(options?: Omit<Urql.UseQueryArgs<FetchAppPermissionsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAppPermissionsQuery, FetchAppPermissionsQueryVariables>({ query: UntypedFetchAppPermissionsDocument, ...options });
-};
 export const UntypedUpdateAppMetadataDocument = gql`
     mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
   updatePrivateMetadata(id: $id, input: $input) {
@@ -33558,10 +33549,6 @@ export const UntypedUpdateAppMetadataDocument = gql`
   }
 }
     `;
-
-export function useUpdateAppMetadataMutation() {
-  return Urql.useMutation<UpdateAppMetadataMutation, UpdateAppMetadataMutationVariables>(UntypedUpdateAppMetadataDocument);
-};
 export const UntypedFetchAppDetailsDocument = gql`
     query FetchAppDetails {
   app {
@@ -33573,10 +33560,6 @@ export const UntypedFetchAppDetailsDocument = gql`
   }
 }
     `;
-
-export function useFetchAppDetailsQuery(options?: Omit<Urql.UseQueryArgs<FetchAppDetailsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchAppDetailsQuery, FetchAppDetailsQueryVariables>({ query: UntypedFetchAppDetailsDocument, ...options });
-};
 export const UntypedFetchChannelsDocument = gql`
     query FetchChannels {
   channels {
@@ -33584,10 +33567,6 @@ export const UntypedFetchChannelsDocument = gql`
   }
 }
     ${UntypedChannelFragmentDoc}`;
-
-export function useFetchChannelsQuery(options?: Omit<Urql.UseQueryArgs<FetchChannelsQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchChannelsQuery, FetchChannelsQueryVariables>({ query: UntypedFetchChannelsDocument, ...options });
-};
 export const UntypedFetchSaleorVersionDocument = gql`
     query FetchSaleorVersion {
   shop {
@@ -33595,10 +33574,6 @@ export const UntypedFetchSaleorVersionDocument = gql`
   }
 }
     `;
-
-export function useFetchSaleorVersionQuery(options?: Omit<Urql.UseQueryArgs<FetchSaleorVersionQueryVariables>, 'query'>) {
-  return Urql.useQuery<FetchSaleorVersionQuery, FetchSaleorVersionQueryVariables>({ query: UntypedFetchSaleorVersionDocument, ...options });
-};
 export const UntypedAppWebhooksDocument = gql`
     query AppWebhooks {
   app {
@@ -33608,10 +33583,6 @@ export const UntypedAppWebhooksDocument = gql`
   }
 }
     ${UntypedWebhookDetailsFragmentDoc}`;
-
-export function useAppWebhooksQuery(options?: Omit<Urql.UseQueryArgs<AppWebhooksQueryVariables>, 'query'>) {
-  return Urql.useQuery<AppWebhooksQuery, AppWebhooksQueryVariables>({ query: UntypedAppWebhooksDocument, ...options });
-};
 export const UntypedCreateAppWebhookDocument = gql`
     mutation CreateAppWebhook($input: WebhookCreateInput!) {
   webhookCreate(input: $input) {
@@ -33625,10 +33596,6 @@ export const UntypedCreateAppWebhookDocument = gql`
   }
 }
     ${UntypedWebhookDetailsFragmentDoc}`;
-
-export function useCreateAppWebhookMutation() {
-  return Urql.useMutation<CreateAppWebhookMutation, CreateAppWebhookMutationVariables>(UntypedCreateAppWebhookDocument);
-};
 export const UntypedDeleteAppWebhookDocument = gql`
     mutation DeleteAppWebhook($id: ID!) {
   webhookDelete(id: $id) {
@@ -33642,10 +33609,6 @@ export const UntypedDeleteAppWebhookDocument = gql`
   }
 }
     ${UntypedWebhookDetailsFragmentDoc}`;
-
-export function useDeleteAppWebhookMutation() {
-  return Urql.useMutation<DeleteAppWebhookMutation, DeleteAppWebhookMutationVariables>(UntypedDeleteAppWebhookDocument);
-};
 export const UntypedGiftCardSentDocument = gql`
     subscription GiftCardSent {
   event {
@@ -33653,10 +33616,6 @@ export const UntypedGiftCardSentDocument = gql`
   }
 }
     ${UntypedGiftCardSentWebhookPayloadFragmentDoc}`;
-
-export function useGiftCardSentSubscription<TData = GiftCardSentSubscription>(options?: Omit<Urql.UseSubscriptionArgs<GiftCardSentSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<GiftCardSentSubscription, TData>) {
-  return Urql.useSubscription<GiftCardSentSubscription, TData, GiftCardSentSubscriptionVariables>({ query: UntypedGiftCardSentDocument, ...options }, handler);
-};
 export const UntypedInvoiceSentDocument = gql`
     subscription InvoiceSent {
   event {
@@ -33665,10 +33624,6 @@ export const UntypedInvoiceSentDocument = gql`
 }
     ${UntypedInvoiceSentWebhookPayloadFragmentDoc}
 ${UntypedOrderDetailsFragmentDoc}`;
-
-export function useInvoiceSentSubscription<TData = InvoiceSentSubscription>(options?: Omit<Urql.UseSubscriptionArgs<InvoiceSentSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<InvoiceSentSubscription, TData>) {
-  return Urql.useSubscription<InvoiceSentSubscription, TData, InvoiceSentSubscriptionVariables>({ query: UntypedInvoiceSentDocument, ...options }, handler);
-};
 export const UntypedOrderCancelledDocument = gql`
     subscription OrderCancelled {
   event {
@@ -33677,10 +33632,6 @@ export const UntypedOrderCancelledDocument = gql`
 }
     ${UntypedOrderCancelledWebhookPayloadFragmentDoc}
 ${UntypedOrderDetailsFragmentDoc}`;
-
-export function useOrderCancelledSubscription<TData = OrderCancelledSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderCancelledSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderCancelledSubscription, TData>) {
-  return Urql.useSubscription<OrderCancelledSubscription, TData, OrderCancelledSubscriptionVariables>({ query: UntypedOrderCancelledDocument, ...options }, handler);
-};
 export const UntypedOrderConfirmedDocument = gql`
     subscription OrderConfirmed {
   event {
@@ -33689,10 +33640,6 @@ export const UntypedOrderConfirmedDocument = gql`
 }
     ${UntypedOrderConfirmedWebhookPayloadFragmentDoc}
 ${UntypedOrderDetailsFragmentDoc}`;
-
-export function useOrderConfirmedSubscription<TData = OrderConfirmedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderConfirmedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderConfirmedSubscription, TData>) {
-  return Urql.useSubscription<OrderConfirmedSubscription, TData, OrderConfirmedSubscriptionVariables>({ query: UntypedOrderConfirmedDocument, ...options }, handler);
-};
 export const UntypedOrderCreatedDocument = gql`
     subscription OrderCreated {
   event {
@@ -33701,10 +33648,6 @@ export const UntypedOrderCreatedDocument = gql`
 }
     ${UntypedOrderCreatedWebhookPayloadFragmentDoc}
 ${UntypedOrderDetailsFragmentDoc}`;
-
-export function useOrderCreatedSubscription<TData = OrderCreatedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderCreatedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderCreatedSubscription, TData>) {
-  return Urql.useSubscription<OrderCreatedSubscription, TData, OrderCreatedSubscriptionVariables>({ query: UntypedOrderCreatedDocument, ...options }, handler);
-};
 export const UntypedOrderFulfilledDocument = gql`
     subscription OrderFulfilled {
   event {
@@ -33713,10 +33656,6 @@ export const UntypedOrderFulfilledDocument = gql`
 }
     ${UntypedOrderFulfilledWebhookPayloadFragmentDoc}
 ${UntypedOrderDetailsFragmentDoc}`;
-
-export function useOrderFulfilledSubscription<TData = OrderFulfilledSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderFulfilledSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderFulfilledSubscription, TData>) {
-  return Urql.useSubscription<OrderFulfilledSubscription, TData, OrderFulfilledSubscriptionVariables>({ query: UntypedOrderFulfilledDocument, ...options }, handler);
-};
 export const UntypedOrderFullyPaidDocument = gql`
     subscription OrderFullyPaid {
   event {
@@ -33725,10 +33664,6 @@ export const UntypedOrderFullyPaidDocument = gql`
 }
     ${UntypedOrderFullyPaidWebhookPayloadFragmentDoc}
 ${UntypedOrderDetailsFragmentDoc}`;
-
-export function useOrderFullyPaidSubscription<TData = OrderFullyPaidSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderFullyPaidSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderFullyPaidSubscription, TData>) {
-  return Urql.useSubscription<OrderFullyPaidSubscription, TData, OrderFullyPaidSubscriptionVariables>({ query: UntypedOrderFullyPaidDocument, ...options }, handler);
-};
 export const UntypedOrderRefundedDocument = gql`
     subscription OrderRefunded {
   event {
@@ -33737,10 +33672,6 @@ export const UntypedOrderRefundedDocument = gql`
 }
     ${UntypedOrderRefundedWebhookPayloadFragmentDoc}
 ${UntypedOrderDetailsFragmentDoc}`;
-
-export function useOrderRefundedSubscription<TData = OrderRefundedSubscription>(options?: Omit<Urql.UseSubscriptionArgs<OrderRefundedSubscriptionVariables>, 'query'>, handler?: Urql.SubscriptionHandler<OrderRefundedSubscription, TData>) {
-  return Urql.useSubscription<OrderRefundedSubscription, TData, OrderRefundedSubscriptionVariables>({ query: UntypedOrderRefundedDocument, ...options }, handler);
-};
 export const ChannelFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Channel"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Channel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]} as unknown as DocumentNode<ChannelFragment, unknown>;
 export const WebhookDetailsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"WebhookDetails"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Webhook"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"asyncEvents"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"eventType"}}]}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}}]}}]} as unknown as DocumentNode<WebhookDetailsFragment, unknown>;
 export const GiftCardSentWebhookPayloadFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"GiftCardSentWebhookPayload"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"GiftCardSent"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"giftCard"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"displayCode"}},{"kind":"Field","name":{"kind":"Name","value":"last4CodeChars"}},{"kind":"Field","name":{"kind":"Name","value":"created"}},{"kind":"Field","name":{"kind":"Name","value":"usedByEmail"}},{"kind":"Field","name":{"kind":"Name","value":"isActive"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"privateMetadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"initialBalance"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentBalance"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"expiryDate"}},{"kind":"Field","name":{"kind":"Name","value":"lastUsedOn"}},{"kind":"Field","name":{"kind":"Name","value":"usedBy"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"sentToEmail"}},{"kind":"Field","name":{"kind":"Name","value":"channel"}}]}}]} as unknown as DocumentNode<GiftCardSentWebhookPayloadFragment, unknown>;
