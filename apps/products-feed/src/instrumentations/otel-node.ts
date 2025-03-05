@@ -1,4 +1,3 @@
-// Use `process.env` here to avoid broken Next.js build
 import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
