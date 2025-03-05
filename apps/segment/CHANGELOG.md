@@ -1,5 +1,25 @@
 # saleor-app-segment
 
+## 2.1.0
+
+### Minor Changes
+
+- 3c4358ae: Setup OTEL via instrumentation hook. After this change app will use [official way](https://nextjs.org/docs/14/app/building-your-application/optimizing/open-telemetry) of setting up OTEL. There are no visible changes to the end user.
+
+### Patch Changes
+
+- defa0b60: Rename `wrapWithSpanAttributes` to `withSpanAttributes`. No changes to the end user.
+- e3fe0f70: Use `@vercel/otel` package to setup OTEL. After this change spans will be automatically flushed by Vercel.
+- Updated dependencies [3c4358ae]
+- Updated dependencies [9cfb8ace]
+- Updated dependencies [e3fe0f70]
+- Updated dependencies [23a31eb4]
+- Updated dependencies [defa0b60]
+- Updated dependencies [defa0b60]
+  - @saleor/apps-otel@2.0.0
+  - @saleor/apps-logger@1.5.0
+  - @saleor/apps-shared@1.12.0
+
 ## 2.0.7
 
 ### Patch Changes
