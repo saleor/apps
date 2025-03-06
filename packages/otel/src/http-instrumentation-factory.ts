@@ -4,7 +4,6 @@ export const createHttpInstrumentation = () => {
   return new HttpInstrumentation({
     requireParentforIncomingSpans: true,
     requireParentforOutgoingSpans: true,
-    ignoreOutgoingRequestHook: (request) =>
-      request.hostname === "ingest.sentry.io" || request.path === "/v1/logs",
+    ignoreOutgoingRequestHook: (request) => request.hostname?.includes("ingest.sentry.io") ?? false,
   });
 };

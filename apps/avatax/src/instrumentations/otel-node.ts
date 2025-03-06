@@ -1,5 +1,6 @@
 import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
+import { createAwsInstrumentation } from "@saleor/apps-otel/src/aws-instrumentation-factory";
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
 import { registerOTel } from "@vercel/otel";
@@ -23,5 +24,5 @@ registerOTel({
       accessToken: env.OTEL_ACCESS_TOKEN,
     }),
   ],
-  instrumentations: [createHttpInstrumentation()],
+  instrumentations: [createAwsInstrumentation(), createHttpInstrumentation()],
 });
