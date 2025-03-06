@@ -10,6 +10,8 @@
   "dependencies": {
     "@opentelemetry/api": "../../node_modules/@opentelemetry/api",
     "@opentelemetry/exporter-trace-otlp-http": "../../node_modules/@opentelemetry/exporter-trace-otlp-http",
+    "@opentelemetry/instrumentation-aws-sdk": "../../node_modules/@opentelemetry/instrumentation-aws-sdk",
+    "@opentelemetry/instrumentation-http": "../../node_modules/@opentelemetry/instrumentation-http",
     "@opentelemetry/resources": "../../node_modules/@opentelemetry/resources",
     "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
     "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
