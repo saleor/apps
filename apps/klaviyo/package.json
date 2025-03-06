@@ -1,6 +1,8 @@
 {
   "name": "saleor-app-klaviyo",
   "version": "1.13.0",
+  "private": true,
+  "type": "module",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",
@@ -13,12 +15,11 @@
     "start": "next start"
   },
   "dependencies": {
-    "@vercel/otel": "../../node_modules/@vercel/otel",
     "@opentelemetry/api": "../../node_modules/@opentelemetry/api",
-    "@opentelemetry/resources": "../../node_modules/@opentelemetry/resources",
-    "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
-    "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
     "@opentelemetry/exporter-trace-otlp-http": "../../node_modules/@opentelemetry/exporter-trace-otlp-http",
+    "@opentelemetry/resources": "../../node_modules/@opentelemetry/resources",
+    "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
+    "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
@@ -29,6 +30,7 @@
     "@sentry/cli": "../../node_modules/@sentry/cli",
     "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
     "@urql/exchange-auth": "2.1.4",
+    "@vercel/otel": "../../node_modules/@vercel/otel",
     "dotenv": "16.3.1",
     "graphql": "16.7.1",
     "graphql-tag": "2.12.6",
@@ -62,9 +64,7 @@
     "tsx": "4.7.1",
     "typescript": "5.5.4"
   },
-  "private": true,
   "saleor": {
     "schemaVersion": "3.10"
-  },
-  "type": "module"
+  }
 }
