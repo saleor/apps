@@ -1,8 +1,12 @@
 {
   "name": "@saleor/e2e",
-  "description": "",
   "version": "1.0.7",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
   "author": "",
+  "type": "module",
+  "main": "index.js",
   "scripts": {
     "check-types": "tsc --noEmit",
     "e2e": "playwright test",
@@ -16,9 +20,5 @@
     "eslint-config-saleor": "workspace:*",
     "typescript": "5.5.4",
     "zod": "3.21.4"
-  },
-  "keywords": [],
-  "license": "ISC",
-  "main": "index.js",
-  "type": "module"
+  }
 }

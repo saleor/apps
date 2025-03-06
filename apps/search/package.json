@@ -1,6 +1,8 @@
 {
   "name": "saleor-app-search",
   "version": "1.23.0",
+  "private": true,
+  "type": "module",
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",
@@ -17,12 +19,11 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
-    "@vercel/otel": "../../node_modules/@vercel/otel",
     "@opentelemetry/api": "../../node_modules/@opentelemetry/api",
-    "@opentelemetry/resources": "../../node_modules/@opentelemetry/resources",
-    "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
-    "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
     "@opentelemetry/exporter-trace-otlp-http": "../../node_modules/@opentelemetry/exporter-trace-otlp-http",
+    "@opentelemetry/resources": "../../node_modules/@opentelemetry/resources",
+    "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
+    "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
@@ -40,6 +41,7 @@
     "@trpc/react-query": "10.43.1",
     "@trpc/server": "10.43.1",
     "@urql/exchange-auth": "2.1.4",
+    "@vercel/otel": "../../node_modules/@vercel/otel",
     "algoliasearch": "4.23.3",
     "clsx": "^1.2.1",
     "debug": "^4.3.4",
@@ -77,9 +79,7 @@
     "vite": "5.3.3",
     "vitest": "1.6.0"
   },
-  "private": true,
   "saleor": {
     "schemaVersion": "3.7"
-  },
-  "type": "module"
+  }
 }

@@ -1,6 +1,8 @@
 {
   "name": "@saleor/apps-ui",
   "version": "1.2.10",
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
@@ -20,11 +22,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
-  "main": "index.ts",
   "peerDependencies": {
     "next": "14.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
-  },
-  "type": "module"
+  }
 }

@@ -1,6 +1,7 @@
 {
   "name": "saleor-apps",
   "version": "0.0.0",
+  "private": true,
   "license": "(BSD-3-Clause AND CC-BY-4.0)",
   "scripts": {
     "build": "turbo run build",
@@ -11,6 +12,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate": "turbo run generate",
     "github:release": "pnpm changeset tag && git push --follow-tags",
+    "knip": "knip",
     "lint": "turbo run lint",
     "lint-staged": "lint-staged",
     "lint:fix": "turbo run lint:fix",
@@ -19,26 +21,31 @@
     "prepare": "husky",
     "start": "turbo run start",
     "test": "turbo run test",
-    "test:ci": "turbo run test:ci",
-    "knip": "knip"
+    "test:ci": "turbo run test:ci"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --cache --fix",
+    "*.{ts,tsx,md}": "prettier --write",
+    "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files",
+    "package.json": "sort-package-json"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
-    "@vercel/otel": "1.10.1",
     "@opentelemetry/api": "1.9.0",
     "@opentelemetry/api-logs": "0.57.2",
+    "@opentelemetry/exporter-trace-otlp-http": "0.57.2",
     "@opentelemetry/instrumentation": "0.57.2",
     "@opentelemetry/instrumentation-http": "0.57.2",
+    "@opentelemetry/resources": "1.30.1",
     "@opentelemetry/sdk-logs": "0.57.2",
-    "@opentelemetry/exporter-trace-otlp-http": "0.57.2",
     "@opentelemetry/sdk-trace-node": "1.30.1",
     "@opentelemetry/semantic-conventions": "1.30.0",
-    "@opentelemetry/resources": "1.30.1",
     "@saleor/app-sdk": "0.52.0",
     "@sentry/cli": "2.32.1",
     "@sentry/nextjs": "7.117.0",
     "@sentry/node": "7.117.0",
     "@types/node": "20.12.3",
+    "@vercel/otel": "1.10.1",
     "cspell": "8.15.2",
     "eslint": "8.57.0",
     "eslint-config-saleor": "workspace:*",
@@ -48,19 +55,14 @@
     "next": "14.2.3",
     "prettier": "3.0.3",
     "sherif": "0.10.0",
+    "sort-package-json": "3.0.0",
     "turbo": "1.12.4",
     "typescript": "5.5.4"
   },
-  "engines": {
-    "npm": ">=10.0.0 <11.0.0",
-    "node": ">=22.0.0 <23.0.0",
-    "pnpm": ">=9.0.0 <10.0.0"
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix",
-    "*.{ts,tsx,md}": "prettier --write",
-    "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files"
-  },
   "packageManager": "pnpm@9.12.3",
-  "private": true
+  "engines": {
+    "node": ">=22.0.0 <23.0.0",
+    "npm": ">=10.0.0 <11.0.0",
+    "pnpm": ">=9.0.0 <10.0.0"
+  }
 }
