@@ -1,6 +1,8 @@
 {
   "name": "@saleor/trpc",
   "version": "4.0.0",
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
@@ -13,7 +15,6 @@
     "next": "14.2.3",
     "typescript": "5.5.4"
   },
-  "main": "index.ts",
   "peerDependencies": {
     "@saleor/app-sdk": "0.41.1",
     "@saleor/apps-shared": "workspace:*",
@@ -25,6 +26,5 @@
     "next": "14.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0"
-  },
-  "type": "module"
+  }
 }

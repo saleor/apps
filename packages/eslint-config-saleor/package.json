@@ -1,9 +1,12 @@
 {
   "name": "eslint-config-saleor",
   "version": "0.4.11",
+  "license": "MIT",
+  "main": "index.js",
   "devDependencies": {
     "@saleor/eslint-plugin-saleor-app": "0.1.2",
     "@typescript-eslint/parser": "7.15.0",
+    "@vitest/eslint-plugin": "1.1.12",
     "eslint": "../../node_modules/eslint",
     "eslint-config-next": "14.2.4",
     "eslint-config-prettier": "9.1.0",
@@ -12,11 +15,8 @@
     "eslint-plugin-react": "7.34.3",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "next": "14.2.3",
-    "typescript": "5.5.4",
-    "@vitest/eslint-plugin": "1.1.12"
+    "typescript": "5.5.4"
   },
-  "license": "MIT",
-  "main": "index.js",
   "publishConfig": {
     "access": "public"
   }
