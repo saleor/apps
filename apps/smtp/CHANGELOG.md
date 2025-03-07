@@ -1,5 +1,12 @@
 # saleor-app-smtp
 
+## 1.3.1
+
+### Patch Changes
+
+- Updated dependencies [8154e9e9]
+  - @saleor/apps-otel@2.1.0
+
 ## 1.3.0
 
 ### Minor Changes
