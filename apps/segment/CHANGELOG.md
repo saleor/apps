@@ -1,5 +1,13 @@
 # saleor-app-segment
 
+## 2.1.1
+
+### Patch Changes
+
+- 8154e9e9: Use `AwsInstrumentation` to auto instrument DynamoDB calls
+- Updated dependencies [8154e9e9]
+  - @saleor/apps-otel@2.1.0
+
 ## 2.1.0
 
 ### Minor Changes
