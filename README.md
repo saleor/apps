@@ -17,7 +17,7 @@
   <span> • </span>
   <a href="https://twitter.com/getsaleor">🐦 Twitter</a>
   <span> • </span>
-  <a href="https://discord.gg/H52JTZAtSH">💬 Discord</a>
+  <a href="https://discord.gg/unUfh24R6d">💬 Discord</a>
 </div>
 
 <div align="center">
@@ -29,7 +29,7 @@
 <br/>
 <div align="center">
   
-[![Discord Badge](https://dcbadge.vercel.app/api/server/H52JTZAtSH)](https://discord.gg/H52JTZAtSH)
+[![Discord Badge](https://dcbadge.vercel.app/api/server/unUfh24R6d)](https://discord.gg/unUfh24R6d)
 
 </div>
 
