@@ -6,6 +6,8 @@
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",
+    "cleanup-client-logs": "pnpm tsx --require dotenv/config ./scripts/cleanup-client-logs.ts",
+    "cleanup-client-logs:dry-run": "pnpm tsx --require dotenv/config ./scripts/cleanup-client-logs.ts --dry-run",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "dev:debug": "APP_LOG_LEVEL=debug pnpm dev",
