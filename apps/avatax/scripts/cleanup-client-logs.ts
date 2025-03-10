@@ -1,6 +1,6 @@
 import { parseArgs } from "node:util";
 
-import { DeletePartitionCommand } from "dynamodb-toolbox/table/actions/deletePartition";
+import { DeleteItemCommand, QueryCommand } from "dynamodb-toolbox";
 import { saleorApp } from "saleor-app";
 
 import { env } from "@/env";
@@ -16,10 +16,12 @@ const { values } = parseArgs({
   },
 });
 
-const startDate = new Date(2024, 1, 1);
-const endDate = new Date(2025, 2, 24); // 14 days from today
+const today = new Date();
+const endDate = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000); // 14 days from today
 
 const main = async () => {
+  const start = performance.now();
+
   const dynamoClient = createLogsDynamoClient();
 
   const logsTable = LogsTable.create({
@@ -38,28 +40,62 @@ const main = async () => {
   });
 
   for (const { saleorApiUrl, appId } of appInstallations) {
-    const command = logsTable
-      .build(DeletePartitionCommand)
-      .entities(logsByCheckoutOrOrderId, logsByDateEntity)
-      .query({
-        partition: LogsTable.getPrimaryKey({ saleorApiUrl, appId }),
-        range: {
-          between: [startDate.toISOString(), endDate.toISOString()],
-        },
-      });
-
     try {
+      let lastEvaluatedKey: Record<string, unknown> | undefined = undefined;
+
+      const command = logsTable
+        .build(QueryCommand)
+        .query({
+          partition: LogsTable.getPrimaryKey({ saleorApiUrl, appId }),
+          lte: endDate,
+        })
+        .entities(logsByCheckoutOrOrderId, logsByDateEntity);
+
       if (values["dry-run"]) {
         console.log(`Would delete logs for ${saleorApiUrl}#${appId}`);
         continue;
       }
+
       console.log(`Deleting logs for ${saleorApiUrl}#${appId}`);
-      await command.send();
+
+      do {
+        const page = await command
+          .options({
+            limit: 100,
+            exclusiveStartKey: lastEvaluatedKey,
+          })
+          .send();
+
+        for (const item of page?.Items ?? []) {
+          if (item.checkoutOrOrderId) {
+            await logsByCheckoutOrOrderId
+              .build(DeleteItemCommand)
+              .key({
+                PK: item.PK,
+                SK: item.SK,
+                checkoutOrOrderId: item.checkoutOrOrderId,
+                date: item.date,
+              })
+              .send();
+          } else {
+            await logsByDateEntity
+              .build(DeleteItemCommand)
+              .key({
+                PK: item.PK,
+                SK: item.SK,
+                date: item.date,
+              })
+              .send();
+          }
+        }
+        lastEvaluatedKey = page.LastEvaluatedKey;
+      } while (lastEvaluatedKey !== undefined);
       console.log(`Logs for ${saleorApiUrl}#${appId} deleted`);
     } catch (error) {
       console.error(`Could not delete logs for ${saleorApiUrl}#${appId}`, error);
     }
   }
+  console.log(`Cleanup took ${performance.now() - start}ms`);
 };
 
 main();
