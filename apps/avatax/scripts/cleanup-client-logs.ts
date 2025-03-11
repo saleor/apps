@@ -1,7 +1,6 @@
 import { parseArgs } from "node:util";
 
-import { DeleteItemCommand, QueryCommand } from "dynamodb-toolbox";
-import { saleorApp } from "saleor-app";
+import { DeleteItemCommand, ScanCommand } from "dynamodb-toolbox";
 
 import { env } from "@/env";
 import {
@@ -33,67 +32,65 @@ const main = async () => {
     ClientLogDynamoEntityFactory.createLogByCheckoutOrOrderId(logsTable);
   const logsByDateEntity = ClientLogDynamoEntityFactory.createLogByDate(logsTable);
 
-  const appInstallations = await saleorApp.apl.getAll().catch(() => {
-    console.error("Could not fetch instances from the APL");
+  try {
+    let lastEvaluatedKey: Record<string, unknown> | undefined = undefined;
 
-    process.exit(1);
-  });
+    const command = logsTable
+      .build(ScanCommand)
+      .entities(logsByCheckoutOrOrderId, logsByDateEntity);
 
-  for (const { saleorApiUrl, appId } of appInstallations) {
-    try {
-      let lastEvaluatedKey: Record<string, unknown> | undefined = undefined;
-
-      const command = logsTable
-        .build(QueryCommand)
-        .query({
-          partition: LogsTable.getPrimaryKey({ saleorApiUrl, appId }),
-          lte: endDate,
-        })
-        .entities(logsByCheckoutOrOrderId, logsByDateEntity);
-
-      if (values["dry-run"]) {
-        console.log(`Would delete logs for ${saleorApiUrl}#${appId} lte: ${endDate.toISOString()}`);
-        continue;
-      }
-
-      console.log(`Deleting logs for ${saleorApiUrl}#${appId} lte: ${endDate.toISOString()}`);
-
-      do {
-        const page = await command
-          .options({
-            limit: 100,
-            exclusiveStartKey: lastEvaluatedKey,
-          })
-          .send();
-
-        for (const item of page?.Items ?? []) {
-          if (item.checkoutOrOrderId) {
-            await logsByCheckoutOrOrderId
-              .build(DeleteItemCommand)
-              .key({
-                PK: item.PK,
-                SK: item.SK,
-                checkoutOrOrderId: item.checkoutOrOrderId,
-                date: item.date,
-              })
-              .send();
-          } else {
-            await logsByDateEntity
-              .build(DeleteItemCommand)
-              .key({
-                PK: item.PK,
-                SK: item.SK,
-                date: item.date,
-              })
-              .send();
-          }
-        }
-        lastEvaluatedKey = page.LastEvaluatedKey;
-      } while (lastEvaluatedKey !== undefined);
-      console.log(`Logs for ${saleorApiUrl}#${appId} deleted`);
-    } catch (error) {
-      console.error(`Could not delete logs for ${saleorApiUrl}#${appId}`, error);
+    if (values["dry-run"]) {
+      console.log(`Would delete logs for lte: ${endDate.toISOString()}`);
+      return;
     }
+
+    console.log(`Deleting logs for lte: ${endDate.toISOString()}`);
+
+    do {
+      const page = await command
+        .options({
+          limit: 100,
+          exclusiveStartKey: lastEvaluatedKey,
+          filters: {
+            LOG_BY_CHECKOUT_OR_ORDER_ID: {
+              attr: "date",
+              lte: endDate.toISOString(),
+            },
+            LOG_BY_DATE: {
+              attr: "date",
+              lte: endDate.toISOString(),
+            },
+          },
+        })
+        .send();
+
+      for (const item of page?.Items ?? []) {
+        if (item.checkoutOrOrderId) {
+          await logsByCheckoutOrOrderId
+            .build(DeleteItemCommand)
+            .key({
+              PK: item.PK,
+              SK: item.SK,
+              checkoutOrOrderId: item.checkoutOrOrderId,
+              date: item.date,
+            })
+            .send();
+        } else {
+          await logsByDateEntity
+            .build(DeleteItemCommand)
+            .key({
+              PK: item.PK,
+              SK: item.SK,
+              date: item.date,
+            })
+            .send();
+        }
+      }
+      lastEvaluatedKey = page.LastEvaluatedKey;
+    } while (lastEvaluatedKey !== undefined);
+    console.log(`Logs deleted`);
+  } catch (error) {
+    console.error(`Could not delete logs`, error);
   }
   console.log(`Cleanup took ${performance.now() - start}ms`);
 };
