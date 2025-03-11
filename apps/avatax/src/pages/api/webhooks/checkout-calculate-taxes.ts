@@ -1,4 +1,4 @@
-import { SpanStatusCode } from "@opentelemetry/api";
+import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
@@ -31,6 +31,9 @@ const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
   return appInternalTracer.startActiveSpan(
     "executing checkoutCalculateTaxes webhook handler",
+    {
+      kind: SpanKind.SERVER,
+    },
     async (span) => {
       const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
 
@@ -54,6 +57,8 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
       try {
         const { payload, authData } = ctx;
 
+        span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
+
         subscriptionErrorChecker.checkPayload(payload);
 
         loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
@@ -62,6 +67,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
         if (payload.version) {
           Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
           loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+          span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         }
 
         logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
