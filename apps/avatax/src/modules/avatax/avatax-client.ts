@@ -4,8 +4,11 @@ import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
+import { fromPromise } from "neverthrow";
 
-import { AvataxClientTaxCodeService } from "./avatax-client-tax-code.service";
+import { createLogger } from "@/logger";
+
+import { AvataxErrorsParser } from "./avatax-errors-parser";
 
 export type CommitTransactionArgs = {
   companyCode: string;
@@ -28,19 +31,30 @@ export type VoidTransactionArgs = {
 };
 
 export class AvataxClient {
+  private logger = createLogger("AvataxClient");
+  private errorParser = new AvataxErrorsParser();
   constructor(private client: Avatax) {}
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    /*
-     * We use createOrAdjustTransaction instead of createTransaction because
-     * we must guarantee a way of idempotent update of the transaction due to the
-     * migration requirements. The transaction can be created in the old flow, but committed in the new flow.
-     */
-    return this.client.createOrAdjustTransaction({ model: { createTransactionModel: model } });
-  }
+    return fromPromise(
+      /*
+       * We use createOrAdjustTransaction instead of createTransaction because
+       * we must guarantee a way of idempotent update of the transaction due to the
+       * migration requirements. The transaction can be created in the old flow, but committed in the new flow.
+       */
+      this.client.createOrAdjustTransaction({
+        model: { createTransactionModel: model },
+      }),
+      (error) => {
+        const parsedError = this.errorParser.parse(error);
 
-  async commitTransaction(args: CommitTransactionArgs) {
-    return this.client.commitTransaction(args);
+        /**
+         * TODO: Refactor errors so we are able to print error only for unhandled cases, otherwise use warnings etc
+         */
+        this.logger.error("Error calculating taxes", { error: parsedError });
+        return parsedError;
+      },
+    );
   }
 
   async voidTransaction({
@@ -50,31 +64,68 @@ export class AvataxClient {
     transactionCode: string;
     companyCode: string;
   }) {
-    return this.client.voidTransaction({
-      transactionCode,
-      companyCode,
-      model: { code: VoidReasonCode.DocVoided },
-    });
+    return fromPromise(
+      this.client.voidTransaction({
+        transactionCode,
+        companyCode,
+        model: { code: VoidReasonCode.DocVoided },
+      }),
+      (error) => {
+        const parsedError = this.errorParser.parse(error);
+
+        this.logger.error("Error voiding transaction", {
+          error: parsedError,
+          transactionCode: transactionCode,
+          companyCode: companyCode,
+        });
+
+        return parsedError;
+      },
+    );
   }
 
   async validateAddress({ address }: ValidateAddressArgs) {
-    return this.client.resolveAddress(address);
+    return fromPromise(this.client.resolveAddress(address), this.errorParser.parse);
   }
 
-  async getFilteredTaxCodes({ filter }: { filter: string | null }) {
-    const taxCodeService = new AvataxClientTaxCodeService(this.client);
+  async listTaxCodes({ filter }: { filter: string | null }) {
+    return fromPromise(
+      this.client.listTaxCodes({
+        ...(filter ? { filter: `taxCode contains "${filter}"` } : {}),
+        top: 50,
+      }),
+      (error) => {
+        const parsedError = this.errorParser.parse(error);
 
-    return taxCodeService.getFilteredTaxCodes({ filter });
+        this.logger.error("Failed to call listTaxCodes on Avatax client", {
+          error: parsedError,
+        });
+
+        return parsedError;
+      },
+    );
   }
 
   async ping() {
-    return this.client.ping();
+    return fromPromise(this.client.ping(), this.errorParser.parse);
   }
 
   async getEntityUseCode(useCode: string) {
-    return this.client.listEntityUseCodes({
-      // https://developer.avalara.com/avatax/filtering-in-rest/
-      filter: `code eq ${useCode}`,
-    });
+    return fromPromise(
+      this.client.listEntityUseCodes({
+        // https://developer.avalara.com/avatax/filtering-in-rest/
+        filter: `code eq ${useCode}`,
+      }),
+      (error) => {
+        const parsedError = this.errorParser.parse(error);
+
+        this.logger.error("Failed to get entity use code", {
+          error: parsedError,
+          useCode,
+        });
+
+        return parsedError;
+      },
+    );
   }
 }

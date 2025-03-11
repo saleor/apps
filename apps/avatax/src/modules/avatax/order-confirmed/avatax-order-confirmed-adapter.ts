@@ -9,7 +9,6 @@ import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
 import { AvataxClient } from "../avatax-client";
 import { AvataxConfig } from "../avatax-connection-schema";
-import { normalizeAvaTaxError } from "../avatax-error-normalizer";
 import { PriceReductionDiscountsStrategy } from "../discounts";
 import { extractTransactionRedactedLogProperties } from "../extract-transaction-redacted-log-properties";
 import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
@@ -60,22 +59,22 @@ export class AvataxOrderConfirmedAdapter
       },
     );
 
-    try {
-      const response = await this.avataxClient.createTransaction(target);
+    const createTransactionResult = await this.avataxClient.createTransaction(target);
 
-      this.logger.info("AvaTax createTransaction successfully responded", {
-        taxCalculationSummary: response.summary,
-      });
-
-      const transformedResponse = this.avataxOrderConfirmedResponseTransformer.transform(response);
-
-      this.logger.debug("Transformed AvaTax createTransaction response");
-
-      return transformedResponse;
-    } catch (e) {
-      const error = normalizeAvaTaxError(e);
-
-      throw error;
+    if (createTransactionResult.isErr()) {
+      throw createTransactionResult.error;
     }
+
+    const transaction = createTransactionResult.value;
+
+    this.logger.info("AvaTax createTransaction successfully responded", {
+      taxCalculationSummary: transaction.summary,
+    });
+
+    const transformedResponse = this.avataxOrderConfirmedResponseTransformer.transform(transaction);
+
+    this.logger.debug("Transformed AvaTax createTransaction response");
+
+    return transformedResponse;
   }
 }
