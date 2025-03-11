@@ -55,6 +55,7 @@ const main = async () => {
         .options({
           limit: 100,
           exclusiveStartKey: lastEvaluatedKey,
+          capacity: "TOTAL",
           filters: {
             LOG_BY_CHECKOUT_OR_ORDER_ID: {
               attr: "date",
@@ -69,12 +70,14 @@ const main = async () => {
         .send();
 
       console.log(
-        `Deleting ${page.Items?.length} logs with ${JSON.stringify(page.LastEvaluatedKey)}`,
+        `Deleting ${page.Items?.length} logs with ${JSON.stringify(
+          page.LastEvaluatedKey,
+        )}, ConsumedCapacity: ${JSON.stringify(page.ConsumedCapacity?.CapacityUnits)}`,
       );
 
-      for (const item of page?.Items ?? []) {
+      const deletePromises = (page?.Items ?? []).map((item) => {
         if (item.checkoutOrOrderId) {
-          await logsByCheckoutOrOrderId
+          return logsByCheckoutOrOrderId
             .build(DeleteItemCommand)
             .key({
               PK: item.PK,
@@ -84,7 +87,7 @@ const main = async () => {
             })
             .send();
         } else {
-          await logsByDateEntity
+          return logsByDateEntity
             .build(DeleteItemCommand)
             .key({
               PK: item.PK,
@@ -93,7 +96,10 @@ const main = async () => {
             })
             .send();
         }
-      }
+      });
+
+      await Promise.all(deletePromises);
+
       lastEvaluatedKey = page.LastEvaluatedKey;
     } while (lastEvaluatedKey !== undefined);
     console.log(`Logs deleted`);
