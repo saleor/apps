@@ -40,11 +40,15 @@ const main = async () => {
       .entities(logsByCheckoutOrOrderId, logsByDateEntity);
 
     if (values["dry-run"]) {
-      console.log(`Would delete logs for lte: ${endDate.toISOString()}`);
+      console.log(
+        `Would delete logs from ${env.DYNAMODB_LOGS_TABLE_NAME} for lte: ${endDate.toISOString()}`,
+      );
       return;
     }
 
-    console.log(`Deleting logs for lte: ${endDate.toISOString()}`);
+    console.log(
+      `Deleting logs fron ${env.DYNAMODB_LOGS_TABLE_NAME} for lte: ${endDate.toISOString()}`,
+    );
 
     do {
       const page = await command
@@ -63,6 +67,10 @@ const main = async () => {
           },
         })
         .send();
+
+      console.log(
+        `Deleting ${page.Items?.length} logs with ${JSON.stringify(page.LastEvaluatedKey)}`,
+      );
 
       for (const item of page?.Items ?? []) {
         if (item.checkoutOrOrderId) {
