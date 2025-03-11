@@ -52,11 +52,11 @@ const main = async () => {
         .entities(logsByCheckoutOrOrderId, logsByDateEntity);
 
       if (values["dry-run"]) {
-        console.log(`Would delete logs for ${saleorApiUrl}#${appId}`);
+        console.log(`Would delete logs for ${saleorApiUrl}#${appId} lte: ${endDate.toISOString()}`);
         continue;
       }
 
-      console.log(`Deleting logs for ${saleorApiUrl}#${appId}`);
+      console.log(`Deleting logs for ${saleorApiUrl}#${appId} lte: ${endDate.toISOString()}`);
 
       do {
         const page = await command
