@@ -4,6 +4,7 @@ import { z } from "zod";
 import { BaseError } from "../../error";
 import {
   AvataxEntityNotFoundError,
+  AvataxForbiddenAccessError,
   AvataxGetTaxError,
   AvataxInvalidAddressError,
   AvataxInvalidCredentialsError,
@@ -25,6 +26,7 @@ export class AvataxErrorsParser {
       "StringLengthError",
       "EntityNotFoundError",
       "TransactionAlreadyCancelled",
+      "PermissionRequired",
     ]),
     details: z.array(
       z.object({
@@ -78,6 +80,13 @@ export class AvataxErrorsParser {
       }
       case "TransactionAlreadyCancelled": {
         return new AvataxTransactionAlreadyCancelledError(parsedError.data.code, {
+          props: {
+            description: parsedError.data.details[0].description,
+          },
+        });
+      }
+      case "PermissionRequired": {
+        return new AvataxForbiddenAccessError(parsedError.data.code, {
           props: {
             description: parsedError.data.details[0].description,
           },

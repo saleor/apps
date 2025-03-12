@@ -1,4 +1,5 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
+import { ok } from "neverthrow";
 import { describe, expect, it, test } from "vitest";
 
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
@@ -16,7 +17,7 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
     new AvataxCalculateTaxesPayloadLinesTransformer(new AvataxCalculateTaxesTaxCodeMatcher()),
     new AvataxEntityTypeMatcher({
       getEntityUseCode() {
-        return Promise.resolve({ "@recordsetCount": 1, value: [{ code: "entityCode" }] });
+        return Promise.resolve(ok({ "@recordsetCount": 1, value: [{ code: "entityCode" }] }));
       },
     }),
   );

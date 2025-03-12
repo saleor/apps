@@ -7,9 +7,13 @@ export class AvataxAuthValidationService {
   constructor(private avataxClient: AvataxClient) {}
 
   async testConnection() {
-    const result = await this.avataxClient.ping();
+    const pingResult = await this.avataxClient.ping();
 
-    if (!result.authenticated) {
+    if (pingResult.isErr()) {
+      return errAsync(pingResult.error);
+    }
+
+    if (!pingResult.value.authenticated) {
       return errAsync(new AvataxInvalidCredentialsError("Invalid AvaTax credentials"));
     }
     return okAsync({});
