@@ -39,17 +39,13 @@ export class AvataxClient {
   constructor(private client: Avatax) {}
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    this.logger.info("Document type", {
-      type: model.type ? DocumentType[model.type] : "unknown",
-      model,
-    });
     return appInternalTracer.startActiveSpan(
       "calling AvaTax createOrAdjustTransaction API",
       {
         kind: SpanKind.CLIENT,
         attributes: {
           [ATTR_PEER_SERVICE]: "avatax",
-          "avatax.document_type": model.type ? DocumentType[model.type] : "unknown",
+          "avatax.document_type": DocumentType[model.type ?? "Any"],
         },
       },
       (span) => {
