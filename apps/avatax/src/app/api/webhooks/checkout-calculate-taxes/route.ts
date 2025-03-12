@@ -11,7 +11,7 @@ import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
-import { loggerContext } from "@/logger-context";
+import { loggerContext, withLoggerContextAppRouter } from "@/logger-context";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
@@ -188,20 +188,5 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
 });
 
 export type WebApiHandler = (req: Request) => Response | Promise<Response>;
-
-export const withLoggerContextAppRouter = (handler: WebApiHandler) => {
-  return (req: Request) => {
-    return loggerContext.wrap(() => {
-      const saleorApiUrl = req.headers.get("saleor-api-url");
-      const saleorEvent = req.headers.get("saleor-event");
-      const path = req.url;
-
-      loggerContext.set("path", path);
-      loggerContext.set("saleorApiUrl", saleorApiUrl ?? null);
-      loggerContext.set("saleorEvent", saleorEvent ?? null);
-      return handler(req);
-    });
-  };
-};
 
 export const POST = compose(withLoggerContextAppRouter)(handler);
