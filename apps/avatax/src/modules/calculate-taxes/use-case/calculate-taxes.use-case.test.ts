@@ -236,7 +236,7 @@ describe("CalculateTaxesUseCase", () => {
   it("Calculates proper discount (extra field with sum of SUBTOTAL-type amounts) and properly reduces price of shipping line", async () => {
     mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
-    mockedAvataxClient.createTransaction.mockResolvedValueOnce({ lines: [] });
+    mockedAvataxClient.createTransaction.mockResolvedValueOnce(Promise.resolve(ok({ lines: [] })));
 
     const payload = getPayloadWithDiscounts();
 
@@ -265,7 +265,7 @@ describe("CalculateTaxesUseCase", () => {
   it("Writes successful log if taxes calculated to Log Writer", async () => {
     mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
-    mockedAvataxClient.createTransaction.mockResolvedValueOnce({ lines: [] });
+    mockedAvataxClient.createTransaction.mockResolvedValueOnce(Promise.resolve(ok({ lines: [] })));
 
     const payload = getPayloadWithDiscounts();
 

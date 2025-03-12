@@ -12,10 +12,14 @@ export class AvataxEntityTypeMatcher {
   }
 
   private async validateEntityCode(entityCode: string) {
-    const result = await this.avataxClient.getEntityUseCode(entityCode);
+    const entityUseCodeResult = await this.avataxClient.getEntityUseCode(entityCode);
+
+    if (entityUseCodeResult.isErr()) {
+      throw entityUseCodeResult.error;
+    }
 
     // If verified, return the entity code. If not, return empty string.
-    return result.value?.[0].code || this.returnFallback();
+    return entityUseCodeResult.value.value?.[0].code || this.returnFallback();
   }
 
   // TODO: Now that we get the customer code from user metadata, maybe we should get the entity code from the same place?

@@ -53,3 +53,9 @@ export const AvataxTransactionAlreadyCancelledError = ExpectedError.subclass(
     },
   },
 );
+
+export const AvataxForbiddenAccessError = ExpectedError.subclass("AvataxForbiddenAccessError", {
+  props: {
+    description: "",
+  },
+});
