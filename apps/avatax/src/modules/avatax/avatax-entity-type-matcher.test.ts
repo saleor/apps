@@ -1,3 +1,4 @@
+import { ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
 import { AvataxClient } from "./avatax-client";
@@ -9,7 +10,7 @@ describe("AvataxEntityTypeMatcher", () => {
   it("returns empty string when no entity code", async () => {
     const mockAvataxClient = {
       getEntityUseCode: mockGetEntityUseCode.mockReturnValue(
-        Promise.resolve({ value: [{ code: "entityCode" }] }),
+        Promise.resolve(ok({ value: [{ code: "entityCode" }] })),
       ),
     } as any as AvataxClient;
 
@@ -20,7 +21,7 @@ describe("AvataxEntityTypeMatcher", () => {
   });
   it("returns empty string when entity code is present in metadata but not in avatax", async () => {
     const mockAvataxClient = {
-      getEntityUseCode: mockGetEntityUseCode.mockReturnValue(Promise.resolve({})),
+      getEntityUseCode: mockGetEntityUseCode.mockReturnValue(Promise.resolve(ok({}))),
     } as any as AvataxClient;
 
     const matcher = new AvataxEntityTypeMatcher(mockAvataxClient);
@@ -32,7 +33,7 @@ describe("AvataxEntityTypeMatcher", () => {
   it("returns entity code when entity code is present in metadata and in avatax", async () => {
     const mockAvataxClient = {
       getEntityUseCode: mockGetEntityUseCode.mockReturnValue(
-        Promise.resolve({ value: [{ code: "entityCode" }] }),
+        Promise.resolve(ok({ value: [{ code: "entityCode" }] })),
       ),
     } as any as AvataxClient;
 
