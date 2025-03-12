@@ -31,7 +31,10 @@ import {
   AvataxInvalidAddressError,
   AvataxStringLengthError,
 } from "@/modules/taxes/tax-error";
-import { orderCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/order-calculate-taxes";
+import {
+  orderCalculateTaxesSyncWebhook,
+  orderCalculateTaxesSyncWebhookReponse,
+} from "@/modules/webhooks/definitions/order-calculate-taxes";
 import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "@/modules/webhooks/validate-webhook-payload";
 
@@ -221,7 +224,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
       .mapErr(captureException)
       .map(logWriter.writeLog);
 
-    return res.status(200).json(ctx.buildResponse(calculatedTaxes));
+    return res.status(200).json(orderCalculateTaxesSyncWebhookReponse(calculatedTaxes));
   } catch (error) {
     if (error instanceof AvataxGetTaxError) {
       logger.warn(

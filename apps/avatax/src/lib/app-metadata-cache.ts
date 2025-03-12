@@ -34,6 +34,7 @@ export class AppMetadataCache {
     const store = this.als.getStore();
 
     if (!store) {
+      console.log("No store");
       throw new Error("Cant set metadata to AppMetadataCache. Function must be wrapped");
     }
 

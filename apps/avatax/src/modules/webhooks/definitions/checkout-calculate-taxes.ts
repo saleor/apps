@@ -1,4 +1,5 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
 import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
@@ -11,3 +12,6 @@ export const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<Calculate
   query: UntypedCalculateTaxesDocument,
   webhookPath: "/api/webhooks/checkout-calculate-taxes",
 });
+
+export const checkoutCalculateTaxesSyncWebhookReponse =
+  buildSyncWebhookResponsePayload<"CHECKOUT_CALCULATE_TAXES">;
