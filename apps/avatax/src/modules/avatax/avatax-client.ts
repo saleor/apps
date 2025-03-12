@@ -45,7 +45,7 @@ export class AvataxClient {
         kind: SpanKind.CLIENT,
         attributes: {
           [ATTR_PEER_SERVICE]: "avatax",
-          "avatax.document_type": model.type,
+          "avatax.document_type": model.type ? DocumentType[model.type] : "unknown",
         },
       },
       (span) => {
