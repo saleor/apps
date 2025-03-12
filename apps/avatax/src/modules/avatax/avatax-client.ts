@@ -1,3 +1,5 @@
+import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
+import { ATTR_PEER_SERVICE } from "@opentelemetry/semantic-conventions/incubating";
 import Avatax from "avatax";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
@@ -6,6 +8,7 @@ import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { fromPromise } from "neverthrow";
 
+import { appInternalTracer } from "@/lib/app-internal-tracer";
 import { createLogger } from "@/logger";
 
 import { AvataxErrorsParser } from "./avatax-errors-parser";
@@ -36,23 +39,52 @@ export class AvataxClient {
   constructor(private client: Avatax) {}
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    return fromPromise(
-      /*
-       * We use createOrAdjustTransaction instead of createTransaction because
-       * we must guarantee a way of idempotent update of the transaction due to the
-       * migration requirements. The transaction can be created in the old flow, but committed in the new flow.
-       */
-      this.client.createOrAdjustTransaction({
-        model: { createTransactionModel: model },
-      }),
-      (error) => {
-        const parsedError = this.errorParser.parse(error);
+    return appInternalTracer.startActiveSpan(
+      "calling AvaTax createOrAdjustTransaction API",
+      {
+        kind: SpanKind.CLIENT,
+        attributes: {
+          [ATTR_PEER_SERVICE]: "avatax",
+          "avatax.document_type": model.type,
+        },
+      },
+      (span) => {
+        return fromPromise(
+          /*
+           * We use createOrAdjustTransaction instead of createTransaction because
+           * we must guarantee a way of idempotent update of the transaction due to the
+           * migration requirements. The transaction can be created in the old flow, but committed in the new flow.
+           */
+          this.client.createOrAdjustTransaction({
+            model: { createTransactionModel: model },
+          }),
+          (error) => {
+            const parsedError = this.errorParser.parse(error);
 
-        /**
-         * TODO: Refactor errors so we are able to print error only for unhandled cases, otherwise use warnings etc
-         */
-        this.logger.error("Error calculating taxes", { error: parsedError });
-        return parsedError;
+            /**
+             * TODO: Refactor errors so we are able to print error only for unhandled cases, otherwise use warnings etc
+             */
+            this.logger.error("Error calculating taxes", { error: parsedError });
+            return parsedError;
+          },
+        )
+          .map((response) => {
+            span.setStatus({
+              code: SpanStatusCode.OK,
+              message: "Transaction created or adjusted successfully",
+            });
+            span.end();
+            return response;
+          })
+          .mapErr((error) => {
+            span.recordException(error);
+            span.setStatus({
+              code: SpanStatusCode.ERROR,
+              message: "Failed to create or adjust transaction",
+            });
+            span.end();
+            return error;
+          });
       },
     );
   }

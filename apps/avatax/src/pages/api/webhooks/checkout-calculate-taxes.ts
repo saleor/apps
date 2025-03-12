@@ -106,7 +106,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
           span.recordException(config.error);
           span.setStatus({
             code: SpanStatusCode.ERROR,
-            message: "App configuration is broken for checkout",
+            message: "App configuration is broken",
           });
           span.end();
 
@@ -120,7 +120,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
             (value) => {
               span.setStatus({
                 code: SpanStatusCode.OK,
-                message: "Taxes calculated successfully for checkout",
+                message: "Taxes calculated successfully",
               });
               span.end();
               return res.status(200).json(ctx.buildResponse(value));
@@ -133,7 +133,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
                 case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
-                    message: "Failed to calculate taxes for checkout",
+                    message: "Failed to calculate taxes",
                   });
                   span.end();
                   return res.status(500).json({
