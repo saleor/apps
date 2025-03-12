@@ -39,6 +39,7 @@ export class AvataxClient {
   constructor(private client: Avatax) {}
 
   async createTransaction({ model }: CreateTransactionArgs) {
+    this.logger.info("Document type", { type: model.type ? DocumentType[model.type] : "unknown" });
     return appInternalTracer.startActiveSpan(
       "calling AvaTax createOrAdjustTransaction API",
       {
