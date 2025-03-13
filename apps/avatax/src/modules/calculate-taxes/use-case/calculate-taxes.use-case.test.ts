@@ -273,7 +273,7 @@ describe("CalculateTaxesUseCase", () => {
 
     expect(logWriter.writeLog).toHaveBeenCalledWith({
       log: expect.objectContaining({
-        message: "Taxes calculated",
+        message: "Sucessfully calculated taxes",
       }),
     });
   });
@@ -287,7 +287,7 @@ describe("CalculateTaxesUseCase", () => {
 
     expect(logWriter.writeLog).toHaveBeenCalledWith({
       log: expect.objectContaining({
-        message: "Failed to calculate taxes. Invalid config",
+        message: "Error during tax calculation",
       }),
     });
   });
