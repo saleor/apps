@@ -133,7 +133,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
                 case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
-                    message: "Failed to calculate taxes",
+                    message: "Failed to calculate taxes: error from AvaTax API",
                   });
                   span.end();
                   return res.status(500).json({
@@ -143,7 +143,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
                 case CalculateTaxesUseCase.ConfigBrokenError: {
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
-                    message: "Failed to calculate taxes due to invalid configuration",
+                    message: "Failed to calculate taxes: invalid configuration",
                   });
                   span.end();
                   return res.status(500).json({
@@ -153,7 +153,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
                 case CalculateTaxesUseCase.ExpectedIncompletePayloadError: {
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
-                    message: "Taxes can't be calculated due to incomplete payload",
+                    message: "Failed to calucalted taxes: incomplete payload",
                   });
                   span.end();
                   return res.status(400).json({
@@ -164,7 +164,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
                   captureException(error);
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
-                    message: "Failed to calculate taxes (Unhandled error)",
+                    message: "Failed to calculate taxes: unhandled error",
                   });
                   span.end();
 
@@ -187,7 +187,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
 
           span.setStatus({
             code: SpanStatusCode.ERROR,
-            message: "Invalid address in app configuration",
+            message: "Failed to calculate taxes: error from AvaTax API",
           });
           span.end();
 
@@ -200,7 +200,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
 
         span.setStatus({
           code: SpanStatusCode.ERROR,
-          message: "Unhandled error",
+          message: "Failed to calculate taxes: unhandled error",
         });
         span.end();
 

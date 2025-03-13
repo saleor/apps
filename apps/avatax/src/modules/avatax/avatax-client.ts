@@ -96,22 +96,53 @@ export class AvataxClient {
     transactionCode: string;
     companyCode: string;
   }) {
-    return fromPromise(
-      this.client.voidTransaction({
-        transactionCode,
-        companyCode,
-        model: { code: VoidReasonCode.DocVoided },
-      }),
-      (error) => {
-        const parsedError = this.errorParser.parse(error);
+    return appInternalTracer.startActiveSpan(
+      "calling AvaTax voidTransaction API",
+      {
+        kind: SpanKind.CLIENT,
+        attributes: {
+          [ATTR_PEER_SERVICE]: "avatax",
+          "avatax.code": VoidReasonCode["DocVoided"],
+        },
+      },
+      (span) => {
+        return fromPromise(
+          this.client.voidTransaction({
+            transactionCode,
+            companyCode,
+            model: { code: VoidReasonCode.DocVoided },
+          }),
+          (error) => {
+            const parsedError = this.errorParser.parse(error);
 
-        this.logger.error("Error voiding transaction", {
-          error: parsedError,
-          transactionCode: transactionCode,
-          companyCode: companyCode,
-        });
+            this.logger.error("Error voiding transaction", {
+              error: parsedError,
+              transactionCode: transactionCode,
+              companyCode: companyCode,
+            });
 
-        return parsedError;
+            return parsedError;
+          },
+        )
+          .map((response) => {
+            span.setStatus({
+              code: SpanStatusCode.OK,
+              message: "Transaction voided successfully",
+            });
+            span.end();
+
+            return response;
+          })
+          .mapErr((error) => {
+            span.recordException(error);
+            span.setStatus({
+              code: SpanStatusCode.ERROR,
+              message: "Failed to void transaction",
+            });
+            span.end();
+
+            return error;
+          });
       },
     );
   }
@@ -143,20 +174,49 @@ export class AvataxClient {
   }
 
   async getEntityUseCode(useCode: string) {
-    return fromPromise(
-      this.client.listEntityUseCodes({
-        // https://developer.avalara.com/avatax/filtering-in-rest/
-        filter: `code eq ${useCode}`,
-      }),
-      (error) => {
-        const parsedError = this.errorParser.parse(error);
+    return appInternalTracer.startActiveSpan(
+      "calling AvaTax listEntityUseCodes API",
+      {
+        kind: SpanKind.CLIENT,
+        attributes: {
+          [ATTR_PEER_SERVICE]: "avatax",
+          "avatax.use_code": useCode,
+        },
+      },
+      (span) => {
+        return fromPromise(
+          this.client.listEntityUseCodes({
+            // https://developer.avalara.com/avatax/filtering-in-rest/
+            filter: `code eq ${useCode}`,
+          }),
+          (error) => {
+            const parsedError = this.errorParser.parse(error);
 
-        this.logger.error("Failed to get entity use code", {
-          error: parsedError,
-          useCode,
-        });
+            this.logger.error("Failed to get entity use code", {
+              error: parsedError,
+              useCode,
+            });
 
-        return parsedError;
+            return parsedError;
+          },
+        )
+          .map((response) => {
+            span.setStatus({
+              code: SpanStatusCode.OK,
+              message: "Entity use code fetched successfully",
+            });
+            span.end();
+            return response;
+          })
+          .mapErr((error) => {
+            span.recordException(error);
+            span.setStatus({
+              code: SpanStatusCode.ERROR,
+              message: "Failed to fetch entity use code",
+            });
+            span.end();
+            return error;
+          });
       },
     );
   }

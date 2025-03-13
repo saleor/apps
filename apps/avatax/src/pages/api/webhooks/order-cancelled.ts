@@ -14,8 +14,8 @@ import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
 import { createAvaTaxOrderCancelledAdapterFromConfig } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter-factory";
-import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
+import { OrderCancelledLogRequest } from "@/modules/client-logs/order-cancelled-log-request";
 import { SaleorCancelledOrderEvent } from "@/modules/saleor";
 import {
   OrderCancelNoAvataxIdError,
@@ -72,19 +72,17 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             logger.error("Insufficient order data", { error });
             Sentry.captureException("Insufficient order data");
 
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Failed to void order. Missing order data.",
-              checkoutOrOrderId: payload.order?.id,
-              channelId: payload.order?.channel.slug,
-              checkoutOrOrder: "order",
+            OrderCancelledLogRequest.createErrorLog({
+              sourceId: payload.order?.id,
+              channelSlug: payload.order?.channel.slug,
+              errorReason: "Missing order data from Saleor",
             })
               .mapErr(captureException)
               .map(logWriter.writeLog);
 
             span.setStatus({
               code: SpanStatusCode.ERROR,
-              message: "Failed to void order. Missing order data",
+              message: "Failed to void AvaTax transaction: missing order data from Saleor",
             });
             span.end();
 
@@ -97,19 +95,18 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
               error,
             });
 
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Failed to void order. Missing avataxId field in order metadata",
-              checkoutOrOrderId: payload.order?.id,
-              channelId: payload.order?.channel.slug,
-              checkoutOrOrder: "order",
+            OrderCancelledLogRequest.createErrorLog({
+              sourceId: payload.order?.id,
+              channelSlug: payload.order?.channel.slug,
+              errorReason: "Missing 'avataxId' field in order metadata",
             })
               .mapErr(captureException)
               .map(logWriter.writeLog);
 
             span.setStatus({
               code: SpanStatusCode.OK,
-              message: "Failed to void order. Missing avataxId field in order metadata",
+              message:
+                "Failed to void AvaTax transaction: missing avataxId field in order metadata",
             });
             span.end();
 
@@ -121,19 +118,17 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             logger.error("Error parsing order payload", { error });
             Sentry.captureException(error);
 
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Failed to void order. Failed to parse payload",
-              checkoutOrOrderId: payload.order?.id,
-              checkoutOrOrder: "order",
-              channelId: payload.order?.channel.slug,
+            OrderCancelledLogRequest.createErrorLog({
+              sourceId: payload.order?.id,
+              channelSlug: payload.order?.channel.slug,
+              errorReason: "Error parsing Saleor event payload",
             })
               .mapErr(captureException)
               .map(logWriter.writeLog);
 
             span.setStatus({
               code: SpanStatusCode.ERROR,
-              message: "Failed to void order. Failed to parse payload",
+              message: "Failed to void AvaTax transaction: error parsing Saleor event payload",
             });
             span.end();
 
@@ -145,19 +140,18 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             logger.error("Unhandled error", { error });
             Sentry.captureException(error);
 
-            ClientLogStoreRequest.create({
-              level: "error",
-              message: "Failed to void order. Unknown error",
-              checkoutOrOrderId: payload.order?.id,
-              checkoutOrOrder: "order",
-              channelId: payload.order?.channel.slug,
+            OrderCancelledLogRequest.createErrorLog({
+              sourceId: payload.order?.id,
+              channelSlug: payload.order?.channel.slug,
+              errorReason: "Unhandled error",
+              avataxId: payload.order?.avataxId,
             })
               .mapErr(captureException)
               .map(logWriter.writeLog);
 
             span.setStatus({
               code: SpanStatusCode.ERROR,
-              message: "Failed to void order. Unknown error",
+              message: "Failed to void AvaTax transaction: unhandled error",
             });
             span.end();
 
@@ -198,12 +192,11 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
       if (config.isErr()) {
         logger.warn("Failed to extract app config from metadata", { error: config.error });
 
-        ClientLogStoreRequest.create({
-          level: "error",
-          message: "Failed to void order. Broken configuration.",
-          checkoutOrOrderId: payload.order?.id,
-          channelId: payload.order?.channel.slug,
-          checkoutOrOrder: "order",
+        OrderCancelledLogRequest.createErrorLog({
+          sourceId: payload.order?.id,
+          channelSlug: payload.order?.channel.slug,
+          errorReason: "Cannot get app configuration",
+          avataxId: payload.order?.avataxId,
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
@@ -211,7 +204,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
         span.recordException(config.error);
         span.setStatus({
           code: SpanStatusCode.ERROR,
-          message: "App configuration is broken",
+          message: "Failed to void AvaTax transaction: invalid configuration",
         });
         span.end();
 
@@ -225,15 +218,21 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
       const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
       if (providerConfig.isErr()) {
-        ClientLogStoreRequest.create({
-          level: "error",
-          message: "Failed to void order. Broken configuration.",
-          checkoutOrOrderId: payload.order?.id,
-          channelId: payload.order?.channel.slug,
-          checkoutOrOrder: "order",
+        OrderCancelledLogRequest.createErrorLog({
+          sourceId: payload.order?.id,
+          channelSlug: payload.order?.channel.slug,
+          errorReason: "Invalid app configuration",
+          avataxId: payload.order?.avataxId,
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
+
+        span.recordException(providerConfig.error);
+        span.setStatus({
+          code: SpanStatusCode.ERROR,
+          message: "Failed to void AvaTax transaction: invalid configuration",
+        });
+        span.end();
 
         return res
           .status(400)
@@ -260,9 +259,18 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             error: e,
           });
 
+          OrderCancelledLogRequest.createErrorLog({
+            sourceId: payload.order?.id,
+            channelSlug: payload.order?.channel.slug,
+            errorReason: "AvaTax transaction was not found in AvaTax",
+            avataxId: payload.order?.avataxId,
+          })
+            .mapErr(captureException)
+            .map(logWriter.writeLog);
+
           span.setStatus({
             code: SpanStatusCode.ERROR,
-            message: "Transaction was not found in AvaTax",
+            message: "AvaTax transaction was not found in AvaTax",
           });
           span.end();
 
@@ -276,52 +284,58 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             error: e,
           });
 
+          OrderCancelledLogRequest.createErrorLog({
+            sourceId: payload.order?.id,
+            channelSlug: payload.order?.channel.slug,
+            errorReason: "AvaTax transaction was already cancelled in AvaTax",
+            avataxId: payload.order?.avataxId,
+          })
+            .mapErr(captureException)
+            .map(logWriter.writeLog);
+
           span.setStatus({
             code: SpanStatusCode.OK,
-            message: "Transaction was already cancelled in AvaTax",
+            message: "AvaTax transaction was already cancelled in AvaTax",
           });
           span.end();
 
           return res.status(200).send({
-            message: "Transaction was already cancelled in AvaTax",
+            message: "Order was already cancelled in AvaTax",
           });
         }
 
-        ClientLogStoreRequest.create({
-          level: "error",
-          message: "Failed to void order. AvaTax returned error.",
-          checkoutOrOrder: "order",
-          checkoutOrOrderId: payload.order?.id,
-          channelId: payload.order?.channel.slug,
+        OrderCancelledLogRequest.createErrorLog({
+          sourceId: payload.order?.id,
+          channelSlug: payload.order?.channel.slug,
+          errorReason: "AvaTax API returned an unhandled error",
+          avataxId: payload.order?.avataxId,
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
 
         span.setStatus({
           code: SpanStatusCode.ERROR,
-          message: "Failed to void order. (Unhandled error)",
+          message: "Failed to void AvaTax transaction: unhandled error",
         });
 
         return res.status(500).send({
-          message: "Failed to void order. (Unhandled error)",
+          message: "Failed to void AvaTax transaction. (Unhandled error)",
         });
       }
 
-      ClientLogStoreRequest.create({
-        level: "info",
-        message: "Order voided in AvaTax",
-        checkoutOrOrder: "order",
-        checkoutOrOrderId: payload.order?.id,
-        channelId: payload.order?.channel.slug,
+      OrderCancelledLogRequest.createSuccessLog({
+        sourceId: payload.order?.id,
+        channelSlug: payload.order?.channel.slug,
+        avataxId: payload.order?.avataxId,
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
 
-      logger.info("Order cancelled");
+      logger.info("AvaTax transaction voided successfully");
 
       span.setStatus({
         code: SpanStatusCode.OK,
-        message: "Order voided in AvaTax",
+        message: "Succesfully voided order in AvaTax",
       });
       span.end();
 

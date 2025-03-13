@@ -18,8 +18,8 @@ import { OrderMetadataManager } from "@/modules/app/order-metadata-manager";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
 import { createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter-factory";
-import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
+import { OrderConfirmedLogRequest } from "@/modules/client-logs/order-confirmed-log-request";
 import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
 import {
   AvataxEntityNotFoundError,
@@ -97,12 +97,10 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         Sentry.captureException(error);
         logger.error("Error parsing webhook payload into Saleor order", { error });
 
-        ClientLogStoreRequest.create({
-          level: "error",
-          message: "Failed to commit order. Unhandled error.",
-          checkoutOrOrderId: payload.order?.id,
-          checkoutOrOrder: "order",
-          channelId: payload.order?.channel.slug,
+        OrderConfirmedLogRequest.createErrorLog({
+          sourceId: payload.order?.id,
+          channelSlug: payload.order?.channel.slug,
+          errorReason: "Error parsing Saleor event payload",
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
@@ -110,7 +108,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         span.recordException(error);
         span.setStatus({
           code: SpanStatusCode.ERROR,
-          message: "Failed to commit transaction for order. Unhandled error.",
+          message: "Failed to commit transaction in AvaTax: error parsing Saleor event payload",
         });
         span.end();
 
@@ -130,19 +128,17 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
            */
           logger.warn("Order is fulfilled, skipping");
 
-          ClientLogStoreRequest.create({
-            level: "info",
-            message: "Skip commiting - order already fulfilled",
-            checkoutOrOrderId: payload.order?.id,
-            checkoutOrOrder: "order",
-            channelId: payload.order?.channel.slug,
+          OrderConfirmedLogRequest.createErrorLog({
+            sourceId: payload.order?.id,
+            channelSlug: payload.order?.channel.slug,
+            errorReason: "Order already fulfilled",
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
             code: SpanStatusCode.ERROR,
-            message: "Skip commiting transaction - order already fulfilled",
+            message: "Failed to commit transaction in AvaTax: order already fulfilled",
           });
           span.end();
 
@@ -154,19 +150,17 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         if (confirmedOrderEvent.isStrategyFlatRates()) {
           logger.info("Order has flat rates tax strategy, skipping...");
 
-          ClientLogStoreRequest.create({
-            level: "info",
-            message: "Skip commiting - order has flat tax rates strategy",
-            checkoutOrOrderId: payload.order?.id,
-            checkoutOrOrder: "order",
-            channelId: payload.order?.channel.slug,
+          OrderConfirmedLogRequest.createErrorLog({
+            sourceId: payload.order?.id,
+            channelSlug: payload.order?.channel.slug,
+            errorReason: "Order has flat tax rates strategy",
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
             code: SpanStatusCode.OK,
-            message: "Order has flat rates tax strategy - skipping commiting transaction",
+            message: "Failed to commit transaction in AvaTax: order has flat tax rates strategy",
           });
           span.end();
 
@@ -202,12 +196,10 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           });
 
         if (config.isErr()) {
-          ClientLogStoreRequest.create({
-            level: "error",
-            message: "Failed to commit order. Configuration error.",
-            checkoutOrOrderId: payload.order?.id,
-            checkoutOrOrder: "order",
-            channelId: payload.order?.channel.slug,
+          OrderConfirmedLogRequest.createErrorLog({
+            sourceId: payload.order?.id,
+            channelSlug: payload.order?.channel.slug,
+            errorReason: "Cannot get app configuration",
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
@@ -217,7 +209,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           span.recordException(config.error);
           span.setStatus({
             code: SpanStatusCode.ERROR,
-            message: "App configuration is broken",
+            message: "Failed to commit AvaTax transaction: invalid configuration",
           });
           span.end();
 
@@ -235,12 +227,10 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         );
 
         if (providerConfig.isErr()) {
-          ClientLogStoreRequest.create({
-            level: "error",
-            message: "Failed to commit order. Configuration error.",
-            checkoutOrOrderId: payload.order?.id,
-            checkoutOrOrder: "order",
-            channelId: payload.order?.channel.slug,
+          OrderConfirmedLogRequest.createErrorLog({
+            sourceId: payload.order?.id,
+            channelSlug: payload.order?.channel.slug,
+            errorReason: "Invalid app configuration",
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
@@ -248,7 +238,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           span.recordException(providerConfig.error);
           span.setStatus({
             code: SpanStatusCode.ERROR,
-            message: "Failed to commit transaction due to invalid configuration",
+            message: "Failed to commit AvaTax transaction: invalid configuration",
           });
           span.end();
 
@@ -280,45 +270,38 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           );
           logger.info("Updated order metadata with externalId");
 
-          ClientLogStoreRequest.create({
-            level: "info",
-            message: "Order committed successfully",
-            checkoutOrOrderId: payload.order?.id,
-            checkoutOrOrder: "order",
-            channelId: payload.order?.channel.slug,
-            attributes: {
-              confirmedOrderId: confirmedOrder.id,
-            },
+          OrderConfirmedLogRequest.createSuccessLog({
+            sourceId: payload.order?.id,
+            channelSlug: payload.order?.channel.slug,
+            avataxId: confirmedOrder.id,
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
             code: SpanStatusCode.OK,
-            message: "Transaction committed successfully",
+            message: "AvaTax transaction committed successfully",
           });
           span.end();
 
           return res.status(200).end();
         } catch (error) {
-          logger.debug("Error confirming order", { error: error });
+          logger.debug("Error confirming order in AvaTax", { error: error });
           span.recordException(error as Error); // todo: remove casting when error handling is refactored
 
           switch (true) {
             case error instanceof TaxBadPayloadError: {
-              ClientLogStoreRequest.create({
-                level: "error",
-                message: "Failed to commit order. Webhook payload invalid",
-                checkoutOrOrderId: payload.order?.id,
-                checkoutOrOrder: "order",
-                channelId: payload.order?.channel.slug,
+              OrderConfirmedLogRequest.createErrorLog({
+                sourceId: payload.order?.id,
+                channelSlug: payload.order?.channel.slug,
+                errorReason: "Invalid webhook payload",
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
 
               span.setStatus({
                 code: SpanStatusCode.ERROR,
-                message: "Failed to commit transaction due to invalid payload",
+                message: "Failed to commit AvaTax transaction: invalid webhook payload",
               });
               span.end();
 
@@ -327,19 +310,17 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
                 .json({ message: `Order: ${payload.order?.id} data is not valid` });
             }
             case error instanceof AvataxStringLengthError: {
-              ClientLogStoreRequest.create({
-                level: "error",
-                message: `Failed to commit order: ${error?.description} `,
-                checkoutOrOrderId: payload.order?.id,
-                checkoutOrOrder: "order",
-                channelId: payload.order?.channel.slug,
+              OrderConfirmedLogRequest.createErrorLog({
+                sourceId: payload.order?.id,
+                channelSlug: payload.order?.channel.slug,
+                errorReason: "Invalid address",
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
 
               span.setStatus({
                 code: SpanStatusCode.ERROR,
-                message: "Failed to commit transaction due to invalid payload",
+                message: "Failed to commit AvaTax transaction: error from AvaTax API",
               });
               span.end();
 
@@ -348,19 +329,17 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
               });
             }
             case error instanceof AvataxEntityNotFoundError: {
-              ClientLogStoreRequest.create({
-                level: "error",
-                message: `Failed to commit order: ${error?.description} `,
-                checkoutOrOrderId: payload.order?.id,
-                checkoutOrOrder: "order",
-                channelId: payload.order?.channel.slug,
+              OrderConfirmedLogRequest.createErrorLog({
+                sourceId: payload.order?.id,
+                channelSlug: payload.order?.channel.slug,
+                errorReason: "Entity not found",
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
 
               span.setStatus({
                 code: SpanStatusCode.ERROR,
-                message: "Failed to commit transaction due to AvaTax entity not found",
+                message: "Failed to commit AvaTax transaction: error from AvaTax API",
               });
               span.end();
 
@@ -372,19 +351,17 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           Sentry.captureException(error);
           logger.error("Unhandled error executing webhook", { error: error });
 
-          ClientLogStoreRequest.create({
-            level: "error",
-            message: `Failed to commit order: Unhandled error `,
-            checkoutOrOrderId: payload.order?.id,
-            checkoutOrOrder: "order",
-            channelId: payload.order?.channel.slug,
+          OrderConfirmedLogRequest.createErrorLog({
+            sourceId: payload.order?.id,
+            channelSlug: payload.order?.channel.slug,
+            errorReason: "Unhandled error",
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
             code: SpanStatusCode.ERROR,
-            message: "Failed to commit transaction. (Unhandled error)",
+            message: "Failed to commit AvaTax transaction: unhandled error",
           });
           span.end();
 
@@ -395,19 +372,17 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         Sentry.captureException(error);
         logger.error("Unhandled error executing webhook", { error: error });
 
-        ClientLogStoreRequest.create({
-          level: "error",
-          message: `Failed to commit order: Unhandled error `,
-          checkoutOrOrderId: payload.order?.id,
-          checkoutOrOrder: "order",
-          channelId: payload.order?.channel.slug,
+        OrderConfirmedLogRequest.createErrorLog({
+          sourceId: payload.order?.id,
+          channelSlug: payload.order?.channel.slug,
+          errorReason: "Unhandled error",
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
 
         span.setStatus({
           code: SpanStatusCode.ERROR,
-          message: "Failed to commit transaction. (Unhandled error)",
+          message: "Failed to commit AvaTax transaction: unhandled error",
         });
         span.end();
 
