@@ -12,7 +12,7 @@ import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calcula
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
 import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-tax-code-matches.service";
-import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
+import { CalculateTaxesLogRequest } from "@/modules/client-logs/calculate-taxes-log-request";
 import { ILogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 
 import { MetadataItem } from "../../../../generated/graphql";
@@ -156,12 +156,11 @@ export class CalculateTaxesUseCase {
         error: config.error,
       });
 
-      ClientLogStoreRequest.create({
-        level: "error",
-        message: "Failed to calculate taxes. Invalid config",
-        checkoutOrOrderId: payload.taxBase.sourceObject.id,
-        channelId: payload.taxBase.channel.slug,
-        checkoutOrOrder: "checkout",
+      CalculateTaxesLogRequest.createErrorLog({
+        sourceId: payload.taxBase.sourceObject.id,
+        channelSlug: payload.taxBase.channel.slug,
+        sourceType: "checkout",
+        errorReason: "Cannot get app configuration",
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
@@ -178,12 +177,11 @@ export class CalculateTaxesUseCase {
     const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 
     if (providerConfig.isErr()) {
-      ClientLogStoreRequest.create({
-        level: "error",
-        message: "Failed to calculate taxes. Invalid config",
-        checkoutOrOrderId: payload.taxBase.sourceObject.id,
-        channelId: payload.taxBase.channel.slug,
-        checkoutOrOrder: "checkout",
+      CalculateTaxesLogRequest.createErrorLog({
+        sourceId: payload.taxBase.sourceObject.id,
+        channelSlug: payload.taxBase.channel.slug,
+        sourceType: "checkout",
+        errorReason: "Invalid app configuration",
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
@@ -206,12 +204,11 @@ export class CalculateTaxesUseCase {
         authData,
       ),
       (err) => {
-        ClientLogStoreRequest.create({
-          level: "error",
-          message: "Failed to calculate taxes.",
-          checkoutOrOrderId: payload.taxBase.sourceObject.id,
-          channelId: payload.taxBase.channel.slug,
-          checkoutOrOrder: "checkout",
+        CalculateTaxesLogRequest.createErrorLog({
+          sourceId: payload.taxBase.sourceObject.id,
+          channelSlug: payload.taxBase.channel.slug,
+          sourceType: "checkout",
+          errorReason: "AvaTax API returned an error",
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
@@ -223,13 +220,11 @@ export class CalculateTaxesUseCase {
     ).map((results) => {
       this.logger.info("Taxes calculated - returning response do Saleor");
 
-      ClientLogStoreRequest.create({
-        level: "info",
-        message: "Taxes calculated",
-        checkoutOrOrderId: payload.taxBase.sourceObject.id,
-        channelId: payload.taxBase.channel.slug,
-        attributes: results,
-        checkoutOrOrder: "checkout",
+      CalculateTaxesLogRequest.createSuccessLog({
+        sourceId: payload.taxBase.sourceObject.id,
+        channelSlug: payload.taxBase.channel.slug,
+        sourceType: "checkout",
+        calculatedTaxesResult: results,
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
