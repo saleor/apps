@@ -13,7 +13,8 @@
     "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
     "VERCEL",
-    "NEXT_RUNTIME"
+    "NEXT_RUNTIME",
+    "REPOSITORY_URL"
   ],
   "pipeline": {
     "build": {

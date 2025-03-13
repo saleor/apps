@@ -13,8 +13,7 @@ registerOTel({
     [ATTR_SERVICE_VERSION]: pkg.version,
     [ATTR_DEPLOYMENT_ENVIRONMENT_NAME]: process.env.ENV,
     [ObservabilityAttributes.COMMIT_SHA]: process.env.VERCEL_GIT_COMMIT_SHA,
-    [ObservabilityAttributes.REPOSITORY_URL]:
-      "https://github.com/saleor/apps/tree/main/apps/products-feed",
+    [ObservabilityAttributes.REPOSITORY_URL]: process.env.REPOSITORY_URL,
     // override attribute set by `@vercel/otel` - if you are using OSS version you can remove it
     env: undefined,
     [ObservabilityAttributes.VERCEL_ENV]: process.env.VERCEL_ENV,

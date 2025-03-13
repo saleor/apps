@@ -16,8 +16,7 @@ registerOTel({
     [ATTR_SERVICE_VERSION]: pkg.version,
     [ATTR_DEPLOYMENT_ENVIRONMENT_NAME]: env.ENV,
     [ObservabilityAttributes.COMMIT_SHA]: env.VERCEL_GIT_COMMIT_SHA,
-    [ObservabilityAttributes.REPOSITORY_URL]:
-      "https://github.com/saleor/apps/tree/main/apps/avatax",
+    [ObservabilityAttributes.REPOSITORY_URL]: env.REPOSITORY_URL,
     // override attribute set by `@vercel/otel` - if you are using OSS version you can remove it
     env: undefined,
     [ObservabilityAttributes.VERCEL_ENV]: env.VERCEL_ENV,
