@@ -1,4 +1,3 @@
-import { Context, Sampler, SamplingResult, SpanKind } from "@opentelemetry/api";
 import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
 import { createAwsInstrumentation } from "@saleor/apps-otel/src/aws-instrumentation-factory";
@@ -9,21 +8,6 @@ import { registerOTel } from "@vercel/otel";
 import { env } from "@/env";
 
 import pkg from "../../package.json";
-
-export class OTELSampler implements Sampler {
-  shouldSample(
-    context: Context,
-    traceId: string,
-    spanName: string,
-    spanKind: SpanKind,
-  ): SamplingResult {
-    return { decision: 2 };
-  }
-
-  toString(): string {
-    return "OTELSampler";
-  }
-}
 
 registerOTel({
   serviceName: env.OTEL_SERVICE_NAME,
@@ -41,5 +25,4 @@ registerOTel({
     }),
   ],
   instrumentations: [createAwsInstrumentation(), createHttpInstrumentation()],
-  traceSampler: new OTELSampler(),
 });
