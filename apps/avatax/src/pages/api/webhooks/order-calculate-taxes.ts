@@ -4,7 +4,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 import * as Sentry from "@sentry/nextjs";
-import { captureException } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
@@ -47,7 +46,10 @@ const logger = createLogger("orderCalculateTaxesSyncWebhook");
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
-const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
+const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(
+  logger,
+  Sentry.captureException,
+);
 const discountStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
 
 const logsWriterFactory = new LogWriterFactory();
@@ -143,7 +145,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
             sourceType: "order",
             errorReason: "Missing address or lines",
           })
-            .mapErr(captureException)
+            .mapErr(Sentry.captureException)
             .map(logWriter.writeLog);
 
           span.recordException(payloadVerificationResult.error);
@@ -164,7 +166,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
             try {
               new AppConfigurationLogger(logger).logConfiguration(config, channelSlug);
             } catch (e) {
-              captureException(
+              Sentry.captureException(
                 new AppConfigExtractor.LogConfigurationMetricError(
                   "Failed to log configuration metric",
                   {
@@ -188,7 +190,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
             sourceType: "order",
             errorReason: "Cannot get app configuration",
           })
-            .mapErr(captureException)
+            .mapErr(Sentry.captureException)
             .map(logWriter.writeLog);
 
           span.recordException(config.error);
@@ -212,7 +214,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
             sourceType: "order",
             errorReason: "Invalid app configuration",
           })
-            .mapErr(captureException)
+            .mapErr(Sentry.captureException)
             .map(logWriter.writeLog);
 
           span.recordException(providerConfig.error);
@@ -242,7 +244,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           sourceType: "order",
           calculatedTaxesResult: calculatedTaxes,
         })
-          .mapErr(captureException)
+          .mapErr(Sentry.captureException)
           .map(logWriter.writeLog);
 
         span.setStatus({
@@ -269,7 +271,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
             sourceType: "order",
             errorReason: "AvaTax API returned an error",
           })
-            .mapErr(captureException)
+            .mapErr(Sentry.captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
@@ -291,7 +293,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
             sourceType: "order",
             errorReason: "Invalid address",
           })
-            .mapErr(captureException)
+            .mapErr(Sentry.captureException)
             .map(logWriter.writeLog);
 
           logger.warn(
@@ -317,7 +319,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
             sourceType: "order",
             errorReason: "Invalid address",
           })
-            .mapErr(captureException)
+            .mapErr(Sentry.captureException)
             .map(logWriter.writeLog);
 
           logger.warn(
@@ -345,7 +347,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
             sourceType: "order",
             errorReason: "Entity not found",
           })
-            .mapErr(captureException)
+            .mapErr(Sentry.captureException)
             .map(logWriter.writeLog);
 
           logger.warn(
@@ -372,7 +374,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           sourceType: "order",
           errorReason: "Unhandled error",
         })
-          .mapErr(captureException)
+          .mapErr(Sentry.captureException)
           .map(logWriter.writeLog);
 
         span.setStatus({

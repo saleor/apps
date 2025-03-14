@@ -19,7 +19,6 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: [
       "@sentry/nextjs",
-      "@sentry/node",
       "@saleor/app-sdk",
       "@trpc/server",
       "@trpc/client",
