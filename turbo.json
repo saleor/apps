@@ -2,18 +2,24 @@
   "$schema": "https://turbo.build/schema.v2.json",
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
-    "VERCEL_ENV",
     "APP_LOG_LEVEL",
-    "NODE_ENV",
     "CI",
-    "OTEL_SERVICE_NAME",
-    "OTEL_ENABLED",
+    "ENABLE_EXPERIMENTAL_COREPACK",
     "ENV",
     "GITHUB_SHA",
+    "NEXT_RUNTIME",
+    "NODE_ENV",
+    "OTEL_ENABLED",
+    "OTEL_EXPORTER_OTLP_ENDPOINT",
+    "OTEL_LOG_LEVEL",
+    "OTEL_SERVICE_NAME",
+    "OTEL_TRACES_SAMPLER_ARG",
+    "OTEL_TRACES_SAMPLER",
+    "REPOSITORY_URL",
+    "VERCEL_ENV",
     "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
-    "VERCEL",
-    "NEXT_RUNTIME"
+    "VERCEL"
   ],
   "tasks": {
     "build": {
