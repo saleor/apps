@@ -51,7 +51,8 @@
     },
     "test": {
       "dependsOn": ["^test"],
-      "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"]
+      "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
+      "outputs": []
     },
     "test:ci": {
       "dependsOn": ["^test:ci"],
