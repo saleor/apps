@@ -12,7 +12,7 @@
   },
   "main": "index.ts",
   "scripts": {
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "vitest",
@@ -25,10 +25,11 @@
   },
   "devDependencies": {
     "@saleor/app-sdk": "catalog:",
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
     "@sentry/nextjs": "catalog:",
     "@vitest/coverage-v8": "1.6.0",
     "eslint": "catalog:",
-    "eslint-config-saleor": "workspace:*",
     "modern-errors": "7.0.1",
     "modern-errors-serialize": "6.1.0",
     "typescript": "5.5.4",

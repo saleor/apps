@@ -4,7 +4,7 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "vitest",
@@ -17,12 +17,13 @@
   },
   "devDependencies": {
     "@saleor/app-sdk": "catalog:",
+    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "1.1.10",
+    "@saleor/typescript-config-apps": "workspace:*",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@types/semver": "7.5.0",
     "@vitest/coverage-v8": "1.6.0",
-    "eslint-config-saleor": "workspace:*",
     "next": "14.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",

@@ -1,6 +1,7 @@
 {
-  "name": "eslint-config-saleor",
+  "name": "@saleor/eslint-config-apps",
   "version": "0.4.11",
+  "private": true,
   "license": "MIT",
   "main": "index.js",
   "devDependencies": {
@@ -16,8 +17,5 @@
     "eslint-plugin-simple-import-sort": "12.1.1",
     "next": "14.2.3",
     "typescript": "5.5.4"
-  },
-  "publishConfig": {
-    "access": "public"
   }
 }
