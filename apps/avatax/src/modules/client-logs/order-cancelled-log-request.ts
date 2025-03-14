@@ -3,14 +3,14 @@ import { ClientLogStoreRequest } from "./client-log";
 export class OrderCancelledLogRequest {
   static createSuccessLog(args: {
     sourceId: string | undefined;
-    channelSlug: string | undefined;
+    channelId: string | undefined;
     avataxId: string | undefined | null;
   }) {
     return ClientLogStoreRequest.create({
       level: "info",
       message: "Succesfully voided AvaTax transaction",
       checkoutOrOrderId: args.sourceId,
-      channelId: args.channelSlug,
+      channelId: args.channelId,
       checkoutOrOrder: "order",
       attributes: {
         ...(args.avataxId ? { avataxTransactionId: args.avataxId } : {}),
@@ -20,7 +20,7 @@ export class OrderCancelledLogRequest {
 
   static createErrorLog(args: {
     sourceId: string | undefined;
-    channelSlug: string | undefined;
+    channelId: string | undefined;
     errorReason: string;
     avataxId?: string | null;
   }) {
@@ -28,7 +28,7 @@ export class OrderCancelledLogRequest {
       level: "error",
       message: "Failed to void AvaTax transaction",
       checkoutOrOrderId: args.sourceId,
-      channelId: args.channelSlug,
+      channelId: args.channelId,
       checkoutOrOrder: "order",
       attributes: {
         error: {
