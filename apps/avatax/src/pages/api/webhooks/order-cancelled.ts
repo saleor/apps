@@ -74,7 +74,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
 
             OrderCancelledLogRequest.createErrorLog({
               sourceId: payload.order?.id,
-              channelSlug: payload.order?.channel.slug,
+              channelId: payload.order?.channel.id,
               errorReason: "Missing order data from Saleor",
             })
               .mapErr(captureException)
@@ -97,7 +97,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
 
             OrderCancelledLogRequest.createErrorLog({
               sourceId: payload.order?.id,
-              channelSlug: payload.order?.channel.slug,
+              channelId: payload.order?.channel.id,
               errorReason: "Missing 'avataxId' field in order metadata",
             })
               .mapErr(captureException)
@@ -120,7 +120,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
 
             OrderCancelledLogRequest.createErrorLog({
               sourceId: payload.order?.id,
-              channelSlug: payload.order?.channel.slug,
+              channelId: payload.order?.channel.id,
               errorReason: "Error parsing Saleor event payload",
             })
               .mapErr(captureException)
@@ -142,7 +142,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
 
             OrderCancelledLogRequest.createErrorLog({
               sourceId: payload.order?.id,
-              channelSlug: payload.order?.channel.slug,
+              channelId: payload.order?.channel.id,
               errorReason: "Unhandled error",
               avataxId: payload.order?.avataxId,
             })
@@ -194,7 +194,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
 
         OrderCancelledLogRequest.createErrorLog({
           sourceId: payload.order?.id,
-          channelSlug: payload.order?.channel.slug,
+          channelId: payload.order?.channel.id,
           errorReason: "Cannot get app configuration",
           avataxId: payload.order?.avataxId,
         })
@@ -220,7 +220,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
       if (providerConfig.isErr()) {
         OrderCancelledLogRequest.createErrorLog({
           sourceId: payload.order?.id,
-          channelSlug: payload.order?.channel.slug,
+          channelId: payload.order?.channel.id,
           errorReason: "Invalid app configuration",
           avataxId: payload.order?.avataxId,
         })
@@ -261,7 +261,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
 
           OrderCancelledLogRequest.createErrorLog({
             sourceId: payload.order?.id,
-            channelSlug: payload.order?.channel.slug,
+            channelId: payload.order?.channel.id,
             errorReason: "AvaTax transaction was not found in AvaTax",
             avataxId: payload.order?.avataxId,
           })
@@ -286,7 +286,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
 
           OrderCancelledLogRequest.createErrorLog({
             sourceId: payload.order?.id,
-            channelSlug: payload.order?.channel.slug,
+            channelId: payload.order?.channel.id,
             errorReason: "AvaTax transaction was already cancelled in AvaTax",
             avataxId: payload.order?.avataxId,
           })
@@ -306,7 +306,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
 
         OrderCancelledLogRequest.createErrorLog({
           sourceId: payload.order?.id,
-          channelSlug: payload.order?.channel.slug,
+          channelId: payload.order?.channel.id,
           errorReason: "AvaTax API returned an unhandled error",
           avataxId: payload.order?.avataxId,
         })
@@ -325,7 +325,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
 
       OrderCancelledLogRequest.createSuccessLog({
         sourceId: payload.order?.id,
-        channelSlug: payload.order?.channel.slug,
+        channelId: payload.order?.channel.id,
         avataxId: payload.order?.avataxId,
       })
         .mapErr(captureException)
