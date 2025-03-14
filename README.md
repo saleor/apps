@@ -71,6 +71,20 @@ Some of the Saleor apps are available in separate repositories:
 
 You can find the documentation for saleor/apps on [docs.saleor.io](https://docs.saleor.io/docs/3.x/developer/app-store/development).
 
+### PNPM and corepack
+
+Due to an issue with [outdated signatures in Corepack](https://github.com/nodejs/corepack/issues/612), Corepack should be updated to its latest version first:
+
+```shell
+npm install --global corepack@latest
+```
+
+After that run to install pnpm with proper version:
+
+```shell
+corepack enable pnpm
+```
+
 ## ADR
 
 This repository uses [architecture decision records](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) to document architectural decisions. You can find them in the `docs/adr` directory.
