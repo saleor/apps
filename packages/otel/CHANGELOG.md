@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 2.1.0
+
+### Minor Changes
+
+- 8154e9e9: Properly disable HTTP instrumentation for Sentry requests. Added `AwsInstrumentation` factory that can be used to auto instrument DynamoDB calls.
+
 ## 2.0.0
 
 ### Major Changes
