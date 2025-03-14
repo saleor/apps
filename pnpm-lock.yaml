@@ -158,9 +158,6 @@ importers:
       '@sentry/nextjs':
         specifier: ../../node_modules/@sentry/nextjs
         version: link:../../node_modules/@sentry/nextjs
-      '@sentry/node':
-        specifier: ../../node_modules/@sentry/node
-        version: link:../../node_modules/@sentry/node
       '@t3-oss/env-nextjs':
         specifier: 0.11.1
         version: 0.11.1(typescript@5.5.4)(zod@3.21.4)
@@ -1081,9 +1078,6 @@ importers:
       '@sentry/nextjs':
         specifier: ../../node_modules/@sentry/nextjs
         version: link:../../node_modules/@sentry/nextjs
-      '@sentry/node':
-        specifier: ../../node_modules/@sentry/node
-        version: link:../../node_modules/@sentry/node
       '@t3-oss/env-nextjs':
         specifier: 0.11.1
         version: 0.11.1(typescript@5.5.4)(zod@3.21.4)
@@ -20563,7 +20557,7 @@ snapshots:
       get-port: 5.1.1
       giget: 1.1.2
       globby: 11.1.0
-      jscodeshift: 0.14.0(@babel/preset-env@7.22.5(@babel/core@7.22.5))
+      jscodeshift: 0.14.0(@babel/preset-env@7.22.5(@babel/core@7.22.11))
       leven: 3.1.0
       prettier: 2.8.8
       prompts: 2.4.2
@@ -25710,7 +25704,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  jscodeshift@0.14.0(@babel/preset-env@7.22.5(@babel/core@7.22.5)):
+  jscodeshift@0.14.0(@babel/preset-env@7.22.5(@babel/core@7.22.11)):
     dependencies:
       '@babel/core': 7.23.3
       '@babel/parser': 7.26.5
