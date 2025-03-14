@@ -136,7 +136,7 @@ importers:
         version: 1.30.0
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -166,7 +166,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 'catalog:'
-        version: 7.117.0(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@sentry/node':
         specifier: 'catalog:'
         version: 7.117.0
@@ -178,7 +178,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
         specifier: 10.43.1
         version: 10.43.1
@@ -223,7 +223,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -282,6 +282,12 @@ importers:
       '@next/bundle-analyzer':
         specifier: 14.1.4
         version: 14.1.4
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config-saleor
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -306,9 +312,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-saleor
       eslint-plugin-neverthrow:
         specifier: ^1.1.4
         version: 1.1.4(@typescript-eslint/parser@8.11.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)
@@ -371,7 +374,7 @@ importers:
         version: 1.30.0
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -398,7 +401,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 'catalog:'
-        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.117.0(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -407,7 +410,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -440,7 +443,7 @@ importers:
         version: 20.0.3
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       p-ratelimit:
         specifier: 1.0.1
         version: 1.0.1
@@ -499,6 +502,12 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config-saleor
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -520,9 +529,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-saleor
       node-mocks-http:
         specifier: ^1.12.2
         version: 1.12.2
@@ -561,7 +567,7 @@ importers:
         version: 1.30.0
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -585,7 +591,7 @@ importers:
         version: 2.32.1
       '@sentry/nextjs':
         specifier: 'catalog:'
-        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+        version: 7.117.0(next@14.2.3(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -603,7 +609,7 @@ importers:
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       node-fetch:
         specifier: ^3.2.6
         version: 3.2.6
@@ -653,6 +659,12 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config-saleor
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -668,9 +680,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-saleor
       postcss:
         specifier: ^8.4.14
         version: 8.4.14
@@ -718,7 +727,7 @@ importers:
         version: 1.30.0
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -846,6 +855,12 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config-saleor
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -864,9 +879,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-saleor
       tsx:
         specifier: 4.7.1
         version: 4.7.1
@@ -905,7 +917,7 @@ importers:
         version: 1.30.0
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -1021,6 +1033,12 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config-saleor
       '@testing-library/react-hooks':
         specifier: ^8.0.1
         version: 8.0.1(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1042,9 +1060,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-saleor
       node-mocks-http:
         specifier: ^1.12.2
         version: 1.12.2
@@ -1101,7 +1116,7 @@ importers:
         version: 1.30.0
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -1232,6 +1247,12 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config-saleor
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1262,9 +1283,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-saleor
       eslint-plugin-neverthrow:
         specifier: ^1.1.4
         version: 1.1.4(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)
@@ -1327,7 +1345,7 @@ importers:
         version: 1.30.0
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -1470,6 +1488,12 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config-saleor
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.0.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1500,9 +1524,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-saleor
       null-loader:
         specifier: 4.0.1
         version: 4.0.1(webpack@5.82.1)
@@ -1521,15 +1542,18 @@ importers:
       '@saleor/app-sdk':
         specifier: 'catalog:'
         version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config-saleor
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
       typescript:
         specifier: 5.5.4
         version: 5.5.4
@@ -1590,7 +1614,13 @@ importers:
     devDependencies:
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config-saleor
       '@sentry/nextjs':
         specifier: 'catalog:'
         version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
@@ -1600,9 +1630,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
       modern-errors:
         specifier: 7.0.1
         version: 7.0.1
@@ -1641,17 +1668,20 @@ importers:
         version: 1.30.0
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       urql:
         specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
     devDependencies:
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config-saleor
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
       typescript:
         specifier: 5.5.4
         version: 5.5.4
@@ -1661,6 +1691,12 @@ importers:
       '@babel/core':
         specifier: ^7.21.8
         version: 7.22.5
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config-saleor
       '@saleor/macaw-ui':
         specifier: 1.1.10
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1700,9 +1736,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1727,12 +1760,15 @@ importers:
 
   packages/sentry-utils:
     devDependencies:
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config-saleor
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
       typescript:
         specifier: 5.5.4
         version: 5.5.4
@@ -1751,7 +1787,13 @@ importers:
     devDependencies:
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config-saleor
       '@saleor/macaw-ui':
         specifier: 1.1.10
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1767,9 +1809,6 @@ importers:
       '@vitest/coverage-v8':
         specifier: 1.6.0
         version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
       next:
         specifier: 14.2.3
         version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1797,9 +1836,15 @@ importers:
 
   packages/trpc:
     dependencies:
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../shared
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config-saleor
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1818,9 +1863,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1833,16 +1875,24 @@ importers:
     devDependencies:
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next:
         specifier: 14.2.3
         version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+
+  packages/typescript-config-saleor: {}
 
   packages/ui:
     devDependencies:
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config-saleor
       '@saleor/macaw-ui':
         specifier: 1.1.10
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1855,9 +1905,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
       next:
         specifier: 14.2.3
         version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1875,7 +1922,7 @@ importers:
     dependencies:
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
@@ -1922,15 +1969,18 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@saleor/apps-eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
+      '@saleor/apps-typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config-saleor
       '@types/semver':
         specifier: 7.5.0
         version: 7.5.0
       '@vitest/coverage-v8':
         specifier: 1.6.0
         version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
       graphql-config:
         specifier: 5.0.3
         version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.5.4)
@@ -19091,6 +19141,22 @@ snapshots:
 
   '@rushstack/eslint-patch@1.10.2': {}
 
+  '@saleor/app-sdk@0.52.0(graphql@16.7.1)(next@14.2.3(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/semantic-conventions': 1.30.0
+      debug: 4.3.4
+      graphql: 16.7.1
+      jose: 4.14.4
+      next: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      raw-body: 2.5.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      retes: 0.33.0
+      uuid: 9.0.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@saleor/app-sdk@0.52.0(graphql@16.7.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
@@ -19115,6 +19181,22 @@ snapshots:
       graphql: 16.7.1
       jose: 4.14.4
       next: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      raw-body: 2.5.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      retes: 0.33.0
+      uuid: 9.0.0
+    transitivePeerDependencies:
+      - supports-color
+
+  '@saleor/app-sdk@0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/semantic-conventions': 1.30.0
+      debug: 4.3.4
+      graphql: 16.7.1
+      jose: 4.14.4
+      next: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       raw-body: 2.5.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -19278,6 +19360,29 @@ snapshots:
       '@sentry/utils': 7.117.0
       localforage: 1.10.0
 
+  '@sentry/nextjs@7.117.0(next@14.2.3(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
+    dependencies:
+      '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
+      '@sentry/core': 7.117.0
+      '@sentry/integrations': 7.117.0
+      '@sentry/node': 7.117.0
+      '@sentry/react': 7.117.0(react@18.2.0)
+      '@sentry/types': 7.117.0
+      '@sentry/utils': 7.117.0
+      '@sentry/vercel-edge': 7.117.0
+      '@sentry/webpack-plugin': 1.21.0
+      chalk: 3.0.0
+      next: 14.2.3(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+      resolve: 1.22.8
+      rollup: 2.78.0
+      stacktrace-parser: 0.1.11
+    optionalDependencies:
+      webpack: 5.82.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
   '@sentry/nextjs@7.117.0(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
@@ -19313,7 +19418,7 @@ snapshots:
       '@sentry/vercel-edge': 7.117.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -20476,7 +20581,7 @@ snapshots:
       '@trpc/client': 10.34.0(@trpc/server@10.34.0)
       '@trpc/react-query': 10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server': 10.34.0
-      next: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
@@ -20498,7 +20603,7 @@ snapshots:
       '@trpc/client': 10.43.1(@trpc/server@10.43.1)
       '@trpc/react-query': 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server': 10.43.1
-      next: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
@@ -26113,6 +26218,32 @@ snapshots:
 
   neverthrow@6.2.1: {}
 
+  next@14.2.3(@babel/core@7.24.3)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@next/env': 14.2.3
+      '@swc/helpers': 0.5.5
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001588
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-jsx: 5.1.1(@babel/core@7.24.3)(react@18.2.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.2.3
+      '@next/swc-darwin-x64': 14.2.3
+      '@next/swc-linux-arm64-gnu': 14.2.3
+      '@next/swc-linux-arm64-musl': 14.2.3
+      '@next/swc-linux-x64-gnu': 14.2.3
+      '@next/swc-linux-x64-musl': 14.2.3
+      '@next/swc-win32-arm64-msvc': 14.2.3
+      '@next/swc-win32-ia32-msvc': 14.2.3
+      '@next/swc-win32-x64-msvc': 14.2.3
+      '@opentelemetry/api': 1.9.0
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+
   next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@next/env': 14.2.3
@@ -26149,7 +26280,7 @@ snapshots:
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.24.7)(react@18.2.0)
+      styled-jsx: 5.1.1(react@18.2.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 14.2.3
       '@next/swc-darwin-x64': 14.2.3
@@ -26162,6 +26293,32 @@ snapshots:
       '@next/swc-win32-x64-msvc': 14.2.3
       '@opentelemetry/api': 1.9.0
       '@playwright/test': 1.35.1
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+
+  next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      '@next/env': 14.2.3
+      '@swc/helpers': 0.5.5
+      busboy: 1.6.0
+      caniuse-lite: 1.0.30001588
+      graceful-fs: 4.2.11
+      postcss: 8.4.31
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      styled-jsx: 5.1.1(react@18.2.0)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 14.2.3
+      '@next/swc-darwin-x64': 14.2.3
+      '@next/swc-linux-arm64-gnu': 14.2.3
+      '@next/swc-linux-arm64-musl': 14.2.3
+      '@next/swc-linux-x64-gnu': 14.2.3
+      '@next/swc-linux-x64-musl': 14.2.3
+      '@next/swc-win32-arm64-msvc': 14.2.3
+      '@next/swc-win32-ia32-msvc': 14.2.3
+      '@next/swc-win32-x64-msvc': 14.2.3
+      '@opentelemetry/api': 1.9.0
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -27782,12 +27939,24 @@ snapshots:
 
   strnum@1.0.5: {}
 
+  styled-jsx@5.1.1(@babel/core@7.24.3)(react@18.2.0):
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
+    optionalDependencies:
+      '@babel/core': 7.24.3
+
   styled-jsx@5.1.1(@babel/core@7.24.7)(react@18.2.0):
     dependencies:
       client-only: 0.0.1
       react: 18.2.0
     optionalDependencies:
       '@babel/core': 7.24.7
+
+  styled-jsx@5.1.1(react@18.2.0):
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
 
   success-symbol@0.1.0: {}
 
