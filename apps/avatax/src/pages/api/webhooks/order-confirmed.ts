@@ -101,7 +101,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
 
         OrderConfirmedLogRequest.createErrorLog({
           sourceId: payload.order?.id,
-          channelSlug: payload.order?.channel.slug,
+          channelId: payload.order?.channel.id,
           errorReason: "Error parsing Saleor event payload",
         })
           .mapErr(Sentry.captureException)
@@ -132,7 +132,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
 
           OrderConfirmedLogRequest.createErrorLog({
             sourceId: payload.order?.id,
-            channelSlug: payload.order?.channel.slug,
+            channelId: payload.order?.channel.id,
             errorReason: "Order already fulfilled",
           })
             .mapErr(Sentry.captureException)
@@ -154,7 +154,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
 
           OrderConfirmedLogRequest.createErrorLog({
             sourceId: payload.order?.id,
-            channelSlug: payload.order?.channel.slug,
+            channelId: payload.order?.channel.id,
             errorReason: "Order has flat tax rates strategy",
           })
             .mapErr(Sentry.captureException)
@@ -200,7 +200,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         if (config.isErr()) {
           OrderConfirmedLogRequest.createErrorLog({
             sourceId: payload.order?.id,
-            channelSlug: payload.order?.channel.slug,
+            channelId: payload.order?.channel.id,
             errorReason: "Cannot get app configuration",
           })
             .mapErr(Sentry.captureException)
@@ -231,7 +231,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         if (providerConfig.isErr()) {
           OrderConfirmedLogRequest.createErrorLog({
             sourceId: payload.order?.id,
-            channelSlug: payload.order?.channel.slug,
+            channelId: payload.order?.channel.id,
             errorReason: "Invalid app configuration",
           })
             .mapErr(Sentry.captureException)
@@ -274,7 +274,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
 
           OrderConfirmedLogRequest.createSuccessLog({
             sourceId: payload.order?.id,
-            channelSlug: payload.order?.channel.slug,
+            channelId: payload.order?.channel.id,
             avataxId: confirmedOrder.id,
           })
             .mapErr(Sentry.captureException)
@@ -295,7 +295,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             case error instanceof TaxBadPayloadError: {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,
-                channelSlug: payload.order?.channel.slug,
+                channelId: payload.order?.channel.id,
                 errorReason: "Invalid webhook payload",
               })
                 .mapErr(Sentry.captureException)
@@ -314,7 +314,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             case error instanceof AvataxStringLengthError: {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,
-                channelSlug: payload.order?.channel.slug,
+                channelId: payload.order?.channel.id,
                 errorReason: "Invalid address",
               })
                 .mapErr(Sentry.captureException)
@@ -333,7 +333,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             case error instanceof AvataxEntityNotFoundError: {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,
-                channelSlug: payload.order?.channel.slug,
+                channelId: payload.order?.channel.id,
                 errorReason: "Entity not found",
               })
                 .mapErr(Sentry.captureException)
@@ -355,7 +355,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
 
           OrderConfirmedLogRequest.createErrorLog({
             sourceId: payload.order?.id,
-            channelSlug: payload.order?.channel.slug,
+            channelId: payload.order?.channel.id,
             errorReason: "Unhandled error",
           })
             .mapErr(Sentry.captureException)
@@ -376,7 +376,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
 
         OrderConfirmedLogRequest.createErrorLog({
           sourceId: payload.order?.id,
-          channelSlug: payload.order?.channel.slug,
+          channelId: payload.order?.channel.id,
           errorReason: "Unhandled error",
         })
           .mapErr(Sentry.captureException)

@@ -114,9 +114,9 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
       const appMetadata = ctx.payload.recipient?.privateMetadata ?? [];
 
       metadataCache.setMetadata(appMetadata);
-      try {
-        const { payload, authData } = ctx;
+      const { payload, authData } = ctx;
 
+      try {
         span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
 
         subscriptionErrorChecker.checkPayload(payload);
@@ -141,7 +141,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
 
           CalculateTaxesLogRequest.createErrorLog({
             sourceId: payload.taxBase.sourceObject.id,
-            channelSlug: payload.taxBase.channel.slug,
+            channelId: payload.taxBase.channel.id,
             sourceType: "order",
             errorReason: "Missing address or lines",
           })
@@ -186,7 +186,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
 
           CalculateTaxesLogRequest.createErrorLog({
             sourceId: payload.taxBase.sourceObject.id,
-            channelSlug: payload.taxBase.channel.slug,
+            channelId: payload.taxBase.channel.id,
             sourceType: "order",
             errorReason: "Cannot get app configuration",
           })
@@ -210,7 +210,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
         if (providerConfig.isErr()) {
           CalculateTaxesLogRequest.createErrorLog({
             sourceId: payload.taxBase.sourceObject.id,
-            channelSlug: payload.taxBase.channel.slug,
+            channelId: payload.taxBase.channel.id,
             sourceType: "order",
             errorReason: "Invalid app configuration",
           })
@@ -240,7 +240,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
 
         CalculateTaxesLogRequest.createSuccessLog({
           sourceId: payload.taxBase.sourceObject.id,
-          channelSlug: payload.taxBase.channel.slug,
+          channelId: payload.taxBase.channel.id,
           sourceType: "order",
           calculatedTaxesResult: calculatedTaxes,
         })
@@ -267,7 +267,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
 
           CalculateTaxesLogRequest.createErrorLog({
             sourceId: orderId,
-            channelSlug: channelSlug,
+            channelId: payload.taxBase.channel.id,
             sourceType: "order",
             errorReason: "AvaTax API returned an error",
           })
@@ -289,7 +289,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
         if (error instanceof AvataxInvalidAddressError) {
           CalculateTaxesLogRequest.createErrorLog({
             sourceId: orderId,
-            channelSlug: channelSlug,
+            channelId: payload.taxBase.channel.id,
             sourceType: "order",
             errorReason: "Invalid address",
           })
@@ -315,7 +315,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
         if (error instanceof AvataxStringLengthError) {
           CalculateTaxesLogRequest.createErrorLog({
             sourceId: orderId,
-            channelSlug: channelSlug,
+            channelId: payload.taxBase.channel.id,
             sourceType: "order",
             errorReason: "Invalid address",
           })
@@ -343,7 +343,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
         if (error instanceof AvataxEntityNotFoundError) {
           CalculateTaxesLogRequest.createErrorLog({
             sourceId: orderId,
-            channelSlug: channelSlug,
+            channelId: payload.taxBase.channel.id,
             sourceType: "order",
             errorReason: "Entity not found",
           })
@@ -370,7 +370,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
 
         CalculateTaxesLogRequest.createErrorLog({
           sourceId: orderId,
-          channelSlug: channelSlug,
+          channelId: payload.taxBase.channel.id,
           sourceType: "order",
           errorReason: "Unhandled error",
         })

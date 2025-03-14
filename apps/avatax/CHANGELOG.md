@@ -1,5 +1,19 @@
 # saleor-app-avatax
 
+## 1.14.0
+
+### Minor Changes
+
+- c51307e6: Refactor AvaTax client to use neverthrow library. No visible changes to the end user.
+- 71360cb4: Wrapped AvaTax API calls and Saleor webhook handlers in tracking spans. Also improved client logs.
+
+### Patch Changes
+
+- 3a618b9f: Pass channelId instead of channelSlug to client logs & remove not used field from client logs
+- 8154e9e9: Use `AwsInstrumentation` to auto instrument DynamoDB calls
+- Updated dependencies [8154e9e9]
+  - @saleor/apps-otel@2.1.0
+
 ## 1.13.0
 
 ### Minor Changes

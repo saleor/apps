@@ -1,8 +1,8 @@
 {
   "extends": ["//"],
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
-    "build": {
+  "tasks": {
+    "deploy": {
       "env": [
         "APL",
         "APP_DEBUG",

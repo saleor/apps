@@ -158,7 +158,7 @@ export class CalculateTaxesUseCase {
 
       CalculateTaxesLogRequest.createErrorLog({
         sourceId: payload.taxBase.sourceObject.id,
-        channelSlug: payload.taxBase.channel.slug,
+        channelId: payload.taxBase.channel.id,
         sourceType: "checkout",
         errorReason: "Cannot get app configuration",
       })
@@ -179,7 +179,7 @@ export class CalculateTaxesUseCase {
     if (providerConfig.isErr()) {
       CalculateTaxesLogRequest.createErrorLog({
         sourceId: payload.taxBase.sourceObject.id,
-        channelSlug: payload.taxBase.channel.slug,
+        channelId: payload.taxBase.channel.id,
         sourceType: "checkout",
         errorReason: "Invalid app configuration",
       })
@@ -206,7 +206,7 @@ export class CalculateTaxesUseCase {
       (err) => {
         CalculateTaxesLogRequest.createErrorLog({
           sourceId: payload.taxBase.sourceObject.id,
-          channelSlug: payload.taxBase.channel.slug,
+          channelId: payload.taxBase.channel.id,
           sourceType: "checkout",
           errorReason: "AvaTax API returned an error",
         })
@@ -222,7 +222,7 @@ export class CalculateTaxesUseCase {
 
       CalculateTaxesLogRequest.createSuccessLog({
         sourceId: payload.taxBase.sourceObject.id,
-        channelSlug: payload.taxBase.channel.slug,
+        channelId: payload.taxBase.channel.id,
         sourceType: "checkout",
         calculatedTaxesResult: results,
       })
