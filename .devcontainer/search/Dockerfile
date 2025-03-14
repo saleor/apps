@@ -2,6 +2,7 @@ FROM mcr.microsoft.com/devcontainers/typescript-node:22
 
 ENV PNPM_HOME="/home/node/.pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+RUN npm install --global corepack@latest
 RUN corepack enable
 
 WORKDIR /app
