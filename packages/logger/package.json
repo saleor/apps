@@ -19,14 +19,15 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "eslint": "../../node_modules/eslint",
+    "@opentelemetry/api": "catalog:",
     "tslog": "4.9.2",
     "typescript": "5.5.4"
   },
   "devDependencies": {
-    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@sentry/nextjs": "../../node_modules/@sentry/nextjs",
+    "@saleor/app-sdk": "catalog:",
+    "@sentry/nextjs": "catalog:",
     "@vitest/coverage-v8": "1.6.0",
+    "eslint": "catalog:",
     "eslint-config-saleor": "workspace:*",
     "modern-errors": "7.0.1",
     "modern-errors-serialize": "6.1.0",
@@ -34,7 +35,7 @@
     "vitest": "1.6.0"
   },
   "peerDependencies": {
-    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@saleor/app-sdk": "catalog:",
     "@sentry/nextjs": ">=8"
   }
 }

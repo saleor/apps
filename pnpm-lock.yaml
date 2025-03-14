@@ -4,6 +4,57 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@opentelemetry/api':
+      specifier: 1.9.0
+      version: 1.9.0
+    '@opentelemetry/api-logs':
+      specifier: 0.57.2
+      version: 0.57.2
+    '@opentelemetry/exporter-trace-otlp-http':
+      specifier: 0.57.2
+      version: 0.57.2
+    '@opentelemetry/instrumentation':
+      specifier: 0.57.2
+      version: 0.57.2
+    '@opentelemetry/instrumentation-aws-sdk':
+      specifier: 0.49.1
+      version: 0.49.1
+    '@opentelemetry/instrumentation-http':
+      specifier: 0.57.2
+      version: 0.57.2
+    '@opentelemetry/resources':
+      specifier: 1.30.1
+      version: 1.30.1
+    '@opentelemetry/sdk-logs':
+      specifier: 0.57.2
+      version: 0.57.2
+    '@opentelemetry/sdk-trace-node':
+      specifier: 1.30.1
+      version: 1.30.1
+    '@opentelemetry/semantic-conventions':
+      specifier: 1.30.0
+      version: 1.30.0
+    '@saleor/app-sdk':
+      specifier: 0.52.0
+      version: 0.52.0
+    '@sentry/cli':
+      specifier: 2.32.1
+      version: 2.32.1
+    '@sentry/nextjs':
+      specifier: 7.117.0
+      version: 7.117.0
+    '@sentry/node':
+      specifier: 7.117.0
+      version: 7.117.0
+    '@vercel/otel':
+      specifier: 1.10.1
+      version: 1.10.1
+    eslint:
+      specifier: 8.57.0
+      version: 8.57.0
+
 importers:
 
   .:
@@ -11,75 +62,24 @@ importers:
       '@changesets/cli':
         specifier: ^2.26.2
         version: 2.26.2
-      '@opentelemetry/api':
-        specifier: 1.9.0
-        version: 1.9.0
-      '@opentelemetry/api-logs':
-        specifier: 0.57.2
-        version: 0.57.2
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: 0.57.2
-        version: 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/instrumentation':
-        specifier: 0.57.2
-        version: 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/instrumentation-aws-sdk':
-        specifier: 0.49.1
-        version: 0.49.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/instrumentation-http':
-        specifier: 0.57.2
-        version: 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/resources':
-        specifier: 1.30.1
-        version: 1.30.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-logs':
-        specifier: 0.57.2
-        version: 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/sdk-trace-node':
-        specifier: 1.30.1
-        version: 1.30.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions':
-        specifier: 1.30.0
-        version: 1.30.0
-      '@saleor/app-sdk':
-        specifier: 0.52.0
-        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@sentry/cli':
-        specifier: 2.32.1
-        version: 2.32.1
-      '@sentry/nextjs':
-        specifier: 7.117.0
-        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
-      '@sentry/node':
-        specifier: 7.117.0
-        version: 7.117.0
       '@types/node':
-        specifier: 20.12.3
-        version: 20.12.3
-      '@vercel/otel':
-        specifier: 1.10.1
-        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
+        specifier: 22.13.10
+        version: 22.13.10
       cspell:
         specifier: 8.15.2
         version: 8.15.2
-      eslint:
-        specifier: 8.57.0
-        version: 8.57.0
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:packages/eslint-config-saleor
       husky:
         specifier: 9.1.4
         version: 9.1.4
       knip:
         specifier: 5.27.2
-        version: 5.27.2(@types/node@20.12.3)(typescript@5.5.4)
+        version: 5.27.2(@types/node@22.13.10)(typescript@5.5.4)
       lint-staged:
         specifier: ^13.2.3
         version: 13.2.3(enquirer@2.4.1)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       prettier:
         specifier: 3.0.3
         version: 3.0.3
@@ -92,9 +92,6 @@ importers:
       turbo:
         specifier: 2.4.4
         version: 2.4.4
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
 
   apps/avatax:
     dependencies:
@@ -114,23 +111,32 @@ importers:
         specifier: ^13.5.4
         version: 13.5.4
       '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        specifier: 'catalog:'
+        version: 1.9.0
+      '@opentelemetry/api-logs':
+        specifier: 'catalog:'
+        version: 0.57.2
       '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources':
-        specifier: ../../node_modules/@opentelemetry/resources
-        version: link:../../node_modules/@opentelemetry/resources
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
-        version: link:../../node_modules/@opentelemetry/sdk-trace-node
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
-        specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
+        specifier: 'catalog:'
+        version: 1.30.0
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -156,14 +162,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/webhook-utils
       '@sentry/cli':
-        specifier: ../../node_modules/@sentry/cli
-        version: link:../../node_modules/@sentry/cli
+        specifier: 'catalog:'
+        version: 2.32.1
       '@sentry/nextjs':
-        specifier: ../../node_modules/@sentry/nextjs
-        version: link:../../node_modules/@sentry/nextjs
+        specifier: 'catalog:'
+        version: 7.117.0(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@sentry/node':
-        specifier: ../../node_modules/@sentry/node
-        version: link:../../node_modules/@sentry/node
+        specifier: 'catalog:'
+        version: 7.117.0
       '@t3-oss/env-nextjs':
         specifier: 0.11.1
         version: 0.11.1(typescript@5.5.4)(zod@3.21.4)
@@ -172,7 +178,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
         specifier: 10.43.1
         version: 10.43.1
@@ -180,8 +186,8 @@ importers:
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
-        specifier: ../../node_modules/@vercel/otel
-        version: link:../../node_modules/@vercel/otel
+        specifier: 'catalog:'
+        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
       avatax:
         specifier: ^23.7.0
         version: 23.7.0
@@ -217,7 +223,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -245,7 +251,7 @@ importers:
         version: 8.4.1
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
       '@graphql-codegen/import-types-preset':
         specifier: ^3.0.0
         version: 3.0.0(graphql@16.7.1)
@@ -290,28 +296,28 @@ importers:
         version: 18.2.5
       '@vitejs/plugin-react':
         specifier: 4.3.1
-        version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+        version: 4.3.1(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       '@vitest/coverage-v8':
         specifier: 1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       aws-sdk-client-mock:
         specifier: 4.0.1
         version: 4.0.1
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../../packages/eslint-config-saleor
       eslint-plugin-neverthrow:
         specifier: ^1.1.4
-        version: 1.1.4(@typescript-eslint/parser@8.11.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)(typescript@5.5.4)
+        version: 1.1.4(@typescript-eslint/parser@8.11.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)
       eslint-plugin-node:
         specifier: 11.1.0
-        version: 11.1.0(eslint@node_modules+eslint)
+        version: 11.1.0(eslint@8.57.0)
       graphql-config:
         specifier: 5.0.3
-        version: 5.0.3(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.5.4)
       pactum:
         specifier: ^3.6.0
         version: 3.6.0
@@ -326,10 +332,10 @@ importers:
         version: 5.5.4
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
 
   apps/cms:
     dependencies:
@@ -340,23 +346,32 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        specifier: 'catalog:'
+        version: 1.9.0
+      '@opentelemetry/api-logs':
+        specifier: 'catalog:'
+        version: 0.57.2
       '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources':
-        specifier: ../../node_modules/@opentelemetry/resources
-        version: link:../../node_modules/@opentelemetry/resources
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
-        version: link:../../node_modules/@opentelemetry/sdk-trace-node
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
-        specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
+        specifier: 'catalog:'
+        version: 1.30.0
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -379,11 +394,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sentry-utils
       '@sentry/cli':
-        specifier: ../../node_modules/@sentry/cli
-        version: link:../../node_modules/@sentry/cli
+        specifier: 'catalog:'
+        version: 2.32.1
       '@sentry/nextjs':
-        specifier: ../../node_modules/@sentry/nextjs
-        version: link:../../node_modules/@sentry/nextjs
+        specifier: 'catalog:'
+        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -392,7 +407,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -403,11 +418,11 @@ importers:
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
-        specifier: ../../node_modules/@vercel/otel
-        version: link:../../node_modules/@vercel/otel
+        specifier: 'catalog:'
+        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
       '@vitejs/plugin-react':
         specifier: 4.3.1
-        version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+        version: 4.3.1(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       contentful-management:
         specifier: 10.46.4
         version: 10.46.4
@@ -425,7 +440,7 @@ importers:
         version: 20.0.3
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       p-ratelimit:
         specifier: 1.0.1
         version: 1.0.1
@@ -455,17 +470,17 @@ importers:
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
       zod:
         specifier: 3.21.4
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -501,10 +516,10 @@ importers:
         version: 18.2.5
       '@vitest/coverage-v8':
         specifier: 1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../../packages/eslint-config-saleor
@@ -521,23 +536,32 @@ importers:
   apps/klaviyo:
     dependencies:
       '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        specifier: 'catalog:'
+        version: 1.9.0
+      '@opentelemetry/api-logs':
+        specifier: 'catalog:'
+        version: 0.57.2
       '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources':
-        specifier: ../../node_modules/@opentelemetry/resources
-        version: link:../../node_modules/@opentelemetry/resources
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
-        version: link:../../node_modules/@opentelemetry/sdk-trace-node
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
-        specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
+        specifier: 'catalog:'
+        version: 1.30.0
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -557,17 +581,17 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sentry-utils
       '@sentry/cli':
-        specifier: ../../node_modules/@sentry/cli
-        version: link:../../node_modules/@sentry/cli
+        specifier: 'catalog:'
+        version: 2.32.1
       '@sentry/nextjs':
-        specifier: ../../node_modules/@sentry/nextjs
-        version: link:../../node_modules/@sentry/nextjs
+        specifier: 'catalog:'
+        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
-        specifier: ../../node_modules/@vercel/otel
-        version: link:../../node_modules/@vercel/otel
+        specifier: 'catalog:'
+        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
@@ -579,7 +603,7 @@ importers:
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       node-fetch:
         specifier: ^3.2.6
         version: 3.2.6
@@ -600,14 +624,14 @@ importers:
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -642,8 +666,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../../packages/eslint-config-saleor
@@ -669,23 +693,32 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        specifier: 'catalog:'
+        version: 1.9.0
+      '@opentelemetry/api-logs':
+        specifier: 'catalog:'
+        version: 0.57.2
       '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources':
-        specifier: ../../node_modules/@opentelemetry/resources
-        version: link:../../node_modules/@opentelemetry/resources
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
-        version: link:../../node_modules/@opentelemetry/sdk-trace-node
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
-        specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
+        specifier: 'catalog:'
+        version: 1.30.0
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -710,12 +743,12 @@ importers:
       '@saleor/webhook-utils':
         specifier: workspace:*
         version: link:../../packages/webhook-utils
-      '@sentry/cli':
-        specifier: ../../node_modules/@sentry/cli
-        version: link:../../node_modules/@sentry/cli
       '@sentry/nextjs':
-        specifier: ../../node_modules/@sentry/nextjs
-        version: link:../../node_modules/@sentry/nextjs
+        specifier: 'catalog:'
+        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+      '@sentry/node':
+        specifier: 'catalog:'
+        version: 7.117.0
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -724,7 +757,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -735,11 +768,11 @@ importers:
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
-        specifier: ../../node_modules/@vercel/otel
-        version: link:../../node_modules/@vercel/otel
+        specifier: 'catalog:'
+        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
       '@vitejs/plugin-react':
         specifier: 4.3.1
-        version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+        version: 4.3.1(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
@@ -760,7 +793,7 @@ importers:
         version: 20.0.3
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -781,17 +814,17 @@ importers:
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
       zod:
         specifier: 3.21.4
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -827,10 +860,10 @@ importers:
         version: 18.2.5
       '@vitest/coverage-v8':
         specifier: 1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../../packages/eslint-config-saleor
@@ -847,23 +880,32 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        specifier: 'catalog:'
+        version: 1.9.0
+      '@opentelemetry/api-logs':
+        specifier: 'catalog:'
+        version: 0.57.2
       '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources':
-        specifier: ../../node_modules/@opentelemetry/resources
-        version: link:../../node_modules/@opentelemetry/resources
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
-        version: link:../../node_modules/@opentelemetry/sdk-trace-node
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
-        specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
+        specifier: 'catalog:'
+        version: 1.30.0
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -889,11 +931,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/webhook-utils
       '@sentry/cli':
-        specifier: ../../node_modules/@sentry/cli
-        version: link:../../node_modules/@sentry/cli
+        specifier: 'catalog:'
+        version: 2.32.1
       '@sentry/nextjs':
-        specifier: ../../node_modules/@sentry/nextjs
-        version: link:../../node_modules/@sentry/nextjs
+        specifier: 'catalog:'
+        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -902,7 +944,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -913,8 +955,8 @@ importers:
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
-        specifier: ../../node_modules/@vercel/otel
-        version: link:../../node_modules/@vercel/otel
+        specifier: 'catalog:'
+        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
       algoliasearch:
         specifier: 4.23.3
         version: 4.23.3
@@ -935,7 +977,7 @@ importers:
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -957,7 +999,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -993,13 +1035,13 @@ importers:
         version: 18.2.5
       '@vitejs/plugin-react':
         specifier: 4.3.1
-        version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+        version: 4.3.1(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       '@vitest/coverage-v8':
         specifier: 1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../../packages/eslint-config-saleor
@@ -1014,10 +1056,10 @@ importers:
         version: 5.5.4
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
 
   apps/segment:
     dependencies:
@@ -1034,23 +1076,32 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        specifier: 'catalog:'
+        version: 1.9.0
+      '@opentelemetry/api-logs':
+        specifier: 'catalog:'
+        version: 0.57.2
       '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources':
-        specifier: ../../node_modules/@opentelemetry/resources
-        version: link:../../node_modules/@opentelemetry/resources
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
-        version: link:../../node_modules/@opentelemetry/sdk-trace-node
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
-        specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
+        specifier: 'catalog:'
+        version: 1.30.0
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -1079,14 +1130,14 @@ importers:
         specifier: 2.2.0
         version: 2.2.0
       '@sentry/cli':
-        specifier: ../../node_modules/@sentry/cli
-        version: link:../../node_modules/@sentry/cli
+        specifier: 'catalog:'
+        version: 2.32.1
       '@sentry/nextjs':
-        specifier: ../../node_modules/@sentry/nextjs
-        version: link:../../node_modules/@sentry/nextjs
+        specifier: 'catalog:'
+        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@sentry/node':
-        specifier: ../../node_modules/@sentry/node
-        version: link:../../node_modules/@sentry/node
+        specifier: 'catalog:'
+        version: 7.117.0
       '@t3-oss/env-nextjs':
         specifier: 0.11.1
         version: 0.11.1(typescript@5.5.4)(zod@3.21.4)
@@ -1095,7 +1146,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
         specifier: 10.43.1
         version: 10.43.1
@@ -1103,11 +1154,11 @@ importers:
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
-        specifier: ../../node_modules/@vercel/otel
-        version: link:../../node_modules/@vercel/otel
+        specifier: 'catalog:'
+        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
       '@vitejs/plugin-react':
         specifier: 4.3.1
-        version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+        version: 4.3.1(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       decimal.js-light:
         specifier: 2.5.1
         version: 2.5.1
@@ -1134,7 +1185,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1162,7 +1213,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -1198,31 +1249,31 @@ importers:
         version: 18.2.5
       '@typescript-eslint/eslint-plugin':
         specifier: 7.15.0
-        version: 7.15.0(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)(typescript@5.5.4)
+        version: 7.15.0(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)
       '@typescript-eslint/parser':
         specifier: 7.15.0
-        version: 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
+        version: 7.15.0(eslint@8.57.0)(typescript@5.5.4)
       '@vitest/coverage-v8':
         specifier: 1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       aws-sdk-client-mock:
         specifier: 4.0.1
         version: 4.0.1
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../../packages/eslint-config-saleor
       eslint-plugin-neverthrow:
         specifier: ^1.1.4
-        version: 1.1.4(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)(typescript@5.5.4)
+        version: 1.1.4(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)
       eslint-plugin-node:
         specifier: 11.1.0
-        version: 11.1.0(eslint@node_modules+eslint)
+        version: 11.1.0(eslint@8.57.0)
       graphql-config:
         specifier: 5.0.3
-        version: 5.0.3(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.5.4)
       jsdom:
         specifier: ^20.0.3
         version: 20.0.3
@@ -1237,10 +1288,10 @@ importers:
         version: 5.5.4
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
 
   apps/smtp:
     dependencies:
@@ -1251,23 +1302,32 @@ importers:
         specifier: ^4.4.6
         version: 4.4.6(monaco-editor@0.47.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        specifier: 'catalog:'
+        version: 1.9.0
+      '@opentelemetry/api-logs':
+        specifier: 'catalog:'
+        version: 0.57.2
       '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/instrumentation':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources':
-        specifier: ../../node_modules/@opentelemetry/resources
-        version: link:../../node_modules/@opentelemetry/resources
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
-        version: link:../../node_modules/@opentelemetry/sdk-trace-node
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
-        specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
+        specifier: 'catalog:'
+        version: 1.30.0
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
@@ -1290,11 +1350,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sentry-utils
       '@sentry/cli':
-        specifier: ../../node_modules/@sentry/cli
-        version: link:../../node_modules/@sentry/cli
+        specifier: 'catalog:'
+        version: 2.32.1
       '@sentry/nextjs':
-        specifier: ../../node_modules/@sentry/nextjs
-        version: link:../../node_modules/@sentry/nextjs
+        specifier: 'catalog:'
+        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@tanstack/react-query':
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1303,7 +1363,7 @@ importers:
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
         specifier: 10.43.1
-        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
         specifier: 10.43.1
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1314,11 +1374,11 @@ importers:
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
-        specifier: ../../node_modules/@vercel/otel
-        version: link:../../node_modules/@vercel/otel
+        specifier: 'catalog:'
+        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
       '@vitejs/plugin-react':
         specifier: 4.3.1
-        version: 4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+        version: 4.3.1(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
@@ -1354,7 +1414,7 @@ importers:
         version: 6.2.1
       next:
         specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
@@ -1378,17 +1438,17 @@ importers:
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
       zod:
         specifier: 3.21.4
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
       '@graphql-codegen/introspection':
         specifier: 4.0.3
         version: 4.0.3(graphql@16.7.1)
@@ -1436,10 +1496,10 @@ importers:
         version: 18.2.5
       '@vitest/coverage-v8':
         specifier: 1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../../packages/eslint-config-saleor
@@ -1459,11 +1519,14 @@ importers:
         specifier: ^1.35.1
         version: 1.35.1
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       dotenv:
         specifier: 16.3.1
         version: 16.3.1
+      eslint:
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -1478,46 +1541,46 @@ importers:
     devDependencies:
       '@saleor/eslint-plugin-saleor-app':
         specifier: 0.1.2
-        version: 0.1.2(eslint@node_modules+eslint)
+        version: 0.1.2(eslint@8.57.0)
       '@typescript-eslint/parser':
         specifier: 7.15.0
-        version: 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
+        version: 7.15.0(eslint@8.57.0)(typescript@5.5.4)
       '@vitest/eslint-plugin':
         specifier: 1.1.12
-        version: 1.1.12(@typescript-eslint/utils@8.11.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)(typescript@5.5.4)(vitest@3.0.4(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.1.12(@typescript-eslint/utils@8.11.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)(vitest@3.0.4(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-next:
         specifier: 14.2.4
-        version: 14.2.4(eslint@node_modules+eslint)(typescript@5.5.4)
+        version: 14.2.4(eslint@8.57.0)(typescript@5.5.4)
       eslint-config-prettier:
         specifier: 9.1.0
-        version: 9.1.0(eslint@node_modules+eslint)
+        version: 9.1.0(eslint@8.57.0)
       eslint-config-turbo:
         specifier: 2.4.2
-        version: 2.4.2(eslint@node_modules+eslint)(turbo@2.4.4)
+        version: 2.4.2(eslint@8.57.0)(turbo@2.4.4)
       eslint-plugin-import:
         specifier: 2.29.1
-        version: 2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)
+        version: 2.29.1(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)
       eslint-plugin-react:
         specifier: 7.34.3
-        version: 7.34.3(eslint@node_modules+eslint)
+        version: 7.34.3(eslint@8.57.0)
       eslint-plugin-simple-import-sort:
         specifier: 12.1.1
-        version: 12.1.1(eslint@node_modules+eslint)
+        version: 12.1.1(eslint@8.57.0)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 5.5.4
         version: 5.5.4
 
   packages/logger:
     dependencies:
-      eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+      '@opentelemetry/api':
+        specifier: 'catalog:'
+        version: 1.9.0
       tslog:
         specifier: 4.9.2
         version: 4.9.2
@@ -1526,14 +1589,17 @@ importers:
         version: 5.5.4
     devDependencies:
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@sentry/nextjs':
-        specifier: ../../node_modules/@sentry/nextjs
-        version: link:../../node_modules/@sentry/nextjs
+        specifier: 'catalog:'
+        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@vitest/coverage-v8':
         specifier: 1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
+      eslint:
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -1545,44 +1611,44 @@ importers:
         version: 6.1.0(modern-errors@7.0.1)
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
 
   packages/otel:
     dependencies:
       '@opentelemetry/api':
-        specifier: ../../node_modules/@opentelemetry/api
-        version: link:../../node_modules/@opentelemetry/api
+        specifier: 'catalog:'
+        version: 1.9.0
       '@opentelemetry/exporter-trace-otlp-http':
-        specifier: ../../node_modules/@opentelemetry/exporter-trace-otlp-http
-        version: link:../../node_modules/@opentelemetry/exporter-trace-otlp-http
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation-aws-sdk':
-        specifier: ../../node_modules/@opentelemetry/instrumentation-aws-sdk
-        version: link:../../node_modules/@opentelemetry/instrumentation-aws-sdk
+        specifier: 'catalog:'
+        version: 0.49.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation-http':
-        specifier: ../../node_modules/@opentelemetry/instrumentation-http
-        version: link:../../node_modules/@opentelemetry/instrumentation-http
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources':
-        specifier: ../../node_modules/@opentelemetry/resources
-        version: link:../../node_modules/@opentelemetry/resources
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node':
-        specifier: ../../node_modules/@opentelemetry/sdk-trace-node
-        version: link:../../node_modules/@opentelemetry/sdk-trace-node
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
-        specifier: ../../node_modules/@opentelemetry/semantic-conventions
-        version: link:../../node_modules/@opentelemetry/semantic-conventions
+        specifier: 'catalog:'
+        version: 1.30.0
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       urql:
         specifier: 4.0.4
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
     devDependencies:
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -1591,10 +1657,6 @@ importers:
         version: 5.5.4
 
   packages/react-hook-form-macaw:
-    dependencies:
-      eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
     devDependencies:
       '@babel/core':
         specifier: ^7.21.8
@@ -1622,7 +1684,7 @@ importers:
         version: 7.0.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.4)
       '@storybook/react-vite':
         specifier: ^7.0.12
-        version: 7.0.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.4)(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+        version: 7.0.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.4)(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       '@storybook/testing-library':
         specifier: ^0.0.14-next.2
         version: 0.0.14-next.2
@@ -1634,7 +1696,10 @@ importers:
         version: 18.2.5
       '@vanilla-extract/vite-plugin':
         specifier: ^3.8.1
-        version: 3.8.1(@types/node@20.12.3)(terser@5.18.0)(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+        version: 3.8.1(@types/node@22.13.10)(terser@5.18.0)(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
+      eslint:
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -1655,13 +1720,16 @@ importers:
         version: 5.5.4
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       webpack:
         specifier: ^5.82.1
         version: 5.82.1(esbuild@0.17.19)
 
   packages/sentry-utils:
     devDependencies:
+      eslint:
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
@@ -1675,15 +1743,15 @@ importers:
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       semver:
         specifier: 7.5.1
         version: 7.5.1
     devDependencies:
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/macaw-ui':
         specifier: 1.1.10
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1698,13 +1766,13 @@ importers:
         version: 7.5.0
       '@vitest/coverage-v8':
         specifier: 1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -1719,10 +1787,10 @@ importers:
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
       zod:
         specifier: 3.21.4
         version: 3.21.4
@@ -1747,41 +1815,34 @@ importers:
       '@trpc/server':
         specifier: 10.34.0
         version: 10.34.0
+      eslint:
+        specifier: 'catalog:'
+        version: 8.57.0
+      eslint-config-saleor:
+        specifier: workspace:*
+        version: link:../eslint-config-saleor
       react:
         specifier: 18.2.0
         version: 18.2.0
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      typescript:
+        specifier: 5.5.4
+        version: 5.5.4
     devDependencies:
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
-      eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
-      eslint-config-saleor:
-        specifier: workspace:*
-        version: link:../eslint-config-saleor
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   packages/ui:
-    dependencies:
-      eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
     devDependencies:
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/macaw-ui':
         specifier: 1.1.10
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1791,30 +1852,36 @@ importers:
       '@types/react-dom':
         specifier: 18.2.5
         version: 18.2.5
+      eslint:
+        specifier: 'catalog:'
+        version: 8.57.0
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      typescript:
+        specifier: 5.5.4
+        version: 5.5.4
 
   packages/webhook-utils:
     dependencies:
       '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        specifier: 'catalog:'
+        version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       eslint:
-        specifier: ../../node_modules/eslint
-        version: link:../../node_modules/eslint
+        specifier: 'catalog:'
+        version: 8.57.0
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -1829,7 +1896,7 @@ importers:
         version: 6.1.0(modern-errors@7.0.1)
       next:
         specifier: 14.2.3
-        version: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       semver:
         specifier: 7.5.1
         version: 7.5.1
@@ -1839,7 +1906,7 @@ importers:
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
-        version: 5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)
       '@graphql-codegen/schema-ast':
         specifier: 4.0.2
         version: 4.0.2(graphql@16.7.1)
@@ -1860,22 +1927,22 @@ importers:
         version: 7.5.0
       '@vitest/coverage-v8':
         specifier: 1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       eslint-config-saleor:
         specifier: workspace:*
         version: link:../eslint-config-saleor
       graphql-config:
         specifier: 5.0.3
-        version: 5.0.3(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.5.4)
+        version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.5.4)
       typescript:
         specifier: 5.5.4
         version: 5.5.4
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
-        version: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
 
 packages:
 
@@ -1886,10 +1953,6 @@ packages:
     peerDependenciesMeta:
       graphql:
         optional: true
-
-  '@aashutoshrathi/word-wrap@1.2.6':
-    resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
-    engines: {node: '>=0.10.0'}
 
   '@algolia/cache-browser-local-storage@4.23.3':
     resolution: {integrity: sha512-vRHXYCpPlTDE7i6UOy2xE03zHF2C8MEFjPN2v7fRbqVpcOvAUQK81x3Kc21xyb5aSIpYCjWCZbYZuz8Glyzyyg==}
@@ -4591,10 +4654,6 @@ packages:
     resolution: {integrity: sha512-CCZCDJuduB9OUkFkY2IgppNZMi2lBQgD2qzwXkEia16cge2pijY/aXi96CJMquDMn3nJdlPV1A5KrJEXwfLNzQ==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
 
-  '@eslint-community/regexpp@4.6.2':
-    resolution: {integrity: sha512-pPTNuaAG3QMH+buKyBIGJs3g/S5y0caxw0ygM3YyE6yJFySwiGGSzA+mM3KJ8QQvzeLh3blwgSonkFjgQdxzMw==}
-    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
-
   '@eslint/eslintrc@2.1.4':
     resolution: {integrity: sha512-269Z39MS6wVJtsoUl10L60WdkhJVdPG24Q4eZTH3nnF6lpvSShEK3wQjDX9JRWAUPvPh7COouPpU9IrqaZFvtQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -5666,8 +5725,8 @@ packages:
     resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
     engines: {node: '>= 8.0.0'}
 
-  '@rollup/pluginutils@5.1.0':
-    resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
+  '@rollup/pluginutils@5.1.4':
+    resolution: {integrity: sha512-USm05zrsFxYLPdWWq+K3STlWiT/3ELn3RcV5hJMghpeAIhxfsUIg6mt12CBJBInWMV4VneoV7SfGv8xIwo2qNQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
@@ -6716,6 +6775,9 @@ packages:
   '@types/node@20.12.3':
     resolution: {integrity: sha512-sD+ia2ubTeWrOu+YMF+MTAB7E+O7qsMqAbMfW7DG3K1URwhZ5hN1pLlRVGbf4wDFzSfikL05M17EyorS86jShw==}
 
+  '@types/node@22.13.10':
+    resolution: {integrity: sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==}
+
   '@types/nodemailer@6.4.7':
     resolution: {integrity: sha512-f5qCBGAn/f0qtRcd4SEn88c8Fp3Swct1731X4ryPKqS61/A3LmmzN8zaEz7hneJvpjFbUUgY7lru/B/7ODTazg==}
 
@@ -6935,8 +6997,8 @@ packages:
     resolution: {integrity: sha512-EaewX6lxSjRJnc+99+dqzTeoDZUfyrA52d2/HRrkI830kgovWsmIiTfmr0NZorzqic7ga+1bS60lRBUgR3n/Bw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@ungap/structured-clone@1.2.0':
-    resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
+  '@ungap/structured-clone@1.3.0':
+    resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
 
   '@urql/core@4.0.10':
     resolution: {integrity: sha512-Vs3nOSAnYftqOCg034Ostp/uSqWlQg5ryLIzcOrm8+O43s4M+Ew4GQAuemIH7ZDB8dek6h61zzWI3ujd8FH3NA==}
@@ -7199,8 +7261,8 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  acorn@8.14.0:
-    resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
+  acorn@8.14.1:
+    resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -8872,6 +8934,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@9.6.1:
@@ -8883,8 +8946,8 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  esquery@1.5.0:
-    resolution: {integrity: sha512-YQLXUplAwJgCydQ78IMJywZCceoqk1oH01OERdSAJc/7U2AylwjhSCLDEtqwg811idIS/9fIU5GjG73IgjKMVg==}
+  esquery@1.6.0:
+    resolution: {integrity: sha512-ca9pw9fomFcKPvFLXhBKUK90ZvGibiGOvRJNbjljY7s7uq/5YO4BOzcYtJqExdx99rF6aAcnRxHmcUHcz6sQsg==}
     engines: {node: '>=0.10'}
 
   esrecurse@4.3.0:
@@ -9138,16 +9201,13 @@ packages:
   find-yarn-workspace-root2@1.2.16:
     resolution: {integrity: sha512-hr6hb1w8ePMpPVUK39S4RlwJzi+xPLuVuG8XlwXU3KD5Yn3qgBWVfy3AzNlDhWvE1EORCE65/Qm26rFQt3VLVA==}
 
-  flat-cache@3.0.4:
-    resolution: {integrity: sha512-dm9s5Pw7Jc0GvMYbshN6zchCA9RgQlzzEZX3vylR9IqFfS8XciblUXOKfW6SiuJ0e13eDYZoZV5wdrev7P3Nwg==}
+  flat-cache@3.2.0:
+    resolution: {integrity: sha512-CYcENa+FtcUKLmhhqyctpclsq7QF38pKjZHsGNiSQF5r4FtoKDWabFDl3hzaEQMvT1LHEysw5twgLvpYYb4vbw==}
     engines: {node: ^10.12.0 || >=12.0.0}
 
   flat-cache@5.0.0:
     resolution: {integrity: sha512-JrqFmyUl2PnPi1OvLyTVHnQvwQ0S+e6lGSwu8OkAZlSaNIZciTY2H/cOOROxsBA1m/LZNHDsqAgDZt6akWcjsQ==}
     engines: {node: '>=18'}
-
-  flatted@3.2.7:
-    resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
 
   flatted@3.3.1:
     resolution: {integrity: sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==}
@@ -9400,8 +9460,8 @@ packages:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
     engines: {node: '>=4'}
 
-  globals@13.20.0:
-    resolution: {integrity: sha512-Qg5QtVkCy/kv3FUSlu4ukeZDVf9ee0iXLAUYX13gbR17bnejFTzr4iS9bY7kwCf1NztRNm1t91fjOiyx4CSwPQ==}
+  globals@13.24.0:
+    resolution: {integrity: sha512-AhO5QUcj8llrbG09iWhPU2B204J1xnPeL8kQmVorSsy+Sjj1sk8gIyh6cUocGmH4L0UuhAJy+hJMRA4mgA4mFQ==}
     engines: {node: '>=8'}
 
   globalthis@1.0.3:
@@ -11096,8 +11156,8 @@ packages:
     resolution: {integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==}
     engines: {node: '>= 0.8.0'}
 
-  optionator@0.9.3:
-    resolution: {integrity: sha512-JjCoypp+jKn1ttEFExxhetCKeJt9zhAgAve5FXHixTvFDW/5aEktX9bufBKLRRMdU7bNtpLfcGu94B3cdEJgjg==}
+  optionator@0.9.4:
+    resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
 
   ora@5.4.1:
@@ -12253,8 +12313,8 @@ packages:
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
-  stacktrace-parser@0.1.10:
-    resolution: {integrity: sha512-KJP1OCML99+8fhOHxwwzyWrlUuVX5GQ0ZpJTd1DFXhdkrvg1szxfHhawXUZ3g9TkXORQd4/WG68jMlQZ2p8wlg==}
+  stacktrace-parser@0.1.11:
+    resolution: {integrity: sha512-WjlahMgHmCJpqzU8bIBy4qtsZdU9lRlcZE3Lvyej6t4tuOuv1vk57OW3MBrj6hXBFx/nNoC9MPMTcr5YA7NQbg==}
     engines: {node: '>=6'}
 
   state-local@1.0.7:
@@ -12783,6 +12843,9 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
+
   undici@5.22.1:
     resolution: {integrity: sha512-Ji2IJhFXZY0x/0tVBXeQwgPlLWw13GVzpsWPQ3rV50IFMMof2I55PZZxtm4P6iNq+L5znYN9nSTAq0ZyE6lSJw==}
     engines: {node: '>=14.0'}
@@ -13243,6 +13306,10 @@ packages:
     resolution: {integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==}
     engines: {node: '>=0.10.0'}
 
+  word-wrap@1.2.5:
+    resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
+    engines: {node: '>=0.10.0'}
+
   wordwrap@1.0.0:
     resolution: {integrity: sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==}
 
@@ -13426,8 +13493,6 @@ snapshots:
   '@0no-co/graphql.web@1.0.4(graphql@16.7.1)':
     optionalDependencies:
       graphql: 16.7.1
-
-  '@aashutoshrathi/word-wrap@1.2.6': {}
 
   '@algolia/cache-browser-local-storage@4.23.3':
     dependencies:
@@ -16822,7 +16887,7 @@ snapshots:
       outdent: 0.5.0
       prettier: 2.8.8
       resolve-from: 5.0.0
-      semver: 7.6.3
+      semver: 7.7.1
 
   '@changesets/assemble-release-plan@5.2.4':
     dependencies:
@@ -16831,7 +16896,7 @@ snapshots:
       '@changesets/get-dependents-graph': 1.3.6
       '@changesets/types': 5.2.1
       '@manypkg/get-packages': 1.1.3
-      semver: 7.6.3
+      semver: 7.7.1
 
   '@changesets/changelog-git@0.1.14':
     dependencies:
@@ -16893,7 +16958,7 @@ snapshots:
       '@manypkg/get-packages': 1.1.3
       chalk: 2.4.2
       fs-extra: 7.0.1
-      semver: 7.6.3
+      semver: 7.7.1
 
   '@changesets/get-release-plan@3.0.17':
     dependencies:
@@ -17528,21 +17593,14 @@ snapshots:
       eslint: 8.57.0
       eslint-visitor-keys: 3.4.3
 
-  '@eslint-community/eslint-utils@4.4.0(eslint@node_modules+eslint)':
-    dependencies:
-      eslint: link:node_modules/eslint
-      eslint-visitor-keys: 3.4.3
-
   '@eslint-community/regexpp@4.12.1': {}
-
-  '@eslint-community/regexpp@4.6.2': {}
 
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.12.6
       debug: 4.4.0
       espree: 9.6.1
-      globals: 13.20.0
+      globals: 13.24.0
       ignore: 5.3.2
       import-fresh: 3.3.0
       js-yaml: 4.1.0
@@ -17588,7 +17646,7 @@ snapshots:
       graphql: 16.7.1
       tslib: 2.6.2
 
-  '@graphql-codegen/cli@5.0.2(@types/node@20.12.3)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)':
+  '@graphql-codegen/cli@5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.5.4)':
     dependencies:
       '@babel/generator': 7.24.1
       '@babel/template': 7.24.0
@@ -17599,12 +17657,12 @@ snapshots:
       '@graphql-tools/apollo-engine-loader': 8.0.0(graphql@16.7.1)
       '@graphql-tools/code-file-loader': 8.1.1(graphql@16.7.1)
       '@graphql-tools/git-loader': 8.0.5(graphql@16.7.1)
-      '@graphql-tools/github-loader': 8.0.0(@types/node@20.12.3)(graphql@16.7.1)
+      '@graphql-tools/github-loader': 8.0.0(@types/node@22.13.10)(graphql@16.7.1)
       '@graphql-tools/graphql-file-loader': 8.0.0(graphql@16.7.1)
       '@graphql-tools/json-file-loader': 8.0.0(graphql@16.7.1)
       '@graphql-tools/load': 8.0.1(graphql@16.7.1)
-      '@graphql-tools/prisma-loader': 8.0.2(@types/node@20.12.3)(graphql@16.7.1)
-      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.3)(graphql@16.7.1)
+      '@graphql-tools/prisma-loader': 8.0.2(@types/node@22.13.10)(graphql@16.7.1)
+      '@graphql-tools/url-loader': 8.0.1(@types/node@22.13.10)(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@whatwg-node/fetch': 0.8.8
       chalk: 4.1.2
@@ -17612,7 +17670,7 @@ snapshots:
       debounce: 1.2.1
       detect-indent: 6.1.0
       graphql: 16.7.1
-      graphql-config: 5.0.3(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.5.4)
+      graphql-config: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.5.4)
       inquirer: 8.2.6
       is-glob: 4.0.3
       jiti: 1.21.0
@@ -17885,14 +17943,14 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@graphql-tools/executor-http@1.0.8(@types/node@20.12.3)(graphql@16.7.1)':
+  '@graphql-tools/executor-http@1.0.8(@types/node@22.13.10)(graphql@16.7.1)':
     dependencies:
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@repeaterjs/repeater': 3.0.5
       '@whatwg-node/fetch': 0.9.16
       extract-files: 11.0.0
       graphql: 16.7.1
-      meros: 1.3.0(@types/node@20.12.3)
+      meros: 1.3.0(@types/node@22.13.10)
       tslib: 2.6.2
       value-or-promise: 1.0.12
     transitivePeerDependencies:
@@ -17931,10 +17989,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@graphql-tools/github-loader@8.0.0(@types/node@20.12.3)(graphql@16.7.1)':
+  '@graphql-tools/github-loader@8.0.0(@types/node@22.13.10)(graphql@16.7.1)':
     dependencies:
       '@ardatan/sync-fetch': 0.0.1
-      '@graphql-tools/executor-http': 1.0.8(@types/node@20.12.3)(graphql@16.7.1)
+      '@graphql-tools/executor-http': 1.0.8(@types/node@22.13.10)(graphql@16.7.1)
       '@graphql-tools/graphql-tag-pluck': 8.3.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@whatwg-node/fetch': 0.9.16
@@ -18007,9 +18065,9 @@ snapshots:
       graphql: 16.7.1
       tslib: 2.6.2
 
-  '@graphql-tools/prisma-loader@8.0.2(@types/node@20.12.3)(graphql@16.7.1)':
+  '@graphql-tools/prisma-loader@8.0.2(@types/node@22.13.10)(graphql@16.7.1)':
     dependencies:
-      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.3)(graphql@16.7.1)
+      '@graphql-tools/url-loader': 8.0.1(@types/node@22.13.10)(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@types/js-yaml': 4.0.9
       '@types/json-stable-stringify': 1.0.36
@@ -18063,12 +18121,12 @@ snapshots:
       tslib: 2.6.2
       value-or-promise: 1.0.12
 
-  '@graphql-tools/url-loader@8.0.1(@types/node@20.12.3)(graphql@16.7.1)':
+  '@graphql-tools/url-loader@8.0.1(@types/node@22.13.10)(graphql@16.7.1)':
     dependencies:
       '@ardatan/sync-fetch': 0.0.1
       '@graphql-tools/delegate': 10.0.3(graphql@16.7.1)
       '@graphql-tools/executor-graphql-ws': 1.1.0(graphql@16.7.1)
-      '@graphql-tools/executor-http': 1.0.8(@types/node@20.12.3)(graphql@16.7.1)
+      '@graphql-tools/executor-http': 1.0.8(@types/node@22.13.10)(graphql@16.7.1)
       '@graphql-tools/executor-legacy-ws': 1.0.5(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       '@graphql-tools/wrap': 10.0.1(graphql@16.7.1)
@@ -18180,7 +18238,7 @@ snapshots:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       '@types/yargs': 16.0.5
       chalk: 4.1.2
 
@@ -18189,17 +18247,17 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       '@types/yargs': 17.0.24
       chalk: 4.1.2
 
-  '@joshwooding/vite-plugin-react-docgen-typescript@0.2.1(typescript@5.5.4)(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))':
+  '@joshwooding/vite-plugin-react-docgen-typescript@0.2.1(typescript@5.5.4)(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))':
     dependencies:
       glob: 7.2.3
       glob-promise: 4.2.2(glob@7.2.3)
       magic-string: 0.27.0
       react-docgen-typescript: 2.2.2(typescript@5.5.4)
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
     optionalDependencies:
       typescript: 5.5.4
 
@@ -18371,7 +18429,7 @@ snapshots:
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.28.0
       forwarded-parse: 2.1.2
-      semver: 7.6.3
+      semver: 7.7.1
     transitivePeerDependencies:
       - supports-color
 
@@ -18382,7 +18440,7 @@ snapshots:
       '@types/shimmer': 1.2.0
       import-in-the-middle: 1.13.1
       require-in-the-middle: 7.5.2
-      semver: 7.6.3
+      semver: 7.7.1
       shimmer: 1.2.1
     transitivePeerDependencies:
       - supports-color
@@ -18452,7 +18510,7 @@ snapshots:
       '@opentelemetry/propagator-b3': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/propagator-jaeger': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
-      semver: 7.6.3
+      semver: 7.7.1
 
   '@opentelemetry/semantic-conventions@1.28.0': {}
 
@@ -18952,7 +19010,7 @@ snapshots:
 
   '@rollup/plugin-commonjs@24.0.0(rollup@2.78.0)':
     dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@2.78.0)
+      '@rollup/pluginutils': 5.1.4(rollup@2.78.0)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
@@ -18966,11 +19024,11 @@ snapshots:
       estree-walker: 2.0.2
       picomatch: 2.3.1
 
-  '@rollup/pluginutils@5.1.0(rollup@2.78.0)':
+  '@rollup/pluginutils@5.1.4(rollup@2.78.0)':
     dependencies:
       '@types/estree': 1.0.6
       estree-walker: 2.0.2
-      picomatch: 2.3.1
+      picomatch: 4.0.2
     optionalDependencies:
       rollup: 2.78.0
 
@@ -19033,14 +19091,14 @@ snapshots:
 
   '@rushstack/eslint-patch@1.10.2': {}
 
-  '@saleor/app-sdk@0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/app-sdk@0.52.0(graphql@16.7.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.30.0
       debug: 4.3.4
       graphql: 16.7.1
       jose: 4.14.4
-      next: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       raw-body: 2.5.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -19049,10 +19107,26 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@saleor/eslint-plugin-saleor-app@0.1.2(eslint@node_modules+eslint)':
+  '@saleor/app-sdk@0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/semantic-conventions': 1.30.0
+      debug: 4.3.4
+      graphql: 16.7.1
+      jose: 4.14.4
+      next: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      raw-body: 2.5.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      retes: 0.33.0
+      uuid: 9.0.0
+    transitivePeerDependencies:
+      - supports-color
+
+  '@saleor/eslint-plugin-saleor-app@0.1.2(eslint@8.57.0)':
     dependencies:
       '@changesets/cli': 2.26.2
-      '@typescript-eslint/utils': 5.62.0(eslint@node_modules+eslint)(typescript@5.5.4)
+      '@typescript-eslint/utils': 5.62.0(eslint@8.57.0)(typescript@5.5.4)
       tsutils: 3.21.0(typescript@5.5.4)
       typescript: 5.5.4
     transitivePeerDependencies:
@@ -19204,6 +19278,29 @@ snapshots:
       '@sentry/utils': 7.117.0
       localforage: 1.10.0
 
+  '@sentry/nextjs@7.117.0(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
+    dependencies:
+      '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
+      '@sentry/core': 7.117.0
+      '@sentry/integrations': 7.117.0
+      '@sentry/node': 7.117.0
+      '@sentry/react': 7.117.0(react@18.2.0)
+      '@sentry/types': 7.117.0
+      '@sentry/utils': 7.117.0
+      '@sentry/vercel-edge': 7.117.0
+      '@sentry/webpack-plugin': 1.21.0
+      chalk: 3.0.0
+      next: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+      resolve: 1.22.8
+      rollup: 2.78.0
+      stacktrace-parser: 0.1.11
+    optionalDependencies:
+      webpack: 5.82.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
   '@sentry/nextjs@7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)':
     dependencies:
       '@rollup/plugin-commonjs': 24.0.0(rollup@2.78.0)
@@ -19216,11 +19313,11 @@ snapshots:
       '@sentry/vercel-edge': 7.117.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
-      stacktrace-parser: 0.1.10
+      stacktrace-parser: 0.1.11
     optionalDependencies:
       webpack: 5.82.1
     transitivePeerDependencies:
@@ -19826,7 +19923,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@storybook/builder-vite@7.0.12(typescript@5.5.4)(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))':
+  '@storybook/builder-vite@7.0.12(typescript@5.5.4)(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))':
     dependencies:
       '@storybook/channel-postmessage': 7.0.12
       '@storybook/channel-websocket': 7.0.12
@@ -19848,7 +19945,7 @@ snapshots:
       remark-external-links: 8.0.0
       remark-slug: 6.1.0
       rollup: 3.29.4
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
     optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
@@ -20184,19 +20281,19 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  '@storybook/react-vite@7.0.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.4)(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))':
+  '@storybook/react-vite@7.0.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.4)(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))':
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.2.1(typescript@5.5.4)(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.2.1(typescript@5.5.4)(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       '@rollup/pluginutils': 4.2.1
-      '@storybook/builder-vite': 7.0.12(typescript@5.5.4)(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+      '@storybook/builder-vite': 7.0.12(typescript@5.5.4)(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       '@storybook/react': 7.0.12(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@5.5.4)
-      '@vitejs/plugin-react': 3.1.0(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+      '@vitejs/plugin-react': 3.1.0(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       ast-types: 0.14.2
       magic-string: 0.27.0
       react: 18.2.0
       react-docgen: 6.0.0-alpha.3
       react-dom: 18.2.0(react@18.2.0)
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
     transitivePeerDependencies:
       - '@preact/preset-vite'
       - supports-color
@@ -20379,29 +20476,29 @@ snapshots:
       '@trpc/client': 10.34.0(@trpc/server@10.34.0)
       '@trpc/react-query': 10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server': 10.34.0
-      next: 14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
 
-  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client': 10.43.1(@trpc/server@10.43.1)
       '@trpc/react-query': 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server': 10.43.1
-      next: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
 
-  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client': 10.43.1(@trpc/server@10.43.1)
       '@trpc/react-query': 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server': 10.43.1
-      next: 14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next: 14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
@@ -20473,11 +20570,11 @@ snapshots:
   '@types/body-parser@1.19.2':
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   '@types/connect@3.4.35':
     dependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   '@types/debug@4.1.8':
     dependencies:
@@ -20516,7 +20613,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.17.35':
     dependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
       '@types/send': 0.17.1
@@ -20533,16 +20630,16 @@ snapshots:
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   '@types/glob@8.1.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   '@types/graceful-fs@4.1.6':
     dependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   '@types/handlebars-helpers@0.5.6':
     dependencies:
@@ -20602,7 +20699,7 @@ snapshots:
 
   '@types/node-fetch@2.6.4':
     dependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       form-data: 3.0.1
 
   '@types/node@12.20.55': {}
@@ -20612,6 +20709,10 @@ snapshots:
   '@types/node@20.12.3':
     dependencies:
       undici-types: 5.26.5
+
+  '@types/node@22.13.10':
+    dependencies:
+      undici-types: 6.20.0
 
   '@types/nodemailer@6.4.7':
     dependencies:
@@ -20646,12 +20747,12 @@ snapshots:
   '@types/send@0.17.1':
     dependencies:
       '@types/mime': 1.3.2
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   '@types/serve-static@1.15.1':
     dependencies:
       '@types/mime': 3.0.1
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   '@types/shimmer@1.2.0': {}
 
@@ -20665,11 +20766,11 @@ snapshots:
 
   '@types/ws@8.5.10':
     dependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   '@types/ws@8.5.5':
     dependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   '@types/yargs-parser@21.0.0': {}
 
@@ -20681,15 +20782,15 @@ snapshots:
     dependencies:
       '@types/yargs-parser': 21.0.0
 
-  '@typescript-eslint/eslint-plugin@7.15.0(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)(typescript@5.5.4)':
+  '@typescript-eslint/eslint-plugin@7.15.0(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
-      '@typescript-eslint/parser': 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
+      '@typescript-eslint/parser': 7.15.0(eslint@8.57.0)(typescript@5.5.4)
       '@typescript-eslint/scope-manager': 7.15.0
-      '@typescript-eslint/type-utils': 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
-      '@typescript-eslint/utils': 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
+      '@typescript-eslint/type-utils': 7.15.0(eslint@8.57.0)(typescript@5.5.4)
+      '@typescript-eslint/utils': 7.15.0(eslint@8.57.0)(typescript@5.5.4)
       '@typescript-eslint/visitor-keys': 7.15.0
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       graphemer: 1.4.0
       ignore: 5.3.2
       natural-compare: 1.4.0
@@ -20699,39 +20800,39 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4)':
+  '@typescript-eslint/parser@5.59.11(eslint@8.57.0)(typescript@5.5.4)':
     dependencies:
       '@typescript-eslint/scope-manager': 5.59.11
       '@typescript-eslint/types': 5.59.11
       '@typescript-eslint/typescript-estree': 5.59.11(typescript@5.5.4)
       debug: 4.4.0
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
     optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)':
+  '@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4)':
     dependencies:
       '@typescript-eslint/scope-manager': 7.15.0
       '@typescript-eslint/types': 7.15.0
       '@typescript-eslint/typescript-estree': 7.15.0(typescript@5.5.4)
       '@typescript-eslint/visitor-keys': 7.15.0
       debug: 4.3.4
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
     optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.11.0(eslint@node_modules+eslint)(typescript@5.5.4)':
+  '@typescript-eslint/parser@8.11.0(eslint@8.57.0)(typescript@5.5.4)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.11.0
       '@typescript-eslint/types': 8.11.0
       '@typescript-eslint/typescript-estree': 8.11.0(typescript@5.5.4)
       '@typescript-eslint/visitor-keys': 8.11.0
       debug: 4.4.0
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
     optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
@@ -20757,12 +20858,12 @@ snapshots:
       '@typescript-eslint/types': 8.11.0
       '@typescript-eslint/visitor-keys': 8.11.0
 
-  '@typescript-eslint/type-utils@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)':
+  '@typescript-eslint/type-utils@7.15.0(eslint@8.57.0)(typescript@5.5.4)':
     dependencies:
       '@typescript-eslint/typescript-estree': 7.15.0(typescript@5.5.4)
-      '@typescript-eslint/utils': 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
+      '@typescript-eslint/utils': 7.15.0(eslint@8.57.0)(typescript@5.5.4)
       debug: 4.4.0
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       ts-api-utils: 1.3.0(typescript@5.5.4)
     optionalDependencies:
       typescript: 5.5.4
@@ -20813,7 +20914,7 @@ snapshots:
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.6.3
+      semver: 7.7.1
       ts-api-utils: 1.3.0(typescript@5.5.4)
     optionalDependencies:
       typescript: 5.5.4
@@ -20835,39 +20936,39 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@5.62.0(eslint@node_modules+eslint)(typescript@5.5.4)':
+  '@typescript-eslint/utils@5.62.0(eslint@8.57.0)(typescript@5.5.4)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@node_modules+eslint)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
       '@types/json-schema': 7.0.12
       '@types/semver': 7.5.0
       '@typescript-eslint/scope-manager': 5.62.0
       '@typescript-eslint/types': 5.62.0
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.5.4)
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       eslint-scope: 5.1.1
       semver: 7.5.1
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  '@typescript-eslint/utils@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)':
+  '@typescript-eslint/utils@7.15.0(eslint@8.57.0)(typescript@5.5.4)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@node_modules+eslint)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
       '@typescript-eslint/scope-manager': 7.15.0
       '@typescript-eslint/types': 7.15.0
       '@typescript-eslint/typescript-estree': 7.15.0(typescript@5.5.4)
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  '@typescript-eslint/utils@8.11.0(eslint@node_modules+eslint)(typescript@5.5.4)':
+  '@typescript-eslint/utils@8.11.0(eslint@8.57.0)(typescript@5.5.4)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.4.0(eslint@node_modules+eslint)
+      '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
       '@typescript-eslint/scope-manager': 8.11.0
       '@typescript-eslint/types': 8.11.0
       '@typescript-eslint/typescript-estree': 8.11.0(typescript@5.5.4)
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -20892,7 +20993,7 @@ snapshots:
       '@typescript-eslint/types': 8.11.0
       eslint-visitor-keys: 3.4.3
 
-  '@ungap/structured-clone@1.2.0': {}
+  '@ungap/structured-clone@1.3.0': {}
 
   '@urql/core@4.0.10(graphql@16.7.1)':
     dependencies:
@@ -20944,7 +21045,7 @@ snapshots:
       modern-ahocorasick: 1.0.1
       outdent: 0.8.0
 
-  '@vanilla-extract/integration@6.2.1(@types/node@20.12.3)(terser@5.18.0)':
+  '@vanilla-extract/integration@6.2.1(@types/node@22.13.10)(terser@5.18.0)':
     dependencies:
       '@babel/core': 7.22.11
       '@babel/plugin-syntax-typescript': 7.22.5(@babel/core@7.22.11)
@@ -20957,8 +21058,8 @@ snapshots:
       lodash: 4.17.21
       mlly: 1.4.0
       outdent: 0.8.0
-      vite: 4.4.8(@types/node@20.12.3)(terser@5.18.0)
-      vite-node: 0.28.5(@types/node@20.12.3)(terser@5.18.0)
+      vite: 4.4.8(@types/node@22.13.10)(terser@5.18.0)
+      vite-node: 0.28.5(@types/node@22.13.10)(terser@5.18.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -20977,13 +21078,13 @@ snapshots:
     dependencies:
       '@vanilla-extract/css': 1.14.2
 
-  '@vanilla-extract/vite-plugin@3.8.1(@types/node@20.12.3)(terser@5.18.0)(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))':
+  '@vanilla-extract/vite-plugin@3.8.1(@types/node@22.13.10)(terser@5.18.0)(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))':
     dependencies:
-      '@vanilla-extract/integration': 6.2.1(@types/node@20.12.3)(terser@5.18.0)
+      '@vanilla-extract/integration': 6.2.1(@types/node@22.13.10)(terser@5.18.0)
       outdent: 0.8.0
       postcss: 8.4.24
       postcss-load-config: 3.1.4(postcss@8.4.24)
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -21005,29 +21106,29 @@ snapshots:
       '@opentelemetry/sdk-metrics': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.0)
 
-  '@vitejs/plugin-react@3.1.0(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))':
+  '@vitejs/plugin-react@3.1.0(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))':
     dependencies:
       '@babel/core': 7.22.11
       '@babel/plugin-transform-react-jsx-self': 7.22.5(@babel/core@7.22.11)
       '@babel/plugin-transform-react-jsx-source': 7.22.5(@babel/core@7.22.11)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-react@4.3.1(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))':
+  '@vitejs/plugin-react@4.3.1(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))':
     dependencies:
       '@babel/core': 7.24.7
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.24.7)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.24.7)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))':
+  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -21042,17 +21143,17 @@ snapshots:
       std-env: 3.8.0
       strip-literal: 2.1.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+      vitest: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/eslint-plugin@1.1.12(@typescript-eslint/utils@8.11.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)(typescript@5.5.4)(vitest@3.0.4(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0))':
+  '@vitest/eslint-plugin@1.1.12(@typescript-eslint/utils@8.11.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4)(vitest@3.0.4(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))':
     dependencies:
-      '@typescript-eslint/utils': 8.11.0(eslint@node_modules+eslint)(typescript@5.5.4)
-      eslint: link:node_modules/eslint
+      '@typescript-eslint/utils': 8.11.0(eslint@8.57.0)(typescript@5.5.4)
+      eslint: 8.57.0
     optionalDependencies:
       typescript: 5.5.4
-      vitest: 3.0.4(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0)
+      vitest: 3.0.4(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
 
   '@vitest/expect@1.6.0':
     dependencies:
@@ -21068,13 +21169,13 @@ snapshots:
       tinyrainbow: 2.0.0
     optional: true
 
-  '@vitest/mocker@3.0.4(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))':
+  '@vitest/mocker@3.0.4(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))':
     dependencies:
       '@vitest/spy': 3.0.4
       estree-walker: 3.0.3
       magic-string: 0.30.17
     optionalDependencies:
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
     optional: true
 
   '@vitest/pretty-format@3.0.4':
@@ -21283,17 +21384,17 @@ snapshots:
     dependencies:
       acorn: 8.9.0
 
-  acorn-import-attributes@1.9.5(acorn@8.14.0):
+  acorn-import-attributes@1.9.5(acorn@8.14.1):
     dependencies:
-      acorn: 8.14.0
+      acorn: 8.14.1
 
   acorn-jsx@5.3.2(acorn@7.4.1):
     dependencies:
       acorn: 7.4.1
 
-  acorn-jsx@5.3.2(acorn@8.11.3):
+  acorn-jsx@5.3.2(acorn@8.14.1):
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.14.1
 
   acorn-walk@7.2.0: {}
 
@@ -21305,7 +21406,7 @@ snapshots:
 
   acorn@8.11.3: {}
 
-  acorn@8.14.0: {}
+  acorn@8.14.1: {}
 
   acorn@8.9.0: {}
 
@@ -23266,32 +23367,32 @@ snapshots:
     optionalDependencies:
       source-map: 0.6.1
 
-  eslint-config-next@14.2.4(eslint@node_modules+eslint)(typescript@5.5.4):
+  eslint-config-next@14.2.4(eslint@8.57.0)(typescript@5.5.4):
     dependencies:
       '@next/eslint-plugin-next': 14.2.4
       '@rushstack/eslint-patch': 1.10.2
-      '@typescript-eslint/parser': 5.59.11(eslint@node_modules+eslint)(typescript@5.5.4)
-      eslint: link:node_modules/eslint
+      '@typescript-eslint/parser': 5.59.11(eslint@8.57.0)(typescript@5.5.4)
+      eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint))(eslint@node_modules+eslint)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint))(eslint@node_modules+eslint))(eslint@node_modules+eslint)
-      eslint-plugin-jsx-a11y: 6.7.1(eslint@node_modules+eslint)
-      eslint-plugin-react: 7.34.3(eslint@node_modules+eslint)
-      eslint-plugin-react-hooks: 4.6.0(eslint@node_modules+eslint)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.59.11(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@5.59.11(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
+      eslint-plugin-jsx-a11y: 6.7.1(eslint@8.57.0)
+      eslint-plugin-react: 7.34.3(eslint@8.57.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.57.0)
     optionalDependencies:
       typescript: 5.5.4
     transitivePeerDependencies:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-config-prettier@9.1.0(eslint@node_modules+eslint):
+  eslint-config-prettier@9.1.0(eslint@8.57.0):
     dependencies:
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
 
-  eslint-config-turbo@2.4.2(eslint@node_modules+eslint)(turbo@2.4.4):
+  eslint-config-turbo@2.4.2(eslint@8.57.0)(turbo@2.4.4):
     dependencies:
-      eslint: link:node_modules/eslint
-      eslint-plugin-turbo: 2.4.2(eslint@node_modules+eslint)(turbo@2.4.4)
+      eslint: 8.57.0
+      eslint-plugin-turbo: 2.4.2(eslint@8.57.0)(turbo@2.4.4)
       turbo: 2.4.4
 
   eslint-import-resolver-node@0.3.9:
@@ -23302,13 +23403,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint))(eslint@node_modules+eslint):
+  eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0):
     dependencies:
       debug: 4.4.0
       enhanced-resolve: 5.15.0
-      eslint: link:node_modules/eslint
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint))(eslint@node_modules+eslint))(eslint@node_modules+eslint)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)
+      eslint: 8.57.0
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.59.11(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)
       get-tsconfig: 4.7.2
       globby: 13.1.4
       is-core-module: 2.13.1
@@ -23320,34 +23421,34 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.0(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint))(eslint@node_modules+eslint))(eslint@node_modules+eslint):
+  eslint-module-utils@2.8.0(@typescript-eslint/parser@5.59.11(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      '@typescript-eslint/parser': 5.59.11(eslint@node_modules+eslint)(typescript@5.5.4)
-      eslint: link:node_modules/eslint
+      '@typescript-eslint/parser': 5.59.11(eslint@8.57.0)(typescript@5.5.4)
+      eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint))(eslint@node_modules+eslint)
+      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.59.11(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1)(eslint@8.57.0)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@node_modules+eslint):
+  eslint-module-utils@2.8.0(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      '@typescript-eslint/parser': 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
-      eslint: link:node_modules/eslint
+      '@typescript-eslint/parser': 7.15.0(eslint@8.57.0)(typescript@5.5.4)
+      eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-es@3.0.1(eslint@node_modules+eslint):
+  eslint-plugin-es@3.0.1(eslint@8.57.0):
     dependencies:
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       eslint-utils: 2.1.0
       regexpp: 3.2.0
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint))(eslint@node_modules+eslint))(eslint@node_modules+eslint):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@5.59.11(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -23355,9 +23456,9 @@ snapshots:
       array.prototype.flatmap: 1.3.2
       debug: 3.2.7
       doctrine: 2.1.0
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5(@typescript-eslint/parser@5.59.11(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint))(eslint@node_modules+eslint))(eslint@node_modules+eslint)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.59.11(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.5.5)(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -23368,13 +23469,13 @@ snapshots:
       semver: 6.3.1
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 5.59.11(eslint@node_modules+eslint)(typescript@5.5.4)
+      '@typescript-eslint/parser': 5.59.11(eslint@8.57.0)(typescript@5.5.4)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -23382,9 +23483,9 @@ snapshots:
       array.prototype.flatmap: 1.3.2
       debug: 3.2.7
       doctrine: 2.1.0
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@node_modules+eslint)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint-import-resolver-node@0.3.9)(eslint@8.57.0)
       hasown: 2.0.2
       is-core-module: 2.13.1
       is-glob: 4.0.3
@@ -23395,13 +23496,13 @@ snapshots:
       semver: 6.3.1
       tsconfig-paths: 3.15.0
     optionalDependencies:
-      '@typescript-eslint/parser': 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
+      '@typescript-eslint/parser': 7.15.0(eslint@8.57.0)(typescript@5.5.4)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-jsx-a11y@6.7.1(eslint@node_modules+eslint):
+  eslint-plugin-jsx-a11y@6.7.1(eslint@8.57.0):
     dependencies:
       '@babel/runtime': 7.25.6
       aria-query: 5.2.1
@@ -23412,7 +23513,7 @@ snapshots:
       axobject-query: 3.2.1
       damerau-levenshtein: 1.0.8
       emoji-regex: 9.2.2
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       has: 1.0.3
       jsx-ast-utils: 3.3.3
       language-tags: 1.0.5
@@ -23421,41 +23522,41 @@ snapshots:
       object.fromentries: 2.0.8
       semver: 6.3.1
 
-  eslint-plugin-neverthrow@1.1.4(@typescript-eslint/parser@7.15.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)(typescript@5.5.4):
+  eslint-plugin-neverthrow@1.1.4(@typescript-eslint/parser@7.15.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4):
     dependencies:
       '@types/eslint-utils': 3.0.5
-      '@typescript-eslint/parser': 7.15.0(eslint@node_modules+eslint)(typescript@5.5.4)
-      eslint: link:node_modules/eslint
-      eslint-utils: 3.0.0(eslint@node_modules+eslint)
+      '@typescript-eslint/parser': 7.15.0(eslint@8.57.0)(typescript@5.5.4)
+      eslint: 8.57.0
+      eslint-utils: 3.0.0(eslint@8.57.0)
       tsutils: 3.21.0(typescript@5.5.4)
     transitivePeerDependencies:
       - typescript
 
-  eslint-plugin-neverthrow@1.1.4(@typescript-eslint/parser@8.11.0(eslint@node_modules+eslint)(typescript@5.5.4))(eslint@node_modules+eslint)(typescript@5.5.4):
+  eslint-plugin-neverthrow@1.1.4(@typescript-eslint/parser@8.11.0(eslint@8.57.0)(typescript@5.5.4))(eslint@8.57.0)(typescript@5.5.4):
     dependencies:
       '@types/eslint-utils': 3.0.5
-      '@typescript-eslint/parser': 8.11.0(eslint@node_modules+eslint)(typescript@5.5.4)
-      eslint: link:node_modules/eslint
-      eslint-utils: 3.0.0(eslint@node_modules+eslint)
+      '@typescript-eslint/parser': 8.11.0(eslint@8.57.0)(typescript@5.5.4)
+      eslint: 8.57.0
+      eslint-utils: 3.0.0(eslint@8.57.0)
       tsutils: 3.21.0(typescript@5.5.4)
     transitivePeerDependencies:
       - typescript
 
-  eslint-plugin-node@11.1.0(eslint@node_modules+eslint):
+  eslint-plugin-node@11.1.0(eslint@8.57.0):
     dependencies:
-      eslint: link:node_modules/eslint
-      eslint-plugin-es: 3.0.1(eslint@node_modules+eslint)
+      eslint: 8.57.0
+      eslint-plugin-es: 3.0.1(eslint@8.57.0)
       eslint-utils: 2.1.0
       ignore: 5.2.4
       minimatch: 3.1.2
       resolve: 1.22.8
       semver: 6.3.1
 
-  eslint-plugin-react-hooks@4.6.0(eslint@node_modules+eslint):
+  eslint-plugin-react-hooks@4.6.0(eslint@8.57.0):
     dependencies:
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
 
-  eslint-plugin-react@7.34.3(eslint@node_modules+eslint):
+  eslint-plugin-react@7.34.3(eslint@8.57.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlast: 1.2.5
@@ -23464,7 +23565,7 @@ snapshots:
       array.prototype.tosorted: 1.1.4
       doctrine: 2.1.0
       es-iterator-helpers: 1.0.19
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       estraverse: 5.3.0
       jsx-ast-utils: 3.3.3
       minimatch: 3.1.2
@@ -23477,14 +23578,14 @@ snapshots:
       semver: 6.3.1
       string.prototype.matchall: 4.0.11
 
-  eslint-plugin-simple-import-sort@12.1.1(eslint@node_modules+eslint):
+  eslint-plugin-simple-import-sort@12.1.1(eslint@8.57.0):
     dependencies:
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
 
-  eslint-plugin-turbo@2.4.2(eslint@node_modules+eslint)(turbo@2.4.4):
+  eslint-plugin-turbo@2.4.2(eslint@8.57.0)(turbo@2.4.4):
     dependencies:
       dotenv: 16.0.3
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       turbo: 2.4.4
 
   eslint-scope@5.1.1:
@@ -23501,9 +23602,9 @@ snapshots:
     dependencies:
       eslint-visitor-keys: 1.3.0
 
-  eslint-utils@3.0.0(eslint@node_modules+eslint):
+  eslint-utils@3.0.0(eslint@8.57.0):
     dependencies:
-      eslint: link:node_modules/eslint
+      eslint: 8.57.0
       eslint-visitor-keys: 2.1.0
 
   eslint-visitor-keys@1.3.0: {}
@@ -23515,31 +23616,31 @@ snapshots:
   eslint@8.57.0:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
-      '@eslint-community/regexpp': 4.6.2
+      '@eslint-community/regexpp': 4.12.1
       '@eslint/eslintrc': 2.1.4
       '@eslint/js': 8.57.0
       '@humanwhocodes/config-array': 0.11.14
       '@humanwhocodes/module-importer': 1.0.1
       '@nodelib/fs.walk': 1.2.8
-      '@ungap/structured-clone': 1.2.0
+      '@ungap/structured-clone': 1.3.0
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4
+      debug: 4.4.0
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
       eslint-visitor-keys: 3.4.3
       espree: 9.6.1
-      esquery: 1.5.0
+      esquery: 1.6.0
       esutils: 2.0.3
       fast-deep-equal: 3.1.3
       file-entry-cache: 6.0.1
       find-up: 5.0.0
       glob-parent: 6.0.2
-      globals: 13.20.0
+      globals: 13.24.0
       graphemer: 1.4.0
-      ignore: 5.2.4
+      ignore: 5.3.2
       imurmurhash: 0.1.4
       is-glob: 4.0.3
       is-path-inside: 3.0.3
@@ -23549,7 +23650,7 @@ snapshots:
       lodash.merge: 4.6.2
       minimatch: 3.1.2
       natural-compare: 1.4.0
-      optionator: 0.9.3
+      optionator: 0.9.4
       strip-ansi: 6.0.1
       text-table: 0.2.0
     transitivePeerDependencies:
@@ -23557,13 +23658,13 @@ snapshots:
 
   espree@9.6.1:
     dependencies:
-      acorn: 8.11.3
-      acorn-jsx: 5.3.2(acorn@8.11.3)
+      acorn: 8.14.1
+      acorn-jsx: 5.3.2(acorn@8.14.1)
       eslint-visitor-keys: 3.4.3
 
   esprima@4.0.1: {}
 
-  esquery@1.5.0:
+  esquery@1.6.0:
     dependencies:
       estraverse: 5.3.0
 
@@ -23844,7 +23945,7 @@ snapshots:
 
   file-entry-cache@6.0.1:
     dependencies:
-      flat-cache: 3.0.4
+      flat-cache: 3.2.0
 
   file-entry-cache@9.1.0:
     dependencies:
@@ -23917,17 +24018,16 @@ snapshots:
       micromatch: 4.0.8
       pkg-dir: 4.2.0
 
-  flat-cache@3.0.4:
+  flat-cache@3.2.0:
     dependencies:
-      flatted: 3.2.7
+      flatted: 3.3.1
+      keyv: 4.5.4
       rimraf: 3.0.2
 
   flat-cache@5.0.0:
     dependencies:
       flatted: 3.3.1
       keyv: 4.5.4
-
-  flatted@3.2.7: {}
 
   flatted@3.3.1: {}
 
@@ -24180,7 +24280,7 @@ snapshots:
 
   globals@11.12.0: {}
 
-  globals@13.20.0:
+  globals@13.24.0:
     dependencies:
       type-fest: 0.20.2
 
@@ -24215,13 +24315,13 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql-config@5.0.3(@types/node@20.12.3)(graphql@16.7.1)(typescript@5.5.4):
+  graphql-config@5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.5.4):
     dependencies:
       '@graphql-tools/graphql-file-loader': 8.0.0(graphql@16.7.1)
       '@graphql-tools/json-file-loader': 8.0.0(graphql@16.7.1)
       '@graphql-tools/load': 8.0.1(graphql@16.7.1)
       '@graphql-tools/merge': 9.0.2(graphql@16.7.1)
-      '@graphql-tools/url-loader': 8.0.1(@types/node@20.12.3)(graphql@16.7.1)
+      '@graphql-tools/url-loader': 8.0.1(@types/node@22.13.10)(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       cosmiconfig: 8.3.6(typescript@5.5.4)
       graphql: 16.7.1
@@ -24548,8 +24648,8 @@ snapshots:
 
   import-in-the-middle@1.13.1:
     dependencies:
-      acorn: 8.14.0
-      acorn-import-attributes: 1.9.5(acorn@8.14.0)
+      acorn: 8.14.1
+      acorn-import-attributes: 1.9.5(acorn@8.14.1)
       cjs-module-lexer: 1.4.3
       module-details-from-path: 1.0.3
 
@@ -24934,7 +25034,7 @@ snapshots:
     dependencies:
       '@jest/types': 29.5.0
       '@types/graceful-fs': 4.1.6
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       anymatch: 3.1.3
       fb-watchman: 2.0.2
       graceful-fs: 4.2.11
@@ -24949,14 +25049,14 @@ snapshots:
   jest-mock@27.5.1:
     dependencies:
       '@jest/types': 27.5.1
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   jest-regex-util@29.4.3: {}
 
   jest-util@29.5.0:
     dependencies:
       '@jest/types': 29.5.0
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       chalk: 4.1.2
       ci-info: 3.8.0
       graceful-fs: 4.2.11
@@ -24964,13 +25064,13 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
   jest-worker@29.5.0:
     dependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       jest-util: 29.5.0
       merge-stream: 2.0.0
       supports-color: 8.1.1
@@ -25180,11 +25280,11 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@5.27.2(@types/node@20.12.3)(typescript@5.5.4):
+  knip@5.27.2(@types/node@22.13.10)(typescript@5.5.4):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       '@snyk/github-codeowners': 1.1.0
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       easy-table: 1.2.0
       enhanced-resolve: 5.17.1
       fast-glob: 3.3.2
@@ -25447,7 +25547,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.6.3
+      semver: 7.7.1
 
   makeerror@1.0.12:
     dependencies:
@@ -25518,9 +25618,9 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  meros@1.3.0(@types/node@20.12.3):
+  meros@1.3.0(@types/node@22.13.10):
     optionalDependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
 
   methods@1.1.2: {}
 
@@ -25921,14 +26021,14 @@ snapshots:
 
   mlly@1.4.0:
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.14.1
       pathe: 1.1.2
       pkg-types: 1.0.3
       ufo: 1.4.0
 
   mlly@1.5.0:
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.14.1
       pathe: 1.1.2
       pkg-types: 1.0.3
       ufo: 1.4.0
@@ -26013,33 +26113,7 @@ snapshots:
 
   neverthrow@6.2.1: {}
 
-  next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      '@next/env': 14.2.3
-      '@swc/helpers': 0.5.5
-      busboy: 1.6.0
-      caniuse-lite: 1.0.30001588
-      graceful-fs: 4.2.11
-      postcss: 8.4.31
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      styled-jsx: 5.1.1(@babel/core@7.24.7)(react@18.2.0)
-    optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.3
-      '@next/swc-darwin-x64': 14.2.3
-      '@next/swc-linux-arm64-gnu': 14.2.3
-      '@next/swc-linux-arm64-musl': 14.2.3
-      '@next/swc-linux-x64-gnu': 14.2.3
-      '@next/swc-linux-x64-musl': 14.2.3
-      '@next/swc-win32-arm64-msvc': 14.2.3
-      '@next/swc-win32-ia32-msvc': 14.2.3
-      '@next/swc-win32-x64-msvc': 14.2.3
-      '@opentelemetry/api': link:node_modules/@opentelemetry/api
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
-
-  next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@next/env': 14.2.3
       '@swc/helpers': 0.5.5
@@ -26065,7 +26139,7 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  next@14.2.3(@opentelemetry/api@node_modules+@opentelemetry+api)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  next@14.2.3(@opentelemetry/api@1.9.0)(@playwright/test@1.35.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@next/env': 14.2.3
       '@swc/helpers': 0.5.5
@@ -26086,7 +26160,8 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 14.2.3
       '@next/swc-win32-ia32-msvc': 14.2.3
       '@next/swc-win32-x64-msvc': 14.2.3
-      '@opentelemetry/api': link:node_modules/@opentelemetry/api
+      '@opentelemetry/api': 1.9.0
+      '@playwright/test': 1.35.1
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros
@@ -26328,14 +26403,14 @@ snapshots:
       type-check: 0.3.2
       word-wrap: 1.2.3
 
-  optionator@0.9.3:
+  optionator@0.9.4:
     dependencies:
-      '@aashutoshrathi/word-wrap': 1.2.6
       deep-is: 0.1.4
       fast-levenshtein: 2.0.6
       levn: 0.4.1
       prelude-ls: 1.2.1
       type-check: 0.4.0
+      word-wrap: 1.2.5
 
   ora@5.4.1:
     dependencies:
@@ -26690,7 +26765,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       long: 5.3.1
 
   proxy-addr@2.0.7:
@@ -27569,7 +27644,7 @@ snapshots:
 
   stackback@0.0.2: {}
 
-  stacktrace-parser@0.1.10:
+  stacktrace-parser@0.1.11:
     dependencies:
       type-fest: 0.7.1
 
@@ -27814,7 +27889,7 @@ snapshots:
   terser@5.18.0:
     dependencies:
       '@jridgewell/source-map': 0.3.3
-      acorn: 8.11.3
+      acorn: 8.14.1
       commander: 2.20.3
       source-map-support: 0.5.21
 
@@ -28090,6 +28165,8 @@ snapshots:
 
   undici-types@5.26.5: {}
 
+  undici-types@6.20.0: {}
+
   undici@5.22.1:
     dependencies:
       busboy: 1.6.0
@@ -28145,7 +28222,7 @@ snapshots:
 
   unplugin@0.10.2:
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.14.1
       chokidar: 3.5.3
       webpack-sources: 3.2.3
       webpack-virtual-modules: 0.4.6
@@ -28283,7 +28360,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-node@0.28.5(@types/node@20.12.3)(terser@5.18.0):
+  vite-node@0.28.5(@types/node@22.13.10)(terser@5.18.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0
@@ -28292,7 +28369,7 @@ snapshots:
       picocolors: 1.1.1
       source-map: 0.6.1
       source-map-support: 0.5.21
-      vite: 4.4.8(@types/node@20.12.3)(terser@5.18.0)
+      vite: 4.4.8(@types/node@22.13.10)(terser@5.18.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -28303,13 +28380,13 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@1.6.0(@types/node@20.12.3)(terser@5.18.0):
+  vite-node@1.6.0(@types/node@22.13.10)(terser@5.18.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0
       pathe: 1.1.2
       picocolors: 1.1.1
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -28320,13 +28397,13 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@3.0.4(@types/node@20.12.3)(terser@5.18.0):
+  vite-node@3.0.4(@types/node@22.13.10)(terser@5.18.0):
     dependencies:
       cac: 6.7.14
       debug: 4.4.0
       es-module-lexer: 1.6.0
       pathe: 2.0.2
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -28338,27 +28415,27 @@ snapshots:
       - terser
     optional: true
 
-  vite@4.4.8(@types/node@20.12.3)(terser@5.18.0):
+  vite@4.4.8(@types/node@22.13.10)(terser@5.18.0):
     dependencies:
       esbuild: 0.18.20
       postcss: 8.5.1
       rollup: 3.29.4
     optionalDependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       fsevents: 2.3.3
       terser: 5.18.0
 
-  vite@5.3.3(@types/node@20.12.3)(terser@5.18.0):
+  vite@5.3.3(@types/node@22.13.10)(terser@5.18.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.1
       rollup: 4.32.0
     optionalDependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       fsevents: 2.3.3
       terser: 5.18.0
 
-  vitest@1.6.0(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0):
+  vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -28377,11 +28454,11 @@ snapshots:
       strip-literal: 2.1.0
       tinybench: 2.9.0
       tinypool: 0.8.4
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
-      vite-node: 1.6.0(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
+      vite-node: 1.6.0(@types/node@22.13.10)(terser@5.18.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       jsdom: 20.0.3
     transitivePeerDependencies:
       - less
@@ -28392,10 +28469,10 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@3.0.4(@types/node@20.12.3)(jsdom@20.0.3)(terser@5.18.0):
+  vitest@3.0.4(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0):
     dependencies:
       '@vitest/expect': 3.0.4
-      '@vitest/mocker': 3.0.4(vite@5.3.3(@types/node@20.12.3)(terser@5.18.0))
+      '@vitest/mocker': 3.0.4(vite@5.3.3(@types/node@22.13.10)(terser@5.18.0))
       '@vitest/pretty-format': 3.0.4
       '@vitest/runner': 3.0.4
       '@vitest/snapshot': 3.0.4
@@ -28411,11 +28488,11 @@ snapshots:
       tinyexec: 0.3.2
       tinypool: 1.0.2
       tinyrainbow: 2.0.0
-      vite: 5.3.3(@types/node@20.12.3)(terser@5.18.0)
-      vite-node: 3.0.4(@types/node@20.12.3)(terser@5.18.0)
+      vite: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
+      vite-node: 3.0.4(@types/node@22.13.10)(terser@5.18.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 20.12.3
+      '@types/node': 22.13.10
       jsdom: 20.0.3
     transitivePeerDependencies:
       - less
@@ -28650,6 +28727,8 @@ snapshots:
   wonka@6.3.2: {}
 
   word-wrap@1.2.3: {}
+
+  word-wrap@1.2.5: {}
 
   wordwrap@1.0.0: {}
 
