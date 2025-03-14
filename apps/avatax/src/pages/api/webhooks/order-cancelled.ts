@@ -3,7 +3,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 import * as Sentry from "@sentry/nextjs";
-import { captureException } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
@@ -32,7 +31,10 @@ export const config = {
 
 const logger = createLogger("orderCancelledAsyncWebhook");
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
-const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
+const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(
+  logger,
+  Sentry.captureException,
+);
 
 const logsWriterFactory = new LogWriterFactory();
 
@@ -77,7 +79,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
               channelSlug: payload.order?.channel.slug,
               errorReason: "Missing order data from Saleor",
             })
-              .mapErr(captureException)
+              .mapErr(Sentry.captureException)
               .map(logWriter.writeLog);
 
             span.setStatus({
@@ -100,7 +102,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
               channelSlug: payload.order?.channel.slug,
               errorReason: "Missing 'avataxId' field in order metadata",
             })
-              .mapErr(captureException)
+              .mapErr(Sentry.captureException)
               .map(logWriter.writeLog);
 
             span.setStatus({
@@ -123,7 +125,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
               channelSlug: payload.order?.channel.slug,
               errorReason: "Error parsing Saleor event payload",
             })
-              .mapErr(captureException)
+              .mapErr(Sentry.captureException)
               .map(logWriter.writeLog);
 
             span.setStatus({
@@ -146,7 +148,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
               errorReason: "Unhandled error",
               avataxId: payload.order?.avataxId,
             })
-              .mapErr(captureException)
+              .mapErr(Sentry.captureException)
               .map(logWriter.writeLog);
 
             span.setStatus({
@@ -176,7 +178,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
           try {
             new AppConfigurationLogger(logger).logConfiguration(config, channelSlug);
           } catch (e) {
-            captureException(
+            Sentry.captureException(
               new AppConfigExtractor.LogConfigurationMetricError(
                 "Failed to log configuration metric",
                 {
@@ -198,7 +200,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
           errorReason: "Cannot get app configuration",
           avataxId: payload.order?.avataxId,
         })
-          .mapErr(captureException)
+          .mapErr(Sentry.captureException)
           .map(logWriter.writeLog);
 
         span.recordException(config.error);
@@ -224,7 +226,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
           errorReason: "Invalid app configuration",
           avataxId: payload.order?.avataxId,
         })
-          .mapErr(captureException)
+          .mapErr(Sentry.captureException)
           .map(logWriter.writeLog);
 
         span.recordException(providerConfig.error);
@@ -265,7 +267,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             errorReason: "AvaTax transaction was not found in AvaTax",
             avataxId: payload.order?.avataxId,
           })
-            .mapErr(captureException)
+            .mapErr(Sentry.captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
@@ -290,7 +292,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             errorReason: "AvaTax transaction was already cancelled in AvaTax",
             avataxId: payload.order?.avataxId,
           })
-            .mapErr(captureException)
+            .mapErr(Sentry.captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
@@ -310,7 +312,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
           errorReason: "AvaTax API returned an unhandled error",
           avataxId: payload.order?.avataxId,
         })
-          .mapErr(captureException)
+          .mapErr(Sentry.captureException)
           .map(logWriter.writeLog);
 
         span.setStatus({
@@ -328,7 +330,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
         channelSlug: payload.order?.channel.slug,
         avataxId: payload.order?.avataxId,
       })
-        .mapErr(captureException)
+        .mapErr(Sentry.captureException)
         .map(logWriter.writeLog);
 
       logger.info("AvaTax transaction voided successfully");
