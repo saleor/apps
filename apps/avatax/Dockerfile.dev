@@ -1,0 +1,30 @@
+FROM node:22.11-alpine
+RUN apk update
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Set up PNPM
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN npm i --global corepack@latest && corepack enable
+
+# Install Turbo globally
+RUN pnpm install --global turbo@1.12.4
+
+# Copy all files
+COPY . .
+
+# Prune the workspace to only include the AvaTax app
+RUN turbo prune saleor-app-avatax --docker
+
+# Install dependencies - add ... to include workspace dependencies 
+RUN cd ./.turbo/saleor-app-avatax && pnpm install --frozen-lockfile --filter=saleor-app-avatax...
+
+# Set working directory to the app
+WORKDIR /app/.turbo/saleor-app-avatax
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Set the command to run the app in development mode
+CMD ["pnpm", "dev"] 
