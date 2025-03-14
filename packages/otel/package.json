@@ -8,18 +8,18 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@opentelemetry/api": "../../node_modules/@opentelemetry/api",
-    "@opentelemetry/exporter-trace-otlp-http": "../../node_modules/@opentelemetry/exporter-trace-otlp-http",
-    "@opentelemetry/instrumentation-aws-sdk": "../../node_modules/@opentelemetry/instrumentation-aws-sdk",
-    "@opentelemetry/instrumentation-http": "../../node_modules/@opentelemetry/instrumentation-http",
-    "@opentelemetry/resources": "../../node_modules/@opentelemetry/resources",
-    "@opentelemetry/sdk-trace-node": "../../node_modules/@opentelemetry/sdk-trace-node",
-    "@opentelemetry/semantic-conventions": "../../node_modules/@opentelemetry/semantic-conventions",
-    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@opentelemetry/api": "catalog:",
+    "@opentelemetry/exporter-trace-otlp-http": "catalog:",
+    "@opentelemetry/instrumentation-aws-sdk": "catalog:",
+    "@opentelemetry/instrumentation-http": "catalog:",
+    "@opentelemetry/resources": "catalog:",
+    "@opentelemetry/sdk-trace-node": "catalog:",
+    "@opentelemetry/semantic-conventions": "catalog:",
+    "@saleor/app-sdk": "catalog:",
     "urql": "4.0.4"
   },
   "devDependencies": {
-    "eslint": "../../node_modules/eslint",
+    "eslint": "catalog:",
     "eslint-config-saleor": "workspace:*",
     "typescript": "5.5.4"
   }
