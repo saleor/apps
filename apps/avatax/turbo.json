@@ -1,7 +1,7 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turbo.build/schema.v2.json",
   "extends": ["//"],
-  "pipeline": {
+  "tasks": {
     "deploy": {
       "env": [
         "ALLOWED_DOMAIN_PATTERN",
@@ -33,7 +33,7 @@
         "OTEL_ACCESS_TOKEN"
       ]
     },
-    "test": {
+    "e2e": {
       "env": ["TEST_SALEOR_API_URL", "E2E_USER_NAME", "E2E_USER_PASSWORD"]
     }
   }

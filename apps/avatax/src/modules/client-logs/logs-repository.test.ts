@@ -440,7 +440,6 @@ describe("LogsRepositoryDynamodb", () => {
           date: "2023-01-01T00:00:00Z",
           attributes: "{}",
           checkoutOrOrderId: "test-order-id",
-          transactionId: "test-transaction",
           channelId: "test-channel",
           _et: "LOG_BY_CHECKOUT_OR_ORDER_ID",
           checkoutOrOrder: "checkout",
@@ -457,7 +456,6 @@ describe("LogsRepositoryDynamodb", () => {
           // Invalid JSON:
           attributes: "abcd",
           checkoutOrOrderId: "test-order-id",
-          transactionId: "test-transaction",
           channelId: "test-channel",
           _et: "LOG_BY_CHECKOUT_OR_ORDER_ID",
           checkoutOrOrder: "checkout",

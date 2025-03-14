@@ -1,9 +1,7 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turbo.build/schema.v2.json",
   "extends": ["//"],
-  "pipeline": {
-    "e2e": {},
-    "e2e:ui": {},
+  "tasks": {
     "lint": {
       "env": ["INSTANCE_URL", "DASHBOARD_USER_EMAIL", "DASHBOARD_USER_PASSWORD"]
     }

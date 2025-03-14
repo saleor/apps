@@ -3,7 +3,7 @@ import { ClientLogStoreRequest } from "./client-log";
 export class OrderConfirmedLogRequest {
   static createSuccessLog(args: {
     sourceId: string | undefined;
-    channelSlug: string | undefined;
+    channelId: string | undefined;
     avataxId: string;
   }) {
     return ClientLogStoreRequest.create({
@@ -11,7 +11,7 @@ export class OrderConfirmedLogRequest {
       message: "AvaTax transaction committed successfully",
       checkoutOrOrderId: args.sourceId,
       checkoutOrOrder: "order",
-      channelId: args.channelSlug,
+      channelId: args.channelId,
       attributes: {
         avataxTransactionId: args.avataxId,
       },
@@ -20,7 +20,7 @@ export class OrderConfirmedLogRequest {
 
   static createErrorLog(args: {
     sourceId: string | undefined;
-    channelSlug: string | undefined;
+    channelId: string | undefined;
     errorReason: string;
     avataxId?: string | null;
   }) {
@@ -29,7 +29,7 @@ export class OrderConfirmedLogRequest {
       message: "Failed to commit transaction in AvaTax",
       checkoutOrOrderId: args.sourceId,
       checkoutOrOrder: "order",
-      channelId: args.channelSlug,
+      channelId: args.channelId,
       attributes: {
         error: {
           reason: args.errorReason,

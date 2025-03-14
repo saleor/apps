@@ -93,7 +93,6 @@ export const baseLogSchema = schema({
     .required()
     .default(() => LogsTable.getDefaultTTL()),
   // checkoutOrOrderId is added by entity schema
-  transactionId: string().optional(),
   channelId: string().optional(),
   date: string()
     .required()
