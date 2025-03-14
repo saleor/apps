@@ -10,7 +10,7 @@
     "eslint": "../../node_modules/eslint",
     "eslint-config-next": "14.2.4",
     "eslint-config-prettier": "9.1.0",
-    "eslint-config-turbo": "1.10.3",
+    "eslint-config-turbo": "2.4.2",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-react": "7.34.3",
     "eslint-plugin-simple-import-sort": "12.1.1",
