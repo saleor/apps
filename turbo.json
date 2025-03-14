@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://turbo.build/schema.v2.json",
   "globalDependencies": ["**/.env.*local"],
   "globalEnv": [
     "VERCEL_ENV",
@@ -15,41 +15,49 @@
     "VERCEL",
     "NEXT_RUNTIME"
   ],
-  "pipeline": {
+  "tasks": {
     "build": {
-      "env": ["NEXT_PUBLIC_VERCEL_ENV"],
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
-    },
-    "deploy": {
-      "env": ["NEXT_PUBLIC_VERCEL_ENV"],
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
-    },
-    "lint": {
-      "inputs": ["src"],
-      "outputs": []
+      "outputs": [".next/**", ".vercel/**", "!.next/cache/**"],
+      "inputs": ["$TURBO_DEFAULT$", ".env"]
     },
     "check-types": {
+      "dependsOn": ["^check-types"],
       "inputs": ["src"],
       "outputs": []
+    },
+    "deploy": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", ".vercel/**", "!.next/cache/**"],
+      "inputs": ["$TURBO_DEFAULT$", ".env"]
     },
     "dev": {
-      "persistent": true,
-      "cache": false
-    },
-    "test": {
-      "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"]
-    },
-    "test:ci": {
-      "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"]
+      "dependsOn": ["^dev"],
+      "cache": false,
+      "persistent": true
     },
     "generate": {
-      "outputs": ["generated/"]
+      "outputs": ["generated/**"]
     },
-    "lint:fix": {
+    "lint": {
+      "dependsOn": ["^lint"],
       "inputs": ["src"],
       "outputs": []
+    },
+    "start": {
+      "dependsOn": ["^build", "^start"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^test"],
+      "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
+      "outputs": []
+    },
+    "test:ci": {
+      "dependsOn": ["^test:ci"],
+      "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
+      "outputs": ["coverage/**"]
     }
   }
 }
