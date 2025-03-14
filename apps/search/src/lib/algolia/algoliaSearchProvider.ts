@@ -25,10 +25,10 @@ export interface AlgoliaSearchProviderOptions {
 const logger = createLogger("AlgoliaSearchProvider");
 
 export class AlgoliaSearchProvider implements SearchProvider {
-  #algolia: SearchClient;
-  #indexNamePrefix?: string | undefined;
-  #indexNames: Array<string>;
-  #enabledKeys: string[];
+  private algolia: SearchClient;
+  private indexNamePrefix?: string | undefined;
+  private indexNames: Array<string>;
+  private enabledKeys: string[];
 
   constructor({
     appId,
@@ -37,19 +37,19 @@ export class AlgoliaSearchProvider implements SearchProvider {
     channels,
     enabledKeys,
   }: AlgoliaSearchProviderOptions) {
-    this.#algolia = Algoliasearch(appId, apiKey); // cspell:disable-line
-    this.#indexNamePrefix = indexNamePrefix;
-    this.#indexNames =
-      channels?.map((c) => channelListingToAlgoliaIndexId({ channel: c }, this.#indexNamePrefix)) ||
+    this.algolia = Algoliasearch(appId, apiKey); // cspell:disable-line
+    this.indexNamePrefix = indexNamePrefix;
+    this.indexNames =
+      channels?.map((c) => channelListingToAlgoliaIndexId({ channel: c }, this.indexNamePrefix)) ||
       [];
-    this.#enabledKeys = enabledKeys;
+    this.enabledKeys = enabledKeys;
   }
 
   private async saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
     logger.debug("saveGroupedByIndex called");
     return Promise.all(
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
-        const index = this.#algolia.initIndex(indexName);
+        const index = this.algolia.initIndex(indexName);
 
         return index.saveObjects(objects);
       }),
@@ -61,7 +61,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
 
     return Promise.all(
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
-        const index = this.#algolia.initIndex(indexName);
+        const index = this.algolia.initIndex(indexName);
 
         return index.deleteObjects(objects);
       }),
@@ -71,8 +71,8 @@ export class AlgoliaSearchProvider implements SearchProvider {
   async updateIndicesSettings() {
     logger.debug(`updateIndicesSettings called`);
     await Promise.all(
-      this.#indexNames.map(async (indexName) => {
-        const index = this.#algolia.initIndex(indexName);
+      this.indexNames.map(async (indexName) => {
+        const index = this.algolia.initIndex(indexName);
 
         return index.setSettings({
           attributesForFaceting: [
@@ -111,8 +111,8 @@ export class AlgoliaSearchProvider implements SearchProvider {
 
     const groupedByIndex = groupProductsByIndexName(productsBatch, {
       visibleInListings: true,
-      indexNamePrefix: this.#indexNamePrefix,
-      enabledKeys: this.#enabledKeys,
+      indexNamePrefix: this.indexNamePrefix,
+      enabledKeys: this.enabledKeys,
     });
 
     await this.saveGroupedByIndex(groupedByIndex);
@@ -137,8 +137,8 @@ export class AlgoliaSearchProvider implements SearchProvider {
     logger.debug(`deleteProduct`);
 
     await Promise.all(
-      this.#indexNames.map((indexName) => {
-        const index = this.#algolia.initIndex(indexName);
+      this.indexNames.map((indexName) => {
+        const index = this.algolia.initIndex(indexName);
 
         return index.deleteBy({ filters: `productId:"${product.id}"` });
       }),
@@ -155,8 +155,8 @@ export class AlgoliaSearchProvider implements SearchProvider {
 
     const groupedByIndexToSave = groupVariantByIndexName(productVariant, {
       visibleInListings: true,
-      indexNamePrefix: this.#indexNamePrefix,
-      enabledKeys: this.#enabledKeys,
+      indexNamePrefix: this.indexNamePrefix,
+      enabledKeys: this.enabledKeys,
     });
 
     if (groupedByIndexToSave && !!Object.keys(groupedByIndexToSave).length) {
@@ -168,7 +168,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
      * If it was created previously, we have to remove it.
      * To achieve that we call delete operation for every index which wasn't updated.
      */
-    const staleIndices = this.#indexNames.filter(
+    const staleIndices = this.indexNames.filter(
       (name) => !Object.keys(groupedByIndexToSave || {}).includes(name),
     );
 
@@ -186,7 +186,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
 
     await this.deleteGroupedByIndex(
       Object.fromEntries(
-        this.#indexNames.map((index) => [index, [productAndVariantToObjectID(productVariant)]]),
+        this.indexNames.map((index) => [index, [productAndVariantToObjectID(productVariant)]]),
       ),
     );
   }

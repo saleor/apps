@@ -18,7 +18,8 @@
     "@saleor/app-sdk": "catalog:",
     "dotenv": "16.3.1",
     "eslint": "catalog:",
-    "eslint-config-saleor": "workspace:*",
+    "@saleor/apps-eslint-config": "workspace:*",
+    "@saleor/apps-typescript-config": "workspace:*",
     "typescript": "5.5.4",
     "zod": "3.21.4"
   }
