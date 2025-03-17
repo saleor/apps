@@ -9,13 +9,14 @@
   },
   "main": "index.ts",
   "scripts": {
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
     "eslint": "catalog:",
-    "eslint-config-saleor": "workspace:*",
     "typescript": "5.5.4"
   }
 }

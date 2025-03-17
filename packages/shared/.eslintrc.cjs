@@ -1,5 +1,5 @@
 module.exports = {
   root: true,
-  extends: ["saleor"],
+  extends: ["@saleor/eslint-config-apps"],
   ignorePatterns: ["coverage"],
 };
