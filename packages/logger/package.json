@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@opentelemetry/api": "catalog:",
-    "tslog": "4.9.2",
-    "typescript": "5.5.4"
+    "next": "14.2.3",
+    "tslog": "4.9.2"
   },
   "devDependencies": {
     "@saleor/app-sdk": "catalog:",
@@ -31,6 +31,7 @@
     "eslint-config-saleor": "workspace:*",
     "modern-errors": "7.0.1",
     "modern-errors-serialize": "6.1.0",
+    "typescript": "5.5.4",
     "vite": "5.3.3",
     "vitest": "1.6.0"
   },
