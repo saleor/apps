@@ -62,9 +62,6 @@ importers:
       '@saleor/app-sdk':
         specifier: 0.52.0
         version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@types/node':
-        specifier: 22.13.10
-        version: 22.13.10
       cspell:
         specifier: 8.15.2
         version: 8.15.2
@@ -1682,6 +1679,9 @@ importers:
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/node':
+        specifier: 22.13.10
+        version: 22.13.10
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
@@ -1769,6 +1769,9 @@ importers:
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
+      '@types/node':
+        specifier: 22.13.10
+        version: 22.13.10
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
