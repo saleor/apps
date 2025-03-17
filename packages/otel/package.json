@@ -3,7 +3,7 @@
   "version": "2.1.0",
   "type": "module",
   "scripts": {
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
@@ -20,8 +20,10 @@
     "urql": "4.0.4"
   },
   "devDependencies": {
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@types/node": "22.13.10",
     "eslint": "catalog:",
-    "eslint-config-saleor": "workspace:*",
     "typescript": "5.5.4"
   }
 }
