@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ["saleor"],
+  extends: ["@saleor/eslint-config-apps"],
   overrides: [
     {
       files: ["*stories.tsx"],

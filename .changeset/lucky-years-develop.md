@@ -1,6 +1,6 @@
 ---
 "@saleor/react-hook-form-macaw": patch
-"eslint-config-saleor": patch
+"@saleor/apps-eslint-config": patch
 "@saleor/webhook-utils": patch
 "saleor-app-products-feed": patch
 "@saleor/apps-logger": patch
