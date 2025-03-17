@@ -11,9 +11,6 @@
     "start-storybook-build": "pnpm dlx http-server ./storybook-static",
     "storybook": "storybook dev -p 6006"
   },
-  "dependencies": {
-    "eslint": "../../node_modules/eslint"
-  },
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "@saleor/macaw-ui": "1.1.10",
@@ -28,6 +25,7 @@
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@vanilla-extract/vite-plugin": "^3.8.1",
+    "eslint": "catalog:",
     "eslint-config-saleor": "workspace:*",
     "react": "18.2.0",
     "react-dom": "18.2.0",
