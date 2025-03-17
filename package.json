@@ -35,7 +35,7 @@
     "cspell": "8.15.2",
     "husky": "9.1.4",
     "knip": "5.27.2",
-    "lint-staged": "^13.2.3",
+    "lint-staged": "15.5.0",
     "prettier": "3.0.3",
     "sherif": "0.10.0",
     "sort-package-json": "3.0.0",
