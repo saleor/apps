@@ -32,7 +32,7 @@ describe("AvataxProductLineFactory", () => {
       discounted: false,
     });
 
-    expect(avataxProductLine).toEqual({
+    expect(avataxProductLine).toStrictEqual({
       amount: 100,
       discounted: false,
       itemCode: "fromSKU",
@@ -70,7 +70,7 @@ describe("AvataxProductLineFactory", () => {
       discounted: false,
     });
 
-    expect(avataxProductLine).toEqual({
+    expect(avataxProductLine).toStrictEqual({
       amount: 100,
       discounted: false,
       itemCode: "fromId",

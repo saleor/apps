@@ -29,12 +29,17 @@ export class AvataxCalculateTaxesPayloadTransformer {
   /**
    * https://linear.app/saleor/issue/SHOPX-1313/tech-debt-avatax-refactor-async-transformers
    */
-  async transform(
-    payload: CalculateTaxesPayload,
-    avataxConfig: AvataxConfig,
-    matches: AvataxTaxCodeMatches,
-    discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
-  ): Promise<CreateTransactionArgs> {
+  async transform({
+    payload,
+    avataxConfig,
+    matches,
+    discountsStrategy,
+  }: {
+    payload: CalculateTaxesPayload;
+    avataxConfig: AvataxConfig;
+    matches: AvataxTaxCodeMatches;
+    discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy;
+  }): Promise<CreateTransactionArgs> {
     const entityUseCode = await this.avataxEntityTypeMatcher.match(
       payload.taxBase.sourceObject.avataxEntityCode,
     );

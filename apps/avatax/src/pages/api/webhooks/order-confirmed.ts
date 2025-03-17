@@ -45,12 +45,17 @@ const logsWriterFactory = new LogWriterFactory();
 /**
  * In the future this should be part of the use-case
  */
-async function confirmOrder(
-  confirmedOrderEvent: SaleorOrderConfirmedEvent,
-  avataxConfig: AvataxConfig,
-  authData: AuthData,
-  discountStrategy: PriceReductionDiscountsStrategy,
-) {
+async function confirmOrder({
+  confirmedOrderEvent,
+  avataxConfig,
+  authData,
+  discountStrategy,
+}: {
+  confirmedOrderEvent: SaleorOrderConfirmedEvent;
+  avataxConfig: AvataxConfig;
+  authData: AuthData;
+  discountStrategy: PriceReductionDiscountsStrategy;
+}) {
   const avataxOrderConfirmedAdapter =
     createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig(avataxConfig);
 
@@ -248,12 +253,12 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         }
 
         try {
-          const confirmedOrder = await confirmOrder(
+          const confirmedOrder = await confirmOrder({
             confirmedOrderEvent,
-            providerConfig.value.avataxConfig.config,
-            ctx.authData,
+            avataxConfig: providerConfig.value.avataxConfig.config,
+            authData: ctx.authData,
             discountStrategy,
-          );
+          });
 
           logger.info("Order confirmed", { orderId: confirmedOrder.id });
 

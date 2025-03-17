@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { ClientLog, ClientLogStoreRequest } from "./client-log";
 import { LogsTransformer } from "./log-transformer";
@@ -29,7 +29,7 @@ describe("LogsTransformer", () => {
 
       const ulid = result.ulid;
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         message: "Test log",
         level: 2,
         date: "2024-01-01T10:00:00Z",
@@ -63,7 +63,7 @@ describe("LogsTransformer", () => {
 
       const ulid = result.ulid;
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         message: "Test log",
         level: 2,
         checkoutOrOrder: "checkout",
@@ -101,7 +101,7 @@ describe("LogsTransformer", () => {
 
       const ulid = result.ulid;
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         message: "Test log",
         level: 5,
         date: "2024-01-01T10:00:00Z",
@@ -136,7 +136,7 @@ describe("LogsTransformer", () => {
 
       const ulid = result.ulid;
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         message: "Test log",
         level: 5,
         date: "2024-01-01T10:00:00Z",
@@ -172,7 +172,7 @@ describe("LogsTransformer", () => {
 
       expect(clientLog).toBeInstanceOf(ClientLog);
 
-      expect(clientLog.getValue()).toEqual({
+      expect(clientLog.getValue()).toStrictEqual({
         level: "info",
         date: "2024-01-01T10:00:00Z",
         message: "Test log",

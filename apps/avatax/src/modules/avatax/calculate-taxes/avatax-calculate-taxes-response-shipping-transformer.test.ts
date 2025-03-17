@@ -19,7 +19,7 @@ describe("transformAvataxTransactionModelIntoShipping", () => {
       TAX_EXCLUDED_NO_SHIPPING_TRANSACTION_MOCK,
     );
 
-    expect(shippingLine).toEqual({
+    expect(shippingLine).toStrictEqual({
       shipping_price_gross_amount: 0,
       shipping_price_net_amount: 0,
       shipping_tax_rate: 0,
@@ -30,7 +30,7 @@ describe("transformAvataxTransactionModelIntoShipping", () => {
       NON_TAXABLE_TRANSACTION_MOCK,
     );
 
-    expect(nonTaxableShippingLine).toEqual({
+    expect(nonTaxableShippingLine).toStrictEqual({
       shipping_price_gross_amount: 77.51,
       shipping_price_net_amount: 77.51,
       shipping_tax_rate: 0,
@@ -42,7 +42,7 @@ describe("transformAvataxTransactionModelIntoShipping", () => {
       NON_TAXABLE_TRANSACTION_MOCK_WITH_DISCOUNT,
     );
 
-    expect(nonTaxableShippingLineWithDiscount).toEqual({
+    expect(nonTaxableShippingLineWithDiscount).toStrictEqual({
       shipping_price_gross_amount: 67.51,
       shipping_price_net_amount: 67.51,
       shipping_tax_rate: 0,
@@ -64,7 +64,7 @@ describe("transformAvataxTransactionModelIntoShipping", () => {
       TAX_INCLUDED_SHIPPING_TRANSACTION_MOCK,
     );
 
-    expect(taxableShippingLine).toEqual({
+    expect(taxableShippingLine).toStrictEqual({
       shipping_price_gross_amount: 77.51,
       shipping_price_net_amount: 70.78,
       shipping_tax_rate: 9.5,
@@ -76,7 +76,7 @@ describe("transformAvataxTransactionModelIntoShipping", () => {
       TAX_EXCLUDED_SHIPPING_TRANSACTION_MOCK,
     );
 
-    expect(taxableShippingLine).toEqual({
+    expect(taxableShippingLine).toStrictEqual({
       shipping_price_gross_amount: 84.87,
       shipping_price_net_amount: 77.51,
       shipping_tax_rate: 9.5,

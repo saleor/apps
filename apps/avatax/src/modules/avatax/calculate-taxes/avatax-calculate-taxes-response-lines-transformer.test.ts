@@ -1,4 +1,3 @@
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { describe, expect, it } from "vitest";
 
 import { avataxMockFactory } from "../avatax-mock-factory";
@@ -19,7 +18,7 @@ describe("AvataxCalculateTaxesResponseLinesTransformer", () => {
   it("when product lines are not taxable, returns line amount if discount is 0", () => {
     const nonTaxableProductLines = transformer.transform(NON_TAXABLE_TRANSACTION_MOCK);
 
-    expect(nonTaxableProductLines).toEqual([
+    expect(nonTaxableProductLines).toStrictEqual([
       {
         total_gross_amount: 20,
         total_net_amount: 20,
@@ -33,7 +32,7 @@ describe("AvataxCalculateTaxesResponseLinesTransformer", () => {
       NON_TAXABLE_TRANSACTION_MOCK_WITH_DISCOUNT,
     );
 
-    expect(nonTaxableProductLines).toEqual([
+    expect(nonTaxableProductLines).toStrictEqual([
       {
         total_gross_amount: 10,
         total_net_amount: 10,
@@ -57,7 +56,7 @@ describe("AvataxCalculateTaxesResponseLinesTransformer", () => {
   it("when product lines are taxable and tax is included, returns calculated gross & net amounts", () => {
     const taxableProductLines = transformer.transform(TAX_INCLUDED_TRANSACTION_MOCK);
 
-    expect(taxableProductLines).toEqual([
+    expect(taxableProductLines).toStrictEqual([
       {
         total_gross_amount: 40,
         total_net_amount: 36.53,
@@ -74,7 +73,7 @@ describe("AvataxCalculateTaxesResponseLinesTransformer", () => {
   it("when product lines are taxable and tax is not included, returns calculated gross & net amounts", () => {
     const taxableProductLines = transformer.transform(TAX_EXCLUDED_TRANSACTION_MOCK);
 
-    expect(taxableProductLines).toEqual([
+    expect(taxableProductLines).toStrictEqual([
       {
         total_gross_amount: 43.8,
         total_net_amount: 40,
