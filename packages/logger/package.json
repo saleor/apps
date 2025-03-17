@@ -24,7 +24,7 @@
     "tslog": "4.9.2"
   },
   "devDependencies": {
-    "@saleor/app-sdk": "catalog:",
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@sentry/nextjs": "catalog:",
     "@vitest/coverage-v8": "1.6.0",
     "eslint": "catalog:",
@@ -36,7 +36,7 @@
     "vitest": "1.6.0"
   },
   "peerDependencies": {
-    "@saleor/app-sdk": "catalog:",
+    "@saleor/app-sdk": "^0.52.0",
     "@sentry/nextjs": ">=8"
   }
 }

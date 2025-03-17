@@ -9,11 +9,11 @@
     "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
-    "@saleor/app-sdk": "catalog:",
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "next": "14.2.3"
   },
   "peerDependencies": {
-    "@saleor/app-sdk": "0.41.1",
+    "@saleor/app-sdk": "^0.52.0",
     "@saleor/apps-shared": "workspace:*",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "10.34.0",

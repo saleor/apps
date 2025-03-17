@@ -9,7 +9,7 @@
     "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
-    "@saleor/app-sdk": "catalog:",
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/macaw-ui": "1.1.10",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",

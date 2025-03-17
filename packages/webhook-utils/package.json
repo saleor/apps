@@ -13,7 +13,7 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "@saleor/app-sdk": "catalog:",
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@urql/exchange-auth": "2.1.4",
     "eslint": "catalog:",
     "graphql": "16.7.1",
