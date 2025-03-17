@@ -76,7 +76,8 @@ registerOTel({
   ],
   instrumentations: [createAwsInstrumentation(), createHttpInstrumentation()],
   traceSampler: new AppSampler({
-    root: new TraceIdRatioBasedSampler(env.OTEL_TRACES_SAMPLER_ARG),
+    // TODO: take from env
+    root: new TraceIdRatioBasedSampler(1),
   }),
   propagators: [new SentryPropagator()],
   contextManager: new Sentry.SentryContextManager(),
