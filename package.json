@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "license": "(BSD-3-Clause AND CC-BY-4.0)",
+  "type": "module",
   "scripts": {
     "build": "turbo run build",
     "check-spelling": "cspell '**/*.{jsx,tsx,js,ts,md,mdx}'",
