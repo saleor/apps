@@ -32,8 +32,10 @@ class AppSampler extends ParentBasedSampler {
       links,
     );
 
+    console.log("AppSampler.shouldSample.decision", { decision });
+
     return wrapSamplingDecision({
-      decision,
+      decision: 2, // RECORD_AND_SAMPLED
       context,
       spanAttributes: attributes,
     });
