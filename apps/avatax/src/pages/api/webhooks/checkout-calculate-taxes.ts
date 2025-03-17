@@ -3,7 +3,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 import * as Sentry from "@sentry/nextjs";
-import { captureException } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
@@ -43,7 +42,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
        */
       const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(
         logger,
-        captureException,
+        Sentry.captureException,
       );
       const useCase = new CalculateTaxesUseCase({
         configExtractor: new AppConfigExtractor(),
@@ -85,7 +84,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
             try {
               new AppConfigurationLogger(logger).logConfiguration(config, channelSlug);
             } catch (e) {
-              captureException(
+              Sentry.captureException(
                 new AppConfigExtractor.LogConfigurationMetricError(
                   "Failed to log configuration metric",
                   {
@@ -161,7 +160,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
                   });
                 }
                 case CalculateTaxesUseCase.UnhandledError: {
-                  captureException(error);
+                  Sentry.captureException(error);
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: unhandled error",

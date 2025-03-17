@@ -3,11 +3,26 @@ import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conven
 import { createAwsInstrumentation } from "@saleor/apps-otel/src/aws-instrumentation-factory";
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
+import * as Sentry from "@sentry/nextjs";
+import { SentryPropagator, SentrySampler } from "@sentry/opentelemetry";
 import { registerOTel } from "@vercel/otel";
 
 import { env } from "@/env";
 
 import pkg from "../../package.json";
+
+const sentryClient = Sentry.init({
+  dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+  environment: env.ENV,
+  includeLocalVariables: true,
+  skipOpenTelemetrySetup: true,
+  integrations: [
+    Sentry.localVariablesIntegration({
+      captureAllExceptions: true,
+    }),
+    Sentry.extraErrorDataIntegration(),
+  ],
+});
 
 registerOTel({
   serviceName: env.OTEL_SERVICE_NAME,
@@ -25,4 +40,7 @@ registerOTel({
     }),
   ],
   instrumentations: [createAwsInstrumentation(), createHttpInstrumentation()],
+  traceSampler: sentryClient ? new SentrySampler(sentryClient) : undefined,
+  propagators: [new SentryPropagator()],
+  contextManager: new Sentry.SentryContextManager(),
 });

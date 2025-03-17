@@ -1,5 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { captureException } from "@sentry/nextjs";
+import * as Sentry from "@sentry/nextjs";
 import { err, fromPromise, Result } from "neverthrow";
 
 import { AvataxClient } from "@/modules/avatax/avatax-client";
@@ -82,7 +82,7 @@ export class CalculateTaxesUseCase {
         try {
           new AppConfigurationLogger(this.logger).logConfiguration(config, channelSlug);
         } catch (e) {
-          captureException(
+          Sentry.captureException(
             new AppConfigExtractor.LogConfigurationMetricError(
               "Failed to log configuration metric",
               {
@@ -162,7 +162,7 @@ export class CalculateTaxesUseCase {
         sourceType: "checkout",
         errorReason: "Cannot get app configuration",
       })
-        .mapErr(captureException)
+        .mapErr(Sentry.captureException)
         .map(logWriter.writeLog);
 
       return err(
@@ -183,7 +183,7 @@ export class CalculateTaxesUseCase {
         sourceType: "checkout",
         errorReason: "Invalid app configuration",
       })
-        .mapErr(captureException)
+        .mapErr(Sentry.captureException)
         .map(logWriter.writeLog);
 
       return err(
@@ -210,7 +210,7 @@ export class CalculateTaxesUseCase {
           sourceType: "checkout",
           errorReason: "AvaTax API returned an error",
         })
-          .mapErr(captureException)
+          .mapErr(Sentry.captureException)
           .map(logWriter.writeLog);
 
         return new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {
@@ -226,7 +226,7 @@ export class CalculateTaxesUseCase {
         sourceType: "checkout",
         calculatedTaxesResult: results,
       })
-        .mapErr(captureException)
+        .mapErr(Sentry.captureException)
         .map(logWriter.writeLog);
 
       return results;
