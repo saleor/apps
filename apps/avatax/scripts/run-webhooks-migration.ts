@@ -16,11 +16,8 @@ const logger = createMigrationScriptLogger("WebhooksMigrationScript");
 
 Sentry.init({
   dsn: env.NEXT_PUBLIC_SENTRY_DSN,
-  enableTracing: false,
+  skipOpenTelemetrySetup: true,
   environment: env.ENV,
-  includeLocalVariables: true,
-  ignoreErrors: [],
-  integrations: [],
 });
 
 const runMigrations = async () => {
