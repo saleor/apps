@@ -24,6 +24,7 @@ const sentryClient = Sentry.init({
     Sentry.extraErrorDataIntegration(),
     Sentry.httpIntegration({ spans: false }),
   ],
+  tracesSampleRate: 1.0,
 });
 
 registerOTel({
