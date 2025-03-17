@@ -1,7 +1,7 @@
 {
-  "$schema": "https://turbo.build/schema.v1.json",
+  "$schema": "https://turbo.build/schema.v2.json",
   "extends": ["//"],
-  "pipeline": {
+  "tasks": {
     "deploy": {
       "env": [
         "ALLOWED_DOMAIN_PATTERN",
