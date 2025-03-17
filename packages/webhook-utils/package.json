@@ -15,7 +15,7 @@
   "dependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@urql/exchange-auth": "2.1.4",
-    "eslint": "../../node_modules/eslint",
+    "eslint": "catalog:",
     "graphql": "16.7.1",
     "graphql-tag": "2.12.6",
     "modern-errors": "7.0.1",
@@ -32,6 +32,7 @@
     "@graphql-typed-document-node/core": "3.2.0",
     "@types/semver": "7.5.0",
     "@vitest/coverage-v8": "1.6.0",
+    "eslint": "catalog:",
     "eslint-config-saleor": "workspace:*",
     "graphql-config": "5.0.3",
     "typescript": "5.5.4",

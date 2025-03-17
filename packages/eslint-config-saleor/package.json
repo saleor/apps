@@ -7,7 +7,7 @@
     "@saleor/eslint-plugin-saleor-app": "0.1.2",
     "@typescript-eslint/parser": "7.15.0",
     "@vitest/eslint-plugin": "1.1.12",
-    "eslint": "../../node_modules/eslint",
+    "eslint": "catalog:",
     "eslint-config-next": "14.2.4",
     "eslint-config-prettier": "9.1.0",
     "eslint-config-turbo": "2.4.2",
