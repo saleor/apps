@@ -16,11 +16,13 @@ const sentryClient = Sentry.init({
   environment: env.ENV,
   includeLocalVariables: true,
   skipOpenTelemetrySetup: true,
+  registerEsmLoaderHooks: false,
   integrations: [
     Sentry.localVariablesIntegration({
       captureAllExceptions: true,
     }),
     Sentry.extraErrorDataIntegration(),
+    Sentry.httpIntegration({ spans: false }),
   ],
 });
 
