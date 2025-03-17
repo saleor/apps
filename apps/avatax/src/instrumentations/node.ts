@@ -1,15 +1,47 @@
+/* eslint-disable max-params */
+import { Context, Link, SpanAttributes, SpanKind } from "@opentelemetry/api";
+import { ParentBasedSampler, TraceIdRatioBasedSampler } from "@opentelemetry/sdk-trace-node";
 import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
 import { createAwsInstrumentation } from "@saleor/apps-otel/src/aws-instrumentation-factory";
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
 import * as Sentry from "@sentry/nextjs";
-import { SentryPropagator, SentrySampler } from "@sentry/opentelemetry";
+import { SentryPropagator, wrapSamplingDecision } from "@sentry/opentelemetry";
 import { registerOTel } from "@vercel/otel";
 
 import { env } from "@/env";
 
 import pkg from "../../package.json";
+
+class AppSampler extends ParentBasedSampler {
+  shouldSample(
+    context: Context,
+    traceId: string,
+    spanName: string,
+    spanKind: SpanKind,
+    attributes: SpanAttributes,
+    links: Link[],
+  ) {
+    const { decision } = super.shouldSample(
+      context,
+      traceId,
+      spanName,
+      spanKind,
+      attributes,
+      links,
+    );
+
+    return wrapSamplingDecision({
+      decision,
+      context,
+      spanAttributes: attributes,
+    });
+  }
+  toString() {
+    return "AppSampler";
+  }
+}
 
 const sentryClient = Sentry.init({
   dsn: env.NEXT_PUBLIC_SENTRY_DSN,
@@ -43,7 +75,9 @@ registerOTel({
     }),
   ],
   instrumentations: [createAwsInstrumentation(), createHttpInstrumentation()],
-  traceSampler: sentryClient ? new SentrySampler(sentryClient) : undefined,
+  traceSampler: new AppSampler({
+    root: new TraceIdRatioBasedSampler(env.OTEL_TRACES_SAMPLER_ARG),
+  }),
   propagators: [new SentryPropagator()],
   contextManager: new Sentry.SentryContextManager(),
 });
