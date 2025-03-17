@@ -68,9 +68,6 @@ importers:
       cspell:
         specifier: 8.15.2
         version: 8.15.2
-      eslint:
-        specifier: 'catalog:'
-        version: 8.57.0
       husky:
         specifier: 9.1.4
         version: 9.1.4

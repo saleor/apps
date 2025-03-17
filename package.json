@@ -9,7 +9,7 @@
     "check-types": "turbo run check-types",
     "deploy": "turbo run deploy",
     "dev": "turbo run dev",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write '**/*.{jsx,tsx,js,ts,md,mdx}'",
     "generate": "turbo run generate",
     "github:release": "pnpm changeset tag && git push --follow-tags",
     "knip": "knip",
@@ -23,18 +23,11 @@
     "test": "turbo run test",
     "test:ci": "turbo run test:ci"
   },
-  "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --cache --fix",
-    "*.{ts,tsx,md}": "prettier --write",
-    "*.{ts,tsx,md,js,jsx}": "cspell --no-must-find-files",
-    "package.json": "sort-package-json"
-  },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
     "@saleor/app-sdk": "0.52.0",
     "@types/node": "22.13.10",
     "cspell": "8.15.2",
-    "eslint": "catalog:",
     "husky": "9.1.4",
     "knip": "5.27.2",
     "lint-staged": "15.5.0",
