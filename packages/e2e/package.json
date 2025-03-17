@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.35.1",
-    "@saleor/app-sdk": "catalog:",
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "dotenv": "16.3.1",
     "eslint": "catalog:",
     "eslint-config-saleor": "workspace:*",
