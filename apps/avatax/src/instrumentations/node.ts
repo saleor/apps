@@ -43,7 +43,7 @@ class AppSampler extends ParentBasedSampler {
   }
 }
 
-const sentryClient = Sentry.init({
+Sentry.init({
   dsn: env.NEXT_PUBLIC_SENTRY_DSN,
   environment: env.ENV,
   includeLocalVariables: true,
@@ -56,7 +56,6 @@ const sentryClient = Sentry.init({
     Sentry.extraErrorDataIntegration(),
     Sentry.httpIntegration({ spans: false }),
   ],
-  tracesSampleRate: 1.0,
 });
 
 registerOTel({
