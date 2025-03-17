@@ -1,4 +1,4 @@
-# eslint-config-saleor
+# @saleor/eslint-config-apps
 
 ## 0.4.11
 

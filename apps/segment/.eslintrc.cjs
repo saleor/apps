@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ["saleor"],
+  extends: ["@saleor/eslint-config-apps"],
   plugins: ["@typescript-eslint", "neverthrow", "node"],
   rules: {
     "turbo/no-undeclared-env-vars": ["error"],

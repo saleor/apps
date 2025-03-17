@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "build-storybook": "storybook build",
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start-storybook-build": "pnpm dlx http-server ./storybook-static",
@@ -13,7 +13,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
+    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "1.1.10",
+    "@saleor/typescript-config-apps": "workspace:*",
     "@storybook/addon-actions": "^7.0.12",
     "@storybook/addon-essentials": "^7.0.12",
     "@storybook/addon-interactions": "^7.0.12",
@@ -26,7 +28,6 @@
     "@types/react-dom": "18.2.5",
     "@vanilla-extract/vite-plugin": "^3.8.1",
     "eslint": "catalog:",
-    "eslint-config-saleor": "workspace:*",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
