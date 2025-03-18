@@ -19,7 +19,9 @@
     "VERCEL_ENV",
     "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
-    "VERCEL"
+    "VERCEL",
+    "NEXT_RUNTIME",
+    "REPOSITORY_URL"
   ],
   "tasks": {
     "build": {
