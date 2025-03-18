@@ -1,5 +1,12 @@
 # @saleor/apps-otel
 
+## 2.1.1
+
+### Patch Changes
+
+- 996d9be1: Use [PNPM catalogs](https://pnpm.io/catalogs) feature to ensure that dependencies are in sync between different packages in monorepo.
+- aa1c7597: Export new `ObservabilityAttributes`: `COMMIT_SHA`, `REPOSITORY_URL` & `VERCEL_ENV`
+
 ## 2.1.0
 
 ### Minor Changes
