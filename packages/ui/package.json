@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-ui",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "type": "module",
   "main": "index.ts",
   "scripts": {

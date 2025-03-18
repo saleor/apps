@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.2.4
+
+### Patch Changes
+
+- 996d9be1: Use [PNPM catalogs](https://pnpm.io/catalogs) feature to ensure that dependencies are in sync between different packages in monorepo.
+
 ## 0.2.3
 
 ### Patch Changes
