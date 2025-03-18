@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // @ts-check
 
 import { withSentryConfig } from "@sentry/nextjs";
