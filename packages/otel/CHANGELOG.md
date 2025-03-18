@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 2.1.2
+
+### Patch Changes
+
+- 6e94e99c: Fix wrong observability attribute name
+
 ## 2.1.1
 
 ### Patch Changes
