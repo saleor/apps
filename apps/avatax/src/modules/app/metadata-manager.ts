@@ -6,11 +6,13 @@ import { AppMetadataCache } from "@/lib/app-metadata-cache";
 import { createLogger } from "@/logger";
 
 import {
+  DeleteAppMetadataDocument,
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
   UpdatePrivateMetadataDocument,
 } from "../../../generated/graphql";
 
+// TODO: Move to graphql
 gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
     updatePrivateMetadata(id: $id, input: $input) {
@@ -31,6 +33,19 @@ gql`
       privateMetadata {
         key
         value
+      }
+    }
+  }
+`;
+
+gql`
+  mutation DeleteAppMetadata($id: ID!, $keys: [String!]!) {
+    deletePrivateMetadata(id: $id, keys: $keys) {
+      item {
+        privateMetadata {
+          key
+          value
+        }
       }
     }
   }
@@ -72,6 +87,23 @@ export async function mutateMetadata(
   );
 }
 
+async function deleteMetadata(
+  client: Pick<Client, "mutation">,
+  keys: string[],
+  appId: string,
+): Promise<void> {
+  const { error } = await client
+    .mutation(DeleteAppMetadataDocument, {
+      id: appId,
+      keys,
+    })
+    .toPromise();
+
+  if (error) {
+    throw new Error(`Mutation error: ${error.message}`);
+  }
+}
+
 const logger = createLogger("SettingsManager");
 
 export const createSettingsManager = (
@@ -103,5 +135,6 @@ export const createSettingsManager = (
       return fetchAllMetadata(client);
     },
     mutateMetadata: (metadata) => mutateMetadata(client, metadata, appId),
+    deleteMetadata: (keys) => deleteMetadata(client, keys, appId),
   });
 };

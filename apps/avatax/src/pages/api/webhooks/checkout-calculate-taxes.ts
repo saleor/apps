@@ -18,7 +18,10 @@ import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-t
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
-import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
+import {
+  checkoutCalculateTaxesSyncWebhook,
+  checkoutCalculateTaxesSyncWebhookReponse,
+} from "@/modules/webhooks/definitions/checkout-calculate-taxes";
 
 export const config = {
   api: {
@@ -123,7 +126,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
                 message: "Taxes calculated successfully",
               });
               span.end();
-              return res.status(200).json(ctx.buildResponse(value));
+              return res.status(200).json(checkoutCalculateTaxesSyncWebhookReponse(value));
             },
             (error) => {
               logger.warn("Error calculating taxes", { error });
