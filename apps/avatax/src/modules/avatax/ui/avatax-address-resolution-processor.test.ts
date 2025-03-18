@@ -100,7 +100,7 @@ describe("AvataxAddressResolutionProcessor", () => {
     it("returns success when no messages", () => {
       const result = processor.resolveAddressResolutionMessage(mockedSuccessResponse);
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         type: "success",
         message: "The address was resolved successfully.",
       });
@@ -108,7 +108,7 @@ describe("AvataxAddressResolutionProcessor", () => {
     it("returns info when messages", () => {
       const result = processor.resolveAddressResolutionMessage(mockedUnresolvedResponse);
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         type: "info",
         message: "The address number is out of range",
       });
@@ -123,7 +123,7 @@ describe("AvataxAddressResolutionProcessor", () => {
     it("returns suggestions when address", () => {
       const result = processor.extractSuggestionsFromResponse(mockedSuccessResponse);
 
-      expect(result).toEqual({
+      expect(result).toStrictEqual({
         street: "20 COOPER ST",
         city: "NEW YORK",
         state: "NY",

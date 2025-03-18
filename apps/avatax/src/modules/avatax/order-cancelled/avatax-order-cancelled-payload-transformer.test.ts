@@ -20,6 +20,6 @@ describe("AvataxOrderCancelledPayloadTransformer", () => {
 
     const target = transformer.transform(payload, avataxMockConfig.companyCode);
 
-    expect(target).toEqual({ transactionCode: "123", companyCode: "DEFAULT" });
+    expect(target).toStrictEqual({ transactionCode: "123", companyCode: "DEFAULT" });
   });
 });

@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import {
   ClientLog,
@@ -25,7 +25,7 @@ describe("ClientLog", () => {
 
     expect(log).toBeInstanceOf(ClientLog);
 
-    expect(log.getValue()).toEqual(logData);
+    expect(log.getValue()).toStrictEqual(logData);
   });
 
   test("create fails with invalid input", () => {
@@ -62,7 +62,7 @@ describe("ClientLogStoreRequest", () => {
 
     expect(log).toBeInstanceOf(ClientLogStoreRequest);
 
-    expect(log.getValue()).toEqual(logData);
+    expect(log.getValue()).toStrictEqual(logData);
   });
 
   test("create fails with invalid input", () => {

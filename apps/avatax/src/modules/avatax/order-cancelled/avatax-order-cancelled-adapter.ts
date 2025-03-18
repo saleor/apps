@@ -22,7 +22,7 @@ export class AvataxOrderCancelledAdapter implements WebhookAdapter<{ avataxId: s
     private avataxOrderCancelledPayloadTransformer: AvataxOrderCancelledPayloadTransformer,
   ) {}
 
-  async send(payload: CancelOrderPayload, config: AvataxConfig) {
+  async send({ payload, config }: { payload: CancelOrderPayload; config: AvataxConfig }) {
     this.logger.info("Transforming the Saleor payload for cancelling transaction with AvaTax...");
 
     const target = this.avataxOrderCancelledPayloadTransformer.transform(

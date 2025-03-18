@@ -96,12 +96,17 @@ export class CalculateTaxesUseCase {
       });
   }
 
-  private async callAvaTax(
-    payload: CalculateTaxesPayload,
-    avataxConfig: AvataxConfig,
-    discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
-    authData: AuthData,
-  ) {
+  private async callAvaTax({
+    payload,
+    avataxConfig,
+    discountStrategy,
+    authData,
+  }: {
+    payload: CalculateTaxesPayload;
+    avataxConfig: AvataxConfig;
+    discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy;
+    authData: AuthData;
+  }) {
     /**
      * Create local dependencies. They more-or-less need runtime values, like AuthData.
      * This is part of the refactor. Later we should refactor these and inject them into use-case
@@ -197,12 +202,12 @@ export class CalculateTaxesUseCase {
     }
 
     return fromPromise(
-      this.callAvaTax(
+      this.callAvaTax({
         payload,
-        providerConfig.value.avataxConfig.config,
-        this.discountsStrategy,
+        avataxConfig: providerConfig.value.avataxConfig.config,
         authData,
-      ),
+        discountStrategy: this.discountsStrategy,
+      }),
       (err) => {
         CalculateTaxesLogRequest.createErrorLog({
           sourceId: payload.taxBase.sourceObject.id,

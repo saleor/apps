@@ -22,7 +22,7 @@ describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
         taxClassId: "non-existing",
         matches: [match],
       }),
-    ).toEqual(CURRENT_DEFAULT_AVATAX_TAX_CLASS_ID);
+    ).toBe(CURRENT_DEFAULT_AVATAX_TAX_CLASS_ID);
   });
 
   it("should return tax code if Saleor tax class is found in AvaTax tax classes", () => {
@@ -33,7 +33,7 @@ describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
         taxClassId: "tax-class-id",
         matches: [match],
       }),
-    ).toEqual("P2137");
+    ).toStrictEqual("P2137");
   });
 
   it("should return default tax class id if there are no AvaTax tax classes", () => {
@@ -44,6 +44,6 @@ describe("AvataxOrderConfirmedTaxCodeMatcher", () => {
         taxClassId: "tax-class-id",
         matches: [],
       }),
-    ).toEqual(CURRENT_DEFAULT_AVATAX_TAX_CLASS_ID);
+    ).toStrictEqual(CURRENT_DEFAULT_AVATAX_TAX_CLASS_ID);
   });
 });

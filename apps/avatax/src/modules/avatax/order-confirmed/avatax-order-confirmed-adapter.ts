@@ -31,12 +31,17 @@ export class AvataxOrderConfirmedAdapter
     private avataxOrderConfirmedPayloadService: AvataxOrderConfirmedPayloadService,
   ) {}
 
-  async send(
-    payload: AvataxOrderConfirmedPayload,
-    config: AvataxConfig,
-    authData: AuthData,
-    discountsStrategy: PriceReductionDiscountsStrategy,
-  ): Promise<AvataxOrderConfirmedResponse> {
+  async send({
+    payload,
+    config,
+    authData,
+    discountsStrategy,
+  }: {
+    payload: AvataxOrderConfirmedPayload;
+    config: AvataxConfig;
+    authData: AuthData;
+    discountsStrategy: PriceReductionDiscountsStrategy;
+  }): Promise<AvataxOrderConfirmedResponse> {
     loggerContext.set(ObservabilityAttributes.ORDER_ID, payload.confirmedOrderEvent.getOrderId());
     loggerContext.set(
       ObservabilityAttributes.CHANNEL_SLUG,
@@ -45,12 +50,12 @@ export class AvataxOrderConfirmedAdapter
 
     this.logger.debug("Transforming the Saleor payload for creating order with AvaTax...");
 
-    const target = await this.avataxOrderConfirmedPayloadService.getPayload(
-      payload.confirmedOrderEvent,
-      config,
+    const target = await this.avataxOrderConfirmedPayloadService.getPayload({
+      confirmedOrderEvent: payload.confirmedOrderEvent,
+      avataxConfig: config,
       authData,
       discountsStrategy,
-    );
+    });
 
     this.logger.info(
       "Calling AvaTax createTransaction with transformed payload for order confirmed event",

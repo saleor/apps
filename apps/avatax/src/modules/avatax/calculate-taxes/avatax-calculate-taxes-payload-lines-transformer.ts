@@ -24,16 +24,17 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
       }, new Decimal(0));
   }
 
-  /**
-   * Method name is temporary -> replace with "transform" later
-   * This method is including extra fields that will be added in SHOPX-1145
-   */
-  transformWithDiscountType(
-    taxBase: TaxBaseFragment,
-    config: AvataxConfig,
-    matches: AvataxTaxCodeMatches,
-    discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
-  ) {
+  transform({
+    taxBase,
+    config,
+    matches,
+    discountsStrategy,
+  }: {
+    taxBase: TaxBaseFragment;
+    config: AvataxConfig;
+    matches: AvataxTaxCodeMatches;
+    discountsStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy;
+  }) {
     const avataxProductLine = new AvataxProductLineCalculateTaxesFactory();
     const areLinesDiscounted = discountsStrategy.areLinesDiscounted(taxBase.discounts);
 

@@ -30,7 +30,7 @@ describe("CrudSettingsService", () => {
     it("returns an empty array if nothing found", async () => {
       const result = await service.readAll();
 
-      expect(result).toEqual({ data: [] });
+      expect(result).toStrictEqual({ data: [] });
     });
     it("returns an array of settings if found", async () => {
       const encryptedValue = JSON.stringify([{ id: "id", key: "value" }]);
@@ -41,7 +41,7 @@ describe("CrudSettingsService", () => {
 
       const result = await service.readAll();
 
-      expect(result).toEqual({ data: [{ id: "id", key: "value" }] });
+      expect(result).toStrictEqual({ data: [{ id: "id", key: "value" }] });
     });
     it("throws an error if the settings are invalid", async () => {
       const encryptedValue = JSON.stringify({});
@@ -84,7 +84,7 @@ describe("CrudSettingsService", () => {
 
       const result = await service.readById("id");
 
-      expect(result).toEqual({ data: { id: "id", key: "value" } });
+      expect(result).toStrictEqual({ data: { id: "id", key: "value" } });
     });
   });
 
@@ -94,7 +94,7 @@ describe("CrudSettingsService", () => {
 
       const result = await service.create({ key: "value" });
 
-      expect(result).toEqual({ data: { id: expect.any(String) } });
+      expect(result).toStrictEqual({ data: { id: expect.any(String) } });
     });
   });
 

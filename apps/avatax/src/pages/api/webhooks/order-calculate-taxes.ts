@@ -74,12 +74,17 @@ const createAvataxCalculateTaxesPayloadTransformer = (
 /**
  * @deprecated use CalculateTaxesUseCase instead, see checkout-calculate-taxes handler
  */
-async function calculateTaxes(
-  payload: CalculateTaxesPayload,
-  avataxConfig: AvataxConfig,
-  authData: AuthData,
-  discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy,
-) {
+async function calculateTaxes({
+  payload,
+  avataxConfig,
+  authData,
+  discountStrategy,
+}: {
+  payload: CalculateTaxesPayload;
+  avataxConfig: AvataxConfig;
+  authData: AuthData;
+  discountStrategy: AutomaticallyDistributedProductLinesDiscountsStrategy;
+}) {
   const avaTaxSdk = new AvataxSdkClientFactory().createClient(avataxConfig);
   const avaTaxClient = new AvataxClient(avaTaxSdk);
   const calculateTaxesPayloadTransformer = createAvataxCalculateTaxesPayloadTransformer(
@@ -227,12 +232,12 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           });
         }
 
-        const calculatedTaxes = await calculateTaxes(
+        const calculatedTaxes = await calculateTaxes({
           payload,
-          providerConfig.value.avataxConfig.config,
-          ctx.authData,
+          avataxConfig: providerConfig.value.avataxConfig.config,
+          authData: ctx.authData,
           discountStrategy,
-        );
+        });
 
         logger.info("Taxes calculated - returning response do Saleor");
 

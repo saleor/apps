@@ -37,12 +37,12 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
       },
     } as unknown as CalculateTaxesPayload;
 
-    const payload = await service.transform(
-      payloadMock,
-      avataxConfigMock,
-      matchesMock,
+    const payload = await service.transform({
+      payload: payloadMock,
+      avataxConfig: avataxConfigMock,
+      matches: matchesMock,
       discountsStrategy,
-    );
+    });
 
     expect(payload.model.type).toBe(DocumentType.SalesOrder);
   });
@@ -62,12 +62,12 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
       },
     } as unknown as CalculateTaxesPayload;
 
-    const payload = await service.transform(
-      payloadMock,
-      avataxConfigMock,
-      matchesMock,
+    const payload = await service.transform({
+      payload: payloadMock,
+      avataxConfig: avataxConfigMock,
+      matches: matchesMock,
       discountsStrategy,
-    );
+    });
 
     expect(payload.model.discount).toBe(21);
   });
@@ -115,12 +115,12 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
       type: "SUBTOTAL",
     }));
 
-    const payload = await service.transform(
-      payloadMock,
-      avataxConfigMock,
-      matchesMock,
+    const payload = await service.transform({
+      payload: payloadMock,
+      avataxConfig: avataxConfigMock,
+      matches: matchesMock,
       discountsStrategy,
-    );
+    });
 
     expect(payload.model.discount).toBe(expectedDiscountSum);
   });
@@ -173,19 +173,19 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
         },
       ];
 
-      const payload = await service.transform(
-        payloadMock,
-        avataxConfigMock,
-        matchesMock,
+      const payload = await service.transform({
+        payload: payloadMock,
+        avataxConfig: avataxConfigMock,
+        matches: matchesMock,
         discountsStrategy,
-      );
+      });
 
       expect(payload.model.discount).toBe(30.33);
 
       const shippingLine = payload.model.lines.find((l) => l.itemCode === SHIPPING_ITEM_CODE);
 
-      expect(shippingLine?.amount).toEqual(38.23);
-      expect(shippingLine?.discounted).toEqual(false);
+      expect(shippingLine?.amount).toStrictEqual(38.23);
+      expect(shippingLine?.discounted).toStrictEqual(false);
     });
   });
   describe("Discounts calculation for SUBTOTAL only type", () => {
@@ -223,19 +223,19 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
         },
       ];
 
-      const payload = await service.transform(
-        payloadMock,
-        avataxConfigMock,
-        matchesMock,
+      const payload = await service.transform({
+        payload: payloadMock,
+        avataxConfig: avataxConfigMock,
+        matches: matchesMock,
         discountsStrategy,
-      );
+      });
 
       expect(payload.model.discount).toBe(30.33);
 
       const shippingLine = payload.model.lines.find((l) => l.itemCode === SHIPPING_ITEM_CODE);
 
-      expect(shippingLine?.amount).toEqual(48.33);
-      expect(shippingLine?.discounted).toEqual(false);
+      expect(shippingLine?.amount).toStrictEqual(48.33);
+      expect(shippingLine?.discounted).toStrictEqual(false);
     });
   });
   describe("Discounts calculation for SHIPPING only type", () => {
@@ -273,19 +273,19 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
         },
       ];
 
-      const payload = await service.transform(
-        payloadMock,
-        avataxConfigMock,
-        matchesMock,
+      const payload = await service.transform({
+        payload: payloadMock,
+        avataxConfig: avataxConfigMock,
+        matches: matchesMock,
         discountsStrategy,
-      );
+      });
 
       expect(payload.model.discount).toBe(0);
 
       const shippingLine = payload.model.lines.find((l) => l.itemCode === SHIPPING_ITEM_CODE);
 
-      expect(shippingLine?.amount).toEqual(38.23);
-      expect(shippingLine?.discounted).toEqual(false);
+      expect(shippingLine?.amount).toStrictEqual(38.23);
+      expect(shippingLine?.discounted).toStrictEqual(false);
     });
   });
 });

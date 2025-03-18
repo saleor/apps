@@ -24,12 +24,12 @@ export const createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig = (config: Avatax
   const calculationDateResolver = new AvataxCalculationDateResolver();
   const documentCodeResolver = new AvataxDocumentCodeResolver();
   const avataxOrderConfirmedResponseTransformer = new AvataxOrderConfirmedResponseTransformer();
-  const orderConfirmedPayloadTransformer = new AvataxOrderConfirmedPayloadTransformer(
-    orderToAvataxLinesTransformer,
-    entityTypeMatcher,
-    calculationDateResolver,
-    documentCodeResolver,
-  );
+  const orderConfirmedPayloadTransformer = new AvataxOrderConfirmedPayloadTransformer({
+    saleorOrderToAvataxLinesTransformer: orderToAvataxLinesTransformer,
+    avataxEntityTypeMatcher: entityTypeMatcher,
+    avataxCalculationDateResolver: calculationDateResolver,
+    avataxDocumentCodeResolver: documentCodeResolver,
+  });
 
   const avataxOrderConfirmedPayloadService = new AvataxOrderConfirmedPayloadService(
     orderConfirmedPayloadTransformer,
