@@ -1,11 +1,11 @@
-/* eslint-disable no-console */
-/* eslint-disable turbo/no-undeclared-env-vars */
-
 import { AuthData } from "@saleor/app-sdk/APL";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 
 import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";
 import { appWebhooks } from "../../webhooks";
+import { createMigrationScriptLogger } from "./migration-logger";
+
+const logger = createMigrationScriptLogger("updateWebhooksScript");
 
 export const updateWebhooksScript = async ({
   authData,
@@ -14,7 +14,7 @@ export const updateWebhooksScript = async ({
   authData: AuthData;
   dryRun: boolean;
 }) => {
-  console.log("Working on env: ", authData.saleorApiUrl);
+  logger.info("Working on env: ", authData.saleorApiUrl);
 
   const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
@@ -23,14 +23,14 @@ export const updateWebhooksScript = async ({
 
   const runner = new WebhookMigrationRunner({
     dryRun,
-    logger: console,
+    logger,
     client,
     saleorApiUrl: authData.saleorApiUrl,
     getManifests: async ({ appDetails }) => {
       const webhooks = appDetails.webhooks;
 
       if (!webhooks?.length) {
-        console.info("The environment does not have any webhooks, skipping");
+        logger.info("The environment does not have any webhooks, skipping");
         return [];
       }
 

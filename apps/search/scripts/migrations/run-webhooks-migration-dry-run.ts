@@ -1,19 +1,19 @@
-/* eslint-disable no-console */
-/* eslint-disable turbo/no-undeclared-env-vars */
-
 import * as dotenv from "dotenv";
 
-import { fetchAplEnvs } from "./migration-utils";
+import { saleorApp } from "../../saleor-app";
+import { createMigrationScriptLogger } from "./migration-logger";
 import { updateWebhooksScript } from "./update-webhooks";
 
 dotenv.config();
 
-const runMigration = async () => {
-  console.log("Starting webhooks migration (dry run)");
+const logger = createMigrationScriptLogger("DryRunWebhooksMigrationScript");
 
-  const allEnvs = await fetchAplEnvs().catch((r) => {
-    console.error("Could not fetch instances from the APL");
-    console.error(r);
+const runMigration = async () => {
+  logger.info("Starting webhooks migration (dry run)");
+
+  const allEnvs = await saleorApp.apl.getAll().catch((r) => {
+    logger.error("Could not fetch instances from the APL");
+    logger.error(r);
 
     process.exit(1);
   });
@@ -22,7 +22,7 @@ const runMigration = async () => {
     await updateWebhooksScript({ authData: env, dryRun: true });
   }
 
-  console.log("Migration dry run complete");
+  logger.info("Migration dry run complete");
 };
 
 runMigration();
