@@ -65,12 +65,12 @@ export class AvataxCalculateTaxesPayloadTransformer {
           shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
         },
         currencyCode: payload.taxBase.currency,
-        lines: this.avaTaxCalculateTaxesPayloadLinesTransformer.transformWithDiscountType(
-          payload.taxBase,
-          avataxConfig,
+        lines: this.avaTaxCalculateTaxesPayloadLinesTransformer.transform({
+          taxBase: payload.taxBase,
+          config: avataxConfig,
           matches,
           discountsStrategy,
-        ),
+        }),
         date: new Date(),
       },
     };

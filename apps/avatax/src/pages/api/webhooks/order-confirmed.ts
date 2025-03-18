@@ -38,7 +38,7 @@ const logger = createLogger("orderConfirmedAsyncWebhook");
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
-const discountStrategy = new PriceReductionDiscountsStrategy();
+const discountsStrategy = new PriceReductionDiscountsStrategy();
 
 const logsWriterFactory = new LogWriterFactory();
 
@@ -49,22 +49,22 @@ async function confirmOrder({
   confirmedOrderEvent,
   avataxConfig,
   authData,
-  discountStrategy,
+  discountsStrategy,
 }: {
   confirmedOrderEvent: SaleorOrderConfirmedEvent;
   avataxConfig: AvataxConfig;
   authData: AuthData;
-  discountStrategy: PriceReductionDiscountsStrategy;
+  discountsStrategy: PriceReductionDiscountsStrategy;
 }) {
   const avataxOrderConfirmedAdapter =
     createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig(avataxConfig);
 
-  const response = await avataxOrderConfirmedAdapter.send(
-    { confirmedOrderEvent },
-    avataxConfig,
+  const response = await avataxOrderConfirmedAdapter.send({
+    payload: { confirmedOrderEvent },
+    config: avataxConfig,
     authData,
-    discountStrategy,
-  );
+    discountsStrategy,
+  });
 
   return response;
 }
@@ -257,7 +257,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             confirmedOrderEvent,
             avataxConfig: providerConfig.value.avataxConfig.config,
             authData: ctx.authData,
-            discountStrategy,
+            discountsStrategy,
           });
 
           logger.info("Order confirmed", { orderId: confirmedOrder.id });
