@@ -1,5 +1,12 @@
 # saleor-app-products-feed
 
+## 1.22.3
+
+### Patch Changes
+
+- Updated dependencies [6e94e99c]
+  - @saleor/apps-otel@2.1.2
+
 ## 1.22.2
 
 ### Patch Changes
