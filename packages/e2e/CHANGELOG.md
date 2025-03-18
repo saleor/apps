@@ -1,5 +1,11 @@
 # @saleor/e2e
 
+## 1.0.8
+
+### Patch Changes
+
+- 996d9be1: Use [PNPM catalogs](https://pnpm.io/catalogs) feature to ensure that dependencies are in sync between different packages in monorepo.
+
 ## 1.0.7
 
 ### Patch Changes
