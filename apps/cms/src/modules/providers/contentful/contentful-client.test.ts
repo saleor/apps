@@ -159,7 +159,7 @@ describe("ContentfulClient", () => {
        *
        * App supports and hardcodes the locale to en-US now
        */
-      expect(mockEntry.fields).toEqual({
+      expect(mockEntry.fields).toStrictEqual({
         [mockMapping.productId]: {
           "en-US": mockVariant.product.id,
         },
@@ -337,7 +337,7 @@ describe("ContentfulClient", () => {
         variant: mockVariant,
       });
 
-      expect(mockEntry.fields).toEqual({
+      expect(mockEntry.fields).toStrictEqual({
         [mockMapping.productId]: {
           "en-US": mockVariant.product.id,
         },

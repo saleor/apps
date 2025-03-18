@@ -49,8 +49,8 @@ describe("App Config", () => {
   });
 
   it("Constructs with empty state", () => {
-    expect(appConfig.connections.getConnections()).toEqual([]);
-    expect(appConfig.providers.getProviders()).toEqual([]);
+    expect(appConfig.connections.getConnections()).toStrictEqual([]);
+    expect(appConfig.providers.getProviders()).toStrictEqual([]);
   });
 
   describe("Providers", () => {
@@ -89,7 +89,7 @@ describe("App Config", () => {
 
       appConfig.providers.deleteProvider(provider.id);
 
-      expect(appConfig.providers.getProviders()).toEqual([]);
+      expect(appConfig.providers.getProviders()).toStrictEqual([]);
     });
   });
 
