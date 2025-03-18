@@ -2,6 +2,8 @@ import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
+import { compose } from "@saleor/apps-shared";
 import * as Sentry from "@sentry/nextjs";
 import { UntypedCalculateTaxesDocument } from "generated/graphql";
 import { saleorApp } from "saleor-app";
@@ -9,10 +11,10 @@ import { saleorApp } from "saleor-app";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { appInternalTracer } from "@/lib/app-internal-tracer";
-import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
+import { metadataCache, wrapWithMetadataCacheAppRouter } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { createLogger } from "@/logger";
-import { loggerContext } from "@/logger-context";
+import { loggerContext, withLoggerContextAppRouter } from "@/logger-context";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
@@ -32,7 +34,7 @@ const checkoutCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTaxesPa
 const checkoutCalculateTaxesSyncWebhookReponse =
   buildSyncWebhookResponsePayload<"CHECKOUT_CALCULATE_TAXES">;
 
-const withMetadataCache = wrapWithMetadataCache(metadataCache);
+const withMetadataCache = wrapWithMetadataCacheAppRouter(metadataCache);
 
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
   return appInternalTracer.startActiveSpan(
@@ -83,7 +85,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
 
         const configExtractor = new AppConfigExtractor();
 
-        // metadataCache.setMetadata(appMetadata);
+        metadataCache.setMetadata(appMetadata);
 
         const config = configExtractor
           .extractAppConfigFromPrivateMetadata(appMetadata)
@@ -249,4 +251,8 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
   );
 });
 
-export const POST = handler;
+export const POST = compose(
+  withLoggerContextAppRouter,
+  withMetadataCache,
+  withSpanAttributesAppRouter,
+)(handler);

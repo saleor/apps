@@ -3,7 +3,7 @@ import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
 export class LoggerContext {
-  private als = new AsyncLocalStorage<Record<string, unknown>>();
+  private als = new AsyncLocalStorage<Record<string, any>>();
   private project_name = process.env.OTEL_SERVICE_NAME as string | undefined;
 
   getRawContext() {
@@ -22,7 +22,7 @@ export class LoggerContext {
     return store;
   }
 
-  async wrap(fn: (...args: unknown[]) => unknown, initialState = {}) {
+  async wrap(fn: (...args: unknown[]) => any, initialState = {}) {
     return this.als.run(
       {
         ...initialState,
