@@ -244,12 +244,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
       );
 
       try {
-        await avaTaxOrderCancelledAdapter.send(
-          {
-            avataxId: cancelledOrderInstance.getAvataxId(),
-          },
-          providerConfig.value.avataxConfig.config,
-        );
+        await avaTaxOrderCancelledAdapter.send({
+          payload: { avataxId: cancelledOrderInstance.getAvataxId() },
+          config: providerConfig.value.avataxConfig.config,
+        });
       } catch (e) {
         span.recordException(e as Error); // todo: remove casting when error handling is refactored
 

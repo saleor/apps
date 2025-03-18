@@ -22,14 +22,14 @@ const discountsStrategy = new PriceReductionDiscountsStrategy();
  */
 export const avataxConfigMock = mockGenerator.generateAvataxConfig();
 
-const transformer = new AvataxOrderConfirmedPayloadTransformer(
-  new SaleorOrderToAvataxLinesTransformer(),
-  new AvataxEntityTypeMatcher(
+const transformer = new AvataxOrderConfirmedPayloadTransformer({
+  saleorOrderToAvataxLinesTransformer: new SaleorOrderToAvataxLinesTransformer(),
+  avataxEntityTypeMatcher: new AvataxEntityTypeMatcher(
     new AvataxClient(new AvataxSdkClientFactory().createClient(avataxConfigMock)),
   ),
-  new AvataxCalculationDateResolver(),
-  new AvataxDocumentCodeResolver(),
-);
+  avataxCalculationDateResolver: new AvataxCalculationDateResolver(),
+  avataxDocumentCodeResolver: new AvataxDocumentCodeResolver(),
+});
 
 describe("AvataxOrderConfirmedPayloadTransformer", () => {
   it("returns document type of SalesInvoice when isDocumentRecordingEnabled is true", async () => {

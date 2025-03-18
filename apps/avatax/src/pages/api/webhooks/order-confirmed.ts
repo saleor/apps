@@ -38,28 +38,33 @@ const logger = createLogger("orderConfirmedAsyncWebhook");
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
-const discountStrategy = new PriceReductionDiscountsStrategy();
+const discountsStrategy = new PriceReductionDiscountsStrategy();
 
 const logsWriterFactory = new LogWriterFactory();
 
 /**
  * In the future this should be part of the use-case
  */
-async function confirmOrder(
-  confirmedOrderEvent: SaleorOrderConfirmedEvent,
-  avataxConfig: AvataxConfig,
-  authData: AuthData,
-  discountStrategy: PriceReductionDiscountsStrategy,
-) {
+async function confirmOrder({
+  confirmedOrderEvent,
+  avataxConfig,
+  authData,
+  discountsStrategy,
+}: {
+  confirmedOrderEvent: SaleorOrderConfirmedEvent;
+  avataxConfig: AvataxConfig;
+  authData: AuthData;
+  discountsStrategy: PriceReductionDiscountsStrategy;
+}) {
   const avataxOrderConfirmedAdapter =
     createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig(avataxConfig);
 
-  const response = await avataxOrderConfirmedAdapter.send(
-    { confirmedOrderEvent },
-    avataxConfig,
+  const response = await avataxOrderConfirmedAdapter.send({
+    payload: { confirmedOrderEvent },
+    config: avataxConfig,
     authData,
-    discountStrategy,
-  );
+    discountsStrategy,
+  });
 
   return response;
 }
@@ -248,12 +253,12 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         }
 
         try {
-          const confirmedOrder = await confirmOrder(
+          const confirmedOrder = await confirmOrder({
             confirmedOrderEvent,
-            providerConfig.value.avataxConfig.config,
-            ctx.authData,
-            discountStrategy,
-          );
+            avataxConfig: providerConfig.value.avataxConfig.config,
+            authData: ctx.authData,
+            discountsStrategy,
+          });
 
           logger.info("Order confirmed", { orderId: confirmedOrder.id });
 

@@ -18,12 +18,17 @@ export class AvataxOrderConfirmedPayloadService {
     return taxCodeMatchesService.getAll();
   }
 
-  async getPayload(
-    confirmedOrderEvent: SaleorOrderConfirmedEvent,
-    avataxConfig: AvataxConfig,
-    authData: AuthData,
-    discountsStrategy: PriceReductionDiscountsStrategy,
-  ): Promise<CreateTransactionArgs> {
+  async getPayload({
+    confirmedOrderEvent,
+    avataxConfig,
+    authData,
+    discountsStrategy,
+  }: {
+    confirmedOrderEvent: SaleorOrderConfirmedEvent;
+    avataxConfig: AvataxConfig;
+    authData: AuthData;
+    discountsStrategy: PriceReductionDiscountsStrategy;
+  }): Promise<CreateTransactionArgs> {
     const matches = await this.getMatches(authData);
 
     return this.avataxOrderConfirmedPayloadTransformer.transform({

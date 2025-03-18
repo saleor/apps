@@ -36,7 +36,7 @@ describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
       },
     ];
 
-    expect(matcher.match(line, matches)).toEqual(DEFAULT_TAX_CLASS_ID);
+    expect(matcher.match(line, matches)).toStrictEqual(DEFAULT_TAX_CLASS_ID);
   });
   it("returns a match when tax class is found", () => {
     const line: TaxBaseLineFragment = {
@@ -73,7 +73,7 @@ describe("AvataxCalculateTaxesTaxCodeMatcher", () => {
 
     const taxCode = matcher.match(line, matches);
 
-    expect(taxCode).toEqual("123412");
+    expect(taxCode).toStrictEqual("123412");
   });
   it("throws an error when line type is not supported", () => {
     const line: TaxBaseLineFragment = {

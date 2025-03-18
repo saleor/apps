@@ -20,10 +20,12 @@ export class AvataxOrderConfirmedPayloadTransformer {
   private logger = createLogger("AvataxOrderConfirmedPayloadTransformer");
 
   constructor(
-    private saleorOrderToAvataxLinesTransformer: SaleorOrderToAvataxLinesTransformer,
-    private avataxEntityTypeMatcher: AvataxEntityTypeMatcher,
-    private avataxCalculationDateResolver: AvataxCalculationDateResolver,
-    private avataxDocumentCodeResolver: AvataxDocumentCodeResolver,
+    private deps: {
+      saleorOrderToAvataxLinesTransformer: SaleorOrderToAvataxLinesTransformer;
+      avataxEntityTypeMatcher: AvataxEntityTypeMatcher;
+      avataxCalculationDateResolver: AvataxCalculationDateResolver;
+      avataxDocumentCodeResolver: AvataxDocumentCodeResolver;
+    },
   ) {}
 
   private matchDocumentType(config: AvataxConfig): DocumentType {
@@ -63,16 +65,16 @@ export class AvataxOrderConfirmedPayloadTransformer {
     matches: AvataxTaxCodeMatches;
     discountsStrategy: PriceReductionDiscountsStrategy;
   }): Promise<CreateTransactionArgs> {
-    const entityUseCode = await this.avataxEntityTypeMatcher.match(
+    const entityUseCode = await this.deps.avataxEntityTypeMatcher.match(
       confirmedOrderEvent.getAvaTaxEntityCode(),
     );
 
-    const date = this.avataxCalculationDateResolver.resolve(
+    const date = this.deps.avataxCalculationDateResolver.resolve(
       confirmedOrderEvent.getAvaTaxTaxCalculationDate(),
       confirmedOrderEvent.getOrderCreationDate(),
     );
 
-    const code = this.avataxDocumentCodeResolver.resolve({
+    const code = this.deps.avataxDocumentCodeResolver.resolve({
       avataxDocumentCode: confirmedOrderEvent.getAvaTaxDocumentCode(),
       orderId: confirmedOrderEvent.getOrderId(),
     });
@@ -112,7 +114,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
         currencyCode: confirmedOrderEvent.getOrderCurrency(),
         // we can fall back to empty string because email is not a required field
         email: confirmedOrderEvent.resolveUserEmailOrEmpty(),
-        lines: this.saleorOrderToAvataxLinesTransformer.transform({
+        lines: this.deps.saleorOrderToAvataxLinesTransformer.transform({
           confirmedOrderEvent,
           matches,
           avataxConfig,

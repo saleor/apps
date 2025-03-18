@@ -60,14 +60,14 @@ describe("getAppConfig", () => {
   it("returns empty providerConnections and channels config when no metadata", () => {
     const { providerConnections, channels } = getAppConfig([]);
 
-    expect(providerConnections).toEqual([]);
-    expect(channels).toEqual({});
+    expect(providerConnections).toStrictEqual([]);
+    expect(channels).toStrictEqual({});
   });
 
   it("returns decrypted providerConnections and channels config when metadata provided", () => {
     const { providerConnections, channels } = getAppConfig(mockedMetadata);
 
-    expect(providerConnections).toEqual(mockedProviders);
-    expect(channels).toEqual(mockedChannels);
+    expect(providerConnections).toStrictEqual(mockedProviders);
+    expect(channels).toStrictEqual(mockedChannels);
   });
 });

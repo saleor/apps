@@ -12,7 +12,7 @@ describe("AvataxCalculationDateResolver", () => {
       created: "2021-01-02T00:00:00.000Z",
     } as any as OrderConfirmedSubscriptionFragment;
 
-    expect(resolver.resolve(order.avataxTaxCalculationDate, order.created)).toEqual(
+    expect(resolver.resolve(order.avataxTaxCalculationDate, order.created)).toStrictEqual(
       new Date("2021-01-01T00:00:00.000Z"),
     );
   });
@@ -22,7 +22,7 @@ describe("AvataxCalculationDateResolver", () => {
       created: "2021-01-02T00:00:00.000Z",
     } as any as OrderConfirmedSubscriptionFragment;
 
-    expect(resolver.resolve(order.avataxTaxCalculationDate, order.created)).toEqual(
+    expect(resolver.resolve(order.avataxTaxCalculationDate, order.created)).toStrictEqual(
       new Date("2021-01-02T00:00:00.000Z"),
     );
   });
@@ -31,7 +31,7 @@ describe("AvataxCalculationDateResolver", () => {
       created: "2021-01-02T00:00:00.000Z",
     } as any as OrderConfirmedSubscriptionFragment;
 
-    expect(resolver.resolve(order.avataxTaxCalculationDate, order.created)).toEqual(
+    expect(resolver.resolve(order.avataxTaxCalculationDate, order.created)).toStrictEqual(
       new Date("2021-01-02T00:00:00.000Z"),
     );
   });
