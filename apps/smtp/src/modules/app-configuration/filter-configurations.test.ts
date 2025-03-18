@@ -55,7 +55,7 @@ describe("filterConfigurations", function () {
       filterConfigurations({
         configurations: exampleConfigurations,
       }),
-    ).toEqual(exampleConfigurations);
+    ).toStrictEqual(exampleConfigurations);
   });
 
   it("Return only active configurations, when active filter provided", () => {
@@ -66,7 +66,7 @@ describe("filterConfigurations", function () {
           active: true,
         },
       }),
-    ).toEqual([enabledConfiguration, channelRestrictedEnabledConfiguration]);
+    ).toStrictEqual([enabledConfiguration, channelRestrictedEnabledConfiguration]);
   });
 
   it("Return only configurations which can be used with provided channel, when channel filter provided", () => {
@@ -77,7 +77,11 @@ describe("filterConfigurations", function () {
           availableInChannel: "default-channel",
         },
       }),
-    ).toEqual([enabledConfiguration, disabledConfiguration, channelRestrictedEnabledConfiguration]);
+    ).toStrictEqual([
+      enabledConfiguration,
+      disabledConfiguration,
+      channelRestrictedEnabledConfiguration,
+    ]);
   });
 
   it("Return only configurations with matching ids, when id filter provided", () => {
@@ -88,7 +92,7 @@ describe("filterConfigurations", function () {
           ids: ["enabled", "restrictedEnabled"],
         },
       }),
-    ).toEqual([enabledConfiguration, channelRestrictedEnabledConfiguration]);
+    ).toStrictEqual([enabledConfiguration, channelRestrictedEnabledConfiguration]);
   });
 
   it("Return only configurations matching all the requirements, when multiple filters provided", () => {
@@ -100,6 +104,6 @@ describe("filterConfigurations", function () {
           active: true,
         },
       }),
-    ).toEqual([enabledConfiguration]);
+    ).toStrictEqual([enabledConfiguration]);
   });
 });

@@ -14,9 +14,10 @@ describe("getEventFormStatus", function () {
           orderRefundedEvent: true,
         },
       }),
-    ).toEqual({
-      tooltipMessage: undefined,
+    ).toStrictEqual({
       isDisabled: false,
+      missingPermission: undefined,
+      requiredSaleorVersion: undefined,
     });
     expect(
       getEventFormStatus({
@@ -27,7 +28,7 @@ describe("getEventFormStatus", function () {
           orderRefundedEvent: true,
         },
       }),
-    ).toEqual({
+    ).toStrictEqual({
       isDisabled: false,
       missingPermission: undefined,
       requiredSaleorVersion: undefined,
@@ -44,7 +45,7 @@ describe("getEventFormStatus", function () {
           orderRefundedEvent: true,
         },
       }),
-    ).toEqual({
+    ).toStrictEqual({
       isDisabled: true,
       missingPermission: PermissionEnum.ManageGiftCard,
       requiredSaleorVersion: undefined,
@@ -61,7 +62,7 @@ describe("getEventFormStatus", function () {
           orderRefundedEvent: true,
         },
       }),
-    ).toEqual({
+    ).toStrictEqual({
       isDisabled: true,
       missingPermission: undefined,
       requiredSaleorVersion: ">=3.13",

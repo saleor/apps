@@ -33,7 +33,7 @@ export class FeatureFlagService {
     const saleorVersion = await this.getSaleorVersion();
     const flags = getFeatureFlags({ saleorVersion });
 
-    logger.debug({ flags }, "Feature flags checked");
+    logger.debug({ flags: flags }, "Feature flags checked");
     return flags;
   };
 }

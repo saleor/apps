@@ -114,10 +114,10 @@ describe("EmailCompiler", () => {
 
     const resultValue = result._unsafeUnwrap();
 
-    expect(resultValue.from).toEqual("John Doe from Saleor <sender@saleor.io>");
-    expect(resultValue.to).toEqual("recipien@test.com");
-    expect(resultValue.subject).toEqual("test subject");
-    expect(resultValue.text).toEqual("2137");
+    expect(resultValue.from).toStrictEqual("John Doe from Saleor <sender@saleor.io>");
+    expect(resultValue.to).toStrictEqual("recipien@test.com");
+    expect(resultValue.subject).toStrictEqual("test subject");
+    expect(resultValue.text).toStrictEqual("2137");
     // Simple assertion to check if result HTML includes injected value
     expect(resultValue.html.includes("2137")).toBe(true);
   });

@@ -238,7 +238,7 @@ describe("SmtpConfigurationService", function () {
 
       const configuration = await service.getConfigurationRoot();
 
-      expect(configuration._unsafeUnwrap()).toEqual(validConfig);
+      expect(configuration._unsafeUnwrap()).toStrictEqual(validConfig);
       expect(getConfigMock).toBeCalledTimes(1);
 
       // Second call should not trigger API call
@@ -265,7 +265,7 @@ describe("SmtpConfigurationService", function () {
         initialData: { ...validConfig },
       });
 
-      expect((await service.getConfigurationRoot())._unsafeUnwrap()).toEqual(validConfig);
+      expect((await service.getConfigurationRoot())._unsafeUnwrap()).toStrictEqual(validConfig);
 
       expect(getConfigMock).toBeCalledTimes(0);
     });
@@ -348,7 +348,7 @@ describe("SmtpConfigurationService", function () {
 
       expect(
         (await service.getConfiguration({ id: validConfig.configurations[0].id }))._unsafeUnwrap(),
-      ).toEqual(validConfig.configurations[0]);
+      ).toStrictEqual(validConfig.configurations[0]);
     });
 
     it("Throws error when configuration with provided ID does not exist", async () => {
@@ -390,7 +390,7 @@ describe("SmtpConfigurationService", function () {
         initialData: emptyConfigRoot,
       });
 
-      expect((await service.getConfigurations())._unsafeUnwrap()).toEqual([]);
+      expect((await service.getConfigurations())._unsafeUnwrap()).toStrictEqual([]);
     });
 
     it("Returns relevant configurations, when filter is passed", async () => {
@@ -409,7 +409,7 @@ describe("SmtpConfigurationService", function () {
       });
 
       // Only the first configuration is active, so only this one should be returned
-      expect((await service.getConfigurations({ active: true }))._unsafeUnwrap()).toEqual([
+      expect((await service.getConfigurations({ active: true }))._unsafeUnwrap()).toStrictEqual([
         validConfig.configurations[0],
       ]);
     });
@@ -444,7 +444,7 @@ describe("SmtpConfigurationService", function () {
         })
       )._unsafeUnwrap();
 
-      expect(newConfiguration.name).toEqual("New configuration");
+      expect(newConfiguration.name).toStrictEqual("New configuration");
       expect(setConfigMock).toBeCalledTimes(1);
     });
   });
@@ -475,7 +475,7 @@ describe("SmtpConfigurationService", function () {
         })
       )._unsafeUnwrap();
 
-      expect(updatedConfiguration.name).toEqual("Updated configuration");
+      expect(updatedConfiguration.name).toStrictEqual("Updated configuration");
       expect(setConfigMock).toBeCalledTimes(1);
 
       const configurationFromCache = (
@@ -485,7 +485,7 @@ describe("SmtpConfigurationService", function () {
       )._unsafeUnwrap();
 
       expect(getConfigMock).toBeCalledTimes(0);
-      expect(configurationFromCache.name).toEqual("Updated configuration");
+      expect(configurationFromCache.name).toStrictEqual("Updated configuration");
     });
 
     it("Error should be thrown, when configuration with given ID does not exist", async () => {
@@ -606,7 +606,7 @@ describe("SmtpConfigurationService", function () {
             eventType: "ORDER_CREATED",
           })
         )._unsafeUnwrap(),
-      ).toEqual(validConfig.configurations[0].events[0]);
+      ).toStrictEqual(validConfig.configurations[0].events[0]);
     });
 
     it("Should throw error, when configuration does not exist", async () => {
@@ -681,7 +681,7 @@ describe("SmtpConfigurationService", function () {
         })
       )._unsafeUnwrap();
 
-      expect(updatedEventConfiguration.subject).toEqual("Updated subject");
+      expect(updatedEventConfiguration.subject).toStrictEqual("Updated subject");
     });
 
     it("Should throw error, when configuration does not exist", async () => {

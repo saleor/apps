@@ -56,8 +56,9 @@ const EditSmtpEventPage: NextPage = () => {
       enabled: !!configurationId && !!eventType,
       onSettled(data, error) {
         if (error) {
-          console.error("Error during fetching the configuration: ", error);
+          notifyError("Error during fetching the configuration");
         }
+
         if (error?.data?.code === "NOT_FOUND" || !data) {
           notifyError("The requested configuration does not exist.");
           router.replace(appUrls.configuration());

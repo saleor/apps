@@ -3,6 +3,11 @@ module.exports = {
   extends: ["@saleor/eslint-config-apps"],
   plugins: ["@typescript-eslint", "neverthrow", "node"],
   rules: {
+    "no-console": "error",
+    "@saleor/saleor-app/logger-leak": "error",
+    "max-params": ["error", { max: 3 }],
+    "@vitest/prefer-strict-equal": "error",
+    "@vitest/prefer-vi-mocked": "error",
     "turbo/no-undeclared-env-vars": ["error"],
     "node/no-process-env": ["error"],
     "@typescript-eslint/no-restricted-imports": [

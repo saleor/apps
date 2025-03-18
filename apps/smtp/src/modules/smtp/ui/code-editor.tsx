@@ -1,6 +1,6 @@
 import Editor from "@monaco-editor/react";
 import { useTheme } from "@saleor/macaw-ui";
-import React, { useCallback, useRef } from "react";
+import { useCallback, useRef } from "react";
 
 type Props = {
   onChange(value: string): void;
@@ -22,6 +22,7 @@ export const CodeEditor = ({ initialTemplate, onChange, value, language }: Props
     (value?: string) => {
       onChange(value ?? "");
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [value],
   );
 
