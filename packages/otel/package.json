@@ -16,7 +16,7 @@
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "next": "14.2.3",
+    "next": "15.2.3",
     "urql": "4.0.4"
   },
   "devDependencies": {

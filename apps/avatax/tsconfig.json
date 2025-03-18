@@ -16,7 +16,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "next.config.js",
+    "next.config.ts",
     ".eslintrc.cjs",
     "reset.d.ts",
     ".next/types/**/*.ts"

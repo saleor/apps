@@ -2,8 +2,8 @@ import { trace } from "@opentelemetry/api";
 import { SALEOR_API_URL_HEADER, SALEOR_SCHEMA_VERSION_HEADER } from "@saleor/app-sdk/headers";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
-import { ObservabilityAttributes } from "./observability-attributes";
 import { WebApiHandler } from "@saleor/app-sdk/handlers/fetch-api";
+import { ObservabilityAttributes } from "./observability-attributes";
 
 export const withSpanAttributes = (handler: NextApiHandler) => {
   return (req: NextApiRequest, res: NextApiResponse) => {
@@ -25,7 +25,6 @@ export const withSpanAttributes = (handler: NextApiHandler) => {
   };
 };
 
-
 export const withSpanAttributesAppRouter = (handler: WebApiHandler) => {
   return (req: Request) => {
     const span = trace.getActiveSpan();
@@ -44,4 +43,4 @@ export const withSpanAttributesAppRouter = (handler: WebApiHandler) => {
     }
     return handler(req);
   };
-}
+};

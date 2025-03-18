@@ -6,6 +6,7 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared";
 import * as Sentry from "@sentry/nextjs";
 import { UntypedCalculateTaxesDocument } from "generated/graphql";
+import { after } from "next/server";
 import { saleorApp } from "saleor-app";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
@@ -37,6 +38,10 @@ const checkoutCalculateTaxesSyncWebhookReponse =
 const withMetadataCache = wrapWithMetadataCacheAppRouter(metadataCache);
 
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
+  after(() => {
+    console.log("After handler");
+  });
+
   return appInternalTracer.startActiveSpan(
     "executing checkoutCalculateTaxes webhook handler",
     {

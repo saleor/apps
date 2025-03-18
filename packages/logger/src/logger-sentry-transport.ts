@@ -1,8 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
-import { SeverityLevel } from "@sentry/nextjs";
 import { ILogObj, Logger } from "tslog";
 
-const loggerLevelToSentryLevel = (level: string): SeverityLevel => {
+const loggerLevelToSentryLevel = (level: string): Sentry.SeverityLevel => {
   switch (level) {
     case "fatal":
     case "error":
