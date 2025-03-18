@@ -3,8 +3,16 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
-    }
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
@@ -12,7 +20,10 @@
     "**/*.tsx",
     "next.config.js",
     ".eslintrc.cjs",
-    "reset.d.ts"
+    "reset.d.ts",
+    ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
