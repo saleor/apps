@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable turbo/no-undeclared-env-vars */
 
 import * as dotenv from "dotenv";

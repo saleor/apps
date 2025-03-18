@@ -1,4 +1,4 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
+/* eslint-disable no-console */
 
 import { AuthData } from "@saleor/app-sdk/APL";
 import { createGraphQLClient } from "@saleor/apps-shared";

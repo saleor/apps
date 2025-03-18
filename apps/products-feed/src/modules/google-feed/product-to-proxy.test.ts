@@ -1,4 +1,4 @@
-import { describe, expect,it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { productToProxy } from "./product-to-proxy";
 
@@ -15,7 +15,7 @@ describe("productToProxy", () => {
       additionalImageLinks: [],
     });
 
-    expect(result.item).toEqual(
+    expect(result.item).toStrictEqual(
       expect.arrayContaining([
         {
           "g:id": expect.arrayContaining([{ "#text": "variant-id" }]),
@@ -39,7 +39,7 @@ describe("productToProxy", () => {
       additionalImageLinks: [],
     });
 
-    expect(result.item).toEqual(
+    expect(result.item).toStrictEqual(
       expect.arrayContaining([
         {
           "g:condition": expect.arrayContaining([{ "#text": "new" }]),
@@ -61,7 +61,7 @@ describe("productToProxy", () => {
       additionalImageLinks: [],
     });
 
-    expect(result.item).toEqual(
+    expect(result.item).toStrictEqual(
       expect.arrayContaining([
         {
           "g:description": expect.arrayContaining([{ "#text": "Product description" }]),
@@ -83,7 +83,7 @@ describe("productToProxy", () => {
       additionalImageLinks: [],
     });
 
-    expect(result.item).toEqual(
+    expect(result.item).toStrictEqual(
       expect.arrayContaining([
         {
           "g:google_product_category": expect.arrayContaining([{ "#text": "1" }]),
@@ -106,7 +106,7 @@ describe("productToProxy", () => {
       additionalImageLinks: [],
     });
 
-    expect(result.item).toEqual(
+    expect(result.item).toStrictEqual(
       expect.arrayContaining([
         {
           link: expect.arrayContaining([
@@ -133,7 +133,7 @@ describe("productToProxy", () => {
       additionalImageLinks: [],
     });
 
-    expect(result.item).toEqual(
+    expect(result.item).toStrictEqual(
       expect.arrayContaining([
         {
           "g:image_link": expect.arrayContaining([{ "#text": "https://image.example.com" }]),
@@ -157,7 +157,7 @@ describe("productToProxy", () => {
       additionalImageLinks: [],
     });
 
-    expect(result.item).toEqual(
+    expect(result.item).toStrictEqual(
       expect.arrayContaining([
         {
           "g:price": expect.arrayContaining([{ "#text": "50.00 USD" }]),

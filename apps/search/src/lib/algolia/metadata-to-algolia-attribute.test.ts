@@ -15,7 +15,7 @@ describe("metadataToAlgoliaAttribute", () => {
           value: "baz",
         },
       ]),
-    ).toEqual({
+    ).toStrictEqual({
       foo: "bar",
       foobar: "baz",
     });
@@ -33,7 +33,7 @@ describe("metadataToAlgoliaAttribute", () => {
           value: `["a", "b", "c"]`,
         },
       ]),
-    ).toEqual({
+    ).toStrictEqual({
       foo: {
         bar: "baz",
       },
@@ -44,7 +44,7 @@ describe("metadataToAlgoliaAttribute", () => {
   it("Maps invalid json attribute to string", () => {
     const invalidJson = `{"bar": "baz"`;
 
-    expect(metadataToAlgoliaAttribute([{ key: "invalidJson", value: invalidJson }])).toEqual({
+    expect(metadataToAlgoliaAttribute([{ key: "invalidJson", value: invalidJson }])).toStrictEqual({
       invalidJson: `{"bar": "baz"`,
     });
   });
@@ -57,7 +57,7 @@ describe("metadataToAlgoliaAttribute", () => {
           value: "",
         },
       ]),
-    ).toEqual({
+    ).toStrictEqual({
       foo: null,
     });
   });
