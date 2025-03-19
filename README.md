@@ -85,6 +85,15 @@ After that run to install pnpm with proper version:
 corepack enable pnpm
 ```
 
+### Turborepo
+
+This repository uses [Turborepo](https://turbo.build/) remote caching. If you are Saleor employee you can leverage it by running following commands in root of this repository:
+
+```shell
+pnpm dlx turbo login
+pnpm dlx turbo link
+```
+
 ## ADR
 
 This repository uses [architecture decision records](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) to document architectural decisions. You can find them in the `docs/adr` directory.
