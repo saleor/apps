@@ -37,12 +37,8 @@
     "eslint": "catalog:",
     "graphql-config": "5.0.3",
     "typescript": "5.5.4",
-    "urql": "4.0.4",
     "vite": "5.3.3",
     "vitest": "1.6.0"
-  },
-  "peerDependencies": {
-    "next": "14.2.3"
   },
   "saleor": {
     "schemaVersion": "3.19"

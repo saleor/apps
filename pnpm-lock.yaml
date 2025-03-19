@@ -1605,6 +1605,18 @@ importers:
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
+      '@saleor/app-sdk':
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
+      '@sentry/nextjs':
+        specifier: 'catalog:'
+        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+      modern-errors:
+        specifier: 7.0.1
+        version: 7.0.1
+      modern-errors-serialize:
+        specifier: 6.1.0
+        version: 6.1.0(modern-errors@7.0.1)
       next:
         specifier: 14.2.3
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1612,30 +1624,18 @@ importers:
         specifier: 4.9.2
         version: 4.9.2
     devDependencies:
-      '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/eslint-config-apps':
         specifier: workspace:*
         version: link:../eslint-config
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
-      '@sentry/nextjs':
-        specifier: 'catalog:'
-        version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@vitest/coverage-v8':
         specifier: 1.6.0
         version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      modern-errors:
-        specifier: 7.0.1
-        version: 7.0.1
-      modern-errors-serialize:
-        specifier: 6.1.0
-        version: 6.1.0(modern-errors@7.0.1)
       typescript:
         specifier: 5.5.4
         version: 5.5.4
@@ -1696,6 +1696,19 @@ importers:
         version: 5.5.4
 
   packages/react-hook-form-macaw:
+    dependencies:
+      '@saleor/macaw-ui':
+        specifier: 1.1.10
+        version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.43.9
+        version: 7.44.3(react@18.2.0)
     devDependencies:
       '@babel/core':
         specifier: ^7.21.8
@@ -1703,9 +1716,6 @@ importers:
       '@saleor/eslint-config-apps':
         specifier: workspace:*
         version: link:../eslint-config
-      '@saleor/macaw-ui':
-        specifier: 1.1.10
-        version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
@@ -1745,15 +1755,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
-      react-hook-form:
-        specifier: ^7.43.9
-        version: 7.44.3(react@18.2.0)
       storybook:
         specifier: ^7.0.12
         version: 7.0.12
@@ -1787,25 +1788,40 @@ importers:
 
   packages/shared:
     dependencies:
+      '@saleor/app-sdk':
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/macaw-ui':
+        specifier: 1.1.10
+        version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@urql/exchange-auth':
         specifier: 2.1.4
         version: 2.1.4(graphql@16.7.1)
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
+      next:
+        specifier: 14.2.3
+        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
       semver:
         specifier: 7.5.1
         version: 7.5.1
+      urql:
+        specifier: 4.0.4
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
+      zod:
+        specifier: 3.21.4
+        version: 3.21.4
     devDependencies:
-      '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/eslint-config-apps':
         specifier: workspace:*
         version: link:../eslint-config
-      '@saleor/macaw-ui':
-        specifier: 1.1.10
-        version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
@@ -1821,45 +1837,24 @@ importers:
       '@vitest/coverage-v8':
         specifier: 1.6.0
         version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
-      next:
-        specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
       typescript:
         specifier: 5.5.4
         version: 5.5.4
-      urql:
-        specifier: 4.0.4
-        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       vite:
         specifier: 5.3.3
         version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
       vitest:
         specifier: 1.6.0
         version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
-      zod:
-        specifier: 3.21.4
-        version: 3.21.4
 
   packages/trpc:
     dependencies:
+      '@saleor/app-sdk':
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../shared
-      '@saleor/eslint-config-apps':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@saleor/typescript-config-apps':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@tanstack/react-query':
-        specifier: 4.29.19
-        version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
         specifier: 10.34.0
         version: 10.34.0(@trpc/server@10.34.0)
@@ -1872,42 +1867,49 @@ importers:
       '@trpc/server':
         specifier: 10.34.0
         version: 10.34.0
+      next:
+        specifier: 14.2.3
+        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+    devDependencies:
+      '@saleor/eslint-config-apps':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@saleor/typescript-config-apps':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: 22.13.10
+        version: 22.13.10
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
+      typescript:
+        specifier: 5.5.4
+        version: 5.5.4
+
+  packages/typescript-config: {}
+
+  packages/ui:
+    dependencies:
+      '@saleor/app-sdk':
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/macaw-ui':
+        specifier: 1.1.10
+        version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      next:
+        specifier: 14.2.3
+        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
     devDependencies:
-      '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
-      '@types/node':
-        specifier: 22.13.10
-        version: 22.13.10
-      next:
-        specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-
-  packages/typescript-config: {}
-
-  packages/ui:
-    devDependencies:
-      '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/eslint-config-apps':
         specifier: workspace:*
         version: link:../eslint-config
-      '@saleor/macaw-ui':
-        specifier: 1.1.10
-        version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
@@ -1920,15 +1922,6 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      next:
-        specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
       typescript:
         specifier: 5.5.4
         version: 5.5.4
@@ -1956,9 +1949,6 @@ importers:
       modern-errors-serialize:
         specifier: 6.1.0
         version: 6.1.0(modern-errors@7.0.1)
-      next:
-        specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       semver:
         specifier: 7.5.1
         version: 7.5.1

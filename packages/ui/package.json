@@ -8,22 +8,19 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
-  "devDependencies": {
+  "dependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "1.1.10",
+    "next": "14.2.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "eslint": "catalog:",
-    "next": "14.2.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "typescript": "5.5.4"
-  },
-  "peerDependencies": {
-    "next": "14.2.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
   }
 }

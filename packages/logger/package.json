@@ -20,24 +20,20 @@
   },
   "dependencies": {
     "@opentelemetry/api": "catalog:",
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@sentry/nextjs": "catalog:",
+    "modern-errors": "7.0.1",
+    "modern-errors-serialize": "6.1.0",
     "next": "14.2.3",
     "tslog": "4.9.2"
   },
   "devDependencies": {
-    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@sentry/nextjs": "catalog:",
     "@vitest/coverage-v8": "1.6.0",
     "eslint": "catalog:",
-    "modern-errors": "7.0.1",
-    "modern-errors-serialize": "6.1.0",
     "typescript": "5.5.4",
     "vite": "5.3.3",
     "vitest": "1.6.0"
-  },
-  "peerDependencies": {
-    "@saleor/app-sdk": "^0.52.0",
-    "@sentry/nextjs": ">=8"
   }
 }
