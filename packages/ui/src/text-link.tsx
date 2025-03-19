@@ -25,6 +25,7 @@ export const TextLink = ({ href, newTab = false, children, ...props }: TextLinkP
     event.preventDefault();
 
     if (!appBridge) {
+      // eslint-disable-next-line no-console
       console.warn(
         "App bridge is not initialized, TextLink cannot be used with external links without it.",
       );
