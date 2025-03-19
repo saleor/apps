@@ -6,7 +6,7 @@ import {
   FetchProductAttributesDataDocument,
   FetchRelatedProductsDataDocument,
 } from "../../../generated/graphql";
-import { fetchProductData,getCursors } from "./fetch-product-data";
+import { fetchProductData, getCursors } from "./fetch-product-data";
 
 describe("getCursors", () => {
   it("loads cursor for each variant page ", async () => {
@@ -62,7 +62,7 @@ describe("getCursors", () => {
       channel: "channel-1",
     });
 
-    expect(cursors).toEqual(["cursor-1", "cursor-2", "cursor-3"]);
+    expect(cursors).toStrictEqual(["cursor-1", "cursor-2", "cursor-3"]);
   });
 });
 
@@ -147,7 +147,7 @@ describe("fetchProductData", () => {
       imageSize: 100,
     });
 
-    expect(variants).toEqual([
+    expect(variants).toStrictEqual([
       {
         attributes: [
           {

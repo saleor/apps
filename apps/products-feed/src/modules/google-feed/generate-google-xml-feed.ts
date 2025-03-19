@@ -131,7 +131,7 @@ export const generateGoogleXmlFeed = ({
     storefrontUrl,
   });
 
-  logger.trace("Coverted shop details to proxy format", { channelData });
+  logger.trace("Coverted shop details to proxy format");
 
   const data = [
     {

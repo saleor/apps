@@ -41,7 +41,7 @@ describe("useAlgoliaConfiguration", () => {
 
     const { result } = renderHook(() => useAlgoliaConfiguration());
 
-    expect(result.current).toEqual({ type: "loading" });
+    expect(result.current).toStrictEqual({ type: "loading" });
   });
 
   it("should return not-configured state when configuration is missing", async () => {
@@ -52,7 +52,7 @@ describe("useAlgoliaConfiguration", () => {
 
     const { result } = renderHook(() => useAlgoliaConfiguration());
 
-    expect(result.current).toEqual({ type: "not-configured" });
+    expect(result.current).toStrictEqual({ type: "not-configured" });
   });
 
   it("should return configured state when configuration is valid", async () => {
@@ -77,7 +77,7 @@ describe("useAlgoliaConfiguration", () => {
     await waitForNextUpdate();
 
     expect(algoliaCredentialsVerifier.verifyCredentials).toHaveBeenCalled();
-    expect(result.current).toEqual({ type: "configured", provider: mockSearchProvider });
+    expect(result.current).toStrictEqual({ type: "configured", provider: mockSearchProvider });
   });
 
   it("should return not-configured state when credentials verification fails", async () => {
@@ -103,6 +103,6 @@ describe("useAlgoliaConfiguration", () => {
     await waitForNextUpdate();
 
     expect(algoliaCredentialsVerifier.verifyCredentials).toHaveBeenCalled();
-    expect(result.current).toEqual({ type: "not-configured" });
+    expect(result.current).toStrictEqual({ type: "not-configured" });
   });
 });

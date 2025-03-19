@@ -14,6 +14,7 @@ const IndexPage: NextPage = () => {
     if (isMounted() && appBridgeState?.ready) {
       replace("/configuration");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted, appBridgeState?.ready]);
 
   if (isInIframe()) {
