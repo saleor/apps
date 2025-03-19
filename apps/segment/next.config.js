@@ -1,4 +1,3 @@
-/* eslint-disable node/no-process-env */
 // @ts-check
 
 import { withSentryConfig } from "@sentry/nextjs";

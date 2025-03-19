@@ -1,16 +1,18 @@
 module.exports = {
   root: true,
   extends: ["@saleor/eslint-config-apps"],
-  plugins: ["neverthrow", "node"],
+  plugins: ["neverthrow", "n"],
   rules: {
-    "no-console": "error",
-    "@saleor/saleor-app/logger-leak": "error",
-    "turbo/no-undeclared-env-vars": ["error"],
-    "node/no-process-env": ["error"],
-    "max-params": ["error", { max: 3 }],
-    "@vitest/prefer-strict-equal": "error",
-    "@vitest/prefer-vi-mocked": "error",
+    "n/no-process-env": "error",
   },
+  overrides: [
+    {
+      rules: {
+        "n/no-process-env": "off",
+      },
+      files: ["next.config.js", "src/env.ts", "src/instrumentation.ts"],
+    },
+  ],
   parserOptions: {
     project: "tsconfig.json",
     tsconfigRootDir: __dirname,
