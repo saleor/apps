@@ -10,27 +10,25 @@
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
-  "dependencies": {
-    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "@saleor/macaw-ui": "1.1.10",
-    "@urql/exchange-auth": "2.1.4",
-    "eslint": "catalog:",
-    "next": "14.2.3",
-    "react": "link:../../node_modules/react",
-    "react-dom": "link:../../node_modules/react-dom",
-    "semver": "7.5.1",
-    "urql": "4.0.4",
-    "zod": "3.21.4"
-  },
   "devDependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/macaw-ui": "1.1.10",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@types/semver": "7.5.0",
+    "@urql/exchange-auth": "2.1.4",
     "@vitest/coverage-v8": "1.6.0",
+    "eslint": "catalog:",
+    "next": "14.2.3",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "semver": "7.5.1",
     "typescript": "5.5.4",
+    "urql": "4.0.4",
     "vite": "5.3.3",
-    "vitest": "1.6.0"
+    "vitest": "1.6.0",
+    "zod": "3.21.4"
   }
 }

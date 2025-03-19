@@ -7,7 +7,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
-  "dependencies": {
+  "devDependencies": {
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/exporter-trace-otlp-http": "catalog:",
     "@opentelemetry/instrumentation-aws-sdk": "catalog:",
@@ -16,14 +16,12 @@
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
-    "next": "14.2.3",
-    "urql": "4.0.4"
-  },
-  "devDependencies": {
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/node": "22.13.10",
     "eslint": "catalog:",
-    "typescript": "5.5.4"
+    "next": "14.2.3",
+    "typescript": "5.5.4",
+    "urql": "4.0.4"
   }
 }

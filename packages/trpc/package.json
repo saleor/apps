@@ -8,19 +8,17 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
-  "dependencies": {
+  "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
     "@trpc/client": "10.43.1",
     "@trpc/next": "10.43.1",
     "@trpc/server": "10.43.1",
-    "next": "14.2.3"
-  },
-  "devDependencies": {
-    "@saleor/eslint-config-apps": "workspace:*",
-    "@saleor/typescript-config-apps": "workspace:*",
     "@types/node": "22.13.10",
     "eslint": "catalog:",
+    "next": "14.2.3",
     "typescript": "5.5.4"
   }
 }
