@@ -21,7 +21,8 @@
     "VERCEL_URL",
     "VERCEL",
     "NEXT_RUNTIME",
-    "REPOSITORY_URL"
+    "REPOSITORY_URL",
+    "PORT"
   ],
   "tasks": {
     "build": {
