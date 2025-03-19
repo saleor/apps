@@ -56,7 +56,6 @@ const nextConfig = {
       "@saleor/app-sdk",
       "@trpc/server",
       "@trpc/client",
-      "@trpc/react-query",
       "@trpc/next",
       "jotai",
       "@saleor/apps-shared",

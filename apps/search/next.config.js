@@ -23,7 +23,6 @@ const nextConfig = {
       "@saleor/app-sdk",
       "@trpc/server",
       "@trpc/client",
-      "@trpc/react-query",
       "@trpc/next",
       "@saleor/apps-shared",
     ],
