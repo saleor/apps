@@ -3,6 +3,8 @@ module.exports = {
   extends: ["@saleor/eslint-config-apps"],
   plugins: ["neverthrow", "node"],
   rules: {
+    "no-console": "error",
+    "@saleor/saleor-app/logger-leak": "error",
     "turbo/no-undeclared-env-vars": ["error"],
     "node/no-process-env": ["error"],
     "max-params": ["error", { max: 3 }],
