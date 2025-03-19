@@ -11,7 +11,7 @@
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@types/node": "22.13.10",
-    "next": "14.2.3"
+    "next": "15.2.3"
   },
   "peerDependencies": {
     "@saleor/app-sdk": "^0.52.0",
@@ -24,7 +24,7 @@
     "@trpc/react-query": "10.34.0",
     "@trpc/server": "10.34.0",
     "eslint": "catalog:",
-    "next": "14.2.3",
+    "next": "15.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "5.5.4"

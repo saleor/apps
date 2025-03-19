@@ -1,3 +1,4 @@
+import { WebApiHandler } from "@saleor/app-sdk/handlers/fetch-api";
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
@@ -26,7 +27,7 @@ export class AppMetadataCache {
     return store.metadata;
   }
 
-  async wrap(fn: (...args: unknown[]) => unknown) {
+  async wrap(fn: (...args: unknown[]) => any) {
     return this.als.run({ metadata: null }, fn);
   }
 
@@ -48,5 +49,14 @@ export const wrapWithMetadataCache = (cache: AppMetadataCache) => (handler: Next
     });
   };
 };
+
+export const wrapWithMetadataCacheAppRouter =
+  (cache: AppMetadataCache) => (handler: WebApiHandler) => {
+    return (req: Request) => {
+      return cache.wrap(() => {
+        return handler(req);
+      });
+    };
+  };
 
 export const metadataCache = new AppMetadataCache();
