@@ -13,7 +13,7 @@ describe("algoliaUtils", function () {
         "staging",
       );
 
-      expect(result).toEqual("staging.usd.USD.products");
+      expect(result).toStrictEqual("staging.usd.USD.products");
     });
 
     it("Creates proper index from channel and empty string prefix", () => {
@@ -24,7 +24,7 @@ describe("algoliaUtils", function () {
         "",
       );
 
-      expect(result).toEqual("usd.USD.products");
+      expect(result).toStrictEqual("usd.USD.products");
     });
 
     it("Creates proper index from channel and undefined prefix", () => {
@@ -35,7 +35,7 @@ describe("algoliaUtils", function () {
         undefined,
       );
 
-      expect(result).toEqual("usd.USD.products");
+      expect(result).toStrictEqual("usd.USD.products");
     });
   });
 

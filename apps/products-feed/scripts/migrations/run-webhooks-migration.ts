@@ -1,31 +1,31 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
-
 import * as dotenv from "dotenv";
 
-import { fetchCloudAplEnvs, verifyRequiredEnvs } from "./migration-utils";
+import { saleorApp } from "../../src/saleor-app";
+import { createMigrationScriptLogger } from "./migration-logger";
 import { updateWebhooksScript } from "./update-webhooks";
 
 dotenv.config();
 
+const logger = createMigrationScriptLogger("WebhooksMigrationScript");
+
 const runMigration = async () => {
-  console.log("Starting running migration");
+  logger.info("Starting running migration");
 
-  verifyRequiredEnvs();
+  logger.info("Envs verified, fetching envs");
 
-  console.log("Envs verified, fetching envs");
-
-  const allEnvs = await fetchCloudAplEnvs().catch((r) => {
-    console.error("Could not fetch instances from the APL");
-    console.error(r);
+  const allEnvs = await saleorApp.apl.getAll().catch((r) => {
+    logger.error("Could not fetch instances from the APL");
+    logger.error(r);
 
     process.exit(1);
   });
 
   for (const env of allEnvs) {
+    logger.info("Working on env: ", env.saleorApiUrl);
     await updateWebhooksScript({ authData: env, dryRun: false });
   }
 
-  console.log("Migration complete");
+  logger.info("Migration complete");
 };
 
 runMigration();

@@ -128,7 +128,7 @@ export class WebhookActivityTogglerService implements IWebhookActivityTogglerSer
   async enableOwnWebhooks() {
     const webhooksIds = await this.webhooksClient.fetchAppWebhooksIDs(this.ownAppId);
 
-    logger.info("Enabling own webhooks", { webhooksIds });
+    logger.info("Enabling own webhooks", { webhooksIds: webhooksIds });
 
     if (!webhooksIds) {
       throw new Error("Failed fetching webhooks");
