@@ -53,6 +53,7 @@
     "react-dom": "catalog:",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.43.9",
+    "urql": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

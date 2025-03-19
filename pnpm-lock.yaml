@@ -245,6 +245,9 @@ importers:
       ulid:
         specifier: 2.3.0
         version: 2.3.0
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -462,6 +465,9 @@ importers:
       strapi-sdk-js:
         specifier: 2.3.4
         version: 2.3.4
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -797,6 +803,9 @@ importers:
       react-is:
         specifier: ^18.2.0
         version: 18.2.0
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -972,6 +981,9 @@ importers:
       react-hook-form:
         specifier: ^7.43.9
         version: 7.44.3(react@18.2.0)
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       zod:
         specifier: 'catalog:'
         version: 3.21.4
@@ -1174,6 +1186,9 @@ importers:
       react-hook-form:
         specifier: ^7.43.9
         version: 7.44.3(react@18.2.0)
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1397,6 +1412,9 @@ importers:
       react-is:
         specifier: ^18.2.0
         version: 18.2.0
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
