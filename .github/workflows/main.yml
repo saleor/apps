@@ -16,6 +16,9 @@ jobs:
       APL: file
       MAILCHIMP_CLIENT_ID: "mocked"
       MAILCHIMP_CLIENT_SECRET: "mocked"
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      TURBO_REMOTE_ONLY: true
     steps:
       - uses: actions/checkout@v4
       - name: Setup PNPM
@@ -43,6 +46,9 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       HUSKY: 0
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      TURBO_REMOTE_ONLY: true
     steps:
       - uses: actions/checkout@v4
       - name: Setup PNPM
