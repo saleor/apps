@@ -1,7 +1,6 @@
 import {
   EncryptedMetadataManager,
   MetadataEntry,
-  MetadataManager,
   SettingsManager,
 } from "@saleor/app-sdk/settings-manager";
 import { Client, gql } from "urql";
@@ -107,7 +106,6 @@ async function updatePrivateMetadata(
 export class EncryptedMetadataManagerFactory {
   constructor(private encryptionKey: string) {
     if (!encryptionKey) {
-      console.error("Encryption key is required, will throw");
       throw new Error("Encryption key is required");
     }
   }
