@@ -85,7 +85,6 @@ export const createAppWebhook = ({
         throw new Error(response.error.message);
       }
 
-      console.log("create wh", response.data?.webhookCreate?.errors);
       const webhookCreateData = response.data?.webhookCreate?.webhook;
 
       if (!webhookCreateData) {

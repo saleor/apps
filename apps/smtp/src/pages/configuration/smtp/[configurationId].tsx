@@ -59,7 +59,7 @@ const EditSmtpConfigurationPage: NextPage = () => {
       enabled: !!configurationId,
       onSettled(data, error) {
         if (error) {
-          console.error("Could not fetch configuration data:", error);
+          notifyError("Could not fetch configuration data");
         }
         if (error?.data?.code === "NOT_FOUND" || !data) {
           notifyError("The requested configuration does not exist.");

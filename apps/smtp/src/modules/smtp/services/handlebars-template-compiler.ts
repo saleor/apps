@@ -41,7 +41,7 @@ export class HandlebarsTemplateCompiler implements ITemplateCompiler {
         template: htmlTemplate,
       });
     } catch (error) {
-      logger.error("Failed to compile template", { error });
+      logger.error("Failed to compile template", { error: error });
 
       return err(
         new HandlebarsTemplateCompiler.FailedCompileError("Failed to compile template", {

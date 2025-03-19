@@ -23,7 +23,7 @@ describe("FeatureFlagService", function () {
       .spyOn(fetchSaleorVersionExports, "fetchSaleorVersion")
       .mockResolvedValue("XXXX");
 
-    expect(await service.getSaleorVersion()).toEqual(passedVersion);
+    expect(await service.getSaleorVersion()).toStrictEqual(passedVersion);
     expect(versionFetchSpy).not.toHaveBeenCalled();
   });
 
@@ -38,11 +38,11 @@ describe("FeatureFlagService", function () {
       .spyOn(fetchSaleorVersionExports, "fetchSaleorVersion")
       .mockResolvedValue(fetchedVersion);
 
-    expect(await service.getSaleorVersion()).toEqual(fetchedVersion);
+    expect(await service.getSaleorVersion()).toStrictEqual(fetchedVersion);
     expect(versionFetchSpy).toHaveBeenCalledOnce();
 
     // Request version once again - should be cached
-    expect(await service.getSaleorVersion()).toEqual(fetchedVersion);
+    expect(await service.getSaleorVersion()).toStrictEqual(fetchedVersion);
     expect(versionFetchSpy).toHaveBeenCalledOnce();
   });
 });
