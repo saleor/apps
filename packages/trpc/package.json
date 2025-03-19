@@ -11,10 +11,9 @@
   "dependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-shared": "workspace:*",
-    "@trpc/client": "10.34.0",
-    "@trpc/next": "10.34.0",
-    "@trpc/react-query": "10.34.0",
-    "@trpc/server": "10.34.0",
+    "@trpc/client": "10.43.1",
+    "@trpc/next": "10.43.1",
+    "@trpc/server": "10.43.1",
     "next": "14.2.3"
   },
   "devDependencies": {
