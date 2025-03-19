@@ -18,7 +18,6 @@ export const createHttpBatchLink = (appBridgeInstance?: AppBridge) => {
       const { token, saleorApiUrl } = appBridgeInstance?.getState() || {};
 
       if (!token || !saleorApiUrl) {
-        console.error("Can't initialize tRPC client before establishing the App Bridge connection");
         throw new Error("Token and Saleor API URL unknown");
       }
       return {
