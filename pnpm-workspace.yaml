@@ -35,3 +35,4 @@ catalog:
   "@trpc/client": "10.43.1"
   "@trpc/next": "10.43.1"
   "@trpc/server": "10.43.1"
+  "@trpc/react-query": "10.43.1"

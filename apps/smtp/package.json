@@ -39,6 +39,7 @@
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "catalog:",
     "@trpc/next": "catalog:",
+    "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "@vercel/otel": "catalog:",
     "@vitejs/plugin-react": "4.3.1",

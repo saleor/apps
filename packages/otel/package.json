@@ -11,13 +11,11 @@
     "@opentelemetry/exporter-trace-otlp-http": "catalog:",
     "@opentelemetry/instrumentation-aws-sdk": "catalog:",
     "@opentelemetry/instrumentation-http": "catalog:",
-    "@opentelemetry/resources": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:"
   },
   "devDependencies": {
     "@opentelemetry/api": "catalog:",
-    "@opentelemetry/resources": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
@@ -31,7 +29,6 @@
   },
   "peerDependencies": {
     "@opentelemetry/api": "catalog:",
-    "@opentelemetry/resources": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "catalog:",
