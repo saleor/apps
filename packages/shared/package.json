@@ -16,8 +16,8 @@
     "@urql/exchange-auth": "2.1.4",
     "eslint": "catalog:",
     "next": "14.2.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "link:../../node_modules/react",
+    "react-dom": "link:../../node_modules/react-dom",
     "semver": "7.5.1",
     "urql": "4.0.4",
     "zod": "3.21.4"
