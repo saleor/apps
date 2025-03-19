@@ -32,3 +32,6 @@ catalog:
   "react-dom": "18.2.0"
   "@saleor/macaw-ui": "1.1.10"
   "zod": "3.21.4"
+  "@trpc/client": "10.43.1"
+  "@trpc/next": "10.43.1"
+  "@trpc/server": "10.43.1"

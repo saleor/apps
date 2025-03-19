@@ -51,6 +51,15 @@ catalogs:
     '@sentry/node':
       specifier: 7.117.0
       version: 7.117.0
+    '@trpc/client':
+      specifier: 10.43.1
+      version: 10.43.1
+    '@trpc/next':
+      specifier: 10.43.1
+      version: 10.43.1
+    '@trpc/server':
+      specifier: 10.43.1
+      version: 10.43.1
     '@vercel/otel':
       specifier: 1.10.1
       version: 1.10.1
@@ -186,13 +195,13 @@ importers:
         specifier: 0.11.1
         version: 0.11.1(typescript@5.5.4)(zod@3.21.4)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
       '@vercel/otel':
         specifier: 'catalog:'
@@ -412,13 +421,13 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
       '@vercel/otel':
         specifier: 'catalog:'
@@ -759,13 +768,13 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
       '@vercel/otel':
         specifier: 'catalog:'
@@ -940,13 +949,13 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
       '@vercel/otel':
         specifier: 'catalog:'
@@ -1136,13 +1145,13 @@ importers:
         specifier: 0.11.1
         version: 0.11.1(typescript@5.5.4)(zod@3.21.4)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
       '@vercel/otel':
         specifier: 'catalog:'
@@ -1350,13 +1359,13 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
       '@vercel/otel':
         specifier: 'catalog:'
@@ -1812,9 +1821,6 @@ importers:
 
   packages/trpc:
     dependencies:
-      '@types/node':
-        specifier: 22.13.10
-        version: 22.13.10
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
@@ -1838,17 +1844,20 @@ importers:
         specifier: workspace:*
         version: link:../typescript-config
       '@trpc/client':
-        specifier: 10.34.1
-        version: 10.34.1(@trpc/server@10.34.1)
+        specifier: 'catalog:'
+        version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.34.1
-        version: 10.34.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.1(@trpc/server@10.34.1))(@trpc/react-query@10.34.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.1(@trpc/server@10.34.1))(@trpc/server@10.34.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.34.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 'catalog:'
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.34.1
-        version: 10.34.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.1(@trpc/server@10.34.1))(@trpc/server@10.34.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: 10.43.1
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.34.1
-        version: 10.34.1
+        specifier: 'catalog:'
+        version: 10.43.1
+      '@types/node':
+        specifier: 22.13.10
+        version: 22.13.10
       next:
         specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -6573,26 +6582,10 @@ packages:
   '@total-typescript/ts-reset@0.6.1':
     resolution: {integrity: sha512-cka47fVSo6lfQDIATYqb/vO1nvFfbPw7uWLayIXIhGETj0wcOOlrlkobOMDNQOFr9QOafegUPq13V2+6vtD7yg==}
 
-  '@trpc/client@10.34.1':
-    resolution: {integrity: sha512-i1V+mv4RPLm/JM6g19NIt6UWw2LMtFdvgQq9J0oPYPpVDsqxXecCCMGJXjG0G5suNjyRwfjMMHbR9QGh2xTzYA==}
-    peerDependencies:
-      '@trpc/server': 10.34.1
-
   '@trpc/client@10.43.1':
     resolution: {integrity: sha512-pkPtbDS0ck/2WZo2cWaPV11NFMII2I/nzse1Ggs5Cr0YczsZk3Z0DM77Sfb9FTSjmccYfkEtumHqxfTj6fRbbg==}
     peerDependencies:
       '@trpc/server': 10.43.1
-
-  '@trpc/next@10.34.1':
-    resolution: {integrity: sha512-WP/xTefo/6bfZolt6/yaA7gP+AcOZpH7ZBn7gmX7ThO9cSlDiwajZijnqDbjIclMRpmdxUIkBG4fbFwYGAS9HA==}
-    peerDependencies:
-      '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.34.1
-      '@trpc/react-query': 10.34.1
-      '@trpc/server': 10.34.1
-      next: '*'
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
 
   '@trpc/next@10.43.1':
     resolution: {integrity: sha512-8Gmt5FaYR6Cb2KLPBUC3sc9xm2YOjJwJG+qUGZsmqnD0AstKr4D3K8dcrP+b7zjiyTIha2Lb3hGaXqyl1Z9X6g==}
@@ -6605,15 +6598,6 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@trpc/react-query@10.34.1':
-    resolution: {integrity: sha512-edUjmSXzkrUk6EcmqbkYveADELXJYlXWMXpyOeAA7X0Tni98OrmXzDB1owckm6JOaMNBVJJF9DTlprpA6lMSew==}
-    peerDependencies:
-      '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.34.1
-      '@trpc/server': 10.34.1
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-
   '@trpc/react-query@10.43.1':
     resolution: {integrity: sha512-H7icpfXRYdD8K7EFDozKxtTEkMyQNu4+KLHNiCHq5yan4le3dyhtDYJa+1ZR/0sZWV95siVa+CqcUQHs1Nwu+g==}
     peerDependencies:
@@ -6622,9 +6606,6 @@ packages:
       '@trpc/server': 10.43.1
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
-
-  '@trpc/server@10.34.1':
-    resolution: {integrity: sha512-56q2FSSz+AHSv5tQ5K0Z2B7ava1Qh38BRNkFp797WIiRKIJRWAyKAxrBp0WzrSA0olQn8lZVi0rLLvRvXXZFgQ==}
 
   '@trpc/server@10.43.1':
     resolution: {integrity: sha512-rKOSCpJOb1MdTyJFqdf3QNNESDfPkbP+yBOZBM2x6iIOS4VlCfJqxsaSrb3uLPR6s8Ni7DhTu+cu/q1r0xOGcw==}
@@ -20487,24 +20468,9 @@ snapshots:
 
   '@total-typescript/ts-reset@0.6.1': {}
 
-  '@trpc/client@10.34.1(@trpc/server@10.34.1)':
-    dependencies:
-      '@trpc/server': 10.34.1
-
   '@trpc/client@10.43.1(@trpc/server@10.43.1)':
     dependencies:
       '@trpc/server': 10.43.1
-
-  '@trpc/next@10.34.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.1(@trpc/server@10.34.1))(@trpc/react-query@10.34.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.1(@trpc/server@10.34.1))(@trpc/server@10.34.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.34.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/client': 10.34.1(@trpc/server@10.34.1)
-      '@trpc/react-query': 10.34.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.1(@trpc/server@10.34.1))(@trpc/server@10.34.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/server': 10.34.1
-      next: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-ssr-prepass: 1.5.0(react@18.2.0)
 
   '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -20517,14 +20483,6 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
 
-  '@trpc/react-query@10.34.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.1(@trpc/server@10.34.1))(@trpc/server@10.34.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/client': 10.34.1(@trpc/server@10.34.1)
-      '@trpc/server': 10.34.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
   '@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -20532,8 +20490,6 @@ snapshots:
       '@trpc/server': 10.43.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-
-  '@trpc/server@10.34.1': {}
 
   '@trpc/server@10.43.1': {}
 
