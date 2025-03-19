@@ -25,7 +25,7 @@ describe("SmtpMetadataManager", () => {
       const instance = new SmtpMetadataManager(metadataManager, SALEOR_API_URL);
       const result = await instance.getConfig().unwrapOr("error");
 
-      expect(result).toEqual({ key: "value" });
+      expect(result).toStrictEqual({ key: "value" });
     });
 
     it("raises error when pulling configuration exceeds the timeout", async () => {
