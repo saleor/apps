@@ -25,15 +25,16 @@
     "PORT"
   ],
   "tasks": {
+    "topo": {
+      "dependsOn": ["^topo"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", ".vercel/**", "!.next/cache/**"],
       "inputs": ["$TURBO_DEFAULT$", ".env"]
     },
     "check-types": {
-      "dependsOn": ["^check-types"],
-      "inputs": ["src"],
-      "outputs": []
+      "dependsOn": ["topo"]
     },
     "deploy": {
       "dependsOn": ["^build"],
@@ -46,12 +47,11 @@
       "persistent": true
     },
     "generate": {
+      "dependsOn": ["topo"],
       "outputs": ["generated/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"],
-      "inputs": ["src"],
-      "outputs": []
+      "dependsOn": ["topo"]
     },
     "start": {
       "dependsOn": ["^build", "^start"],
@@ -59,12 +59,12 @@
       "persistent": true
     },
     "test": {
-      "dependsOn": ["^test"],
+      "dependsOn": ["topo"],
       "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
       "outputs": []
     },
     "test:ci": {
-      "dependsOn": ["^test:ci"],
+      "dependsOn": ["topo"],
       "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
       "outputs": ["coverage/**"]
     }
