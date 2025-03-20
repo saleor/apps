@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { err, ok } from "neverthrow";
 
@@ -89,7 +89,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
     const addressPayload = this.getSaleorAddress(confirmedOrderEvent);
 
     if (addressPayload.isErr()) {
-      Sentry.captureException(addressPayload.error);
+      captureException(addressPayload.error);
       this.logger.error("Error while transforming OrderConfirmedPayload", {
         error: addressPayload.error,
       });

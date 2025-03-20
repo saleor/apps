@@ -1,6 +1,6 @@
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
-import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";
 
 import { createLogger } from "../../../logger";
@@ -18,7 +18,7 @@ const handler = trpcNext.createNextApiHandler({
   createContext: createTrpcContext,
   onError: ({ path, error }) => {
     if (error.code === "INTERNAL_SERVER_ERROR") {
-      Sentry.captureException(error);
+      captureException(error);
       logger.error(`${path} returned error:`, error);
       return;
     }
