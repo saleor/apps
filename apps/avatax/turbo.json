@@ -9,7 +9,6 @@
         "APL",
         "APP_API_BASE_URL",
         "APP_IFRAME_BASE_URL",
-        "APP_LOG_LEVEL",
         "AVATAX_CLIENT_TIMEOUT",
         "AWS_ACCESS_KEY_ID",
         "AWS_REGION",
@@ -19,17 +18,11 @@
         "FILE_APL_PATH",
         "MANIFEST_APP_ID",
         "NEXT_PUBLIC_SENTRY_DSN",
-        "NODE_ENV",
-        "OTEL_ENABLED",
-        "OTEL_SERVICE_NAME",
-        "PORT",
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_ORG",
-        "SENTRY_PROJECT",
-        "OTEL_ACCESS_TOKEN"
+        "SENTRY_PROJECT"
       ]
     },
     "e2e": {

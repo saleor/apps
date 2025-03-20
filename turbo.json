@@ -8,21 +8,22 @@
     "ENV",
     "GITHUB_SHA",
     "NEXT_RUNTIME",
+    "NEXT_RUNTIME",
     "NODE_ENV",
+    "OTEL_ACCESS_TOKEN",
     "OTEL_ENABLED",
     "OTEL_EXPORTER_OTLP_ENDPOINT",
     "OTEL_LOG_LEVEL",
     "OTEL_SERVICE_NAME",
     "OTEL_TRACES_SAMPLER_ARG",
     "OTEL_TRACES_SAMPLER",
+    "PORT",
     "REPOSITORY_URL",
+    "SENTRY_ORG",
     "VERCEL_ENV",
     "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
-    "VERCEL",
-    "NEXT_RUNTIME",
-    "REPOSITORY_URL",
-    "PORT"
+    "VERCEL"
   ],
   "tasks": {
     "topo": {
