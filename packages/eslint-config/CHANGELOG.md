@@ -1,5 +1,11 @@
 # @saleor/eslint-config-apps
 
+## 0.4.13
+
+### Patch Changes
+
+- da9899d5: Cleanup deps, peerDeps & devDependencies for package
+
 ## 0.4.12
 
 ### Patch Changes

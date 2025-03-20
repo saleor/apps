@@ -1,5 +1,11 @@
 # @saleor/e2e
 
+## 1.0.9
+
+### Patch Changes
+
+- da9899d5: Cleanup deps, peerDeps & devDependencies for package
+
 ## 1.0.8
 
 ### Patch Changes
