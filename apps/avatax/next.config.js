@@ -74,22 +74,11 @@ const nextConfig = {
     instrumentationHook: true,
   },
   /** @type {import('next').NextConfig['webpack']} */
-  webpack: (config, { isServer, webpack }) => {
+  webpack: (config, { isServer }) => {
     if (isServer) {
       // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
       config.ignoreWarnings = [{ module: /require-in-the-middle/ }];
     }
-
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/tree-shaking/#tree-shaking-with-nextjs
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        __SENTRY_DEBUG__: false,
-        __SENTRY_TRACING__: false,
-        __RRWEB_EXCLUDE_IFRAME__: true,
-        __RRWEB_EXCLUDE_SHADOW_DOM__: true,
-        __SENTRY_EXCLUDE_REPLAY_WORKER__: true,
-      }),
-    );
 
     return config;
   },
