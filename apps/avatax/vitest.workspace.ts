@@ -1,4 +1,3 @@
-/* eslint-disable import/no-default-export */
 import { defineWorkspace } from "vitest/config";
 
 export default defineWorkspace([
