@@ -8,32 +8,34 @@
     "ENV",
     "GITHUB_SHA",
     "NEXT_RUNTIME",
+    "NEXT_RUNTIME",
     "NODE_ENV",
+    "OTEL_ACCESS_TOKEN",
     "OTEL_ENABLED",
     "OTEL_EXPORTER_OTLP_ENDPOINT",
     "OTEL_LOG_LEVEL",
     "OTEL_SERVICE_NAME",
     "OTEL_TRACES_SAMPLER_ARG",
     "OTEL_TRACES_SAMPLER",
+    "PORT",
     "REPOSITORY_URL",
+    "SENTRY_ORG",
     "VERCEL_ENV",
     "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
-    "VERCEL",
-    "NEXT_RUNTIME",
-    "REPOSITORY_URL",
-    "PORT"
+    "VERCEL"
   ],
   "tasks": {
+    "topo": {
+      "dependsOn": ["^topo"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", ".vercel/**", "!.next/cache/**"],
       "inputs": ["$TURBO_DEFAULT$", ".env"]
     },
     "check-types": {
-      "dependsOn": ["^check-types"],
-      "inputs": ["src"],
-      "outputs": []
+      "dependsOn": ["topo"]
     },
     "deploy": {
       "dependsOn": ["^build"],
@@ -46,25 +48,19 @@
       "persistent": true
     },
     "generate": {
+      "dependsOn": ["topo"],
       "outputs": ["generated/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"],
-      "inputs": ["src"],
-      "outputs": []
+      "dependsOn": ["topo"]
     },
     "start": {
       "dependsOn": ["^build", "^start"],
       "cache": false,
       "persistent": true
     },
-    "test": {
-      "dependsOn": ["^test"],
-      "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
-      "outputs": []
-    },
     "test:ci": {
-      "dependsOn": ["^test:ci"],
+      "dependsOn": ["topo"],
       "inputs": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/*.spec.ts", "src/**/*.spec.tsx"],
       "outputs": ["coverage/**"]
     }
