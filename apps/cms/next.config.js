@@ -28,6 +28,7 @@ const nextConfig = () => {
       "@saleor/react-hook-form-macaw",
     ],
     experimental: {
+      optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
       bundlePagesExternals: true,
       instrumentationHook: true,
     },
@@ -42,22 +43,12 @@ const nextConfig = () => {
   };
 };
 
-const isSentryPropertiesInEnvironment =
-  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
-
-const configWithSentry = withSentryConfig(
-  nextConfig,
-  {
-    org: process.env.SENTRY_ORG,
-    project: process.env.SENTRY_PROJECT,
-    silent: true,
-  },
-  {
-    hideSourceMaps: true,
-    widenClientFileUpload: true,
-    disableLogger: true,
-    tunnelRoute: "/monitoring",
-  },
-);
-
-export default isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
+// Make sure to export sentry config as the last one - https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#apply-instrumentation-to-your-app
+export default withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: true,
+  disableLogger: true,
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+});

@@ -1,5 +1,5 @@
 import { ApiError, buildClient, Client, SimpleSchemaTypes } from "@datocms/cma-client-browser";
-import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { z } from "zod";
 
 import { createLogger } from "@/logger";
@@ -201,7 +201,7 @@ export class DatoCMSClient {
         }
       } catch (e) {
         this.logger.error("Invalid error shape from DatoCMS", { error: err });
-        Sentry.captureException("Invalid error shape from DatoCMS", (c) => {
+        captureException("Invalid error shape from DatoCMS", (c) => {
           return c.setExtra("error", err);
         });
 

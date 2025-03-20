@@ -1,7 +1,7 @@
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
-import * as Sentry from "@sentry/node";
+import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
 
@@ -16,9 +16,9 @@ const logger = createMigrationScriptLogger("WebhooksMigrationScript");
 
 Sentry.init({
   dsn: env.NEXT_PUBLIC_SENTRY_DSN,
-  enableTracing: false,
   environment: env.ENV,
   includeLocalVariables: true,
+  skipOpenTelemetrySetup: true,
   ignoreErrors: [],
   integrations: [],
 });

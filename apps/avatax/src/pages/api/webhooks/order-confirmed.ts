@@ -3,8 +3,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
-import * as Sentry from "@sentry/nextjs";
-import { captureException } from "@sentry/nextjs";
+import { captureException, setTag } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
@@ -87,7 +86,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
       const { saleorApiUrl, token } = authData;
 
       if (payload.version) {
-        Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, payload.version);
       }
@@ -99,7 +98,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         const error = confirmedOrderFromPayload.error;
 
         // Capture error when there is problem with parsing webhook payload - it should not happen
-        Sentry.captureException(error);
+        captureException(error);
         logger.error("Error parsing webhook payload into Saleor order", { error });
 
         OrderConfirmedLogRequest.createErrorLog({
@@ -353,7 +352,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
               });
             }
           }
-          Sentry.captureException(error);
+          captureException(error);
           logger.error("Unhandled error executing webhook", { error: error });
 
           OrderConfirmedLogRequest.createErrorLog({
@@ -374,7 +373,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         }
       } catch (error) {
         span.recordException(error as Error);
-        Sentry.captureException(error);
+        captureException(error);
         logger.error("Unhandled error executing webhook", { error: error });
 
         OrderConfirmedLogRequest.createErrorLog({

@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { LineItemModel } from "avatax/lib/models/LineItemModel";
 import Decimal from "decimal.js-light";
 
@@ -56,7 +56,7 @@ export class AvataxCalculateTaxesPayloadLinesTransformer {
         .toNumber();
 
       if (shippingAmountMinusDiscounts < 0) {
-        Sentry.captureException(
+        captureException(
           new Error("Saleor returned shipping discounts with higher values than shipping amount"),
         );
       }

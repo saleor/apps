@@ -2,8 +2,7 @@ import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
-import * as Sentry from "@sentry/nextjs";
-import { captureException } from "@sentry/nextjs";
+import { captureException, setTag } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
@@ -54,7 +53,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
       subscriptionErrorChecker.checkPayload(payload);
 
       if (payload.version) {
-        Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, payload.version);
       }
@@ -70,7 +69,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
         switch (true) {
           case error instanceof OrderCancelPayloadOrderError: {
             logger.error("Insufficient order data", { error });
-            Sentry.captureException("Insufficient order data");
+            captureException("Insufficient order data");
 
             OrderCancelledLogRequest.createErrorLog({
               sourceId: payload.order?.id,
@@ -116,7 +115,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
           }
           case error instanceof SaleorCancelledOrderEvent.ParsingError: {
             logger.error("Error parsing order payload", { error });
-            Sentry.captureException(error);
+            captureException(error);
 
             OrderCancelledLogRequest.createErrorLog({
               sourceId: payload.order?.id,
@@ -138,7 +137,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
           }
           default: {
             logger.error("Unhandled error", { error });
-            Sentry.captureException(error);
+            captureException(error);
 
             OrderCancelledLogRequest.createErrorLog({
               sourceId: payload.order?.id,
