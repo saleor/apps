@@ -87,16 +87,12 @@ const configWithBundleAnalyzer = withBundleAnalyzerConfig({
   enabled: process.env.ANALYZE_BUNDLE === "true",
 })(nextConfig);
 
-const isSentryPropertiesInEnvironment = process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
-
 // Make sure to export sentry config as the last one - https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#apply-instrumentation-to-your-app
-export default isSentryPropertiesInEnvironment
-  ? withSentryConfig(configWithBundleAnalyzer, {
-      org: process.env.SENTRY_ORG,
-      project: process.env.SENTRY_PROJECT,
-      silent: true,
-      disableLogger: true,
-      widenClientFileUpload: true,
-      tunnelRoute: "/monitoring",
-    })
-  : configWithBundleAnalyzer;
+export default withSentryConfig(configWithBundleAnalyzer, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: true,
+  disableLogger: true,
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+});
