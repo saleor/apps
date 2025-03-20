@@ -4,23 +4,16 @@
   "tasks": {
     "deploy": {
       "env": [
-        "APL",
-        "APP_DEBUG",
-        "NODE_ENV",
-        "SECRET_KEY",
         "ALLOWED_DOMAIN_PATTERN",
+        "APL",
+        "APP_API_BASE_URL",
+        "APP_IFRAME_BASE_URL",
+        "NEXT_PUBLIC_SENTRY_DSN",
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
-        "NEXT_PUBLIC_VERCEL_ENV",
-        "APP_IFRAME_BASE_URL",
-        "APP_API_BASE_URL",
-        "VERCEL_URL",
-        "PORT",
+        "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT",
-        "SENTRY_ORG",
-        "NEXT_PUBLIC_SENTRY_DSN",
-        "OTEL_ACCESS_TOKEN"
+        "SENTRY_PROJECT"
       ]
     }
   }
