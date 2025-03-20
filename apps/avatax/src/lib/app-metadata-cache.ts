@@ -1,7 +1,8 @@
-import { WebApiHandler } from "@saleor/app-sdk/handlers/fetch-api";
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 
+import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import { NextRequest } from "next/server";
 import { MetadataItem } from "../../generated/graphql";
 import { createLogger } from "../logger";
 
@@ -51,8 +52,8 @@ export const wrapWithMetadataCache = (cache: AppMetadataCache) => (handler: Next
 };
 
 export const wrapWithMetadataCacheAppRouter =
-  (cache: AppMetadataCache) => (handler: WebApiHandler) => {
-    return (req: Request) => {
+  (cache: AppMetadataCache) => (handler: NextAppRouterHandler) => {
+    return (req: NextRequest) => {
       return cache.wrap(() => {
         return handler(req);
       });

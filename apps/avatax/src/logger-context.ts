@@ -1,7 +1,8 @@
-import { WebApiHandler } from "@saleor/app-sdk/handlers/fetch-api";
+import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/headers";
 import { LoggerContext, wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { NextApiHandler } from "next";
+import { NextRequest } from "next/server";
 
 /**
  * Server-side only
@@ -12,8 +13,8 @@ export const withLoggerContext = (handler: NextApiHandler) => {
   return wrapWithLoggerContext(handler, loggerContext);
 };
 
-export const withLoggerContextAppRouter = (handler: WebApiHandler) => {
-  return (req: Request) => {
+export const withLoggerContextAppRouter = (handler: NextAppRouterHandler) => {
+  return (req: NextRequest) => {
     return loggerContext.wrap(() => {
       const saleorApiUrl = req.headers.get(SALEOR_API_URL_HEADER);
       const saleorEvent = req.headers.get(SALEOR_EVENT_HEADER);
