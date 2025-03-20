@@ -3,7 +3,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
-import * as Sentry from "@sentry/nextjs";
+import { captureException, setTag } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
@@ -36,10 +36,7 @@ export const config = {
 const logger = createLogger("orderConfirmedAsyncWebhook");
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
-const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(
-  logger,
-  Sentry.captureException,
-);
+const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 const discountsStrategy = new PriceReductionDiscountsStrategy();
 
 const logsWriterFactory = new LogWriterFactory();
@@ -89,7 +86,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
       const { saleorApiUrl, token } = authData;
 
       if (payload.version) {
-        Sentry.setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
+        setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, payload.version);
       }
@@ -101,7 +98,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         const error = confirmedOrderFromPayload.error;
 
         // Capture error when there is problem with parsing webhook payload - it should not happen
-        Sentry.captureException(error);
+        captureException(error);
         logger.error("Error parsing webhook payload into Saleor order", { error });
 
         OrderConfirmedLogRequest.createErrorLog({
@@ -109,7 +106,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           channelId: payload.order?.channel.id,
           errorReason: "Error parsing Saleor event payload",
         })
-          .mapErr(Sentry.captureException)
+          .mapErr(captureException)
           .map(logWriter.writeLog);
 
         span.recordException(error);
@@ -140,7 +137,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             channelId: payload.order?.channel.id,
             errorReason: "Order already fulfilled",
           })
-            .mapErr(Sentry.captureException)
+            .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
@@ -162,7 +159,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             channelId: payload.order?.channel.id,
             errorReason: "Order has flat tax rates strategy",
           })
-            .mapErr(Sentry.captureException)
+            .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
@@ -189,7 +186,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
                 confirmedOrderEvent.getChannelSlug(),
               );
             } catch (e) {
-              Sentry.captureException(
+              captureException(
                 new AppConfigExtractor.LogConfigurationMetricError(
                   "Failed to log configuration metric",
                   {
@@ -208,7 +205,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             channelId: payload.order?.channel.id,
             errorReason: "Cannot get app configuration",
           })
-            .mapErr(Sentry.captureException)
+            .mapErr(captureException)
             .map(logWriter.writeLog);
 
           logger.warn("Failed to extract app config from metadata", { error: config.error });
@@ -239,7 +236,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             channelId: payload.order?.channel.id,
             errorReason: "Invalid app configuration",
           })
-            .mapErr(Sentry.captureException)
+            .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.recordException(providerConfig.error);
@@ -282,7 +279,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             channelId: payload.order?.channel.id,
             avataxId: confirmedOrder.id,
           })
-            .mapErr(Sentry.captureException)
+            .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
@@ -303,7 +300,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
                 channelId: payload.order?.channel.id,
                 errorReason: "Invalid webhook payload",
               })
-                .mapErr(Sentry.captureException)
+                .mapErr(captureException)
                 .map(logWriter.writeLog);
 
               span.setStatus({
@@ -322,7 +319,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
                 channelId: payload.order?.channel.id,
                 errorReason: "Invalid address",
               })
-                .mapErr(Sentry.captureException)
+                .mapErr(captureException)
                 .map(logWriter.writeLog);
 
               span.setStatus({
@@ -341,7 +338,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
                 channelId: payload.order?.channel.id,
                 errorReason: "Entity not found",
               })
-                .mapErr(Sentry.captureException)
+                .mapErr(captureException)
                 .map(logWriter.writeLog);
 
               span.setStatus({
@@ -355,7 +352,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
               });
             }
           }
-          Sentry.captureException(error);
+          captureException(error);
           logger.error("Unhandled error executing webhook", { error: error });
 
           OrderConfirmedLogRequest.createErrorLog({
@@ -363,7 +360,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
             channelId: payload.order?.channel.id,
             errorReason: "Unhandled error",
           })
-            .mapErr(Sentry.captureException)
+            .mapErr(captureException)
             .map(logWriter.writeLog);
 
           span.setStatus({
@@ -376,7 +373,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         }
       } catch (error) {
         span.recordException(error as Error);
-        Sentry.captureException(error);
+        captureException(error);
         logger.error("Unhandled error executing webhook", { error: error });
 
         OrderConfirmedLogRequest.createErrorLog({
@@ -384,7 +381,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           channelId: payload.order?.channel.id,
           errorReason: "Unhandled error",
         })
-          .mapErr(Sentry.captureException)
+          .mapErr(captureException)
           .map(logWriter.writeLog);
 
         span.setStatus({

@@ -1,6 +1,6 @@
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";
 
 import { loggerContext } from "@/logger-context";
@@ -14,7 +14,7 @@ export default wrapWithLoggerContext(
       createContext: createTrpcContext,
       onError: ({ error }) => {
         if (error.code === "INTERNAL_SERVER_ERROR") {
-          Sentry.captureException(error);
+          captureException(error);
           return;
         }
       },
