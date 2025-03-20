@@ -20,10 +20,9 @@ module.exports = {
   rules: {
     /**
      * In case of more than 3 args, ensure object param is introduced.
-     * This should be error once fixed in the codebase
      */
     "max-params": [
-      "warn",
+      "error",
       {
         max: 3,
       },
@@ -38,13 +37,12 @@ module.exports = {
     "@next/next/no-html-link-for-pages": "off",
     "react/jsx-key": "off",
     "newline-after-var": "warn",
-    "@vitest/prefer-strict-equal": "warn",
-    "@vitest/prefer-vi-mocked": "warn",
+    "@vitest/prefer-strict-equal": "error",
+    "@vitest/prefer-vi-mocked": "error",
     "multiline-comment-style": ["warn", "starred-block"],
-    "no-restricted-imports": [
-      "error",
-      { name: "@saleor/apps-logger", message: "Use your app logger directly" },
-    ],
+    "@saleor/saleor-app/logger-leak": "error",
+    "turbo/no-undeclared-env-vars": "error",
+    "no-console": "error",
   },
   parserOptions: {
     babelOptions: {
@@ -53,19 +51,15 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["src/pages/**/*", "src/pages/api/**/*", "vitest.config.ts", "generated/graphql.ts"],
-      rules: {
-        "import/no-default-export": "off",
-      },
-    },
-    {
-      files: ["src/logger.ts"],
-      rules: {
-        "no-restricted-imports": "off",
-      },
-    },
-    {
-      files: ["next.config.js"],
+      files: [
+        "src/pages/**/*",
+        "src/pages/api/**/*",
+        "vitest.config.ts",
+        "generated/graphql.ts",
+        "next.config.js",
+        "vitest.workspace.ts",
+        "playwright.config.ts",
+      ],
       rules: {
         "import/no-default-export": "off",
       },
