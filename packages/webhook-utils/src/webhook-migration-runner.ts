@@ -82,7 +82,7 @@ export class WebhookMigrationRunner {
         default:
           logger.error(
             `Migration finished with error for ${saleorApiUrl} while running migrations`,
-            { error },
+            { error: error },
           );
           throw error;
       }
