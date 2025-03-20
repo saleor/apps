@@ -36,6 +36,12 @@ catalogs:
     '@opentelemetry/semantic-conventions':
       specifier: 1.30.0
       version: 1.30.0
+    '@saleor/app-sdk':
+      specifier: 0.52.0
+      version: 0.52.0
+    '@saleor/macaw-ui':
+      specifier: 1.1.10
+      version: 1.1.10
     '@sentry/cli':
       specifier: 2.32.1
       version: 2.32.1
@@ -45,12 +51,39 @@ catalogs:
     '@sentry/node':
       specifier: 7.117.0
       version: 7.117.0
+    '@trpc/client':
+      specifier: 10.43.1
+      version: 10.43.1
+    '@trpc/next':
+      specifier: 10.43.1
+      version: 10.43.1
+    '@trpc/react-query':
+      specifier: 10.43.1
+      version: 10.43.1
+    '@trpc/server':
+      specifier: 10.43.1
+      version: 10.43.1
     '@vercel/otel':
       specifier: 1.10.1
       version: 1.10.1
     eslint:
       specifier: 8.57.0
       version: 8.57.0
+    next:
+      specifier: 14.2.3
+      version: 14.2.3
+    react:
+      specifier: 18.2.0
+      version: 18.2.0
+    react-dom:
+      specifier: 18.2.0
+      version: 18.2.0
+    urql:
+      specifier: 4.0.4
+      version: 4.0.4
+    zod:
+      specifier: 3.21.4
+      version: 3.21.4
 
 importers:
 
@@ -60,7 +93,7 @@ importers:
         specifier: ^2.26.2
         version: 2.26.2
       '@saleor/app-sdk':
-        specifier: 0.52.0
+        specifier: 'catalog:'
         version: 0.52.0(graphql@16.7.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       cspell:
         specifier: 8.15.2
@@ -110,9 +143,6 @@ importers:
       '@opentelemetry/api-logs':
         specifier: 'catalog:'
         version: 0.57.2
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: 'catalog:'
-        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation':
         specifier: 'catalog:'
         version: 0.57.2(@opentelemetry/api@1.9.0)
@@ -144,7 +174,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
@@ -168,17 +198,17 @@ importers:
         specifier: 0.11.1
         version: 0.11.1(typescript@5.5.4)(zod@3.21.4)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@trpc/react-query':
+        specifier: 'catalog:'
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
-      '@urql/exchange-auth':
-        specifier: 2.1.4
-        version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
         specifier: 'catalog:'
         version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
@@ -216,13 +246,13 @@ importers:
         specifier: 6.2.1
         version: 6.2.1
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-hook-form:
         specifier: ^7.43.9
@@ -231,13 +261,13 @@ importers:
         specifier: 2.3.0
         version: 2.3.0
       urql:
-        specifier: 4.0.4
+        specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       zod:
-        specifier: 3.21.4
+        specifier: 'catalog:'
         version: 3.21.4
     devDependencies:
       '@faker-js/faker':
@@ -348,9 +378,6 @@ importers:
       '@opentelemetry/api-logs':
         specifier: 'catalog:'
         version: 0.57.2
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: 'catalog:'
-        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation':
         specifier: 'catalog:'
         version: 0.57.2(@opentelemetry/api@1.9.0)
@@ -382,7 +409,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
@@ -400,20 +427,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
-      '@urql/exchange-auth':
-        specifier: 2.1.4
-        version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
         specifier: 'catalog:'
         version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
@@ -436,7 +460,7 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       p-ratelimit:
         specifier: 1.0.1
@@ -445,10 +469,10 @@ importers:
         specifier: 6.11.2
         version: 6.11.2
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-error-boundary:
         specifier: 4.0.10
@@ -460,7 +484,7 @@ importers:
         specifier: 2.3.4
         version: 2.3.4
       urql:
-        specifier: 4.0.4
+        specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -472,7 +496,7 @@ importers:
         specifier: 1.6.0
         version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
       zod:
-        specifier: 3.21.4
+        specifier: 'catalog:'
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
@@ -541,9 +565,6 @@ importers:
       '@opentelemetry/api-logs':
         specifier: 'catalog:'
         version: 0.57.2
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: 'catalog:'
-        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation':
         specifier: 'catalog:'
         version: 0.57.2(@opentelemetry/api@1.9.0)
@@ -575,7 +596,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/sentry-utils':
         specifier: workspace:*
@@ -586,9 +607,6 @@ importers:
       '@sentry/nextjs':
         specifier: 'catalog:'
         version: 7.117.0(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
-      '@urql/exchange-auth':
-        specifier: 2.1.4
-        version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
         specifier: 'catalog:'
         version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
@@ -602,22 +620,22 @@ importers:
         specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       node-fetch:
         specifier: ^3.2.6
         version: 3.2.6
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-helmet:
         specifier: ^6.1.0
         version: 6.1.0(react@18.2.0)
       urql:
-        specifier: 4.0.4
+        specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -628,6 +646,9 @@ importers:
       vitest:
         specifier: 1.6.0
         version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
+      zod:
+        specifier: 'catalog:'
+        version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
@@ -704,9 +725,6 @@ importers:
       '@opentelemetry/api-logs':
         specifier: 'catalog:'
         version: 0.57.2
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: 'catalog:'
-        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation':
         specifier: 'catalog:'
         version: 0.57.2(@opentelemetry/api@1.9.0)
@@ -738,7 +756,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
@@ -759,20 +777,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
-      '@urql/exchange-auth':
-        specifier: 2.1.4
-        version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
         specifier: 'catalog:'
         version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
@@ -798,13 +813,13 @@ importers:
         specifier: ^20.0.3
         version: 20.0.3
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-hook-form:
         specifier: ^7.43.9
@@ -813,7 +828,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       urql:
-        specifier: 4.0.4
+        specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -825,7 +840,7 @@ importers:
         specifier: 1.6.0
         version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
       zod:
-        specifier: 3.21.4
+        specifier: 'catalog:'
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
@@ -894,9 +909,6 @@ importers:
       '@opentelemetry/api-logs':
         specifier: 'catalog:'
         version: 0.57.2
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: 'catalog:'
-        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation':
         specifier: 'catalog:'
         version: 0.57.2(@opentelemetry/api@1.9.0)
@@ -928,7 +940,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
@@ -949,20 +961,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
-      '@urql/exchange-auth':
-        specifier: 2.1.4
-        version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
         specifier: 'catalog:'
         version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
@@ -985,13 +994,13 @@ importers:
         specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-helmet:
         specifier: ^6.1.0
@@ -1000,10 +1009,10 @@ importers:
         specifier: ^7.43.9
         version: 7.44.3(react@18.2.0)
       urql:
-        specifier: 4.0.4
+        specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       zod:
-        specifier: 3.21.4
+        specifier: 'catalog:'
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
@@ -1093,9 +1102,6 @@ importers:
       '@opentelemetry/api-logs':
         specifier: 'catalog:'
         version: 0.57.2
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: 'catalog:'
-        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation':
         specifier: 'catalog:'
         version: 0.57.2(@opentelemetry/api@1.9.0)
@@ -1127,7 +1133,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
@@ -1154,17 +1160,17 @@ importers:
         specifier: 0.11.1
         version: 0.11.1(typescript@5.5.4)(zod@3.21.4)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@trpc/react-query':
+        specifier: 'catalog:'
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
-      '@urql/exchange-auth':
-        specifier: 2.1.4
-        version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
         specifier: 'catalog:'
         version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
@@ -1196,13 +1202,13 @@ importers:
         specifier: 6.2.1
         version: 6.2.1
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-error-boundary:
         specifier: 4.0.10
@@ -1211,7 +1217,7 @@ importers:
         specifier: ^7.43.9
         version: 7.44.3(react@18.2.0)
       urql:
-        specifier: 4.0.4
+        specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -1220,7 +1226,7 @@ importers:
         specifier: 11.0.4
         version: 11.0.4
       zod:
-        specifier: 3.21.4
+        specifier: 'catalog:'
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
@@ -1322,9 +1328,6 @@ importers:
       '@opentelemetry/api-logs':
         specifier: 'catalog:'
         version: 0.57.2
-      '@opentelemetry/exporter-trace-otlp-http':
-        specifier: 'catalog:'
-        version: 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation':
         specifier: 'catalog:'
         version: 0.57.2(@opentelemetry/api@1.9.0)
@@ -1356,7 +1359,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/ui
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
@@ -1374,20 +1377,17 @@ importers:
         specifier: 4.29.19
         version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@trpc/server@10.43.1)
       '@trpc/next':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/react-query':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/server':
-        specifier: 10.43.1
+        specifier: 'catalog:'
         version: 10.43.1
-      '@urql/exchange-auth':
-        specifier: 2.1.4
-        version: 2.1.4(graphql@16.7.1)
       '@vercel/otel':
         specifier: 'catalog:'
         version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
@@ -1428,16 +1428,16 @@ importers:
         specifier: 6.2.1
         version: 6.2.1
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-hook-form:
         specifier: ^7.43.9
@@ -1446,7 +1446,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       urql:
-        specifier: 4.0.4
+        specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
         specifier: ^2.9.1
@@ -1458,7 +1458,7 @@ importers:
         specifier: 1.6.0
         version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
       zod:
-        specifier: 3.21.4
+        specifier: 'catalog:'
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
@@ -1558,7 +1558,7 @@ importers:
         specifier: 5.5.4
         version: 5.5.4
       zod:
-        specifier: 3.21.4
+        specifier: 'catalog:'
         version: 3.21.4
 
   packages/eslint-config:
@@ -1593,25 +1593,22 @@ importers:
       eslint-plugin-simple-import-sort:
         specifier: 12.1.1
         version: 12.1.1(eslint@8.57.0)
-      next:
-        specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
 
   packages/logger:
     dependencies:
-      '@opentelemetry/api':
-        specifier: 'catalog:'
-        version: 1.9.0
-      next:
-        specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      modern-errors:
+        specifier: 7.0.1
+        version: 7.0.1
+      modern-errors-serialize:
+        specifier: 6.1.0
+        version: 6.1.0(modern-errors@7.0.1)
       tslog:
         specifier: 4.9.2
         version: 4.9.2
     devDependencies:
+      '@opentelemetry/api':
+        specifier: 'catalog:'
+        version: 1.9.0
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
@@ -1630,12 +1627,9 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
-      modern-errors:
-        specifier: 7.0.1
-        version: 7.0.1
-      modern-errors-serialize:
-        specifier: 6.1.0
-        version: 6.1.0(modern-errors@7.0.1)
+      next:
+        specifier: 'catalog:'
+        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 5.5.4
         version: 5.5.4
@@ -1648,9 +1642,6 @@ importers:
 
   packages/otel:
     dependencies:
-      '@opentelemetry/api':
-        specifier: 'catalog:'
-        version: 1.9.0
       '@opentelemetry/exporter-trace-otlp-http':
         specifier: 'catalog:'
         version: 0.57.2(@opentelemetry/api@1.9.0)
@@ -1660,25 +1651,19 @@ importers:
       '@opentelemetry/instrumentation-http':
         specifier: 'catalog:'
         version: 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/resources':
-        specifier: 'catalog:'
-        version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-trace-node':
         specifier: 'catalog:'
         version: 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
         specifier: 'catalog:'
         version: 1.30.0
+    devDependencies:
+      '@opentelemetry/api':
+        specifier: 'catalog:'
+        version: 1.9.0
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
-      next:
-        specifier: 14.2.3
-        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      urql:
-        specifier: 4.0.4
-        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
-    devDependencies:
       '@saleor/eslint-config-apps':
         specifier: workspace:*
         version: link:../eslint-config
@@ -1691,9 +1676,15 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 8.57.0
+      next:
+        specifier: 'catalog:'
+        version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
         specifier: 5.5.4
         version: 5.5.4
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
 
   packages/react-hook-form-macaw:
     devDependencies:
@@ -1704,7 +1695,7 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
@@ -1746,10 +1737,10 @@ importers:
         specifier: 'catalog:'
         version: 8.57.0
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-hook-form:
         specifier: ^7.43.9
@@ -1796,6 +1787,9 @@ importers:
       semver:
         specifier: 7.5.1
         version: 7.5.1
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
     devDependencies:
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
@@ -1804,7 +1798,7 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
@@ -1822,20 +1816,17 @@ importers:
         specifier: 1.6.0
         version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       typescript:
         specifier: 5.5.4
         version: 5.5.4
-      urql:
-        specifier: 4.0.4
-        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       vite:
         specifier: 5.3.3
         version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
@@ -1843,11 +1834,24 @@ importers:
         specifier: 1.6.0
         version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
       zod:
-        specifier: 3.21.4
+        specifier: 'catalog:'
         version: 3.21.4
 
   packages/trpc:
     dependencies:
+      eslint:
+        specifier: 'catalog:'
+        version: 8.57.0
+      react:
+        specifier: 'catalog:'
+        version: 18.2.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
+    devDependencies:
+      '@saleor/app-sdk':
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/apps-shared':
         specifier: workspace:*
         version: link:../shared
@@ -1857,43 +1861,27 @@ importers:
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
-      '@tanstack/react-query':
-        specifier: 4.29.19
-        version: 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@trpc/client':
-        specifier: 10.34.0
-        version: 10.34.0(@trpc/server@10.34.0)
-      '@trpc/next':
-        specifier: 10.34.0
-        version: 10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/react-query@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.34.0)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/react-query':
-        specifier: 10.34.0
-        version: 10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/server':
-        specifier: 10.34.0
-        version: 10.34.0
-      eslint:
         specifier: 'catalog:'
-        version: 8.57.0
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
-      typescript:
-        specifier: 5.5.4
-        version: 5.5.4
-    devDependencies:
-      '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
+        version: 10.43.1(@trpc/server@10.43.1)
+      '@trpc/next':
+        specifier: 'catalog:'
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@trpc/react-query':
+        specifier: 'catalog:'
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@trpc/server':
+        specifier: 'catalog:'
+        version: 10.43.1
       '@types/node':
         specifier: 22.13.10
         version: 22.13.10
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      typescript:
+        specifier: 5.5.4
+        version: 5.5.4
 
   packages/typescript-config: {}
 
@@ -1906,7 +1894,7 @@ importers:
         specifier: workspace:*
         version: link:../eslint-config
       '@saleor/macaw-ui':
-        specifier: 1.1.10
+        specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
@@ -1921,13 +1909,13 @@ importers:
         specifier: 'catalog:'
         version: 8.57.0
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0
       react-dom:
-        specifier: 18.2.0
+        specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       typescript:
         specifier: 5.5.4
@@ -1935,15 +1923,6 @@ importers:
 
   packages/webhook-utils:
     dependencies:
-      '@saleor/app-sdk':
-        specifier: link:../../node_modules/@saleor/app-sdk
-        version: link:../../node_modules/@saleor/app-sdk
-      '@urql/exchange-auth':
-        specifier: 2.1.4
-        version: 2.1.4(graphql@16.7.1)
-      eslint:
-        specifier: 'catalog:'
-        version: 8.57.0
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -1957,14 +1936,11 @@ importers:
         specifier: 6.1.0
         version: 6.1.0(modern-errors@7.0.1)
       next:
-        specifier: 14.2.3
+        specifier: 'catalog:'
         version: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       semver:
         specifier: 7.5.1
         version: 7.5.1
-      urql:
-        specifier: 4.0.4
-        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
     devDependencies:
       '@graphql-codegen/cli':
         specifier: 5.0.2
@@ -1984,6 +1960,9 @@ importers:
       '@graphql-typed-document-node/core':
         specifier: 3.2.0
         version: 3.2.0(graphql@16.7.1)
+      '@saleor/app-sdk':
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
       '@saleor/eslint-config-apps':
         specifier: workspace:*
         version: link:../eslint-config
@@ -1996,12 +1975,18 @@ importers:
       '@vitest/coverage-v8':
         specifier: 1.6.0
         version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
+      eslint:
+        specifier: 'catalog:'
+        version: 8.57.0
       graphql-config:
         specifier: 5.0.3
         version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.5.4)
       typescript:
         specifier: 5.5.4
         version: 5.5.4
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       vite:
         specifier: 5.3.3
         version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
@@ -6615,26 +6600,10 @@ packages:
   '@total-typescript/ts-reset@0.6.1':
     resolution: {integrity: sha512-cka47fVSo6lfQDIATYqb/vO1nvFfbPw7uWLayIXIhGETj0wcOOlrlkobOMDNQOFr9QOafegUPq13V2+6vtD7yg==}
 
-  '@trpc/client@10.34.0':
-    resolution: {integrity: sha512-nqtDTIqSY/9syo2EjSy4WWWXPU9GsamEh9Tsg698gLAh1nhgFc5+/YYeb+Ne1pbvWGZ5/3t9Dcz3h4wMyyJ9gQ==}
-    peerDependencies:
-      '@trpc/server': 10.34.0
-
   '@trpc/client@10.43.1':
     resolution: {integrity: sha512-pkPtbDS0ck/2WZo2cWaPV11NFMII2I/nzse1Ggs5Cr0YczsZk3Z0DM77Sfb9FTSjmccYfkEtumHqxfTj6fRbbg==}
     peerDependencies:
       '@trpc/server': 10.43.1
-
-  '@trpc/next@10.34.0':
-    resolution: {integrity: sha512-8jQPedVkCYCAG6PXDEumG5ILeD1aYVC6/aApk5Y96eeqnmAtX7TO9grVRfGGNaISuTtJ/oIDmRfSRqo1eOU4OA==}
-    peerDependencies:
-      '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.34.0
-      '@trpc/react-query': 10.34.0
-      '@trpc/server': 10.34.0
-      next: '*'
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
 
   '@trpc/next@10.43.1':
     resolution: {integrity: sha512-8Gmt5FaYR6Cb2KLPBUC3sc9xm2YOjJwJG+qUGZsmqnD0AstKr4D3K8dcrP+b7zjiyTIha2Lb3hGaXqyl1Z9X6g==}
@@ -6647,15 +6616,6 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@trpc/react-query@10.34.0':
-    resolution: {integrity: sha512-dnp7CmCBXwBgd8nAjMoHWMJwQrvAzjP+f8EXKfJVF66y9FydTBTf4CuXRh+A4EgA5CZeu4Ecva4D61Eu2I13GA==}
-    peerDependencies:
-      '@tanstack/react-query': ^4.18.0
-      '@trpc/client': 10.34.0
-      '@trpc/server': 10.34.0
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-
   '@trpc/react-query@10.43.1':
     resolution: {integrity: sha512-H7icpfXRYdD8K7EFDozKxtTEkMyQNu4+KLHNiCHq5yan4le3dyhtDYJa+1ZR/0sZWV95siVa+CqcUQHs1Nwu+g==}
     peerDependencies:
@@ -6664,9 +6624,6 @@ packages:
       '@trpc/server': 10.43.1
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
-
-  '@trpc/server@10.34.0':
-    resolution: {integrity: sha512-2VMW44Fpaoyqb50dBtzdSWMhqt8lmoJiocEyBBeDb03R0W+XrzbVD5kU/wqKPlcp1DWeNCkOEIMtetMZCfo1hA==}
 
   '@trpc/server@10.43.1':
     resolution: {integrity: sha512-rKOSCpJOb1MdTyJFqdf3QNNESDfPkbP+yBOZBM2x6iIOS4VlCfJqxsaSrb3uLPR6s8Ni7DhTu+cu/q1r0xOGcw==}
@@ -20529,24 +20486,9 @@ snapshots:
 
   '@total-typescript/ts-reset@0.6.1': {}
 
-  '@trpc/client@10.34.0(@trpc/server@10.34.0)':
-    dependencies:
-      '@trpc/server': 10.34.0
-
   '@trpc/client@10.43.1(@trpc/server@10.43.1)':
     dependencies:
       '@trpc/server': 10.43.1
-
-  '@trpc/next@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/react-query@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.34.0)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/client': 10.34.0(@trpc/server@10.34.0)
-      '@trpc/react-query': 10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/server': 10.34.0
-      next: 14.2.3(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-ssr-prepass: 1.5.0(react@18.2.0)
 
   '@trpc/next@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@14.2.3(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -20559,14 +20501,6 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       react-ssr-prepass: 1.5.0(react@18.2.0)
 
-  '@trpc/react-query@10.34.0(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.34.0(@trpc/server@10.34.0))(@trpc/server@10.34.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
-    dependencies:
-      '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@trpc/client': 10.34.0(@trpc/server@10.34.0)
-      '@trpc/server': 10.34.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-
   '@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@tanstack/react-query': 4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -20574,8 +20508,6 @@ snapshots:
       '@trpc/server': 10.43.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-
-  '@trpc/server@10.34.0': {}
 
   '@trpc/server@10.43.1': {}
 
@@ -27237,7 +27169,7 @@ snapshots:
   retes@0.33.0:
     dependencies:
       busboy: 1.6.0
-      zod: 3.21.4
+      zod: 3.23.8
 
   reusify@1.0.4: {}
 

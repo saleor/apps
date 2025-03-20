@@ -36,3 +36,5 @@ function NextApp({ Component, pageProps }: AppProps) {
 }
 
 export default trpcClient.withTRPC(NextApp);
+
+
