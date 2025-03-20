@@ -43,16 +43,12 @@ const nextConfig = () => {
   };
 };
 
-const isSentryPropertiesInEnvironment = process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
-
 // Make sure to export sentry config as the last one - https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#apply-instrumentation-to-your-app
-export default isSentryPropertiesInEnvironment
-  ? withSentryConfig(nextConfig, {
-      org: process.env.SENTRY_ORG,
-      project: process.env.SENTRY_PROJECT,
-      silent: true,
-      disableLogger: true,
-      widenClientFileUpload: true,
-      tunnelRoute: "/monitoring",
-    })
-  : nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: true,
+  disableLogger: true,
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+});
