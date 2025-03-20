@@ -23,7 +23,6 @@ catalog:
   "@vercel/otel": "1.10.1"
   "@sentry/cli": "2.32.1"
   "@sentry/nextjs": "7.117.0"
-  "@sentry/node": "7.117.0"
   "eslint": "8.57.0"
   "@saleor/app-sdk": "0.52.0"
   "urql": "4.0.4"

@@ -1,6 +1,6 @@
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
-import * as Sentry from "@sentry/node";
+import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";

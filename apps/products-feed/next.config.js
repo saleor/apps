@@ -17,6 +17,7 @@ const nextConfig = {
     "@saleor/webhook-utils",
   ],
   experimental: {
+    optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
     bundlePagesExternals: true,
     instrumentationHook: true,
   },

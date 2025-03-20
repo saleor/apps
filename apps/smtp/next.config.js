@@ -25,6 +25,7 @@ const nextConfig = {
       "handlebars",
       "handlebars-helpers",
     ],
+    optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
     bundlePagesExternals: true,
     instrumentationHook: true,
   },

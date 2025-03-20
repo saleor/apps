@@ -1,7 +1,7 @@
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
-import * as Sentry from "@sentry/node";
+import * as Sentry from "@sentry/nextjs";
 
 import { env } from "@/env";
 

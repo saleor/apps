@@ -28,6 +28,7 @@ const nextConfig = () => {
       "@saleor/react-hook-form-macaw",
     ],
     experimental: {
+      optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
       bundlePagesExternals: true,
       instrumentationHook: true,
     },

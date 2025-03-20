@@ -36,7 +36,6 @@
     "@saleor/sentry-utils": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",
     "@sentry/nextjs": "catalog:",
-    "@sentry/node": "catalog:",
     "@tanstack/react-query": "4.29.19",
     "@trpc/client": "catalog:",
     "@trpc/next": "catalog:",

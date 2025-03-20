@@ -16,6 +16,7 @@ const nextConfig = {
     "@saleor/apps-otel",
   ],
   experimental: {
+    optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
     bundlePagesExternals: true,
     instrumentationHook: true,
   },
