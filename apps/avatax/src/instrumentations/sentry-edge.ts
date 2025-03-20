@@ -4,13 +4,8 @@ import { env } from "@/env";
 
 Sentry.init({
   dsn: env.NEXT_PUBLIC_SENTRY_DSN,
-  enableTracing: false,
+  skipOpenTelemetrySetup: true,
   environment: env.ENV,
   includeLocalVariables: true,
-  integrations: [
-    Sentry.localVariablesIntegration({
-      captureAllExceptions: true,
-    }),
-    Sentry.extraErrorDataIntegration(),
-  ],
+  integrations: [Sentry.extraErrorDataIntegration()],
 });

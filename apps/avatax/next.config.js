@@ -74,39 +74,41 @@ const nextConfig = {
     instrumentationHook: true,
   },
   /** @type {import('next').NextConfig['webpack']} */
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, webpack }) => {
     if (isServer) {
       // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
       config.ignoreWarnings = [{ module: /require-in-the-middle/ }];
     }
+
+    // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/tree-shaking/#tree-shaking-with-nextjs
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        __SENTRY_DEBUG__: false,
+        __SENTRY_TRACING__: false,
+        __RRWEB_EXCLUDE_IFRAME__: true,
+        __RRWEB_EXCLUDE_SHADOW_DOM__: true,
+        __SENTRY_EXCLUDE_REPLAY_WORKER__: true,
+      }),
+    );
+
     return config;
   },
 };
 
-const configWithSentry = withSentryConfig(
-  nextConfig,
-  {
-    org: process.env.SENTRY_ORG,
-    project: process.env.SENTRY_PROJECT,
-    silent: true,
-  },
-  {
-    hideSourceMaps: true,
-    widenClientFileUpload: true,
-    disableLogger: true,
-    transpileClientSDK: true,
-    tunnelRoute: "/monitoring",
-  },
-);
-
-const withBundleAnalyzer = withBundleAnalyzerConfig({
+const configWithBundleAnalyzer = withBundleAnalyzerConfig({
   enabled: process.env.ANALYZE_BUNDLE === "true",
-});
+})(nextConfig);
 
-const isSentryPropertiesInEnvironment =
-  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
+const isSentryPropertiesInEnvironment = process.env.SENTRY_PROJECT && process.env.SENTRY_ORG;
 
-const config = isSentryPropertiesInEnvironment ? configWithSentry : nextConfig;
-
-// @ts-expect-error bundle analyzer requires NextConfig when Sentry is returning NextConfigFunction | NextConfigObject
-export default withBundleAnalyzer(config);
+// Make sure to export sentry config as the last one - https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#apply-instrumentation-to-your-app
+export default isSentryPropertiesInEnvironment
+  ? withSentryConfig(configWithBundleAnalyzer, {
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      silent: true,
+      disableLogger: true,
+      widenClientFileUpload: true,
+      tunnelRoute: "/monitoring",
+    })
+  : configWithBundleAnalyzer;
