@@ -1,3 +1,4 @@
+import { Context, Sampler, SamplingResult, SpanKind } from "@opentelemetry/api";
 import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
 import { createAwsInstrumentation } from "@saleor/apps-otel/src/aws-instrumentation-factory";
@@ -8,10 +9,10 @@ import { registerOTel } from "@vercel/otel";
 
 import { env } from "@/env";
 
-import { Context, Sampler, SamplingResult, SpanKind } from "@opentelemetry/api";
 import pkg from "../../package.json";
 
 export class OTELSampler implements Sampler {
+  // eslint-disable-next-line max-params
   shouldSample(
     context: Context,
     traceId: string,
