@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -37,7 +37,7 @@ const OrderFulfilledGraphqlSubscription = gql`
 export const orderFulfilledWebhook = new SaleorAsyncWebhook<OrderFulfilledWebhookPayloadFragment>({
   name: "Order Fulfilled in Saleor",
   webhookPath: "api/webhooks/order-fulfilled",
-  asyncEvent: "ORDER_FULFILLED",
+  event: "ORDER_FULFILLED",
   apl: saleorApp.apl,
   query: OrderFulfilledGraphqlSubscription,
 });
@@ -46,7 +46,7 @@ const logger = createLogger(orderFulfilledWebhook.webhookPath);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
-const handler: NextWebhookApiHandler<OrderFulfilledWebhookPayloadFragment> = async (
+const handler: NextJsWebhookHandler<OrderFulfilledWebhookPayloadFragment> = async (
   req,
   res,
   context,
