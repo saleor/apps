@@ -26,11 +26,6 @@ Sentry.init({
 const runMigrations = async () => {
   logger.info(`Starting webhooks migration`);
 
-  if (!env.REST_APL_TOKEN || !env.REST_APL_ENDPOINT) {
-    logger.error("REST_APL_TOKEN and REST_APL_ENDPOINT must be set");
-    process.exit(1);
-  }
-
   const saleorAPL = saleorApp.apl;
 
   const saleorCloudEnv = await saleorAPL.getAll().catch(() => {
