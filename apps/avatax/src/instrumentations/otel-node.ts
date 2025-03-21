@@ -8,7 +8,23 @@ import { registerOTel } from "@vercel/otel";
 
 import { env } from "@/env";
 
+import { Context, Sampler, SamplingResult, SpanKind } from "@opentelemetry/api";
 import pkg from "../../package.json";
+
+export class OTELSampler implements Sampler {
+  shouldSample(
+    context: Context,
+    traceId: string,
+    spanName: string,
+    spanKind: SpanKind,
+  ): SamplingResult {
+    return { decision: 2 };
+  }
+
+  toString(): string {
+    return "OTELSampler";
+  }
+}
 
 registerOTel({
   serviceName: env.OTEL_SERVICE_NAME,
@@ -27,4 +43,5 @@ registerOTel({
     }),
   ],
   instrumentations: [createAwsInstrumentation(), createHttpInstrumentation()],
+  traceSampler: new OTELSampler(),
 });
