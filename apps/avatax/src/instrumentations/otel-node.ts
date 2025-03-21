@@ -11,7 +11,7 @@ import { env } from "@/env";
 
 import pkg from "../../package.json";
 
-export class OTELSampler implements Sampler {
+class OTELSampler implements Sampler {
   // eslint-disable-next-line max-params
   shouldSample(
     context: Context,
@@ -44,5 +44,5 @@ registerOTel({
     }),
   ],
   instrumentations: [createAwsInstrumentation(), createHttpInstrumentation()],
-  traceSampler: new OTELSampler(),
+  // traceSampler: new OTELSampler(),
 });
