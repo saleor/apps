@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.14.4
+
+### Patch Changes
+
+- a18b637e: Setup Sentry integration with our OTEL setup.
+
 ## 1.14.3
 
 ### Patch Changes
