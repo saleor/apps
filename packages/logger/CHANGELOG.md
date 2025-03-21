@@ -1,5 +1,11 @@
 # @saleor/apps-logger
 
+## 1.5.2
+
+### Patch Changes
+
+- da9899d5: Cleanup deps, peerDeps & devDependencies for package
+
 ## 1.5.1
 
 ### Patch Changes
