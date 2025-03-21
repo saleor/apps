@@ -30,7 +30,7 @@ export async function fetchAllMetadata(client: Pick<Client, "query">): Promise<M
   return data?.app?.privateMetadata.map((md) => ({ key: md.key, value: md.value })) || [];
 }
 
-export async function mutateMetadata(
+export async function updateMetadata(
   client: Pick<Client, "mutation">,
   metadata: MetadataEntry[],
   appId: string,
@@ -43,7 +43,7 @@ export async function mutateMetadata(
     .toPromise();
 
   if (mutationError) {
-    throw new MetadataManagerMutationError("Error during metadata mutation", {
+    throw new MetadataManagerMutationError("Error during metadata update", {
       cause: mutationError,
     });
   }
@@ -103,7 +103,7 @@ export const createSettingsManager = (
       logger.debug("Cache not found, fetching metadata");
       return fetchAllMetadata(client);
     },
-    mutateMetadata: (metadata) => mutateMetadata(client, metadata, appId),
+    mutateMetadata: (metadata) => updateMetadata(client, metadata, appId),
     deleteMetadata: (keys) => deleteMetadata(client, keys, appId),
   });
 };
