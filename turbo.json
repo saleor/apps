@@ -54,8 +54,15 @@
     "lint": {
       "dependsOn": ["topo"]
     },
+    "lint:fix": {
+      "dependsOn": ["topo"]
+    },
     "start": {
       "dependsOn": ["^build", "^start"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
       "cache": false,
       "persistent": true
     },
