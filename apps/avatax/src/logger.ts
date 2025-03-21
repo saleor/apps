@@ -21,13 +21,15 @@ if (typeof window === "undefined") {
 
   attachLoggerSentryTransport(rootLogger);
 
-  // if (env.NODE_ENV === "production") {
-  //   attachLoggerVercelRuntimeTransport(
-  //     rootLogger,
-  //     packageJson.version,
-  //     require("./logger-context").loggerContext,
-  //   );
-  // }
+  /*
+   * if (env.NODE_ENV === "production") {
+   *   attachLoggerVercelRuntimeTransport(
+   *     rootLogger,
+   *     packageJson.version,
+   *     require("./logger-context").loggerContext,
+   *   );
+   * }
+   */
 }
 
 export const createLogger = (name: string, params?: Record<string, unknown>) =>
