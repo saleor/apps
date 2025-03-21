@@ -77,8 +77,6 @@
     "@graphql-typed-document-node/core": "3.2.0",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/react-hooks": "^8.0.1",
     "@types/handlebars-helpers": "^0.5.6",
     "@types/html-to-text": "^9.0.0",
     "@types/mjml": "4.7.4",

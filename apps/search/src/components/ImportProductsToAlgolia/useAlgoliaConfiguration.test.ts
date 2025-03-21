@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
@@ -72,12 +72,12 @@ describe("useAlgoliaConfiguration", () => {
     vi.mocked(algoliaCredentialsVerifier.verifyCredentials).mockResolvedValue(undefined);
     vi.mocked(useSearchProvider).mockReturnValue(mockSearchProvider as any);
 
-    const { result, waitForNextUpdate } = renderHook(() => useAlgoliaConfiguration());
-
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useAlgoliaConfiguration());
 
     expect(algoliaCredentialsVerifier.verifyCredentials).toHaveBeenCalled();
-    expect(result.current).toStrictEqual({ type: "configured", provider: mockSearchProvider });
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({ type: "configured", provider: mockSearchProvider });
+    });
   });
 
   it("should return not-configured state when credentials verification fails", async () => {
@@ -98,11 +98,11 @@ describe("useAlgoliaConfiguration", () => {
     );
     vi.mocked(useSearchProvider).mockReturnValue(null);
 
-    const { result, waitForNextUpdate } = renderHook(() => useAlgoliaConfiguration());
-
-    await waitForNextUpdate();
+    const { result } = renderHook(() => useAlgoliaConfiguration());
 
     expect(algoliaCredentialsVerifier.verifyCredentials).toHaveBeenCalled();
-    expect(result.current).toStrictEqual({ type: "not-configured" });
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({ type: "not-configured" });
+    });
   });
 });
