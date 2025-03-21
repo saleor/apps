@@ -12,9 +12,13 @@ import { SentryPropagator, wrapSamplingDecision } from "@sentry/opentelemetry";
 import { registerOTel } from "@vercel/otel";
 
 import { env } from "@/env";
+import { createLogger } from "@/logger";
 
 import pkg from "../../package.json";
 
+const logger = createLogger("instrumentations/otel-node");
+
+// Use ParentBasedSampler to make decision and then wrap it with Sentry wrapSamplingDecision
 class AppSampler extends ParentBasedSampler {
   shouldSample(
     context: Context,
@@ -33,8 +37,7 @@ class AppSampler extends ParentBasedSampler {
       links,
     );
 
-    // eslint-disable-next-line no-console
-    console.log("AppSampler.shouldSample.decision", { decision });
+    logger.info("AppSampler.shouldSample.decision", { decision });
 
     return wrapSamplingDecision({
       decision,
