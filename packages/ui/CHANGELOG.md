@@ -1,5 +1,11 @@
 # @saleor/apps-ui
 
+## 1.2.12
+
+### Patch Changes
+
+- da9899d5: Cleanup deps, peerDeps & devDependencies for package
+
 ## 1.2.11
 
 ### Patch Changes
