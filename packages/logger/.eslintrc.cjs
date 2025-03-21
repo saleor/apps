@@ -9,4 +9,5 @@ module.exports = {
   rules: {
     "no-console": "off",
   },
+  ignorePatterns: ["lint-staged.config.js"],
 };

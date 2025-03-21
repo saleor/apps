@@ -17,5 +17,5 @@ module.exports = {
     project: "tsconfig.json",
     tsconfigRootDir: __dirname,
   },
-  ignorePatterns: ["generated", "coverage"],
+  ignorePatterns: ["generated", "coverage", "lint-staged.config.js"],
 };
