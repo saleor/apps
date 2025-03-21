@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsSyncWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
@@ -54,7 +54,7 @@ export const productVariantCreatedWebhook =
  * todo document that fields in Contentful should be unique
  * todo fetch metadata end decode it with payload
  */
-const handler: NextWebhookApiHandler<ProductVariantCreatedWebhookPayloadFragment> = async (
+const handler: NextJsSyncWebhookHandler<ProductVariantCreatedWebhookPayloadFragment> = async (
   req,
   res,
   context,
