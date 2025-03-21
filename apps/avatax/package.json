@@ -47,7 +47,6 @@
     "@saleor/webhook-utils": "workspace:*",
     "@sentry/cli": "catalog:",
     "@sentry/nextjs": "catalog:",
-    "@sentry/opentelemetry": "9.8.0",
     "@t3-oss/env-nextjs": "0.11.1",
     "@trpc/client": "catalog:",
     "@trpc/next": "catalog:",
