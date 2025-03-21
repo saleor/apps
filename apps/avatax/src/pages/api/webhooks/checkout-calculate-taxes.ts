@@ -18,6 +18,7 @@ import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calcul
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
+import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
 export const config = {
   api: {
@@ -26,6 +27,9 @@ export const config = {
 };
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
+
+const checkoutCalculateTaxesSyncWebhookReponse =
+  buildSyncWebhookResponsePayload<"CHECKOUT_CALCULATE_TAXES">;
 
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
   return appInternalTracer.startActiveSpan(
@@ -122,7 +126,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
                 message: "Taxes calculated successfully",
               });
               span.end();
-              return res.status(200).json(ctx.buildResponse(value));
+              return res.status(200).json(checkoutCalculateTaxesSyncWebhookReponse(value));
             },
             (error) => {
               logger.warn("Error calculating taxes", { error });

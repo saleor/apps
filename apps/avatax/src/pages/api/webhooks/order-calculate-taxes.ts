@@ -17,9 +17,9 @@ import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
 import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
 import { AvataxCalculateTaxesAdapter } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
-import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
+import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "@/modules/avatax/discounts";
@@ -35,12 +35,16 @@ import {
 import { orderCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/order-calculate-taxes";
 import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "@/modules/webhooks/validate-webhook-payload";
+import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
+
+const orderCalculateTaxesSyncWebhookReponse =
+  buildSyncWebhookResponsePayload<"ORDER_CALCULATE_TAXES">;
 
 const logger = createLogger("orderCalculateTaxesSyncWebhook");
 
@@ -255,7 +259,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
         });
         span.end();
 
-        return res.status(200).json(ctx.buildResponse(calculatedTaxes));
+        return res.status(200).json(orderCalculateTaxesSyncWebhookReponse(calculatedTaxes));
       } catch (error) {
         span.recordException(error as Error); // todo: remove casting when error handling is refactored
 

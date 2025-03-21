@@ -24,7 +24,7 @@ catalog:
   "@sentry/cli": "1.77.3"
   "@sentry/nextjs": "9.6.1"
   "eslint": "8.57.0"
-  "@saleor/app-sdk": "0.52.0"
+  "@saleor/app-sdk": "1.0.0"
   "urql": "4.0.4"
   "next": "14.2.3"
   "react": "18.2.0"

@@ -1,7 +1,7 @@
-import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as Sentry from "@sentry/nextjs";
+import { saleorApp } from "saleor-app";
 
 import { env } from "@/env";
 
@@ -31,13 +31,10 @@ const runMigrations = async () => {
     process.exit(1);
   }
 
-  const saleorAPL = new SaleorCloudAPL({
-    token: env.REST_APL_TOKEN,
-    resourceUrl: env.REST_APL_ENDPOINT,
-  });
+  const saleorAPL = saleorApp.apl;
 
   const saleorCloudEnv = await saleorAPL.getAll().catch(() => {
-    logger.error("Could not fetch instances from the Cloud APL");
+    logger.error(`Could not fetch instances from the ${env.APL} APL`);
 
     process.exit(1);
   });
@@ -99,6 +96,6 @@ const runMigrations = async () => {
 runMigrations();
 
 process.on("beforeExit", () => {
-  logger.info(`Webhook migration complete for all environments from saleor-cloud APL`);
+  logger.info(`Webhook migration complete for all environments from ${env.APL} APL`);
   process.exit(0);
 });

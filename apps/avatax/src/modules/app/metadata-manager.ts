@@ -1,40 +1,22 @@
 import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/settings-manager";
-import { Client, gql } from "urql";
+import { Client } from "urql";
 
 import { env } from "@/env";
 import { AppMetadataCache } from "@/lib/app-metadata-cache";
 import { createLogger } from "@/logger";
 
+import { BaseError } from "@/error";
 import {
+  DeleteAppMetadataDocument,
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
   UpdatePrivateMetadataDocument,
 } from "../../../generated/graphql";
 
-gql`
-  mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
-    updatePrivateMetadata(id: $id, input: $input) {
-      item {
-        privateMetadata {
-          key
-          value
-        }
-      }
-    }
-  }
-`;
+const logger = createLogger("SettingsManager");
 
-gql`
-  query FetchAppDetails {
-    app {
-      id
-      privateMetadata {
-        key
-        value
-      }
-    }
-  }
-`;
+const MetadataManagerMutationError = BaseError.subclass("MetadataManagerMutationError");
+const MetadataManagerDeleteError = BaseError.subclass("MetadataManagerDeleteError");
 
 export async function fetchAllMetadata(client: Pick<Client, "query">): Promise<MetadataEntry[]> {
   const { error, data } = await client
@@ -61,7 +43,9 @@ export async function mutateMetadata(
     .toPromise();
 
   if (mutationError) {
-    throw new Error(`Mutation error: ${mutationError.message}`);
+    throw new MetadataManagerMutationError("Error during metadata mutation", {
+      cause: mutationError,
+    });
   }
 
   return (
@@ -72,7 +56,24 @@ export async function mutateMetadata(
   );
 }
 
-const logger = createLogger("SettingsManager");
+async function deleteMetadata(
+  client: Pick<Client, "mutation">,
+  keys: string[],
+  appId: string,
+): Promise<void> {
+  const { error } = await client
+    .mutation(DeleteAppMetadataDocument, {
+      id: appId,
+      keys,
+    })
+    .toPromise();
+
+  if (error) {
+    throw new MetadataManagerDeleteError("Error during metadata deletion", {
+      cause: error,
+    });
+  }
+}
 
 export const createSettingsManager = (
   client: Pick<Client, "mutation" | "query">,
@@ -103,5 +104,6 @@ export const createSettingsManager = (
       return fetchAllMetadata(client);
     },
     mutateMetadata: (metadata) => mutateMetadata(client, metadata, appId),
+    deleteMetadata: (keys) => deleteMetadata(client, keys, appId),
   });
 };
