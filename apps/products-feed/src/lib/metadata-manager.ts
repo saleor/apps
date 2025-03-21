@@ -1,36 +1,12 @@
 import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/settings-manager";
-import { Client, gql } from "urql";
+import { Client } from "urql";
 
 import {
+  DeleteAppMetadataDocument,
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
-
-gql`
-  mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {
-    updatePrivateMetadata(id: $id, input: $input) {
-      item {
-        privateMetadata {
-          key
-          value
-        }
-      }
-    }
-  }
-`;
-
-gql`
-  query FetchAppDetails {
-    app {
-      id
-      privateMetadata {
-        key
-        value
-      }
-    }
-  }
-`;
 
 export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]> {
   const { error, data } = await client
@@ -52,7 +28,7 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
 
   if (idQueryError) {
     throw new Error(
-      "Could not fetch the app id. Please check if auth data for the client are valid."
+      "Could not fetch the app id. Please check if auth data for the client are valid.",
     );
   }
 
@@ -81,6 +57,41 @@ export async function mutateMetadata(client: Client, metadata: MetadataEntry[]) 
   );
 }
 
+async function deleteMetadata(
+  client: Pick<Client, "mutation" | "query">,
+  keys: string[],
+): Promise<void> {
+  // to update the metadata, ID is required
+  const { error: idQueryError, data: idQueryData } = await client
+    .query(FetchAppDetailsDocument, {})
+    .toPromise();
+
+  if (idQueryError) {
+    throw new Error(
+      "Could not fetch the app id. Please check if auth data for the client are valid.",
+    );
+  }
+
+  const appId = idQueryData?.app?.id;
+
+  if (!appId) {
+    throw new Error("Could not fetch the app ID");
+  }
+
+  const { error } = await client
+    .mutation(DeleteAppMetadataDocument, {
+      id: appId,
+      keys,
+    })
+    .toPromise();
+
+  if (error) {
+    throw new Error("Error during metadata deletion", {
+      cause: error,
+    });
+  }
+}
+
 export const createSettingsManager = (client: Client) => {
   /*
    * EncryptedMetadataManager gives you interface to manipulate metadata and cache values in memory.
@@ -92,5 +103,6 @@ export const createSettingsManager = (client: Client) => {
     encryptionKey: process.env.SECRET_KEY!,
     fetchMetadata: () => fetchAllMetadata(client),
     mutateMetadata: (metadata) => mutateMetadata(client, metadata),
+    deleteMetadata: (keys) => deleteMetadata(client, keys),
   });
 };

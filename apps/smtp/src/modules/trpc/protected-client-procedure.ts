@@ -1,5 +1,4 @@
-import { ProtectedHandlerError } from "@saleor/app-sdk/handlers/next";
-import { verifyJWT } from "@saleor/app-sdk/verify-jwt";
+import { verifyJWT } from "@saleor/app-sdk/auth";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
 import { TRPCError } from "@trpc/server";
 
@@ -88,7 +87,10 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
       });
     } catch (e) {
       logger.debug("JWT verification failed, throwing");
-      throw new ProtectedHandlerError("JWT verification failed: ", "JWT_VERIFICATION_FAILED");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "JWT verification failed",
+      });
     }
   }
 

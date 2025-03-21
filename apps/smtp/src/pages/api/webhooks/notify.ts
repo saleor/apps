@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
@@ -18,7 +18,7 @@ import { saleorApp } from "../../../saleor-app";
 export const notifyWebhook = new SaleorAsyncWebhook<NotifySubscriptionPayload>({
   name: "notify",
   webhookPath: "api/webhooks/notify",
-  asyncEvent: "NOTIFY_USER",
+  event: "NOTIFY_USER",
   apl: saleorApp.apl,
   query: "{}", // We are using the default payload instead of subscription
 });
@@ -27,7 +27,7 @@ const logger = createLogger(notifyWebhook.webhookPath);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
-const handler: NextWebhookApiHandler<NotifySubscriptionPayload> = async (req, res, context) => {
+const handler: NextJsWebhookHandler<NotifySubscriptionPayload> = async (req, res, context) => {
   logger.info("Webhook received");
 
   const { payload, authData } = context;

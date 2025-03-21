@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
@@ -16,7 +16,7 @@ export const config = {
 
 const logger = createLogger("webhookProductVariantOutOfStockWebhookHandler");
 
-export const handler: NextWebhookApiHandler<ProductVariantOutOfStock> = async (
+export const handler: NextJsWebhookHandler<ProductVariantOutOfStock> = async (
   req,
   res,
   context,

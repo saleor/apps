@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -26,7 +26,7 @@ const configManager = DynamoAppConfigManager.create(configRepository);
 const segmentEventTrackerFactory = new SegmentEventTrackerFactory();
 const useCase = new TrackEventUseCase({ segmentEventTrackerFactory });
 
-const handler: NextWebhookApiHandler<OrderRefundedSubscriptionPayloadFragment> = async (
+const handler: NextJsWebhookHandler<OrderRefundedSubscriptionPayloadFragment> = async (
   req,
   res,
   context,
