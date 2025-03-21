@@ -1,5 +1,3 @@
-import "@testing-library/jest-dom/vitest";
-
 import { vi } from "vitest";
 
 vi.stubEnv("DYNAMODB_LOGS_ITEM_TTL_IN_DAYS", "7");
