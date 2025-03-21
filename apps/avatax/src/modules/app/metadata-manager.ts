@@ -2,10 +2,10 @@ import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/setting
 import { Client } from "urql";
 
 import { env } from "@/env";
+import { BaseError } from "@/error";
 import { AppMetadataCache } from "@/lib/app-metadata-cache";
 import { createLogger } from "@/logger";
 
-import { BaseError } from "@/error";
 import {
   DeleteAppMetadataDocument,
   FetchAppDetailsDocument,

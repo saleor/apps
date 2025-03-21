@@ -1,4 +1,5 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
+import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
@@ -18,7 +19,6 @@ import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calcul
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
-import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
 export const config = {
   api: {
