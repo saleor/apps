@@ -1,13 +1,13 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { compose } from "@saleor/apps-shared";
 import { captureException } from "@sentry/nextjs";
 
 import { env } from "@/env";
-import { withLoggerContext } from "@/logger-context";
-
 import { BaseError } from "@/error";
+import { withLoggerContext } from "@/logger-context";
+import { compose } from "@saleor/apps-shared";
+
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
 
