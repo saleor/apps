@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.12.2
+
+### Patch Changes
+
+- da9899d5: Cleanup deps, peerDeps & devDependencies for package
+
 ## 1.12.1
 
 ### Patch Changes

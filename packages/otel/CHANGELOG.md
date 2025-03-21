@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 2.1.3
+
+### Patch Changes
+
+- da9899d5: Cleanup deps, peerDeps & devDependencies for package
+
 ## 2.1.2
 
 ### Patch Changes

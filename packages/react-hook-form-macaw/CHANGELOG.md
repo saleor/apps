@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.14
+
+### Patch Changes
+
+- da9899d5: Cleanup deps, peerDeps & devDependencies for package
+
 ## 0.2.13
 
 ### Patch Changes
