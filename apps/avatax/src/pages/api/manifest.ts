@@ -6,6 +6,8 @@ import { compose } from "@saleor/apps-shared";
 import { env } from "@/env";
 import { withLoggerContext } from "@/logger-context";
 
+import { BaseError } from "@/error";
+import { captureException } from "@sentry/nextjs";
 import packageJson from "../../../package.json";
 import { appWebhooks } from "../../../webhooks";
 
@@ -35,6 +37,8 @@ const handler = createManifestHandler({
       version: packageJson.version,
       webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
     };
+
+    captureException(new BaseError("test error on node sdk"));
 
     return manifest;
   },
