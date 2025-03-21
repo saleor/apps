@@ -1,5 +1,11 @@
 # @saleor/trpc
 
+## 4.0.2
+
+### Patch Changes
+
+- da9899d5: Cleanup deps, peerDeps & devDependencies for package
+
 ## 4.0.1
 
 ### Patch Changes

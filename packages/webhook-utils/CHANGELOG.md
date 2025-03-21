@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.2.5
+
+### Patch Changes
+
+- da9899d5: Cleanup deps, peerDeps & devDependencies for package
+
 ## 0.2.4
 
 ### Patch Changes
