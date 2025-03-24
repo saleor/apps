@@ -78,11 +78,8 @@ export const wrapWithLoggerContextAppRouter = (
     return loggerContext.wrapNextAppRouterHandler(() => {
       const saleorApiUrl = req.headers.get(SALEOR_API_URL_HEADER);
       const saleorEvent = req.headers.get(SALEOR_EVENT_HEADER);
-      const path = req.nextUrl.pathname;
 
-      console.log("path", req.nextUrl.pathname);
-
-      loggerContext.set("path", path);
+      loggerContext.set("path", req.nextUrl.pathname);
 
       if (saleorApiUrl) {
         loggerContext.set("saleorApiUrl", saleorApiUrl);
