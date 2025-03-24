@@ -2,10 +2,8 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
-import { captureException } from "@sentry/nextjs";
 
 import { env } from "@/env";
-import { BaseError } from "@/error";
 import { withLoggerContext } from "@/logger-context";
 
 import packageJson from "../../../package.json";
@@ -37,8 +35,6 @@ const handler = createManifestHandler({
       version: packageJson.version,
       webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
     };
-
-    captureException(new BaseError("test error on node sdk"));
 
     return manifest;
   },
