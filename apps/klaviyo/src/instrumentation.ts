@@ -8,8 +8,4 @@ export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs" && process.env.NEXT_PUBLIC_SENTRY_DSN) {
     await import("./instrumentations/sentry-node");
   }
-
-  if (process.env.NEXT_RUNTIME === "edge" && process.env.NEXT_PUBLIC_SENTRY_DSN) {
-    await import("./instrumentations/sentry-edge");
-  }
 }
