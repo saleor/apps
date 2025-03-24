@@ -80,6 +80,8 @@ export const wrapWithLoggerContextAppRouter = (
       const saleorEvent = req.headers.get(SALEOR_EVENT_HEADER);
       const path = req.url;
 
+      console.log("path", path, req.nextUrl);
+
       loggerContext.set("path", path);
 
       if (saleorApiUrl) {
