@@ -29,7 +29,7 @@ describe("MetadataManager", () => {
       return manager.get(METADATA_KEY);
     }
 
-    return expect(cache.wrap(() => someExecution())).resolves.toBe("bar");
+    return expect(cache.wrapNextAppRouterHandler(() => someExecution())).resolves.toBe("bar");
   });
 
   it("Still works if cache is empty", () => {
@@ -60,6 +60,8 @@ describe("MetadataManager", () => {
       return manager.get(METADATA_KEY);
     }
 
-    return expect(cache.wrap(() => someExecution())).resolves.toBe(METADATA_VALUE);
+    return expect(cache.wrapNextAppRouterHandler(() => someExecution())).resolves.toBe(
+      METADATA_VALUE,
+    );
   });
 });

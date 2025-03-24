@@ -24,7 +24,20 @@ export class LoggerContext {
     return store;
   }
 
-  async wrap(fn: (...args: unknown[]) => unknown, initialState = {}) {
+  async wrapNextApiHandler(fn: (...args: unknown[]) => unknown, initialState = {}) {
+    return this.als.run(
+      {
+        ...initialState,
+        project_name: this.project_name,
+      },
+      fn,
+    );
+  }
+
+  async wrapNextAppRouterHandler(
+    fn: (...args: unknown[]) => Response | Promise<Response>,
+    initialState = {},
+  ) {
     return this.als.run(
       {
         ...initialState,
@@ -43,7 +56,7 @@ export class LoggerContext {
 
 export const wrapWithLoggerContext = (handler: NextApiHandler, loggerContext: LoggerContext) => {
   return (req: NextApiRequest, res: NextApiResponse) => {
-    return loggerContext.wrap(() => {
+    return loggerContext.wrapNextApiHandler(() => {
       const saleorApiUrl = req.headers[SALEOR_API_URL_HEADER] as string;
       const saleorEvent = req.headers[SALEOR_EVENT_HEADER] as string;
       const path = req.url as string;
@@ -62,7 +75,7 @@ export const wrapWithLoggerContextAppRouter = (
   loggerContext: LoggerContext,
 ) => {
   return (req: NextRequest) => {
-    return loggerContext.wrap(() => {
+    return loggerContext.wrapNextAppRouterHandler(() => {
       const saleorApiUrl = req.headers.get(SALEOR_API_URL_HEADER);
       const saleorEvent = req.headers.get(SALEOR_EVENT_HEADER);
       const path = req.url;
