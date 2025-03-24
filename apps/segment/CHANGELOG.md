@@ -1,5 +1,11 @@
 # saleor-app-segment
 
+## 2.1.5
+
+### Patch Changes
+
+- 339518c2: Fixed how we initialize Sentry SDK for API routes when runtime is Node.js. After this change we will use `NodeClient` directly from Sentry SDK to avoid interfering with our OTEL setup. We also removed not needed Sentry integration for edge runtime
+
 ## 2.1.4
 
 ### Patch Changes
