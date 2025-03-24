@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-products-feed",
   "version": "1.22.5",
   "private": true,
@@ -71,8 +72,8 @@
     "@graphql-typed-document-node/core": "3.2.0",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@testing-library/react": "16.2.0",
     "@testing-library/dom": "10.4.0",
+    "@testing-library/react": "16.2.0",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@vitest/coverage-v8": "1.6.0",

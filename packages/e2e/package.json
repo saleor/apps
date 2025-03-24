@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@saleor/e2e",
   "version": "1.0.9",
   "description": "",

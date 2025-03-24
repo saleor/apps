@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@saleor/apps-shared",
   "version": "1.12.2",
   "type": "module",

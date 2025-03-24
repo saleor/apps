@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@saleor/apps-ui",
   "version": "1.2.12",
   "type": "module",

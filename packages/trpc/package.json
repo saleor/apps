@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@saleor/trpc",
   "version": "4.0.2",
   "type": "module",

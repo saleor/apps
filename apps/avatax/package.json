@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-avatax",
   "version": "1.14.6",
   "private": true,

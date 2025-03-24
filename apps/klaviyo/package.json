@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-klaviyo",
   "version": "1.13.5",
   "private": true,

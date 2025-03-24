@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-cms",
   "version": "2.11.5",
   "private": true,

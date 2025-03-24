@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@saleor/react-hook-form-macaw",
   "version": "0.2.14",
   "type": "module",

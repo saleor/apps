@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@saleor/webhook-utils",
   "version": "0.2.5",
   "type": "module",

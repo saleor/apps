@@ -1,6 +1,6 @@
 {
+  "$schema": "https://turbo.build/schema.v2.json",
   "extends": ["//"],
-  "$schema": "https://turbo.build/schema.json",
   "tasks": {
     "deploy": {
       "env": [
