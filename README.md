@@ -99,3 +99,24 @@ pnpm dlx turbo link
 This repository uses [architecture decision records](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) to document architectural decisions. You can find them in the `docs/adr` directory.
 
 To add new ADR follow [the guide](https://github.com/npryce/adr-tools).
+
+# Contributions
+
+The `saleor/apps` monorepo is used by Saleor to host apps in Saleor infrastructure. While the code remains open source, the decisions in this repository are made to enable Saleor to maintain features needed by it's business goals. 
+
+Saleor team doesn't guarantee to merge PRs from contributors. To effectively contribute to the repository, first open issue or ask on Discord about the problem you are solving. Saleor team will help deciding if this change is welcome.
+
+Some of the changes will be rejected and should be kept on individual forks
+
+# Deployment
+
+Apps are written in Next.js and are hosted on Vercel by Saleor. Everyone should be able to host the app on Vercel if the app is configured properly. Apps share common code, but some of the functionalities are app-specific. For example, Avatax and Segment apps require DynamoDB to run. Check each app's "env" files to verify what must be provided to deploy.
+
+## Docker
+
+Repository contains "devcontainers" setup which include Dockerfiles. They are meant for development. At the moment Saleor doesn't provide official production dockerfiles. Feel free to write your own, based on the development ones.
+
+## APLs
+
+Apps follow BYOA (bring your own APL) approach. Minimal set of APLs are implemented in the source code, to avoid maintaining not used dependencies and increasing bundle size. You may want to use other APL client, like Redis. In such case, please ensure your fork does the job. Usually apps contain single file that imports APL from `@saleor/app-sdk`. Your fork can ensure this file contains your own APL setup
+
