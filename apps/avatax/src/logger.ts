@@ -9,7 +9,7 @@ rootLogger.settings.maskValuesOfKeys = ["metadata", "username", "password", "api
 const require = createRequire(import.meta.url);
 
 if (env.NODE_ENV !== "production") {
-  // attachLoggerConsoleTransport(rootLogger);
+  attachLoggerConsoleTransport(rootLogger);
 }
 
 if (typeof window === "undefined") {
@@ -21,15 +21,13 @@ if (typeof window === "undefined") {
 
   attachLoggerSentryTransport(rootLogger);
 
-  /*
-   * if (env.NODE_ENV === "production") {
-   *   attachLoggerVercelRuntimeTransport(
-   *     rootLogger,
-   *     packageJson.version,
-   *     require("./logger-context").loggerContext,
-   *   );
-   * }
-   */
+  if (env.NODE_ENV === "production") {
+    attachLoggerVercelRuntimeTransport(
+      rootLogger,
+      packageJson.version,
+      require("./logger-context").loggerContext,
+    );
+  }
 }
 
 export const createLogger = (name: string, params?: Record<string, unknown>) =>
