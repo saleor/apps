@@ -11,7 +11,6 @@ describe("DynamoAPL", () => {
   const mockedAuthData: AuthData = {
     saleorApiUrl: "saleorApiUrl",
     token: "appToken",
-    domain: "saleorDomain",
     appId: "saleorAppId",
   };
 
@@ -88,7 +87,6 @@ describe("DynamoAPL", () => {
     apl.set({
       saleorApiUrl: mockedAuthData.saleorApiUrl,
       token: "newAppToken",
-      domain: "newSaleorDomain",
       appId: "newSaleorAppId",
     });
 
@@ -96,7 +94,6 @@ describe("DynamoAPL", () => {
 
     expect(getEntryResult).toStrictEqual({
       saleorApiUrl: mockedAuthData.saleorApiUrl,
-      domain: "newSaleorDomain",
       appId: "newSaleorAppId",
       token: "newAppToken",
     });
@@ -129,7 +126,6 @@ describe("DynamoAPL", () => {
     const secondEntry: AuthData = {
       saleorApiUrl: "saleorApiUrl2",
       token: "appToken2",
-      domain: "saleorDomain2",
       appId: "saleorAppId2",
     };
     const apl = new DynamoAPL({ repository });

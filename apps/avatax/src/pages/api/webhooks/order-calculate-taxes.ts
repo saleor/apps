@@ -1,5 +1,6 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { AuthData } from "@saleor/app-sdk/APL";
+import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
@@ -41,6 +42,9 @@ export const config = {
     bodyParser: false,
   },
 };
+
+const orderCalculateTaxesSyncWebhookReponse =
+  buildSyncWebhookResponsePayload<"ORDER_CALCULATE_TAXES">;
 
 const logger = createLogger("orderCalculateTaxesSyncWebhook");
 
@@ -255,7 +259,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
         });
         span.end();
 
-        return res.status(200).json(ctx.buildResponse(calculatedTaxes));
+        return res.status(200).json(orderCalculateTaxesSyncWebhookReponse(calculatedTaxes));
       } catch (error) {
         span.recordException(error as Error); // todo: remove casting when error handling is refactored
 
