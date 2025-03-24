@@ -103,7 +103,7 @@
     "pactum": "^3.6.0",
     "pactum-matchers": "^1.1.6",
     "tsx": "4.7.1",
-    "typescript": "5.5.4",
+    "typescript": "5.8.2",
     "vite": "5.3.3",
     "vitest": "1.6.0"
   },

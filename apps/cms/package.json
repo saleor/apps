@@ -80,7 +80,7 @@
     "eslint": "catalog:",
     "node-mocks-http": "^1.12.2",
     "tsx": "4.7.1",
-    "typescript": "5.5.4"
+    "typescript": "5.8.2"
   },
   "saleor": {
     "schemaVersion": "3.10"
