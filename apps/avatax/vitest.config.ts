@@ -19,12 +19,5 @@ export default defineProject({
     alias: {
       "@/": new URL("./src/", import.meta.url).pathname,
     },
-    sequence: {
-      /**
-       * Shuffle tests to avoid side effects, where test_2 relies on something that test_1 did.
-       * Now tests will fail a little earlier
-       */
-      shuffle: true,
-    },
   },
 });
