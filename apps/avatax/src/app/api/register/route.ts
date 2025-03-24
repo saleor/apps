@@ -1,12 +1,12 @@
-import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
-import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 
 import { env } from "@/env";
 import { createLogger } from "@/logger";
 import { withLoggerContext } from "@/logger-context";
 
-import { saleorApp } from "../../../saleor-app";
+import { saleorApp } from "../../../../saleor-app";
 
 const logger = createLogger("createAppRegisterHandler");
 
@@ -41,4 +41,4 @@ const handler = createAppRegisterHandler({
   },
 });
 
-export default compose(withLoggerContext, withSpanAttributes)(handler);
+export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
