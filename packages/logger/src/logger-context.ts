@@ -1,6 +1,8 @@
+import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/headers";
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+import { NextRequest } from "next/server";
 
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();
@@ -51,6 +53,31 @@ export const wrapWithLoggerContext = (handler: NextApiHandler, loggerContext: Lo
       loggerContext.set("saleorEvent", saleorEvent ?? null);
 
       return handler(req, res);
+    });
+  };
+};
+
+export const wrapWithLoggerContextAppRouter = (
+  handler: NextAppRouterHandler,
+  loggerContext: LoggerContext,
+) => {
+  return (req: NextRequest) => {
+    return loggerContext.wrap(() => {
+      const saleorApiUrl = req.headers.get(SALEOR_API_URL_HEADER);
+      const saleorEvent = req.headers.get(SALEOR_EVENT_HEADER);
+      const path = req.url;
+
+      loggerContext.set("path", path);
+
+      if (saleorApiUrl) {
+        loggerContext.set("saleorApiUrl", saleorApiUrl);
+      }
+
+      if (saleorEvent) {
+        loggerContext.set("saleorEvent", saleorEvent);
+      }
+
+      return handler(req);
     });
   };
 };

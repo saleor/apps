@@ -1,5 +1,7 @@
+import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+import { NextRequest } from "next/server";
 
 import { MetadataItem } from "../../generated/graphql";
 import { createLogger } from "../logger";
@@ -48,5 +50,14 @@ export const wrapWithMetadataCache = (cache: AppMetadataCache) => (handler: Next
     });
   };
 };
+
+export const wrapWithMetadataCacheAppRouter =
+  (cache: AppMetadataCache) => (handler: NextAppRouterHandler) => {
+    return (req: NextRequest) => {
+      return cache.wrap(() => {
+        return handler(req);
+      });
+    };
+  };
 
 export const metadataCache = new AppMetadataCache();
