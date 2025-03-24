@@ -2,7 +2,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    passWithNoTests: true,
+    globals: true,
     environment: "jsdom",
     globalSetup: "./test-globals.ts",
     sequence: {
