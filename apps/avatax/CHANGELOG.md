@@ -1,5 +1,23 @@
 # saleor-app-avatax
 
+## 1.14.6
+
+### Patch Changes
+
+- 339518c2: Fixed how we initialize Sentry SDK for API routes when runtime is Node.js. After this change we will use `NodeClient` directly from Sentry SDK to avoid interfering with our OTEL setup. We also removed not needed Sentry integration for edge runtime
+
+## 1.14.5
+
+### Patch Changes
+
+- cc32891b: Fix how we initialize Sentry SDK for API routes when using node.js runtime. After this change we will use `NodeClient` from Sentry directly - avoiding Sentry interference with our OTEL setup.
+
+## 1.14.4
+
+### Patch Changes
+
+- a18b637e: Setup Sentry integration with our OTEL setup.
+
 ## 1.14.3
 
 ### Patch Changes

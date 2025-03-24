@@ -40,6 +40,7 @@ export const env = createEnv({
     OTEL_ACCESS_TOKEN: z.string().optional(),
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
+    OTEL_TRACES_SAMPLER_ARG: z.coerce.number().min(0).max(1).optional().default(1),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]),
@@ -78,6 +79,7 @@ export const env = createEnv({
     OTEL_ACCESS_TOKEN: process.env.OTEL_ACCESS_TOKEN,
     VERCEL_ENV: process.env.VERCEL_ENV,
     REPOSITORY_URL: process.env.REPOSITORY_URL,
+    OTEL_TRACES_SAMPLER_ARG: process.env.OTEL_TRACES_SAMPLER_ARG,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

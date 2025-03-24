@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-avatax",
-  "version": "1.14.3",
+  "version": "1.14.6",
   "private": true,
   "type": "module",
   "scripts": {

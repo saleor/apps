@@ -1,4 +1,4 @@
-import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
+import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -24,7 +24,7 @@ type FactoryProps = {
 };
 
 export const setupIndicesHandlerFactory =
-  ({ settingsManagerFactory, graphqlClientFactory }: FactoryProps): NextProtectedApiHandler =>
+  ({ settingsManagerFactory, graphqlClientFactory }: FactoryProps): NextJsProtectedApiHandler =>
   async (req, res, { authData }) => {
     if (req.method !== "POST") {
       logger.debug("Request method is different than POST, returning 405");
