@@ -18,7 +18,7 @@ describe("MetadataManager", () => {
     const cache = new AppMetadataCache();
     const manager = createSettingsManager(mockGqlClient, "test-id", cache);
 
-    function someExecution() {
+    async function someExecution() {
       cache.setMetadata([
         {
           key: METADATA_KEY,
@@ -26,13 +26,18 @@ describe("MetadataManager", () => {
         },
       ]);
 
-      return manager.get(METADATA_KEY);
+      const result = await manager.get(METADATA_KEY);
+
+      return Response.json({ result });
     }
 
-    return expect(cache.wrapNextAppRouterHandler(() => someExecution())).resolves.toBe("bar");
+    const response = await cache.wrapNextAppRouterHandler(() => someExecution());
+    const body = (await response.json()) as { result: string };
+
+    expect(body.result).toBe(METADATA_VALUE);
   });
 
-  it("Still works if cache is empty", () => {
+  it("Still works if cache is empty", async () => {
     const cache = new AppMetadataCache();
     const manager = createSettingsManager(mockGqlClient, "test-id", cache);
 
@@ -56,12 +61,15 @@ describe("MetadataManager", () => {
       };
     });
 
-    function someExecution() {
-      return manager.get(METADATA_KEY);
+    async function someExecution() {
+      const result = await manager.get(METADATA_KEY);
+
+      return Response.json({ result });
     }
 
-    return expect(cache.wrapNextAppRouterHandler(() => someExecution())).resolves.toBe(
-      METADATA_VALUE,
-    );
+    const response = await cache.wrapNextAppRouterHandler(() => someExecution());
+    const body = (await response.json()) as { result: string };
+
+    expect(body.result).toBe(METADATA_VALUE);
   });
 });
