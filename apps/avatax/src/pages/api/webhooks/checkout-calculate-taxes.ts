@@ -1,4 +1,5 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
+import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
@@ -26,6 +27,9 @@ export const config = {
 };
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
+
+const checkoutCalculateTaxesSyncWebhookReponse =
+  buildSyncWebhookResponsePayload<"CHECKOUT_CALCULATE_TAXES">;
 
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
   return appInternalTracer.startActiveSpan(
@@ -122,7 +126,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (req, res,
                 message: "Taxes calculated successfully",
               });
               span.end();
-              return res.status(200).json(ctx.buildResponse(value));
+              return res.status(200).json(checkoutCalculateTaxesSyncWebhookReponse(value));
             },
             (error) => {
               logger.warn("Error calculating taxes", { error });
