@@ -8,4 +8,5 @@ module.exports = {
     project: "tsconfig.json",
     tsconfigRootDir: __dirname,
   },
+  ignorePatterns: ["lint-staged.config.js"],
 };

@@ -16,4 +16,5 @@ module.exports = {
       },
     },
   ],
+  ignorePatterns: ["lint-staged.config.js"],
 };
