@@ -1,5 +1,14 @@
 # saleor-app-search
 
+## 1.23.6
+
+### Patch Changes
+
+- a76465fb: Update `@saleor/app-sdk` to `v1.0.0`
+- Updated dependencies [a76465fb]
+  - @saleor/apps-logger@1.5.3
+  - @saleor/apps-otel@2.1.4
+
 ## 1.23.5
 
 ### Patch Changes

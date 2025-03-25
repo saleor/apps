@@ -22,6 +22,7 @@
         "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
+        "SENTRY_SUPPRESS_GLOBAL_ERROR_HANDLER_FILE_WARNING",
         "SENTRY_PROJECT"
       ]
     },
