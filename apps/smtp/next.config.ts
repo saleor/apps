@@ -1,9 +1,7 @@
-// @ts-check
-
 import { withSentryConfig } from "@sentry/nextjs";
+import { NextConfig } from "next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: [
     "@saleor/apps-otel",
@@ -13,20 +11,18 @@ const nextConfig = {
     "@saleor/react-hook-form-macaw",
   ],
   experimental: {
-    serverComponentsExternalPackages: [
-      /*
-       * The deps below are have node-related features. When the flag "bundlePagesExternals" is enabled, They raise errors,
-       * So we must explicitly declare them as externals.
-       * more info: https://nextjs.org/docs/app/api-reference/next-config-js/serverExternalPackages
-       */
-      "handlebars",
-      "handlebars-helpers",
-    ],
     optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
-    bundlePagesExternals: true,
-    instrumentationHook: true,
   },
-  /** @type {import('next').NextConfig['webpack']} */
+  bundlePagesRouterDependencies: true,
+  serverExternalPackages: [
+    /*
+     * The deps below are have node-related features. When the flag "bundlePagesExternals" is enabled, They raise errors,
+     * So we must explicitly declare them as externals.
+     * more info: https://nextjs.org/docs/app/api-reference/next-config-js/serverExternalPackages
+     */
+    "handlebars",
+    "handlebars-helpers",
+  ],
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
