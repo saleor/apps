@@ -1,4 +1,4 @@
-import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 
 import { UntypedOrderConfirmedSubscriptionDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";

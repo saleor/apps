@@ -1,6 +1,6 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 import { captureException, setTag } from "@sentry/nextjs";
 
@@ -23,19 +23,13 @@ import {
 import { AvataxTransactionAlreadyCancelledError } from "@/modules/taxes/tax-error";
 import { orderCancelledAsyncWebhook } from "@/modules/webhooks/definitions/order-cancelled";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const logger = createLogger("orderCancelledAsyncWebhook");
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, captureException);
 
 const logsWriterFactory = new LogWriterFactory();
 
-const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) => {
+const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
   return appInternalTracer.startActiveSpan(
     "executing orderCancelled webhook handler",
     {
@@ -85,9 +79,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             });
             span.end();
 
-            return res
-              .status(400)
-              .json({ message: `Invalid order payload for order: ${payload.order?.id}` });
+            return Response.json(
+              { message: `Invalid order payload for order: ${payload.order?.id}` },
+              { status: 400 },
+            );
           }
           case error instanceof OrderCancelNoAvataxIdError: {
             logger.warn("No AvaTax id found in order. Likely not an AvaTax order.", {
@@ -109,9 +104,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             });
             span.end();
 
-            return res
-              .status(200)
-              .json({ message: "Invalid order payload. Likely not an AvaTax order." });
+            return Response.json(
+              { message: "Invalid order payload. Likely not an AvaTax order." },
+              { status: 200 },
+            );
           }
           case error instanceof SaleorCancelledOrderEvent.ParsingError: {
             logger.error("Error parsing order payload", { error });
@@ -131,9 +127,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             });
             span.end();
 
-            return res
-              .status(400)
-              .json({ message: `Invalid order payload for order: ${payload.order?.id}` });
+            return Response.json(
+              { message: `Invalid order payload for order: ${payload.order?.id}` },
+              { status: 400 },
+            );
           }
           default: {
             logger.error("Unhandled error", { error });
@@ -154,9 +151,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
             });
             span.end();
 
-            return res
-              .status(500)
-              .json({ message: `Unhandled error for order: ${payload.order?.id}` });
+            return Response.json(
+              { message: `Unhandled error for order: ${payload.order?.id}` },
+              { status: 500 },
+            );
           }
         }
       }
@@ -207,9 +205,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
         });
         span.end();
 
-        return res
-          .status(400)
-          .json({ message: `App configuration is broken for order: ${payload.order?.id}` });
+        return Response.json(
+          { message: `App configuration is broken for order: ${payload.order?.id}` },
+          { status: 400 },
+        );
       }
 
       logger.info("Cancelling order...");
@@ -233,9 +232,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
         });
         span.end();
 
-        return res
-          .status(400)
-          .json({ message: `App is not configured properly for order: ${payload.order?.id}` });
+        return Response.json(
+          { message: `App is not configured properly for order: ${payload.order?.id}` },
+          { status: 400 },
+        );
       }
 
       const avaTaxOrderCancelledAdapter = createAvaTaxOrderCancelledAdapterFromConfig(
@@ -271,9 +271,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
           });
           span.end();
 
-          return res.status(400).send({
-            message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs",
-          });
+          return Response.json(
+            { message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs" },
+            { status: 400 },
+          );
         }
 
         if (e instanceof AvataxTransactionAlreadyCancelledError) {
@@ -296,9 +297,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
           });
           span.end();
 
-          return res.status(200).send({
-            message: "Order was already cancelled in AvaTax",
-          });
+          return Response.json(
+            { message: "Order was already cancelled in AvaTax" },
+            { status: 200 },
+          );
         }
 
         OrderCancelledLogRequest.createErrorLog({
@@ -315,9 +317,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
           message: "Failed to void AvaTax transaction: unhandled error",
         });
 
-        return res.status(500).send({
-          message: "Failed to void AvaTax transaction. (Unhandled error)",
-        });
+        return Response.json(
+          { message: "Failed to void AvaTax transaction. (Unhandled error)" },
+          { status: 500 },
+        );
       }
 
       OrderCancelledLogRequest.createSuccessLog({
@@ -336,9 +339,13 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (req, res, ctx) =
       });
       span.end();
 
-      return res.status(200).end();
+      return Response.json({ message: "Success" }, { status: 200 });
     },
   );
 });
 
-export default compose(withLoggerContext, withMetadataCache, withSpanAttributes)(handler);
+export const POST = compose(
+  withLoggerContext,
+  withMetadataCache,
+  withSpanAttributesAppRouter,
+)(handler);
