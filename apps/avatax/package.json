@@ -28,7 +28,6 @@
     "@aws-sdk/lib-dynamodb": "3.651.1",
     "@aws-sdk/util-dynamodb": "3.651.1",
     "@hookform/resolvers": "^3.3.1",
-    "@next/env": "^13.5.4",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/api-logs": "catalog:",
     "@opentelemetry/instrumentation": "catalog:",
