@@ -9,8 +9,8 @@
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "dev:debug": "APP_LOG_LEVEL=debug pnpm dev",
-    "e2e": "vitest --project e2e --watch=false",
-    "e2e:watch": "vitest --project e2e --watch",
+    "e2e": "vitest --project e2e --watch=false --sequence.sequential",
+    "e2e:watch": "vitest --project e2e --watch --sequence.sequential",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run generate:app && pnpm run generate:e2e",
     "generate:app": "graphql-codegen --config .graphqlrc.ts",
@@ -20,8 +20,8 @@
     "migrate": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts --dry-run",
     "start": "next start",
-    "test": "vitest --project units",
-    "test:ci": "vitest run --coverage --project units"
+    "test": "vitest --project units --sequence.shuffle",
+    "test:ci": "vitest run --coverage --project units --sequence.shuffle"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "3.651.1",

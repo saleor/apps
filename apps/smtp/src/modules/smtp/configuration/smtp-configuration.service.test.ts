@@ -10,10 +10,6 @@ import { SmtpMetadataManager } from "./smtp-metadata-manager";
 
 const mockSaleorApiUrl = "https://demo.saleor.io/graphql/";
 
-const emptyConfigRoot: SmtpConfig = {
-  configurations: [],
-};
-
 const validConfig: SmtpConfig = {
   configurations: [
     {
@@ -247,6 +243,10 @@ describe("SmtpConfigurationService", function () {
     });
 
     it("The API should not be called when initial data were provided", async () => {
+      const emptyConfigRoot: SmtpConfig = {
+        configurations: [],
+      };
+
       const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
@@ -272,6 +272,10 @@ describe("SmtpConfigurationService", function () {
   });
   describe("setConfigurationRoot", () => {
     it("The API should be called and value cached, when saving the configuration", async () => {
+      const emptyConfigRoot: SmtpConfig = {
+        configurations: [],
+      };
+
       const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
@@ -304,6 +308,10 @@ describe("SmtpConfigurationService", function () {
     });
 
     it("Operation should be rejected, when attempting to save event not available according to feature flag", async () => {
+      const emptyConfigRoot: SmtpConfig = {
+        configurations: [],
+      };
+
       const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
@@ -376,6 +384,10 @@ describe("SmtpConfigurationService", function () {
 
   describe("getConfigurations", () => {
     it("Returns empty list when no configurations", async () => {
+      const initialData: SmtpConfig = {
+        configurations: [],
+      };
+
       const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
@@ -387,7 +399,7 @@ describe("SmtpConfigurationService", function () {
           saleorVersion: "3.14.0",
         }),
         metadataManager: configurator,
-        initialData: emptyConfigRoot,
+        initialData,
       });
 
       expect((await service.getConfigurations())._unsafeUnwrap()).toStrictEqual([]);
@@ -417,6 +429,10 @@ describe("SmtpConfigurationService", function () {
 
   describe("createConfiguration", () => {
     it("New configuration should be sent to API, when created", async () => {
+      const emptyConfigRoot: SmtpConfig = {
+        configurations: [],
+      };
+
       const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,
         mockSaleorApiUrl,
