@@ -1,9 +1,7 @@
-// @ts-check
-
 import { withSentryConfig } from "@sentry/nextjs";
+import { NextConfig } from "next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: [
     "@saleor/apps-otel",
@@ -15,10 +13,8 @@ const nextConfig = {
   ],
   experimental: {
     optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
-    bundlePagesExternals: true,
-    instrumentationHook: true,
   },
-  /** @type {import('next').NextConfig['webpack']} */
+  bundlePagesRouterDependencies: true,
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
