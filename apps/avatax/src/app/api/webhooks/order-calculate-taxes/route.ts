@@ -2,7 +2,7 @@ import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { AuthData } from "@saleor/app-sdk/APL";
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 import { captureException, setTag } from "@sentry/nextjs";
 
@@ -36,12 +36,6 @@ import {
 import { orderCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/order-calculate-taxes";
 import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "@/modules/webhooks/validate-webhook-payload";
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 const orderCalculateTaxesSyncWebhookReponse =
   buildSyncWebhookResponsePayload<"ORDER_CALCULATE_TAXES">;
@@ -106,7 +100,7 @@ async function calculateTaxes({
   return response;
 }
 
-const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ctx) => {
+const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
   return appInternalTracer.startActiveSpan(
     "executing orderCalculateTaxes webhook handler",
     {
@@ -161,7 +155,14 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           });
           span.end();
 
-          return res.status(400).json({ message: payloadVerificationResult.error.message });
+          return Response.json(
+            {
+              message: payloadVerificationResult.error.message,
+            },
+            {
+              status: 400,
+            },
+          );
         }
 
         const configExtractor = new AppConfigExtractor();
@@ -206,9 +207,12 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           });
           span.end();
 
-          return res.status(400).json({
-            message: `App configuration is broken for order: ${payload.taxBase.sourceObject.id}`,
-          });
+          return Response.json(
+            {
+              message: `App configuration is broken for order: ${payload.taxBase.sourceObject.id}`,
+            },
+            { status: 400 },
+          );
         }
 
         const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
@@ -230,9 +234,12 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           });
           span.end();
 
-          return res.status(400).json({
-            message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
-          });
+          return Response.json(
+            {
+              message: `App is not configured properly for order: ${payload.taxBase.sourceObject.id}`,
+            },
+            { status: 400 },
+          );
         }
 
         const calculatedTaxes = await calculateTaxes({
@@ -259,7 +266,9 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
         });
         span.end();
 
-        return res.status(200).json(orderCalculateTaxesSyncWebhookReponse(calculatedTaxes));
+        return Response.json(orderCalculateTaxesSyncWebhookReponse(calculatedTaxes), {
+          status: 200,
+        });
       } catch (error) {
         span.recordException(error as Error); // todo: remove casting when error handling is refactored
 
@@ -286,10 +295,13 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           });
           span.end();
 
-          return res.status(400).json({
-            message:
-              "GetTaxError: A problem occurred when you attempted to create a transaction through AvaTax. Check your address or line items.",
-          });
+          return Response.json(
+            {
+              message:
+                "GetTaxError: A problem occurred when you attempted to create a transaction through AvaTax. Check your address or line items.",
+            },
+            { status: 400 },
+          );
         }
 
         if (error instanceof AvataxInvalidAddressError) {
@@ -313,9 +325,12 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           });
           span.end();
 
-          return res.status(400).json({
-            message: "InvalidAppAddressError: Check address in app configuration",
-          });
+          return Response.json(
+            {
+              message: "InvalidAppAddressError: Check address in app configuration",
+            },
+            { status: 400 },
+          );
         }
 
         if (error instanceof AvataxStringLengthError) {
@@ -341,9 +356,12 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           });
           span.end();
 
-          return res.status(400).json({
-            message: `AvaTax service returned validation error: ${error.description} `,
-          });
+          return Response.json(
+            {
+              message: `AvaTax service returned validation error: ${error.description} `,
+            },
+            { status: 400 },
+          );
         }
 
         if (error instanceof AvataxEntityNotFoundError) {
@@ -367,9 +385,12 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
           });
           span.end();
 
-          return res.status(400).json({
-            message: `AvaTax service returned validation error: ${error.description} `,
-          });
+          return Response.json(
+            {
+              message: `AvaTax service returned validation error: ${error.description} `,
+            },
+            { status: 400 },
+          );
         }
 
         captureException(error);
@@ -389,10 +410,14 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (req, res, ct
         });
         span.end();
 
-        return res.status(500).json({ message: "Unhandled error" });
+        return Response.json({ message: "Unhandled error" }, { status: 500 });
       }
     },
   );
 });
 
-export default compose(withLoggerContext, withMetadataCache, withSpanAttributes)(handler);
+export const POST = compose(
+  withLoggerContext,
+  withMetadataCache,
+  withSpanAttributesAppRouter,
+)(handler);
