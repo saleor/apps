@@ -1,5 +1,11 @@
 # @saleor/trpc
 
+## 4.0.3
+
+### Patch Changes
+
+- a76465fb: Update `@saleor/app-sdk` to `v1.0.0`
+
 ## 4.0.2
 
 ### Patch Changes
