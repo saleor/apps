@@ -1,7 +1,7 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 import { captureException, setTag } from "@sentry/nextjs";
 
@@ -26,12 +26,6 @@ import {
   TaxBadPayloadError,
 } from "@/modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "@/modules/webhooks/definitions/order-confirmed";
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 const logger = createLogger("orderConfirmedAsyncWebhook");
 
@@ -68,7 +62,7 @@ async function confirmOrder({
   return response;
 }
 
-const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) => {
+const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
   return appInternalTracer.startActiveSpan(
     "executing orderConfirmed handler",
     {
@@ -116,7 +110,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         });
         span.end();
 
-        return res.status(500).json({ message: error.message });
+        return Response.json({ message: error.message }, { status: 500 });
       }
 
       loggerContext.set(
@@ -146,9 +140,12 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           });
           span.end();
 
-          return res.status(400).json({
-            message: `Skipping fulfilled order to prevent duplication for order: ${payload.order?.id}`,
-          });
+          return Response.json(
+            {
+              message: `Skipping fulfilled order to prevent duplication for order: ${payload.order?.id}`,
+            },
+            { status: 400 },
+          );
         }
 
         if (confirmedOrderEvent.isStrategyFlatRates()) {
@@ -168,9 +165,12 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           });
           span.end();
 
-          return res
-            .status(202)
-            .json({ message: `Order ${payload.order?.id} has flat rates tax strategy.` });
+          return Response.json(
+            {
+              message: `Order ${payload.order?.id} has flat rates tax strategy.`,
+            },
+            { status: 202 },
+          );
         }
 
         const appMetadata = payload.recipient?.privateMetadata ?? [];
@@ -217,9 +217,12 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           });
           span.end();
 
-          return res
-            .status(400)
-            .json({ message: `App configuration is broken for order: ${payload.order?.id}` });
+          return Response.json(
+            {
+              message: `App configuration is broken for order: ${payload.order?.id}`,
+            },
+            { status: 400 },
+          );
         }
 
         metadataCache.setMetadata(appMetadata);
@@ -246,9 +249,12 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           });
           span.end();
 
-          return res.status(400).json({
-            message: `App is not configured properly for order: ${payload.order?.id}`,
-          });
+          return Response.json(
+            {
+              message: `App is not configured properly for order: ${payload.order?.id}`,
+            },
+            { status: 400 },
+          );
         }
 
         try {
@@ -288,7 +294,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           });
           span.end();
 
-          return res.status(200).end();
+          return Response.json({ message: "Success" }, { status: 200 });
         } catch (error) {
           logger.debug("Error confirming order in AvaTax", { error: error });
           span.recordException(error as Error); // todo: remove casting when error handling is refactored
@@ -309,9 +315,12 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
               });
               span.end();
 
-              return res
-                .status(400)
-                .json({ message: `Order: ${payload.order?.id} data is not valid` });
+              return Response.json(
+                {
+                  message: `Order: ${payload.order?.id} data is not valid`,
+                },
+                { status: 400 },
+              );
             }
             case error instanceof AvataxStringLengthError: {
               OrderConfirmedLogRequest.createErrorLog({
@@ -328,9 +337,12 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
               });
               span.end();
 
-              return res.status(400).json({
-                message: `AvaTax service returned validation error: ${error?.description}`,
-              });
+              return Response.json(
+                {
+                  message: `AvaTax service returned validation error: ${error?.description}`,
+                },
+                { status: 400 },
+              );
             }
             case error instanceof AvataxEntityNotFoundError: {
               OrderConfirmedLogRequest.createErrorLog({
@@ -347,9 +359,12 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
               });
               span.end();
 
-              return res.status(400).json({
-                message: `AvaTax service returned validation error: ${error?.description}`,
-              });
+              return Response.json(
+                {
+                  message: `AvaTax service returned validation error: ${error?.description}`,
+                },
+                { status: 400 },
+              );
             }
           }
           captureException(error);
@@ -369,7 +384,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
           });
           span.end();
 
-          return res.status(500).json({ message: "Unhandled error" });
+          return Response.json({ message: "Unhandled error" }, { status: 500 });
         }
       } catch (error) {
         span.recordException(error as Error);
@@ -390,10 +405,14 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (req, res, ctx) =
         });
         span.end();
 
-        return res.status(500).json({ message: "Unhandled error" });
+        return Response.json({ message: "Unhandled error" }, { status: 500 });
       }
     },
   );
 });
 
-export default compose(withLoggerContext, withMetadataCache, withSpanAttributes)(handler);
+export const POST = compose(
+  withLoggerContext,
+  withMetadataCache,
+  withSpanAttributesAppRouter,
+)(handler);
