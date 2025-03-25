@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-otel",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "type": "module",
   "scripts": {
     "check-types": "tsc",
