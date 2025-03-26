@@ -25,5 +25,6 @@ const handler = (request: Request) => {
   });
 };
 
-export const GET = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
-export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
+const wrappedHandler = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
+
+export { wrappedHandler as GET, wrappedHandler as POST };
