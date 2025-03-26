@@ -1,5 +1,17 @@
 # saleor-app-avatax
 
+## 1.15.0
+
+### Minor Changes
+
+- 1aff5e42: Migrate AvaTax app to Next.js app router.
+
+### Patch Changes
+
+- Updated dependencies [1aff5e42]
+  - @saleor/apps-logger@1.5.4
+  - @saleor/apps-otel@2.1.5
+
 ## 1.14.7
 
 ### Patch Changes
