@@ -1,13 +1,11 @@
-// @ts-check
-
 import withBundleAnalyzerConfig from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
+import { NextConfig } from "next";
 
 // cache request for 1 day (in seconds) + revalidate once 60 seconds
 const cacheValue = "private,s-maxage=60,stale-while-revalidate=86400";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   async headers() {
     return [
       {
@@ -60,19 +58,8 @@ const nextConfig = {
       "jotai",
       "@saleor/apps-shared",
     ],
-    serverComponentsExternalPackages: [
-      "@aws-sdk/client-dynamodb",
-      "@aws-sdk/lib-dynamodb",
-      "@aws-sdk/util-dynamodb",
-      // dependencies of aws-sdk-client-mock
-      "@aws-sdk/client-s3",
-      "@aws-sdk/client-sns",
-      "@aws-sdk/client-sqs",
-    ],
-    bundlePagesExternals: true,
-    instrumentationHook: true,
   },
-  /** @type {import('next').NextConfig['webpack']} */
+  bundlePagesRouterDependencies: true,
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173

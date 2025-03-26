@@ -1,32 +1,19 @@
-// @ts-check
-
 import { withSentryConfig } from "@sentry/nextjs";
+import { NextConfig } from "next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: [
-    "@saleor/apps-logger",
     "@saleor/apps-shared",
     "@saleor/apps-ui",
     "@saleor/react-hook-form-macaw",
+    "@saleor/apps-logger",
+    "@saleor/apps-otel",
   ],
   experimental: {
-    optimizePackageImports: [
-      "@sentry/nextjs",
-      "@sentry/node",
-      "usehooks-ts",
-      "@saleor/app-sdk",
-      "@trpc/server",
-      "@trpc/client",
-      "@trpc/react-query",
-      "@trpc/next",
-      "@saleor/apps-shared",
-    ],
-    bundlePagesExternals: true,
-    instrumentationHook: true,
+    optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
   },
-  /** @type {import('next').NextConfig['webpack']} */
+  bundlePagesRouterDependencies: true,
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
