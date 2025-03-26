@@ -1,9 +1,0 @@
-{
-  "$schema": "https://turbo.build/schema.v2.json",
-  "extends": ["//"],
-  "tasks": {
-    "lint": {
-      "env": ["INSTANCE_URL", "DASHBOARD_USER_EMAIL", "DASHBOARD_USER_PASSWORD"]
-    }
-  }
-}
