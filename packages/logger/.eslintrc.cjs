@@ -5,9 +5,8 @@ module.exports = {
     project: "tsconfig.json",
     tsconfigRootDir: __dirname,
   },
-  ignorePatterns: ["coverage"],
   rules: {
     "no-console": "off",
   },
-  ignorePatterns: ["lint-staged.config.js"],
+  ignorePatterns: ["coverage", "lint-staged.config.js"],
 };

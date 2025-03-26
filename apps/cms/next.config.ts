@@ -1,15 +1,14 @@
 /* eslint-disable no-console */
-// @ts-check
 
 import { withSentryConfig } from "@sentry/nextjs";
+import { NextConfig } from "next";
 import { z } from "zod";
 
 const RequiredEnvs = z.object({
   APL: z.string().min(1),
 });
 
-/** @type {import('next').NextConfig} */
-const nextConfig = () => {
+const nextConfig = (): NextConfig => {
   const parsedEnvs = RequiredEnvs.safeParse(process.env);
 
   if (!parsedEnvs.success) {
@@ -29,10 +28,8 @@ const nextConfig = () => {
     ],
     experimental: {
       optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
-      bundlePagesExternals: true,
-      instrumentationHook: true,
     },
-    /** @type {import('next').NextConfig['webpack']} */
+    bundlePagesRouterDependencies: true,
     webpack: (config, { isServer }) => {
       if (isServer) {
         // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173

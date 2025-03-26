@@ -27,7 +27,7 @@ module.exports = {
       rules: {
         "n/no-process-env": "off",
       },
-      files: ["next.config.js", "src/env.ts", "src/instrumentation.ts"],
+      files: ["next.config.ts", "src/env.ts", "src/instrumentation.ts"],
     },
   ],
   parserOptions: {
