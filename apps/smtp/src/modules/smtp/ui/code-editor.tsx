@@ -22,7 +22,6 @@ export const CodeEditor = ({ initialTemplate, onChange, value, language }: Props
     (value?: string) => {
       onChange(value ?? "");
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [value],
   );
 
