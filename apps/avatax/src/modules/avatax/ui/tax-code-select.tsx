@@ -87,7 +87,6 @@ const useTaxCodeAutocomplete = ({ taxClassId }: { taxClassId: string }) => {
       prevValueRef.current = debouncedValue;
       updateMutation({ saleorTaxClassId: taxClassId, avataxTaxCode: debouncedValue });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedValue, isTouched, taxCodes, taxClassId, updateMutation]);
 
   React.useEffect(() => {
