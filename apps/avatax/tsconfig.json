@@ -17,7 +17,7 @@
     "**/*.ts",
     "**/*.tsx",
     "next.config.ts",
-    "eslint.config.js",
+    // "eslint.config.js",
     "reset.d.ts",
     ".next/types/**/*.ts",
     "graphql.config.ts"

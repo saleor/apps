@@ -107,12 +107,24 @@ export const config = [
     files: ["**/*.test.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}"],
     plugins: {
       vitest: vitestPlugin,
+      "@typescript-eslint": tseslint.plugin,
     },
     rules: {
-      "vitest/prefer-strict-equal": "error",
-      "vitest/prefer-vi-mocked": "error",
       // TODO: migrate all apps / packages to use this rules
       // ...vitestPlugin.configs.recommended.rules,
+      "vitest/prefer-strict-equal": "error",
+      "vitest/prefer-vi-mocked": "error",
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/__tests__/**"],
+              message: "Tests related code cannot be imported into application code",
+            },
+          ],
+        },
+      ],
     },
   },
   {
@@ -126,6 +138,13 @@ export const config = [
     ],
     rules: {
       "import/no-default-export": "off",
+    },
+  },
+  {
+    name: "@saleor/eslint-config-apps/override-no-restricted-imports",
+    files: ["**/*.test.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": "off",
     },
   },
   // it has to be the last config as it overrides rules that conflicts with prettier
