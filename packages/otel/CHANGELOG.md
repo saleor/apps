@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 2.1.5
+
+### Patch Changes
+
+- 1aff5e42: Add new helpers for Next.js app router.
+
 ## 2.1.4
 
 ### Patch Changes
