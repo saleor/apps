@@ -1,5 +1,5 @@
 import { trace } from "@opentelemetry/api";
-import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { ILogObj, Logger } from "tslog";
 
 import { BaseError, UnknownError } from "./errors";
@@ -49,7 +49,7 @@ export const attachLoggerVercelRuntimeTransport = (
       });
 
       if (isLogExceedingVercelLimit(stringifiedMessage)) {
-        Sentry.captureException(
+        captureException(
           new VercelMaximumLogSizeExceededError("Log message is exceeding Vercel limit", {
             props: {
               logName: log._meta.name,
@@ -74,7 +74,7 @@ export const attachLoggerVercelRuntimeTransport = (
 
       console.log(stringifiedMessage);
     } catch (error) {
-      Sentry.captureException(
+      captureException(
         new UnknownError("Error during attaching Vercel transport", {
           cause: error,
         }),

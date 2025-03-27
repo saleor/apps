@@ -18,7 +18,10 @@ const baseTracer = trace.getTracer("saleor.app.avatax.core", pkg.version);
 
 type CreateSpanCallback = (span: Span) => Promise<unknown> | unknown;
 
-// Create a proxy for Span to intercept recordException
+/*
+ * Proxy `recordException` method on span to serialize error before sending it to the OTEL collector.
+ * Serializing error is necessary to avoid sending stack trace to the collector.
+ */
 const createSpanProxy = (span: Span): Span => {
   return new Proxy(span, {
     get(target: Span, prop: string) {
@@ -28,14 +31,20 @@ const createSpanProxy = (span: Span): Span => {
             // serialize error to avoid sending stack trace
             return target.recordException(BaseError.serialize(exception), time);
           }
+
           return target.recordException(exception, time);
         };
       }
+
       return target[prop as keyof Span];
     },
   });
 };
 
+/**
+ * Proxied version of `@opentelemetry/api` Tracer that adds tenant domain attribute to all spans.
+ * It also calls `span.end()` automatically.
+ */
 export const appInternalTracer = new Proxy(baseTracer, {
   get(target: Tracer, prop: string) {
     if (prop === "startActiveSpan") {
@@ -44,7 +53,6 @@ export const appInternalTracer = new Proxy(baseTracer, {
           const proxiedSpan = createSpanProxy(span);
 
           try {
-            // Add default attributes to all spans
             const tenantDomain = loggerContext.getTenantDomain();
 
             if (tenantDomain) {
@@ -67,6 +75,7 @@ export const appInternalTracer = new Proxy(baseTracer, {
         });
       };
     }
+
     return target[prop as keyof Tracer];
   },
 });
