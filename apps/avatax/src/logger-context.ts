@@ -1,5 +1,8 @@
 import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
-import { LoggerContext, wrapWithLoggerContextAppRouter } from "@saleor/apps-logger/node";
+import {
+  LoggerContext,
+  wrapWithLoggerContextAppRouter,
+} from "@saleor/apps-logger/src/logger-context";
 
 /**
  * Server-side only

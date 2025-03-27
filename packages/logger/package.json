@@ -2,14 +2,6 @@
   "name": "@saleor/apps-logger",
   "version": "1.5.4",
   "type": "module",
-  "exports": {
-    ".": {
-      "default": "./index.ts"
-    },
-    "./node": {
-      "default": "./node.ts"
-    }
-  },
   "main": "index.ts",
   "scripts": {
     "check-types": "tsc",
