@@ -1,5 +1,18 @@
 # saleor-app-search
 
+## 1.23.8
+
+### Patch Changes
+
+- 94c52129: Update to Next.js 15
+  - @saleor/apps-logger@1.5.4
+  - @saleor/apps-otel@2.1.5
+  - @saleor/react-hook-form-macaw@0.2.14
+  - @saleor/sentry-utils@0.2.4
+  - @saleor/apps-shared@1.12.2
+  - @saleor/apps-ui@1.2.12
+  - @saleor/webhook-utils@0.2.5
+
 ## 1.23.7
 
 ### Patch Changes
