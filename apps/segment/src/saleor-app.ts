@@ -19,6 +19,7 @@ switch (env.APL) {
     apl = new DynamoAPL({ repository });
     break;
   }
+
   case "saleor-cloud": {
     if (!env.REST_APL_ENDPOINT || !env.REST_APL_TOKEN) {
       throw new MisconfiguredSaleorCloudAPLError(
@@ -35,6 +36,7 @@ switch (env.APL) {
   }
 
   case "file":
+
   default:
     apl = new FileAPL({
       fileName: env.FILE_APL_PATH,

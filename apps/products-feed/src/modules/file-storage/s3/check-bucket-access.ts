@@ -10,6 +10,6 @@ export const checkBucketAccess = async ({ s3Client, bucketName }: checkBucketAcc
   await s3Client.send(
     new HeadBucketCommand({
       Bucket: bucketName,
-    })
+    }),
   );
 };

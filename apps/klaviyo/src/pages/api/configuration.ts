@@ -71,6 +71,7 @@ const handler: NextJsProtectedApiHandler = async (request, res, ctx) => {
         success: true,
         data: await getAppSettings(settings),
       });
+
     case "POST": {
       try {
         await settings.set((JSON.parse(request.body) as PostRequestBody).data);
@@ -87,6 +88,7 @@ const handler: NextJsProtectedApiHandler = async (request, res, ctx) => {
         });
       }
     }
+
     default:
       return res.status(405).end();
   }

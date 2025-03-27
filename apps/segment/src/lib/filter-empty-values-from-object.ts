@@ -41,6 +41,7 @@ export const filterEmptyValuesFromObject = <T extends JsonObject>(obj: T): Parti
         if (typeof value === "object") {
           return [key, filterEmptyValuesFromObject(value as JsonObject)];
         }
+
         return [key, value];
       }),
   ) as Partial<T>;

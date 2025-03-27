@@ -111,6 +111,7 @@ const fetchVariants = async ({
         error: basicProductData.error,
       },
     );
+
     return [];
   }
 
@@ -121,6 +122,7 @@ const fetchVariants = async ({
         error: productAttributesData.error,
       },
     );
+
     return [];
   }
 
@@ -143,6 +145,7 @@ const fetchVariants = async ({
         error: relatedProductsData.error,
       },
     );
+
     return [];
   }
 
@@ -190,6 +193,7 @@ const fetchVariants = async ({
     logger.error("Error during the product variants mapping", {
       error: error instanceof Error ? error.message : error,
     });
+
     return [];
   }
 };

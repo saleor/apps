@@ -27,6 +27,7 @@ export const handler: NextJsWebhookHandler<ProductDeleted> = async (req, res, co
 
   if (!product) {
     logger.error("Webhook did not received expected product data in the payload.");
+
     return res.status(200).end();
   }
 
@@ -39,6 +40,7 @@ export const handler: NextJsWebhookHandler<ProductDeleted> = async (req, res, co
       logger.info("Algolia deleteProduct success");
 
       res.status(200).end();
+
       return;
     } catch (e) {
       logger.error("Failed to execute product_deleted webhook (algoliaClient.deleteProduct)", {

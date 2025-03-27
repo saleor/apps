@@ -70,6 +70,7 @@ export const datocmsRouter = router({
         logger.debug("Content type fields fetched successfully", {
           contentTypesIds: fields.map((f) => f.id),
         });
+
         return fields;
       } catch (e) {
         logger.warn("Can't fetch content type fields", { error: e });

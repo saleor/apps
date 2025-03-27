@@ -61,6 +61,7 @@ export const UploadMultiPart = async ({
           )
           .then((d) => {
             logger.trace(`Part ${i + 1}/${numberOfParts} uploaded`);
+
             return d;
           }),
       );

@@ -101,6 +101,7 @@ export const createSettingsManager = (
       }
 
       logger.debug("Cache not found, fetching metadata");
+
       return fetchAllMetadata(client);
     },
     mutateMetadata: (metadata) => updateMetadata(client, metadata, appId),

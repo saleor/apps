@@ -7,7 +7,7 @@ describe("priceMapping", () => {
     expect(
       priceMapping({
         pricing: undefined,
-      })
+      }),
     ).toStrictEqual(undefined);
   });
   it("Return undefined, when amount is equal to 0", () => {
@@ -21,7 +21,7 @@ describe("priceMapping", () => {
             },
           },
         },
-      })
+      }),
     ).toStrictEqual(undefined);
   });
   it("Return formatted base price, when there is no sale", () => {
@@ -35,7 +35,7 @@ describe("priceMapping", () => {
             },
           },
         },
-      })
+      }),
     ).toStrictEqual({ price: "10.50 USD" });
   });
   it("Return formatted base and sale prices, when there is a sale", () => {
@@ -55,7 +55,7 @@ describe("priceMapping", () => {
             },
           },
         },
-      })
+      }),
     ).toStrictEqual({ price: "10.50 USD", salePrice: "5.25 USD" });
   });
 });

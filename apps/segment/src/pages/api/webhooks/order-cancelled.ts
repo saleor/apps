@@ -49,6 +49,7 @@ const handler: NextJsWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = a
 
     if (!payload.order) {
       logger.info("Payload does not contain order data. Skipping.");
+
       return res
         .status(200)
         .json({ message: "Payload does not contain order data. It will be skipped by app" });

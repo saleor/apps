@@ -74,6 +74,7 @@ export const ConnectedS3ConfigurationForm = () => {
     onError({ message }) {
       if (message) {
         notifyError("Error", message);
+
         return;
       }
       notifyError("Error", "Failed to update, please refresh and try again");
@@ -96,14 +97,14 @@ export const ConnectedS3ConfigurationForm = () => {
     async (data: S3BucketConfiguration) => {
       mutate(data);
     },
-    [mutate]
+    [mutate],
   );
 
   const handleValidate = useCallback(
     async (data: S3BucketConfiguration) => {
       testConfigurationMutate(data);
     },
-    [testConfigurationMutate]
+    [testConfigurationMutate],
   );
 
   const formData: S3BucketConfiguration = useMemo(() => {

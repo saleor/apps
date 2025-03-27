@@ -31,6 +31,7 @@ export const updateWebhooksScript = async ({
 
       if (!webhooks?.length) {
         logger.info("The environment does not have any webhooks, skipping");
+
         return [];
       }
 

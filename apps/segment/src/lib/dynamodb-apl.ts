@@ -32,10 +32,12 @@ export class DynamoAPL implements APL {
 
       if (!getEntryResult.value) {
         span.end();
+
         return undefined;
       }
 
       span.end();
+
       return getEntryResult.value;
     });
   }
@@ -54,6 +56,7 @@ export class DynamoAPL implements APL {
       }
 
       span.end();
+
       return undefined;
     });
   }
@@ -72,6 +75,7 @@ export class DynamoAPL implements APL {
       }
 
       span.end();
+
       return undefined;
     });
   }
@@ -89,10 +93,12 @@ export class DynamoAPL implements APL {
 
       if (!getAllEntriesResult.value) {
         span.end();
+
         return [];
       }
 
       span.end();
+
       return getAllEntriesResult.value;
     });
   }

@@ -58,7 +58,7 @@ export const config = [
       "simple-import-sort/exports": "error",
       "@next/next/no-html-link-for-pages": "off",
       "padding-line-between-statements": [
-        "off", // TODO: migrate all apps / packages to use this rule
+        "error",
         { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
         { blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"] },
         { blankLine: "always", prev: "*", next: "return" },

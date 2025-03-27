@@ -104,6 +104,7 @@ export class AppConfig {
       this.rootData.s3 = s3ConfigSchema.parse(s3Config);
 
       logger.debug("S3 config saved");
+
       return this;
     } catch (e) {
       logger.info("Invalid S3 config provided", { error: e });
@@ -117,6 +118,7 @@ export class AppConfig {
       this.rootData.attributeMapping = attributeMappingSchema.parse(attributeMapping);
 
       logger.debug("Attribute mapping saved");
+
       return this;
     } catch (e) {
       logger.info("Invalid mapping config provided", { error: e });
@@ -134,6 +136,7 @@ export class AppConfig {
       };
 
       logger.debug("Channel urls saved");
+
       return this;
     } catch (e) {
       logger.info("Invalid channels config provided", { error: e });

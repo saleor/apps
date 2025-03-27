@@ -25,6 +25,7 @@ export async function fetchAllMetadata(client: Client): Promise<MetadataEntry[]>
 
   if (error) {
     logger.error("Error during fetching the metadata: ", { error: error });
+
     return [];
   }
 
