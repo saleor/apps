@@ -114,7 +114,7 @@ Apps are written in Next.js and are hosted on Vercel by Saleor. Everyone should 
 
 ## Docker
 
-Repository contains "devcontainers" setup which include Dockerfiles. They are meant for development. At the moment Saleor doesn't provide official production dockerfiles. Feel free to write your own, based on the development ones.
+Repository contains [Devcontainers](https://containers.dev/) setup which include Dockerfiles. They are meant for development. At the moment Saleor doesn't provide official production dockerfiles. Feel free to write your own, based on the development ones.
 
 ## APLs
 
