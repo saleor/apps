@@ -17,9 +17,10 @@
     "**/*.ts",
     "**/*.tsx",
     "next.config.ts",
-    ".eslintrc.cjs",
+    // "eslint.config.js",
     "reset.d.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "graphql.config.ts"
   ],
   "exclude": ["node_modules"]
 }

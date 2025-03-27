@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - uses: streetsidesoftware/cspell-action@934c74da3775ac844ec89503f666f67efb427fed # v6.8.1
+      - uses: streetsidesoftware/cspell-action@8485bb4b688c68384c2f6db7ad931f5e3e63f21c # v6.10.1
         with:
-          config: .cspell.json
+          config: cspell.config.js
           files: "**/*.{jsx,tsx,js,ts,md,mdx}"
           strict: false

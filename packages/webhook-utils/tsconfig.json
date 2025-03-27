@@ -1,5 +1,5 @@
 {
   "extends": "@saleor/typescript-config-apps/base.json",
-  "include": ["**/*.ts", "**/*.tsx", ".eslintrc.cjs"],
+  "include": ["**/*.ts", "**/*.tsx", "graphql.config.ts"],
   "exclude": ["node_modules"]
 }

@@ -1,4 +1,5 @@
 import { IGraphQLConfig } from "graphql-config";
+
 const config: IGraphQLConfig = {
   projects: {
     e2e: {
@@ -21,8 +22,10 @@ const config: IGraphQLConfig = {
               config: {
                 // Export operations into raw string with `gql` used in template literals
                 rawRequest: true,
-                // We don't want to use `graphql-tag` for parsing of strings into AST
-                // because PactumJS expects string as input to requests
+                /*
+                 * We don't want to use `graphql-tag` for parsing of strings into AST
+                 * because PactumJS expects string as input to requests
+                 */
                 gqlImport: "../utils#gql",
               },
             },
