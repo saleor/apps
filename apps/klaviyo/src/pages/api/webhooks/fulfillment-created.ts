@@ -103,6 +103,7 @@ const handler: NextJsWebhookHandler<FulfillmentCreatedWebhookPayloadFragment> = 
 
   if (!userEmail) {
     logger.warn("Request rejected - missing user email");
+
     return res.status(400).json({ success: false, message: "No user email." });
   }
 
@@ -124,6 +125,7 @@ const handler: NextJsWebhookHandler<FulfillmentCreatedWebhookPayloadFragment> = 
   }
 
   logger.info("Webhook processed successfully");
+
   return res.status(200).json({ success: true, message: "Message sent!" });
 };
 

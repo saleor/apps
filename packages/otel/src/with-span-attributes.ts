@@ -22,6 +22,7 @@ export const withSpanAttributes = (handler: NextApiHandler) => {
         span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, saleorVersion);
       }
     }
+
     return handler(req, res);
   };
 };
@@ -42,6 +43,7 @@ export const withSpanAttributesAppRouter = (handler: NextAppRouterHandler) => {
         span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, saleorVersion);
       }
     }
+
     return handler(req);
   };
 };

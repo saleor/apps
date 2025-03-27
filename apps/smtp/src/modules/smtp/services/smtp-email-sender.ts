@@ -67,6 +67,7 @@ export class SmtpEmailSender implements ISMTPEmailSender {
           },
         });
         break;
+
       case "SSL":
         transporter = nodemailer.createTransport({
           secure: true,
@@ -78,6 +79,7 @@ export class SmtpEmailSender implements ISMTPEmailSender {
           },
         });
         break;
+
       case "NONE":
         transporter = nodemailer.createTransport({
           host: smtpSettings.host,
@@ -89,6 +91,7 @@ export class SmtpEmailSender implements ISMTPEmailSender {
           },
         });
         break;
+
       default:
         throw new Error("Unknown encryption type");
     }

@@ -70,15 +70,18 @@ export class WebhookMigrationRunner {
             `Migration finished with warning for ${saleorApiUrl}: app probably uninstalled`,
           );
           break;
+
         case error instanceof WebhookMigrationNetworkError:
           logger.warn(`Migration finished with warning for ${saleorApiUrl}: Saleor not available`);
           break;
+
         case error instanceof WebhookMigrationUnknownError:
           logger.error(
             `Migration finished with error for ${saleorApiUrl} while fetching data from Saleor`,
             { error },
           );
           throw error;
+
         default:
           logger.error(
             `Migration finished with error for ${saleorApiUrl} while running migrations`,

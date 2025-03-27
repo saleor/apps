@@ -96,6 +96,7 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
   }
 
   logger.debug("Token verified");
+
   return next();
 });
 

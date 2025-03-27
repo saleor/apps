@@ -98,6 +98,7 @@ describe("fetchProductData", () => {
                 },
               }),
             };
+
           case FetchProductAttributesDataDocument:
             return {
               toPromise: vi.fn().mockResolvedValueOnce({
@@ -121,6 +122,7 @@ describe("fetchProductData", () => {
                 },
               }),
             };
+
           case FetchRelatedProductsDataDocument:
             return {
               toPromise: vi.fn().mockResolvedValueOnce({
@@ -134,6 +136,7 @@ describe("fetchProductData", () => {
                 },
               }),
             };
+
           default:
             return { toPromise: vi.fn().mockResolvedValue({ data: {} }) };
         }

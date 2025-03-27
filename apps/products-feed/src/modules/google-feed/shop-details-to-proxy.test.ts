@@ -9,7 +9,7 @@ describe("shopDetailsToProxy", () => {
         description: "Shop description",
         storefrontUrl: "https://example.com",
         title: "Shop title",
-      })
+      }),
     ).toMatchInlineSnapshot(`
       [
         {
@@ -42,7 +42,7 @@ describe("shopDetailsToProxy", () => {
       shopDetailsToProxy({
         storefrontUrl: "https://example.com",
         title: "Shop title",
-      })
+      }),
     ).toMatchInlineSnapshot(`
       [
         {

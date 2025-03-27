@@ -62,11 +62,13 @@ export const attachLoggerVercelRuntimeTransport = (
       // Prints Vercel log in proper level https://vercel.com/docs/observability/runtime-logs#level
       if (_meta.logLevelName === "ERROR") {
         console.error(stringifiedMessage);
+
         return;
       }
 
       if (_meta.logLevelName === "WARN") {
         console.warn(stringifiedMessage);
+
         return;
       }
 

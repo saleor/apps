@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
       // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
       config.ignoreWarnings = [{ module: /require-in-the-middle/ }];
     }
+
     return config;
   },
 };

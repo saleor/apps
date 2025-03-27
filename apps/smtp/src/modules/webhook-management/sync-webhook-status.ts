@@ -44,9 +44,11 @@ export const syncWebhookStatus = async ({
 
     if (newStatuses[webhook]) {
       logger.debug(`Creating webhook ${webhook}`);
+
       return webhookManagementService.createWebhook({ webhook });
     } else {
       logger.debug(`Deleting webhook ${webhook}`);
+
       return webhookManagementService.deleteWebhook({ webhook });
     }
   });

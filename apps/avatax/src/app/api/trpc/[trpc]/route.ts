@@ -18,6 +18,7 @@ const handler = (request: Request) => {
     onError: ({ path, error }) => {
       if (error.code === "INTERNAL_SERVER_ERROR") {
         logger.error(`${path} returned error:`, error);
+
         return;
       }
       logger.debug(`${path} returned error:`, error);

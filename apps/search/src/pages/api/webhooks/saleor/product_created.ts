@@ -28,6 +28,7 @@ export const handler: NextJsWebhookHandler<ProductCreated> = async (req, res, co
 
   if (!product) {
     logger.error("Webhook did not received expected product data in the payload.");
+
     return res.status(200).end();
   }
 
@@ -40,6 +41,7 @@ export const handler: NextJsWebhookHandler<ProductCreated> = async (req, res, co
       logger.info("Algolia createProduct success");
 
       res.status(200).end();
+
       return;
     } catch (e) {
       if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {

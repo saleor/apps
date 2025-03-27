@@ -195,6 +195,7 @@ export class DatoCMSClient {
             error: isUniqueIdError,
             variantId: variant.product.id,
           });
+
           return this.updateProductVariant({ configuration, variant });
         } else {
           throw new Error(JSON.stringify(err.cause));

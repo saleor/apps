@@ -16,6 +16,7 @@ export class AvataxAuthValidationService {
     if (!pingResult.value.authenticated) {
       return errAsync(new AvataxInvalidCredentialsError("Invalid AvaTax credentials"));
     }
+
     return okAsync({});
   }
 }

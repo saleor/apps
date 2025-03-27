@@ -121,6 +121,8 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 code: SpanStatusCode.OK,
                 message: "Taxes calculated successfully",
               });
+              span.end();
+
               return Response.json(checkoutCalculateTaxesSyncWebhookReponse(value), {
                 status: 200,
               });
@@ -135,6 +137,8 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: error from AvaTax API",
                   });
+                  span.end();
+
                   return Response.json(
                     {
                       message: `Failed to calculate taxes for checkout: ${payload.taxBase.sourceObject.id}`,
@@ -142,11 +146,14 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     { status: 500 },
                   );
                 }
+
                 case CalculateTaxesUseCase.ConfigBrokenError: {
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: invalid configuration",
                   });
+                  span.end();
+
                   return Response.json(
                     {
                       message: `Failed to calculate taxes due to invalid configuration for checkout: ${payload.taxBase.sourceObject.id}`,
@@ -154,11 +161,14 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     { status: 500 },
                   );
                 }
+
                 case CalculateTaxesUseCase.ExpectedIncompletePayloadError: {
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calucalted taxes: incomplete payload",
                   });
+                  span.end();
+
                   return Response.json(
                     {
                       message: `Taxes can't be calculated due to incomplete payload for checkout: ${payload.taxBase.sourceObject.id}`,
@@ -166,7 +176,9 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     { status: 400 },
                   );
                 }
+
                 default:
+
                 case CalculateTaxesUseCase.UnhandledError: {
                   captureException(error);
                   span.setStatus({
