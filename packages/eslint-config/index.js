@@ -31,6 +31,7 @@ export const config = [
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
+        sourceType: "module",
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
@@ -46,6 +47,7 @@ export const config = [
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,
+      ...tseslint.configs.eslintRecommended.rules,
       "max-params": "off",
       "@typescript-eslint/max-params": ["error", { max: 3 }],
       "turbo/no-undeclared-env-vars": "error",

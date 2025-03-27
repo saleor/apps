@@ -46,7 +46,7 @@ export class CategoriesFetcher {
    * Fetches all categories pages - standard page is max 100 items
    */
   async fetchAllCategories(): Promise<CategoryWithMappingFragmentFragment[]> {
-    let categories: CategoryWithMappingFragmentFragment[] = [];
+    const categories: CategoryWithMappingFragmentFragment[] = [];
 
     this.logger.debug("fetchAllCategories called");
 

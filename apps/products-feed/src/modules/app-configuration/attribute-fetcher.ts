@@ -45,7 +45,7 @@ export class AttributeFetcher {
    * Fetches all attribute pages - standard page is max 100 items
    */
   async fetchAllAttributes(): Promise<AttributeWithMappingFragmentFragment[]> {
-    let attributes: AttributeWithMappingFragmentFragment[] = [];
+    const attributes: AttributeWithMappingFragmentFragment[] = [];
 
     this.logger.debug("fetchAllAttributes called");
 
