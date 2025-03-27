@@ -57,7 +57,6 @@ export const useAppApi = ({ url, options, skip }: UseFetchProps) => {
       setError(undefined);
       setData(undefined);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, options, skip]);
 
   return { data, error, loading };
