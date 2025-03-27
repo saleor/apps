@@ -8,9 +8,9 @@ import { captureException, setTag } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
-import { appInternalTracer } from "@/lib/app-internal-tracer";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { appExternalTracer } from "@/lib/tracing";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
@@ -101,7 +101,7 @@ async function calculateTaxes({
 }
 
 const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
-  return appInternalTracer.startActiveSpan(
+  return appExternalTracer.startActiveSpan(
     "executing orderCalculateTaxes webhook handler",
     {
       kind: SpanKind.SERVER,

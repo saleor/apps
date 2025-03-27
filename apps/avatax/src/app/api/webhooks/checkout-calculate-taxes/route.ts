@@ -7,9 +7,9 @@ import { captureException, setTag } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
-import { appInternalTracer } from "@/lib/app-internal-tracer";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { appExternalTracer } from "@/lib/tracing";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
@@ -26,7 +26,7 @@ const checkoutCalculateTaxesSyncWebhookReponse =
   buildSyncWebhookResponsePayload<"CHECKOUT_CALCULATE_TAXES">;
 
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
-  return appInternalTracer.startActiveSpan(
+  return appExternalTracer.startActiveSpan(
     "executing checkoutCalculateTaxes webhook handler",
     {
       kind: SpanKind.SERVER,

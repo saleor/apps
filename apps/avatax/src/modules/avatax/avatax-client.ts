@@ -8,7 +8,7 @@ import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { fromPromise } from "neverthrow";
 
-import { appInternalTracer } from "@/lib/app-internal-tracer";
+import { appExternalTracer } from "@/lib/tracing";
 import { createLogger } from "@/logger";
 
 import { AvataxErrorsParser } from "./avatax-errors-parser";
@@ -39,7 +39,7 @@ export class AvataxClient {
   constructor(private client: Avatax) {}
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    return appInternalTracer.startActiveSpan(
+    return appExternalTracer.startActiveSpan(
       "calling AvaTax createOrAdjustTransaction API",
       {
         kind: SpanKind.CLIENT,
@@ -97,7 +97,7 @@ export class AvataxClient {
     transactionCode: string;
     companyCode: string;
   }) {
-    return appInternalTracer.startActiveSpan(
+    return appExternalTracer.startActiveSpan(
       "calling AvaTax voidTransaction API",
       {
         kind: SpanKind.CLIENT,
@@ -173,7 +173,7 @@ export class AvataxClient {
   }
 
   async getEntityUseCode(useCode: string) {
-    return appInternalTracer.startActiveSpan(
+    return appExternalTracer.startActiveSpan(
       "calling AvaTax listEntityUseCodes API",
       {
         kind: SpanKind.CLIENT,

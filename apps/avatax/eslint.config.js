@@ -12,6 +12,19 @@ export default [
     },
     rules: {
       "n/no-process-env": "error",
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@opentelemetry/api",
+              importNames: ["trace"],
+              message:
+                "Importing trace from @opentelemetry/api is not allowed. Use our custom tracing module instead.",
+            },
+          ],
+        },
+      ],
     },
   },
   {

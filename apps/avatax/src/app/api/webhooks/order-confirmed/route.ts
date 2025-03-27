@@ -7,10 +7,10 @@ import { captureException, setTag } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
-import { appInternalTracer } from "@/lib/app-internal-tracer";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { appExternalTracer } from "@/lib/tracing";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { OrderMetadataManager } from "@/modules/app/order-metadata-manager";
@@ -63,7 +63,7 @@ async function confirmOrder({
 }
 
 const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
-  return appInternalTracer.startActiveSpan(
+  return appExternalTracer.startActiveSpan(
     "executing orderConfirmed handler",
     {
       kind: SpanKind.SERVER,

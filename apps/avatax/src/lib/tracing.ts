@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-restricted-imports */
 import {
   Exception,
   Span,
@@ -14,7 +15,7 @@ import { loggerContext } from "@/logger-context";
 
 import pkg from "../../package.json";
 
-const baseTracer = trace.getTracer("saleor.app.avatax.core", pkg.version);
+export const baseTracer = trace.getTracer("saleor.app.avatax.service", pkg.version);
 
 type CreateSpanCallback = (span: Span) => Promise<unknown> | unknown;
 
@@ -42,10 +43,13 @@ const createSpanProxy = (span: Span): Span => {
 };
 
 /**
+ * Tracer that sends spans both to external OTEL & Saleor internal OTEL collectors.
+ * **Make sure you intend to use this tracer as it will send spans to external OTEL collector.**
+ *
  * Proxied version of `@opentelemetry/api` Tracer that adds tenant domain attribute to all spans.
  * It also calls `span.end()` automatically.
  */
-export const appInternalTracer = new Proxy(baseTracer, {
+export const appExternalTracer = new Proxy(baseTracer, {
   get(target: Tracer, prop: string) {
     if (prop === "startActiveSpan") {
       return async (name: string, options: SpanOptions, callback: CreateSpanCallback) => {
@@ -79,3 +83,8 @@ export const appInternalTracer = new Proxy(baseTracer, {
     return target[prop as keyof Tracer];
   },
 });
+
+/**
+ * Tracer that sends spans to Saleor internal OTEL collector.
+ */
+export const appInternalTracer = trace.getTracer("saleor.app.avatax.core", pkg.version);
