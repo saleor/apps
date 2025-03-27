@@ -1,5 +1,17 @@
 # @saleor/apps-logger
 
+## 1.5.4
+
+### Patch Changes
+
+- 1aff5e42: Add new helpers for Next.js app router.
+
+## 1.5.3
+
+### Patch Changes
+
+- a76465fb: Update `@saleor/app-sdk` to `v1.0.0`
+
 ## 1.5.2
 
 ### Patch Changes

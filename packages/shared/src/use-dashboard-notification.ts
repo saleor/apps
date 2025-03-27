@@ -12,10 +12,10 @@ export const useDashboardNotification = () => {
             status: "success",
             title,
             text,
-          })
+          }),
         );
       },
-      [appBridge]
+      [appBridge],
     ),
     notifyError: useCallback(
       (title: string, text?: string, apiMessage?: string) => {
@@ -25,10 +25,10 @@ export const useDashboardNotification = () => {
             title,
             text,
             apiMessage: apiMessage,
-          })
+          }),
         );
       },
-      [appBridge]
+      [appBridge],
     ),
     notifyWarning: useCallback(
       (title: string, text?: string) => {
@@ -37,10 +37,10 @@ export const useDashboardNotification = () => {
             status: "warning",
             title,
             text,
-          })
+          }),
         );
       },
-      [appBridge]
+      [appBridge],
     ),
     notifyInfo: useCallback(
       (title: string, text?: string) => {
@@ -49,10 +49,10 @@ export const useDashboardNotification = () => {
             status: "info",
             title,
             text,
-          })
+          }),
         );
       },
-      [appBridge]
+      [appBridge],
     ),
   };
 };

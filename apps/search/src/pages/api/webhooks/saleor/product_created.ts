@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
@@ -17,7 +17,7 @@ export const config = {
 
 const logger = createLogger("webhookProductCreatedWebhookHandler");
 
-export const handler: NextWebhookApiHandler<ProductCreated> = async (req, res, context) => {
+export const handler: NextJsWebhookHandler<ProductCreated> = async (req, res, context) => {
   const { event, authData } = context;
 
   logger.info(`New event received: ${event} (${context.payload?.__typename})`, {
@@ -28,6 +28,7 @@ export const handler: NextWebhookApiHandler<ProductCreated> = async (req, res, c
 
   if (!product) {
     logger.error("Webhook did not received expected product data in the payload.");
+
     return res.status(200).end();
   }
 
@@ -40,6 +41,7 @@ export const handler: NextWebhookApiHandler<ProductCreated> = async (req, res, c
       logger.info("Algolia createProduct success");
 
       res.status(200).end();
+
       return;
     } catch (e) {
       if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {

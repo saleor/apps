@@ -12,7 +12,6 @@ export const useWebhooksStatus = () => {
     /**
      * fetch from SDK is not wrapped with memo todo
      */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return useQuery<WebhooksStatusResponse>({

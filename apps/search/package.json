@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-search",
-  "version": "1.23.4",
+  "version": "1.23.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -68,7 +68,8 @@
     "@graphql-typed-document-node/core": "3.2.0",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/react": "16.2.0",
     "@types/debug": "^4.1.7",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
@@ -77,7 +78,7 @@
     "eslint": "catalog:",
     "node-mocks-http": "^1.12.2",
     "tsx": "4.7.1",
-    "typescript": "5.5.4",
+    "typescript": "5.8.2",
     "vite": "5.3.3",
     "vitest": "1.6.0"
   },

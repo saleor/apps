@@ -1,6 +1,6 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { createGraphQLClient } from "@saleor/apps-shared";
-import { act, renderHook } from "@testing-library/react-hooks";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
@@ -35,24 +35,29 @@ describe("useBatchUpload", () => {
   });
 
   it("should start import and update upload state", async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useBatchUpload(mockSearchProvider));
+    const { result } = renderHook(() => useBatchUpload(mockSearchProvider));
 
     act(() => {
       result.current.startUpload();
     });
 
-    await waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.uploadState.type).toBe("uploading");
+    });
 
-    expect(result.current.uploadState.type).toBe("uploading");
-
-    await waitForNextUpdate();
-
-    expect(result.current.uploadState.type).toBe("success");
-    expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledTimes(1);
-    expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledWith([
-      { id: "product1" },
-      { id: "product2" },
-    ]);
+    await waitFor(
+      () => {
+        expect(result.current.uploadState.type).toBe("success");
+        expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledTimes(1);
+        expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledWith([
+          { id: "product1" },
+          { id: "product2" },
+        ]);
+      },
+      {
+        timeout: 2_000,
+      },
+    );
   });
 
   it("should not start import if searchProvider is null", async () => {
@@ -94,21 +99,26 @@ describe("useBatchUpload", () => {
       }),
     } as any);
 
-    const { result, waitForNextUpdate } = renderHook(() => useBatchUpload(mockSearchProvider));
+    const { result } = renderHook(() => useBatchUpload(mockSearchProvider));
 
     act(() => {
       result.current.startUpload();
     });
 
-    await waitForNextUpdate();
+    await waitFor(() => {
+      expect(result.current.uploadState.type).toBe("uploading");
+    });
 
-    expect(result.current.uploadState.type).toBe("uploading");
-
-    await waitForNextUpdate();
-
-    expect(result.current.uploadState.type).toBe("success");
-    expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledTimes(2);
-    expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledWith([{ id: "product1" }]);
-    expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledWith([{ id: "product2" }]);
+    await waitFor(
+      () => {
+        expect(result.current.uploadState.type).toBe("success");
+        expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledTimes(2);
+        expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledWith([{ id: "product1" }]);
+        expect(mockSearchProvider.updatedBatchProducts).toHaveBeenCalledWith([{ id: "product2" }]);
+      },
+      {
+        timeout: 2_000,
+      },
+    );
   });
 });

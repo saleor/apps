@@ -11,9 +11,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "next.config.js",
-    ".eslintrc.cjs",
-    "reset.d.ts"
+    "next.config.ts",
+    "reset.d.ts",
+    "graphql.config.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -37,6 +37,7 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
               tax_rate: 0,
             },
           );
+
           return {
             total_gross_amount: totalAmount,
             total_net_amount: totalAmount,

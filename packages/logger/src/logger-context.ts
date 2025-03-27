@@ -1,6 +1,8 @@
-import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/const";
+import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/headers";
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
+import { NextRequest } from "next/server";
 
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();
@@ -22,7 +24,20 @@ export class LoggerContext {
     return store;
   }
 
-  async wrap(fn: (...args: unknown[]) => unknown, initialState = {}) {
+  async wrapNextApiHandler(fn: (...args: unknown[]) => unknown, initialState = {}) {
+    return this.als.run(
+      {
+        ...initialState,
+        project_name: this.project_name,
+      },
+      fn,
+    );
+  }
+
+  async wrapNextAppRouterHandler(
+    fn: (...args: unknown[]) => Response | Promise<Response>,
+    initialState = {},
+  ) {
     return this.als.run(
       {
         ...initialState,
@@ -41,7 +56,7 @@ export class LoggerContext {
 
 export const wrapWithLoggerContext = (handler: NextApiHandler, loggerContext: LoggerContext) => {
   return (req: NextApiRequest, res: NextApiResponse) => {
-    return loggerContext.wrap(() => {
+    return loggerContext.wrapNextApiHandler(() => {
       const saleorApiUrl = req.headers[SALEOR_API_URL_HEADER] as string;
       const saleorEvent = req.headers[SALEOR_EVENT_HEADER] as string;
       const path = req.url as string;
@@ -51,6 +66,30 @@ export const wrapWithLoggerContext = (handler: NextApiHandler, loggerContext: Lo
       loggerContext.set("saleorEvent", saleorEvent ?? null);
 
       return handler(req, res);
+    });
+  };
+};
+
+export const wrapWithLoggerContextAppRouter = (
+  handler: NextAppRouterHandler,
+  loggerContext: LoggerContext,
+) => {
+  return (req: NextRequest) => {
+    return loggerContext.wrapNextAppRouterHandler(() => {
+      const saleorApiUrl = req.headers.get(SALEOR_API_URL_HEADER);
+      const saleorEvent = req.headers.get(SALEOR_EVENT_HEADER);
+
+      loggerContext.set("path", req.nextUrl.pathname);
+
+      if (saleorApiUrl) {
+        loggerContext.set("saleorApiUrl", saleorApiUrl);
+      }
+
+      if (saleorEvent) {
+        loggerContext.set("saleorEvent", saleorEvent);
+      }
+
+      return handler(req);
     });
   };
 };

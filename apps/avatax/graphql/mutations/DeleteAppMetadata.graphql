@@ -1,0 +1,10 @@
+mutation DeleteAppMetadata($id: ID!, $keys: [String!]!) {
+  deletePrivateMetadata(id: $id, keys: $keys) {
+    item {
+      privateMetadata {
+        key
+        value
+      }
+    }
+  }
+}

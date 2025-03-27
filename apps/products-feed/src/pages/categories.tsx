@@ -7,7 +7,7 @@ const DynamicCategoryMapping = dynamic(
   () => import("../modules/category-mapping/ui/category-mapping").then((m) => m.CategoryMapping),
   {
     loading: () => <Text>Loading...</Text>,
-  }
+  },
 );
 
 const CategoriesPage: NextPage = () => {

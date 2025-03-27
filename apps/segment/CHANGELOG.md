@@ -1,5 +1,41 @@
 # saleor-app-segment
 
+## 2.1.8
+
+### Patch Changes
+
+- 94c52129: Update to Next.js 15
+  - @saleor/apps-logger@1.5.4
+  - @saleor/apps-otel@2.1.5
+  - @saleor/react-hook-form-macaw@0.2.14
+  - @saleor/sentry-utils@0.2.4
+  - @saleor/apps-shared@1.12.2
+  - @saleor/apps-ui@1.2.12
+  - @saleor/webhook-utils@0.2.5
+
+## 2.1.7
+
+### Patch Changes
+
+- Updated dependencies [1aff5e42]
+  - @saleor/apps-logger@1.5.4
+  - @saleor/apps-otel@2.1.5
+
+## 2.1.6
+
+### Patch Changes
+
+- a76465fb: Update `@saleor/app-sdk` to `v1.0.0`
+- Updated dependencies [a76465fb]
+  - @saleor/apps-logger@1.5.3
+  - @saleor/apps-otel@2.1.4
+
+## 2.1.5
+
+### Patch Changes
+
+- 339518c2: Fixed how we initialize Sentry SDK for API routes when runtime is Node.js. After this change we will use `NodeClient` directly from Sentry SDK to avoid interfering with our OTEL setup. We also removed not needed Sentry integration for edge runtime
+
 ## 2.1.4
 
 ### Patch Changes

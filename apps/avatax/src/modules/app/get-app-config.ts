@@ -34,6 +34,7 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
 
     if (providerConnectionValidation.success) {
       providerConnections = providerConnectionValidation.data;
+
       return;
     }
 
@@ -41,6 +42,7 @@ export const getAppConfig = (metadata: MetadataItem[]) => {
 
     if (channelsValidation.success) {
       channelsConfig = channelsValidation.data;
+
       return;
     }
   });

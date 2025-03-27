@@ -1,4 +1,4 @@
-import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/const";
+import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/headers";
 import { httpBatchLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 
@@ -31,6 +31,7 @@ export const trpcClient = createTRPCNext<AppRouter>({
               );
               throw new Error("Token and Saleor API URL unknown");
             }
+
             return {
               /**
                * Attach headers from app to client requests, so tRPC can add them to context

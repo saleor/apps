@@ -12,29 +12,17 @@
     "storybook": "storybook dev -p 6006"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.8",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@storybook/addon-actions": "^7.0.12",
-    "@storybook/addon-essentials": "^7.0.12",
-    "@storybook/addon-interactions": "^7.0.12",
-    "@storybook/addon-links": "^7.0.12",
-    "@storybook/blocks": "^7.0.12",
-    "@storybook/react": "^7.0.12",
-    "@storybook/react-vite": "^7.0.12",
-    "@storybook/testing-library": "^0.0.14-next.2",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "@vanilla-extract/vite-plugin": "^3.8.1",
     "eslint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-hook-form": "^7.43.9",
-    "storybook": "^7.0.12",
-    "typescript": "5.5.4",
-    "vite": "5.3.3",
-    "webpack": "^5.82.1"
+    "typescript": "5.8.2",
+    "vite": "5.3.3"
   },
   "peerDependencies": {
     "@saleor/macaw-ui": "catalog:",

@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -42,7 +42,7 @@ export const orderCreatedWebhook = new SaleorAsyncWebhook<OrderCreatedWebhookPay
   query: UntypedOrderCreatedDocument,
 });
 
-const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async (
+const handler: NextJsWebhookHandler<OrderCreatedWebhookPayloadFragment> = async (
   req,
   res,
   context,
@@ -65,6 +65,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   if (!klaviyoToken || !klaviyoMetric) {
     logger.warn("Request rejected - app not configured");
+
     return res.status(400).json({ success: false, message: "App not configured." });
   }
 
@@ -72,6 +73,7 @@ const handler: NextWebhookApiHandler<OrderCreatedWebhookPayloadFragment> = async
 
   if (!userEmail) {
     logger.warn("Request rejected - missing user email");
+
     return res.status(400).json({ success: false, message: "No user email." });
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-cms",
-  "version": "2.11.4",
+  "version": "2.11.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -73,8 +73,6 @@
     "@graphql-typed-document-node/core": "3.2.0",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/react-hooks": "^8.0.1",
     "@types/qs": "^6.9.7",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
@@ -82,7 +80,7 @@
     "eslint": "catalog:",
     "node-mocks-http": "^1.12.2",
     "tsx": "4.7.1",
-    "typescript": "5.5.4"
+    "typescript": "5.8.2"
   },
   "saleor": {
     "schemaVersion": "3.10"

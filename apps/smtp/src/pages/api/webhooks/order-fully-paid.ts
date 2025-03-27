@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -37,7 +37,7 @@ const OrderFullyPaidGraphqlSubscription = gql`
 export const orderFullyPaidWebhook = new SaleorAsyncWebhook<OrderFullyPaidWebhookPayloadFragment>({
   name: "Order Fully Paid in Saleor",
   webhookPath: "api/webhooks/order-fully-paid",
-  asyncEvent: "ORDER_FULLY_PAID",
+  event: "ORDER_FULLY_PAID",
   apl: saleorApp.apl,
   query: OrderFullyPaidGraphqlSubscription,
 });
@@ -46,7 +46,7 @@ const logger = createLogger(orderFullyPaidWebhook.webhookPath);
 
 const useCaseFactory = new SendEventMessagesUseCaseFactory();
 
-const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = async (
+const handler: NextJsWebhookHandler<OrderFullyPaidWebhookPayloadFragment> = async (
   req,
   res,
   context,
@@ -58,6 +58,7 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
 
   if (!order) {
     logger.error("No order data payload");
+
     return res.status(200).end();
   }
 
@@ -65,6 +66,7 @@ const handler: NextWebhookApiHandler<OrderFullyPaidWebhookPayloadFragment> = asy
 
   if (!recipientEmail?.length) {
     logger.error(`The order ${order.number} had no email recipient set. Aborting.`);
+
     return res
       .status(200)
       .json({ error: "Email recipient has not been specified in the event payload." });

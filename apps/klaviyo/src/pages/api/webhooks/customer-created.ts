@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -66,7 +66,7 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedWebh
   },
 );
 
-const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = async (
+const handler: NextJsWebhookHandler<CustomerCreatedWebhookPayloadFragment> = async (
   req,
   res,
   context,
@@ -90,6 +90,7 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
 
   if (!klaviyoToken || !klaviyoMetric) {
     logger.warn("Request rejected - app not configured");
+
     return res.status(400).json({ success: false, message: "App not configured." });
   }
 
@@ -97,6 +98,7 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
 
   if (!userEmail) {
     logger.warn("Request rejected - missing user email");
+
     return res.status(400).json({ success: false, message: "No user email." });
   }
 
@@ -118,6 +120,7 @@ const handler: NextWebhookApiHandler<CustomerCreatedWebhookPayloadFragment> = as
   }
 
   logger.info("Webhook processed successfully");
+
   return res.status(200).json({ success: true, message: "Message sent!" });
 };
 

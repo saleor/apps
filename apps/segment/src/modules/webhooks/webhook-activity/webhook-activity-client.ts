@@ -34,6 +34,7 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
         ),
       );
     }
+
     return ok(result.data.app.webhooks.map((w) => w));
   }
 

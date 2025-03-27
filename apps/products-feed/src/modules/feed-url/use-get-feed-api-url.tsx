@@ -8,6 +8,6 @@ export const useGetFeedApiUrl = (channelSlug: string) => {
   }
 
   return `${window.location.origin}/api/feed/${encodeURIComponent(
-    appBridgeState.saleorApiUrl as string
+    appBridgeState.saleorApiUrl as string,
   )}/${channelSlug}/google.xml`;
 };

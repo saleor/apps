@@ -1,7 +1,7 @@
-import { SaleorCloudAPL } from "@saleor/app-sdk/APL";
 import { WebhookManifest } from "@saleor/app-sdk/types";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as Sentry from "@sentry/nextjs";
+import { saleorApp } from "saleor-app";
 
 import { env } from "@/env";
 
@@ -26,18 +26,10 @@ Sentry.init({
 const runMigrations = async () => {
   logger.info(`Starting webhooks migration`);
 
-  if (!env.REST_APL_TOKEN || !env.REST_APL_ENDPOINT) {
-    logger.error("REST_APL_TOKEN and REST_APL_ENDPOINT must be set");
-    process.exit(1);
-  }
-
-  const saleorAPL = new SaleorCloudAPL({
-    token: env.REST_APL_TOKEN,
-    resourceUrl: env.REST_APL_ENDPOINT,
-  });
+  const saleorAPL = saleorApp.apl;
 
   const saleorCloudEnv = await saleorAPL.getAll().catch(() => {
-    logger.error("Could not fetch instances from the Cloud APL");
+    logger.error(`Could not fetch instances from the ${env.APL} APL`);
 
     process.exit(1);
   });
@@ -63,6 +55,7 @@ const runMigrations = async () => {
 
           if (!webhooks?.length) {
             logger.warn("The environment does not have any webhooks, skipping");
+
             return [];
           }
 
@@ -73,6 +66,7 @@ const runMigrations = async () => {
 
           if (!targetUrl?.length) {
             logger.error("App has no defined appUrl, skipping");
+
             return [];
           }
 
@@ -99,6 +93,6 @@ const runMigrations = async () => {
 runMigrations();
 
 process.on("beforeExit", () => {
-  logger.info(`Webhook migration complete for all environments from saleor-cloud APL`);
+  logger.info(`Webhook migration complete for all environments from ${env.APL} APL`);
   process.exit(0);
 });

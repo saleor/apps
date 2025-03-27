@@ -1,4 +1,4 @@
-import { createProtectedHandler, NextProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
+import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
@@ -47,7 +47,7 @@ const getAppSettings = async (settingsManager: EncryptedMetadataManager) => [
   { key: "PUBLIC_TOKEN", value: await settingsManager.get("PUBLIC_TOKEN") },
 ];
 
-const handler: NextProtectedApiHandler = async (request, res, ctx) => {
+const handler: NextJsProtectedApiHandler = async (request, res, ctx) => {
   const {
     authData: { token, saleorApiUrl, appId },
   } = ctx;
@@ -71,6 +71,7 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
         success: true,
         data: await getAppSettings(settings),
       });
+
     case "POST": {
       try {
         await settings.set((JSON.parse(request.body) as PostRequestBody).data);
@@ -87,6 +88,7 @@ const handler: NextProtectedApiHandler = async (request, res, ctx) => {
         });
       }
     }
+
     default:
       return res.status(405).end();
   }

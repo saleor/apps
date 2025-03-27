@@ -1,4 +1,4 @@
-import { NextWebhookApiHandler } from "@saleor/app-sdk/handlers/next";
+import { NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
@@ -16,7 +16,7 @@ export const config = {
 
 const logger = createLogger("webhookProductDeletedWebhookHandler");
 
-export const handler: NextWebhookApiHandler<ProductDeleted> = async (req, res, context) => {
+export const handler: NextJsWebhookHandler<ProductDeleted> = async (req, res, context) => {
   const { event, authData } = context;
 
   logger.info(`New event received: ${event} (${context.payload?.__typename})`, {
@@ -27,6 +27,7 @@ export const handler: NextWebhookApiHandler<ProductDeleted> = async (req, res, c
 
   if (!product) {
     logger.error("Webhook did not received expected product data in the payload.");
+
     return res.status(200).end();
   }
 
@@ -39,6 +40,7 @@ export const handler: NextWebhookApiHandler<ProductDeleted> = async (req, res, c
       logger.info("Algolia deleteProduct success");
 
       res.status(200).end();
+
       return;
     } catch (e) {
       logger.error("Failed to execute product_deleted webhook (algoliaClient.deleteProduct)", {

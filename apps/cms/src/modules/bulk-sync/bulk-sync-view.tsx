@@ -140,11 +140,13 @@ export const BulkSyncView = ({
                 />
               );
             }
+
             case "fetching": {
               return <SaleorProductsFetchingStep />;
             }
 
             case "fetched":
+
             case "uploading": {
               return (
                 <SaleorProductsFetchedStep

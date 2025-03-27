@@ -1,4 +1,6 @@
-import { APL, FileAPL, SaleorCloudAPL } from "@saleor/app-sdk/APL";
+import { APL } from "@saleor/app-sdk/APL";
+import { FileAPL } from "@saleor/app-sdk/APL/file";
+import { SaleorCloudAPL } from "@saleor/app-sdk/APL/saleor-cloud";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 import { env } from "./env";
@@ -17,6 +19,7 @@ switch (env.APL) {
     apl = new DynamoAPL({ repository });
     break;
   }
+
   case "saleor-cloud": {
     if (!env.REST_APL_ENDPOINT || !env.REST_APL_TOKEN) {
       throw new MisconfiguredSaleorCloudAPLError(
@@ -33,6 +36,7 @@ switch (env.APL) {
   }
 
   case "file":
+
   default:
     apl = new FileAPL({
       fileName: env.FILE_APL_PATH,

@@ -100,23 +100,23 @@ This repository uses [architecture decision records](https://cognitect.com/blog/
 
 To add new ADR follow [the guide](https://github.com/npryce/adr-tools).
 
-# Contributions
+## Contributing
 
-The `saleor/apps` monorepo is used by Saleor to host apps in Saleor infrastructure. While the code remains open source, the decisions in this repository are made to enable Saleor to maintain features needed by it's business goals. 
+We love your contributions and do our best to provide you with mentorship and support. However, please keep in mind that `saleor/apps` monorepo is used by Saleor to host apps in Saleor infrastructure. While the code remains open source, the decisions in this repository are made to enable Saleor to maintain features needed by it's business goals. 
 
-Saleor team doesn't guarantee to merge PRs from contributors. To effectively contribute to the repository, first open issue or ask on Discord about the problem you are solving. Saleor team will help deciding if this change is welcome.
+If you are looking for an issue to tackle, take a look at issues labeled [`Good first issue`](https://github.com/saleor/apps/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+) and [`Help wanted`](https://github.com/saleor/apps/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
 
-Some of the changes will be rejected and should be kept on individual forks
+If nothing grabs your attention, check [our roadmap](https://saleor.io/roadmap) or [start a Discord discussion](https://saleor.io/discord) about a feature you'd like to see. Make sure to read our [Contribution Guidelines](http://docs.saleor.io/developer/community/contributing) before opening a PR or issue.
 
-# Deployment
+## Deployment
 
 Apps are written in Next.js and are hosted on Vercel by Saleor. Everyone should be able to host the app on Vercel if the app is configured properly. Apps share common code, but some of the functionalities are app-specific. For example, Avatax and Segment apps require DynamoDB to run. Check each app's "env" files to verify what must be provided to deploy.
 
-## Docker
+### Docker
 
 Repository contains [Devcontainers](https://containers.dev/) setup which include Dockerfiles. They are meant for development. At the moment Saleor doesn't provide official production dockerfiles. Feel free to write your own, based on the development ones.
 
-## APLs
+### APLs
 
 Apps follow BYOA (bring your own APL) approach. Minimal set of APLs are implemented in the source code, to avoid maintaining not used dependencies and increasing bundle size. You may want to use other APL client, like Redis. In such case, please ensure your fork does the job. Usually apps contain single file that imports APL from `@saleor/app-sdk`. Your fork can ensure this file contains your own APL setup
 

@@ -8,7 +8,7 @@ describe("renderHandlebarsTemplate", () => {
       renderHandlebarsTemplate({
         data: { name: "John", hobby: "fishing" },
         template: "Hello, my name is {{ name }}. My hobby is {{ hobby }}.",
-      })
+      }),
     ).toStrictEqual("Hello, my name is John. My hobby is fishing.");
   });
   it("Throws an error, when provided template is not valid", () => {
@@ -16,7 +16,7 @@ describe("renderHandlebarsTemplate", () => {
       renderHandlebarsTemplate({
         data: { name: "John", hobby: "fishing" },
         template: "Hello, my name is {{ name }}. My hobby is {{ hobby", // no closing brackets to trigger an error
-      })
+      }),
     ).toThrowError("Could not render the template");
   });
 });

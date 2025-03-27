@@ -1,20 +1,24 @@
 {
   "name": "@saleor/eslint-config-apps",
-  "version": "0.4.13",
+  "version": "0.4.14",
   "private": true,
   "license": "MIT",
   "type": "module",
-  "main": "index.cjs",
+  "main": "index.js",
   "devDependencies": {
-    "@saleor/eslint-plugin-saleor-app": "0.1.2",
-    "@typescript-eslint/parser": "7.15.0",
-    "@vitest/eslint-plugin": "1.1.12",
+    "@next/eslint-plugin-next": "15.2.4",
+    "@saleor/eslint-plugin-saleor-app": "0.0.0-pr-20250326080729",
+    "@stylistic/eslint-plugin": "4.2.0",
+    "@vitest/eslint-plugin": "1.1.38",
     "eslint": "catalog:",
-    "eslint-config-next": "14.2.4",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-config-turbo": "2.4.2",
-    "eslint-plugin-import": "2.29.1",
-    "eslint-plugin-react": "7.34.3",
-    "eslint-plugin-simple-import-sort": "12.1.1"
+    "eslint-config-prettier": "10.1.1",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-neverthrow-must-use": "0.1.2",
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "eslint-plugin-turbo": "2.4.4",
+    "globals": "16.0.0",
+    "typescript-eslint": "8.28.0"
   }
 }

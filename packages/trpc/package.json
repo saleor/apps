@@ -1,6 +1,6 @@
 {
   "name": "@saleor/trpc",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "type": "module",
   "main": "index.ts",
   "scripts": {
@@ -19,7 +19,7 @@
     "@trpc/server": "catalog:",
     "@types/node": "22.13.10",
     "next": "catalog:",
-    "typescript": "5.5.4"
+    "typescript": "5.8.2"
   },
   "peerDependencies": {
     "@saleor/app-sdk": "catalog:",
