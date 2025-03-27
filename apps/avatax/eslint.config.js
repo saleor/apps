@@ -20,7 +20,7 @@ export default [
               name: "@opentelemetry/api",
               importNames: ["trace"],
               message:
-                "Importing trace from @opentelemetry/api is not allowed. Use our custom tracing module instead.",
+                "Importing trace from @opentelemetry/api is not allowed. Use `@lib/tracing` module instead.",
             },
           ],
         },
