@@ -73,7 +73,6 @@ export class AvataxClient {
               code: SpanStatusCode.OK,
               message: "Transaction created or adjusted successfully",
             });
-            span.end();
             return response;
           })
           .mapErr((error) => {
@@ -82,7 +81,6 @@ export class AvataxClient {
               code: SpanStatusCode.ERROR,
               message: "Failed to create or adjust transaction",
             });
-            span.end();
             return error;
           });
       },
@@ -129,7 +127,6 @@ export class AvataxClient {
               code: SpanStatusCode.OK,
               message: "Transaction voided successfully",
             });
-            span.end();
 
             return response;
           })
@@ -139,7 +136,6 @@ export class AvataxClient {
               code: SpanStatusCode.ERROR,
               message: "Failed to void transaction",
             });
-            span.end();
 
             return error;
           });
@@ -205,7 +201,6 @@ export class AvataxClient {
               code: SpanStatusCode.OK,
               message: "Entity use code fetched successfully",
             });
-            span.end();
             return response;
           })
           .mapErr((error) => {
@@ -214,7 +209,6 @@ export class AvataxClient {
               code: SpanStatusCode.ERROR,
               message: "Failed to fetch entity use code",
             });
-            span.end();
             return error;
           });
       },
