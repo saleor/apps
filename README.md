@@ -99,3 +99,9 @@ pnpm dlx turbo link
 This repository uses [architecture decision records](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) to document architectural decisions. You can find them in the `docs/adr` directory.
 
 To add new ADR follow [the guide](https://github.com/npryce/adr-tools).
+
+## Contributing
+
+We love your contributions and do our best to provide you with mentorship and support. If you are looking for an issue to tackle, take a look at issues labeled [`Good first issue`](https://github.com/saleor/apps/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+) and [`Help wanted`](https://github.com/saleor/apps/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
+
+If nothing grabs your attention, check [our roadmap](https://saleor.io/roadmap) or [start a Discord discussion](https://saleor.io/discord) about a feature you'd like to see. Make sure to read our [Contribution Guidelines](http://docs.saleor.io/developer/community/contributing) before opening a PR or issue.
