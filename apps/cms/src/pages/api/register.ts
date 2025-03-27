@@ -1,5 +1,5 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import { saleorApp } from "@/saleor-app";

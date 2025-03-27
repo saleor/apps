@@ -1,23 +1,29 @@
-import { attachLoggerConsoleTransport, rootLogger } from "@saleor/apps-logger";
+import { rootLogger } from "@saleor/apps-logger/src/root-logger";
 
 import packageJson from "../package.json";
 
 rootLogger.settings.maskValuesOfKeys = ["metadata", "username", "password", "apiKey"];
 
 if (process.env.NODE_ENV !== "production") {
+  const { attachLoggerConsoleTransport } = await import(
+    "@saleor/apps-logger/src/logger-console-transport"
+  );
+
   attachLoggerConsoleTransport(rootLogger);
 }
 
 if (typeof window === "undefined") {
-  // Don't remove require - it's necessary for proper logger initialization
-  const {
-    attachLoggerSentryTransport,
-    attachLoggerVercelRuntimeTransport,
-  } = require("@saleor/apps-logger/node");
+  const { attachLoggerSentryTransport } = await import(
+    "@saleor/apps-logger/src/logger-sentry-transport"
+  );
 
   attachLoggerSentryTransport(rootLogger);
 
   if (process.env.NODE_ENV === "production") {
+    const { attachLoggerVercelRuntimeTransport } = await import(
+      "@saleor/apps-logger/src/logger-vercel-runtime-transport"
+    );
+
     attachLoggerVercelRuntimeTransport(
       rootLogger,
       packageJson.version,

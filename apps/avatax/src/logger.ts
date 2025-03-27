@@ -14,9 +14,6 @@ if (env.NODE_ENV !== "production") {
 }
 
 if (typeof window === "undefined") {
-  const { attachLoggerVercelRuntimeTransport } = await import(
-    "@saleor/apps-logger/src/logger-vercel-runtime-transport"
-  );
   const { attachLoggerSentryTransport } = await import(
     "@saleor/apps-logger/src/logger-sentry-transport"
   );
@@ -24,6 +21,10 @@ if (typeof window === "undefined") {
   attachLoggerSentryTransport(rootLogger);
 
   if (env.NODE_ENV === "production") {
+    const { attachLoggerVercelRuntimeTransport } = await import(
+      "@saleor/apps-logger/src/logger-vercel-runtime-transport"
+    );
+
     attachLoggerVercelRuntimeTransport(
       rootLogger,
       packageJson.version,

@@ -1,4 +1,4 @@
-import { LoggerContext } from "@saleor/apps-logger/node";
+import { LoggerContext } from "@saleor/apps-logger/src/logger-context";
 
 /**
  * Server-side only

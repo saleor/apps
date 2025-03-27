@@ -1,5 +1,5 @@
 import { SpanStatusCode } from "@opentelemetry/api";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";

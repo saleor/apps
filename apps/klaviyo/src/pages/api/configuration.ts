@@ -1,6 +1,6 @@
 import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { createGraphQLClient } from "@saleor/apps-shared";

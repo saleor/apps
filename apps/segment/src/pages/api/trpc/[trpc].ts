@@ -1,4 +1,4 @@
-import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/src/logger-context";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";

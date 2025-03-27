@@ -1,4 +1,5 @@
-import { attachLoggerVercelBuildtimeTransport, rootLogger } from "@saleor/apps-logger";
+import { attachLoggerVercelBuildtimeTransport } from "@saleor/apps-logger/src/logger-vercel-buildtime-transport";
+import { rootLogger } from "@saleor/apps-logger/src/root-logger";
 
 rootLogger.settings.maskValuesOfKeys = ["username", "password", "token"];
 
