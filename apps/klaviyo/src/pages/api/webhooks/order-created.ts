@@ -65,6 +65,7 @@ const handler: NextJsWebhookHandler<OrderCreatedWebhookPayloadFragment> = async 
 
   if (!klaviyoToken || !klaviyoMetric) {
     logger.warn("Request rejected - app not configured");
+
     return res.status(400).json({ success: false, message: "App not configured." });
   }
 
@@ -72,6 +73,7 @@ const handler: NextJsWebhookHandler<OrderCreatedWebhookPayloadFragment> = async 
 
   if (!userEmail) {
     logger.warn("Request rejected - missing user email");
+
     return res.status(400).json({ success: false, message: "No user email." });
   }
 

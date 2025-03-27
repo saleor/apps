@@ -84,6 +84,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
               { status: 400 },
             );
           }
+
           case error instanceof OrderCancelNoAvataxIdError: {
             logger.warn("No AvaTax id found in order. Likely not an AvaTax order.", {
               error,
@@ -109,6 +110,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
               { status: 200 },
             );
           }
+
           case error instanceof SaleorCancelledOrderEvent.ParsingError: {
             logger.error("Error parsing order payload", { error });
             captureException(error);
@@ -132,6 +134,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
               { status: 400 },
             );
           }
+
           default: {
             logger.error("Unhandled error", { error });
             captureException(error);

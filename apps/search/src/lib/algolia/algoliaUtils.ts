@@ -133,6 +133,7 @@ export function productAndVariantToAlgolia({
       if (!preparedAttr) {
         return acc;
       }
+
       return {
         ...acc,
         ...preparedAttr,
@@ -144,6 +145,7 @@ export function productAndVariantToAlgolia({
       if (!preparedAttr) {
         return acc;
       }
+
       return {
         ...acc,
         ...preparedAttr,

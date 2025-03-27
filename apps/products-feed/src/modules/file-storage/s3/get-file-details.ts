@@ -12,6 +12,6 @@ export const getFileDetails = async ({ s3Client, bucketName, fileName }: GetFile
       Bucket: bucketName,
       Key: fileName,
       ObjectAttributes: ["ObjectParts"],
-    })
+    }),
   );
 };

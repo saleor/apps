@@ -17,7 +17,7 @@ const NotReadyPage = () => {
             appBridge?.dispatch(
               actions.Redirect({
                 to: `/channels/add`,
-              })
+              }),
             );
           }}
         >

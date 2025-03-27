@@ -58,6 +58,7 @@ export const categoryMappingRouter = router({
       }
 
       logger.info("Category mapping updated");
+
       return;
     }),
 });

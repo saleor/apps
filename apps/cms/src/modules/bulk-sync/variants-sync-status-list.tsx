@@ -30,12 +30,15 @@ export const VariantsSyncStatusList = ({ variants, ...props }: Props) => {
       case "pending": {
         return null;
       }
+
       case "success": {
         return <SemanticChip variant="success">Uploaded</SemanticChip>;
       }
+
       case "error": {
         return <SemanticChip variant="error">Error</SemanticChip>;
       }
+
       case "uploading": {
         return <SemanticChip variant="default">Uploading</SemanticChip>;
       }

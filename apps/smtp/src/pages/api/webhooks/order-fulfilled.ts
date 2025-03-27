@@ -58,6 +58,7 @@ const handler: NextJsWebhookHandler<OrderFulfilledWebhookPayloadFragment> = asyn
 
   if (!order) {
     logger.error("No order data payload");
+
     return res.status(200).end();
   }
 
@@ -65,6 +66,7 @@ const handler: NextJsWebhookHandler<OrderFulfilledWebhookPayloadFragment> = asyn
 
   if (!recipientEmail?.length) {
     logger.error(`The order ${order.number} had no email recipient set. Aborting.`);
+
     return res
       .status(200)
       .json({ error: "Email recipient has not been specified in the event payload." });
