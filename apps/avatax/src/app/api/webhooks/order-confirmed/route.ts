@@ -108,7 +108,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
           code: SpanStatusCode.ERROR,
           message: "Failed to commit transaction in AvaTax: error parsing Saleor event payload",
         });
-        span.end();
 
         return Response.json({ message: error.message }, { status: 500 });
       }
@@ -138,7 +137,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             code: SpanStatusCode.ERROR,
             message: "Failed to commit transaction in AvaTax: order already fulfilled",
           });
-          span.end();
 
           return Response.json(
             {
@@ -163,7 +161,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             code: SpanStatusCode.OK,
             message: "Failed to commit transaction in AvaTax: order has flat tax rates strategy",
           });
-          span.end();
 
           return Response.json(
             {
@@ -215,7 +212,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             code: SpanStatusCode.ERROR,
             message: "Failed to commit AvaTax transaction: invalid configuration",
           });
-          span.end();
 
           return Response.json(
             {
@@ -247,7 +243,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             code: SpanStatusCode.ERROR,
             message: "Failed to commit AvaTax transaction: invalid configuration",
           });
-          span.end();
 
           return Response.json(
             {
@@ -292,7 +287,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             code: SpanStatusCode.OK,
             message: "AvaTax transaction committed successfully",
           });
-          span.end();
 
           return Response.json({ message: "Success" }, { status: 200 });
         } catch (error) {
@@ -313,7 +307,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
                 code: SpanStatusCode.ERROR,
                 message: "Failed to commit AvaTax transaction: invalid webhook payload",
               });
-              span.end();
 
               return Response.json(
                 {
@@ -336,7 +329,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
                 code: SpanStatusCode.ERROR,
                 message: "Failed to commit AvaTax transaction: error from AvaTax API",
               });
-              span.end();
 
               return Response.json(
                 {
@@ -359,7 +351,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
                 code: SpanStatusCode.ERROR,
                 message: "Failed to commit AvaTax transaction: error from AvaTax API",
               });
-              span.end();
 
               return Response.json(
                 {
@@ -384,7 +375,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             code: SpanStatusCode.ERROR,
             message: "Failed to commit AvaTax transaction: unhandled error",
           });
-          span.end();
 
           return Response.json({ message: "Unhandled error" }, { status: 500 });
         }
@@ -405,7 +395,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
           code: SpanStatusCode.ERROR,
           message: "Failed to commit AvaTax transaction: unhandled error",
         });
-        span.end();
 
         return Response.json({ message: "Unhandled error" }, { status: 500 });
       }

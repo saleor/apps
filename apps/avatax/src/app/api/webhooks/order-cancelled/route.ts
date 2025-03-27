@@ -77,7 +77,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
               code: SpanStatusCode.ERROR,
               message: "Failed to void AvaTax transaction: missing order data from Saleor",
             });
-            span.end();
 
             return Response.json(
               { message: `Invalid order payload for order: ${payload.order?.id}` },
@@ -103,7 +102,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
               message:
                 "Failed to void AvaTax transaction: missing avataxId field in order metadata",
             });
-            span.end();
 
             return Response.json(
               { message: "Invalid order payload. Likely not an AvaTax order." },
@@ -127,7 +125,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
               code: SpanStatusCode.ERROR,
               message: "Failed to void AvaTax transaction: error parsing Saleor event payload",
             });
-            span.end();
 
             return Response.json(
               { message: `Invalid order payload for order: ${payload.order?.id}` },
@@ -152,7 +149,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
               code: SpanStatusCode.ERROR,
               message: "Failed to void AvaTax transaction: unhandled error",
             });
-            span.end();
 
             return Response.json(
               { message: `Unhandled error for order: ${payload.order?.id}` },
@@ -206,7 +202,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
           code: SpanStatusCode.ERROR,
           message: "Failed to void AvaTax transaction: invalid configuration",
         });
-        span.end();
 
         return Response.json(
           { message: `App configuration is broken for order: ${payload.order?.id}` },
@@ -233,7 +228,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
           code: SpanStatusCode.ERROR,
           message: "Failed to void AvaTax transaction: invalid configuration",
         });
-        span.end();
 
         return Response.json(
           { message: `App is not configured properly for order: ${payload.order?.id}` },
@@ -272,7 +266,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
             code: SpanStatusCode.ERROR,
             message: "AvaTax transaction was not found in AvaTax",
           });
-          span.end();
 
           return Response.json(
             { message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs" },
@@ -298,7 +291,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
             code: SpanStatusCode.OK,
             message: "AvaTax transaction was already cancelled in AvaTax",
           });
-          span.end();
 
           return Response.json(
             { message: "Order was already cancelled in AvaTax" },
@@ -340,7 +332,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
         code: SpanStatusCode.OK,
         message: "Succesfully voided order in AvaTax",
       });
-      span.end();
 
       return Response.json({ message: "Success" }, { status: 200 });
     },
