@@ -33,6 +33,7 @@ export default {
   words: [
     "avalara",
     "avatax",
+    "barell",
     "bruno",
     "codegen",
     "tseslint",
