@@ -31,6 +31,7 @@ export class LoggerContext {
     if (context) {
       return context[ObservabilityAttributes.TENANT_DOMAIN] as string;
     }
+
     return null;
   }
 
