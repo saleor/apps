@@ -1,7 +1,0 @@
-{
-  "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignore": [
-    "apps/**/generated/**",
-    "packages/**/generated/**"
-  ]
-}
