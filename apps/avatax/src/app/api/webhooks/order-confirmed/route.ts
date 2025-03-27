@@ -322,6 +322,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
                 { status: 400 },
               );
             }
+
             case error instanceof AvataxStringLengthError: {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,
@@ -344,6 +345,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
                 { status: 400 },
               );
             }
+
             case error instanceof AvataxEntityNotFoundError: {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,

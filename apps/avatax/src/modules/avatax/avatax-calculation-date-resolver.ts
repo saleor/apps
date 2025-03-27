@@ -8,6 +8,7 @@ export class AvataxCalculationDateResolver {
   resolve(avataxTaxCalculationDate: string | null | undefined, orderCreatedDate: string): Date {
     if (!avataxTaxCalculationDate) {
       this.logger.info("No tax calculation date provided. Falling back to order created date.");
+
       return new Date(orderCreatedDate);
     }
 
@@ -19,6 +20,7 @@ export class AvataxCalculationDateResolver {
       this.logger.info(
         "Valid UTC tax calculation date found in metadata. Using it for tax calculation.",
       );
+
       return new Date(taxCalculationParse.data);
     } else {
       this.logger.warn(

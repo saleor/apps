@@ -32,6 +32,7 @@ export class AvataxEntityTypeMatcher {
       return this.validateEntityCode(entityCode);
     } catch (error) {
       this.logger.debug("Failed to verify entity code", { error });
+
       return this.returnFallback();
     }
   }

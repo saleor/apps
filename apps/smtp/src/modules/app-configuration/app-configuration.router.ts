@@ -8,6 +8,7 @@ export const appConfigurationRouter = router({
     const logger = createLogger("appConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
 
     logger.debug("appConfigurationRouter.featureFlags called");
+
     return await ctx.featureFlagService.getFeatureFlags();
   }),
   appPermissions: protectedWithConfigurationServices.query(async ({ ctx }) => {

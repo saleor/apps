@@ -41,6 +41,7 @@ export class AvataxCalculateTaxesTaxCodeMatcher {
         taxClassId,
         taxCode: possibleMatch.data.avataxTaxCode,
       });
+
       return possibleMatch.data.avataxTaxCode;
     }
 

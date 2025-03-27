@@ -41,6 +41,7 @@ export class AvataxValidationErrorResolver {
     }
 
     this.logger.error("Unknown error while validating AvaTax configuration.");
+
     return new Error("Unknown error while validating AvaTax configuration.");
   }
 }

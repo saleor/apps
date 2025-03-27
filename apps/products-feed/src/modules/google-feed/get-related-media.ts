@@ -57,6 +57,7 @@ export const getVariantMediaMap = ({ variant }: GetVariantMediaMapArgs) => {
         return accumulator;
       }
       accumulator[id] = currentValue.media?.filter((m) => !!m) || [];
+
       return accumulator;
     }, {}) || {}
   );

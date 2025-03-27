@@ -30,6 +30,7 @@ export const trpcClient = createTRPCNext<AppRouter>({
               );
               throw new Error("Token and Saleor API URL unknown");
             }
+
             return {
               /**
                * Attach headers from app to client requests, so tRPC can add them to context

@@ -28,6 +28,7 @@ export const handler: NextJsWebhookHandler<ProductVariantUpdated> = async (req, 
 
   if (!productVariant) {
     logger.error("Webhook did not received expected product data in the payload.");
+
     return res.status(200).end();
   }
 
@@ -38,6 +39,7 @@ export const handler: NextJsWebhookHandler<ProductVariantUpdated> = async (req, 
       await algoliaClient.updateProductVariant(productVariant);
 
       res.status(200).end();
+
       return;
     } catch (e) {
       if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {

@@ -65,6 +65,7 @@ export class AvataxClient {
              * TODO: Refactor errors so we are able to print error only for unhandled cases, otherwise use warnings etc
              */
             this.logger.error("Error calculating taxes", { error: parsedError });
+
             return parsedError;
           },
         )
@@ -74,6 +75,7 @@ export class AvataxClient {
               message: "Transaction created or adjusted successfully",
             });
             span.end();
+
             return response;
           })
           .mapErr((error) => {
@@ -83,6 +85,7 @@ export class AvataxClient {
               message: "Failed to create or adjust transaction",
             });
             span.end();
+
             return error;
           });
       },
@@ -206,6 +209,7 @@ export class AvataxClient {
               message: "Entity use code fetched successfully",
             });
             span.end();
+
             return response;
           })
           .mapErr((error) => {
@@ -215,6 +219,7 @@ export class AvataxClient {
               message: "Failed to fetch entity use code",
             });
             span.end();
+
             return error;
           });
       },

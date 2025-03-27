@@ -13,6 +13,6 @@ export const UploadSinglePart = async ({
       Bucket: bucketName,
       Body: buffer,
       Key: fileName,
-    })
+    }),
   );
 };

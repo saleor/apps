@@ -54,6 +54,7 @@ const runMigrations = async () => {
 
           if (!webhooks?.length) {
             logger.warn("The environment does not have any webhooks, skipping");
+
             return [];
           }
 
@@ -64,6 +65,7 @@ const runMigrations = async () => {
 
           if (!targetUrl?.length) {
             logger.error("App has no defined appUrl, skipping");
+
             return [];
           }
 

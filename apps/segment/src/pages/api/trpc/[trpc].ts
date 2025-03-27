@@ -15,6 +15,7 @@ export default wrapWithLoggerContext(
       onError: ({ error }) => {
         if (error.code === "INTERNAL_SERVER_ERROR") {
           captureException(error);
+
           return;
         }
       },

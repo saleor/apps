@@ -36,13 +36,17 @@ export const ProvidersResolver = {
     switch (config.type) {
       case "contentful":
         return new ContentfulBulkSyncProcessor(config);
+
       case "datocms":
         return new DatocmsBulkSyncProcessor(config);
+
       case "strapi":
         return new StrapiBulkSyncProcessor(config);
+
       case "builder.io": {
         return new BuilderIoBulkSyncProcessor(config);
       }
+
       case "payloadcms": {
         return new PayloadCmsBulkSyncProcessor(config);
       }
@@ -52,12 +56,16 @@ export const ProvidersResolver = {
     switch (type) {
       case "contentful":
         return ContentfulProviderConfig.Schema.Input;
+
       case "datocms":
         return DatocmsProviderConfig.Schema.Input;
+
       case "strapi":
         return StrapiProviderConfig.Schema.Input;
+
       case "builder.io":
         return BuilderIoProviderConfig.Schema.Input;
+
       case "payloadcms":
         return PayloadCmsProviderConfig.Schema.Input;
     }
@@ -66,12 +74,16 @@ export const ProvidersResolver = {
     switch (type) {
       case "contentful":
         return ContentfulProviderConfig.Schema.Full;
+
       case "datocms":
         return DatocmsProviderConfig.Schema.Full;
+
       case "strapi":
         return StrapiProviderConfig.Schema.Full;
+
       case "builder.io":
         return BuilderIoProviderConfig.Schema.Full;
+
       case "payloadcms":
         return PayloadCmsProviderConfig.Schema.Full;
     }
@@ -81,15 +93,19 @@ export const ProvidersResolver = {
       case "contentful": {
         return Contentful;
       }
+
       case "datocms": {
         return Datocms;
       }
+
       case "strapi": {
         return Strapi;
       }
+
       case "builder.io": {
         return BuilderIo;
       }
+
       case "payloadcms": {
         return PayloadCMS;
       }
@@ -100,15 +116,19 @@ export const ProvidersResolver = {
       case "contentful": {
         return new ContentfulWebhooksProcessor(config);
       }
+
       case "datocms": {
         return new DatocmsWebhooksProcessor(config);
       }
+
       case "strapi": {
         return new StrapiWebhooksProcessor(config);
       }
+
       case "builder.io": {
         return new BuilderIoWebhooksProcessor(config);
       }
+
       case "payloadcms": {
         return new PayloadCmsWebhooksProcessor(config);
       }
@@ -127,6 +147,7 @@ export const ProvidersResolver = {
           ),
         );
       }
+
       case "datocms": {
         return dynamic(() =>
           import("./datocms/datocms-config-form").then(
@@ -134,6 +155,7 @@ export const ProvidersResolver = {
           ),
         );
       }
+
       case "strapi": {
         return dynamic(() =>
           import("./strapi/strapi-config-form").then(
@@ -141,6 +163,7 @@ export const ProvidersResolver = {
           ),
         );
       }
+
       case "builder.io": {
         return dynamic(() =>
           import("./builder.io/builder-io-config-form").then(
@@ -148,6 +171,7 @@ export const ProvidersResolver = {
           ),
         );
       }
+
       case "payloadcms": {
         return dynamic(() =>
           import("./payloadcms/payloadcms-config-form").then(
@@ -166,6 +190,7 @@ export const ProvidersResolver = {
           ),
         );
       }
+
       case "datocms": {
         return dynamic(() =>
           import("./datocms/datocms-config-form").then(
@@ -173,6 +198,7 @@ export const ProvidersResolver = {
           ),
         );
       }
+
       case "strapi": {
         return dynamic(() =>
           import("./strapi/strapi-config-form").then(
@@ -180,6 +206,7 @@ export const ProvidersResolver = {
           ),
         );
       }
+
       case "builder.io": {
         return dynamic(() =>
           import("./builder.io/builder-io-config-form").then(
@@ -187,6 +214,7 @@ export const ProvidersResolver = {
           ),
         );
       }
+
       case "payloadcms": {
         return dynamic(() =>
           import("./payloadcms/payloadcms-config-form").then(

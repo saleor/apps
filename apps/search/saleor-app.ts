@@ -19,10 +19,12 @@ switch (aplType) {
     apl = new UpstashAPL();
 
     break;
+
   case "file":
     apl = new FileAPL();
 
     break;
+
   case "saleor-cloud": {
     if (!process.env.REST_APL_ENDPOINT || !process.env.REST_APL_TOKEN) {
       throw new Error("Rest APL is not configured - missing env variables. Check saleor-app.ts");
@@ -35,6 +37,7 @@ switch (aplType) {
 
     break;
   }
+
   default: {
     throw new Error("Invalid APL config");
   }

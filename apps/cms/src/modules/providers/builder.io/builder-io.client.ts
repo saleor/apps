@@ -145,6 +145,7 @@ export class BuilderIoClient {
         const results = data.results.map((result: any) => result.id) as string[];
 
         this.logger.trace("Fetched builder.io entries", { entriesIds: results });
+
         return results;
       })
       .catch((err) => {
