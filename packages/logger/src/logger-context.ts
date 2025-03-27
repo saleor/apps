@@ -29,7 +29,7 @@ export class LoggerContext {
     const context = this.getRawContext();
 
     if (context) {
-      return context["saleor.enviroment_domain"] as string;
+      return context[ObservabilityAttributes.TENANT_DOMAIN] as string;
     }
 
     return null;
