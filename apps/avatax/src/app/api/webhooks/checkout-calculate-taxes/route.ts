@@ -54,8 +54,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
       try {
         const { payload, authData } = ctx;
 
-        span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
-
         subscriptionErrorChecker.checkPayload(payload);
 
         loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
@@ -64,7 +62,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
         if (payload.version) {
           setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
           loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-          span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         }
 
         logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
@@ -162,7 +159,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 case CalculateTaxesUseCase.ExpectedIncompletePayloadError: {
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
-                    message: "Failed to calucalted taxes: incomplete payload",
+                    message: "Failed to calculate taxes: incomplete payload",
                   });
 
                   return Response.json(

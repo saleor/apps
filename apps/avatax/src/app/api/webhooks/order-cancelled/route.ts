@@ -36,9 +36,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
       kind: SpanKind.SERVER,
     },
     async (span) => {
-      const { payload, authData } = ctx;
-
-      span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
+      const { payload } = ctx;
 
       const logWriter = logsWriterFactory.createWriter(ctx.authData);
 
@@ -49,7 +47,6 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
       if (payload.version) {
         setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-        span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, payload.version);
       }
 
       logger.info("Handler called with payload");

@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-restricted-imports */
 import {
   Exception,
   Span,
   SpanOptions,
   SpanStatusCode,
   TimeInput,
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   trace,
   Tracer,
 } from "@opentelemetry/api";
@@ -14,10 +14,6 @@ import { BaseError } from "@/error";
 import { loggerContext } from "@/logger-context";
 
 import pkg from "../../package.json";
-
-export const baseTracer = trace.getTracer("saleor.app.avatax.service", pkg.version);
-
-type CreateSpanCallback = (span: Span) => Promise<unknown> | unknown;
 
 /*
  * Proxy `recordException` method on span to serialize error before sending it to the OTEL collector.
@@ -43,48 +39,100 @@ const createSpanProxy = (span: Span): Span => {
 };
 
 /**
- * Tracer that sends spans both to external OTEL & Saleor internal OTEL collectors.
- * **Make sure you intend to use this tracer as it will send spans to external OTEL collector.**
+ * Creates a configured OpenTelemetry tracer with enhanced capabilities.
  *
- * Proxied version of `@opentelemetry/api` Tracer that adds tenant domain attribute to all spans.
- * It also calls `span.end()` automatically.
+ * ### Features
+ * - Enhanced error serialization
+ * - Custom attribute injection
+ * - Proper span lifecycle management
+ *
+ * @param tracerName - Unique identifier for the tracer in OTEL
+ * @returns A function that accepts callbacks for span customization
+ *
+ * @example
+ * ```ts
+ * const tracer = getAppTracer("my.service")({
+ *   setupSpan: (span) => {
+ *     span.setAttribute("environment", "production");
+ *   }
+ * });
+ *
+ * await tracer.startActiveSpan(
+ *   "operation.name",
+ *   async (span) => {
+ *     // Your code here
+ *   }
+ * );
+ * ```
  */
-export const appExternalTracer = new Proxy(baseTracer, {
-  get(target: Tracer, prop: string) {
-    if (prop === "startActiveSpan") {
-      return async (name: string, options: SpanOptions, callback: CreateSpanCallback) => {
-        return target.startActiveSpan(name, options, async (span) => {
-          const proxiedSpan = createSpanProxy(span);
+const getAppTracer = (tracerName: string) => (callbacks: { setupSpan: (span: Span) => void }) =>
+  new Proxy(trace.getTracer(tracerName, pkg.version), {
+    get(target: Tracer, prop: string) {
+      if (prop === "startActiveSpan") {
+        return async (
+          name: string,
+          options: SpanOptions,
+          fn: (span: Span) => Promise<unknown> | unknown,
+        ) => {
+          return target.startActiveSpan(name, options, async (span) => {
+            const proxiedSpan = createSpanProxy(span);
 
-          try {
-            const tenantDomain = loggerContext.getTenantDomain();
+            try {
+              callbacks.setupSpan(proxiedSpan);
 
-            if (tenantDomain) {
-              proxiedSpan.setAttribute(ObservabilityAttributes.TENANT_DOMAIN, tenantDomain);
+              const result = await fn(proxiedSpan);
+
+              return result;
+            } catch (error) {
+              proxiedSpan.recordException(error as Error);
+              proxiedSpan.setStatus({
+                code: SpanStatusCode.ERROR,
+                message: (error as Error)?.message,
+              });
+              throw error;
+            } finally {
+              proxiedSpan.end();
             }
+          });
+        };
+      }
 
-            const result = await callback(proxiedSpan);
+      return target[prop as keyof Tracer];
+    },
+  });
 
-            return result;
-          } catch (error) {
-            proxiedSpan.recordException(error as Error);
-            proxiedSpan.setStatus({
-              code: SpanStatusCode.ERROR,
-              message: (error as Error)?.message,
-            });
-            throw error;
-          } finally {
-            proxiedSpan.end();
-          }
-        });
-      };
-    }
+/**
+ * ### ⚠️ Important
+ * This tracer sends data to **both** external and internal collectors.
+ *
+ * ### Features
+ * - Automatically adds tenant domain
+ * - Handles error serialization
+ * - Manages span lifecycle
+ */
+export const appExternalTracer = getAppTracer("saleor.app.avatax.service")({
+  setupSpan: (span) => {
+    const tenantDomain = loggerContext.getTenantDomain();
 
-    return target[prop as keyof Tracer];
+    span.setAttribute(ObservabilityAttributes.TENANT_DOMAIN, tenantDomain);
   },
 });
 
 /**
- * Tracer that sends spans to Saleor internal OTEL collector.
+ * OpenTelemetry tracer configured for internal collection only.
+ *
+ * ### Features
+ * - Adds tenant domain and Saleor API URL
+ * - Handles error serialization
+ * - Manages span lifecycle
+ * - Keeps data within internal systems
  */
-export const appInternalTracer = trace.getTracer("saleor.app.avatax.core", pkg.version);
+export const appInternalTracer = getAppTracer("saleor.app.avatax.core")({
+  setupSpan: (span) => {
+    const tenantDomain = loggerContext.getTenantDomain();
+    const saleorApiUrl = loggerContext.getSaleorApiUrl();
+
+    span.setAttribute(ObservabilityAttributes.TENANT_DOMAIN, tenantDomain);
+    span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, saleorApiUrl);
+  },
+});

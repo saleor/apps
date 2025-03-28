@@ -5,9 +5,12 @@ import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 
+import { BaseError } from "./errors";
+
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();
   private project_name = process.env.OTEL_SERVICE_NAME as string | undefined;
+  static GetValueFromContextError = BaseError.subclass("GetTenantDomainError");
 
   getRawContext() {
     const store = this.als.getStore();
@@ -32,7 +35,17 @@ export class LoggerContext {
       return context[ObservabilityAttributes.TENANT_DOMAIN] as string;
     }
 
-    return null;
+    throw new LoggerContext.GetValueFromContextError("Tenant domain not found in logger context");
+  }
+
+  getSaleorApiUrl() {
+    const context = this.getRawContext();
+
+    if (context) {
+      return context[ObservabilityAttributes.SALEOR_API_URL] as string;
+    }
+
+    throw new LoggerContext.GetValueFromContextError("Saleor API url not found in logger context");
   }
 
   async wrapNextApiHandler(fn: (...args: unknown[]) => unknown, initialState = {}) {

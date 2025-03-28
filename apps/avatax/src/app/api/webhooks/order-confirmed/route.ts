@@ -71,8 +71,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
     async (span) => {
       const { payload, authData } = ctx;
 
-      span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
-
       const logWriter = logsWriterFactory.createWriter(ctx.authData);
 
       subscriptionErrorChecker.checkPayload(payload);
@@ -82,7 +80,6 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
       if (payload.version) {
         setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-        span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, payload.version);
       }
 
       logger.info("Handler called with payload");
