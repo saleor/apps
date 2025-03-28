@@ -1,7 +1,6 @@
 import { Client } from "urql";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { WebhookEventTypeAsyncEnum } from "../../../generated/graphql";
 import { invoiceSentWebhook } from "../../pages/api/webhooks/invoice-sent";
 import { orderCancelledWebhook } from "../../pages/api/webhooks/order-cancelled";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
@@ -28,7 +27,7 @@ describe("WebhookManagementService", function () {
 
     const fetchAppWebhooksMock = vi.spyOn(operationExports, "fetchAppWebhooks").mockResolvedValue([
       {
-        asyncEvents: [{ eventType: WebhookEventTypeAsyncEnum.InvoiceSent, name: "Invoice sent" }],
+        asyncEvents: [{ eventType: "INVOICE_SENT", name: "Invoice sent" }],
         id: "1",
         isActive: true,
         name: invoiceSentWebhook.name,
@@ -39,7 +38,7 @@ describe("WebhookManagementService", function () {
 
     expect(webhookData).toStrictEqual([
       {
-        asyncEvents: [{ eventType: WebhookEventTypeAsyncEnum.InvoiceSent, name: "Invoice sent" }],
+        asyncEvents: [{ eventType: "INVOICE_SENT", name: "Invoice sent" }],
         id: "1",
         isActive: true,
         name: invoiceSentWebhook.name,
@@ -60,15 +59,13 @@ describe("WebhookManagementService", function () {
 
     const fetchAppWebhooksMock = vi.spyOn(operationExports, "fetchAppWebhooks").mockResolvedValue([
       {
-        asyncEvents: [{ eventType: WebhookEventTypeAsyncEnum.InvoiceSent, name: "Invoice sent" }],
+        asyncEvents: [{ eventType: "INVOICE_SENT", name: "Invoice sent" }],
         id: "1",
         isActive: true,
         name: invoiceSentWebhook.name,
       },
       {
-        asyncEvents: [
-          { eventType: WebhookEventTypeAsyncEnum.OrderCancelled, name: "Order cancelled" },
-        ],
+        asyncEvents: [{ eventType: "ORDER_CANCELLED", name: "Order cancelled" }],
         id: "2",
         isActive: false,
         name: orderCancelledWebhook.name,
@@ -97,7 +94,7 @@ describe("WebhookManagementService", function () {
       id: "1",
       isActive: true,
       name: invoiceSentWebhook.name,
-      asyncEvents: [{ eventType: WebhookEventTypeAsyncEnum.InvoiceSent, name: "Invoice sent" }],
+      asyncEvents: [{ eventType: "INVOICE_SENT", name: "Invoice sent" }],
     });
 
     await webhookManagementService.createWebhook({
@@ -150,15 +147,13 @@ describe("WebhookManagementService", function () {
 
     vi.spyOn(operationExports, "fetchAppWebhooks").mockResolvedValue([
       {
-        asyncEvents: [{ eventType: WebhookEventTypeAsyncEnum.InvoiceSent, name: "Invoice sent" }],
+        asyncEvents: [{ eventType: "INVOICE_SENT", name: "Invoice sent" }],
         id: "1",
         isActive: true,
         name: invoiceSentWebhook.name,
       },
       {
-        asyncEvents: [
-          { eventType: WebhookEventTypeAsyncEnum.OrderCancelled, name: "Order cancelled" },
-        ],
+        asyncEvents: [{ eventType: "ORDER_CANCELLED", name: "Order cancelled" }],
         id: "2",
         isActive: false,
         name: orderCancelledWebhook.name,

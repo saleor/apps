@@ -1,7 +1,6 @@
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
 
 import {
-  AttributeInputTypeEnum,
   ProductAttributesDataFragment,
   ProductVariantWebhookPayloadFragment,
 } from "../../../generated/graphql";
@@ -68,13 +67,13 @@ export type AlgoliaObject = ReturnType<typeof productAndVariantToAlgolia>;
 
 const isAttributeValueBooleanType = (
   attributeValue: ProductAttributesDataFragment["values"],
-): attributeValue is [{ boolean: boolean; inputType: AttributeInputTypeEnum.Boolean }] => {
+): attributeValue is [{ boolean: boolean; inputType: "BOOLEAN" }] => {
   return (
     /**
      * Boolean type can be only a single value. List API exists due to multi-value fields like multiselect
      */
     attributeValue.length === 1 &&
-    attributeValue[0].inputType === AttributeInputTypeEnum.Boolean &&
+    attributeValue[0].inputType === "BOOLEAN" &&
     typeof attributeValue[0].boolean === "boolean"
   );
 };

@@ -1,7 +1,6 @@
 import {
   GiftCardSentWebhookPayloadFragment,
   InvoiceSentWebhookPayloadFragment,
-  LanguageCodeEnum,
   OrderCancelledWebhookPayloadFragment,
   OrderConfirmedWebhookPayloadFragment,
   OrderCreatedWebhookPayloadFragment,
@@ -9,7 +8,6 @@ import {
   OrderFulfilledWebhookPayloadFragment,
   OrderFullyPaidWebhookPayloadFragment,
   OrderRefundedWebhookPayloadFragment,
-  OrderStatus,
 } from "../../../generated/graphql";
 import {
   NotifyPayloadAccountChangeEmailRequest,
@@ -23,8 +21,8 @@ import { MessageEventTypes } from "./message-event-types";
 const exampleOrderPayload: OrderDetailsFragment = {
   id: "T3JkZXI6NTdiNTBhNDAtYzRmYi00YjQzLWIxODgtM2JhZmRlMTc3MGQ5",
   number: "198",
-  status: OrderStatus.Unfulfilled,
-  languageCodeEnum: LanguageCodeEnum.En,
+  status: "UNFULFILLED",
+  languageCodeEnum: "EN",
   created: "",
   displayGrossPrices: true,
   isShippingRequired: true,
@@ -48,7 +46,7 @@ const exampleOrderPayload: OrderDetailsFragment = {
     email: "adrian.king@example.com",
     firstName: "Adrian",
     lastName: "King",
-    languageCode: LanguageCodeEnum.En,
+    languageCode: "EN",
   },
   billingAddress: {
     firstName: "Adrian",
