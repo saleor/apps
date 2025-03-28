@@ -40,7 +40,7 @@ describe("DynamoAppConfigManager", () => {
     expect(result).toBeNull();
   });
 
-  it("should throw error if getting App Config fails", () => {
+  it("should throw error if getting App Config fails", async () => {
     const repository = new MemoryConfigRepository();
 
     vi.spyOn(repository, "getAppConfigEntry").mockReturnValue(
@@ -48,9 +48,9 @@ describe("DynamoAppConfigManager", () => {
     );
     const manager = DynamoAppConfigManager.create(repository);
 
-    expect(manager.get({ appId: "appId", saleorApiUrl: "saleorApiUrl" })).rejects.toThrowError(
-      DynamoAppConfigManager.GetConfigDataError,
-    );
+    await expect(
+      manager.get({ appId: "appId", saleorApiUrl: "saleorApiUrl" }),
+    ).rejects.toThrowError(DynamoAppConfigManager.GetConfigDataError);
   });
 
   it("should set App Config in DynamoDB", async () => {
@@ -78,7 +78,7 @@ describe("DynamoAppConfigManager", () => {
     expect(respositoryResult._unsafeUnwrap()).toBe(config);
   });
 
-  it("should throw error if setting App Config fails", () => {
+  it("should throw error if setting App Config fails", async () => {
     const repository = new MemoryConfigRepository();
 
     vi.spyOn(repository, "setAppConfigEntry").mockReturnValue(
@@ -86,7 +86,7 @@ describe("DynamoAppConfigManager", () => {
     );
     const manager = DynamoAppConfigManager.create(repository);
 
-    expect(
+    await expect(
       manager.set({
         appId: "appId",
         saleorApiUrl: "saleorApiUrl",
