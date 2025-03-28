@@ -1500,6 +1500,9 @@ importers:
 
   packages/eslint-config:
     devDependencies:
+      '@eslint/js':
+        specifier: 9.23.0
+        version: 9.23.0
       '@next/eslint-plugin-next':
         specifier: 15.2.4
         version: 15.2.4
