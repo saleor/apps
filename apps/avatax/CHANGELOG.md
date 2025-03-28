@@ -1,5 +1,15 @@
 # saleor-app-avatax
 
+## 1.15.2
+
+### Patch Changes
+
+- b4ed42c9: Added wrapper for external OTEL tracer. Wrapper is responsible for enhanced error serialization, custom attribute injection & proper span lifecycle management.
+- Updated dependencies [b4ed42c9]
+- Updated dependencies [b4ed42c9]
+  - @saleor/apps-otel@2.1.6
+  - @saleor/apps-logger@1.5.5
+
 ## 1.15.1
 
 ### Patch Changes

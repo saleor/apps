@@ -1,5 +1,14 @@
 # saleor-app-cms
 
+## 2.11.9
+
+### Patch Changes
+
+- Updated dependencies [b4ed42c9]
+- Updated dependencies [b4ed42c9]
+  - @saleor/apps-otel@2.1.6
+  - @saleor/apps-logger@1.5.5
+
 ## 2.11.8
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @saleor/apps-logger
 
+## 1.5.5
+
+### Patch Changes
+
+- b4ed42c9: Added new methods on `LoggerContext` responsible for getting tenant domain & Saleor api url.
+- Updated dependencies [b4ed42c9]
+  - @saleor/apps-otel@2.1.6
+
 ## 1.5.4
 
 ### Patch Changes
