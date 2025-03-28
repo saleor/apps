@@ -1545,6 +1545,9 @@ importers:
 
   packages/logger:
     dependencies:
+      '@saleor/apps-otel':
+        specifier: workspace:*
+        version: link:../otel
       modern-errors:
         specifier: 7.0.1
         version: 7.0.1

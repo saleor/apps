@@ -8,4 +8,7 @@ export const ObservabilityAttributes = {
   COMMIT_SHA: "git.commit.sha",
   REPOSITORY_URL: "git.repository_url",
   VERCEL_ENV: "vercel.env",
+  PATH: "path",
+  SALEOR_EVENT: "saleorEvent",
+  TENANT_DOMAIN: "saleor.enviroment_domain",
 } as const;

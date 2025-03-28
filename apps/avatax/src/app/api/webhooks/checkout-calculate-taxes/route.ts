@@ -7,9 +7,9 @@ import { captureException, setTag } from "@sentry/nextjs";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
-import { appInternalTracer } from "@/lib/app-internal-tracer";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { appExternalTracer } from "@/lib/tracing";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
@@ -26,7 +26,7 @@ const checkoutCalculateTaxesSyncWebhookReponse =
   buildSyncWebhookResponsePayload<"CHECKOUT_CALCULATE_TAXES">;
 
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
-  return appInternalTracer.startActiveSpan(
+  return appExternalTracer.startActiveSpan(
     "executing checkoutCalculateTaxes webhook handler",
     {
       kind: SpanKind.SERVER,
@@ -54,8 +54,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
       try {
         const { payload, authData } = ctx;
 
-        span.setAttribute(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
-
         subscriptionErrorChecker.checkPayload(payload);
 
         loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
@@ -64,7 +62,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
         if (payload.version) {
           setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
           loggerContext.set(ObservabilityAttributes.SALEOR_VERSION, payload.version);
-          span.setAttribute(ObservabilityAttributes.SALEOR_VERSION, payload.version);
         }
 
         logger.info("Handler for CHECKOUT_CALCULATE_TAXES webhook called");
@@ -105,7 +102,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
             code: SpanStatusCode.ERROR,
             message: "App configuration is broken",
           });
-          span.end();
 
           return Response.json(
             {
@@ -122,7 +118,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 code: SpanStatusCode.OK,
                 message: "Taxes calculated successfully",
               });
-              span.end();
 
               return Response.json(checkoutCalculateTaxesSyncWebhookReponse(value), {
                 status: 200,
@@ -138,7 +133,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: error from AvaTax API",
                   });
-                  span.end();
 
                   return Response.json(
                     {
@@ -153,7 +147,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: invalid configuration",
                   });
-                  span.end();
 
                   return Response.json(
                     {
@@ -166,9 +159,8 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 case CalculateTaxesUseCase.ExpectedIncompletePayloadError: {
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
-                    message: "Failed to calucalted taxes: incomplete payload",
+                    message: "Failed to calculate taxes: incomplete payload",
                   });
-                  span.end();
 
                   return Response.json(
                     {
@@ -186,7 +178,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: unhandled error",
                   });
-                  span.end();
 
                   return Response.json(
                     {
@@ -212,7 +203,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
             code: SpanStatusCode.ERROR,
             message: "Failed to calculate taxes: error from AvaTax API",
           });
-          span.end();
 
           return Response.json(
             {
@@ -228,7 +218,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
           code: SpanStatusCode.ERROR,
           message: "Failed to calculate taxes: unhandled error",
         });
-        span.end();
 
         return Response.json({ message: "Unhandled error" }, { status: 500 });
       }

@@ -8,7 +8,7 @@ import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { fromPromise } from "neverthrow";
 
-import { appInternalTracer } from "@/lib/app-internal-tracer";
+import { appExternalTracer } from "@/lib/tracing";
 import { createLogger } from "@/logger";
 
 import { AvataxErrorsParser } from "./avatax-errors-parser";
@@ -39,7 +39,7 @@ export class AvataxClient {
   constructor(private client: Avatax) {}
 
   async createTransaction({ model }: CreateTransactionArgs) {
-    return appInternalTracer.startActiveSpan(
+    return appExternalTracer.startActiveSpan(
       "calling AvaTax createOrAdjustTransaction API",
       {
         kind: SpanKind.CLIENT,
@@ -74,7 +74,6 @@ export class AvataxClient {
               code: SpanStatusCode.OK,
               message: "Transaction created or adjusted successfully",
             });
-            span.end();
 
             return response;
           })
@@ -84,7 +83,6 @@ export class AvataxClient {
               code: SpanStatusCode.ERROR,
               message: "Failed to create or adjust transaction",
             });
-            span.end();
 
             return error;
           });
@@ -99,7 +97,7 @@ export class AvataxClient {
     transactionCode: string;
     companyCode: string;
   }) {
-    return appInternalTracer.startActiveSpan(
+    return appExternalTracer.startActiveSpan(
       "calling AvaTax voidTransaction API",
       {
         kind: SpanKind.CLIENT,
@@ -132,7 +130,6 @@ export class AvataxClient {
               code: SpanStatusCode.OK,
               message: "Transaction voided successfully",
             });
-            span.end();
 
             return response;
           })
@@ -142,7 +139,6 @@ export class AvataxClient {
               code: SpanStatusCode.ERROR,
               message: "Failed to void transaction",
             });
-            span.end();
 
             return error;
           });
@@ -177,7 +173,7 @@ export class AvataxClient {
   }
 
   async getEntityUseCode(useCode: string) {
-    return appInternalTracer.startActiveSpan(
+    return appExternalTracer.startActiveSpan(
       "calling AvaTax listEntityUseCodes API",
       {
         kind: SpanKind.CLIENT,
@@ -208,7 +204,6 @@ export class AvataxClient {
               code: SpanStatusCode.OK,
               message: "Entity use code fetched successfully",
             });
-            span.end();
 
             return response;
           })
@@ -218,7 +213,6 @@ export class AvataxClient {
               code: SpanStatusCode.ERROR,
               message: "Failed to fetch entity use code",
             });
-            span.end();
 
             return error;
           });
