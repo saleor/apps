@@ -20,7 +20,7 @@ export const WebhooksStatus = () => {
       <Accordion display={"grid"} gap={1.5}>
         {webhooksData.map((webhook) => {
           const failedEventDeliveries = webhook.eventDeliveries?.edges?.filter(
-            (e) => e.node.status === EventDeliveryStatusEnum.Failed,
+            (e) => e.node.status === "FAILED",
           );
 
           const hasFailedDeliveries = failedEventDeliveries && failedEventDeliveries.length > 0;

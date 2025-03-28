@@ -34,7 +34,7 @@ export const getRelatedMedia = ({
 
   const additionalImages =
     [...mediaAssignedToVariant, ...mediaAssignedToNoVariant]
-      ?.filter((media) => media.type === ProductMediaType.Image) // Videos are not supported by the field
+      ?.filter((media) => media.type === "IMAGE") // Videos are not supported by the field
       .map((media) => media.url)
       .filter((url) => url !== productThumbnailUrl) || []; // Exclude image used as thumbnail
 
