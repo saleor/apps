@@ -17,7 +17,6 @@ const getMjmlTemplate = (injectedValue: string | number) => `<mjml>
 </mjml>`;
 
 describe("EmailCompiler", () => {
-  let templateCompiler = new HandlebarsTemplateCompiler();
   let compiler = new EmailCompiler(
     new HandlebarsTemplateCompiler(),
     new HtmlToTextCompiler(),

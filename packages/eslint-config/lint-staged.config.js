@@ -5,5 +5,5 @@ import baseConfig from "../../lint-staged.config.js";
  */
 export default {
   ...baseConfig,
-  "*.cjs": ["prettier --write"],
+  "*.js": ["prettier --write"],
 };
