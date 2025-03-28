@@ -7,14 +7,14 @@ import { AvataxForbiddenAccessError } from "../taxes/tax-error";
 
 describe("AvataxClientTaxCodeService", () => {
   describe("getFilteredTaxCodes", () => {
-    it("Throws ForbiddenAccessError error if Avatax returns AvataxForbiddenAccessError", () => {
+    it("Throws ForbiddenAccessError error if Avatax returns AvataxForbiddenAccessError", async () => {
       const service = new AvataxClientTaxCodeService({
         listTaxCodes() {
           return Promise.resolve(err(new AvataxForbiddenAccessError("Not permitted")));
         },
       });
 
-      expect(() => service.getFilteredTaxCodes({ filter: "" })).rejects.toThrowError(
+      await expect(() => service.getFilteredTaxCodes({ filter: "" })).rejects.toThrowError(
         AvataxClientTaxCodeService.ForbiddenAccessError,
       );
     });
