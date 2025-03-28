@@ -303,7 +303,9 @@ describe("SmtpConfigurationService", function () {
       expect(setConfigMock).toBeCalledWith(validConfig);
 
       // Since data should be cached automatically, no API call should be triggered
-      expect(await service.getConfigurationRoot());
+      const configuration = await service.getConfigurationRoot();
+
+      expect(configuration._unsafeUnwrap()).toStrictEqual(validConfig);
       expect(getConfigMock).toBeCalledTimes(0);
     });
 
@@ -566,9 +568,7 @@ describe("SmtpConfigurationService", function () {
         SmtpConfigurationService.ConfigNotFoundError,
       );
     });
-  });
 
-  describe("deleteConfiguration", () => {
     it("Error should be thrown, when given ID does not exist", async () => {
       const configurator = new SmtpMetadataManager(
         null as unknown as SettingsManager,

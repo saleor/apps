@@ -1,3 +1,4 @@
+import eslint from "@eslint/js";
 import nextPlugin from "@next/eslint-plugin-next";
 import saleorPlugin from "@saleor/eslint-plugin-saleor-app";
 import stylisticPlugin from "@stylistic/eslint-plugin";
@@ -11,19 +12,13 @@ import turboPlugin from "eslint-plugin-turbo";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-// TODO: add typescript-eslint & eslint/js recommended configs
-
 /** @type {import('eslint').Linter.Config[]} */
 export const config = [
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     name: "@saleor/eslint-config-apps/ignores",
-    ignores: [
-      ".next/**/*",
-      "coverage/**/*",
-      "**/generated/**/*",
-      "lint-staged.config.js",
-      "next-env.d.ts",
-    ],
+    ignores: [".next/**/*", "coverage/**/*", "**/generated/**/*", "next-env.d.ts"],
   },
   {
     name: "@saleor/eslint-config-apps/code-ts",
@@ -112,8 +107,7 @@ export const config = [
       "@typescript-eslint": tseslint.plugin,
     },
     rules: {
-      // TODO: migrate all apps / packages to use this rules
-      // ...vitestPlugin.configs.recommended.rules,
+      ...vitestPlugin.configs.recommended.rules,
       "vitest/prefer-strict-equal": "error",
       "vitest/prefer-vi-mocked": "error",
       "@typescript-eslint/no-restricted-imports": [

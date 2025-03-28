@@ -28,7 +28,7 @@ export function Combobox<TFieldValues extends FieldValues = FieldValues>({
       control={control}
       render={({ field: { value, onChange, ...field }, fieldState: { error } }) => {
         return (
-          // @ts-ignore todo: fix
+          // @ts-expect-error todo: fix
           <$Combobox
             {...rest}
             {...field}

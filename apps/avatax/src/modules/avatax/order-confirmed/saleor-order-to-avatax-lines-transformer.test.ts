@@ -14,7 +14,7 @@ const saleorConfirmedOrderEvent = SaleorOrderConfirmedEventMockFactory.create();
 const discountsStrategy = new PriceReductionDiscountsStrategy();
 
 describe("SaleorOrderToAvataxLinesTransformer", () => {
-  it("should transform lines and shipping from order into product and shipping lines ", () => {
+  it("should transform lines and shipping from order into product and shipping lines", () => {
     const { order } = SaleorOrderConfirmedEventMockFactory.getGraphqlPayload();
 
     expect(
