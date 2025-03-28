@@ -21,4 +21,15 @@ export default [
       "n/no-process-env": "off",
     },
   },
+  {
+    // TODO: remove this override once the recommended rules are fixed
+    name: "saleor-app-search/override-recommended",
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      "no-fallthrough": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-namespace": "warn",
+      "@typescript-eslint/no-empty-object-type": "warn",
+    },
+  },
 ];

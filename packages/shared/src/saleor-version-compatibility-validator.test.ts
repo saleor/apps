@@ -17,7 +17,7 @@ describe("SaleorVersionCompatibilityValidator", () => {
   ])('Passes for app requirement "%s" and saleor version "%s"', (appVersionReq, saleorVersion) => {
     expect(() =>
       new SaleorVersionCompatibilityValidator(appVersionReq).validateOrThrow(saleorVersion),
-    ).not.to.throw();
+    ).not.toThrow();
   });
 
   it.each([
@@ -28,6 +28,6 @@ describe("SaleorVersionCompatibilityValidator", () => {
   ])('Throws for app requirement "%s" and saleor version "%s"', (appVersionReq, saleorVersion) => {
     expect(() =>
       new SaleorVersionCompatibilityValidator(appVersionReq).validateOrThrow(saleorVersion),
-    ).to.throw();
+    ).toThrow();
   });
 });
