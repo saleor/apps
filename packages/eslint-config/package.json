@@ -6,8 +6,9 @@
   "type": "module",
   "main": "index.js",
   "devDependencies": {
+    "@eslint/js": "9.23.0",
     "@next/eslint-plugin-next": "15.2.4",
-    "@saleor/eslint-plugin-saleor-app": "0.0.0-pr-20250326080729",
+    "@saleor/eslint-plugin-saleor-app": "0.2.0",
     "@stylistic/eslint-plugin": "4.2.0",
     "@vitest/eslint-plugin": "1.1.38",
     "eslint": "catalog:",

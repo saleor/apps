@@ -9,7 +9,7 @@ import {
 import { fetchProductData, getCursors } from "./fetch-product-data";
 
 describe("getCursors", () => {
-  it("loads cursor for each variant page ", async () => {
+  it("loads cursor for each variant page", async () => {
     const client = {
       query: vi.fn().mockReturnValue({
         toPromise: vi
