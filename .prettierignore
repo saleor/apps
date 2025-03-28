@@ -1,5 +1,5 @@
 **/.next
 **/pnpm-lock.yaml
 **/graphql/schema.graphql
-**/generated/**/*
+**/generated
 .changeset/
