@@ -84,6 +84,10 @@ export class AvataxClient {
             this.apiCallsCounter.add(1, {
               status: "success",
               method: "create_or_adjust_transaction",
+              avatax_enviroment:
+                this.client.baseUrl === "https://sandbox-rest.avatax.com"
+                  ? "sandbox"
+                  : "production",
             });
 
             return response;
@@ -98,6 +102,10 @@ export class AvataxClient {
             this.apiCallsCounter.add(1, {
               status: "error",
               method: "create_or_adjust_transaction",
+              avatax_enviroment:
+                this.client.baseUrl === "https://sandbox-rest.avatax.com"
+                  ? "sandbox"
+                  : "production",
             });
 
             return error;
