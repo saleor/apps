@@ -4,11 +4,13 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 import { captureException, setTag } from "@sentry/nextjs";
+import { after } from "next/server";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
+import { meterProvider, metricReader } from "@/lib/metrics";
 import { appExternalTracer } from "@/lib/tracing";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
@@ -26,6 +28,12 @@ const checkoutCalculateTaxesSyncWebhookReponse =
   buildSyncWebhookResponsePayload<"CHECKOUT_CALCULATE_TAXES">;
 
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
+  after(async () => {
+    // eslint-disable-next-line no-console
+    console.log("force flushing of metric reader");
+    await meterProvider.forceFlush();
+  });
+
   return appExternalTracer.startActiveSpan(
     "executing checkoutCalculateTaxes webhook handler",
     {

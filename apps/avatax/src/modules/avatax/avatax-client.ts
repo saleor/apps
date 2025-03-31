@@ -8,6 +8,7 @@ import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { fromPromise } from "neverthrow";
 
+import { internalMeter } from "@/lib/metrics";
 import { appExternalTracer } from "@/lib/tracing";
 import { createLogger } from "@/logger";
 
@@ -36,6 +37,11 @@ export type VoidTransactionArgs = {
 export class AvataxClient {
   private logger = createLogger("AvataxClient");
   private errorParser = new AvataxErrorsParser();
+  private apiCallsCounter = internalMeter.createCounter("saleor.app.avatax.api.requests", {
+    description: "The number of requests to AvaTax API",
+    unit: "{request}",
+  });
+
   constructor(private client: Avatax) {}
 
   async createTransaction({ model }: CreateTransactionArgs) {
@@ -75,6 +81,11 @@ export class AvataxClient {
               message: "Transaction created or adjusted successfully",
             });
 
+            this.apiCallsCounter.add(1, {
+              status: "success",
+              method: "create_or_adjust_transaction",
+            });
+
             return response;
           })
           .mapErr((error) => {
@@ -82,6 +93,11 @@ export class AvataxClient {
             span.setStatus({
               code: SpanStatusCode.ERROR,
               message: "Failed to create or adjust transaction",
+            });
+
+            this.apiCallsCounter.add(1, {
+              status: "error",
+              method: "create_or_adjust_transaction",
             });
 
             return error;

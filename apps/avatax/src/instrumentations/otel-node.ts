@@ -1,3 +1,4 @@
+import { metrics } from "@opentelemetry/api";
 import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
 import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
 import { createAwsInstrumentation } from "@saleor/apps-otel/src/aws-instrumentation-factory";
@@ -7,6 +8,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { registerOTel } from "@vercel/otel";
 
 import { env } from "@/env";
+import { meterProvider } from "@/lib/metrics";
 
 import pkg from "../../package.json";
 
@@ -28,3 +30,5 @@ registerOTel({
   ],
   instrumentations: [createAwsInstrumentation(), createHttpInstrumentation()],
 });
+
+metrics.setGlobalMeterProvider(meterProvider);
