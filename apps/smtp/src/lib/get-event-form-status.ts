@@ -21,13 +21,13 @@ export const getEventFormStatus = ({
     case "ORDER_REFUNDED": {
       const isUnsupported = !featureFlags?.orderRefundedEvent;
 
-      const hasPermission = (appPermissions || []).includes(PermissionEnum.ManageOrders);
+      const hasPermission = (appPermissions || []).includes("MANAGE_ORDERS");
 
       const isDisabled = isUnsupported || !hasPermission;
 
       return {
         isDisabled,
-        missingPermission: hasPermission ? undefined : PermissionEnum.ManageOrders,
+        missingPermission: hasPermission ? undefined : "MANAGE_ORDERS",
         requiredSaleorVersion: isUnsupported ? ">=3.14" : undefined,
       };
     }
@@ -35,13 +35,13 @@ export const getEventFormStatus = ({
     case "GIFT_CARD_SENT": {
       const isUnsupported = !featureFlags?.giftCardSentEvent;
 
-      const hasPermission = (appPermissions || []).includes(PermissionEnum.ManageGiftCard);
+      const hasPermission = (appPermissions || []).includes("MANAGE_GIFT_CARD");
 
       const isDisabled = isUnsupported || !hasPermission;
 
       return {
         isDisabled,
-        missingPermission: hasPermission ? undefined : PermissionEnum.ManageGiftCard,
+        missingPermission: hasPermission ? undefined : "MANAGE_GIFT_CARD",
         requiredSaleorVersion: isUnsupported ? ">=3.13" : undefined,
       };
     }

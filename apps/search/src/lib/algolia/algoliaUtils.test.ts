@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { AttributeInputTypeEnum } from "../../../generated/graphql";
 import { channelListingToAlgoliaIndexId, productAndVariantToAlgolia } from "./algoliaUtils";
 
 describe("algoliaUtils", function () {
@@ -57,7 +56,7 @@ describe("algoliaUtils", function () {
               values: [
                 {
                   name: "true",
-                  inputType: AttributeInputTypeEnum.Boolean,
+                  inputType: "BOOLEAN",
                   boolean: true,
                 },
               ],
@@ -69,7 +68,7 @@ describe("algoliaUtils", function () {
               values: [
                 {
                   name: "true",
-                  inputType: AttributeInputTypeEnum.Boolean,
+                  inputType: "BOOLEAN",
                   boolean: false,
                 },
               ],
@@ -95,7 +94,7 @@ describe("algoliaUtils", function () {
                 values: [
                   {
                     name: "true",
-                    inputType: AttributeInputTypeEnum.Boolean,
+                    inputType: "BOOLEAN",
                     boolean: true,
                   },
                 ],
@@ -107,7 +106,7 @@ describe("algoliaUtils", function () {
                 values: [
                   {
                     name: "true",
-                    inputType: AttributeInputTypeEnum.Boolean,
+                    inputType: "BOOLEAN",
                     boolean: false,
                   },
                 ],
