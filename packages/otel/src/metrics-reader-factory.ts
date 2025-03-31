@@ -1,4 +1,7 @@
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
+import {
+  AggregationTemporalityPreference,
+  OTLPMetricExporter,
+} from "@opentelemetry/exporter-metrics-otlp-http";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
 
 export const createMetricsReader = (args: { accessToken: string | undefined }) => {
@@ -6,6 +9,7 @@ export const createMetricsReader = (args: { accessToken: string | undefined }) =
 
   return new PeriodicExportingMetricReader({
     exporter: new OTLPMetricExporter({
+      temporalityPreference: AggregationTemporalityPreference.DELTA,
       headers,
     }),
   });

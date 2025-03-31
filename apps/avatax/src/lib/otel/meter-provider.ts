@@ -6,6 +6,7 @@ import {
 } from "@opentelemetry/semantic-conventions/incubating";
 import { createMetricsReader } from "@saleor/apps-otel/src/metrics-reader-factory";
 import { race } from "@saleor/apps-shared";
+import { v4 as uuidv4 } from "uuid";
 
 import { env } from "@/env";
 import { BaseError } from "@/error";
@@ -20,6 +21,8 @@ export const meterProvider = new MeterProvider({
     // be extra careful with adding attributes here - each one will add cardinality to the metrics
     [ATTR_SERVICE_NAME]: env.OTEL_SERVICE_NAME,
     [ATTR_DEPLOYMENT_ENVIRONMENT_NAME]: env.ENV,
+    "service.instance.id": uuidv4(),
+    "saleor.test.attribute.name": "test-attribute-value-on-resource",
   }),
 });
 
