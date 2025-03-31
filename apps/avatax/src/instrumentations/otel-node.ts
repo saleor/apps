@@ -8,7 +8,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { registerOTel } from "@vercel/otel";
 
 import { env } from "@/env";
-import { meterProvider } from "@/lib/metrics";
+import { meterProvider } from "@/lib/otel/meter-provider";
 
 import pkg from "../../package.json";
 

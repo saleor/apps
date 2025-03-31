@@ -2,9 +2,6 @@ import { captureException } from "@sentry/nextjs";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { err, ok } from "neverthrow";
 
-import { TenatDomainResolver } from "@/lib/tenant-domain-resolver";
-import { loggerContext } from "@/logger-context";
-
 import { createLogger } from "../../../logger";
 import { SaleorOrderConfirmedEvent } from "../../saleor";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
@@ -101,7 +98,6 @@ export class AvataxOrderConfirmedPayloadTransformer {
     }
 
     return {
-      tenantDomainResolver: new TenatDomainResolver({ loggerContext: loggerContext }),
       model: {
         code,
         type: this.matchDocumentType(avataxConfig),

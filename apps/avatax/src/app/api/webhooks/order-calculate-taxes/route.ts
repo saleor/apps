@@ -5,12 +5,14 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 import { captureException, setTag } from "@sentry/nextjs";
+import { after } from "next/server";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
-import { appExternalTracer } from "@/lib/tracing";
+import { flushOtelMetrics } from "@/lib/otel/meter-provider";
+import { appExternalTracer } from "@/lib/otel/tracing";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
@@ -101,6 +103,10 @@ async function calculateTaxes({
 }
 
 const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
+  after(async () => {
+    await flushOtelMetrics();
+  });
+
   return appExternalTracer.startActiveSpan(
     "executing orderCalculateTaxes webhook handler",
     {

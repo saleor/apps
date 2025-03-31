@@ -1,8 +1,5 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 
-import { TenatDomainResolver } from "@/lib/tenant-domain-resolver";
-import { loggerContext } from "@/logger-context";
-
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { avataxAddressFactory } from "../address-factory";
 import { CreateTransactionArgs } from "../avatax-client";
@@ -55,7 +52,6 @@ export class AvataxCalculateTaxesPayloadTransformer {
     });
 
     return {
-      tenantDomainResolver: new TenatDomainResolver({ loggerContext: loggerContext }),
       model: {
         type: this.matchDocumentType(),
         entityUseCode,

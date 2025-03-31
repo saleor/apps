@@ -10,8 +10,8 @@ import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
-import { meterProvider, metricReader } from "@/lib/metrics";
-import { appExternalTracer } from "@/lib/tracing";
+import { flushOtelMetrics } from "@/lib/otel/meter-provider";
+import { appExternalTracer } from "@/lib/otel/tracing";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
@@ -29,9 +29,7 @@ const checkoutCalculateTaxesSyncWebhookReponse =
 
 const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
   after(async () => {
-    // eslint-disable-next-line no-console
-    console.log("force flushing of metric reader");
-    await meterProvider.forceFlush();
+    await flushOtelMetrics();
   });
 
   return appExternalTracer.startActiveSpan(
