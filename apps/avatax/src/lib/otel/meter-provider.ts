@@ -23,10 +23,12 @@ export const meterProvider = new MeterProvider({
   }),
 });
 
+const MetricsTimeoutFlushError = BaseError.subclass("MetricsTimeoutFlushError");
+
 export const flushOtelMetrics = async () => {
   await race({
     promise: meterProvider.forceFlush(),
     timeoutMilis: 1_000,
-    error: new BaseError("Timeout while flushing metrics"),
+    error: new MetricsTimeoutFlushError("Metrics did not flush in (1s) time"),
   });
 };

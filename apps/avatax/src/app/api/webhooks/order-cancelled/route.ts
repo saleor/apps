@@ -33,7 +33,11 @@ const logsWriterFactory = new LogWriterFactory();
 
 const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
   after(async () => {
-    await flushOtelMetrics();
+    try {
+      await flushOtelMetrics();
+    } catch (error) {
+      logger.error("Error while flushing metrics", { error: error });
+    }
   });
 
   return appExternalTracer.startActiveSpan(
