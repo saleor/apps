@@ -3,7 +3,7 @@ import type { LoggerContext } from "@saleor/apps-logger/node";
 import { env } from "@/env";
 
 export class OtelTenatDomainResolver {
-  constructor(private deps: { loggerContext: LoggerContext }) {}
+  constructor(private deps: { loggerContext: Pick<LoggerContext, "getTenantDomain"> }) {}
 
   getDomain() {
     const domain = this.deps.loggerContext.getTenantDomain();
