@@ -41,6 +41,16 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
     OTEL_TRACES_SAMPLER_ARG: z.coerce.number().min(0).max(1).optional().default(1),
+    TENANT_DOMAIN_ALLOWLIST: z
+      .string()
+      .optional()
+      .transform((s) => {
+        if (!s) {
+          return [];
+        }
+
+        return s.split(",").map((domain) => domain.trim());
+      }),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]),
@@ -80,6 +90,7 @@ export const env = createEnv({
     VERCEL_ENV: process.env.VERCEL_ENV,
     REPOSITORY_URL: process.env.REPOSITORY_URL,
     OTEL_TRACES_SAMPLER_ARG: process.env.OTEL_TRACES_SAMPLER_ARG,
+    TENANT_DOMAIN_ALLOWLIST: process.env.TENANT_DOMAIN_ALLOWLIST,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

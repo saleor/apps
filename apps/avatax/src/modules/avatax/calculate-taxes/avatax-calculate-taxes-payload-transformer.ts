@@ -1,5 +1,8 @@
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 
+import { TenatDomainResolver } from "@/lib/tenant-domain-resolver";
+import { loggerContext } from "@/logger-context";
+
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { avataxAddressFactory } from "../address-factory";
 import { CreateTransactionArgs } from "../avatax-client";
@@ -16,7 +19,7 @@ export class AvataxCalculateTaxesPayloadTransformer {
     private avataxEntityTypeMatcher: AvataxEntityTypeMatcher,
   ) {}
 
-  private matchDocumentType(config: AvataxConfig): DocumentType {
+  private matchDocumentType(): DocumentType {
     /*
      * * For calculating taxes, we always use DocumentType.SalesOrder because it doesn't cause transaction recording.
      * * The full flow is described here: https://developer.avalara.com/ecommerce-integration-guide/sales-tax-badge/design-document-workflow/should-i-commit/
@@ -52,8 +55,9 @@ export class AvataxCalculateTaxesPayloadTransformer {
     });
 
     return {
+      tenantDomainResolver: new TenatDomainResolver({ loggerContext: loggerContext }),
       model: {
-        type: this.matchDocumentType(avataxConfig),
+        type: this.matchDocumentType(),
         entityUseCode,
         customerCode,
         companyCode: avataxConfig.companyCode ?? defaultAvataxConfig.companyCode,

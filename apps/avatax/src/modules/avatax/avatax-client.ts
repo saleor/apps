@@ -1,5 +1,6 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { ATTR_PEER_SERVICE } from "@opentelemetry/semantic-conventions/incubating";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import Avatax from "avatax";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
@@ -9,6 +10,7 @@ import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel
 import { fromPromise } from "neverthrow";
 
 import { internalMeter } from "@/lib/metrics";
+import { TenatDomainResolver } from "@/lib/tenant-domain-resolver";
 import { appExternalTracer } from "@/lib/tracing";
 import { createLogger } from "@/logger";
 
@@ -23,6 +25,7 @@ export type CommitTransactionArgs = {
 
 export type CreateTransactionArgs = {
   model: CreateTransactionModel;
+  tenantDomainResolver: TenatDomainResolver;
 };
 
 export type ValidateAddressArgs = {
@@ -41,10 +44,15 @@ export class AvataxClient {
     description: "The number of requests to AvaTax API",
     unit: "{request}",
   });
+  private avataxEnviromentObervabilityAttribute = "avatax.enviroment";
 
   constructor(private client: Avatax) {}
 
-  async createTransaction({ model }: CreateTransactionArgs) {
+  private getAvaTaxEnviroment() {
+    return this.client.baseUrl === "https://sandbox-rest.avatax.com" ? "sandbox" : "production";
+  }
+
+  async createTransaction({ model, tenantDomainResolver }: CreateTransactionArgs) {
     return appExternalTracer.startActiveSpan(
       "calling AvaTax createOrAdjustTransaction API",
       {
@@ -52,6 +60,7 @@ export class AvataxClient {
         attributes: {
           [ATTR_PEER_SERVICE]: "avatax",
           "avatax.document_type": DocumentType[model.type ?? "Any"],
+          [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
         },
       },
       (span) => {
@@ -84,10 +93,8 @@ export class AvataxClient {
             this.apiCallsCounter.add(1, {
               status: "success",
               method: "create_or_adjust_transaction",
-              avatax_enviroment:
-                this.client.baseUrl === "https://sandbox-rest.avatax.com"
-                  ? "sandbox"
-                  : "production",
+              [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
+              [ObservabilityAttributes.TENANT_DOMAIN]: tenantDomainResolver.getTenantDomain(),
             });
 
             return response;
@@ -102,10 +109,8 @@ export class AvataxClient {
             this.apiCallsCounter.add(1, {
               status: "error",
               method: "create_or_adjust_transaction",
-              avatax_enviroment:
-                this.client.baseUrl === "https://sandbox-rest.avatax.com"
-                  ? "sandbox"
-                  : "production",
+              [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
+              [ObservabilityAttributes.TENANT_DOMAIN]: tenantDomainResolver.getTenantDomain(),
             });
 
             return error;
