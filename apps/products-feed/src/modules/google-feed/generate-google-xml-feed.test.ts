@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { WeightUnitsEnum } from "../../../generated/graphql";
 import { ProductVariant } from "./fetch-product-data";
 import { generateGoogleXmlFeed } from "./generate-google-xml-feed";
 
@@ -63,7 +62,7 @@ describe("generateGoogleXmlFeed", () => {
           product: productBase,
           attributes: [],
           weight: {
-            unit: WeightUnitsEnum.Kg,
+            unit: "KG",
             value: 1,
           },
         },
