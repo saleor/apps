@@ -10,7 +10,7 @@
  * try {
  *   const result = await race({
  *     promise: fetch('https://api.example.com'),
- *     timeout: 5000, // 5 seconds
+ *     timeoutMilis: 5_000, // 5 seconds
  *     error: new Error('API request timed out')
  *   });
  *   // Handle success
@@ -24,11 +24,11 @@
  */
 export function race<T>({
   promise,
-  timeout,
+  timeoutMilis,
   error,
 }: {
   promise: Promise<T>;
-  timeout: number;
+  timeoutMilis: number;
   error: Error;
 }): Promise<T> {
   let timer: NodeJS.Timeout | null = null;
@@ -37,7 +37,7 @@ export function race<T>({
     new Promise<never>((_res, rej) => {
       timer = setTimeout(() => {
         rej(error);
-      }, timeout);
+      }, timeoutMilis);
     }),
     promise.finally(() => {
       if (timer) {
