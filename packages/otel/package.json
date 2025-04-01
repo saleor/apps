@@ -13,7 +13,8 @@
     "@opentelemetry/instrumentation-aws-sdk": "catalog:",
     "@opentelemetry/instrumentation-http": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
-    "@opentelemetry/semantic-conventions": "catalog:"
+    "@opentelemetry/semantic-conventions": "catalog:",
+    "uuid": "11.0.4"
   },
   "devDependencies": {
     "@opentelemetry/api": "catalog:",

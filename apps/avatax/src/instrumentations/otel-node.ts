@@ -1,6 +1,9 @@
 import { metrics } from "@opentelemetry/api";
 import { ATTR_SERVICE_VERSION } from "@opentelemetry/semantic-conventions";
-import { ATTR_DEPLOYMENT_ENVIRONMENT_NAME } from "@opentelemetry/semantic-conventions/incubating";
+import {
+  ATTR_DEPLOYMENT_ENVIRONMENT_NAME,
+  ATTR_SERVICE_INSTANCE_ID,
+} from "@opentelemetry/semantic-conventions/incubating";
 import { createAwsInstrumentation } from "@saleor/apps-otel/src/aws-instrumentation-factory";
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
@@ -9,6 +12,7 @@ import { registerOTel } from "@vercel/otel";
 
 import { env } from "@/env";
 import { meterProvider } from "@/lib/otel/meter-provider";
+import { sharedServiceInstanceId } from "@/lib/otel/shared-service-instance-id";
 
 import pkg from "../../package.json";
 
@@ -17,6 +21,7 @@ registerOTel({
   attributes: {
     [ATTR_SERVICE_VERSION]: pkg.version,
     [ATTR_DEPLOYMENT_ENVIRONMENT_NAME]: env.ENV,
+    [ATTR_SERVICE_INSTANCE_ID]: sharedServiceInstanceId,
     [ObservabilityAttributes.COMMIT_SHA]: env.VERCEL_GIT_COMMIT_SHA,
     [ObservabilityAttributes.REPOSITORY_URL]: env.REPOSITORY_URL,
     // override attribute set by `@vercel/otel` - if you are using OSS version you can remove it

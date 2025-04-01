@@ -2,14 +2,16 @@ import { Resource } from "@opentelemetry/resources";
 import { MeterProvider } from "@opentelemetry/sdk-metrics";
 import {
   ATTR_DEPLOYMENT_ENVIRONMENT_NAME,
+  ATTR_SERVICE_INSTANCE_ID,
   ATTR_SERVICE_NAME,
 } from "@opentelemetry/semantic-conventions/incubating";
 import { createMetricsReader } from "@saleor/apps-otel/src/metrics-reader-factory";
 import { race } from "@saleor/apps-shared";
-import { v4 as uuidv4 } from "uuid";
 
 import { env } from "@/env";
 import { BaseError } from "@/error";
+
+import { sharedServiceInstanceId } from "./shared-service-instance-id";
 
 export const meterProvider = new MeterProvider({
   readers: [
@@ -17,12 +19,12 @@ export const meterProvider = new MeterProvider({
       accessToken: env.OTEL_ACCESS_TOKEN,
     }),
   ],
+  // Create new resource as `@vercel/otel` creates its own under the hood and don't expose it
   resource: new Resource({
-    // be extra careful with adding attributes here - each one will add cardinality to the metrics
+    // We don't add all attributes from `instrumentations/otel-node.ts` as they will end up as attributes on the metrics in our OTEL collector. If you are using OSS version you can add them here.
     [ATTR_SERVICE_NAME]: env.OTEL_SERVICE_NAME,
     [ATTR_DEPLOYMENT_ENVIRONMENT_NAME]: env.ENV,
-    "service.instance.id": uuidv4(),
-    "saleor.test.attribute.name": "test-attribute-value-on-resource",
+    [ATTR_SERVICE_INSTANCE_ID]: sharedServiceInstanceId,
   }),
 });
 
