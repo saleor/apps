@@ -1633,6 +1633,9 @@ importers:
       '@types/react-dom':
         specifier: 18.2.5
         version: 18.2.5
+      '@vitest/coverage-v8':
+        specifier: 1.6.0
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
       eslint:
         specifier: 'catalog:'
         version: 9.23.0(jiti@2.4.2)
