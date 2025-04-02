@@ -1,5 +1,5 @@
 import { useAppBridge, withAuthorization } from "@saleor/app-sdk/app-bridge";
-import { isInIframe } from "@saleor/apps-shared";
+import { isInIframe } from "@saleor/apps-shared/is-in-iframe";
 import { Text } from "@saleor/macaw-ui";
 
 import { ConfigurationView } from "../views/configuration/configuration.view";

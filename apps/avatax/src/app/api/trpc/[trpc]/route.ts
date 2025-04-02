@@ -1,5 +1,5 @@
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
-import { compose } from "@saleor/apps-shared";
+import { compose } from "@saleor/apps-shared/compose";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { createLogger } from "@/logger";

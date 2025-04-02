@@ -1,4 +1,4 @@
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { TextLink } from "@saleor/apps-ui";
 import { Box, Button } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
