@@ -1,4 +1,4 @@
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { UpdateChannelsInput } from "../../channels/channel-configuration-schema";

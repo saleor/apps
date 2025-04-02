@@ -2,7 +2,8 @@ import "@saleor/macaw-ui/style";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
-import { NoSSRWrapper, ThemeSynchronizer } from "@saleor/apps-shared";
+import { NoSSRWrapper } from "@saleor/apps-shared/no-ssr-wrapper";
+import { ThemeSynchronizer } from "@saleor/apps-shared/theme-synchronizer";
 import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import { AppProps } from "next/app";
 

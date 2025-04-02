@@ -1,5 +1,5 @@
 import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { useMutation } from "@tanstack/react-query";
 import { useCallback } from "react";
 

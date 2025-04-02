@@ -1,5 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 
 export const updateWebhooksScript = async ({

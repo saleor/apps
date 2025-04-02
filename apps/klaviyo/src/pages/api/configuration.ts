@@ -3,7 +3,7 @@ import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 
 import { saleorApp } from "../../../saleor-app";
 import { createSettingsManager } from "../../lib/metadata";

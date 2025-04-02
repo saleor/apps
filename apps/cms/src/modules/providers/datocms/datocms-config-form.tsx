@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { ButtonsBox } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input, Select } from "@saleor/react-hook-form-macaw";

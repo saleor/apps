@@ -1,4 +1,4 @@
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import React from "react";
 
 import { trpcClient } from "../../trpc/trpc-client";

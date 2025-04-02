@@ -1,4 +1,4 @@
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Button } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";

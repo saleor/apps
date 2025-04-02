@@ -1,5 +1,5 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { useState } from "react";
 
 import {
