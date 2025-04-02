@@ -8,7 +8,7 @@
     "./theme-synchronizer": "./src/theme-synchronizer.tsx",
     "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
     "./create-graphql-client": "./src/create-graphql-client.ts",
-    "./editor-js-plaintext-renderer": "./src/src/editor-js-plaintext-renderer.ts",
+    "./editor-js-plaintext-renderer": "./src/editor-js/editor-js-plaintext-renderer.ts",
     "./metadata-manager": "./src/metadata-manager.ts",
     "./permissions": "./src/permissions.ts",
     "./is-in-iframe": "./src/is-in-iframe.ts"
