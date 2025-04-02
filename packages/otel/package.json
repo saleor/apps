@@ -8,14 +8,17 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
+    "@opentelemetry/exporter-metrics-otlp-http": "catalog:",
     "@opentelemetry/exporter-trace-otlp-http": "catalog:",
     "@opentelemetry/instrumentation-aws-sdk": "catalog:",
     "@opentelemetry/instrumentation-http": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
-    "@opentelemetry/semantic-conventions": "catalog:"
+    "@opentelemetry/semantic-conventions": "catalog:",
+    "uuid": "11.0.4"
   },
   "devDependencies": {
     "@opentelemetry/api": "catalog:",
+    "@opentelemetry/sdk-metrics": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
@@ -29,6 +32,7 @@
   },
   "peerDependencies": {
     "@opentelemetry/api": "catalog:",
+    "@opentelemetry/sdk-metrics": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "catalog:",

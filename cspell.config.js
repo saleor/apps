@@ -42,6 +42,7 @@ export default {
     "devcontainer",
     "klaviyo",
     "mailhog",
+    "milis",
     "mjml",
     "neverthrow",
     "nygard",

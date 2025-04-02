@@ -9,7 +9,8 @@ import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
-import { appExternalTracer } from "@/lib/tracing";
+import { appExternalTracer } from "@/lib/otel/tracing";
+import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
@@ -19,6 +20,8 @@ import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calcul
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
+
+const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
 
 const withMetadataCache = wrapWithMetadataCache(metadataCache);
 
@@ -32,8 +35,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
       kind: SpanKind.SERVER,
     },
     async (span) => {
-      const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
-
       /**
        * Create deps in handler, so it's potentially faster and reduce lambda start
        * TODO: It's rather not true, we should move it outside
@@ -230,6 +231,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
  */
 export const POST = compose(
   withLoggerContext,
+  withFlushOtelMetrics,
   withMetadataCache,
   withSpanAttributesAppRouter,
 )(handler);

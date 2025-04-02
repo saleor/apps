@@ -10,7 +10,8 @@ import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
-import { appExternalTracer } from "@/lib/tracing";
+import { appExternalTracer } from "@/lib/otel/tracing";
+import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { OrderMetadataManager } from "@/modules/app/order-metadata-manager";
@@ -401,6 +402,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
 
 export const POST = compose(
   withLoggerContext,
+  withFlushOtelMetrics,
   withMetadataCache,
   withSpanAttributesAppRouter,
 )(handler);

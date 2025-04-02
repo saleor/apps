@@ -12,6 +12,7 @@
     "./metadata-manager": "./src/metadata-manager.ts",
     "./no-ssr-wrapper": "./src/no-ssr-wrapper.tsx",
     "./permissions": "./src/permissions.ts",
+    "./race": "./src/race.ts",
     "./saleor-version-compatibility-validator": "./src/saleor-version-compatibility-validator.ts",
     "./theme-synchronizer": "./src/theme-synchronizer.tsx",
     "./use-dashboard-notification": "./src/use-dashboard-notification.ts"

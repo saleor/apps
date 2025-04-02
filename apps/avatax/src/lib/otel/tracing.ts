@@ -13,7 +13,8 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { BaseError } from "@/error";
 import { loggerContext } from "@/logger-context";
 
-import pkg from "../../package.json";
+import pkg from "../../../package.json";
+import { OtelTenatDomainResolver } from "./otel-tenant-domain-resolver";
 
 /*
  * Proxy `recordException` method on span to serialize error before sending it to the OTEL collector.
@@ -101,6 +102,8 @@ const getAppTracer = (tracerName: string) => (callbacks: { setupSpan: (span: Spa
     },
   });
 
+const tenantDomainResolver = new OtelTenatDomainResolver({ loggerContext });
+
 /**
  * ### ⚠️ Important
  * This tracer sends data to **both** external and internal collectors.
@@ -112,7 +115,7 @@ const getAppTracer = (tracerName: string) => (callbacks: { setupSpan: (span: Spa
  */
 export const appExternalTracer = getAppTracer("saleor.app.avatax.service")({
   setupSpan: (span) => {
-    const tenantDomain = loggerContext.getTenantDomain();
+    const tenantDomain = tenantDomainResolver.getDomain();
 
     span.setAttribute(ObservabilityAttributes.TENANT_DOMAIN, tenantDomain);
   },
@@ -129,7 +132,7 @@ export const appExternalTracer = getAppTracer("saleor.app.avatax.service")({
  */
 export const appInternalTracer = getAppTracer("saleor.app.avatax.core")({
   setupSpan: (span) => {
-    const tenantDomain = loggerContext.getTenantDomain();
+    const tenantDomain = tenantDomainResolver.getDomain();
     const saleorApiUrl = loggerContext.getSaleorApiUrl();
 
     span.setAttribute(ObservabilityAttributes.TENANT_DOMAIN, tenantDomain);

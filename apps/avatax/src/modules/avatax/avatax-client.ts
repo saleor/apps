@@ -1,5 +1,6 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { ATTR_PEER_SERVICE } from "@opentelemetry/semantic-conventions/incubating";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import Avatax from "avatax";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
@@ -8,8 +9,11 @@ import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel
 import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { fromPromise } from "neverthrow";
 
-import { appExternalTracer } from "@/lib/tracing";
+import { internalMeter } from "@/lib/otel/metrics";
+import { OtelTenatDomainResolver } from "@/lib/otel/otel-tenant-domain-resolver";
+import { appExternalTracer } from "@/lib/otel/tracing";
 import { createLogger } from "@/logger";
+import { loggerContext } from "@/logger-context";
 
 import { AvataxErrorsParser } from "./avatax-errors-parser";
 
@@ -36,7 +40,19 @@ export type VoidTransactionArgs = {
 export class AvataxClient {
   private logger = createLogger("AvataxClient");
   private errorParser = new AvataxErrorsParser();
+  // TODO: after testing phase change it to be externalMeter
+  private apiCallsCounter = internalMeter.createCounter("saleor.app.avatax.api.requests", {
+    description: "The number of requests to AvaTax API",
+    unit: "{request}",
+  });
+  private avataxEnviromentObervabilityAttribute = "avatax.enviroment";
+  private tenantDomainResolver = new OtelTenatDomainResolver({ loggerContext });
+
   constructor(private client: Avatax) {}
+
+  private getAvaTaxEnviroment() {
+    return this.client.baseUrl === "https://sandbox-rest.avatax.com" ? "sandbox" : "production";
+  }
 
   async createTransaction({ model }: CreateTransactionArgs) {
     return appExternalTracer.startActiveSpan(
@@ -46,6 +62,7 @@ export class AvataxClient {
         attributes: {
           [ATTR_PEER_SERVICE]: "avatax",
           "avatax.document_type": DocumentType[model.type ?? "Any"],
+          [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
         },
       },
       (span) => {
@@ -75,6 +92,13 @@ export class AvataxClient {
               message: "Transaction created or adjusted successfully",
             });
 
+            this.apiCallsCounter.add(1, {
+              status: "success",
+              method: "create_or_adjust_transaction",
+              [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
+              [ObservabilityAttributes.TENANT_DOMAIN]: this.tenantDomainResolver.getDomain(),
+            });
+
             return response;
           })
           .mapErr((error) => {
@@ -82,6 +106,13 @@ export class AvataxClient {
             span.setStatus({
               code: SpanStatusCode.ERROR,
               message: "Failed to create or adjust transaction",
+            });
+
+            this.apiCallsCounter.add(1, {
+              status: "error",
+              method: "create_or_adjust_transaction",
+              [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
+              [ObservabilityAttributes.TENANT_DOMAIN]: this.tenantDomainResolver.getDomain(),
             });
 
             return error;
@@ -131,6 +162,13 @@ export class AvataxClient {
               message: "Transaction voided successfully",
             });
 
+            this.apiCallsCounter.add(1, {
+              status: "success",
+              method: "void_transaction",
+              [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
+              [ObservabilityAttributes.TENANT_DOMAIN]: this.tenantDomainResolver.getDomain(),
+            });
+
             return response;
           })
           .mapErr((error) => {
@@ -138,6 +176,13 @@ export class AvataxClient {
             span.setStatus({
               code: SpanStatusCode.ERROR,
               message: "Failed to void transaction",
+            });
+
+            this.apiCallsCounter.add(1, {
+              status: "error",
+              method: "void_transaction",
+              [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
+              [ObservabilityAttributes.TENANT_DOMAIN]: this.tenantDomainResolver.getDomain(),
             });
 
             return error;
@@ -205,6 +250,13 @@ export class AvataxClient {
               message: "Entity use code fetched successfully",
             });
 
+            this.apiCallsCounter.add(1, {
+              status: "success",
+              method: "list_entity_use_code",
+              [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
+              [ObservabilityAttributes.TENANT_DOMAIN]: this.tenantDomainResolver.getDomain(),
+            });
+
             return response;
           })
           .mapErr((error) => {
@@ -212,6 +264,13 @@ export class AvataxClient {
             span.setStatus({
               code: SpanStatusCode.ERROR,
               message: "Failed to fetch entity use code",
+            });
+
+            this.apiCallsCounter.add(1, {
+              status: "error",
+              method: "list_entity_use_code",
+              [this.avataxEnviromentObervabilityAttribute]: this.getAvaTaxEnviroment(),
+              [ObservabilityAttributes.TENANT_DOMAIN]: this.tenantDomainResolver.getDomain(),
             });
 
             return error;

@@ -3,6 +3,7 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 
 import { env } from "@/env";
+import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { withLoggerContext } from "@/logger-context";
 
@@ -41,4 +42,8 @@ const handler = createAppRegisterHandler({
   },
 });
 
-export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
+export const POST = compose(
+  withLoggerContext,
+  withFlushOtelMetrics,
+  withSpanAttributesAppRouter,
+)(handler);
