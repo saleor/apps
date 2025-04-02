@@ -3,9 +3,9 @@
   "version": "1.12.2",
   "type": "module",
   "exports": {
+    "./compose": "./src/compose.ts",
     "./create-graphql-client": "./src/create-graphql-client.ts",
     "./editor-js-plaintext-renderer": "./src/editor-js/editor-js-plaintext-renderer.ts",
-    "./compose": "./src/compose.ts",
     "./get-app-base-url": "./src/get-app-base-url.ts",
     "./graphql-provider": "./src/graphql-provider.tsx",
     "./is-in-iframe": "./src/is-in-iframe.ts",
