@@ -2,7 +2,11 @@
   "name": "@saleor/trpc",
   "version": "4.0.3",
   "type": "module",
-  "main": "index.ts",
+  "exports": {
+    "./context-app-router": "./src/context-app-router.ts",
+    "./context-pages-router": "./src/context-pages-router.ts",
+    "./http-batch-link": "./src/http-batch-link.ts"
+  },
   "scripts": {
     "check-types": "tsc",
     "lint": "eslint .",

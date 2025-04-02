@@ -46,6 +46,7 @@
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "@vercel/otel": "catalog:",
+    "graphql-tag": "2.12.6",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

@@ -3,7 +3,7 @@ import { getAppBaseUrl } from "@saleor/apps-shared";
 import { inferAsyncReturnType } from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 
-export const createTrpcContext = async ({ req }: trpcNext.CreateNextContextOptions) => {
+export const createTrpcPagesRouterContext = async ({ req }: trpcNext.CreateNextContextOptions) => {
   const baseUrl = getAppBaseUrl(req.headers);
 
   return {
@@ -15,4 +15,4 @@ export const createTrpcContext = async ({ req }: trpcNext.CreateNextContextOptio
   };
 };
 
-export type TrpcContext = inferAsyncReturnType<typeof createTrpcContext>;
+export type PagesRouterTrpcContext = inferAsyncReturnType<typeof createTrpcPagesRouterContext>;

@@ -1,5 +1,5 @@
 import { Permission } from "@saleor/app-sdk/types";
-import { TrpcContextAppRouter } from "@saleor/trpc";
+import { TrpcContextAppRouter } from "@saleor/trpc/context-app-router";
 import { initTRPC } from "@trpc/server";
 
 interface Meta {
