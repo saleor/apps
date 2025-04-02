@@ -6,7 +6,7 @@ import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/ca
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
-import { ILogWriter, LogWriterContext, NoopLogWriter } from "@/modules/client-logs/log-writer";
+import { ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
 
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
@@ -16,7 +16,7 @@ import { AvataxSdkClientFactory } from "../../avatax/avatax-sdk-client-factory";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { CalculateTaxesUseCase } from "./calculate-taxes.use-case";
 
-const mockGetAppConfig = vi.fn<never, Result<AppConfig, (typeof BaseError)["prototype"]>>();
+const mockGetAppConfig = vi.fn<() => Result<AppConfig, (typeof BaseError)["prototype"]>>();
 
 const MockConfigExtractor: IAppConfigExtractor = {
   extractAppConfigFromPrivateMetadata: mockGetAppConfig,
@@ -145,6 +145,7 @@ const getMockedAppConfig = (): AppConfig => {
 
 describe("CalculateTaxesUseCase", () => {
   let instance: CalculateTaxesUseCase;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockedAvataxClient: any;
   let logWriter: ILogWriter;
 
@@ -177,7 +178,7 @@ describe("CalculateTaxesUseCase", () => {
     instance = new CalculateTaxesUseCase({
       configExtractor: MockConfigExtractor,
       logWriterFactory: {
-        createWriter(context: LogWriterContext): ILogWriter {
+        createWriter(): ILogWriter {
           return logWriter;
         },
       },
