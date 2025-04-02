@@ -1,5 +1,5 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
+import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared/saleor-version-compatibility-validator";
 import { TextLink } from "@saleor/apps-ui";
 import { Text } from "@saleor/macaw-ui";
 

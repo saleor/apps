@@ -1,9 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { TextLink } from "@saleor/apps-ui";
 import { Box, Button, Text, Tooltip } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
-import React from "react";
 import { useForm } from "react-hook-form";
 
 import { BoxFooter } from "../../../components/box-footer";

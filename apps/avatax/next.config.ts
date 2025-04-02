@@ -56,7 +56,6 @@ const nextConfig: NextConfig = {
       "@trpc/react-query",
       "@trpc/next",
       "jotai",
-      "@saleor/apps-shared",
     ],
   },
   bundlePagesRouterDependencies: true,

@@ -1,5 +1,5 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -7,7 +7,7 @@ import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { useBatchUpload } from "./useBatchUpload";
 
 vi.mock("@saleor/app-sdk/app-bridge");
-vi.mock("@saleor/apps-shared");
+vi.mock("@saleor/apps-shared/create-graphql-client");
 
 describe("useBatchUpload", () => {
   const mockSearchProvider = {

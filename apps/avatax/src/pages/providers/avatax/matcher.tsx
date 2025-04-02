@@ -1,4 +1,4 @@
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { TextLink } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
