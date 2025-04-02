@@ -1,4 +1,4 @@
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Breadcrumbs, ButtonsBox, Layout } from "@saleor/apps-ui";
 import { ArrowRightIcon, Box, Button, Text } from "@saleor/macaw-ui";
 import { useEffect, useRef, useState } from "react";

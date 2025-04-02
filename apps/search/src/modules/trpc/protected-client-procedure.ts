@@ -1,5 +1,5 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
-import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared";
+import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
 import { TRPCError } from "@trpc/server";
 
 import { saleorApp } from "../../../saleor-app";

@@ -2,7 +2,20 @@
   "name": "@saleor/apps-shared",
   "version": "1.12.2",
   "type": "module",
-  "main": "index.ts",
+  "exports": {
+    "./compose": "./src/compose.ts",
+    "./create-graphql-client": "./src/create-graphql-client.ts",
+    "./editor-js-plaintext-renderer": "./src/editor-js/editor-js-plaintext-renderer.ts",
+    "./get-app-base-url": "./src/get-app-base-url.ts",
+    "./graphql-provider": "./src/graphql-provider.tsx",
+    "./is-in-iframe": "./src/is-in-iframe.ts",
+    "./metadata-manager": "./src/metadata-manager.ts",
+    "./no-ssr-wrapper": "./src/no-ssr-wrapper.tsx",
+    "./permissions": "./src/permissions.ts",
+    "./saleor-version-compatibility-validator": "./src/saleor-version-compatibility-validator.ts",
+    "./theme-synchronizer": "./src/theme-synchronizer.tsx",
+    "./use-dashboard-notification": "./src/use-dashboard-notification.ts"
+  },
   "scripts": {
     "check-types": "tsc",
     "lint": "eslint .",

@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
       "@trpc/client",
       "@trpc/react-query",
       "@trpc/next",
-      "@saleor/apps-shared",
     ],
   },
   bundlePagesRouterDependencies: true,

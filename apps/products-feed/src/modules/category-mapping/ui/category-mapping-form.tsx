@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Box, Button, PropsWithBox } from "@saleor/macaw-ui";
-import React from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { CategoryWithMappingFragmentFragment } from "../../../../generated/graphql";
