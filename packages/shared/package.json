@@ -8,7 +8,6 @@
       "./src/*.tsx"
     ]
   },
-  "main": "index.ts",
   "scripts": {
     "check-types": "tsc",
     "lint": "eslint .",
