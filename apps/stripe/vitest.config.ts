@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     include: ["src/**/*.test.{ts,tsx}"],
     passWithNoTests: true, // TODO: remove this after we add first test
-    setupFiles: "./__tests__/setup.ts",
+    setupFiles: "./src/__tests__/setup.ts",
     css: false,
     alias: {
       "@/": new URL("./src/", import.meta.url).pathname,

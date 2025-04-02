@@ -1,3 +1,5 @@
+"use client";
+
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { PropsWithChildren } from "react";
 import { Provider } from "urql";

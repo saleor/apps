@@ -3,9 +3,9 @@ import { createTRPCNext } from "@trpc/next";
 
 import { appBridgeInstance } from "@/pages/_app";
 
-import { AppRouter } from "./trpc-app-router";
+import { TrpcRouter } from "./trpc-router";
 
-export const trpcClient = createTRPCNext<AppRouter>({
+export const trpcClient = createTRPCNext<TrpcRouter>({
   config() {
     return {
       links: [createHttpBatchLink(appBridgeInstance)],
