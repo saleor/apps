@@ -40,6 +40,7 @@ export type VoidTransactionArgs = {
 export class AvataxClient {
   private logger = createLogger("AvataxClient");
   private errorParser = new AvataxErrorsParser();
+  // TODO: after testing phase change it to be externalMeter
   private apiCallsCounter = internalMeter.createCounter("saleor.app.avatax.api.requests", {
     description: "The number of requests to AvaTax API",
     unit: "{request}",

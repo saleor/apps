@@ -6,10 +6,8 @@ import {
   ATTR_SERVICE_NAME,
 } from "@opentelemetry/semantic-conventions/incubating";
 import { createMetricsReader } from "@saleor/apps-otel/src/metrics-reader-factory";
-import { race } from "@saleor/apps-shared";
 
 import { env } from "@/env";
-import { BaseError } from "@/error";
 
 import { sharedServiceInstanceId } from "./shared-service-instance-id";
 
@@ -27,13 +25,3 @@ export const meterProvider = new MeterProvider({
     [ATTR_SERVICE_INSTANCE_ID]: sharedServiceInstanceId,
   }),
 });
-
-const MetricsTimeoutFlushError = BaseError.subclass("MetricsTimeoutFlushError");
-
-export const flushOtelMetrics = async () => {
-  await race({
-    promise: meterProvider.forceFlush(),
-    timeoutMilis: 1_000,
-    error: new MetricsTimeoutFlushError("Metrics did not flush in (1s) time"),
-  });
-};

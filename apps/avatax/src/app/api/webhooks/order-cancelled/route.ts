@@ -3,14 +3,13 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared";
 import { captureException, setTag } from "@sentry/nextjs";
-import { after } from "next/server";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
-import { flushOtelMetrics } from "@/lib/otel/meter-provider";
 import { appExternalTracer } from "@/lib/otel/tracing";
+import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
@@ -32,14 +31,6 @@ const subscriptionErrorChecker = new SubscriptionPayloadErrorChecker(logger, cap
 const logsWriterFactory = new LogWriterFactory();
 
 const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
-  after(async () => {
-    try {
-      await flushOtelMetrics();
-    } catch (error) {
-      logger.error("Error while flushing metrics", { error: error });
-    }
-  });
-
   return appExternalTracer.startActiveSpan(
     "executing orderCancelled webhook handler",
     {
@@ -347,6 +338,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
 
 export const POST = compose(
   withLoggerContext,
+  withFlushOtelMetrics,
   withMetadataCache,
   withSpanAttributesAppRouter,
 )(handler);

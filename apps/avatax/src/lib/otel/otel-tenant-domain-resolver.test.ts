@@ -10,7 +10,7 @@ const createMockedLoggerContext = (domain: string) => ({
 
 describe("OtelTenatDomainResolver", () => {
   it("returns domain when it's in allowlist", () => {
-    vi.mocked(env).TENANT_DOMAIN_ALLOWLIST = ["example.com", "test.com"];
+    vi.mocked(env).OTEL_TENANT_DOMAIN_ALLOWLIST = ["example.com", "test.com"];
 
     const resolver = new OtelTenatDomainResolver({
       loggerContext: createMockedLoggerContext("example.com"),
@@ -20,7 +20,7 @@ describe("OtelTenatDomainResolver", () => {
   });
 
   it("returns 'other' when domain is not in allowlist", () => {
-    vi.mocked(env).TENANT_DOMAIN_ALLOWLIST = ["example.com", "test.com"];
+    vi.mocked(env).OTEL_TENANT_DOMAIN_ALLOWLIST = ["example.com", "test.com"];
 
     const resolver = new OtelTenatDomainResolver({
       loggerContext: createMockedLoggerContext("not-in-allowlist.com"),
@@ -30,7 +30,7 @@ describe("OtelTenatDomainResolver", () => {
   });
 
   it("handles empty allowlist", () => {
-    vi.mocked(env).TENANT_DOMAIN_ALLOWLIST = [];
+    vi.mocked(env).OTEL_TENANT_DOMAIN_ALLOWLIST = [];
 
     const resolver = new OtelTenatDomainResolver({
       loggerContext: createMockedLoggerContext("any-domain.com"),
@@ -40,7 +40,7 @@ describe("OtelTenatDomainResolver", () => {
   });
 
   it("handles multiple domains in allowlist", () => {
-    vi.mocked(env).TENANT_DOMAIN_ALLOWLIST = ["one.com", "two.com", "three.com"];
+    vi.mocked(env).OTEL_TENANT_DOMAIN_ALLOWLIST = ["one.com", "two.com", "three.com"];
 
     const resolver = new OtelTenatDomainResolver({
       loggerContext: createMockedLoggerContext("two.com"),

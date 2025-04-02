@@ -41,7 +41,7 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
     OTEL_TRACES_SAMPLER_ARG: z.coerce.number().min(0).max(1).optional().default(1),
-    TENANT_DOMAIN_ALLOWLIST: z
+    OTEL_TENANT_DOMAIN_ALLOWLIST: z
       .string()
       .optional()
       .transform((s) => {
@@ -51,6 +51,7 @@ export const env = createEnv({
 
         return s.split(",").map((domain) => domain.trim());
       }),
+    OTEL_METRICS_FLUSH_TIMEOUT_MILIS: z.coerce.number().optional().default(5_000),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]),
@@ -90,7 +91,8 @@ export const env = createEnv({
     VERCEL_ENV: process.env.VERCEL_ENV,
     REPOSITORY_URL: process.env.REPOSITORY_URL,
     OTEL_TRACES_SAMPLER_ARG: process.env.OTEL_TRACES_SAMPLER_ARG,
-    TENANT_DOMAIN_ALLOWLIST: process.env.TENANT_DOMAIN_ALLOWLIST,
+    OTEL_TENANT_DOMAIN_ALLOWLIST: process.env.OTEL_TENANT_DOMAIN_ALLOWLIST,
+    OTEL_METRICS_FLUSH_TIMEOUT_MILIS: process.env.OTEL_METRICS_FLUSH_TIMEOUT_MILIS,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

@@ -8,7 +8,7 @@ export class OtelTenatDomainResolver {
   getDomain() {
     const domain = this.deps.loggerContext.getTenantDomain();
 
-    const allowList = env.TENANT_DOMAIN_ALLOWLIST;
+    const allowList = env.OTEL_TENANT_DOMAIN_ALLOWLIST;
 
     /*
      * reduce cardinality of OTEL attributes - allow only domain specified in env vars

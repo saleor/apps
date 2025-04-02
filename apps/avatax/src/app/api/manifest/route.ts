@@ -4,6 +4,7 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared";
 
 import { env } from "@/env";
+import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { withLoggerContext } from "@/logger-context";
 
 import packageJson from "../../../../package.json";
@@ -40,4 +41,8 @@ const handler = createManifestHandler({
   },
 });
 
-export const GET = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
+export const GET = compose(
+  withLoggerContext,
+  withFlushOtelMetrics,
+  withSpanAttributesAppRouter,
+)(handler);
