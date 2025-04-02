@@ -22,7 +22,9 @@
         "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "OTEL_TENANT_DOMAIN_ALLOWLIST",
+        "OTEL_METRICS_FLUSH_TIMEOUT_MILIS"
       ]
     },
     "e2e": {

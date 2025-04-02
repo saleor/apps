@@ -8,7 +8,8 @@ import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
-import { appExternalTracer } from "@/lib/tracing";
+import { appExternalTracer } from "@/lib/otel/tracing";
+import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
@@ -337,6 +338,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
 
 export const POST = compose(
   withLoggerContext,
+  withFlushOtelMetrics,
   withMetadataCache,
   withSpanAttributesAppRouter,
 )(handler);

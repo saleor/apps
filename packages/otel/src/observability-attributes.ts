@@ -10,5 +10,5 @@ export const ObservabilityAttributes = {
   VERCEL_ENV: "vercel.env",
   PATH: "path",
   SALEOR_EVENT: "saleorEvent",
-  TENANT_DOMAIN: "saleor.enviroment_domain",
+  TENANT_DOMAIN: "saleor.environment_domain",
 } as const;

@@ -4,7 +4,7 @@ import {
   CreateGraphQLClientArgs,
 } from "@saleor/apps-shared/create-graphql-client";
 
-import { appInternalTracer } from "./tracing";
+import { appInternalTracer } from "./otel/tracing";
 
 type CreateGraphQLClientProps = Omit<CreateGraphQLClientArgs, "opts">;
 
