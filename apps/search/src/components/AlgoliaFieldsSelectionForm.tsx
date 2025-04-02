@@ -1,4 +1,4 @@
-import { useDashboardNotification } from "@saleor/apps-shared";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { ButtonsBox, Layout } from "@saleor/apps-ui";
 import { Box, Button, Checkbox, Skeleton } from "@saleor/macaw-ui";
 import { useEffect } from "react";

@@ -3,12 +3,10 @@
   "version": "1.12.2",
   "type": "module",
   "exports": {
-    ".": {
-      "default": "./index.ts"
-    },
-    "./compose": {
-      "default": "./src/compose.ts"
-    }
+    "./*": [
+      "./src/*.ts",
+      "./src/*.tsx"
+    ]
   },
   "main": "index.ts",
   "scripts": {

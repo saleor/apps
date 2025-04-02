@@ -2,7 +2,7 @@ import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handle
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { createGraphQLClient } from "@saleor/apps-shared";
+import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { gql } from "urql";
 
 import {

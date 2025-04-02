@@ -1,4 +1,4 @@
-import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared";
+import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared/saleor-version-compatibility-validator";
 
 export const featureFlags = ["giftCardSentEvent", "orderRefundedEvent"] as const;
 

@@ -1,4 +1,4 @@
-import { EditorJsPlaintextRenderer } from "@saleor/apps-shared";
+import { EditorJsPlaintextRenderer } from "@saleor/apps-shared/editor-js-plaintext-renderer";
 import { XMLBuilder } from "fast-xml-parser";
 
 import { createLogger } from "../../logger";
