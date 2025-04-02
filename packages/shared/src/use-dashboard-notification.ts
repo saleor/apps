@@ -1,5 +1,3 @@
-"use client";
-
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useCallback } from "react";
 

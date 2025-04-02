@@ -1,5 +1,3 @@
-"use client";
-
 import dynamic from "next/dynamic";
 import { Fragment, PropsWithChildren } from "react";
 

@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     "@saleor/apps-logger",
     "@saleor/apps-otel",
     "@saleor/apps-shared",
-    "@saleor/trpc",
+    "@saleor/apps-trpc",
   ],
   experimental: {
     optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],

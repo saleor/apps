@@ -1,4 +1,4 @@
-import { createHttpBatchLink } from "@saleor/trpc/http-batch-link";
+import { createHttpBatchLink } from "@saleor/apps-trpc/http-batch-link";
 import { createTRPCNext } from "@trpc/next";
 
 import { appBridgeInstance } from "@/pages/_app";

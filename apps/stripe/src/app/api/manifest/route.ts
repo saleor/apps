@@ -1,7 +1,7 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
-import { compose } from "@saleor/apps-shared";
+import { compose } from "@saleor/apps-shared/compose";
 
 import { env } from "@/lib/env";
 import { withLoggerContext } from "@/lib/logger-context";

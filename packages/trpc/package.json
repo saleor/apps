@@ -1,5 +1,5 @@
 {
-  "name": "@saleor/trpc",
+  "name": "@saleor/apps-trpc",
   "version": "4.0.3",
   "type": "module",
   "exports": {
