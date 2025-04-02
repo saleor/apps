@@ -7,7 +7,7 @@ import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { useBatchUpload } from "./useBatchUpload";
 
 vi.mock("@saleor/app-sdk/app-bridge");
-vi.mock("@saleor/apps-shared");
+vi.mock("@saleor/apps-shared/create-graphql-client");
 
 describe("useBatchUpload", () => {
   const mockSearchProvider = {

@@ -3,10 +3,15 @@
   "version": "1.12.2",
   "type": "module",
   "exports": {
-    "./*": [
-      "./src/*.ts",
-      "./src/*.tsx"
-    ]
+    "./graphql-provider": "./src/graphql-provider.tsx",
+    "./no-ssr-wrapper": "./src/no-ssr-wrapper.tsx",
+    "./theme-synchronizer": "./src/theme-synchronizer.tsx",
+    "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
+    "./create-graphql-client": "./src/create-graphql-client.ts",
+    "./editor-js-plaintext-renderer": "./src/src/editor-js-plaintext-renderer.ts",
+    "./metadata-manager": "./src/metadata-manager.ts",
+    "./permissions": "./src/permissions.ts",
+    "./is-in-iframe": "./src/is-in-iframe.ts"
   },
   "scripts": {
     "check-types": "tsc",
