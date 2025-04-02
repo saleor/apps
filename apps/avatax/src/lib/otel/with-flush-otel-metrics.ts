@@ -1,5 +1,5 @@
 import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
-import { race } from "@saleor/apps-shared";
+import { race } from "@saleor/apps-shared/race";
 import { after, NextRequest } from "next/server";
 
 import { env } from "@/env";
