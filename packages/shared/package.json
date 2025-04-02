@@ -2,6 +2,14 @@
   "name": "@saleor/apps-shared",
   "version": "1.12.2",
   "type": "module",
+  "exports": {
+    ".": {
+      "default": "./index.ts"
+    },
+    "./compose": {
+      "default": "./src/compose.ts"
+    }
+  },
   "main": "index.ts",
   "scripts": {
     "check-types": "tsc",
