@@ -23,11 +23,11 @@ describe("syncWebhookStatus", function () {
 
   const createWebhookMock = vi
     .spyOn(webhookManagementService, "createWebhook")
-    .mockImplementation((_) => Promise.resolve());
+    .mockImplementation(() => Promise.resolve());
 
   const deleteWebhookMock = vi
     .spyOn(webhookManagementService, "deleteWebhook")
-    .mockImplementation((_) => Promise.resolve());
+    .mockImplementation(() => Promise.resolve());
 
   const smtpConfigurator = new SmtpMetadataManager(
     null as unknown as SettingsManager,
@@ -84,6 +84,10 @@ describe("syncWebhookStatus", function () {
   });
 
   it("Webhooks should be deleted from API, when configurations no longer use them", async () => {
+    const deleteWebhookMock = vi
+      .spyOn(webhookManagementService, "deleteWebhook")
+      .mockImplementation(() => Promise.resolve());
+
     vi.spyOn(statusesExports, "getWebhookStatusesFromConfigurations").mockReturnValue({
       invoiceSentWebhook: false,
       notifyWebhook: false,
