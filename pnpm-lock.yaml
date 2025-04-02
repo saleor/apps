@@ -1522,6 +1522,154 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
+  apps/stripe:
+    dependencies:
+      '@opentelemetry/api':
+        specifier: 'catalog:'
+        version: 1.9.0
+      '@opentelemetry/api-logs':
+        specifier: 'catalog:'
+        version: 0.57.2
+      '@opentelemetry/instrumentation':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources':
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-logs':
+        specifier: 'catalog:'
+        version: 0.57.2(@opentelemetry/api@1.9.0)
+      '@opentelemetry/sdk-trace-node':
+        specifier: 'catalog:'
+        version: 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions':
+        specifier: 'catalog:'
+        version: 1.30.0
+      '@saleor/app-sdk':
+        specifier: link:../../node_modules/@saleor/app-sdk
+        version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/apps-logger':
+        specifier: workspace:*
+        version: link:../../packages/logger
+      '@saleor/apps-otel':
+        specifier: workspace:*
+        version: link:../../packages/otel
+      '@saleor/apps-shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@saleor/apps-trpc':
+        specifier: workspace:*
+        version: link:../../packages/trpc
+      '@saleor/macaw-ui':
+        specifier: 'catalog:'
+        version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@sentry/cli':
+        specifier: 'catalog:'
+        version: 1.77.3
+      '@sentry/nextjs':
+        specifier: 'catalog:'
+        version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
+      '@t3-oss/env-nextjs':
+        specifier: 0.11.1
+        version: 0.11.1(typescript@5.8.2)(zod@3.21.4)
+      '@trpc/client':
+        specifier: 'catalog:'
+        version: 10.43.1(@trpc/server@10.43.1)
+      '@trpc/next':
+        specifier: 'catalog:'
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/react-query@10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/server@10.43.1)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@trpc/react-query':
+        specifier: 'catalog:'
+        version: 10.43.1(@tanstack/react-query@4.29.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@trpc/client@10.43.1(@trpc/server@10.43.1))(@trpc/server@10.43.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@trpc/server':
+        specifier: 'catalog:'
+        version: 10.43.1
+      '@vercel/otel':
+        specifier: 'catalog:'
+        version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
+      graphql-tag:
+        specifier: 2.12.6
+        version: 2.12.6(graphql@16.7.1)
+      next:
+        specifier: 'catalog:'
+        version: 15.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react:
+        specifier: 'catalog:'
+        version: 18.2.0
+      react-dom:
+        specifier: 'catalog:'
+        version: 18.2.0(react@18.2.0)
+      urql:
+        specifier: 'catalog:'
+        version: 4.0.4(graphql@16.7.1)(react@18.2.0)
+      usehooks-ts:
+        specifier: ^2.9.1
+        version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      zod:
+        specifier: 'catalog:'
+        version: 3.21.4
+    devDependencies:
+      '@graphql-codegen/cli':
+        specifier: 5.0.2
+        version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
+      '@graphql-codegen/introspection':
+        specifier: 4.0.3
+        version: 4.0.3(graphql@16.7.1)
+      '@graphql-codegen/typed-document-node':
+        specifier: 5.0.5
+        version: 5.0.5(graphql@16.7.1)
+      '@graphql-codegen/typescript':
+        specifier: 4.0.5
+        version: 4.0.5(graphql@16.7.1)
+      '@graphql-codegen/typescript-operations':
+        specifier: 4.1.3
+        version: 4.1.3(graphql@16.7.1)
+      '@graphql-codegen/typescript-urql':
+        specifier: 4.0.0
+        version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
+      '@graphql-typed-document-node/core':
+        specifier: 3.2.0
+        version: 3.2.0(graphql@16.7.1)
+      '@saleor/eslint-config-apps':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@saleor/typescript-config-apps':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@total-typescript/ts-reset':
+        specifier: 0.6.1
+        version: 0.6.1
+      '@types/react':
+        specifier: 18.2.5
+        version: 18.2.5
+      '@types/react-dom':
+        specifier: 18.2.5
+        version: 18.2.5
+      '@vitest/coverage-v8':
+        specifier: 1.6.0
+        version: 1.6.0(vitest@1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0))
+      eslint:
+        specifier: 'catalog:'
+        version: 9.23.0(jiti@2.4.2)
+      eslint-plugin-n:
+        specifier: 17.16.2
+        version: 17.16.2(eslint@9.23.0(jiti@2.4.2))
+      graphql-config:
+        specifier: 5.0.3
+        version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.8.2)
+      tsx:
+        specifier: 4.7.1
+        version: 4.7.1
+      typescript:
+        specifier: 5.8.2
+        version: 5.8.2
+      vite:
+        specifier: 5.3.3
+        version: 5.3.3(@types/node@22.13.10)(terser@5.18.0)
+      vitest:
+        specifier: 1.6.0
+        version: 1.6.0(@types/node@22.13.10)(jsdom@20.0.3)(terser@5.18.0)
+
   packages/eslint-config:
     devDependencies:
       '@eslint/js':
@@ -4876,19 +5024,9 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/rollup-android-arm-eabi@4.32.0':
-    resolution: {integrity: sha512-G2fUQQANtBPsNwiVFg4zKiPQyjVKZCUdQUol53R8E71J7AsheRMV/Yv/nB8giOcOVqP7//eB5xPqieBYZe9bGg==}
-    cpu: [arm]
-    os: [android]
-
   '@rollup/rollup-android-arm-eabi@4.35.0':
     resolution: {integrity: sha512-uYQ2WfPaqz5QtVgMxfN6NpLD+no0MYHDBywl7itPYd3K5TjjSghNKmX8ic9S8NU8w81NVhJv/XojcHptRly7qQ==}
     cpu: [arm]
-    os: [android]
-
-  '@rollup/rollup-android-arm64@4.32.0':
-    resolution: {integrity: sha512-qhFwQ+ljoymC+j5lXRv8DlaJYY/+8vyvYmVx074zrLsu5ZGWYsJNLjPPVJJjhZQpyAKUGPydOq9hRLLNvh1s3A==}
-    cpu: [arm64]
     os: [android]
 
   '@rollup/rollup-android-arm64@4.35.0':
@@ -4896,19 +5034,9 @@ packages:
     cpu: [arm64]
     os: [android]
 
-  '@rollup/rollup-darwin-arm64@4.32.0':
-    resolution: {integrity: sha512-44n/X3lAlWsEY6vF8CzgCx+LQaoqWGN7TzUfbJDiTIOjJm4+L2Yq+r5a8ytQRGyPqgJDs3Rgyo8eVL7n9iW6AQ==}
-    cpu: [arm64]
-    os: [darwin]
-
   '@rollup/rollup-darwin-arm64@4.35.0':
     resolution: {integrity: sha512-Uk+GjOJR6CY844/q6r5DR/6lkPFOw0hjfOIzVx22THJXMxktXG6CbejseJFznU8vHcEBLpiXKY3/6xc+cBm65Q==}
     cpu: [arm64]
-    os: [darwin]
-
-  '@rollup/rollup-darwin-x64@4.32.0':
-    resolution: {integrity: sha512-F9ct0+ZX5Np6+ZDztxiGCIvlCaW87HBdHcozUfsHnj1WCUTBUubAoanhHUfnUHZABlElyRikI0mgcw/qdEm2VQ==}
-    cpu: [x64]
     os: [darwin]
 
   '@rollup/rollup-darwin-x64@4.35.0':
@@ -4916,19 +5044,9 @@ packages:
     cpu: [x64]
     os: [darwin]
 
-  '@rollup/rollup-freebsd-arm64@4.32.0':
-    resolution: {integrity: sha512-JpsGxLBB2EFXBsTLHfkZDsXSpSmKD3VxXCgBQtlPcuAqB8TlqtLcbeMhxXQkCDv1avgwNjF8uEIbq5p+Cee0PA==}
-    cpu: [arm64]
-    os: [freebsd]
-
   '@rollup/rollup-freebsd-arm64@4.35.0':
     resolution: {integrity: sha512-sxjoD/6F9cDLSELuLNnY0fOrM9WA0KrM0vWm57XhrIMf5FGiN8D0l7fn+bpUeBSU7dCgPV2oX4zHAsAXyHFGcQ==}
     cpu: [arm64]
-    os: [freebsd]
-
-  '@rollup/rollup-freebsd-x64@4.32.0':
-    resolution: {integrity: sha512-wegiyBT6rawdpvnD9lmbOpx5Sph+yVZKHbhnSP9MqUEDX08G4UzMU+D87jrazGE7lRSyTRs6NEYHtzfkJ3FjjQ==}
-    cpu: [x64]
     os: [freebsd]
 
   '@rollup/rollup-freebsd-x64@4.35.0':
@@ -4936,18 +5054,8 @@ packages:
     cpu: [x64]
     os: [freebsd]
 
-  '@rollup/rollup-linux-arm-gnueabihf@4.32.0':
-    resolution: {integrity: sha512-3pA7xecItbgOs1A5H58dDvOUEboG5UfpTq3WzAdF54acBbUM+olDJAPkgj1GRJ4ZqE12DZ9/hNS2QZk166v92A==}
-    cpu: [arm]
-    os: [linux]
-
   '@rollup/rollup-linux-arm-gnueabihf@4.35.0':
     resolution: {integrity: sha512-mrA0v3QMy6ZSvEuLs0dMxcO2LnaCONs1Z73GUDBHWbY8tFFocM6yl7YyMu7rz4zS81NDSqhrUuolyZXGi8TEqg==}
-    cpu: [arm]
-    os: [linux]
-
-  '@rollup/rollup-linux-arm-musleabihf@4.32.0':
-    resolution: {integrity: sha512-Y7XUZEVISGyge51QbYyYAEHwpGgmRrAxQXO3siyYo2kmaj72USSG8LtlQQgAtlGfxYiOwu+2BdbPjzEpcOpRmQ==}
     cpu: [arm]
     os: [linux]
 
@@ -4956,18 +5064,8 @@ packages:
     cpu: [arm]
     os: [linux]
 
-  '@rollup/rollup-linux-arm64-gnu@4.32.0':
-    resolution: {integrity: sha512-r7/OTF5MqeBrZo5omPXcTnjvv1GsrdH8a8RerARvDFiDwFpDVDnJyByYM/nX+mvks8XXsgPUxkwe/ltaX2VH7w==}
-    cpu: [arm64]
-    os: [linux]
-
   '@rollup/rollup-linux-arm64-gnu@4.35.0':
     resolution: {integrity: sha512-uagpnH2M2g2b5iLsCTZ35CL1FgyuzzJQ8L9VtlJ+FckBXroTwNOaD0z0/UF+k5K3aNQjbm8LIVpxykUOQt1m/A==}
-    cpu: [arm64]
-    os: [linux]
-
-  '@rollup/rollup-linux-arm64-musl@4.32.0':
-    resolution: {integrity: sha512-HJbifC9vex9NqnlodV2BHVFNuzKL5OnsV2dvTw6e1dpZKkNjPG6WUq+nhEYV6Hv2Bv++BXkwcyoGlXnPrjAKXw==}
     cpu: [arm64]
     os: [linux]
 
@@ -4976,19 +5074,9 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  '@rollup/rollup-linux-loongarch64-gnu@4.32.0':
-    resolution: {integrity: sha512-VAEzZTD63YglFlWwRj3taofmkV1V3xhebDXffon7msNz4b14xKsz7utO6F8F4cqt8K/ktTl9rm88yryvDpsfOw==}
-    cpu: [loong64]
-    os: [linux]
-
   '@rollup/rollup-linux-loongarch64-gnu@4.35.0':
     resolution: {integrity: sha512-5pMT5PzfgwcXEwOaSrqVsz/LvjDZt+vQ8RT/70yhPU06PTuq8WaHhfT1LW+cdD7mW6i/J5/XIkX/1tCAkh1W6g==}
     cpu: [loong64]
-    os: [linux]
-
-  '@rollup/rollup-linux-powerpc64le-gnu@4.32.0':
-    resolution: {integrity: sha512-Sts5DST1jXAc9YH/iik1C9QRsLcCoOScf3dfbY5i4kH9RJpKxiTBXqm7qU5O6zTXBTEZry69bGszr3SMgYmMcQ==}
-    cpu: [ppc64]
     os: [linux]
 
   '@rollup/rollup-linux-powerpc64le-gnu@4.35.0':
@@ -4996,19 +5084,9 @@ packages:
     cpu: [ppc64]
     os: [linux]
 
-  '@rollup/rollup-linux-riscv64-gnu@4.32.0':
-    resolution: {integrity: sha512-qhlXeV9AqxIyY9/R1h1hBD6eMvQCO34ZmdYvry/K+/MBs6d1nRFLm6BOiITLVI+nFAAB9kUB6sdJRKyVHXnqZw==}
-    cpu: [riscv64]
-    os: [linux]
-
   '@rollup/rollup-linux-riscv64-gnu@4.35.0':
     resolution: {integrity: sha512-s91fuAHdOwH/Tad2tzTtPX7UZyytHIRR6V4+2IGlV0Cej5rkG0R61SX4l4y9sh0JBibMiploZx3oHKPnQBKe4g==}
     cpu: [riscv64]
-    os: [linux]
-
-  '@rollup/rollup-linux-s390x-gnu@4.32.0':
-    resolution: {integrity: sha512-8ZGN7ExnV0qjXa155Rsfi6H8M4iBBwNLBM9lcVS+4NcSzOFaNqmt7djlox8pN1lWrRPMRRQ8NeDlozIGx3Omsw==}
-    cpu: [s390x]
     os: [linux]
 
   '@rollup/rollup-linux-s390x-gnu@4.35.0':
@@ -5016,18 +5094,8 @@ packages:
     cpu: [s390x]
     os: [linux]
 
-  '@rollup/rollup-linux-x64-gnu@4.32.0':
-    resolution: {integrity: sha512-VDzNHtLLI5s7xd/VubyS10mq6TxvZBp+4NRWoW+Hi3tgV05RtVm4qK99+dClwTN1McA6PHwob6DEJ6PlXbY83A==}
-    cpu: [x64]
-    os: [linux]
-
   '@rollup/rollup-linux-x64-gnu@4.35.0':
     resolution: {integrity: sha512-Pim1T8rXOri+0HmV4CdKSGrqcBWX0d1HoPnQ0uw0bdp1aP5SdQVNBy8LjYncvnLgu3fnnCt17xjWGd4cqh8/hA==}
-    cpu: [x64]
-    os: [linux]
-
-  '@rollup/rollup-linux-x64-musl@4.32.0':
-    resolution: {integrity: sha512-qcb9qYDlkxz9DxJo7SDhWxTWV1gFuwznjbTiov289pASxlfGbaOD54mgbs9+z94VwrXtKTu+2RqwlSTbiOqxGg==}
     cpu: [x64]
     os: [linux]
 
@@ -5036,29 +5104,14 @@ packages:
     cpu: [x64]
     os: [linux]
 
-  '@rollup/rollup-win32-arm64-msvc@4.32.0':
-    resolution: {integrity: sha512-pFDdotFDMXW2AXVbfdUEfidPAk/OtwE/Hd4eYMTNVVaCQ6Yl8et0meDaKNL63L44Haxv4UExpv9ydSf3aSayDg==}
-    cpu: [arm64]
-    os: [win32]
-
   '@rollup/rollup-win32-arm64-msvc@4.35.0':
     resolution: {integrity: sha512-OUOlGqPkVJCdJETKOCEf1mw848ZyJ5w50/rZ/3IBQVdLfR5jk/6Sr5m3iO2tdPgwo0x7VcncYuOvMhBWZq8ayg==}
     cpu: [arm64]
     os: [win32]
 
-  '@rollup/rollup-win32-ia32-msvc@4.32.0':
-    resolution: {integrity: sha512-/TG7WfrCAjeRNDvI4+0AAMoHxea/USWhAzf9PVDFHbcqrQ7hMMKp4jZIy4VEjk72AAfN5k4TiSMRXRKf/0akSw==}
-    cpu: [ia32]
-    os: [win32]
-
   '@rollup/rollup-win32-ia32-msvc@4.35.0':
     resolution: {integrity: sha512-2/lsgejMrtwQe44glq7AFFHLfJBPafpsTa6JvP2NGef/ifOa4KBoglVf7AKN7EV9o32evBPRqfg96fEHzWo5kw==}
     cpu: [ia32]
-    os: [win32]
-
-  '@rollup/rollup-win32-x64-msvc@4.32.0':
-    resolution: {integrity: sha512-5hqO5S3PTEO2E5VjCePxv40gIgyS2KvO7E7/vvC/NbIW4SIRamkMr1hqj+5Y67fbBWv/bQLB6KelBQmXlyCjWA==}
-    cpu: [x64]
     os: [win32]
 
   '@rollup/rollup-win32-x64-msvc@4.35.0':
@@ -7040,10 +7093,6 @@ packages:
   end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
 
-  enhanced-resolve@5.17.1:
-    resolution: {integrity: sha512-LMHl3dXhTcfv8gM4kEzIUeTQ+7fpdA0l2tUf34BddXPkz2A5xJ5L/Pchd5BL6rdccM9QGvu0sWZzK1Z1t4wwyg==}
-    engines: {node: '>=10.13.0'}
-
   enhanced-resolve@5.18.1:
     resolution: {integrity: sha512-ZSW3ma5GkcQBIpwZTSRAI8N71Uuwgs93IezB7mf7R60tC8ZbJideoDNKjHn2O9KIlx6rkGTTEk1xUCK2E1Y2Yg==}
     engines: {node: '>=10.13.0'}
@@ -7640,9 +7689,6 @@ packages:
   get-tsconfig@4.10.0:
     resolution: {integrity: sha512-kGzZ3LWWQcGIAmg6iWvXn0ei6WDtV26wzHRMwDSzmAbcXrTEXxHy6IehI6/4eT6VRKyMP1eF1VqwrVUmE/LR7A==}
 
-  get-tsconfig@4.7.2:
-    resolution: {integrity: sha512-wuMsz4leaj5hbGgg4IvDU0bqJagpftG5l5cXIAvo8uZrqn0NJqwtfupTN00VnkQJPcIRrxYrm1Ue24btpCha2A==}
-
   get-value@2.0.6:
     resolution: {integrity: sha512-Ln0UQDlxH1BapMu3GPtf7CuYNwRZf2gwCuPqbyG6pB8WfmFpzqcy4xtAaAMUhnNqjMKTiCPZG2oMT3YSx8U2NA==}
     engines: {node: '>=0.10.0'}
@@ -8060,9 +8106,6 @@ packages:
   is-ci@3.0.1:
     resolution: {integrity: sha512-ZYvCgrefwqoQ6yTyYUbQu64HsITZ3NfKX1lzaEYdkTDcfKzzCI/wthRRYKkdjHKFVgNiXKAKm65Zo1pk2as/QQ==}
     hasBin: true
-
-  is-core-module@2.13.1:
-    resolution: {integrity: sha512-hHrIjvZsftOsvKSn2TRYl63zvxsgE0K+0mYMoH6gD4omR5IWB2KynivBQczo3+wF1cCkjzvptnI9Q0sPU66ilw==}
 
   is-core-module@2.16.1:
     resolution: {integrity: sha512-UfoeMA6fIJ8wTYFEUjelnaGI67v6+N7qXJEvQuIGa99l4xsCruSYOVSQ0uPANn4dAzm8lkYPaKLrrijLq7x23w==}
@@ -9791,11 +9834,6 @@ packages:
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
-  rollup@4.32.0:
-    resolution: {integrity: sha512-JmrhfQR31Q4AuNBjjAX4s+a/Pu/Q8Q9iwjWBsjRH1q52SPFE2NqRMK6fUZKKnvKO6id+h7JIRf0oYsph53eATg==}
-    engines: {node: '>=18.0.0', npm: '>=8.0.0'}
-    hasBin: true
-
   rollup@4.35.0:
     resolution: {integrity: sha512-kg6oI4g+vc41vePJyO6dHt/yl0Rz3Thv0kJeVQ3D1kS3E5XSuKbPc29G4IpT/Kv1KQwgHVcN+HtyS+HYLNSvQg==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
@@ -11312,7 +11350,7 @@ snapshots:
 
   '@aws-crypto/supports-web-crypto@5.2.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-crypto/util@3.0.0':
     dependencies:
@@ -11324,16 +11362,16 @@ snapshots:
     dependencies:
       '@aws-sdk/types': 3.649.0
       '@smithy/util-utf8': 2.3.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/abort-controller@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/chunked-blob-reader@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/client-dynamodb@3.651.1':
     dependencies:
@@ -11643,7 +11681,7 @@ snapshots:
       '@aws-sdk/util-user-agent-node': 3.329.0
       '@aws-sdk/util-utf8': 3.310.0
       fast-xml-parser: 4.1.2
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
 
@@ -11697,7 +11735,7 @@ snapshots:
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-config-provider': 3.310.0
       '@aws-sdk/util-middleware': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/core@3.651.1':
     dependencies:
@@ -11716,14 +11754,14 @@ snapshots:
     dependencies:
       '@aws-sdk/property-provider': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-env@3.649.0':
     dependencies:
       '@aws-sdk/types': 3.649.0
       '@smithy/property-provider': 3.1.6
       '@smithy/types': 3.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-http@3.649.0':
     dependencies:
@@ -11735,7 +11773,7 @@ snapshots:
       '@smithy/smithy-client': 3.3.2
       '@smithy/types': 3.4.2
       '@smithy/util-stream': 3.1.6
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-imds@3.329.0':
     dependencies:
@@ -11743,7 +11781,7 @@ snapshots:
       '@aws-sdk/property-provider': 3.329.0
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/url-parser': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-ini@3.332.0':
     dependencies:
@@ -11755,7 +11793,7 @@ snapshots:
       '@aws-sdk/property-provider': 3.329.0
       '@aws-sdk/shared-ini-file-loader': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
 
@@ -11772,7 +11810,7 @@ snapshots:
       '@smithy/property-provider': 3.1.6
       '@smithy/shared-ini-file-loader': 3.1.7
       '@smithy/types': 3.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - '@aws-sdk/client-sso-oidc'
       - aws-crt
@@ -11788,7 +11826,7 @@ snapshots:
       '@aws-sdk/property-provider': 3.329.0
       '@aws-sdk/shared-ini-file-loader': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
 
@@ -11816,7 +11854,7 @@ snapshots:
       '@aws-sdk/property-provider': 3.329.0
       '@aws-sdk/shared-ini-file-loader': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-process@3.649.0':
     dependencies:
@@ -11824,7 +11862,7 @@ snapshots:
       '@smithy/property-provider': 3.1.6
       '@smithy/shared-ini-file-loader': 3.1.7
       '@smithy/types': 3.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-sso@3.332.0':
     dependencies:
@@ -11833,7 +11871,7 @@ snapshots:
       '@aws-sdk/shared-ini-file-loader': 3.329.0
       '@aws-sdk/token-providers': 3.332.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
 
@@ -11845,7 +11883,7 @@ snapshots:
       '@smithy/property-provider': 3.1.6
       '@smithy/shared-ini-file-loader': 3.1.7
       '@smithy/types': 3.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - '@aws-sdk/client-sso-oidc'
       - aws-crt
@@ -11854,7 +11892,7 @@ snapshots:
     dependencies:
       '@aws-sdk/property-provider': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-web-identity@3.649.0(@aws-sdk/client-sts@3.651.1)':
     dependencies:
@@ -11862,12 +11900,12 @@ snapshots:
       '@aws-sdk/types': 3.649.0
       '@smithy/property-provider': 3.1.6
       '@smithy/types': 3.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/endpoint-cache@3.572.0':
     dependencies:
       mnemonist: 0.38.3
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/eventstream-codec@3.329.0':
     dependencies:
@@ -11880,24 +11918,24 @@ snapshots:
     dependencies:
       '@aws-sdk/eventstream-serde-universal': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/eventstream-serde-config-resolver@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/eventstream-serde-node@3.329.0':
     dependencies:
       '@aws-sdk/eventstream-serde-universal': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/eventstream-serde-universal@3.329.0':
     dependencies:
       '@aws-sdk/eventstream-codec': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/fetch-http-handler@3.329.0':
     dependencies:
@@ -11905,35 +11943,35 @@ snapshots:
       '@aws-sdk/querystring-builder': 3.329.0
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-base64': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/hash-blob-browser@3.329.0':
     dependencies:
       '@aws-sdk/chunked-blob-reader': 3.310.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/hash-node@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-buffer-from': 3.310.0
       '@aws-sdk/util-utf8': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/hash-stream-node@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-utf8': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/invalid-dependency@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/is-array-buffer@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1)':
     dependencies:
@@ -11948,7 +11986,7 @@ snapshots:
     dependencies:
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-utf8': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-bucket-endpoint@3.329.0':
     dependencies:
@@ -11956,13 +11994,13 @@ snapshots:
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-arn-parser': 3.310.0
       '@aws-sdk/util-config-provider': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-content-length@3.329.0':
     dependencies:
       '@aws-sdk/protocol-http': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-endpoint-discovery@3.649.0':
     dependencies:
@@ -11979,13 +12017,13 @@ snapshots:
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/url-parser': 3.329.0
       '@aws-sdk/util-middleware': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-expect-continue@3.329.0':
     dependencies:
       '@aws-sdk/protocol-http': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-flexible-checksums@3.331.0':
     dependencies:
@@ -11995,13 +12033,13 @@ snapshots:
       '@aws-sdk/protocol-http': 3.329.0
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-utf8': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-host-header@3.329.0':
     dependencies:
       '@aws-sdk/protocol-http': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-host-header@3.649.0':
     dependencies:
@@ -12013,12 +12051,12 @@ snapshots:
   '@aws-sdk/middleware-location-constraint@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-logger@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-logger@3.649.0':
     dependencies:
@@ -12030,7 +12068,7 @@ snapshots:
     dependencies:
       '@aws-sdk/protocol-http': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-recursion-detection@3.649.0':
     dependencies:
@@ -12046,7 +12084,7 @@ snapshots:
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-middleware': 3.329.0
       '@aws-sdk/util-retry': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
       uuid: 8.3.2
 
   '@aws-sdk/middleware-sdk-s3@3.329.0':
@@ -12054,18 +12092,18 @@ snapshots:
       '@aws-sdk/protocol-http': 3.329.0
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-arn-parser': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-sdk-sts@3.329.0':
     dependencies:
       '@aws-sdk/middleware-signing': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-serde@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-signing@3.329.0':
     dependencies:
@@ -12074,23 +12112,23 @@ snapshots:
       '@aws-sdk/signature-v4': 3.329.0
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-middleware': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-ssec@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-stack@3.329.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-user-agent@3.332.0':
     dependencies:
       '@aws-sdk/protocol-http': 3.329.0
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-endpoints': 3.332.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/middleware-user-agent@3.649.0':
     dependencies:
@@ -12105,7 +12143,7 @@ snapshots:
       '@aws-sdk/property-provider': 3.329.0
       '@aws-sdk/shared-ini-file-loader': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/node-http-handler@3.329.0':
     dependencies:
@@ -12113,28 +12151,28 @@ snapshots:
       '@aws-sdk/protocol-http': 3.329.0
       '@aws-sdk/querystring-builder': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/property-provider@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/protocol-http@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/querystring-builder@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-uri-escape': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/querystring-parser@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/region-config-resolver@3.649.0':
     dependencies:
@@ -12150,14 +12188,14 @@ snapshots:
   '@aws-sdk/shared-ini-file-loader@3.329.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/signature-v4-multi-region@3.329.0':
     dependencies:
       '@aws-sdk/protocol-http': 3.329.0
       '@aws-sdk/signature-v4': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/signature-v4@3.329.0':
     dependencies:
@@ -12167,13 +12205,13 @@ snapshots:
       '@aws-sdk/util-middleware': 3.329.0
       '@aws-sdk/util-uri-escape': 3.310.0
       '@aws-sdk/util-utf8': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/smithy-client@3.329.0':
     dependencies:
       '@aws-sdk/middleware-stack': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/token-providers@3.332.0':
     dependencies:
@@ -12196,7 +12234,7 @@ snapshots:
 
   '@aws-sdk/types@3.329.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/types@3.649.0':
     dependencies:
@@ -12207,40 +12245,40 @@ snapshots:
     dependencies:
       '@aws-sdk/querystring-parser': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-arn-parser@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-base64@3.310.0':
     dependencies:
       '@aws-sdk/util-buffer-from': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-body-length-browser@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-body-length-node@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-buffer-from@3.310.0':
     dependencies:
       '@aws-sdk/is-array-buffer': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-config-provider@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-defaults-mode-browser@3.329.0':
     dependencies:
       '@aws-sdk/property-provider': 3.329.0
       '@aws-sdk/types': 3.329.0
       bowser: 2.11.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-defaults-mode-node@3.329.0':
     dependencies:
@@ -12249,7 +12287,7 @@ snapshots:
       '@aws-sdk/node-config-provider': 3.329.0
       '@aws-sdk/property-provider': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1)':
     dependencies:
@@ -12259,7 +12297,7 @@ snapshots:
   '@aws-sdk/util-endpoints@3.332.0':
     dependencies:
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-endpoints@3.649.0':
     dependencies:
@@ -12270,20 +12308,20 @@ snapshots:
 
   '@aws-sdk/util-hex-encoding@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-locate-window@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-middleware@3.329.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-retry@3.329.0':
     dependencies:
       '@aws-sdk/service-error-classification': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-stream-browser@3.329.0':
     dependencies:
@@ -12292,14 +12330,14 @@ snapshots:
       '@aws-sdk/util-base64': 3.310.0
       '@aws-sdk/util-hex-encoding': 3.310.0
       '@aws-sdk/util-utf8': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-stream-node@3.331.0':
     dependencies:
       '@aws-sdk/node-http-handler': 3.329.0
       '@aws-sdk/types': 3.329.0
       '@aws-sdk/util-buffer-from': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-uri-escape@3.310.0':
     dependencies:
@@ -12309,7 +12347,7 @@ snapshots:
     dependencies:
       '@aws-sdk/types': 3.329.0
       bowser: 2.11.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-user-agent-browser@3.649.0':
     dependencies:
@@ -12322,7 +12360,7 @@ snapshots:
     dependencies:
       '@aws-sdk/node-config-provider': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-user-agent-node@3.649.0':
     dependencies:
@@ -12333,22 +12371,22 @@ snapshots:
 
   '@aws-sdk/util-utf8-browser@3.259.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-utf8@3.310.0':
     dependencies:
       '@aws-sdk/util-buffer-from': 3.310.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/util-waiter@3.329.0':
     dependencies:
       '@aws-sdk/abort-controller': 3.329.0
       '@aws-sdk/types': 3.329.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@aws-sdk/xml-builder@3.310.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@babel/code-frame@7.24.2':
     dependencies:
@@ -13438,7 +13476,7 @@ snapshots:
 
   '@emnapi/runtime@1.3.1':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
     optional: true
 
   '@emotion/hash@0.9.1': {}
@@ -13609,7 +13647,7 @@ snapshots:
       espree: 10.3.0
       globals: 14.0.0
       ignore: 5.3.2
-      import-fresh: 3.3.0
+      import-fresh: 3.3.1
       js-yaml: 4.1.0
       minimatch: 3.1.2
       strip-json-comments: 3.1.1
@@ -13934,13 +13972,13 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       dataloader: 2.2.2
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/documents@1.0.0(graphql@16.7.1)':
     dependencies:
       graphql: 16.7.1
       lodash.sortby: 4.7.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/executor-graphql-ws@1.1.0(graphql@16.7.1)':
     dependencies:
@@ -13949,7 +13987,7 @@ snapshots:
       graphql: 16.7.1
       graphql-ws: 5.14.0(graphql@16.7.1)
       isomorphic-ws: 5.0.0(ws@8.16.0)
-      tslib: 2.6.2
+      tslib: 2.8.1
       ws: 8.16.0
     transitivePeerDependencies:
       - bufferutil
@@ -13963,7 +14001,7 @@ snapshots:
       extract-files: 11.0.0
       graphql: 16.7.1
       meros: 1.3.0(@types/node@22.13.10)
-      tslib: 2.6.2
+      tslib: 2.8.1
       value-or-promise: 1.0.12
     transitivePeerDependencies:
       - '@types/node'
@@ -13974,7 +14012,7 @@ snapshots:
       '@types/ws': 8.5.10
       graphql: 16.7.1
       isomorphic-ws: 5.0.0(ws@8.16.0)
-      tslib: 2.6.2
+      tslib: 2.8.1
       ws: 8.16.0
     transitivePeerDependencies:
       - bufferutil
@@ -14034,7 +14072,7 @@ snapshots:
       '@babel/types': 7.26.5
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
@@ -14043,7 +14081,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       graphql: 16.7.1
       resolve-from: 5.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/json-file-loader@8.0.0(graphql@16.7.1)':
     dependencies:
@@ -14070,12 +14108,12 @@ snapshots:
   '@graphql-tools/optimize@1.4.0(graphql@16.7.1)':
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/optimize@2.0.0(graphql@16.7.1)':
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/prisma-loader@8.0.2(@types/node@22.13.10)(graphql@16.7.1)':
     dependencies:
@@ -14110,7 +14148,7 @@ snapshots:
       '@ardatan/relay-compiler': 12.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 9.2.1(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -14120,7 +14158,7 @@ snapshots:
       '@ardatan/relay-compiler': 12.0.0(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -14130,7 +14168,7 @@ snapshots:
       '@graphql-tools/merge': 9.0.2(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
       value-or-promise: 1.0.12
 
   '@graphql-tools/url-loader@8.0.1(@types/node@22.13.10)(graphql@16.7.1)':
@@ -14166,13 +14204,13 @@ snapshots:
   '@graphql-tools/utils@8.13.1(graphql@16.7.1)':
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/utils@9.2.1(graphql@16.7.1)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/wrap@10.0.1(graphql@16.7.1)':
     dependencies:
@@ -14180,7 +14218,7 @@ snapshots:
       '@graphql-tools/schema': 10.0.2(graphql@16.7.1)
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
       value-or-promise: 1.0.12
 
   '@graphql-typed-document-node/core@3.2.0(graphql@16.7.1)':
@@ -14762,7 +14800,7 @@ snapshots:
       '@peculiar/asn1-schema': 2.3.8
       '@peculiar/json-schema': 1.1.12
       pvtsutils: 1.3.5
-      tslib: 2.6.2
+      tslib: 2.8.1
       webcrypto-core: 1.7.8
 
   '@pkgjs/parseargs@0.11.0':
@@ -15250,115 +15288,58 @@ snapshots:
     optionalDependencies:
       rollup: 4.35.0
 
-  '@rollup/rollup-android-arm-eabi@4.32.0':
-    optional: true
-
   '@rollup/rollup-android-arm-eabi@4.35.0':
-    optional: true
-
-  '@rollup/rollup-android-arm64@4.32.0':
     optional: true
 
   '@rollup/rollup-android-arm64@4.35.0':
     optional: true
 
-  '@rollup/rollup-darwin-arm64@4.32.0':
-    optional: true
-
   '@rollup/rollup-darwin-arm64@4.35.0':
-    optional: true
-
-  '@rollup/rollup-darwin-x64@4.32.0':
     optional: true
 
   '@rollup/rollup-darwin-x64@4.35.0':
     optional: true
 
-  '@rollup/rollup-freebsd-arm64@4.32.0':
-    optional: true
-
   '@rollup/rollup-freebsd-arm64@4.35.0':
-    optional: true
-
-  '@rollup/rollup-freebsd-x64@4.32.0':
     optional: true
 
   '@rollup/rollup-freebsd-x64@4.35.0':
     optional: true
 
-  '@rollup/rollup-linux-arm-gnueabihf@4.32.0':
-    optional: true
-
   '@rollup/rollup-linux-arm-gnueabihf@4.35.0':
-    optional: true
-
-  '@rollup/rollup-linux-arm-musleabihf@4.32.0':
     optional: true
 
   '@rollup/rollup-linux-arm-musleabihf@4.35.0':
     optional: true
 
-  '@rollup/rollup-linux-arm64-gnu@4.32.0':
-    optional: true
-
   '@rollup/rollup-linux-arm64-gnu@4.35.0':
-    optional: true
-
-  '@rollup/rollup-linux-arm64-musl@4.32.0':
     optional: true
 
   '@rollup/rollup-linux-arm64-musl@4.35.0':
     optional: true
 
-  '@rollup/rollup-linux-loongarch64-gnu@4.32.0':
-    optional: true
-
   '@rollup/rollup-linux-loongarch64-gnu@4.35.0':
-    optional: true
-
-  '@rollup/rollup-linux-powerpc64le-gnu@4.32.0':
     optional: true
 
   '@rollup/rollup-linux-powerpc64le-gnu@4.35.0':
     optional: true
 
-  '@rollup/rollup-linux-riscv64-gnu@4.32.0':
-    optional: true
-
   '@rollup/rollup-linux-riscv64-gnu@4.35.0':
-    optional: true
-
-  '@rollup/rollup-linux-s390x-gnu@4.32.0':
     optional: true
 
   '@rollup/rollup-linux-s390x-gnu@4.35.0':
     optional: true
 
-  '@rollup/rollup-linux-x64-gnu@4.32.0':
-    optional: true
-
   '@rollup/rollup-linux-x64-gnu@4.35.0':
-    optional: true
-
-  '@rollup/rollup-linux-x64-musl@4.32.0':
     optional: true
 
   '@rollup/rollup-linux-x64-musl@4.35.0':
     optional: true
 
-  '@rollup/rollup-win32-arm64-msvc@4.32.0':
-    optional: true
-
   '@rollup/rollup-win32-arm64-msvc@4.35.0':
     optional: true
 
-  '@rollup/rollup-win32-ia32-msvc@4.32.0':
-    optional: true
-
   '@rollup/rollup-win32-ia32-msvc@4.35.0':
-    optional: true
-
-  '@rollup/rollup-win32-x64-msvc@4.32.0':
     optional: true
 
   '@rollup/rollup-win32-x64-msvc@4.35.0':
@@ -15418,11 +15399,11 @@ snapshots:
       '@lukeed/uuid': 2.0.1
       '@segment/analytics-generic-utils': 1.2.0
       dset: 3.1.4
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@segment/analytics-generic-utils@1.2.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@segment/analytics-node@2.2.0':
     dependencies:
@@ -15660,7 +15641,7 @@ snapshots:
   '@smithy/abort-controller@3.1.4':
     dependencies:
       '@smithy/types': 3.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/config-resolver@3.0.8':
     dependencies:
@@ -15689,7 +15670,7 @@ snapshots:
       '@smithy/property-provider': 3.1.6
       '@smithy/types': 3.4.2
       '@smithy/url-parser': 3.0.6
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/fetch-http-handler@3.2.7':
     dependencies:
@@ -15775,7 +15756,7 @@ snapshots:
   '@smithy/property-provider@3.1.6':
     dependencies:
       '@smithy/types': 3.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/protocol-http@4.1.3':
     dependencies:
@@ -15786,12 +15767,12 @@ snapshots:
     dependencies:
       '@smithy/types': 3.4.2
       '@smithy/util-uri-escape': 3.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/querystring-parser@3.0.6':
     dependencies:
       '@smithy/types': 3.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/service-error-classification@3.0.6':
     dependencies:
@@ -15800,7 +15781,7 @@ snapshots:
   '@smithy/shared-ini-file-loader@3.1.7':
     dependencies:
       '@smithy/types': 3.4.2
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/signature-v4@4.1.3':
     dependencies:
@@ -15811,7 +15792,7 @@ snapshots:
       '@smithy/util-middleware': 3.0.6
       '@smithy/util-uri-escape': 3.0.0
       '@smithy/util-utf8': 3.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/smithy-client@3.3.2':
     dependencies:
@@ -15854,11 +15835,11 @@ snapshots:
   '@smithy/util-buffer-from@3.0.0':
     dependencies:
       '@smithy/is-array-buffer': 3.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/util-config-provider@3.0.0':
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/util-defaults-mode-browser@3.0.18':
     dependencies:
@@ -15908,7 +15889,7 @@ snapshots:
       '@smithy/util-buffer-from': 3.0.0
       '@smithy/util-hex-encoding': 3.0.0
       '@smithy/util-utf8': 3.0.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/util-uri-escape@3.0.0':
     dependencies:
@@ -15917,7 +15898,7 @@ snapshots:
   '@smithy/util-utf8@2.3.0':
     dependencies:
       '@smithy/util-buffer-from': 2.2.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@smithy/util-utf8@3.0.0':
     dependencies:
@@ -16524,7 +16505,7 @@ snapshots:
       busboy: 1.6.0
       fast-querystring: 1.1.2
       fast-url-parser: 1.1.3
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@whatwg-node/node-fetch@0.5.6':
     dependencies:
@@ -16797,7 +16778,7 @@ snapshots:
 
   aria-hidden@1.2.3:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   aria-query@5.3.0:
     dependencies:
@@ -17254,7 +17235,7 @@ snapshots:
       path-case: 3.0.4
       sentence-case: 3.0.4
       snake-case: 3.0.4
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   chardet@0.7.0: {}
 
@@ -17498,7 +17479,7 @@ snapshots:
 
   cross-inspect@1.0.0:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   cross-spawn@5.1.0:
     dependencies:
@@ -17856,7 +17837,7 @@ snapshots:
       prop-types: 15.8.1
       react: 18.2.0
       react-is: 18.2.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   dset@3.1.3: {}
 
@@ -17905,11 +17886,6 @@ snapshots:
   end-of-stream@1.4.4:
     dependencies:
       once: 1.4.0
-
-  enhanced-resolve@5.17.1:
-    dependencies:
-      graceful-fs: 4.2.11
-      tapable: 2.2.1
 
   enhanced-resolve@5.18.1:
     dependencies:
@@ -18190,7 +18166,7 @@ snapshots:
   eslint-plugin-n@17.16.2(eslint@9.23.0(jiti@2.4.2)):
     dependencies:
       '@eslint-community/eslint-utils': 4.5.1(eslint@9.23.0(jiti@2.4.2))
-      enhanced-resolve: 5.17.1
+      enhanced-resolve: 5.18.1
       eslint: 9.23.0(jiti@2.4.2)
       eslint-plugin-es-x: 7.8.0(eslint@9.23.0(jiti@2.4.2))
       get-tsconfig: 4.10.0
@@ -18705,10 +18681,6 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  get-tsconfig@4.7.2:
-    dependencies:
-      resolve-pkg-maps: 1.0.0
-
   get-value@2.0.6: {}
 
   git-hooks-list@3.2.0: {}
@@ -18826,7 +18798,7 @@ snapshots:
   graphql-tag@2.12.6(graphql@16.7.1):
     dependencies:
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   graphql-ws@5.14.0(graphql@16.7.1):
     dependencies:
@@ -19207,10 +19179,6 @@ snapshots:
     dependencies:
       ci-info: 3.8.0
 
-  is-core-module@2.13.1:
-    dependencies:
-      hasown: 2.0.2
-
   is-core-module@2.16.1:
     dependencies:
       hasown: 2.0.2
@@ -19280,7 +19248,7 @@ snapshots:
 
   is-lower-case@2.0.2:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   is-map@2.0.3: {}
 
@@ -19373,7 +19341,7 @@ snapshots:
 
   is-upper-case@2.0.2:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   is-weakmap@2.0.2: {}
 
@@ -19785,13 +19753,13 @@ snapshots:
 
   lower-case-first@2.0.2:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   lower-case@1.1.4: {}
 
   lower-case@2.0.2:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   lru-cache@10.2.2: {}
 
@@ -21005,7 +20973,7 @@ snapshots:
       react: 18.2.0
       react-remove-scroll-bar: 2.3.4(@types/react@18.2.5)(react@18.2.0)
       react-style-singleton: 2.2.1(@types/react@18.2.5)(react@18.2.0)
-      tslib: 2.6.2
+      tslib: 2.8.1
       use-callback-ref: 1.3.0(@types/react@18.2.5)(react@18.2.0)
       use-sidecar: 1.1.2(@types/react@18.2.5)(react@18.2.0)
     optionalDependencies:
@@ -21163,7 +21131,7 @@ snapshots:
 
   resolve@1.22.8:
     dependencies:
-      is-core-module: 2.13.1
+      is-core-module: 2.16.1
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
@@ -21190,31 +21158,6 @@ snapshots:
   rfdc@1.3.1: {}
 
   rfdc@1.4.1: {}
-
-  rollup@4.32.0:
-    dependencies:
-      '@types/estree': 1.0.6
-    optionalDependencies:
-      '@rollup/rollup-android-arm-eabi': 4.32.0
-      '@rollup/rollup-android-arm64': 4.32.0
-      '@rollup/rollup-darwin-arm64': 4.32.0
-      '@rollup/rollup-darwin-x64': 4.32.0
-      '@rollup/rollup-freebsd-arm64': 4.32.0
-      '@rollup/rollup-freebsd-x64': 4.32.0
-      '@rollup/rollup-linux-arm-gnueabihf': 4.32.0
-      '@rollup/rollup-linux-arm-musleabihf': 4.32.0
-      '@rollup/rollup-linux-arm64-gnu': 4.32.0
-      '@rollup/rollup-linux-arm64-musl': 4.32.0
-      '@rollup/rollup-linux-loongarch64-gnu': 4.32.0
-      '@rollup/rollup-linux-powerpc64le-gnu': 4.32.0
-      '@rollup/rollup-linux-riscv64-gnu': 4.32.0
-      '@rollup/rollup-linux-s390x-gnu': 4.32.0
-      '@rollup/rollup-linux-x64-gnu': 4.32.0
-      '@rollup/rollup-linux-x64-musl': 4.32.0
-      '@rollup/rollup-win32-arm64-msvc': 4.32.0
-      '@rollup/rollup-win32-ia32-msvc': 4.32.0
-      '@rollup/rollup-win32-x64-msvc': 4.32.0
-      fsevents: 2.3.3
 
   rollup@4.35.0:
     dependencies:
@@ -21249,7 +21192,7 @@ snapshots:
 
   rxjs@7.8.1:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   safe-array-concat@1.1.3:
     dependencies:
@@ -21661,7 +21604,7 @@ snapshots:
 
   sponge-case@1.0.1:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   sprintf-js@1.0.3: {}
 
@@ -21831,7 +21774,7 @@ snapshots:
 
   swap-case@2.0.2:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   symbol-tree@3.2.4: {}
 
@@ -21895,7 +21838,7 @@ snapshots:
 
   title-case@3.0.3:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   tmp@0.0.33:
     dependencies:
@@ -21981,7 +21924,7 @@ snapshots:
   tsx@4.7.1:
     dependencies:
       esbuild: 0.19.12
-      get-tsconfig: 4.7.2
+      get-tsconfig: 4.10.0
     optionalDependencies:
       fsevents: 2.3.3
 
@@ -22166,13 +22109,13 @@ snapshots:
 
   upper-case-first@2.0.2:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   upper-case@1.1.3: {}
 
   upper-case@2.0.2:
     dependencies:
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   uri-js@4.4.1:
     dependencies:
@@ -22279,7 +22222,7 @@ snapshots:
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.1
-      rollup: 4.32.0
+      rollup: 4.35.0
     optionalDependencies:
       '@types/node': 22.13.10
       fsevents: 2.3.3

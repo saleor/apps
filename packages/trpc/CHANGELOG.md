@@ -1,4 +1,4 @@
-# @saleor/trpc
+# @saleor/apps-trpc
 
 ## 4.0.3
 

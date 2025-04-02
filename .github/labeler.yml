@@ -25,3 +25,7 @@
 "App: Segment":
   - changed-files:
       - any-glob-to-any-file: "apps/segment/**/*"
+
+"App Payment: Stripe":
+  - changed-files:
+      - any-glob-to-any-file: "apps/stripe/**/*"
