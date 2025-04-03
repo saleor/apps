@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
+  "name": "Stripe app",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "stripe",
+  "workspaceFolder": "/app/apps/stripe",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "Stripe app"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "GraphQL.vscode-graphql-syntax",
+        "GraphQL.vscode-graphql",
+        "streetsidesoftware.code-spell-checker"
+      ]
+    }
+  }
+}
