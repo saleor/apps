@@ -10,7 +10,7 @@ export class StripeSecretKey {
   }
 
   isValid() {
-    // TODO: check if in current implementation we can use restricted keys - preivously we coudn't
+    // TODO: check if in current implementation we can use restricted keys - preivously we couldn't
     return false;
   }
 
