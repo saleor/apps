@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-products-feed",
-  "version": "1.22.8",
+  "version": "1.22.9",
   "private": true,
   "type": "module",
   "scripts": {
