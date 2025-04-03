@@ -3,19 +3,19 @@ import Stripe from "stripe";
 
 import { env } from "@/lib/env";
 import { BaseError } from "@/lib/errors";
-import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
+import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import pkg from "@/package.json";
 
-export class StripeClientApi {
-  static PingTokensCreateError = BaseError.subclass("PingTokensCreateError");
+export class StripePaymentIntentsApi {
+  static CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentError");
 
   private constructor(
     private deps: {
-      stripeApiWrapper: Pick<Stripe, "tokens">;
+      stripeApiWrapper: Pick<Stripe, "paymentIntents">;
     },
   ) {}
 
-  static createFromKey(args: { key: StripePublishableKey }) {
+  static createFromKey(args: { key: StripeRestrictedKey }) {
     const stripeApiWrapper = new Stripe(args.key.getKeyValue(), {
       typescript: true,
       httpClient: Stripe.createFetchHttpClient(fetch), // this allow us to mock the fetch
@@ -27,16 +27,14 @@ export class StripeClientApi {
       },
     });
 
-    return new StripeClientApi({ stripeApiWrapper });
+    return new StripePaymentIntentsApi({ stripeApiWrapper });
   }
 
-  pingTokensCreate() {
+  createPaymentIntent(args: { params: Stripe.PaymentIntentCreateParams }) {
     return ResultAsync.fromPromise(
-      this.deps.stripeApiWrapper.tokens.create({
-        pii: { id_number: "test" },
-      }),
+      this.deps.stripeApiWrapper.paymentIntents.create(args.params),
       (error) =>
-        new StripeClientApi.PingTokensCreateError("Failed to ping tokens create", {
+        new StripePaymentIntentsApi.CreatePaymentIntentError("Failed to create payment intent", {
           cause: error,
         }),
     );

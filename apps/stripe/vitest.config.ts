@@ -1,16 +1,11 @@
+import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  plugins: [],
+  plugins: [tsconfigPaths()],
   test: {
-    passWithNoTests: true, // TODO: remove this after we add first test
     setupFiles: "./src/__tests__/setup.ts",
     css: false,
-    alias: {
-      "@/": new URL("./src/", import.meta.url).pathname,
-      "@/generated": new URL("./generated/", import.meta.url).pathname,
-      "@/package.json": new URL("./package.json", import.meta.url).pathname,
-    },
     workspace: [
       {
         extends: true,

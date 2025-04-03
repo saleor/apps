@@ -9,11 +9,6 @@ export class StripeRestrictedKey {
     return new StripeRestrictedKey(args.restrictedKey);
   }
 
-  isValid() {
-    // TODO: check if in current implementation we can use restricted keys - preivously we couldn't
-    return false;
-  }
-
   getKeyValue() {
     return this.key;
   }
