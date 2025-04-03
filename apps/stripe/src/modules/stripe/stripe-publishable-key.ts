@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 
+import { AppConfig } from "@/modules/app-config/app-config";
 import { StripeClientApi } from "@/modules/stripe/stripe-client-api";
 
 export class StripePublishableKey {
@@ -11,6 +12,10 @@ export class StripePublishableKey {
 
   static createFromUserInput(args: { publishableKey: string }) {
     return new StripePublishableKey(args.publishableKey);
+  }
+
+  static createFromAppConfig(args: { appConfig: AppConfig }) {
+    return new StripePublishableKey(args.appConfig.getStripePublishableKey());
   }
 
   isValid() {

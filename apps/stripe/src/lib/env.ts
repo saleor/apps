@@ -27,6 +27,8 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
     VERCEL_GIT_COMMIT_SHA: z.string().optional(),
     STRIPE_PARTNER_ID: z.string().optional(),
+    STRIPE_SECRET_KEY: z.string(),
+    STRIPE_PUBLISHABLE_KEY: z.string(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
@@ -52,6 +54,8 @@ export const env = createEnv({
     VERCEL_ENV: process.env.VERCEL_ENV,
     VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
     STRIPE_PARTNER_ID: process.env.STRIPE_PARTNER_ID,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

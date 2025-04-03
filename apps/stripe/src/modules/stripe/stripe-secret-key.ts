@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 
+import { AppConfig } from "@/modules/app-config/app-config";
 import { StripeServerApi } from "@/modules/stripe/stripe-server-api";
 
 export class StripeSecretKey {
@@ -11,6 +12,10 @@ export class StripeSecretKey {
 
   static createFromUserInput(args: { secretKey: string }) {
     return new StripeSecretKey(args.secretKey);
+  }
+
+  static createFromAppConfig(args: { appConfig: AppConfig }) {
+    return new StripeSecretKey(args.appConfig.getStripeSecretKeyValue());
   }
 
   isValid() {

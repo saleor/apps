@@ -14,7 +14,9 @@
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",
-        "STRIPE_PARTNER_ID"
+        "STRIPE_PARTNER_ID",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_PUBLISHABLE_KEY"
       ]
     }
   }
