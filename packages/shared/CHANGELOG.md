@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.12.3
+
+### Patch Changes
+
+- e3c75265: Added `race` function. This utility helps prevent promises from hanging indefinitely by adding a timeout constraint. If the original promise doesn't resolve within the specified timeout, the race will reject with the provided error.
+
 ## 1.12.2
 
 ### Patch Changes

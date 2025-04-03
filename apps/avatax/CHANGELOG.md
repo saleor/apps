@@ -1,5 +1,23 @@
 # saleor-app-avatax
 
+## 1.16.0
+
+### Minor Changes
+
+- e3c75265: Add custom OTEL metric that counts requests made to AvaTax API.
+
+### Patch Changes
+
+- 4c5c63d5: Use TypeScript unions instead of enums in types generated from Graphql files.
+- b4ed42c9: Added wrapper for external OTEL tracer. Wrapper is responsible for enhanced error serialization, custom attribute injection & proper span lifecycle management.
+- Updated dependencies [e3c75265]
+- Updated dependencies [b4ed42c9]
+- Updated dependencies [e3c75265]
+- Updated dependencies [b4ed42c9]
+  - @saleor/apps-otel@2.2.0
+  - @saleor/apps-shared@1.12.3
+  - @saleor/apps-logger@1.5.5
+
 ## 1.15.1
 
 ### Patch Changes

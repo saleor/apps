@@ -1,5 +1,15 @@
 # @saleor/apps-otel
 
+## 2.2.0
+
+### Minor Changes
+
+- e3c75265: Added new `createMetricsReader` factory to create periodic metric reader with proper headers.
+
+### Patch Changes
+
+- b4ed42c9: Add `PATH`, `SALEOR_EVENT` & `TENANT_DOMAIN` to observability attributes
+
 ## 2.1.5
 
 ### Patch Changes

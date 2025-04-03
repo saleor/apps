@@ -1,5 +1,19 @@
 # saleor-app-klaviyo
 
+## 1.13.9
+
+### Patch Changes
+
+- e3c75265: Add new `ATTR_SERVICE_INSTANCE_ID` OTEL attribute to app instrumentation.
+- 4c5c63d5: Use TypeScript unions instead of enums in types generated from Graphql files.
+- Updated dependencies [e3c75265]
+- Updated dependencies [b4ed42c9]
+- Updated dependencies [e3c75265]
+- Updated dependencies [b4ed42c9]
+  - @saleor/apps-otel@2.2.0
+  - @saleor/apps-shared@1.12.3
+  - @saleor/apps-logger@1.5.5
+
 ## 1.13.8
 
 ### Patch Changes
