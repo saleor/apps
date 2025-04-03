@@ -1587,6 +1587,12 @@ importers:
       graphql-tag:
         specifier: 2.12.6
         version: 2.12.6(graphql@16.7.1)
+      modern-errors:
+        specifier: 7.0.1
+        version: 7.0.1
+      modern-errors-serialize:
+        specifier: 6.1.0
+        version: 6.1.0(modern-errors@7.0.1)
       next:
         specifier: 'catalog:'
         version: 15.2.4(@babel/core@7.24.7)(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
