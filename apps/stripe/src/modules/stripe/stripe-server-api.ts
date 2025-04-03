@@ -1,10 +1,12 @@
 import { ResultAsync } from "neverthrow";
 import Stripe from "stripe";
 
+import { env } from "@/lib/env";
 import { BaseError } from "@/lib/errors";
+import { StripeSecretKey } from "@/modules/stripe/stripe-secret-key";
 import pkg from "@/package.json";
 
-export class StripeApiClient {
+export class StripeServerApi {
   private static stripeWebhookEnabledEvents: Stripe.WebhookEndpointCreateParams.EnabledEvent[] = [
     "payment_intent.created",
     "payment_intent.canceled",
@@ -21,38 +23,40 @@ export class StripeApiClient {
   static DeleteAppWebhookError = BaseError.subclass("DeleteAppWebhookError");
   static GetAppWebhookError = BaseError.subclass("GetAppWebhookError");
   static PingPaymentIntentsError = BaseError.subclass("PingPaymentIntentsError");
-  static PingTokensCreateError = BaseError.subclass("PingTokensCreateError");
   static CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentError");
 
   private constructor(
     private deps: {
-      stripeApiWrapper: Pick<Stripe, "webhookEndpoints" | "paymentIntents" | "tokens">;
+      stripeApiWrapper: Pick<Stripe, "webhookEndpoints" | "paymentIntents">;
     },
   ) {}
 
-  static createFromKey(args: { key: string }) {
-    const stripeApiWrapper = new Stripe(args.key, {
+  static createFromKey(args: { key: StripeSecretKey }) {
+    const stripeApiWrapper = new Stripe(args.key.getKeyValue(), {
       typescript: true,
       httpClient: Stripe.createFetchHttpClient(fetch), // this allow us to mock the fetch
       appInfo: {
         name: "Saleor App Payment Stripe",
         version: pkg.version,
-        // TOOD: add url / partner_id - https://docs.stripe.com/building-plugins?lang=node#setappinfo
+        url: "https://apps.saleor.io/apps/stripe",
+        partner_id: env.STRIPE_PARTNER_ID,
       },
     });
 
-    return new StripeApiClient({ stripeApiWrapper });
+    return new StripeServerApi({ stripeApiWrapper });
   }
 
   createAppWebhook(args: { webhookUrl: string }) {
     return ResultAsync.fromPromise(
       this.deps.stripeApiWrapper.webhookEndpoints.create({
         url: args.webhookUrl,
-        enabled_events: StripeApiClient.stripeWebhookEnabledEvents,
+        enabled_events: StripeServerApi.stripeWebhookEnabledEvents,
         description: "Saleor App Payment Stripe Webhook",
       }),
       (error) =>
-        new StripeApiClient.CreateAppWebhookError("Failed to create app webhook", { cause: error }),
+        new StripeServerApi.CreateAppWebhookError("Failed to create app webhook", {
+          cause: error,
+        }),
     );
   }
 
@@ -60,7 +64,9 @@ export class StripeApiClient {
     return ResultAsync.fromPromise(
       this.deps.stripeApiWrapper.webhookEndpoints.del(args.webhookId),
       (error) =>
-        new StripeApiClient.DeleteAppWebhookError("Failed to delete app webhook", { cause: error }),
+        new StripeServerApi.DeleteAppWebhookError("Failed to delete app webhook", {
+          cause: error,
+        }),
     );
   }
 
@@ -68,7 +74,7 @@ export class StripeApiClient {
     return ResultAsync.fromPromise(
       this.deps.stripeApiWrapper.webhookEndpoints.retrieve(args.webhookId),
       (error) =>
-        new StripeApiClient.GetAppWebhookError("Failed to get app webhook", { cause: error }),
+        new StripeServerApi.GetAppWebhookError("Failed to get app webhook", { cause: error }),
     );
   }
 
@@ -76,19 +82,7 @@ export class StripeApiClient {
     return ResultAsync.fromPromise(
       this.deps.stripeApiWrapper.paymentIntents.list({ limit: 1 }),
       (error) =>
-        new StripeApiClient.PingPaymentIntentsError("Failed to ping payment intents", {
-          cause: error,
-        }),
-    );
-  }
-
-  pingTokensCreate() {
-    return ResultAsync.fromPromise(
-      this.deps.stripeApiWrapper.tokens.create({
-        pii: { id_number: "test" },
-      }),
-      (error) =>
-        new StripeApiClient.PingTokensCreateError("Failed to ping tokens create", {
+        new StripeServerApi.PingPaymentIntentsError("Failed to ping payment intents", {
           cause: error,
         }),
     );
@@ -98,7 +92,7 @@ export class StripeApiClient {
     return ResultAsync.fromPromise(
       this.deps.stripeApiWrapper.paymentIntents.create(args.params),
       (error) =>
-        new StripeApiClient.CreatePaymentIntentError("Failed to create payment intent", {
+        new StripeServerApi.CreatePaymentIntentError("Failed to create payment intent", {
           cause: error,
         }),
     );
