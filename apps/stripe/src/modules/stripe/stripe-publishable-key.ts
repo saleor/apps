@@ -18,6 +18,8 @@ export class StripePublishableKey {
     const stripeClientApi = StripeClientApi.createFromKey({
       key: this,
     });
+
+    // Based on https://stackoverflow.com/a/61001462/704894
     const pingResult = stripeClientApi.pingTokensCreate();
 
     return pingResult.match(
