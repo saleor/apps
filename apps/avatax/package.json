@@ -93,18 +93,18 @@
     "@total-typescript/ts-reset": "0.6.1",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "@vitejs/plugin-react": "4.3.1",
-    "@vitest/coverage-v8": "1.6.0",
+    "@vitejs/plugin-react": "4.3.4",
+    "@vitest/coverage-v8": "3.1.1",
     "aws-sdk-client-mock": "4.0.1",
     "eslint": "catalog:",
     "eslint-plugin-n": "17.16.2",
     "graphql-config": "5.0.3",
     "pactum": "^3.6.0",
     "pactum-matchers": "^1.1.6",
-    "tsx": "4.7.1",
+    "tsx": "4.19.3",
     "typescript": "5.8.2",
-    "vite": "5.3.3",
-    "vitest": "1.6.0"
+    "vite": "6.2.4",
+    "vitest": "3.1.1"
   },
   "saleor": {
     "schemaVersion": "3.20"

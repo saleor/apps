@@ -1,11 +1,14 @@
-import { err, errAsync, ok, okAsync, Result } from "neverthrow";
+import { err, errAsync, ok, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { BaseError } from "../../../errors";
 import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
-import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
-import { CompiledEmail, IEmailCompiler } from "../../smtp/services/email-compiler";
-import { ISMTPEmailSender } from "../../smtp/services/smtp-email-sender";
+import {
+  FilterConfigurationsArgs,
+  IGetSmtpConfiguration,
+} from "../../smtp/configuration/smtp-configuration.service";
+import { CompileArgs, IEmailCompiler } from "../../smtp/services/email-compiler";
+import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
 import { MessageEventTypes } from "../message-event-types";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
 import { SendEventMessagesUseCaseFactory } from "./send-event-messages.use-case.factory";
@@ -26,10 +29,7 @@ class MockEmailCompiler implements IEmailCompiler {
     return err(new BaseError("Error compiling"));
   };
 
-  mockEmailCompileMethod = vi.fn<
-    Parameters<IEmailCompiler["compile"]>,
-    ReturnType<IEmailCompiler["compile"]>
-  >();
+  mockEmailCompileMethod = vi.fn<(args: CompileArgs) => ReturnType<IEmailCompiler["compile"]>>();
 
   compile = this.mockEmailCompileMethod;
 }
@@ -43,10 +43,8 @@ class MockSmtpSender implements ISMTPEmailSender {
     throw new BaseError("Some error");
   };
 
-  mockSendEmailMethod = vi.fn<
-    Parameters<ISMTPEmailSender["sendEmailWithSmtp"]>,
-    ReturnType<ISMTPEmailSender["sendEmailWithSmtp"]>
-  >();
+  mockSendEmailMethod =
+    vi.fn<(args: SendMailArgs) => ReturnType<ISMTPEmailSender["sendEmailWithSmtp"]>>();
 
   sendEmailWithSmtp = this.mockSendEmailMethod;
 }
@@ -97,10 +95,10 @@ class MockSmptConfigurationService implements IGetSmtpConfiguration {
     return okAsync([c1, c2]);
   };
 
-  mockGetConfigurationsMethod = vi.fn<
-    Parameters<IGetSmtpConfiguration["getConfigurations"]>,
-    ReturnType<IGetSmtpConfiguration["getConfigurations"]>
-  >();
+  mockGetConfigurationsMethod =
+    vi.fn<
+      (args?: FilterConfigurationsArgs) => ReturnType<IGetSmtpConfiguration["getConfigurations"]>
+    >();
 
   getConfigurations = this.mockGetConfigurationsMethod;
 }

@@ -7,7 +7,7 @@ import { ITemplateCompiler } from "./handlebars-template-compiler";
 import { IHtmlToTextCompiler } from "./html-to-text-compiler";
 import { IMjmlCompiler } from "./mjml-compiler";
 
-interface CompileArgs {
+export interface CompileArgs {
   recipientEmail: string;
   event: MessageEventTypes;
   payload: unknown;
