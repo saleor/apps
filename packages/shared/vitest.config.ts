@@ -4,7 +4,6 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [],
   test: {
-    passWithNoTests: true,
     environment: "jsdom",
     setupFiles: "./src/setup-tests.ts",
     css: false,

@@ -4,12 +4,9 @@
   "type": "module",
   "main": "index.ts",
   "scripts": {
-    "build-storybook": "storybook build",
     "check-types": "tsc",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
-    "start-storybook-build": "pnpm dlx http-server ./storybook-static",
-    "storybook": "storybook dev -p 6006"
+    "lint:fix": "eslint --fix ."
   },
   "devDependencies": {
     "@saleor/eslint-config-apps": "workspace:*",
@@ -21,8 +18,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-hook-form": "^7.43.9",
-    "typescript": "5.8.2",
-    "vite": "5.3.3"
+    "typescript": "5.8.2"
   },
   "peerDependencies": {
     "@saleor/macaw-ui": "catalog:",

@@ -21,10 +21,10 @@ const generateArr = (length: number) => new Array(length).fill(null).map((_, ind
 const wait = () => new Promise((res) => setTimeout(res, 100));
 
 describe("CategoriesFetcher", () => {
-  const mockQueryPromise = vi.fn<any, FetchResult>();
+  const mockQueryPromise = vi.fn<() => FetchResult>();
 
   const mockClient: Pick<Client, "query"> = {
-    // @ts-ignore - It's hard to mock urql mocks - but it can be improved
+    // @ts-expect-error - It's hard to mock urql mocks - but it can be improved
     query() {
       return {
         toPromise: mockQueryPromise,
