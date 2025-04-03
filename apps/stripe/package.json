@@ -51,9 +51,11 @@
     "graphql-tag": "2.12.6",
     "modern-errors": "7.0.1",
     "modern-errors-serialize": "6.1.0",
+    "neverthrow": "6.2.1",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "stripe": "18.0.0",
     "urql": "catalog:",
     "usehooks-ts": "^2.9.1",
     "zod": "catalog:"
