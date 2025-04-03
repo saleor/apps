@@ -1630,9 +1630,15 @@ importers:
       '@saleor/eslint-config-apps':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@saleor/webhook-utils':
+        specifier: workspace:*
+        version: link:../../packages/webhook-utils
       '@total-typescript/ts-reset':
         specifier: 0.6.1
         version: 0.6.1
