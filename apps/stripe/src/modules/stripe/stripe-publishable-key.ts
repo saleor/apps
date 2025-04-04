@@ -1,12 +1,31 @@
+import { err, ok } from "neverthrow";
+
+import { BaseError } from "@/lib/errors";
+
 export class StripePublishableKey {
-  // TODO: use this to validate the keys on client side
-  static testPrefix = "pk_test_";
-  static livePrefix = "pk_live_";
+  static WrongKeyFormatError = BaseError.subclass("WrongKeyFormatError");
+  private static testPrefix = "pk_test_";
+  private static livePrefix = "pk_live_";
 
   private constructor(private key: string) {}
 
+  private static isInProperFormat(key: string) {
+    return (
+      key.startsWith(StripePublishableKey.testPrefix) ||
+      key.startsWith(StripePublishableKey.livePrefix)
+    );
+  }
+
   static createFromUserInput(args: { publishableKey: string }) {
-    return new StripePublishableKey(args.publishableKey);
+    if (StripePublishableKey.isInProperFormat(args.publishableKey)) {
+      return ok(new StripePublishableKey(args.publishableKey));
+    }
+
+    return err(
+      new this.WrongKeyFormatError(
+        "Invalid publishable key format - it should start with `pk_test_` or `pk_live_`",
+      ),
+    );
   }
 
   getKeyValue() {
