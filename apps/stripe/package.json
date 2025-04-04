@@ -7,6 +7,7 @@
   "scripts": {
     "build": "next build",
     "check-types": "tsc",
+    "create-app-config": "pnpm tsx --env-file-if-exists=.env ./scripts/create-app-config.ts",
     "deploy": "tsx --env-file-if-exists=.env ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",

@@ -28,6 +28,18 @@ export class StripePublishableKey {
     );
   }
 
+  static createFromPersistedData(args: { publishableKeyValue: string }) {
+    if (StripePublishableKey.isInProperFormat(args.publishableKeyValue)) {
+      return ok(new StripePublishableKey(args.publishableKeyValue));
+    }
+
+    return err(
+      new this.WrongKeyFormatError(
+        "Invalid publishable key format - it should start with `pk_test_` or `pk_live_`",
+      ),
+    );
+  }
+
   getKeyValue() {
     return this.key;
   }
