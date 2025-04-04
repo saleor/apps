@@ -13,7 +13,8 @@
         "NEXT_PUBLIC_SENTRY_DSN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "STRIPE_PARTNER_ID"
       ]
     }
   }

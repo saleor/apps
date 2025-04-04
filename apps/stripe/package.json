@@ -17,7 +17,9 @@
     "migrate:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts --dry-run",
     "start": "next start",
     "test": "vitest",
-    "test:ci": "vitest run --coverage"
+    "test:ci": "vitest run --coverage",
+    "test:integration": "vitest --project=integration",
+    "test:unit": "vitest --project=unit"
   },
   "config": {
     "saleor": {
@@ -47,9 +49,13 @@
     "@trpc/server": "catalog:",
     "@vercel/otel": "catalog:",
     "graphql-tag": "2.12.6",
+    "modern-errors": "7.0.1",
+    "modern-errors-serialize": "6.1.0",
+    "neverthrow": "6.2.1",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "stripe": "18.0.0",
     "urql": "catalog:",
     "usehooks-ts": "^2.9.1",
     "zod": "catalog:"
@@ -63,7 +69,9 @@
     "@graphql-codegen/typescript-urql": "4.0.0",
     "@graphql-typed-document-node/core": "3.2.0",
     "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/sentry-utils": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
+    "@saleor/webhook-utils": "workspace:*",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
@@ -74,6 +82,7 @@
     "tsx": "4.19.3",
     "typescript": "5.8.2",
     "vite": "6.2.4",
+    "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.1.1"
   }
 }
