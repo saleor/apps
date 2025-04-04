@@ -9,7 +9,7 @@ import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { AppConfigPresistor } from "./app-config-persistor";
 
 export class FileAppConfigPresistor implements AppConfigPresistor {
-  private filePath = ".stripe-app-config.json";
+  constructor(private deps: { filePath: string } = { filePath: ".stripe-app-config.json" }) {}
 
   private static appConfigSchema = z.object({
     appConfig: z.record(
@@ -57,7 +57,7 @@ export class FileAppConfigPresistor implements AppConfigPresistor {
   );
 
   private readExistingAppConfigFromFile() {
-    const fileContentResult = this.readFileSafe(this.filePath, "utf-8");
+    const fileContentResult = this.readFileSafe(this.deps.filePath, "utf-8");
 
     if (fileContentResult.isErr()) {
       return err(fileContentResult.error);
@@ -102,7 +102,7 @@ export class FileAppConfigPresistor implements AppConfigPresistor {
     };
 
     const writeResult = this.writeJsonFileSafe(
-      this.filePath,
+      this.deps.filePath,
       JSON.stringify(newConfig, null, 2),
       "utf-8",
     );
@@ -127,7 +127,7 @@ export class FileAppConfigPresistor implements AppConfigPresistor {
     };
 
     const writeResult = this.writeJsonFileSafe(
-      this.filePath,
+      this.deps.filePath,
       JSON.stringify(newConfig, null, 2),
       "utf-8",
     );
@@ -145,7 +145,7 @@ export class FileAppConfigPresistor implements AppConfigPresistor {
     saleorApiUrl: string;
     appId: string;
   }): Promise<Result<void, InstanceType<typeof BaseError>>> {
-    if (fs.existsSync(this.filePath)) {
+    if (fs.existsSync(this.deps.filePath)) {
       return this.persistExistingAppConfig(args);
     }
 
