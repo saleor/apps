@@ -8,6 +8,7 @@ export interface AppConfigPresistor {
   persistStripeConfig: (args: {
     channelId: string;
     config: StripeConfig;
+    // TODO: maybe saleorApiUrl should be value object as well?
     saleorApiUrl: string;
     appId: string;
   }) => Promise<Result<void, InstanceType<typeof BaseError>>>;
