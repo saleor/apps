@@ -18,6 +18,8 @@ coverage:
         flags: [segment]
       app-smtp:
         flags: [smtp]
+      app-payment-stripe:
+        flags: [stripe]
       packages-logger:
         flags: [logger]
       packages-shared:
@@ -44,6 +46,9 @@ flags:
   smtp:
     paths:
       - apps/smtp/
+  stripe:
+    paths:
+      - apps/stripe/
   logger:
     paths:
       - packages/logger/
