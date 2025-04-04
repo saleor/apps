@@ -28,6 +28,18 @@ export class StripeRestrictedKey {
     );
   }
 
+  static createFromPersistedData(args: { restrictedKeyValue: string }) {
+    if (StripeRestrictedKey.isInProperFormat(args.restrictedKeyValue)) {
+      return ok(new StripeRestrictedKey(args.restrictedKeyValue));
+    }
+
+    return err(
+      new this.WrongKeyFormatError(
+        "Invalid restricted key format - it should start with `rk_test_` or `rk_live_`",
+      ),
+    );
+  }
+
   getKeyValue() {
     return this.key;
   }
