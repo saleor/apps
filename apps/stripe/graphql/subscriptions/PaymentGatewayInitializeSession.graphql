@@ -1,0 +1,7 @@
+subscription PaymentGatewayInitializeSession {
+    event {
+        ... on PaymentGatewayInitializeSession{
+            version
+        }
+    }
+}
