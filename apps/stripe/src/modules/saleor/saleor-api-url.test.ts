@@ -17,6 +17,7 @@ describe("SaleorApiUrl", () => {
       const result = SaleorApiUrl.create({ url: "" });
 
       expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrl.ValidationError);
       expect(result._unsafeUnwrapErr().message).toBe("Saleor API URL cannot be empty");
     });
 
@@ -34,6 +35,17 @@ describe("SaleorApiUrl", () => {
       expect(result.isErr()).toBe(true);
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrl.ValidationError);
       expect(result._unsafeUnwrapErr().message).toBe("Saleor API URL must end with /graphql/");
+    });
+
+    it("should reject incorrect URL", () => {
+      const result = SaleorApiUrl.create({ url: "demo.saleor.io/" });
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrl.ValidationError);
+      expect(result._unsafeUnwrapErr().message).toMatchInlineSnapshot(`
+        "Invalid URL
+        Cannot parse Saleor API URL"
+      `);
     });
   });
 });

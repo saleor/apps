@@ -10,6 +10,7 @@ import {
 } from "@/app/api/saleor/gateway-initialize/response-shape";
 import { BaseError } from "@/lib/errors";
 import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SESSION"];
 
@@ -29,7 +30,7 @@ export class InitializeStripeSessionUseCase {
   async execute(params: {
     channelId: string;
     appId: string;
-    saleorApiUrl: string;
+    saleorApiUrl: SaleorApiUrl;
   }): Promise<Result<UseCaseResultShape, UseCaseErrorShape>> {
     const { channelId, appId, saleorApiUrl } = params;
 
@@ -40,7 +41,7 @@ export class InitializeStripeSessionUseCase {
     });
 
     if (stripeConfigForThisChannel.isOk()) {
-      const pk = stripeConfigForThisChannel.value?.getPublishableKey();
+      const pk = stripeConfigForThisChannel.value?.publishableKey;
 
       if (!pk) {
         return err(
@@ -51,7 +52,7 @@ export class InitializeStripeSessionUseCase {
       }
 
       const rawShape: PaymentGatewayInitializeResponseShapeType = {
-        stripePublishableKey: pk.getKeyValue(),
+        stripePublishableKey: pk.keyValue,
       };
 
       const responseDataShape = PaymentGatewayInitializeResponseShape.parse(rawShape);
