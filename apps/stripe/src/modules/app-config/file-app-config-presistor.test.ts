@@ -148,7 +148,7 @@ describe("FileAppConfigPresistor", () => {
       expect(config!.getRestrictedKey()).toBeInstanceOf(StripeRestrictedKey);
     });
 
-    it("should handle missing channel config", async () => {
+    it("should return null if channel config is missing", async () => {
       const existingConfig: FileAppConfigPresistorConfigSchema = {
         appRootConfig: {},
       };
@@ -162,8 +162,8 @@ describe("FileAppConfigPresistor", () => {
         appId: TEST_APP_ID,
       });
 
-      expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigPresistor.ConfigNotFoudError);
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap()).toBeNull();
     });
 
     it("should handle invalid JSON", async () => {

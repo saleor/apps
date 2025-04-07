@@ -35,7 +35,6 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
   static FileWriteError = BaseError.subclass("FileWriteError");
   static JsonParseError = BaseError.subclass("JsonParseError");
   static SchemaParseError = BaseError.subclass("SchemaParseError");
-  static ConfigNotFoudError = BaseError.subclass("ConfigNotFoudError");
 
   private serializeStripeConfigToJson(config: StripeConfig) {
     return {
@@ -202,7 +201,7 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
     const channelConfig = existingConfigResult.value.appRootConfig[args.channelId];
 
     if (!channelConfig) {
-      return err(new FileAppConfigPresistor.ConfigNotFoudError("No config found for channelId"));
+      return ok(null);
     }
 
     const restrictedKey = StripeRestrictedKey.create({

@@ -2,16 +2,16 @@ import { StripeConfig } from "@/modules/app-config/stripe-config";
 
 export class AppRootConfig {
   constructor(
-    private deps: {
+    private props: {
       configsByChannelId: Record<string, StripeConfig>;
     },
   ) {}
 
   getConfigs() {
-    return this.deps.configsByChannelId;
+    return this.props.configsByChannelId;
   }
 
   getConfigByChannelId(channelId: string) {
-    return this.deps.configsByChannelId[channelId];
+    return this.props.configsByChannelId[channelId];
   }
 }
