@@ -1,4 +1,4 @@
-export * from "./src/components/Combobox";
+export * from "./src/components/combobox";
 export * from "./src/components/Input";
 export * from "./src/components/Multiselect";
 export * from "./src/components/Select";

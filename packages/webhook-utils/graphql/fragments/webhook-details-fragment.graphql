@@ -4,12 +4,12 @@ fragment WebhookDetailsFragment on Webhook {
   name
   targetUrl
   subscriptionQuery
-  syncEvents{
+  syncEvents {
     name
     eventType
   }
   asyncEvents {
     name
     eventType
-  }  
+  }
 }

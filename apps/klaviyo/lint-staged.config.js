@@ -6,5 +6,5 @@ import baseConfig from "../../lint-staged.config.js";
 export default {
   ...baseConfig,
   // run eslint first & then format with prettier
-  "*.{jsx,tsx,ts,js}": ["eslint --cache --fix", "prettier --write"],
+  "*.{jsx,tsx,ts,js,graphql}": ["eslint --cache --fix", "prettier --write"],
 };

@@ -1,4 +1,5 @@
 import eslint from "@eslint/js";
+import graphqlPlugin from "@graphql-eslint/eslint-plugin";
 import nextPlugin from "@next/eslint-plugin-next";
 import saleorPlugin from "@saleor/eslint-plugin-saleor-app";
 import stylisticPlugin from "@stylistic/eslint-plugin";
@@ -7,6 +8,7 @@ import eslintConfigPrettier from "eslint-config-prettier/flat";
 import importPlugin from "eslint-plugin-import";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
+import reactNamingConventionPlugin from "eslint-plugin-react-naming-convention";
 import simpleImportSortPlugin from "eslint-plugin-simple-import-sort";
 import turboPlugin from "eslint-plugin-turbo";
 import globals from "globals";
@@ -19,6 +21,27 @@ export const config = [
   {
     name: "@saleor/eslint-config-apps/ignores",
     ignores: [".next/**/*", "coverage/**/*", "**/generated/**/*", "next-env.d.ts"],
+  },
+  {
+    files: ["**/*.graphql"],
+    languageOptions: {
+      parser: graphqlPlugin.parser,
+    },
+    plugins: {
+      "@graphql-eslint": graphqlPlugin,
+    },
+    rules: {
+      "@graphql-eslint/match-document-filename": [
+        "error",
+        {
+          fileExtension: ".graphql",
+          fragment: { style: "kebab-case" },
+          query: { style: "kebab-case" },
+          subscription: { style: "kebab-case" },
+          mutation: { style: "kebab-case" },
+        },
+      ],
+    },
   },
   {
     name: "@saleor/eslint-config-apps/code-ts",
@@ -39,6 +62,7 @@ export const config = [
       "@next/next": nextPlugin,
       "@stylistic": stylisticPlugin,
       "@saleor/saleor-app": saleorPlugin,
+      "react-naming-convention": reactNamingConventionPlugin,
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,
@@ -66,6 +90,7 @@ export const config = [
       "multiline-comment-style": ["error", "starred-block"],
       "no-console": "error",
       "@saleor/saleor-app/logger-leak": "error",
+      "react-naming-convention/filename": ["error", { rule: "kebab-case" }],
     },
   },
   {
@@ -141,6 +166,13 @@ export const config = [
     files: ["**/*.test.{ts,tsx}", "**/__tests__/**/*.{ts,tsx}"],
     rules: {
       "@typescript-eslint/no-restricted-imports": "off",
+    },
+  },
+  {
+    name: "@saleor/eslint-config-apps/override-react-naming-convention/filename",
+    files: ["src/pages/**/*", "src/app/**/*"],
+    rules: {
+      "react-naming-convention/filename": "off",
     },
   },
   // it has to be the last config as it overrides rules that conflicts with prettier

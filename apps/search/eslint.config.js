@@ -16,4 +16,29 @@ export default [
       "@typescript-eslint/no-require-imports": "warn",
     },
   },
+  {
+    // TODO: remove this override once we rename all ts / tsx files to kebab-case
+    name: "saleor-app-search/override-react-naming-convention/filename",
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      "react-naming-convention/filename": ["warn", { rule: "kebab-case" }],
+    },
+  },
+  {
+    // TODO: remove this override once we rename all graphql files to kebab-case
+    name: "saleor-app-search/override-@graphql-eslint/match-document-filename",
+    files: ["**/*.graphql"],
+    rules: {
+      "@graphql-eslint/match-document-filename": [
+        "warn",
+        {
+          fileExtension: ".graphql",
+          fragment: { style: "kebab-case" },
+          query: { style: "kebab-case" },
+          subscription: { style: "kebab-case" },
+          mutation: { style: "kebab-case" },
+        },
+      ],
+    },
+  },
 ];
