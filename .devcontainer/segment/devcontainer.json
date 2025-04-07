@@ -12,7 +12,7 @@
       "label": "Local DynamoDB"
     }
   },
-  "postCreateCommand": "./scripts/setup-dynamodb.sh",
+  "postCreateCommand": "pnpm install --frozen-lockfile && ./scripts/setup-dynamodb.sh",
   "features": {
     "ghcr.io/devcontainers/features/aws-cli": {}
   },

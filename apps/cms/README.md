@@ -33,6 +33,9 @@
 
 #### Running app locally in development containers
 
+> [!IMPORTANT]
+> You can use devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` manually
+
 The easiest way of running Saleor for local development is to use [development containers](https://containers.dev/).
 If you have Visual Studio Code follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open existing folder in container.
 
