@@ -4,8 +4,9 @@ import { captureException } from "@sentry/nextjs";
 
 import { InitializeStripeSessionUseCase } from "@/app/api/saleor/gateway-initialize/use-case";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/gateway-initialize/webhook-definition";
-import { appConfigPersistence } from "@/app-config-persistence";
+import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { withLoggerContext } from "@/lib/logger-context";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 const useCase = new InitializeStripeSessionUseCase({
   configPersistor: appConfigPersistence,
@@ -17,10 +18,24 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(a
    * todo: should we pass auth data to execute? likely yes
    */
 
+  const saleorApiUrlResult = SaleorApiUrl.create({ url: ctx.authData.saleorApiUrl });
+
+  if (saleorApiUrlResult.isErr()) {
+    // TODO: maybe we should throw here?
+    return Response.json(
+      {
+        message: "Invalid Saleor API URL",
+      },
+      {
+        status: 400,
+      },
+    );
+  }
+
   const result = await useCase.execute({
     channelId: ctx.payload.sourceObject.channel.id,
     appId: ctx.authData.appId,
-    saleorApiUrl: ctx.authData.saleorApiUrl,
+    saleorApiUrl: saleorApiUrlResult.value,
   });
 
   return result.match(

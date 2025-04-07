@@ -7,6 +7,7 @@ import {
   FileAppConfigPresistorConfigSchema,
 } from "@/modules/app-config/file-app-config-presistor";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
@@ -16,21 +17,24 @@ describe("FileAppConfigPresistor", () => {
   const TEST_FILE_PATH = ".stripe-app-config.json";
   const TEST_CHANNEL_ID = "test-channel";
   const TEST_APP_ID = "test-app";
-  const TEST_API_URL = "https://example.com/graphql/";
+
+  const saleorApiUrl = SaleorApiUrl.create({
+    url: "https://example.com/graphql/",
+  })._unsafeUnwrap();
 
   const restricteKey = StripeRestrictedKey.create({
     restrictedKey: "rk_test_1234567890",
-  });
+  })._unsafeUnwrap();
 
   const publishableKey = StripePublishableKey.create({
     publishableKey: "pk_test_1234567890",
-  });
+  })._unsafeUnwrap();
 
   const mockStripeConfig = StripeConfig.create({
-    configName: "Test Config",
-    configId: "test-config-id",
-    restrictedKey: restricteKey._unsafeUnwrap(),
-    publishableKey: publishableKey._unsafeUnwrap(),
+    name: "Test Config",
+    id: "test-config-id",
+    restrictedKey: restricteKey,
+    publishableKey: publishableKey,
   })._unsafeUnwrap();
 
   afterEach(() => {
@@ -46,7 +50,7 @@ describe("FileAppConfigPresistor", () => {
       const result = await persistor.saveStripeConfig({
         channelId: TEST_CHANNEL_ID,
         config: mockStripeConfig,
-        saleorApiUrl: TEST_API_URL,
+        saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -79,7 +83,7 @@ describe("FileAppConfigPresistor", () => {
       const result = await persistor.saveStripeConfig({
         channelId: TEST_CHANNEL_ID,
         config: mockStripeConfig,
-        saleorApiUrl: TEST_API_URL,
+        saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -106,7 +110,7 @@ describe("FileAppConfigPresistor", () => {
       const result = await persistor.saveStripeConfig({
         channelId: TEST_CHANNEL_ID,
         config: mockStripeConfig,
-        saleorApiUrl: TEST_API_URL,
+        saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -120,10 +124,10 @@ describe("FileAppConfigPresistor", () => {
       const existingConfig: FileAppConfigPresistorConfigSchema = {
         appRootConfig: {
           [TEST_CHANNEL_ID]: {
-            name: mockStripeConfig.getConfigName(),
-            id: mockStripeConfig.getConfigId(),
-            restrictedKey: mockStripeConfig.getRestrictedKey().getKeyValue(),
-            publishableKey: mockStripeConfig.getPublishableKey().getKeyValue(),
+            name: mockStripeConfig.name,
+            id: mockStripeConfig.id,
+            restrictedKey: mockStripeConfig.restrictedKey.keyValue,
+            publishableKey: mockStripeConfig.publishableKey.keyValue,
           },
         },
       };
@@ -133,7 +137,7 @@ describe("FileAppConfigPresistor", () => {
       const persistor = new FileAppConfigPresistor();
       const result = await persistor.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
-        saleorApiUrl: TEST_API_URL,
+        saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -142,10 +146,10 @@ describe("FileAppConfigPresistor", () => {
 
       expect(config).not.toBeNull();
 
-      expect(config!.getConfigName()).toBe(mockStripeConfig.getConfigName());
-      expect(config!.getConfigId()).toBe(mockStripeConfig.getConfigId());
-      expect(config!.getPublishableKey()).toBeInstanceOf(StripePublishableKey);
-      expect(config!.getRestrictedKey()).toBeInstanceOf(StripeRestrictedKey);
+      expect(config!.name).toBe(mockStripeConfig.name);
+      expect(config!.id).toBe(mockStripeConfig.id);
+      expect(config!.publishableKey).toBeInstanceOf(StripePublishableKey);
+      expect(config!.restrictedKey).toBeInstanceOf(StripeRestrictedKey);
     });
 
     it("should return null if channel config is missing", async () => {
@@ -158,7 +162,7 @@ describe("FileAppConfigPresistor", () => {
       const persistor = new FileAppConfigPresistor();
       const result = await persistor.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
-        saleorApiUrl: TEST_API_URL,
+        saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -172,7 +176,7 @@ describe("FileAppConfigPresistor", () => {
       const persistor = new FileAppConfigPresistor();
       const result = await persistor.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
-        saleorApiUrl: TEST_API_URL,
+        saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -186,7 +190,7 @@ describe("FileAppConfigPresistor", () => {
       const persistor = new FileAppConfigPresistor();
       const result = await persistor.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
-        saleorApiUrl: TEST_API_URL,
+        saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -202,7 +206,7 @@ describe("FileAppConfigPresistor", () => {
       const persistor = new FileAppConfigPresistor();
       const result = await persistor.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
-        saleorApiUrl: TEST_API_URL,
+        saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 

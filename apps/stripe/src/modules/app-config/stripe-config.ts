@@ -1,48 +1,50 @@
-import { ok } from "neverthrow";
+import { err, ok } from "neverthrow";
 
+import { BaseError } from "@/lib/errors";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
 export class StripeConfig {
-  private constructor(
-    private props: {
-      name: string;
-      id: string;
-      restrictedKey: StripeRestrictedKey;
-      publishableKey: StripePublishableKey;
-    },
-  ) {}
+  readonly name: string;
+  readonly id: string;
+  readonly restrictedKey: StripeRestrictedKey;
+  readonly publishableKey: StripePublishableKey;
 
-  static create(args: {
-    configName: string;
-    configId: string;
+  static ValidationError = BaseError.subclass("ValidationError");
+
+  private constructor(props: {
+    name: string;
+    id: string;
     restrictedKey: StripeRestrictedKey;
     publishableKey: StripePublishableKey;
   }) {
-    // TODO: add validation of args: configName, configId
+    this.name = props.name;
+    this.id = props.id;
+    this.restrictedKey = props.restrictedKey;
+    this.publishableKey = props.publishableKey;
+  }
+
+  static create(args: {
+    name: string;
+    id: string;
+    restrictedKey: StripeRestrictedKey;
+    publishableKey: StripePublishableKey;
+  }) {
+    if (args.name.length === 0) {
+      return err(new StripeConfig.ValidationError("Config name cannot be empty"));
+    }
+
+    if (args.id.length === 0) {
+      return err(new StripeConfig.ValidationError("Config id cannot be empty"));
+    }
+
     return ok(
       new StripeConfig({
-        name: args.configName,
-        id: args.configId,
+        name: args.name,
+        id: args.id,
         restrictedKey: args.restrictedKey,
         publishableKey: args.publishableKey,
       }),
     );
-  }
-
-  getConfigName() {
-    return this.props.name;
-  }
-
-  getConfigId() {
-    return this.props.id;
-  }
-
-  getRestrictedKey() {
-    return this.props.restrictedKey;
-  }
-
-  getPublishableKey() {
-    return this.props.publishableKey;
   }
 }
