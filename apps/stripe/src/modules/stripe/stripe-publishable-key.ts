@@ -29,7 +29,7 @@ export class StripePublishableKey {
     if (!this.isInProperFormat(args.publishableKey)) {
       return err(
         new this.ValidationError(
-          "Invalid restricted key format - it should start with `pk_test_` or `pk_live_`",
+          "Invalid publishable key format - it should start with `pk_test_` or `pk_live_`",
         ),
       );
     }
