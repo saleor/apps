@@ -16,8 +16,8 @@ export class StripePublishableKey {
     );
   }
 
-  static createFromUserInput(args: { publishableKey: string }) {
-    if (StripePublishableKey.isInProperFormat(args.publishableKey)) {
+  static create(args: { publishableKey: string }) {
+    if (this.isInProperFormat(args.publishableKey)) {
       return ok(new StripePublishableKey(args.publishableKey));
     }
 
