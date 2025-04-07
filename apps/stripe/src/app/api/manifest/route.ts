@@ -3,6 +3,7 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 
+import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/gateway-initialize/webhook-definition";
 import { env } from "@/lib/env";
 import { withLoggerContext } from "@/lib/logger-context";
 import packageJson from "@/package.json";
@@ -32,7 +33,7 @@ const handler = createManifestHandler({
       supportUrl: "https://saleor.io/discord",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
-      webhooks: [],
+      webhooks: [paymentGatewayInitializeSessionWebhookDefinition.getWebhookManifest(appBaseUrl)],
     };
 
     return manifest;

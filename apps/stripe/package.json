@@ -53,6 +53,7 @@
     "modern-errors-serialize": "6.1.0",
     "neverthrow": "6.2.1",
     "next": "catalog:",
+    "next-test-api-route-handler": "4.0.16",
     "react": "catalog:",
     "react-dom": "catalog:",
     "stripe": "18.0.0",
