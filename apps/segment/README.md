@@ -15,10 +15,13 @@
 ### Prerequisites
 
 - [Node.js](https://nodejs.org) v22+
-- [PNPM](https://pnpm.io/) v9+
+- [PNPM](https://pnpm.io/) v10+
 - An account on [Twilio Segment](https://segment.com/) with configured [source](https://segment.com/docs/partners/sources/).
 
 ### Running app locally in development containers
+
+> [!IMPORTANT]
+> You can use devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` and `./scripts/setup-dynamodb.sh` manually
 
 The easiest way of running Saleor for local development is to use [development containers](https://containers.dev/).
 If you have Visual Studio Code follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open existing folder in container.
