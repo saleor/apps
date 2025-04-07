@@ -26,18 +26,28 @@ type GetManifestFunction = ({
 }) => Promise<Array<WebhookManifest>>;
 
 export class WebhookMigrationRunner {
-  constructor(
-    private args: {
-      dryRun: boolean;
-      logger: Logger;
-      client: Client;
-      saleorApiUrl: string;
-      getManifests: GetManifestFunction;
-    },
-  ) {}
+  private readonly dryRun: boolean;
+  private readonly logger: Logger;
+  private readonly client: Client;
+  private readonly saleorApiUrl: string;
+  private readonly getManifests: GetManifestFunction;
+
+  constructor(args: {
+    dryRun: boolean;
+    logger: Logger;
+    client: Client;
+    saleorApiUrl: string;
+    getManifests: GetManifestFunction;
+  }) {
+    this.dryRun = args.dryRun;
+    this.logger = args.logger;
+    this.client = args.client;
+    this.saleorApiUrl = args.saleorApiUrl;
+    this.getManifests = args.getManifests;
+  }
 
   public migrate = async () => {
-    const { dryRun, logger, client, getManifests, saleorApiUrl } = this.args;
+    const { dryRun, logger, client, getManifests, saleorApiUrl } = this;
 
     try {
       logger.debug("Getting app details and webhooks data");

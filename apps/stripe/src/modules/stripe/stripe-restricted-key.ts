@@ -3,32 +3,37 @@ import { err, ok } from "neverthrow";
 import { BaseError } from "@/lib/errors";
 
 export class StripeRestrictedKey {
-  static WrongKeyFormatError = BaseError.subclass("WrongKeyFormatError");
+  readonly keyValue: string;
+
+  static ValidationError = BaseError.subclass("ValidationError");
+
   private static testPrefix = "rk_test_";
   private static livePrefix = "rk_live_";
 
-  private constructor(private key: string) {}
+  private constructor(keyValue: string) {
+    this.keyValue = keyValue;
+  }
 
-  private static isInProperFormat(key: string) {
+  private static isInProperFormat(keyValue: string) {
     return (
-      key.startsWith(StripeRestrictedKey.testPrefix) ||
-      key.startsWith(StripeRestrictedKey.livePrefix)
+      keyValue.startsWith(StripeRestrictedKey.testPrefix) ||
+      keyValue.startsWith(StripeRestrictedKey.livePrefix)
     );
   }
 
   static create(args: { restrictedKey: string }) {
-    if (StripeRestrictedKey.isInProperFormat(args.restrictedKey)) {
-      return ok(new StripeRestrictedKey(args.restrictedKey));
+    if (args.restrictedKey.length === 0) {
+      return err(new this.ValidationError("Restricted key cannot be empty"));
     }
 
-    return err(
-      new this.WrongKeyFormatError(
-        "Invalid restricted key format - it should start with `rk_test_` or `rk_live_`",
-      ),
-    );
-  }
+    if (!this.isInProperFormat(args.restrictedKey)) {
+      return err(
+        new this.ValidationError(
+          "Invalid restricted key format - it should start with `rk_test_` or `rk_live_`",
+        ),
+      );
+    }
 
-  getKeyValue() {
-    return this.key;
+    return ok(new StripeRestrictedKey(args.restrictedKey));
   }
 }

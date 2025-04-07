@@ -3,32 +3,37 @@ import { err, ok } from "neverthrow";
 import { BaseError } from "@/lib/errors";
 
 export class StripePublishableKey {
-  static WrongKeyFormatError = BaseError.subclass("WrongKeyFormatError");
+  readonly keyValue: string;
+
+  static ValidationError = BaseError.subclass("ValidationError");
+
   private static testPrefix = "pk_test_";
   private static livePrefix = "pk_live_";
 
-  private constructor(private key: string) {}
+  private constructor(keyValue: string) {
+    this.keyValue = keyValue;
+  }
 
-  private static isInProperFormat(key: string) {
+  private static isInProperFormat(keyValue: string) {
     return (
-      key.startsWith(StripePublishableKey.testPrefix) ||
-      key.startsWith(StripePublishableKey.livePrefix)
+      keyValue.startsWith(StripePublishableKey.testPrefix) ||
+      keyValue.startsWith(StripePublishableKey.livePrefix)
     );
   }
 
   static create(args: { publishableKey: string }) {
-    if (this.isInProperFormat(args.publishableKey)) {
-      return ok(new StripePublishableKey(args.publishableKey));
+    if (args.publishableKey.length === 0) {
+      return err(new this.ValidationError("Publishable key cannot be empty"));
     }
 
-    return err(
-      new this.WrongKeyFormatError(
-        "Invalid publishable key format - it should start with `pk_test_` or `pk_live_`",
-      ),
-    );
-  }
+    if (!this.isInProperFormat(args.publishableKey)) {
+      return err(
+        new this.ValidationError(
+          "Invalid restricted key format - it should start with `pk_test_` or `pk_live_`",
+        ),
+      );
+    }
 
-  getKeyValue() {
-    return this.key;
+    return ok(new StripePublishableKey(args.publishableKey));
   }
 }

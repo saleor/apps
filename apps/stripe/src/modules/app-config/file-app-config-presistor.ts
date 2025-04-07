@@ -6,6 +6,7 @@ import { z } from "zod";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
@@ -15,6 +16,10 @@ export type FileAppConfigPresistorConfigSchema = z.infer<
   typeof FileAppConfigPresistor.FileConfigSchema
 >;
 
+/**
+ * Save / read app configuration from a JSON file (`.stripe-app-config.json`).
+ * If file with configuration doesn't exist it will create a new one with empty config that you need to fill in.
+ */
 export class FileAppConfigPresistor implements AppConfigPersistor {
   private logger = createLogger("FileAppConfigPresistor");
   private filePath = ".stripe-app-config.json";
@@ -38,10 +43,10 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
 
   private serializeStripeConfigToJson(config: StripeConfig) {
     return {
-      name: config.getConfigName(),
-      id: config.getConfigId(),
-      restrictedKey: config.getRestrictedKey().getKeyValue(),
-      publishableKey: config.getPublishableKey().getKeyValue(),
+      name: config.name,
+      id: config.id,
+      restrictedKey: config.restrictedKey.keyValue,
+      publishableKey: config.publishableKey.keyValue,
     };
   }
 
@@ -94,7 +99,7 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
   private persistExistingAppConfig(args: {
     channelId: string;
     config: StripeConfig;
-    saleorApiUrl: string;
+    saleorApiUrl: SaleorApiUrl;
     appId: string;
   }) {
     const existingConfigResult = this.readExistingAppConfigFromFile();
@@ -126,7 +131,7 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
   private persistNewAppConfig(args: {
     channelId: string;
     config: StripeConfig;
-    saleorApiUrl: string;
+    saleorApiUrl: SaleorApiUrl;
     appId: string;
   }) {
     const newConfig = {
@@ -151,7 +156,7 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
   async saveStripeConfig(args: {
     channelId: string;
     config: StripeConfig;
-    saleorApiUrl: string;
+    saleorApiUrl: SaleorApiUrl;
     appId: string;
   }): Promise<Result<void, InstanceType<typeof BaseError>>> {
     if (fs.existsSync(this.filePath)) {
@@ -181,7 +186,7 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
 
   async getStripeConfig(args: {
     channelId: string;
-    saleorApiUrl: string;
+    saleorApiUrl: SaleorApiUrl;
     appId: string;
   }): Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>> {
     const existingConfigResult = this.readExistingAppConfigFromFile();
@@ -221,10 +226,10 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
     }
 
     const stripeConfigResult = StripeConfig.create({
-      configName: channelConfig.name,
-      configId: channelConfig.id,
-      restrictedKeyValue: restrictedKey.value,
-      publishableKeyValue: publishableKey.value,
+      name: channelConfig.name,
+      id: channelConfig.id,
+      restrictedKey: restrictedKey.value,
+      publishableKey: publishableKey.value,
     });
 
     if (stripeConfigResult.isErr()) {

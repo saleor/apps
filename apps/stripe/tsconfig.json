@@ -12,7 +12,8 @@
         "name": "next"
       }
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "erasableSyntaxOnly": true
   },
   "include": [
     "**/*.ts",

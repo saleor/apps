@@ -11,7 +11,7 @@ describe("StripeRestrictedKey", () => {
 
       expect(result.isOk()).toBe(true);
       expect(result._unsafeUnwrap()).toBeInstanceOf(StripeRestrictedKey);
-      expect(result._unsafeUnwrap().getKeyValue()).toBe("rk_test_valid123");
+      expect(result._unsafeUnwrap().keyValue).toBe("rk_test_valid123");
     });
 
     it("should create instance for valid live key", () => {
@@ -21,7 +21,7 @@ describe("StripeRestrictedKey", () => {
 
       expect(result.isOk()).toBe(true);
       expect(result._unsafeUnwrap()).toBeInstanceOf(StripeRestrictedKey);
-      expect(result._unsafeUnwrap().getKeyValue()).toBe("rk_live_valid456");
+      expect(result._unsafeUnwrap().keyValue).toBe("rk_live_valid456");
     });
 
     it("should return error for invalid key format", () => {
@@ -30,7 +30,7 @@ describe("StripeRestrictedKey", () => {
       });
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripeRestrictedKey.WrongKeyFormatError);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripeRestrictedKey.ValidationError);
     });
   });
 });
