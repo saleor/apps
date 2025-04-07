@@ -2,7 +2,7 @@ import {
   buildSyncWebhookResponsePayload,
   SyncWebhookResponsesMap,
 } from "@saleor/app-sdk/handlers/shared";
-import { err, errAsync, ok, okAsync, Result, ResultAsync } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 import {
   PaymentGatewayInitializeResponseShape,
@@ -13,21 +13,15 @@ import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
 
 type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SESSION"];
 
-/*
- * todo test
- * todo errors
- */
+type UseCaseErrorShape = InstanceType<typeof InitializeStripeSessionUseCase.UseCaseError>;
+
 export class InitializeStripeSessionUseCase {
   private configPersistor: AppConfigPersistor;
 
   static UseCaseError = BaseError.subclass("InitializeStripeSessionUseCaseError");
   static MissingConfigError = this.UseCaseError.subclass("MissingConfigError");
 
-  constructor(
-    private deps: {
-      configPersistor: AppConfigPersistor;
-    },
-  ) {
+  constructor(deps: { configPersistor: AppConfigPersistor }) {
     this.configPersistor = deps.configPersistor;
   }
 
@@ -35,7 +29,7 @@ export class InitializeStripeSessionUseCase {
     channelId: string;
     appId: string;
     saleorApiUrl: string;
-  }): Promise<Result<UseCaseResultShape, typeof InitializeStripeSessionUseCase.UseCaseError>> {
+  }): Promise<Result<UseCaseResultShape, UseCaseErrorShape>> {
     const { channelId, appId, saleorApiUrl } = params;
 
     const stripeConfigForThisChannel = await this.configPersistor.getStripeConfig({
@@ -44,41 +38,42 @@ export class InitializeStripeSessionUseCase {
       saleorApiUrl,
     });
 
-    return stripeConfigForThisChannel.match(
-      (config) => {
-        const pk = config?.getPublishableKey();
+    if (stripeConfigForThisChannel.isOk()) {
+      const pk = stripeConfigForThisChannel.value?.getPublishableKey();
 
-        if (!pk) {
-          return err(
-            new InitializeStripeSessionUseCase.MissingConfigError("Config for channel not found", {
-              // todo: pass props (channel id), but type safe
-            }),
-          );
-        }
-
-        const rawShape: PaymentGatewayInitializeResponseShapeType = {
-          stripePublishableKey: pk.getKeyValue(),
-        };
-
-        const responseDataShape = PaymentGatewayInitializeResponseShape.parse(rawShape);
-
-        const validResponseShape =
-          buildSyncWebhookResponsePayload<"PAYMENT_GATEWAY_INITIALIZE_SESSION">({
-            data: responseDataShape,
-          });
-
-        return ok(validResponseShape);
-      },
-      (error) => {
+      if (!pk) {
         return err(
-          new InitializeStripeSessionUseCase.UseCaseError(
-            "Failed to retrieve Publishable Key from config",
-            {
-              cause: error,
-            },
-          ),
+          new InitializeStripeSessionUseCase.MissingConfigError("Config for channel not found", {
+            // todo: pass props (channel id), but type safe
+          }),
         );
-      },
-    );
+      }
+
+      const rawShape: PaymentGatewayInitializeResponseShapeType = {
+        stripePublishableKey: pk.getKeyValue(),
+      };
+
+      const responseDataShape = PaymentGatewayInitializeResponseShape.parse(rawShape);
+
+      const validResponseShape =
+        buildSyncWebhookResponsePayload<"PAYMENT_GATEWAY_INITIALIZE_SESSION">({
+          data: responseDataShape,
+        });
+
+      return ok(validResponseShape);
+    }
+
+    if (stripeConfigForThisChannel.isErr()) {
+      return err(
+        new InitializeStripeSessionUseCase.UseCaseError(
+          "Failed to retrieve Publishable Key from config",
+          {
+            cause: stripeConfigForThisChannel.error,
+          },
+        ),
+      );
+    }
+
+    throw new Error("Leaky logic, should not happen");
   }
 }

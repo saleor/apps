@@ -16,16 +16,16 @@ export class StripeConfig {
   static create(args: {
     configName: string;
     configId: string;
-    restrictedKeyValue: StripeRestrictedKey;
-    publishableKeyValue: StripePublishableKey;
+    restrictedKey: StripeRestrictedKey;
+    publishableKey: StripePublishableKey;
   }) {
     // TODO: add validation of args: configName, configId
     return ok(
       new StripeConfig({
         name: args.configName,
         id: args.configId,
-        restrictedKey: args.restrictedKeyValue,
-        publishableKey: args.publishableKeyValue,
+        restrictedKey: args.restrictedKey,
+        publishableKey: args.publishableKey,
       }),
     );
   }
