@@ -5,7 +5,7 @@ import { StripePublishableKey } from "./stripe-publishable-key";
 describe("StripePublishableKey", () => {
   describe("createFromUserInput", () => {
     it("should create instance for valid test key", () => {
-      const result = StripePublishableKey.createFromUserInput({
+      const result = StripePublishableKey.create({
         publishableKey: "pk_test_valid123",
       });
 
@@ -15,7 +15,7 @@ describe("StripePublishableKey", () => {
     });
 
     it("should create instance for valid live key", () => {
-      const result = StripePublishableKey.createFromUserInput({
+      const result = StripePublishableKey.create({
         publishableKey: "pk_live_valid456",
       });
 
@@ -25,7 +25,7 @@ describe("StripePublishableKey", () => {
     });
 
     it("should return error for invalid key format", () => {
-      const result = StripePublishableKey.createFromUserInput({
+      const result = StripePublishableKey.create({
         publishableKey: "invalid_key",
       });
 

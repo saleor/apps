@@ -9,7 +9,7 @@ describe("StripePaymentIntentsApi", () => {
 
   describe("createFromKey", () => {
     it("creates instance of StripePaymentIntentsApi", () => {
-      const key = StripeRestrictedKey.createFromUserInput({
+      const key = StripeRestrictedKey.create({
         restrictedKey: mockStripeKeyValue,
       });
       const api = StripePaymentIntentsApi.createFromKey({ key: key._unsafeUnwrap() });
