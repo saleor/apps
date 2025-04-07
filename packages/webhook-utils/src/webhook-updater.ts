@@ -12,26 +12,34 @@ import { removeAppWebhook } from "./operations/remove-app-webhook";
 import { Logger, WebhookData } from "./types";
 
 export class WebhookUpdater {
-  private addedWebhooks: Array<WebhookData>;
-  private modifiedWebhooks: Array<WebhookData>;
-  private removedWebhooks: Array<WebhookData>;
+  private readonly addedWebhooks: Array<WebhookData>;
+  private readonly modifiedWebhooks: Array<WebhookData>;
+  private readonly removedWebhooks: Array<WebhookData>;
+  private readonly dryRun: boolean;
+  private readonly logger: Logger;
+  private readonly client: Client;
+  private readonly webhookManifests: Array<WebhookManifest>;
+  private readonly existingWebhooksData: Array<WebhookData>;
 
-  constructor(
-    private args: {
-      dryRun: boolean;
-      logger: Logger;
-      client: Client;
-      webhookManifests: Array<WebhookManifest>;
-      existingWebhooksData: Array<WebhookData>;
-    },
-  ) {
+  constructor(args: {
+    dryRun: boolean;
+    logger: Logger;
+    client: Client;
+    webhookManifests: Array<WebhookManifest>;
+    existingWebhooksData: Array<WebhookData>;
+  }) {
     this.addedWebhooks = [];
     this.modifiedWebhooks = [];
     this.removedWebhooks = [];
+    this.dryRun = args.dryRun;
+    this.logger = args.logger;
+    this.client = args.client;
+    this.webhookManifests = args.webhookManifests;
+    this.existingWebhooksData = args.existingWebhooksData;
   }
 
   public update = async () => {
-    const { dryRun, logger, client, webhookManifests, existingWebhooksData } = this.args;
+    const { dryRun, logger, client, webhookManifests, existingWebhooksData } = this;
 
     logger.debug("Updating webhooks");
 
@@ -110,7 +118,7 @@ export class WebhookUpdater {
   };
 
   private rollback = async () => {
-    const { logger, client, existingWebhooksData } = this.args;
+    const { logger, client, existingWebhooksData } = this;
 
     if (this.addedWebhooks.length) {
       logger.debug("Removing added webhooks");

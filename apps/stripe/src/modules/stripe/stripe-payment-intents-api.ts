@@ -9,14 +9,14 @@ import pkg from "@/package.json";
 export class StripePaymentIntentsApi {
   static CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentError");
 
-  private constructor(
-    private deps: {
-      stripeApiWrapper: Pick<Stripe, "paymentIntents">;
-    },
-  ) {}
+  private stripeApiWrapper: Pick<Stripe, "paymentIntents">;
+
+  private constructor(stripeApiWrapper: Pick<Stripe, "paymentIntents">) {
+    this.stripeApiWrapper = stripeApiWrapper;
+  }
 
   static createFromKey(args: { key: StripeRestrictedKey }) {
-    const stripeApiWrapper = new Stripe(args.key.getKeyValue(), {
+    const stripeApiWrapper = new Stripe(args.key.keyValue, {
       typescript: true,
       httpClient: Stripe.createFetchHttpClient(fetch), // this allow us to mock the fetch
       appInfo: {
@@ -27,12 +27,12 @@ export class StripePaymentIntentsApi {
       },
     });
 
-    return new StripePaymentIntentsApi({ stripeApiWrapper });
+    return new StripePaymentIntentsApi(stripeApiWrapper);
   }
 
   createPaymentIntent(args: { params: Stripe.PaymentIntentCreateParams }) {
     return ResultAsync.fromPromise(
-      this.deps.stripeApiWrapper.paymentIntents.create(args.params),
+      this.stripeApiWrapper.paymentIntents.create(args.params),
       (error) =>
         new StripePaymentIntentsApi.CreatePaymentIntentError("Failed to create payment intent", {
           cause: error,

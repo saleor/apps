@@ -1,0 +1,23 @@
+fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession {
+  version
+  sourceObject {
+    ... on Checkout {
+      channel {
+        ...Channel
+      }
+    }
+    ... on Order {
+      channel {
+        ...Channel
+      }
+    }
+  }
+}
+
+subscription PaymentGatewayInitializeSession {
+  event {
+    ... on PaymentGatewayInitializeSession {
+      ...PaymentGatewayInitializeSessionEvent
+    }
+  }
+}
