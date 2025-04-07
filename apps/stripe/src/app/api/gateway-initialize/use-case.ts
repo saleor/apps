@@ -7,7 +7,7 @@ import { okAsync, ResultAsync } from "neverthrow";
 import {
   PaymentGatewayInitializeResponseShape,
   PaymentGatewayInitializeResponseShapeType,
-} from "@/app/api/pi/gateway-initialize/response-shape";
+} from "@/app/api/gateway-initialize/response-shape";
 import { BaseError } from "@/lib/errors";
 
 type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SESSION"];
@@ -27,7 +27,7 @@ export class InitializeStripeSessionUseCase {
     // todo get config
 
     const rawShape: PaymentGatewayInitializeResponseShapeType = {
-      stripePk: "todo", // todo fetch from config
+      stripePublishableKey: "todo", // todo fetch from config
     };
 
     const responseDataShape = PaymentGatewayInitializeResponseShape.parse(rawShape);
