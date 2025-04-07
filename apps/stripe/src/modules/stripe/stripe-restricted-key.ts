@@ -16,7 +16,7 @@ export class StripeRestrictedKey {
     );
   }
 
-  static createFromUserInput(args: { restrictedKey: string }) {
+  static create(args: { restrictedKey: string }) {
     if (StripeRestrictedKey.isInProperFormat(args.restrictedKey)) {
       return ok(new StripeRestrictedKey(args.restrictedKey));
     }

@@ -5,7 +5,7 @@ import { StripeRestrictedKey } from "./stripe-restricted-key";
 describe("StripeRestrictedKey", () => {
   describe("createFromUserInput", () => {
     it("should create instance for valid test key", () => {
-      const result = StripeRestrictedKey.createFromUserInput({
+      const result = StripeRestrictedKey.create({
         restrictedKey: "rk_test_valid123",
       });
 
@@ -15,7 +15,7 @@ describe("StripeRestrictedKey", () => {
     });
 
     it("should create instance for valid live key", () => {
-      const result = StripeRestrictedKey.createFromUserInput({
+      const result = StripeRestrictedKey.create({
         restrictedKey: "rk_live_valid456",
       });
 
@@ -25,7 +25,7 @@ describe("StripeRestrictedKey", () => {
     });
 
     it("should return error for invalid key format", () => {
-      const result = StripeRestrictedKey.createFromUserInput({
+      const result = StripeRestrictedKey.create({
         restrictedKey: "invalid_key",
       });
 
