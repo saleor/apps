@@ -1,7 +1,7 @@
 import { ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
-import { InitializeStripeSessionUseCase } from "@/app/api/gateway-initialize/use-case";
+import { InitializeStripeSessionUseCase } from "@/app/api/saleor/gateway-initialize/use-case";
 import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";

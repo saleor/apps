@@ -7,7 +7,7 @@ import { err, ok, Result } from "neverthrow";
 import {
   PaymentGatewayInitializeResponseShape,
   PaymentGatewayInitializeResponseShapeType,
-} from "@/app/api/gateway-initialize/response-shape";
+} from "@/app/api/saleor/gateway-initialize/response-shape";
 import { BaseError } from "@/lib/errors";
 import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
 
@@ -20,6 +20,7 @@ export class InitializeStripeSessionUseCase {
 
   static UseCaseError = BaseError.subclass("InitializeStripeSessionUseCaseError");
   static MissingConfigError = this.UseCaseError.subclass("MissingConfigError");
+  static UnhandledError = this.UseCaseError.subclass("UnhandledError");
 
   constructor(deps: { configPersistor: AppConfigPersistor }) {
     this.configPersistor = deps.configPersistor;
@@ -74,6 +75,6 @@ export class InitializeStripeSessionUseCase {
       );
     }
 
-    throw new Error("Leaky logic, should not happen");
+    throw new BaseError("Leaky logic, should not happen");
   }
 }
