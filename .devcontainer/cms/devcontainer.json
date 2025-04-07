@@ -9,6 +9,7 @@
       "label": "CMS app"
     }
   },
+  "postCreateCommand": "pnpm install --frozen-lockfile",
   "customizations": {
     "vscode": {
       "extensions": [
