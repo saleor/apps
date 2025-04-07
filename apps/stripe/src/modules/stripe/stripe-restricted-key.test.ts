@@ -32,5 +32,15 @@ describe("StripeRestrictedKey", () => {
       expect(result.isErr()).toBe(true);
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripeRestrictedKey.ValidationError);
     });
+
+    it("should return error if key is empty", () => {
+      const result = StripeRestrictedKey.create({
+        restrictedKey: "",
+      });
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripeRestrictedKey.ValidationError);
+      expect(result._unsafeUnwrapErr().message).toBe("Restricted key cannot be empty");
+    });
   });
 });

@@ -32,5 +32,15 @@ describe("StripePublishableKey", () => {
       expect(result.isErr()).toBe(true);
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripePublishableKey.ValidationError);
     });
+
+    it("should return error if key is empty", () => {
+      const result = StripePublishableKey.create({
+        publishableKey: "",
+      });
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripePublishableKey.ValidationError);
+      expect(result._unsafeUnwrapErr().message).toBe("Publishable key cannot be empty");
+    });
   });
 });
