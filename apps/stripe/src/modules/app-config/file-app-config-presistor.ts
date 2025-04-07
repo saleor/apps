@@ -4,15 +4,23 @@ import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
+import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
+import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
-import { AppConfigPresistor } from "./app-config-persistor";
+import { AppConfigPersistor } from "./app-config-persistor";
 
-export class FileAppConfigPresistor implements AppConfigPresistor {
-  constructor(private deps: { filePath: string } = { filePath: ".stripe-app-config.json" }) {}
+export type FileAppConfigPresistorConfigSchema = z.infer<
+  typeof FileAppConfigPresistor.FileConfigSchema
+>;
 
-  private static appConfigSchema = z.object({
-    appConfig: z.record(
+export class FileAppConfigPresistor implements AppConfigPersistor {
+  private logger = createLogger("FileAppConfigPresistor");
+  private filePath = ".stripe-app-config.json";
+
+  static FileConfigSchema = z.object({
+    appRootConfig: z.record(
       z.string(),
       z.object({
         name: z.string(),
@@ -57,7 +65,7 @@ export class FileAppConfigPresistor implements AppConfigPresistor {
   );
 
   private readExistingAppConfigFromFile() {
-    const fileContentResult = this.readFileSafe(this.deps.filePath, "utf-8");
+    const fileContentResult = this.readFileSafe(this.filePath, "utf-8");
 
     if (fileContentResult.isErr()) {
       return err(fileContentResult.error);
@@ -69,7 +77,9 @@ export class FileAppConfigPresistor implements AppConfigPresistor {
       return err(jsonParseResult.error);
     }
 
-    const exisitingConfig = FileAppConfigPresistor.appConfigSchema.safeParse(jsonParseResult.value);
+    const exisitingConfig = FileAppConfigPresistor.FileConfigSchema.safeParse(
+      jsonParseResult.value,
+    );
 
     if (!exisitingConfig.success) {
       return err(
@@ -94,15 +104,15 @@ export class FileAppConfigPresistor implements AppConfigPresistor {
       return err(existingConfigResult.error);
     }
 
-    const newConfig: z.infer<typeof FileAppConfigPresistor.appConfigSchema> = {
-      appConfig: {
-        ...existingConfigResult.value.appConfig,
+    const newConfig: z.infer<typeof FileAppConfigPresistor.FileConfigSchema> = {
+      appRootConfig: {
+        ...existingConfigResult.value.appRootConfig,
         [args.channelId]: this.serializeStripeConfigToJson(args.config),
       },
     };
 
     const writeResult = this.writeJsonFileSafe(
-      this.deps.filePath,
+      this.filePath,
       JSON.stringify(newConfig, null, 2),
       "utf-8",
     );
@@ -127,7 +137,7 @@ export class FileAppConfigPresistor implements AppConfigPresistor {
     };
 
     const writeResult = this.writeJsonFileSafe(
-      this.deps.filePath,
+      this.filePath,
       JSON.stringify(newConfig, null, 2),
       "utf-8",
     );
@@ -139,41 +149,83 @@ export class FileAppConfigPresistor implements AppConfigPresistor {
     return ok(undefined);
   }
 
-  async persistStripeConfig(args: {
+  async saveStripeConfig(args: {
     channelId: string;
     config: StripeConfig;
     saleorApiUrl: string;
     appId: string;
   }): Promise<Result<void, InstanceType<typeof BaseError>>> {
-    if (fs.existsSync(this.deps.filePath)) {
+    if (fs.existsSync(this.filePath)) {
       return this.persistExistingAppConfig(args);
     }
 
     return this.persistNewAppConfig(args);
   }
 
-  async retrieveStripeConfig(args: {
+  private createFileWithEmptyConfig() {
+    const emptyConfig: FileAppConfigPresistorConfigSchema = {
+      appRootConfig: {},
+    };
+
+    const writeResult = this.writeJsonFileSafe(
+      this.filePath,
+      JSON.stringify(emptyConfig, null, 2),
+      "utf-8",
+    );
+
+    if (writeResult.isErr()) {
+      return err(writeResult.error);
+    }
+
+    return ok(undefined);
+  }
+
+  async getStripeConfig(args: {
     channelId: string;
     saleorApiUrl: string;
     appId: string;
-  }): Promise<Result<StripeConfig, InstanceType<typeof BaseError>>> {
+  }): Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>> {
     const existingConfigResult = this.readExistingAppConfigFromFile();
 
     if (existingConfigResult.isErr()) {
+      // if file does not exist, create new one with empty config
+      if (existingConfigResult.error instanceof FileAppConfigPresistor.FileReadError) {
+        this.createFileWithEmptyConfig();
+        this.logger.info("File does not exist, creating new one with empty config.");
+
+        return ok(null);
+      }
+
       return err(existingConfigResult.error);
     }
 
-    const channelConfig = existingConfigResult.value.appConfig[args.channelId];
+    const channelConfig = existingConfigResult.value.appRootConfig[args.channelId];
 
     if (!channelConfig) {
       return err(new FileAppConfigPresistor.ConfigNotFoudError("No config found for channelId"));
     }
 
-    const stripeConfigResult = StripeConfig.createFromPersistedData({
+    const restrictedKey = StripeRestrictedKey.create({
+      restrictedKey: channelConfig.restrictedKey,
+    });
+
+    if (restrictedKey.isErr()) {
+      return err(restrictedKey.error);
+    }
+
+    const publishableKey = StripePublishableKey.create({
+      publishableKey: channelConfig.publishableKey,
+    });
+
+    if (publishableKey.isErr()) {
+      return err(publishableKey.error);
+    }
+
+    const stripeConfigResult = StripeConfig.create({
       configName: channelConfig.name,
       configId: channelConfig.id,
-      restrictedKeyValue: channelConfig.restrictedKey,
-      publishableKeyValue: channelConfig.publishableKey,
+      restrictedKeyValue: restrictedKey.value,
+      publishableKeyValue: publishableKey.value,
     });
 
     if (stripeConfigResult.isErr()) {

@@ -1,11 +1,11 @@
-import { err, ok } from "neverthrow";
+import { ok } from "neverthrow";
 
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
 export class StripeConfig {
   private constructor(
-    private deps: {
+    private props: {
       name: string;
       id: string;
       restrictedKey: StripeRestrictedKey;
@@ -13,51 +13,36 @@ export class StripeConfig {
     },
   ) {}
 
-  static createFromPersistedData(args: {
+  static create(args: {
     configName: string;
     configId: string;
-    restrictedKeyValue: string;
-    publishableKeyValue: string;
+    restrictedKeyValue: StripeRestrictedKey;
+    publishableKeyValue: StripePublishableKey;
   }) {
-    const publishableKeyResult = StripePublishableKey.createFromPersistedData({
-      publishableKeyValue: args.publishableKeyValue,
-    });
-
-    if (publishableKeyResult.isErr()) {
-      return err(publishableKeyResult.error);
-    }
-
-    const restrictedKeyResult = StripeRestrictedKey.createFromPersistedData({
-      restrictedKeyValue: args.restrictedKeyValue,
-    });
-
-    if (restrictedKeyResult.isErr()) {
-      return err(restrictedKeyResult.error);
-    }
-
+    // TODO: add validation of args: configName, configId
     return ok(
       new StripeConfig({
         name: args.configName,
         id: args.configId,
-        restrictedKey: restrictedKeyResult.value,
-        publishableKey: publishableKeyResult.value,
+        restrictedKey: args.restrictedKeyValue,
+        publishableKey: args.publishableKeyValue,
       }),
     );
   }
 
   getConfigName() {
-    return this.deps.name;
+    return this.props.name;
   }
 
   getConfigId() {
-    return this.deps.id;
+    return this.props.id;
   }
 
   getRestrictedKey() {
-    return this.deps.restrictedKey;
+    return this.props.restrictedKey;
   }
 
   getPublishableKey() {
-    return this.deps.publishableKey;
+    return this.props.publishableKey;
   }
 }

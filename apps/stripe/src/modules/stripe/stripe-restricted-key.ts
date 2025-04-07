@@ -16,21 +16,9 @@ export class StripeRestrictedKey {
     );
   }
 
-  static createFromUserInput(args: { restrictedKey: string }) {
+  static create(args: { restrictedKey: string }) {
     if (StripeRestrictedKey.isInProperFormat(args.restrictedKey)) {
       return ok(new StripeRestrictedKey(args.restrictedKey));
-    }
-
-    return err(
-      new this.WrongKeyFormatError(
-        "Invalid restricted key format - it should start with `rk_test_` or `rk_live_`",
-      ),
-    );
-  }
-
-  static createFromPersistedData(args: { restrictedKeyValue: string }) {
-    if (StripeRestrictedKey.isInProperFormat(args.restrictedKeyValue)) {
-      return ok(new StripeRestrictedKey(args.restrictedKeyValue));
     }
 
     return err(

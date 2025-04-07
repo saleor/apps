@@ -1,6 +1,6 @@
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 
-export class AppConfig {
+export class AppRootConfig {
   constructor(
     private deps: {
       configsByChannelId: Record<string, StripeConfig>;

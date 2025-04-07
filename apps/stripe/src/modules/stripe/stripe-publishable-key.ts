@@ -16,21 +16,9 @@ export class StripePublishableKey {
     );
   }
 
-  static createFromUserInput(args: { publishableKey: string }) {
-    if (StripePublishableKey.isInProperFormat(args.publishableKey)) {
+  static create(args: { publishableKey: string }) {
+    if (this.isInProperFormat(args.publishableKey)) {
       return ok(new StripePublishableKey(args.publishableKey));
-    }
-
-    return err(
-      new this.WrongKeyFormatError(
-        "Invalid publishable key format - it should start with `pk_test_` or `pk_live_`",
-      ),
-    );
-  }
-
-  static createFromPersistedData(args: { publishableKeyValue: string }) {
-    if (StripePublishableKey.isInProperFormat(args.publishableKeyValue)) {
-      return ok(new StripePublishableKey(args.publishableKeyValue));
     }
 
     return err(
