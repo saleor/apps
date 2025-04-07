@@ -223,8 +223,8 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
     const stripeConfigResult = StripeConfig.create({
       configName: channelConfig.name,
       configId: channelConfig.id,
-      restrictedKeyValue: restrictedKey.value,
-      publishableKeyValue: publishableKey.value,
+      restrictedKey: restrictedKey.value,
+      publishableKey: publishableKey.value,
     });
 
     if (stripeConfigResult.isErr()) {

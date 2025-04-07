@@ -29,8 +29,8 @@ describe("FileAppConfigPresistor", () => {
   const mockStripeConfig = StripeConfig.create({
     configName: "Test Config",
     configId: "test-config-id",
-    restrictedKeyValue: restricteKey._unsafeUnwrap(),
-    publishableKeyValue: publishableKey._unsafeUnwrap(),
+    restrictedKey: restricteKey._unsafeUnwrap(),
+    publishableKey: publishableKey._unsafeUnwrap(),
   })._unsafeUnwrap();
 
   afterEach(() => {

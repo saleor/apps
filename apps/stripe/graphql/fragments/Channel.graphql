@@ -1,0 +1,3 @@
+fragment Channel on Channel {
+    id slug
+}
