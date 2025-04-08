@@ -54,6 +54,7 @@ export default {
     "saleor",
     "sendgrid",
     "shopx",
+    "serviceworker",
     "strapi",
     "taxjar",
     "toolset",
