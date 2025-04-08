@@ -7,7 +7,7 @@ import { err, ok, Result } from "neverthrow";
 import {
   PaymentGatewayInitializeResponseShape,
   PaymentGatewayInitializeResponseShapeType,
-} from "@/app/api/saleor/gateway-initialize/response-shape";
+} from "@/app/api/saleor/payment-gateway-initialize-session/response-shape";
 import { BaseError } from "@/lib/errors";
 import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";

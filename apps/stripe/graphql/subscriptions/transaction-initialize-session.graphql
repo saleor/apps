@@ -1,0 +1,23 @@
+fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
+  version
+  sourceObject {
+    ... on Checkout {
+      channel {
+        ...Channel
+      }
+    }
+    ... on Order {
+      channel {
+        ...Channel
+      }
+    }
+  }
+}
+
+subscription TransactionInitializeSession {
+  event {
+    ... on TransactionInitializeSession {
+      ...TransactionInitializeSessionEvent
+    }
+  }
+}
