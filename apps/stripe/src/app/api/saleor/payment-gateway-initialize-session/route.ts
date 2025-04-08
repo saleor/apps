@@ -9,7 +9,7 @@ import { withLoggerContext } from "@/lib/logger-context";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 const useCase = new InitializeStripeSessionUseCase({
-  configPersistor: appConfigPersistence,
+  appConfigRepo: appConfigPersistence,
 });
 
 const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(async (req, ctx) => {

@@ -1,4 +1,4 @@
 // TODO: Temp, replace with DB
-import { FileAppConfigPresistor } from "@/modules/app-config/file-app-config-presistor";
+import { FileAppConfigRepo } from "@/modules/app-config/file-app-config-repo";
 
-export const appConfigPersistence = new FileAppConfigPresistor();
+export const appConfigPersistence = new FileAppConfigRepo();
