@@ -33,7 +33,7 @@ const handler = createManifestHandler({
       supportUrl: "https://saleor.io/discord",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
-      webhooks: [paymentGatewayInitializeSessionWebhookDefinition.getWebhookManifest(appBaseUrl)],
+      webhooks: [paymentGatewayInitializeSessionWebhookDefinition.getWebhookManifest(apiBaseURL)],
     };
 
     return manifest;

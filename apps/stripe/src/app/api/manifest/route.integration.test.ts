@@ -1,7 +1,14 @@
 import { testApiHandler } from "next-test-api-route-handler";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import * as manifestHandlers from "./route";
+
+vi.mock("@/lib/env", () => ({
+  env: {
+    APP_IFRAME_BASE_URL: "https://localhost:3000",
+    APP_API_BASE_URL: "https://localhost:3000",
+  },
+}));
 
 describe("Manifest handler", async () => {
   /**
@@ -18,24 +25,23 @@ describe("Manifest handler", async () => {
         expect(body).toMatchInlineSnapshot(`
           {
             "about": "App that allows merchants using the Saleor e-commerce platform to accept online payments from customers using Stripe as their payment processor.",
-            "appUrl": "ntarh://[::1]:58267",
+            "appUrl": "https://localhost:3000",
             "author": "Saleor Commerce",
             "brand": {
               "logo": {
-                "default": "ntarh://[::1]:58267/logo.png",
+                "default": "https://localhost:3000/logo.png",
               },
             },
             "dataPrivacyUrl": "https://saleor.io/legal/privacy/",
             "extensions": [],
             "homepageUrl": "https://github.com/saleor/apps",
-            "id": "saleor.app.payment.stripe-v2",
             "name": "Stripe",
             "permissions": [
               "HANDLE_PAYMENTS",
             ],
             "requiredSaleorVersion": ">=3.20 <4",
             "supportUrl": "https://saleor.io/discord",
-            "tokenTargetUrl": "ntarh://[::1]:58267/api/register",
+            "tokenTargetUrl": "https://localhost:3000/api/register",
             "version": "0.0.2",
             "webhooks": [
               {
@@ -45,7 +51,7 @@ describe("Manifest handler", async () => {
                 "syncEvents": [
                   "PAYMENT_GATEWAY_INITIALIZE_SESSION",
                 ],
-                "targetUrl": "ntarh://[::1]:58267/api/saleor/gateway-initialize",
+                "targetUrl": "https://localhost:3000/api/saleor/gateway-initialize",
               },
             ],
           }
