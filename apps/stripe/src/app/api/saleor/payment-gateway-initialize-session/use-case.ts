@@ -7,9 +7,9 @@ import { err, ok, Result } from "neverthrow";
 import {
   PaymentGatewayInitializeResponseShape,
   PaymentGatewayInitializeResponseShapeType,
-} from "@/app/api/saleor/gateway-initialize/response-shape";
+} from "@/app/api/saleor/payment-gateway-initialize-session/response-shape";
 import { BaseError } from "@/lib/errors";
-import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
+import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SESSION"];
@@ -17,14 +17,14 @@ type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SE
 type UseCaseErrorShape = InstanceType<typeof InitializeStripeSessionUseCase.UseCaseError>;
 
 export class InitializeStripeSessionUseCase {
-  private configPersistor: AppConfigPersistor;
+  private appConfigRepo: AppConfigRepo;
 
   static UseCaseError = BaseError.subclass("InitializeStripeSessionUseCaseError");
   static MissingConfigError = this.UseCaseError.subclass("MissingConfigError");
   static UnhandledError = this.UseCaseError.subclass("UnhandledError");
 
-  constructor(deps: { configPersistor: AppConfigPersistor }) {
-    this.configPersistor = deps.configPersistor;
+  constructor(deps: { appConfigRepo: AppConfigRepo }) {
+    this.appConfigRepo = deps.appConfigRepo;
   }
 
   async execute(params: {
@@ -34,7 +34,7 @@ export class InitializeStripeSessionUseCase {
   }): Promise<Result<UseCaseResultShape, UseCaseErrorShape>> {
     const { channelId, appId, saleorApiUrl } = params;
 
-    const stripeConfigForThisChannel = await this.configPersistor.getStripeConfig({
+    const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
       channelId,
       appId,
       saleorApiUrl,

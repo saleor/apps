@@ -10,18 +10,16 @@ import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
-import { AppConfigPersistor } from "./app-config-persistor";
+import { AppConfigRepo } from "./app-config-repo";
 
-export type FileAppConfigPresistorConfigSchema = z.infer<
-  typeof FileAppConfigPresistor.FileConfigSchema
->;
+export type FileAppConfigRepoSchema = z.infer<typeof FileAppConfigRepo.FileConfigSchema>;
 
 /**
  * Save / read app configuration from a JSON file (`.stripe-app-config.json`).
  * If file with configuration doesn't exist it will create a new one with empty config that you need to fill in.
  */
-export class FileAppConfigPresistor implements AppConfigPersistor {
-  private logger = createLogger("FileAppConfigPresistor");
+export class FileAppConfigRepo implements AppConfigRepo {
+  private logger = createLogger("FileAppConfigRepo");
   private filePath = ".stripe-app-config.json";
 
   static FileConfigSchema = z.object({
@@ -52,20 +50,20 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
 
   private readFileSafe = Result.fromThrowable(
     fs.readFileSync,
-    (error) => new FileAppConfigPresistor.FileReadError("Error reading file", { cause: error }),
+    (error) => new FileAppConfigRepo.FileReadError("Error reading file", { cause: error }),
   );
 
   private jsonParseSafe = Result.fromThrowable(
     JSON.parse,
     (error) =>
-      new FileAppConfigPresistor.JsonParseError("Error parsing JSON with config", {
+      new FileAppConfigRepo.JsonParseError("Error parsing JSON with config", {
         cause: error,
       }),
   );
 
   private writeJsonFileSafe = Result.fromThrowable(
     fs.writeFileSync,
-    (error) => new FileAppConfigPresistor.FileWriteError("Error writing file", { cause: error }),
+    (error) => new FileAppConfigRepo.FileWriteError("Error writing file", { cause: error }),
   );
 
   private readExistingAppConfigFromFile() {
@@ -81,13 +79,11 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
       return err(jsonParseResult.error);
     }
 
-    const exisitingConfig = FileAppConfigPresistor.FileConfigSchema.safeParse(
-      jsonParseResult.value,
-    );
+    const exisitingConfig = FileAppConfigRepo.FileConfigSchema.safeParse(jsonParseResult.value);
 
     if (!exisitingConfig.success) {
       return err(
-        new FileAppConfigPresistor.SchemaParseError("Error parsing schema", {
+        new FileAppConfigRepo.SchemaParseError("Error parsing schema", {
           cause: exisitingConfig.error,
         }),
       );
@@ -108,7 +104,7 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
       return err(existingConfigResult.error);
     }
 
-    const newConfig: z.infer<typeof FileAppConfigPresistor.FileConfigSchema> = {
+    const newConfig: z.infer<typeof FileAppConfigRepo.FileConfigSchema> = {
       appRootConfig: {
         ...existingConfigResult.value.appRootConfig,
         [args.channelId]: this.serializeStripeConfigToJson(args.config),
@@ -167,7 +163,7 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
   }
 
   private createFileWithEmptyConfig() {
-    const emptyConfig: FileAppConfigPresistorConfigSchema = {
+    const emptyConfig: FileAppConfigRepoSchema = {
       appRootConfig: {},
     };
 
@@ -193,7 +189,7 @@ export class FileAppConfigPresistor implements AppConfigPersistor {
 
     if (existingConfigResult.isErr()) {
       // if file does not exist, create new one with empty config
-      if (existingConfigResult.error instanceof FileAppConfigPresistor.FileReadError) {
+      if (existingConfigResult.error instanceof FileAppConfigRepo.FileReadError) {
         this.createFileWithEmptyConfig();
         this.logger.info("File does not exist, creating new one with empty config.");
 
