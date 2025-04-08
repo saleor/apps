@@ -9,7 +9,7 @@ import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProps } from "next/app";
 
-import { GraphQLProvider } from "@/modules/graphql/GraphQLProvider";
+import { GraphQLProvider } from "@/modules/graphql/graphql-provider";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
 /**

@@ -15,4 +15,21 @@ export default [
       "@typescript-eslint/no-non-null-asserted-optional-chain": "warn",
     },
   },
+  {
+    // TODO: remove this override once we rename all graphql files to kebab-case
+    name: "saleor-app-search/override-@graphql-eslint/match-document-filename",
+    files: ["**/*.graphql"],
+    rules: {
+      "@graphql-eslint/match-document-filename": [
+        "warn",
+        {
+          fileExtension: ".graphql",
+          fragment: { style: "kebab-case" },
+          query: { style: "kebab-case" },
+          subscription: { style: "kebab-case" },
+          mutation: { style: "kebab-case" },
+        },
+      ],
+    },
+  },
 ];

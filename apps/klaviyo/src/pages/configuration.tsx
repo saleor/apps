@@ -4,7 +4,7 @@ import { Breadcrumbs, ButtonsBox, Layout, SkeletonLayout, TextLink } from "@sale
 import { Box, Button, Input, Text } from "@saleor/macaw-ui";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 
-import { useAppApi } from "../hooks/useAppApi";
+import { useAppApi } from "../hooks/use-app-api";
 
 interface ConfigurationField {
   key: string;

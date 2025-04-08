@@ -8,7 +8,7 @@ import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import { AppProps } from "next/app";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
-import { GraphQLProvider } from "@/providers/GraphQLProvider";
+import { GraphQLProvider } from "@/providers/graphql-provider";
 
 /**
  * Ensure instance is a singleton.
