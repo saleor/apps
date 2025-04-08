@@ -55,7 +55,7 @@ describe("Manifest handler", async () => {
                 "syncEvents": [
                   "PAYMENT_GATEWAY_INITIALIZE_SESSION",
                 ],
-                "targetUrl": "https://localhost:3000/api/saleor/gateway-initialize",
+                "targetUrl": "https://localhost:3000/api/saleor/payment-gateway-initialize-session",
               },
               {
                 "isActive": true,

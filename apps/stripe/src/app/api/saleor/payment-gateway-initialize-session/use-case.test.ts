@@ -1,8 +1,8 @@
 import { ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
-import { InitializeStripeSessionUseCase } from "@/app/api/saleor/gateway-initialize/use-case";
-import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
+import { InitializeStripeSessionUseCase } from "@/app/api/saleor/payment-gateway-initialize-session/use-case";
+import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
@@ -15,7 +15,7 @@ const channelIdMock = "test-id";
 const mockAppId = "test-id";
 
 describe("InitializeStripeSessionUseCase", () => {
-  const testConfig: AppConfigPersistor = {
+  const testConfig: AppConfigRepo = {
     getStripeConfig: vi.fn(),
     saveStripeConfig: vi.fn(),
   };
@@ -33,7 +33,7 @@ describe("InitializeStripeSessionUseCase", () => {
     );
 
     const uc = new InitializeStripeSessionUseCase({
-      configPersistor: testConfig,
+      appConfigRepo: testConfig,
     });
 
     const responsePayload = await uc.execute({
@@ -53,7 +53,7 @@ describe("InitializeStripeSessionUseCase", () => {
     vi.mocked(testConfig.getStripeConfig).mockImplementationOnce(async () => ok(null));
 
     const uc = new InitializeStripeSessionUseCase({
-      configPersistor: testConfig,
+      appConfigRepo: testConfig,
     });
 
     const responsePayload = await uc.execute({
