@@ -3,17 +3,20 @@ import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
 import { InitializeStripeSessionUseCase } from "@/app/api/saleor/payment-gateway-initialize/use-case";
-import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/payment-gateway-initialize/webhook-definition";
+import { InitializeStripeTransactionUseCase } from "@/app/api/saleor/transaction-initialize-session/use-case";
+import { transactionInitializeSessionWebhookDefinition } from "@/app/api/saleor/transaction-initialize-session/webhook-definition";
 import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { UnknownError } from "@/lib/errors";
 import { withLoggerContext } from "@/lib/logger-context";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 
-const useCase = new InitializeStripeSessionUseCase({
+const useCase = new InitializeStripeTransactionUseCase({
   configPersister: appConfigPersistence,
+  stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
 });
 
-const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(async (req, ctx) => {
+const handler = transactionInitializeSessionWebhookDefinition.createHandler(async (req, ctx) => {
   /*
    * todo create config repo
    * todo: should we pass auth data to execute? likely yes
@@ -37,6 +40,7 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(a
     channelId: ctx.payload.sourceObject.channel.id,
     appId: ctx.authData.appId,
     saleorApiUrl: saleorApiUrlResult.value,
+    event: ctx.payload,
   });
 
   return result.match(
@@ -58,7 +62,7 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(a
 
         default: {
           captureException(
-            new UnknownError("Unhandled error in PaymentGatewayInitializeSession", {
+            new UnknownError("Unhandled error in GatewayInitializeSession", {
               cause: err,
             }),
           );

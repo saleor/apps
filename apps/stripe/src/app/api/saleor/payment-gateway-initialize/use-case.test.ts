@@ -33,7 +33,7 @@ describe("InitializeStripeSessionUseCase", () => {
     );
 
     const uc = new InitializeStripeSessionUseCase({
-      configPersistor: testConfig,
+      configPersister: testConfig,
     });
 
     const responsePayload = await uc.execute({
@@ -53,7 +53,7 @@ describe("InitializeStripeSessionUseCase", () => {
     vi.mocked(testConfig.getStripeConfig).mockImplementationOnce(async () => ok(null));
 
     const uc = new InitializeStripeSessionUseCase({
-      configPersistor: testConfig,
+      configPersister: testConfig,
     });
 
     const responsePayload = await uc.execute({

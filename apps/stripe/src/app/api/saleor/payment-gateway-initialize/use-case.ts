@@ -17,14 +17,14 @@ type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SE
 type UseCaseErrorShape = InstanceType<typeof InitializeStripeSessionUseCase.UseCaseError>;
 
 export class InitializeStripeSessionUseCase {
-  private configPersistor: AppConfigPersister;
+  private configPersister: AppConfigPersister;
 
   static UseCaseError = BaseError.subclass("InitializeStripeSessionUseCaseError");
   static MissingConfigError = this.UseCaseError.subclass("MissingConfigError");
   static UnhandledError = this.UseCaseError.subclass("UnhandledError");
 
-  constructor(deps: { configPersistor: AppConfigPersister }) {
-    this.configPersistor = deps.configPersistor;
+  constructor(deps: { configPersister: AppConfigPersister }) {
+    this.configPersister = deps.configPersister;
   }
 
   async execute(params: {
@@ -34,7 +34,7 @@ export class InitializeStripeSessionUseCase {
   }): Promise<Result<UseCaseResultShape, UseCaseErrorShape>> {
     const { channelId, appId, saleorApiUrl } = params;
 
-    const stripeConfigForThisChannel = await this.configPersistor.getStripeConfig({
+    const stripeConfigForThisChannel = await this.configPersister.getStripeConfig({
       channelId,
       appId,
       saleorApiUrl,

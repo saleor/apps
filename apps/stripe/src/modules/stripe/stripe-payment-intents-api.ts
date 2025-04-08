@@ -3,10 +3,12 @@ import Stripe from "stripe";
 
 import { env } from "@/lib/env";
 import { BaseError } from "@/lib/errors";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import pkg from "@/package.json";
 
-export class StripePaymentIntentsApi {
+import { StripeRestrictedKey } from "./stripe-restricted-key";
+import { IStripePaymentIntentsApi } from "./types";
+
+export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
   static CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentError");
 
   private stripeApiWrapper: Pick<Stripe, "paymentIntents">;
@@ -15,10 +17,10 @@ export class StripePaymentIntentsApi {
     this.stripeApiWrapper = stripeApiWrapper;
   }
 
-  static createFromKey(args: { key: StripeRestrictedKey }) {
-    const stripeApiWrapper = new Stripe(args.key.keyValue, {
+  static create(key: StripeRestrictedKey) {
+    const stripeApiWrapper = new Stripe(key.keyValue, {
       typescript: true,
-      httpClient: Stripe.createFetchHttpClient(fetch), // this allow us to mock the fetch
+      httpClient: Stripe.createFetchHttpClient(fetch), // this allows us to mock the fetch
       appInfo: {
         name: "Saleor App Payment Stripe",
         version: pkg.version,
@@ -30,9 +32,9 @@ export class StripePaymentIntentsApi {
     return new StripePaymentIntentsApi(stripeApiWrapper);
   }
 
-  createPaymentIntent(args: { params: Stripe.PaymentIntentCreateParams }) {
+  async createPaymentIntent(params: Stripe.PaymentIntentCreateParams) {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.create(args.params),
+      this.stripeApiWrapper.paymentIntents.create(params),
       (error) =>
         new StripePaymentIntentsApi.CreatePaymentIntentError("Failed to create payment intent", {
           cause: error,

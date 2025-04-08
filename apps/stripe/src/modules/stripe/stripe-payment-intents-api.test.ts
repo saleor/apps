@@ -12,7 +12,7 @@ describe("StripePaymentIntentsApi", () => {
       const key = StripeRestrictedKey.create({
         restrictedKey: mockStripeKeyValue,
       });
-      const api = StripePaymentIntentsApi.createFromKey({ key: key._unsafeUnwrap() });
+      const api = StripePaymentIntentsApi.create(key._unsafeUnwrap());
 
       expect(api).toBeInstanceOf(StripePaymentIntentsApi);
     });
