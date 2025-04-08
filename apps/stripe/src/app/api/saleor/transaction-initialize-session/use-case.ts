@@ -4,23 +4,23 @@ import { err, ok } from "neverthrow";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
+import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
 export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
-  private configPersister: AppConfigPersistor;
+  private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
 
   static UseCaseError = BaseError.subclass("InitializeStripeTransactionUseCaseError");
   static MissingConfigError = this.UseCaseError.subclass("MissingConfigError");
 
   constructor(deps: {
-    configPersister: AppConfigPersistor;
+    appConfigRepo: AppConfigRepo;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
   }) {
-    this.configPersister = deps.configPersister;
+    this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
   }
 
@@ -32,7 +32,7 @@ export class TransactionInitializeSessionUseCase {
   }) {
     const { channelId, appId, saleorApiUrl } = args;
 
-    const stripeConfigForThisChannel = await this.configPersister.getStripeConfig({
+    const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
       channelId,
       appId,
       saleorApiUrl,

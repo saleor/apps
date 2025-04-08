@@ -1,7 +1,7 @@
 import { ok } from "neverthrow";
 import { vi } from "vitest";
 
-import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
+import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
@@ -15,7 +15,7 @@ const mockedStripeConfig = StripeConfig.create({
   restrictedKey: StripeRestrictedKey.create({ restrictedKey: "rk_live_1" })._unsafeUnwrap(),
 })._unsafeUnwrap();
 
-export const mockedAppConfigPersistor: AppConfigPersistor = {
+export const mockedAppConfigRepo: AppConfigRepo = {
   getStripeConfig: async () => ok(mockedStripeConfig),
   saveStripeConfig: vi.fn(),
 };

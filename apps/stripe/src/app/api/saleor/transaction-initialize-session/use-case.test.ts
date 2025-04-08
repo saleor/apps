@@ -2,13 +2,13 @@ import { err, ok } from "neverthrow";
 import Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
-import { mockedAppConfigPersistor } from "@/__tests__/mocks/app-config-presistor";
+import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initalize-session-event";
 import { TransactionInitializeSessionUseCase } from "@/app/api/saleor/transaction-initialize-session/use-case";
 import { BaseError } from "@/lib/errors";
-import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
+import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
 describe("TransactionInitializeSessionUseCase", () => {
@@ -21,7 +21,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     };
 
     const uc = new TransactionInitializeSessionUseCase({
-      configPersister: mockedAppConfigPersistor,
+      appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
     });
 
@@ -41,7 +41,7 @@ describe("TransactionInitializeSessionUseCase", () => {
   });
 
   it("Returns MissingConfigError if config not found for specified channel", async () => {
-    const missingConfigPersistor: AppConfigPersistor = {
+    const missingConfigRepo: AppConfigRepo = {
       getStripeConfig: async () => ok(null),
       saveStripeConfig: vi.fn(),
     };
@@ -53,7 +53,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     };
 
     const uc = new TransactionInitializeSessionUseCase({
-      configPersister: missingConfigPersistor,
+      appConfigRepo: missingConfigRepo,
       stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
     });
 
@@ -78,7 +78,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     };
 
     const uc = new TransactionInitializeSessionUseCase({
-      configPersister: mockedAppConfigPersistor,
+      appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
     });
     const responsePayload = await uc.execute({

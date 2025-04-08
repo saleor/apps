@@ -12,7 +12,7 @@ import { TransactionInitializeSessionUseCase } from "./use-case";
 import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
 
 const useCase = new TransactionInitializeSessionUseCase({
-  configPersister: appConfigPersistence,
+  appConfigRepo: appConfigPersistence,
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
 });
 

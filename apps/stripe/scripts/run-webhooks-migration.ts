@@ -3,7 +3,7 @@ import { parseArgs } from "node:util";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as Sentry from "@sentry/nextjs";
 
-import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/gateway-initialize/webhook-definition";
+import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionInitializeSessionWebhookDefinition } from "@/app/api/saleor/transaction-initialize-session/webhook-definition";
 import { env } from "@/lib/env";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
