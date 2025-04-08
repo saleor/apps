@@ -4,9 +4,10 @@ import Stripe from "stripe";
 import { env } from "@/lib/env";
 import { BaseError } from "@/lib/errors";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { IStripePaymentIntentsApi } from "@/modules/stripe/types";
 import pkg from "@/package.json";
 
-export class StripePaymentIntentsApi {
+export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
   static CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentError");
 
   private stripeApiWrapper: Pick<Stripe, "paymentIntents">;
@@ -30,7 +31,7 @@ export class StripePaymentIntentsApi {
     return new StripePaymentIntentsApi(stripeApiWrapper);
   }
 
-  createPaymentIntent(args: { params: Stripe.PaymentIntentCreateParams }) {
+  async createPaymentIntent(args: { params: Stripe.PaymentIntentCreateParams }) {
     return ResultAsync.fromPromise(
       this.stripeApiWrapper.paymentIntents.create(args.params),
       (error) =>
