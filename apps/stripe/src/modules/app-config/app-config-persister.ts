@@ -5,7 +5,7 @@ import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import { StripeConfig } from "./stripe-config";
 
-export interface AppConfigPersistor {
+export interface AppConfigPersister {
   saveStripeConfig: (args: {
     channelId: string;
     config: StripeConfig;

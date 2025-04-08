@@ -3,9 +3,9 @@ import fs from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-  FileAppConfigPresistor,
-  FileAppConfigPresistorConfigSchema,
-} from "@/modules/app-config/file-app-config-presistor";
+  FileAppConfigPersister,
+  FileAppConfigPresisterConfigSchema,
+} from "@/modules/app-config/file-app-config-persister";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
@@ -13,7 +13,7 @@ import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
 vi.mock("node:fs");
 
-describe("FileAppConfigPresistor", () => {
+describe("FileAppConfigPersister", () => {
   const TEST_FILE_PATH = ".stripe-app-config.json";
   const TEST_CHANNEL_ID = "test-channel";
   const TEST_APP_ID = "test-app";
@@ -46,8 +46,8 @@ describe("FileAppConfigPresistor", () => {
       vi.mocked(fs.existsSync).mockReturnValue(false);
       vi.mocked(fs.writeFileSync).mockImplementation(() => undefined);
 
-      const persistor = new FileAppConfigPresistor();
-      const result = await persistor.saveStripeConfig({
+      const persister = new FileAppConfigPersister();
+      const result = await persister.saveStripeConfig({
         channelId: TEST_CHANNEL_ID,
         config: mockStripeConfig,
         saleorApiUrl: saleorApiUrl,
@@ -63,7 +63,7 @@ describe("FileAppConfigPresistor", () => {
     });
 
     it("should update existing config file", async () => {
-      const existingConfig: FileAppConfigPresistorConfigSchema = {
+      const existingConfig: FileAppConfigPresisterConfigSchema = {
         appRootConfig: {
           "existing-channel": {
             name: "Existing Config",
@@ -78,9 +78,9 @@ describe("FileAppConfigPresistor", () => {
       vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify(existingConfig));
       vi.mocked(fs.writeFileSync).mockImplementation(() => undefined);
 
-      const persistor = new FileAppConfigPresistor();
+      const persister = new FileAppConfigPersister();
 
-      const result = await persistor.saveStripeConfig({
+      const result = await persister.saveStripeConfig({
         channelId: TEST_CHANNEL_ID,
         config: mockStripeConfig,
         saleorApiUrl: saleorApiUrl,
@@ -106,8 +106,8 @@ describe("FileAppConfigPresistor", () => {
         throw new Error("Write error");
       });
 
-      const persistor = new FileAppConfigPresistor();
-      const result = await persistor.saveStripeConfig({
+      const persister = new FileAppConfigPersister();
+      const result = await persister.saveStripeConfig({
         channelId: TEST_CHANNEL_ID,
         config: mockStripeConfig,
         saleorApiUrl: saleorApiUrl,
@@ -115,13 +115,13 @@ describe("FileAppConfigPresistor", () => {
       });
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigPresistor.FileWriteError);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigPersister.FileWriteError);
     });
   });
 
   describe("getStripeConfig", () => {
     it("should retrieve existing config", async () => {
-      const existingConfig: FileAppConfigPresistorConfigSchema = {
+      const existingConfig: FileAppConfigPresisterConfigSchema = {
         appRootConfig: {
           [TEST_CHANNEL_ID]: {
             name: mockStripeConfig.name,
@@ -134,8 +134,8 @@ describe("FileAppConfigPresistor", () => {
 
       vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify(existingConfig));
 
-      const persistor = new FileAppConfigPresistor();
-      const result = await persistor.getStripeConfig({
+      const persister = new FileAppConfigPersister();
+      const result = await persister.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
         saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
@@ -153,14 +153,14 @@ describe("FileAppConfigPresistor", () => {
     });
 
     it("should return null if channel config is missing", async () => {
-      const existingConfig: FileAppConfigPresistorConfigSchema = {
+      const existingConfig: FileAppConfigPresisterConfigSchema = {
         appRootConfig: {},
       };
 
       vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify(existingConfig));
 
-      const persistor = new FileAppConfigPresistor();
-      const result = await persistor.getStripeConfig({
+      const persister = new FileAppConfigPersister();
+      const result = await persister.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
         saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
@@ -173,29 +173,29 @@ describe("FileAppConfigPresistor", () => {
     it("should handle invalid JSON", async () => {
       vi.mocked(fs.readFileSync).mockReturnValue("invalid json");
 
-      const persistor = new FileAppConfigPresistor();
-      const result = await persistor.getStripeConfig({
+      const persister = new FileAppConfigPersister();
+      const result = await persister.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
         saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigPresistor.JsonParseError);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigPersister.JsonParseError);
     });
 
     it("should handle parse errors", async () => {
       vi.mocked(fs.readFileSync).mockReturnValue("{}");
 
-      const persistor = new FileAppConfigPresistor();
-      const result = await persistor.getStripeConfig({
+      const persister = new FileAppConfigPersister();
+      const result = await persister.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
         saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigPresistor.SchemaParseError);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigPersister.SchemaParseError);
     });
 
     it("should create file with empty config if file is not present", async () => {
@@ -203,8 +203,8 @@ describe("FileAppConfigPresistor", () => {
         throw new Error("File not found");
       });
 
-      const persistor = new FileAppConfigPresistor();
-      const result = await persistor.getStripeConfig({
+      const persister = new FileAppConfigPersister();
+      const result = await persister.getStripeConfig({
         channelId: TEST_CHANNEL_ID,
         saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,

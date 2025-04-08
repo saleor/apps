@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { PaymentGatewayInitializeResponseShape } from "@/app/api/saleor/gateway-initialize/response-shape";
+import { PaymentGatewayInitializeResponseShape } from "@/app/api/saleor/payment-gateway-initialize/response-shape";
 
 describe("PaymentGatewayInitializeResponseShape", () => {
   it("Constructs with valid pk value", () => {

@@ -7,9 +7,9 @@ import { err, ok, Result } from "neverthrow";
 import {
   PaymentGatewayInitializeResponseShape,
   PaymentGatewayInitializeResponseShapeType,
-} from "@/app/api/saleor/gateway-initialize/response-shape";
+} from "@/app/api/saleor/payment-gateway-initialize/response-shape";
 import { BaseError } from "@/lib/errors";
-import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
+import { AppConfigPersister } from "@/modules/app-config/app-config-persister";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SESSION"];
@@ -17,13 +17,13 @@ type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SE
 type UseCaseErrorShape = InstanceType<typeof InitializeStripeSessionUseCase.UseCaseError>;
 
 export class InitializeStripeSessionUseCase {
-  private configPersistor: AppConfigPersistor;
+  private configPersistor: AppConfigPersister;
 
   static UseCaseError = BaseError.subclass("InitializeStripeSessionUseCaseError");
   static MissingConfigError = this.UseCaseError.subclass("MissingConfigError");
   static UnhandledError = this.UseCaseError.subclass("UnhandledError");
 
-  constructor(deps: { configPersistor: AppConfigPersistor }) {
+  constructor(deps: { configPersistor: AppConfigPersister }) {
     this.configPersistor = deps.configPersistor;
   }
 

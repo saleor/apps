@@ -13,5 +13,5 @@ export const paymentGatewayInitializeSessionWebhookDefinition =
     name: "Stripe Payment Gateway Initialize",
     isActive: false,
     query: PaymentGatewayInitializeSessionDocument,
-    webhookPath: "api/saleor/gateway-initialize",
+    webhookPath: "api/saleor/payment-gateway-initialize",
   });
