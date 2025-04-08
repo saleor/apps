@@ -8,8 +8,8 @@ import { AppConfigPersistor } from "@/modules/app-config/app-config-persistor";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
-export class InitializeStripeTransactionUseCase {
-  private logger = createLogger("InitializeStripeTransactionUseCase");
+export class TransactionInitializeSessionUseCase {
+  private logger = createLogger("TransactionInitializeSessionUseCase");
   private configPersister: AppConfigPersistor;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
 
@@ -40,7 +40,7 @@ export class InitializeStripeTransactionUseCase {
 
     if (stripeConfigForThisChannel.isErr()) {
       return err(
-        new InitializeStripeTransactionUseCase.UseCaseError(
+        new TransactionInitializeSessionUseCase.UseCaseError(
           "Failed to retrieve config for channel",
           {
             cause: stripeConfigForThisChannel.error,
@@ -51,7 +51,7 @@ export class InitializeStripeTransactionUseCase {
 
     if (!stripeConfigForThisChannel.value) {
       return err(
-        new InitializeStripeTransactionUseCase.MissingConfigError("Config for channel not found"),
+        new TransactionInitializeSessionUseCase.MissingConfigError("Config for channel not found"),
       );
     }
 
@@ -62,23 +62,20 @@ export class InitializeStripeTransactionUseCase {
     });
 
     this.logger.debug("Creating Stripe payment intent with params", {
-      params: {
-        amount: 100,
-        currency: "USD",
-      },
+      params: args.event.action,
     });
 
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent({
-      // TODO: get real data from event
+      // TODO: extract to resolver / StripeMoney
       params: {
-        amount: 100,
-        currency: "USD",
+        amount: args.event.action.amount * 100,
+        currency: args.event.action.currency.toLowerCase(),
       },
     });
 
     if (createPaymentIntentResult.isErr()) {
       return err(
-        new InitializeStripeTransactionUseCase.UseCaseError(
+        new TransactionInitializeSessionUseCase.UseCaseError(
           "Error creating Stripe payment intent",
           {
             cause: createPaymentIntentResult.error,
@@ -94,7 +91,7 @@ export class InitializeStripeTransactionUseCase {
     const validResponseShape = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
       // TODO: fill out with real data
       result: "CHARGE_SUCCESS",
-      amount: 100,
+      amount: createPaymentIntentResult.value.amount,
     });
 
     return ok(validResponseShape);

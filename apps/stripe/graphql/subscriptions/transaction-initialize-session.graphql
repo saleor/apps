@@ -1,5 +1,9 @@
 fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
   version
+  action {
+    amount
+    currency
+  }
   sourceObject {
     ... on Checkout {
       channel {

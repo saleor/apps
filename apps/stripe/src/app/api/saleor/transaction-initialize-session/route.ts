@@ -3,29 +3,29 @@ import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
 import { appConfigPersistence } from "@/lib/app-config-persistence";
-import { UnknownError } from "@/lib/errors";
+import { BaseError, UnknownError } from "@/lib/errors";
 import { withLoggerContext } from "@/lib/logger-context";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 
-import { InitializeStripeTransactionUseCase } from "./use-case";
+import { TransactionInitializeSessionUseCase } from "./use-case";
 import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
 
-const useCase = new InitializeStripeTransactionUseCase({
+const useCase = new TransactionInitializeSessionUseCase({
   configPersister: appConfigPersistence,
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
 });
 
 const handler = transactionInitializeSessionWebhookDefinition.createHandler(async (req, ctx) => {
-  /*
-   * todo create config repo
-   * todo: should we pass auth data to execute? likely yes
-   */
-
   const saleorApiUrlResult = SaleorApiUrl.create({ url: ctx.authData.saleorApiUrl });
 
   if (saleorApiUrlResult.isErr()) {
-    // TODO: maybe we should throw here?
+    captureException(
+      new BaseError("Invalid Saleor API URL", {
+        cause: saleorApiUrlResult.error,
+      }),
+    );
+
     return Response.json(
       {
         message: "Invalid Saleor API URL",
@@ -49,7 +49,7 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(asyn
     },
     (err) => {
       switch (err["constructor"]) {
-        case InitializeStripeTransactionUseCase.MissingConfigError:
+        case TransactionInitializeSessionUseCase.MissingConfigError:
           return Response.json(
             {
               // todo what should be the response here?
@@ -62,7 +62,7 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(asyn
 
         default: {
           captureException(
-            new UnknownError("Unhandled error in GatewayInitializeSession", {
+            new UnknownError("Unhandled error in TransactionInitializeSession", {
               cause: err,
             }),
           );
@@ -81,4 +81,5 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(asyn
   );
 });
 
+// TODO: write integration test for this route
 export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);

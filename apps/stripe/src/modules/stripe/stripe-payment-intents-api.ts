@@ -2,14 +2,13 @@ import { ResultAsync } from "neverthrow";
 import Stripe from "stripe";
 
 import { env } from "@/lib/env";
-import { BaseError } from "@/lib/errors";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
-import { IStripePaymentIntentsApi } from "@/modules/stripe/types";
 import pkg from "@/package.json";
 
-export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
-  static CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentError");
+import { CreatePaymentIntentError } from "./errors";
+import { StripeRestrictedKey } from "./stripe-restricted-key";
+import { IStripePaymentIntentsApi } from "./types";
 
+export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
   private stripeApiWrapper: Pick<Stripe, "paymentIntents">;
 
   private constructor(stripeApiWrapper: Pick<Stripe, "paymentIntents">) {
@@ -35,7 +34,7 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
     return ResultAsync.fromPromise(
       this.stripeApiWrapper.paymentIntents.create(args.params),
       (error) =>
-        new StripePaymentIntentsApi.CreatePaymentIntentError("Failed to create payment intent", {
+        new CreatePaymentIntentError("Failed to create payment intent", {
           cause: error,
         }),
     );

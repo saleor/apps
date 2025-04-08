@@ -5,6 +5,8 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     css: false,
+    mockReset: true,
+    restoreMocks: true,
     workspace: [
       {
         extends: true,

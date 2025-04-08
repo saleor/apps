@@ -1,11 +1,17 @@
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 
+import { mockedSaleorChannelId } from "./constants";
+
 export const mockedTransactionInitializeSessionEvent: TransactionInitializeSessionEventFragment = {
+  action: {
+    amount: 100,
+    currency: "USD",
+  },
   sourceObject: {
     __typename: "Checkout",
     channel: {
       __typename: "Channel",
-      id: "channel-id",
+      id: mockedSaleorChannelId,
       slug: "channel-slug",
     },
   },

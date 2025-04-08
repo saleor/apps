@@ -1,8 +1,7 @@
 import { Result } from "neverthrow";
 import Stripe from "stripe";
 
-import { BaseError } from "@/lib/errors";
-
+import { CreatePaymentIntentError } from "./errors";
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 
 export interface IStripePaymentIntentsApiFactory {
@@ -12,5 +11,5 @@ export interface IStripePaymentIntentsApiFactory {
 export interface IStripePaymentIntentsApi {
   createPaymentIntent(args: {
     params: Stripe.PaymentIntentCreateParams;
-  }): Promise<Result<Stripe.PaymentIntent, InstanceType<typeof BaseError>>>;
+  }): Promise<Result<Stripe.PaymentIntent, InstanceType<typeof CreatePaymentIntentError>>>;
 }
