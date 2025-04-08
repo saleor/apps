@@ -27,7 +27,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
     "@cspell/cspell-types": "8.17.5",
-    "@saleor/app-sdk": "0.0.0-pr-20250408065642",
+    "@saleor/app-sdk": "catalog:",
     "cspell": "8.17.5",
     "husky": "9.1.4",
     "knip": "5.46.2",
