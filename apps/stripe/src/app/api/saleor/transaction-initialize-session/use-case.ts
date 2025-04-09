@@ -11,6 +11,10 @@ import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
+type TransactionInitializeSessionResponseData = {
+  stripeClientSecret: string | null;
+};
+
 export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
   private appConfigRepo: AppConfigRepo;
@@ -75,13 +79,15 @@ export class TransactionInitializeSessionUseCase {
       });
     }
 
+    const stripePaymentIntentAdditionalInformation: TransactionInitializeSessionResponseData = {
+      stripeClientSecret: stripePaymentIntentResponse.client_secret,
+    };
+
     return {
       result: "CHARGE_REQUESTED",
       amount: saleorMoneyResult.value.getAmount(),
       pspReference: stripePaymentIntentResponse.id,
-      data: {
-        stripeClientSecret: stripePaymentIntentResponse.client_secret,
-      },
+      data: stripePaymentIntentAdditionalInformation,
     } as const;
   }
 

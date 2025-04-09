@@ -5,14 +5,14 @@ import { err, ok } from "neverthrow";
 import { BaseError } from "@/lib/errors";
 
 export class SaleorMoney {
-  private readonly stripeAmount: number;
-  private readonly stripeCurrency: string;
+  private readonly amount: number;
+  private readonly currency: string;
 
   static ValdationError = BaseError.subclass("ValidationError");
 
-  private constructor(args: { stripeAmount: number; stripeCurrency: string }) {
-    this.stripeAmount = args.stripeAmount;
-    this.stripeCurrency = args.stripeCurrency;
+  private constructor(args: { amount: number; currency: string }) {
+    this.amount = args.amount;
+    this.currency = args.currency;
   }
 
   static createFromStripe(args: { amount: number; currency: string }) {
@@ -30,8 +30,8 @@ export class SaleorMoney {
 
     return ok(
       new SaleorMoney({
-        stripeAmount: args.amount,
-        stripeCurrency: args.currency,
+        amount: args.amount,
+        currency: args.currency,
       }),
     );
   }
@@ -39,7 +39,7 @@ export class SaleorMoney {
   getAmount() {
     const currencyCodeData = currencyCodesData.code(this.getCurrency());
 
-    const amount = currencyJs(this.stripeAmount, {
+    const amount = currencyJs(this.amount, {
       fromCents: true,
       // currencyCodeData will be defined at this point
       precision: currencyCodeData!.digits,
@@ -49,6 +49,6 @@ export class SaleorMoney {
   }
 
   getCurrency() {
-    return this.stripeCurrency.toUpperCase();
+    return this.currency.toUpperCase();
   }
 }
