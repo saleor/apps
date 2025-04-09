@@ -66,7 +66,7 @@ export class TransactionInitializeSessionUseCase {
     });
 
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent({
-      // TODO: extract to resolver / StripeMoney
+      // TODO: move to deletaged to service / resolver
       params: {
         amount: args.event.action.amount * 100,
         currency: args.event.action.currency.toLowerCase(),
@@ -75,12 +75,9 @@ export class TransactionInitializeSessionUseCase {
 
     if (createPaymentIntentResult.isErr()) {
       return err(
-        new TransactionInitializeSessionUseCase.UseCaseError(
-          "Error creating Stripe payment intent",
-          {
-            cause: createPaymentIntentResult.error,
-          },
-        ),
+        new TransactionInitializeSessionUseCase.UseCaseError("Failed to create payment intent", {
+          cause: createPaymentIntentResult.error,
+        }),
       );
     }
 
@@ -89,7 +86,6 @@ export class TransactionInitializeSessionUseCase {
     });
 
     const validResponseShape = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
-      // TODO: fill out with real data
       result: "CHARGE_SUCCESS",
       amount: createPaymentIntentResult.value.amount,
     });
