@@ -1,12 +1,22 @@
-import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
+import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/shared";
 import { err, ok } from "neverthrow";
+import Stripe from "stripe";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+
+type TransactionInitalizeSessionResponse =
+  SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"] & {
+    data: {
+      stripeClientSecret: string;
+    };
+  };
 
 export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
@@ -22,6 +32,70 @@ export class TransactionInitializeSessionUseCase {
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
+  }
+
+  private prepareStripeCreatePaymentIntentParams(
+    event: TransactionInitializeSessionEventFragment,
+  ): Stripe.PaymentIntentCreateParams {
+    const stripeMoneyResult = StripeMoney.createFromSaleorAmount({
+      amount: event.action.amount,
+      currency: event.action.currency,
+    });
+
+    if (stripeMoneyResult.isErr()) {
+      this.logger.error(
+        "Failed to convert amount / currency coming from Saleor to one used by Stripe - throwing",
+        {
+          error: stripeMoneyResult.error,
+        },
+      );
+
+      throw new TransactionInitializeSessionUseCase.UseCaseError("Failed to create Stripe money", {
+        cause: stripeMoneyResult.error,
+      });
+    }
+
+    return {
+      amount: stripeMoneyResult.value.amount,
+      currency: stripeMoneyResult.value.currency,
+    };
+  }
+
+  private prepareResponseToSaleor(
+    stripePaymentIntentResponse: Stripe.PaymentIntent,
+  ): TransactionInitalizeSessionResponse {
+    const saleorMoneyResult = SaleorMoney.createFromStripe({
+      amount: stripePaymentIntentResponse.amount,
+      currency: stripePaymentIntentResponse.currency,
+    });
+
+    if (saleorMoneyResult.isErr()) {
+      this.logger.error(
+        "Failed to convert amount / currency coming from Stripe to one used by Saleor - throwing",
+        {
+          error: saleorMoneyResult.error,
+        },
+      );
+
+      throw new TransactionInitializeSessionUseCase.UseCaseError("Failed to create Saleor money", {
+        cause: saleorMoneyResult.error,
+      });
+    }
+
+    if (!stripePaymentIntentResponse.client_secret) {
+      throw new TransactionInitializeSessionUseCase.UseCaseError(
+        "Stripe payment intent response does not contain client_secret. It means that the payment intent was not created properly.",
+      );
+    }
+
+    return {
+      result: "CHARGE_REQUESTED",
+      amount: saleorMoneyResult.value.amount,
+      pspReference: stripePaymentIntentResponse.id,
+      data: {
+        stripeClientSecret: stripePaymentIntentResponse.client_secret,
+      },
+    } as const;
   }
 
   async execute(args: {
@@ -66,11 +140,7 @@ export class TransactionInitializeSessionUseCase {
     });
 
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent({
-      // TODO: move to deletaged to service / resolver
-      params: {
-        amount: args.event.action.amount * 100,
-        currency: args.event.action.currency.toLowerCase(),
-      },
+      params: this.prepareStripeCreatePaymentIntentParams(args.event),
     });
 
     if (createPaymentIntentResult.isErr()) {
@@ -85,10 +155,7 @@ export class TransactionInitializeSessionUseCase {
       stripeResponse: createPaymentIntentResult.value,
     });
 
-    const validResponseShape = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
-      result: "CHARGE_SUCCESS",
-      amount: createPaymentIntentResult.value.amount,
-    });
+    const validResponseShape = this.prepareResponseToSaleor(createPaymentIntentResult.value);
 
     return ok(validResponseShape);
   }
