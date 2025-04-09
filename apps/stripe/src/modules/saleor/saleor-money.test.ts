@@ -33,14 +33,14 @@ describe("SaleorMoney", () => {
     });
   });
 
-  describe("getAmount", () => {
+  describe("amount", () => {
     it("handles 0-digit currencies", () => {
       const money = SaleorMoney.createFromStripe({
         amount: 2137,
         currency: "jpy",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(2137);
+      expect(money.amount).toBe(2137);
     });
 
     it("handles 2-digit currencies", () => {
@@ -49,7 +49,7 @@ describe("SaleorMoney", () => {
         currency: "usd",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(10.99);
+      expect(money.amount).toBe(10.99);
     });
 
     it("handles 3-digit currencies", () => {
@@ -58,7 +58,7 @@ describe("SaleorMoney", () => {
         currency: "iqd",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(10.123);
+      expect(money.amount).toBe(10.123);
     });
 
     it("handles 4-digit currencies", () => {
@@ -67,15 +67,15 @@ describe("SaleorMoney", () => {
         currency: "uyw",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(10.1234);
+      expect(money.amount).toBe(10.1234);
     });
   });
 
-  describe("getCurrency", () => {
+  describe("currency", () => {
     it("returns currency in uppercase", () => {
       const result = SaleorMoney.createFromStripe({ amount: 1000, currency: "usd" });
 
-      expect(result._unsafeUnwrap().getCurrency()).toBe("USD");
+      expect(result._unsafeUnwrap().currency).toBe("USD");
     });
   });
 });

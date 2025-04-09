@@ -1,4 +1,4 @@
-import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
+import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/shared";
 import { err, ok } from "neverthrow";
 import Stripe from "stripe";
 
@@ -11,9 +11,12 @@ import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
-type TransactionInitializeSessionResponseData = {
-  stripeClientSecret: string | null;
-};
+type TransactionInitalizeSessionResponse =
+  SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"] & {
+    data: {
+      stripeClientSecret: string;
+    };
+  };
 
 export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
@@ -53,14 +56,14 @@ export class TransactionInitializeSessionUseCase {
     }
 
     return {
-      amount: stripeMoneyResult.value.getAmount(),
-      currency: stripeMoneyResult.value.getCurrency(),
+      amount: stripeMoneyResult.value.amount,
+      currency: stripeMoneyResult.value.currency,
     };
   }
 
   private prepareResponseToSaleor(
     stripePaymentIntentResponse: Stripe.PaymentIntent,
-  ): ReturnType<typeof buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">> {
+  ): TransactionInitalizeSessionResponse {
     const saleorMoneyResult = SaleorMoney.createFromStripe({
       amount: stripePaymentIntentResponse.amount,
       currency: stripePaymentIntentResponse.currency,
@@ -79,15 +82,19 @@ export class TransactionInitializeSessionUseCase {
       });
     }
 
-    const stripePaymentIntentAdditionalInformation: TransactionInitializeSessionResponseData = {
-      stripeClientSecret: stripePaymentIntentResponse.client_secret,
-    };
+    if (!stripePaymentIntentResponse.client_secret) {
+      throw new TransactionInitializeSessionUseCase.UseCaseError(
+        "Stripe payment intent response does not contain client_secret. It means that the payment intent was not created properly.",
+      );
+    }
 
     return {
       result: "CHARGE_REQUESTED",
-      amount: saleorMoneyResult.value.getAmount(),
+      amount: saleorMoneyResult.value.amount,
       pspReference: stripePaymentIntentResponse.id,
-      data: stripePaymentIntentAdditionalInformation,
+      data: {
+        stripeClientSecret: stripePaymentIntentResponse.client_secret,
+      },
     } as const;
   }
 
@@ -148,9 +155,7 @@ export class TransactionInitializeSessionUseCase {
       stripeResponse: createPaymentIntentResult.value,
     });
 
-    const validResponseShape = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">(
-      this.prepareResponseToSaleor(createPaymentIntentResult.value),
-    );
+    const validResponseShape = this.prepareResponseToSaleor(createPaymentIntentResult.value);
 
     return ok(validResponseShape);
   }

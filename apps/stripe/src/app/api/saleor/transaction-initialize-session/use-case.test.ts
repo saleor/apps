@@ -17,6 +17,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok({
         amount: 100,
         currency: "usd",
+        client_secret: "secret-value",
       } as Stripe.PaymentIntent),
     );
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
@@ -165,5 +166,36 @@ describe("TransactionInitializeSessionUseCase", () => {
       [InitializeStripeTransactionUseCaseError: ValidationError: Currency code is not supported
       Failed to create Saleor money]
     `);
+  });
+
+  it("Throws error when Stripe PaymentIntentsAPI didn't returned required client_secret field", async () => {
+    const saleorEvent = getMockedTransactionInitializeSessionEvent();
+    const createPaymentIntent = vi.fn(async () =>
+      ok({
+        amount: 100,
+        currency: "usd",
+      } as Stripe.PaymentIntent),
+    );
+    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
+      create: () => ({
+        createPaymentIntent,
+      }),
+    };
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+    });
+
+    await expect(
+      uc.execute({
+        channelId: mockedSaleorChannelId,
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[InitializeStripeTransactionUseCaseError: Stripe payment intent response does not contain client_secret. It means that the payment intent was not created properly.]`,
+    );
   });
 });

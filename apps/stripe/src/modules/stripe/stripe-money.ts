@@ -5,8 +5,8 @@ import { err, ok } from "neverthrow";
 import { BaseError } from "@/lib/errors";
 
 export class StripeMoney {
-  private readonly amount: number;
-  private readonly currency: string;
+  public readonly amount: number;
+  public readonly currency: string;
 
   static ValdationError = BaseError.subclass("ValidationError");
 
@@ -24,30 +24,20 @@ export class StripeMoney {
       return err(new StripeMoney.ValdationError("Currency code must be 3 characters long"));
     }
 
-    if (currencyCodesData.code(args.currency) === undefined) {
+    const currencyCodeData = currencyCodesData.code(args.currency);
+
+    if (currencyCodeData === undefined) {
       return err(new StripeMoney.ValdationError("Currency code is not supported"));
     }
+    const convertedAmount = currencyJs(args.amount, {
+      precision: currencyCodeData.digits,
+    });
 
     return ok(
       new StripeMoney({
-        amount: args.amount,
-        currency: args.currency,
+        amount: convertedAmount.intValue,
+        currency: args.currency.toLowerCase(),
       }),
     );
-  }
-
-  getAmount() {
-    const currencyCodeData = currencyCodesData.code(this.currency);
-
-    const amount = currencyJs(this.amount, {
-      // currencyCodeData will be defined at this point
-      precision: currencyCodeData!.digits,
-    });
-
-    return amount.intValue;
-  }
-
-  getCurrency() {
-    return this.currency.toLowerCase();
   }
 }

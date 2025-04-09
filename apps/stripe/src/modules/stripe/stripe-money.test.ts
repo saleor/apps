@@ -10,8 +10,8 @@ describe("StripeMoney", () => {
         currency: "USD",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(1000);
-      expect(money.getCurrency()).toBe("usd");
+      expect(money.amount).toBe(1000);
+      expect(money.currency).toBe("usd");
     });
 
     it("handles different currency precisions correctly", () => {
@@ -20,8 +20,8 @@ describe("StripeMoney", () => {
         currency: "JPY",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(10);
-      expect(money.getCurrency()).toBe("jpy");
+      expect(money.amount).toBe(10);
+      expect(money.currency).toBe("jpy");
     });
 
     it("returns error for negative amount", () => {
@@ -59,7 +59,7 @@ describe("StripeMoney", () => {
         currency: "JPY",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(2137);
+      expect(money.amount).toBe(2137);
     });
 
     it("handles 2-digit currencies", () => {
@@ -68,7 +68,7 @@ describe("StripeMoney", () => {
         currency: "USD",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(1099);
+      expect(money.amount).toBe(1099);
     });
 
     it("handles 3-digit currencies", () => {
@@ -77,7 +77,7 @@ describe("StripeMoney", () => {
         currency: "IQD",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(10123);
+      expect(money.amount).toBe(10123);
     });
 
     it("handles 4-digit currencies", () => {
@@ -86,7 +86,7 @@ describe("StripeMoney", () => {
         currency: "UYW",
       })._unsafeUnwrap();
 
-      expect(money.getAmount()).toBe(101234);
+      expect(money.amount).toBe(101234);
     });
   });
 
@@ -97,7 +97,7 @@ describe("StripeMoney", () => {
         currency: "EUR",
       })._unsafeUnwrap();
 
-      expect(money.getCurrency()).toBe("eur");
+      expect(money.currency).toBe("eur");
     });
   });
 });
