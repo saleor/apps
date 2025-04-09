@@ -1,9 +1,10 @@
 import { parseArgs } from "node:util";
 
-import { WebhookManifest } from "@saleor/app-sdk/types";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as Sentry from "@sentry/nextjs";
 
+import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/payment-gateway-initialize-session/webhook-definition";
+import { transactionInitializeSessionWebhookDefinition } from "@/app/api/saleor/transaction-initialize-session/webhook-definition";
 import { env } from "@/lib/env";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { saleorApp } from "@/lib/saleor-app";
@@ -69,7 +70,6 @@ const runMigrations = async () => {
           }
 
           // All webhooks in this application are turned on or off. If any of them is enabled, we enable all of them.
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const enabled = webhooks.some((w) => w.isActive);
 
           const targetUrl = appDetails.appUrl;
@@ -80,10 +80,18 @@ const runMigrations = async () => {
             return [];
           }
 
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const baseUrl = new URL(targetUrl).origin;
 
-          const appWebhooks: WebhookManifest[] = []; // TODO: Replace with actual webhooks
+          const appWebhooks = [
+            {
+              ...paymentGatewayInitializeSessionWebhookDefinition.getWebhookManifest(baseUrl),
+              isActive: enabled,
+            },
+            {
+              ...transactionInitializeSessionWebhookDefinition.getWebhookManifest(baseUrl),
+              isActive: enabled,
+            },
+          ];
 
           return appWebhooks;
         },
