@@ -49,7 +49,7 @@ describe("Manifest handler", async () => {
             "version": Any<String>,
             "webhooks": [
               {
-                "isActive": false,
+                "isActive": true,
                 "name": "Stripe Payment Gateway Initialize",
                 "query": "subscription PaymentGatewayInitializeSession { event { ... on PaymentGatewayInitializeSession { ...PaymentGatewayInitializeSessionEvent } }}fragment Channel on Channel { id slug}fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession { version sourceObject { ... on Checkout { channel { ...Channel } } ... on Order { channel { ...Channel } } }}",
                 "syncEvents": [
