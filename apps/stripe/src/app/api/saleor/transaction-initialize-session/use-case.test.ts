@@ -13,7 +13,12 @@ import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 describe("TransactionInitializeSessionUseCase", () => {
   it("Calls Stripe PaymentIntentsAPI to create payment intent", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
-    const createPaymentIntent = vi.fn(async () => ok({} as Stripe.PaymentIntent));
+    const createPaymentIntent = vi.fn(async () =>
+      ok({
+        amount: 100,
+        currency: "usd",
+      } as Stripe.PaymentIntent),
+    );
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
@@ -95,5 +100,70 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(
       TransactionInitializeSessionUseCase.UseCaseError,
     );
+  });
+
+  it("Throws error when currency coming from Saleor is not supported", async () => {
+    const saleorEvent = {
+      ...getMockedTransactionInitializeSessionEvent(),
+      action: {
+        amount: 100,
+        currency: "ABC",
+      },
+    };
+    const createPaymentIntent = vi.fn(async () => ok({} as Stripe.PaymentIntent));
+    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
+      create: () => ({
+        createPaymentIntent,
+      }),
+    };
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+    });
+
+    await expect(
+      uc.execute({
+        channelId: mockedSaleorChannelId,
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`
+      [InitializeStripeTransactionUseCaseError: ValidationError: Currency code is not supported
+      Failed to create Stripe money]
+    `);
+  });
+
+  it("Throws error when currency coming from Stripe is not supported", async () => {
+    const saleorEvent = getMockedTransactionInitializeSessionEvent();
+    const createPaymentIntent = vi.fn(async () =>
+      ok({
+        amount: 100,
+        currency: "abc",
+      } as Stripe.PaymentIntent),
+    );
+    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
+      create: () => ({
+        createPaymentIntent,
+      }),
+    };
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+    });
+
+    await expect(
+      uc.execute({
+        channelId: mockedSaleorChannelId,
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`
+      [InitializeStripeTransactionUseCaseError: ValidationError: Currency code is not supported
+      Failed to create Saleor money]
+    `);
   });
 });
