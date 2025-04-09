@@ -89,7 +89,8 @@ export class TransactionInitializeSessionUseCase {
     }
 
     return {
-      result: "CHARGE_REQUESTED",
+      result: "CHARGE_REQUEST",
+      message: "",
       amount: saleorMoneyResult.value.amount,
       pspReference: stripePaymentIntentResponse.id,
       data: {
