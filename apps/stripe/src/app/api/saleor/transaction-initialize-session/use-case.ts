@@ -37,7 +37,7 @@ export class TransactionInitializeSessionUseCase {
 
     if (stripeMoneyResult.isErr()) {
       this.logger.error(
-        "Failed to convert amount / currency comming from Saleor to one used by Stripe - throwing",
+        "Failed to convert amount / currency coming from Saleor to one used by Stripe - throwing",
         {
           error: stripeMoneyResult.error,
         },
@@ -64,7 +64,7 @@ export class TransactionInitializeSessionUseCase {
 
     if (saleorMoneyResult.isErr()) {
       this.logger.error(
-        "Failed to convert amount / currency comming from Stripe to one used by Saleor - throwing",
+        "Failed to convert amount / currency coming from Stripe to one used by Saleor - throwing",
         {
           error: saleorMoneyResult.error,
         },
