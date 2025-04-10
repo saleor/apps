@@ -59,8 +59,9 @@ export class StripeWebhookUseCase {
     const authData = await saleorApp.apl.get(webhookParams.saleorApiUrl.url);
 
     if (!authData) {
-      captureException(new Error("AuthData from APL is empty, installation may be broken"), (s) =>
-        s.setLevel("warning"),
+      captureException(
+        new BaseError("AuthData from APL is empty, installation may be broken"),
+        (s) => s.setLevel("warning"),
       );
 
       return err(

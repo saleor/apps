@@ -3,6 +3,7 @@ import Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
 import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
+import { IStripeSignatureVerify } from "@/modules/stripe/types";
 
 type Errors = typeof StripeWebhookEventParser.InvalidSignatureError;
 type ErrorResult = InstanceType<Errors>;
@@ -29,7 +30,7 @@ export class StripeWebhookEventParser {
   }: {
     rawBody: string;
     webhookSecret: string;
-    signatureValidator: StripeWebhookSignatureValidator;
+    signatureValidator: IStripeSignatureVerify;
     signatureHeader: string;
   }): Promise<Result<Stripe.Event, ErrorResult>> {
     try {

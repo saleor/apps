@@ -2,7 +2,7 @@ import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
 
-const stripeSignatureHeader = "stripe-signature";
+export const stripeSignatureHeader = "stripe-signature";
 
 export const MissingStripeHeaderError = BaseError.subclass("MissingStripeHeaderError", {
   props: {
@@ -10,7 +10,6 @@ export const MissingStripeHeaderError = BaseError.subclass("MissingStripeHeaderE
   },
 });
 
-// todo test
 export function getAndParseStripeSignatureHeader(
   headers: Headers,
 ): Result<string, InstanceType<typeof MissingStripeHeaderError>> {

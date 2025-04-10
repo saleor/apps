@@ -1,9 +1,9 @@
 import { Result } from "neverthrow";
 import Stripe from "stripe";
 
+import { BaseError } from "@/lib/errors";
 import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
 
-import { StripeEventParsingError } from "./errors";
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 
 export interface IStripePaymentIntentsApiFactory {
@@ -32,3 +32,9 @@ export interface IStripeSignatureVerify {
     webhookSecret: string;
   }): Result<Stripe.Event, InstanceType<typeof StripeEventParsingError>>;
 }
+
+export const StripeEventParsingError = BaseError.subclass("StripeEventParsingError", {
+  props: {
+    internalName: "StripeEventParsingError" as const,
+  },
+});

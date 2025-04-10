@@ -1,10 +1,9 @@
 import { fromThrowable } from "neverthrow";
 import Stripe from "stripe";
 
-import { StripeEventParsingError } from "@/modules/stripe/errors";
 import { StripeClient } from "@/modules/stripe/stripe-client";
 
-import { IStripeSignatureVerify } from "./types";
+import { IStripeSignatureVerify, StripeEventParsingError } from "./types";
 
 export class StripeWebhookSignatureValidator implements IStripeSignatureVerify {
   private stripeSdkClient: Pick<Stripe, "webhooks">;

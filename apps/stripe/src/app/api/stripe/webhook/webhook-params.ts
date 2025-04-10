@@ -12,7 +12,7 @@ export class WebhookParams {
 
   static ParsingError = BaseError.subclass("ParsingError", {
     props: {
-      _type: "WebhookParamsParsingError",
+      _internalName: "WebhookParamsParsingError",
     },
   });
 
@@ -28,7 +28,7 @@ export class WebhookParams {
     const saleorApiUrlRawString = searchParams.get(WebhookParams.saleorApiUrlSearchParam);
 
     if (!saleorApiUrlRawString) {
-      throw new Error(`Missing ${WebhookParams.saleorApiUrlSearchParam} param`);
+      throw new BaseError(`Missing ${WebhookParams.saleorApiUrlSearchParam} param`);
     }
 
     const saleorApiUrlVo = SaleorApiUrl.create({
@@ -36,7 +36,7 @@ export class WebhookParams {
     });
 
     if (saleorApiUrlVo.isErr()) {
-      throw new Error(`${WebhookParams.saleorApiUrlSearchParam} URL param is invalid`);
+      throw new BaseError(`${WebhookParams.saleorApiUrlSearchParam} URL param is invalid`);
     }
 
     return saleorApiUrlVo.value;
@@ -49,7 +49,7 @@ export class WebhookParams {
       return channelId;
     }
 
-    throw new Error(`${WebhookParams.channelIdSearchParam} URL param is invalid`);
+    throw new BaseError(`${WebhookParams.channelIdSearchParam} URL param is invalid`);
   }
 
   static createFromWebhookUrl(
