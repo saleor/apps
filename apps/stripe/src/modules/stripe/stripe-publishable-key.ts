@@ -1,11 +1,15 @@
-import { err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
 
 export class StripePublishableKey {
   readonly keyValue: string;
 
-  static ValidationError = BaseError.subclass("ValidationError");
+  static ValidationError = BaseError.subclass("ValidationError", {
+    props: {
+      _internalName: "StripePublishableKey.ValidationError" as const,
+    },
+  });
 
   private static testPrefix = "pk_test_";
   private static livePrefix = "pk_live_";
@@ -14,14 +18,16 @@ export class StripePublishableKey {
     this.keyValue = keyValue;
   }
 
-  private static isInProperFormat(keyValue: string) {
+  private static isInProperFormat(keyValue: string): boolean {
     return (
       keyValue.startsWith(StripePublishableKey.testPrefix) ||
       keyValue.startsWith(StripePublishableKey.livePrefix)
     );
   }
 
-  static create(args: { publishableKey: string }) {
+  static create(args: {
+    publishableKey: string;
+  }): Result<StripePublishableKey, InstanceType<typeof StripePublishableKey.ValidationError>> {
     if (args.publishableKey.length === 0) {
       return err(new this.ValidationError("Publishable key cannot be empty"));
     }

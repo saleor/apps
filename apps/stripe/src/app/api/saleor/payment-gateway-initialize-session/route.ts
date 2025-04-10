@@ -5,6 +5,7 @@ import { captureException } from "@sentry/nextjs";
 import { InitializeStripeSessionUseCase } from "@/app/api/saleor/payment-gateway-initialize-session/use-case";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/payment-gateway-initialize-session/webhook-definition";
 import { appConfigPersistence } from "@/lib/app-config-persistence";
+import { UseCaseGetConfigError, UseCaseMissingConfigError } from "@/lib/errors";
 import { withLoggerContext } from "@/lib/logger-context";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
@@ -44,14 +45,14 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(a
     },
     (err) => {
       switch (err["constructor"]) {
-        case InitializeStripeSessionUseCase.MissingConfigError:
+        case UseCaseMissingConfigError:
+        case UseCaseGetConfigError:
           return Response.json(
             {
-              // todo what should be the response here?
-              message: "App is not configured",
+              message: err.httpMessage,
             },
             {
-              status: 400,
+              status: err.httpStatusCode,
             },
           );
 

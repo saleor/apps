@@ -7,7 +7,8 @@ import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/cons
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initalize-session-event";
 import { TransactionInitializeSessionUseCase } from "@/app/api/saleor/transaction-initialize-session/use-case";
-import { CreatePaymentIntentError } from "@/modules/stripe/errors";
+import { UseCaseMissingConfigError } from "@/lib/errors";
+import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
 describe("TransactionInitializeSessionUseCase", () => {
@@ -74,12 +75,12 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     expect(spy).toHaveBeenCalledOnce();
 
-    expect(err).toBeInstanceOf(TransactionInitializeSessionUseCase.MissingConfigError);
+    expect(err).toBeInstanceOf(UseCaseMissingConfigError);
   });
 
   it("Returns UseCaseError if Stripe Payment API throws error", async () => {
     const createPaymentIntent = vi.fn(async () =>
-      err(new CreatePaymentIntentError("Error from Stripe API")),
+      err(new StripePaymentIntentsApi.CreatePaymentIntentError("Error from Stripe API")),
     );
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
