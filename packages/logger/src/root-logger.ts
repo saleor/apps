@@ -45,7 +45,7 @@ export const rootLogger = new Logger<ILogObj>({
      */
     toLogObj(args, log) {
       const message = args.find((arg) => typeof arg === "string");
-      const attributesFromLog = (args.find(isObject) as Object) ?? {};
+      const attributesFromLog = (args.find(isObject) as object) ?? {};
       const parentAttributes = log ?? {};
 
       return {
