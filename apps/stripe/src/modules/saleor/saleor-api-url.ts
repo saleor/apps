@@ -5,13 +5,19 @@ import { BaseError } from "@/lib/errors";
 export class SaleorApiUrl {
   public readonly url;
 
-  static ValidationError = BaseError.subclass("ValidationError");
+  static ValidationError = BaseError.subclass("ValidationError", {
+    props: {
+      _internalName: "SaleorApiUrl.ValidationError" as const,
+    },
+  });
 
   private constructor(url: string) {
     this.url = url;
   }
 
-  static create(args: { url: string }) {
+  static create(args: {
+    url: string;
+  }): Result<SaleorApiUrl, InstanceType<typeof SaleorApiUrl.ValidationError>> {
     if (args.url.length === 0) {
       return err(new SaleorApiUrl.ValidationError("Saleor API URL cannot be empty"));
     }

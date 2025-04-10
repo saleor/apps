@@ -1,9 +1,9 @@
 import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/shared";
-import { err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
-import { BaseError } from "@/lib/errors";
+import { BaseError, UseCaseGetConfigError, UseCaseMissingConfigError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -11,20 +11,29 @@ import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
-type TransactionInitalizeSessionResponse =
-  SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"] & {
-    data: {
-      stripeClientSecret: string;
-    };
+type UseCaseResultShape = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"] & {
+  data: {
+    stripeClientSecret: string;
   };
+};
+
+type UseCaseErrorShape =
+  | InstanceType<typeof UseCaseMissingConfigError>
+  | InstanceType<typeof UseCaseGetConfigError>
+  | InstanceType<typeof TransactionInitializeSessionUseCase.UseCaseError>;
 
 export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
 
-  static UseCaseError = BaseError.subclass("InitializeStripeTransactionUseCaseError");
-  static MissingConfigError = this.UseCaseError.subclass("MissingConfigError");
+  static UseCaseError = BaseError.subclass("InitializeStripeTransactionUseCaseError", {
+    props: {
+      _internalName: "InitializeStripeTransactionUseCaseError" as const,
+      httpStatusCode: 500,
+      httpMessage: "Failed to initialize Stripe PaymentIntent",
+    },
+  });
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
@@ -63,7 +72,7 @@ export class TransactionInitializeSessionUseCase {
 
   private prepareResponseToSaleor(
     stripePaymentIntentResponse: Stripe.PaymentIntent,
-  ): TransactionInitalizeSessionResponse {
+  ): UseCaseResultShape {
     const saleorMoneyResult = SaleorMoney.createFromStripe({
       amount: stripePaymentIntentResponse.amount,
       currency: stripePaymentIntentResponse.currency,
@@ -103,7 +112,7 @@ export class TransactionInitializeSessionUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
-  }) {
+  }): Promise<Result<UseCaseResultShape, UseCaseErrorShape>> {
     const { channelId, appId, saleorApiUrl } = args;
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
@@ -114,18 +123,19 @@ export class TransactionInitializeSessionUseCase {
 
     if (stripeConfigForThisChannel.isErr()) {
       return err(
-        new TransactionInitializeSessionUseCase.UseCaseError(
-          "Failed to retrieve config for channel",
-          {
-            cause: stripeConfigForThisChannel.error,
-          },
-        ),
+        new UseCaseGetConfigError("Failed to retrieve config for channel", {
+          cause: stripeConfigForThisChannel.error,
+        }),
       );
     }
 
     if (!stripeConfigForThisChannel.value) {
       return err(
-        new TransactionInitializeSessionUseCase.MissingConfigError("Config for channel not found"),
+        new UseCaseMissingConfigError("Config for channel not found", {
+          props: {
+            channelId,
+          },
+        }),
       );
     }
 
@@ -144,6 +154,7 @@ export class TransactionInitializeSessionUseCase {
     });
 
     if (createPaymentIntentResult.isErr()) {
+      // TODO: shoudn't we return 200 with error in the body to Saleor?
       return err(
         new TransactionInitializeSessionUseCase.UseCaseError("Failed to create payment intent", {
           cause: createPaymentIntentResult.error,

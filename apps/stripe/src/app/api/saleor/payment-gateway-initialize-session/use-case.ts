@@ -8,20 +8,27 @@ import {
   PaymentGatewayInitializeResponseShape,
   PaymentGatewayInitializeResponseShapeType,
 } from "@/app/api/saleor/payment-gateway-initialize-session/response-shape";
-import { BaseError } from "@/lib/errors";
+import { BaseError, UseCaseGetConfigError, UseCaseMissingConfigError } from "@/lib/errors";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SESSION"];
 
-type UseCaseErrorShape = InstanceType<typeof InitializeStripeSessionUseCase.UseCaseError>;
+type UseCaseErrorShape =
+  | InstanceType<typeof UseCaseMissingConfigError>
+  | InstanceType<typeof UseCaseGetConfigError>;
 
+// TODO: shoundn't this be named `PaymentGatewayInitializeSessionUseCase`?
 export class InitializeStripeSessionUseCase {
   private appConfigRepo: AppConfigRepo;
 
-  static UseCaseError = BaseError.subclass("InitializeStripeSessionUseCaseError");
-  static MissingConfigError = this.UseCaseError.subclass("MissingConfigError");
-  static UnhandledError = this.UseCaseError.subclass("UnhandledError");
+  static UseCaseError = BaseError.subclass("InitializeStripeSessionUseCaseError", {
+    props: {
+      _internalName: "InitializeStripeSessionUseCaseError" as const,
+      httpStatusCode: 500,
+      httpMessage: "Failed to initialize Stripe session",
+    },
+  });
 
   constructor(deps: { appConfigRepo: AppConfigRepo }) {
     this.appConfigRepo = deps.appConfigRepo;
@@ -45,8 +52,10 @@ export class InitializeStripeSessionUseCase {
 
       if (!pk) {
         return err(
-          new InitializeStripeSessionUseCase.MissingConfigError("Config for channel not found", {
-            // todo: pass props (channel id), but type safe
+          new UseCaseMissingConfigError("Config for channel not found", {
+            props: {
+              channelId,
+            },
           }),
         );
       }
@@ -67,15 +76,12 @@ export class InitializeStripeSessionUseCase {
 
     if (stripeConfigForThisChannel.isErr()) {
       return err(
-        new InitializeStripeSessionUseCase.UseCaseError(
-          "Failed to retrieve Publishable Key from config",
-          {
-            cause: stripeConfigForThisChannel.error,
-          },
-        ),
+        new UseCaseGetConfigError("Failed to retrieve Publishable Key from config", {
+          cause: stripeConfigForThisChannel.error,
+        }),
       );
     }
 
-    throw new BaseError("Leaky logic, should not happen");
+    throw new InitializeStripeSessionUseCase.UseCaseError("Leaky logic, should not happen");
   }
 }
