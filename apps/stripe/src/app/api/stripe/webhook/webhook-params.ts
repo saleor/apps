@@ -78,7 +78,11 @@ export class WebhookParams {
     }
   }
 
-  static createFromParams() {}
+  static createFromParams() {
+    // todo
+  }
 
-  createWebhookUrl() {}
+  createWebhookUrl() {
+    // todo
+  }
 }

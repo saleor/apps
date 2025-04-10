@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
-import { mockStripeWebhookSecret } from "@/__tests__/mocks/constants";
+import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { StripeConfig } from "@/modules/app-config/stripe-config";

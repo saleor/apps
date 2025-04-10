@@ -2,7 +2,7 @@ import fs from "node:fs";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { mockStripeWebhookSecret } from "@/__tests__/mocks/constants";
+import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import {
   FileAppConfigRepo,
   FileAppConfigRepoSchema,

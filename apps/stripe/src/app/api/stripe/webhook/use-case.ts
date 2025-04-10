@@ -1,41 +1,40 @@
+import { APL } from "@saleor/app-sdk/APL";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
-import { StripeWebhookEventParser } from "@/app/api/stripe/webhook/stripe-webhook-event-parser";
 import {
   StripeWebhookErrorResponse,
   StripeWebhookSuccessResponse,
 } from "@/app/api/stripe/webhook/stripe-webhook-response";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
-import { saleorApp } from "@/lib/saleor-app";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { StripeClient } from "@/modules/stripe/stripe-client";
-import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
+import { IStripeEventVerify } from "@/modules/stripe/types";
 
 type SuccessResult = StripeWebhookSuccessResponse;
 type ErrorResult = StripeWebhookErrorResponse;
 
 type R = Promise<Result<SuccessResult, ErrorResult>>;
 
+type StripeVerificateEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
+
 /**
- * TODO: Should we have single webhook per app or per channel?
- * - Webhook per config
- * - Webhook per app
- * - Should channel ID be in URL param or payload? check security. Better URL and metadata is non critical
- *
- * TODO: Check where and how to handle deduplication
+ * TODO: We need to store events to DB to handle deduplication
  */
 export class StripeWebhookUseCase {
   private appConfigRepo: AppConfigRepo;
-  private webhookEventParser: StripeWebhookEventParser;
+  private webhookEventVerifyFactory: StripeVerificateEventFactory;
+  private apl: APL;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
-    webhookEventParser: StripeWebhookEventParser;
+    webhookEventVerifyFactory: StripeVerificateEventFactory;
+    apl: APL;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
-    this.webhookEventParser = deps.webhookEventParser;
+    this.webhookEventVerifyFactory = deps.webhookEventVerifyFactory;
+    this.apl = deps.apl;
   }
 
   async execute({
@@ -56,7 +55,7 @@ export class StripeWebhookUseCase {
      */
     webhookParams: WebhookParams;
   }): R {
-    const authData = await saleorApp.apl.get(webhookParams.saleorApiUrl.url);
+    const authData = await this.apl.get(webhookParams.saleorApiUrl.url);
 
     if (!authData) {
       captureException(
@@ -96,11 +95,11 @@ export class StripeWebhookUseCase {
     }
 
     const stripeClient = StripeClient.createFromRestrictedKey(config.value.restrictedKey);
+    const eventVerifier = this.webhookEventVerifyFactory(stripeClient);
 
-    const event = await this.webhookEventParser.verifyRequestAndGetEvent({
+    const event = eventVerifier.verifyEvent({
       rawBody,
-      webhookSecret: config.value.webhookSecret.secretValue,
-      signatureValidator: StripeWebhookSignatureValidator.createFromClient(stripeClient),
+      webhookSecret: config.value.webhookSecret,
       signatureHeader,
     });
 
@@ -113,5 +112,3 @@ export class StripeWebhookUseCase {
     return ok(new StripeWebhookSuccessResponse()); // todo
   }
 }
-
-// todo add webhook result

@@ -22,8 +22,8 @@ export interface IStripePaymentIntentsApi {
   >;
 }
 
-export interface IStripeSignatureVerify {
-  verifySignature({
+export interface IStripeEventVerify {
+  verifyEvent({
     signatureHeader,
     webhookSecret,
     rawBody,

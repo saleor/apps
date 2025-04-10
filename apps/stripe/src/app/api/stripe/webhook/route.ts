@@ -2,15 +2,18 @@ import { Result } from "neverthrow";
 import { NextRequest } from "next/server";
 
 import { getAndParseStripeSignatureHeader } from "@/app/api/stripe/webhook/stripe-signature-header";
-import { StripeWebhookEventParser } from "@/app/api/stripe/webhook/stripe-webhook-event-parser";
 import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { withLoggerContext } from "@/lib/logger-context";
+import { saleorApp } from "@/lib/saleor-app";
+import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
 
 const useCase = new StripeWebhookUseCase({
   appConfigRepo: appConfigPersistence,
-  webhookEventParser: new StripeWebhookEventParser(),
+  webhookEventVerifyFactory: (stripeClient) =>
+    StripeWebhookSignatureValidator.createFromClient(stripeClient),
+  apl: saleorApp.apl,
 });
 
 const handler = async (request: NextRequest): Promise<Response> => {

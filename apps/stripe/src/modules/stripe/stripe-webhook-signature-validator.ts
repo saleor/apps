@@ -2,10 +2,11 @@ import { fromThrowable } from "neverthrow";
 import Stripe from "stripe";
 
 import { StripeClient } from "@/modules/stripe/stripe-client";
+import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
-import { IStripeSignatureVerify, StripeEventParsingError } from "./types";
+import { IStripeEventVerify, StripeEventParsingError } from "./types";
 
-export class StripeWebhookSignatureValidator implements IStripeSignatureVerify {
+export class StripeWebhookSignatureValidator implements IStripeEventVerify {
   private stripeSdkClient: Pick<Stripe, "webhooks">;
 
   private constructor(stripeApiWrapper: Pick<Stripe, "webhooks">) {
@@ -16,14 +17,14 @@ export class StripeWebhookSignatureValidator implements IStripeSignatureVerify {
     return new StripeWebhookSignatureValidator(client.nativeClient);
   }
 
-  verifySignature({
+  verifyEvent({
     signatureHeader,
     webhookSecret,
     rawBody,
   }: {
     rawBody: string;
     signatureHeader: string;
-    webhookSecret: string;
+    webhookSecret: StripeWebhookSecret;
   }) {
     return fromThrowable(
       this.stripeSdkClient.webhooks.constructEvent,
@@ -31,6 +32,6 @@ export class StripeWebhookSignatureValidator implements IStripeSignatureVerify {
         new StripeEventParsingError("Failed to validate Stripe Event", {
           cause: err,
         }),
-    )(rawBody, signatureHeader, webhookSecret);
+    )(rawBody, signatureHeader, webhookSecret.secretValue);
   }
 }

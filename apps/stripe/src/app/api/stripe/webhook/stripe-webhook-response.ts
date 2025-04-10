@@ -1,10 +1,12 @@
 import { BaseError } from "@/lib/errors";
 
 export class StripeWebhookSuccessResponse {
+  readonly responseStatusCode = 200;
+
   getResponse() {
     // todo What should be the message
     return new Response("OK", {
-      status: 200,
+      status: this.responseStatusCode,
     });
   }
 }
@@ -16,6 +18,7 @@ export class StripeWebhookSuccessResponse {
  */
 export class StripeWebhookErrorResponse {
   readonly error: InstanceType<typeof BaseError>;
+  readonly responseStatusCode = 500;
 
   constructor(error: InstanceType<typeof BaseError>) {
     this.error = error;
@@ -24,8 +27,8 @@ export class StripeWebhookErrorResponse {
   getResponse() {
     // todo What should be the message
     return new Response("Error", {
-      // TODO What should be the error
-      status: 500,
+      // TODO What should be the error?
+      status: this.responseStatusCode,
     });
   }
 }
