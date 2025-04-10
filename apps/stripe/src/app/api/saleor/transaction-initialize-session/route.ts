@@ -3,7 +3,12 @@ import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
 import { appConfigPersistence } from "@/lib/app-config-persistence";
-import { BaseError, UnknownError } from "@/lib/errors";
+import {
+  BaseError,
+  UnknownError,
+  UseCaseGetConfigError,
+  UseCaseMissingConfigError,
+} from "@/lib/errors";
 import { withLoggerContext } from "@/lib/logger-context";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
@@ -49,14 +54,26 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(asyn
     },
     (err) => {
       switch (err["constructor"]) {
-        case TransactionInitializeSessionUseCase.MissingConfigError:
+        case UseCaseMissingConfigError:
+        case UseCaseGetConfigError:
           return Response.json(
             {
-              // todo what should be the response here?
-              message: "App is not configured",
+              message: err.httpMessage,
             },
             {
-              status: 400,
+              status: err.httpStatusCode,
+            },
+          );
+
+        case TransactionInitializeSessionUseCase.UseCaseError:
+          captureException(TransactionInitializeSessionUseCase.UseCaseError);
+
+          return Response.json(
+            {
+              message: err.httpMessage,
+            },
+            {
+              status: err.httpStatusCode,
             },
           );
 

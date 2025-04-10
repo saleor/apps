@@ -85,7 +85,6 @@ export const config = [
         { blankLine: "always", prev: "*", next: "return" },
         { blankLine: "always", prev: "directive", next: "*" },
         { blankLine: "any", prev: "directive", next: "directive" },
-        { blankLine: "always", prev: ["case", "default"], next: "*" },
       ],
       "multiline-comment-style": ["error", "starred-block"],
       "no-console": "error",
