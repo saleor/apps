@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { mockStripeWebhookSecret } from "@/__tests__/mocks/constants";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
@@ -19,7 +20,7 @@ describe("StripeConfig", () => {
       id: "test-config-1",
       publishableKey: mockedPublishableKey,
       restrictedKey: mockedRestrictedKey,
-      webhookSecret: "TEST_WEBHOOK_SECRET",
+      webhookSecret: mockStripeWebhookSecret,
     });
 
     expect(result.isOk()).toBe(true);
@@ -35,7 +36,7 @@ describe("StripeConfig", () => {
       id: "test-config-1",
       publishableKey: mockedPublishableKey,
       restrictedKey: mockedRestrictedKey,
-      webhookSecret: "TEST_WEBHOOK_SECRET",
+      webhookSecret: mockStripeWebhookSecret,
     });
 
     expect(result.isErr()).toBe(true);
@@ -49,7 +50,7 @@ describe("StripeConfig", () => {
       id: "",
       publishableKey: mockedPublishableKey,
       restrictedKey: mockedRestrictedKey,
-      webhookSecret: "TEST_WEBHOOK_SECRET",
+      webhookSecret: mockStripeWebhookSecret,
     });
 
     expect(result.isErr()).toBe(true);

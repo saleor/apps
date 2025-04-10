@@ -2,6 +2,7 @@ import fs from "node:fs";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { mockStripeWebhookSecret } from "@/__tests__/mocks/constants";
 import {
   FileAppConfigRepo,
   FileAppConfigRepoSchema,
@@ -35,7 +36,7 @@ describe("FileAppConfigRepo", () => {
     id: "test-config-id",
     restrictedKey: restrictedKey,
     publishableKey: publishableKey,
-    webhookSecret: "TEST_WEBHOOK_SECRET",
+    webhookSecret: mockStripeWebhookSecret,
   })._unsafeUnwrap();
 
   afterEach(() => {
@@ -130,7 +131,7 @@ describe("FileAppConfigRepo", () => {
             id: mockStripeConfig.id,
             restrictedKey: mockStripeConfig.restrictedKey.keyValue,
             publishableKey: mockStripeConfig.publishableKey.keyValue,
-            webhookSecret: mockStripeConfig.webhookSecret,
+            webhookSecret: mockStripeConfig.webhookSecret.secretValue,
           },
         },
       };

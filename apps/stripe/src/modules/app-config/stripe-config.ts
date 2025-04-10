@@ -3,13 +3,14 @@ import { err, ok, Result } from "neverthrow";
 import { BaseError } from "@/lib/errors";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
 export class StripeConfig {
   readonly name: string;
   readonly id: string;
   readonly restrictedKey: StripeRestrictedKey;
   readonly publishableKey: StripePublishableKey;
-  readonly webhookSecret: string; // todo make it VO
+  readonly webhookSecret: StripeWebhookSecret;
 
   static ValidationError = BaseError.subclass("ValidationError", {
     props: {
@@ -22,7 +23,7 @@ export class StripeConfig {
     id: string;
     restrictedKey: StripeRestrictedKey;
     publishableKey: StripePublishableKey;
-    webhookSecret: string;
+    webhookSecret: StripeWebhookSecret;
   }) {
     this.name = props.name;
     this.id = props.id;
@@ -34,7 +35,7 @@ export class StripeConfig {
   static create(args: {
     name: string;
     id: string;
-    webhookSecret: string;
+    webhookSecret: StripeWebhookSecret;
     restrictedKey: StripeRestrictedKey;
     publishableKey: StripePublishableKey;
   }): Result<StripeConfig, InstanceType<typeof StripeConfig.ValidationError>> {

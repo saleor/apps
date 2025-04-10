@@ -98,7 +98,7 @@ export class StripeWebhookUseCase {
 
     const event = await this.webhookEventParser.verifyRequestAndGetEvent({
       rawBody,
-      webhookSecret: config.value.webhookSecret,
+      webhookSecret: config.value.webhookSecret.secretValue,
       signatureValidator: StripeWebhookSignatureValidator.createFromClient(stripeClient),
       signatureHeader,
     });

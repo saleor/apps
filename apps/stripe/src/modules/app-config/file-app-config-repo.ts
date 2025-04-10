@@ -3,6 +3,7 @@ import fs from "node:fs";
 import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
+import { mockStripeWebhookSecret } from "@/__tests__/mocks/constants";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
@@ -46,7 +47,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
       id: config.id,
       restrictedKey: config.restrictedKey.keyValue,
       publishableKey: config.publishableKey.keyValue,
-      webhookSecret: config.webhookSecret,
+      webhookSecret: config.webhookSecret.secretValue,
     };
   }
 
@@ -228,7 +229,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
       id: channelConfig.id,
       restrictedKey: restrictedKey.value,
       publishableKey: publishableKey.value,
-      webhookSecret: channelConfig.webhookSecret,
+      webhookSecret: mockStripeWebhookSecret,
     });
 
     if (stripeConfigResult.isErr()) {
