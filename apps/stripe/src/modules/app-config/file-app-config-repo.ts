@@ -30,6 +30,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
         id: z.string(),
         restrictedKey: z.string(),
         publishableKey: z.string(),
+        webhookSecret: z.string(),
       }),
     ),
   });
@@ -45,6 +46,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
       id: config.id,
       restrictedKey: config.restrictedKey.keyValue,
       publishableKey: config.publishableKey.keyValue,
+      webhookSecret: config.webhookSecret,
     };
   }
 
@@ -226,6 +228,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
       id: channelConfig.id,
       restrictedKey: restrictedKey.value,
       publishableKey: publishableKey.value,
+      webhookSecret: channelConfig.webhookSecret,
     });
 
     if (stripeConfigResult.isErr()) {

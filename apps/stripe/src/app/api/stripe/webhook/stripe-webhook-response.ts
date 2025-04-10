@@ -1,3 +1,5 @@
+import { BaseError } from "@/lib/errors";
+
 export class StripeWebhookSuccessResponse {
   getResponse() {
     // todo What should be the message
@@ -13,6 +15,12 @@ export class StripeWebhookSuccessResponse {
  * TODO: Check how to handle retrying webhooks
  */
 export class StripeWebhookErrorResponse {
+  readonly error: InstanceType<typeof BaseError>;
+
+  constructor(error: InstanceType<typeof BaseError>) {
+    this.error = error;
+  }
+
   getResponse() {
     // todo What should be the message
     return new Response("Error", {

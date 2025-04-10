@@ -29,6 +29,7 @@ describe("InitializeStripeSessionUseCase", () => {
           publishableKey: "pk_live_1",
         })._unsafeUnwrap(),
         restrictedKey: StripeRestrictedKey.create({ restrictedKey: "rk_live_1" })._unsafeUnwrap(),
+        webhookSecret: "TEST_WEBHOOK_SECRET",
       }),
     );
 

@@ -35,6 +35,7 @@ describe("FileAppConfigRepo", () => {
     id: "test-config-id",
     restrictedKey: restrictedKey,
     publishableKey: publishableKey,
+    webhookSecret: "TEST_WEBHOOK_SECRET",
   })._unsafeUnwrap();
 
   afterEach(() => {
@@ -70,6 +71,7 @@ describe("FileAppConfigRepo", () => {
             id: "existing-id",
             restrictedKey: "rk_existing",
             publishableKey: "pk_existing",
+            webhookSecret: "TEST_SECRET",
           },
         },
       };
@@ -128,6 +130,7 @@ describe("FileAppConfigRepo", () => {
             id: mockStripeConfig.id,
             restrictedKey: mockStripeConfig.restrictedKey.keyValue,
             publishableKey: mockStripeConfig.publishableKey.keyValue,
+            webhookSecret: mockStripeConfig.webhookSecret,
           },
         },
       };

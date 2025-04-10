@@ -2,8 +2,7 @@ import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
-import { StripeConfig } from "@/modules/app-config/stripe-config";
-import { StripeClient } from "@/modules/stripe/stripe-client";
+import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
 
 type Errors = typeof StripeWebhookEventParser.InvalidSignatureError;
 type ErrorResult = InstanceType<Errors>;
@@ -24,26 +23,27 @@ export class StripeWebhookEventParser {
 
   async verifyRequestAndGetEvent({
     rawBody,
-    stripeConfig,
-    stripeClient,
+    webhookSecret,
+    signatureValidator,
     signatureHeader,
   }: {
     rawBody: string;
-    stripeConfig: StripeConfig;
-    stripeClient: StripeClient;
+    webhookSecret: string;
+    signatureValidator: StripeWebhookSignatureValidator;
     signatureHeader: string;
   }): Promise<Result<Stripe.Event, ErrorResult>> {
     try {
-      const webhookSecret = stripeConfig.webhookSecret;
-
-      // todo wrap stripe api with facade
-      const validEvent = stripeClient.nativeClient.webhooks.constructEvent(
-        rawBody,
-        signatureHeader,
+      const validEvent = signatureValidator.verifySignature({
+        rawBody: rawBody,
         webhookSecret,
-      );
+        signatureHeader,
+      });
 
-      return ok(validEvent);
+      if (validEvent.isErr()) {
+        throw validEvent.error;
+      }
+
+      return ok(validEvent.value);
     } catch (e) {
       return err(
         new StripeWebhookEventParser.InvalidSignatureError(

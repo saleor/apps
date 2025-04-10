@@ -19,6 +19,7 @@ describe("StripeConfig", () => {
       id: "test-config-1",
       publishableKey: mockedPublishableKey,
       restrictedKey: mockedRestrictedKey,
+      webhookSecret: "TEST_WEBHOOK_SECRET",
     });
 
     expect(result.isOk()).toBe(true);
@@ -34,6 +35,7 @@ describe("StripeConfig", () => {
       id: "test-config-1",
       publishableKey: mockedPublishableKey,
       restrictedKey: mockedRestrictedKey,
+      webhookSecret: "TEST_WEBHOOK_SECRET",
     });
 
     expect(result.isErr()).toBe(true);
@@ -47,6 +49,7 @@ describe("StripeConfig", () => {
       id: "",
       publishableKey: mockedPublishableKey,
       restrictedKey: mockedRestrictedKey,
+      webhookSecret: "TEST_WEBHOOK_SECRET",
     });
 
     expect(result.isErr()).toBe(true);

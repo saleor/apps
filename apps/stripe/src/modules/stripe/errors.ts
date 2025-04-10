@@ -5,3 +5,9 @@ export const CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentE
     internalName: "CreatePaymentIntentError" as const,
   },
 });
+
+export const StripeEventParsingError = BaseError.subclass("StripeEventParsingError", {
+  props: {
+    internalName: "StripeEventParsingError" as const,
+  },
+});

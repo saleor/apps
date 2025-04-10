@@ -8,6 +8,7 @@ import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
  */
 export class WebhookParams {
   static saleorApiUrlSearchParam = "saleorApiUrl";
+  static channelIdSearchParam = "channelId";
 
   static ParsingError = BaseError.subclass("ParsingError", {
     props: {
@@ -16,10 +17,11 @@ export class WebhookParams {
   });
 
   readonly saleorApiUrl: SaleorApiUrl;
-  // todo probably keep here channel id as well
+  readonly channelId: string;
 
-  private constructor(props: { saleorApiUrl: SaleorApiUrl }) {
+  private constructor(props: { saleorApiUrl: SaleorApiUrl; channelId: string }) {
     this.saleorApiUrl = props.saleorApiUrl;
+    this.channelId = props.channelId;
   }
 
   private static getSaleorApiUrlOrThrow(searchParams: URLSearchParams): SaleorApiUrl {
@@ -34,10 +36,20 @@ export class WebhookParams {
     });
 
     if (saleorApiUrlVo.isErr()) {
-      throw new Error(`${WebhookParams.saleorApiUrlSearchParam} is invalid`);
+      throw new Error(`${WebhookParams.saleorApiUrlSearchParam} URL param is invalid`);
     }
 
     return saleorApiUrlVo.value;
+  }
+
+  private static getChannelIdOrThrow(searchParams: URLSearchParams): string {
+    const channelId = searchParams.get(this.channelIdSearchParam);
+
+    if (channelId && channelId.length > 0) {
+      return channelId;
+    }
+
+    throw new Error(`${WebhookParams.channelIdSearchParam} URL param is invalid`);
   }
 
   static createFromWebhookUrl(
@@ -48,10 +60,12 @@ export class WebhookParams {
 
       // Inner error will be caught by catch and remapped
       const saleorApiUrlVo = this.getSaleorApiUrlOrThrow(searchParams);
+      const channelId = this.getChannelIdOrThrow(searchParams);
 
       return ok(
         new WebhookParams({
           saleorApiUrl: saleorApiUrlVo,
+          channelId: channelId,
         }),
       );
     } catch (error) {
