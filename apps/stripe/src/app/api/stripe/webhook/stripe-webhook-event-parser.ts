@@ -2,7 +2,7 @@ import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
-import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
+import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 import { IStripeSignatureVerify } from "@/modules/stripe/types";
 
 type Errors = typeof StripeWebhookEventParser.InvalidSignatureError;
@@ -22,21 +22,21 @@ export class StripeWebhookEventParser {
     },
   });
 
-  async verifyRequestAndGetEvent({
+  verifyRequestAndGetEvent({
     rawBody,
     webhookSecret,
     signatureValidator,
     signatureHeader,
   }: {
     rawBody: string;
-    webhookSecret: string;
+    webhookSecret: StripeWebhookSecret;
     signatureValidator: IStripeSignatureVerify;
     signatureHeader: string;
-  }): Promise<Result<Stripe.Event, ErrorResult>> {
+  }): Result<Stripe.Event, ErrorResult> {
     try {
       const validEvent = signatureValidator.verifySignature({
         rawBody: rawBody,
-        webhookSecret,
+        webhookSecret: webhookSecret,
         signatureHeader,
       });
 

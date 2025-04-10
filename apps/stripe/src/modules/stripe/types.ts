@@ -3,6 +3,7 @@ import Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
 import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
+import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 
@@ -29,7 +30,7 @@ export interface IStripeSignatureVerify {
   }: {
     rawBody: string;
     signatureHeader: string;
-    webhookSecret: string;
+    webhookSecret: StripeWebhookSecret;
   }): Result<Stripe.Event, InstanceType<typeof StripeEventParsingError>>;
 }
 
