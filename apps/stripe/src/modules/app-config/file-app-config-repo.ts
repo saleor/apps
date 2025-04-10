@@ -3,13 +3,13 @@ import fs from "node:fs";
 import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
-import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
 import { AppConfigRepo } from "./app-config-repo";
 
@@ -224,12 +224,18 @@ export class FileAppConfigRepo implements AppConfigRepo {
       return err(publishableKey.error);
     }
 
+    const whSecret = StripeWebhookSecret.create(channelConfig.webhookSecret);
+
+    if (whSecret.isErr()) {
+      return err(whSecret.error);
+    }
+
     const stripeConfigResult = StripeConfig.create({
       name: channelConfig.name,
       id: channelConfig.id,
       restrictedKey: restrictedKey.value,
       publishableKey: publishableKey.value,
-      webhookSecret: mockStripeWebhookSecret,
+      webhookSecret: whSecret.value,
     });
 
     if (stripeConfigResult.isErr()) {
