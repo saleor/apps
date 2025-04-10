@@ -9,6 +9,7 @@ export class StripeConfig {
   readonly id: string;
   readonly restrictedKey: StripeRestrictedKey;
   readonly publishableKey: StripePublishableKey;
+  readonly webhookSecret: string; // todo make it VO
 
   static ValidationError = BaseError.subclass("ValidationError");
 
@@ -17,16 +18,19 @@ export class StripeConfig {
     id: string;
     restrictedKey: StripeRestrictedKey;
     publishableKey: StripePublishableKey;
+    webhookSecret: string;
   }) {
     this.name = props.name;
     this.id = props.id;
     this.restrictedKey = props.restrictedKey;
     this.publishableKey = props.publishableKey;
+    this.webhookSecret = props.webhookSecret;
   }
 
   static create(args: {
     name: string;
     id: string;
+    webhookSecret: string;
     restrictedKey: StripeRestrictedKey;
     publishableKey: StripePublishableKey;
   }) {
@@ -44,6 +48,7 @@ export class StripeConfig {
         id: args.id,
         restrictedKey: args.restrictedKey,
         publishableKey: args.publishableKey,
+        webhookSecret: args.webhookSecret,
       }),
     );
   }

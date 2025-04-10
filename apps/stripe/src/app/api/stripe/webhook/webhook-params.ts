@@ -16,12 +16,13 @@ export class WebhookParams {
   });
 
   readonly saleorApiUrl: SaleorApiUrl;
+  // todo probably keep here channel id as well
 
   private constructor(props: { saleorApiUrl: SaleorApiUrl }) {
     this.saleorApiUrl = props.saleorApiUrl;
   }
 
-  private static getSaleorApiUrlOrThrow(searchParams: URLSearchParams) {
+  private static getSaleorApiUrlOrThrow(searchParams: URLSearchParams): SaleorApiUrl {
     const saleorApiUrlRawString = searchParams.get(WebhookParams.saleorApiUrlSearchParam);
 
     if (!saleorApiUrlRawString) {
@@ -62,4 +63,8 @@ export class WebhookParams {
       );
     }
   }
+
+  static createFromParams() {}
+
+  createWebhookUrl() {}
 }
