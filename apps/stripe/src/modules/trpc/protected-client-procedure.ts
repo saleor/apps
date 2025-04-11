@@ -50,10 +50,10 @@ const attachSharedServices = middleware(async ({ ctx, next }) => {
   return next({
     ctx: {
       apiClient: gqlClient,
+      configRepo: appConfigPersistence,
       appToken: ctx.token!,
       saleorApiUrl: ctx.saleorApiUrl!,
       appId: ctx.appId!,
-      configRepo: appConfigPersistence,
     },
   });
 });

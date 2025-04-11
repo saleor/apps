@@ -1,56 +1,80 @@
 import { err, ok } from "neverthrow";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedConfigurationId, mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import {
+  mockedAppToken,
+  mockedConfigurationId,
+  mockedSaleorAppId,
+} from "@/__tests__/mocks/constants";
+import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
+import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { BaseError } from "@/lib/errors";
-import { getStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/get-stripe-config-trpc-handler";
+import { GetStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/get-stripe-config-trpc-handler";
+import { router } from "@/modules/trpc/trpc-server";
 
-describe("getStripeConfigTrpcHandler", () => {
-  it("Returns serialized config if found in repo", async () => {
-    const result = await getStripeConfigTrpcHandler({
-      saleorApiUrl: mockedSaleorApiUrl,
+const getTestCaller = () => {
+  const instance = new GetStripeConfigTrpcHandler();
+
+  // @ts-expect-error - context doesnt match but its applied in test
+  instance.baseProcedure = TEST_Procedure;
+
+  const testRouter = router({
+    testProcedure: instance.getTrpcProcedure(),
+  });
+
+  return {
+    mockedAppConfigRepo,
+    caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
+      saleorApiUrl: mockedSaleorApiUrl.url,
+      token: mockedAppToken,
       configRepo: mockedAppConfigRepo,
-      configId: mockedConfigurationId,
-    });
+      apiClient: mockedGraphqlClient,
+    }),
+  };
+};
+
+describe("GetStripeConfigTrpcHandler", () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it("Returns serialized config if found in repo", async () => {
+    const { caller } = getTestCaller();
+
+    const result = await caller.testProcedure({ configId: mockedConfigurationId });
 
     expect(result).toMatchInlineSnapshot(`
-        StripeFrontendConfig {
-          "id": "config-id",
-          "name": "config-name",
-          "publishableKey": "pk_live_1",
-          "restrictedKey": "...ve_1",
-        }
-      `);
+      StripeFrontendConfig {
+        "id": "config-id",
+        "name": "config-name",
+        "publishableKey": "pk_live_1",
+        "restrictedKey": "...ve_1",
+      }
+    `);
   });
 
   it("Returns error 500 if repository is down", async () => {
+    const { caller, mockedAppConfigRepo } = getTestCaller();
+
     vi.spyOn(mockedAppConfigRepo, "getStripeConfig").mockImplementationOnce(async () => ok(null));
 
     return expect(() =>
-      getStripeConfigTrpcHandler({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        configRepo: mockedAppConfigRepo,
-        configId: mockedConfigurationId,
-      }),
+      caller.testProcedure({ configId: mockedConfigurationId }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`[TRPCError: Config not found]`);
   });
 
   it("Returns 404 if config not found", () => {
+    const { caller, mockedAppConfigRepo } = getTestCaller();
+
     vi.spyOn(mockedAppConfigRepo, "getStripeConfig").mockImplementationOnce(async () =>
       err(new BaseError("Test error")),
     );
 
     return expect(() =>
-      getStripeConfigTrpcHandler({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        configRepo: mockedAppConfigRepo,
-        configId: mockedConfigurationId,
-      }),
+      caller.testProcedure({ configId: mockedConfigurationId }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `[TRPCError: App failed to fetch config, please contact Saleor]`,
     );
