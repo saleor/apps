@@ -1,32 +1,29 @@
-import {
-  buildSyncWebhookResponsePayload,
-  SyncWebhookResponsesMap,
-} from "@saleor/app-sdk/handlers/shared";
 import { err, ok, Result } from "neverthrow";
 
-import {
-  PaymentGatewayInitializeResponseShape,
-  PaymentGatewayInitializeResponseShapeType,
-} from "@/app/api/saleor/payment-gateway-initialize-session/response-shape";
-import { BaseError, UseCaseGetConfigError, UseCaseMissingConfigError } from "@/lib/errors";
+import { BaseError } from "@/lib/errors";
+import { GetConfigError, MissingConfigError } from "@/modules/app-config/app-config-errors";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import {
+  GetConfigErrorResponse,
+  MissingConfigErrorResponse,
+} from "@/modules/saleor/saleor-webhook-responses";
 
-type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SESSION"];
+import {
+  PaymentGatewayInitializeResponseDataShape,
+  PaymentGatewayInitializeResponseDataShapeType,
+} from "./response-data-shape";
+import {
+  PaymentGatewayInitializeSessionUseCaseResponses,
+  PaymentGatewayInitializeSessionUseCaseResponsesType,
+} from "./use-case-response";
 
-type UseCaseErrorShape =
-  | InstanceType<typeof UseCaseMissingConfigError>
-  | InstanceType<typeof UseCaseGetConfigError>;
-
-// TODO: shoundn't this be named `PaymentGatewayInitializeSessionUseCase`?
-export class InitializeStripeSessionUseCase {
+export class PaymentGatewayInitializeSessionUseCase {
   private appConfigRepo: AppConfigRepo;
 
-  static UseCaseError = BaseError.subclass("InitializeStripeSessionUseCaseError", {
+  static UseCaseError = BaseError.subclass("PaymentGatewayInitializeSessionUseCaseError", {
     props: {
       _internalName: "InitializeStripeSessionUseCaseError" as const,
-      httpStatusCode: 500,
-      httpMessage: "Failed to initialize Stripe session",
     },
   });
 
@@ -38,7 +35,12 @@ export class InitializeStripeSessionUseCase {
     channelId: string;
     appId: string;
     saleorApiUrl: SaleorApiUrl;
-  }): Promise<Result<UseCaseResultShape, UseCaseErrorShape>> {
+  }): Promise<
+    Result<
+      PaymentGatewayInitializeSessionUseCaseResponsesType,
+      MissingConfigErrorResponse | GetConfigErrorResponse
+    >
+  > {
     const { channelId, appId, saleorApiUrl } = params;
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
@@ -52,36 +54,39 @@ export class InitializeStripeSessionUseCase {
 
       if (!pk) {
         return err(
-          new UseCaseMissingConfigError("Config for channel not found", {
-            props: {
-              channelId,
-            },
+          new MissingConfigErrorResponse({
+            error: new MissingConfigError("Config for channel not found", {
+              props: {
+                channelId,
+              },
+            }),
           }),
         );
       }
 
-      const rawShape: PaymentGatewayInitializeResponseShapeType = {
+      const rawShape: PaymentGatewayInitializeResponseDataShapeType = {
         stripePublishableKey: pk.keyValue,
       };
 
-      const responseDataShape = PaymentGatewayInitializeResponseShape.parse(rawShape);
+      const responseData = PaymentGatewayInitializeResponseDataShape.parse(rawShape);
 
-      const validResponseShape =
-        buildSyncWebhookResponsePayload<"PAYMENT_GATEWAY_INITIALIZE_SESSION">({
-          data: responseDataShape,
-        });
-
-      return ok(validResponseShape);
-    }
-
-    if (stripeConfigForThisChannel.isErr()) {
-      return err(
-        new UseCaseGetConfigError("Failed to retrieve Publishable Key from config", {
-          cause: stripeConfigForThisChannel.error,
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Success({
+          responseData,
         }),
       );
     }
 
-    throw new InitializeStripeSessionUseCase.UseCaseError("Leaky logic, should not happen");
+    if (stripeConfigForThisChannel.isErr()) {
+      return err(
+        new GetConfigErrorResponse({
+          error: new GetConfigError("Failed to get configuration", {
+            cause: stripeConfigForThisChannel.error,
+          }),
+        }),
+      );
+    }
+
+    throw new PaymentGatewayInitializeSessionUseCase.UseCaseError("Leaky logic, should not happen");
   }
 }

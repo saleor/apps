@@ -1,32 +1,35 @@
-import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/shared";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
-import { BaseError, UseCaseGetConfigError, UseCaseMissingConfigError } from "@/lib/errors";
+import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { GetConfigError, MissingConfigError } from "@/modules/app-config/app-config-errors";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import {
+  GetConfigErrorResponse,
+  MissingConfigErrorResponse,
+} from "@/modules/saleor/saleor-webhook-responses";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
-type UseCaseResultShape = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"] & {
-  data: {
-    stripeClientSecret: string;
-  };
-};
-
-type UseCaseErrorShape =
-  | InstanceType<typeof UseCaseMissingConfigError>
-  | InstanceType<typeof UseCaseGetConfigError>
-  | InstanceType<typeof TransactionInitializeSessionUseCase.UseCaseError>;
+import {
+  TransactionInitalizeSessionResponseDataShape,
+  TransactionInitalizeSessionResponseDataShapeType,
+} from "./response-data-shape";
+import {
+  TransactionInitalizeSessionUseCaseResponses,
+  TransactionInitalizeSessionUseCaseResponsesType,
+} from "./use-case-response";
 
 export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
 
+  // TODO: change it to retrun failure response instead of throwing error
   static UseCaseError = BaseError.subclass("InitializeStripeTransactionUseCaseError", {
     props: {
       _internalName: "InitializeStripeTransactionUseCaseError" as const,
@@ -70,9 +73,11 @@ export class TransactionInitializeSessionUseCase {
     };
   }
 
-  private prepareResponseToSaleor(
-    stripePaymentIntentResponse: Stripe.PaymentIntent,
-  ): UseCaseResultShape {
+  private prepareSuccessResponseParamsToSaleor(stripePaymentIntentResponse: Stripe.PaymentIntent): {
+    pspReference: string;
+    amount: number;
+    responseData: TransactionInitalizeSessionResponseDataShapeType;
+  } {
     const saleorMoneyResult = SaleorMoney.createFromStripe({
       amount: stripePaymentIntentResponse.amount,
       currency: stripePaymentIntentResponse.currency,
@@ -91,20 +96,21 @@ export class TransactionInitializeSessionUseCase {
       });
     }
 
-    if (!stripePaymentIntentResponse.client_secret) {
+    const responseDataShape = TransactionInitalizeSessionResponseDataShape.safeParse({
+      stripeClientSecret: stripePaymentIntentResponse.client_secret,
+    });
+
+    if (!responseDataShape.success) {
       throw new TransactionInitializeSessionUseCase.UseCaseError(
         "Stripe payment intent response does not contain client_secret. It means that the payment intent was not created properly.",
       );
     }
 
     return {
-      result: "CHARGE_REQUEST",
       amount: saleorMoneyResult.value.amount,
       pspReference: stripePaymentIntentResponse.id,
-      data: {
-        stripeClientSecret: stripePaymentIntentResponse.client_secret,
-      },
-    } as const;
+      responseData: responseDataShape.data,
+    };
   }
 
   async execute(args: {
@@ -112,7 +118,12 @@ export class TransactionInitializeSessionUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
-  }): Promise<Result<UseCaseResultShape, UseCaseErrorShape>> {
+  }): Promise<
+    Result<
+      TransactionInitalizeSessionUseCaseResponsesType,
+      MissingConfigErrorResponse | GetConfigErrorResponse
+    >
+  > {
     const { channelId, appId, saleorApiUrl } = args;
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
@@ -123,18 +134,22 @@ export class TransactionInitializeSessionUseCase {
 
     if (stripeConfigForThisChannel.isErr()) {
       return err(
-        new UseCaseGetConfigError("Failed to retrieve config for channel", {
-          cause: stripeConfigForThisChannel.error,
+        new GetConfigErrorResponse({
+          error: new GetConfigError("Failed to get configuration", {
+            cause: stripeConfigForThisChannel.error,
+          }),
         }),
       );
     }
 
     if (!stripeConfigForThisChannel.value) {
       return err(
-        new UseCaseMissingConfigError("Config for channel not found", {
-          props: {
-            channelId,
-          },
+        new MissingConfigErrorResponse({
+          error: new MissingConfigError("Config for channel not found", {
+            props: {
+              channelId,
+            },
+          }),
         }),
       );
     }
@@ -154,10 +169,10 @@ export class TransactionInitializeSessionUseCase {
     });
 
     if (createPaymentIntentResult.isErr()) {
-      // TODO: shoudn't we return 200 with error in the body to Saleor?
-      return err(
-        new TransactionInitializeSessionUseCase.UseCaseError("Failed to create payment intent", {
-          cause: createPaymentIntentResult.error,
+      // TODO: handle error properly
+      return ok(
+        new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
+          message: "Error from Stripe API",
         }),
       );
     }
@@ -166,8 +181,16 @@ export class TransactionInitializeSessionUseCase {
       stripeResponse: createPaymentIntentResult.value,
     });
 
-    const validResponseShape = this.prepareResponseToSaleor(createPaymentIntentResult.value);
+    const { responseData, amount, pspReference } = this.prepareSuccessResponseParamsToSaleor(
+      createPaymentIntentResult.value,
+    );
 
-    return ok(validResponseShape);
+    return ok(
+      new TransactionInitalizeSessionUseCaseResponses.ChargeRequest({
+        responseData,
+        amount,
+        pspReference,
+      }),
+    );
   }
 }
