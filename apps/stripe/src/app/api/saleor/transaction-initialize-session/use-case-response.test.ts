@@ -32,13 +32,14 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("should return fetch API response with status code and message", async () => {
       const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
         message: "Error message for Saleor dashboard",
+        amount: 100,
       });
       const fetchReponse = successResponse.getResponse();
 
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "amount": 0,
+          "amount": 100,
           "message": "Error message for Saleor dashboard",
           "result": "CHARGE_FAILURE",
         }
