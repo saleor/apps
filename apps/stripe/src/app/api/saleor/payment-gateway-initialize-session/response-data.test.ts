@@ -1,24 +1,24 @@
 import { describe, expect, it } from "vitest";
 
-import { PaymentGatewayInitializeResponseShape } from "@/app/api/saleor/payment-gateway-initialize-session/response-shape";
+import { responseData } from "./response-data";
 
-describe("PaymentGatewayInitializeResponseShape", () => {
+describe("PaymentGatewayInitializeResponseDataShape", () => {
   it("Constructs with valid pk value", () => {
     expect(() =>
-      PaymentGatewayInitializeResponseShape.parse({
+      responseData.parse({
         stripePublishableKey: "pk_live_asd",
       }),
     ).not.throw();
   });
   it("Fails with error with invalid value", () => {
     expect(() =>
-      PaymentGatewayInitializeResponseShape.parse({
+      responseData.parse({
         stripePublishableKey: null,
       }),
     ).to.throw();
 
     expect(() =>
-      PaymentGatewayInitializeResponseShape.parse({
+      responseData.parse({
         stripePublishableKey: 1,
       }),
     ).to.throw();
