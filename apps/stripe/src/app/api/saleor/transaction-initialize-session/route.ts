@@ -6,7 +6,7 @@ import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { withLoggerContext } from "@/lib/logger-context";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
-  SaleorApiUrlCreateErrorResponse,
+  MalformedRequestResponse,
   UnhandledErrorResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
@@ -25,7 +25,7 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(asyn
 
     if (saleorApiUrlResult.isErr()) {
       captureException(saleorApiUrlResult.error);
-      const response = new SaleorApiUrlCreateErrorResponse();
+      const response = new MalformedRequestResponse();
 
       return response.getResponse();
     }

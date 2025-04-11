@@ -6,7 +6,7 @@ export class ErrorWebhookResponse {
   statusCode = 500;
 }
 
-export class GetConfigErrorResponse extends ErrorWebhookResponse {
+export class BrokenAppResponse extends ErrorWebhookResponse {
   message = "App is not working";
 
   getResponse() {
@@ -19,8 +19,8 @@ export class GetConfigErrorResponse extends ErrorWebhookResponse {
   }
 }
 
-export class MissingConfigErrorResponse extends ErrorWebhookResponse {
-  message = "App is not working";
+export class AppIsNotConfiguredResponse extends ErrorWebhookResponse {
+  message = "App is not configured";
 
   getResponse() {
     return Response.json(
@@ -49,7 +49,7 @@ export class UnhandledErrorResponse extends ErrorWebhookResponse {
   }
 }
 
-export class SaleorApiUrlCreateErrorResponse extends ErrorWebhookResponse {
+export class MalformedRequestResponse extends ErrorWebhookResponse {
   message = "Malformed request";
 
   getResponse() {
@@ -60,14 +60,4 @@ export class SaleorApiUrlCreateErrorResponse extends ErrorWebhookResponse {
       { status: this.statusCode },
     );
   }
-}
-
-export class ChargeRequestResponse extends SuccessWebhookResponse {
-  // TODO: figure out what actions should we allow here
-  actions = [];
-}
-
-export class ChargeFailureResponse extends SuccessWebhookResponse {
-  // TODO: figure out what actions should we allow here
-  actions = [];
 }

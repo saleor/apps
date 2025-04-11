@@ -2,12 +2,12 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 
-import { PaymentGatewayInitializeResponseDataShapeType } from "./response-data-shape";
+import { ResponseDataType } from "./response-data";
 
 class Success extends SuccessWebhookResponse {
-  responseData: PaymentGatewayInitializeResponseDataShapeType;
+  responseData: ResponseDataType;
 
-  constructor(args: { responseData: PaymentGatewayInitializeResponseDataShapeType }) {
+  constructor(args: { responseData: ResponseDataType }) {
     super();
     this.responseData = args.responseData;
   }

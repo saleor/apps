@@ -6,7 +6,7 @@ import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initalize-session-event";
-import { MissingConfigErrorResponse } from "@/modules/saleor/saleor-webhook-responses";
+import { AppIsNotConfiguredResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
@@ -21,6 +21,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         amount: 100,
         currency: "usd",
         client_secret: "secret-value",
+        id: "pi_test",
       } as Stripe.PaymentIntent),
     );
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
@@ -77,7 +78,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     expect(spy).toHaveBeenCalledOnce();
 
-    expect(err).toBeInstanceOf(MissingConfigErrorResponse);
+    expect(err).toBeInstanceOf(AppIsNotConfiguredResponse);
   });
 
   it("Returns ChargeFailure response if Stripe Payment API throws error", async () => {
@@ -178,6 +179,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok({
         amount: 100,
         currency: "usd",
+        id: "pi_test",
       } as Stripe.PaymentIntent),
     );
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
@@ -199,7 +201,61 @@ describe("TransactionInitializeSessionUseCase", () => {
         event: saleorEvent,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[InitializeStripeTransactionUseCaseError: Stripe payment intent response does not contain client_secret. It means that the payment intent was not created properly.]`,
+      `
+      [ZodError: [
+        {
+          "code": "invalid_type",
+          "expected": "string",
+          "received": "undefined",
+          "path": [
+            "stripeClientSecret"
+          ],
+          "message": "Client secret is required"
+        }
+      ]]
+    `,
+    );
+  });
+
+  it("Throws error when Stripe PaymentIntentsAPI didn't returned required payment id", async () => {
+    const saleorEvent = getMockedTransactionInitializeSessionEvent();
+    const createPaymentIntent = vi.fn(async () =>
+      ok({
+        amount: 100,
+        currency: "usd",
+        client_secret: "secret-value",
+      } as Stripe.PaymentIntent),
+    );
+    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
+      create: () => ({
+        createPaymentIntent,
+      }),
+    };
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+    });
+
+    await expect(
+      uc.execute({
+        channelId: mockedSaleorChannelId,
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `
+      [ZodError: [
+        {
+          "code": "invalid_type",
+          "expected": "string",
+          "received": "undefined",
+          "path": [],
+          "message": "Payment intent id is required"
+        }
+      ]]
+    `,
     );
   });
 });

@@ -5,14 +5,11 @@ import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
-  GetConfigErrorResponse,
-  MissingConfigErrorResponse,
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 
-import {
-  PaymentGatewayInitializeResponseDataShape,
-  PaymentGatewayInitializeResponseDataShapeType,
-} from "./response-data-shape";
+import { responseData } from "./response-data";
 import {
   PaymentGatewayInitializeSessionUseCaseResponses,
   PaymentGatewayInitializeSessionUseCaseResponsesType,
@@ -39,7 +36,7 @@ export class PaymentGatewayInitializeSessionUseCase {
   }): Promise<
     Result<
       PaymentGatewayInitializeSessionUseCaseResponsesType,
-      MissingConfigErrorResponse | GetConfigErrorResponse
+      AppIsNotConfiguredResponse | BrokenAppResponse
     >
   > {
     const { channelId, appId, saleorApiUrl } = params;
@@ -58,18 +55,14 @@ export class PaymentGatewayInitializeSessionUseCase {
           channelId,
         });
 
-        return err(new MissingConfigErrorResponse());
+        return err(new AppIsNotConfiguredResponse());
       }
-
-      const rawShape: PaymentGatewayInitializeResponseDataShapeType = {
-        stripePublishableKey: pk.keyValue,
-      };
-
-      const responseData = PaymentGatewayInitializeResponseDataShape.parse(rawShape);
 
       return ok(
         new PaymentGatewayInitializeSessionUseCaseResponses.Success({
-          responseData,
+          responseData: responseData.parse({
+            stripePublishableKey: pk.keyValue,
+          }),
         }),
       );
     }
@@ -79,7 +72,7 @@ export class PaymentGatewayInitializeSessionUseCase {
         error: stripeConfigForThisChannel.error,
       });
 
-      return err(new GetConfigErrorResponse());
+      return err(new BrokenAppResponse());
     }
 
     throw new PaymentGatewayInitializeSessionUseCase.UseCaseError("Leaky logic, should not happen");

@@ -6,7 +6,7 @@ import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { withLoggerContext } from "@/lib/logger-context";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
-  SaleorApiUrlCreateErrorResponse,
+  MalformedRequestResponse,
   UnhandledErrorResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 
@@ -22,7 +22,7 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(a
     const saleorApiUrlResult = SaleorApiUrl.create({ url: ctx.authData.saleorApiUrl });
 
     if (saleorApiUrlResult.isErr()) {
-      const response = new SaleorApiUrlCreateErrorResponse();
+      const response = new MalformedRequestResponse();
 
       captureException(saleorApiUrlResult.error);
 

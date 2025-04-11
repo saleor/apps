@@ -1,29 +1,27 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
-import {
-  ChargeFailureResponse,
-  ChargeRequestResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
+import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 
-import { TransactionInitalizeSessionResponseDataShapeType } from "./response-data-shape";
+import { ResponseDataType, StripePaymentIntentIdType } from "./response-data";
 
 // TODO: add support for other results e.g AUTHORIZE
 
-class ChargeRequest extends ChargeRequestResponse {
+class ChargeRequest extends SuccessWebhookResponse {
   result = "CHARGE_REQUEST" as const;
-  responseData: TransactionInitalizeSessionResponseDataShapeType;
-  amount: number;
-  pspReference: string;
+  responseData: ResponseDataType;
+  saleorMoney: SaleorMoney;
+  stripePaymentIntentId: StripePaymentIntentIdType;
 
   constructor(args: {
-    responseData: TransactionInitalizeSessionResponseDataShapeType;
-    amount: number;
-    pspReference: string;
+    responseData: ResponseDataType;
+    saleorMoney: SaleorMoney;
+    stripePaymentIntentId: StripePaymentIntentIdType;
   }) {
     super();
     this.responseData = args.responseData;
-    this.amount = args.amount;
-    this.pspReference = args.pspReference;
+    this.saleorMoney = args.saleorMoney;
+    this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 
   getResponse() {
@@ -31,29 +29,27 @@ class ChargeRequest extends ChargeRequestResponse {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
       data: this.responseData,
       result: this.result,
-      amount: this.amount,
-      pspReference: this.pspReference,
+      amount: this.saleorMoney.amount,
+      pspReference: this.stripePaymentIntentId,
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
 }
 
-class ChargeFailure extends ChargeFailureResponse {
+class ChargeFailure extends SuccessWebhookResponse {
   result = "CHARGE_FAILURE" as const;
-  amount: number;
   message: string;
 
-  constructor(args: { message: string; amount: number }) {
+  constructor(args: { message: string }) {
     super();
     this.message = args.message;
-    this.amount = args.amount;
   }
 
   getResponse() {
+    // @ts-expect-error - TODO: amount is required - fix in app-sdk (after confirming that it's not needed)
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
       result: this.result,
-      amount: this.amount,
       message: this.message,
     });
 

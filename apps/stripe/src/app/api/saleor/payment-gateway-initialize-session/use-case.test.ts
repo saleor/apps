@@ -5,7 +5,7 @@ import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { PaymentGatewayInitializeSessionUseCaseResponses } from "@/app/api/saleor/payment-gateway-initialize-session/use-case-response";
-import { MissingConfigErrorResponse } from "@/modules/saleor/saleor-webhook-responses";
+import { AppIsNotConfiguredResponse } from "@/modules/saleor/saleor-webhook-responses";
 
 import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 
@@ -46,7 +46,7 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
 
     const err = responsePayload._unsafeUnwrapErr();
 
-    expect(err).toBeInstanceOf(MissingConfigErrorResponse);
+    expect(err).toBeInstanceOf(AppIsNotConfiguredResponse);
     expect(spy).toHaveBeenCalledOnce();
   });
 });

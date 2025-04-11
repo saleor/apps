@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { stripePublishableKey } from "@/__tests__/mocks/stripe-publishable-key";
+import { responseData } from "@/app/api/saleor/payment-gateway-initialize-session/response-data";
 
 import { PaymentGatewayInitializeSessionUseCaseResponses } from "./use-case-response";
 
@@ -8,9 +9,9 @@ describe("PaymentGatewayInitializeSessionUseCaseResponses", () => {
   describe("Success", () => {
     it("should return fetch API response with status code and message", async () => {
       const successResponse = new PaymentGatewayInitializeSessionUseCaseResponses.Success({
-        responseData: {
+        responseData: responseData.parse({
           stripePublishableKey: stripePublishableKey.keyValue,
-        },
+        }),
       });
       const fetchReponse = successResponse.getResponse();
 
