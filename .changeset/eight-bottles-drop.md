@@ -2,4 +2,4 @@
 "saleor-app-products-feed": minor
 ---
 
-Adding "handlebars-helpers" plugin to products data feed
+Added support for [Handlebars Helpers](https://github.com/helpers/handlebars-helpers) which adds more flexibility to the template syntax.
