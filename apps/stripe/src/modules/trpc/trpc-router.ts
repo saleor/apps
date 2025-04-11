@@ -1,4 +1,4 @@
-import { appConfigRouter } from "@/modules/app-config/app-config-router";
+import { appConfigRouter } from "@/modules/app-config/trpc-handlers/app-config-router";
 
 import { router } from "./trpc-server";
 
