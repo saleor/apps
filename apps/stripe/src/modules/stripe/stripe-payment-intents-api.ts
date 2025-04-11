@@ -1,9 +1,8 @@
 import { Result, ResultAsync } from "neverthrow";
 import Stripe from "stripe";
 
-import { env } from "@/lib/env";
 import { BaseError } from "@/lib/errors";
-import pkg from "@/package.json";
+import { StripeClient } from "@/modules/stripe/stripe-client";
 
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 import { IStripePaymentIntentsApi } from "./types";
@@ -21,19 +20,10 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
     this.stripeApiWrapper = stripeApiWrapper;
   }
 
-  static createFromKey(args: { key: StripeRestrictedKey }): StripePaymentIntentsApi {
-    const stripeApiWrapper = new Stripe(args.key.keyValue, {
-      typescript: true,
-      httpClient: Stripe.createFetchHttpClient(fetch), // this allow us to mock the fetch
-      appInfo: {
-        name: "Saleor App Payment Stripe",
-        version: pkg.version,
-        url: "https://apps.saleor.io/apps/stripe",
-        partner_id: env.STRIPE_PARTNER_ID,
-      },
-    });
+  static createFromKey(args: { key: StripeRestrictedKey }) {
+    const stripeApiWrapper = StripeClient.createFromRestrictedKey(args.key);
 
-    return new StripePaymentIntentsApi(stripeApiWrapper);
+    return new StripePaymentIntentsApi(stripeApiWrapper.nativeClient);
   }
 
   async createPaymentIntent(args: {
