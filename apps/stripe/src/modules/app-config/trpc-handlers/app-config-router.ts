@@ -1,6 +1,5 @@
 import { GetStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/get-stripe-config-trpc-handler";
-import { newStripeConfigSchema } from "@/modules/app-config/trpc-handlers/save-new-stripe-config-trpc-handler";
-import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
+import { NewStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-stripe-config-trpc-handler";
 import { router } from "@/modules/trpc/trpc-server";
 
 /**
@@ -8,7 +7,5 @@ import { router } from "@/modules/trpc/trpc-server";
  */
 export const appConfigRouter = router({
   getStripeConfig: new GetStripeConfigTrpcHandler().getTrpcProcedure(),
-  saveNewStripeConfig: protectedClientProcedure
-    .input(newStripeConfigSchema)
-    .query(({ ctx, input }) => {}),
+  saveNewStripeConfig: new NewStripeConfigTrpcHandler().getTrpcProcedure(),
 });
