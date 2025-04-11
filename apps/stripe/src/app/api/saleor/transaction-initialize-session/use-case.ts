@@ -4,7 +4,6 @@ import Stripe from "stripe";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { GetConfigError, MissingConfigError } from "@/modules/app-config/app-config-errors";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
@@ -113,6 +112,18 @@ export class TransactionInitializeSessionUseCase {
     };
   }
 
+  private prepareFailureResponseParamsToSaleor(
+    action: TransactionInitializeSessionEventFragment["action"],
+  ): {
+    message: string;
+    amount: number;
+  } {
+    return {
+      message: "Error from Stripe API",
+      amount: action.amount,
+    };
+  }
+
   async execute(args: {
     channelId: string;
     appId: string;
@@ -133,25 +144,19 @@ export class TransactionInitializeSessionUseCase {
     });
 
     if (stripeConfigForThisChannel.isErr()) {
-      return err(
-        new GetConfigErrorResponse({
-          error: new GetConfigError("Failed to get configuration", {
-            cause: stripeConfigForThisChannel.error,
-          }),
-        }),
-      );
+      this.logger.error("Failed to get configuration", {
+        error: stripeConfigForThisChannel.error,
+      });
+
+      return err(new GetConfigErrorResponse());
     }
 
     if (!stripeConfigForThisChannel.value) {
-      return err(
-        new MissingConfigErrorResponse({
-          error: new MissingConfigError("Config for channel not found", {
-            props: {
-              channelId,
-            },
-          }),
-        }),
-      );
+      this.logger.warn("Config for channel not found", {
+        channelId,
+      });
+
+      return err(new MissingConfigErrorResponse());
     }
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
@@ -170,9 +175,12 @@ export class TransactionInitializeSessionUseCase {
 
     if (createPaymentIntentResult.isErr()) {
       // TODO: handle error properly
+      const { message, amount } = this.prepareFailureResponseParamsToSaleor(args.event.action);
+
       return ok(
         new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
-          message: "Error from Stripe API",
+          message,
+          amount,
         }),
       );
     }

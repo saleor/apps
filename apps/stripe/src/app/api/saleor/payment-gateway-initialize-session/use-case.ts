@@ -1,7 +1,7 @@
 import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
-import { GetConfigError, MissingConfigError } from "@/modules/app-config/app-config-errors";
+import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
@@ -20,6 +20,7 @@ import {
 
 export class PaymentGatewayInitializeSessionUseCase {
   private appConfigRepo: AppConfigRepo;
+  private logger = createLogger("PaymentGatewayInitializeSessionUseCase");
 
   static UseCaseError = BaseError.subclass("PaymentGatewayInitializeSessionUseCaseError", {
     props: {
@@ -53,15 +54,11 @@ export class PaymentGatewayInitializeSessionUseCase {
       const pk = stripeConfigForThisChannel.value?.publishableKey;
 
       if (!pk) {
-        return err(
-          new MissingConfigErrorResponse({
-            error: new MissingConfigError("Config for channel not found", {
-              props: {
-                channelId,
-              },
-            }),
-          }),
-        );
+        this.logger.warn("Config for channel not found", {
+          channelId,
+        });
+
+        return err(new MissingConfigErrorResponse());
       }
 
       const rawShape: PaymentGatewayInitializeResponseDataShapeType = {
@@ -78,13 +75,11 @@ export class PaymentGatewayInitializeSessionUseCase {
     }
 
     if (stripeConfigForThisChannel.isErr()) {
-      return err(
-        new GetConfigErrorResponse({
-          error: new GetConfigError("Failed to get configuration", {
-            cause: stripeConfigForThisChannel.error,
-          }),
-        }),
-      );
+      this.logger.error("Failed to get configuration", {
+        error: stripeConfigForThisChannel.error,
+      });
+
+      return err(new GetConfigErrorResponse());
     }
 
     throw new PaymentGatewayInitializeSessionUseCase.UseCaseError("Leaky logic, should not happen");

@@ -24,11 +24,8 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(asyn
     const saleorApiUrlResult = SaleorApiUrl.create({ url: ctx.authData.saleorApiUrl });
 
     if (saleorApiUrlResult.isErr()) {
-      const response = new SaleorApiUrlCreateErrorResponse({
-        error: saleorApiUrlResult.error,
-      });
-
-      captureException(response.error);
+      captureException(saleorApiUrlResult.error);
+      const response = new SaleorApiUrlCreateErrorResponse();
 
       return response.getResponse();
     }
@@ -49,11 +46,8 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(asyn
       },
     );
   } catch (error) {
-    const response = new UnhandledErrorResponse({
-      error: error,
-    });
-
-    captureException(response.error);
+    captureException(error);
+    const response = new UnhandledErrorResponse();
 
     return response.getResponse();
   }

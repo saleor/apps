@@ -2,14 +2,14 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 
 import {
   ChargeFailureResponse,
-  ChargeSuccessResponse,
+  ChargeRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 
 import { TransactionInitalizeSessionResponseDataShapeType } from "./response-data-shape";
 
 // TODO: add support for other results e.g AUTHORIZE
 
-class ChargeRequest extends ChargeSuccessResponse {
+class ChargeRequest extends ChargeRequestResponse {
   result = "CHARGE_REQUEST" as const;
   responseData: TransactionInitalizeSessionResponseDataShapeType;
   amount: number;
@@ -41,12 +41,13 @@ class ChargeRequest extends ChargeSuccessResponse {
 
 class ChargeFailure extends ChargeFailureResponse {
   result = "CHARGE_FAILURE" as const;
-  amount = 0;
+  amount: number;
   message: string;
 
-  constructor(args: { message: string }) {
+  constructor(args: { message: string; amount: number }) {
     super();
     this.message = args.message;
+    this.amount = args.amount;
   }
 
   getResponse() {

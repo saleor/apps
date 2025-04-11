@@ -19,19 +19,12 @@ const useCase = new PaymentGatewayInitializeSessionUseCase({
 
 const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(async (req, ctx) => {
   try {
-    /*
-     * todo create config repo
-     * todo: should we pass auth data to execute? likely yes
-     */
-
     const saleorApiUrlResult = SaleorApiUrl.create({ url: ctx.authData.saleorApiUrl });
 
     if (saleorApiUrlResult.isErr()) {
-      const response = new SaleorApiUrlCreateErrorResponse({
-        error: saleorApiUrlResult.error,
-      });
+      const response = new SaleorApiUrlCreateErrorResponse();
 
-      captureException(response.error);
+      captureException(saleorApiUrlResult.error);
 
       return response.getResponse();
     }
@@ -51,11 +44,8 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(a
       },
     );
   } catch (error) {
-    const response = new UnhandledErrorResponse({
-      error: error,
-    });
-
-    captureException(response.error);
+    captureException(error);
+    const response = new UnhandledErrorResponse();
 
     return response.getResponse();
   }
