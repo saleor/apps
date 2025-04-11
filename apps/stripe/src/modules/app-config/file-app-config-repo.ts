@@ -1,26 +1,26 @@
 import fs from "node:fs";
 
-import { err, ok, Result } from "neverthrow";
+import { ok, Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
-import { createLogger } from "@/lib/logger";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
-import { AppConfigRepo } from "./app-config-repo";
+import { AppConfigRepo, GetStripeConfigAccessPattern } from "./app-config-repo";
 
 export type FileAppConfigRepoSchema = z.infer<typeof FileAppConfigRepo.FileConfigSchema>;
 
 /**
  * Save / read app configuration from a JSON file (`.stripe-app-config.json`).
  * If file with configuration doesn't exist it will create a new one with empty config that you need to fill in.
+ *
+ * It will be removed. Lack of error handling is intentional
  */
 export class FileAppConfigRepo implements AppConfigRepo {
-  private logger = createLogger("FileAppConfigRepo");
   private filePath = ".stripe-app-config.json";
 
   static FileConfigSchema = z.object({
@@ -36,7 +36,6 @@ export class FileAppConfigRepo implements AppConfigRepo {
     ),
   });
 
-  static FileReadError = BaseError.subclass("FileReadError");
   static FileWriteError = BaseError.subclass("FileWriteError");
   static JsonParseError = BaseError.subclass("JsonParseError");
   static SchemaParseError = BaseError.subclass("SchemaParseError");
@@ -51,83 +50,43 @@ export class FileAppConfigRepo implements AppConfigRepo {
     };
   }
 
-  private readFileSafe = Result.fromThrowable(
-    fs.readFileSync,
-    (error) => new FileAppConfigRepo.FileReadError("Error reading file", { cause: error }),
-  );
+  private readExistingAppConfigFromFileAsJson() {
+    try {
+      const fileContentResult = fs.readFileSync(this.filePath, "utf-8");
 
-  private jsonParseSafe = Result.fromThrowable(
-    JSON.parse,
-    (error) =>
-      new FileAppConfigRepo.JsonParseError("Error parsing JSON with config", {
-        cause: error,
-      }),
-  );
+      const jsonParseResult = JSON.parse(fileContentResult as string);
 
-  private writeJsonFileSafe = Result.fromThrowable(
-    fs.writeFileSync,
-    (error) => new FileAppConfigRepo.FileWriteError("Error writing file", { cause: error }),
-  );
+      const existingConfig = FileAppConfigRepo.FileConfigSchema.parse(jsonParseResult);
 
-  private readExistingAppConfigFromFile() {
-    const fileContentResult = this.readFileSafe(this.filePath, "utf-8");
-
-    if (fileContentResult.isErr()) {
-      return err(fileContentResult.error);
+      return existingConfig;
+    } catch (e) {
+      throw new BaseError("Failed reading file from disk, check config", {
+        cause: e,
+      });
     }
-
-    const jsonParseResult = this.jsonParseSafe(fileContentResult.value as string);
-
-    if (jsonParseResult.isErr()) {
-      return err(jsonParseResult.error);
-    }
-
-    const exisitingConfig = FileAppConfigRepo.FileConfigSchema.safeParse(jsonParseResult.value);
-
-    if (!exisitingConfig.success) {
-      return err(
-        new FileAppConfigRepo.SchemaParseError("Error parsing schema", {
-          cause: exisitingConfig.error,
-        }),
-      );
-    }
-
-    return ok(exisitingConfig.data);
   }
 
-  private persistExistingAppConfig(args: {
+  private saveNewConfigToFile(args: {
     channelId: string;
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
   }) {
-    const existingConfigResult = this.readExistingAppConfigFromFile();
-
-    if (existingConfigResult.isErr()) {
-      return err(existingConfigResult.error);
-    }
+    const existingConfigResult = this.readExistingAppConfigFromFileAsJson();
 
     const newConfig: z.infer<typeof FileAppConfigRepo.FileConfigSchema> = {
       appRootConfig: {
-        ...existingConfigResult.value.appRootConfig,
+        ...existingConfigResult.appRootConfig,
         [args.channelId]: this.serializeStripeConfigToJson(args.config),
       },
     };
 
-    const writeResult = this.writeJsonFileSafe(
-      this.filePath,
-      JSON.stringify(newConfig, null, 2),
-      "utf-8",
-    );
-
-    if (writeResult.isErr()) {
-      return err(writeResult.error);
-    }
+    fs.writeFileSync(this.filePath, JSON.stringify(newConfig, null, 2), "utf-8");
 
     return ok(undefined);
   }
 
-  private persistNewAppConfig(args: {
+  private createNewFileAndPersistNewAppConfig(args: {
     channelId: string;
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
@@ -139,15 +98,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
       },
     };
 
-    const writeResult = this.writeJsonFileSafe(
-      this.filePath,
-      JSON.stringify(newConfig, null, 2),
-      "utf-8",
-    );
-
-    if (writeResult.isErr()) {
-      return err(writeResult.error);
-    }
+    fs.writeFileSync(this.filePath, JSON.stringify(newConfig, null, 2), "utf-8");
 
     return ok(undefined);
   }
@@ -159,10 +110,10 @@ export class FileAppConfigRepo implements AppConfigRepo {
     appId: string;
   }): Promise<Result<void, InstanceType<typeof BaseError>>> {
     if (fs.existsSync(this.filePath)) {
-      return this.persistExistingAppConfig(args);
+      return this.saveNewConfigToFile(args);
     }
 
-    return this.persistNewAppConfig(args);
+    return this.createNewFileAndPersistNewAppConfig(args);
   }
 
   private createFileWithEmptyConfig() {
@@ -170,78 +121,94 @@ export class FileAppConfigRepo implements AppConfigRepo {
       appRootConfig: {},
     };
 
-    const writeResult = this.writeJsonFileSafe(
-      this.filePath,
-      JSON.stringify(emptyConfig, null, 2),
-      "utf-8",
-    );
-
-    if (writeResult.isErr()) {
-      return err(writeResult.error);
-    }
+    fs.writeFileSync(this.filePath, JSON.stringify(emptyConfig, null, 2), "utf-8");
 
     return ok(undefined);
   }
 
-  async getStripeConfig(args: {
-    channelId: string;
-    saleorApiUrl: SaleorApiUrl;
-    appId: string;
-  }): Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>> {
-    const existingConfigResult = this.readExistingAppConfigFromFile();
+  async getStripeConfig(
+    access: GetStripeConfigAccessPattern,
+  ): Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>> {
+    try {
+      let existingConfigJson: FileAppConfigRepoSchema | null = null;
 
-    if (existingConfigResult.isErr()) {
-      // if file does not exist, create new one with empty config
-      if (existingConfigResult.error instanceof FileAppConfigRepo.FileReadError) {
+      try {
+        existingConfigJson = this.readExistingAppConfigFromFileAsJson();
+      } catch {
         this.createFileWithEmptyConfig();
-        this.logger.info("File does not exist, creating new one with empty config.");
 
         return ok(null);
       }
 
-      return err(existingConfigResult.error);
+      let resolvedConfig: FileAppConfigRepoSchema["appRootConfig"][string] | null;
+
+      if ("configId" in access) {
+        resolvedConfig =
+          Object.entries(existingConfigJson!.appRootConfig)
+            .map(([, config]) => config)
+            .find((config) => {
+              return config.id === access.configId;
+            }) ?? null;
+      } else if ("channelId" in access) {
+        resolvedConfig = existingConfigJson!.appRootConfig[access.channelId] ?? null;
+      } else {
+        throw new Error("invariant");
+      }
+
+      if (!resolvedConfig) {
+        return ok(null);
+      }
+
+      const restrictedKey = StripeRestrictedKey.create({
+        restrictedKey: resolvedConfig.restrictedKey,
+      })._unsafeUnwrap();
+
+      const publishableKey = StripePublishableKey.create({
+        publishableKey: resolvedConfig.publishableKey,
+      })._unsafeUnwrap();
+
+      const whSecret = StripeWebhookSecret.create(resolvedConfig.webhookSecret)._unsafeUnwrap();
+
+      const stripeConfig = StripeConfig.create({
+        name: resolvedConfig.name,
+        id: resolvedConfig.id,
+        restrictedKey: restrictedKey,
+        publishableKey: publishableKey,
+        webhookSecret: whSecret,
+      })._unsafeUnwrap();
+
+      return ok(stripeConfig);
+    } catch (e) {
+      throw new BaseError("Something is wrong with local file config", {
+        cause: e,
+      });
     }
+  }
 
-    const channelConfig = existingConfigResult.value.appRootConfig[args.channelId];
+  async updateStripeConfig(
+    access: {
+      configId: string;
+      saleorApiUrl: SaleorApiUrl;
+      appId: string;
+    },
+    stripeConfig: StripeConfig,
+  ) {
+    const config = this.readExistingAppConfigFromFileAsJson();
 
-    if (!channelConfig) {
-      return ok(null);
-    }
+    const newConfig = Object.entries(config.appRootConfig).reduce(
+      (accumulator, [channelId, oldConfig]) => {
+        accumulator.appRootConfig[channelId] =
+          oldConfig.id === access.configId
+            ? this.serializeStripeConfigToJson(stripeConfig)
+            : oldConfig;
 
-    const restrictedKey = StripeRestrictedKey.create({
-      restrictedKey: channelConfig.restrictedKey,
-    });
+        return accumulator;
+      },
+      { appRootConfig: {} } as FileAppConfigRepoSchema,
+    );
 
-    if (restrictedKey.isErr()) {
-      return err(restrictedKey.error);
-    }
+    fs.writeFileSync(this.filePath, JSON.stringify(newConfig, null, 2), "utf-8");
 
-    const publishableKey = StripePublishableKey.create({
-      publishableKey: channelConfig.publishableKey,
-    });
-
-    if (publishableKey.isErr()) {
-      return err(publishableKey.error);
-    }
-
-    const whSecret = StripeWebhookSecret.create(channelConfig.webhookSecret);
-
-    if (whSecret.isErr()) {
-      return err(whSecret.error);
-    }
-
-    const stripeConfigResult = StripeConfig.create({
-      name: channelConfig.name,
-      id: channelConfig.id,
-      restrictedKey: restrictedKey.value,
-      publishableKey: publishableKey.value,
-      webhookSecret: whSecret.value,
-    });
-
-    if (stripeConfigResult.isErr()) {
-      return err(stripeConfigResult.error);
-    }
-
-    return ok(stripeConfigResult.value);
+    return ok(null);
   }
 }

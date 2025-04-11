@@ -1,4 +1,5 @@
 import { err, ok, Result } from "neverthrow";
+import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -8,7 +9,7 @@ import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
  */
 export class WebhookParams {
   static saleorApiUrlSearchParam = "saleorApiUrl";
-  static channelIdSearchParam = "channelId";
+  static configurationIdIdSearchParam = "configurationId";
 
   static ParsingError = BaseError.subclass("ParsingError", {
     props: {
@@ -17,11 +18,11 @@ export class WebhookParams {
   });
 
   readonly saleorApiUrl: SaleorApiUrl;
-  readonly channelId: string;
+  readonly configurationId: string;
 
-  private constructor(props: { saleorApiUrl: SaleorApiUrl; channelId: string }) {
+  private constructor(props: { saleorApiUrl: SaleorApiUrl; configurationId: string }) {
     this.saleorApiUrl = props.saleorApiUrl;
-    this.channelId = props.channelId;
+    this.configurationId = props.configurationId;
   }
 
   private static getSaleorApiUrlOrThrow(searchParams: URLSearchParams): SaleorApiUrl {
@@ -42,14 +43,15 @@ export class WebhookParams {
     return saleorApiUrlVo.value;
   }
 
-  private static getChannelIdOrThrow(searchParams: URLSearchParams): string {
-    const channelId = searchParams.get(this.channelIdSearchParam);
+  private static getConfigurationIdOrThrow(searchParams: URLSearchParams): string {
+    const configurationId = searchParams.get(this.configurationIdIdSearchParam);
+    const parsedUUID = z.string().uuid().safeParse(configurationId);
 
-    if (channelId && channelId.length > 0) {
-      return channelId;
+    if (parsedUUID.success) {
+      return parsedUUID.data;
     }
 
-    throw new BaseError(`${WebhookParams.channelIdSearchParam} URL param is invalid`);
+    throw new BaseError(`${WebhookParams.configurationIdIdSearchParam} URL param is invalid`);
   }
 
   static createFromWebhookUrl(
@@ -60,12 +62,12 @@ export class WebhookParams {
 
       // Inner error will be caught by catch and remapped
       const saleorApiUrlVo = this.getSaleorApiUrlOrThrow(searchParams);
-      const channelId = this.getChannelIdOrThrow(searchParams);
+      const channelId = this.getConfigurationIdOrThrow(searchParams);
 
       return ok(
         new WebhookParams({
           saleorApiUrl: saleorApiUrlVo,
-          channelId: channelId,
+          configurationId: channelId,
         }),
       );
     } catch (error) {

@@ -2,6 +2,7 @@ import fs from "node:fs";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { mockedConfigurationId } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import {
   FileAppConfigRepo,
@@ -33,7 +34,7 @@ describe("FileAppConfigRepo", () => {
 
   const mockStripeConfig = StripeConfig.create({
     name: "Test Config",
-    id: "test-config-id",
+    id: mockedConfigurationId,
     restrictedKey: restrictedKey,
     publishableKey: publishableKey,
     webhookSecret: mockStripeWebhookSecret,
@@ -102,24 +103,6 @@ describe("FileAppConfigRepo", () => {
         "utf-8",
       );
     });
-
-    it("should handle write errors", async () => {
-      vi.mocked(fs.existsSync).mockReturnValue(false);
-      vi.mocked(fs.writeFileSync).mockImplementation(() => {
-        throw new Error("Write error");
-      });
-
-      const configRepo = new FileAppConfigRepo();
-      const result = await configRepo.saveStripeConfig({
-        channelId: TEST_CHANNEL_ID,
-        config: mockStripeConfig,
-        saleorApiUrl: saleorApiUrl,
-        appId: TEST_APP_ID,
-      });
-
-      expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigRepo.FileWriteError);
-    });
   });
 
   describe("getStripeConfig", () => {
@@ -140,7 +123,7 @@ describe("FileAppConfigRepo", () => {
 
       const configRepo = new FileAppConfigRepo();
       const result = await configRepo.getStripeConfig({
-        channelId: TEST_CHANNEL_ID,
+        configId: mockedConfigurationId,
         saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
@@ -165,41 +148,13 @@ describe("FileAppConfigRepo", () => {
 
       const configRepo = new FileAppConfigRepo();
       const result = await configRepo.getStripeConfig({
-        channelId: TEST_CHANNEL_ID,
+        configId: mockedConfigurationId,
         saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });
 
       expect(result.isOk()).toBe(true);
       expect(result._unsafeUnwrap()).toBeNull();
-    });
-
-    it("should handle invalid JSON", async () => {
-      vi.mocked(fs.readFileSync).mockReturnValue("invalid json");
-
-      const configRepo = new FileAppConfigRepo();
-      const result = await configRepo.getStripeConfig({
-        channelId: TEST_CHANNEL_ID,
-        saleorApiUrl: saleorApiUrl,
-        appId: TEST_APP_ID,
-      });
-
-      expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigRepo.JsonParseError);
-    });
-
-    it("should handle parse errors", async () => {
-      vi.mocked(fs.readFileSync).mockReturnValue("{}");
-
-      const configRepo = new FileAppConfigRepo();
-      const result = await configRepo.getStripeConfig({
-        channelId: TEST_CHANNEL_ID,
-        saleorApiUrl: saleorApiUrl,
-        appId: TEST_APP_ID,
-      });
-
-      expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(FileAppConfigRepo.SchemaParseError);
     });
 
     it("should create file with empty config if file is not present", async () => {
@@ -209,7 +164,7 @@ describe("FileAppConfigRepo", () => {
 
       const configRepo = new FileAppConfigRepo();
       const result = await configRepo.getStripeConfig({
-        channelId: TEST_CHANNEL_ID,
+        configId: mockedConfigurationId,
         saleorApiUrl: saleorApiUrl,
         appId: TEST_APP_ID,
       });

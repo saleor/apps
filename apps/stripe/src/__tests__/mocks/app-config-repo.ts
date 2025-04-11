@@ -20,4 +20,5 @@ const mockedStripeConfig = StripeConfig.create({
 export const mockedAppConfigRepo: AppConfigRepo = {
   getStripeConfig: async () => ok(mockedStripeConfig),
   saveStripeConfig: vi.fn(),
+  updateStripeConfig: vi.fn(),
 };

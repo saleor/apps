@@ -71,7 +71,7 @@ export class StripeWebhookUseCase {
     }
 
     const config = await this.appConfigRepo.getStripeConfig({
-      channelId: webhookParams.channelId,
+      configId: webhookParams.configurationId,
       appId: authData.appId,
       saleorApiUrl: webhookParams.saleorApiUrl,
     });
