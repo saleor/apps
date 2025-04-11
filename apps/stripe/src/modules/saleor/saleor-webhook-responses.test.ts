@@ -36,7 +36,7 @@ describe("MissingConfigErrorResponse", () => {
     expect(fetchReponse.status).toBe(500);
     expect(await fetchReponse.json()).toMatchInlineSnapshot(`
       {
-        "channelId": "saleor-channel-id",
+        "channelId": "Q2hhbm5lbDox",
         "message": "App is not configured - configuration is missing for channel",
       }
     `);
