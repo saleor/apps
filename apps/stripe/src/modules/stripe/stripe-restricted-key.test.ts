@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { mockRestrictedKey } from "@/__tests__/mocks/restricted-key";
+
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 
 describe("StripeRestrictedKey", () => {
@@ -42,5 +44,9 @@ describe("StripeRestrictedKey", () => {
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripeRestrictedKey.ValidationError);
       expect(result._unsafeUnwrapErr().message).toBe("Restricted key cannot be empty");
     });
+  });
+
+  it("Can be retrieved with masked value", () => {
+    expect(mockRestrictedKey.getMaskedValue()).toMatchInlineSnapshot(`"...GGGG"`);
   });
 });

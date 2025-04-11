@@ -2,6 +2,7 @@ import { verifyJWT } from "@saleor/app-sdk/auth";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
 import { TRPCError } from "@trpc/server";
 
+import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";
 import { saleorApp } from "@/lib/saleor-app";
@@ -36,6 +37,23 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
       appToken: authData.token,
       saleorApiUrl: authData.saleorApiUrl,
       appId: authData.appId,
+    },
+  });
+});
+
+const attachSharedServices = middleware(async ({ ctx, next }) => {
+  const gqlClient = createInstrumentedGraphqlClient({
+    saleorApiUrl: ctx.saleorApiUrl!, // Will be defined, previous middleware will ensure it
+    token: ctx.token,
+  });
+
+  return next({
+    ctx: {
+      apiClient: gqlClient,
+      appToken: ctx.token!,
+      saleorApiUrl: ctx.saleorApiUrl!,
+      appId: ctx.appId!,
+      configRepo: appConfigPersistence,
     },
   });
 });
@@ -118,18 +136,4 @@ export const protectedClientProcedure = procedure
   .use(logErrors)
   .use(attachAppToken)
   .use(validateClientToken)
-  .use(async ({ ctx, next }) => {
-    const client = createInstrumentedGraphqlClient({
-      saleorApiUrl: ctx.saleorApiUrl,
-      token: ctx.appToken,
-    });
-
-    return next({
-      ctx: {
-        apiClient: client,
-        appToken: ctx.appToken,
-        saleorApiUrl: ctx.saleorApiUrl,
-        appId: ctx.appId,
-      },
-    });
-  });
+  .use(attachSharedServices);
