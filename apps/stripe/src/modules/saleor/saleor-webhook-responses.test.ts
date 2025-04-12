@@ -26,7 +26,7 @@ describe("MissingConfigErrorResponse", () => {
     const missingConfigResponse = new AppIsNotConfiguredResponse();
     const fetchReponse = missingConfigResponse.getResponse();
 
-    expect(fetchReponse.status).toBe(500);
+    expect(fetchReponse.status).toBe(400);
     expect(await fetchReponse.json()).toMatchInlineSnapshot(`
       {
         "message": "App is not configured",
