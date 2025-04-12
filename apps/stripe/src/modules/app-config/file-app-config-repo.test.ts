@@ -3,13 +3,13 @@ import fs from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { mockedConfigurationId } from "@/__tests__/mocks/constants";
+import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import {
   FileAppConfigRepo,
   FileAppConfigRepoSchema,
 } from "@/modules/app-config/file-app-config-repo";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
@@ -19,10 +19,6 @@ describe("FileAppConfigRepo", () => {
   const TEST_FILE_PATH = ".stripe-app-config.json";
   const TEST_CHANNEL_ID = "test-channel";
   const TEST_APP_ID = "test-app";
-
-  const saleorApiUrl = SaleorApiUrl.create({
-    url: "https://example.com/graphql/",
-  })._unsafeUnwrap();
 
   const restrictedKey = StripeRestrictedKey.create({
     restrictedKey: "rk_test_1234567890",
@@ -53,7 +49,7 @@ describe("FileAppConfigRepo", () => {
       const result = await configRepo.saveStripeConfig({
         channelId: TEST_CHANNEL_ID,
         config: mockStripeConfig,
-        saleorApiUrl: saleorApiUrl,
+        saleorApiUrl: mockedSaleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -87,7 +83,7 @@ describe("FileAppConfigRepo", () => {
       const result = await configRepo.saveStripeConfig({
         channelId: TEST_CHANNEL_ID,
         config: mockStripeConfig,
-        saleorApiUrl: saleorApiUrl,
+        saleorApiUrl: mockedSaleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -124,7 +120,7 @@ describe("FileAppConfigRepo", () => {
       const configRepo = new FileAppConfigRepo();
       const result = await configRepo.getStripeConfig({
         configId: mockedConfigurationId,
-        saleorApiUrl: saleorApiUrl,
+        saleorApiUrl: mockedSaleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -149,7 +145,7 @@ describe("FileAppConfigRepo", () => {
       const configRepo = new FileAppConfigRepo();
       const result = await configRepo.getStripeConfig({
         configId: mockedConfigurationId,
-        saleorApiUrl: saleorApiUrl,
+        saleorApiUrl: mockedSaleorApiUrl,
         appId: TEST_APP_ID,
       });
 
@@ -165,7 +161,7 @@ describe("FileAppConfigRepo", () => {
       const configRepo = new FileAppConfigRepo();
       const result = await configRepo.getStripeConfig({
         configId: mockedConfigurationId,
-        saleorApiUrl: saleorApiUrl,
+        saleorApiUrl: mockedSaleorApiUrl,
         appId: TEST_APP_ID,
       });
 

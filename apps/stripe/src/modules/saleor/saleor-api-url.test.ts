@@ -1,50 +1,107 @@
 import { describe, expect, it } from "vitest";
 
-import { SaleorApiUrl } from "./saleor-api-url";
+import { createSaleorApiUrl, SaleorApiUrlValidationError } from "./saleor-api-url";
 
 describe("SaleorApiUrl", () => {
   describe("create", () => {
-    it("should create valid URL", () => {
-      const result = SaleorApiUrl.create({
-        url: "https://demo.saleor.io/graphql/",
-      });
+    it("should create valid URL with https", () => {
+      const result = createSaleorApiUrl("https://demo.saleor.io/graphql/");
 
       expect(result.isOk()).toBe(true);
-      expect(result._unsafeUnwrap().url).toBe("https://demo.saleor.io/graphql/");
+      expect(result._unsafeUnwrap()).toBe("https://demo.saleor.io/graphql/");
+    });
+
+    it("should create valid URL with http", () => {
+      const result = createSaleorApiUrl("http://demo.saleor.io/graphql/");
+
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap()).toBe("http://demo.saleor.io/graphql/");
     });
 
     it("should reject empty URL", () => {
-      const result = SaleorApiUrl.create({ url: "" });
+      const result = createSaleorApiUrl("");
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrl.ValidationError);
-      expect(result._unsafeUnwrapErr().message).toBe("Saleor API URL cannot be empty");
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrlValidationError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        [SaleorApiUrlValidationError: ZodError: [
+          {
+            "validation": "url",
+            "code": "invalid_string",
+            "message": "Invalid url",
+            "path": []
+          },
+          {
+            "code": "invalid_string",
+            "validation": {
+              "endsWith": "/graphql/"
+            },
+            "message": "Invalid input: must end with \\"/graphql/\\"",
+            "path": []
+          },
+          {
+            "code": "custom",
+            "message": "Invalid input: must start with \\"http://\\" or \\"https://\\"",
+            "path": []
+          }
+        ]]
+      `);
     });
 
     it("should reject URL not starting with http/https", () => {
-      const result = SaleorApiUrl.create({ url: "ftp://demo.saleor.io/graphql/" });
+      const result = createSaleorApiUrl("ftp://demo.saleor.io/graphql/");
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrl.ValidationError);
-      expect(result._unsafeUnwrapErr().message).toBe("Saleor API URL must start with http / https");
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrlValidationError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        [SaleorApiUrlValidationError: ZodError: [
+          {
+            "code": "custom",
+            "message": "Invalid input: must start with \\"http://\\" or \\"https://\\"",
+            "path": []
+          }
+        ]]
+      `);
     });
 
     it("should reject URL not ending with /graphql/", () => {
-      const result = SaleorApiUrl.create({ url: "https://demo.saleor.io/" });
+      const result = createSaleorApiUrl("https://demo.saleor.io/");
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrl.ValidationError);
-      expect(result._unsafeUnwrapErr().message).toBe("Saleor API URL must end with /graphql/");
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrlValidationError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        [SaleorApiUrlValidationError: ZodError: [
+          {
+            "code": "invalid_string",
+            "validation": {
+              "endsWith": "/graphql/"
+            },
+            "message": "Invalid input: must end with \\"/graphql/\\"",
+            "path": []
+          }
+        ]]
+      `);
     });
 
     it("should reject incorrect URL", () => {
-      const result = SaleorApiUrl.create({ url: "demo.saleor.io/" });
+      const result = createSaleorApiUrl("demo.saleor.io/graphql/");
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrl.ValidationError);
-      expect(result._unsafeUnwrapErr().message).toMatchInlineSnapshot(`
-        "Invalid URL
-        Cannot parse Saleor API URL"
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorApiUrlValidationError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        [SaleorApiUrlValidationError: ZodError: [
+          {
+            "validation": "url",
+            "code": "invalid_string",
+            "message": "Invalid url",
+            "path": []
+          },
+          {
+            "code": "custom",
+            "message": "Invalid input: must start with \\"http://\\" or \\"https://\\"",
+            "path": []
+          }
+        ]]
       `);
     });
   });

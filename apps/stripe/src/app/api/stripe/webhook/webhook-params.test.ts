@@ -6,7 +6,7 @@ import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 
 describe("WebhookParams", () => {
   const validSearchParams = new URLSearchParams({
-    [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl.url,
+    [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
     [WebhookParams.configurationIdIdSearchParam]: mockedConfigurationId,
   });
 
@@ -83,7 +83,7 @@ describe("WebhookParams", () => {
 
     it("Throws if configurationId is missing", () => {
       const params = new URLSearchParams({
-        [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl.url,
+        [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
       });
 
       const result = WebhookParams.createFromWebhookUrl(
@@ -101,7 +101,7 @@ describe("WebhookParams", () => {
     it("Throws if configurationId is malformed", () => {
       const params = new URLSearchParams({
         [WebhookParams.configurationIdIdSearchParam]: "",
-        [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl.url,
+        [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
       });
 
       const result = WebhookParams.createFromWebhookUrl(
