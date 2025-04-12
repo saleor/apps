@@ -3,7 +3,7 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 
-import { ResponseDataType, StripePaymentIntentIdType } from "./response-data";
+import { ResponseDataType, StripePaymentIntentIdType } from "./response-params";
 
 // TODO: add support for other results e.g AUTHORIZE
 

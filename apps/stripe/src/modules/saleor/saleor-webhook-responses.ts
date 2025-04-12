@@ -21,6 +21,7 @@ export class BrokenAppResponse extends ErrorWebhookResponse {
 
 export class AppIsNotConfiguredResponse extends ErrorWebhookResponse {
   message = "App is not configured";
+  statusCode = 400;
 
   getResponse() {
     return Response.json(

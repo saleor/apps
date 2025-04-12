@@ -19,7 +19,7 @@ import {
   ResponseDataType,
   stripePaymentIntentId,
   StripePaymentIntentIdType,
-} from "./response-data";
+} from "./response-params";
 import {
   TransactionInitalizeSessionUseCaseResponses,
   TransactionInitalizeSessionUseCaseResponsesType,

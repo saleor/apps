@@ -2,7 +2,7 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 
-import { ResponseDataType } from "./response-data";
+import { ResponseDataType } from "./response-params";
 
 class Success extends SuccessWebhookResponse {
   responseData: ResponseDataType;

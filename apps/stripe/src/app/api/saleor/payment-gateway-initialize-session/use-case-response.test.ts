@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { stripePublishableKey } from "@/__tests__/mocks/stripe-publishable-key";
-import { responseData } from "@/app/api/saleor/payment-gateway-initialize-session/response-data";
+import { responseData } from "@/app/api/saleor/payment-gateway-initialize-session/response-params";
 
 import { PaymentGatewayInitializeSessionUseCaseResponses } from "./use-case-response";
 

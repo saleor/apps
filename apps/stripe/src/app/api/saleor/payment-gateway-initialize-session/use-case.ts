@@ -9,7 +9,7 @@ import {
   BrokenAppResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 
-import { responseData } from "./response-data";
+import { responseData } from "./response-params";
 import {
   PaymentGatewayInitializeSessionUseCaseResponses,
   PaymentGatewayInitializeSessionUseCaseResponsesType,

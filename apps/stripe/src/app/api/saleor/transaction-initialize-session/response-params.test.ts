@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { responseData, stripePaymentIntentId } from "./response-data";
+import { responseData, stripePaymentIntentId } from "./response-params";
 
 describe("responseData", () => {
   it("Constructs with valid stripeClientSecret value", () => {

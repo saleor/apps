@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 
-import { responseData, stripePaymentIntentId } from "./response-data";
+import { responseData, stripePaymentIntentId } from "./response-params";
 import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionInitalizeSessionUseCaseResponses", () => {

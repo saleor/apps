@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { responseData } from "./response-data";
+import { responseData } from "./response-params";
 
 describe("PaymentGatewayInitializeResponseDataShape", () => {
   it("Constructs with valid pk value", () => {
