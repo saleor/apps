@@ -8,7 +8,7 @@ import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initalize-session-event";
 import { TransactionInitializeSessionUseCase } from "@/app/api/saleor/transaction-initialize-session/use-case";
 import { UseCaseMissingConfigError } from "@/lib/errors";
-import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
+import { UnknownPaymentIntentError } from "@/modules/stripe/stripe-payment-intents-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
 describe("TransactionInitializeSessionUseCase", () => {
@@ -80,7 +80,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
   it("Returns UseCaseError if Stripe Payment API throws error", async () => {
     const createPaymentIntent = vi.fn(async () =>
-      err(new StripePaymentIntentsApi.CreatePaymentIntentError("Error from Stripe API")),
+      err(new UnknownPaymentIntentError("Error from Stripe API")),
     );
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({

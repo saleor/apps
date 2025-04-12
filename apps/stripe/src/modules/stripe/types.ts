@@ -2,9 +2,9 @@ import { Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
-import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
 import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
+import { StripePaymentIntentsApiErrorTypes } from "./stripe-payment-intents-api-error";
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 
 export interface IStripePaymentIntentsApiFactory {
@@ -14,12 +14,7 @@ export interface IStripePaymentIntentsApiFactory {
 export interface IStripePaymentIntentsApi {
   createPaymentIntent(args: {
     params: Stripe.PaymentIntentCreateParams;
-  }): Promise<
-    Result<
-      Stripe.PaymentIntent,
-      InstanceType<typeof StripePaymentIntentsApi.CreatePaymentIntentError>
-    >
-  >;
+  }): Promise<Result<Stripe.PaymentIntent, StripePaymentIntentsApiErrorTypes>>;
 }
 
 export interface IStripeEventVerify {
