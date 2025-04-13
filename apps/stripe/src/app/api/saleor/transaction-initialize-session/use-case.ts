@@ -1,8 +1,8 @@
+import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
-import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -11,33 +11,33 @@ import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
+import {
+  createStripeClientSecret,
+  StripeClientSecretType,
+  StripeClientSecretValidationError,
+} from "@/modules/stripe/stripe-client-secret";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
+import {
+  createStripePaymentIntentId,
+  StripePaymentIntentIdType,
+  StripePaymentIntentValidationError,
+} from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
-import {
-  responseData,
-  ResponseDataType,
-  stripePaymentIntentId,
-  StripePaymentIntentIdType,
-} from "./response-params";
 import {
   TransactionInitalizeSessionUseCaseResponses,
   TransactionInitalizeSessionUseCaseResponsesType,
 } from "./use-case-response";
 
+type UseCaseExecuteResult = Result<
+  TransactionInitalizeSessionUseCaseResponsesType,
+  AppIsNotConfiguredResponse | BrokenAppResponse
+>;
+
 export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
-
-  // TODO: change it to return failure response instead of throwing error
-  static UseCaseError = BaseError.subclass("InitializeStripeTransactionUseCaseError", {
-    props: {
-      _internalName: "InitializeStripeTransactionUseCaseError" as const,
-      httpStatusCode: 500,
-      httpMessage: "Failed to initialize Stripe PaymentIntent",
-    },
-  });
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
@@ -49,63 +49,34 @@ export class TransactionInitializeSessionUseCase {
 
   private prepareStripeCreatePaymentIntentParams(
     event: TransactionInitializeSessionEventFragment,
-  ): Stripe.PaymentIntentCreateParams {
-    const stripeMoneyResult = StripeMoney.createFromSaleorAmount({
+  ): Result<Stripe.PaymentIntentCreateParams, InstanceType<typeof StripeMoney.ValdationError>> {
+    return StripeMoney.createFromSaleorAmount({
       amount: event.action.amount,
       currency: event.action.currency,
+    }).map((result) => {
+      return {
+        amount: result.amount,
+        currency: result.currency,
+      };
     });
-
-    if (stripeMoneyResult.isErr()) {
-      this.logger.error(
-        "Failed to convert amount / currency coming from Saleor to one used by Stripe - throwing",
-        {
-          error: stripeMoneyResult.error,
-        },
-      );
-
-      throw new TransactionInitializeSessionUseCase.UseCaseError("Failed to create Stripe money", {
-        cause: stripeMoneyResult.error,
-      });
-    }
-
-    return {
-      amount: stripeMoneyResult.value.amount,
-      currency: stripeMoneyResult.value.currency,
-    };
   }
 
   private mapStripePaymentIntentToWebhookResponse(
     stripePaymentIntentResponse: Stripe.PaymentIntent,
-  ): {
-    stripePaymentIntentId: StripePaymentIntentIdType;
-    saleorMoney: SaleorMoney;
-    responseData: ResponseDataType;
-  } {
-    const saleorMoneyResult = SaleorMoney.createFromStripe({
-      amount: stripePaymentIntentResponse.amount,
-      currency: stripePaymentIntentResponse.currency,
-    });
-
-    if (saleorMoneyResult.isErr()) {
-      this.logger.error(
-        "Failed to convert amount / currency coming from Stripe to one used by Saleor - throwing",
-        {
-          error: saleorMoneyResult.error,
-        },
-      );
-
-      throw new TransactionInitializeSessionUseCase.UseCaseError("Failed to create Saleor money", {
-        cause: saleorMoneyResult.error,
-      });
-    }
-
-    return {
-      saleorMoney: saleorMoneyResult.value,
-      stripePaymentIntentId: stripePaymentIntentId.parse(stripePaymentIntentResponse.id),
-      responseData: responseData.parse({
-        stripeClientSecret: stripePaymentIntentResponse.client_secret,
+  ): Result<
+    [SaleorMoney, StripePaymentIntentIdType, StripeClientSecretType],
+    | InstanceType<typeof StripePaymentIntentValidationError>
+    | InstanceType<typeof SaleorMoney.ValdationError>
+    | InstanceType<typeof StripeClientSecretValidationError>
+  > {
+    return Result.combine([
+      SaleorMoney.createFromStripe({
+        amount: stripePaymentIntentResponse.amount,
+        currency: stripePaymentIntentResponse.currency,
       }),
-    };
+      createStripePaymentIntentId(stripePaymentIntentResponse.id),
+      createStripeClientSecret(stripePaymentIntentResponse.client_secret),
+    ]);
   }
 
   async execute(args: {
@@ -113,12 +84,7 @@ export class TransactionInitializeSessionUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
-  }): Promise<
-    Result<
-      TransactionInitalizeSessionUseCaseResponsesType,
-      AppIsNotConfiguredResponse | BrokenAppResponse
-    >
-  > {
+  }): Promise<UseCaseExecuteResult> {
     const { channelId, appId, saleorApiUrl } = args;
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
@@ -153,8 +119,16 @@ export class TransactionInitializeSessionUseCase {
       params: args.event.action,
     });
 
+    const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams(args.event);
+
+    if (stripePaymentIntentParamsResult.isErr()) {
+      captureException(stripePaymentIntentParamsResult.error);
+
+      return err(new BrokenAppResponse());
+    }
+
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent({
-      params: this.prepareStripeCreatePaymentIntentParams(args.event),
+      params: stripePaymentIntentParamsResult.value,
     });
 
     if (createPaymentIntentResult.isErr()) {
@@ -170,15 +144,23 @@ export class TransactionInitializeSessionUseCase {
       stripeResponse: createPaymentIntentResult.value,
     });
 
-    const { responseData, saleorMoney, stripePaymentIntentId } =
-      this.mapStripePaymentIntentToWebhookResponse(createPaymentIntentResult.value);
+    return this.mapStripePaymentIntentToWebhookResponse(
+      createPaymentIntentResult.value,
+    ).match<UseCaseExecuteResult>(
+      ([saleorMoney, stripePaymentIntentId, stripeClientSecret]) => {
+        return ok(
+          new TransactionInitalizeSessionUseCaseResponses.ChargeRequest({
+            stripeClientSecret,
+            saleorMoney,
+            stripePaymentIntentId,
+          }),
+        );
+      },
+      (error) => {
+        captureException(error);
 
-    return ok(
-      new TransactionInitalizeSessionUseCaseResponses.ChargeRequest({
-        responseData,
-        saleorMoney,
-        stripePaymentIntentId,
-      }),
+        return err(new BrokenAppResponse());
+      },
     );
   }
 }

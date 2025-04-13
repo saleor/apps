@@ -1,8 +1,8 @@
-export class SuccessWebhookResponse {
+export abstract class SuccessWebhookResponse {
   statusCode = 200;
 }
 
-export class ErrorWebhookResponse {
+export abstract class ErrorWebhookResponse {
   statusCode = 500;
 }
 

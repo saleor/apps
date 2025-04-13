@@ -6,7 +6,10 @@ import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initalize-session-event";
-import { AppIsNotConfiguredResponse } from "@/modules/saleor/saleor-webhook-responses";
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+} from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
@@ -108,7 +111,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     );
   });
 
-  it("Throws error when currency coming from Saleor is not supported", async () => {
+  it("Returns BrokenAppResponse when currency coming from Saleor is not supported", async () => {
     const saleorEvent = {
       ...getMockedTransactionInitializeSessionEvent(),
       action: {
@@ -135,13 +138,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`
-      [InitializeStripeTransactionUseCaseError: ValidationError: Currency code is not supported
-      Failed to create Stripe money]
-    `);
+    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
   });
 
-  it("Throws error when currency coming from Stripe is not supported", async () => {
+  it("Returns BrokenAppRespone when currency coming from Stripe is not supported", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
     const createPaymentIntent = vi.fn(async () =>
       ok({
@@ -167,13 +167,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`
-      [InitializeStripeTransactionUseCaseError: ValidationError: Currency code is not supported
-      Failed to create Saleor money]
-    `);
+    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
   });
 
-  it("Throws error when Stripe PaymentIntentsAPI didn't returned required client_secret field", async () => {
+  it("Returns BrokenAppResponse when Stripe PaymentIntentsAPI didn't returned required client_secret field", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
     const createPaymentIntent = vi.fn(async () =>
       ok({
@@ -200,24 +197,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `
-      [ZodError: [
-        {
-          "code": "invalid_type",
-          "expected": "string",
-          "received": "undefined",
-          "path": [
-            "stripeClientSecret"
-          ],
-          "message": "Client secret is required"
-        }
-      ]]
-    `,
-    );
+    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
   });
 
-  it("Throws error when Stripe PaymentIntentsAPI didn't returned required payment id", async () => {
+  it("Returns BrokenAppResponse when Stripe PaymentIntentsAPI didn't returned required payment id", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
     const createPaymentIntent = vi.fn(async () =>
       ok({
@@ -244,18 +227,6 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `
-      [ZodError: [
-        {
-          "code": "invalid_type",
-          "expected": "string",
-          "received": "undefined",
-          "path": [],
-          "message": "Payment intent id is required"
-        }
-      ]]
-    `,
-    );
+    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
   });
 });

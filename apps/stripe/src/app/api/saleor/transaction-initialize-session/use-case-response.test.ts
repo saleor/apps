@@ -1,22 +1,21 @@
 import { describe, expect, it } from "vitest";
 
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { createStripeClientSecret } from "@/modules/stripe/stripe-client-secret";
+import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
-import { responseData, stripePaymentIntentId } from "./response-params";
 import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionInitalizeSessionUseCaseResponses", () => {
   describe("ChargeRequest", () => {
     it("should return fetch API response with status code and message", async () => {
       const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeRequest({
-        responseData: responseData.parse({
-          stripeClientSecret: "stripe_client_secret",
-        }),
+        stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
         saleorMoney: SaleorMoney.createFromStripe({
           amount: 10000,
           currency: "usd",
         })._unsafeUnwrap(),
-        stripePaymentIntentId: stripePaymentIntentId.parse("pi_1"),
+        stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -25,7 +24,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         {
           "amount": 100,
           "data": {
-            "stripeClientSecret": "stripe_client_secret",
+            "stripeClientSecret": "stripe-client-secret",
           },
           "pspReference": "pi_1",
           "result": "CHARGE_REQUEST",

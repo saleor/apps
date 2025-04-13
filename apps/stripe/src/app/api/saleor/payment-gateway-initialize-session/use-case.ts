@@ -9,7 +9,6 @@ import {
   BrokenAppResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 
-import { responseData } from "./response-params";
 import {
   PaymentGatewayInitializeSessionUseCaseResponses,
   PaymentGatewayInitializeSessionUseCaseResponsesType,
@@ -58,13 +57,7 @@ export class PaymentGatewayInitializeSessionUseCase {
         return err(new AppIsNotConfiguredResponse());
       }
 
-      return ok(
-        new PaymentGatewayInitializeSessionUseCaseResponses.Success({
-          responseData: responseData.parse({
-            stripePublishableKey: pk.keyValue,
-          }),
-        }),
-      );
+      return ok(new PaymentGatewayInitializeSessionUseCaseResponses.Success({ pk }));
     }
 
     if (stripeConfigForThisChannel.isErr()) {

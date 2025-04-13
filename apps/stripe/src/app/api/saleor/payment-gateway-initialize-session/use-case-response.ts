@@ -1,20 +1,26 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
+import { z } from "zod";
 
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
-
-import { ResponseDataType } from "./response-params";
+import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 
 class Success extends SuccessWebhookResponse {
-  responseData: ResponseDataType;
+  pk: StripePublishableKey;
 
-  constructor(args: { responseData: ResponseDataType }) {
+  private static ResponseDataSchema = z.object({
+    stripePublishableKey: z.string(),
+  });
+
+  constructor(args: { pk: StripePublishableKey }) {
     super();
-    this.responseData = args.responseData;
+    this.pk = args.pk;
   }
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"PAYMENT_GATEWAY_INITIALIZE_SESSION">({
-      data: this.responseData,
+      data: Success.ResponseDataSchema.parse({
+        stripePublishableKey: this.pk.keyValue,
+      }),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
