@@ -12,7 +12,7 @@ export const StripePaymentIntentValidationError = BaseError.subclass(
   },
 );
 
-const stripePaymentIntentIdSchema = z
+const StripePaymentIntentIdSchema = z
   .string({
     required_error: "Payment intent id is required",
   })
@@ -20,8 +20,8 @@ const stripePaymentIntentIdSchema = z
   .brand("StripePaymentIntentId");
 
 export const createStripePaymentIntentId = (raw: string) =>
-  fromThrowable(stripePaymentIntentIdSchema.parse, (error) =>
+  fromThrowable(StripePaymentIntentIdSchema.parse, (error) =>
     StripePaymentIntentValidationError.normalize(error),
   )(raw);
 
-export type StripePaymentIntentIdType = z.infer<typeof stripePaymentIntentIdSchema>;
+export type StripePaymentIntentIdType = z.infer<typeof StripePaymentIntentIdSchema>;
