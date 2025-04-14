@@ -8,6 +8,7 @@ import {
 } from "@/app/api/stripe/webhook/stripe-webhook-response";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { IStripeEventVerify } from "@/modules/stripe/types";
@@ -26,6 +27,7 @@ export class StripeWebhookUseCase {
   private appConfigRepo: AppConfigRepo;
   private webhookEventVerifyFactory: StripeVerificateEventFactory;
   private apl: APL;
+  private logger = createLogger("StripeWebhookUseCase");
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
