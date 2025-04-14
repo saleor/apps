@@ -2,12 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   ParseError,
-  parseTransactionInitalizeSessionRequestData,
-  TransactionInitalizeRequestData,
+  parseTransactionInitalizeSessionEventData,
+  TransactionInitalizeEventData,
   UnsupportedPaymentMethodError,
-} from "@/app/api/saleor/transaction-initialize-session/request-data-parser";
+} from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 
-describe("parseTransactionInitalizeSessionRequestData", () => {
+describe("parseTransactionInitalizeSessionEventData", () => {
   it("should parse valid data coming from storefront", () => {
     const storefrontData = {
       paymentIntent: {
@@ -15,7 +15,7 @@ describe("parseTransactionInitalizeSessionRequestData", () => {
       },
     };
 
-    const result = parseTransactionInitalizeSessionRequestData(storefrontData);
+    const result = parseTransactionInitalizeSessionEventData(storefrontData);
 
     expect(result._unsafeUnwrap()).toStrictEqual({
       paymentIntent: {
@@ -31,7 +31,7 @@ describe("parseTransactionInitalizeSessionRequestData", () => {
       },
     };
 
-    const result = parseTransactionInitalizeSessionRequestData(storefrontData);
+    const result = parseTransactionInitalizeSessionEventData(storefrontData);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(UnsupportedPaymentMethodError);
   });
@@ -43,14 +43,14 @@ describe("parseTransactionInitalizeSessionRequestData", () => {
         additionalField: "invalidValue",
       },
     };
-    const result = parseTransactionInitalizeSessionRequestData(storefrontData);
+    const result = parseTransactionInitalizeSessionEventData(storefrontData);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(ParseError);
   });
 
   it("shouldn't be assignable without createFromTransactionInitalizeSessionData", () => {
     // @ts-expect-error - if this fails - it means the type is not branded
-    const testValue: TransactionInitalizeRequestData = {};
+    const testValue: TransactionInitalizeEventData = {};
 
     expect(testValue).toStrictEqual({});
   });

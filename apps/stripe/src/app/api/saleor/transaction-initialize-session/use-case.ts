@@ -2,7 +2,10 @@ import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
-import { parseTransactionInitalizeSessionRequestData } from "@/app/api/saleor/transaction-initialize-session/request-data-parser";
+import {
+  parseTransactionInitalizeSessionEventData,
+  TransactionInitalizeEventData,
+} from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
@@ -49,16 +52,18 @@ export class TransactionInitializeSessionUseCase {
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
   }
 
-  private prepareStripeCreatePaymentIntentParams(
-    event: TransactionInitializeSessionEventFragment,
-  ): Result<Stripe.PaymentIntentCreateParams, InstanceType<typeof StripeMoney.ValdationError>> {
+  private prepareStripeCreatePaymentIntentParams(args: {
+    eventAction: TransactionInitializeSessionEventFragment["action"];
+    eventData: TransactionInitalizeEventData;
+  }): Result<Stripe.PaymentIntentCreateParams, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
-      amount: event.action.amount,
-      currency: event.action.currency,
+      amount: args.eventAction.amount,
+      currency: args.eventAction.currency,
     }).map((result) => {
       return {
         amount: result.amount,
         currency: result.currency,
+        payment_method_types: [args.eventData.paymentIntent.paymentMethod],
       };
     });
   }
@@ -88,14 +93,13 @@ export class TransactionInitializeSessionUseCase {
     event: TransactionInitializeSessionEventFragment;
   }): Promise<UseCaseExecuteResult> {
     const { channelId, appId, saleorApiUrl, event } = args;
-    const stripeCreatePaymentIntentStorefrontParamsResult =
-      parseTransactionInitalizeSessionRequestData(event.data);
+    const eventDataResult = parseTransactionInitalizeSessionEventData(event.data);
 
-    if (stripeCreatePaymentIntentStorefrontParamsResult.isErr()) {
+    if (eventDataResult.isErr()) {
       return ok(
         new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
-          message: "Unsuported payment method received from storefront",
-          error: stripeCreatePaymentIntentStorefrontParamsResult.error,
+          message: "Storefront sent invalid data",
+          error: eventDataResult.error,
         }),
       );
     }
@@ -132,7 +136,10 @@ export class TransactionInitializeSessionUseCase {
       params: args.event.action,
     });
 
-    const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams(event);
+    const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams({
+      eventData: eventDataResult.value,
+      eventAction: event.action,
+    });
 
     if (stripePaymentIntentParamsResult.isErr()) {
       captureException(stripePaymentIntentParamsResult.error);

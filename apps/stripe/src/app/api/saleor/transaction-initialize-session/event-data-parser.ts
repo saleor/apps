@@ -9,7 +9,7 @@ const CardPaymentMethodSchema = z
   })
   .strict();
 
-const TransactionInitalizeRequestDataSchema = z
+const TransactionInitalizeEventDataSchema = z
   .object({
     paymentIntent: z.discriminatedUnion("paymentMethod", [CardPaymentMethodSchema]),
   })
@@ -17,18 +17,18 @@ const TransactionInitalizeRequestDataSchema = z
 
 export const ParseError = BaseError.subclass("ParseError", {
   props: {
-    _internalName: "TransactionInitalizeSesssionDataParseErrorError" as const,
+    _internalName: "TransactionInitalizeEventDataParseError" as const,
   },
 });
 
 export const UnsupportedPaymentMethodError = ParseError.subclass("UnsupportedPaymentMethodError", {
   props: {
-    _internalName: "TransactionInitalizeSesssionDataUnsupportedPaymentMethodError" as const,
+    _internalName: "TransactionInitalizeEventDataUnsupportedPaymentMethodError" as const,
   },
 });
 
-export const parseTransactionInitalizeSessionRequestData = (raw: unknown) => {
-  const parsingResult = TransactionInitalizeRequestDataSchema.safeParse(raw);
+export const parseTransactionInitalizeSessionEventData = (raw: unknown) => {
+  const parsingResult = TransactionInitalizeEventDataSchema.safeParse(raw);
 
   if (parsingResult.success) {
     return ok(parsingResult.data);
@@ -49,8 +49,8 @@ export const parseTransactionInitalizeSessionRequestData = (raw: unknown) => {
   return err(new ParseError("Invalid data", { cause: parsingResult.error }));
 };
 
-export type TransactionInitalizeRequestData = z.infer<typeof TransactionInitalizeRequestDataSchema>;
+export type TransactionInitalizeEventData = z.infer<typeof TransactionInitalizeEventDataSchema>;
 
-export type TransactionInitalizeRequestDataError =
+export type TransactionInitalizeEventDataError =
   | InstanceType<typeof ParseError>
   | InstanceType<typeof UnsupportedPaymentMethodError>;

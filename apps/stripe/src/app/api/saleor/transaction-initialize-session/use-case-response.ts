@@ -1,7 +1,7 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
-import { TransactionInitalizeRequestDataError } from "@/app/api/saleor/transaction-initialize-session/request-data-parser";
+import { TransactionInitalizeEventDataError } from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
@@ -58,7 +58,7 @@ class ChargeFailure extends SuccessWebhookResponse {
   readonly result = "CHARGE_FAILURE" as const;
   readonly message: string;
   readonly error:
-    | TransactionInitalizeRequestDataError
+    | TransactionInitalizeEventDataError
     | InstanceType<typeof StripePaymentIntentsApi.CreatePaymentIntentError>;
 
   private static ResponseDataSchema = z.object({
@@ -79,12 +79,12 @@ class ChargeFailure extends SuccessWebhookResponse {
     description: string;
   } {
     switch (this.error._internalName) {
-      case "TransactionInitalizeSesssionDataUnsupportedPaymentMethodError":
+      case "TransactionInitalizeEventDataUnsupportedPaymentMethodError":
         return {
           reason: "UnsupportedPaymentMethodError",
           description: "Provided payment method is not supported",
         };
-      case "TransactionInitalizeSesssionDataParseErrorError":
+      case "TransactionInitalizeEventDataParseError":
         return {
           reason: "BadRequestError",
           description:
@@ -106,7 +106,7 @@ class ChargeFailure extends SuccessWebhookResponse {
   constructor(args: {
     message: string;
     error:
-      | TransactionInitalizeRequestDataError
+      | TransactionInitalizeEventDataError
       | InstanceType<typeof StripePaymentIntentsApi.CreatePaymentIntentError>;
   }) {
     super();

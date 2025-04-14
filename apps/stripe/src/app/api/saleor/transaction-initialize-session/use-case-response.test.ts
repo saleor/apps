@@ -5,7 +5,7 @@ import { createStripeClientSecret } from "@/modules/stripe/stripe-client-secret"
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
 
-import { ParseError, UnsupportedPaymentMethodError } from "./request-data-parser";
+import { ParseError, UnsupportedPaymentMethodError } from "./event-data-parser";
 import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionInitalizeSessionUseCaseResponses", () => {
