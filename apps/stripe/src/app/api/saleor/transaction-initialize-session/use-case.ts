@@ -2,6 +2,7 @@ import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
+import { createFromTransactionInitalizeSessionData } from "@/app/api/saleor/transaction-initialize-session/request-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
@@ -86,7 +87,18 @@ export class TransactionInitializeSessionUseCase {
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
   }): Promise<UseCaseExecuteResult> {
-    const { channelId, appId, saleorApiUrl } = args;
+    const { channelId, appId, saleorApiUrl, event } = args;
+    const stripeCreatePaymentIntentStorefrontParamsResult =
+      createFromTransactionInitalizeSessionData(event.data);
+
+    if (stripeCreatePaymentIntentStorefrontParamsResult.isErr()) {
+      return ok(
+        new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
+          message: "Unsuported payment method received from storefront",
+          error: stripeCreatePaymentIntentStorefrontParamsResult.error,
+        }),
+      );
+    }
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
       channelId,
@@ -120,7 +132,7 @@ export class TransactionInitializeSessionUseCase {
       params: args.event.action,
     });
 
-    const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams(args.event);
+    const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams(event);
 
     if (stripePaymentIntentParamsResult.isErr()) {
       captureException(stripePaymentIntentParamsResult.error);
@@ -137,6 +149,7 @@ export class TransactionInitializeSessionUseCase {
       return ok(
         new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
           message: "Error from Stripe API",
+          error: createPaymentIntentResult.error,
         }),
       );
     }

@@ -11,21 +11,18 @@ const CardPaymentMethodSchema = z
 
 const TransactionInitalizeRequestDataSchema = z
   .object({
-    paymentIntent: z.discriminatedUnion("paymentMethod", [CardPaymentMethodSchema], {}),
+    paymentIntent: z.discriminatedUnion("paymentMethod", [CardPaymentMethodSchema]),
   })
   .brand("TransactionInitalizeRequestData");
 
-export const ValidationError = BaseError.subclass(
-  "TransactionInitalizeSesssionDataValidationError",
-  {
-    props: {
-      _internalName: "TransactionInitalizeSesssionDataValidationError" as const,
-    },
+export const ValidationError = BaseError.subclass("ValidationError", {
+  props: {
+    _internalName: "TransactionInitalizeSesssionDataValidationError" as const,
   },
-);
+});
 
 export const UnsupportedPaymentMethodError = ValidationError.subclass(
-  "TransactionInitalizeSesssionDataUnsupportedPaymentMethodError",
+  "UnsupportedPaymentMethodError",
   {
     props: {
       _internalName: "TransactionInitalizeSesssionDataUnsupportedPaymentMethodError" as const,
@@ -56,3 +53,9 @@ export const createFromTransactionInitalizeSessionData = (raw: unknown) => {
 };
 
 export type TransactionInitalizeRequestData = z.infer<typeof TransactionInitalizeRequestDataSchema>;
+
+export type TransactionInitalizeRequestDataError =
+  | InstanceType<typeof ValidationError>
+  | InstanceType<typeof UnsupportedPaymentMethodError>;
+
+export class TransactionInitalizeSessionDataParserRequestDataParser {}

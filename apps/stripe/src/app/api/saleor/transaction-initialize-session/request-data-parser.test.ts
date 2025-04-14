@@ -5,10 +5,10 @@ import {
   TransactionInitalizeRequestData,
   UnsupportedPaymentMethodError,
   ValidationError,
-} from "@/app/api/saleor/transaction-initialize-session/request-data";
+} from "@/app/api/saleor/transaction-initialize-session/request-data-parser";
 
 describe("createFromTransactionInitalizeSessionData", () => {
-  it("should parse valid data comming from storefront", () => {
+  it("should parse valid data coming from storefront", () => {
     const storefrontData = {
       paymentIntent: {
         paymentMethod: "card",
@@ -36,11 +36,11 @@ describe("createFromTransactionInitalizeSessionData", () => {
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(UnsupportedPaymentMethodError);
   });
 
-  it("should return ValidationError if storefront sends invalid data (e.g addtional field we dont support)", () => {
+  it("should return ValidationError if storefront sends invalid data (e.g additional field we dont support)", () => {
     const storefrontData = {
       paymentIntent: {
         paymentMethod: "card",
-        addtionalField: "invalidValue",
+        additionalField: "invalidValue",
       },
     };
     const result = createFromTransactionInitalizeSessionData(storefrontData);
