@@ -8,7 +8,7 @@ import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response
 
 describe("TransactionInitalizeSessionUseCaseResponses", () => {
   describe("ChargeRequest", () => {
-    it("should return fetch API response with status code and message", async () => {
+    it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe client secret", async () => {
       const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeRequest({
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
         saleorMoney: SaleorMoney.createFromStripe({
@@ -34,7 +34,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
   });
 
   describe("ChargeFailure", () => {
-    it("should return fetch API response with status code and message", async () => {
+    it("getResponse() returns valid Response with status 200 and message with failure reason", async () => {
       const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
         message: "Error message for Saleor dashboard",
       });

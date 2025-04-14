@@ -7,7 +7,7 @@ export abstract class ErrorWebhookResponse {
 }
 
 export class BrokenAppResponse extends ErrorWebhookResponse {
-  message = "App is not working";
+  readonly message = "App is not working";
 
   getResponse() {
     return Response.json(
@@ -20,8 +20,8 @@ export class BrokenAppResponse extends ErrorWebhookResponse {
 }
 
 export class AppIsNotConfiguredResponse extends ErrorWebhookResponse {
-  message = "App is not configured";
-  statusCode = 400;
+  readonly message = "App is not configured";
+  readonly statusCode = 400;
 
   getResponse() {
     return Response.json(
@@ -34,7 +34,7 @@ export class AppIsNotConfiguredResponse extends ErrorWebhookResponse {
 }
 
 export class UnhandledErrorResponse extends ErrorWebhookResponse {
-  message = "Unhandled error";
+  readonly message = "Unhandled error";
 
   constructor() {
     super();
@@ -51,7 +51,7 @@ export class UnhandledErrorResponse extends ErrorWebhookResponse {
 }
 
 export class MalformedRequestResponse extends ErrorWebhookResponse {
-  message = "Malformed request";
+  readonly message = "Malformed request";
 
   getResponse() {
     return Response.json(

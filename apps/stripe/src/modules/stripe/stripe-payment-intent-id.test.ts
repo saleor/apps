@@ -26,4 +26,11 @@ describe("createStripePaymentIntentId", () => {
     expect(result.isErr()).toBe(true);
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripePaymentIntentValidationError);
   });
+
+  it("shouldn't be assignable without createStripePaymentIntentId", () => {
+    // @ts-expect-error - if this fails - it means the type is not branded
+    const testValue: StripePaymentIntentIdType = "";
+
+    expect(testValue).toBe("");
+  });
 });

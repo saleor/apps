@@ -8,7 +8,7 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 
 describe("GetConfigErrorResponse", () => {
-  it("should return fetch API response with status code and message", async () => {
+  it("getResponse() returns valid Response with status 500 and message with error reason", async () => {
     const getConfigResponse = new BrokenAppResponse();
     const fetchReponse = getConfigResponse.getResponse();
 
@@ -22,7 +22,7 @@ describe("GetConfigErrorResponse", () => {
 });
 
 describe("MissingConfigErrorResponse", () => {
-  it("should return fetch API response with status code and message", async () => {
+  it("getResponse() returns valid Response with status 400 and message with error reason", async () => {
     const missingConfigResponse = new AppIsNotConfiguredResponse();
     const fetchReponse = missingConfigResponse.getResponse();
 
@@ -36,7 +36,7 @@ describe("MissingConfigErrorResponse", () => {
 });
 
 describe("UnhandledErrorResponse", () => {
-  it("should return fetch API response with status code and message", async () => {
+  it("getResponse() returns valid Response with status 500 and message with error reason", async () => {
     const unhandledResponse = new UnhandledErrorResponse();
     const fetchReponse = unhandledResponse.getResponse();
 
@@ -49,8 +49,8 @@ describe("UnhandledErrorResponse", () => {
   });
 });
 
-describe("SaleorApiUrlCreateErrorResponse", () => {
-  it("should return fetch API response with status code and message", async () => {
+describe("MalformedRequestResponse", () => {
+  it("getResponse() returns valid Response with status 500 and message with error reason", async () => {
     const saleorApiUrlResponse = new MalformedRequestResponse();
     const fetchReponse = saleorApiUrlResponse.getResponse();
 
