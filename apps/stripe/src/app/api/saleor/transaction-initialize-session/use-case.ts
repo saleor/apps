@@ -10,6 +10,7 @@ import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
+  MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import {
   createStripeClientSecret,
@@ -31,7 +32,7 @@ import {
 
 type UseCaseExecuteResult = Result<
   TransactionInitalizeSessionUseCaseResponsesType,
-  AppIsNotConfiguredResponse | BrokenAppResponse
+  AppIsNotConfiguredResponse | BrokenAppResponse | MalformedRequestResponse
 >;
 
 export class TransactionInitializeSessionUseCase {
@@ -124,7 +125,7 @@ export class TransactionInitializeSessionUseCase {
     if (stripePaymentIntentParamsResult.isErr()) {
       captureException(stripePaymentIntentParamsResult.error);
 
-      return err(new BrokenAppResponse());
+      return err(new MalformedRequestResponse());
     }
 
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent({
