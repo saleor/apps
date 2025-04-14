@@ -5,7 +5,7 @@ import { z } from "zod";
 import { BaseError } from "@/lib/errors";
 import { RandomId } from "@/lib/random-id";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
@@ -56,7 +56,7 @@ export class NewStripeConfigTrpcHandler {
 
   getTrpcProcedure() {
     return this.baseProcedure.input(newStripeConfigSchema).mutation(async ({ input, ctx }) => {
-      const saleorApiUrl = SaleorApiUrl.create({ url: ctx.saleorApiUrl });
+      const saleorApiUrl = createSaleorApiUrl(ctx.saleorApiUrl);
 
       /**
        * TODO: Extract such logic to be shared between handlers

@@ -1,5 +1,5 @@
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
-export const mockedSaleorApiUrl = SaleorApiUrl.create({
-  url: "https://foo.bar.saleor.cloud/graphql/",
-})._unsafeUnwrap();
+export const mockedSaleorApiUrl = createSaleorApiUrl(
+  "https://foo.bar.saleor.cloud/graphql/",
+)._unsafeUnwrap();

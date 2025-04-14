@@ -2,7 +2,7 @@ import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { createSaleorApiUrl, SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 /**
  * Stores attributes that Stripe webhooks returns to us
@@ -32,9 +32,7 @@ export class WebhookParams {
       throw new BaseError(`Missing ${WebhookParams.saleorApiUrlSearchParam} param`);
     }
 
-    const saleorApiUrlVo = SaleorApiUrl.create({
-      url: saleorApiUrlRawString,
-    });
+    const saleorApiUrlVo = createSaleorApiUrl(saleorApiUrlRawString);
 
     if (saleorApiUrlVo.isErr()) {
       throw new BaseError(`${WebhookParams.saleorApiUrlSearchParam} URL param is invalid`);

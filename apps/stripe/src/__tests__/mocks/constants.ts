@@ -8,6 +8,6 @@ export const mockStripeWebhookSecretValue = "whsec_XYZ";
 export const mockedAppToken = "XXXYYYZZZ";
 export const mockAppUrlBase = "https://my-app.saleor.app";
 export const mockAdyenWebhookUrl = `${mockAppUrlBase}?${new URLSearchParams({
-  [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl.url,
+  [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
   [WebhookParams.configurationIdIdSearchParam]: mockedConfigurationId,
 }).toString()}`;
