@@ -1,39 +1,43 @@
-import { SyncWebhookResponsesMap } from "@saleor/app-sdk/handlers/shared";
+import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
-import { BaseError, UseCaseGetConfigError, UseCaseMissingConfigError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+} from "@/modules/saleor/saleor-webhook-responses";
+import {
+  createStripeClientSecret,
+  StripeClientSecretType,
+  StripeClientSecretValidationError,
+} from "@/modules/stripe/stripe-client-secret";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
+import {
+  createStripePaymentIntentId,
+  StripePaymentIntentIdType,
+  StripePaymentIntentValidationError,
+} from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
-type UseCaseResultShape = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"] & {
-  data: {
-    stripeClientSecret: string;
-  };
-};
+import {
+  TransactionInitalizeSessionUseCaseResponses,
+  TransactionInitalizeSessionUseCaseResponsesType,
+} from "./use-case-response";
 
-type UseCaseErrorShape =
-  | InstanceType<typeof UseCaseMissingConfigError>
-  | InstanceType<typeof UseCaseGetConfigError>
-  | InstanceType<typeof TransactionInitializeSessionUseCase.UseCaseError>;
+type UseCaseExecuteResult = Result<
+  TransactionInitalizeSessionUseCaseResponsesType,
+  AppIsNotConfiguredResponse | BrokenAppResponse
+>;
 
 export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
-
-  static UseCaseError = BaseError.subclass("InitializeStripeTransactionUseCaseError", {
-    props: {
-      _internalName: "InitializeStripeTransactionUseCaseError" as const,
-      httpStatusCode: 500,
-      httpMessage: "Failed to initialize Stripe PaymentIntent",
-    },
-  });
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
@@ -45,66 +49,34 @@ export class TransactionInitializeSessionUseCase {
 
   private prepareStripeCreatePaymentIntentParams(
     event: TransactionInitializeSessionEventFragment,
-  ): Stripe.PaymentIntentCreateParams {
-    const stripeMoneyResult = StripeMoney.createFromSaleorAmount({
+  ): Result<Stripe.PaymentIntentCreateParams, InstanceType<typeof StripeMoney.ValdationError>> {
+    return StripeMoney.createFromSaleorAmount({
       amount: event.action.amount,
       currency: event.action.currency,
+    }).map((result) => {
+      return {
+        amount: result.amount,
+        currency: result.currency,
+      };
     });
-
-    if (stripeMoneyResult.isErr()) {
-      this.logger.error(
-        "Failed to convert amount / currency coming from Saleor to one used by Stripe - throwing",
-        {
-          error: stripeMoneyResult.error,
-        },
-      );
-
-      throw new TransactionInitializeSessionUseCase.UseCaseError("Failed to create Stripe money", {
-        cause: stripeMoneyResult.error,
-      });
-    }
-
-    return {
-      amount: stripeMoneyResult.value.amount,
-      currency: stripeMoneyResult.value.currency,
-    };
   }
 
-  private prepareResponseToSaleor(
+  private mapStripePaymentIntentToWebhookResponse(
     stripePaymentIntentResponse: Stripe.PaymentIntent,
-  ): UseCaseResultShape {
-    const saleorMoneyResult = SaleorMoney.createFromStripe({
-      amount: stripePaymentIntentResponse.amount,
-      currency: stripePaymentIntentResponse.currency,
-    });
-
-    if (saleorMoneyResult.isErr()) {
-      this.logger.error(
-        "Failed to convert amount / currency coming from Stripe to one used by Saleor - throwing",
-        {
-          error: saleorMoneyResult.error,
-        },
-      );
-
-      throw new TransactionInitializeSessionUseCase.UseCaseError("Failed to create Saleor money", {
-        cause: saleorMoneyResult.error,
-      });
-    }
-
-    if (!stripePaymentIntentResponse.client_secret) {
-      throw new TransactionInitializeSessionUseCase.UseCaseError(
-        "Stripe payment intent response does not contain client_secret. It means that the payment intent was not created properly.",
-      );
-    }
-
-    return {
-      result: "CHARGE_REQUEST",
-      amount: saleorMoneyResult.value.amount,
-      pspReference: stripePaymentIntentResponse.id,
-      data: {
-        stripeClientSecret: stripePaymentIntentResponse.client_secret,
-      },
-    } as const;
+  ): Result<
+    [SaleorMoney, StripePaymentIntentIdType, StripeClientSecretType],
+    | InstanceType<typeof StripePaymentIntentValidationError>
+    | InstanceType<typeof SaleorMoney.ValdationError>
+    | InstanceType<typeof StripeClientSecretValidationError>
+  > {
+    return Result.combine([
+      SaleorMoney.createFromStripe({
+        amount: stripePaymentIntentResponse.amount,
+        currency: stripePaymentIntentResponse.currency,
+      }),
+      createStripePaymentIntentId(stripePaymentIntentResponse.id),
+      createStripeClientSecret(stripePaymentIntentResponse.client_secret),
+    ]);
   }
 
   async execute(args: {
@@ -112,7 +84,7 @@ export class TransactionInitializeSessionUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
-  }): Promise<Result<UseCaseResultShape, UseCaseErrorShape>> {
+  }): Promise<UseCaseExecuteResult> {
     const { channelId, appId, saleorApiUrl } = args;
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
@@ -122,21 +94,19 @@ export class TransactionInitializeSessionUseCase {
     });
 
     if (stripeConfigForThisChannel.isErr()) {
-      return err(
-        new UseCaseGetConfigError("Failed to retrieve config for channel", {
-          cause: stripeConfigForThisChannel.error,
-        }),
-      );
+      this.logger.error("Failed to get configuration", {
+        error: stripeConfigForThisChannel.error,
+      });
+
+      return err(new BrokenAppResponse());
     }
 
     if (!stripeConfigForThisChannel.value) {
-      return err(
-        new UseCaseMissingConfigError("Config for channel not found", {
-          props: {
-            channelId,
-          },
-        }),
-      );
+      this.logger.warn("Config for channel not found", {
+        channelId,
+      });
+
+      return err(new AppIsNotConfiguredResponse());
     }
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
@@ -149,15 +119,23 @@ export class TransactionInitializeSessionUseCase {
       params: args.event.action,
     });
 
+    const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams(args.event);
+
+    if (stripePaymentIntentParamsResult.isErr()) {
+      captureException(stripePaymentIntentParamsResult.error);
+
+      return err(new BrokenAppResponse());
+    }
+
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent({
-      params: this.prepareStripeCreatePaymentIntentParams(args.event),
+      params: stripePaymentIntentParamsResult.value,
     });
 
     if (createPaymentIntentResult.isErr()) {
-      // TODO: shoudn't we return 200 with error in the body to Saleor?
-      return err(
-        new TransactionInitializeSessionUseCase.UseCaseError("Failed to create payment intent", {
-          cause: createPaymentIntentResult.error,
+      // TODO: handle error properly
+      return ok(
+        new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
+          message: "Error from Stripe API",
         }),
       );
     }
@@ -166,8 +144,23 @@ export class TransactionInitializeSessionUseCase {
       stripeResponse: createPaymentIntentResult.value,
     });
 
-    const validResponseShape = this.prepareResponseToSaleor(createPaymentIntentResult.value);
+    return this.mapStripePaymentIntentToWebhookResponse(
+      createPaymentIntentResult.value,
+    ).match<UseCaseExecuteResult>(
+      ([saleorMoney, stripePaymentIntentId, stripeClientSecret]) => {
+        return ok(
+          new TransactionInitalizeSessionUseCaseResponses.ChargeRequest({
+            stripeClientSecret,
+            saleorMoney,
+            stripePaymentIntentId,
+          }),
+        );
+      },
+      (error) => {
+        captureException(error);
 
-    return ok(validResponseShape);
+        return err(new BrokenAppResponse());
+      },
+    );
   }
 }

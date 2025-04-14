@@ -4,12 +4,15 @@ import { describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { InitializeStripeSessionUseCase } from "@/app/api/saleor/payment-gateway-initialize-session/use-case";
-import { UseCaseMissingConfigError } from "@/lib/errors";
+import { stripePublishableKey } from "@/__tests__/mocks/stripe-publishable-key";
+import { PaymentGatewayInitializeSessionUseCaseResponses } from "@/app/api/saleor/payment-gateway-initialize-session/use-case-response";
+import { AppIsNotConfiguredResponse } from "@/modules/saleor/saleor-webhook-responses";
 
-describe("InitializeStripeSessionUseCase", () => {
-  it('Returns publishable key within "data" object if found in configuration', async () => {
-    const uc = new InitializeStripeSessionUseCase({
+import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
+
+describe("PaymentGatewayInitializeSessionUseCase", () => {
+  it('Returns Success response with publishable key within "data" object if found in configuration', async () => {
+    const uc = new PaymentGatewayInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
     });
 
@@ -19,19 +22,25 @@ describe("InitializeStripeSessionUseCase", () => {
       appId: mockedSaleorAppId,
     });
 
-    expect(responsePayload._unsafeUnwrap()).toStrictEqual({
+    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
+      PaymentGatewayInitializeSessionUseCaseResponses.Success,
+    );
+
+    const jsonResponse = await responsePayload._unsafeUnwrap().getResponse().json();
+
+    expect(jsonResponse).toStrictEqual({
       data: {
-        stripePublishableKey: "pk_live_1",
+        stripePublishableKey: stripePublishableKey.keyValue,
       },
     });
   });
 
-  it("Returns AppNotConfiguredError if config not found for specified channel", async () => {
+  it("Returns MissingConfigErrorResponse if config not found for specified channel", async () => {
     const spy = vi
       .spyOn(mockedAppConfigRepo, "getStripeConfig")
       .mockImplementationOnce(async () => ok(null));
 
-    const uc = new InitializeStripeSessionUseCase({
+    const uc = new PaymentGatewayInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
     });
 
@@ -43,7 +52,7 @@ describe("InitializeStripeSessionUseCase", () => {
 
     const err = responsePayload._unsafeUnwrapErr();
 
-    expect(err).toBeInstanceOf(UseCaseMissingConfigError);
+    expect(err).toBeInstanceOf(AppIsNotConfiguredResponse);
     expect(spy).toHaveBeenCalledOnce();
   });
 });
