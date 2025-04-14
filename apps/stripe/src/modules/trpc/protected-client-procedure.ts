@@ -40,6 +40,19 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
   });
 });
 
+const attachSharedServices = middleware(async ({ ctx, next }) => {
+  const gqlClient = createInstrumentedGraphqlClient({
+    saleorApiUrl: ctx.saleorApiUrl!, // Will be defined, previous middleware will ensure it
+    token: ctx.token,
+  });
+
+  return next({
+    ctx: {
+      apiClient: gqlClient,
+    },
+  });
+});
+
 const validateClientToken = middleware(async ({ ctx, next, meta }) => {
   logger.debug("Calling validateClientToken middleware with permissions required", {
     permissions: meta?.requiredClientPermissions,
@@ -118,18 +131,4 @@ export const protectedClientProcedure = procedure
   .use(logErrors)
   .use(attachAppToken)
   .use(validateClientToken)
-  .use(async ({ ctx, next }) => {
-    const client = createInstrumentedGraphqlClient({
-      saleorApiUrl: ctx.saleorApiUrl,
-      token: ctx.appToken,
-    });
-
-    return next({
-      ctx: {
-        apiClient: client,
-        appToken: ctx.appToken,
-        saleorApiUrl: ctx.saleorApiUrl,
-        appId: ctx.appId,
-      },
-    });
-  });
+  .use(attachSharedServices);

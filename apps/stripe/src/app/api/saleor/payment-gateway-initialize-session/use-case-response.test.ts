@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { stripePublishableKey } from "@/__tests__/mocks/stripe-publishable-key";
+import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 
 import { PaymentGatewayInitializeSessionUseCaseResponses } from "./use-case-response";
 
@@ -8,7 +8,7 @@ describe("PaymentGatewayInitializeSessionUseCaseResponses", () => {
   describe("Success", () => {
     it("should return fetch API response with status code and message", async () => {
       const successResponse = new PaymentGatewayInitializeSessionUseCaseResponses.Success({
-        pk: stripePublishableKey,
+        pk: mockedStripePublishableKey,
       });
       const fetchReponse = successResponse.getResponse();
 

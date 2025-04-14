@@ -42,4 +42,8 @@ export class StripeRestrictedKey {
 
     return ok(new StripeRestrictedKey(args.restrictedKey));
   }
+
+  getMaskedValue() {
+    return `...${this.keyValue.slice(-4)}`;
+  }
 }

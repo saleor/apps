@@ -5,7 +5,7 @@ export const mockedSaleorChannelId = "Q2hhbm5lbDox";
 export const mockedConfigurationId = "81f323bd-91e2-4838-ab6e-5affd81ffc3b";
 export const mockedSaleorAppId = "saleor-app-id";
 export const mockStripeWebhookSecretValue = "whsec_XYZ";
-export const mockAppToken = "XXXYYYZZZ";
+export const mockedAppToken = "XXXYYYZZZ";
 export const mockAppUrlBase = "https://my-app.saleor.app";
 export const mockAdyenWebhookUrl = `${mockAppUrlBase}?${new URLSearchParams({
   [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl.url,

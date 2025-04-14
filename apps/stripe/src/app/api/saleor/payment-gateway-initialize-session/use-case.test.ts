@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
+import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { stripePublishableKey } from "@/__tests__/mocks/stripe-publishable-key";
 import { PaymentGatewayInitializeSessionUseCaseResponses } from "@/app/api/saleor/payment-gateway-initialize-session/use-case-response";
 import { AppIsNotConfiguredResponse } from "@/modules/saleor/saleor-webhook-responses";
 
@@ -30,7 +30,7 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
 
     expect(jsonResponse).toStrictEqual({
       data: {
-        stripePublishableKey: stripePublishableKey.keyValue,
+        stripePublishableKey: mockedStripePublishableKey.keyValue,
       },
     });
   });
