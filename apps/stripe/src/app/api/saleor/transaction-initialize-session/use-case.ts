@@ -14,13 +14,13 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import {
   createStripeClientSecret,
-  StripeClientSecretType,
+  StripeClientSecret,
   StripeClientSecretValidationError,
 } from "@/modules/stripe/stripe-client-secret";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import {
   createStripePaymentIntentId,
-  StripePaymentIntentIdType,
+  StripePaymentIntentId,
   StripePaymentIntentValidationError,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
@@ -65,7 +65,7 @@ export class TransactionInitializeSessionUseCase {
   private mapStripePaymentIntentToWebhookResponse(
     stripePaymentIntentResponse: Stripe.PaymentIntent,
   ): Result<
-    [SaleorMoney, StripePaymentIntentIdType, StripeClientSecretType],
+    [SaleorMoney, StripePaymentIntentId, StripeClientSecret],
     | InstanceType<typeof StripePaymentIntentValidationError>
     | InstanceType<typeof SaleorMoney.ValdationError>
     | InstanceType<typeof StripeClientSecretValidationError>
