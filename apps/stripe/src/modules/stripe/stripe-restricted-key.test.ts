@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { mockRestrictedKey } from "@/__tests__/mocks/restricted-key";
+import { mockedRestrictedKey } from "@/__tests__/mocks/restricted-key";
 
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 
@@ -47,6 +47,6 @@ describe("StripeRestrictedKey", () => {
   });
 
   it("Can be retrieved with masked value", () => {
-    expect(mockRestrictedKey.getMaskedValue()).toMatchInlineSnapshot(`"...GGGG"`);
+    expect(mockedRestrictedKey.getMaskedValue()).toMatchInlineSnapshot(`"...GGGG"`);
   });
 });

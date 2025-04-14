@@ -1,6 +1,8 @@
+import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { BaseError } from "@/lib/errors";
 import { RandomId } from "@/lib/random-id";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -71,23 +73,36 @@ export class NewStripeConfigTrpcHandler {
         restrictedKey: input.restrictedKey,
         name: input.name,
         id: new RandomId().generate(),
-        webhookSecret: StripeWebhookSecret.create("TODO")._unsafeUnwrap(), //todo - pass after webhook is created
+        webhookSecret: StripeWebhookSecret.create("whsec_TODO")._unsafeUnwrap(), //todo - pass after webhook is created
       });
 
       // TODO: Handle exact reasons, give good messages
       if (newConfig.isErr()) {
+        captureException(
+          new BaseError(
+            "Handler validation triggered outside of input validation. This means input validation is leaky.",
+          ),
+        );
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Failed to create Stripe configuration",
+          message: "Failed to create Stripe configuration. Data is invalid",
         });
       }
 
-      await ctx.configRepo.saveStripeConfig({
+      const saveResult = await ctx.configRepo.saveStripeConfig({
         channelId: input.channelId,
         config: newConfig.value,
         saleorApiUrl: saleorApiUrl.value,
         appId: ctx.appId,
       });
+
+      if (saveResult.isErr()) {
+        // TODO Handle exact errors
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create Stripe configuration. Data can't be saved.",
+        });
+      }
     });
   }
 }
