@@ -55,7 +55,7 @@ export class StripeWebhookUseCase {
      */
     webhookParams: WebhookParams;
   }): R {
-    const authData = await this.apl.get(webhookParams.saleorApiUrl.url);
+    const authData = await this.apl.get(webhookParams.saleorApiUrl);
 
     if (!authData) {
       captureException(

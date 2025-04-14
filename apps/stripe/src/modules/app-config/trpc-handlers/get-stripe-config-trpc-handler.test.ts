@@ -28,7 +28,7 @@ const getTestCaller = () => {
     mockedAppConfigRepo,
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
-      saleorApiUrl: mockedSaleorApiUrl.url,
+      saleorApiUrl: mockedSaleorApiUrl,
       token: mockedAppToken,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,

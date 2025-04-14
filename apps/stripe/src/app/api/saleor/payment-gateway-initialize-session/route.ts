@@ -4,7 +4,7 @@ import { captureException } from "@sentry/nextjs";
 
 import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { withLoggerContext } from "@/lib/logger-context";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
   MalformedRequestResponse,
   UnhandledErrorResponse,
@@ -19,7 +19,7 @@ const useCase = new PaymentGatewayInitializeSessionUseCase({
 
 const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(async (req, ctx) => {
   try {
-    const saleorApiUrlResult = SaleorApiUrl.create({ url: ctx.authData.saleorApiUrl });
+    const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
     if (saleorApiUrlResult.isErr()) {
       const response = new MalformedRequestResponse();

@@ -5,6 +5,6 @@ import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 
 export const mockAuthData: AuthData = {
   appId: mockedSaleorAppId,
-  saleorApiUrl: mockedSaleorApiUrl.url,
   token: mockedAppToken,
+  saleorApiUrl: mockedSaleorApiUrl,
 };
