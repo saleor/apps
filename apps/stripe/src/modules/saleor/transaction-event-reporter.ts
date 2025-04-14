@@ -7,46 +7,55 @@ import {
   TransactionEventTypeEnum,
 } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
+import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 export type TransactionEventReportInput = {
-  transactionId: "";
-  message: "";
-  amount: undefined;
-  pspReference: "";
-  time: undefined;
+  transactionId: string;
+  message: string;
+  amount: SaleorMoney;
+  pspReference: StripePaymentIntentId;
+  time: string;
   type: TransactionEventTypeEnum;
 };
 
-export type PossibleTransactionEventReportErrors = InstanceType<
-  typeof TransactionEventReporter.AlreadyReportedError
->;
+export type PossibleTransactionEventReportErrors = InstanceType<typeof AlreadyReportedError>;
 
 export type TransactionEventReportResultResult = {
   createdEventId: string;
 };
 
-export class TransactionEventReporter {
-  static AlreadyReportedError = BaseError.subclass(
-    "TransactionEventReporter.AlreadyReportedError",
-    {
-      props: {
-        _internalName: "TransactionEventReporter.AlreadyReportedError",
-      },
-    },
-  );
+const AlreadyReportedError = BaseError.subclass("TransactionEventReporter.AlreadyReportedError", {
+  props: {
+    _internalName: "TransactionEventReporter.AlreadyReportedError",
+  },
+});
 
-  static GraphqlError = BaseError.subclass("TransactionEventReporter.GraphqlError", {
-    props: {
-      _internalName: "TransactionEventReporter.GraphqlError",
-    },
-  });
+const GraphqlError = BaseError.subclass("TransactionEventReporter.GraphqlError", {
+  props: {
+    _internalName: "TransactionEventReporter.GraphqlError",
+  },
+});
 
-  static UnhandledError = BaseError.subclass("TransactionEventReporter.UnhandledError", {
-    props: {
-      _internalName: "TransactionEventReporter.UnhandledError",
-    },
-  });
+const UnhandledError = BaseError.subclass("TransactionEventReporter.UnhandledError", {
+  props: {
+    _internalName: "TransactionEventReporter.UnhandledError",
+  },
+});
 
+export const TransactionEventReporterErrors = {
+  AlreadyReportedError,
+  GraphqlError,
+  UnhandledError,
+};
+
+export interface ITransactionEventReporter {
+  reportTransactionEvent(
+    input: TransactionEventReportInput,
+  ): Promise<Result<TransactionEventReportResultResult, PossibleTransactionEventReportErrors>>;
+}
+
+export class TransactionEventReporter implements ITransactionEventReporter {
   private gqlClient: Pick<Client, "mutation">;
 
   constructor(deps: { graphqlClient: Pick<Client, "mutation"> }) {
@@ -65,14 +74,14 @@ export class TransactionEventReporter {
         switch (error.cause as TransactionEventReportErrorCode) {
           case "ALREADY_EXISTS": {
             return err(
-              new TransactionEventReporter.AlreadyReportedError(`Event already reported`, {
+              new AlreadyReportedError(`Event already reported`, {
                 cause: error,
               }),
             );
           }
           case "GRAPHQL_ERROR": {
             return err(
-              new TransactionEventReporter.GraphqlError("Error reporting transaction event", {
+              new GraphqlError("Error reporting transaction event", {
                 cause: error,
               }),
             );
@@ -82,7 +91,7 @@ export class TransactionEventReporter {
           case "INCORRECT_DETAILS":
           case "REQUIRED": {
             return err(
-              new TransactionEventReporter.UnhandledError("Error reporting transaction event", {
+              new UnhandledError("Error reporting transaction event", {
                 cause: error,
               }),
             );
@@ -92,18 +101,15 @@ export class TransactionEventReporter {
 
       if (!data?.transactionEventReport?.transactionEvent) {
         return err(
-          new TransactionEventReporter.UnhandledError(
-            "Error reporting transaction event: missing resolved data",
-            {
-              cause: error,
-            },
-          ),
+          new UnhandledError("Error reporting transaction event: missing resolved data", {
+            cause: error,
+          }),
         );
       }
 
       if (data.transactionEventReport.alreadyProcessed) {
         return err(
-          new TransactionEventReporter.AlreadyReportedError(
+          new AlreadyReportedError(
             `Event already reported: ${data.transactionEventReport.transactionEvent.id}`,
           ),
         );
@@ -114,7 +120,7 @@ export class TransactionEventReporter {
       });
     } catch (e) {
       return err(
-        new TransactionEventReporter.GraphqlError("Error reporting transaction event", {
+        new GraphqlError("Error reporting transaction event", {
           cause: e,
         }),
       );
