@@ -5,7 +5,7 @@ import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-response
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 
 class Success extends SuccessWebhookResponse {
-  pk: StripePublishableKey;
+  readonly pk: StripePublishableKey;
 
   private static ResponseDataSchema = z.object({
     stripePublishableKey: z.string(),

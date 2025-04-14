@@ -9,6 +9,7 @@ import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/tr
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
+  MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
@@ -111,7 +112,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     );
   });
 
-  it("Returns BrokenAppResponse when currency coming from Saleor is not supported", async () => {
+  it("Returns MalformedRequestResponse when currency coming from Saleor is not supported", async () => {
     const saleorEvent = {
       ...getMockedTransactionInitializeSessionEvent(),
       action: {
@@ -138,7 +139,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    ).resolves.toStrictEqual(err(new MalformedRequestResponse()));
   });
 
   it("Returns BrokenAppRespone when currency coming from Stripe is not supported", async () => {

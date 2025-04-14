@@ -6,7 +6,7 @@ import { PaymentGatewayInitializeSessionUseCaseResponses } from "./use-case-resp
 
 describe("PaymentGatewayInitializeSessionUseCaseResponses", () => {
   describe("Success", () => {
-    it("should return fetch API response with status code and message", async () => {
+    it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe PK", async () => {
       const successResponse = new PaymentGatewayInitializeSessionUseCaseResponses.Success({
         pk: stripePublishableKey,
       });
