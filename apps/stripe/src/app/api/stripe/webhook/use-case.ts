@@ -1,4 +1,4 @@
-import { APL } from "@saleor/app-sdk/APL";
+import { APL, AuthData } from "@saleor/app-sdk/APL";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
@@ -35,31 +35,32 @@ type ErrorResult = StripeWebhookErrorResponse;
 
 type R = Promise<Result<SuccessResult, ErrorResult>>;
 
-type StripeVerificateEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
+type StripeVerifyEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
+type SaleorTransactionEventReporterFactory = (authData: AuthData) => ITransactionEventReporter;
 
 /**
  * TODO: We need to store events to DB to handle deduplication
  */
 export class StripeWebhookUseCase {
   private appConfigRepo: AppConfigRepo;
-  private webhookEventVerifyFactory: StripeVerificateEventFactory;
+  private webhookEventVerifyFactory: StripeVerifyEventFactory;
   private apl: APL;
   private logger = createLogger("StripeWebhookUseCase");
   private transactionRecorder: TransactionRecorder;
-  private transactionEventReporter: ITransactionEventReporter;
+  private transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
-    webhookEventVerifyFactory: StripeVerificateEventFactory;
+    webhookEventVerifyFactory: StripeVerifyEventFactory;
     apl: APL;
     transactionRecorder: TransactionRecorder;
-    transactionEventReporter: ITransactionEventReporter;
+    transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.webhookEventVerifyFactory = deps.webhookEventVerifyFactory;
     this.apl = deps.apl;
     this.transactionRecorder = deps.transactionRecorder;
-    this.transactionEventReporter = deps.transactionEventReporter;
+    this.transactionEventReporterFactory = deps.transactionEventReporterFactory;
   }
 
   async execute({
@@ -94,6 +95,8 @@ export class StripeWebhookUseCase {
         ),
       );
     }
+
+    const transactionEventReporter = this.transactionEventReporterFactory(authData);
 
     const config = await this.appConfigRepo.getStripeConfig({
       configId: webhookParams.configurationId,
@@ -182,7 +185,7 @@ export class StripeWebhookUseCase {
       return err(new StripeWebhookErrorResponse(error));
     }
 
-    const reportResult = await this.transactionEventReporter.reportTransactionEvent({
+    const reportResult = await transactionEventReporter.reportTransactionEvent({
       type: eventToReport.saleorEventType,
       message: eventToReport.message,
       time: eventToReport.date.toISOString(),

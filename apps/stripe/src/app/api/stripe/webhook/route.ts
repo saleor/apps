@@ -8,9 +8,11 @@ import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { BaseError } from "@/lib/errors";
+import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";
 import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { saleorApp } from "@/lib/saleor-app";
+import { TransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
 
 const useCase = new StripeWebhookUseCase({
@@ -18,6 +20,13 @@ const useCase = new StripeWebhookUseCase({
   webhookEventVerifyFactory: (stripeClient) =>
     StripeWebhookSignatureValidator.createFromClient(stripeClient),
   apl: saleorApp.apl,
+  // todo
+  transactionRecorder: {},
+  transactionEventReporterFactory(authData) {
+    return new TransactionEventReporter({
+      graphqlClient: createInstrumentedGraphqlClient(authData),
+    });
+  },
 });
 
 const logger = createLogger("StripeWebhookHandler");

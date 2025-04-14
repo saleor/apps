@@ -19,7 +19,7 @@ export class TransactionChargeSuccess implements TransactionRequestBase {
   readonly message = "Successfully charged";
   readonly date: Date;
 
-  constructor(props: { pspRef: StripePaymentIntentId; amount: SaleorMoney; date: Dat }) {
+  constructor(props: { pspRef: StripePaymentIntentId; amount: SaleorMoney; date: Date }) {
     this.pspRef = props.pspRef;
     this.amount = props.amount;
     this.date = props.date;
