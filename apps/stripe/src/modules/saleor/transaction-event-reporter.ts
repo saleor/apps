@@ -47,9 +47,9 @@ export class TransactionEventReporter {
     },
   });
 
-  private gqlClient: Client;
+  private gqlClient: Pick<Client, "mutation">;
 
-  constructor(deps: { graphqlClient: Client }) {
+  constructor(deps: { graphqlClient: Pick<Client, "mutation"> }) {
     this.gqlClient = deps.graphqlClient;
   }
 

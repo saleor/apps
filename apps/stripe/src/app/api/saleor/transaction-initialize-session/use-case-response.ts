@@ -7,7 +7,7 @@ import {
   StripeClientSecretSchema,
   StripeClientSecretType,
 } from "@/modules/stripe/stripe-client-secret";
-import { StripePaymentIntentIdType } from "@/modules/stripe/stripe-payment-intent-id";
+import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 // TODO: add support for other results e.g AUTHORIZE
 
@@ -15,7 +15,7 @@ class ChargeRequest extends SuccessWebhookResponse {
   readonly result = "CHARGE_REQUEST" as const;
   readonly stripeClientSecret: StripeClientSecretType;
   readonly saleorMoney: SaleorMoney;
-  readonly stripePaymentIntentId: StripePaymentIntentIdType;
+  readonly stripePaymentIntentId: StripePaymentIntentId;
 
   private static ResponseDataSchema = z.object({
     stripeClientSecret: StripeClientSecretSchema,
@@ -24,7 +24,7 @@ class ChargeRequest extends SuccessWebhookResponse {
   constructor(args: {
     stripeClientSecret: StripeClientSecretType;
     saleorMoney: SaleorMoney;
-    stripePaymentIntentId: StripePaymentIntentIdType;
+    stripePaymentIntentId: StripePaymentIntentId;
   }) {
     super();
     this.stripeClientSecret = args.stripeClientSecret;
