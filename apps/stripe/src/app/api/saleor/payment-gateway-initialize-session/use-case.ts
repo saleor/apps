@@ -1,32 +1,26 @@
-import {
-  buildSyncWebhookResponsePayload,
-  SyncWebhookResponsesMap,
-} from "@saleor/app-sdk/handlers/shared";
 import { err, ok, Result } from "neverthrow";
 
-import {
-  PaymentGatewayInitializeResponseShape,
-  PaymentGatewayInitializeResponseShapeType,
-} from "@/app/api/saleor/payment-gateway-initialize-session/response-shape";
-import { BaseError, UseCaseGetConfigError, UseCaseMissingConfigError } from "@/lib/errors";
+import { BaseError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+} from "@/modules/saleor/saleor-webhook-responses";
 
-type UseCaseResultShape = SyncWebhookResponsesMap["PAYMENT_GATEWAY_INITIALIZE_SESSION"];
+import {
+  PaymentGatewayInitializeSessionUseCaseResponses,
+  PaymentGatewayInitializeSessionUseCaseResponsesType,
+} from "./use-case-response";
 
-type UseCaseErrorShape =
-  | InstanceType<typeof UseCaseMissingConfigError>
-  | InstanceType<typeof UseCaseGetConfigError>;
-
-// TODO: shoundn't this be named `PaymentGatewayInitializeSessionUseCase`?
-export class InitializeStripeSessionUseCase {
+export class PaymentGatewayInitializeSessionUseCase {
   private appConfigRepo: AppConfigRepo;
+  private logger = createLogger("PaymentGatewayInitializeSessionUseCase");
 
-  static UseCaseError = BaseError.subclass("InitializeStripeSessionUseCaseError", {
+  static UseCaseError = BaseError.subclass("PaymentGatewayInitializeSessionUseCaseError", {
     props: {
       _internalName: "InitializeStripeSessionUseCaseError" as const,
-      httpStatusCode: 500,
-      httpMessage: "Failed to initialize Stripe session",
     },
   });
 
@@ -38,7 +32,12 @@ export class InitializeStripeSessionUseCase {
     channelId: string;
     appId: string;
     saleorApiUrl: SaleorApiUrl;
-  }): Promise<Result<UseCaseResultShape, UseCaseErrorShape>> {
+  }): Promise<
+    Result<
+      PaymentGatewayInitializeSessionUseCaseResponsesType,
+      AppIsNotConfiguredResponse | BrokenAppResponse
+    >
+  > {
     const { channelId, appId, saleorApiUrl } = params;
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
@@ -51,37 +50,24 @@ export class InitializeStripeSessionUseCase {
       const pk = stripeConfigForThisChannel.value?.publishableKey;
 
       if (!pk) {
-        return err(
-          new UseCaseMissingConfigError("Config for channel not found", {
-            props: {
-              channelId,
-            },
-          }),
-        );
-      }
-
-      const rawShape: PaymentGatewayInitializeResponseShapeType = {
-        stripePublishableKey: pk.keyValue,
-      };
-
-      const responseDataShape = PaymentGatewayInitializeResponseShape.parse(rawShape);
-
-      const validResponseShape =
-        buildSyncWebhookResponsePayload<"PAYMENT_GATEWAY_INITIALIZE_SESSION">({
-          data: responseDataShape,
+        this.logger.warn("Config for channel not found", {
+          channelId,
         });
 
-      return ok(validResponseShape);
+        return err(new AppIsNotConfiguredResponse());
+      }
+
+      return ok(new PaymentGatewayInitializeSessionUseCaseResponses.Success({ pk }));
     }
 
     if (stripeConfigForThisChannel.isErr()) {
-      return err(
-        new UseCaseGetConfigError("Failed to retrieve Publishable Key from config", {
-          cause: stripeConfigForThisChannel.error,
-        }),
-      );
+      this.logger.error("Failed to get configuration", {
+        error: stripeConfigForThisChannel.error,
+      });
+
+      return err(new BrokenAppResponse());
     }
 
-    throw new InitializeStripeSessionUseCase.UseCaseError("Leaky logic, should not happen");
+    throw new PaymentGatewayInitializeSessionUseCase.UseCaseError("Leaky logic, should not happen");
   }
 }
