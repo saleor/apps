@@ -2,7 +2,7 @@ import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
-import { createSaleorApiUrl, SaleorApiUrlType } from "@/modules/saleor/saleor-api-url";
+import { createSaleorApiUrl, SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 /**
  * Stores attributes that Stripe webhooks returns to us
@@ -17,15 +17,15 @@ export class WebhookParams {
     },
   });
 
-  readonly saleorApiUrl: SaleorApiUrlType;
+  readonly saleorApiUrl: SaleorApiUrl;
   readonly configurationId: string;
 
-  private constructor(props: { saleorApiUrl: SaleorApiUrlType; configurationId: string }) {
+  private constructor(props: { saleorApiUrl: SaleorApiUrl; configurationId: string }) {
     this.saleorApiUrl = props.saleorApiUrl;
     this.configurationId = props.configurationId;
   }
 
-  private static getSaleorApiUrlOrThrow(searchParams: URLSearchParams): SaleorApiUrlType {
+  private static getSaleorApiUrlOrThrow(searchParams: URLSearchParams): SaleorApiUrl {
     const saleorApiUrlRawString = searchParams.get(WebhookParams.saleorApiUrlSearchParam);
 
     if (!saleorApiUrlRawString) {

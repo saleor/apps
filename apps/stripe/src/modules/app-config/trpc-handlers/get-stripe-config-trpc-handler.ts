@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { StripeFrontendConfig } from "@/modules/app-config/stripe-config";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class GetStripeConfigTrpcHandler {
@@ -16,7 +16,7 @@ export class GetStripeConfigTrpcHandler {
         }),
       )
       .query(async ({ input, ctx }) => {
-        const saleorApiUrl = SaleorApiUrl.create({ url: ctx.saleorApiUrl });
+        const saleorApiUrl = createSaleorApiUrl(ctx.saleorApiUrl);
 
         /**
          * TODO: Extract such logic to be shared between handlers

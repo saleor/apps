@@ -1,7 +1,7 @@
 import { Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
-import { SaleorApiUrlType } from "@/modules/saleor/saleor-api-url";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import { StripeConfig } from "./stripe-config";
 
@@ -10,7 +10,7 @@ import { StripeConfig } from "./stripe-config";
  */
 export type StripeConfigByChannelIdAccessPattern = {
   channelId: string;
-  saleorApiUrl: SaleorApiUrlType;
+  saleorApiUrl: SaleorApiUrl;
   appId: string;
 };
 
@@ -19,7 +19,7 @@ export type StripeConfigByChannelIdAccessPattern = {
  */
 export type StripeConfigByConfigIdAccessPattern = {
   configId: string;
-  saleorApiUrl: SaleorApiUrlType;
+  saleorApiUrl: SaleorApiUrl;
   appId: string;
 };
 
@@ -31,7 +31,7 @@ export interface AppConfigRepo {
   saveStripeConfig: (args: {
     channelId: string;
     config: StripeConfig;
-    saleorApiUrl: SaleorApiUrlType;
+    saleorApiUrl: SaleorApiUrl;
     appId: string;
   }) => Promise<Result<null | void, InstanceType<typeof BaseError>>>;
   getStripeConfig: (
@@ -40,7 +40,7 @@ export interface AppConfigRepo {
   updateStripeConfig: (
     access: {
       configId: string;
-      saleorApiUrl: SaleorApiUrlType;
+      saleorApiUrl: SaleorApiUrl;
       appId: string;
     },
     stripeConfig: StripeConfig,

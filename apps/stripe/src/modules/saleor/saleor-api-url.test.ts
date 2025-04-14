@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createSaleorApiUrl, SaleorApiUrlValidationError } from "./saleor-api-url";
+import { createSaleorApiUrl, SaleorApiUrl, SaleorApiUrlValidationError } from "./saleor-api-url";
 
 describe("SaleorApiUrl", () => {
   describe("create", () => {
@@ -107,7 +107,7 @@ describe("SaleorApiUrl", () => {
 
     it("shouldn't be assignable without createSaleorApiUrl", () => {
       // @ts-expect-error - if this fails - it means the type is not branded
-      const testValue: SaleorApiUrlType = "";
+      const testValue: SaleorApiUrl = "";
 
       expect(testValue).toBe("");
     });

@@ -33,7 +33,7 @@ const getTestCaller = () => {
     mockedAppConfigRepo,
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
-      saleorApiUrl: mockedSaleorApiUrl.url,
+      saleorApiUrl: mockedSaleorApiUrl,
       token: mockedAppToken,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
@@ -134,9 +134,7 @@ describe("NewStripeConfigTrpcHandler", () => {
             "secretValue": "whsec_TODO",
           },
         },
-        "saleorApiUrl": SaleorApiUrl {
-          "url": "https://foo.bar.saleor.cloud/graphql/",
-        },
+        "saleorApiUrl": "https://foo.bar.saleor.cloud/graphql/",
       }
     `,
     );
