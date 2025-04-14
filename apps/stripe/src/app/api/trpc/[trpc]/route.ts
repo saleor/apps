@@ -1,10 +1,10 @@
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
-import { createTrpcContextAppRouter } from "@saleor/apps-trpc/context-app-router";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
+import { createTrpcContextAppRouter } from "@/modules/trpc/context-app-router";
 import { trpcRouter } from "@/modules/trpc/trpc-router";
 
 const logger = createLogger("trpcHandler");

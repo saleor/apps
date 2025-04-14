@@ -58,3 +58,41 @@ export class StripeConfig {
     );
   }
 }
+
+type SerializedFields = {
+  readonly name: string;
+  readonly id: string;
+  readonly restrictedKey: string;
+  readonly publishableKey: string;
+};
+
+/**
+ * Safe class that only returns whats permitted to the UI.
+ * It also allows to serialize and deserialize itself, so it can be easily transported via tRPC
+ */
+export class StripeFrontendConfig implements SerializedFields {
+  readonly name: string;
+  readonly id: string;
+  readonly restrictedKey: string;
+  readonly publishableKey: string;
+
+  private constructor(fields: SerializedFields) {
+    this.name = fields.name;
+    this.id = fields.id;
+    this.restrictedKey = fields.restrictedKey;
+    this.publishableKey = fields.publishableKey;
+  }
+
+  static createFromStripeConfig(stripeConfig: StripeConfig) {
+    return new StripeFrontendConfig({
+      name: stripeConfig.name,
+      id: stripeConfig.id,
+      publishableKey: stripeConfig.publishableKey.keyValue,
+      restrictedKey: stripeConfig.restrictedKey.getMaskedValue(),
+    });
+  }
+
+  static createFromSerializedFields(fields: SerializedFields) {
+    return new StripeFrontendConfig(fields);
+  }
+}
