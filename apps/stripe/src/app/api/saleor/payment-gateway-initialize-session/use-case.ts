@@ -3,7 +3,7 @@ import { err, ok, Result } from "neverthrow";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { SaleorApiUrlType } from "@/modules/saleor/saleor-api-url";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
@@ -31,7 +31,7 @@ export class PaymentGatewayInitializeSessionUseCase {
   async execute(params: {
     channelId: string;
     appId: string;
-    saleorApiUrl: SaleorApiUrl;
+    saleorApiUrl: SaleorApiUrlType;
   }): Promise<
     Result<
       PaymentGatewayInitializeSessionUseCaseResponsesType,

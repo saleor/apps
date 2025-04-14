@@ -5,7 +5,7 @@ import Stripe from "stripe";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { SaleorApiUrlType } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   AppIsNotConfiguredResponse,
@@ -83,7 +83,7 @@ export class TransactionInitializeSessionUseCase {
   async execute(args: {
     channelId: string;
     appId: string;
-    saleorApiUrl: SaleorApiUrl;
+    saleorApiUrl: SaleorApiUrlType;
     event: TransactionInitializeSessionEventFragment;
   }): Promise<UseCaseExecuteResult> {
     const { channelId, appId, saleorApiUrl } = args;

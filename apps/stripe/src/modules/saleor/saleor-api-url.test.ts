@@ -104,5 +104,12 @@ describe("SaleorApiUrl", () => {
         ]]
       `);
     });
+
+    it("shouldn't be assignable without createSaleorApiUrl", () => {
+      // @ts-expect-error - if this fails - it means the type is not branded
+      const testValue: SaleorApiUrlType = "";
+
+      expect(testValue).toBe("");
+    });
   });
 });

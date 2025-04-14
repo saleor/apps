@@ -23,4 +23,4 @@ export const createSaleorApiUrl = (raw: string) =>
     raw,
   );
 
-export type SaleorApiUrl = z.infer<typeof saleorApiUrlSchema>;
+export type SaleorApiUrlType = z.infer<typeof saleorApiUrlSchema>;

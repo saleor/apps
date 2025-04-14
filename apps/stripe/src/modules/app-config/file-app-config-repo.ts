@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { SaleorApiUrlType } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
@@ -69,7 +69,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
   private saveNewConfigToFile(args: {
     channelId: string;
     config: StripeConfig;
-    saleorApiUrl: SaleorApiUrl;
+    saleorApiUrl: SaleorApiUrlType;
     appId: string;
   }) {
     const existingConfigResult = this.readExistingAppConfigFromFileAsJson();
@@ -89,7 +89,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
   private createNewFileAndPersistNewAppConfig(args: {
     channelId: string;
     config: StripeConfig;
-    saleorApiUrl: SaleorApiUrl;
+    saleorApiUrl: SaleorApiUrlType;
     appId: string;
   }) {
     const newConfig = {
@@ -106,7 +106,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
   async saveStripeConfig(args: {
     channelId: string;
     config: StripeConfig;
-    saleorApiUrl: SaleorApiUrl;
+    saleorApiUrl: SaleorApiUrlType;
     appId: string;
   }): Promise<Result<void, InstanceType<typeof BaseError>>> {
     if (fs.existsSync(this.filePath)) {
@@ -188,7 +188,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
   async updateStripeConfig(
     access: {
       configId: string;
-      saleorApiUrl: SaleorApiUrl;
+      saleorApiUrl: SaleorApiUrlType;
       appId: string;
     },
     stripeConfig: StripeConfig,
