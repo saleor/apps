@@ -2,7 +2,6 @@ import { verifyJWT } from "@saleor/app-sdk/auth";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
 import { TRPCError } from "@trpc/server";
 
-import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";
 import { saleorApp } from "@/lib/saleor-app";
@@ -50,10 +49,6 @@ const attachSharedServices = middleware(async ({ ctx, next }) => {
   return next({
     ctx: {
       apiClient: gqlClient,
-      configRepo: appConfigPersistence,
-      appToken: ctx.token!,
-      saleorApiUrl: ctx.saleorApiUrl!,
-      appId: ctx.appId!,
     },
   });
 });
