@@ -5,7 +5,7 @@ import { createStripeClientSecret } from "@/modules/stripe/stripe-client-secret"
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
 
-import { UnsupportedPaymentMethodError, ValidationError } from "./request-data-parser";
+import { ParseError, UnsupportedPaymentMethodError } from "./request-data-parser";
 import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionInitalizeSessionUseCaseResponses", () => {
@@ -26,7 +26,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         {
           "amount": 100,
           "data": {
-            "stripeClientSecret": "stripe-client-secret",
+            "paymentIntent": {
+              "stripeClientSecret": "stripe-client-secret",
+            },
           },
           "pspReference": "pi_1",
           "result": "CHARGE_REQUEST",
@@ -63,7 +65,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and BadRequest error inside data object", async () => {
       const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
         message: "Error message for Saleor dashboard",
-        error: new ValidationError("Invalid data"),
+        error: new ParseError("Invalid data"),
       });
       const fetchReponse = successResponse.getResponse();
 

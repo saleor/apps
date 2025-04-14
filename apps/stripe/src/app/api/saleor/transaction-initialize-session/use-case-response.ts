@@ -21,7 +21,9 @@ class ChargeRequest extends SuccessWebhookResponse {
   readonly stripePaymentIntentId: StripePaymentIntentId;
 
   private static ResponseDataSchema = z.object({
-    stripeClientSecret: StripeClientSecretSchema,
+    paymentIntent: z.object({
+      stripeClientSecret: StripeClientSecretSchema,
+    }),
   });
 
   constructor(args: {
@@ -39,7 +41,9 @@ class ChargeRequest extends SuccessWebhookResponse {
     // TODO: fix typing of buildSyncWebhookResponsePayload - it doesn't allow actions etc.
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
       data: ChargeRequest.ResponseDataSchema.parse({
-        stripeClientSecret: this.stripeClientSecret,
+        paymentIntent: {
+          stripeClientSecret: this.stripeClientSecret,
+        },
       }),
       result: this.result,
       amount: this.saleorMoney.amount,
@@ -80,7 +84,7 @@ class ChargeFailure extends SuccessWebhookResponse {
           reason: "UnsupportedPaymentMethodError",
           description: "Provided payment method is not supported",
         };
-      case "TransactionInitalizeSesssionDataValidationError":
+      case "TransactionInitalizeSesssionDataParseErrorError":
         return {
           reason: "BadRequestError",
           description:

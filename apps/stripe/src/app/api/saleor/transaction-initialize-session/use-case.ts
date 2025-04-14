@@ -2,7 +2,7 @@ import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
-import { createFromTransactionInitalizeSessionData } from "@/app/api/saleor/transaction-initialize-session/request-data-parser";
+import { parseTransactionInitalizeSessionRequestData } from "@/app/api/saleor/transaction-initialize-session/request-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
@@ -89,7 +89,7 @@ export class TransactionInitializeSessionUseCase {
   }): Promise<UseCaseExecuteResult> {
     const { channelId, appId, saleorApiUrl, event } = args;
     const stripeCreatePaymentIntentStorefrontParamsResult =
-      createFromTransactionInitalizeSessionData(event.data);
+      parseTransactionInitalizeSessionRequestData(event.data);
 
     if (stripeCreatePaymentIntentStorefrontParamsResult.isErr()) {
       return ok(

@@ -1,4 +1,4 @@
-import { createFromTransactionInitalizeSessionData } from "@/app/api/saleor/transaction-initialize-session/request-data-parser";
+import { parseTransactionInitalizeSessionRequestData } from "@/app/api/saleor/transaction-initialize-session/request-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 
 import { mockedSaleorChannelId } from "./constants";
@@ -9,7 +9,7 @@ export const getMockedTransactionInitializeSessionEvent =
       amount: 100,
       currency: "USD",
     },
-    data: createFromTransactionInitalizeSessionData({
+    data: parseTransactionInitalizeSessionRequestData({
       paymentIntent: {
         paymentMethod: "card",
       },
