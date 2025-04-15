@@ -130,6 +130,25 @@ describe("StripeWebhookUseCase", () => {
         }
       `);
     });
+
+    it("Returns error if transaction not previously recorded", async () => {
+      eventVerify.verifyEvent.mockImplementationOnce(() =>
+        ok(getMockedPaymentIntentSucceededEvent()),
+      );
+
+      const result = await instance.execute({
+        rawBody: rawEventBody,
+        signatureHeader: "test-signature",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        StripeWebhookErrorResponse {
+          "error": [TransactionRecorder.TransactionMissingError: Transaction not found],
+          "responseStatusCode": 500,
+        }
+      `);
+    });
   });
 
   describe("Success cases", () => {
