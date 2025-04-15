@@ -50,10 +50,12 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         {
           "data": {
             "paymentIntent": {
-              "error": {
-                "description": "Provided payment method is not supported",
-                "reason": "UnsupportedPaymentMethodError",
-              },
+              "errors": [
+                {
+                  "code": "UnsupportedPaymentMethodError",
+                  "message": "Provided payment method is not supported",
+                },
+              ],
             },
           },
           "message": "Error message for Saleor dashboard",
@@ -74,10 +76,12 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         {
           "data": {
             "paymentIntent": {
-              "error": {
-                "description": "Provided data is invalid. Check your data argument to transactionInitalizeSession mutation and try again.",
-                "reason": "BadRequestError",
-              },
+              "errors": [
+                {
+                  "code": "BadRequestError",
+                  "message": "Provided data is invalid. Check your data argument to transactionInitalizeSession mutation and try again.",
+                },
+              ],
             },
           },
           "message": "Error message for Saleor dashboard",
@@ -98,10 +102,12 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         {
           "data": {
             "paymentIntent": {
-              "error": {
-                "description": "Stripe API returned error while creating payment intent",
-                "reason": "StripeCreatePaymentIntentError",
-              },
+              "errors": [
+                {
+                  "code": "StripeCreatePaymentIntentError",
+                  "message": "Stripe API returned error while creating payment intent",
+                },
+              ],
             },
           },
           "message": "Error message for Saleor dashboard",

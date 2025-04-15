@@ -20,7 +20,7 @@ export const ParseError = BaseError.subclass("ParseError", {
     _internalName: "TransactionInitalizeEventDataParseError" as const,
     publicCode: "BadRequestError" as const,
     publicMessage:
-      "Provided data is invalid. Check your data argument to transactionInitalizeSession mutation and try again." as const,
+      "Provided data is invalid. Check your data argument to transactionInitalizeSession mutation and try again.",
   },
 });
 
@@ -28,7 +28,7 @@ export const UnsupportedPaymentMethodError = ParseError.subclass("UnsupportedPay
   props: {
     _internalName: "TransactionInitalizeEventDataUnsupportedPaymentMethodError" as const,
     publicCode: "UnsupportedPaymentMethodError" as const,
-    publicMessage: "Provided payment method is not supported" as const,
+    publicMessage: "Provided payment method is not supported",
   },
 });
 

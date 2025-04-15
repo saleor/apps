@@ -2,8 +2,11 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 import { z } from "zod";
 
 import { TransactionInitalizeEventDataError } from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
-import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import {
+  createFailureWebhookResponseDataSchema,
+  createSuccessWebhookResponseDataSchema,
+} from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import {
   StripeClientSecret,
@@ -20,11 +23,11 @@ class ChargeRequest extends SuccessWebhookResponse {
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
 
-  private static ResponseDataSchema = z.object({
-    paymentIntent: z.object({
+  private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
+    z.object({
       stripeClientSecret: StripeClientSecretSchema,
     }),
-  });
+  );
 
   constructor(args: {
     stripeClientSecret: StripeClientSecret;
@@ -54,13 +57,6 @@ class ChargeRequest extends SuccessWebhookResponse {
   }
 }
 
-// TODO: move to factory
-// const schema = z.object({
-//   paymentIntent: z.object({
-//     errors: z.array(),
-//   })
-// })
-
 class ChargeFailure extends SuccessWebhookResponse {
   readonly result = "CHARGE_FAILURE" as const;
   readonly message: string;
@@ -68,52 +64,18 @@ class ChargeFailure extends SuccessWebhookResponse {
     | TransactionInitalizeEventDataError
     | InstanceType<typeof StripePaymentIntentsApi.CreatePaymentIntentError>;
 
-
-
-  private static ResponseDataSchema = z.object({
-    paymentIntent: z.object({
-      error: z.object({
-        // code 
-        reason: z.union([
+  private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
+    z.array(
+      z.object({
+        code: z.union([
           z.literal("UnsupportedPaymentMethodError"),
           z.literal("BadRequestError"),
           z.literal("StripeCreatePaymentIntentError"),
         ]),
-        // message
-        description: z.string(),
+        message: z.string(),
       }),
-    }),
-  });
-
-  private createErrorResponseDetail(): {
-    reason: z.infer<typeof ChargeFailure.ResponseDataSchema>["paymentIntent"]["error"]["reason"];
-    description: string;
-  } {
-    switch (this.error._internalName) {
-      case "TransactionInitalizeEventDataUnsupportedPaymentMethodError":
-        // TODO: move to error props
-        return {
-          reason: "UnsupportedPaymentMethodError",
-          description: "Provided payment method is not supported",
-        };
-      case "TransactionInitalizeEventDataParseError":
-        return {
-          reason: "BadRequestError",
-          description:
-            "Provided data is invalid. Check your data argument to transactionInitalizeSession mutation and try again.",
-        };
-      case "CreatePaymentIntentError":
-        return {
-          reason: "StripeCreatePaymentIntentError",
-          description: "Stripe API returned error while creating payment intent",
-        };
-      default:
-        // eslint-disable-next-line no-case-declarations
-        const exhaustiveCheck: never = this.error;
-
-        throw new BaseError(`Unhandled case: ${exhaustiveCheck}`);
-    }
-  }
+    ),
+  );
 
   constructor(args: {
     message: string;
@@ -133,7 +95,12 @@ class ChargeFailure extends SuccessWebhookResponse {
       message: this.message,
       data: ChargeFailure.ResponseDataSchema.parse({
         paymentIntent: {
-          error: this.createErrorResponseDetail(),
+          errors: [
+            {
+              code: this.error.publicCode,
+              message: this.error.publicMessage,
+            },
+          ],
         },
       }),
     });
