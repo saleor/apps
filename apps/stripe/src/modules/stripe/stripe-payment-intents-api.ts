@@ -13,6 +13,8 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
   static CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentError", {
     props: {
       _internalName: "CreatePaymentIntentError" as const,
+      publicCode: "StripeCreatePaymentIntentError" as const,
+      publicMessage: "Stripe API returned error while creating payment intent",
     },
   });
 

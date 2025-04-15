@@ -51,6 +51,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         // Saleor API sends amount in floats - Stripe wants amount in ints
         amount: saleorEvent.action.amount * 100,
         currency: "usd",
+        payment_method_types: [saleorEvent.data.paymentIntent.paymentMethod],
       },
     });
   });
@@ -105,6 +106,73 @@ describe("TransactionInitializeSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionInitializeSessionEvent(),
+    });
+
+    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
+      TransactionInitalizeSessionUseCaseResponses.ChargeFailure,
+    );
+  });
+
+  it("Returns ChargeFailure response when receives not supported payment method in data", async () => {
+    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
+      create: () => ({
+        createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
+      }),
+    };
+
+    const eventWithNotSupportedPaymentMethod = {
+      ...getMockedTransactionInitializeSessionEvent(),
+      data: {
+        paymentIntent: {
+          paymentMethod: "not-supported-payment-method",
+        },
+      },
+    };
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+    });
+
+    const responsePayload = await uc.execute({
+      channelId: mockedSaleorChannelId,
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithNotSupportedPaymentMethod,
+    });
+
+    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
+      TransactionInitalizeSessionUseCaseResponses.ChargeFailure,
+    );
+  });
+
+  it("Returns ChargeFailure response when receives addtional field in data", async () => {
+    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
+      create: () => ({
+        createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
+      }),
+    };
+
+    const eventWithAdditionalFieldinData = {
+      ...getMockedTransactionInitializeSessionEvent(),
+      data: {
+        paymentIntent: {
+          paymentMethod: "card",
+          addtionalField: "value",
+        },
+      },
+    };
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+    });
+
+    const responsePayload = await uc.execute({
+      channelId: mockedSaleorChannelId,
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithAdditionalFieldinData,
     });
 
     expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
