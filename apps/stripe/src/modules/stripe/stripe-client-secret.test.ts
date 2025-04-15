@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   createStripeClientSecret,
-  StripeClientSecretType,
+  StripeClientSecret,
   StripeClientSecretValidationError,
 } from "./stripe-client-secret";
 
@@ -30,7 +30,7 @@ describe("createStripeClientSecret", () => {
 
   it("shouldn't be assignable without createStripeClientSecret", () => {
     // @ts-expect-error - if this fails - it means the type is not branded
-    const testValue: StripeClientSecretType = "";
+    const testValue: StripeClientSecret = "";
 
     expect(testValue).toBe("");
   });

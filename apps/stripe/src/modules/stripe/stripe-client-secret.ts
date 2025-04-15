@@ -19,4 +19,4 @@ export const createStripeClientSecret = (raw: string | null) =>
     StripeClientSecretValidationError.normalize(error),
   )(raw);
 
-export type StripeClientSecretType = z.infer<typeof StripeClientSecretSchema>;
+export type StripeClientSecret = z.infer<typeof StripeClientSecretSchema>;

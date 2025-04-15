@@ -32531,6 +32531,7 @@ export type PaymentGatewayInitializeSessionSubscription = {
 export type TransactionInitializeSessionEventFragment = {
   __typename?: "TransactionInitializeSession";
   version?: string | null;
+  data?: any | null;
   action: { __typename?: "TransactionProcessAction"; amount: any; currency: string };
   sourceObject:
     | { __typename?: "Checkout"; channel: { __typename?: "Channel"; id: string; slug: string } }
@@ -32688,6 +32689,7 @@ export type TransactionInitializeSessionSubscription = {
     | {
         __typename?: "TransactionInitializeSession";
         version?: string | null;
+        data?: any | null;
         action: { __typename?: "TransactionProcessAction"; amount: any; currency: string };
         sourceObject:
           | {
@@ -32746,6 +32748,7 @@ export const UntypedTransactionInitializeSessionEventFragmentDoc = gql`
       amount
       currency
     }
+    data
     sourceObject {
       ... on Checkout {
         channel {
@@ -32931,6 +32934,7 @@ export const TransactionInitializeSessionEventFragmentDoc = {
               ],
             },
           },
+          { kind: "Field", name: { kind: "Name", value: "data" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "sourceObject" },
@@ -33328,6 +33332,7 @@ export const TransactionInitializeSessionDocument = {
               ],
             },
           },
+          { kind: "Field", name: { kind: "Name", value: "data" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "sourceObject" },
