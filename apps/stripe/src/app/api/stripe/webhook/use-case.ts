@@ -15,10 +15,7 @@ import { ITransactionEventReporter } from "@/modules/saleor/transaction-event-re
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripeEventVerify } from "@/modules/stripe/types";
-import {
-  TransactionRecorder,
-  TransactionRecorderError,
-} from "@/modules/transactions-recording/transaction-recorder";
+import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
 
 type SuccessResult = StripeWebhookSuccessResponse;
 type ErrorResult = StripeWebhookErrorResponse;
@@ -127,36 +124,23 @@ export class StripeWebhookUseCase {
 
     // TODO: There may be more than one object in single event (data.object)
 
-    const stripePaymentIntentId = createStripePaymentIntentId(event.value.id);
-
-    if (stripePaymentIntentId.isErr()) {
-      return err(new StripeWebhookErrorResponse(stripePaymentIntentId.error));
-    }
-
-    const recordedTransaction =
-      await this.transactionRecorder.getTransactionByStripePaymentIntentId(
-        stripePaymentIntentId.value,
-      );
-
-    if (recordedTransaction.isErr()) {
-      const recordedTransactionError = recordedTransaction.error;
-
-      switch (recordedTransactionError["constructor"]) {
-        default:
-        case TransactionRecorderError.PersistenceNotAvailable: {
-          captureException(
-            new BaseError("Can not retrieve recorded transaction from database", {
-              cause: recordedTransactionError,
-            }),
-          );
-
-          return err(new StripeWebhookErrorResponse(recordedTransactionError));
-        }
-      }
-    }
-
     switch (event.value.type) {
       case "payment_intent.succeeded": {
+        const stripePaymentIntentId = createStripePaymentIntentId(event.value.data.object.id);
+
+        if (stripePaymentIntentId.isErr()) {
+          return err(new StripeWebhookErrorResponse(stripePaymentIntentId.error));
+        }
+
+        const recordedTransaction =
+          await this.transactionRecorder.getTransactionByStripePaymentIntentId(
+            stripePaymentIntentId.value,
+          );
+
+        if (recordedTransaction.isErr()) {
+          return err(new StripeWebhookErrorResponse(recordedTransaction.error));
+        }
+
         const eventHandler = new PaymentIntentSucceededHandler();
         const resultEvent = await eventHandler.processEvent({
           recordedTransaction: recordedTransaction.value,

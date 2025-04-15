@@ -29,4 +29,8 @@ export class MockedTransactionRecorder implements TransactionRecorder {
       return err(new TransactionRecorderError.TransactionMissingError("Transaction not found"));
     }
   }
+
+  reset() {
+    this.transactions = {};
+  }
 }
