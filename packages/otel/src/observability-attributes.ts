@@ -3,6 +3,7 @@ export const ObservabilityAttributes = {
   SALEOR_VERSION: "saleorVersion",
   CHANNEL_SLUG: "channelSlug",
   TRANSACTION_ID: "transactionId",
+  CONFIGURATION_ID: "configurationId",
   ORDER_ID: "orderId",
   CHECKOUT_ID: "checkoutId",
   COMMIT_SHA: "git.commit.sha",

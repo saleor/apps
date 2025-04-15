@@ -33,7 +33,7 @@ describe("TransactionChargeSuccess", () => {
         "message": "Successfully charged",
         "pspRef": "pi_TEST_TEST_TEST",
         "saleorEventType": "CHARGE_SUCCESS",
-        "saleorTransactionId": "VHJhbnNhY3Rpb246MQ==",
+        "saleorTransactionId": "mocked-transaction-id",
       }
     `);
   });
@@ -64,7 +64,7 @@ describe("TransactionAuthorizationSuccess", () => {
         "message": "Successfully authorized",
         "pspRef": "pi_TEST_TEST_TEST",
         "saleorEventType": "AUTHORIZATION_SUCCESS",
-        "saleorTransactionId": "VHJhbnNhY3Rpb246MQ==",
+        "saleorTransactionId": "mocked-transaction-id",
       }
     `);
   });

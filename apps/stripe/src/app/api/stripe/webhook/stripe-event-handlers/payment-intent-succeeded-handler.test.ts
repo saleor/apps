@@ -36,7 +36,7 @@ describe("PaymentIntentSucceededHandler", () => {
     it("Resolved fields from Stripe properly", async () => {
       const event = getMockedPaymentIntentSucceededEvent();
 
-      event.data.object.amount_received = 2137;
+      event.data.object.amount_received = 2137_11;
 
       const transaction = getMockedRecordedTransaction({
         transactionFlow: "CHARGE",
@@ -53,7 +53,7 @@ describe("PaymentIntentSucceededHandler", () => {
       // comes from mock
       expect(value.amount.currency).toStrictEqual("USD");
       // Converted to Saleor float
-      expect(value.amount.amount).toStrictEqual(2137);
+      expect(value.amount.amount).toStrictEqual(2137.11);
       expect(value.pspRef).toStrictEqual(event.data.object.id);
       expect(value.date).toBeInstanceOf(Date);
     });

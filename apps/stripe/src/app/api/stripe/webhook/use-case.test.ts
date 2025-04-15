@@ -189,13 +189,13 @@ describe("StripeWebhookUseCase", () => {
           .toMatchInlineSnapshot(`
             {
               "amount": SaleorMoney {
-                "amount": 10,
+                "amount": 10.13,
                 "currency": "USD",
               },
               "message": "Successfully charged",
               "pspReference": "pi_TEST_TEST_TEST",
               "time": "2025-01-31T23:00:00.000Z",
-              "transactionId": "VHJhbnNhY3Rpb246MQ==",
+              "transactionId": "mocked-transaction-id",
               "type": "CHARGE_SUCCESS",
             }
           `);
@@ -241,13 +241,13 @@ describe("StripeWebhookUseCase", () => {
           .toMatchInlineSnapshot(`
             {
               "amount": SaleorMoney {
-                "amount": 15,
+                "amount": 15.11,
                 "currency": "USD",
               },
               "message": "Successfully authorized",
               "pspReference": "pi_TEST_TEST_TEST",
               "time": "2025-01-31T23:00:00.000Z",
-              "transactionId": "VHJhbnNhY3Rpb246MQ==",
+              "transactionId": "mocked-transaction-id",
               "type": "AUTHORIZATION_SUCCESS",
             }
           `);

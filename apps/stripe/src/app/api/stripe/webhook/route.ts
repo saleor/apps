@@ -1,3 +1,4 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { Result } from "neverthrow";
 import { NextRequest } from "next/server";
@@ -60,8 +61,8 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
    * - move shared attribute keys to some lib, maybe shared monorepo
    * - improve logger context to accept single record
    */
-  loggerContext.set("saleorApiUrl", webhookParams.saleorApiUrl);
-  loggerContext.set("configurationId", webhookParams.configurationId);
+  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, webhookParams.saleorApiUrl);
+  loggerContext.set(ObservabilityAttributes.CONFIGURATION_ID, webhookParams.configurationId);
 
   logger.info("Received webhook from Stripe");
 

@@ -122,8 +122,11 @@ export class StripeWebhookUseCase {
       return err(new StripeWebhookErrorResponse(event.error));
     }
 
-    // TODO: There may be more than one object in single event (data.object)
-
+    /*
+     * TODO: There may be more than one object in single event (data.object)
+     * todo: implement rest of events
+     * todo: extract shared pieces, maybe this code should be run once and handlers implement the same interface?
+     */
     switch (event.value.type) {
       case "payment_intent.succeeded": {
         const stripePaymentIntentId = createStripePaymentIntentId(event.value.data.object.id);
