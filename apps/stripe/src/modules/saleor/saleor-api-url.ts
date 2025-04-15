@@ -1,44 +1,26 @@
-import { err, ok, Result } from "neverthrow";
+import { fromThrowable } from "neverthrow";
+import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
 
-export class SaleorApiUrl {
-  public readonly url;
+export const SaleorApiUrlValidationError = BaseError.subclass("SaleorApiUrlValidationError", {
+  props: {
+    _internalName: "SaleorApiUrl.ValidationError" as const,
+  },
+});
 
-  static ValidationError = BaseError.subclass("ValidationError", {
-    props: {
-      _internalName: "SaleorApiUrl.ValidationError" as const,
-    },
-  });
+const saleorApiUrlSchema = z
+  .string()
+  .url()
+  .endsWith("/graphql/")
+  .refine((value) => value.startsWith("http://") || value.startsWith("https://"), {
+    message: 'Invalid input: must start with "http://" or "https://"',
+  })
+  .brand("SaleorApiUrl");
 
-  private constructor(url: string) {
-    this.url = url;
-  }
+export const createSaleorApiUrl = (raw: string) =>
+  fromThrowable(saleorApiUrlSchema.parse, (error) => SaleorApiUrlValidationError.normalize(error))(
+    raw,
+  );
 
-  static create(args: {
-    url: string;
-  }): Result<SaleorApiUrl, InstanceType<typeof SaleorApiUrl.ValidationError>> {
-    if (args.url.length === 0) {
-      return err(new SaleorApiUrl.ValidationError("Saleor API URL cannot be empty"));
-    }
-
-    const urlParsingResult = Result.fromThrowable(
-      () => new URL(args.url),
-      (err) => new SaleorApiUrl.ValidationError("Cannot parse Saleor API URL", { cause: err }),
-    )();
-
-    if (urlParsingResult.isErr()) {
-      return err(urlParsingResult.error);
-    }
-
-    if (!args.url.startsWith("http://") && !args.url.startsWith("https://")) {
-      return err(new SaleorApiUrl.ValidationError("Saleor API URL must start with http / https"));
-    }
-
-    if (!args.url.endsWith("/graphql/")) {
-      return err(new SaleorApiUrl.ValidationError("Saleor API URL must end with /graphql/"));
-    }
-
-    return ok(new SaleorApiUrl(urlParsingResult.value.href));
-  }
-}
+export type SaleorApiUrl = z.infer<typeof saleorApiUrlSchema>;

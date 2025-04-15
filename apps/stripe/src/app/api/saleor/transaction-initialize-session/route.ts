@@ -3,14 +3,12 @@ import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
 import { appConfigPersistence } from "@/lib/app-config-persistence";
-import {
-  BaseError,
-  UnknownError,
-  UseCaseGetConfigError,
-  UseCaseMissingConfigError,
-} from "@/lib/errors";
 import { withLoggerContext } from "@/lib/logger-context";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import {
+  MalformedRequestResponse,
+  UnhandledErrorResponse,
+} from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 
 import { TransactionInitializeSessionUseCase } from "./use-case";
@@ -22,80 +20,37 @@ const useCase = new TransactionInitializeSessionUseCase({
 });
 
 const handler = transactionInitializeSessionWebhookDefinition.createHandler(async (req, ctx) => {
-  const saleorApiUrlResult = SaleorApiUrl.create({ url: ctx.authData.saleorApiUrl });
+  try {
+    const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
-  if (saleorApiUrlResult.isErr()) {
-    captureException(
-      new BaseError("Invalid Saleor API URL", {
-        cause: saleorApiUrlResult.error,
-      }),
-    );
+    if (saleorApiUrlResult.isErr()) {
+      captureException(saleorApiUrlResult.error);
+      const response = new MalformedRequestResponse();
 
-    return Response.json(
-      {
-        message: "Invalid Saleor API URL",
+      return response.getResponse();
+    }
+
+    const result = await useCase.execute({
+      channelId: ctx.payload.sourceObject.channel.id,
+      appId: ctx.authData.appId,
+      saleorApiUrl: saleorApiUrlResult.value,
+      event: ctx.payload,
+    });
+
+    return result.match(
+      (result) => {
+        return result.getResponse();
       },
-      {
-        status: 400,
+      (err) => {
+        return err.getResponse();
       },
     );
+  } catch (error) {
+    captureException(error);
+    const response = new UnhandledErrorResponse();
+
+    return response.getResponse();
   }
-
-  const result = await useCase.execute({
-    channelId: ctx.payload.sourceObject.channel.id,
-    appId: ctx.authData.appId,
-    saleorApiUrl: saleorApiUrlResult.value,
-    event: ctx.payload,
-  });
-
-  return result.match(
-    (result) => {
-      return Response.json(result, { status: 200 });
-    },
-    (err) => {
-      switch (err["constructor"]) {
-        case UseCaseMissingConfigError:
-        case UseCaseGetConfigError:
-          return Response.json(
-            {
-              message: err.httpMessage,
-            },
-            {
-              status: err.httpStatusCode,
-            },
-          );
-
-        case TransactionInitializeSessionUseCase.UseCaseError:
-          captureException(TransactionInitializeSessionUseCase.UseCaseError);
-
-          return Response.json(
-            {
-              message: err.httpMessage,
-            },
-            {
-              status: err.httpStatusCode,
-            },
-          );
-
-        default: {
-          captureException(
-            new UnknownError("Unhandled error in TransactionInitializeSession", {
-              cause: err,
-            }),
-          );
-
-          return Response.json(
-            {
-              message: "Unhandled error",
-            },
-            {
-              status: 500,
-            },
-          );
-        }
-      }
-    },
-  );
 });
 
 // TODO: write integration test for this route

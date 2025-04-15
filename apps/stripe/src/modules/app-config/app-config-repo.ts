@@ -33,7 +33,7 @@ export interface AppConfigRepo {
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
-  }) => Promise<Result<void, InstanceType<typeof BaseError>>>;
+  }) => Promise<Result<null | void, InstanceType<typeof BaseError>>>;
   getStripeConfig: (
     access: GetStripeConfigAccessPattern,
   ) => Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>>;
