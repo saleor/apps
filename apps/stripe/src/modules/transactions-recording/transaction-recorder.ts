@@ -32,10 +32,20 @@ export const TransactionRecorderError = {
       _internalName: "TransactionRecorder.PersistenceNotAvailableError",
     },
   }),
+  /**
+   * Current assumption is that transaction MUST exist before reading it.
+   * If not, it's something wrong with the business logic
+   */
+  TransactionMissingError: BaseError.subclass("TransactionRecorder.TransactionMissingError", {
+    props: {
+      _internalName: "TransactionRecorder.TransactionMissingError",
+    },
+  }),
 };
 
 export type TransactionRecorderError = InstanceType<
-  typeof TransactionRecorderError.PersistenceNotAvailable
+  | typeof TransactionRecorderError.PersistenceNotAvailable
+  | typeof TransactionRecorderError.TransactionMissingError
 >;
 
 export interface TransactionRecorder {
