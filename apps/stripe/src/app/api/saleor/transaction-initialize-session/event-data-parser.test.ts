@@ -36,12 +36,24 @@ describe("parseTransactionInitalizeSessionEventData", () => {
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(UnsupportedPaymentMethodError);
   });
 
-  it("should return ValidationError if storefront sends invalid data (e.g additional field we dont support)", () => {
+  it("should return ParseError if storefront sends additional field we dont support for card payment method", () => {
     const storefrontData = {
       paymentIntent: {
         paymentMethod: "card",
         additionalField: "invalidValue",
       },
+    };
+    const result = parseTransactionInitalizeSessionEventData(storefrontData);
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(ParseError);
+  });
+
+  it("should return ParseError is storefront sends additional field we dont support", () => {
+    const storefrontData = {
+      paymentIntent: {
+        paymentMethod: "card",
+      },
+      additionalField: "invalidValue",
     };
     const result = parseTransactionInitalizeSessionEventData(storefrontData);
 

@@ -13,6 +13,7 @@ const TransactionInitalizeEventDataSchema = z
   .object({
     paymentIntent: z.discriminatedUnion("paymentMethod", [CardPaymentMethodSchema]),
   })
+  .strict()
   .brand("TransactionInitalizeRequestData");
 
 export const ParseError = BaseError.subclass("ParseError", {
