@@ -14,6 +14,7 @@ import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { saleorApp } from "@/lib/saleor-app";
 import { TransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
+import { transactionRecorder } from "@/modules/transactions-recording/transaction-recorder-impl";
 
 const useCase = new StripeWebhookUseCase({
   appConfigRepo: appConfigPersistence,
@@ -21,7 +22,7 @@ const useCase = new StripeWebhookUseCase({
     StripeWebhookSignatureValidator.createFromClient(stripeClient),
   apl: saleorApp.apl,
   // todo
-  transactionRecorder: {},
+  transactionRecorder: transactionRecorder,
   transactionEventReporterFactory(authData) {
     return new TransactionEventReporter({
       graphqlClient: createInstrumentedGraphqlClient(authData),

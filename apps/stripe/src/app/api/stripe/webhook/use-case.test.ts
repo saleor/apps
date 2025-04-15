@@ -9,7 +9,9 @@ import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
+import { ITransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { IStripeEventVerify, StripeEventParsingError } from "@/modules/stripe/types";
+import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
 
 describe("StripeWebhookUseCase", () => {
   const rawEventBody = JSON.stringify({ id: 1 });
@@ -29,6 +31,15 @@ describe("StripeWebhookUseCase", () => {
 
   const webhookParams = WebhookParams.createFromWebhookUrl(mockAdyenWebhookUrl)._unsafeUnwrap();
 
+  const mockEventReporter: ITransactionEventReporter = {
+    reportTransactionEvent: vi.fn(),
+  };
+
+  const mockTransactionRecorder: TransactionRecorder = {
+    recordTransaction: vi.fn(),
+    getTransactionByStripePaymentIntentId: vi.fn(),
+  };
+
   beforeEach(() => {
     mockApl.get.mockImplementation(async () => mockAuthData);
 
@@ -36,6 +47,10 @@ describe("StripeWebhookUseCase", () => {
       apl: mockApl,
       appConfigRepo: mockedAppConfigRepo,
       webhookEventVerifyFactory: () => eventVerify,
+      transactionEventReporterFactory() {
+        return mockEventReporter;
+      },
+      transactionRecorder: mockTransactionRecorder,
     });
   });
 
