@@ -185,20 +185,28 @@ describe("StripeWebhookUseCase", () => {
 
         expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
-        expect(vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0])
-          .toMatchInlineSnapshot(`
-            {
-              "amount": SaleorMoney {
-                "amount": 10.13,
-                "currency": "USD",
-              },
-              "message": "Successfully charged",
-              "pspReference": "pi_TEST_TEST_TEST",
-              "time": "2025-01-31T23:00:00.000Z",
-              "transactionId": "mocked-transaction-id",
-              "type": "CHARGE_SUCCESS",
-            }
-          `);
+        expect(
+          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+        ).toMatchInlineSnapshot(
+          {
+            time: expect.toSatisfy(
+              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+            ),
+          },
+          `
+          {
+            "amount": SaleorMoney {
+              "amount": 10.13,
+              "currency": "USD",
+            },
+            "message": "Successfully charged",
+            "pspReference": "pi_TEST_TEST_TEST",
+            "time": toSatisfy<[Function anonymous]>,
+            "transactionId": "mocked-transaction-id",
+            "type": "CHARGE_SUCCESS",
+          }
+        `,
+        );
       });
 
       it("Reports AUTHORIZATION_SUCCESS transaction event to Saleor", async () => {
@@ -237,20 +245,28 @@ describe("StripeWebhookUseCase", () => {
 
         expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
-        expect(vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0])
-          .toMatchInlineSnapshot(`
-            {
-              "amount": SaleorMoney {
-                "amount": 15.11,
-                "currency": "USD",
-              },
-              "message": "Successfully authorized",
-              "pspReference": "pi_TEST_TEST_TEST",
-              "time": "2025-01-31T23:00:00.000Z",
-              "transactionId": "mocked-transaction-id",
-              "type": "AUTHORIZATION_SUCCESS",
-            }
-          `);
+        expect(
+          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+        ).toMatchInlineSnapshot(
+          {
+            time: expect.toSatisfy(
+              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+            ),
+          },
+          `
+          {
+            "amount": SaleorMoney {
+              "amount": 15.11,
+              "currency": "USD",
+            },
+            "message": "Successfully authorized",
+            "pspReference": "pi_TEST_TEST_TEST",
+            "time": toSatisfy<[Function anonymous]>,
+            "transactionId": "mocked-transaction-id",
+            "type": "AUTHORIZATION_SUCCESS",
+          }
+        `,
+        );
       });
     });
   });
