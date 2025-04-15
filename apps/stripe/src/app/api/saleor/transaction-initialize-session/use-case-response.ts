@@ -54,6 +54,13 @@ class ChargeRequest extends SuccessWebhookResponse {
   }
 }
 
+// TODO: move to factory
+// const schema = z.object({
+//   paymentIntent: z.object({
+//     errors: z.array(),
+//   })
+// })
+
 class ChargeFailure extends SuccessWebhookResponse {
   readonly result = "CHARGE_FAILURE" as const;
   readonly message: string;
@@ -61,14 +68,18 @@ class ChargeFailure extends SuccessWebhookResponse {
     | TransactionInitalizeEventDataError
     | InstanceType<typeof StripePaymentIntentsApi.CreatePaymentIntentError>;
 
+
+
   private static ResponseDataSchema = z.object({
     paymentIntent: z.object({
       error: z.object({
+        // code 
         reason: z.union([
           z.literal("UnsupportedPaymentMethodError"),
           z.literal("BadRequestError"),
           z.literal("StripeCreatePaymentIntentError"),
         ]),
+        // message
         description: z.string(),
       }),
     }),
@@ -80,6 +91,7 @@ class ChargeFailure extends SuccessWebhookResponse {
   } {
     switch (this.error._internalName) {
       case "TransactionInitalizeEventDataUnsupportedPaymentMethodError":
+        // TODO: move to error props
         return {
           reason: "UnsupportedPaymentMethodError",
           description: "Provided payment method is not supported",
