@@ -1,12 +1,8 @@
 import { APL, AuthData } from "@saleor/app-sdk/APL";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
-import Stripe from "stripe";
 
-import {
-  TransactionAuthorizationSuccess,
-  TransactionChargeSuccess,
-} from "@/app/api/stripe/webhook/resolved-webhook-events";
+import { PaymentIntentSucceededHandler } from "@/app/api/stripe/webhook/stripe-event-handlers/payment-intent-succeeded-handler";
 import {
   StripeWebhookErrorResponse,
   StripeWebhookSuccessResponse,
@@ -15,17 +11,11 @@ import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { ITransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { StripeClient } from "@/modules/stripe/stripe-client";
-import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
-import {
-  createStripePaymentIntentId,
-  StripePaymentIntentId,
-} from "@/modules/stripe/stripe-payment-intent-id";
+import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripeEventVerify } from "@/modules/stripe/types";
 import {
-  RecordedTransaction,
   TransactionRecorder,
   TransactionRecorderError,
 } from "@/modules/transactions-recording/transaction-recorder";
@@ -165,104 +155,30 @@ export class StripeWebhookUseCase {
       }
     }
 
-    const { saleorTransactionId } = recordedTransaction.value;
-
-    const eventToReport = this.resolveResultToReport(
-      stripePaymentIntentId.value,
-      event.value,
-      recordedTransaction.value,
-    );
-
-    if (!eventToReport) {
-      const error = new BaseError("Event not implemented", {
-        props: {
-          event: event.value.type,
-        },
-      });
-
-      captureException(error);
-
-      return err(new StripeWebhookErrorResponse(error));
-    }
-
-    const reportResult = await transactionEventReporter.reportTransactionEvent({
-      type: eventToReport.saleorEventType,
-      message: eventToReport.message,
-      time: eventToReport.date.toISOString(),
-      pspReference: eventToReport.pspRef,
-      transactionId: saleorTransactionId,
-      amount: eventToReport.amount,
-    });
-
-    if (reportResult.isErr()) {
-      // handle error
-
-      return err(new StripeWebhookErrorResponse(reportResult.error));
-    }
-
-    return ok(new StripeWebhookSuccessResponse()); // todo
-  }
-
-  /**
-   * TODO:
-   * - handle complexity of nested conditions
-   * - handle all events
-   * - handle local errors
-   */
-  private resolveResultToReport(
-    saleorTransactionId: StripePaymentIntentId,
-    event: Stripe.Event,
-    recordedTransaction: RecordedTransaction,
-  ) {
-    // TODO: Map events. Check which to support
-    switch (event.type) {
+    switch (event.value.type) {
       case "payment_intent.succeeded": {
-        const intentObject = event.data.object;
-        const currency = intentObject.currency;
+        const eventHandler = new PaymentIntentSucceededHandler();
+        const resultEvent = await eventHandler.processEvent({
+          recordedTransaction: recordedTransaction.value,
+          event: event.value,
+        });
 
-        switch (recordedTransaction.transactionFlow) {
-          case "AUTHORIZATION": {
-            // todo check docs for which amount to use
-            const authorizedAmount = intentObject.amount_capturable;
-
-            const saleorAmountToReport = SaleorMoney.createFromStripe({
-              amount: authorizedAmount,
-              currency,
-            });
-
-            if (saleorAmountToReport.isErr()) {
-              throw new BaseError("Failed to convert Stripe amount to Saleor amount", {
-                cause: saleorAmountToReport.error,
-              });
-            }
-
-            return new TransactionAuthorizationSuccess({
-              pspRef: saleorTransactionId,
-              amount: saleorAmountToReport.value,
-              date: createDateFromStripeEvent(event),
-            });
-          }
-          case "CHARGE": {
-            const capturedAmount = intentObject.amount_received;
-
-            const saleorAmountToReport = SaleorMoney.createFromStripe({
-              amount: capturedAmount,
-              currency,
-            });
-
-            if (saleorAmountToReport.isErr()) {
-              throw new BaseError("Failed to convert Stripe amount to Saleor amount", {
-                cause: saleorAmountToReport.error,
-              });
-            }
-
-            return new TransactionChargeSuccess({
-              pspRef: saleorTransactionId,
-              amount: saleorAmountToReport.value,
-              date: createDateFromStripeEvent(event),
-            });
-          }
+        if (resultEvent.isErr()) {
+          return err(new StripeWebhookErrorResponse(resultEvent.error));
         }
+
+        const reportResult = await transactionEventReporter.reportTransactionEvent(
+          resultEvent.value.getTransactionReportVariables(),
+        );
+
+        if (reportResult.isErr()) {
+          return err(new StripeWebhookErrorResponse(reportResult.error));
+        }
+
+        return ok(new StripeWebhookSuccessResponse());
+      }
+      default: {
+        throw new Error("Event not implemented");
       }
     }
   }

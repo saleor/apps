@@ -67,7 +67,7 @@ export class TransactionInitializeSessionUseCase {
   ): Result<
     [SaleorMoney, StripePaymentIntentId, StripeClientSecretType],
     | InstanceType<typeof StripePaymentIntentValidationError>
-    | InstanceType<typeof SaleorMoney.ValdationError>
+    | InstanceType<typeof SaleorMoney.ValidationError>
     | InstanceType<typeof StripeClientSecretValidationError>
   > {
     return Result.combine([
