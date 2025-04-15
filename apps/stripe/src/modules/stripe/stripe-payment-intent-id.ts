@@ -24,4 +24,4 @@ export const createStripePaymentIntentId = (raw: string) =>
     StripePaymentIntentValidationError.normalize(error),
   )(raw);
 
-export type StripePaymentIntentIdType = z.infer<typeof StripePaymentIntentIdSchema>;
+export type StripePaymentIntentId = z.infer<typeof StripePaymentIntentIdSchema>;

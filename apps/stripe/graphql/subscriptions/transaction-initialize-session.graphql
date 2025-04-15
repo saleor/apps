@@ -4,6 +4,8 @@ fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
     amount
     currency
   }
+  # TODO: check recipient of the app
+  data
   sourceObject {
     ... on Checkout {
       channel {
