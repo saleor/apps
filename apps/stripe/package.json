@@ -27,6 +27,9 @@
     }
   },
   "dependencies": {
+    "react-hook-form": "^7.43.9",
+    "@hookform/resolvers": "^3.3.1",
+    "@saleor/react-hook-form-macaw": "workspace:*",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/api-logs": "catalog:",
     "@opentelemetry/instrumentation": "catalog:",

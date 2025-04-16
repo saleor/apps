@@ -14,6 +14,7 @@ export const AppHeader = ({ ...props }: BoxProps) => {
         </TextLink>{" "}
         to learn more
       </Text>
+      <Box>{props.children}</Box>
     </Box>
   );
 };

@@ -15,5 +15,5 @@ export const ChannelConfigSection = () => {
     return <EmptyConfigs />;
   }
 
-  return <Box>asd</Box>;
+  return <Box>Loading...</Box>;
 };

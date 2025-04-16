@@ -1521,6 +1521,9 @@ importers:
 
   apps/stripe:
     dependencies:
+      '@hookform/resolvers':
+        specifier: ^3.3.1
+        version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
@@ -1563,6 +1566,9 @@ importers:
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@saleor/react-hook-form-macaw':
+        specifier: workspace:*
+        version: link:../../packages/react-hook-form-macaw
       '@sentry/cli':
         specifier: 'catalog:'
         version: 1.77.3
@@ -1614,6 +1620,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.43.9
+        version: 7.44.3(react@18.2.0)
       stripe:
         specifier: 18.0.0
         version: 18.0.0

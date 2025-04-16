@@ -9,9 +9,7 @@ export const EmptyConfigs = () => {
     <Layout.AppSectionCard
       footer={
         <Box display="flex" justifyContent="flex-end">
-          <Button onClick={() => router.push("/configuration/new")}>
-            Add Stripe configuration
-          </Button>
+          <Button onClick={() => router.push("/config/new")}>Add Stripe configuration</Button>
         </Box>
       }
     >
