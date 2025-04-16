@@ -84,7 +84,9 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
         return success.getResponse();
       },
       (error) => {
-        logger.error("Error processing Stripe webhook");
+        logger.error("Error processing Stripe webhook", {
+          error: error,
+        });
 
         return error.getResponse();
       },
