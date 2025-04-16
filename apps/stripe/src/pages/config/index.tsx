@@ -4,6 +4,7 @@ import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
 import { AppHeader } from "@/modules/ui/app-header";
+import { ChannelConfigSection } from "@/modules/ui/stripe-configs/channel-config-section";
 
 const ConfigPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
@@ -31,7 +32,7 @@ const ConfigPage: NextPage = () => {
           </Box>
         }
       >
-        a
+        <ChannelConfigSection />
       </Layout.AppSection>
       <Layout.AppSection
         heading="Channels configurations"

@@ -10,4 +10,8 @@ export class AppRootConfig {
   getConfigByChannelId(channelId: string) {
     return this.configsByChannelId[channelId];
   }
+
+  getAllConfigsAsList() {
+    return Object.values(this.configsByChannelId);
+  }
 }

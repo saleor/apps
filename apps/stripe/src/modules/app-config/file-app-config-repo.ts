@@ -4,6 +4,7 @@ import { ok, Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
+import { AppRootConfig } from "@/modules/app-config/app-root-config";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
@@ -210,5 +211,30 @@ export class FileAppConfigRepo implements AppConfigRepo {
     fs.writeFileSync(this.filePath, JSON.stringify(newConfig, null, 2), "utf-8");
 
     return ok(null);
+  }
+
+  async getRootConfig() {
+    const savedJson = this.readExistingAppConfigFromFileAsJson();
+
+    const mappedRecord = Object.entries(savedJson.appRootConfig).reduce(
+      (acc, [channelId, configJson]) => {
+        acc[channelId] = StripeConfig.create({
+          name: configJson.name,
+          id: configJson.id,
+          restrictedKey: StripeRestrictedKey.create({
+            restrictedKey: configJson.restrictedKey,
+          })._unsafeUnwrap(),
+          publishableKey: StripePublishableKey.create({
+            publishableKey: configJson.publishableKey,
+          })._unsafeUnwrap(),
+          webhookSecret: StripeWebhookSecret.create(configJson.webhookSecret)._unsafeUnwrap(),
+        })._unsafeUnwrap();
+
+        return acc;
+      },
+      {} as Record<string, StripeConfig>,
+    );
+
+    return ok(new AppRootConfig(mappedRecord));
   }
 }
