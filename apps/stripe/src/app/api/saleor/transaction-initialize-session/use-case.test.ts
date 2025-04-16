@@ -51,7 +51,9 @@ describe("TransactionInitializeSessionUseCase", () => {
         // Saleor API sends amount in floats - Stripe wants amount in ints
         amount: saleorEvent.action.amount * 100,
         currency: "usd",
-        payment_method_types: ["card"],
+        automatic_payment_methods: {
+          enabled: true,
+        },
       },
     });
   });

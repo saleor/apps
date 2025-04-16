@@ -83,7 +83,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               "errors": [
                 {
                   "code": "BadRequestError",
-                  "message": "Provided data is invalid. Check your data argument to transactionInitalizeSession mutation and try again.",
+                  "message": "Provided data is invalid. Check your data argument to transactionInitializeSession mutation and try again.",
                 },
               ],
             },

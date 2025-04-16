@@ -9,32 +9,32 @@ const CardPaymentMethodSchema = z
   })
   .strict();
 
-const TransactionInitalizeEventDataSchema = z
+const TransactionInitializeEventDataSchema = z
   .object({
     paymentIntent: z.discriminatedUnion("paymentMethod", [CardPaymentMethodSchema]),
   })
   .strict()
-  .brand("TransactionInitalizeRequestData");
+  .brand("TransactionInitializeRequestData");
 
 export const ParseError = BaseError.subclass("ParseError", {
   props: {
-    _internalName: "TransactionInitalizeEventDataParseError" as const,
+    _internalName: "TransactionInitializeEventDataParseError" as const,
     publicCode: "BadRequestError" as const,
     publicMessage:
-      "Provided data is invalid. Check your data argument to transactionInitalizeSession mutation and try again.",
+      "Provided data is invalid. Check your data argument to transactionInitializeSession mutation and try again.",
   },
 });
 
 export const UnsupportedPaymentMethodError = ParseError.subclass("UnsupportedPaymentMethodError", {
   props: {
-    _internalName: "TransactionInitalizeEventDataUnsupportedPaymentMethodError" as const,
+    _internalName: "TransactionInitializeEventDataUnsupportedPaymentMethodError" as const,
     publicCode: "UnsupportedPaymentMethodError" as const,
     publicMessage: "Provided payment method is not supported",
   },
 });
 
-export const parseTransactionInitalizeSessionEventData = (raw: unknown) => {
-  const parsingResult = TransactionInitalizeEventDataSchema.safeParse(raw);
+export const parseTransactionInitializeSessionEventData = (raw: unknown) => {
+  const parsingResult = TransactionInitializeEventDataSchema.safeParse(raw);
 
   if (parsingResult.success) {
     return ok(parsingResult.data);
@@ -55,8 +55,10 @@ export const parseTransactionInitalizeSessionEventData = (raw: unknown) => {
   return err(new ParseError("Invalid data", { cause: parsingResult.error }));
 };
 
-export type TransactionInitalizeEventData = z.infer<typeof TransactionInitalizeEventDataSchema>;
+export type TransactionInitializeSessionEventData = z.infer<
+  typeof TransactionInitializeEventDataSchema
+>;
 
-export type TransactionInitalizeEventDataError =
+export type TransactionInitializeSessionEventDataError =
   | InstanceType<typeof ParseError>
   | InstanceType<typeof UnsupportedPaymentMethodError>;
