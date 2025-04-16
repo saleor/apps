@@ -14,6 +14,7 @@ const config: IGraphQLConfig = {
                 defaultScalarType: "unknown",
                 immutableTypes: true,
                 strictScalars: true,
+                skipTypename: true,
                 scalars: {
                   _Any: "unknown",
                   Date: "string",

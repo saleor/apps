@@ -67,7 +67,6 @@ export type Scalars = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountAddressCreate = {
-  readonly __typename?: 'AccountAddressCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -78,7 +77,6 @@ export type AccountAddressCreate = {
 
 /** Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER. */
 export type AccountAddressDelete = {
-  readonly __typename?: 'AccountAddressDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -89,7 +87,6 @@ export type AccountAddressDelete = {
 
 /** Updates an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER. */
 export type AccountAddressUpdate = {
-  readonly __typename?: 'AccountAddressUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -104,7 +101,6 @@ export type AccountAddressUpdate = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountDelete = {
-  readonly __typename?: 'AccountDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -112,7 +108,6 @@ export type AccountDelete = {
 };
 
 export type AccountError = {
-  readonly __typename?: 'AccountError';
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -174,7 +169,6 @@ export type AccountInput = {
 
 /** Register a new user. */
 export type AccountRegister = {
-  readonly __typename?: 'AccountRegister';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -208,7 +202,6 @@ export type AccountRegisterInput = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountRequestDeletion = {
-  readonly __typename?: 'AccountRequestDeletion';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -220,7 +213,6 @@ export type AccountRequestDeletion = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountSetDefaultAddress = {
-  readonly __typename?: 'AccountSetDefaultAddress';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -234,7 +226,6 @@ export type AccountSetDefaultAddress = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountUpdate = {
-  readonly __typename?: 'AccountUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -243,7 +234,6 @@ export type AccountUpdate = {
 
 /** Represents user address data. */
 export type Address = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Address';
   readonly city: Scalars['String']['output'];
   readonly cityArea: Scalars['String']['output'];
   readonly companyName: Scalars['String']['output'];
@@ -345,7 +335,6 @@ export type AddressPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type AddressCreate = {
-  readonly __typename?: 'AddressCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -362,7 +351,6 @@ export type AddressCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AddressCreated = Event & {
-  readonly __typename?: 'AddressCreated';
   /** The address the event relates to. */
   readonly address?: Maybe<Address>;
   /** Time of the event. */
@@ -381,7 +369,6 @@ export type AddressCreated = Event & {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type AddressDelete = {
-  readonly __typename?: 'AddressDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -398,7 +385,6 @@ export type AddressDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AddressDeleted = Event & {
-  readonly __typename?: 'AddressDeleted';
   /** The address the event relates to. */
   readonly address?: Maybe<Address>;
   /** Time of the event. */
@@ -442,7 +428,6 @@ export type AddressInput = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type AddressSetDefault = {
-  readonly __typename?: 'AddressSetDefault';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -461,7 +446,6 @@ export type AddressTypeEnum =
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type AddressUpdate = {
-  readonly __typename?: 'AddressUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -478,7 +462,6 @@ export type AddressUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AddressUpdated = Event & {
-  readonly __typename?: 'AddressUpdated';
   /** The address the event relates to. */
   readonly address?: Maybe<Address>;
   /** Time of the event. */
@@ -492,7 +475,6 @@ export type AddressUpdated = Event & {
 };
 
 export type AddressValidationData = {
-  readonly __typename?: 'AddressValidationData';
   readonly addressFormat: Scalars['String']['output'];
   readonly addressLatinFormat: Scalars['String']['output'];
   readonly allowedFields: ReadonlyArray<Scalars['String']['output']>;
@@ -514,7 +496,6 @@ export type AddressValidationData = {
 
 /** Represents allocation. */
 export type Allocation = Node & {
-  readonly __typename?: 'Allocation';
   readonly id: Scalars['ID']['output'];
   /**
    * Quantity allocated for orders.
@@ -544,7 +525,6 @@ export type AllocationStrategyEnum =
 
 /** Represents app data. */
 export type App = Node & ObjectWithMetadata & {
-  readonly __typename?: 'App';
   /** Description of this app. */
   readonly aboutApp?: Maybe<Scalars['String']['output']>;
   /** JWT token used to authenticate by thridparty app. */
@@ -678,7 +658,6 @@ export type AppPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppActivate = {
-  readonly __typename?: 'AppActivate';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -686,7 +665,6 @@ export type AppActivate = {
 };
 
 export type AppCountableConnection = {
-  readonly __typename?: 'AppCountableConnection';
   readonly edges: ReadonlyArray<AppCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -695,7 +673,6 @@ export type AppCountableConnection = {
 };
 
 export type AppCountableEdge = {
-  readonly __typename?: 'AppCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -704,7 +681,6 @@ export type AppCountableEdge = {
 
 /** Creates a new app. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS. */
 export type AppCreate = {
-  readonly __typename?: 'AppCreate';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -719,7 +695,6 @@ export type AppCreate = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppDeactivate = {
-  readonly __typename?: 'AppDeactivate';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -732,7 +707,6 @@ export type AppDeactivate = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppDelete = {
-  readonly __typename?: 'AppDelete';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -745,7 +719,6 @@ export type AppDelete = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppDeleteFailedInstallation = {
-  readonly __typename?: 'AppDeleteFailedInstallation';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appInstallation?: Maybe<AppInstallation>;
@@ -760,7 +733,6 @@ export type AppDeleteFailedInstallation = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppDeleted = Event & {
-  readonly __typename?: 'AppDeleted';
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
   /** Time of the event. */
@@ -774,7 +746,6 @@ export type AppDeleted = Event & {
 };
 
 export type AppError = {
-  readonly __typename?: 'AppError';
   /** The error code. */
   readonly code: AppErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -803,7 +774,6 @@ export type AppErrorCode =
 
 /** Represents app data. */
 export type AppExtension = Node & {
-  readonly __typename?: 'AppExtension';
   /** JWT token used to authenticate by thridparty app extension. */
   readonly accessToken?: Maybe<Scalars['String']['output']>;
   readonly app: App;
@@ -821,7 +791,6 @@ export type AppExtension = Node & {
 };
 
 export type AppExtensionCountableConnection = {
-  readonly __typename?: 'AppExtensionCountableConnection';
   readonly edges: ReadonlyArray<AppExtensionCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -830,7 +799,6 @@ export type AppExtensionCountableConnection = {
 };
 
 export type AppExtensionCountableEdge = {
-  readonly __typename?: 'AppExtensionCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -876,7 +844,6 @@ export type AppExtensionTargetEnum =
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppFetchManifest = {
-  readonly __typename?: 'AppFetchManifest';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
@@ -898,7 +865,6 @@ export type AppInput = {
 
 /** Install new app by using app manifest. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS. */
 export type AppInstall = {
-  readonly __typename?: 'AppInstall';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appInstallation?: Maybe<AppInstallation>;
@@ -918,7 +884,6 @@ export type AppInstallInput = {
 
 /** Represents ongoing installation of app. */
 export type AppInstallation = Job & Node & {
-  readonly __typename?: 'AppInstallation';
   readonly appName: Scalars['String']['output'];
   /** Created date time of job in ISO 8601 format. */
   readonly createdAt: Scalars['DateTime']['output'];
@@ -940,7 +905,6 @@ export type AppInstallation = Job & Node & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppInstalled = Event & {
-  readonly __typename?: 'AppInstalled';
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
   /** Time of the event. */
@@ -954,7 +918,6 @@ export type AppInstalled = Event & {
 };
 
 export type AppManifestExtension = {
-  readonly __typename?: 'AppManifestExtension';
   /** Label of the extension to show in the dashboard. */
   readonly label: Scalars['String']['output'];
   /** Place where given extension will be mounted. */
@@ -968,7 +931,6 @@ export type AppManifestExtension = {
 };
 
 export type AppManifestWebhook = {
-  readonly __typename?: 'AppManifestWebhook';
   /** The asynchronous events that webhook wants to subscribe. */
   readonly asyncEvents?: Maybe<ReadonlyArray<WebhookEventTypeAsyncEnum>>;
   /** The name of the webhook. */
@@ -987,7 +949,6 @@ export type AppManifestWebhook = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppRetryInstall = {
-  readonly __typename?: 'AppRetryInstall';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appInstallation?: Maybe<AppInstallation>;
@@ -1015,7 +976,6 @@ export type AppSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppStatusChanged = Event & {
-  readonly __typename?: 'AppStatusChanged';
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
   /** Time of the event. */
@@ -1030,7 +990,6 @@ export type AppStatusChanged = Event & {
 
 /** Represents token data. */
 export type AppToken = Node & {
-  readonly __typename?: 'AppToken';
   /** Last 4 characters of the token. */
   readonly authToken?: Maybe<Scalars['String']['output']>;
   readonly id: Scalars['ID']['output'];
@@ -1044,7 +1003,6 @@ export type AppToken = Node & {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppTokenCreate = {
-  readonly __typename?: 'AppTokenCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appToken?: Maybe<AppToken>;
@@ -1059,7 +1017,6 @@ export type AppTokenCreate = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppTokenDelete = {
-  readonly __typename?: 'AppTokenDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appToken?: Maybe<AppToken>;
@@ -1075,7 +1032,6 @@ export type AppTokenInput = {
 
 /** Verify provided app token. */
 export type AppTokenVerify = {
-  readonly __typename?: 'AppTokenVerify';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
@@ -1096,7 +1052,6 @@ export type AppTypeEnum =
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppUpdate = {
-  readonly __typename?: 'AppUpdate';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -1111,7 +1066,6 @@ export type AppUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppUpdated = Event & {
-  readonly __typename?: 'AppUpdated';
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
   /** Time of the event. */
@@ -1139,7 +1093,6 @@ export type AreaUnitsEnum =
  * Requires one of the following permissions: MANAGE_MENUS, MANAGE_SETTINGS.
  */
 export type AssignNavigation = {
-  readonly __typename?: 'AssignNavigation';
   readonly errors: ReadonlyArray<MenuError>;
   /** Assigned navigation menu. */
   readonly menu?: Maybe<Menu>;
@@ -1153,7 +1106,6 @@ export type AssignNavigation = {
  * Added in Saleor 3.1.
  */
 export type AssignedVariantAttribute = {
-  readonly __typename?: 'AssignedVariantAttribute';
   /** Attribute assigned to variant. */
   readonly attribute: Attribute;
   /** Determines, whether assigned attribute is allowed for variant selection. Supported variant types for variant selection are: ['dropdown', 'boolean', 'swatch', 'numeric'] */
@@ -1162,7 +1114,6 @@ export type AssignedVariantAttribute = {
 
 /** Custom attribute of a product. Attributes can be assigned to products and variants at the product type level. */
 export type Attribute = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Attribute';
   /** Whether the attribute can be displayed in the admin product list. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES. */
   readonly availableInGrid: Scalars['Boolean']['output'];
   /** List of attribute's values. */
@@ -1309,7 +1260,6 @@ export type AttributeTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeBulkDelete = {
-  readonly __typename?: 'AttributeBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   /** Returns how many objects were affected. */
@@ -1331,7 +1281,6 @@ export type AttributeChoicesSortingInput = {
 };
 
 export type AttributeCountableConnection = {
-  readonly __typename?: 'AttributeCountableConnection';
   readonly edges: ReadonlyArray<AttributeCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -1340,7 +1289,6 @@ export type AttributeCountableConnection = {
 };
 
 export type AttributeCountableEdge = {
-  readonly __typename?: 'AttributeCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -1349,7 +1297,6 @@ export type AttributeCountableEdge = {
 
 /** Creates an attribute. */
 export type AttributeCreate = {
-  readonly __typename?: 'AttributeCreate';
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
@@ -1401,7 +1348,6 @@ export type AttributeCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeCreated = Event & {
-  readonly __typename?: 'AttributeCreated';
   /** The attribute the event relates to. */
   readonly attribute?: Maybe<Attribute>;
   /** Time of the event. */
@@ -1420,7 +1366,6 @@ export type AttributeCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeDelete = {
-  readonly __typename?: 'AttributeDelete';
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
@@ -1435,7 +1380,6 @@ export type AttributeDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeDeleted = Event & {
-  readonly __typename?: 'AttributeDeleted';
   /** The attribute the event relates to. */
   readonly attribute?: Maybe<Attribute>;
   /** Time of the event. */
@@ -1455,7 +1399,6 @@ export type AttributeEntityTypeEnum =
   | 'PRODUCT_VARIANT';
 
 export type AttributeError = {
-  readonly __typename?: 'AttributeError';
   /** The error code. */
   readonly code: AttributeErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -1530,7 +1473,6 @@ export type AttributeInputTypeEnum =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeReorderValues = {
-  readonly __typename?: 'AttributeReorderValues';
   /** Attribute from which values are reordered. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1566,7 +1508,6 @@ export type AttributeSortingInput = {
 };
 
 export type AttributeTranslatableContent = Node & {
-  readonly __typename?: 'AttributeTranslatableContent';
   /**
    * Custom attribute of a product.
    * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
@@ -1589,7 +1530,6 @@ export type AttributeTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type AttributeTranslate = {
-  readonly __typename?: 'AttributeTranslate';
   readonly attribute?: Maybe<Attribute>;
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1597,7 +1537,6 @@ export type AttributeTranslate = {
 };
 
 export type AttributeTranslation = Node & {
-  readonly __typename?: 'AttributeTranslation';
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
   readonly language: LanguageDisplay;
@@ -1615,7 +1554,6 @@ export type AttributeTypeEnum =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeUpdate = {
-  readonly __typename?: 'AttributeUpdate';
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
@@ -1663,7 +1601,6 @@ export type AttributeUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeUpdated = Event & {
-  readonly __typename?: 'AttributeUpdated';
   /** The attribute the event relates to. */
   readonly attribute?: Maybe<Attribute>;
   /** Time of the event. */
@@ -1678,7 +1615,6 @@ export type AttributeUpdated = Event & {
 
 /** Represents a value of an attribute. */
 export type AttributeValue = Node & {
-  readonly __typename?: 'AttributeValue';
   /** Represents the boolean value of the attribute value. */
   readonly boolean?: Maybe<Scalars['Boolean']['output']>;
   /** Represents the date value of the attribute value. */
@@ -1728,7 +1664,6 @@ export type AttributeValueTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeValueBulkDelete = {
-  readonly __typename?: 'AttributeValueBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   /** Returns how many objects were affected. */
@@ -1737,7 +1672,6 @@ export type AttributeValueBulkDelete = {
 };
 
 export type AttributeValueCountableConnection = {
-  readonly __typename?: 'AttributeValueCountableConnection';
   readonly edges: ReadonlyArray<AttributeValueCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -1746,7 +1680,6 @@ export type AttributeValueCountableConnection = {
 };
 
 export type AttributeValueCountableEdge = {
-  readonly __typename?: 'AttributeValueCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -1759,7 +1692,6 @@ export type AttributeValueCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type AttributeValueCreate = {
-  readonly __typename?: 'AttributeValueCreate';
   /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1807,7 +1739,6 @@ export type AttributeValueCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeValueCreated = Event & {
-  readonly __typename?: 'AttributeValueCreated';
   /** The attribute value the event relates to. */
   readonly attributeValue?: Maybe<AttributeValue>;
   /** Time of the event. */
@@ -1826,7 +1757,6 @@ export type AttributeValueCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeValueDelete = {
-  readonly __typename?: 'AttributeValueDelete';
   /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1843,7 +1773,6 @@ export type AttributeValueDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeValueDeleted = Event & {
-  readonly __typename?: 'AttributeValueDeleted';
   /** The attribute value the event relates to. */
   readonly attributeValue?: Maybe<AttributeValue>;
   /** Time of the event. */
@@ -1921,7 +1850,6 @@ export type AttributeValueSelectableTypeInput = {
 };
 
 export type AttributeValueTranslatableContent = Node & {
-  readonly __typename?: 'AttributeValueTranslatableContent';
   /**
    * Associated attribute that can be translated.
    *
@@ -1958,7 +1886,6 @@ export type AttributeValueTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type AttributeValueTranslate = {
-  readonly __typename?: 'AttributeValueTranslate';
   readonly attributeValue?: Maybe<AttributeValue>;
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1966,7 +1893,6 @@ export type AttributeValueTranslate = {
 };
 
 export type AttributeValueTranslation = Node & {
-  readonly __typename?: 'AttributeValueTranslation';
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
   readonly language: LanguageDisplay;
@@ -1999,7 +1925,6 @@ export type AttributeValueTranslationInput = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeValueUpdate = {
-  readonly __typename?: 'AttributeValueUpdate';
   /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2047,7 +1972,6 @@ export type AttributeValueUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeValueUpdated = Event & {
-  readonly __typename?: 'AttributeValueUpdated';
   /** The attribute value the event relates to. */
   readonly attributeValue?: Maybe<AttributeValue>;
   /** Time of the event. */
@@ -2070,7 +1994,6 @@ export type BulkAttributeValueInput = {
 };
 
 export type BulkProductError = {
-  readonly __typename?: 'BulkProductError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of channel IDs which causes the error. */
@@ -2090,7 +2013,6 @@ export type BulkProductError = {
 };
 
 export type BulkStockError = {
-  readonly __typename?: 'BulkStockError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -2113,7 +2035,6 @@ export type BulkStockError = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CalculateTaxes = Event & {
-  readonly __typename?: 'CalculateTaxes';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -2151,7 +2072,6 @@ export type CatalogueInput = {
 
 /** Represents a single category of products. Categories allow to organize products in a tree-hierarchies which can be used for navigation in the storefront. */
 export type Category = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Category';
   /** List of ancestors of the category. */
   readonly ancestors?: Maybe<CategoryCountableConnection>;
   readonly backgroundImage?: Maybe<Image>;
@@ -2296,7 +2216,6 @@ export type CategoryTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryBulkDelete = {
-  readonly __typename?: 'CategoryBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -2305,7 +2224,6 @@ export type CategoryBulkDelete = {
 };
 
 export type CategoryCountableConnection = {
-  readonly __typename?: 'CategoryCountableConnection';
   readonly edges: ReadonlyArray<CategoryCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -2314,7 +2232,6 @@ export type CategoryCountableConnection = {
 };
 
 export type CategoryCountableEdge = {
-  readonly __typename?: 'CategoryCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -2327,7 +2244,6 @@ export type CategoryCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryCreate = {
-  readonly __typename?: 'CategoryCreate';
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2342,7 +2258,6 @@ export type CategoryCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CategoryCreated = Event & {
-  readonly __typename?: 'CategoryCreated';
   /** The category the event relates to. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -2361,7 +2276,6 @@ export type CategoryCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryDelete = {
-  readonly __typename?: 'CategoryDelete';
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2376,7 +2290,6 @@ export type CategoryDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CategoryDeleted = Event & {
-  readonly __typename?: 'CategoryDeleted';
   /** The category the event relates to. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -2449,7 +2362,6 @@ export type CategorySortingInput = {
 };
 
 export type CategoryTranslatableContent = Node & {
-  readonly __typename?: 'CategoryTranslatableContent';
   /**
    * Represents a single category of products.
    * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
@@ -2487,7 +2399,6 @@ export type CategoryTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type CategoryTranslate = {
-  readonly __typename?: 'CategoryTranslate';
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2495,7 +2406,6 @@ export type CategoryTranslate = {
 };
 
 export type CategoryTranslation = Node & {
-  readonly __typename?: 'CategoryTranslation';
   /**
    * Translated description of the category.
    *
@@ -2523,7 +2433,6 @@ export type CategoryTranslation = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryUpdate = {
-  readonly __typename?: 'CategoryUpdate';
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2538,7 +2447,6 @@ export type CategoryUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CategoryUpdated = Event & {
-  readonly __typename?: 'CategoryUpdated';
   /** The category the event relates to. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -2553,7 +2461,6 @@ export type CategoryUpdated = Event & {
 
 /** Represents channel. */
 export type Channel = Node & {
-  readonly __typename?: 'Channel';
   /**
    * Shipping methods that are available for the channel.
    *
@@ -2639,7 +2546,6 @@ export type ChannelAvailableShippingMethodsPerCountryArgs = {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelActivate = {
-  readonly __typename?: 'ChannelActivate';
   /** Activated channel. */
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2653,7 +2559,6 @@ export type ChannelActivate = {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelCreate = {
-  readonly __typename?: 'ChannelCreate';
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
@@ -2705,7 +2610,6 @@ export type ChannelCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ChannelCreated = Event & {
-  readonly __typename?: 'ChannelCreated';
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -2724,7 +2628,6 @@ export type ChannelCreated = Event & {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelDeactivate = {
-  readonly __typename?: 'ChannelDeactivate';
   /** Deactivated channel. */
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2738,7 +2641,6 @@ export type ChannelDeactivate = {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelDelete = {
-  readonly __typename?: 'ChannelDelete';
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
@@ -2758,7 +2660,6 @@ export type ChannelDeleteInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ChannelDeleted = Event & {
-  readonly __typename?: 'ChannelDeleted';
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -2772,7 +2673,6 @@ export type ChannelDeleted = Event & {
 };
 
 export type ChannelError = {
-  readonly __typename?: 'ChannelError';
   /** The error code. */
   readonly code: ChannelErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -2807,7 +2707,6 @@ export type ChannelErrorCode =
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelReorderWarehouses = {
-  readonly __typename?: 'ChannelReorderWarehouses';
   /** Channel within the warehouses are reordered. */
   readonly channel?: Maybe<Channel>;
   readonly errors: ReadonlyArray<ChannelError>;
@@ -2821,7 +2720,6 @@ export type ChannelReorderWarehouses = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ChannelStatusChanged = Event & {
-  readonly __typename?: 'ChannelStatusChanged';
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -2840,7 +2738,6 @@ export type ChannelStatusChanged = Event & {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelUpdate = {
-  readonly __typename?: 'ChannelUpdate';
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
@@ -2898,7 +2795,6 @@ export type ChannelUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ChannelUpdated = Event & {
-  readonly __typename?: 'ChannelUpdated';
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -2913,7 +2809,6 @@ export type ChannelUpdated = Event & {
 
 /** Checkout object. */
 export type Checkout = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Checkout';
   /**
    * Collection points that can be used for this order.
    *
@@ -3074,7 +2969,6 @@ export type CheckoutPrivateMetafieldsArgs = {
 
 /** Adds a gift card or a voucher to a checkout. */
 export type CheckoutAddPromoCode = {
-  readonly __typename?: 'CheckoutAddPromoCode';
   /** The checkout with the added gift card or voucher. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3093,7 +2987,6 @@ export type CheckoutAddressValidationRules = {
 
 /** Update billing address in the existing checkout. */
 export type CheckoutBillingAddressUpdate = {
-  readonly __typename?: 'CheckoutBillingAddressUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3103,7 +2996,6 @@ export type CheckoutBillingAddressUpdate = {
 
 /** Completes the checkout. As a result a new order is created and a payment charge is made. This action requires a successful payment before it can be performed. In case additional confirmation step as 3D secure is required confirmationNeeded flag will be set to True and no order created until payment is confirmed with second call of this mutation. */
 export type CheckoutComplete = {
-  readonly __typename?: 'CheckoutComplete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   /** Confirmation data used to process additional authorization steps. */
@@ -3116,7 +3008,6 @@ export type CheckoutComplete = {
 };
 
 export type CheckoutCountableConnection = {
-  readonly __typename?: 'CheckoutCountableConnection';
   readonly edges: ReadonlyArray<CheckoutCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -3125,7 +3016,6 @@ export type CheckoutCountableConnection = {
 };
 
 export type CheckoutCountableEdge = {
-  readonly __typename?: 'CheckoutCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -3134,7 +3024,6 @@ export type CheckoutCountableEdge = {
 
 /** Create a new checkout. */
 export type CheckoutCreate = {
-  readonly __typename?: 'CheckoutCreate';
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
@@ -3177,7 +3066,6 @@ export type CheckoutCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutCreated = Event & {
-  readonly __typename?: 'CheckoutCreated';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -3196,7 +3084,6 @@ export type CheckoutCreated = Event & {
  * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_USER.
  */
 export type CheckoutCustomerAttach = {
-  readonly __typename?: 'CheckoutCustomerAttach';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3210,7 +3097,6 @@ export type CheckoutCustomerAttach = {
  * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_USER.
  */
 export type CheckoutCustomerDetach = {
-  readonly __typename?: 'CheckoutCustomerDetach';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3226,7 +3112,6 @@ export type CheckoutCustomerDetach = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutDeliveryMethodUpdate = {
-  readonly __typename?: 'CheckoutDeliveryMethodUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   readonly errors: ReadonlyArray<CheckoutError>;
@@ -3234,7 +3119,6 @@ export type CheckoutDeliveryMethodUpdate = {
 
 /** Updates email address in the existing checkout object. */
 export type CheckoutEmailUpdate = {
-  readonly __typename?: 'CheckoutEmailUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3243,7 +3127,6 @@ export type CheckoutEmailUpdate = {
 };
 
 export type CheckoutError = {
-  readonly __typename?: 'CheckoutError';
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -3305,7 +3188,6 @@ export type CheckoutFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutFilterShippingMethods = Event & {
-  readonly __typename?: 'CheckoutFilterShippingMethods';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -3328,7 +3210,6 @@ export type CheckoutFilterShippingMethods = Event & {
 
 /** Update language code in the existing checkout. */
 export type CheckoutLanguageCodeUpdate = {
-  readonly __typename?: 'CheckoutLanguageCodeUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3338,7 +3219,6 @@ export type CheckoutLanguageCodeUpdate = {
 
 /** Represents an item in the checkout. */
 export type CheckoutLine = Node & ObjectWithMetadata & {
-  readonly __typename?: 'CheckoutLine';
   readonly id: Scalars['ID']['output'];
   /** List of public metadata items. Can be accessed without permissions. */
   readonly metadata: ReadonlyArray<MetadataItem>;
@@ -3419,7 +3299,6 @@ export type CheckoutLinePrivateMetafieldsArgs = {
 };
 
 export type CheckoutLineCountableConnection = {
-  readonly __typename?: 'CheckoutLineCountableConnection';
   readonly edges: ReadonlyArray<CheckoutLineCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -3428,7 +3307,6 @@ export type CheckoutLineCountableConnection = {
 };
 
 export type CheckoutLineCountableEdge = {
-  readonly __typename?: 'CheckoutLineCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -3437,7 +3315,6 @@ export type CheckoutLineCountableEdge = {
 
 /** Deletes a CheckoutLine. */
 export type CheckoutLineDelete = {
-  readonly __typename?: 'CheckoutLineDelete';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3501,7 +3378,6 @@ export type CheckoutLineUpdateInput = {
 
 /** Adds a checkout line to the existing checkout.If line was already in checkout, its quantity will be increased. */
 export type CheckoutLinesAdd = {
-  readonly __typename?: 'CheckoutLinesAdd';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3511,7 +3387,6 @@ export type CheckoutLinesAdd = {
 
 /** Deletes checkout lines. */
 export type CheckoutLinesDelete = {
-  readonly __typename?: 'CheckoutLinesDelete';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   readonly errors: ReadonlyArray<CheckoutError>;
@@ -3519,7 +3394,6 @@ export type CheckoutLinesDelete = {
 
 /** Updates checkout line in the existing checkout. */
 export type CheckoutLinesUpdate = {
-  readonly __typename?: 'CheckoutLinesUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3535,7 +3409,6 @@ export type CheckoutLinesUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutMetadataUpdated = Event & {
-  readonly __typename?: 'CheckoutMetadataUpdated';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -3550,7 +3423,6 @@ export type CheckoutMetadataUpdated = Event & {
 
 /** Create a new payment for given checkout. */
 export type CheckoutPaymentCreate = {
-  readonly __typename?: 'CheckoutPaymentCreate';
   /** Related checkout object. */
   readonly checkout?: Maybe<Checkout>;
   readonly errors: ReadonlyArray<PaymentError>;
@@ -3562,7 +3434,6 @@ export type CheckoutPaymentCreate = {
 
 /** Remove a gift card or a voucher from a checkout. */
 export type CheckoutRemovePromoCode = {
-  readonly __typename?: 'CheckoutRemovePromoCode';
   /** The checkout with the removed gift card or voucher. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3572,7 +3443,6 @@ export type CheckoutRemovePromoCode = {
 
 /** Update shipping address in the existing checkout. */
 export type CheckoutShippingAddressUpdate = {
-  readonly __typename?: 'CheckoutShippingAddressUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3582,7 +3452,6 @@ export type CheckoutShippingAddressUpdate = {
 
 /** Updates the shipping method of the checkout. */
 export type CheckoutShippingMethodUpdate = {
-  readonly __typename?: 'CheckoutShippingMethodUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3613,7 +3482,6 @@ export type CheckoutSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutUpdated = Event & {
-  readonly __typename?: 'CheckoutUpdated';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -3634,14 +3502,12 @@ export type CheckoutValidationRules = {
 };
 
 export type ChoiceValue = {
-  readonly __typename?: 'ChoiceValue';
   readonly raw?: Maybe<Scalars['String']['output']>;
   readonly verbose?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents a collection of products. */
 export type Collection = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Collection';
   readonly backgroundImage?: Maybe<Image>;
   /** Channel given to retrieve this collection. Also used by federation gateway to resolve this object in a federated query. */
   readonly channel?: Maybe<Scalars['String']['output']>;
@@ -3769,7 +3635,6 @@ export type CollectionTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionAddProducts = {
-  readonly __typename?: 'CollectionAddProducts';
   /** Collection to which products will be added. */
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3783,7 +3648,6 @@ export type CollectionAddProducts = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionBulkDelete = {
-  readonly __typename?: 'CollectionBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
   /** Returns how many objects were affected. */
@@ -3793,7 +3657,6 @@ export type CollectionBulkDelete = {
 
 /** Represents collection channel listing. */
 export type CollectionChannelListing = Node & {
-  readonly __typename?: 'CollectionChannelListing';
   readonly channel: Channel;
   readonly id: Scalars['ID']['output'];
   readonly isPublished: Scalars['Boolean']['output'];
@@ -3808,7 +3671,6 @@ export type CollectionChannelListing = Node & {
 };
 
 export type CollectionChannelListingError = {
-  readonly __typename?: 'CollectionChannelListingError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of channels IDs which causes the error. */
@@ -3829,7 +3691,6 @@ export type CollectionChannelListingError = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionChannelListingUpdate = {
-  readonly __typename?: 'CollectionChannelListingUpdate';
   /** An updated collection instance. */
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3845,7 +3706,6 @@ export type CollectionChannelListingUpdateInput = {
 };
 
 export type CollectionCountableConnection = {
-  readonly __typename?: 'CollectionCountableConnection';
   readonly edges: ReadonlyArray<CollectionCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -3854,7 +3714,6 @@ export type CollectionCountableConnection = {
 };
 
 export type CollectionCountableEdge = {
-  readonly __typename?: 'CollectionCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -3867,7 +3726,6 @@ export type CollectionCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionCreate = {
-  readonly __typename?: 'CollectionCreate';
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
@@ -3923,7 +3781,6 @@ export type CollectionCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CollectionCreated = Event & {
-  readonly __typename?: 'CollectionCreated';
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -3954,7 +3811,6 @@ export type CollectionCreatedCollectionArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionDelete = {
-  readonly __typename?: 'CollectionDelete';
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
@@ -3969,7 +3825,6 @@ export type CollectionDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CollectionDeleted = Event & {
-  readonly __typename?: 'CollectionDeleted';
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -3995,7 +3850,6 @@ export type CollectionDeletedCollectionArgs = {
 };
 
 export type CollectionError = {
-  readonly __typename?: 'CollectionError';
   /** The error code. */
   readonly code: CollectionErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -4077,7 +3931,6 @@ export type CollectionInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CollectionMetadataUpdated = Event & {
-  readonly __typename?: 'CollectionMetadataUpdated';
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -4112,7 +3965,6 @@ export type CollectionPublished =
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionRemoveProducts = {
-  readonly __typename?: 'CollectionRemoveProducts';
   /** Collection from which products will be removed. */
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4126,7 +3978,6 @@ export type CollectionRemoveProducts = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionReorderProducts = {
-  readonly __typename?: 'CollectionReorderProducts';
   /** Collection from which products are reordered. */
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4172,7 +4023,6 @@ export type CollectionSortingInput = {
 };
 
 export type CollectionTranslatableContent = Node & {
-  readonly __typename?: 'CollectionTranslatableContent';
   /**
    * Represents a collection of products.
    * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
@@ -4210,7 +4060,6 @@ export type CollectionTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type CollectionTranslate = {
-  readonly __typename?: 'CollectionTranslate';
   readonly collection?: Maybe<Collection>;
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4218,7 +4067,6 @@ export type CollectionTranslate = {
 };
 
 export type CollectionTranslation = Node & {
-  readonly __typename?: 'CollectionTranslation';
   /**
    * Translated description of the collection.
    *
@@ -4246,7 +4094,6 @@ export type CollectionTranslation = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionUpdate = {
-  readonly __typename?: 'CollectionUpdate';
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
@@ -4261,7 +4108,6 @@ export type CollectionUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CollectionUpdated = Event & {
-  readonly __typename?: 'CollectionUpdated';
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -4288,7 +4134,6 @@ export type CollectionUpdatedCollectionArgs = {
 
 /** Stores information about a single configuration field. */
 export type ConfigurationItem = {
-  readonly __typename?: 'ConfigurationItem';
   /** Help text for the field. */
   readonly helpText?: Maybe<Scalars['String']['output']>;
   /** Label for the field. */
@@ -4320,7 +4165,6 @@ export type ConfigurationTypeFieldEnum =
 
 /** Confirm user account with token sent by email during registration. */
 export type ConfirmAccount = {
-  readonly __typename?: 'ConfirmAccount';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -4334,7 +4178,6 @@ export type ConfirmAccount = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type ConfirmEmailChange = {
-  readonly __typename?: 'ConfirmEmailChange';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -4596,7 +4439,6 @@ export type CountryCode =
   | 'ZW';
 
 export type CountryDisplay = {
-  readonly __typename?: 'CountryDisplay';
   /** Country code. */
   readonly code: Scalars['String']['output'];
   /** Country name. */
@@ -4629,7 +4471,6 @@ export type CountryRateUpdateInput = {
 
 /** Create JWT token. */
 export type CreateToken = {
-  readonly __typename?: 'CreateToken';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate access token. */
@@ -4644,7 +4485,6 @@ export type CreateToken = {
 };
 
 export type CreditCard = {
-  readonly __typename?: 'CreditCard';
   /** Card brand. */
   readonly brand: Scalars['String']['output'];
   /** Two-digit number representing the card’s expiration month. */
@@ -4663,7 +4503,6 @@ export type CreditCard = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type CustomerBulkDelete = {
-  readonly __typename?: 'CustomerBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** Returns how many objects were affected. */
@@ -4677,7 +4516,6 @@ export type CustomerBulkDelete = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type CustomerCreate = {
-  readonly __typename?: 'CustomerCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -4692,7 +4530,6 @@ export type CustomerCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CustomerCreated = Event & {
-  readonly __typename?: 'CustomerCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -4711,7 +4548,6 @@ export type CustomerCreated = Event & {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type CustomerDelete = {
-  readonly __typename?: 'CustomerDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -4720,7 +4556,6 @@ export type CustomerDelete = {
 
 /** History log of the customer. */
 export type CustomerEvent = Node & {
-  readonly __typename?: 'CustomerEvent';
   /** App that performed the action. */
   readonly app?: Maybe<App>;
   /** Number of objects concerned by the event. */
@@ -4806,7 +4641,6 @@ export type CustomerInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CustomerMetadataUpdated = Event & {
-  readonly __typename?: 'CustomerMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -4825,7 +4659,6 @@ export type CustomerMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type CustomerUpdate = {
-  readonly __typename?: 'CustomerUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -4840,7 +4673,6 @@ export type CustomerUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CustomerUpdated = Event & {
-  readonly __typename?: 'CustomerUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -4873,7 +4705,6 @@ export type DateTimeRangeInput = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type DeactivateAllUserTokens = {
-  readonly __typename?: 'DeactivateAllUserTokens';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -4881,7 +4712,6 @@ export type DeactivateAllUserTokens = {
 
 /** Delete metadata of an object. To use it, you need to have access to the modified object. */
 export type DeleteMetadata = {
-  readonly __typename?: 'DeleteMetadata';
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4890,7 +4720,6 @@ export type DeleteMetadata = {
 
 /** Delete object's private metadata. To use it, you need to be an authenticated staff user or an app and have access to the modified object. */
 export type DeletePrivateMetadata = {
-  readonly __typename?: 'DeletePrivateMetadata';
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4907,7 +4736,6 @@ export type DeletePrivateMetadata = {
 export type DeliveryMethod = ShippingMethod | Warehouse;
 
 export type DigitalContent = Node & ObjectWithMetadata & {
-  readonly __typename?: 'DigitalContent';
   readonly automaticFulfillment: Scalars['Boolean']['output'];
   readonly contentFile: Scalars['String']['output'];
   readonly id: Scalars['ID']['output'];
@@ -4981,7 +4809,6 @@ export type DigitalContentPrivateMetafieldsArgs = {
 };
 
 export type DigitalContentCountableConnection = {
-  readonly __typename?: 'DigitalContentCountableConnection';
   readonly edges: ReadonlyArray<DigitalContentCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -4990,7 +4817,6 @@ export type DigitalContentCountableConnection = {
 };
 
 export type DigitalContentCountableEdge = {
-  readonly __typename?: 'DigitalContentCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -5003,7 +4829,6 @@ export type DigitalContentCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentCreate = {
-  readonly __typename?: 'DigitalContentCreate';
   readonly content?: Maybe<DigitalContent>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5017,7 +4842,6 @@ export type DigitalContentCreate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentDelete = {
-  readonly __typename?: 'DigitalContentDelete';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -5053,7 +4877,6 @@ export type DigitalContentInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentUpdate = {
-  readonly __typename?: 'DigitalContentUpdate';
   readonly content?: Maybe<DigitalContent>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5087,7 +4910,6 @@ export type DigitalContentUploadInput = {
 };
 
 export type DigitalContentUrl = Node & {
-  readonly __typename?: 'DigitalContentUrl';
   readonly content: DigitalContent;
   readonly created: Scalars['DateTime']['output'];
   readonly downloadNum: Scalars['Int']['output'];
@@ -5104,7 +4926,6 @@ export type DigitalContentUrl = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentUrlCreate = {
-  readonly __typename?: 'DigitalContentUrlCreate';
   readonly digitalContentUrl?: Maybe<DigitalContentUrl>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5117,7 +4938,6 @@ export type DigitalContentUrlCreateInput = {
 };
 
 export type DiscountError = {
-  readonly __typename?: 'DiscountError';
   /** List of channels IDs which causes the error. */
   readonly channels?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -5161,7 +4981,6 @@ export type DistanceUnitsEnum =
 
 /** Represents shop's domain. */
 export type Domain = {
-  readonly __typename?: 'Domain';
   /** The host name of the domain. */
   readonly host: Scalars['String']['output'];
   /** Inform if SSL is enabled. */
@@ -5176,7 +4995,6 @@ export type Domain = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderBulkDelete = {
-  readonly __typename?: 'DraftOrderBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderError>;
@@ -5190,7 +5008,6 @@ export type DraftOrderBulkDelete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderComplete = {
-  readonly __typename?: 'DraftOrderComplete';
   readonly errors: ReadonlyArray<OrderError>;
   /** Completed order. */
   readonly order?: Maybe<Order>;
@@ -5204,7 +5021,6 @@ export type DraftOrderComplete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderCreate = {
-  readonly __typename?: 'DraftOrderCreate';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5250,7 +5066,6 @@ export type DraftOrderCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type DraftOrderCreated = Event & {
-  readonly __typename?: 'DraftOrderCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -5269,7 +5084,6 @@ export type DraftOrderCreated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderDelete = {
-  readonly __typename?: 'DraftOrderDelete';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5284,7 +5098,6 @@ export type DraftOrderDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type DraftOrderDeleted = Event & {
-  readonly __typename?: 'DraftOrderDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -5332,7 +5145,6 @@ export type DraftOrderInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderLinesBulkDelete = {
-  readonly __typename?: 'DraftOrderLinesBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderError>;
@@ -5346,7 +5158,6 @@ export type DraftOrderLinesBulkDelete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderUpdate = {
-  readonly __typename?: 'DraftOrderUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5361,7 +5172,6 @@ export type DraftOrderUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type DraftOrderUpdated = Event & {
-  readonly __typename?: 'DraftOrderUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -5387,7 +5197,6 @@ export type Event = {
 
 /** Event delivery. */
 export type EventDelivery = Node & {
-  readonly __typename?: 'EventDelivery';
   /** Event delivery attempts. */
   readonly attempts?: Maybe<EventDeliveryAttemptCountableConnection>;
   readonly createdAt: Scalars['DateTime']['output'];
@@ -5412,7 +5221,6 @@ export type EventDeliveryAttemptsArgs = {
 
 /** Event delivery attempts. */
 export type EventDeliveryAttempt = Node & {
-  readonly __typename?: 'EventDeliveryAttempt';
   /** Event delivery creation date and time. */
   readonly createdAt: Scalars['DateTime']['output'];
   /** Delivery attempt duration. */
@@ -5433,7 +5241,6 @@ export type EventDeliveryAttempt = Node & {
 };
 
 export type EventDeliveryAttemptCountableConnection = {
-  readonly __typename?: 'EventDeliveryAttemptCountableConnection';
   readonly edges: ReadonlyArray<EventDeliveryAttemptCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -5442,7 +5249,6 @@ export type EventDeliveryAttemptCountableConnection = {
 };
 
 export type EventDeliveryAttemptCountableEdge = {
-  readonly __typename?: 'EventDeliveryAttemptCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -5461,7 +5267,6 @@ export type EventDeliveryAttemptSortingInput = {
 };
 
 export type EventDeliveryCountableConnection = {
-  readonly __typename?: 'EventDeliveryCountableConnection';
   readonly edges: ReadonlyArray<EventDeliveryCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -5470,7 +5275,6 @@ export type EventDeliveryCountableConnection = {
 };
 
 export type EventDeliveryCountableEdge = {
-  readonly __typename?: 'EventDeliveryCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -5488,7 +5292,6 @@ export type EventDeliveryFilterInput = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type EventDeliveryRetry = {
-  readonly __typename?: 'EventDeliveryRetry';
   /** Event delivery. */
   readonly delivery?: Maybe<EventDelivery>;
   readonly errors: ReadonlyArray<WebhookError>;
@@ -5511,7 +5314,6 @@ export type EventDeliveryStatusEnum =
   | 'SUCCESS';
 
 export type ExportError = {
-  readonly __typename?: 'ExportError';
   /** The error code. */
   readonly code: ExportErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -5529,7 +5331,6 @@ export type ExportErrorCode =
 
 /** History log of export file. */
 export type ExportEvent = Node & {
-  readonly __typename?: 'ExportEvent';
   /** App which performed the action. Requires one of the following permissions: OWNER, MANAGE_APPS. */
   readonly app?: Maybe<App>;
   /** Date when event happened at in ISO 8601 format. */
@@ -5555,7 +5356,6 @@ export type ExportEventsEnum =
 
 /** Represents a job data of exported file. */
 export type ExportFile = Job & Node & {
-  readonly __typename?: 'ExportFile';
   readonly app?: Maybe<App>;
   /** Created date time of job in ISO 8601 format. */
   readonly createdAt: Scalars['DateTime']['output'];
@@ -5574,7 +5374,6 @@ export type ExportFile = Job & Node & {
 };
 
 export type ExportFileCountableConnection = {
-  readonly __typename?: 'ExportFileCountableConnection';
   readonly edges: ReadonlyArray<ExportFileCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -5583,7 +5382,6 @@ export type ExportFileCountableConnection = {
 };
 
 export type ExportFileCountableEdge = {
-  readonly __typename?: 'ExportFileCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -5621,7 +5419,6 @@ export type ExportFileSortingInput = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type ExportGiftCards = {
-  readonly __typename?: 'ExportGiftCards';
   readonly errors: ReadonlyArray<ExportError>;
   /** The newly created export file job which is responsible for export data. */
   readonly exportFile?: Maybe<ExportFile>;
@@ -5655,7 +5452,6 @@ export type ExportInfoInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ExportProducts = {
-  readonly __typename?: 'ExportProducts';
   readonly errors: ReadonlyArray<ExportError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly exportErrors: ReadonlyArray<ExportError>;
@@ -5685,7 +5481,6 @@ export type ExportScope =
   | 'IDS';
 
 export type ExternalAuthentication = {
-  readonly __typename?: 'ExternalAuthentication';
   /** ID of external authentication plugin. */
   readonly id: Scalars['String']['output'];
   /** Name of external authentication plugin. */
@@ -5694,7 +5489,6 @@ export type ExternalAuthentication = {
 
 /** Prepare external authentication url for user by custom plugin. */
 export type ExternalAuthenticationUrl = {
-  readonly __typename?: 'ExternalAuthenticationUrl';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** The data returned by authentication plugin. */
@@ -5704,7 +5498,6 @@ export type ExternalAuthenticationUrl = {
 
 /** Logout user by custom plugin. */
 export type ExternalLogout = {
-  readonly __typename?: 'ExternalLogout';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -5713,7 +5506,6 @@ export type ExternalLogout = {
 };
 
 export type ExternalNotificationError = {
-  readonly __typename?: 'ExternalNotificationError';
   /** The error code. */
   readonly code: ExternalNotificationErrorCodes;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -5735,7 +5527,6 @@ export type ExternalNotificationErrorCodes =
  * Added in Saleor 3.1.
  */
 export type ExternalNotificationTrigger = {
-  readonly __typename?: 'ExternalNotificationTrigger';
   readonly errors: ReadonlyArray<ExternalNotificationError>;
 };
 
@@ -5750,7 +5541,6 @@ export type ExternalNotificationTriggerInput = {
 
 /** Obtain external access tokens for user by custom plugin. */
 export type ExternalObtainAccessTokens = {
-  readonly __typename?: 'ExternalObtainAccessTokens';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate external access token. */
@@ -5766,7 +5556,6 @@ export type ExternalObtainAccessTokens = {
 
 /** Refresh user's access by custom plugin. */
 export type ExternalRefresh = {
-  readonly __typename?: 'ExternalRefresh';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate external access token. */
@@ -5782,7 +5571,6 @@ export type ExternalRefresh = {
 
 /** Verify external authentication data by plugin. */
 export type ExternalVerify = {
-  readonly __typename?: 'ExternalVerify';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -5795,7 +5583,6 @@ export type ExternalVerify = {
 };
 
 export type File = {
-  readonly __typename?: 'File';
   /** Content type of the file. */
   readonly contentType?: Maybe<Scalars['String']['output']>;
   /** The URL of the file. */
@@ -5813,7 +5600,6 @@ export type FileTypesEnum =
  * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
  */
 export type FileUpload = {
-  readonly __typename?: 'FileUpload';
   readonly errors: ReadonlyArray<UploadError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly uploadErrors: ReadonlyArray<UploadError>;
@@ -5822,7 +5608,6 @@ export type FileUpload = {
 
 /** Represents order fulfillment. */
 export type Fulfillment = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Fulfillment';
   readonly created: Scalars['DateTime']['output'];
   readonly fulfillmentOrder: Scalars['Int']['output'];
   readonly id: Scalars['ID']['output'];
@@ -5908,7 +5693,6 @@ export type FulfillmentPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentApprove = {
-  readonly __typename?: 'FulfillmentApprove';
   readonly errors: ReadonlyArray<OrderError>;
   /** An approved fulfillment. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -5926,7 +5710,6 @@ export type FulfillmentApprove = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type FulfillmentApproved = Event & {
-  readonly __typename?: 'FulfillmentApproved';
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -5947,7 +5730,6 @@ export type FulfillmentApproved = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentCancel = {
-  readonly __typename?: 'FulfillmentCancel';
   readonly errors: ReadonlyArray<OrderError>;
   /** A canceled fulfillment. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -5970,7 +5752,6 @@ export type FulfillmentCancelInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type FulfillmentCanceled = Event & {
-  readonly __typename?: 'FulfillmentCanceled';
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -5993,7 +5774,6 @@ export type FulfillmentCanceled = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type FulfillmentCreated = Event & {
-  readonly __typename?: 'FulfillmentCreated';
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -6010,7 +5790,6 @@ export type FulfillmentCreated = Event & {
 
 /** Represents line of the fulfillment. */
 export type FulfillmentLine = Node & {
-  readonly __typename?: 'FulfillmentLine';
   readonly id: Scalars['ID']['output'];
   readonly orderLine?: Maybe<OrderLine>;
   readonly quantity: Scalars['Int']['output'];
@@ -6024,7 +5803,6 @@ export type FulfillmentLine = Node & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type FulfillmentMetadataUpdated = Event & {
-  readonly __typename?: 'FulfillmentMetadataUpdated';
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -6045,7 +5823,6 @@ export type FulfillmentMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentRefundProducts = {
-  readonly __typename?: 'FulfillmentRefundProducts';
   readonly errors: ReadonlyArray<OrderError>;
   /** A refunded fulfillment. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -6061,7 +5838,6 @@ export type FulfillmentRefundProducts = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentReturnProducts = {
-  readonly __typename?: 'FulfillmentReturnProducts';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which fulfillment was returned. */
   readonly order?: Maybe<Order>;
@@ -6091,7 +5867,6 @@ export type FulfillmentStatus =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentUpdateTracking = {
-  readonly __typename?: 'FulfillmentUpdateTracking';
   readonly errors: ReadonlyArray<OrderError>;
   /** A fulfillment with updated tracking. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -6110,7 +5885,6 @@ export type FulfillmentUpdateTrackingInput = {
 
 /** Payment gateway client configuration key and value pair. */
 export type GatewayConfigLine = {
-  readonly __typename?: 'GatewayConfigLine';
   /** Gateway config key. */
   readonly field: Scalars['String']['output'];
   /** Gateway config value for key. */
@@ -6119,7 +5893,6 @@ export type GatewayConfigLine = {
 
 /** A gift card is a prepaid electronic payment card accepted in stores. They can be used during checkout by providing a valid gift card codes. */
 export type GiftCard = Node & ObjectWithMetadata & {
-  readonly __typename?: 'GiftCard';
   /**
    * App which created the gift card.
    *
@@ -6306,7 +6079,6 @@ export type GiftCardPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardActivate = {
-  readonly __typename?: 'GiftCardActivate';
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Activated gift card. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -6324,7 +6096,6 @@ export type GiftCardActivate = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardAddNote = {
-  readonly __typename?: 'GiftCardAddNote';
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Gift card note created. */
   readonly event?: Maybe<GiftCardEvent>;
@@ -6347,7 +6118,6 @@ export type GiftCardAddNoteInput = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardBulkActivate = {
-  readonly __typename?: 'GiftCardBulkActivate';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<GiftCardError>;
@@ -6363,7 +6133,6 @@ export type GiftCardBulkActivate = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardBulkCreate = {
-  readonly __typename?: 'GiftCardBulkCreate';
   /** Returns how many objects were created. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<GiftCardError>;
@@ -6394,7 +6163,6 @@ export type GiftCardBulkCreateInput = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardBulkDeactivate = {
-  readonly __typename?: 'GiftCardBulkDeactivate';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<GiftCardError>;
@@ -6410,14 +6178,12 @@ export type GiftCardBulkDeactivate = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardBulkDelete = {
-  readonly __typename?: 'GiftCardBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<GiftCardError>;
 };
 
 export type GiftCardCountableConnection = {
-  readonly __typename?: 'GiftCardCountableConnection';
   readonly edges: ReadonlyArray<GiftCardCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -6426,7 +6192,6 @@ export type GiftCardCountableConnection = {
 };
 
 export type GiftCardCountableEdge = {
-  readonly __typename?: 'GiftCardCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -6439,7 +6204,6 @@ export type GiftCardCountableEdge = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardCreate = {
-  readonly __typename?: 'GiftCardCreate';
   readonly errors: ReadonlyArray<GiftCardError>;
   readonly giftCard?: Maybe<GiftCard>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6519,7 +6283,6 @@ export type GiftCardCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardCreated = Event & {
-  readonly __typename?: 'GiftCardCreated';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6538,7 +6301,6 @@ export type GiftCardCreated = Event & {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardDeactivate = {
-  readonly __typename?: 'GiftCardDeactivate';
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Deactivated gift card. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -6556,7 +6318,6 @@ export type GiftCardDeactivate = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardDelete = {
-  readonly __typename?: 'GiftCardDelete';
   readonly errors: ReadonlyArray<GiftCardError>;
   readonly giftCard?: Maybe<GiftCard>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6571,7 +6332,6 @@ export type GiftCardDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardDeleted = Event & {
-  readonly __typename?: 'GiftCardDeleted';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6585,7 +6345,6 @@ export type GiftCardDeleted = Event & {
 };
 
 export type GiftCardError = {
-  readonly __typename?: 'GiftCardError';
   /** The error code. */
   readonly code: GiftCardErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -6615,7 +6374,6 @@ export type GiftCardErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardEvent = Node & {
-  readonly __typename?: 'GiftCardEvent';
   /** App that performed the action. Requires one of the following permissions: MANAGE_APPS, OWNER. */
   readonly app?: Maybe<App>;
   /** The gift card balance. */
@@ -6646,7 +6404,6 @@ export type GiftCardEvent = Node & {
 };
 
 export type GiftCardEventBalance = {
-  readonly __typename?: 'GiftCardEventBalance';
   /** Current balance of the gift card. */
   readonly currentBalance: Money;
   /** Initial balance of the gift card. */
@@ -6698,7 +6455,6 @@ export type GiftCardFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardMetadataUpdated = Event & {
-  readonly __typename?: 'GiftCardMetadataUpdated';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6721,7 +6477,6 @@ export type GiftCardMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardResend = {
-  readonly __typename?: 'GiftCardResend';
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Gift card which has been sent. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -6738,7 +6493,6 @@ export type GiftCardResendInput = {
 
 /** Gift card related settings from site settings. */
 export type GiftCardSettings = {
-  readonly __typename?: 'GiftCardSettings';
   /** The gift card expiry period settings. */
   readonly expiryPeriod?: Maybe<TimePeriod>;
   /** The gift card expiry type settings. */
@@ -6746,7 +6500,6 @@ export type GiftCardSettings = {
 };
 
 export type GiftCardSettingsError = {
-  readonly __typename?: 'GiftCardSettingsError';
   /** The error code. */
   readonly code: GiftCardSettingsErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -6772,7 +6525,6 @@ export type GiftCardSettingsExpiryTypeEnum =
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardSettingsUpdate = {
-  readonly __typename?: 'GiftCardSettingsUpdate';
   readonly errors: ReadonlyArray<GiftCardSettingsError>;
   /** Gift card settings. */
   readonly giftCardSettings?: Maybe<GiftCardSettings>;
@@ -6814,7 +6566,6 @@ export type GiftCardSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardStatusChanged = Event & {
-  readonly __typename?: 'GiftCardStatusChanged';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6835,13 +6586,11 @@ export type GiftCardStatusChanged = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardTag = Node & {
-  readonly __typename?: 'GiftCardTag';
   readonly id: Scalars['ID']['output'];
   readonly name: Scalars['String']['output'];
 };
 
 export type GiftCardTagCountableConnection = {
-  readonly __typename?: 'GiftCardTagCountableConnection';
   readonly edges: ReadonlyArray<GiftCardTagCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -6850,7 +6599,6 @@ export type GiftCardTagCountableConnection = {
 };
 
 export type GiftCardTagCountableEdge = {
-  readonly __typename?: 'GiftCardTagCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -6867,7 +6615,6 @@ export type GiftCardTagFilterInput = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardUpdate = {
-  readonly __typename?: 'GiftCardUpdate';
   readonly errors: ReadonlyArray<GiftCardError>;
   readonly giftCard?: Maybe<GiftCard>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6929,7 +6676,6 @@ export type GiftCardUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardUpdated = Event & {
-  readonly __typename?: 'GiftCardUpdated';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6944,7 +6690,6 @@ export type GiftCardUpdated = Event & {
 
 /** Represents permission group data. */
 export type Group = Node & {
-  readonly __typename?: 'Group';
   readonly id: Scalars['ID']['output'];
   readonly name: Scalars['String']['output'];
   /** List of group permissions */
@@ -6960,7 +6705,6 @@ export type Group = Node & {
 };
 
 export type GroupCountableConnection = {
-  readonly __typename?: 'GroupCountableConnection';
   readonly edges: ReadonlyArray<GroupCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -6969,7 +6713,6 @@ export type GroupCountableConnection = {
 };
 
 export type GroupCountableEdge = {
-  readonly __typename?: 'GroupCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -6978,7 +6721,6 @@ export type GroupCountableEdge = {
 
 /** Represents an image. */
 export type Image = {
-  readonly __typename?: 'Image';
   /** Alt text for an image. */
   readonly alt?: Maybe<Scalars['String']['output']>;
   /** The URL of the image. */
@@ -6994,7 +6736,6 @@ export type IntRangeInput = {
 
 /** Represents an Invoice. */
 export type Invoice = Job & Node & ObjectWithMetadata & {
-  readonly __typename?: 'Invoice';
   readonly createdAt: Scalars['DateTime']['output'];
   readonly externalUrl?: Maybe<Scalars['String']['output']>;
   /** The ID of the object. */
@@ -7084,7 +6825,6 @@ export type InvoicePrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceCreate = {
-  readonly __typename?: 'InvoiceCreate';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7104,7 +6844,6 @@ export type InvoiceCreateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceDelete = {
-  readonly __typename?: 'InvoiceDelete';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7119,7 +6858,6 @@ export type InvoiceDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type InvoiceDeleted = Event & {
-  readonly __typename?: 'InvoiceDeleted';
   /** The invoice the event relates to. */
   readonly invoice?: Maybe<Invoice>;
   /** Time of the event. */
@@ -7139,7 +6877,6 @@ export type InvoiceDeleted = Event & {
 };
 
 export type InvoiceError = {
-  readonly __typename?: 'InvoiceError';
   /** The error code. */
   readonly code: InvoiceErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -7165,7 +6902,6 @@ export type InvoiceErrorCode =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceRequest = {
-  readonly __typename?: 'InvoiceRequest';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7180,7 +6916,6 @@ export type InvoiceRequest = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceRequestDelete = {
-  readonly __typename?: 'InvoiceRequestDelete';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7195,7 +6930,6 @@ export type InvoiceRequestDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type InvoiceRequested = Event & {
-  readonly __typename?: 'InvoiceRequested';
   /** The invoice the event relates to. */
   readonly invoice?: Maybe<Invoice>;
   /** Time of the event. */
@@ -7220,7 +6954,6 @@ export type InvoiceRequested = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceSendNotification = {
-  readonly __typename?: 'InvoiceSendNotification';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7235,7 +6968,6 @@ export type InvoiceSendNotification = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type InvoiceSent = Event & {
-  readonly __typename?: 'InvoiceSent';
   /** The invoice the event relates to. */
   readonly invoice?: Maybe<Invoice>;
   /** Time of the event. */
@@ -7260,7 +6992,6 @@ export type InvoiceSent = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceUpdate = {
-  readonly __typename?: 'InvoiceUpdate';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8070,7 +7801,6 @@ export type LanguageCodeEnum =
   | 'ZU_ZA';
 
 export type LanguageDisplay = {
-  readonly __typename?: 'LanguageDisplay';
   /** ISO 639 representation of the language name. */
   readonly code: LanguageCodeEnum;
   /** Full name of the language. */
@@ -8078,7 +7808,6 @@ export type LanguageDisplay = {
 };
 
 export type LimitInfo = {
-  readonly __typename?: 'LimitInfo';
   /** Defines the allowed maximum resource usage, null means unlimited. */
   readonly allowedUsage: Limits;
   /** Defines the current resource usage. */
@@ -8086,7 +7815,6 @@ export type LimitInfo = {
 };
 
 export type Limits = {
-  readonly __typename?: 'Limits';
   readonly channels?: Maybe<Scalars['Int']['output']>;
   readonly orders?: Maybe<Scalars['Int']['output']>;
   readonly productVariants?: Maybe<Scalars['Int']['output']>;
@@ -8096,7 +7824,6 @@ export type Limits = {
 
 /** The manifest definition. */
 export type Manifest = {
-  readonly __typename?: 'Manifest';
   readonly about?: Maybe<Scalars['String']['output']>;
   readonly appUrl?: Maybe<Scalars['String']['output']>;
   /**
@@ -8137,7 +7864,6 @@ export type Manifest = {
 };
 
 export type Margin = {
-  readonly __typename?: 'Margin';
   readonly start?: Maybe<Scalars['Int']['output']>;
   readonly stop?: Maybe<Scalars['Int']['output']>;
 };
@@ -8188,7 +7914,6 @@ export type MediaSortingInput = {
 
 /** Represents a single menu - an object that is used to help navigate through the store. */
 export type Menu = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Menu';
   readonly id: Scalars['ID']['output'];
   readonly items?: Maybe<ReadonlyArray<MenuItem>>;
   /** List of public metadata items. Can be accessed without permissions. */
@@ -8265,7 +7990,6 @@ export type MenuPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuBulkDelete = {
-  readonly __typename?: 'MenuBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<MenuError>;
@@ -8274,7 +7998,6 @@ export type MenuBulkDelete = {
 };
 
 export type MenuCountableConnection = {
-  readonly __typename?: 'MenuCountableConnection';
   readonly edges: ReadonlyArray<MenuCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -8283,7 +8006,6 @@ export type MenuCountableConnection = {
 };
 
 export type MenuCountableEdge = {
-  readonly __typename?: 'MenuCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -8296,7 +8018,6 @@ export type MenuCountableEdge = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuCreate = {
-  readonly __typename?: 'MenuCreate';
   readonly errors: ReadonlyArray<MenuError>;
   readonly menu?: Maybe<Menu>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8320,7 +8041,6 @@ export type MenuCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuCreated = Event & {
-  readonly __typename?: 'MenuCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8351,7 +8071,6 @@ export type MenuCreatedMenuArgs = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuDelete = {
-  readonly __typename?: 'MenuDelete';
   readonly errors: ReadonlyArray<MenuError>;
   readonly menu?: Maybe<Menu>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8366,7 +8085,6 @@ export type MenuDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuDeleted = Event & {
-  readonly __typename?: 'MenuDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8392,7 +8110,6 @@ export type MenuDeletedMenuArgs = {
 };
 
 export type MenuError = {
-  readonly __typename?: 'MenuError';
   /** The error code. */
   readonly code: MenuErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -8429,7 +8146,6 @@ export type MenuInput = {
 
 /** Represents a single item of the related menu. Can store categories, collection or pages. */
 export type MenuItem = Node & ObjectWithMetadata & {
-  readonly __typename?: 'MenuItem';
   readonly category?: Maybe<Category>;
   readonly children?: Maybe<ReadonlyArray<MenuItem>>;
   /** A collection associated with this menu item. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
@@ -8523,7 +8239,6 @@ export type MenuItemTranslationArgs = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemBulkDelete = {
-  readonly __typename?: 'MenuItemBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<MenuError>;
@@ -8532,7 +8247,6 @@ export type MenuItemBulkDelete = {
 };
 
 export type MenuItemCountableConnection = {
-  readonly __typename?: 'MenuItemCountableConnection';
   readonly edges: ReadonlyArray<MenuItemCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -8541,7 +8255,6 @@ export type MenuItemCountableConnection = {
 };
 
 export type MenuItemCountableEdge = {
-  readonly __typename?: 'MenuItemCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -8554,7 +8267,6 @@ export type MenuItemCountableEdge = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemCreate = {
-  readonly __typename?: 'MenuItemCreate';
   readonly errors: ReadonlyArray<MenuError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
@@ -8586,7 +8298,6 @@ export type MenuItemCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuItemCreated = Event & {
-  readonly __typename?: 'MenuItemCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8617,7 +8328,6 @@ export type MenuItemCreatedMenuItemArgs = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemDelete = {
-  readonly __typename?: 'MenuItemDelete';
   readonly errors: ReadonlyArray<MenuError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
@@ -8632,7 +8342,6 @@ export type MenuItemDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuItemDeleted = Event & {
-  readonly __typename?: 'MenuItemDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8681,7 +8390,6 @@ export type MenuItemInput = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemMove = {
-  readonly __typename?: 'MenuItemMove';
   readonly errors: ReadonlyArray<MenuError>;
   /** Assigned menu to move within. */
   readonly menu?: Maybe<Menu>;
@@ -8706,7 +8414,6 @@ export type MenuItemSortingInput = {
 };
 
 export type MenuItemTranslatableContent = Node & {
-  readonly __typename?: 'MenuItemTranslatableContent';
   readonly id: Scalars['ID']['output'];
   /**
    * Represents a single item of the related menu. Can store categories, collection or pages.
@@ -8729,7 +8436,6 @@ export type MenuItemTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type MenuItemTranslate = {
-  readonly __typename?: 'MenuItemTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly menuItem?: Maybe<MenuItem>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8737,7 +8443,6 @@ export type MenuItemTranslate = {
 };
 
 export type MenuItemTranslation = Node & {
-  readonly __typename?: 'MenuItemTranslation';
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
   readonly language: LanguageDisplay;
@@ -8750,7 +8455,6 @@ export type MenuItemTranslation = Node & {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemUpdate = {
-  readonly __typename?: 'MenuItemUpdate';
   readonly errors: ReadonlyArray<MenuError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
@@ -8765,7 +8469,6 @@ export type MenuItemUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuItemUpdated = Event & {
-  readonly __typename?: 'MenuItemUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8813,7 +8516,6 @@ export type MenuSortingInput = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuUpdate = {
-  readonly __typename?: 'MenuUpdate';
   readonly errors: ReadonlyArray<MenuError>;
   readonly menu?: Maybe<Menu>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8828,7 +8530,6 @@ export type MenuUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuUpdated = Event & {
-  readonly __typename?: 'MenuUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8854,7 +8555,6 @@ export type MenuUpdatedMenuArgs = {
 };
 
 export type MetadataError = {
-  readonly __typename?: 'MetadataError';
   /** The error code. */
   readonly code: MetadataErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -8886,7 +8586,6 @@ export type MetadataInput = {
 };
 
 export type MetadataItem = {
-  readonly __typename?: 'MetadataItem';
   /** Key of a metadata item. */
   readonly key: Scalars['String']['output'];
   /** Value of a metadata item. */
@@ -8895,7 +8594,6 @@ export type MetadataItem = {
 
 /** Represents amount of money in specific currency. */
 export type Money = {
-  readonly __typename?: 'Money';
   /** Amount of money. */
   readonly amount: Scalars['Float']['output'];
   /** Currency code. */
@@ -8911,7 +8609,6 @@ export type MoneyInput = {
 
 /** Represents a range of amounts of money. */
 export type MoneyRange = {
-  readonly __typename?: 'MoneyRange';
   /** Lower bound of a price range. */
   readonly start?: Maybe<Money>;
   /** Upper bound of a price range. */
@@ -8926,7 +8623,6 @@ export type MoveProductInput = {
 };
 
 export type Mutation = {
-  readonly __typename?: 'Mutation';
   /**
    * Create a new address for the customer.
    *
@@ -12314,7 +12010,6 @@ export type ObjectWithMetadataPrivateMetafieldsArgs = {
 
 /** Represents an order in the shop. */
 export type Order = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Order';
   /** List of actions that can be performed in the current state of an order. */
   readonly actions: ReadonlyArray<OrderAction>;
   /**
@@ -12602,7 +12297,6 @@ export type OrderAction =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderAddNote = {
-  readonly __typename?: 'OrderAddNote';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order note created. */
   readonly event?: Maybe<OrderEvent>;
@@ -12643,7 +12337,6 @@ export type OrderAuthorizeStatusEnum =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderBulkCancel = {
-  readonly __typename?: 'OrderBulkCancel';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderError>;
@@ -12657,7 +12350,6 @@ export type OrderBulkCancel = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderCancel = {
-  readonly __typename?: 'OrderCancel';
   readonly errors: ReadonlyArray<OrderError>;
   /** Canceled order. */
   readonly order?: Maybe<Order>;
@@ -12673,7 +12365,6 @@ export type OrderCancel = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderCancelled = Event & {
-  readonly __typename?: 'OrderCancelled';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -12692,7 +12383,6 @@ export type OrderCancelled = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderCapture = {
-  readonly __typename?: 'OrderCapture';
   readonly errors: ReadonlyArray<OrderError>;
   /** Captured order. */
   readonly order?: Maybe<Order>;
@@ -12725,7 +12415,6 @@ export type OrderChargeStatusEnum =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderConfirm = {
-  readonly __typename?: 'OrderConfirm';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -12740,7 +12429,6 @@ export type OrderConfirm = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderConfirmed = Event & {
-  readonly __typename?: 'OrderConfirmed';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -12754,7 +12442,6 @@ export type OrderConfirmed = Event & {
 };
 
 export type OrderCountableConnection = {
-  readonly __typename?: 'OrderCountableConnection';
   readonly edges: ReadonlyArray<OrderCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -12763,7 +12450,6 @@ export type OrderCountableConnection = {
 };
 
 export type OrderCountableEdge = {
-  readonly __typename?: 'OrderCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -12778,14 +12464,12 @@ export type OrderCountableEdge = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderCreateFromCheckout = {
-  readonly __typename?: 'OrderCreateFromCheckout';
   readonly errors: ReadonlyArray<OrderCreateFromCheckoutError>;
   /** Placed order. */
   readonly order?: Maybe<Order>;
 };
 
 export type OrderCreateFromCheckoutError = {
-  readonly __typename?: 'OrderCreateFromCheckoutError';
   /** The error code. */
   readonly code: OrderCreateFromCheckoutErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -12823,7 +12507,6 @@ export type OrderCreateFromCheckoutErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderCreated = Event & {
-  readonly __typename?: 'OrderCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -12844,7 +12527,6 @@ export type OrderDirection =
 
 /** Contains all details related to the applied discount to the order. */
 export type OrderDiscount = Node & {
-  readonly __typename?: 'OrderDiscount';
   /** Returns amount of discount. */
   readonly amount: Money;
   readonly id: Scalars['ID']['output'];
@@ -12869,7 +12551,6 @@ export type OrderDiscount = Node & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderDiscountAdd = {
-  readonly __typename?: 'OrderDiscountAdd';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which has been discounted. */
   readonly order?: Maybe<Order>;
@@ -12892,7 +12573,6 @@ export type OrderDiscountCommonInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderDiscountDelete = {
-  readonly __typename?: 'OrderDiscountDelete';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which has removed discount. */
   readonly order?: Maybe<Order>;
@@ -12911,7 +12591,6 @@ export type OrderDiscountType =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderDiscountUpdate = {
-  readonly __typename?: 'OrderDiscountUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which has been discounted. */
   readonly order?: Maybe<Order>;
@@ -12928,7 +12607,6 @@ export type OrderDraftFilterInput = {
 };
 
 export type OrderError = {
-  readonly __typename?: 'OrderError';
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -12982,7 +12660,6 @@ export type OrderErrorCode =
 
 /** History log of the order. */
 export type OrderEvent = Node & {
-  readonly __typename?: 'OrderEvent';
   /** Amount of money. */
   readonly amount?: Maybe<Scalars['Float']['output']>;
   /** App that performed the action. Requires of of the following permissions: MANAGE_APPS, MANAGE_ORDERS, OWNER. */
@@ -13035,7 +12712,6 @@ export type OrderEvent = Node & {
 };
 
 export type OrderEventCountableConnection = {
-  readonly __typename?: 'OrderEventCountableConnection';
   readonly edges: ReadonlyArray<OrderEventCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -13044,7 +12720,6 @@ export type OrderEventCountableConnection = {
 };
 
 export type OrderEventCountableEdge = {
-  readonly __typename?: 'OrderEventCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -13052,7 +12727,6 @@ export type OrderEventCountableEdge = {
 };
 
 export type OrderEventDiscountObject = {
-  readonly __typename?: 'OrderEventDiscountObject';
   /** Returns amount of discount. */
   readonly amount?: Maybe<Money>;
   /** Returns amount of discount. */
@@ -13070,7 +12744,6 @@ export type OrderEventDiscountObject = {
 };
 
 export type OrderEventOrderLineObject = {
-  readonly __typename?: 'OrderEventOrderLineObject';
   /** The discount applied to the order line. */
   readonly discount?: Maybe<OrderEventDiscountObject>;
   /** The variant name. */
@@ -13169,7 +12842,6 @@ export type OrderFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderFilterShippingMethods = Event & {
-  readonly __typename?: 'OrderFilterShippingMethods';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13196,7 +12868,6 @@ export type OrderFilterShippingMethods = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderFulfill = {
-  readonly __typename?: 'OrderFulfill';
   readonly errors: ReadonlyArray<OrderError>;
   /** List of created fulfillments. */
   readonly fulfillments?: Maybe<ReadonlyArray<Fulfillment>>;
@@ -13243,7 +12914,6 @@ export type OrderFulfillStockInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderFulfilled = Event & {
-  readonly __typename?: 'OrderFulfilled';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13264,7 +12934,6 @@ export type OrderFulfilled = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderFullyPaid = Event & {
-  readonly __typename?: 'OrderFullyPaid';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13279,7 +12948,6 @@ export type OrderFullyPaid = Event & {
 
 /** Represents order line of particular order. */
 export type OrderLine = Node & ObjectWithMetadata & {
-  readonly __typename?: 'OrderLine';
   /**
    * List of allocations across warehouses.
    *
@@ -13450,7 +13118,6 @@ export type OrderLineCreateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineDelete = {
-  readonly __typename?: 'OrderLineDelete';
   readonly errors: ReadonlyArray<OrderError>;
   /** A related order. */
   readonly order?: Maybe<Order>;
@@ -13466,7 +13133,6 @@ export type OrderLineDelete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineDiscountRemove = {
-  readonly __typename?: 'OrderLineDiscountRemove';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which is related to line which has removed discount. */
   readonly order?: Maybe<Order>;
@@ -13482,7 +13148,6 @@ export type OrderLineDiscountRemove = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineDiscountUpdate = {
-  readonly __typename?: 'OrderLineDiscountUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which is related to the discounted line. */
   readonly order?: Maybe<Order>;
@@ -13503,7 +13168,6 @@ export type OrderLineInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineUpdate = {
-  readonly __typename?: 'OrderLineUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   /** Related order. */
   readonly order?: Maybe<Order>;
@@ -13518,7 +13182,6 @@ export type OrderLineUpdate = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLinesCreate = {
-  readonly __typename?: 'OrderLinesCreate';
   readonly errors: ReadonlyArray<OrderError>;
   /** Related order. */
   readonly order?: Maybe<Order>;
@@ -13534,7 +13197,6 @@ export type OrderLinesCreate = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderMarkAsPaid = {
-  readonly __typename?: 'OrderMarkAsPaid';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order marked as paid. */
   readonly order?: Maybe<Order>;
@@ -13550,7 +13212,6 @@ export type OrderMarkAsPaid = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderMetadataUpdated = Event & {
-  readonly __typename?: 'OrderMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13575,7 +13236,6 @@ export type OrderOriginEnum =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderRefund = {
-  readonly __typename?: 'OrderRefund';
   readonly errors: ReadonlyArray<OrderError>;
   /** A refunded order. */
   readonly order?: Maybe<Order>;
@@ -13641,13 +13301,11 @@ export type OrderReturnProductsInput = {
 
 /** Order related settings from site settings. */
 export type OrderSettings = {
-  readonly __typename?: 'OrderSettings';
   readonly automaticallyConfirmAllNewOrders: Scalars['Boolean']['output'];
   readonly automaticallyFulfillNonShippableGiftCard: Scalars['Boolean']['output'];
 };
 
 export type OrderSettingsError = {
-  readonly __typename?: 'OrderSettingsError';
   /** The error code. */
   readonly code: OrderSettingsErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -13666,7 +13324,6 @@ export type OrderSettingsErrorCode =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderSettingsUpdate = {
-  readonly __typename?: 'OrderSettingsUpdate';
   readonly errors: ReadonlyArray<OrderSettingsError>;
   /** Order settings. */
   readonly orderSettings?: Maybe<OrderSettings>;
@@ -13740,7 +13397,6 @@ export type OrderStatusFilter =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderUpdate = {
-  readonly __typename?: 'OrderUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -13768,7 +13424,6 @@ export type OrderUpdateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderUpdateShipping = {
-  readonly __typename?: 'OrderUpdateShipping';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order with updated shipping method. */
   readonly order?: Maybe<Order>;
@@ -13789,7 +13444,6 @@ export type OrderUpdateShippingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderUpdated = Event & {
-  readonly __typename?: 'OrderUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13808,7 +13462,6 @@ export type OrderUpdated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderVoid = {
-  readonly __typename?: 'OrderVoid';
   readonly errors: ReadonlyArray<OrderError>;
   /** A voided order. */
   readonly order?: Maybe<Order>;
@@ -13818,7 +13471,6 @@ export type OrderVoid = {
 
 /** A static page that can be manually added by a shop operator through the dashboard. */
 export type Page = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Page';
   /** List of attributes assigned to this product. */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /**
@@ -13930,7 +13582,6 @@ export type PageTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageAttributeAssign = {
-  readonly __typename?: 'PageAttributeAssign';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -13944,7 +13595,6 @@ export type PageAttributeAssign = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageAttributeUnassign = {
-  readonly __typename?: 'PageAttributeUnassign';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -13958,7 +13608,6 @@ export type PageAttributeUnassign = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageBulkDelete = {
-  readonly __typename?: 'PageBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<PageError>;
@@ -13972,7 +13621,6 @@ export type PageBulkDelete = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageBulkPublish = {
-  readonly __typename?: 'PageBulkPublish';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<PageError>;
@@ -13981,7 +13629,6 @@ export type PageBulkPublish = {
 };
 
 export type PageCountableConnection = {
-  readonly __typename?: 'PageCountableConnection';
   readonly edges: ReadonlyArray<PageCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -13990,7 +13637,6 @@ export type PageCountableConnection = {
 };
 
 export type PageCountableEdge = {
-  readonly __typename?: 'PageCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -14003,7 +13649,6 @@ export type PageCountableEdge = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageCreate = {
-  readonly __typename?: 'PageCreate';
   readonly errors: ReadonlyArray<PageError>;
   readonly page?: Maybe<Page>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14051,7 +13696,6 @@ export type PageCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageCreated = Event & {
-  readonly __typename?: 'PageCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14070,7 +13714,6 @@ export type PageCreated = Event & {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageDelete = {
-  readonly __typename?: 'PageDelete';
   readonly errors: ReadonlyArray<PageError>;
   readonly page?: Maybe<Page>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14085,7 +13728,6 @@ export type PageDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageDeleted = Event & {
-  readonly __typename?: 'PageDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14099,7 +13741,6 @@ export type PageDeleted = Event & {
 };
 
 export type PageError = {
-  readonly __typename?: 'PageError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -14132,7 +13773,6 @@ export type PageFilterInput = {
 
 /** The Relay compliant `PageInfo` type, containing data necessary to paginate this connection. */
 export type PageInfo = {
-  readonly __typename?: 'PageInfo';
   /** When paginating forwards, the cursor to continue. */
   readonly endCursor?: Maybe<Scalars['String']['output']>;
   /** When paginating forwards, are there more items? */
@@ -14180,7 +13820,6 @@ export type PageInput = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageReorderAttributeValues = {
-  readonly __typename?: 'PageReorderAttributeValues';
   readonly errors: ReadonlyArray<PageError>;
   /** Page from which attribute values are reordered. */
   readonly page?: Maybe<Page>;
@@ -14228,7 +13867,6 @@ export type PageSortingInput = {
 };
 
 export type PageTranslatableContent = Node & {
-  readonly __typename?: 'PageTranslatableContent';
   /** List of page content attribute values that can be translated. */
   readonly attributeValues: ReadonlyArray<AttributeValueTranslatableContent>;
   /**
@@ -14268,7 +13906,6 @@ export type PageTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type PageTranslate = {
-  readonly __typename?: 'PageTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly page?: Maybe<PageTranslatableContent>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14276,7 +13913,6 @@ export type PageTranslate = {
 };
 
 export type PageTranslation = Node & {
-  readonly __typename?: 'PageTranslation';
   /**
    * Translated content of the page.
    *
@@ -14312,7 +13948,6 @@ export type PageTranslationInput = {
 
 /** Represents a type of page. It defines what attributes are available to pages of this type. */
 export type PageType = Node & ObjectWithMetadata & {
-  readonly __typename?: 'PageType';
   /** Page attributes of that page type. */
   readonly attributes?: Maybe<ReadonlyArray<Attribute>>;
   /**
@@ -14412,7 +14047,6 @@ export type PageTypePrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeBulkDelete = {
-  readonly __typename?: 'PageTypeBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<PageError>;
@@ -14421,7 +14055,6 @@ export type PageTypeBulkDelete = {
 };
 
 export type PageTypeCountableConnection = {
-  readonly __typename?: 'PageTypeCountableConnection';
   readonly edges: ReadonlyArray<PageTypeCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -14430,7 +14063,6 @@ export type PageTypeCountableConnection = {
 };
 
 export type PageTypeCountableEdge = {
-  readonly __typename?: 'PageTypeCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -14443,7 +14075,6 @@ export type PageTypeCountableEdge = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeCreate = {
-  readonly __typename?: 'PageTypeCreate';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -14467,7 +14098,6 @@ export type PageTypeCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageTypeCreated = Event & {
-  readonly __typename?: 'PageTypeCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14486,7 +14116,6 @@ export type PageTypeCreated = Event & {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeDelete = {
-  readonly __typename?: 'PageTypeDelete';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -14501,7 +14130,6 @@ export type PageTypeDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageTypeDeleted = Event & {
-  readonly __typename?: 'PageTypeDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14525,7 +14153,6 @@ export type PageTypeFilterInput = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeReorderAttributes = {
-  readonly __typename?: 'PageTypeReorderAttributes';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -14552,7 +14179,6 @@ export type PageTypeSortingInput = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeUpdate = {
-  readonly __typename?: 'PageTypeUpdate';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -14578,7 +14204,6 @@ export type PageTypeUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageTypeUpdated = Event & {
-  readonly __typename?: 'PageTypeUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14597,7 +14222,6 @@ export type PageTypeUpdated = Event & {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageUpdate = {
-  readonly __typename?: 'PageUpdate';
   readonly errors: ReadonlyArray<PageError>;
   readonly page?: Maybe<Page>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14612,7 +14236,6 @@ export type PageUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageUpdated = Event & {
-  readonly __typename?: 'PageUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14631,7 +14254,6 @@ export type PageUpdated = Event & {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type PasswordChange = {
-  readonly __typename?: 'PasswordChange';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -14641,7 +14263,6 @@ export type PasswordChange = {
 
 /** Represents a payment of a given type. */
 export type Payment = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Payment';
   /**
    * List of actions that can be performed in the current state of a payment.
    *
@@ -14763,7 +14384,6 @@ export type PaymentPrivateMetafieldsArgs = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentAuthorize = Event & {
-  readonly __typename?: 'PaymentAuthorize';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14782,7 +14402,6 @@ export type PaymentAuthorize = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type PaymentCapture = {
-  readonly __typename?: 'PaymentCapture';
   readonly errors: ReadonlyArray<PaymentError>;
   /** Updated payment. */
   readonly payment?: Maybe<Payment>;
@@ -14798,7 +14417,6 @@ export type PaymentCapture = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentCaptureEvent = Event & {
-  readonly __typename?: 'PaymentCaptureEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14824,7 +14442,6 @@ export type PaymentChargeStatusEnum =
 
 /** Check payment balance. */
 export type PaymentCheckBalance = {
-  readonly __typename?: 'PaymentCheckBalance';
   /** Response from the gateway. */
   readonly data?: Maybe<Scalars['JSONString']['output']>;
   readonly errors: ReadonlyArray<PaymentError>;
@@ -14851,7 +14468,6 @@ export type PaymentCheckBalanceInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentConfirmEvent = Event & {
-  readonly __typename?: 'PaymentConfirmEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14865,7 +14481,6 @@ export type PaymentConfirmEvent = Event & {
 };
 
 export type PaymentCountableConnection = {
-  readonly __typename?: 'PaymentCountableConnection';
   readonly edges: ReadonlyArray<PaymentCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -14874,7 +14489,6 @@ export type PaymentCountableConnection = {
 };
 
 export type PaymentCountableEdge = {
-  readonly __typename?: 'PaymentCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -14882,7 +14496,6 @@ export type PaymentCountableEdge = {
 };
 
 export type PaymentError = {
-  readonly __typename?: 'PaymentError';
   /** The error code. */
   readonly code: PaymentErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -14925,7 +14538,6 @@ export type PaymentFilterInput = {
 
 /** Available payment gateway backend with configuration necessary to setup client. */
 export type PaymentGateway = {
-  readonly __typename?: 'PaymentGateway';
   /** Payment gateway client configuration. */
   readonly config: ReadonlyArray<GatewayConfigLine>;
   /** Payment gateway supported currencies. */
@@ -14938,7 +14550,6 @@ export type PaymentGateway = {
 
 /** Initializes payment process when it is required by gateway. */
 export type PaymentInitialize = {
-  readonly __typename?: 'PaymentInitialize';
   readonly errors: ReadonlyArray<PaymentError>;
   readonly initializedPayment?: Maybe<PaymentInitialized>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14947,7 +14558,6 @@ export type PaymentInitialize = {
 
 /** Server-side data generated by a payment gateway. Optional step when the payment provider requires an additional action to initialize payment session. */
 export type PaymentInitialized = {
-  readonly __typename?: 'PaymentInitialized';
   /** Initialized data by gateway. */
   readonly data?: Maybe<Scalars['JSONString']['output']>;
   /** ID of a payment gateway. */
@@ -14987,7 +14597,6 @@ export type PaymentInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentListGateways = Event & {
-  readonly __typename?: 'PaymentListGateways';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -15008,7 +14617,6 @@ export type PaymentListGateways = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentProcessEvent = Event & {
-  readonly __typename?: 'PaymentProcessEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15027,7 +14635,6 @@ export type PaymentProcessEvent = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type PaymentRefund = {
-  readonly __typename?: 'PaymentRefund';
   readonly errors: ReadonlyArray<PaymentError>;
   /** Updated payment. */
   readonly payment?: Maybe<Payment>;
@@ -15043,7 +14650,6 @@ export type PaymentRefund = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentRefundEvent = Event & {
-  readonly __typename?: 'PaymentRefundEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15058,7 +14664,6 @@ export type PaymentRefundEvent = Event & {
 
 /** Represents a payment source stored for user in payment gateway, such as credit card. */
 export type PaymentSource = {
-  readonly __typename?: 'PaymentSource';
   /** Stored credit card details if available. */
   readonly creditCardInfo?: Maybe<CreditCard>;
   /** Payment gateway name. */
@@ -15081,7 +14686,6 @@ export type PaymentSource = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type PaymentVoid = {
-  readonly __typename?: 'PaymentVoid';
   readonly errors: ReadonlyArray<PaymentError>;
   /** Updated payment. */
   readonly payment?: Maybe<Payment>;
@@ -15097,7 +14701,6 @@ export type PaymentVoid = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentVoidEvent = Event & {
-  readonly __typename?: 'PaymentVoidEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15112,7 +14715,6 @@ export type PaymentVoidEvent = Event & {
 
 /** Represents a permission object in a friendly form. */
 export type Permission = {
-  readonly __typename?: 'Permission';
   /** Internal code for permission. */
   readonly code: PermissionEnum;
   /** Describe action(s) allowed to do by permission. */
@@ -15151,7 +14753,6 @@ export type PermissionEnum =
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type PermissionGroupCreate = {
-  readonly __typename?: 'PermissionGroupCreate';
   readonly errors: ReadonlyArray<PermissionGroupError>;
   readonly group?: Maybe<Group>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -15175,7 +14776,6 @@ export type PermissionGroupCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PermissionGroupCreated = Event & {
-  readonly __typename?: 'PermissionGroupCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15194,7 +14794,6 @@ export type PermissionGroupCreated = Event & {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type PermissionGroupDelete = {
-  readonly __typename?: 'PermissionGroupDelete';
   readonly errors: ReadonlyArray<PermissionGroupError>;
   readonly group?: Maybe<Group>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -15209,7 +14808,6 @@ export type PermissionGroupDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PermissionGroupDeleted = Event & {
-  readonly __typename?: 'PermissionGroupDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15223,7 +14821,6 @@ export type PermissionGroupDeleted = Event & {
 };
 
 export type PermissionGroupError = {
-  readonly __typename?: 'PermissionGroupError';
   /** The error code. */
   readonly code: PermissionGroupErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -15269,7 +14866,6 @@ export type PermissionGroupSortingInput = {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type PermissionGroupUpdate = {
-  readonly __typename?: 'PermissionGroupUpdate';
   readonly errors: ReadonlyArray<PermissionGroupError>;
   readonly group?: Maybe<Group>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -15297,7 +14893,6 @@ export type PermissionGroupUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PermissionGroupUpdated = Event & {
-  readonly __typename?: 'PermissionGroupUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15312,7 +14907,6 @@ export type PermissionGroupUpdated = Event & {
 
 /** Plugin. */
 export type Plugin = {
-  readonly __typename?: 'Plugin';
   /** Channel-specific plugin configuration. */
   readonly channelConfigurations: ReadonlyArray<PluginConfiguration>;
   /** Description of the plugin. */
@@ -15327,7 +14921,6 @@ export type Plugin = {
 
 /** Stores information about a configuration of plugin. */
 export type PluginConfiguration = {
-  readonly __typename?: 'PluginConfiguration';
   /** Determines if plugin is active or not. */
   readonly active: Scalars['Boolean']['output'];
   /** The channel to which the plugin configuration is assigned to. */
@@ -15341,7 +14934,6 @@ export type PluginConfigurationType =
   | 'PER_CHANNEL';
 
 export type PluginCountableConnection = {
-  readonly __typename?: 'PluginCountableConnection';
   readonly edges: ReadonlyArray<PluginCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -15350,7 +14942,6 @@ export type PluginCountableConnection = {
 };
 
 export type PluginCountableEdge = {
-  readonly __typename?: 'PluginCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -15358,7 +14949,6 @@ export type PluginCountableEdge = {
 };
 
 export type PluginError = {
-  readonly __typename?: 'PluginError';
   /** The error code. */
   readonly code: PluginErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -15404,7 +14994,6 @@ export type PluginStatusInChannelsInput = {
  * Requires one of the following permissions: MANAGE_PLUGINS.
  */
 export type PluginUpdate = {
-  readonly __typename?: 'PluginUpdate';
   readonly errors: ReadonlyArray<PluginError>;
   readonly plugin?: Maybe<Plugin>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -15425,7 +15014,6 @@ export type PostalCodeRuleInclusionTypeEnum =
 
 /** Represents preorder settings for product variant. */
 export type PreorderData = {
-  readonly __typename?: 'PreorderData';
   /** Preorder end date. */
   readonly endDate?: Maybe<Scalars['DateTime']['output']>;
   /**
@@ -15451,7 +15039,6 @@ export type PreorderSettingsInput = {
 
 /** Represents preorder variant data for channel. */
 export type PreorderThreshold = {
-  readonly __typename?: 'PreorderThreshold';
   /** Preorder threshold for product variant in this channel. */
   readonly quantity?: Maybe<Scalars['Int']['output']>;
   /** Number of sold product variant in this channel. */
@@ -15474,7 +15061,6 @@ export type PriceRangeInput = {
 
 /** Represents an individual item for sale in the storefront. */
 export type Product = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Product';
   /**
    * Get a single attribute attached to product by attribute slug.
    *
@@ -15703,7 +15289,6 @@ export type ProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeAssign = {
-  readonly __typename?: 'ProductAttributeAssign';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -15732,7 +15317,6 @@ export type ProductAttributeAssignInput = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeAssignmentUpdate = {
-  readonly __typename?: 'ProductAttributeAssignmentUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -15761,7 +15345,6 @@ export type ProductAttributeType =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeUnassign = {
-  readonly __typename?: 'ProductAttributeUnassign';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -15775,7 +15358,6 @@ export type ProductAttributeUnassign = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductBulkDelete = {
-  readonly __typename?: 'ProductBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -15785,7 +15367,6 @@ export type ProductBulkDelete = {
 
 /** Represents product channel listing. */
 export type ProductChannelListing = Node & {
-  readonly __typename?: 'ProductChannelListing';
   /** @deprecated This field will be removed in Saleor 4.0. Use the `availableForPurchaseAt` field to fetch the available for purchase date. */
   readonly availableForPurchase?: Maybe<Scalars['Date']['output']>;
   /**
@@ -15872,7 +15453,6 @@ export type ProductChannelListingAddInput = {
 };
 
 export type ProductChannelListingError = {
-  readonly __typename?: 'ProductChannelListingError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of channels IDs which causes the error. */
@@ -15895,7 +15475,6 @@ export type ProductChannelListingError = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductChannelListingUpdate = {
-  readonly __typename?: 'ProductChannelListingUpdate';
   readonly errors: ReadonlyArray<ProductChannelListingError>;
   /** An updated product instance. */
   readonly product?: Maybe<Product>;
@@ -15911,7 +15490,6 @@ export type ProductChannelListingUpdateInput = {
 };
 
 export type ProductCountableConnection = {
-  readonly __typename?: 'ProductCountableConnection';
   readonly edges: ReadonlyArray<ProductCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -15920,7 +15498,6 @@ export type ProductCountableConnection = {
 };
 
 export type ProductCountableEdge = {
-  readonly __typename?: 'ProductCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -15933,7 +15510,6 @@ export type ProductCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductCreate = {
-  readonly __typename?: 'ProductCreate';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -16007,7 +15583,6 @@ export type ProductCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductCreated = Event & {
-  readonly __typename?: 'ProductCreated';
   /** The category of the product. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -16040,7 +15615,6 @@ export type ProductCreatedProductArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductDelete = {
-  readonly __typename?: 'ProductDelete';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -16055,7 +15629,6 @@ export type ProductDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductDeleted = Event & {
-  readonly __typename?: 'ProductDeleted';
   /** The category of the product. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -16083,7 +15656,6 @@ export type ProductDeletedProductArgs = {
 };
 
 export type ProductError = {
-  readonly __typename?: 'ProductError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -16188,7 +15760,6 @@ export type ProductFilterInput = {
 
 /** Represents a product image. */
 export type ProductImage = {
-  readonly __typename?: 'ProductImage';
   /** The alt text of the image. */
   readonly alt?: Maybe<Scalars['String']['output']>;
   /** The ID of the image. */
@@ -16264,7 +15835,6 @@ export type ProductInput = {
 
 /** Represents a product media. */
 export type ProductMedia = Node & {
-  readonly __typename?: 'ProductMedia';
   readonly alt: Scalars['String']['output'];
   readonly id: Scalars['ID']['output'];
   readonly oembedData: Scalars['JSONString']['output'];
@@ -16286,7 +15856,6 @@ export type ProductMediaUrlArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaBulkDelete = {
-  readonly __typename?: 'ProductMediaBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -16300,7 +15869,6 @@ export type ProductMediaBulkDelete = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaCreate = {
-  readonly __typename?: 'ProductMediaCreate';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   readonly product?: Maybe<Product>;
@@ -16325,7 +15893,6 @@ export type ProductMediaCreateInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaDelete = {
-  readonly __typename?: 'ProductMediaDelete';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   readonly product?: Maybe<Product>;
@@ -16339,7 +15906,6 @@ export type ProductMediaDelete = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaReorder = {
-  readonly __typename?: 'ProductMediaReorder';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ReadonlyArray<ProductMedia>>;
   readonly product?: Maybe<Product>;
@@ -16358,7 +15924,6 @@ export type ProductMediaType =
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaUpdate = {
-  readonly __typename?: 'ProductMediaUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   readonly product?: Maybe<Product>;
@@ -16379,7 +15944,6 @@ export type ProductMediaUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductMetadataUpdated = Event & {
-  readonly __typename?: 'ProductMetadataUpdated';
   /** The category of the product. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -16484,7 +16048,6 @@ export type ProductOrderField =
 
 /** Represents availability of a product in the storefront. */
 export type ProductPricingInfo = {
-  readonly __typename?: 'ProductPricingInfo';
   /** The discount amount if in sale (null otherwise). */
   readonly discount?: Maybe<TaxedMoney>;
   /** The discount amount in the local currency. */
@@ -16513,7 +16076,6 @@ export type ProductPricingInfo = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductReorderAttributeValues = {
-  readonly __typename?: 'ProductReorderAttributeValues';
   readonly errors: ReadonlyArray<ProductError>;
   /** Product from which attribute values are reordered. */
   readonly product?: Maybe<Product>;
@@ -16527,7 +16089,6 @@ export type ProductStockFilterInput = {
 };
 
 export type ProductTranslatableContent = Node & {
-  readonly __typename?: 'ProductTranslatableContent';
   /** List of product attribute values that can be translated. */
   readonly attributeValues: ReadonlyArray<AttributeValueTranslatableContent>;
   /**
@@ -16567,7 +16128,6 @@ export type ProductTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ProductTranslate = {
-  readonly __typename?: 'ProductTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -16575,7 +16135,6 @@ export type ProductTranslate = {
 };
 
 export type ProductTranslation = Node & {
-  readonly __typename?: 'ProductTranslation';
   /**
    * Translated description of the product.
    *
@@ -16599,7 +16158,6 @@ export type ProductTranslation = Node & {
 
 /** Represents a type of product. It defines what attributes are available to products of this type. */
 export type ProductType = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ProductType';
   /**
    * Variant attributes of that product type with attached variant selection.
    *
@@ -16748,7 +16306,6 @@ export type ProductTypeVariantAttributesArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeBulkDelete = {
-  readonly __typename?: 'ProductTypeBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -16761,7 +16318,6 @@ export type ProductTypeConfigurable =
   | 'SIMPLE';
 
 export type ProductTypeCountableConnection = {
-  readonly __typename?: 'ProductTypeCountableConnection';
   readonly edges: ReadonlyArray<ProductTypeCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -16770,7 +16326,6 @@ export type ProductTypeCountableConnection = {
 };
 
 export type ProductTypeCountableEdge = {
-  readonly __typename?: 'ProductTypeCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -16783,7 +16338,6 @@ export type ProductTypeCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeCreate = {
-  readonly __typename?: 'ProductTypeCreate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -16796,7 +16350,6 @@ export type ProductTypeCreate = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeDelete = {
-  readonly __typename?: 'ProductTypeDelete';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -16857,7 +16410,6 @@ export type ProductTypeKindEnum =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeReorderAttributes = {
-  readonly __typename?: 'ProductTypeReorderAttributes';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -16886,7 +16438,6 @@ export type ProductTypeSortingInput = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeUpdate = {
-  readonly __typename?: 'ProductTypeUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -16899,7 +16450,6 @@ export type ProductTypeUpdate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductUpdate = {
-  readonly __typename?: 'ProductUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -16914,7 +16464,6 @@ export type ProductUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductUpdated = Event & {
-  readonly __typename?: 'ProductUpdated';
   /** The category of the product. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -16943,7 +16492,6 @@ export type ProductUpdatedProductArgs = {
 
 /** Represents a version of a product such as different size or color. */
 export type ProductVariant = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ProductVariant';
   /** List of attributes assigned to this variant. */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /** Channel given to retrieve this product variant. Also used by federation gateway to resolve this object in a federated query. */
@@ -17128,7 +16676,6 @@ export type ProductVariantTranslationArgs = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantBackInStock = Event & {
-  readonly __typename?: 'ProductVariantBackInStock';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17161,7 +16708,6 @@ export type ProductVariantBackInStockProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantBulkCreate = {
-  readonly __typename?: 'ProductVariantBulkCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly bulkProductErrors: ReadonlyArray<BulkProductError>;
   /** Returns how many objects were created. */
@@ -17228,7 +16774,6 @@ export type ProductVariantBulkCreateInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantBulkDelete = {
-  readonly __typename?: 'ProductVariantBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -17238,7 +16783,6 @@ export type ProductVariantBulkDelete = {
 
 /** Represents product varaint channel listing. */
 export type ProductVariantChannelListing = Node & {
-  readonly __typename?: 'ProductVariantChannelListing';
   readonly channel: Channel;
   /** Cost price of the variant. */
   readonly costPrice?: Maybe<Money>;
@@ -17283,7 +16827,6 @@ export type ProductVariantChannelListingAddInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantChannelListingUpdate = {
-  readonly __typename?: 'ProductVariantChannelListingUpdate';
   readonly errors: ReadonlyArray<ProductChannelListingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productChannelListingErrors: ReadonlyArray<ProductChannelListingError>;
@@ -17292,7 +16835,6 @@ export type ProductVariantChannelListingUpdate = {
 };
 
 export type ProductVariantCountableConnection = {
-  readonly __typename?: 'ProductVariantCountableConnection';
   readonly edges: ReadonlyArray<ProductVariantCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -17301,7 +16843,6 @@ export type ProductVariantCountableConnection = {
 };
 
 export type ProductVariantCountableEdge = {
-  readonly __typename?: 'ProductVariantCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -17314,7 +16855,6 @@ export type ProductVariantCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantCreate = {
-  readonly __typename?: 'ProductVariantCreate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -17380,7 +16920,6 @@ export type ProductVariantCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantCreated = Event & {
-  readonly __typename?: 'ProductVariantCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17411,7 +16950,6 @@ export type ProductVariantCreatedProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantDelete = {
-  readonly __typename?: 'ProductVariantDelete';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -17426,7 +16964,6 @@ export type ProductVariantDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantDeleted = Event & {
-  readonly __typename?: 'ProductVariantDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17514,7 +17051,6 @@ export type ProductVariantInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantMetadataUpdated = Event & {
-  readonly __typename?: 'ProductVariantMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17547,7 +17083,6 @@ export type ProductVariantMetadataUpdatedProductVariantArgs = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantOutOfStock = Event & {
-  readonly __typename?: 'ProductVariantOutOfStock';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17584,7 +17119,6 @@ export type ProductVariantOutOfStockProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantPreorderDeactivate = {
-  readonly __typename?: 'ProductVariantPreorderDeactivate';
   readonly errors: ReadonlyArray<ProductError>;
   /** Product variant with ended preorder. */
   readonly productVariant?: Maybe<ProductVariant>;
@@ -17596,7 +17130,6 @@ export type ProductVariantPreorderDeactivate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantReorder = {
-  readonly __typename?: 'ProductVariantReorder';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -17609,7 +17142,6 @@ export type ProductVariantReorder = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantReorderAttributeValues = {
-  readonly __typename?: 'ProductVariantReorderAttributeValues';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -17623,7 +17155,6 @@ export type ProductVariantReorderAttributeValues = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantSetDefault = {
-  readonly __typename?: 'ProductVariantSetDefault';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -17647,7 +17178,6 @@ export type ProductVariantSortingInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksCreate = {
-  readonly __typename?: 'ProductVariantStocksCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly bulkStockErrors: ReadonlyArray<BulkStockError>;
   readonly errors: ReadonlyArray<BulkStockError>;
@@ -17661,7 +17191,6 @@ export type ProductVariantStocksCreate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksDelete = {
-  readonly __typename?: 'ProductVariantStocksDelete';
   readonly errors: ReadonlyArray<StockError>;
   /** Updated product variant. */
   readonly productVariant?: Maybe<ProductVariant>;
@@ -17675,7 +17204,6 @@ export type ProductVariantStocksDelete = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksUpdate = {
-  readonly __typename?: 'ProductVariantStocksUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly bulkStockErrors: ReadonlyArray<BulkStockError>;
   readonly errors: ReadonlyArray<BulkStockError>;
@@ -17684,7 +17212,6 @@ export type ProductVariantStocksUpdate = {
 };
 
 export type ProductVariantTranslatableContent = Node & {
-  readonly __typename?: 'ProductVariantTranslatableContent';
   /** List of product variant attribute values that can be translated. */
   readonly attributeValues: ReadonlyArray<AttributeValueTranslatableContent>;
   readonly id: Scalars['ID']['output'];
@@ -17709,7 +17236,6 @@ export type ProductVariantTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ProductVariantTranslate = {
-  readonly __typename?: 'ProductVariantTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly productVariant?: Maybe<ProductVariant>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -17717,7 +17243,6 @@ export type ProductVariantTranslate = {
 };
 
 export type ProductVariantTranslation = Node & {
-  readonly __typename?: 'ProductVariantTranslation';
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
   readonly language: LanguageDisplay;
@@ -17730,7 +17255,6 @@ export type ProductVariantTranslation = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantUpdate = {
-  readonly __typename?: 'ProductVariantUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -17745,7 +17269,6 @@ export type ProductVariantUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantUpdated = Event & {
-  readonly __typename?: 'ProductVariantUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17790,7 +17313,6 @@ export type PublishableChannelListingInput = {
 };
 
 export type Query = {
-  readonly __typename?: 'Query';
   readonly _entities?: Maybe<ReadonlyArray<Maybe<_Entity>>>;
   readonly _service?: Maybe<_Service>;
   /** Look up an address by ID. */
@@ -18784,7 +18306,6 @@ export type QueryWebhookSamplePayloadArgs = {
 
 /** Represents a reduced VAT rate for a particular type of goods. */
 export type ReducedRate = {
-  readonly __typename?: 'ReducedRate';
   /** Reduced VAT rate in percent. */
   readonly rate: Scalars['Float']['output'];
   /** A type of goods. */
@@ -18793,7 +18314,6 @@ export type ReducedRate = {
 
 /** Refresh JWT token. Mutation tries to take refreshToken from the input.If it fails it will try to take refreshToken from the http-only cookie -refreshToken. csrfToken is required when refreshToken is provided as a cookie. */
 export type RefreshToken = {
-  readonly __typename?: 'RefreshToken';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -18820,7 +18340,6 @@ export type ReportingPeriod =
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type RequestEmailChange = {
-  readonly __typename?: 'RequestEmailChange';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -18830,7 +18349,6 @@ export type RequestEmailChange = {
 
 /** Sends an email with the account password modification link. */
 export type RequestPasswordReset = {
-  readonly __typename?: 'RequestPasswordReset';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -18838,7 +18356,6 @@ export type RequestPasswordReset = {
 
 /** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
 export type Sale = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Sale';
   /** List of categories this sale applies to. */
   readonly categories?: Maybe<CategoryCountableConnection>;
   /**
@@ -18994,7 +18511,6 @@ export type SaleVariantsArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleAddCatalogues = {
-  readonly __typename?: 'SaleAddCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -19008,7 +18524,6 @@ export type SaleAddCatalogues = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleBulkDelete = {
-  readonly __typename?: 'SaleBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -19018,7 +18533,6 @@ export type SaleBulkDelete = {
 
 /** Represents sale channel listing. */
 export type SaleChannelListing = Node & {
-  readonly __typename?: 'SaleChannelListing';
   readonly channel: Channel;
   readonly currency: Scalars['String']['output'];
   readonly discountValue: Scalars['Float']['output'];
@@ -19045,7 +18559,6 @@ export type SaleChannelListingInput = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleChannelListingUpdate = {
-  readonly __typename?: 'SaleChannelListingUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -19054,7 +18567,6 @@ export type SaleChannelListingUpdate = {
 };
 
 export type SaleCountableConnection = {
-  readonly __typename?: 'SaleCountableConnection';
   readonly edges: ReadonlyArray<SaleCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -19063,7 +18575,6 @@ export type SaleCountableConnection = {
 };
 
 export type SaleCountableEdge = {
-  readonly __typename?: 'SaleCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -19076,7 +18587,6 @@ export type SaleCountableEdge = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleCreate = {
-  readonly __typename?: 'SaleCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -19091,7 +18601,6 @@ export type SaleCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type SaleCreated = Event & {
-  readonly __typename?: 'SaleCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19122,7 +18631,6 @@ export type SaleCreatedSaleArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleDelete = {
-  readonly __typename?: 'SaleDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -19137,7 +18645,6 @@ export type SaleDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type SaleDeleted = Event & {
-  readonly __typename?: 'SaleDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19197,7 +18704,6 @@ export type SaleInput = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleRemoveCatalogues = {
-  readonly __typename?: 'SaleRemoveCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -19246,7 +18752,6 @@ export type SaleSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type SaleToggle = Event & {
-  readonly __typename?: 'SaleToggle';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19278,7 +18783,6 @@ export type SaleToggleSaleArgs = {
 };
 
 export type SaleTranslatableContent = Node & {
-  readonly __typename?: 'SaleTranslatableContent';
   readonly id: Scalars['ID']['output'];
   readonly name: Scalars['String']['output'];
   /**
@@ -19303,7 +18807,6 @@ export type SaleTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type SaleTranslate = {
-  readonly __typename?: 'SaleTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly sale?: Maybe<Sale>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -19311,7 +18814,6 @@ export type SaleTranslate = {
 };
 
 export type SaleTranslation = Node & {
-  readonly __typename?: 'SaleTranslation';
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
   readonly language: LanguageDisplay;
@@ -19328,7 +18830,6 @@ export type SaleType =
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleUpdate = {
-  readonly __typename?: 'SaleUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -19343,7 +18844,6 @@ export type SaleUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type SaleUpdated = Event & {
-  readonly __typename?: 'SaleUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19370,7 +18870,6 @@ export type SaleUpdatedSaleArgs = {
 
 /** Represents a custom attribute. */
 export type SelectedAttribute = {
-  readonly __typename?: 'SelectedAttribute';
   /** Name of an attribute displayed in the interface. */
   readonly attribute: Attribute;
   /** Values of an attribute. */
@@ -19386,7 +18885,6 @@ export type SeoInput = {
 
 /** Sets the user's password from the token sent by email using the RequestPasswordReset mutation. */
 export type SetPassword = {
-  readonly __typename?: 'SetPassword';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate access token. */
@@ -19401,7 +18899,6 @@ export type SetPassword = {
 };
 
 export type ShippingError = {
-  readonly __typename?: 'ShippingError';
   /** List of channels IDs which causes the error. */
   readonly channels?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -19433,7 +18930,6 @@ export type ShippingErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingListMethodsForCheckout = Event & {
-  readonly __typename?: 'ShippingListMethodsForCheckout';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -19456,7 +18952,6 @@ export type ShippingListMethodsForCheckout = Event & {
 
 /** Shipping methods that can be used as means of shipping for orders and checkouts. */
 export type ShippingMethod = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ShippingMethod';
   /** Describes if this shipping method is active and can be selected. */
   readonly active: Scalars['Boolean']['output'];
   /**
@@ -19572,7 +19067,6 @@ export type ShippingMethodTranslationArgs = {
 
 /** Represents shipping method channel listing. */
 export type ShippingMethodChannelListing = Node & {
-  readonly __typename?: 'ShippingMethodChannelListing';
   readonly channel: Channel;
   readonly id: Scalars['ID']['output'];
   readonly maximumOrderPrice?: Maybe<Money>;
@@ -19604,7 +19098,6 @@ export type ShippingMethodChannelListingInput = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingMethodChannelListingUpdate = {
-  readonly __typename?: 'ShippingMethodChannelListingUpdate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -19614,7 +19107,6 @@ export type ShippingMethodChannelListingUpdate = {
 
 /** Represents shipping method postal code rule. */
 export type ShippingMethodPostalCodeRule = Node & {
-  readonly __typename?: 'ShippingMethodPostalCodeRule';
   /** End address range. */
   readonly end?: Maybe<Scalars['String']['output']>;
   /** The ID of the object. */
@@ -19626,7 +19118,6 @@ export type ShippingMethodPostalCodeRule = Node & {
 };
 
 export type ShippingMethodTranslatableContent = Node & {
-  readonly __typename?: 'ShippingMethodTranslatableContent';
   /**
    * Description of the shipping method.
    *
@@ -19652,7 +19143,6 @@ export type ShippingMethodTranslatableContentTranslationArgs = {
 };
 
 export type ShippingMethodTranslation = Node & {
-  readonly __typename?: 'ShippingMethodTranslation';
   /**
    * Translated description of the shipping method.
    *
@@ -19667,7 +19157,6 @@ export type ShippingMethodTranslation = Node & {
 
 /** Shipping method are the methods you'll use to get customer's orders to them. They are directly exposed to the customers. */
 export type ShippingMethodType = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ShippingMethodType';
   /**
    * List of channels available for the method.
    *
@@ -19808,7 +19297,6 @@ export type ShippingMethodTypeEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingMethodsPerCountry = {
-  readonly __typename?: 'ShippingMethodsPerCountry';
   /** The country code. */
   readonly countryCode: CountryCode;
   /** List of available shipping methods. */
@@ -19828,7 +19316,6 @@ export type ShippingPostalCodeRulesCreateInputRange = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceBulkDelete = {
-  readonly __typename?: 'ShippingPriceBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ShippingError>;
@@ -19842,7 +19329,6 @@ export type ShippingPriceBulkDelete = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceCreate = {
-  readonly __typename?: 'ShippingPriceCreate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -19859,7 +19345,6 @@ export type ShippingPriceCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingPriceCreated = Event & {
-  readonly __typename?: 'ShippingPriceCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19904,7 +19389,6 @@ export type ShippingPriceCreatedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceDelete = {
-  readonly __typename?: 'ShippingPriceDelete';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -19922,7 +19406,6 @@ export type ShippingPriceDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingPriceDeleted = Event & {
-  readonly __typename?: 'ShippingPriceDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19967,7 +19450,6 @@ export type ShippingPriceDeletedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceExcludeProducts = {
-  readonly __typename?: 'ShippingPriceExcludeProducts';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -20013,7 +19495,6 @@ export type ShippingPriceInput = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceRemoveProductFromExclude = {
-  readonly __typename?: 'ShippingPriceRemoveProductFromExclude';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -20027,7 +19508,6 @@ export type ShippingPriceRemoveProductFromExclude = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ShippingPriceTranslate = {
-  readonly __typename?: 'ShippingPriceTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly shippingMethod?: Maybe<ShippingMethodType>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -20050,7 +19530,6 @@ export type ShippingPriceTranslationInput = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceUpdate = {
-  readonly __typename?: 'ShippingPriceUpdate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -20067,7 +19546,6 @@ export type ShippingPriceUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingPriceUpdated = Event & {
-  readonly __typename?: 'ShippingPriceUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20108,7 +19586,6 @@ export type ShippingPriceUpdatedShippingZoneArgs = {
 
 /** Represents a shipping zone in the shop. Zones are the concept used only for grouping shipping methods in the dashboard, and are never exposed to the customers directly. */
 export type ShippingZone = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ShippingZone';
   /** List of channels for shipping zone. */
   readonly channels: ReadonlyArray<Channel>;
   /** List of countries available for the method. */
@@ -20196,7 +19673,6 @@ export type ShippingZonePrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneBulkDelete = {
-  readonly __typename?: 'ShippingZoneBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ShippingError>;
@@ -20205,7 +19681,6 @@ export type ShippingZoneBulkDelete = {
 };
 
 export type ShippingZoneCountableConnection = {
-  readonly __typename?: 'ShippingZoneCountableConnection';
   readonly edges: ReadonlyArray<ShippingZoneCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -20214,7 +19689,6 @@ export type ShippingZoneCountableConnection = {
 };
 
 export type ShippingZoneCountableEdge = {
-  readonly __typename?: 'ShippingZoneCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -20227,7 +19701,6 @@ export type ShippingZoneCountableEdge = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneCreate = {
-  readonly __typename?: 'ShippingZoneCreate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -20257,7 +19730,6 @@ export type ShippingZoneCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingZoneCreated = Event & {
-  readonly __typename?: 'ShippingZoneCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20288,7 +19760,6 @@ export type ShippingZoneCreatedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneDelete = {
-  readonly __typename?: 'ShippingZoneDelete';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -20303,7 +19774,6 @@ export type ShippingZoneDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingZoneDeleted = Event & {
-  readonly __typename?: 'ShippingZoneDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20341,7 +19811,6 @@ export type ShippingZoneFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingZoneMetadataUpdated = Event & {
-  readonly __typename?: 'ShippingZoneMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20372,7 +19841,6 @@ export type ShippingZoneMetadataUpdatedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneUpdate = {
-  readonly __typename?: 'ShippingZoneUpdate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -20406,7 +19874,6 @@ export type ShippingZoneUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingZoneUpdated = Event & {
-  readonly __typename?: 'ShippingZoneUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20433,7 +19900,6 @@ export type ShippingZoneUpdatedShippingZoneArgs = {
 
 /** Represents a shop resource containing general shop data and configuration. */
 export type Shop = {
-  readonly __typename?: 'Shop';
   /**
    * Enable automatic fulfillment for all digital products.
    *
@@ -20618,7 +20084,6 @@ export type ShopTranslationArgs = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopAddressUpdate = {
-  readonly __typename?: 'ShopAddressUpdate';
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
@@ -20632,7 +20097,6 @@ export type ShopAddressUpdate = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopDomainUpdate = {
-  readonly __typename?: 'ShopDomainUpdate';
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
@@ -20641,7 +20105,6 @@ export type ShopDomainUpdate = {
 };
 
 export type ShopError = {
-  readonly __typename?: 'ShopError';
   /** The error code. */
   readonly code: ShopErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -20666,7 +20129,6 @@ export type ShopErrorCode =
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopFetchTaxRates = {
-  readonly __typename?: 'ShopFetchTaxRates';
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
@@ -20753,7 +20215,6 @@ export type ShopSettingsInput = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ShopSettingsTranslate = {
-  readonly __typename?: 'ShopSettingsTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   /** Updated shop settings. */
   readonly shop?: Maybe<Shop>;
@@ -20772,7 +20233,6 @@ export type ShopSettingsTranslationInput = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopSettingsUpdate = {
-  readonly __typename?: 'ShopSettingsUpdate';
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
@@ -20781,7 +20241,6 @@ export type ShopSettingsUpdate = {
 };
 
 export type ShopTranslation = Node & {
-  readonly __typename?: 'ShopTranslation';
   readonly description: Scalars['String']['output'];
   readonly headerText: Scalars['String']['output'];
   readonly id: Scalars['ID']['output'];
@@ -20802,7 +20261,6 @@ export type SiteDomainInput = {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type StaffBulkDelete = {
-  readonly __typename?: 'StaffBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<StaffError>;
@@ -20816,7 +20274,6 @@ export type StaffBulkDelete = {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type StaffCreate = {
-  readonly __typename?: 'StaffCreate';
   readonly errors: ReadonlyArray<StaffError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
@@ -20848,7 +20305,6 @@ export type StaffCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StaffCreated = Event & {
-  readonly __typename?: 'StaffCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20867,7 +20323,6 @@ export type StaffCreated = Event & {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type StaffDelete = {
-  readonly __typename?: 'StaffDelete';
   readonly errors: ReadonlyArray<StaffError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
@@ -20882,7 +20337,6 @@ export type StaffDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StaffDeleted = Event & {
-  readonly __typename?: 'StaffDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20896,7 +20350,6 @@ export type StaffDeleted = Event & {
 };
 
 export type StaffError = {
-  readonly __typename?: 'StaffError';
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -20921,7 +20374,6 @@ export type StaffMemberStatus =
 
 /** Represents a recipient of email notifications send by Saleor, such as notifications about new orders. Notifications can be assigned to staff users or arbitrary email addresses. */
 export type StaffNotificationRecipient = Node & {
-  readonly __typename?: 'StaffNotificationRecipient';
   /** Determines if a notification active. */
   readonly active?: Maybe<Scalars['Boolean']['output']>;
   /** Returns email address of a user subscribed to email notifications. */
@@ -20937,7 +20389,6 @@ export type StaffNotificationRecipient = Node & {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientCreate = {
-  readonly __typename?: 'StaffNotificationRecipientCreate';
   readonly errors: ReadonlyArray<ShopError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
@@ -20950,7 +20401,6 @@ export type StaffNotificationRecipientCreate = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientDelete = {
-  readonly __typename?: 'StaffNotificationRecipientDelete';
   readonly errors: ReadonlyArray<ShopError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
@@ -20972,7 +20422,6 @@ export type StaffNotificationRecipientInput = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientUpdate = {
-  readonly __typename?: 'StaffNotificationRecipientUpdate';
   readonly errors: ReadonlyArray<ShopError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
@@ -20985,7 +20434,6 @@ export type StaffNotificationRecipientUpdate = {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type StaffUpdate = {
-  readonly __typename?: 'StaffUpdate';
   readonly errors: ReadonlyArray<StaffError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
@@ -21017,7 +20465,6 @@ export type StaffUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StaffUpdated = Event & {
-  readonly __typename?: 'StaffUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -21038,7 +20485,6 @@ export type StaffUserInput = {
 
 /** Represents stock. */
 export type Stock = Node & {
-  readonly __typename?: 'Stock';
   readonly id: Scalars['ID']['output'];
   readonly productVariant: ProductVariant;
   /**
@@ -21067,7 +20513,6 @@ export type StockAvailability =
   | 'OUT_OF_STOCK';
 
 export type StockCountableConnection = {
-  readonly __typename?: 'StockCountableConnection';
   readonly edges: ReadonlyArray<StockCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -21076,7 +20521,6 @@ export type StockCountableConnection = {
 };
 
 export type StockCountableEdge = {
-  readonly __typename?: 'StockCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -21084,7 +20528,6 @@ export type StockCountableEdge = {
 };
 
 export type StockError = {
-  readonly __typename?: 'StockError';
   /** The error code. */
   readonly code: StockErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21122,7 +20565,6 @@ export type StockInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StockSettings = {
-  readonly __typename?: 'StockSettings';
   /** Allocation strategy defines the preference of warehouses for allocations and reservations. */
   readonly allocationStrategy: AllocationStrategyEnum;
 };
@@ -21142,7 +20584,6 @@ export type StorePaymentMethodEnum =
   | 'ON_SESSION';
 
 export type Subscription = {
-  readonly __typename?: 'Subscription';
   /**
    * Look up subscription event.
    *
@@ -21165,7 +20606,6 @@ export type TaxCalculationStrategy =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxClass = Node & ObjectWithMetadata & {
-  readonly __typename?: 'TaxClass';
   /** Country-specific tax rates for this tax class. */
   readonly countries: ReadonlyArray<TaxClassCountryRate>;
   /** The ID of the object. */
@@ -21263,7 +20703,6 @@ export type TaxClassPrivateMetafieldsArgs = {
 };
 
 export type TaxClassCountableConnection = {
-  readonly __typename?: 'TaxClassCountableConnection';
   readonly edges: ReadonlyArray<TaxClassCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -21272,7 +20711,6 @@ export type TaxClassCountableConnection = {
 };
 
 export type TaxClassCountableEdge = {
-  readonly __typename?: 'TaxClassCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -21287,7 +20725,6 @@ export type TaxClassCountableEdge = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxClassCountryRate = {
-  readonly __typename?: 'TaxClassCountryRate';
   /** Country in which this tax rate applies. */
   readonly country: CountryDisplay;
   /** Tax rate value. */
@@ -21306,13 +20743,11 @@ export type TaxClassCountryRate = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxClassCreate = {
-  readonly __typename?: 'TaxClassCreate';
   readonly errors: ReadonlyArray<TaxClassCreateError>;
   readonly taxClass?: Maybe<TaxClass>;
 };
 
 export type TaxClassCreateError = {
-  readonly __typename?: 'TaxClassCreateError';
   /** The error code. */
   readonly code: TaxClassCreateErrorCode;
   /** List of country codes for which the configuration is invalid. */
@@ -21346,13 +20781,11 @@ export type TaxClassCreateInput = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxClassDelete = {
-  readonly __typename?: 'TaxClassDelete';
   readonly errors: ReadonlyArray<TaxClassDeleteError>;
   readonly taxClass?: Maybe<TaxClass>;
 };
 
 export type TaxClassDeleteError = {
-  readonly __typename?: 'TaxClassDeleteError';
   /** The error code. */
   readonly code: TaxClassDeleteErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21401,13 +20834,11 @@ export type TaxClassSortingInput = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxClassUpdate = {
-  readonly __typename?: 'TaxClassUpdate';
   readonly errors: ReadonlyArray<TaxClassUpdateError>;
   readonly taxClass?: Maybe<TaxClass>;
 };
 
 export type TaxClassUpdateError = {
-  readonly __typename?: 'TaxClassUpdateError';
   /** The error code. */
   readonly code: TaxClassUpdateErrorCode;
   /** List of country codes for which the configuration is invalid. */
@@ -21442,7 +20873,6 @@ export type TaxClassUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxConfiguration = Node & ObjectWithMetadata & {
-  readonly __typename?: 'TaxConfiguration';
   /** A channel to which the tax configuration applies to. */
   readonly channel: Channel;
   /** Determines whether taxes are charged in the given channel. */
@@ -21548,7 +20978,6 @@ export type TaxConfigurationPrivateMetafieldsArgs = {
 };
 
 export type TaxConfigurationCountableConnection = {
-  readonly __typename?: 'TaxConfigurationCountableConnection';
   readonly edges: ReadonlyArray<TaxConfigurationCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -21557,7 +20986,6 @@ export type TaxConfigurationCountableConnection = {
 };
 
 export type TaxConfigurationCountableEdge = {
-  readonly __typename?: 'TaxConfigurationCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -21577,7 +21005,6 @@ export type TaxConfigurationFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxConfigurationPerCountry = {
-  readonly __typename?: 'TaxConfigurationPerCountry';
   /** Determines whether taxes are charged in this country. */
   readonly chargeTaxes: Scalars['Boolean']['output'];
   /** Country in which this configuration applies. */
@@ -21609,13 +21036,11 @@ export type TaxConfigurationPerCountryInput = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxConfigurationUpdate = {
-  readonly __typename?: 'TaxConfigurationUpdate';
   readonly errors: ReadonlyArray<TaxConfigurationUpdateError>;
   readonly taxConfiguration?: Maybe<TaxConfiguration>;
 };
 
 export type TaxConfigurationUpdateError = {
-  readonly __typename?: 'TaxConfigurationUpdateError';
   /** The error code. */
   readonly code: TaxConfigurationUpdateErrorCode;
   /** List of country codes for which the configuration is invalid. */
@@ -21656,7 +21081,6 @@ export type TaxConfigurationUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxCountryConfiguration = {
-  readonly __typename?: 'TaxCountryConfiguration';
   /** A country for which tax class rates are grouped. */
   readonly country: CountryDisplay;
   /** List of tax class rates. */
@@ -21673,14 +21097,12 @@ export type TaxCountryConfiguration = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxCountryConfigurationDelete = {
-  readonly __typename?: 'TaxCountryConfigurationDelete';
   readonly errors: ReadonlyArray<TaxCountryConfigurationDeleteError>;
   /** Updated tax class rates grouped by a country. */
   readonly taxCountryConfiguration?: Maybe<TaxCountryConfiguration>;
 };
 
 export type TaxCountryConfigurationDeleteError = {
-  readonly __typename?: 'TaxCountryConfigurationDeleteError';
   /** The error code. */
   readonly code: TaxCountryConfigurationDeleteErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21705,14 +21127,12 @@ export type TaxCountryConfigurationDeleteErrorCode =
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxCountryConfigurationUpdate = {
-  readonly __typename?: 'TaxCountryConfigurationUpdate';
   readonly errors: ReadonlyArray<TaxCountryConfigurationUpdateError>;
   /** Updated tax class rates grouped by a country. */
   readonly taxCountryConfiguration?: Maybe<TaxCountryConfiguration>;
 };
 
 export type TaxCountryConfigurationUpdateError = {
-  readonly __typename?: 'TaxCountryConfigurationUpdateError';
   /** The error code. */
   readonly code: TaxCountryConfigurationUpdateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21741,13 +21161,11 @@ export type TaxCountryConfigurationUpdateErrorCode =
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxExemptionManage = {
-  readonly __typename?: 'TaxExemptionManage';
   readonly errors: ReadonlyArray<TaxExemptionManageError>;
   readonly taxableObject?: Maybe<TaxSourceObject>;
 };
 
 export type TaxExemptionManageError = {
-  readonly __typename?: 'TaxExemptionManageError';
   /** The error code. */
   readonly code: TaxExemptionManageErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21769,7 +21187,6 @@ export type TaxSourceObject = Checkout | Order;
 
 /** Representation of tax types fetched from tax gateway. */
 export type TaxType = {
-  readonly __typename?: 'TaxType';
   /** Description of the tax type. */
   readonly description?: Maybe<Scalars['String']['output']>;
   /** External tax code used to identify given tax group. */
@@ -21778,7 +21195,6 @@ export type TaxType = {
 
 /** Taxable object. */
 export type TaxableObject = {
-  readonly __typename?: 'TaxableObject';
   /** The address data. */
   readonly address?: Maybe<Address>;
   readonly channel: Channel;
@@ -21798,7 +21214,6 @@ export type TaxableObject = {
 
 /** Taxable object discount. */
 export type TaxableObjectDiscount = {
-  readonly __typename?: 'TaxableObjectDiscount';
   /** The amount of the discount. */
   readonly amount: Money;
   /** The name of the discount. */
@@ -21806,7 +21221,6 @@ export type TaxableObjectDiscount = {
 };
 
 export type TaxableObjectLine = {
-  readonly __typename?: 'TaxableObjectLine';
   /** Determines if taxes are being charged for the product. */
   readonly chargeTaxes: Scalars['Boolean']['output'];
   /** The product name. */
@@ -21827,7 +21241,6 @@ export type TaxableObjectLine = {
 
 /** Represents a monetary value with taxes. In cases where taxes were not applied, net and gross values will be equal. */
 export type TaxedMoney = {
-  readonly __typename?: 'TaxedMoney';
   /** Currency code. */
   readonly currency: Scalars['String']['output'];
   /** Amount of money including taxes. */
@@ -21840,7 +21253,6 @@ export type TaxedMoney = {
 
 /** Represents a range of monetary values. */
 export type TaxedMoneyRange = {
-  readonly __typename?: 'TaxedMoneyRange';
   /** Lower bound of a price range. */
   readonly start?: Maybe<TaxedMoney>;
   /** Upper bound of a price range. */
@@ -21852,7 +21264,6 @@ export type ThumbnailFormatEnum =
   | 'WEBP';
 
 export type TimePeriod = {
-  readonly __typename?: 'TimePeriod';
   /** The length of the period. */
   readonly amount: Scalars['Int']['output'];
   /** The type of the period. */
@@ -21875,7 +21286,6 @@ export type TimePeriodTypeEnum =
 
 /** An object representing a single payment. */
 export type Transaction = Node & {
-  readonly __typename?: 'Transaction';
   /** Total amount of the transaction. */
   readonly amount?: Maybe<Money>;
   readonly created: Scalars['DateTime']['output'];
@@ -21889,7 +21299,6 @@ export type Transaction = Node & {
 };
 
 export type TransactionAction = {
-  readonly __typename?: 'TransactionAction';
   /** Determines the action type. */
   readonly actionType: TransactionActionEnum;
   /** Transaction request amount. Null when action type is VOID. */
@@ -21917,7 +21326,6 @@ export type TransactionActionEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionActionRequest = Event & {
-  readonly __typename?: 'TransactionActionRequest';
   /**
    * Requested action data.
    *
@@ -21952,13 +21360,11 @@ export type TransactionActionRequest = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionCreate = {
-  readonly __typename?: 'TransactionCreate';
   readonly errors: ReadonlyArray<TransactionCreateError>;
   readonly transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionCreateError = {
-  readonly __typename?: 'TransactionCreateError';
   /** The error code. */
   readonly code: TransactionCreateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22000,7 +21406,6 @@ export type TransactionCreateInput = {
 
 /** Represents transaction's event. */
 export type TransactionEvent = Node & {
-  readonly __typename?: 'TransactionEvent';
   readonly createdAt: Scalars['DateTime']['output'];
   /** The ID of the object. */
   readonly id: Scalars['ID']['output'];
@@ -22029,7 +21434,6 @@ export type TransactionEventInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionItem = Node & ObjectWithMetadata & {
-  readonly __typename?: 'TransactionItem';
   /** List of actions that can be performed in the current state of a payment. */
   readonly actions: ReadonlyArray<TransactionActionEnum>;
   /** Total amount authorized for this payment. */
@@ -22156,7 +21560,6 @@ export type TransactionItemPrivateMetafieldsArgs = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionItemMetadataUpdated = Event & {
-  readonly __typename?: 'TransactionItemMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22196,13 +21599,11 @@ export type TransactionKind =
  * Requires one of the following permissions: HANDLE_PAYMENTS, MANAGE_ORDERS.
  */
 export type TransactionRequestAction = {
-  readonly __typename?: 'TransactionRequestAction';
   readonly errors: ReadonlyArray<TransactionRequestActionError>;
   readonly transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionRequestActionError = {
-  readonly __typename?: 'TransactionRequestActionError';
   /** The error code. */
   readonly code: TransactionRequestActionErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22232,13 +21633,11 @@ export type TransactionStatus =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionUpdate = {
-  readonly __typename?: 'TransactionUpdate';
   readonly errors: ReadonlyArray<TransactionUpdateError>;
   readonly transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionUpdateError = {
-  readonly __typename?: 'TransactionUpdateError';
   /** The error code. */
   readonly code: TransactionUpdateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22281,7 +21680,6 @@ export type TransactionUpdateInput = {
 export type TranslatableItem = AttributeTranslatableContent | AttributeValueTranslatableContent | CategoryTranslatableContent | CollectionTranslatableContent | MenuItemTranslatableContent | PageTranslatableContent | ProductTranslatableContent | ProductVariantTranslatableContent | SaleTranslatableContent | ShippingMethodTranslatableContent | VoucherTranslatableContent;
 
 export type TranslatableItemConnection = {
-  readonly __typename?: 'TranslatableItemConnection';
   readonly edges: ReadonlyArray<TranslatableItemEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -22290,7 +21688,6 @@ export type TranslatableItemConnection = {
 };
 
 export type TranslatableItemEdge = {
-  readonly __typename?: 'TranslatableItemEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -22318,7 +21715,6 @@ export type TranslatableKinds =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TranslationCreated = Event & {
-  readonly __typename?: 'TranslationCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22332,7 +21728,6 @@ export type TranslationCreated = Event & {
 };
 
 export type TranslationError = {
-  readonly __typename?: 'TranslationError';
   /** The error code. */
   readonly code: TranslationErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22370,7 +21765,6 @@ export type TranslationTypes = AttributeTranslation | AttributeValueTranslation 
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TranslationUpdated = Event & {
-  readonly __typename?: 'TranslationUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22392,7 +21786,6 @@ export type UpdateInvoiceInput = {
 
 /** Updates metadata of an object. To use it, you need to have access to the modified object. */
 export type UpdateMetadata = {
-  readonly __typename?: 'UpdateMetadata';
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22401,7 +21794,6 @@ export type UpdateMetadata = {
 
 /** Updates private metadata of an object. To use it, you need to be an authenticated staff user or an app and have access to the modified object. */
 export type UpdatePrivateMetadata = {
-  readonly __typename?: 'UpdatePrivateMetadata';
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22409,7 +21801,6 @@ export type UpdatePrivateMetadata = {
 };
 
 export type UploadError = {
-  readonly __typename?: 'UploadError';
   /** The error code. */
   readonly code: UploadErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22424,7 +21815,6 @@ export type UploadErrorCode =
 
 /** Represents user data. */
 export type User = Node & ObjectWithMetadata & {
-  readonly __typename?: 'User';
   /** List of all user's addresses. */
   readonly addresses: ReadonlyArray<Address>;
   readonly avatar?: Maybe<Image>;
@@ -22614,7 +22004,6 @@ export type UserStoredPaymentSourcesArgs = {
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type UserAvatarDelete = {
-  readonly __typename?: 'UserAvatarDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -22628,7 +22017,6 @@ export type UserAvatarDelete = {
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type UserAvatarUpdate = {
-  readonly __typename?: 'UserAvatarUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -22642,7 +22030,6 @@ export type UserAvatarUpdate = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type UserBulkSetActive = {
-  readonly __typename?: 'UserBulkSetActive';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** Returns how many objects were affected. */
@@ -22651,7 +22038,6 @@ export type UserBulkSetActive = {
 };
 
 export type UserCountableConnection = {
-  readonly __typename?: 'UserCountableConnection';
   readonly edges: ReadonlyArray<UserCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -22660,7 +22046,6 @@ export type UserCountableConnection = {
 };
 
 export type UserCountableEdge = {
-  readonly __typename?: 'UserCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -22697,7 +22082,6 @@ export type UserCreateInput = {
 };
 
 export type UserPermission = {
-  readonly __typename?: 'UserPermission';
   /** Internal code for permission. */
   readonly code: PermissionEnum;
   /** Describe action(s) allowed to do by permission. */
@@ -22734,7 +22118,6 @@ export type UserSortingInput = {
 
 /** Represents a VAT rate for a country. */
 export type Vat = {
-  readonly __typename?: 'VAT';
   /** Country code. */
   readonly countryCode: Scalars['String']['output'];
   /** Country's VAT rate exceptions for specific types of goods. */
@@ -22754,7 +22137,6 @@ export type VariantAttributeScope =
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type VariantMediaAssign = {
-  readonly __typename?: 'VariantMediaAssign';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22768,7 +22150,6 @@ export type VariantMediaAssign = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type VariantMediaUnassign = {
-  readonly __typename?: 'VariantMediaUnassign';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22778,7 +22159,6 @@ export type VariantMediaUnassign = {
 
 /** Represents availability of a variant in the storefront. */
 export type VariantPricingInfo = {
-  readonly __typename?: 'VariantPricingInfo';
   /** The discount amount if in sale (null otherwise). */
   readonly discount?: Maybe<TaxedMoney>;
   /** The discount amount in the local currency. */
@@ -22795,7 +22175,6 @@ export type VariantPricingInfo = {
 
 /** Verify JWT token. */
 export type VerifyToken = {
-  readonly __typename?: 'VerifyToken';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -22825,7 +22204,6 @@ export type VolumeUnitsEnum =
 
 /** Vouchers allow giving discounts to particular customers on categories, collections or specific products. They can be used during checkout by providing valid voucher codes. */
 export type Voucher = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Voucher';
   readonly applyOncePerCustomer: Scalars['Boolean']['output'];
   readonly applyOncePerOrder: Scalars['Boolean']['output'];
   /** List of categories this voucher applies to. */
@@ -22993,7 +22371,6 @@ export type VoucherVariantsArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherAddCatalogues = {
-  readonly __typename?: 'VoucherAddCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -23007,7 +22384,6 @@ export type VoucherAddCatalogues = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherBulkDelete = {
-  readonly __typename?: 'VoucherBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23017,7 +22393,6 @@ export type VoucherBulkDelete = {
 
 /** Represents voucher channel listing. */
 export type VoucherChannelListing = Node & {
-  readonly __typename?: 'VoucherChannelListing';
   readonly channel: Channel;
   readonly currency: Scalars['String']['output'];
   readonly discountValue: Scalars['Float']['output'];
@@ -23047,7 +22422,6 @@ export type VoucherChannelListingInput = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherChannelListingUpdate = {
-  readonly __typename?: 'VoucherChannelListingUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -23056,7 +22430,6 @@ export type VoucherChannelListingUpdate = {
 };
 
 export type VoucherCountableConnection = {
-  readonly __typename?: 'VoucherCountableConnection';
   readonly edges: ReadonlyArray<VoucherCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -23065,7 +22438,6 @@ export type VoucherCountableConnection = {
 };
 
 export type VoucherCountableEdge = {
-  readonly __typename?: 'VoucherCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -23078,7 +22450,6 @@ export type VoucherCountableEdge = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherCreate = {
-  readonly __typename?: 'VoucherCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -23093,7 +22464,6 @@ export type VoucherCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type VoucherCreated = Event & {
-  readonly __typename?: 'VoucherCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23124,7 +22494,6 @@ export type VoucherCreatedVoucherArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherDelete = {
-  readonly __typename?: 'VoucherDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -23139,7 +22508,6 @@ export type VoucherDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type VoucherDeleted = Event & {
-  readonly __typename?: 'VoucherDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23226,7 +22594,6 @@ export type VoucherInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type VoucherMetadataUpdated = Event & {
-  readonly __typename?: 'VoucherMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23257,7 +22624,6 @@ export type VoucherMetadataUpdatedVoucherArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherRemoveCatalogues = {
-  readonly __typename?: 'VoucherRemoveCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -23303,7 +22669,6 @@ export type VoucherSortingInput = {
 };
 
 export type VoucherTranslatableContent = Node & {
-  readonly __typename?: 'VoucherTranslatableContent';
   readonly id: Scalars['ID']['output'];
   readonly name?: Maybe<Scalars['String']['output']>;
   /** Returns translated voucher fields for the given language code. */
@@ -23328,7 +22693,6 @@ export type VoucherTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type VoucherTranslate = {
-  readonly __typename?: 'VoucherTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
@@ -23336,7 +22700,6 @@ export type VoucherTranslate = {
 };
 
 export type VoucherTranslation = Node & {
-  readonly __typename?: 'VoucherTranslation';
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
   readonly language: LanguageDisplay;
@@ -23354,7 +22717,6 @@ export type VoucherTypeEnum =
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherUpdate = {
-  readonly __typename?: 'VoucherUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -23369,7 +22731,6 @@ export type VoucherUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type VoucherUpdated = Event & {
-  readonly __typename?: 'VoucherUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23396,7 +22757,6 @@ export type VoucherUpdatedVoucherArgs = {
 
 /** Represents warehouse. */
 export type Warehouse = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Warehouse';
   readonly address: Address;
   /**
    * Click and collect options: local, all or disabled.
@@ -23505,7 +22865,6 @@ export type WarehouseClickAndCollectOptionEnum =
   | 'LOCAL';
 
 export type WarehouseCountableConnection = {
-  readonly __typename?: 'WarehouseCountableConnection';
   readonly edges: ReadonlyArray<WarehouseCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -23514,7 +22873,6 @@ export type WarehouseCountableConnection = {
 };
 
 export type WarehouseCountableEdge = {
-  readonly __typename?: 'WarehouseCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -23527,7 +22885,6 @@ export type WarehouseCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseCreate = {
-  readonly __typename?: 'WarehouseCreate';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23565,7 +22922,6 @@ export type WarehouseCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type WarehouseCreated = Event & {
-  readonly __typename?: 'WarehouseCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23584,7 +22940,6 @@ export type WarehouseCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseDelete = {
-  readonly __typename?: 'WarehouseDelete';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23599,7 +22954,6 @@ export type WarehouseDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type WarehouseDeleted = Event & {
-  readonly __typename?: 'WarehouseDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23613,7 +22967,6 @@ export type WarehouseDeleted = Event & {
 };
 
 export type WarehouseError = {
-  readonly __typename?: 'WarehouseError';
   /** The error code. */
   readonly code: WarehouseErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -23650,7 +23003,6 @@ export type WarehouseFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type WarehouseMetadataUpdated = Event & {
-  readonly __typename?: 'WarehouseMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23669,7 +23021,6 @@ export type WarehouseMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseShippingZoneAssign = {
-  readonly __typename?: 'WarehouseShippingZoneAssign';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23682,7 +23033,6 @@ export type WarehouseShippingZoneAssign = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseShippingZoneUnassign = {
-  readonly __typename?: 'WarehouseShippingZoneUnassign';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23706,7 +23056,6 @@ export type WarehouseSortingInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseUpdate = {
-  readonly __typename?: 'WarehouseUpdate';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23754,7 +23103,6 @@ export type WarehouseUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type WarehouseUpdated = Event & {
-  readonly __typename?: 'WarehouseUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23769,7 +23117,6 @@ export type WarehouseUpdated = Event & {
 
 /** Webhook. */
 export type Webhook = Node & {
-  readonly __typename?: 'Webhook';
   readonly app: App;
   /** List of asynchronous webhook events. */
   readonly asyncEvents: ReadonlyArray<WebhookEventAsync>;
@@ -23814,7 +23161,6 @@ export type WebhookEventDeliveriesArgs = {
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
 export type WebhookCreate = {
-  readonly __typename?: 'WebhookCreate';
   readonly errors: ReadonlyArray<WebhookError>;
   readonly webhook?: Maybe<Webhook>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23862,7 +23208,6 @@ export type WebhookCreateInput = {
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
 export type WebhookDelete = {
-  readonly __typename?: 'WebhookDelete';
   readonly errors: ReadonlyArray<WebhookError>;
   readonly webhook?: Maybe<Webhook>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23870,7 +23215,6 @@ export type WebhookDelete = {
 };
 
 export type WebhookError = {
-  readonly __typename?: 'WebhookError';
   /** The error code. */
   readonly code: WebhookErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -23890,7 +23234,6 @@ export type WebhookErrorCode =
 
 /** Webhook event. */
 export type WebhookEvent = {
-  readonly __typename?: 'WebhookEvent';
   /** Internal name of the event type. */
   readonly eventType: WebhookEventTypeEnum;
   /** Display name of the event. */
@@ -23899,7 +23242,6 @@ export type WebhookEvent = {
 
 /** Asynchronous webhook event. */
 export type WebhookEventAsync = {
-  readonly __typename?: 'WebhookEventAsync';
   /** Internal name of the event type. */
   readonly eventType: WebhookEventTypeAsyncEnum;
   /** Display name of the event. */
@@ -23908,7 +23250,6 @@ export type WebhookEventAsync = {
 
 /** Synchronous webhook event. */
 export type WebhookEventSync = {
-  readonly __typename?: 'WebhookEventSync';
   /** Internal name of the event type. */
   readonly eventType: WebhookEventTypeSyncEnum;
   /** Display name of the event. */
@@ -24683,7 +24024,6 @@ export type WebhookSampleEventTypeEnum =
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type WebhookUpdate = {
-  readonly __typename?: 'WebhookUpdate';
   readonly errors: ReadonlyArray<WebhookError>;
   readonly webhook?: Maybe<Webhook>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -24727,7 +24067,6 @@ export type WebhookUpdateInput = {
 
 /** Represents weight value in a specific weight unit. */
 export type Weight = {
-  readonly __typename?: 'Weight';
   /** Weight unit. */
   readonly unit: WeightUnitsEnum;
   /** Weight value. */
@@ -24747,21 +24086,20 @@ export type _Entity = Address | App | Category | Collection | Group | PageType |
 
 /** _Service manifest as defined by Federation spec. */
 export type _Service = {
-  readonly __typename?: '_Service';
   readonly sdl?: Maybe<Scalars['String']['output']>;
 };
 
-export type AddressFragmentFragment = { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } };
+export type AddressFragmentFragment = { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } };
 
-export type MetadataFragmentFragment = { readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string };
+export type MetadataFragmentFragment = { readonly key: string, readonly value: string };
 
-export type MoneyFragmentFragment = { readonly __typename?: 'Money', readonly amount: number, readonly currency: string };
+export type MoneyFragmentFragment = { readonly amount: number, readonly currency: string };
 
-export type OrderFragmentFragment = { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly __typename?: 'ShippingMethod', readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly __typename?: 'OrderDiscount', readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly __typename?: 'Allocation', readonly quantity: number, readonly warehouse: { readonly __typename?: 'Warehouse', readonly id: string } }> | null, readonly unitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly __typename?: 'Fulfillment', readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly __typename?: 'Money', readonly amount: number } | null, readonly capturedAmount?: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly __typename?: 'CreditCard', readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly total: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly weight: { readonly __typename?: 'Weight', readonly value: number, readonly unit: WeightUnitsEnum } };
+export type OrderFragmentFragment = { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly quantity: number, readonly warehouse: { readonly id: string } }> | null, readonly unitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly amount: number } | null, readonly capturedAmount?: { readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly total: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly weight: { readonly value: number, readonly unit: WeightUnitsEnum } };
 
-export type PaymentFragmentFragment = { readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly __typename?: 'Money', readonly amount: number } | null, readonly capturedAmount?: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly __typename?: 'CreditCard', readonly brand: string } | null };
+export type PaymentFragmentFragment = { readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly amount: number } | null, readonly capturedAmount?: { readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly brand: string } | null };
 
-export type TaxedMoneyFragmentFragment = { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } };
+export type TaxedMoneyFragmentFragment = { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } };
 
 export type DeleteAppMetadataMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -24769,7 +24107,7 @@ export type DeleteAppMetadataMutationVariables = Exact<{
 }>;
 
 
-export type DeleteAppMetadataMutation = { readonly __typename?: 'Mutation', readonly deletePrivateMetadata?: { readonly __typename?: 'DeletePrivateMetadata', readonly item?: { readonly __typename?: 'Address', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'App', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Attribute', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Category', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Checkout', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'CheckoutLine', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Collection', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'DigitalContent', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Fulfillment', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'GiftCard', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Invoice', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Menu', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'MenuItem', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Order', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'OrderLine', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Page', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'PageType', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Payment', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Product', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ProductType', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ProductVariant', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Sale', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ShippingMethod', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ShippingMethodType', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ShippingZone', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'TaxClass', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'TaxConfiguration', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'TransactionItem', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'User', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Voucher', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Warehouse', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | null } | null };
+export type DeleteAppMetadataMutation = { readonly deletePrivateMetadata?: { readonly item?: { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | null } | null };
 
 export type UpdateAppMetadataMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -24777,40 +24115,40 @@ export type UpdateAppMetadataMutationVariables = Exact<{
 }>;
 
 
-export type UpdateAppMetadataMutation = { readonly __typename?: 'Mutation', readonly updatePrivateMetadata?: { readonly __typename?: 'UpdatePrivateMetadata', readonly item?: { readonly __typename?: 'Address', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'App', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Attribute', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Category', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Checkout', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'CheckoutLine', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Collection', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'DigitalContent', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Fulfillment', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'GiftCard', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Invoice', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Menu', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'MenuItem', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Order', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'OrderLine', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Page', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'PageType', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Payment', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Product', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ProductType', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ProductVariant', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Sale', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ShippingMethod', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ShippingMethodType', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'ShippingZone', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'TaxClass', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'TaxConfiguration', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'TransactionItem', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'User', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Voucher', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | { readonly __typename?: 'Warehouse', readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | null } | null };
+export type UpdateAppMetadataMutation = { readonly updatePrivateMetadata?: { readonly item?: { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | { readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | null } | null };
 
 export type FetchAppDetailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchAppDetailsQuery = { readonly __typename?: 'Query', readonly app?: { readonly __typename?: 'App', readonly id: string, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | null };
+export type FetchAppDetailsQuery = { readonly app?: { readonly id: string, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | null };
 
-export type CustomerCreatedWebhookPayloadFragment = { readonly __typename?: 'CustomerCreated', readonly user?: { readonly __typename: 'User', readonly id: string, readonly email: string, readonly firstName: string, readonly lastName: string, readonly isActive: boolean, readonly dateJoined: string, readonly languageCode: LanguageCodeEnum, readonly defaultShippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly defaultBillingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly addresses: ReadonlyArray<{ readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } }>, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | null };
+export type CustomerCreatedWebhookPayloadFragment = { readonly user?: { readonly __typename: 'User', readonly id: string, readonly email: string, readonly firstName: string, readonly lastName: string, readonly isActive: boolean, readonly dateJoined: string, readonly languageCode: LanguageCodeEnum, readonly defaultShippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly defaultBillingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly addresses: ReadonlyArray<{ readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } }>, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | null };
 
 export type CustomerCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CustomerCreatedSubscription = { readonly __typename?: 'Subscription', readonly event?: { readonly __typename?: 'AddressCreated' } | { readonly __typename?: 'AddressDeleted' } | { readonly __typename?: 'AddressUpdated' } | { readonly __typename?: 'AppDeleted' } | { readonly __typename?: 'AppInstalled' } | { readonly __typename?: 'AppStatusChanged' } | { readonly __typename?: 'AppUpdated' } | { readonly __typename?: 'AttributeCreated' } | { readonly __typename?: 'AttributeDeleted' } | { readonly __typename?: 'AttributeUpdated' } | { readonly __typename?: 'AttributeValueCreated' } | { readonly __typename?: 'AttributeValueDeleted' } | { readonly __typename?: 'AttributeValueUpdated' } | { readonly __typename?: 'CalculateTaxes' } | { readonly __typename?: 'CategoryCreated' } | { readonly __typename?: 'CategoryDeleted' } | { readonly __typename?: 'CategoryUpdated' } | { readonly __typename?: 'ChannelCreated' } | { readonly __typename?: 'ChannelDeleted' } | { readonly __typename?: 'ChannelStatusChanged' } | { readonly __typename?: 'ChannelUpdated' } | { readonly __typename?: 'CheckoutCreated' } | { readonly __typename?: 'CheckoutFilterShippingMethods' } | { readonly __typename?: 'CheckoutMetadataUpdated' } | { readonly __typename?: 'CheckoutUpdated' } | { readonly __typename?: 'CollectionCreated' } | { readonly __typename?: 'CollectionDeleted' } | { readonly __typename?: 'CollectionMetadataUpdated' } | { readonly __typename?: 'CollectionUpdated' } | { readonly __typename?: 'CustomerCreated', readonly user?: { readonly __typename: 'User', readonly id: string, readonly email: string, readonly firstName: string, readonly lastName: string, readonly isActive: boolean, readonly dateJoined: string, readonly languageCode: LanguageCodeEnum, readonly defaultShippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly defaultBillingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly addresses: ReadonlyArray<{ readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } }>, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }> } | null } | { readonly __typename?: 'CustomerMetadataUpdated' } | { readonly __typename?: 'CustomerUpdated' } | { readonly __typename?: 'DraftOrderCreated' } | { readonly __typename?: 'DraftOrderDeleted' } | { readonly __typename?: 'DraftOrderUpdated' } | { readonly __typename?: 'FulfillmentApproved' } | { readonly __typename?: 'FulfillmentCanceled' } | { readonly __typename?: 'FulfillmentCreated' } | { readonly __typename?: 'FulfillmentMetadataUpdated' } | { readonly __typename?: 'GiftCardCreated' } | { readonly __typename?: 'GiftCardDeleted' } | { readonly __typename?: 'GiftCardMetadataUpdated' } | { readonly __typename?: 'GiftCardStatusChanged' } | { readonly __typename?: 'GiftCardUpdated' } | { readonly __typename?: 'InvoiceDeleted' } | { readonly __typename?: 'InvoiceRequested' } | { readonly __typename?: 'InvoiceSent' } | { readonly __typename?: 'MenuCreated' } | { readonly __typename?: 'MenuDeleted' } | { readonly __typename?: 'MenuItemCreated' } | { readonly __typename?: 'MenuItemDeleted' } | { readonly __typename?: 'MenuItemUpdated' } | { readonly __typename?: 'MenuUpdated' } | { readonly __typename?: 'OrderCancelled' } | { readonly __typename?: 'OrderConfirmed' } | { readonly __typename?: 'OrderCreated' } | { readonly __typename?: 'OrderFilterShippingMethods' } | { readonly __typename?: 'OrderFulfilled' } | { readonly __typename?: 'OrderFullyPaid' } | { readonly __typename?: 'OrderMetadataUpdated' } | { readonly __typename?: 'OrderUpdated' } | { readonly __typename?: 'PageCreated' } | { readonly __typename?: 'PageDeleted' } | { readonly __typename?: 'PageTypeCreated' } | { readonly __typename?: 'PageTypeDeleted' } | { readonly __typename?: 'PageTypeUpdated' } | { readonly __typename?: 'PageUpdated' } | { readonly __typename?: 'PaymentAuthorize' } | { readonly __typename?: 'PaymentCaptureEvent' } | { readonly __typename?: 'PaymentConfirmEvent' } | { readonly __typename?: 'PaymentListGateways' } | { readonly __typename?: 'PaymentProcessEvent' } | { readonly __typename?: 'PaymentRefundEvent' } | { readonly __typename?: 'PaymentVoidEvent' } | { readonly __typename?: 'PermissionGroupCreated' } | { readonly __typename?: 'PermissionGroupDeleted' } | { readonly __typename?: 'PermissionGroupUpdated' } | { readonly __typename?: 'ProductCreated' } | { readonly __typename?: 'ProductDeleted' } | { readonly __typename?: 'ProductMetadataUpdated' } | { readonly __typename?: 'ProductUpdated' } | { readonly __typename?: 'ProductVariantBackInStock' } | { readonly __typename?: 'ProductVariantCreated' } | { readonly __typename?: 'ProductVariantDeleted' } | { readonly __typename?: 'ProductVariantMetadataUpdated' } | { readonly __typename?: 'ProductVariantOutOfStock' } | { readonly __typename?: 'ProductVariantUpdated' } | { readonly __typename?: 'SaleCreated' } | { readonly __typename?: 'SaleDeleted' } | { readonly __typename?: 'SaleToggle' } | { readonly __typename?: 'SaleUpdated' } | { readonly __typename?: 'ShippingListMethodsForCheckout' } | { readonly __typename?: 'ShippingPriceCreated' } | { readonly __typename?: 'ShippingPriceDeleted' } | { readonly __typename?: 'ShippingPriceUpdated' } | { readonly __typename?: 'ShippingZoneCreated' } | { readonly __typename?: 'ShippingZoneDeleted' } | { readonly __typename?: 'ShippingZoneMetadataUpdated' } | { readonly __typename?: 'ShippingZoneUpdated' } | { readonly __typename?: 'StaffCreated' } | { readonly __typename?: 'StaffDeleted' } | { readonly __typename?: 'StaffUpdated' } | { readonly __typename?: 'TransactionActionRequest' } | { readonly __typename?: 'TransactionItemMetadataUpdated' } | { readonly __typename?: 'TranslationCreated' } | { readonly __typename?: 'TranslationUpdated' } | { readonly __typename?: 'VoucherCreated' } | { readonly __typename?: 'VoucherDeleted' } | { readonly __typename?: 'VoucherMetadataUpdated' } | { readonly __typename?: 'VoucherUpdated' } | { readonly __typename?: 'WarehouseCreated' } | { readonly __typename?: 'WarehouseDeleted' } | { readonly __typename?: 'WarehouseMetadataUpdated' } | { readonly __typename?: 'WarehouseUpdated' } | null };
+export type CustomerCreatedSubscription = { readonly event?: { readonly user?: { readonly __typename: 'User', readonly id: string, readonly email: string, readonly firstName: string, readonly lastName: string, readonly isActive: boolean, readonly dateJoined: string, readonly languageCode: LanguageCodeEnum, readonly defaultShippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly defaultBillingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly addresses: ReadonlyArray<{ readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } }>, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }> } | null } | {} | null };
 
-export type FulfillmentCreatedWebhookPayloadFragment = { readonly __typename?: 'FulfillmentCreated', readonly fulfillment?: { readonly __typename: 'Fulfillment', readonly id: string, readonly warehouse?: { readonly __typename?: 'Warehouse', readonly address: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } } | null, readonly lines?: ReadonlyArray<{ readonly __typename: 'FulfillmentLine', readonly id: string, readonly quantity: number, readonly orderLine?: { readonly __typename?: 'OrderLine', readonly productName: string, readonly variantName: string, readonly productSku?: string | null, readonly productVariantId?: string | null, readonly unitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly totalPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } } } | null }> | null } | null, readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly __typename?: 'ShippingMethod', readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly __typename?: 'OrderDiscount', readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly __typename?: 'Allocation', readonly quantity: number, readonly warehouse: { readonly __typename?: 'Warehouse', readonly id: string } }> | null, readonly unitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly __typename?: 'Fulfillment', readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly __typename?: 'Money', readonly amount: number } | null, readonly capturedAmount?: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly __typename?: 'CreditCard', readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly total: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly weight: { readonly __typename?: 'Weight', readonly value: number, readonly unit: WeightUnitsEnum } } | null };
+export type FulfillmentCreatedWebhookPayloadFragment = { readonly fulfillment?: { readonly __typename: 'Fulfillment', readonly id: string, readonly warehouse?: { readonly address: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } } | null, readonly lines?: ReadonlyArray<{ readonly __typename: 'FulfillmentLine', readonly id: string, readonly quantity: number, readonly orderLine?: { readonly productName: string, readonly variantName: string, readonly productSku?: string | null, readonly productVariantId?: string | null, readonly unitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly totalPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } } } | null }> | null } | null, readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly quantity: number, readonly warehouse: { readonly id: string } }> | null, readonly unitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly amount: number } | null, readonly capturedAmount?: { readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly total: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly weight: { readonly value: number, readonly unit: WeightUnitsEnum } } | null };
 
 export type FulfillmentCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FulfillmentCreatedSubscription = { readonly __typename?: 'Subscription', readonly event?: { readonly __typename?: 'AddressCreated' } | { readonly __typename?: 'AddressDeleted' } | { readonly __typename?: 'AddressUpdated' } | { readonly __typename?: 'AppDeleted' } | { readonly __typename?: 'AppInstalled' } | { readonly __typename?: 'AppStatusChanged' } | { readonly __typename?: 'AppUpdated' } | { readonly __typename?: 'AttributeCreated' } | { readonly __typename?: 'AttributeDeleted' } | { readonly __typename?: 'AttributeUpdated' } | { readonly __typename?: 'AttributeValueCreated' } | { readonly __typename?: 'AttributeValueDeleted' } | { readonly __typename?: 'AttributeValueUpdated' } | { readonly __typename?: 'CalculateTaxes' } | { readonly __typename?: 'CategoryCreated' } | { readonly __typename?: 'CategoryDeleted' } | { readonly __typename?: 'CategoryUpdated' } | { readonly __typename?: 'ChannelCreated' } | { readonly __typename?: 'ChannelDeleted' } | { readonly __typename?: 'ChannelStatusChanged' } | { readonly __typename?: 'ChannelUpdated' } | { readonly __typename?: 'CheckoutCreated' } | { readonly __typename?: 'CheckoutFilterShippingMethods' } | { readonly __typename?: 'CheckoutMetadataUpdated' } | { readonly __typename?: 'CheckoutUpdated' } | { readonly __typename?: 'CollectionCreated' } | { readonly __typename?: 'CollectionDeleted' } | { readonly __typename?: 'CollectionMetadataUpdated' } | { readonly __typename?: 'CollectionUpdated' } | { readonly __typename?: 'CustomerCreated' } | { readonly __typename?: 'CustomerMetadataUpdated' } | { readonly __typename?: 'CustomerUpdated' } | { readonly __typename?: 'DraftOrderCreated' } | { readonly __typename?: 'DraftOrderDeleted' } | { readonly __typename?: 'DraftOrderUpdated' } | { readonly __typename?: 'FulfillmentApproved' } | { readonly __typename?: 'FulfillmentCanceled' } | { readonly __typename?: 'FulfillmentCreated', readonly fulfillment?: { readonly __typename: 'Fulfillment', readonly id: string, readonly warehouse?: { readonly __typename?: 'Warehouse', readonly address: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } } | null, readonly lines?: ReadonlyArray<{ readonly __typename: 'FulfillmentLine', readonly id: string, readonly quantity: number, readonly orderLine?: { readonly __typename?: 'OrderLine', readonly productName: string, readonly variantName: string, readonly productSku?: string | null, readonly productVariantId?: string | null, readonly unitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly totalPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } } } | null }> | null } | null, readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly __typename?: 'ShippingMethod', readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly __typename?: 'OrderDiscount', readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly __typename?: 'Allocation', readonly quantity: number, readonly warehouse: { readonly __typename?: 'Warehouse', readonly id: string } }> | null, readonly unitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly __typename?: 'Fulfillment', readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly __typename?: 'Money', readonly amount: number } | null, readonly capturedAmount?: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly __typename?: 'CreditCard', readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly total: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly weight: { readonly __typename?: 'Weight', readonly value: number, readonly unit: WeightUnitsEnum } } | null } | { readonly __typename?: 'FulfillmentMetadataUpdated' } | { readonly __typename?: 'GiftCardCreated' } | { readonly __typename?: 'GiftCardDeleted' } | { readonly __typename?: 'GiftCardMetadataUpdated' } | { readonly __typename?: 'GiftCardStatusChanged' } | { readonly __typename?: 'GiftCardUpdated' } | { readonly __typename?: 'InvoiceDeleted' } | { readonly __typename?: 'InvoiceRequested' } | { readonly __typename?: 'InvoiceSent' } | { readonly __typename?: 'MenuCreated' } | { readonly __typename?: 'MenuDeleted' } | { readonly __typename?: 'MenuItemCreated' } | { readonly __typename?: 'MenuItemDeleted' } | { readonly __typename?: 'MenuItemUpdated' } | { readonly __typename?: 'MenuUpdated' } | { readonly __typename?: 'OrderCancelled' } | { readonly __typename?: 'OrderConfirmed' } | { readonly __typename?: 'OrderCreated' } | { readonly __typename?: 'OrderFilterShippingMethods' } | { readonly __typename?: 'OrderFulfilled' } | { readonly __typename?: 'OrderFullyPaid' } | { readonly __typename?: 'OrderMetadataUpdated' } | { readonly __typename?: 'OrderUpdated' } | { readonly __typename?: 'PageCreated' } | { readonly __typename?: 'PageDeleted' } | { readonly __typename?: 'PageTypeCreated' } | { readonly __typename?: 'PageTypeDeleted' } | { readonly __typename?: 'PageTypeUpdated' } | { readonly __typename?: 'PageUpdated' } | { readonly __typename?: 'PaymentAuthorize' } | { readonly __typename?: 'PaymentCaptureEvent' } | { readonly __typename?: 'PaymentConfirmEvent' } | { readonly __typename?: 'PaymentListGateways' } | { readonly __typename?: 'PaymentProcessEvent' } | { readonly __typename?: 'PaymentRefundEvent' } | { readonly __typename?: 'PaymentVoidEvent' } | { readonly __typename?: 'PermissionGroupCreated' } | { readonly __typename?: 'PermissionGroupDeleted' } | { readonly __typename?: 'PermissionGroupUpdated' } | { readonly __typename?: 'ProductCreated' } | { readonly __typename?: 'ProductDeleted' } | { readonly __typename?: 'ProductMetadataUpdated' } | { readonly __typename?: 'ProductUpdated' } | { readonly __typename?: 'ProductVariantBackInStock' } | { readonly __typename?: 'ProductVariantCreated' } | { readonly __typename?: 'ProductVariantDeleted' } | { readonly __typename?: 'ProductVariantMetadataUpdated' } | { readonly __typename?: 'ProductVariantOutOfStock' } | { readonly __typename?: 'ProductVariantUpdated' } | { readonly __typename?: 'SaleCreated' } | { readonly __typename?: 'SaleDeleted' } | { readonly __typename?: 'SaleToggle' } | { readonly __typename?: 'SaleUpdated' } | { readonly __typename?: 'ShippingListMethodsForCheckout' } | { readonly __typename?: 'ShippingPriceCreated' } | { readonly __typename?: 'ShippingPriceDeleted' } | { readonly __typename?: 'ShippingPriceUpdated' } | { readonly __typename?: 'ShippingZoneCreated' } | { readonly __typename?: 'ShippingZoneDeleted' } | { readonly __typename?: 'ShippingZoneMetadataUpdated' } | { readonly __typename?: 'ShippingZoneUpdated' } | { readonly __typename?: 'StaffCreated' } | { readonly __typename?: 'StaffDeleted' } | { readonly __typename?: 'StaffUpdated' } | { readonly __typename?: 'TransactionActionRequest' } | { readonly __typename?: 'TransactionItemMetadataUpdated' } | { readonly __typename?: 'TranslationCreated' } | { readonly __typename?: 'TranslationUpdated' } | { readonly __typename?: 'VoucherCreated' } | { readonly __typename?: 'VoucherDeleted' } | { readonly __typename?: 'VoucherMetadataUpdated' } | { readonly __typename?: 'VoucherUpdated' } | { readonly __typename?: 'WarehouseCreated' } | { readonly __typename?: 'WarehouseDeleted' } | { readonly __typename?: 'WarehouseMetadataUpdated' } | { readonly __typename?: 'WarehouseUpdated' } | null };
+export type FulfillmentCreatedSubscription = { readonly event?: { readonly fulfillment?: { readonly __typename: 'Fulfillment', readonly id: string, readonly warehouse?: { readonly address: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } } | null, readonly lines?: ReadonlyArray<{ readonly __typename: 'FulfillmentLine', readonly id: string, readonly quantity: number, readonly orderLine?: { readonly productName: string, readonly variantName: string, readonly productSku?: string | null, readonly productVariantId?: string | null, readonly unitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly totalPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } } } | null }> | null } | null, readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly quantity: number, readonly warehouse: { readonly id: string } }> | null, readonly unitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly amount: number } | null, readonly capturedAmount?: { readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly total: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly weight: { readonly value: number, readonly unit: WeightUnitsEnum } } | null } | {} | null };
 
-export type OrderCreatedWebhookPayloadFragment = { readonly __typename?: 'OrderCreated', readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly __typename?: 'ShippingMethod', readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly __typename?: 'OrderDiscount', readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly __typename?: 'Allocation', readonly quantity: number, readonly warehouse: { readonly __typename?: 'Warehouse', readonly id: string } }> | null, readonly unitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly __typename?: 'Fulfillment', readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly __typename?: 'Money', readonly amount: number } | null, readonly capturedAmount?: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly __typename?: 'CreditCard', readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly total: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly weight: { readonly __typename?: 'Weight', readonly value: number, readonly unit: WeightUnitsEnum } } | null };
+export type OrderCreatedWebhookPayloadFragment = { readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly quantity: number, readonly warehouse: { readonly id: string } }> | null, readonly unitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly amount: number } | null, readonly capturedAmount?: { readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly total: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly weight: { readonly value: number, readonly unit: WeightUnitsEnum } } | null };
 
 export type OrderCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type OrderCreatedSubscription = { readonly __typename?: 'Subscription', readonly event?: { readonly __typename?: 'AddressCreated' } | { readonly __typename?: 'AddressDeleted' } | { readonly __typename?: 'AddressUpdated' } | { readonly __typename?: 'AppDeleted' } | { readonly __typename?: 'AppInstalled' } | { readonly __typename?: 'AppStatusChanged' } | { readonly __typename?: 'AppUpdated' } | { readonly __typename?: 'AttributeCreated' } | { readonly __typename?: 'AttributeDeleted' } | { readonly __typename?: 'AttributeUpdated' } | { readonly __typename?: 'AttributeValueCreated' } | { readonly __typename?: 'AttributeValueDeleted' } | { readonly __typename?: 'AttributeValueUpdated' } | { readonly __typename?: 'CalculateTaxes' } | { readonly __typename?: 'CategoryCreated' } | { readonly __typename?: 'CategoryDeleted' } | { readonly __typename?: 'CategoryUpdated' } | { readonly __typename?: 'ChannelCreated' } | { readonly __typename?: 'ChannelDeleted' } | { readonly __typename?: 'ChannelStatusChanged' } | { readonly __typename?: 'ChannelUpdated' } | { readonly __typename?: 'CheckoutCreated' } | { readonly __typename?: 'CheckoutFilterShippingMethods' } | { readonly __typename?: 'CheckoutMetadataUpdated' } | { readonly __typename?: 'CheckoutUpdated' } | { readonly __typename?: 'CollectionCreated' } | { readonly __typename?: 'CollectionDeleted' } | { readonly __typename?: 'CollectionMetadataUpdated' } | { readonly __typename?: 'CollectionUpdated' } | { readonly __typename?: 'CustomerCreated' } | { readonly __typename?: 'CustomerMetadataUpdated' } | { readonly __typename?: 'CustomerUpdated' } | { readonly __typename?: 'DraftOrderCreated' } | { readonly __typename?: 'DraftOrderDeleted' } | { readonly __typename?: 'DraftOrderUpdated' } | { readonly __typename?: 'FulfillmentApproved' } | { readonly __typename?: 'FulfillmentCanceled' } | { readonly __typename?: 'FulfillmentCreated' } | { readonly __typename?: 'FulfillmentMetadataUpdated' } | { readonly __typename?: 'GiftCardCreated' } | { readonly __typename?: 'GiftCardDeleted' } | { readonly __typename?: 'GiftCardMetadataUpdated' } | { readonly __typename?: 'GiftCardStatusChanged' } | { readonly __typename?: 'GiftCardUpdated' } | { readonly __typename?: 'InvoiceDeleted' } | { readonly __typename?: 'InvoiceRequested' } | { readonly __typename?: 'InvoiceSent' } | { readonly __typename?: 'MenuCreated' } | { readonly __typename?: 'MenuDeleted' } | { readonly __typename?: 'MenuItemCreated' } | { readonly __typename?: 'MenuItemDeleted' } | { readonly __typename?: 'MenuItemUpdated' } | { readonly __typename?: 'MenuUpdated' } | { readonly __typename?: 'OrderCancelled' } | { readonly __typename?: 'OrderConfirmed' } | { readonly __typename?: 'OrderCreated', readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly __typename?: 'ShippingMethod', readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly __typename?: 'OrderDiscount', readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly __typename?: 'Allocation', readonly quantity: number, readonly warehouse: { readonly __typename?: 'Warehouse', readonly id: string } }> | null, readonly unitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly __typename?: 'Fulfillment', readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly __typename?: 'Money', readonly amount: number } | null, readonly capturedAmount?: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly __typename?: 'CreditCard', readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly total: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly weight: { readonly __typename?: 'Weight', readonly value: number, readonly unit: WeightUnitsEnum } } | null } | { readonly __typename?: 'OrderFilterShippingMethods' } | { readonly __typename?: 'OrderFulfilled' } | { readonly __typename?: 'OrderFullyPaid' } | { readonly __typename?: 'OrderMetadataUpdated' } | { readonly __typename?: 'OrderUpdated' } | { readonly __typename?: 'PageCreated' } | { readonly __typename?: 'PageDeleted' } | { readonly __typename?: 'PageTypeCreated' } | { readonly __typename?: 'PageTypeDeleted' } | { readonly __typename?: 'PageTypeUpdated' } | { readonly __typename?: 'PageUpdated' } | { readonly __typename?: 'PaymentAuthorize' } | { readonly __typename?: 'PaymentCaptureEvent' } | { readonly __typename?: 'PaymentConfirmEvent' } | { readonly __typename?: 'PaymentListGateways' } | { readonly __typename?: 'PaymentProcessEvent' } | { readonly __typename?: 'PaymentRefundEvent' } | { readonly __typename?: 'PaymentVoidEvent' } | { readonly __typename?: 'PermissionGroupCreated' } | { readonly __typename?: 'PermissionGroupDeleted' } | { readonly __typename?: 'PermissionGroupUpdated' } | { readonly __typename?: 'ProductCreated' } | { readonly __typename?: 'ProductDeleted' } | { readonly __typename?: 'ProductMetadataUpdated' } | { readonly __typename?: 'ProductUpdated' } | { readonly __typename?: 'ProductVariantBackInStock' } | { readonly __typename?: 'ProductVariantCreated' } | { readonly __typename?: 'ProductVariantDeleted' } | { readonly __typename?: 'ProductVariantMetadataUpdated' } | { readonly __typename?: 'ProductVariantOutOfStock' } | { readonly __typename?: 'ProductVariantUpdated' } | { readonly __typename?: 'SaleCreated' } | { readonly __typename?: 'SaleDeleted' } | { readonly __typename?: 'SaleToggle' } | { readonly __typename?: 'SaleUpdated' } | { readonly __typename?: 'ShippingListMethodsForCheckout' } | { readonly __typename?: 'ShippingPriceCreated' } | { readonly __typename?: 'ShippingPriceDeleted' } | { readonly __typename?: 'ShippingPriceUpdated' } | { readonly __typename?: 'ShippingZoneCreated' } | { readonly __typename?: 'ShippingZoneDeleted' } | { readonly __typename?: 'ShippingZoneMetadataUpdated' } | { readonly __typename?: 'ShippingZoneUpdated' } | { readonly __typename?: 'StaffCreated' } | { readonly __typename?: 'StaffDeleted' } | { readonly __typename?: 'StaffUpdated' } | { readonly __typename?: 'TransactionActionRequest' } | { readonly __typename?: 'TransactionItemMetadataUpdated' } | { readonly __typename?: 'TranslationCreated' } | { readonly __typename?: 'TranslationUpdated' } | { readonly __typename?: 'VoucherCreated' } | { readonly __typename?: 'VoucherDeleted' } | { readonly __typename?: 'VoucherMetadataUpdated' } | { readonly __typename?: 'VoucherUpdated' } | { readonly __typename?: 'WarehouseCreated' } | { readonly __typename?: 'WarehouseDeleted' } | { readonly __typename?: 'WarehouseMetadataUpdated' } | { readonly __typename?: 'WarehouseUpdated' } | null };
+export type OrderCreatedSubscription = { readonly event?: { readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly quantity: number, readonly warehouse: { readonly id: string } }> | null, readonly unitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly amount: number } | null, readonly capturedAmount?: { readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly total: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly weight: { readonly value: number, readonly unit: WeightUnitsEnum } } | null } | {} | null };
 
-export type OrderFullyPaidWebhookPayloadFragment = { readonly __typename?: 'OrderFullyPaid', readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly __typename?: 'ShippingMethod', readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly __typename?: 'OrderDiscount', readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly __typename?: 'Allocation', readonly quantity: number, readonly warehouse: { readonly __typename?: 'Warehouse', readonly id: string } }> | null, readonly unitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly __typename?: 'Fulfillment', readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly __typename?: 'Money', readonly amount: number } | null, readonly capturedAmount?: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly __typename?: 'CreditCard', readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly total: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly weight: { readonly __typename?: 'Weight', readonly value: number, readonly unit: WeightUnitsEnum } } | null };
+export type OrderFullyPaidWebhookPayloadFragment = { readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly quantity: number, readonly warehouse: { readonly id: string } }> | null, readonly unitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly amount: number } | null, readonly capturedAmount?: { readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly total: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly weight: { readonly value: number, readonly unit: WeightUnitsEnum } } | null };
 
 export type OrderFullyPaidSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type OrderFullyPaidSubscription = { readonly __typename?: 'Subscription', readonly event?: { readonly __typename?: 'AddressCreated' } | { readonly __typename?: 'AddressDeleted' } | { readonly __typename?: 'AddressUpdated' } | { readonly __typename?: 'AppDeleted' } | { readonly __typename?: 'AppInstalled' } | { readonly __typename?: 'AppStatusChanged' } | { readonly __typename?: 'AppUpdated' } | { readonly __typename?: 'AttributeCreated' } | { readonly __typename?: 'AttributeDeleted' } | { readonly __typename?: 'AttributeUpdated' } | { readonly __typename?: 'AttributeValueCreated' } | { readonly __typename?: 'AttributeValueDeleted' } | { readonly __typename?: 'AttributeValueUpdated' } | { readonly __typename?: 'CalculateTaxes' } | { readonly __typename?: 'CategoryCreated' } | { readonly __typename?: 'CategoryDeleted' } | { readonly __typename?: 'CategoryUpdated' } | { readonly __typename?: 'ChannelCreated' } | { readonly __typename?: 'ChannelDeleted' } | { readonly __typename?: 'ChannelStatusChanged' } | { readonly __typename?: 'ChannelUpdated' } | { readonly __typename?: 'CheckoutCreated' } | { readonly __typename?: 'CheckoutFilterShippingMethods' } | { readonly __typename?: 'CheckoutMetadataUpdated' } | { readonly __typename?: 'CheckoutUpdated' } | { readonly __typename?: 'CollectionCreated' } | { readonly __typename?: 'CollectionDeleted' } | { readonly __typename?: 'CollectionMetadataUpdated' } | { readonly __typename?: 'CollectionUpdated' } | { readonly __typename?: 'CustomerCreated' } | { readonly __typename?: 'CustomerMetadataUpdated' } | { readonly __typename?: 'CustomerUpdated' } | { readonly __typename?: 'DraftOrderCreated' } | { readonly __typename?: 'DraftOrderDeleted' } | { readonly __typename?: 'DraftOrderUpdated' } | { readonly __typename?: 'FulfillmentApproved' } | { readonly __typename?: 'FulfillmentCanceled' } | { readonly __typename?: 'FulfillmentCreated' } | { readonly __typename?: 'FulfillmentMetadataUpdated' } | { readonly __typename?: 'GiftCardCreated' } | { readonly __typename?: 'GiftCardDeleted' } | { readonly __typename?: 'GiftCardMetadataUpdated' } | { readonly __typename?: 'GiftCardStatusChanged' } | { readonly __typename?: 'GiftCardUpdated' } | { readonly __typename?: 'InvoiceDeleted' } | { readonly __typename?: 'InvoiceRequested' } | { readonly __typename?: 'InvoiceSent' } | { readonly __typename?: 'MenuCreated' } | { readonly __typename?: 'MenuDeleted' } | { readonly __typename?: 'MenuItemCreated' } | { readonly __typename?: 'MenuItemDeleted' } | { readonly __typename?: 'MenuItemUpdated' } | { readonly __typename?: 'MenuUpdated' } | { readonly __typename?: 'OrderCancelled' } | { readonly __typename?: 'OrderConfirmed' } | { readonly __typename?: 'OrderCreated' } | { readonly __typename?: 'OrderFilterShippingMethods' } | { readonly __typename?: 'OrderFulfilled' } | { readonly __typename?: 'OrderFullyPaid', readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly __typename?: 'ShippingMethod', readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly __typename?: 'CountryDisplay', readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly __typename?: 'OrderDiscount', readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly __typename?: 'Allocation', readonly quantity: number, readonly warehouse: { readonly __typename?: 'Warehouse', readonly id: string } }> | null, readonly unitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly __typename?: 'Fulfillment', readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly __typename?: 'Money', readonly amount: number } | null, readonly capturedAmount?: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly __typename?: 'CreditCard', readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly __typename?: 'MetadataItem', readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly total: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly __typename?: 'TaxedMoney', readonly currency: string, readonly net: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string }, readonly gross: { readonly __typename?: 'Money', readonly amount: number, readonly currency: string } }, readonly weight: { readonly __typename?: 'Weight', readonly value: number, readonly unit: WeightUnitsEnum } } | null } | { readonly __typename?: 'OrderMetadataUpdated' } | { readonly __typename?: 'OrderUpdated' } | { readonly __typename?: 'PageCreated' } | { readonly __typename?: 'PageDeleted' } | { readonly __typename?: 'PageTypeCreated' } | { readonly __typename?: 'PageTypeDeleted' } | { readonly __typename?: 'PageTypeUpdated' } | { readonly __typename?: 'PageUpdated' } | { readonly __typename?: 'PaymentAuthorize' } | { readonly __typename?: 'PaymentCaptureEvent' } | { readonly __typename?: 'PaymentConfirmEvent' } | { readonly __typename?: 'PaymentListGateways' } | { readonly __typename?: 'PaymentProcessEvent' } | { readonly __typename?: 'PaymentRefundEvent' } | { readonly __typename?: 'PaymentVoidEvent' } | { readonly __typename?: 'PermissionGroupCreated' } | { readonly __typename?: 'PermissionGroupDeleted' } | { readonly __typename?: 'PermissionGroupUpdated' } | { readonly __typename?: 'ProductCreated' } | { readonly __typename?: 'ProductDeleted' } | { readonly __typename?: 'ProductMetadataUpdated' } | { readonly __typename?: 'ProductUpdated' } | { readonly __typename?: 'ProductVariantBackInStock' } | { readonly __typename?: 'ProductVariantCreated' } | { readonly __typename?: 'ProductVariantDeleted' } | { readonly __typename?: 'ProductVariantMetadataUpdated' } | { readonly __typename?: 'ProductVariantOutOfStock' } | { readonly __typename?: 'ProductVariantUpdated' } | { readonly __typename?: 'SaleCreated' } | { readonly __typename?: 'SaleDeleted' } | { readonly __typename?: 'SaleToggle' } | { readonly __typename?: 'SaleUpdated' } | { readonly __typename?: 'ShippingListMethodsForCheckout' } | { readonly __typename?: 'ShippingPriceCreated' } | { readonly __typename?: 'ShippingPriceDeleted' } | { readonly __typename?: 'ShippingPriceUpdated' } | { readonly __typename?: 'ShippingZoneCreated' } | { readonly __typename?: 'ShippingZoneDeleted' } | { readonly __typename?: 'ShippingZoneMetadataUpdated' } | { readonly __typename?: 'ShippingZoneUpdated' } | { readonly __typename?: 'StaffCreated' } | { readonly __typename?: 'StaffDeleted' } | { readonly __typename?: 'StaffUpdated' } | { readonly __typename?: 'TransactionActionRequest' } | { readonly __typename?: 'TransactionItemMetadataUpdated' } | { readonly __typename?: 'TranslationCreated' } | { readonly __typename?: 'TranslationUpdated' } | { readonly __typename?: 'VoucherCreated' } | { readonly __typename?: 'VoucherDeleted' } | { readonly __typename?: 'VoucherMetadataUpdated' } | { readonly __typename?: 'VoucherUpdated' } | { readonly __typename?: 'WarehouseCreated' } | { readonly __typename?: 'WarehouseDeleted' } | { readonly __typename?: 'WarehouseMetadataUpdated' } | { readonly __typename?: 'WarehouseUpdated' } | null };
+export type OrderFullyPaidSubscription = { readonly event?: { readonly order?: { readonly __typename: 'Order', readonly id: string, readonly token: string, readonly userEmail?: string | null, readonly created: string, readonly original?: string | null, readonly status: OrderStatus, readonly languageCodeEnum: LanguageCodeEnum, readonly origin: OrderOriginEnum, readonly shippingMethodName?: string | null, readonly collectionPointName?: string | null, readonly shippingTaxRate: number, readonly channel: { readonly __typename: 'Channel', readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly shippingMethod?: { readonly type?: ShippingMethodTypeEnum | null, readonly id: string, readonly name: string } | null, readonly shippingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly billingAddress?: { readonly __typename: 'Address', readonly id: string, readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly city: string, readonly cityArea: string, readonly postalCode: string, readonly countryArea: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discounts: ReadonlyArray<{ readonly id: string }>, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly productVariantId?: string | null, readonly productName: string, readonly variantName: string, readonly translatedProductName: string, readonly translatedVariantName: string, readonly productSku?: string | null, readonly quantity: number, readonly unitDiscountValue: number, readonly unitDiscountType?: DiscountValueTypeEnum | null, readonly unitDiscountReason?: string | null, readonly taxRate: number, readonly totalPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly allocations?: ReadonlyArray<{ readonly quantity: number, readonly warehouse: { readonly id: string } }> | null, readonly unitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedUnitPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } } }>, readonly fulfillments: ReadonlyArray<{ readonly id: string }>, readonly payments: ReadonlyArray<{ readonly __typename: 'Payment', readonly id: string, readonly created: string, readonly modified: string, readonly gateway: string, readonly isActive: boolean, readonly chargeStatus: PaymentChargeStatusEnum, readonly paymentMethodType: string, readonly total?: { readonly amount: number } | null, readonly capturedAmount?: { readonly amount: number, readonly currency: string } | null, readonly creditCard?: { readonly brand: string } | null }>, readonly privateMetadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly metadata: ReadonlyArray<{ readonly key: string, readonly value: string }>, readonly shippingPrice: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly total: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly undiscountedTotal: { readonly currency: string, readonly net: { readonly amount: number, readonly currency: string }, readonly gross: { readonly amount: number, readonly currency: string } }, readonly weight: { readonly value: number, readonly unit: WeightUnitsEnum } } | null } | {} | null };
 
 export const UntypedAddressFragmentFragmentDoc = gql`
     fragment AddressFragment on Address {
