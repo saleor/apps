@@ -31,7 +31,6 @@ export type GetStripeConfigAccessPattern =
 
 export interface AppConfigRepo {
   saveStripeConfig: (args: {
-    channelId: string;
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;

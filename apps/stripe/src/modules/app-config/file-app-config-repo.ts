@@ -25,8 +25,10 @@ export class FileAppConfigRepo implements AppConfigRepo {
   private filePath = ".stripe-app-config.json";
 
   static FileConfigSchema = z.object({
-    appRootConfig: z.record(
-      z.string(),
+    stripeConfigs: z.record(
+      z.string({
+        description: "Config ID",
+      }),
       z.object({
         name: z.string(),
         id: z.string(),
@@ -35,11 +37,8 @@ export class FileAppConfigRepo implements AppConfigRepo {
         webhookSecret: z.string(),
       }),
     ),
+    channelMapping: z.record(z.string(), z.string()),
   });
-
-  static FileWriteError = BaseError.subclass("FileWriteError");
-  static JsonParseError = BaseError.subclass("JsonParseError");
-  static SchemaParseError = BaseError.subclass("SchemaParseError");
 
   private serializeStripeConfigToJson(config: StripeConfig) {
     return {
@@ -68,18 +67,15 @@ export class FileAppConfigRepo implements AppConfigRepo {
   }
 
   private saveNewConfigToFile(args: {
-    channelId: string;
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
   }) {
     const existingConfigResult = this.readExistingAppConfigFromFileAsJson();
 
-    const newConfig: z.infer<typeof FileAppConfigRepo.FileConfigSchema> = {
-      appRootConfig: {
-        ...existingConfigResult.appRootConfig,
-        [args.channelId]: this.serializeStripeConfigToJson(args.config),
-      },
+    const newConfig: FileAppConfigRepoSchema = {
+      ...existingConfigResult,
+      [args.config.id]: args.config,
     };
 
     fs.writeFileSync(this.filePath, JSON.stringify(newConfig, null, 2), "utf-8");
@@ -88,15 +84,15 @@ export class FileAppConfigRepo implements AppConfigRepo {
   }
 
   private createNewFileAndPersistNewAppConfig(args: {
-    channelId: string;
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
   }) {
-    const newConfig = {
-      appConfig: {
-        [args.channelId]: this.serializeStripeConfigToJson(args.config),
+    const newConfig: FileAppConfigRepoSchema = {
+      stripeConfigs: {
+        [args.config.id]: this.serializeStripeConfigToJson(args.config),
       },
+      channelMapping: {},
     };
 
     fs.writeFileSync(this.filePath, JSON.stringify(newConfig, null, 2), "utf-8");
@@ -105,7 +101,6 @@ export class FileAppConfigRepo implements AppConfigRepo {
   }
 
   async saveStripeConfig(args: {
-    channelId: string;
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
@@ -119,7 +114,8 @@ export class FileAppConfigRepo implements AppConfigRepo {
 
   private createFileWithEmptyConfig() {
     const emptyConfig: FileAppConfigRepoSchema = {
-      appRootConfig: {},
+      channelMapping: {},
+      stripeConfigs: {},
     };
 
     fs.writeFileSync(this.filePath, JSON.stringify(emptyConfig, null, 2), "utf-8");
@@ -141,17 +137,19 @@ export class FileAppConfigRepo implements AppConfigRepo {
         return ok(null);
       }
 
-      let resolvedConfig: FileAppConfigRepoSchema["appRootConfig"][string] | null;
+      let resolvedConfig: FileAppConfigRepoSchema["stripeConfigs"][string] | null;
 
       if ("configId" in access) {
         resolvedConfig =
-          Object.entries(existingConfigJson!.appRootConfig)
+          Object.entries(existingConfigJson!.stripeConfigs)
             .map(([, config]) => config)
             .find((config) => {
               return config.id === access.configId;
             }) ?? null;
       } else if ("channelId" in access) {
-        resolvedConfig = existingConfigJson!.appRootConfig[access.channelId] ?? null;
+        const configId = existingConfigJson.channelMapping[access.channelId];
+
+        resolvedConfig = existingConfigJson!.stripeConfigs[configId] ?? null;
       } else {
         throw new Error("invariant");
       }
@@ -196,16 +194,16 @@ export class FileAppConfigRepo implements AppConfigRepo {
   ) {
     const config = this.readExistingAppConfigFromFileAsJson();
 
-    const newConfig = Object.entries(config.appRootConfig).reduce(
-      (accumulator, [channelId, oldConfig]) => {
-        accumulator.appRootConfig[channelId] =
+    const newConfig = Object.entries(config.stripeConfigs).reduce(
+      (accumulator, [configId, oldConfig]) => {
+        accumulator.stripeConfigs[configId] =
           oldConfig.id === access.configId
             ? this.serializeStripeConfigToJson(stripeConfig)
             : oldConfig;
 
         return accumulator;
       },
-      { appRootConfig: {} } as FileAppConfigRepoSchema,
+      { stripeConfigs: {}, channelMapping: {} } as FileAppConfigRepoSchema,
     );
 
     fs.writeFileSync(this.filePath, JSON.stringify(newConfig, null, 2), "utf-8");
@@ -216,25 +214,6 @@ export class FileAppConfigRepo implements AppConfigRepo {
   async getRootConfig() {
     const savedJson = this.readExistingAppConfigFromFileAsJson();
 
-    const mappedRecord = Object.entries(savedJson.appRootConfig).reduce(
-      (acc, [channelId, configJson]) => {
-        acc[channelId] = StripeConfig.create({
-          name: configJson.name,
-          id: configJson.id,
-          restrictedKey: StripeRestrictedKey.create({
-            restrictedKey: configJson.restrictedKey,
-          })._unsafeUnwrap(),
-          publishableKey: StripePublishableKey.create({
-            publishableKey: configJson.publishableKey,
-          })._unsafeUnwrap(),
-          webhookSecret: StripeWebhookSecret.create(configJson.webhookSecret)._unsafeUnwrap(),
-        })._unsafeUnwrap();
-
-        return acc;
-      },
-      {} as Record<string, StripeConfig>,
-    );
-
-    return ok(new AppRootConfig(mappedRecord));
+    return ok(new AppRootConfig({})); //todo
   }
 }

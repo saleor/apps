@@ -3,9 +3,9 @@ import { z } from "zod";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
+// change value objects to branded strings
 export const newStripeConfigInputSchema = z.object({
   name: z.string().min(1),
-  channelId: z.string().min(1), // todo we shouldnt require channel here
   publishableKey: z.string().transform((value, ctx): StripePublishableKey => {
     return StripePublishableKey.create({
       publishableKey: value,

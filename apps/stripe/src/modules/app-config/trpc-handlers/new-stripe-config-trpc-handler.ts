@@ -53,7 +53,6 @@ export class NewStripeConfigTrpcHandler {
       }
 
       const saveResult = await ctx.configRepo.saveStripeConfig({
-        channelId: input.channelId,
         config: newConfig.value,
         saleorApiUrl: saleorApiUrl.value,
         appId: ctx.appId,
