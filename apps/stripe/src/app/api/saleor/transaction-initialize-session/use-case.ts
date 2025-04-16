@@ -2,6 +2,10 @@ import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
+import {
+  parseTransactionInitializeSessionEventData,
+  TransactionInitializeSessionEventData,
+} from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
@@ -14,13 +18,13 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import {
   createStripeClientSecret,
-  StripeClientSecretType,
+  StripeClientSecret,
   StripeClientSecretValidationError,
 } from "@/modules/stripe/stripe-client-secret";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import {
   createStripePaymentIntentId,
-  StripePaymentIntentIdType,
+  StripePaymentIntentId,
   StripePaymentIntentValidationError,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
@@ -48,16 +52,24 @@ export class TransactionInitializeSessionUseCase {
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
   }
 
-  private prepareStripeCreatePaymentIntentParams(
-    event: TransactionInitializeSessionEventFragment,
-  ): Result<Stripe.PaymentIntentCreateParams, InstanceType<typeof StripeMoney.ValdationError>> {
+  private prepareStripeCreatePaymentIntentParams(args: {
+    eventAction: TransactionInitializeSessionEventFragment["action"];
+    eventData: TransactionInitializeSessionEventData;
+  }): Result<Stripe.PaymentIntentCreateParams, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
-      amount: event.action.amount,
-      currency: event.action.currency,
+      amount: args.eventAction.amount,
+      currency: args.eventAction.currency,
     }).map((result) => {
       return {
         amount: result.amount,
         currency: result.currency,
+        /*
+         * Enable all payment methods configured in the Stripe Dashboard.
+         * The app validated if it allow payment method before.
+         */
+        automatic_payment_methods: {
+          enabled: true,
+        },
       };
     });
   }
@@ -65,7 +77,7 @@ export class TransactionInitializeSessionUseCase {
   private mapStripePaymentIntentToWebhookResponse(
     stripePaymentIntentResponse: Stripe.PaymentIntent,
   ): Result<
-    [SaleorMoney, StripePaymentIntentIdType, StripeClientSecretType],
+    [SaleorMoney, StripePaymentIntentId, StripeClientSecret],
     | InstanceType<typeof StripePaymentIntentValidationError>
     | InstanceType<typeof SaleorMoney.ValdationError>
     | InstanceType<typeof StripeClientSecretValidationError>
@@ -86,7 +98,18 @@ export class TransactionInitializeSessionUseCase {
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
   }): Promise<UseCaseExecuteResult> {
-    const { channelId, appId, saleorApiUrl } = args;
+    const { channelId, appId, saleorApiUrl, event } = args;
+    const eventDataResult = parseTransactionInitializeSessionEventData(event.data);
+
+    if (eventDataResult.isErr()) {
+      return ok(
+        new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
+          message: "Storefront sent invalid data",
+          error: eventDataResult.error,
+          saleorEventAmount: event.action.amount,
+        }),
+      );
+    }
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
       channelId,
@@ -120,7 +143,10 @@ export class TransactionInitializeSessionUseCase {
       params: args.event.action,
     });
 
-    const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams(args.event);
+    const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams({
+      eventData: eventDataResult.value,
+      eventAction: event.action,
+    });
 
     if (stripePaymentIntentParamsResult.isErr()) {
       captureException(stripePaymentIntentParamsResult.error);
@@ -137,6 +163,8 @@ export class TransactionInitializeSessionUseCase {
       return ok(
         new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
           message: "Error from Stripe API",
+          error: createPaymentIntentResult.error,
+          saleorEventAmount: event.action.amount,
         }),
       );
     }
@@ -150,7 +178,7 @@ export class TransactionInitializeSessionUseCase {
     ).match<UseCaseExecuteResult>(
       ([saleorMoney, stripePaymentIntentId, stripeClientSecret]) => {
         return ok(
-          new TransactionInitalizeSessionUseCaseResponses.ChargeRequest({
+          new TransactionInitalizeSessionUseCaseResponses.ChargeActionRequired({
             stripeClientSecret,
             saleorMoney,
             stripePaymentIntentId,

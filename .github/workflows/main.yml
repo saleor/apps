@@ -40,7 +40,6 @@ jobs:
       - name: Check for changes in graphql files
         run: |
           pnpm generate
-          pnpm lint-staged # format generated files
           git diff --name-status --exit-code .
 
   test:

@@ -86,7 +86,7 @@ export const generateGoogleXmlFeed = ({
       slug: variant.product.slug,
       variantId: variant.id,
       sku: variant.sku || undefined,
-      description: EditorJsPlaintextRenderer({ stringData: variant.product.description }),
+      description: EditorJsPlaintextRenderer({ stringData: variant.product.description ?? "" }),
       availability:
         variant.quantityAvailable && variant.quantityAvailable > 0 ? "in_stock" : "out_of_stock",
       category: variant.product.category?.name || "unknown",
