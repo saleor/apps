@@ -1,4 +1,4 @@
-export const safeParseJson = (jsonString: string) => {
+export const safeParseJson = (jsonString: string | null | undefined) => {
   if (!jsonString) {
     return null;
   }
