@@ -7,10 +7,37 @@ const config: IGraphQLConfig = {
       documents: ["graphql/**/*.graphql"],
       extensions: {
         codegen: {
-          ignoreNoDocuments: true, // TODO: Remove after we add first graphql file
           generates: {
             "generated/graphql.ts": {
+              config: {
+                dedupeFragments: true,
+                defaultScalarType: "unknown",
+                immutableTypes: true,
+                strictScalars: true,
+                scalars: {
+                  _Any: "unknown",
+                  Date: "string",
+                  DateTime: "string",
+                  Decimal: "number",
+                  Minute: "number",
+                  GenericScalar: "JSONValue",
+                  JSON: "JSONValue",
+                  JSONString: "string",
+                  Metadata: "Record<string, string>",
+                  PositiveDecimal: "number",
+                  Upload: "unknown",
+                  UUID: "string",
+                  WeightScalar: "number",
+                  Day: "string",
+                },
+              },
               plugins: [
+                {
+                  add: {
+                    content:
+                      "type JSONValue = string | number | boolean | null | { [key: string]: JSONValue } | JSONValue[];",
+                  },
+                },
                 {
                   typescript: {
                     enumsAsTypes: true,
