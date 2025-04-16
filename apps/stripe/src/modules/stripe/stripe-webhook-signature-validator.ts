@@ -27,6 +27,9 @@ export class StripeWebhookSignatureValidator implements IStripeEventVerify {
     webhookSecret: StripeWebhookSecret;
   }) => {
     return fromThrowable(
+      /**
+       * Bind Stripe because otherwise it lost it's internal this
+       */
       this.stripeSdkClient.webhooks.constructEvent.bind(this.stripeSdkClient.webhooks),
       (err) =>
         new StripeEventParsingError("Failed to validate Stripe Event", {
