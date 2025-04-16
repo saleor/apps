@@ -1,4 +1,5 @@
 import { APL, AuthData } from "@saleor/app-sdk/APL";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
@@ -10,6 +11,7 @@ import {
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { ITransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { StripeClient } from "@/modules/stripe/stripe-client";
@@ -68,6 +70,7 @@ export class StripeWebhookUseCase {
      */
     webhookParams: WebhookParams;
   }): R {
+    this.logger.debug("Executing");
     const authData = await this.apl.get(webhookParams.saleorApiUrl);
 
     if (!authData) {
@@ -90,6 +93,8 @@ export class StripeWebhookUseCase {
       appId: authData.appId,
       saleorApiUrl: webhookParams.saleorApiUrl,
     });
+
+    this.logger.debug("Configuration for config resolved");
 
     if (config.isErr()) {
       const error = new BaseError("Failed to fetch config from database", {
@@ -118,9 +123,13 @@ export class StripeWebhookUseCase {
       signatureHeader,
     });
 
+    this.logger.debug("Event verified");
+
     if (event.isErr()) {
       return err(new StripeWebhookErrorResponse(event.error));
     }
+
+    this.logger.debug(`Resolved event type: ${event.value.type}`);
 
     /*
      * TODO: There may be more than one object in single event (data.object)
@@ -135,14 +144,21 @@ export class StripeWebhookUseCase {
           return err(new StripeWebhookErrorResponse(stripePaymentIntentId.error));
         }
 
+        this.logger.debug(`Resolved Payment Intent ID: ${stripePaymentIntentId.value}`);
+        loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntentId.value);
+
         const recordedTransaction =
           await this.transactionRecorder.getTransactionByStripePaymentIntentId(
             stripePaymentIntentId.value,
           );
 
         if (recordedTransaction.isErr()) {
+          this.logger.warn("Error fetching recorded transaction");
+
           return err(new StripeWebhookErrorResponse(recordedTransaction.error));
         }
+
+        this.logger.debug("Resolved previously saved transaction");
 
         const eventHandler = new PaymentIntentSucceededHandler();
         const resultEvent = await eventHandler.processEvent({

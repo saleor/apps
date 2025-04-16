@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import { ok, Result } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 import {
   createStripePaymentIntentId,
@@ -24,9 +24,15 @@ export class TransactionRecorderFile implements TransactionRecorder {
   private filePath = ".transactions-record.json";
 
   private readAndParseFile(): InnerStructure {
-    const file = fs.readFileSync(this.filePath, "utf-8");
+    try {
+      const file = fs.readFileSync(this.filePath, "utf-8");
 
-    return JSON.parse(file) as InnerStructure;
+      return JSON.parse(file) as InnerStructure;
+    } catch {
+      this.writeFile({});
+
+      return {};
+    }
   }
 
   private writeFile(transactions: InnerStructure) {
@@ -48,16 +54,27 @@ export class TransactionRecorderFile implements TransactionRecorder {
   async getTransactionByStripePaymentIntentId(
     id: StripePaymentIntentId,
   ): Promise<Result<RecordedTransaction, TransactionRecorderError>> {
-    const currentFile = this.readAndParseFile();
+    try {
+      const currentFile = this.readAndParseFile();
 
-    const transaction = currentFile[id];
+      const transaction = currentFile[id];
 
-    return ok(
-      new RecordedTransaction(
-        transaction.saleorTransactionId,
-        createStripePaymentIntentId(transaction.stripePaymentIntentId)._unsafeUnwrap(),
-        transaction.transactionFlow,
-      ),
-    );
+      return ok(
+        new RecordedTransaction(
+          transaction.saleorTransactionId,
+          createStripePaymentIntentId(transaction.stripePaymentIntentId)._unsafeUnwrap(),
+          transaction.transactionFlow,
+        ),
+      );
+    } catch (e) {
+      return err(
+        new TransactionRecorderError.PersistenceNotAvailable(
+          "Error with File Transaction Recorded",
+          {
+            cause: e,
+          },
+        ),
+      );
+    }
   }
 }

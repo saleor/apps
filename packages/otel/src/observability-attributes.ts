@@ -12,4 +12,5 @@ export const ObservabilityAttributes = {
   PATH: "path",
   SALEOR_EVENT: "saleorEvent",
   TENANT_DOMAIN: "saleor.environment_domain",
+  PSP_REFERENCE: "pspReference",
 } as const;

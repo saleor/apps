@@ -8,6 +8,7 @@ import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
+import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
 
 import {
   PaymentGatewayInitializeSessionUseCaseResponses,
@@ -16,6 +17,7 @@ import {
 
 export class PaymentGatewayInitializeSessionUseCase {
   private appConfigRepo: AppConfigRepo;
+  private transactionRecorder: TransactionRecorder;
   private logger = createLogger("PaymentGatewayInitializeSessionUseCase");
 
   static UseCaseError = BaseError.subclass("PaymentGatewayInitializeSessionUseCaseError", {
@@ -56,6 +58,8 @@ export class PaymentGatewayInitializeSessionUseCase {
 
         return err(new AppIsNotConfiguredResponse());
       }
+
+      // TODO: Save transaction here
 
       return ok(new PaymentGatewayInitializeSessionUseCaseResponses.Success({ pk }));
     }
