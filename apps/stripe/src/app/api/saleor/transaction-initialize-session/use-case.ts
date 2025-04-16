@@ -100,6 +100,7 @@ export class TransactionInitializeSessionUseCase {
         new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
           message: "Storefront sent invalid data",
           error: eventDataResult.error,
+          saleorEventAmount: event.action.amount,
         }),
       );
     }
@@ -157,6 +158,7 @@ export class TransactionInitializeSessionUseCase {
         new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
           message: "Error from Stripe API",
           error: createPaymentIntentResult.error,
+          saleorEventAmount: event.action.amount,
         }),
       );
     }
@@ -170,7 +172,7 @@ export class TransactionInitializeSessionUseCase {
     ).match<UseCaseExecuteResult>(
       ([saleorMoney, stripePaymentIntentId, stripeClientSecret]) => {
         return ok(
-          new TransactionInitalizeSessionUseCaseResponses.ChargeRequest({
+          new TransactionInitalizeSessionUseCaseResponses.ChargeActionRequired({
             stripeClientSecret,
             saleorMoney,
             stripePaymentIntentId,
