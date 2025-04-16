@@ -31,6 +31,8 @@ catalog:
   next: 15.2.4
   react: 18.2.0
   react-dom: 18.2.0
+  "@types/react": 18.3.20
+  "@types/react-dom": 18.3.6
   "@saleor/macaw-ui": 1.1.10
   zod: 3.21.4
   "@trpc/client": 10.43.1
