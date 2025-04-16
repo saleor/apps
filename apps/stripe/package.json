@@ -39,6 +39,7 @@
     "@saleor/apps-otel": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-trpc": "workspace:*",
+    "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@sentry/cli": "catalog:",
     "@sentry/nextjs": "catalog:",

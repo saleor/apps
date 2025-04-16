@@ -1557,6 +1557,9 @@ importers:
       '@saleor/apps-trpc':
         specifier: workspace:*
         version: link:../../packages/trpc
+      '@saleor/apps-ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.1.10(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
