@@ -2,12 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   ParseError,
-  parseTransactionInitalizeSessionEventData,
-  TransactionInitalizeEventData,
+  parseTransactionInitializeSessionEventData,
+  TransactionInitializeSessionEventData,
   UnsupportedPaymentMethodError,
 } from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 
-describe("parseTransactionInitalizeSessionEventData", () => {
+describe("parseTransactionInitializeSessionEventData", () => {
   it("should parse valid data coming from storefront", () => {
     const storefrontData = {
       paymentIntent: {
@@ -15,7 +15,7 @@ describe("parseTransactionInitalizeSessionEventData", () => {
       },
     };
 
-    const result = parseTransactionInitalizeSessionEventData(storefrontData);
+    const result = parseTransactionInitializeSessionEventData(storefrontData);
 
     expect(result._unsafeUnwrap()).toStrictEqual({
       paymentIntent: {
@@ -31,7 +31,7 @@ describe("parseTransactionInitalizeSessionEventData", () => {
       },
     };
 
-    const result = parseTransactionInitalizeSessionEventData(storefrontData);
+    const result = parseTransactionInitializeSessionEventData(storefrontData);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(UnsupportedPaymentMethodError);
   });
@@ -43,7 +43,7 @@ describe("parseTransactionInitalizeSessionEventData", () => {
         additionalField: "invalidValue",
       },
     };
-    const result = parseTransactionInitalizeSessionEventData(storefrontData);
+    const result = parseTransactionInitializeSessionEventData(storefrontData);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(ParseError);
   });
@@ -55,14 +55,14 @@ describe("parseTransactionInitalizeSessionEventData", () => {
       },
       additionalField: "invalidValue",
     };
-    const result = parseTransactionInitalizeSessionEventData(storefrontData);
+    const result = parseTransactionInitializeSessionEventData(storefrontData);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(ParseError);
   });
 
   it("shouldn't be assignable without createFromTransactionInitalizeSessionData", () => {
     // @ts-expect-error - if this fails - it means the type is not branded
-    const testValue: TransactionInitalizeEventData = {};
+    const testValue: TransactionInitializeSessionEventData = {};
 
     expect(testValue).toStrictEqual({});
   });

@@ -3,8 +3,8 @@ import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import {
-  parseTransactionInitalizeSessionEventData,
-  TransactionInitalizeEventData,
+  parseTransactionInitializeSessionEventData,
+  TransactionInitializeSessionEventData,
 } from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
@@ -54,7 +54,7 @@ export class TransactionInitializeSessionUseCase {
 
   private prepareStripeCreatePaymentIntentParams(args: {
     eventAction: TransactionInitializeSessionEventFragment["action"];
-    eventData: TransactionInitalizeEventData;
+    eventData: TransactionInitializeSessionEventData;
   }): Result<Stripe.PaymentIntentCreateParams, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
       amount: args.eventAction.amount,
@@ -63,7 +63,13 @@ export class TransactionInitializeSessionUseCase {
       return {
         amount: result.amount,
         currency: result.currency,
-        payment_method_types: [args.eventData.paymentIntent.paymentMethod],
+        /*
+         * Enable all payment methods configured in the Stripe Dashboard.
+         * The app validated if it allow payment method before.
+         */
+        automatic_payment_methods: {
+          enabled: true,
+        },
       };
     });
   }
@@ -93,7 +99,7 @@ export class TransactionInitializeSessionUseCase {
     event: TransactionInitializeSessionEventFragment;
   }): Promise<UseCaseExecuteResult> {
     const { channelId, appId, saleorApiUrl, event } = args;
-    const eventDataResult = parseTransactionInitalizeSessionEventData(event.data);
+    const eventDataResult = parseTransactionInitializeSessionEventData(event.data);
 
     if (eventDataResult.isErr()) {
       return ok(
