@@ -4,6 +4,6 @@
 export default {
   "*.{jsx,tsx,js,ts,md}": "cspell --no-must-find-files",
   // https://github.com/lint-staged/lint-staged#task-concurrency
-  "!(*.jsx|*.tsx|*.ts|*.js|*.cjs,*.graphql)": ["prettier --ignore-unknown '!**/generated' g--write"],
+  "!(*.jsx|*.tsx|*.ts|*.js|*.cjs,*.graphql)": ["prettier --ignore-unknown --write"],
   "package.json": "sort-package-json",
 };
