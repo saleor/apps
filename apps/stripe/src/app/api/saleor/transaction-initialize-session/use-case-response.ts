@@ -1,7 +1,6 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
-import { TransactionInitalizeEventDataError } from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   createFailureWebhookResponseDataSchema,
@@ -14,6 +13,8 @@ import {
 } from "@/modules/stripe/stripe-client-secret";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
+
+import { TransactionInitializeSessionEventDataError } from "./event-data-parser";
 
 // TODO: add support for other results e.g AUTHORIZE
 
@@ -61,7 +62,7 @@ class ChargeFailure extends SuccessWebhookResponse {
   readonly result = "CHARGE_FAILURE" as const;
   readonly message: string;
   readonly error:
-    | TransactionInitalizeEventDataError
+    | TransactionInitializeSessionEventDataError
     | InstanceType<typeof StripePaymentIntentsApi.CreatePaymentIntentError>;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
@@ -80,7 +81,7 @@ class ChargeFailure extends SuccessWebhookResponse {
   constructor(args: {
     message: string;
     error:
-      | TransactionInitalizeEventDataError
+      | TransactionInitializeSessionEventDataError
       | InstanceType<typeof StripePaymentIntentsApi.CreatePaymentIntentError>;
   }) {
     super();
