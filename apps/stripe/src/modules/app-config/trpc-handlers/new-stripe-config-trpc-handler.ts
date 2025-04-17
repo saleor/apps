@@ -6,6 +6,8 @@ import { BaseError } from "@/lib/errors";
 import { RandomId } from "@/lib/random-id";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { StripeAuthValidator } from "@/modules/stripe/stripe-auth-validator";
+import { StripeClient } from "@/modules/stripe/stripe-client";
 import {
   createStripePublishableKey,
   StripePublishableKey,
@@ -56,6 +58,14 @@ export const newStripeConfigSchema = z.object({
 export class NewStripeConfigTrpcHandler {
   baseProcedure = protectedClientProcedure;
 
+  private validateRk(rk: StripeRestrictedKey) {
+    const validator = StripeAuthValidator.createFromClient(
+      StripeClient.createFromRestrictedKey(rk),
+    );
+
+    return validator.validateStripeAuth();
+  }
+
   getTrpcProcedure() {
     return this.baseProcedure.input(newStripeConfigSchema).mutation(async ({ input, ctx }) => {
       const saleorApiUrl = createSaleorApiUrl(ctx.saleorApiUrl);
@@ -88,6 +98,15 @@ export class NewStripeConfigTrpcHandler {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Failed to create Stripe configuration. Data is invalid",
+        });
+      }
+
+      const rkValidationResult = await this.validateRk(input.restrictedKey);
+
+      if (rkValidationResult.isErr()) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Failed to create Stripe configuration. Restricted key is invalid",
         });
       }
 
