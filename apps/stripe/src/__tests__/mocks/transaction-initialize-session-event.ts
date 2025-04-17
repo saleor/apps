@@ -15,9 +15,7 @@ export const getMockedTransactionInitializeSessionEvent =
       },
     })._unsafeUnwrap(),
     sourceObject: {
-      __typename: "Checkout",
       channel: {
-        __typename: "Channel",
         id: mockedSaleorChannelId,
         slug: "channel-slug",
       },
