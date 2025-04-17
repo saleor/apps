@@ -1,4 +1,4 @@
-import { err, fromThrowable, ok, Result } from "neverthrow";
+import { fromThrowable } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
