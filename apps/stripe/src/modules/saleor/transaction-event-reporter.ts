@@ -66,7 +66,10 @@ export class TransactionEventReporter implements ITransactionEventReporter {
     input: TransactionEventReportInput,
   ): Promise<Result<TransactionEventReportResultResult, PossibleTransactionEventReportErrors>> {
     try {
-      const mutationResult = await this.gqlClient.mutation(TransactionEventReportDocument, input);
+      const mutationResult = await this.gqlClient.mutation(TransactionEventReportDocument, {
+        ...input,
+        amount: input.amount.amount,
+      });
 
       const { data, error } = mutationResult;
 
