@@ -47,6 +47,24 @@ export class StripeConfig {
       return err(new StripeConfig.ValidationError("Config id cannot be empty"));
     }
 
+    const isPkTest = args.publishableKey.startsWith("pk_test");
+    const isPkLive = args.publishableKey.startsWith("pk_live");
+    const isRkTest = args.restrictedKey.startsWith("rk_test");
+    const isRkLive = args.restrictedKey.startsWith("rk_live");
+
+    const isBothTest = isRkTest && isPkTest;
+    const isBothLive = isRkLive && isPkLive;
+
+    const isBothTestOrLive = isBothTest || isBothLive;
+
+    if (!isBothTestOrLive) {
+      return err(
+        new StripeConfig.ValidationError(
+          "Publishable key and restricted key must be of the same environment - TEST or LIVE",
+        ),
+      );
+    }
+
     return ok(
       new StripeConfig({
         name: args.name,
@@ -59,7 +77,7 @@ export class StripeConfig {
   }
 }
 
-type SerializedFields = {
+export type StripeFrontendConfigSerializedFields = {
   readonly name: string;
   readonly id: string;
   readonly restrictedKey: string;
@@ -70,13 +88,13 @@ type SerializedFields = {
  * Safe class that only returns whats permitted to the UI.
  * It also allows to serialize and deserialize itself, so it can be easily transported via tRPC
  */
-export class StripeFrontendConfig implements SerializedFields {
+export class StripeFrontendConfig implements StripeFrontendConfigSerializedFields {
   readonly name: string;
   readonly id: string;
   readonly restrictedKey: string;
   readonly publishableKey: string;
 
-  private constructor(fields: SerializedFields) {
+  private constructor(fields: StripeFrontendConfigSerializedFields) {
     this.name = fields.name;
     this.id = fields.id;
     this.restrictedKey = fields.restrictedKey;
@@ -85,6 +103,10 @@ export class StripeFrontendConfig implements SerializedFields {
 
   private static getMaskedKeyValue(key: StripeRestrictedKey) {
     return `...${key.slice(-4)}`;
+  }
+
+  getStripeEnvValue() {
+    return this.publishableKey.startsWith("pk_test") ? "TEST" : "LIVE";
   }
 
   static createFromStripeConfig(stripeConfig: StripeConfig) {
@@ -96,7 +118,7 @@ export class StripeFrontendConfig implements SerializedFields {
     });
   }
 
-  static createFromSerializedFields(fields: SerializedFields) {
+  static createFromSerializedFields(fields: StripeFrontendConfigSerializedFields) {
     return new StripeFrontendConfig(fields);
   }
 }
