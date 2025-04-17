@@ -51,7 +51,7 @@ describe("GetStripeConfigTrpcHandler", () => {
         "id": "config-id",
         "name": "config-name",
         "publishableKey": "pk_live_1",
-        "restrictedKey": "...ve_1",
+        "restrictedKey": "...GGGG",
       }
     `);
   });

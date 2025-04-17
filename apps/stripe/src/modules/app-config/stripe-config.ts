@@ -83,12 +83,16 @@ export class StripeFrontendConfig implements SerializedFields {
     this.publishableKey = fields.publishableKey;
   }
 
+  private static getMaskedKeyValue(key: StripeRestrictedKey) {
+    return `...${key.slice(-4)}`;
+  }
+
   static createFromStripeConfig(stripeConfig: StripeConfig) {
     return new StripeFrontendConfig({
       name: stripeConfig.name,
       id: stripeConfig.id,
-      publishableKey: stripeConfig.publishableKey.keyValue,
-      restrictedKey: stripeConfig.restrictedKey.getMaskedValue(),
+      publishableKey: stripeConfig.publishableKey,
+      restrictedKey: this.getMaskedKeyValue(stripeConfig.restrictedKey),
     });
   }
 

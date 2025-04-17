@@ -6,9 +6,9 @@ import { z } from "zod";
 import { BaseError } from "@/lib/errors";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
-import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
+import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
+import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
 import { AppConfigRepo, GetStripeConfigAccessPattern } from "./app-config-repo";
 
@@ -36,17 +36,13 @@ export class FileAppConfigRepo implements AppConfigRepo {
     ),
   });
 
-  static FileWriteError = BaseError.subclass("FileWriteError");
-  static JsonParseError = BaseError.subclass("JsonParseError");
-  static SchemaParseError = BaseError.subclass("SchemaParseError");
-
   private serializeStripeConfigToJson(config: StripeConfig) {
     return {
       name: config.name,
       id: config.id,
-      restrictedKey: config.restrictedKey.keyValue,
-      publishableKey: config.publishableKey.keyValue,
-      webhookSecret: config.webhookSecret.secretValue,
+      restrictedKey: config.restrictedKey,
+      publishableKey: config.publishableKey,
+      webhookSecret: config.webhookSecret,
     };
   }
 
@@ -159,15 +155,13 @@ export class FileAppConfigRepo implements AppConfigRepo {
         return ok(null);
       }
 
-      const restrictedKey = StripeRestrictedKey.create({
-        restrictedKey: resolvedConfig.restrictedKey,
-      })._unsafeUnwrap();
+      const restrictedKey = createStripeRestrictedKey(resolvedConfig.restrictedKey)._unsafeUnwrap();
 
-      const publishableKey = StripePublishableKey.create({
-        publishableKey: resolvedConfig.publishableKey,
-      })._unsafeUnwrap();
+      const publishableKey = createStripePublishableKey(
+        resolvedConfig.publishableKey,
+      )._unsafeUnwrap();
 
-      const whSecret = StripeWebhookSecret.create(resolvedConfig.webhookSecret)._unsafeUnwrap();
+      const whSecret = createStripeWebhookSecret(resolvedConfig.webhookSecret)._unsafeUnwrap();
 
       const stripeConfig = StripeConfig.create({
         name: resolvedConfig.name,

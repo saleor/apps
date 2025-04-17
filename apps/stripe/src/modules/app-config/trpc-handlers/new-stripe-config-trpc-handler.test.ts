@@ -9,7 +9,7 @@ import {
 } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
-import { mockedRestrictedKey } from "@/__tests__/mocks/restricted-key";
+import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { BaseError } from "@/lib/errors";
@@ -56,8 +56,8 @@ describe("NewStripeConfigTrpcHandler", () => {
     return expect(() =>
       caller.testProcedure({
         name: "Test config",
-        publishableKey: mockedStripePublishableKey.keyValue,
-        restrictedKey: mockedRestrictedKey.keyValue,
+        publishableKey: mockedStripePublishableKey,
+        restrictedKey: mockedStripeRestrictedKey,
         channelId: mockedSaleorChannelId,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
@@ -74,8 +74,8 @@ describe("NewStripeConfigTrpcHandler", () => {
     return expect(
       caller.testProcedure({
         name: "", //empty name should throw
-        publishableKey: mockedStripePublishableKey.keyValue,
-        restrictedKey: mockedRestrictedKey.keyValue,
+        publishableKey: mockedStripePublishableKey,
+        restrictedKey: mockedStripeRestrictedKey,
         channelId: mockedSaleorChannelId,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
@@ -103,8 +103,8 @@ describe("NewStripeConfigTrpcHandler", () => {
     await expect(
       caller.testProcedure({
         name: "Test config",
-        publishableKey: mockedStripePublishableKey.keyValue,
-        restrictedKey: mockedRestrictedKey.keyValue,
+        publishableKey: mockedStripePublishableKey,
+        restrictedKey: mockedStripeRestrictedKey,
         channelId: mockedSaleorChannelId,
       }),
     ).resolves.not.toThrow();
@@ -116,27 +116,19 @@ describe("NewStripeConfigTrpcHandler", () => {
         config: {
           id: expect.any(String),
         },
-      },
-      `
+      }, `
       {
         "appId": "saleor-app-id",
         "channelId": "Q2hhbm5lbDox",
         "config": {
           "id": Any<String>,
           "name": "Test config",
-          "publishableKey": StripePublishableKey {
-            "keyValue": "pk_live_1",
-          },
-          "restrictedKey": StripeRestrictedKey {
-            "keyValue": "rk_live_AAAAABBBBCCCCCEEEEEEEFFFFFGGGGG",
-          },
-          "webhookSecret": StripeWebhookSecret {
-            "secretValue": "whsec_TODO",
-          },
+          "publishableKey": "pk_live_1",
+          "restrictedKey": "rk_live_AAAAABBBBCCCCCEEEEEEEFFFFFGGGGG",
+          "webhookSecret": "whsec_TODO",
         },
         "saleorApiUrl": "https://foo.bar.saleor.cloud/graphql/",
       }
-    `,
-    );
+    `);
   });
 });
