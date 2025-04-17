@@ -1,40 +1,55 @@
-import { APL } from "@saleor/app-sdk/APL";
+import { APL, AuthData } from "@saleor/app-sdk/APL";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
+import { PaymentIntentSucceededHandler } from "@/app/api/stripe/webhook/stripe-event-handlers/payment-intent-succeeded-handler";
 import {
   StripeWebhookErrorResponse,
   StripeWebhookSuccessResponse,
 } from "@/app/api/stripe/webhook/stripe-webhook-response";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
+import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
+import { ITransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { StripeClient } from "@/modules/stripe/stripe-client";
+import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripeEventVerify } from "@/modules/stripe/types";
+import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
 
 type SuccessResult = StripeWebhookSuccessResponse;
 type ErrorResult = StripeWebhookErrorResponse;
 
 type R = Promise<Result<SuccessResult, ErrorResult>>;
 
-type StripeVerificateEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
+type StripeVerifyEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
+type SaleorTransactionEventReporterFactory = (authData: AuthData) => ITransactionEventReporter;
 
 /**
  * TODO: We need to store events to DB to handle deduplication
  */
 export class StripeWebhookUseCase {
   private appConfigRepo: AppConfigRepo;
-  private webhookEventVerifyFactory: StripeVerificateEventFactory;
+  private webhookEventVerifyFactory: StripeVerifyEventFactory;
   private apl: APL;
+  private logger = createLogger("StripeWebhookUseCase");
+  private transactionRecorder: TransactionRecorder;
+  private transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
-    webhookEventVerifyFactory: StripeVerificateEventFactory;
+    webhookEventVerifyFactory: StripeVerifyEventFactory;
     apl: APL;
+    transactionRecorder: TransactionRecorder;
+    transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.webhookEventVerifyFactory = deps.webhookEventVerifyFactory;
     this.apl = deps.apl;
+    this.transactionRecorder = deps.transactionRecorder;
+    this.transactionEventReporterFactory = deps.transactionEventReporterFactory;
   }
 
   async execute({
@@ -55,6 +70,7 @@ export class StripeWebhookUseCase {
      */
     webhookParams: WebhookParams;
   }): R {
+    this.logger.debug("Executing");
     const authData = await this.apl.get(webhookParams.saleorApiUrl);
 
     if (!authData) {
@@ -70,11 +86,15 @@ export class StripeWebhookUseCase {
       );
     }
 
+    const transactionEventReporter = this.transactionEventReporterFactory(authData);
+
     const config = await this.appConfigRepo.getStripeConfig({
       configId: webhookParams.configurationId,
       appId: authData.appId,
       saleorApiUrl: webhookParams.saleorApiUrl,
     });
+
+    this.logger.debug("Configuration for config resolved");
 
     if (config.isErr()) {
       const error = new BaseError("Failed to fetch config from database", {
@@ -103,12 +123,66 @@ export class StripeWebhookUseCase {
       signatureHeader,
     });
 
+    this.logger.debug("Event verified");
+
     if (event.isErr()) {
       return err(new StripeWebhookErrorResponse(event.error));
     }
 
-    // todo: business logic with webhook here
+    this.logger.debug(`Resolved event type: ${event.value.type}`);
 
-    return ok(new StripeWebhookSuccessResponse()); // todo
+    /*
+     * TODO: There may be more than one object in single event (data.object)
+     * todo: implement rest of events
+     * todo: extract shared pieces, maybe this code should be run once and handlers implement the same interface?
+     */
+    switch (event.value.type) {
+      case "payment_intent.succeeded": {
+        const stripePaymentIntentId = createStripePaymentIntentId(event.value.data.object.id);
+
+        if (stripePaymentIntentId.isErr()) {
+          return err(new StripeWebhookErrorResponse(stripePaymentIntentId.error));
+        }
+
+        this.logger.debug(`Resolved Payment Intent ID: ${stripePaymentIntentId.value}`);
+        loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntentId.value);
+
+        const recordedTransaction =
+          await this.transactionRecorder.getTransactionByStripePaymentIntentId(
+            stripePaymentIntentId.value,
+          );
+
+        if (recordedTransaction.isErr()) {
+          this.logger.warn("Error fetching recorded transaction");
+
+          return err(new StripeWebhookErrorResponse(recordedTransaction.error));
+        }
+
+        this.logger.debug("Resolved previously saved transaction");
+
+        const eventHandler = new PaymentIntentSucceededHandler();
+        const resultEvent = await eventHandler.processEvent({
+          recordedTransaction: recordedTransaction.value,
+          event: event.value,
+        });
+
+        if (resultEvent.isErr()) {
+          return err(new StripeWebhookErrorResponse(resultEvent.error));
+        }
+
+        const reportResult = await transactionEventReporter.reportTransactionEvent(
+          resultEvent.value.getTransactionReportVariables(),
+        );
+
+        if (reportResult.isErr()) {
+          return err(new StripeWebhookErrorResponse(reportResult.error));
+        }
+
+        return ok(new StripeWebhookSuccessResponse());
+      }
+      default: {
+        throw new Error("Event not implemented");
+      }
+    }
   }
 }

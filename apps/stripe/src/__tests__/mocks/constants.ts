@@ -11,3 +11,4 @@ export const mockAdyenWebhookUrl = `${mockAppUrlBase}?${new URLSearchParams({
   [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
   [WebhookParams.configurationIdIdSearchParam]: mockedConfigurationId,
 }).toString()}`;
+export const mockedSaleorTransactionId = "mocked-transaction-id";
