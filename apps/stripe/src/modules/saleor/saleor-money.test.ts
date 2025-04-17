@@ -15,21 +15,21 @@ describe("SaleorMoney", () => {
       const result = SaleorMoney.createFromStripe({ amount: -100, currency: "usd" });
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorMoney.ValdationError);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorMoney.ValidationError);
     });
 
     it("rejects invalid currency code length", () => {
       const result = SaleorMoney.createFromStripe({ amount: 100, currency: "usdd" });
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorMoney.ValdationError);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorMoney.ValidationError);
     });
 
     it("rejects unsupported currency codes", () => {
       const result = SaleorMoney.createFromStripe({ amount: 100, currency: "abc" });
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorMoney.ValdationError);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(SaleorMoney.ValidationError);
     });
   });
 
