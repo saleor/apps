@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+type JSONValue = string | number | boolean | null | { [key: string]: JSONValue } | JSONValue[];
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -20,20 +21,20 @@ export type Scalars = {
    * value as specified by
    * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
    */
-  Date: { input: any; output: any; }
+  Date: { input: string; output: string; }
   /**
    * The `DateTime` scalar type represents a DateTime
    * value as specified by
    * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
    */
-  DateTime: { input: any; output: any; }
+  DateTime: { input: string; output: string; }
   /**
    * The `GenericScalar` scalar type represents a generic
    * GraphQL scalar value that could be:
    * String, Boolean, Int, Float, List or Object.
    */
-  GenericScalar: { input: any; output: any; }
-  JSONString: { input: any; output: any; }
+  GenericScalar: { input: JSONValue; output: JSONValue; }
+  JSONString: { input: string; output: string; }
   /**
    * Metadata is a map of key-value pairs, both keys and values are `String`.
    *
@@ -45,19 +46,19 @@ export type Scalars = {
    * }
    * ```
    */
-  Metadata: { input: any; output: any; }
+  Metadata: { input: Record<string, string>; output: Record<string, string>; }
   /**
    * Positive Decimal scalar implementation.
    *
    * Should be used in places where value must be positive.
    */
-  PositiveDecimal: { input: any; output: any; }
-  UUID: { input: any; output: any; }
+  PositiveDecimal: { input: number; output: number; }
+  UUID: { input: string; output: string; }
   /** Variables of this type must be set to null in mutations. They will be replaced with a filename from a following multipart part containing a binary file. See: https://github.com/jaydenseric/graphql-multipart-request-spec. */
-  Upload: { input: any; output: any; }
-  WeightScalar: { input: any; output: any; }
+  Upload: { input: unknown; output: unknown; }
+  WeightScalar: { input: number; output: number; }
   /** _Any value scalar as defined by Federation spec. */
-  _Any: { input: any; output: any; }
+  _Any: { input: unknown; output: unknown; }
 };
 
 /**
@@ -20986,11 +20987,11 @@ export type BasicProductDataFragment = { __typename?: 'ProductVariant', id: stri
 
 export type CategoryWithMappingFragmentFragment = { __typename?: 'Category', id: string, name: string, googleCategoryId?: string | null, parent?: { __typename?: 'Category', name: string, parent?: { __typename?: 'Category', name: string } | null } | null };
 
-export type GoogleFeedProductVariantFragment = { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, quantityAvailable?: number | null, weight?: { __typename?: 'Weight', unit: WeightUnitsEnum, value: number } | null, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', currency: string, amount: number } } | null, price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', currency: string, amount: number } } | null } | null, attributes: Array<{ __typename?: 'SelectedAttribute', attribute: { __typename?: 'Attribute', id: string }, values: Array<{ __typename?: 'AttributeValue', value?: string | null, name?: string | null }> }>, product: { __typename?: 'Product', id: string, name: string, slug: string, description?: any | null, seoDescription?: string | null, productType: { __typename?: 'ProductType', isShippingRequired: boolean }, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null }> | null, attributes: Array<{ __typename?: 'SelectedAttribute', attribute: { __typename?: 'Attribute', id: string }, values: Array<{ __typename?: 'AttributeValue', value?: string | null, name?: string | null }> }>, thumbnail?: { __typename?: 'Image', url: string } | null, category?: { __typename?: 'Category', id: string, name: string, googleCategoryId?: string | null } | null } };
+export type GoogleFeedProductVariantFragment = { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, quantityAvailable?: number | null, weight?: { __typename?: 'Weight', unit: WeightUnitsEnum, value: number } | null, pricing?: { __typename?: 'VariantPricingInfo', priceUndiscounted?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', currency: string, amount: number } } | null, price?: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', currency: string, amount: number } } | null } | null, attributes: Array<{ __typename?: 'SelectedAttribute', attribute: { __typename?: 'Attribute', id: string }, values: Array<{ __typename?: 'AttributeValue', value?: string | null, name?: string | null }> }>, product: { __typename?: 'Product', id: string, name: string, slug: string, description?: string | null, seoDescription?: string | null, productType: { __typename?: 'ProductType', isShippingRequired: boolean }, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null }> | null, attributes: Array<{ __typename?: 'SelectedAttribute', attribute: { __typename?: 'Attribute', id: string }, values: Array<{ __typename?: 'AttributeValue', value?: string | null, name?: string | null }> }>, thumbnail?: { __typename?: 'Image', url: string } | null, category?: { __typename?: 'Category', id: string, name: string, googleCategoryId?: string | null } | null } };
 
 export type ProductAttributesFragment = { __typename?: 'ProductVariant', id: string, attributes: Array<{ __typename?: 'SelectedAttribute', attribute: { __typename?: 'Attribute', id: string }, values: Array<{ __typename?: 'AttributeValue', value?: string | null, name?: string | null }> }> };
 
-export type RelatedProductsFragment = { __typename?: 'Product', id: string, name: string, slug: string, description?: any | null, seoDescription?: string | null, productType: { __typename?: 'ProductType', isShippingRequired: boolean }, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null }> | null, attributes: Array<{ __typename?: 'SelectedAttribute', attribute: { __typename?: 'Attribute', id: string }, values: Array<{ __typename?: 'AttributeValue', value?: string | null, name?: string | null }> }>, thumbnail?: { __typename?: 'Image', url: string } | null, category?: { __typename?: 'Category', id: string, name: string, googleCategoryId?: string | null } | null };
+export type RelatedProductsFragment = { __typename?: 'Product', id: string, name: string, slug: string, description?: string | null, seoDescription?: string | null, productType: { __typename?: 'ProductType', isShippingRequired: boolean }, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null }> | null, attributes: Array<{ __typename?: 'SelectedAttribute', attribute: { __typename?: 'Attribute', id: string }, values: Array<{ __typename?: 'AttributeValue', value?: string | null, name?: string | null }> }>, thumbnail?: { __typename?: 'Image', url: string } | null, category?: { __typename?: 'Category', id: string, name: string, googleCategoryId?: string | null } | null };
 
 export type DeleteAppMetadataMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -21068,7 +21069,7 @@ export type FetchRelatedProductsDataQueryVariables = Exact<{
 }>;
 
 
-export type FetchRelatedProductsDataQuery = { __typename?: 'Query', products?: { __typename?: 'ProductCountableConnection', edges: Array<{ __typename?: 'ProductCountableEdge', node: { __typename?: 'Product', id: string, name: string, slug: string, description?: any | null, seoDescription?: string | null, productType: { __typename?: 'ProductType', isShippingRequired: boolean }, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null }> | null, attributes: Array<{ __typename?: 'SelectedAttribute', attribute: { __typename?: 'Attribute', id: string }, values: Array<{ __typename?: 'AttributeValue', value?: string | null, name?: string | null }> }>, thumbnail?: { __typename?: 'Image', url: string } | null, category?: { __typename?: 'Category', id: string, name: string, googleCategoryId?: string | null } | null } }> } | null };
+export type FetchRelatedProductsDataQuery = { __typename?: 'Query', products?: { __typename?: 'ProductCountableConnection', edges: Array<{ __typename?: 'ProductCountableEdge', node: { __typename?: 'Product', id: string, name: string, slug: string, description?: string | null, seoDescription?: string | null, productType: { __typename?: 'ProductType', isShippingRequired: boolean }, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, media?: Array<{ __typename?: 'ProductMedia', id: string, alt: string, url: string, type: ProductMediaType }> | null }> | null, attributes: Array<{ __typename?: 'SelectedAttribute', attribute: { __typename?: 'Attribute', id: string }, values: Array<{ __typename?: 'AttributeValue', value?: string | null, name?: string | null }> }>, thumbnail?: { __typename?: 'Image', url: string } | null, category?: { __typename?: 'Category', id: string, name: string, googleCategoryId?: string | null } | null } }> } | null };
 
 export type ShopDetailsQueryVariables = Exact<{ [key: string]: never; }>;
 

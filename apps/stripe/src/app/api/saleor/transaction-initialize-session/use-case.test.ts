@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initalize-session-event";
+import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initialize-session-event";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
@@ -51,7 +51,9 @@ describe("TransactionInitializeSessionUseCase", () => {
         // Saleor API sends amount in floats - Stripe wants amount in ints
         amount: saleorEvent.action.amount * 100,
         currency: "usd",
-        payment_method_types: [saleorEvent.data.paymentIntent.paymentMethod],
+        automatic_payment_methods: {
+          enabled: true,
+        },
       },
     });
   });
