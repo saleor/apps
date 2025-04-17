@@ -1,0 +1,28 @@
+mutation TransactionEventReport(
+  $transactionId: ID!
+  $message: String!
+  $amount: PositiveDecimal!
+  $pspReference: String!
+  $time: DateTime!
+  $type: TransactionEventTypeEnum!
+  $availableActions: [TransactionActionEnum!]
+) {
+  transactionEventReport(
+    id: $transactionId
+    message: $message
+    amount: $amount
+    pspReference: $pspReference
+    time: $time
+    type: $type
+    availableActions: $availableActions
+  ) {
+    alreadyProcessed
+    errors {
+      message
+      code
+    }
+    transactionEvent {
+      id
+    }
+  }
+}

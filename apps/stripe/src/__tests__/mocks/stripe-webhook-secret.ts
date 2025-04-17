@@ -1,6 +1,3 @@
-import { mockStripeWebhookSecretValue } from "@/__tests__/mocks/constants";
-import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
+import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
-export const mockStripeWebhookSecret = StripeWebhookSecret.create(
-  mockStripeWebhookSecretValue,
-)._unsafeUnwrap();
+export const mockStripeWebhookSecret = createStripeWebhookSecret("whsec_XYZ")._unsafeUnwrap();

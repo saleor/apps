@@ -30,7 +30,7 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
 
     expect(jsonResponse).toStrictEqual({
       data: {
-        stripePublishableKey: mockedStripePublishableKey.keyValue,
+        stripePublishableKey: mockedStripePublishableKey,
       },
     });
   });
