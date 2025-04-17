@@ -30,12 +30,12 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
           const testEnvChip = (
             <Chip
               marginLeft={"auto"}
-              backgroundColor="critical1"
-              borderColor="critical1"
-              color="critical1"
+              backgroundColor="warning1"
+              borderColor="warning1"
+              color="warning1"
               size="large"
             >
-              <Text color="critical1" size={1}>
+              <Text color="warning1" size={1}>
                 {configInstance.getStripeEnvValue()}
               </Text>
             </Chip>
