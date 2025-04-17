@@ -1,46 +1,56 @@
 import { describe, expect, it } from "vitest";
 
-import { StripePublishableKey } from "./stripe-publishable-key";
+import {
+  createStripePublishableKey,
+  StripePublishableKeyValidationError,
+} from "./stripe-publishable-key";
 
 describe("StripePublishableKey", () => {
   describe("createFromUserInput", () => {
     it("should create instance for valid test key", () => {
-      const result = StripePublishableKey.create({
-        publishableKey: "pk_test_valid123",
-      });
+      const result = createStripePublishableKey("pk_test_valid123");
 
       expect(result.isOk()).toBe(true);
-      expect(result._unsafeUnwrap()).toBeInstanceOf(StripePublishableKey);
-      expect(result._unsafeUnwrap().keyValue).toBe("pk_test_valid123");
+      expect(result._unsafeUnwrap()).toBe("pk_test_valid123");
     });
 
     it("should create instance for valid live key", () => {
-      const result = StripePublishableKey.create({
-        publishableKey: "pk_live_valid456",
-      });
+      const result = createStripePublishableKey("pk_live_valid456");
 
       expect(result.isOk()).toBe(true);
-      expect(result._unsafeUnwrap()).toBeInstanceOf(StripePublishableKey);
-      expect(result._unsafeUnwrap().keyValue).toBe("pk_live_valid456");
+      expect(result._unsafeUnwrap()).toBe("pk_live_valid456");
     });
 
     it("should return error for invalid key format", () => {
-      const result = StripePublishableKey.create({
-        publishableKey: "invalid_key",
-      });
+      const result = createStripePublishableKey("invalid_key");
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripePublishableKey.ValidationError);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripePublishableKeyValidationError);
     });
 
     it("should return error if key is empty", () => {
-      const result = StripePublishableKey.create({
-        publishableKey: "",
-      });
+      const result = createStripePublishableKey("");
 
       expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripePublishableKey.ValidationError);
-      expect(result._unsafeUnwrapErr().message).toBe("Publishable key cannot be empty");
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripePublishableKeyValidationError);
+      expect(result._unsafeUnwrapErr().message).toMatchInlineSnapshot(`
+        "ZodError: [
+          {
+            "code": "too_small",
+            "minimum": 1,
+            "type": "string",
+            "inclusive": true,
+            "exact": false,
+            "message": "String must contain at least 1 character(s)",
+            "path": []
+          },
+          {
+            "code": "custom",
+            "message": "Invalid input",
+            "path": []
+          }
+        ]"
+      `);
     });
   });
 });

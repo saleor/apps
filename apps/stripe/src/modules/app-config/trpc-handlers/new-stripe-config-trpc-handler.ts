@@ -6,18 +6,22 @@ import { BaseError } from "@/lib/errors";
 import { RandomId } from "@/lib/random-id";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
-import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
+import {
+  createStripePublishableKey,
+  StripePublishableKey,
+} from "@/modules/stripe/stripe-publishable-key";
+import {
+  createStripeRestrictedKey,
+  StripeRestrictedKey,
+} from "@/modules/stripe/stripe-restricted-key";
+import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export const newStripeConfigSchema = z.object({
   name: z.string().min(1),
   channelId: z.string().min(1),
   publishableKey: z.string().transform((value, ctx): StripePublishableKey => {
-    return StripePublishableKey.create({
-      publishableKey: value,
-    }).match(
+    return createStripePublishableKey(value).match(
       (parsed) => parsed,
       () => {
         ctx.addIssue({
@@ -30,9 +34,7 @@ export const newStripeConfigSchema = z.object({
     );
   }),
   restrictedKey: z.string().transform((value, ctx): StripeRestrictedKey => {
-    return StripeRestrictedKey.create({
-      restrictedKey: value,
-    }).match(
+    return createStripeRestrictedKey(value).match(
       (parsed) => parsed,
       () => {
         ctx.addIssue({
@@ -73,7 +75,7 @@ export class NewStripeConfigTrpcHandler {
         restrictedKey: input.restrictedKey,
         name: input.name,
         id: new RandomId().generate(),
-        webhookSecret: StripeWebhookSecret.create("whsec_TODO")._unsafeUnwrap(), //todo - pass after webhook is created
+        webhookSecret: createStripeWebhookSecret("whsec_TODO")._unsafeUnwrap(), //todo - pass after webhook is created
       });
 
       // TODO: Handle exact reasons, give good messages

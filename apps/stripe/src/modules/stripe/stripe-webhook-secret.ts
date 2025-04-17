@@ -1,39 +1,26 @@
-import { err, ok, Result } from "neverthrow";
+import { fromThrowable } from "neverthrow";
+import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
 
-export class StripeWebhookSecret {
-  readonly secretValue: string;
-
-  static ValidationError = BaseError.subclass("ValidationError", {
+export const StripeWebhookSecretValidationError = BaseError.subclass(
+  "StripeWebhookSecretValidationError",
+  {
     props: {
-      _internalName: "StripeWebhookSecret.ValidationError" as const,
+      _internalName: "StripeWebhookSecretValidationError" as const,
     },
-  });
+  },
+);
 
-  private static prefix = "whsec_";
+export const StripeWebhookSecretSchema = z
+  .string()
+  .min(1)
+  .startsWith("whsec_")
+  .brand("StripeWebhookSecretSchema");
 
-  private constructor(keyValue: string) {
-    this.secretValue = keyValue;
-  }
+export const createStripeWebhookSecret = (raw: string | null) =>
+  fromThrowable(StripeWebhookSecretSchema.parse, (error) =>
+    StripeWebhookSecretValidationError.normalize(error),
+  )(raw);
 
-  private static isInProperFormat(keyValue: string): boolean {
-    return keyValue.startsWith(StripeWebhookSecret.prefix);
-  }
-
-  static create(
-    secretValue: string,
-  ): Result<StripeWebhookSecret, InstanceType<typeof StripeWebhookSecret.ValidationError>> {
-    if (secretValue.length === 0) {
-      return err(new this.ValidationError("Webhook Secret can not be empty"));
-    }
-
-    if (!this.isInProperFormat(secretValue)) {
-      return err(
-        new this.ValidationError(`Invalid format - must start with ${StripeWebhookSecret.prefix}`),
-      );
-    }
-
-    return ok(new StripeWebhookSecret(secretValue));
-  }
-}
+export type StripeWebhookSecret = z.infer<typeof StripeWebhookSecretSchema>;
