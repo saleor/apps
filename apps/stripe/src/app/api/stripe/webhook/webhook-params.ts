@@ -78,8 +78,11 @@ export class WebhookParams {
     }
   }
 
-  static createFromParams() {
-    // todo
+  static createFromParams(params: { saleorApiUrl: SaleorApiUrl; configurationId: string }) {
+    return new WebhookParams({
+      saleorApiUrl: params.saleorApiUrl,
+      configurationId: params.configurationId,
+    });
   }
 
   createWebhookUrl() {

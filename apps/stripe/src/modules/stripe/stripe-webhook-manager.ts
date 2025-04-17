@@ -1,18 +1,22 @@
 import { err, ok, Result } from "neverthrow";
 
+import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { supportedStripeEvents } from "@/modules/stripe/supported-stripe-events";
 
 // todo test
 
 export class StripeWebhookManager {
-  private buildWebhookUrl() {
-    return ""; //todo
-  }
+  private logger = createLogger("StripeWebhookManager");
 
-  async createWebhook(config: StripeConfig): Promise<
+  async createWebhook(
+    config: StripeConfig,
+    { appUrl, saleorApiUrl }: { appUrl: string; saleorApiUrl: SaleorApiUrl },
+  ): Promise<
     Result<
       {
         secret: string;
@@ -21,13 +25,25 @@ export class StripeWebhookManager {
       InstanceType<typeof BaseError>
     >
   > {
+    this.logger.debug("Will create Stripe webhook");
     const client = StripeClient.createFromRestrictedKey(config.restrictedKey);
 
-    const webhookUrl = this.buildWebhookUrl();
+    const webhookUrl = new URL(appUrl + "/stripe/webhook");
+    const wp = WebhookParams.createFromParams({
+      saleorApiUrl: saleorApiUrl,
+      configurationId: config.id,
+    });
+
+    webhookUrl.searchParams.set(wp.configurationId, wp.configurationId);
+    webhookUrl.searchParams.set(wp.saleorApiUrl, wp.saleorApiUrl);
+
+    this.logger.debug("Resolved webhook url", {
+      webhookUrl,
+    });
 
     try {
       const result = await client.nativeClient.webhookEndpoints.create({
-        url: webhookUrl,
+        url: webhookUrl.toString(),
         description: `Created by Saleor Stripe app, config name: ${config.name}`, //todo
         enabled_events: supportedStripeEvents,
         metadata: {
@@ -36,6 +52,8 @@ export class StripeWebhookManager {
       });
 
       const { secret, id } = result;
+
+      this.logger.info("Successfully created Stripe webhook", { id });
 
       if (!secret) {
         /**
@@ -48,6 +66,8 @@ export class StripeWebhookManager {
 
       return ok({ secret, id });
     } catch (e) {
+      this.logger.warn("Error creating webhook", { error: e });
+
       // todo handle error
       return err(
         new BaseError("Error creating webhook", {
