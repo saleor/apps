@@ -75,7 +75,10 @@ export class FileAppConfigRepo implements AppConfigRepo {
 
     const newConfig: FileAppConfigRepoSchema = {
       ...existingConfigResult,
-      [args.config.id]: args.config,
+      stripeConfigs: {
+        ...existingConfigResult.stripeConfigs,
+        [args.config.id]: args.config,
+      },
     };
 
     fs.writeFileSync(this.filePath, JSON.stringify(newConfig, null, 2), "utf-8");
