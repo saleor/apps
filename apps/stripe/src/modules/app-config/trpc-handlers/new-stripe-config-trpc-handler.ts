@@ -59,7 +59,7 @@ export class NewStripeConfigTrpcHandler {
         );
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Failed to create Stripe configuration. Data is invalid",
+          message: `Failed to create Stripe configuration: ${newConfig.error.message}`,
         });
       }
 
