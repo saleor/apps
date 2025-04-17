@@ -1,42 +1,35 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
+import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
+import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
-import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
 import { StripeConfig, StripeFrontendConfig } from "./stripe-config";
 
 describe("StripeConfig", () => {
-  const mockedPublishableKey = StripePublishableKey.create({
-    publishableKey: "pk_test_123",
-  })._unsafeUnwrap();
-  const mockedRestrictedKey = StripeRestrictedKey.create({
-    restrictedKey: "rk_test_132",
-  })._unsafeUnwrap();
-
   it("should create a valid config", () => {
     const result = StripeConfig.create({
       name: "Test Config",
       id: "test-config-1",
-      publishableKey: mockedPublishableKey,
-      restrictedKey: mockedRestrictedKey,
+      publishableKey: mockedStripePublishableKey,
+      restrictedKey: mockedStripeRestrictedKey,
       webhookSecret: mockStripeWebhookSecret,
     });
 
     expect(result.isOk()).toBe(true);
     expect(result._unsafeUnwrap().name).toBe("Test Config");
     expect(result._unsafeUnwrap().id).toBe("test-config-1");
-    expect(result._unsafeUnwrap().publishableKey).toBe(mockedPublishableKey);
-    expect(result._unsafeUnwrap().restrictedKey).toBe(mockedRestrictedKey);
+    expect(result._unsafeUnwrap().publishableKey).toBe(mockedStripePublishableKey);
+    expect(result._unsafeUnwrap().restrictedKey).toBe(mockedStripeRestrictedKey);
   });
 
   it("should return error for empty name", () => {
     const result = StripeConfig.create({
       name: "",
       id: "test-config-1",
-      publishableKey: mockedPublishableKey,
-      restrictedKey: mockedRestrictedKey,
+      publishableKey: mockedStripePublishableKey,
+      restrictedKey: mockedStripeRestrictedKey,
       webhookSecret: mockStripeWebhookSecret,
     });
 
@@ -49,8 +42,8 @@ describe("StripeConfig", () => {
     const result = StripeConfig.create({
       name: "Test Config",
       id: "",
-      publishableKey: mockedPublishableKey,
-      restrictedKey: mockedRestrictedKey,
+      publishableKey: mockedStripePublishableKey,
+      restrictedKey: mockedStripeRestrictedKey,
       webhookSecret: mockStripeWebhookSecret,
     });
 
@@ -66,10 +59,10 @@ describe("StripeFrontendConfig", () => {
 
     expect(frontendConfig.id).toStrictEqual(mockedStripeConfig.id);
     expect(frontendConfig.name).toStrictEqual(mockedStripeConfig.name);
-    expect(frontendConfig.publishableKey).toStrictEqual(mockedStripeConfig.publishableKey.keyValue);
+    expect(frontendConfig.publishableKey).toStrictEqual(mockedStripeConfig.publishableKey);
 
     // Ensure RK is masked
-    expect(frontendConfig.restrictedKey).toMatchInlineSnapshot(`"...ve_1"`);
+    expect(frontendConfig.restrictedKey).toMatchInlineSnapshot(`"...GGGG"`);
   });
 
   it("Serializes and deserializes from itself", () => {
@@ -81,7 +74,7 @@ describe("StripeFrontendConfig", () => {
      * Ensure serialized data doesn't have secrets!
      */
     expect(serialized).toMatchInlineSnapshot(
-      `"{"name":"config-name","id":"config-id","restrictedKey":"...ve_1","publishableKey":"pk_live_1"}"`,
+      `"{"name":"config-name","id":"config-id","restrictedKey":"...GGGG","publishableKey":"pk_live_1"}"`,
     );
 
     //@ts-expect-error - JSON is arbitrary
@@ -89,9 +82,9 @@ describe("StripeFrontendConfig", () => {
 
     expect(parsedBack.id).toStrictEqual(mockedStripeConfig.id);
     expect(parsedBack.name).toStrictEqual(mockedStripeConfig.name);
-    expect(parsedBack.publishableKey).toStrictEqual(mockedStripeConfig.publishableKey.keyValue);
+    expect(parsedBack.publishableKey).toStrictEqual(mockedStripeConfig.publishableKey);
 
     // Ensure RK is masked
-    expect(parsedBack.restrictedKey).toMatchInlineSnapshot(`"...ve_1"`);
+    expect(parsedBack.restrictedKey).toMatchInlineSnapshot(`"...GGGG"`);
   });
 });

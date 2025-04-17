@@ -3,6 +3,8 @@ import fs from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { mockedConfigurationId } from "@/__tests__/mocks/constants";
+import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
+import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import {
@@ -10,8 +12,6 @@ import {
   FileAppConfigRepoSchema,
 } from "@/modules/app-config/file-app-config-repo";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
-import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
 vi.mock("node:fs");
 
@@ -20,19 +20,11 @@ describe("FileAppConfigRepo", () => {
   const TEST_CHANNEL_ID = "test-channel";
   const TEST_APP_ID = "test-app";
 
-  const restrictedKey = StripeRestrictedKey.create({
-    restrictedKey: "rk_test_1234567890",
-  })._unsafeUnwrap();
-
-  const publishableKey = StripePublishableKey.create({
-    publishableKey: "pk_test_1234567890",
-  })._unsafeUnwrap();
-
   const mockStripeConfig = StripeConfig.create({
     name: "Test Config",
     id: mockedConfigurationId,
-    restrictedKey: restrictedKey,
-    publishableKey: publishableKey,
+    restrictedKey: mockedStripeRestrictedKey,
+    publishableKey: mockedStripePublishableKey,
     webhookSecret: mockStripeWebhookSecret,
   })._unsafeUnwrap();
 
@@ -108,9 +100,9 @@ describe("FileAppConfigRepo", () => {
           [TEST_CHANNEL_ID]: {
             name: mockStripeConfig.name,
             id: mockStripeConfig.id,
-            restrictedKey: mockStripeConfig.restrictedKey.keyValue,
-            publishableKey: mockStripeConfig.publishableKey.keyValue,
-            webhookSecret: mockStripeConfig.webhookSecret.secretValue,
+            restrictedKey: mockStripeConfig.restrictedKey,
+            publishableKey: mockStripeConfig.publishableKey,
+            webhookSecret: mockStripeConfig.webhookSecret,
           },
         },
       };
@@ -131,8 +123,8 @@ describe("FileAppConfigRepo", () => {
 
       expect(config!.name).toBe(mockStripeConfig.name);
       expect(config!.id).toBe(mockStripeConfig.id);
-      expect(config!.publishableKey).toBeInstanceOf(StripePublishableKey);
-      expect(config!.restrictedKey).toBeInstanceOf(StripeRestrictedKey);
+      expect(config!.publishableKey).toStrictEqual(mockedStripePublishableKey);
+      expect(config!.restrictedKey).toStrictEqual(mockedStripeRestrictedKey);
     });
 
     it("should return null if channel config is missing", async () => {
