@@ -1,15 +1,18 @@
 import { z } from "zod";
 
-import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import {
+  createStripePublishableKey,
+  StripePublishableKey,
+} from "@/modules/stripe/stripe-publishable-key";
+import {
+  createStripeRestrictedKey,
+  StripeRestrictedKey,
+} from "@/modules/stripe/stripe-restricted-key";
 
-// change value objects to branded strings
 export const newStripeConfigInputSchema = z.object({
   name: z.string().min(1),
   publishableKey: z.string().transform((value, ctx): StripePublishableKey => {
-    return StripePublishableKey.create({
-      publishableKey: value,
-    }).match(
+    return createStripePublishableKey(value).match(
       (parsed) => parsed,
       () => {
         ctx.addIssue({
@@ -22,9 +25,7 @@ export const newStripeConfigInputSchema = z.object({
     );
   }),
   restrictedKey: z.string().transform((value, ctx): StripeRestrictedKey => {
-    return StripeRestrictedKey.create({
-      restrictedKey: value,
-    }).match(
+    return createStripeRestrictedKey(value).match(
       (parsed) => parsed,
       () => {
         ctx.addIssue({
