@@ -6,6 +6,9 @@ import { RandomId } from "@/lib/random-id";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { StripeAuthValidator } from "@/modules/stripe/stripe-auth-validator";
+import { StripeClient } from "@/modules/stripe/stripe-client";
+import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
@@ -16,6 +19,14 @@ import { protectedClientProcedure } from "@/modules/trpc/protected-client-proced
  */
 export class NewStripeConfigTrpcHandler {
   baseProcedure = protectedClientProcedure;
+
+  private validateRk(rk: StripeRestrictedKey) {
+    const validator = StripeAuthValidator.createFromClient(
+      StripeClient.createFromRestrictedKey(rk),
+    );
+
+    return validator.validateStripeAuth();
+  }
 
   getTrpcProcedure() {
     return this.baseProcedure.input(newStripeConfigInputSchema).mutation(async ({ input, ctx }) => {
@@ -48,7 +59,16 @@ export class NewStripeConfigTrpcHandler {
         );
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Failed to create Stripe configuration. Data is invalid",
+          message: `Failed to create Stripe configuration: ${newConfig.error.message}`,
+        });
+      }
+
+      const rkValidationResult = await this.validateRk(input.restrictedKey);
+
+      if (rkValidationResult.isErr()) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Failed to create Stripe configuration. Restricted key is invalid",
         });
       }
 

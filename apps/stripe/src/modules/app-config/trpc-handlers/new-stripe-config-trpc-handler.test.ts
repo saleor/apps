@@ -1,4 +1,5 @@
 import { err, ok } from "neverthrow";
+import Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
@@ -10,6 +11,7 @@ import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { BaseError } from "@/lib/errors";
 import { NewStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-stripe-config-trpc-handler";
+import { StripeClient } from "@/modules/stripe/stripe-client";
 import { router } from "@/modules/trpc/trpc-server";
 
 /**
@@ -38,8 +40,19 @@ const getTestCaller = () => {
 };
 
 describe("NewStripeConfigTrpcHandler", () => {
+  const stripe = new Stripe("key");
+
   beforeEach(() => {
     vi.resetAllMocks();
+
+    vi.spyOn(stripe.paymentIntents, "list").mockImplementation(() => {
+      return Promise.resolve({}) as Stripe.ApiListPromise<Stripe.PaymentIntent>;
+    });
+    vi.spyOn(StripeClient, "createFromRestrictedKey").mockImplementation(() => {
+      return {
+        nativeClient: stripe,
+      };
+    });
   });
 
   it("Returns error 500 if repository fails to save config", async () => {
@@ -124,5 +137,28 @@ describe("NewStripeConfigTrpcHandler", () => {
       }
     `,
     );
+  });
+
+  describe("Stripe Auth", () => {
+    it("Calls auth service and returns error if Stripe RK is invalid", () => {
+      // @ts-expect-error - mocking stripe client
+      vi.spyOn(stripe.paymentIntents, "list").mockImplementationOnce(async () => {
+        throw new Error("Invalid key");
+      });
+
+      const { caller } = getTestCaller();
+
+      return expect(() =>
+        caller.testProcedure({
+          name: "Test config",
+          publishableKey: mockedStripePublishableKey,
+          restrictedKey: mockedStripeRestrictedKey,
+        }),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `[TRPCError: Failed to create Stripe configuration. Restricted key is invalid]`,
+      );
+
+      expect(stripe.paymentIntents.list).toHaveBeenCalledOnce();
+    });
   });
 });

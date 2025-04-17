@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
 import { Box, Button } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
@@ -16,11 +17,16 @@ type FormShape = {
 
 export const NewStripeConfigForm = () => {
   const router = useRouter();
+  const { notifyError, notifySuccess } = useDashboardNotification();
+
   const { mutate } = trpcClient.appConfig.saveNewStripeConfig.useMutation({
     onSuccess() {
+      notifySuccess("Configuration saved");
+
       return router.push("/config");
     },
-    onError() {
+    onError(err) {
+      notifyError("Error saving config", err.message);
       // todo show error
     },
   });
