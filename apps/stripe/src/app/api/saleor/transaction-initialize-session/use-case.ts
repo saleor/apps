@@ -22,6 +22,7 @@ import {
   StripeClientSecretValidationError,
 } from "@/modules/stripe/stripe-client-secret";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
+import { mapStripeCreatePaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
@@ -104,7 +105,6 @@ export class TransactionInitializeSessionUseCase {
     if (eventDataResult.isErr()) {
       return ok(
         new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
-          message: "Storefront sent invalid data",
           error: eventDataResult.error,
           saleorEventAmount: event.action.amount,
         }),
@@ -159,10 +159,17 @@ export class TransactionInitializeSessionUseCase {
     });
 
     if (createPaymentIntentResult.isErr()) {
+      const mappedError = mapStripeCreatePaymentIntentErrorToApiError(
+        createPaymentIntentResult.error,
+      );
+
+      this.logger.error("Failed to create payment intent", {
+        error: mappedError,
+      });
+
       return ok(
         new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
-          message: `${createPaymentIntentResult.error.publicCode}: ${createPaymentIntentResult.error.publicMessage}`,
-          error: createPaymentIntentResult.error,
+          error: mappedError,
           saleorEventAmount: event.action.amount,
         }),
       );

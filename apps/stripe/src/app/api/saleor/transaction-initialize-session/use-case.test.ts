@@ -11,8 +11,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
-import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import { CreatePaymentIntentError, IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response";
@@ -90,7 +89,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
   it("Returns ChargeFailure response if Stripe Payment API throws error", async () => {
     const createPaymentIntent = vi.fn(async () =>
-      err(new StripePaymentIntentsApi.UnknownError("Error from Stripe API")),
+      err(new CreatePaymentIntentError("Error from Stripe API")),
     );
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({

@@ -2,7 +2,6 @@ import { Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
-import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
 import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
 import { StripeRestrictedKey } from "./stripe-restricted-key";
@@ -11,21 +10,16 @@ export interface IStripePaymentIntentsApiFactory {
   create(args: { key: StripeRestrictedKey }): IStripePaymentIntentsApi;
 }
 
-export type StripePaymentIntentAPIError =
-  | InstanceType<typeof StripePaymentIntentsApi.StripeCardError>
-  | InstanceType<typeof StripePaymentIntentsApi.StripeInvalidRequestError>
-  | InstanceType<typeof StripePaymentIntentsApi.StripeRateLimitError>
-  | InstanceType<typeof StripePaymentIntentsApi.StripeConnectionError>
-  | InstanceType<typeof StripePaymentIntentsApi.StripeAPIError>
-  | InstanceType<typeof StripePaymentIntentsApi.StripeAuthenticationError>
-  | InstanceType<typeof StripePaymentIntentsApi.StripePermissionError>
-  | InstanceType<typeof StripePaymentIntentsApi.StripeIdempotencyError>
-  | InstanceType<typeof StripePaymentIntentsApi.UnknownError>;
+export const CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentError", {
+  props: {
+    _internalName: "CreatePaymentIntentError" as const,
+  },
+});
 
 export interface IStripePaymentIntentsApi {
   createPaymentIntent(args: {
     params: Stripe.PaymentIntentCreateParams;
-  }): Promise<Result<Stripe.PaymentIntent, StripePaymentIntentAPIError>>;
+  }): Promise<Result<Stripe.PaymentIntent, unknown>>;
 }
 
 export interface IStripeEventVerify {
