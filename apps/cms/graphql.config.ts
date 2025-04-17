@@ -14,6 +14,7 @@ const config: IGraphQLConfig = {
                 defaultScalarType: "unknown",
                 immutableTypes: false, // TODO: enable this when we fix mutating fragments
                 strictScalars: true,
+                skipTypename: true,
                 scalars: {
                   _Any: "unknown",
                   Date: "string",

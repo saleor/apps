@@ -50,6 +50,7 @@ const config: IGraphQLConfig = {
                 defaultScalarType: "unknown",
                 immutableTypes: false, // TODO: enable this when we fix mutating fragments
                 strictScalars: true,
+                skipTypename: false, // TODO: enable this when we remove __typename from codebase
                 scalars: {
                   _Any: "unknown",
                   Date: "string",
