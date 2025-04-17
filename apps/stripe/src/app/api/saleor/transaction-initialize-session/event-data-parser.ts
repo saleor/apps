@@ -16,20 +16,25 @@ const TransactionInitializeEventDataSchema = z
   .strict()
   .brand("TransactionInitializeRequestData");
 
+export const ParseErrorPublicCode = "ParseError" as const;
+export const UnsupportedPaymentMethodErrorPublicCode = "UnsupportedPaymentMethodError" as const;
+
 export const ParseError = BaseError.subclass("ParseError", {
   props: {
     _internalName: "TransactionInitializeEventDataParseError" as const,
-    publicCode: "BadRequestError" as const,
+    publicCode: ParseErrorPublicCode,
     publicMessage:
       "Provided data is invalid. Check your data argument to transactionInitializeSession mutation and try again.",
+    merchantMessage: "Payment intent not created - storefront sent invalid data",
   },
 });
 
 export const UnsupportedPaymentMethodError = ParseError.subclass("UnsupportedPaymentMethodError", {
   props: {
     _internalName: "TransactionInitializeEventDataUnsupportedPaymentMethodError" as const,
-    publicCode: "UnsupportedPaymentMethodError" as const,
+    publicCode: UnsupportedPaymentMethodErrorPublicCode,
     publicMessage: "Provided payment method is not supported",
+    merchantMessage: "Payment intent not created - provided payment method is not supported",
   },
 });
 
