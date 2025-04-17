@@ -100,7 +100,16 @@ const ConfigurationPage: NextPage = () => {
               <TextLink href="https://handlebarsjs.com/" newTab>
                 Handlebars
               </TextLink>{" "}
-              format. Example of the variables you can use:
+              format.
+            </Paragraph>
+            <Paragraph size={3}>
+              The app also supports{" "}
+              <TextLink href="https://github.com/helpers/handlebars-helpers/tree/master" newTab>
+                Handlebars Helpers
+              </TextLink>{" "}
+              which provides additional functionality like <code>lowercase</code>,{" "}
+              <code>uppercase</code>, and many other helpers to transform your data. Example of the
+              variables you can use:
             </Paragraph>
             <ul>
               <li>
@@ -111,6 +120,12 @@ const ConfigurationPage: NextPage = () => {
               <li>
                 <Text size={3}>
                   <code>{"{{ variant.id }}"}</code> - product variant id
+                </Text>
+              </li>
+              <li>
+                <Text size={3}>
+                  <code>{"{{ lowercase variant.product.name }}"}</code> - product name in lowercase
+                  (useful for URLs)
                 </Text>
               </li>
             </ul>

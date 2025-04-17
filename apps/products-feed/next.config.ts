@@ -15,6 +15,15 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["@sentry/nextjs", "@sentry/node"],
   },
   bundlePagesRouterDependencies: true,
+  serverExternalPackages: [
+    /*
+     * The deps below are have node-related features. When the flag "bundlePagesExternals" is enabled, They raise errors,
+     * So we must explicitly declare them as externals.
+     * more info: https://nextjs.org/docs/app/api-reference/next-config-js/serverExternalPackages
+     */
+    "handlebars",
+    "handlebars-helpers",
+  ],
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173
