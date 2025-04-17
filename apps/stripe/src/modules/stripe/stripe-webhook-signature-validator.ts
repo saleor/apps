@@ -17,21 +17,24 @@ export class StripeWebhookSignatureValidator implements IStripeEventVerify {
     return new StripeWebhookSignatureValidator(client.nativeClient);
   }
 
-  verifyEvent({
+  verifyEvent = ({
     signatureHeader,
     webhookSecret,
     rawBody,
   }: {
-    rawBody: string;
+    rawBody: string | Buffer;
     signatureHeader: string;
     webhookSecret: StripeWebhookSecret;
-  }) {
+  }) => {
     return fromThrowable(
-      this.stripeSdkClient.webhooks.constructEvent,
+      /**
+       * Bind Stripe because otherwise it lost it's internal this
+       */
+      this.stripeSdkClient.webhooks.constructEvent.bind(this.stripeSdkClient.webhooks),
       (err) =>
         new StripeEventParsingError("Failed to validate Stripe Event", {
           cause: err,
         }),
     )(rawBody, signatureHeader, webhookSecret.secretValue);
-  }
+  };
 }

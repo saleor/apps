@@ -9,9 +9,9 @@ import { ParseError, UnsupportedPaymentMethodError } from "./event-data-parser";
 import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionInitalizeSessionUseCaseResponses", () => {
-  describe("ChargeRequest", () => {
+  describe("ChargeActionRequired", () => {
     it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe client secret", async () => {
-      const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeRequest({
+      const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeActionRequired({
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
         saleorMoney: SaleorMoney.createFromStripe({
           amount: 10000,
@@ -31,7 +31,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
             },
           },
           "pspReference": "pi_1",
-          "result": "CHARGE_REQUEST",
+          "result": "CHARGE_ACTION_REQUIRED",
         }
       `);
     });
@@ -42,12 +42,14 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
         message: "Error message for Saleor dashboard",
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
+        saleorEventAmount: 21.23,
       });
       const fetchReponse = successResponse.getResponse();
 
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "amount": 21.23,
           "data": {
             "paymentIntent": {
               "errors": [
@@ -68,18 +70,20 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
         message: "Error message for Saleor dashboard",
         error: new ParseError("Invalid data"),
+        saleorEventAmount: 21.123,
       });
       const fetchReponse = successResponse.getResponse();
 
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "amount": 21.123,
           "data": {
             "paymentIntent": {
               "errors": [
                 {
                   "code": "BadRequestError",
-                  "message": "Provided data is invalid. Check your data argument to transactionInitalizeSession mutation and try again.",
+                  "message": "Provided data is invalid. Check your data argument to transactionInitializeSession mutation and try again.",
                 },
               ],
             },
@@ -94,12 +98,14 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
         message: "Error message for Saleor dashboard",
         error: new StripePaymentIntentsApi.CreatePaymentIntentError("Error from Stripe API"),
+        saleorEventAmount: 100.123,
       });
       const fetchReponse = successResponse.getResponse();
 
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "amount": 100.123,
           "data": {
             "paymentIntent": {
               "errors": [

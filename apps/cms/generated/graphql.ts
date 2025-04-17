@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+type JSONValue = string | number | boolean | null | { [key: string]: JSONValue } | JSONValue[];
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -20,20 +21,20 @@ export type Scalars = {
    * value as specified by
    * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
    */
-  Date: { input: any; output: any; }
+  Date: { input: string; output: string; }
   /**
    * The `DateTime` scalar type represents a DateTime
    * value as specified by
    * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
    */
-  DateTime: { input: any; output: any; }
+  DateTime: { input: string; output: string; }
   /**
    * The `GenericScalar` scalar type represents a generic
    * GraphQL scalar value that could be:
    * String, Boolean, Int, Float, List or Object.
    */
-  GenericScalar: { input: any; output: any; }
-  JSONString: { input: any; output: any; }
+  GenericScalar: { input: JSONValue; output: JSONValue; }
+  JSONString: { input: string; output: string; }
   /**
    * Metadata is a map of key-value pairs, both keys and values are `String`.
    *
@@ -45,19 +46,19 @@ export type Scalars = {
    * }
    * ```
    */
-  Metadata: { input: any; output: any; }
+  Metadata: { input: Record<string, string>; output: Record<string, string>; }
   /**
    * Positive Decimal scalar implementation.
    *
    * Should be used in places where value must be positive.
    */
-  PositiveDecimal: { input: any; output: any; }
-  UUID: { input: any; output: any; }
+  PositiveDecimal: { input: number; output: number; }
+  UUID: { input: string; output: string; }
   /** Variables of this type must be set to null in mutations. They will be replaced with a filename from a following multipart part containing a binary file. See: https://github.com/jaydenseric/graphql-multipart-request-spec. */
-  Upload: { input: any; output: any; }
-  WeightScalar: { input: any; output: any; }
+  Upload: { input: unknown; output: unknown; }
+  WeightScalar: { input: number; output: number; }
   /** _Any value scalar as defined by Federation spec. */
-  _Any: { input: any; output: any; }
+  _Any: { input: unknown; output: unknown; }
 };
 
 /**
