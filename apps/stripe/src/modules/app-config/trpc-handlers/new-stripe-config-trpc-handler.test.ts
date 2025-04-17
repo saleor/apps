@@ -58,7 +58,6 @@ describe("NewStripeConfigTrpcHandler", () => {
         name: "Test config",
         publishableKey: mockedStripePublishableKey,
         restrictedKey: mockedStripeRestrictedKey,
-        channelId: mockedSaleorChannelId,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `[TRPCError: Failed to create Stripe configuration. Data can't be saved.]`,
@@ -76,7 +75,6 @@ describe("NewStripeConfigTrpcHandler", () => {
         name: "", //empty name should throw
         publishableKey: mockedStripePublishableKey,
         restrictedKey: mockedStripeRestrictedKey,
-        channelId: mockedSaleorChannelId,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       [TRPCError: [
@@ -105,7 +103,6 @@ describe("NewStripeConfigTrpcHandler", () => {
         name: "Test config",
         publishableKey: mockedStripePublishableKey,
         restrictedKey: mockedStripeRestrictedKey,
-        channelId: mockedSaleorChannelId,
       }),
     ).resolves.not.toThrow();
 
@@ -119,7 +116,6 @@ describe("NewStripeConfigTrpcHandler", () => {
       }, `
       {
         "appId": "saleor-app-id",
-        "channelId": "Q2hhbm5lbDox",
         "config": {
           "id": Any<String>,
           "name": "Test config",

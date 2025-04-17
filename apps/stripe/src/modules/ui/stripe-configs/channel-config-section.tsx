@@ -1,18 +1,29 @@
-import { Box } from "@saleor/macaw-ui";
+import { Box, Text } from "@saleor/macaw-ui";
+import { useEffect } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { EmptyConfigs } from "@/modules/ui/stripe-configs/empty-configs";
+import { StripeConfigsList } from "@/modules/ui/stripe-configs/stripe-configs-list";
 
 export const ChannelConfigSection = () => {
-  // todo call trpc for root configs
+  const { data, error, refetch } = trpcClient.appConfig.getStripeConfigsList.useQuery();
 
-  const { data, error } = trpcClient.appConfig.getStripeConfigsList.useQuery();
+  useEffect(() => {
+    refetch();
+  }, []);
 
-  console.log(data);
-  console.log(error);
+  if (error) {
+    // todo better ui
+
+    return <Text>Error fetching config: {error.message}</Text>;
+  }
 
   if (data && data.length === 0) {
     return <EmptyConfigs />;
+  }
+
+  if (data && data.length > 0) {
+    return <StripeConfigsList configs={data} />;
   }
 
   return <Box>Loading...</Box>;
