@@ -215,6 +215,24 @@ export class FileAppConfigRepo implements AppConfigRepo {
   async getRootConfig() {
     const savedJson = this.readExistingAppConfigFromFileAsJson();
 
-    return ok(new AppRootConfig({})); //todo
+    return ok(
+      new AppRootConfig(
+        savedJson.channelMapping,
+        Object.values(savedJson.stripeConfigs).reduce(
+          (acc, configJson) => {
+            acc[configJson.id] = StripeConfig.create({
+              name: configJson.name,
+              id: configJson.id,
+              publishableKey: createStripePublishableKey(configJson.publishableKey)._unsafeUnwrap(),
+              restrictedKey: createStripeRestrictedKey(configJson.restrictedKey)._unsafeUnwrap(),
+              webhookSecret: createStripeWebhookSecret(configJson.webhookSecret)._unsafeUnwrap(),
+            })._unsafeUnwrap();
+
+            return acc;
+          },
+          {} as Record<string, StripeConfig>,
+        ),
+      ),
+    );
   }
 }

@@ -1,17 +1,18 @@
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 
 export class AppRootConfig {
-  readonly configsByChannelId: Record<string, StripeConfig>;
+  readonly chanelConfigMapping: Record<string, string>;
+  readonly stripeConfigsById: Record<string, StripeConfig>;
 
-  constructor(configsByChannelId: Record<string, StripeConfig>) {
-    this.configsByChannelId = configsByChannelId;
-  }
-
-  getConfigByChannelId(channelId: string) {
-    return this.configsByChannelId[channelId];
+  constructor(
+    chanelConfigMapping: Record<string, string>,
+    stripeConfigsById: Record<string, StripeConfig>,
+  ) {
+    this.chanelConfigMapping = chanelConfigMapping;
+    this.stripeConfigsById = stripeConfigsById;
   }
 
   getAllConfigsAsList() {
-    return Object.values(this.configsByChannelId);
+    return Object.values(this.stripeConfigsById);
   }
 }
