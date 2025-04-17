@@ -159,10 +159,9 @@ export class TransactionInitializeSessionUseCase {
     });
 
     if (createPaymentIntentResult.isErr()) {
-      // TODO: handle error properly
       return ok(
         new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
-          message: "Error from Stripe API",
+          message: `${createPaymentIntentResult.error.publicCode}: ${createPaymentIntentResult.error.publicMessage}`,
           error: createPaymentIntentResult.error,
           saleorEventAmount: event.action.amount,
         }),

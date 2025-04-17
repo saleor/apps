@@ -97,7 +97,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and StripeCreatePaymentIntentError error inside data object", async () => {
       const successResponse = new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
         message: "Error message for Saleor dashboard",
-        error: new StripePaymentIntentsApi.CreatePaymentIntentError("Error from Stripe API"),
+        error: new StripePaymentIntentsApi.UnknownError("Error from Stripe API"),
         saleorEventAmount: 100.123,
       });
       const fetchReponse = successResponse.getResponse();

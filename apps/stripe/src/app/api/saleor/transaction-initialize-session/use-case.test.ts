@@ -90,7 +90,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
   it("Returns ChargeFailure response if Stripe Payment API throws error", async () => {
     const createPaymentIntent = vi.fn(async () =>
-      err(new StripePaymentIntentsApi.CreatePaymentIntentError("Error from Stripe API")),
+      err(new StripePaymentIntentsApi.UnknownError("Error from Stripe API")),
     );
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({

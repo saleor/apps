@@ -13,8 +13,13 @@ import {
 } from "@/modules/stripe/stripe-client-secret";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripePaymentIntentsApi } from "@/modules/stripe/stripe-payment-intents-api";
+import { StripePaymentIntentAPIError } from "@/modules/stripe/types";
 
-import { TransactionInitializeSessionEventDataError } from "./event-data-parser";
+import {
+  ParseError,
+  TransactionInitializeSessionEventDataError,
+  UnsupportedPaymentMethodError,
+} from "./event-data-parser";
 
 // TODO: add support for other results e.g AUTHORIZE
 
@@ -61,18 +66,27 @@ class ChargeActionRequired extends SuccessWebhookResponse {
 class ChargeFailure extends SuccessWebhookResponse {
   readonly result = "CHARGE_FAILURE" as const;
   readonly message: string;
-  readonly error:
-    | TransactionInitializeSessionEventDataError
-    | InstanceType<typeof StripePaymentIntentsApi.CreatePaymentIntentError>;
+  readonly error: TransactionInitializeSessionEventDataError | StripePaymentIntentAPIError;
   readonly saleorEventAmount: number;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
       z.object({
         code: z.union([
-          z.literal("UnsupportedPaymentMethodError"),
-          z.literal("BadRequestError"),
-          z.literal("StripeCreatePaymentIntentError"),
+          z.literal(UnsupportedPaymentMethodError.prototype.publicCode),
+          z.literal(ParseError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripeCardError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripeInvalidRequestError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripeAuthenticationError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripePermissionError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripeIdempotencyError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripeAPIError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripeRateLimitError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripeConnectionError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripeAuthenticationError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripePermissionError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.StripeIdempotencyError.prototype.publicCode),
+          z.literal(StripePaymentIntentsApi.UnknownError.prototype.publicCode),
         ]),
         message: z.string(),
       }),
@@ -81,9 +95,7 @@ class ChargeFailure extends SuccessWebhookResponse {
 
   constructor(args: {
     message: string;
-    error:
-      | TransactionInitializeSessionEventDataError
-      | InstanceType<typeof StripePaymentIntentsApi.CreatePaymentIntentError>;
+    error: TransactionInitializeSessionEventDataError | StripePaymentIntentAPIError;
     saleorEventAmount: number;
   }) {
     super();
