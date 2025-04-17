@@ -1,49 +1,33 @@
-import { err, ok, Result } from "neverthrow";
+import { fromThrowable } from "neverthrow";
+import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
 
-export class StripeRestrictedKey {
-  readonly keyValue: string;
-
-  static ValidationError = BaseError.subclass("ValidationError", {
+export const StripeRestrictedKeyValidationError = BaseError.subclass(
+  "StripeRestrictedKeyValidationError",
+  {
     props: {
-      _internalName: "StripeRestrictedKey.ValidationError" as const,
+      _internalName: "StripeRestrictedKeyValidationError" as const,
     },
-  });
+  },
+);
 
-  private static testPrefix = "rk_test_";
-  private static livePrefix = "rk_live_";
+export const StripeRestrictedKeySchema = z
+  .string()
+  .min(1)
+  .refine(
+    (value) => {
+      return value.startsWith("rk_test_") || value.startsWith("rk_live_");
+    },
+    {
+      message: "Must start with 'rk_test_' or 'rk_live_",
+    },
+  )
+  .brand("StripeRestrictedKey");
 
-  private constructor(keyValue: string) {
-    this.keyValue = keyValue;
-  }
+export const createStripeRestrictedKey = (raw: string | null) =>
+  fromThrowable(StripeRestrictedKeySchema.parse, (error) =>
+    StripeRestrictedKeyValidationError.normalize(error),
+  )(raw);
 
-  private static isInProperFormat(keyValue: string): boolean {
-    return (
-      keyValue.startsWith(StripeRestrictedKey.testPrefix) ||
-      keyValue.startsWith(StripeRestrictedKey.livePrefix)
-    );
-  }
-
-  static create(args: {
-    restrictedKey: string;
-  }): Result<StripeRestrictedKey, InstanceType<typeof StripeRestrictedKey.ValidationError>> {
-    if (args.restrictedKey.length === 0) {
-      return err(new this.ValidationError("Restricted key cannot be empty"));
-    }
-
-    if (!this.isInProperFormat(args.restrictedKey)) {
-      return err(
-        new this.ValidationError(
-          "Invalid restricted key format - it should start with `rk_test_` or `rk_live_`",
-        ),
-      );
-    }
-
-    return ok(new StripeRestrictedKey(args.restrictedKey));
-  }
-
-  getMaskedValue() {
-    return `...${this.keyValue.slice(-4)}`;
-  }
-}
+export type StripeRestrictedKey = z.infer<typeof StripeRestrictedKeySchema>;

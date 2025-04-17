@@ -35,6 +35,6 @@ export class StripeWebhookSignatureValidator implements IStripeEventVerify {
         new StripeEventParsingError("Failed to validate Stripe Event", {
           cause: err,
         }),
-    )(rawBody, signatureHeader, webhookSecret.secretValue);
+    )(rawBody, signatureHeader, webhookSecret);
   };
 }

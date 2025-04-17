@@ -6,7 +6,7 @@ import { RandomId } from "@/lib/random-id";
 import { StripeConfig } from "@/modules/app-config/stripe-config";
 import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
+import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 /**
@@ -36,7 +36,7 @@ export class NewStripeConfigTrpcHandler {
         restrictedKey: input.restrictedKey,
         name: input.name,
         id: new RandomId().generate(),
-        webhookSecret: StripeWebhookSecret.create("whsec_TODO")._unsafeUnwrap(), //todo - pass after webhook is created
+        webhookSecret: createStripeWebhookSecret("whsec_TODO")._unsafeUnwrap(), //todo - pass after webhook is created
       });
 
       // TODO: Handle exact reasons, give good messages

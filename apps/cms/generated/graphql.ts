@@ -67,7 +67,6 @@ export type Scalars = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountAddressCreate = {
-  __typename?: 'AccountAddressCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   address?: Maybe<Address>;
@@ -78,7 +77,6 @@ export type AccountAddressCreate = {
 
 /** Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER. */
 export type AccountAddressDelete = {
-  __typename?: 'AccountAddressDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   address?: Maybe<Address>;
@@ -89,7 +87,6 @@ export type AccountAddressDelete = {
 
 /** Updates an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER. */
 export type AccountAddressUpdate = {
-  __typename?: 'AccountAddressUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   address?: Maybe<Address>;
@@ -104,7 +101,6 @@ export type AccountAddressUpdate = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountDelete = {
-  __typename?: 'AccountDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -112,7 +108,6 @@ export type AccountDelete = {
 };
 
 export type AccountError = {
-  __typename?: 'AccountError';
   /** A type of address that causes the error. */
   addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -175,7 +170,6 @@ export type AccountInput = {
 
 /** Register a new user. */
 export type AccountRegister = {
-  __typename?: 'AccountRegister';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -209,7 +203,6 @@ export type AccountRegisterInput = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountRequestDeletion = {
-  __typename?: 'AccountRequestDeletion';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -221,7 +214,6 @@ export type AccountRequestDeletion = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountSetDefaultAddress = {
-  __typename?: 'AccountSetDefaultAddress';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -235,7 +227,6 @@ export type AccountSetDefaultAddress = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type AccountUpdate = {
-  __typename?: 'AccountUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -244,7 +235,6 @@ export type AccountUpdate = {
 
 /** Represents user address data. */
 export type Address = Node & ObjectWithMetadata & {
-  __typename?: 'Address';
   city: Scalars['String']['output'];
   cityArea: Scalars['String']['output'];
   companyName: Scalars['String']['output'];
@@ -346,7 +336,6 @@ export type AddressPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type AddressCreate = {
-  __typename?: 'AddressCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   address?: Maybe<Address>;
@@ -363,7 +352,6 @@ export type AddressCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AddressCreated = Event & {
-  __typename?: 'AddressCreated';
   /** The address the event relates to. */
   address?: Maybe<Address>;
   /** Time of the event. */
@@ -382,7 +370,6 @@ export type AddressCreated = Event & {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type AddressDelete = {
-  __typename?: 'AddressDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   address?: Maybe<Address>;
@@ -399,7 +386,6 @@ export type AddressDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AddressDeleted = Event & {
-  __typename?: 'AddressDeleted';
   /** The address the event relates to. */
   address?: Maybe<Address>;
   /** Time of the event. */
@@ -443,7 +429,6 @@ export type AddressInput = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type AddressSetDefault = {
-  __typename?: 'AddressSetDefault';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -462,7 +447,6 @@ export type AddressTypeEnum =
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type AddressUpdate = {
-  __typename?: 'AddressUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   address?: Maybe<Address>;
@@ -479,7 +463,6 @@ export type AddressUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AddressUpdated = Event & {
-  __typename?: 'AddressUpdated';
   /** The address the event relates to. */
   address?: Maybe<Address>;
   /** Time of the event. */
@@ -493,7 +476,6 @@ export type AddressUpdated = Event & {
 };
 
 export type AddressValidationData = {
-  __typename?: 'AddressValidationData';
   addressFormat: Scalars['String']['output'];
   addressLatinFormat: Scalars['String']['output'];
   allowedFields: Array<Scalars['String']['output']>;
@@ -515,7 +497,6 @@ export type AddressValidationData = {
 
 /** Represents allocation. */
 export type Allocation = Node & {
-  __typename?: 'Allocation';
   id: Scalars['ID']['output'];
   /**
    * Quantity allocated for orders.
@@ -545,7 +526,6 @@ export type AllocationStrategyEnum =
 
 /** Represents app data. */
 export type App = Node & ObjectWithMetadata & {
-  __typename?: 'App';
   /** Description of this app. */
   aboutApp?: Maybe<Scalars['String']['output']>;
   /** JWT token used to authenticate by thridparty app. */
@@ -679,7 +659,6 @@ export type AppPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppActivate = {
-  __typename?: 'AppActivate';
   app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
@@ -687,7 +666,6 @@ export type AppActivate = {
 };
 
 export type AppCountableConnection = {
-  __typename?: 'AppCountableConnection';
   edges: Array<AppCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -696,7 +674,6 @@ export type AppCountableConnection = {
 };
 
 export type AppCountableEdge = {
-  __typename?: 'AppCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -705,7 +682,6 @@ export type AppCountableEdge = {
 
 /** Creates a new app. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS. */
 export type AppCreate = {
-  __typename?: 'AppCreate';
   app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
@@ -720,7 +696,6 @@ export type AppCreate = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppDeactivate = {
-  __typename?: 'AppDeactivate';
   app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
@@ -733,7 +708,6 @@ export type AppDeactivate = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppDelete = {
-  __typename?: 'AppDelete';
   app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
@@ -746,7 +720,6 @@ export type AppDelete = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppDeleteFailedInstallation = {
-  __typename?: 'AppDeleteFailedInstallation';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
   appInstallation?: Maybe<AppInstallation>;
@@ -761,7 +734,6 @@ export type AppDeleteFailedInstallation = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppDeleted = Event & {
-  __typename?: 'AppDeleted';
   /** The application the event relates to. */
   app?: Maybe<App>;
   /** Time of the event. */
@@ -775,7 +747,6 @@ export type AppDeleted = Event & {
 };
 
 export type AppError = {
-  __typename?: 'AppError';
   /** The error code. */
   code: AppErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -804,7 +775,6 @@ export type AppErrorCode =
 
 /** Represents app data. */
 export type AppExtension = Node & {
-  __typename?: 'AppExtension';
   /** JWT token used to authenticate by thridparty app extension. */
   accessToken?: Maybe<Scalars['String']['output']>;
   app: App;
@@ -822,7 +792,6 @@ export type AppExtension = Node & {
 };
 
 export type AppExtensionCountableConnection = {
-  __typename?: 'AppExtensionCountableConnection';
   edges: Array<AppExtensionCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -831,7 +800,6 @@ export type AppExtensionCountableConnection = {
 };
 
 export type AppExtensionCountableEdge = {
-  __typename?: 'AppExtensionCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -877,7 +845,6 @@ export type AppExtensionTargetEnum =
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppFetchManifest = {
-  __typename?: 'AppFetchManifest';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
   errors: Array<AppError>;
@@ -899,7 +866,6 @@ export type AppInput = {
 
 /** Install new app by using app manifest. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS. */
 export type AppInstall = {
-  __typename?: 'AppInstall';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
   appInstallation?: Maybe<AppInstallation>;
@@ -919,7 +885,6 @@ export type AppInstallInput = {
 
 /** Represents ongoing installation of app. */
 export type AppInstallation = Job & Node & {
-  __typename?: 'AppInstallation';
   appName: Scalars['String']['output'];
   /** Created date time of job in ISO 8601 format. */
   createdAt: Scalars['DateTime']['output'];
@@ -941,7 +906,6 @@ export type AppInstallation = Job & Node & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppInstalled = Event & {
-  __typename?: 'AppInstalled';
   /** The application the event relates to. */
   app?: Maybe<App>;
   /** Time of the event. */
@@ -955,7 +919,6 @@ export type AppInstalled = Event & {
 };
 
 export type AppManifestExtension = {
-  __typename?: 'AppManifestExtension';
   /** Label of the extension to show in the dashboard. */
   label: Scalars['String']['output'];
   /** Place where given extension will be mounted. */
@@ -969,7 +932,6 @@ export type AppManifestExtension = {
 };
 
 export type AppManifestWebhook = {
-  __typename?: 'AppManifestWebhook';
   /** The asynchronous events that webhook wants to subscribe. */
   asyncEvents?: Maybe<Array<WebhookEventTypeAsyncEnum>>;
   /** The name of the webhook. */
@@ -988,7 +950,6 @@ export type AppManifestWebhook = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppRetryInstall = {
-  __typename?: 'AppRetryInstall';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
   appInstallation?: Maybe<AppInstallation>;
@@ -1016,7 +977,6 @@ export type AppSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppStatusChanged = Event & {
-  __typename?: 'AppStatusChanged';
   /** The application the event relates to. */
   app?: Maybe<App>;
   /** Time of the event. */
@@ -1031,7 +991,6 @@ export type AppStatusChanged = Event & {
 
 /** Represents token data. */
 export type AppToken = Node & {
-  __typename?: 'AppToken';
   /** Last 4 characters of the token. */
   authToken?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
@@ -1045,7 +1004,6 @@ export type AppToken = Node & {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppTokenCreate = {
-  __typename?: 'AppTokenCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
   appToken?: Maybe<AppToken>;
@@ -1060,7 +1018,6 @@ export type AppTokenCreate = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppTokenDelete = {
-  __typename?: 'AppTokenDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
   appToken?: Maybe<AppToken>;
@@ -1076,7 +1033,6 @@ export type AppTokenInput = {
 
 /** Verify provided app token. */
 export type AppTokenVerify = {
-  __typename?: 'AppTokenVerify';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
   errors: Array<AppError>;
@@ -1097,7 +1053,6 @@ export type AppTypeEnum =
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppUpdate = {
-  __typename?: 'AppUpdate';
   app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   appErrors: Array<AppError>;
@@ -1112,7 +1067,6 @@ export type AppUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppUpdated = Event & {
-  __typename?: 'AppUpdated';
   /** The application the event relates to. */
   app?: Maybe<App>;
   /** Time of the event. */
@@ -1140,7 +1094,6 @@ export type AreaUnitsEnum =
  * Requires one of the following permissions: MANAGE_MENUS, MANAGE_SETTINGS.
  */
 export type AssignNavigation = {
-  __typename?: 'AssignNavigation';
   errors: Array<MenuError>;
   /** Assigned navigation menu. */
   menu?: Maybe<Menu>;
@@ -1154,7 +1107,6 @@ export type AssignNavigation = {
  * Added in Saleor 3.1.
  */
 export type AssignedVariantAttribute = {
-  __typename?: 'AssignedVariantAttribute';
   /** Attribute assigned to variant. */
   attribute: Attribute;
   /** Determines, whether assigned attribute is allowed for variant selection. Supported variant types for variant selection are: ['dropdown', 'boolean', 'swatch', 'numeric'] */
@@ -1163,7 +1115,6 @@ export type AssignedVariantAttribute = {
 
 /** Custom attribute of a product. Attributes can be assigned to products and variants at the product type level. */
 export type Attribute = Node & ObjectWithMetadata & {
-  __typename?: 'Attribute';
   /** Whether the attribute can be displayed in the admin product list. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES. */
   availableInGrid: Scalars['Boolean']['output'];
   /** List of attribute's values. */
@@ -1310,7 +1261,6 @@ export type AttributeTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeBulkDelete = {
-  __typename?: 'AttributeBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   attributeErrors: Array<AttributeError>;
   /** Returns how many objects were affected. */
@@ -1332,7 +1282,6 @@ export type AttributeChoicesSortingInput = {
 };
 
 export type AttributeCountableConnection = {
-  __typename?: 'AttributeCountableConnection';
   edges: Array<AttributeCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -1341,7 +1290,6 @@ export type AttributeCountableConnection = {
 };
 
 export type AttributeCountableEdge = {
-  __typename?: 'AttributeCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -1350,7 +1298,6 @@ export type AttributeCountableEdge = {
 
 /** Creates an attribute. */
 export type AttributeCreate = {
-  __typename?: 'AttributeCreate';
   attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   attributeErrors: Array<AttributeError>;
@@ -1402,7 +1349,6 @@ export type AttributeCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeCreated = Event & {
-  __typename?: 'AttributeCreated';
   /** The attribute the event relates to. */
   attribute?: Maybe<Attribute>;
   /** Time of the event. */
@@ -1421,7 +1367,6 @@ export type AttributeCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeDelete = {
-  __typename?: 'AttributeDelete';
   attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   attributeErrors: Array<AttributeError>;
@@ -1436,7 +1381,6 @@ export type AttributeDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeDeleted = Event & {
-  __typename?: 'AttributeDeleted';
   /** The attribute the event relates to. */
   attribute?: Maybe<Attribute>;
   /** Time of the event. */
@@ -1456,7 +1400,6 @@ export type AttributeEntityTypeEnum =
   | 'PRODUCT_VARIANT';
 
 export type AttributeError = {
-  __typename?: 'AttributeError';
   /** The error code. */
   code: AttributeErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -1531,7 +1474,6 @@ export type AttributeInputTypeEnum =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeReorderValues = {
-  __typename?: 'AttributeReorderValues';
   /** Attribute from which values are reordered. */
   attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1567,7 +1509,6 @@ export type AttributeSortingInput = {
 };
 
 export type AttributeTranslatableContent = Node & {
-  __typename?: 'AttributeTranslatableContent';
   /**
    * Custom attribute of a product.
    * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
@@ -1590,7 +1531,6 @@ export type AttributeTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type AttributeTranslate = {
-  __typename?: 'AttributeTranslate';
   attribute?: Maybe<Attribute>;
   errors: Array<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1598,7 +1538,6 @@ export type AttributeTranslate = {
 };
 
 export type AttributeTranslation = Node & {
-  __typename?: 'AttributeTranslation';
   id: Scalars['ID']['output'];
   /** Translation language. */
   language: LanguageDisplay;
@@ -1616,7 +1555,6 @@ export type AttributeTypeEnum =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeUpdate = {
-  __typename?: 'AttributeUpdate';
   attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   attributeErrors: Array<AttributeError>;
@@ -1664,7 +1602,6 @@ export type AttributeUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeUpdated = Event & {
-  __typename?: 'AttributeUpdated';
   /** The attribute the event relates to. */
   attribute?: Maybe<Attribute>;
   /** Time of the event. */
@@ -1679,7 +1616,6 @@ export type AttributeUpdated = Event & {
 
 /** Represents a value of an attribute. */
 export type AttributeValue = Node & {
-  __typename?: 'AttributeValue';
   /** Represents the boolean value of the attribute value. */
   boolean?: Maybe<Scalars['Boolean']['output']>;
   /** Represents the date value of the attribute value. */
@@ -1729,7 +1665,6 @@ export type AttributeValueTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeValueBulkDelete = {
-  __typename?: 'AttributeValueBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   attributeErrors: Array<AttributeError>;
   /** Returns how many objects were affected. */
@@ -1738,7 +1673,6 @@ export type AttributeValueBulkDelete = {
 };
 
 export type AttributeValueCountableConnection = {
-  __typename?: 'AttributeValueCountableConnection';
   edges: Array<AttributeValueCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -1747,7 +1681,6 @@ export type AttributeValueCountableConnection = {
 };
 
 export type AttributeValueCountableEdge = {
-  __typename?: 'AttributeValueCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -1760,7 +1693,6 @@ export type AttributeValueCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type AttributeValueCreate = {
-  __typename?: 'AttributeValueCreate';
   /** The updated attribute. */
   attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1808,7 +1740,6 @@ export type AttributeValueCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeValueCreated = Event & {
-  __typename?: 'AttributeValueCreated';
   /** The attribute value the event relates to. */
   attributeValue?: Maybe<AttributeValue>;
   /** Time of the event. */
@@ -1827,7 +1758,6 @@ export type AttributeValueCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeValueDelete = {
-  __typename?: 'AttributeValueDelete';
   /** The updated attribute. */
   attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1844,7 +1774,6 @@ export type AttributeValueDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeValueDeleted = Event & {
-  __typename?: 'AttributeValueDeleted';
   /** The attribute value the event relates to. */
   attributeValue?: Maybe<AttributeValue>;
   /** Time of the event. */
@@ -1922,7 +1851,6 @@ export type AttributeValueSelectableTypeInput = {
 };
 
 export type AttributeValueTranslatableContent = Node & {
-  __typename?: 'AttributeValueTranslatableContent';
   /**
    * Associated attribute that can be translated.
    *
@@ -1959,7 +1887,6 @@ export type AttributeValueTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type AttributeValueTranslate = {
-  __typename?: 'AttributeValueTranslate';
   attributeValue?: Maybe<AttributeValue>;
   errors: Array<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -1967,7 +1894,6 @@ export type AttributeValueTranslate = {
 };
 
 export type AttributeValueTranslation = Node & {
-  __typename?: 'AttributeValueTranslation';
   id: Scalars['ID']['output'];
   /** Translation language. */
   language: LanguageDisplay;
@@ -2000,7 +1926,6 @@ export type AttributeValueTranslationInput = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type AttributeValueUpdate = {
-  __typename?: 'AttributeValueUpdate';
   /** The updated attribute. */
   attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2048,7 +1973,6 @@ export type AttributeValueUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AttributeValueUpdated = Event & {
-  __typename?: 'AttributeValueUpdated';
   /** The attribute value the event relates to. */
   attributeValue?: Maybe<AttributeValue>;
   /** Time of the event. */
@@ -2071,7 +1995,6 @@ export type BulkAttributeValueInput = {
 };
 
 export type BulkProductError = {
-  __typename?: 'BulkProductError';
   /** List of attributes IDs which causes the error. */
   attributes?: Maybe<Array<Scalars['ID']['output']>>;
   /** List of channel IDs which causes the error. */
@@ -2091,7 +2014,6 @@ export type BulkProductError = {
 };
 
 export type BulkStockError = {
-  __typename?: 'BulkStockError';
   /** List of attributes IDs which causes the error. */
   attributes?: Maybe<Array<Scalars['ID']['output']>>;
   /** The error code. */
@@ -2114,7 +2036,6 @@ export type BulkStockError = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CalculateTaxes = Event & {
-  __typename?: 'CalculateTaxes';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -2152,7 +2073,6 @@ export type CatalogueInput = {
 
 /** Represents a single category of products. Categories allow to organize products in a tree-hierarchies which can be used for navigation in the storefront. */
 export type Category = Node & ObjectWithMetadata & {
-  __typename?: 'Category';
   /** List of ancestors of the category. */
   ancestors?: Maybe<CategoryCountableConnection>;
   backgroundImage?: Maybe<Image>;
@@ -2297,7 +2217,6 @@ export type CategoryTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryBulkDelete = {
-  __typename?: 'CategoryBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<ProductError>;
@@ -2306,7 +2225,6 @@ export type CategoryBulkDelete = {
 };
 
 export type CategoryCountableConnection = {
-  __typename?: 'CategoryCountableConnection';
   edges: Array<CategoryCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -2315,7 +2233,6 @@ export type CategoryCountableConnection = {
 };
 
 export type CategoryCountableEdge = {
-  __typename?: 'CategoryCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -2328,7 +2245,6 @@ export type CategoryCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryCreate = {
-  __typename?: 'CategoryCreate';
   category?: Maybe<Category>;
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2343,7 +2259,6 @@ export type CategoryCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CategoryCreated = Event & {
-  __typename?: 'CategoryCreated';
   /** The category the event relates to. */
   category?: Maybe<Category>;
   /** Time of the event. */
@@ -2362,7 +2277,6 @@ export type CategoryCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryDelete = {
-  __typename?: 'CategoryDelete';
   category?: Maybe<Category>;
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2377,7 +2291,6 @@ export type CategoryDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CategoryDeleted = Event & {
-  __typename?: 'CategoryDeleted';
   /** The category the event relates to. */
   category?: Maybe<Category>;
   /** Time of the event. */
@@ -2450,7 +2363,6 @@ export type CategorySortingInput = {
 };
 
 export type CategoryTranslatableContent = Node & {
-  __typename?: 'CategoryTranslatableContent';
   /**
    * Represents a single category of products.
    * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
@@ -2488,7 +2400,6 @@ export type CategoryTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type CategoryTranslate = {
-  __typename?: 'CategoryTranslate';
   category?: Maybe<Category>;
   errors: Array<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2496,7 +2407,6 @@ export type CategoryTranslate = {
 };
 
 export type CategoryTranslation = Node & {
-  __typename?: 'CategoryTranslation';
   /**
    * Translated description of the category.
    *
@@ -2524,7 +2434,6 @@ export type CategoryTranslation = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryUpdate = {
-  __typename?: 'CategoryUpdate';
   category?: Maybe<Category>;
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2539,7 +2448,6 @@ export type CategoryUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CategoryUpdated = Event & {
-  __typename?: 'CategoryUpdated';
   /** The category the event relates to. */
   category?: Maybe<Category>;
   /** Time of the event. */
@@ -2554,7 +2462,6 @@ export type CategoryUpdated = Event & {
 
 /** Represents channel. */
 export type Channel = Node & {
-  __typename?: 'Channel';
   /**
    * Shipping methods that are available for the channel.
    *
@@ -2640,7 +2547,6 @@ export type ChannelAvailableShippingMethodsPerCountryArgs = {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelActivate = {
-  __typename?: 'ChannelActivate';
   /** Activated channel. */
   channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2654,7 +2560,6 @@ export type ChannelActivate = {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelCreate = {
-  __typename?: 'ChannelCreate';
   channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   channelErrors: Array<ChannelError>;
@@ -2706,7 +2611,6 @@ export type ChannelCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ChannelCreated = Event & {
-  __typename?: 'ChannelCreated';
   /** The channel the event relates to. */
   channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -2725,7 +2629,6 @@ export type ChannelCreated = Event & {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelDeactivate = {
-  __typename?: 'ChannelDeactivate';
   /** Deactivated channel. */
   channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2739,7 +2642,6 @@ export type ChannelDeactivate = {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelDelete = {
-  __typename?: 'ChannelDelete';
   channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   channelErrors: Array<ChannelError>;
@@ -2759,7 +2661,6 @@ export type ChannelDeleteInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ChannelDeleted = Event & {
-  __typename?: 'ChannelDeleted';
   /** The channel the event relates to. */
   channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -2773,7 +2674,6 @@ export type ChannelDeleted = Event & {
 };
 
 export type ChannelError = {
-  __typename?: 'ChannelError';
   /** The error code. */
   code: ChannelErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -2808,7 +2708,6 @@ export type ChannelErrorCode =
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelReorderWarehouses = {
-  __typename?: 'ChannelReorderWarehouses';
   /** Channel within the warehouses are reordered. */
   channel?: Maybe<Channel>;
   errors: Array<ChannelError>;
@@ -2822,7 +2721,6 @@ export type ChannelReorderWarehouses = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ChannelStatusChanged = Event & {
-  __typename?: 'ChannelStatusChanged';
   /** The channel the event relates to. */
   channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -2841,7 +2739,6 @@ export type ChannelStatusChanged = Event & {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelUpdate = {
-  __typename?: 'ChannelUpdate';
   channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   channelErrors: Array<ChannelError>;
@@ -2899,7 +2796,6 @@ export type ChannelUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ChannelUpdated = Event & {
-  __typename?: 'ChannelUpdated';
   /** The channel the event relates to. */
   channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -2914,7 +2810,6 @@ export type ChannelUpdated = Event & {
 
 /** Checkout object. */
 export type Checkout = Node & ObjectWithMetadata & {
-  __typename?: 'Checkout';
   /**
    * Collection points that can be used for this order.
    *
@@ -3075,7 +2970,6 @@ export type CheckoutPrivateMetafieldsArgs = {
 
 /** Adds a gift card or a voucher to a checkout. */
 export type CheckoutAddPromoCode = {
-  __typename?: 'CheckoutAddPromoCode';
   /** The checkout with the added gift card or voucher. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3094,7 +2988,6 @@ export type CheckoutAddressValidationRules = {
 
 /** Update billing address in the existing checkout. */
 export type CheckoutBillingAddressUpdate = {
-  __typename?: 'CheckoutBillingAddressUpdate';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3104,7 +2997,6 @@ export type CheckoutBillingAddressUpdate = {
 
 /** Completes the checkout. As a result a new order is created and a payment charge is made. This action requires a successful payment before it can be performed. In case additional confirmation step as 3D secure is required confirmationNeeded flag will be set to True and no order created until payment is confirmed with second call of this mutation. */
 export type CheckoutComplete = {
-  __typename?: 'CheckoutComplete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   checkoutErrors: Array<CheckoutError>;
   /** Confirmation data used to process additional authorization steps. */
@@ -3117,7 +3009,6 @@ export type CheckoutComplete = {
 };
 
 export type CheckoutCountableConnection = {
-  __typename?: 'CheckoutCountableConnection';
   edges: Array<CheckoutCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -3126,7 +3017,6 @@ export type CheckoutCountableConnection = {
 };
 
 export type CheckoutCountableEdge = {
-  __typename?: 'CheckoutCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -3135,7 +3025,6 @@ export type CheckoutCountableEdge = {
 
 /** Create a new checkout. */
 export type CheckoutCreate = {
-  __typename?: 'CheckoutCreate';
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   checkoutErrors: Array<CheckoutError>;
@@ -3178,7 +3067,6 @@ export type CheckoutCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutCreated = Event & {
-  __typename?: 'CheckoutCreated';
   /** The checkout the event relates to. */
   checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -3197,7 +3085,6 @@ export type CheckoutCreated = Event & {
  * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_USER.
  */
 export type CheckoutCustomerAttach = {
-  __typename?: 'CheckoutCustomerAttach';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3211,7 +3098,6 @@ export type CheckoutCustomerAttach = {
  * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_USER.
  */
 export type CheckoutCustomerDetach = {
-  __typename?: 'CheckoutCustomerDetach';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3227,7 +3113,6 @@ export type CheckoutCustomerDetach = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutDeliveryMethodUpdate = {
-  __typename?: 'CheckoutDeliveryMethodUpdate';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   errors: Array<CheckoutError>;
@@ -3235,7 +3120,6 @@ export type CheckoutDeliveryMethodUpdate = {
 
 /** Updates email address in the existing checkout object. */
 export type CheckoutEmailUpdate = {
-  __typename?: 'CheckoutEmailUpdate';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3244,7 +3128,6 @@ export type CheckoutEmailUpdate = {
 };
 
 export type CheckoutError = {
-  __typename?: 'CheckoutError';
   /** A type of address that causes the error. */
   addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -3306,7 +3189,6 @@ export type CheckoutFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutFilterShippingMethods = Event & {
-  __typename?: 'CheckoutFilterShippingMethods';
   /** The checkout the event relates to. */
   checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -3329,7 +3211,6 @@ export type CheckoutFilterShippingMethods = Event & {
 
 /** Update language code in the existing checkout. */
 export type CheckoutLanguageCodeUpdate = {
-  __typename?: 'CheckoutLanguageCodeUpdate';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3339,7 +3220,6 @@ export type CheckoutLanguageCodeUpdate = {
 
 /** Represents an item in the checkout. */
 export type CheckoutLine = Node & ObjectWithMetadata & {
-  __typename?: 'CheckoutLine';
   id: Scalars['ID']['output'];
   /** List of public metadata items. Can be accessed without permissions. */
   metadata: Array<MetadataItem>;
@@ -3420,7 +3300,6 @@ export type CheckoutLinePrivateMetafieldsArgs = {
 };
 
 export type CheckoutLineCountableConnection = {
-  __typename?: 'CheckoutLineCountableConnection';
   edges: Array<CheckoutLineCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -3429,7 +3308,6 @@ export type CheckoutLineCountableConnection = {
 };
 
 export type CheckoutLineCountableEdge = {
-  __typename?: 'CheckoutLineCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -3438,7 +3316,6 @@ export type CheckoutLineCountableEdge = {
 
 /** Deletes a CheckoutLine. */
 export type CheckoutLineDelete = {
-  __typename?: 'CheckoutLineDelete';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3502,7 +3379,6 @@ export type CheckoutLineUpdateInput = {
 
 /** Adds a checkout line to the existing checkout.If line was already in checkout, its quantity will be increased. */
 export type CheckoutLinesAdd = {
-  __typename?: 'CheckoutLinesAdd';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3512,7 +3388,6 @@ export type CheckoutLinesAdd = {
 
 /** Deletes checkout lines. */
 export type CheckoutLinesDelete = {
-  __typename?: 'CheckoutLinesDelete';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   errors: Array<CheckoutError>;
@@ -3520,7 +3395,6 @@ export type CheckoutLinesDelete = {
 
 /** Updates checkout line in the existing checkout. */
 export type CheckoutLinesUpdate = {
-  __typename?: 'CheckoutLinesUpdate';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3536,7 +3410,6 @@ export type CheckoutLinesUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutMetadataUpdated = Event & {
-  __typename?: 'CheckoutMetadataUpdated';
   /** The checkout the event relates to. */
   checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -3551,7 +3424,6 @@ export type CheckoutMetadataUpdated = Event & {
 
 /** Create a new payment for given checkout. */
 export type CheckoutPaymentCreate = {
-  __typename?: 'CheckoutPaymentCreate';
   /** Related checkout object. */
   checkout?: Maybe<Checkout>;
   errors: Array<PaymentError>;
@@ -3563,7 +3435,6 @@ export type CheckoutPaymentCreate = {
 
 /** Remove a gift card or a voucher from a checkout. */
 export type CheckoutRemovePromoCode = {
-  __typename?: 'CheckoutRemovePromoCode';
   /** The checkout with the removed gift card or voucher. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3573,7 +3444,6 @@ export type CheckoutRemovePromoCode = {
 
 /** Update shipping address in the existing checkout. */
 export type CheckoutShippingAddressUpdate = {
-  __typename?: 'CheckoutShippingAddressUpdate';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3583,7 +3453,6 @@ export type CheckoutShippingAddressUpdate = {
 
 /** Updates the shipping method of the checkout. */
 export type CheckoutShippingMethodUpdate = {
-  __typename?: 'CheckoutShippingMethodUpdate';
   /** An updated checkout. */
   checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3614,7 +3483,6 @@ export type CheckoutSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutUpdated = Event & {
-  __typename?: 'CheckoutUpdated';
   /** The checkout the event relates to. */
   checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -3635,14 +3503,12 @@ export type CheckoutValidationRules = {
 };
 
 export type ChoiceValue = {
-  __typename?: 'ChoiceValue';
   raw?: Maybe<Scalars['String']['output']>;
   verbose?: Maybe<Scalars['String']['output']>;
 };
 
 /** Represents a collection of products. */
 export type Collection = Node & ObjectWithMetadata & {
-  __typename?: 'Collection';
   backgroundImage?: Maybe<Image>;
   /** Channel given to retrieve this collection. Also used by federation gateway to resolve this object in a federated query. */
   channel?: Maybe<Scalars['String']['output']>;
@@ -3770,7 +3636,6 @@ export type CollectionTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionAddProducts = {
-  __typename?: 'CollectionAddProducts';
   /** Collection to which products will be added. */
   collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3784,7 +3649,6 @@ export type CollectionAddProducts = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionBulkDelete = {
-  __typename?: 'CollectionBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   collectionErrors: Array<CollectionError>;
   /** Returns how many objects were affected. */
@@ -3794,7 +3658,6 @@ export type CollectionBulkDelete = {
 
 /** Represents collection channel listing. */
 export type CollectionChannelListing = Node & {
-  __typename?: 'CollectionChannelListing';
   channel: Channel;
   id: Scalars['ID']['output'];
   isPublished: Scalars['Boolean']['output'];
@@ -3809,7 +3672,6 @@ export type CollectionChannelListing = Node & {
 };
 
 export type CollectionChannelListingError = {
-  __typename?: 'CollectionChannelListingError';
   /** List of attributes IDs which causes the error. */
   attributes?: Maybe<Array<Scalars['ID']['output']>>;
   /** List of channels IDs which causes the error. */
@@ -3830,7 +3692,6 @@ export type CollectionChannelListingError = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionChannelListingUpdate = {
-  __typename?: 'CollectionChannelListingUpdate';
   /** An updated collection instance. */
   collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3846,7 +3707,6 @@ export type CollectionChannelListingUpdateInput = {
 };
 
 export type CollectionCountableConnection = {
-  __typename?: 'CollectionCountableConnection';
   edges: Array<CollectionCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -3855,7 +3715,6 @@ export type CollectionCountableConnection = {
 };
 
 export type CollectionCountableEdge = {
-  __typename?: 'CollectionCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -3868,7 +3727,6 @@ export type CollectionCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionCreate = {
-  __typename?: 'CollectionCreate';
   collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   collectionErrors: Array<CollectionError>;
@@ -3924,7 +3782,6 @@ export type CollectionCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CollectionCreated = Event & {
-  __typename?: 'CollectionCreated';
   /** The collection the event relates to. */
   collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -3955,7 +3812,6 @@ export type CollectionCreatedCollectionArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionDelete = {
-  __typename?: 'CollectionDelete';
   collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   collectionErrors: Array<CollectionError>;
@@ -3970,7 +3826,6 @@ export type CollectionDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CollectionDeleted = Event & {
-  __typename?: 'CollectionDeleted';
   /** The collection the event relates to. */
   collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -3996,7 +3851,6 @@ export type CollectionDeletedCollectionArgs = {
 };
 
 export type CollectionError = {
-  __typename?: 'CollectionError';
   /** The error code. */
   code: CollectionErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -4078,7 +3932,6 @@ export type CollectionInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CollectionMetadataUpdated = Event & {
-  __typename?: 'CollectionMetadataUpdated';
   /** The collection the event relates to. */
   collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -4113,7 +3966,6 @@ export type CollectionPublished =
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionRemoveProducts = {
-  __typename?: 'CollectionRemoveProducts';
   /** Collection from which products will be removed. */
   collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4127,7 +3979,6 @@ export type CollectionRemoveProducts = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionReorderProducts = {
-  __typename?: 'CollectionReorderProducts';
   /** Collection from which products are reordered. */
   collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4173,7 +4024,6 @@ export type CollectionSortingInput = {
 };
 
 export type CollectionTranslatableContent = Node & {
-  __typename?: 'CollectionTranslatableContent';
   /**
    * Represents a collection of products.
    * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
@@ -4211,7 +4061,6 @@ export type CollectionTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type CollectionTranslate = {
-  __typename?: 'CollectionTranslate';
   collection?: Maybe<Collection>;
   errors: Array<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4219,7 +4068,6 @@ export type CollectionTranslate = {
 };
 
 export type CollectionTranslation = Node & {
-  __typename?: 'CollectionTranslation';
   /**
    * Translated description of the collection.
    *
@@ -4247,7 +4095,6 @@ export type CollectionTranslation = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionUpdate = {
-  __typename?: 'CollectionUpdate';
   collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   collectionErrors: Array<CollectionError>;
@@ -4262,7 +4109,6 @@ export type CollectionUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CollectionUpdated = Event & {
-  __typename?: 'CollectionUpdated';
   /** The collection the event relates to. */
   collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -4289,7 +4135,6 @@ export type CollectionUpdatedCollectionArgs = {
 
 /** Stores information about a single configuration field. */
 export type ConfigurationItem = {
-  __typename?: 'ConfigurationItem';
   /** Help text for the field. */
   helpText?: Maybe<Scalars['String']['output']>;
   /** Label for the field. */
@@ -4321,7 +4166,6 @@ export type ConfigurationTypeFieldEnum =
 
 /** Confirm user account with token sent by email during registration. */
 export type ConfirmAccount = {
-  __typename?: 'ConfirmAccount';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -4335,7 +4179,6 @@ export type ConfirmAccount = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type ConfirmEmailChange = {
-  __typename?: 'ConfirmEmailChange';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -4597,7 +4440,6 @@ export type CountryCode =
   | 'ZW';
 
 export type CountryDisplay = {
-  __typename?: 'CountryDisplay';
   /** Country code. */
   code: Scalars['String']['output'];
   /** Country name. */
@@ -4630,7 +4472,6 @@ export type CountryRateUpdateInput = {
 
 /** Create JWT token. */
 export type CreateToken = {
-  __typename?: 'CreateToken';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   /** CSRF token required to re-generate access token. */
@@ -4645,7 +4486,6 @@ export type CreateToken = {
 };
 
 export type CreditCard = {
-  __typename?: 'CreditCard';
   /** Card brand. */
   brand: Scalars['String']['output'];
   /** Two-digit number representing the card’s expiration month. */
@@ -4664,7 +4504,6 @@ export type CreditCard = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type CustomerBulkDelete = {
-  __typename?: 'CustomerBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   /** Returns how many objects were affected. */
@@ -4678,7 +4517,6 @@ export type CustomerBulkDelete = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type CustomerCreate = {
-  __typename?: 'CustomerCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -4693,7 +4531,6 @@ export type CustomerCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CustomerCreated = Event & {
-  __typename?: 'CustomerCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -4712,7 +4549,6 @@ export type CustomerCreated = Event & {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type CustomerDelete = {
-  __typename?: 'CustomerDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -4721,7 +4557,6 @@ export type CustomerDelete = {
 
 /** History log of the customer. */
 export type CustomerEvent = Node & {
-  __typename?: 'CustomerEvent';
   /** App that performed the action. */
   app?: Maybe<App>;
   /** Number of objects concerned by the event. */
@@ -4807,7 +4642,6 @@ export type CustomerInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CustomerMetadataUpdated = Event & {
-  __typename?: 'CustomerMetadataUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -4826,7 +4660,6 @@ export type CustomerMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type CustomerUpdate = {
-  __typename?: 'CustomerUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -4841,7 +4674,6 @@ export type CustomerUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CustomerUpdated = Event & {
-  __typename?: 'CustomerUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -4874,7 +4706,6 @@ export type DateTimeRangeInput = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type DeactivateAllUserTokens = {
-  __typename?: 'DeactivateAllUserTokens';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -4882,7 +4713,6 @@ export type DeactivateAllUserTokens = {
 
 /** Delete metadata of an object. To use it, you need to have access to the modified object. */
 export type DeleteMetadata = {
-  __typename?: 'DeleteMetadata';
   errors: Array<MetadataError>;
   item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4891,7 +4721,6 @@ export type DeleteMetadata = {
 
 /** Delete object's private metadata. To use it, you need to be an authenticated staff user or an app and have access to the modified object. */
 export type DeletePrivateMetadata = {
-  __typename?: 'DeletePrivateMetadata';
   errors: Array<MetadataError>;
   item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4908,7 +4737,6 @@ export type DeletePrivateMetadata = {
 export type DeliveryMethod = ShippingMethod | Warehouse;
 
 export type DigitalContent = Node & ObjectWithMetadata & {
-  __typename?: 'DigitalContent';
   automaticFulfillment: Scalars['Boolean']['output'];
   contentFile: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -4982,7 +4810,6 @@ export type DigitalContentPrivateMetafieldsArgs = {
 };
 
 export type DigitalContentCountableConnection = {
-  __typename?: 'DigitalContentCountableConnection';
   edges: Array<DigitalContentCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -4991,7 +4818,6 @@ export type DigitalContentCountableConnection = {
 };
 
 export type DigitalContentCountableEdge = {
-  __typename?: 'DigitalContentCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -5004,7 +4830,6 @@ export type DigitalContentCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentCreate = {
-  __typename?: 'DigitalContentCreate';
   content?: Maybe<DigitalContent>;
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5018,7 +4843,6 @@ export type DigitalContentCreate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentDelete = {
-  __typename?: 'DigitalContentDelete';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -5054,7 +4878,6 @@ export type DigitalContentInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentUpdate = {
-  __typename?: 'DigitalContentUpdate';
   content?: Maybe<DigitalContent>;
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5088,7 +4911,6 @@ export type DigitalContentUploadInput = {
 };
 
 export type DigitalContentUrl = Node & {
-  __typename?: 'DigitalContentUrl';
   content: DigitalContent;
   created: Scalars['DateTime']['output'];
   downloadNum: Scalars['Int']['output'];
@@ -5105,7 +4927,6 @@ export type DigitalContentUrl = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentUrlCreate = {
-  __typename?: 'DigitalContentUrlCreate';
   digitalContentUrl?: Maybe<DigitalContentUrl>;
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5118,7 +4939,6 @@ export type DigitalContentUrlCreateInput = {
 };
 
 export type DiscountError = {
-  __typename?: 'DiscountError';
   /** List of channels IDs which causes the error. */
   channels?: Maybe<Array<Scalars['ID']['output']>>;
   /** The error code. */
@@ -5162,7 +4982,6 @@ export type DistanceUnitsEnum =
 
 /** Represents shop's domain. */
 export type Domain = {
-  __typename?: 'Domain';
   /** The host name of the domain. */
   host: Scalars['String']['output'];
   /** Inform if SSL is enabled. */
@@ -5177,7 +4996,6 @@ export type Domain = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderBulkDelete = {
-  __typename?: 'DraftOrderBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<OrderError>;
@@ -5191,7 +5009,6 @@ export type DraftOrderBulkDelete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderComplete = {
-  __typename?: 'DraftOrderComplete';
   errors: Array<OrderError>;
   /** Completed order. */
   order?: Maybe<Order>;
@@ -5205,7 +5022,6 @@ export type DraftOrderComplete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderCreate = {
-  __typename?: 'DraftOrderCreate';
   errors: Array<OrderError>;
   order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5251,7 +5067,6 @@ export type DraftOrderCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type DraftOrderCreated = Event & {
-  __typename?: 'DraftOrderCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -5270,7 +5085,6 @@ export type DraftOrderCreated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderDelete = {
-  __typename?: 'DraftOrderDelete';
   errors: Array<OrderError>;
   order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5285,7 +5099,6 @@ export type DraftOrderDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type DraftOrderDeleted = Event & {
-  __typename?: 'DraftOrderDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -5333,7 +5146,6 @@ export type DraftOrderInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderLinesBulkDelete = {
-  __typename?: 'DraftOrderLinesBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<OrderError>;
@@ -5347,7 +5159,6 @@ export type DraftOrderLinesBulkDelete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderUpdate = {
-  __typename?: 'DraftOrderUpdate';
   errors: Array<OrderError>;
   order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5362,7 +5173,6 @@ export type DraftOrderUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type DraftOrderUpdated = Event & {
-  __typename?: 'DraftOrderUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -5388,7 +5198,6 @@ export type Event = {
 
 /** Event delivery. */
 export type EventDelivery = Node & {
-  __typename?: 'EventDelivery';
   /** Event delivery attempts. */
   attempts?: Maybe<EventDeliveryAttemptCountableConnection>;
   createdAt: Scalars['DateTime']['output'];
@@ -5413,7 +5222,6 @@ export type EventDeliveryAttemptsArgs = {
 
 /** Event delivery attempts. */
 export type EventDeliveryAttempt = Node & {
-  __typename?: 'EventDeliveryAttempt';
   /** Event delivery creation date and time. */
   createdAt: Scalars['DateTime']['output'];
   /** Delivery attempt duration. */
@@ -5434,7 +5242,6 @@ export type EventDeliveryAttempt = Node & {
 };
 
 export type EventDeliveryAttemptCountableConnection = {
-  __typename?: 'EventDeliveryAttemptCountableConnection';
   edges: Array<EventDeliveryAttemptCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -5443,7 +5250,6 @@ export type EventDeliveryAttemptCountableConnection = {
 };
 
 export type EventDeliveryAttemptCountableEdge = {
-  __typename?: 'EventDeliveryAttemptCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -5462,7 +5268,6 @@ export type EventDeliveryAttemptSortingInput = {
 };
 
 export type EventDeliveryCountableConnection = {
-  __typename?: 'EventDeliveryCountableConnection';
   edges: Array<EventDeliveryCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -5471,7 +5276,6 @@ export type EventDeliveryCountableConnection = {
 };
 
 export type EventDeliveryCountableEdge = {
-  __typename?: 'EventDeliveryCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -5489,7 +5293,6 @@ export type EventDeliveryFilterInput = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type EventDeliveryRetry = {
-  __typename?: 'EventDeliveryRetry';
   /** Event delivery. */
   delivery?: Maybe<EventDelivery>;
   errors: Array<WebhookError>;
@@ -5512,7 +5315,6 @@ export type EventDeliveryStatusEnum =
   | 'SUCCESS';
 
 export type ExportError = {
-  __typename?: 'ExportError';
   /** The error code. */
   code: ExportErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -5530,7 +5332,6 @@ export type ExportErrorCode =
 
 /** History log of export file. */
 export type ExportEvent = Node & {
-  __typename?: 'ExportEvent';
   /** App which performed the action. Requires one of the following permissions: OWNER, MANAGE_APPS. */
   app?: Maybe<App>;
   /** Date when event happened at in ISO 8601 format. */
@@ -5556,7 +5357,6 @@ export type ExportEventsEnum =
 
 /** Represents a job data of exported file. */
 export type ExportFile = Job & Node & {
-  __typename?: 'ExportFile';
   app?: Maybe<App>;
   /** Created date time of job in ISO 8601 format. */
   createdAt: Scalars['DateTime']['output'];
@@ -5575,7 +5375,6 @@ export type ExportFile = Job & Node & {
 };
 
 export type ExportFileCountableConnection = {
-  __typename?: 'ExportFileCountableConnection';
   edges: Array<ExportFileCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -5584,7 +5383,6 @@ export type ExportFileCountableConnection = {
 };
 
 export type ExportFileCountableEdge = {
-  __typename?: 'ExportFileCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -5622,7 +5420,6 @@ export type ExportFileSortingInput = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type ExportGiftCards = {
-  __typename?: 'ExportGiftCards';
   errors: Array<ExportError>;
   /** The newly created export file job which is responsible for export data. */
   exportFile?: Maybe<ExportFile>;
@@ -5656,7 +5453,6 @@ export type ExportInfoInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ExportProducts = {
-  __typename?: 'ExportProducts';
   errors: Array<ExportError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   exportErrors: Array<ExportError>;
@@ -5686,7 +5482,6 @@ export type ExportScope =
   | 'IDS';
 
 export type ExternalAuthentication = {
-  __typename?: 'ExternalAuthentication';
   /** ID of external authentication plugin. */
   id: Scalars['String']['output'];
   /** Name of external authentication plugin. */
@@ -5695,7 +5490,6 @@ export type ExternalAuthentication = {
 
 /** Prepare external authentication url for user by custom plugin. */
 export type ExternalAuthenticationUrl = {
-  __typename?: 'ExternalAuthenticationUrl';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   /** The data returned by authentication plugin. */
@@ -5705,7 +5499,6 @@ export type ExternalAuthenticationUrl = {
 
 /** Logout user by custom plugin. */
 export type ExternalLogout = {
-  __typename?: 'ExternalLogout';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -5714,7 +5507,6 @@ export type ExternalLogout = {
 };
 
 export type ExternalNotificationError = {
-  __typename?: 'ExternalNotificationError';
   /** The error code. */
   code: ExternalNotificationErrorCodes;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -5736,7 +5528,6 @@ export type ExternalNotificationErrorCodes =
  * Added in Saleor 3.1.
  */
 export type ExternalNotificationTrigger = {
-  __typename?: 'ExternalNotificationTrigger';
   errors: Array<ExternalNotificationError>;
 };
 
@@ -5751,7 +5542,6 @@ export type ExternalNotificationTriggerInput = {
 
 /** Obtain external access tokens for user by custom plugin. */
 export type ExternalObtainAccessTokens = {
-  __typename?: 'ExternalObtainAccessTokens';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   /** CSRF token required to re-generate external access token. */
@@ -5767,7 +5557,6 @@ export type ExternalObtainAccessTokens = {
 
 /** Refresh user's access by custom plugin. */
 export type ExternalRefresh = {
-  __typename?: 'ExternalRefresh';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   /** CSRF token required to re-generate external access token. */
@@ -5783,7 +5572,6 @@ export type ExternalRefresh = {
 
 /** Verify external authentication data by plugin. */
 export type ExternalVerify = {
-  __typename?: 'ExternalVerify';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -5796,7 +5584,6 @@ export type ExternalVerify = {
 };
 
 export type File = {
-  __typename?: 'File';
   /** Content type of the file. */
   contentType?: Maybe<Scalars['String']['output']>;
   /** The URL of the file. */
@@ -5814,7 +5601,6 @@ export type FileTypesEnum =
  * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
  */
 export type FileUpload = {
-  __typename?: 'FileUpload';
   errors: Array<UploadError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   uploadErrors: Array<UploadError>;
@@ -5823,7 +5609,6 @@ export type FileUpload = {
 
 /** Represents order fulfillment. */
 export type Fulfillment = Node & ObjectWithMetadata & {
-  __typename?: 'Fulfillment';
   created: Scalars['DateTime']['output'];
   fulfillmentOrder: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
@@ -5909,7 +5694,6 @@ export type FulfillmentPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentApprove = {
-  __typename?: 'FulfillmentApprove';
   errors: Array<OrderError>;
   /** An approved fulfillment. */
   fulfillment?: Maybe<Fulfillment>;
@@ -5927,7 +5711,6 @@ export type FulfillmentApprove = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type FulfillmentApproved = Event & {
-  __typename?: 'FulfillmentApproved';
   /** The fulfillment the event relates to. */
   fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -5948,7 +5731,6 @@ export type FulfillmentApproved = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentCancel = {
-  __typename?: 'FulfillmentCancel';
   errors: Array<OrderError>;
   /** A canceled fulfillment. */
   fulfillment?: Maybe<Fulfillment>;
@@ -5971,7 +5753,6 @@ export type FulfillmentCancelInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type FulfillmentCanceled = Event & {
-  __typename?: 'FulfillmentCanceled';
   /** The fulfillment the event relates to. */
   fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -5994,7 +5775,6 @@ export type FulfillmentCanceled = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type FulfillmentCreated = Event & {
-  __typename?: 'FulfillmentCreated';
   /** The fulfillment the event relates to. */
   fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -6011,7 +5791,6 @@ export type FulfillmentCreated = Event & {
 
 /** Represents line of the fulfillment. */
 export type FulfillmentLine = Node & {
-  __typename?: 'FulfillmentLine';
   id: Scalars['ID']['output'];
   orderLine?: Maybe<OrderLine>;
   quantity: Scalars['Int']['output'];
@@ -6025,7 +5804,6 @@ export type FulfillmentLine = Node & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type FulfillmentMetadataUpdated = Event & {
-  __typename?: 'FulfillmentMetadataUpdated';
   /** The fulfillment the event relates to. */
   fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -6046,7 +5824,6 @@ export type FulfillmentMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentRefundProducts = {
-  __typename?: 'FulfillmentRefundProducts';
   errors: Array<OrderError>;
   /** A refunded fulfillment. */
   fulfillment?: Maybe<Fulfillment>;
@@ -6062,7 +5839,6 @@ export type FulfillmentRefundProducts = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentReturnProducts = {
-  __typename?: 'FulfillmentReturnProducts';
   errors: Array<OrderError>;
   /** Order which fulfillment was returned. */
   order?: Maybe<Order>;
@@ -6092,7 +5868,6 @@ export type FulfillmentStatus =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentUpdateTracking = {
-  __typename?: 'FulfillmentUpdateTracking';
   errors: Array<OrderError>;
   /** A fulfillment with updated tracking. */
   fulfillment?: Maybe<Fulfillment>;
@@ -6111,7 +5886,6 @@ export type FulfillmentUpdateTrackingInput = {
 
 /** Payment gateway client configuration key and value pair. */
 export type GatewayConfigLine = {
-  __typename?: 'GatewayConfigLine';
   /** Gateway config key. */
   field: Scalars['String']['output'];
   /** Gateway config value for key. */
@@ -6120,7 +5894,6 @@ export type GatewayConfigLine = {
 
 /** A gift card is a prepaid electronic payment card accepted in stores. They can be used during checkout by providing a valid gift card codes. */
 export type GiftCard = Node & ObjectWithMetadata & {
-  __typename?: 'GiftCard';
   /**
    * App which created the gift card.
    *
@@ -6307,7 +6080,6 @@ export type GiftCardPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardActivate = {
-  __typename?: 'GiftCardActivate';
   errors: Array<GiftCardError>;
   /** Activated gift card. */
   giftCard?: Maybe<GiftCard>;
@@ -6325,7 +6097,6 @@ export type GiftCardActivate = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardAddNote = {
-  __typename?: 'GiftCardAddNote';
   errors: Array<GiftCardError>;
   /** Gift card note created. */
   event?: Maybe<GiftCardEvent>;
@@ -6348,7 +6119,6 @@ export type GiftCardAddNoteInput = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardBulkActivate = {
-  __typename?: 'GiftCardBulkActivate';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<GiftCardError>;
@@ -6364,7 +6134,6 @@ export type GiftCardBulkActivate = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardBulkCreate = {
-  __typename?: 'GiftCardBulkCreate';
   /** Returns how many objects were created. */
   count: Scalars['Int']['output'];
   errors: Array<GiftCardError>;
@@ -6395,7 +6164,6 @@ export type GiftCardBulkCreateInput = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardBulkDeactivate = {
-  __typename?: 'GiftCardBulkDeactivate';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<GiftCardError>;
@@ -6411,14 +6179,12 @@ export type GiftCardBulkDeactivate = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardBulkDelete = {
-  __typename?: 'GiftCardBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<GiftCardError>;
 };
 
 export type GiftCardCountableConnection = {
-  __typename?: 'GiftCardCountableConnection';
   edges: Array<GiftCardCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -6427,7 +6193,6 @@ export type GiftCardCountableConnection = {
 };
 
 export type GiftCardCountableEdge = {
-  __typename?: 'GiftCardCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -6440,7 +6205,6 @@ export type GiftCardCountableEdge = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardCreate = {
-  __typename?: 'GiftCardCreate';
   errors: Array<GiftCardError>;
   giftCard?: Maybe<GiftCard>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6520,7 +6284,6 @@ export type GiftCardCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardCreated = Event & {
-  __typename?: 'GiftCardCreated';
   /** The gift card the event relates to. */
   giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6539,7 +6302,6 @@ export type GiftCardCreated = Event & {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardDeactivate = {
-  __typename?: 'GiftCardDeactivate';
   errors: Array<GiftCardError>;
   /** Deactivated gift card. */
   giftCard?: Maybe<GiftCard>;
@@ -6557,7 +6319,6 @@ export type GiftCardDeactivate = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardDelete = {
-  __typename?: 'GiftCardDelete';
   errors: Array<GiftCardError>;
   giftCard?: Maybe<GiftCard>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6572,7 +6333,6 @@ export type GiftCardDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardDeleted = Event & {
-  __typename?: 'GiftCardDeleted';
   /** The gift card the event relates to. */
   giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6586,7 +6346,6 @@ export type GiftCardDeleted = Event & {
 };
 
 export type GiftCardError = {
-  __typename?: 'GiftCardError';
   /** The error code. */
   code: GiftCardErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -6616,7 +6375,6 @@ export type GiftCardErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardEvent = Node & {
-  __typename?: 'GiftCardEvent';
   /** App that performed the action. Requires one of the following permissions: MANAGE_APPS, OWNER. */
   app?: Maybe<App>;
   /** The gift card balance. */
@@ -6647,7 +6405,6 @@ export type GiftCardEvent = Node & {
 };
 
 export type GiftCardEventBalance = {
-  __typename?: 'GiftCardEventBalance';
   /** Current balance of the gift card. */
   currentBalance: Money;
   /** Initial balance of the gift card. */
@@ -6699,7 +6456,6 @@ export type GiftCardFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardMetadataUpdated = Event & {
-  __typename?: 'GiftCardMetadataUpdated';
   /** The gift card the event relates to. */
   giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6722,7 +6478,6 @@ export type GiftCardMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardResend = {
-  __typename?: 'GiftCardResend';
   errors: Array<GiftCardError>;
   /** Gift card which has been sent. */
   giftCard?: Maybe<GiftCard>;
@@ -6739,7 +6494,6 @@ export type GiftCardResendInput = {
 
 /** Gift card related settings from site settings. */
 export type GiftCardSettings = {
-  __typename?: 'GiftCardSettings';
   /** The gift card expiry period settings. */
   expiryPeriod?: Maybe<TimePeriod>;
   /** The gift card expiry type settings. */
@@ -6747,7 +6501,6 @@ export type GiftCardSettings = {
 };
 
 export type GiftCardSettingsError = {
-  __typename?: 'GiftCardSettingsError';
   /** The error code. */
   code: GiftCardSettingsErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -6773,7 +6526,6 @@ export type GiftCardSettingsExpiryTypeEnum =
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardSettingsUpdate = {
-  __typename?: 'GiftCardSettingsUpdate';
   errors: Array<GiftCardSettingsError>;
   /** Gift card settings. */
   giftCardSettings?: Maybe<GiftCardSettings>;
@@ -6815,7 +6567,6 @@ export type GiftCardSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardStatusChanged = Event & {
-  __typename?: 'GiftCardStatusChanged';
   /** The gift card the event relates to. */
   giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6836,13 +6587,11 @@ export type GiftCardStatusChanged = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardTag = Node & {
-  __typename?: 'GiftCardTag';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
 };
 
 export type GiftCardTagCountableConnection = {
-  __typename?: 'GiftCardTagCountableConnection';
   edges: Array<GiftCardTagCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -6851,7 +6600,6 @@ export type GiftCardTagCountableConnection = {
 };
 
 export type GiftCardTagCountableEdge = {
-  __typename?: 'GiftCardTagCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -6868,7 +6616,6 @@ export type GiftCardTagFilterInput = {
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardUpdate = {
-  __typename?: 'GiftCardUpdate';
   errors: Array<GiftCardError>;
   giftCard?: Maybe<GiftCard>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6930,7 +6677,6 @@ export type GiftCardUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardUpdated = Event & {
-  __typename?: 'GiftCardUpdated';
   /** The gift card the event relates to. */
   giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -6945,7 +6691,6 @@ export type GiftCardUpdated = Event & {
 
 /** Represents permission group data. */
 export type Group = Node & {
-  __typename?: 'Group';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   /** List of group permissions */
@@ -6961,7 +6706,6 @@ export type Group = Node & {
 };
 
 export type GroupCountableConnection = {
-  __typename?: 'GroupCountableConnection';
   edges: Array<GroupCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -6970,7 +6714,6 @@ export type GroupCountableConnection = {
 };
 
 export type GroupCountableEdge = {
-  __typename?: 'GroupCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -6979,7 +6722,6 @@ export type GroupCountableEdge = {
 
 /** Represents an image. */
 export type Image = {
-  __typename?: 'Image';
   /** Alt text for an image. */
   alt?: Maybe<Scalars['String']['output']>;
   /** The URL of the image. */
@@ -6995,7 +6737,6 @@ export type IntRangeInput = {
 
 /** Represents an Invoice. */
 export type Invoice = Job & Node & ObjectWithMetadata & {
-  __typename?: 'Invoice';
   createdAt: Scalars['DateTime']['output'];
   externalUrl?: Maybe<Scalars['String']['output']>;
   /** The ID of the object. */
@@ -7085,7 +6826,6 @@ export type InvoicePrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceCreate = {
-  __typename?: 'InvoiceCreate';
   errors: Array<InvoiceError>;
   invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7105,7 +6845,6 @@ export type InvoiceCreateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceDelete = {
-  __typename?: 'InvoiceDelete';
   errors: Array<InvoiceError>;
   invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7120,7 +6859,6 @@ export type InvoiceDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type InvoiceDeleted = Event & {
-  __typename?: 'InvoiceDeleted';
   /** The invoice the event relates to. */
   invoice?: Maybe<Invoice>;
   /** Time of the event. */
@@ -7140,7 +6878,6 @@ export type InvoiceDeleted = Event & {
 };
 
 export type InvoiceError = {
-  __typename?: 'InvoiceError';
   /** The error code. */
   code: InvoiceErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -7166,7 +6903,6 @@ export type InvoiceErrorCode =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceRequest = {
-  __typename?: 'InvoiceRequest';
   errors: Array<InvoiceError>;
   invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7181,7 +6917,6 @@ export type InvoiceRequest = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceRequestDelete = {
-  __typename?: 'InvoiceRequestDelete';
   errors: Array<InvoiceError>;
   invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7196,7 +6931,6 @@ export type InvoiceRequestDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type InvoiceRequested = Event & {
-  __typename?: 'InvoiceRequested';
   /** The invoice the event relates to. */
   invoice?: Maybe<Invoice>;
   /** Time of the event. */
@@ -7221,7 +6955,6 @@ export type InvoiceRequested = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceSendNotification = {
-  __typename?: 'InvoiceSendNotification';
   errors: Array<InvoiceError>;
   invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7236,7 +6969,6 @@ export type InvoiceSendNotification = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type InvoiceSent = Event & {
-  __typename?: 'InvoiceSent';
   /** The invoice the event relates to. */
   invoice?: Maybe<Invoice>;
   /** Time of the event. */
@@ -7261,7 +6993,6 @@ export type InvoiceSent = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceUpdate = {
-  __typename?: 'InvoiceUpdate';
   errors: Array<InvoiceError>;
   invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8071,7 +7802,6 @@ export type LanguageCodeEnum =
   | 'ZU_ZA';
 
 export type LanguageDisplay = {
-  __typename?: 'LanguageDisplay';
   /** ISO 639 representation of the language name. */
   code: LanguageCodeEnum;
   /** Full name of the language. */
@@ -8079,7 +7809,6 @@ export type LanguageDisplay = {
 };
 
 export type LimitInfo = {
-  __typename?: 'LimitInfo';
   /** Defines the allowed maximum resource usage, null means unlimited. */
   allowedUsage: Limits;
   /** Defines the current resource usage. */
@@ -8087,7 +7816,6 @@ export type LimitInfo = {
 };
 
 export type Limits = {
-  __typename?: 'Limits';
   channels?: Maybe<Scalars['Int']['output']>;
   orders?: Maybe<Scalars['Int']['output']>;
   productVariants?: Maybe<Scalars['Int']['output']>;
@@ -8097,7 +7825,6 @@ export type Limits = {
 
 /** The manifest definition. */
 export type Manifest = {
-  __typename?: 'Manifest';
   about?: Maybe<Scalars['String']['output']>;
   appUrl?: Maybe<Scalars['String']['output']>;
   /**
@@ -8138,7 +7865,6 @@ export type Manifest = {
 };
 
 export type Margin = {
-  __typename?: 'Margin';
   start?: Maybe<Scalars['Int']['output']>;
   stop?: Maybe<Scalars['Int']['output']>;
 };
@@ -8189,7 +7915,6 @@ export type MediaSortingInput = {
 
 /** Represents a single menu - an object that is used to help navigate through the store. */
 export type Menu = Node & ObjectWithMetadata & {
-  __typename?: 'Menu';
   id: Scalars['ID']['output'];
   items?: Maybe<Array<MenuItem>>;
   /** List of public metadata items. Can be accessed without permissions. */
@@ -8266,7 +7991,6 @@ export type MenuPrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuBulkDelete = {
-  __typename?: 'MenuBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<MenuError>;
@@ -8275,7 +7999,6 @@ export type MenuBulkDelete = {
 };
 
 export type MenuCountableConnection = {
-  __typename?: 'MenuCountableConnection';
   edges: Array<MenuCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -8284,7 +8007,6 @@ export type MenuCountableConnection = {
 };
 
 export type MenuCountableEdge = {
-  __typename?: 'MenuCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -8297,7 +8019,6 @@ export type MenuCountableEdge = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuCreate = {
-  __typename?: 'MenuCreate';
   errors: Array<MenuError>;
   menu?: Maybe<Menu>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8321,7 +8042,6 @@ export type MenuCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuCreated = Event & {
-  __typename?: 'MenuCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8352,7 +8072,6 @@ export type MenuCreatedMenuArgs = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuDelete = {
-  __typename?: 'MenuDelete';
   errors: Array<MenuError>;
   menu?: Maybe<Menu>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8367,7 +8086,6 @@ export type MenuDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuDeleted = Event & {
-  __typename?: 'MenuDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8393,7 +8111,6 @@ export type MenuDeletedMenuArgs = {
 };
 
 export type MenuError = {
-  __typename?: 'MenuError';
   /** The error code. */
   code: MenuErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -8430,7 +8147,6 @@ export type MenuInput = {
 
 /** Represents a single item of the related menu. Can store categories, collection or pages. */
 export type MenuItem = Node & ObjectWithMetadata & {
-  __typename?: 'MenuItem';
   category?: Maybe<Category>;
   children?: Maybe<Array<MenuItem>>;
   /** A collection associated with this menu item. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
@@ -8524,7 +8240,6 @@ export type MenuItemTranslationArgs = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemBulkDelete = {
-  __typename?: 'MenuItemBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<MenuError>;
@@ -8533,7 +8248,6 @@ export type MenuItemBulkDelete = {
 };
 
 export type MenuItemCountableConnection = {
-  __typename?: 'MenuItemCountableConnection';
   edges: Array<MenuItemCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -8542,7 +8256,6 @@ export type MenuItemCountableConnection = {
 };
 
 export type MenuItemCountableEdge = {
-  __typename?: 'MenuItemCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -8555,7 +8268,6 @@ export type MenuItemCountableEdge = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemCreate = {
-  __typename?: 'MenuItemCreate';
   errors: Array<MenuError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   menuErrors: Array<MenuError>;
@@ -8587,7 +8299,6 @@ export type MenuItemCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuItemCreated = Event & {
-  __typename?: 'MenuItemCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8618,7 +8329,6 @@ export type MenuItemCreatedMenuItemArgs = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemDelete = {
-  __typename?: 'MenuItemDelete';
   errors: Array<MenuError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   menuErrors: Array<MenuError>;
@@ -8633,7 +8343,6 @@ export type MenuItemDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuItemDeleted = Event & {
-  __typename?: 'MenuItemDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8682,7 +8391,6 @@ export type MenuItemInput = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemMove = {
-  __typename?: 'MenuItemMove';
   errors: Array<MenuError>;
   /** Assigned menu to move within. */
   menu?: Maybe<Menu>;
@@ -8707,7 +8415,6 @@ export type MenuItemSortingInput = {
 };
 
 export type MenuItemTranslatableContent = Node & {
-  __typename?: 'MenuItemTranslatableContent';
   id: Scalars['ID']['output'];
   /**
    * Represents a single item of the related menu. Can store categories, collection or pages.
@@ -8730,7 +8437,6 @@ export type MenuItemTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type MenuItemTranslate = {
-  __typename?: 'MenuItemTranslate';
   errors: Array<TranslationError>;
   menuItem?: Maybe<MenuItem>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8738,7 +8444,6 @@ export type MenuItemTranslate = {
 };
 
 export type MenuItemTranslation = Node & {
-  __typename?: 'MenuItemTranslation';
   id: Scalars['ID']['output'];
   /** Translation language. */
   language: LanguageDisplay;
@@ -8751,7 +8456,6 @@ export type MenuItemTranslation = Node & {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuItemUpdate = {
-  __typename?: 'MenuItemUpdate';
   errors: Array<MenuError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   menuErrors: Array<MenuError>;
@@ -8766,7 +8470,6 @@ export type MenuItemUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuItemUpdated = Event & {
-  __typename?: 'MenuItemUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8814,7 +8517,6 @@ export type MenuSortingInput = {
  * Requires one of the following permissions: MANAGE_MENUS.
  */
 export type MenuUpdate = {
-  __typename?: 'MenuUpdate';
   errors: Array<MenuError>;
   menu?: Maybe<Menu>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8829,7 +8531,6 @@ export type MenuUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type MenuUpdated = Event & {
-  __typename?: 'MenuUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -8855,7 +8556,6 @@ export type MenuUpdatedMenuArgs = {
 };
 
 export type MetadataError = {
-  __typename?: 'MetadataError';
   /** The error code. */
   code: MetadataErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -8887,7 +8587,6 @@ export type MetadataInput = {
 };
 
 export type MetadataItem = {
-  __typename?: 'MetadataItem';
   /** Key of a metadata item. */
   key: Scalars['String']['output'];
   /** Value of a metadata item. */
@@ -8896,7 +8595,6 @@ export type MetadataItem = {
 
 /** Represents amount of money in specific currency. */
 export type Money = {
-  __typename?: 'Money';
   /** Amount of money. */
   amount: Scalars['Float']['output'];
   /** Currency code. */
@@ -8912,7 +8610,6 @@ export type MoneyInput = {
 
 /** Represents a range of amounts of money. */
 export type MoneyRange = {
-  __typename?: 'MoneyRange';
   /** Lower bound of a price range. */
   start?: Maybe<Money>;
   /** Upper bound of a price range. */
@@ -8927,7 +8624,6 @@ export type MoveProductInput = {
 };
 
 export type Mutation = {
-  __typename?: 'Mutation';
   /**
    * Create a new address for the customer.
    *
@@ -12315,7 +12011,6 @@ export type ObjectWithMetadataPrivateMetafieldsArgs = {
 
 /** Represents an order in the shop. */
 export type Order = Node & ObjectWithMetadata & {
-  __typename?: 'Order';
   /** List of actions that can be performed in the current state of an order. */
   actions: Array<OrderAction>;
   /**
@@ -12603,7 +12298,6 @@ export type OrderAction =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderAddNote = {
-  __typename?: 'OrderAddNote';
   errors: Array<OrderError>;
   /** Order note created. */
   event?: Maybe<OrderEvent>;
@@ -12644,7 +12338,6 @@ export type OrderAuthorizeStatusEnum =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderBulkCancel = {
-  __typename?: 'OrderBulkCancel';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<OrderError>;
@@ -12658,7 +12351,6 @@ export type OrderBulkCancel = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderCancel = {
-  __typename?: 'OrderCancel';
   errors: Array<OrderError>;
   /** Canceled order. */
   order?: Maybe<Order>;
@@ -12674,7 +12366,6 @@ export type OrderCancel = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderCancelled = Event & {
-  __typename?: 'OrderCancelled';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -12693,7 +12384,6 @@ export type OrderCancelled = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderCapture = {
-  __typename?: 'OrderCapture';
   errors: Array<OrderError>;
   /** Captured order. */
   order?: Maybe<Order>;
@@ -12726,7 +12416,6 @@ export type OrderChargeStatusEnum =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderConfirm = {
-  __typename?: 'OrderConfirm';
   errors: Array<OrderError>;
   order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -12741,7 +12430,6 @@ export type OrderConfirm = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderConfirmed = Event & {
-  __typename?: 'OrderConfirmed';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -12755,7 +12443,6 @@ export type OrderConfirmed = Event & {
 };
 
 export type OrderCountableConnection = {
-  __typename?: 'OrderCountableConnection';
   edges: Array<OrderCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -12764,7 +12451,6 @@ export type OrderCountableConnection = {
 };
 
 export type OrderCountableEdge = {
-  __typename?: 'OrderCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -12779,14 +12465,12 @@ export type OrderCountableEdge = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderCreateFromCheckout = {
-  __typename?: 'OrderCreateFromCheckout';
   errors: Array<OrderCreateFromCheckoutError>;
   /** Placed order. */
   order?: Maybe<Order>;
 };
 
 export type OrderCreateFromCheckoutError = {
-  __typename?: 'OrderCreateFromCheckoutError';
   /** The error code. */
   code: OrderCreateFromCheckoutErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -12824,7 +12508,6 @@ export type OrderCreateFromCheckoutErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderCreated = Event & {
-  __typename?: 'OrderCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -12845,7 +12528,6 @@ export type OrderDirection =
 
 /** Contains all details related to the applied discount to the order. */
 export type OrderDiscount = Node & {
-  __typename?: 'OrderDiscount';
   /** Returns amount of discount. */
   amount: Money;
   id: Scalars['ID']['output'];
@@ -12870,7 +12552,6 @@ export type OrderDiscount = Node & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderDiscountAdd = {
-  __typename?: 'OrderDiscountAdd';
   errors: Array<OrderError>;
   /** Order which has been discounted. */
   order?: Maybe<Order>;
@@ -12893,7 +12574,6 @@ export type OrderDiscountCommonInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderDiscountDelete = {
-  __typename?: 'OrderDiscountDelete';
   errors: Array<OrderError>;
   /** Order which has removed discount. */
   order?: Maybe<Order>;
@@ -12912,7 +12592,6 @@ export type OrderDiscountType =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderDiscountUpdate = {
-  __typename?: 'OrderDiscountUpdate';
   errors: Array<OrderError>;
   /** Order which has been discounted. */
   order?: Maybe<Order>;
@@ -12929,7 +12608,6 @@ export type OrderDraftFilterInput = {
 };
 
 export type OrderError = {
-  __typename?: 'OrderError';
   /** A type of address that causes the error. */
   addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -12983,7 +12661,6 @@ export type OrderErrorCode =
 
 /** History log of the order. */
 export type OrderEvent = Node & {
-  __typename?: 'OrderEvent';
   /** Amount of money. */
   amount?: Maybe<Scalars['Float']['output']>;
   /** App that performed the action. Requires of of the following permissions: MANAGE_APPS, MANAGE_ORDERS, OWNER. */
@@ -13036,7 +12713,6 @@ export type OrderEvent = Node & {
 };
 
 export type OrderEventCountableConnection = {
-  __typename?: 'OrderEventCountableConnection';
   edges: Array<OrderEventCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -13045,7 +12721,6 @@ export type OrderEventCountableConnection = {
 };
 
 export type OrderEventCountableEdge = {
-  __typename?: 'OrderEventCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -13053,7 +12728,6 @@ export type OrderEventCountableEdge = {
 };
 
 export type OrderEventDiscountObject = {
-  __typename?: 'OrderEventDiscountObject';
   /** Returns amount of discount. */
   amount?: Maybe<Money>;
   /** Returns amount of discount. */
@@ -13071,7 +12745,6 @@ export type OrderEventDiscountObject = {
 };
 
 export type OrderEventOrderLineObject = {
-  __typename?: 'OrderEventOrderLineObject';
   /** The discount applied to the order line. */
   discount?: Maybe<OrderEventDiscountObject>;
   /** The variant name. */
@@ -13170,7 +12843,6 @@ export type OrderFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderFilterShippingMethods = Event & {
-  __typename?: 'OrderFilterShippingMethods';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13197,7 +12869,6 @@ export type OrderFilterShippingMethods = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderFulfill = {
-  __typename?: 'OrderFulfill';
   errors: Array<OrderError>;
   /** List of created fulfillments. */
   fulfillments?: Maybe<Array<Fulfillment>>;
@@ -13244,7 +12915,6 @@ export type OrderFulfillStockInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderFulfilled = Event & {
-  __typename?: 'OrderFulfilled';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13265,7 +12935,6 @@ export type OrderFulfilled = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderFullyPaid = Event & {
-  __typename?: 'OrderFullyPaid';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13280,7 +12949,6 @@ export type OrderFullyPaid = Event & {
 
 /** Represents order line of particular order. */
 export type OrderLine = Node & ObjectWithMetadata & {
-  __typename?: 'OrderLine';
   /**
    * List of allocations across warehouses.
    *
@@ -13451,7 +13119,6 @@ export type OrderLineCreateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineDelete = {
-  __typename?: 'OrderLineDelete';
   errors: Array<OrderError>;
   /** A related order. */
   order?: Maybe<Order>;
@@ -13467,7 +13134,6 @@ export type OrderLineDelete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineDiscountRemove = {
-  __typename?: 'OrderLineDiscountRemove';
   errors: Array<OrderError>;
   /** Order which is related to line which has removed discount. */
   order?: Maybe<Order>;
@@ -13483,7 +13149,6 @@ export type OrderLineDiscountRemove = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineDiscountUpdate = {
-  __typename?: 'OrderLineDiscountUpdate';
   errors: Array<OrderError>;
   /** Order which is related to the discounted line. */
   order?: Maybe<Order>;
@@ -13504,7 +13169,6 @@ export type OrderLineInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineUpdate = {
-  __typename?: 'OrderLineUpdate';
   errors: Array<OrderError>;
   /** Related order. */
   order?: Maybe<Order>;
@@ -13519,7 +13183,6 @@ export type OrderLineUpdate = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLinesCreate = {
-  __typename?: 'OrderLinesCreate';
   errors: Array<OrderError>;
   /** Related order. */
   order?: Maybe<Order>;
@@ -13535,7 +13198,6 @@ export type OrderLinesCreate = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderMarkAsPaid = {
-  __typename?: 'OrderMarkAsPaid';
   errors: Array<OrderError>;
   /** Order marked as paid. */
   order?: Maybe<Order>;
@@ -13551,7 +13213,6 @@ export type OrderMarkAsPaid = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderMetadataUpdated = Event & {
-  __typename?: 'OrderMetadataUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13576,7 +13237,6 @@ export type OrderOriginEnum =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderRefund = {
-  __typename?: 'OrderRefund';
   errors: Array<OrderError>;
   /** A refunded order. */
   order?: Maybe<Order>;
@@ -13642,13 +13302,11 @@ export type OrderReturnProductsInput = {
 
 /** Order related settings from site settings. */
 export type OrderSettings = {
-  __typename?: 'OrderSettings';
   automaticallyConfirmAllNewOrders: Scalars['Boolean']['output'];
   automaticallyFulfillNonShippableGiftCard: Scalars['Boolean']['output'];
 };
 
 export type OrderSettingsError = {
-  __typename?: 'OrderSettingsError';
   /** The error code. */
   code: OrderSettingsErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -13667,7 +13325,6 @@ export type OrderSettingsErrorCode =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderSettingsUpdate = {
-  __typename?: 'OrderSettingsUpdate';
   errors: Array<OrderSettingsError>;
   /** Order settings. */
   orderSettings?: Maybe<OrderSettings>;
@@ -13741,7 +13398,6 @@ export type OrderStatusFilter =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderUpdate = {
-  __typename?: 'OrderUpdate';
   errors: Array<OrderError>;
   order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -13769,7 +13425,6 @@ export type OrderUpdateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderUpdateShipping = {
-  __typename?: 'OrderUpdateShipping';
   errors: Array<OrderError>;
   /** Order with updated shipping method. */
   order?: Maybe<Order>;
@@ -13790,7 +13445,6 @@ export type OrderUpdateShippingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderUpdated = Event & {
-  __typename?: 'OrderUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -13809,7 +13463,6 @@ export type OrderUpdated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderVoid = {
-  __typename?: 'OrderVoid';
   errors: Array<OrderError>;
   /** A voided order. */
   order?: Maybe<Order>;
@@ -13819,7 +13472,6 @@ export type OrderVoid = {
 
 /** A static page that can be manually added by a shop operator through the dashboard. */
 export type Page = Node & ObjectWithMetadata & {
-  __typename?: 'Page';
   /** List of attributes assigned to this product. */
   attributes: Array<SelectedAttribute>;
   /**
@@ -13931,7 +13583,6 @@ export type PageTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageAttributeAssign = {
-  __typename?: 'PageAttributeAssign';
   errors: Array<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   pageErrors: Array<PageError>;
@@ -13945,7 +13596,6 @@ export type PageAttributeAssign = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageAttributeUnassign = {
-  __typename?: 'PageAttributeUnassign';
   errors: Array<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   pageErrors: Array<PageError>;
@@ -13959,7 +13609,6 @@ export type PageAttributeUnassign = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageBulkDelete = {
-  __typename?: 'PageBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<PageError>;
@@ -13973,7 +13622,6 @@ export type PageBulkDelete = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageBulkPublish = {
-  __typename?: 'PageBulkPublish';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<PageError>;
@@ -13982,7 +13630,6 @@ export type PageBulkPublish = {
 };
 
 export type PageCountableConnection = {
-  __typename?: 'PageCountableConnection';
   edges: Array<PageCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -13991,7 +13638,6 @@ export type PageCountableConnection = {
 };
 
 export type PageCountableEdge = {
-  __typename?: 'PageCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -14004,7 +13650,6 @@ export type PageCountableEdge = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageCreate = {
-  __typename?: 'PageCreate';
   errors: Array<PageError>;
   page?: Maybe<Page>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14052,7 +13697,6 @@ export type PageCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageCreated = Event & {
-  __typename?: 'PageCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14071,7 +13715,6 @@ export type PageCreated = Event & {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageDelete = {
-  __typename?: 'PageDelete';
   errors: Array<PageError>;
   page?: Maybe<Page>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14086,7 +13729,6 @@ export type PageDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageDeleted = Event & {
-  __typename?: 'PageDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14100,7 +13742,6 @@ export type PageDeleted = Event & {
 };
 
 export type PageError = {
-  __typename?: 'PageError';
   /** List of attributes IDs which causes the error. */
   attributes?: Maybe<Array<Scalars['ID']['output']>>;
   /** The error code. */
@@ -14133,7 +13774,6 @@ export type PageFilterInput = {
 
 /** The Relay compliant `PageInfo` type, containing data necessary to paginate this connection. */
 export type PageInfo = {
-  __typename?: 'PageInfo';
   /** When paginating forwards, the cursor to continue. */
   endCursor?: Maybe<Scalars['String']['output']>;
   /** When paginating forwards, are there more items? */
@@ -14181,7 +13821,6 @@ export type PageInput = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageReorderAttributeValues = {
-  __typename?: 'PageReorderAttributeValues';
   errors: Array<PageError>;
   /** Page from which attribute values are reordered. */
   page?: Maybe<Page>;
@@ -14229,7 +13868,6 @@ export type PageSortingInput = {
 };
 
 export type PageTranslatableContent = Node & {
-  __typename?: 'PageTranslatableContent';
   /** List of page content attribute values that can be translated. */
   attributeValues: Array<AttributeValueTranslatableContent>;
   /**
@@ -14269,7 +13907,6 @@ export type PageTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type PageTranslate = {
-  __typename?: 'PageTranslate';
   errors: Array<TranslationError>;
   page?: Maybe<PageTranslatableContent>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14277,7 +13914,6 @@ export type PageTranslate = {
 };
 
 export type PageTranslation = Node & {
-  __typename?: 'PageTranslation';
   /**
    * Translated content of the page.
    *
@@ -14313,7 +13949,6 @@ export type PageTranslationInput = {
 
 /** Represents a type of page. It defines what attributes are available to pages of this type. */
 export type PageType = Node & ObjectWithMetadata & {
-  __typename?: 'PageType';
   /** Page attributes of that page type. */
   attributes?: Maybe<Array<Attribute>>;
   /**
@@ -14413,7 +14048,6 @@ export type PageTypePrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeBulkDelete = {
-  __typename?: 'PageTypeBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<PageError>;
@@ -14422,7 +14056,6 @@ export type PageTypeBulkDelete = {
 };
 
 export type PageTypeCountableConnection = {
-  __typename?: 'PageTypeCountableConnection';
   edges: Array<PageTypeCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -14431,7 +14064,6 @@ export type PageTypeCountableConnection = {
 };
 
 export type PageTypeCountableEdge = {
-  __typename?: 'PageTypeCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -14444,7 +14076,6 @@ export type PageTypeCountableEdge = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeCreate = {
-  __typename?: 'PageTypeCreate';
   errors: Array<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   pageErrors: Array<PageError>;
@@ -14468,7 +14099,6 @@ export type PageTypeCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageTypeCreated = Event & {
-  __typename?: 'PageTypeCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14487,7 +14117,6 @@ export type PageTypeCreated = Event & {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeDelete = {
-  __typename?: 'PageTypeDelete';
   errors: Array<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   pageErrors: Array<PageError>;
@@ -14502,7 +14131,6 @@ export type PageTypeDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageTypeDeleted = Event & {
-  __typename?: 'PageTypeDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14526,7 +14154,6 @@ export type PageTypeFilterInput = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeReorderAttributes = {
-  __typename?: 'PageTypeReorderAttributes';
   errors: Array<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   pageErrors: Array<PageError>;
@@ -14553,7 +14180,6 @@ export type PageTypeSortingInput = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeUpdate = {
-  __typename?: 'PageTypeUpdate';
   errors: Array<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   pageErrors: Array<PageError>;
@@ -14579,7 +14205,6 @@ export type PageTypeUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageTypeUpdated = Event & {
-  __typename?: 'PageTypeUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14598,7 +14223,6 @@ export type PageTypeUpdated = Event & {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageUpdate = {
-  __typename?: 'PageUpdate';
   errors: Array<PageError>;
   page?: Maybe<Page>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14613,7 +14237,6 @@ export type PageUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PageUpdated = Event & {
-  __typename?: 'PageUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14632,7 +14255,6 @@ export type PageUpdated = Event & {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type PasswordChange = {
-  __typename?: 'PasswordChange';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -14642,7 +14264,6 @@ export type PasswordChange = {
 
 /** Represents a payment of a given type. */
 export type Payment = Node & ObjectWithMetadata & {
-  __typename?: 'Payment';
   /**
    * List of actions that can be performed in the current state of a payment.
    *
@@ -14764,7 +14385,6 @@ export type PaymentPrivateMetafieldsArgs = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentAuthorize = Event & {
-  __typename?: 'PaymentAuthorize';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14783,7 +14403,6 @@ export type PaymentAuthorize = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type PaymentCapture = {
-  __typename?: 'PaymentCapture';
   errors: Array<PaymentError>;
   /** Updated payment. */
   payment?: Maybe<Payment>;
@@ -14799,7 +14418,6 @@ export type PaymentCapture = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentCaptureEvent = Event & {
-  __typename?: 'PaymentCaptureEvent';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14825,7 +14443,6 @@ export type PaymentChargeStatusEnum =
 
 /** Check payment balance. */
 export type PaymentCheckBalance = {
-  __typename?: 'PaymentCheckBalance';
   /** Response from the gateway. */
   data?: Maybe<Scalars['JSONString']['output']>;
   errors: Array<PaymentError>;
@@ -14852,7 +14469,6 @@ export type PaymentCheckBalanceInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentConfirmEvent = Event & {
-  __typename?: 'PaymentConfirmEvent';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -14866,7 +14482,6 @@ export type PaymentConfirmEvent = Event & {
 };
 
 export type PaymentCountableConnection = {
-  __typename?: 'PaymentCountableConnection';
   edges: Array<PaymentCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -14875,7 +14490,6 @@ export type PaymentCountableConnection = {
 };
 
 export type PaymentCountableEdge = {
-  __typename?: 'PaymentCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -14883,7 +14497,6 @@ export type PaymentCountableEdge = {
 };
 
 export type PaymentError = {
-  __typename?: 'PaymentError';
   /** The error code. */
   code: PaymentErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -14926,7 +14539,6 @@ export type PaymentFilterInput = {
 
 /** Available payment gateway backend with configuration necessary to setup client. */
 export type PaymentGateway = {
-  __typename?: 'PaymentGateway';
   /** Payment gateway client configuration. */
   config: Array<GatewayConfigLine>;
   /** Payment gateway supported currencies. */
@@ -14939,7 +14551,6 @@ export type PaymentGateway = {
 
 /** Initializes payment process when it is required by gateway. */
 export type PaymentInitialize = {
-  __typename?: 'PaymentInitialize';
   errors: Array<PaymentError>;
   initializedPayment?: Maybe<PaymentInitialized>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -14948,7 +14559,6 @@ export type PaymentInitialize = {
 
 /** Server-side data generated by a payment gateway. Optional step when the payment provider requires an additional action to initialize payment session. */
 export type PaymentInitialized = {
-  __typename?: 'PaymentInitialized';
   /** Initialized data by gateway. */
   data?: Maybe<Scalars['JSONString']['output']>;
   /** ID of a payment gateway. */
@@ -14988,7 +14598,6 @@ export type PaymentInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentListGateways = Event & {
-  __typename?: 'PaymentListGateways';
   /** The checkout the event relates to. */
   checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -15009,7 +14618,6 @@ export type PaymentListGateways = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentProcessEvent = Event & {
-  __typename?: 'PaymentProcessEvent';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15028,7 +14636,6 @@ export type PaymentProcessEvent = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type PaymentRefund = {
-  __typename?: 'PaymentRefund';
   errors: Array<PaymentError>;
   /** Updated payment. */
   payment?: Maybe<Payment>;
@@ -15044,7 +14651,6 @@ export type PaymentRefund = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentRefundEvent = Event & {
-  __typename?: 'PaymentRefundEvent';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15059,7 +14665,6 @@ export type PaymentRefundEvent = Event & {
 
 /** Represents a payment source stored for user in payment gateway, such as credit card. */
 export type PaymentSource = {
-  __typename?: 'PaymentSource';
   /** Stored credit card details if available. */
   creditCardInfo?: Maybe<CreditCard>;
   /** Payment gateway name. */
@@ -15082,7 +14687,6 @@ export type PaymentSource = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type PaymentVoid = {
-  __typename?: 'PaymentVoid';
   errors: Array<PaymentError>;
   /** Updated payment. */
   payment?: Maybe<Payment>;
@@ -15098,7 +14702,6 @@ export type PaymentVoid = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentVoidEvent = Event & {
-  __typename?: 'PaymentVoidEvent';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15113,7 +14716,6 @@ export type PaymentVoidEvent = Event & {
 
 /** Represents a permission object in a friendly form. */
 export type Permission = {
-  __typename?: 'Permission';
   /** Internal code for permission. */
   code: PermissionEnum;
   /** Describe action(s) allowed to do by permission. */
@@ -15152,7 +14754,6 @@ export type PermissionEnum =
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type PermissionGroupCreate = {
-  __typename?: 'PermissionGroupCreate';
   errors: Array<PermissionGroupError>;
   group?: Maybe<Group>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -15176,7 +14777,6 @@ export type PermissionGroupCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PermissionGroupCreated = Event & {
-  __typename?: 'PermissionGroupCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15195,7 +14795,6 @@ export type PermissionGroupCreated = Event & {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type PermissionGroupDelete = {
-  __typename?: 'PermissionGroupDelete';
   errors: Array<PermissionGroupError>;
   group?: Maybe<Group>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -15210,7 +14809,6 @@ export type PermissionGroupDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PermissionGroupDeleted = Event & {
-  __typename?: 'PermissionGroupDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15224,7 +14822,6 @@ export type PermissionGroupDeleted = Event & {
 };
 
 export type PermissionGroupError = {
-  __typename?: 'PermissionGroupError';
   /** The error code. */
   code: PermissionGroupErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -15270,7 +14867,6 @@ export type PermissionGroupSortingInput = {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type PermissionGroupUpdate = {
-  __typename?: 'PermissionGroupUpdate';
   errors: Array<PermissionGroupError>;
   group?: Maybe<Group>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -15298,7 +14894,6 @@ export type PermissionGroupUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PermissionGroupUpdated = Event & {
-  __typename?: 'PermissionGroupUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -15313,7 +14908,6 @@ export type PermissionGroupUpdated = Event & {
 
 /** Plugin. */
 export type Plugin = {
-  __typename?: 'Plugin';
   /** Channel-specific plugin configuration. */
   channelConfigurations: Array<PluginConfiguration>;
   /** Description of the plugin. */
@@ -15328,7 +14922,6 @@ export type Plugin = {
 
 /** Stores information about a configuration of plugin. */
 export type PluginConfiguration = {
-  __typename?: 'PluginConfiguration';
   /** Determines if plugin is active or not. */
   active: Scalars['Boolean']['output'];
   /** The channel to which the plugin configuration is assigned to. */
@@ -15342,7 +14935,6 @@ export type PluginConfigurationType =
   | 'PER_CHANNEL';
 
 export type PluginCountableConnection = {
-  __typename?: 'PluginCountableConnection';
   edges: Array<PluginCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -15351,7 +14943,6 @@ export type PluginCountableConnection = {
 };
 
 export type PluginCountableEdge = {
-  __typename?: 'PluginCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -15359,7 +14950,6 @@ export type PluginCountableEdge = {
 };
 
 export type PluginError = {
-  __typename?: 'PluginError';
   /** The error code. */
   code: PluginErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -15405,7 +14995,6 @@ export type PluginStatusInChannelsInput = {
  * Requires one of the following permissions: MANAGE_PLUGINS.
  */
 export type PluginUpdate = {
-  __typename?: 'PluginUpdate';
   errors: Array<PluginError>;
   plugin?: Maybe<Plugin>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -15426,7 +15015,6 @@ export type PostalCodeRuleInclusionTypeEnum =
 
 /** Represents preorder settings for product variant. */
 export type PreorderData = {
-  __typename?: 'PreorderData';
   /** Preorder end date. */
   endDate?: Maybe<Scalars['DateTime']['output']>;
   /**
@@ -15452,7 +15040,6 @@ export type PreorderSettingsInput = {
 
 /** Represents preorder variant data for channel. */
 export type PreorderThreshold = {
-  __typename?: 'PreorderThreshold';
   /** Preorder threshold for product variant in this channel. */
   quantity?: Maybe<Scalars['Int']['output']>;
   /** Number of sold product variant in this channel. */
@@ -15475,7 +15062,6 @@ export type PriceRangeInput = {
 
 /** Represents an individual item for sale in the storefront. */
 export type Product = Node & ObjectWithMetadata & {
-  __typename?: 'Product';
   /**
    * Get a single attribute attached to product by attribute slug.
    *
@@ -15704,7 +15290,6 @@ export type ProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeAssign = {
-  __typename?: 'ProductAttributeAssign';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -15733,7 +15318,6 @@ export type ProductAttributeAssignInput = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeAssignmentUpdate = {
-  __typename?: 'ProductAttributeAssignmentUpdate';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -15762,7 +15346,6 @@ export type ProductAttributeType =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeUnassign = {
-  __typename?: 'ProductAttributeUnassign';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -15776,7 +15359,6 @@ export type ProductAttributeUnassign = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductBulkDelete = {
-  __typename?: 'ProductBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<ProductError>;
@@ -15786,7 +15368,6 @@ export type ProductBulkDelete = {
 
 /** Represents product channel listing. */
 export type ProductChannelListing = Node & {
-  __typename?: 'ProductChannelListing';
   /** @deprecated This field will be removed in Saleor 4.0. Use the `availableForPurchaseAt` field to fetch the available for purchase date. */
   availableForPurchase?: Maybe<Scalars['Date']['output']>;
   /**
@@ -15873,7 +15454,6 @@ export type ProductChannelListingAddInput = {
 };
 
 export type ProductChannelListingError = {
-  __typename?: 'ProductChannelListingError';
   /** List of attributes IDs which causes the error. */
   attributes?: Maybe<Array<Scalars['ID']['output']>>;
   /** List of channels IDs which causes the error. */
@@ -15896,7 +15476,6 @@ export type ProductChannelListingError = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductChannelListingUpdate = {
-  __typename?: 'ProductChannelListingUpdate';
   errors: Array<ProductChannelListingError>;
   /** An updated product instance. */
   product?: Maybe<Product>;
@@ -15912,7 +15491,6 @@ export type ProductChannelListingUpdateInput = {
 };
 
 export type ProductCountableConnection = {
-  __typename?: 'ProductCountableConnection';
   edges: Array<ProductCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -15921,7 +15499,6 @@ export type ProductCountableConnection = {
 };
 
 export type ProductCountableEdge = {
-  __typename?: 'ProductCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -15934,7 +15511,6 @@ export type ProductCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductCreate = {
-  __typename?: 'ProductCreate';
   errors: Array<ProductError>;
   product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -16008,7 +15584,6 @@ export type ProductCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductCreated = Event & {
-  __typename?: 'ProductCreated';
   /** The category of the product. */
   category?: Maybe<Category>;
   /** Time of the event. */
@@ -16041,7 +15616,6 @@ export type ProductCreatedProductArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductDelete = {
-  __typename?: 'ProductDelete';
   errors: Array<ProductError>;
   product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -16056,7 +15630,6 @@ export type ProductDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductDeleted = Event & {
-  __typename?: 'ProductDeleted';
   /** The category of the product. */
   category?: Maybe<Category>;
   /** Time of the event. */
@@ -16084,7 +15657,6 @@ export type ProductDeletedProductArgs = {
 };
 
 export type ProductError = {
-  __typename?: 'ProductError';
   /** List of attributes IDs which causes the error. */
   attributes?: Maybe<Array<Scalars['ID']['output']>>;
   /** The error code. */
@@ -16189,7 +15761,6 @@ export type ProductFilterInput = {
 
 /** Represents a product image. */
 export type ProductImage = {
-  __typename?: 'ProductImage';
   /** The alt text of the image. */
   alt?: Maybe<Scalars['String']['output']>;
   /** The ID of the image. */
@@ -16265,7 +15836,6 @@ export type ProductInput = {
 
 /** Represents a product media. */
 export type ProductMedia = Node & {
-  __typename?: 'ProductMedia';
   alt: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   oembedData: Scalars['JSONString']['output'];
@@ -16287,7 +15857,6 @@ export type ProductMediaUrlArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaBulkDelete = {
-  __typename?: 'ProductMediaBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<ProductError>;
@@ -16301,7 +15870,6 @@ export type ProductMediaBulkDelete = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaCreate = {
-  __typename?: 'ProductMediaCreate';
   errors: Array<ProductError>;
   media?: Maybe<ProductMedia>;
   product?: Maybe<Product>;
@@ -16326,7 +15894,6 @@ export type ProductMediaCreateInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaDelete = {
-  __typename?: 'ProductMediaDelete';
   errors: Array<ProductError>;
   media?: Maybe<ProductMedia>;
   product?: Maybe<Product>;
@@ -16340,7 +15907,6 @@ export type ProductMediaDelete = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaReorder = {
-  __typename?: 'ProductMediaReorder';
   errors: Array<ProductError>;
   media?: Maybe<Array<ProductMedia>>;
   product?: Maybe<Product>;
@@ -16359,7 +15925,6 @@ export type ProductMediaType =
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaUpdate = {
-  __typename?: 'ProductMediaUpdate';
   errors: Array<ProductError>;
   media?: Maybe<ProductMedia>;
   product?: Maybe<Product>;
@@ -16380,7 +15945,6 @@ export type ProductMediaUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductMetadataUpdated = Event & {
-  __typename?: 'ProductMetadataUpdated';
   /** The category of the product. */
   category?: Maybe<Category>;
   /** Time of the event. */
@@ -16485,7 +16049,6 @@ export type ProductOrderField =
 
 /** Represents availability of a product in the storefront. */
 export type ProductPricingInfo = {
-  __typename?: 'ProductPricingInfo';
   /** The discount amount if in sale (null otherwise). */
   discount?: Maybe<TaxedMoney>;
   /** The discount amount in the local currency. */
@@ -16514,7 +16077,6 @@ export type ProductPricingInfo = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductReorderAttributeValues = {
-  __typename?: 'ProductReorderAttributeValues';
   errors: Array<ProductError>;
   /** Product from which attribute values are reordered. */
   product?: Maybe<Product>;
@@ -16528,7 +16090,6 @@ export type ProductStockFilterInput = {
 };
 
 export type ProductTranslatableContent = Node & {
-  __typename?: 'ProductTranslatableContent';
   /** List of product attribute values that can be translated. */
   attributeValues: Array<AttributeValueTranslatableContent>;
   /**
@@ -16568,7 +16129,6 @@ export type ProductTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ProductTranslate = {
-  __typename?: 'ProductTranslate';
   errors: Array<TranslationError>;
   product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -16576,7 +16136,6 @@ export type ProductTranslate = {
 };
 
 export type ProductTranslation = Node & {
-  __typename?: 'ProductTranslation';
   /**
    * Translated description of the product.
    *
@@ -16600,7 +16159,6 @@ export type ProductTranslation = Node & {
 
 /** Represents a type of product. It defines what attributes are available to products of this type. */
 export type ProductType = Node & ObjectWithMetadata & {
-  __typename?: 'ProductType';
   /**
    * Variant attributes of that product type with attached variant selection.
    *
@@ -16749,7 +16307,6 @@ export type ProductTypeVariantAttributesArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeBulkDelete = {
-  __typename?: 'ProductTypeBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<ProductError>;
@@ -16762,7 +16319,6 @@ export type ProductTypeConfigurable =
   | 'SIMPLE';
 
 export type ProductTypeCountableConnection = {
-  __typename?: 'ProductTypeCountableConnection';
   edges: Array<ProductTypeCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -16771,7 +16327,6 @@ export type ProductTypeCountableConnection = {
 };
 
 export type ProductTypeCountableEdge = {
-  __typename?: 'ProductTypeCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -16784,7 +16339,6 @@ export type ProductTypeCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeCreate = {
-  __typename?: 'ProductTypeCreate';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -16797,7 +16351,6 @@ export type ProductTypeCreate = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeDelete = {
-  __typename?: 'ProductTypeDelete';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -16858,7 +16411,6 @@ export type ProductTypeKindEnum =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeReorderAttributes = {
-  __typename?: 'ProductTypeReorderAttributes';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -16887,7 +16439,6 @@ export type ProductTypeSortingInput = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeUpdate = {
-  __typename?: 'ProductTypeUpdate';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -16900,7 +16451,6 @@ export type ProductTypeUpdate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductUpdate = {
-  __typename?: 'ProductUpdate';
   errors: Array<ProductError>;
   product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -16915,7 +16465,6 @@ export type ProductUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductUpdated = Event & {
-  __typename?: 'ProductUpdated';
   /** The category of the product. */
   category?: Maybe<Category>;
   /** Time of the event. */
@@ -16944,7 +16493,6 @@ export type ProductUpdatedProductArgs = {
 
 /** Represents a version of a product such as different size or color. */
 export type ProductVariant = Node & ObjectWithMetadata & {
-  __typename?: 'ProductVariant';
   /** List of attributes assigned to this variant. */
   attributes: Array<SelectedAttribute>;
   /** Channel given to retrieve this product variant. Also used by federation gateway to resolve this object in a federated query. */
@@ -17129,7 +16677,6 @@ export type ProductVariantTranslationArgs = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantBackInStock = Event & {
-  __typename?: 'ProductVariantBackInStock';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17162,7 +16709,6 @@ export type ProductVariantBackInStockProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantBulkCreate = {
-  __typename?: 'ProductVariantBulkCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   bulkProductErrors: Array<BulkProductError>;
   /** Returns how many objects were created. */
@@ -17229,7 +16775,6 @@ export type ProductVariantBulkCreateInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantBulkDelete = {
-  __typename?: 'ProductVariantBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<ProductError>;
@@ -17239,7 +16784,6 @@ export type ProductVariantBulkDelete = {
 
 /** Represents product varaint channel listing. */
 export type ProductVariantChannelListing = Node & {
-  __typename?: 'ProductVariantChannelListing';
   channel: Channel;
   /** Cost price of the variant. */
   costPrice?: Maybe<Money>;
@@ -17284,7 +16828,6 @@ export type ProductVariantChannelListingAddInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantChannelListingUpdate = {
-  __typename?: 'ProductVariantChannelListingUpdate';
   errors: Array<ProductChannelListingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productChannelListingErrors: Array<ProductChannelListingError>;
@@ -17293,7 +16836,6 @@ export type ProductVariantChannelListingUpdate = {
 };
 
 export type ProductVariantCountableConnection = {
-  __typename?: 'ProductVariantCountableConnection';
   edges: Array<ProductVariantCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -17302,7 +16844,6 @@ export type ProductVariantCountableConnection = {
 };
 
 export type ProductVariantCountableEdge = {
-  __typename?: 'ProductVariantCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -17315,7 +16856,6 @@ export type ProductVariantCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantCreate = {
-  __typename?: 'ProductVariantCreate';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -17381,7 +16921,6 @@ export type ProductVariantCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantCreated = Event & {
-  __typename?: 'ProductVariantCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17412,7 +16951,6 @@ export type ProductVariantCreatedProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantDelete = {
-  __typename?: 'ProductVariantDelete';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -17427,7 +16965,6 @@ export type ProductVariantDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantDeleted = Event & {
-  __typename?: 'ProductVariantDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17515,7 +17052,6 @@ export type ProductVariantInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantMetadataUpdated = Event & {
-  __typename?: 'ProductVariantMetadataUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17548,7 +17084,6 @@ export type ProductVariantMetadataUpdatedProductVariantArgs = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantOutOfStock = Event & {
-  __typename?: 'ProductVariantOutOfStock';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17585,7 +17120,6 @@ export type ProductVariantOutOfStockProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantPreorderDeactivate = {
-  __typename?: 'ProductVariantPreorderDeactivate';
   errors: Array<ProductError>;
   /** Product variant with ended preorder. */
   productVariant?: Maybe<ProductVariant>;
@@ -17597,7 +17131,6 @@ export type ProductVariantPreorderDeactivate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantReorder = {
-  __typename?: 'ProductVariantReorder';
   errors: Array<ProductError>;
   product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -17610,7 +17143,6 @@ export type ProductVariantReorder = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantReorderAttributeValues = {
-  __typename?: 'ProductVariantReorderAttributeValues';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -17624,7 +17156,6 @@ export type ProductVariantReorderAttributeValues = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantSetDefault = {
-  __typename?: 'ProductVariantSetDefault';
   errors: Array<ProductError>;
   product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -17648,7 +17179,6 @@ export type ProductVariantSortingInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksCreate = {
-  __typename?: 'ProductVariantStocksCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   bulkStockErrors: Array<BulkStockError>;
   errors: Array<BulkStockError>;
@@ -17662,7 +17192,6 @@ export type ProductVariantStocksCreate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksDelete = {
-  __typename?: 'ProductVariantStocksDelete';
   errors: Array<StockError>;
   /** Updated product variant. */
   productVariant?: Maybe<ProductVariant>;
@@ -17676,7 +17205,6 @@ export type ProductVariantStocksDelete = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksUpdate = {
-  __typename?: 'ProductVariantStocksUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   bulkStockErrors: Array<BulkStockError>;
   errors: Array<BulkStockError>;
@@ -17685,7 +17213,6 @@ export type ProductVariantStocksUpdate = {
 };
 
 export type ProductVariantTranslatableContent = Node & {
-  __typename?: 'ProductVariantTranslatableContent';
   /** List of product variant attribute values that can be translated. */
   attributeValues: Array<AttributeValueTranslatableContent>;
   id: Scalars['ID']['output'];
@@ -17710,7 +17237,6 @@ export type ProductVariantTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ProductVariantTranslate = {
-  __typename?: 'ProductVariantTranslate';
   errors: Array<TranslationError>;
   productVariant?: Maybe<ProductVariant>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -17718,7 +17244,6 @@ export type ProductVariantTranslate = {
 };
 
 export type ProductVariantTranslation = Node & {
-  __typename?: 'ProductVariantTranslation';
   id: Scalars['ID']['output'];
   /** Translation language. */
   language: LanguageDisplay;
@@ -17731,7 +17256,6 @@ export type ProductVariantTranslation = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantUpdate = {
-  __typename?: 'ProductVariantUpdate';
   errors: Array<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   productErrors: Array<ProductError>;
@@ -17746,7 +17270,6 @@ export type ProductVariantUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantUpdated = Event & {
-  __typename?: 'ProductVariantUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17791,7 +17314,6 @@ export type PublishableChannelListingInput = {
 };
 
 export type Query = {
-  __typename?: 'Query';
   _entities?: Maybe<Array<Maybe<_Entity>>>;
   _service?: Maybe<_Service>;
   /** Look up an address by ID. */
@@ -18785,7 +18307,6 @@ export type QueryWebhookSamplePayloadArgs = {
 
 /** Represents a reduced VAT rate for a particular type of goods. */
 export type ReducedRate = {
-  __typename?: 'ReducedRate';
   /** Reduced VAT rate in percent. */
   rate: Scalars['Float']['output'];
   /** A type of goods. */
@@ -18794,7 +18315,6 @@ export type ReducedRate = {
 
 /** Refresh JWT token. Mutation tries to take refreshToken from the input.If it fails it will try to take refreshToken from the http-only cookie -refreshToken. csrfToken is required when refreshToken is provided as a cookie. */
 export type RefreshToken = {
-  __typename?: 'RefreshToken';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -18821,7 +18341,6 @@ export type ReportingPeriod =
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type RequestEmailChange = {
-  __typename?: 'RequestEmailChange';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -18831,7 +18350,6 @@ export type RequestEmailChange = {
 
 /** Sends an email with the account password modification link. */
 export type RequestPasswordReset = {
-  __typename?: 'RequestPasswordReset';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -18839,7 +18357,6 @@ export type RequestPasswordReset = {
 
 /** Sales allow creating discounts for categories, collections or products and are visible to all the customers. */
 export type Sale = Node & ObjectWithMetadata & {
-  __typename?: 'Sale';
   /** List of categories this sale applies to. */
   categories?: Maybe<CategoryCountableConnection>;
   /**
@@ -18995,7 +18512,6 @@ export type SaleVariantsArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleAddCatalogues = {
-  __typename?: 'SaleAddCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -19009,7 +18525,6 @@ export type SaleAddCatalogues = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleBulkDelete = {
-  __typename?: 'SaleBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -19019,7 +18534,6 @@ export type SaleBulkDelete = {
 
 /** Represents sale channel listing. */
 export type SaleChannelListing = Node & {
-  __typename?: 'SaleChannelListing';
   channel: Channel;
   currency: Scalars['String']['output'];
   discountValue: Scalars['Float']['output'];
@@ -19046,7 +18560,6 @@ export type SaleChannelListingInput = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleChannelListingUpdate = {
-  __typename?: 'SaleChannelListingUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -19055,7 +18568,6 @@ export type SaleChannelListingUpdate = {
 };
 
 export type SaleCountableConnection = {
-  __typename?: 'SaleCountableConnection';
   edges: Array<SaleCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -19064,7 +18576,6 @@ export type SaleCountableConnection = {
 };
 
 export type SaleCountableEdge = {
-  __typename?: 'SaleCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -19077,7 +18588,6 @@ export type SaleCountableEdge = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleCreate = {
-  __typename?: 'SaleCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -19092,7 +18602,6 @@ export type SaleCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type SaleCreated = Event & {
-  __typename?: 'SaleCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19123,7 +18632,6 @@ export type SaleCreatedSaleArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleDelete = {
-  __typename?: 'SaleDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -19138,7 +18646,6 @@ export type SaleDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type SaleDeleted = Event & {
-  __typename?: 'SaleDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19198,7 +18705,6 @@ export type SaleInput = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleRemoveCatalogues = {
-  __typename?: 'SaleRemoveCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -19247,7 +18753,6 @@ export type SaleSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type SaleToggle = Event & {
-  __typename?: 'SaleToggle';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19279,7 +18784,6 @@ export type SaleToggleSaleArgs = {
 };
 
 export type SaleTranslatableContent = Node & {
-  __typename?: 'SaleTranslatableContent';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   /**
@@ -19304,7 +18808,6 @@ export type SaleTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type SaleTranslate = {
-  __typename?: 'SaleTranslate';
   errors: Array<TranslationError>;
   sale?: Maybe<Sale>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -19312,7 +18815,6 @@ export type SaleTranslate = {
 };
 
 export type SaleTranslation = Node & {
-  __typename?: 'SaleTranslation';
   id: Scalars['ID']['output'];
   /** Translation language. */
   language: LanguageDisplay;
@@ -19329,7 +18831,6 @@ export type SaleType =
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleUpdate = {
-  __typename?: 'SaleUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -19344,7 +18845,6 @@ export type SaleUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type SaleUpdated = Event & {
-  __typename?: 'SaleUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19371,7 +18871,6 @@ export type SaleUpdatedSaleArgs = {
 
 /** Represents a custom attribute. */
 export type SelectedAttribute = {
-  __typename?: 'SelectedAttribute';
   /** Name of an attribute displayed in the interface. */
   attribute: Attribute;
   /** Values of an attribute. */
@@ -19387,7 +18886,6 @@ export type SeoInput = {
 
 /** Sets the user's password from the token sent by email using the RequestPasswordReset mutation. */
 export type SetPassword = {
-  __typename?: 'SetPassword';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   /** CSRF token required to re-generate access token. */
@@ -19402,7 +18900,6 @@ export type SetPassword = {
 };
 
 export type ShippingError = {
-  __typename?: 'ShippingError';
   /** List of channels IDs which causes the error. */
   channels?: Maybe<Array<Scalars['ID']['output']>>;
   /** The error code. */
@@ -19434,7 +18931,6 @@ export type ShippingErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingListMethodsForCheckout = Event & {
-  __typename?: 'ShippingListMethodsForCheckout';
   /** The checkout the event relates to. */
   checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -19457,7 +18953,6 @@ export type ShippingListMethodsForCheckout = Event & {
 
 /** Shipping methods that can be used as means of shipping for orders and checkouts. */
 export type ShippingMethod = Node & ObjectWithMetadata & {
-  __typename?: 'ShippingMethod';
   /** Describes if this shipping method is active and can be selected. */
   active: Scalars['Boolean']['output'];
   /**
@@ -19573,7 +19068,6 @@ export type ShippingMethodTranslationArgs = {
 
 /** Represents shipping method channel listing. */
 export type ShippingMethodChannelListing = Node & {
-  __typename?: 'ShippingMethodChannelListing';
   channel: Channel;
   id: Scalars['ID']['output'];
   maximumOrderPrice?: Maybe<Money>;
@@ -19605,7 +19099,6 @@ export type ShippingMethodChannelListingInput = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingMethodChannelListingUpdate = {
-  __typename?: 'ShippingMethodChannelListingUpdate';
   errors: Array<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shippingErrors: Array<ShippingError>;
@@ -19615,7 +19108,6 @@ export type ShippingMethodChannelListingUpdate = {
 
 /** Represents shipping method postal code rule. */
 export type ShippingMethodPostalCodeRule = Node & {
-  __typename?: 'ShippingMethodPostalCodeRule';
   /** End address range. */
   end?: Maybe<Scalars['String']['output']>;
   /** The ID of the object. */
@@ -19627,7 +19119,6 @@ export type ShippingMethodPostalCodeRule = Node & {
 };
 
 export type ShippingMethodTranslatableContent = Node & {
-  __typename?: 'ShippingMethodTranslatableContent';
   /**
    * Description of the shipping method.
    *
@@ -19653,7 +19144,6 @@ export type ShippingMethodTranslatableContentTranslationArgs = {
 };
 
 export type ShippingMethodTranslation = Node & {
-  __typename?: 'ShippingMethodTranslation';
   /**
    * Translated description of the shipping method.
    *
@@ -19668,7 +19158,6 @@ export type ShippingMethodTranslation = Node & {
 
 /** Shipping method are the methods you'll use to get customer's orders to them. They are directly exposed to the customers. */
 export type ShippingMethodType = Node & ObjectWithMetadata & {
-  __typename?: 'ShippingMethodType';
   /**
    * List of channels available for the method.
    *
@@ -19809,7 +19298,6 @@ export type ShippingMethodTypeEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingMethodsPerCountry = {
-  __typename?: 'ShippingMethodsPerCountry';
   /** The country code. */
   countryCode: CountryCode;
   /** List of available shipping methods. */
@@ -19829,7 +19317,6 @@ export type ShippingPostalCodeRulesCreateInputRange = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceBulkDelete = {
-  __typename?: 'ShippingPriceBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<ShippingError>;
@@ -19843,7 +19330,6 @@ export type ShippingPriceBulkDelete = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceCreate = {
-  __typename?: 'ShippingPriceCreate';
   errors: Array<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shippingErrors: Array<ShippingError>;
@@ -19860,7 +19346,6 @@ export type ShippingPriceCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingPriceCreated = Event & {
-  __typename?: 'ShippingPriceCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19905,7 +19390,6 @@ export type ShippingPriceCreatedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceDelete = {
-  __typename?: 'ShippingPriceDelete';
   errors: Array<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shippingErrors: Array<ShippingError>;
@@ -19923,7 +19407,6 @@ export type ShippingPriceDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingPriceDeleted = Event & {
-  __typename?: 'ShippingPriceDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19968,7 +19451,6 @@ export type ShippingPriceDeletedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceExcludeProducts = {
-  __typename?: 'ShippingPriceExcludeProducts';
   errors: Array<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shippingErrors: Array<ShippingError>;
@@ -20014,7 +19496,6 @@ export type ShippingPriceInput = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceRemoveProductFromExclude = {
-  __typename?: 'ShippingPriceRemoveProductFromExclude';
   errors: Array<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shippingErrors: Array<ShippingError>;
@@ -20028,7 +19509,6 @@ export type ShippingPriceRemoveProductFromExclude = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ShippingPriceTranslate = {
-  __typename?: 'ShippingPriceTranslate';
   errors: Array<TranslationError>;
   shippingMethod?: Maybe<ShippingMethodType>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -20051,7 +19531,6 @@ export type ShippingPriceTranslationInput = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceUpdate = {
-  __typename?: 'ShippingPriceUpdate';
   errors: Array<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shippingErrors: Array<ShippingError>;
@@ -20068,7 +19547,6 @@ export type ShippingPriceUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingPriceUpdated = Event & {
-  __typename?: 'ShippingPriceUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20109,7 +19587,6 @@ export type ShippingPriceUpdatedShippingZoneArgs = {
 
 /** Represents a shipping zone in the shop. Zones are the concept used only for grouping shipping methods in the dashboard, and are never exposed to the customers directly. */
 export type ShippingZone = Node & ObjectWithMetadata & {
-  __typename?: 'ShippingZone';
   /** List of channels for shipping zone. */
   channels: Array<Channel>;
   /** List of countries available for the method. */
@@ -20197,7 +19674,6 @@ export type ShippingZonePrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneBulkDelete = {
-  __typename?: 'ShippingZoneBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<ShippingError>;
@@ -20206,7 +19682,6 @@ export type ShippingZoneBulkDelete = {
 };
 
 export type ShippingZoneCountableConnection = {
-  __typename?: 'ShippingZoneCountableConnection';
   edges: Array<ShippingZoneCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -20215,7 +19690,6 @@ export type ShippingZoneCountableConnection = {
 };
 
 export type ShippingZoneCountableEdge = {
-  __typename?: 'ShippingZoneCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -20228,7 +19702,6 @@ export type ShippingZoneCountableEdge = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneCreate = {
-  __typename?: 'ShippingZoneCreate';
   errors: Array<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shippingErrors: Array<ShippingError>;
@@ -20258,7 +19731,6 @@ export type ShippingZoneCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingZoneCreated = Event & {
-  __typename?: 'ShippingZoneCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20289,7 +19761,6 @@ export type ShippingZoneCreatedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneDelete = {
-  __typename?: 'ShippingZoneDelete';
   errors: Array<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shippingErrors: Array<ShippingError>;
@@ -20304,7 +19775,6 @@ export type ShippingZoneDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingZoneDeleted = Event & {
-  __typename?: 'ShippingZoneDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20342,7 +19812,6 @@ export type ShippingZoneFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingZoneMetadataUpdated = Event & {
-  __typename?: 'ShippingZoneMetadataUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20373,7 +19842,6 @@ export type ShippingZoneMetadataUpdatedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneUpdate = {
-  __typename?: 'ShippingZoneUpdate';
   errors: Array<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shippingErrors: Array<ShippingError>;
@@ -20407,7 +19875,6 @@ export type ShippingZoneUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ShippingZoneUpdated = Event & {
-  __typename?: 'ShippingZoneUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20434,7 +19901,6 @@ export type ShippingZoneUpdatedShippingZoneArgs = {
 
 /** Represents a shop resource containing general shop data and configuration. */
 export type Shop = {
-  __typename?: 'Shop';
   /**
    * Enable automatic fulfillment for all digital products.
    *
@@ -20619,7 +20085,6 @@ export type ShopTranslationArgs = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopAddressUpdate = {
-  __typename?: 'ShopAddressUpdate';
   errors: Array<ShopError>;
   /** Updated shop. */
   shop?: Maybe<Shop>;
@@ -20633,7 +20098,6 @@ export type ShopAddressUpdate = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopDomainUpdate = {
-  __typename?: 'ShopDomainUpdate';
   errors: Array<ShopError>;
   /** Updated shop. */
   shop?: Maybe<Shop>;
@@ -20642,7 +20106,6 @@ export type ShopDomainUpdate = {
 };
 
 export type ShopError = {
-  __typename?: 'ShopError';
   /** The error code. */
   code: ShopErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -20667,7 +20130,6 @@ export type ShopErrorCode =
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopFetchTaxRates = {
-  __typename?: 'ShopFetchTaxRates';
   errors: Array<ShopError>;
   /** Updated shop. */
   shop?: Maybe<Shop>;
@@ -20754,7 +20216,6 @@ export type ShopSettingsInput = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ShopSettingsTranslate = {
-  __typename?: 'ShopSettingsTranslate';
   errors: Array<TranslationError>;
   /** Updated shop settings. */
   shop?: Maybe<Shop>;
@@ -20773,7 +20234,6 @@ export type ShopSettingsTranslationInput = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopSettingsUpdate = {
-  __typename?: 'ShopSettingsUpdate';
   errors: Array<ShopError>;
   /** Updated shop. */
   shop?: Maybe<Shop>;
@@ -20782,7 +20242,6 @@ export type ShopSettingsUpdate = {
 };
 
 export type ShopTranslation = Node & {
-  __typename?: 'ShopTranslation';
   description: Scalars['String']['output'];
   headerText: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -20803,7 +20262,6 @@ export type SiteDomainInput = {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type StaffBulkDelete = {
-  __typename?: 'StaffBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   errors: Array<StaffError>;
@@ -20817,7 +20275,6 @@ export type StaffBulkDelete = {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type StaffCreate = {
-  __typename?: 'StaffCreate';
   errors: Array<StaffError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   staffErrors: Array<StaffError>;
@@ -20849,7 +20306,6 @@ export type StaffCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StaffCreated = Event & {
-  __typename?: 'StaffCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20868,7 +20324,6 @@ export type StaffCreated = Event & {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type StaffDelete = {
-  __typename?: 'StaffDelete';
   errors: Array<StaffError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   staffErrors: Array<StaffError>;
@@ -20883,7 +20338,6 @@ export type StaffDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StaffDeleted = Event & {
-  __typename?: 'StaffDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -20897,7 +20351,6 @@ export type StaffDeleted = Event & {
 };
 
 export type StaffError = {
-  __typename?: 'StaffError';
   /** A type of address that causes the error. */
   addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -20922,7 +20375,6 @@ export type StaffMemberStatus =
 
 /** Represents a recipient of email notifications send by Saleor, such as notifications about new orders. Notifications can be assigned to staff users or arbitrary email addresses. */
 export type StaffNotificationRecipient = Node & {
-  __typename?: 'StaffNotificationRecipient';
   /** Determines if a notification active. */
   active?: Maybe<Scalars['Boolean']['output']>;
   /** Returns email address of a user subscribed to email notifications. */
@@ -20938,7 +20390,6 @@ export type StaffNotificationRecipient = Node & {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientCreate = {
-  __typename?: 'StaffNotificationRecipientCreate';
   errors: Array<ShopError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shopErrors: Array<ShopError>;
@@ -20951,7 +20402,6 @@ export type StaffNotificationRecipientCreate = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientDelete = {
-  __typename?: 'StaffNotificationRecipientDelete';
   errors: Array<ShopError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shopErrors: Array<ShopError>;
@@ -20973,7 +20423,6 @@ export type StaffNotificationRecipientInput = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientUpdate = {
-  __typename?: 'StaffNotificationRecipientUpdate';
   errors: Array<ShopError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   shopErrors: Array<ShopError>;
@@ -20986,7 +20435,6 @@ export type StaffNotificationRecipientUpdate = {
  * Requires one of the following permissions: MANAGE_STAFF.
  */
 export type StaffUpdate = {
-  __typename?: 'StaffUpdate';
   errors: Array<StaffError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   staffErrors: Array<StaffError>;
@@ -21018,7 +20466,6 @@ export type StaffUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StaffUpdated = Event & {
-  __typename?: 'StaffUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -21039,7 +20486,6 @@ export type StaffUserInput = {
 
 /** Represents stock. */
 export type Stock = Node & {
-  __typename?: 'Stock';
   id: Scalars['ID']['output'];
   productVariant: ProductVariant;
   /**
@@ -21068,7 +20514,6 @@ export type StockAvailability =
   | 'OUT_OF_STOCK';
 
 export type StockCountableConnection = {
-  __typename?: 'StockCountableConnection';
   edges: Array<StockCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -21077,7 +20522,6 @@ export type StockCountableConnection = {
 };
 
 export type StockCountableEdge = {
-  __typename?: 'StockCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -21085,7 +20529,6 @@ export type StockCountableEdge = {
 };
 
 export type StockError = {
-  __typename?: 'StockError';
   /** The error code. */
   code: StockErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21123,7 +20566,6 @@ export type StockInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StockSettings = {
-  __typename?: 'StockSettings';
   /** Allocation strategy defines the preference of warehouses for allocations and reservations. */
   allocationStrategy: AllocationStrategyEnum;
 };
@@ -21143,7 +20585,6 @@ export type StorePaymentMethodEnum =
   | 'ON_SESSION';
 
 export type Subscription = {
-  __typename?: 'Subscription';
   /**
    * Look up subscription event.
    *
@@ -21166,7 +20607,6 @@ export type TaxCalculationStrategy =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxClass = Node & ObjectWithMetadata & {
-  __typename?: 'TaxClass';
   /** Country-specific tax rates for this tax class. */
   countries: Array<TaxClassCountryRate>;
   /** The ID of the object. */
@@ -21264,7 +20704,6 @@ export type TaxClassPrivateMetafieldsArgs = {
 };
 
 export type TaxClassCountableConnection = {
-  __typename?: 'TaxClassCountableConnection';
   edges: Array<TaxClassCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -21273,7 +20712,6 @@ export type TaxClassCountableConnection = {
 };
 
 export type TaxClassCountableEdge = {
-  __typename?: 'TaxClassCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -21288,7 +20726,6 @@ export type TaxClassCountableEdge = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxClassCountryRate = {
-  __typename?: 'TaxClassCountryRate';
   /** Country in which this tax rate applies. */
   country: CountryDisplay;
   /** Tax rate value. */
@@ -21307,13 +20744,11 @@ export type TaxClassCountryRate = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxClassCreate = {
-  __typename?: 'TaxClassCreate';
   errors: Array<TaxClassCreateError>;
   taxClass?: Maybe<TaxClass>;
 };
 
 export type TaxClassCreateError = {
-  __typename?: 'TaxClassCreateError';
   /** The error code. */
   code: TaxClassCreateErrorCode;
   /** List of country codes for which the configuration is invalid. */
@@ -21347,13 +20782,11 @@ export type TaxClassCreateInput = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxClassDelete = {
-  __typename?: 'TaxClassDelete';
   errors: Array<TaxClassDeleteError>;
   taxClass?: Maybe<TaxClass>;
 };
 
 export type TaxClassDeleteError = {
-  __typename?: 'TaxClassDeleteError';
   /** The error code. */
   code: TaxClassDeleteErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21402,13 +20835,11 @@ export type TaxClassSortingInput = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxClassUpdate = {
-  __typename?: 'TaxClassUpdate';
   errors: Array<TaxClassUpdateError>;
   taxClass?: Maybe<TaxClass>;
 };
 
 export type TaxClassUpdateError = {
-  __typename?: 'TaxClassUpdateError';
   /** The error code. */
   code: TaxClassUpdateErrorCode;
   /** List of country codes for which the configuration is invalid. */
@@ -21443,7 +20874,6 @@ export type TaxClassUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxConfiguration = Node & ObjectWithMetadata & {
-  __typename?: 'TaxConfiguration';
   /** A channel to which the tax configuration applies to. */
   channel: Channel;
   /** Determines whether taxes are charged in the given channel. */
@@ -21549,7 +20979,6 @@ export type TaxConfigurationPrivateMetafieldsArgs = {
 };
 
 export type TaxConfigurationCountableConnection = {
-  __typename?: 'TaxConfigurationCountableConnection';
   edges: Array<TaxConfigurationCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -21558,7 +20987,6 @@ export type TaxConfigurationCountableConnection = {
 };
 
 export type TaxConfigurationCountableEdge = {
-  __typename?: 'TaxConfigurationCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -21578,7 +21006,6 @@ export type TaxConfigurationFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxConfigurationPerCountry = {
-  __typename?: 'TaxConfigurationPerCountry';
   /** Determines whether taxes are charged in this country. */
   chargeTaxes: Scalars['Boolean']['output'];
   /** Country in which this configuration applies. */
@@ -21610,13 +21037,11 @@ export type TaxConfigurationPerCountryInput = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxConfigurationUpdate = {
-  __typename?: 'TaxConfigurationUpdate';
   errors: Array<TaxConfigurationUpdateError>;
   taxConfiguration?: Maybe<TaxConfiguration>;
 };
 
 export type TaxConfigurationUpdateError = {
-  __typename?: 'TaxConfigurationUpdateError';
   /** The error code. */
   code: TaxConfigurationUpdateErrorCode;
   /** List of country codes for which the configuration is invalid. */
@@ -21657,7 +21082,6 @@ export type TaxConfigurationUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TaxCountryConfiguration = {
-  __typename?: 'TaxCountryConfiguration';
   /** A country for which tax class rates are grouped. */
   country: CountryDisplay;
   /** List of tax class rates. */
@@ -21674,14 +21098,12 @@ export type TaxCountryConfiguration = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxCountryConfigurationDelete = {
-  __typename?: 'TaxCountryConfigurationDelete';
   errors: Array<TaxCountryConfigurationDeleteError>;
   /** Updated tax class rates grouped by a country. */
   taxCountryConfiguration?: Maybe<TaxCountryConfiguration>;
 };
 
 export type TaxCountryConfigurationDeleteError = {
-  __typename?: 'TaxCountryConfigurationDeleteError';
   /** The error code. */
   code: TaxCountryConfigurationDeleteErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21706,14 +21128,12 @@ export type TaxCountryConfigurationDeleteErrorCode =
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxCountryConfigurationUpdate = {
-  __typename?: 'TaxCountryConfigurationUpdate';
   errors: Array<TaxCountryConfigurationUpdateError>;
   /** Updated tax class rates grouped by a country. */
   taxCountryConfiguration?: Maybe<TaxCountryConfiguration>;
 };
 
 export type TaxCountryConfigurationUpdateError = {
-  __typename?: 'TaxCountryConfigurationUpdateError';
   /** The error code. */
   code: TaxCountryConfigurationUpdateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21742,13 +21162,11 @@ export type TaxCountryConfigurationUpdateErrorCode =
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxExemptionManage = {
-  __typename?: 'TaxExemptionManage';
   errors: Array<TaxExemptionManageError>;
   taxableObject?: Maybe<TaxSourceObject>;
 };
 
 export type TaxExemptionManageError = {
-  __typename?: 'TaxExemptionManageError';
   /** The error code. */
   code: TaxExemptionManageErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -21770,7 +21188,6 @@ export type TaxSourceObject = Checkout | Order;
 
 /** Representation of tax types fetched from tax gateway. */
 export type TaxType = {
-  __typename?: 'TaxType';
   /** Description of the tax type. */
   description?: Maybe<Scalars['String']['output']>;
   /** External tax code used to identify given tax group. */
@@ -21779,7 +21196,6 @@ export type TaxType = {
 
 /** Taxable object. */
 export type TaxableObject = {
-  __typename?: 'TaxableObject';
   /** The address data. */
   address?: Maybe<Address>;
   channel: Channel;
@@ -21799,7 +21215,6 @@ export type TaxableObject = {
 
 /** Taxable object discount. */
 export type TaxableObjectDiscount = {
-  __typename?: 'TaxableObjectDiscount';
   /** The amount of the discount. */
   amount: Money;
   /** The name of the discount. */
@@ -21807,7 +21222,6 @@ export type TaxableObjectDiscount = {
 };
 
 export type TaxableObjectLine = {
-  __typename?: 'TaxableObjectLine';
   /** Determines if taxes are being charged for the product. */
   chargeTaxes: Scalars['Boolean']['output'];
   /** The product name. */
@@ -21828,7 +21242,6 @@ export type TaxableObjectLine = {
 
 /** Represents a monetary value with taxes. In cases where taxes were not applied, net and gross values will be equal. */
 export type TaxedMoney = {
-  __typename?: 'TaxedMoney';
   /** Currency code. */
   currency: Scalars['String']['output'];
   /** Amount of money including taxes. */
@@ -21841,7 +21254,6 @@ export type TaxedMoney = {
 
 /** Represents a range of monetary values. */
 export type TaxedMoneyRange = {
-  __typename?: 'TaxedMoneyRange';
   /** Lower bound of a price range. */
   start?: Maybe<TaxedMoney>;
   /** Upper bound of a price range. */
@@ -21853,7 +21265,6 @@ export type ThumbnailFormatEnum =
   | 'WEBP';
 
 export type TimePeriod = {
-  __typename?: 'TimePeriod';
   /** The length of the period. */
   amount: Scalars['Int']['output'];
   /** The type of the period. */
@@ -21876,7 +21287,6 @@ export type TimePeriodTypeEnum =
 
 /** An object representing a single payment. */
 export type Transaction = Node & {
-  __typename?: 'Transaction';
   /** Total amount of the transaction. */
   amount?: Maybe<Money>;
   created: Scalars['DateTime']['output'];
@@ -21890,7 +21300,6 @@ export type Transaction = Node & {
 };
 
 export type TransactionAction = {
-  __typename?: 'TransactionAction';
   /** Determines the action type. */
   actionType: TransactionActionEnum;
   /** Transaction request amount. Null when action type is VOID. */
@@ -21918,7 +21327,6 @@ export type TransactionActionEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionActionRequest = Event & {
-  __typename?: 'TransactionActionRequest';
   /**
    * Requested action data.
    *
@@ -21953,13 +21361,11 @@ export type TransactionActionRequest = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionCreate = {
-  __typename?: 'TransactionCreate';
   errors: Array<TransactionCreateError>;
   transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionCreateError = {
-  __typename?: 'TransactionCreateError';
   /** The error code. */
   code: TransactionCreateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22001,7 +21407,6 @@ export type TransactionCreateInput = {
 
 /** Represents transaction's event. */
 export type TransactionEvent = Node & {
-  __typename?: 'TransactionEvent';
   createdAt: Scalars['DateTime']['output'];
   /** The ID of the object. */
   id: Scalars['ID']['output'];
@@ -22030,7 +21435,6 @@ export type TransactionEventInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionItem = Node & ObjectWithMetadata & {
-  __typename?: 'TransactionItem';
   /** List of actions that can be performed in the current state of a payment. */
   actions: Array<TransactionActionEnum>;
   /** Total amount authorized for this payment. */
@@ -22157,7 +21561,6 @@ export type TransactionItemPrivateMetafieldsArgs = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionItemMetadataUpdated = Event & {
-  __typename?: 'TransactionItemMetadataUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22197,13 +21600,11 @@ export type TransactionKind =
  * Requires one of the following permissions: HANDLE_PAYMENTS, MANAGE_ORDERS.
  */
 export type TransactionRequestAction = {
-  __typename?: 'TransactionRequestAction';
   errors: Array<TransactionRequestActionError>;
   transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionRequestActionError = {
-  __typename?: 'TransactionRequestActionError';
   /** The error code. */
   code: TransactionRequestActionErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22233,13 +21634,11 @@ export type TransactionStatus =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionUpdate = {
-  __typename?: 'TransactionUpdate';
   errors: Array<TransactionUpdateError>;
   transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionUpdateError = {
-  __typename?: 'TransactionUpdateError';
   /** The error code. */
   code: TransactionUpdateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22282,7 +21681,6 @@ export type TransactionUpdateInput = {
 export type TranslatableItem = AttributeTranslatableContent | AttributeValueTranslatableContent | CategoryTranslatableContent | CollectionTranslatableContent | MenuItemTranslatableContent | PageTranslatableContent | ProductTranslatableContent | ProductVariantTranslatableContent | SaleTranslatableContent | ShippingMethodTranslatableContent | VoucherTranslatableContent;
 
 export type TranslatableItemConnection = {
-  __typename?: 'TranslatableItemConnection';
   edges: Array<TranslatableItemEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -22291,7 +21689,6 @@ export type TranslatableItemConnection = {
 };
 
 export type TranslatableItemEdge = {
-  __typename?: 'TranslatableItemEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -22319,7 +21716,6 @@ export type TranslatableKinds =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TranslationCreated = Event & {
-  __typename?: 'TranslationCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22333,7 +21729,6 @@ export type TranslationCreated = Event & {
 };
 
 export type TranslationError = {
-  __typename?: 'TranslationError';
   /** The error code. */
   code: TranslationErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22371,7 +21766,6 @@ export type TranslationTypes = AttributeTranslation | AttributeValueTranslation 
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TranslationUpdated = Event & {
-  __typename?: 'TranslationUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22393,7 +21787,6 @@ export type UpdateInvoiceInput = {
 
 /** Updates metadata of an object. To use it, you need to have access to the modified object. */
 export type UpdateMetadata = {
-  __typename?: 'UpdateMetadata';
   errors: Array<MetadataError>;
   item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22402,7 +21795,6 @@ export type UpdateMetadata = {
 
 /** Updates private metadata of an object. To use it, you need to be an authenticated staff user or an app and have access to the modified object. */
 export type UpdatePrivateMetadata = {
-  __typename?: 'UpdatePrivateMetadata';
   errors: Array<MetadataError>;
   item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22410,7 +21802,6 @@ export type UpdatePrivateMetadata = {
 };
 
 export type UploadError = {
-  __typename?: 'UploadError';
   /** The error code. */
   code: UploadErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -22425,7 +21816,6 @@ export type UploadErrorCode =
 
 /** Represents user data. */
 export type User = Node & ObjectWithMetadata & {
-  __typename?: 'User';
   /** List of all user's addresses. */
   addresses: Array<Address>;
   avatar?: Maybe<Image>;
@@ -22615,7 +22005,6 @@ export type UserStoredPaymentSourcesArgs = {
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type UserAvatarDelete = {
-  __typename?: 'UserAvatarDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -22629,7 +22018,6 @@ export type UserAvatarDelete = {
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type UserAvatarUpdate = {
-  __typename?: 'UserAvatarUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -22643,7 +22031,6 @@ export type UserAvatarUpdate = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type UserBulkSetActive = {
-  __typename?: 'UserBulkSetActive';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   /** Returns how many objects were affected. */
@@ -22652,7 +22039,6 @@ export type UserBulkSetActive = {
 };
 
 export type UserCountableConnection = {
-  __typename?: 'UserCountableConnection';
   edges: Array<UserCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -22661,7 +22047,6 @@ export type UserCountableConnection = {
 };
 
 export type UserCountableEdge = {
-  __typename?: 'UserCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -22698,7 +22083,6 @@ export type UserCreateInput = {
 };
 
 export type UserPermission = {
-  __typename?: 'UserPermission';
   /** Internal code for permission. */
   code: PermissionEnum;
   /** Describe action(s) allowed to do by permission. */
@@ -22735,7 +22119,6 @@ export type UserSortingInput = {
 
 /** Represents a VAT rate for a country. */
 export type Vat = {
-  __typename?: 'VAT';
   /** Country code. */
   countryCode: Scalars['String']['output'];
   /** Country's VAT rate exceptions for specific types of goods. */
@@ -22755,7 +22138,6 @@ export type VariantAttributeScope =
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type VariantMediaAssign = {
-  __typename?: 'VariantMediaAssign';
   errors: Array<ProductError>;
   media?: Maybe<ProductMedia>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22769,7 +22151,6 @@ export type VariantMediaAssign = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type VariantMediaUnassign = {
-  __typename?: 'VariantMediaUnassign';
   errors: Array<ProductError>;
   media?: Maybe<ProductMedia>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22779,7 +22160,6 @@ export type VariantMediaUnassign = {
 
 /** Represents availability of a variant in the storefront. */
 export type VariantPricingInfo = {
-  __typename?: 'VariantPricingInfo';
   /** The discount amount if in sale (null otherwise). */
   discount?: Maybe<TaxedMoney>;
   /** The discount amount in the local currency. */
@@ -22796,7 +22176,6 @@ export type VariantPricingInfo = {
 
 /** Verify JWT token. */
 export type VerifyToken = {
-  __typename?: 'VerifyToken';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   accountErrors: Array<AccountError>;
   errors: Array<AccountError>;
@@ -22826,7 +22205,6 @@ export type VolumeUnitsEnum =
 
 /** Vouchers allow giving discounts to particular customers on categories, collections or specific products. They can be used during checkout by providing valid voucher codes. */
 export type Voucher = Node & ObjectWithMetadata & {
-  __typename?: 'Voucher';
   applyOncePerCustomer: Scalars['Boolean']['output'];
   applyOncePerOrder: Scalars['Boolean']['output'];
   /** List of categories this voucher applies to. */
@@ -22994,7 +22372,6 @@ export type VoucherVariantsArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherAddCatalogues = {
-  __typename?: 'VoucherAddCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -23008,7 +22385,6 @@ export type VoucherAddCatalogues = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherBulkDelete = {
-  __typename?: 'VoucherBulkDelete';
   /** Returns how many objects were affected. */
   count: Scalars['Int']['output'];
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23018,7 +22394,6 @@ export type VoucherBulkDelete = {
 
 /** Represents voucher channel listing. */
 export type VoucherChannelListing = Node & {
-  __typename?: 'VoucherChannelListing';
   channel: Channel;
   currency: Scalars['String']['output'];
   discountValue: Scalars['Float']['output'];
@@ -23048,7 +22423,6 @@ export type VoucherChannelListingInput = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherChannelListingUpdate = {
-  __typename?: 'VoucherChannelListingUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -23057,7 +22431,6 @@ export type VoucherChannelListingUpdate = {
 };
 
 export type VoucherCountableConnection = {
-  __typename?: 'VoucherCountableConnection';
   edges: Array<VoucherCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -23066,7 +22439,6 @@ export type VoucherCountableConnection = {
 };
 
 export type VoucherCountableEdge = {
-  __typename?: 'VoucherCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -23079,7 +22451,6 @@ export type VoucherCountableEdge = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherCreate = {
-  __typename?: 'VoucherCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -23094,7 +22465,6 @@ export type VoucherCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type VoucherCreated = Event & {
-  __typename?: 'VoucherCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23125,7 +22495,6 @@ export type VoucherCreatedVoucherArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherDelete = {
-  __typename?: 'VoucherDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -23140,7 +22509,6 @@ export type VoucherDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type VoucherDeleted = Event & {
-  __typename?: 'VoucherDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23227,7 +22595,6 @@ export type VoucherInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type VoucherMetadataUpdated = Event & {
-  __typename?: 'VoucherMetadataUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23258,7 +22625,6 @@ export type VoucherMetadataUpdatedVoucherArgs = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherRemoveCatalogues = {
-  __typename?: 'VoucherRemoveCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -23304,7 +22670,6 @@ export type VoucherSortingInput = {
 };
 
 export type VoucherTranslatableContent = Node & {
-  __typename?: 'VoucherTranslatableContent';
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
   /** Returns translated voucher fields for the given language code. */
@@ -23329,7 +22694,6 @@ export type VoucherTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type VoucherTranslate = {
-  __typename?: 'VoucherTranslate';
   errors: Array<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   translationErrors: Array<TranslationError>;
@@ -23337,7 +22701,6 @@ export type VoucherTranslate = {
 };
 
 export type VoucherTranslation = Node & {
-  __typename?: 'VoucherTranslation';
   id: Scalars['ID']['output'];
   /** Translation language. */
   language: LanguageDisplay;
@@ -23355,7 +22718,6 @@ export type VoucherTypeEnum =
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type VoucherUpdate = {
-  __typename?: 'VoucherUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   discountErrors: Array<DiscountError>;
   errors: Array<DiscountError>;
@@ -23370,7 +22732,6 @@ export type VoucherUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type VoucherUpdated = Event & {
-  __typename?: 'VoucherUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23397,7 +22758,6 @@ export type VoucherUpdatedVoucherArgs = {
 
 /** Represents warehouse. */
 export type Warehouse = Node & ObjectWithMetadata & {
-  __typename?: 'Warehouse';
   address: Address;
   /**
    * Click and collect options: local, all or disabled.
@@ -23506,7 +22866,6 @@ export type WarehouseClickAndCollectOptionEnum =
   | 'LOCAL';
 
 export type WarehouseCountableConnection = {
-  __typename?: 'WarehouseCountableConnection';
   edges: Array<WarehouseCountableEdge>;
   /** Pagination data for this connection. */
   pageInfo: PageInfo;
@@ -23515,7 +22874,6 @@ export type WarehouseCountableConnection = {
 };
 
 export type WarehouseCountableEdge = {
-  __typename?: 'WarehouseCountableEdge';
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -23528,7 +22886,6 @@ export type WarehouseCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseCreate = {
-  __typename?: 'WarehouseCreate';
   errors: Array<WarehouseError>;
   warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23566,7 +22923,6 @@ export type WarehouseCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type WarehouseCreated = Event & {
-  __typename?: 'WarehouseCreated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23585,7 +22941,6 @@ export type WarehouseCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseDelete = {
-  __typename?: 'WarehouseDelete';
   errors: Array<WarehouseError>;
   warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23600,7 +22955,6 @@ export type WarehouseDelete = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type WarehouseDeleted = Event & {
-  __typename?: 'WarehouseDeleted';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23614,7 +22968,6 @@ export type WarehouseDeleted = Event & {
 };
 
 export type WarehouseError = {
-  __typename?: 'WarehouseError';
   /** The error code. */
   code: WarehouseErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -23651,7 +23004,6 @@ export type WarehouseFilterInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type WarehouseMetadataUpdated = Event & {
-  __typename?: 'WarehouseMetadataUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23670,7 +23022,6 @@ export type WarehouseMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseShippingZoneAssign = {
-  __typename?: 'WarehouseShippingZoneAssign';
   errors: Array<WarehouseError>;
   warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23683,7 +23034,6 @@ export type WarehouseShippingZoneAssign = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseShippingZoneUnassign = {
-  __typename?: 'WarehouseShippingZoneUnassign';
   errors: Array<WarehouseError>;
   warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23707,7 +23057,6 @@ export type WarehouseSortingInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseUpdate = {
-  __typename?: 'WarehouseUpdate';
   errors: Array<WarehouseError>;
   warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23755,7 +23104,6 @@ export type WarehouseUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type WarehouseUpdated = Event & {
-  __typename?: 'WarehouseUpdated';
   /** Time of the event. */
   issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23770,7 +23118,6 @@ export type WarehouseUpdated = Event & {
 
 /** Webhook. */
 export type Webhook = Node & {
-  __typename?: 'Webhook';
   app: App;
   /** List of asynchronous webhook events. */
   asyncEvents: Array<WebhookEventAsync>;
@@ -23815,7 +23162,6 @@ export type WebhookEventDeliveriesArgs = {
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
 export type WebhookCreate = {
-  __typename?: 'WebhookCreate';
   errors: Array<WebhookError>;
   webhook?: Maybe<Webhook>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23863,7 +23209,6 @@ export type WebhookCreateInput = {
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
 export type WebhookDelete = {
-  __typename?: 'WebhookDelete';
   errors: Array<WebhookError>;
   webhook?: Maybe<Webhook>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -23871,7 +23216,6 @@ export type WebhookDelete = {
 };
 
 export type WebhookError = {
-  __typename?: 'WebhookError';
   /** The error code. */
   code: WebhookErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -23891,7 +23235,6 @@ export type WebhookErrorCode =
 
 /** Webhook event. */
 export type WebhookEvent = {
-  __typename?: 'WebhookEvent';
   /** Internal name of the event type. */
   eventType: WebhookEventTypeEnum;
   /** Display name of the event. */
@@ -23900,7 +23243,6 @@ export type WebhookEvent = {
 
 /** Asynchronous webhook event. */
 export type WebhookEventAsync = {
-  __typename?: 'WebhookEventAsync';
   /** Internal name of the event type. */
   eventType: WebhookEventTypeAsyncEnum;
   /** Display name of the event. */
@@ -23909,7 +23251,6 @@ export type WebhookEventAsync = {
 
 /** Synchronous webhook event. */
 export type WebhookEventSync = {
-  __typename?: 'WebhookEventSync';
   /** Internal name of the event type. */
   eventType: WebhookEventTypeSyncEnum;
   /** Display name of the event. */
@@ -24684,7 +24025,6 @@ export type WebhookSampleEventTypeEnum =
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
 export type WebhookUpdate = {
-  __typename?: 'WebhookUpdate';
   errors: Array<WebhookError>;
   webhook?: Maybe<Webhook>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -24728,7 +24068,6 @@ export type WebhookUpdateInput = {
 
 /** Represents weight value in a specific weight unit. */
 export type Weight = {
-  __typename?: 'Weight';
   /** Weight unit. */
   unit: WeightUnitsEnum;
   /** Weight value. */
@@ -24748,15 +24087,14 @@ export type _Entity = Address | App | Category | Collection | Group | PageType |
 
 /** _Service manifest as defined by Federation spec. */
 export type _Service = {
-  __typename?: '_Service';
   sdl?: Maybe<Scalars['String']['output']>;
 };
 
-export type BulkImportProductFragment = { __typename?: 'Product', id: string, name: string, slug: string, variants?: Array<{ __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null }> | null };
+export type BulkImportProductFragment = { id: string, name: string, slug: string, variants?: Array<{ id: string, name: string, sku?: string | null, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null };
 
-export type WebhookProductFragment = { __typename?: 'Product', id: string, name: string, slug: string, channelListings?: Array<{ __typename?: 'ProductChannelListing', id: string, channel: { __typename?: 'Channel', id: string, slug: string } }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, name: string, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null }> | null };
+export type WebhookProductFragment = { id: string, name: string, slug: string, channelListings?: Array<{ id: string, channel: { id: string, slug: string } }> | null, variants?: Array<{ id: string, name: string, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null };
 
-export type WebhookProductVariantFragment = { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, product: { __typename?: 'Product', id: string, name: string, slug: string }, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null };
+export type WebhookProductVariantFragment = { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null };
 
 export type UpdateAppMetadataMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -24764,12 +24102,12 @@ export type UpdateAppMetadataMutationVariables = Exact<{
 }>;
 
 
-export type UpdateAppMetadataMutation = { __typename?: 'Mutation', updatePrivateMetadata?: { __typename?: 'UpdatePrivateMetadata', item?: { __typename?: 'Address', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'App', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Attribute', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Category', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Checkout', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'CheckoutLine', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Collection', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'DigitalContent', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Fulfillment', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'GiftCard', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Invoice', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Menu', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'MenuItem', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Order', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'OrderLine', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Page', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'PageType', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Payment', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Product', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'ProductType', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'ProductVariant', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Sale', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'ShippingMethod', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'ShippingMethodType', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'ShippingZone', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'TaxClass', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'TaxConfiguration', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'TransactionItem', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'User', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Voucher', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'Warehouse', privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null } | null };
+export type UpdateAppMetadataMutation = { updatePrivateMetadata?: { item?: { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | { privateMetadata: Array<{ key: string, value: string }> } | null } | null };
 
 export type FetchChannelsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchChannelsQuery = { __typename?: 'Query', channels?: Array<{ __typename?: 'Channel', id: string, slug: string, name: string }> | null };
+export type FetchChannelsQuery = { channels?: Array<{ id: string, slug: string, name: string }> | null };
 
 export type FetchProductsPaginatedQueryVariables = Exact<{
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -24777,35 +24115,35 @@ export type FetchProductsPaginatedQueryVariables = Exact<{
 }>;
 
 
-export type FetchProductsPaginatedQuery = { __typename?: 'Query', products?: { __typename?: 'ProductCountableConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null }, edges: Array<{ __typename?: 'ProductCountableEdge', node: { __typename?: 'Product', id: string, name: string, slug: string, variants?: Array<{ __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null }> | null } }> } | null };
+export type FetchProductsPaginatedQuery = { products?: { pageInfo: { hasNextPage: boolean, endCursor?: string | null }, edges: Array<{ node: { id: string, name: string, slug: string, variants?: Array<{ id: string, name: string, sku?: string | null, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null } }> } | null };
 
-export type ProductUpdatedWebhookPayloadFragment = { __typename?: 'ProductUpdated', product?: { __typename?: 'Product', id: string, name: string, slug: string, channelListings?: Array<{ __typename?: 'ProductChannelListing', id: string, channel: { __typename?: 'Channel', id: string, slug: string } }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, name: string, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null }> | null } | null };
+export type ProductUpdatedWebhookPayloadFragment = { product?: { id: string, name: string, slug: string, channelListings?: Array<{ id: string, channel: { id: string, slug: string } }> | null, variants?: Array<{ id: string, name: string, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null } | null };
 
 export type ProductUpdatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProductUpdatedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated', product?: { __typename?: 'Product', id: string, name: string, slug: string, channelListings?: Array<{ __typename?: 'ProductChannelListing', id: string, channel: { __typename?: 'Channel', id: string, slug: string } }> | null, variants?: Array<{ __typename?: 'ProductVariant', id: string, name: string, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null }> | null } | null } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffUpdated' } | { __typename?: 'TransactionActionRequest' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type ProductUpdatedSubscription = { event?: { product?: { id: string, name: string, slug: string, channelListings?: Array<{ id: string, channel: { id: string, slug: string } }> | null, variants?: Array<{ id: string, name: string, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null }> | null } | null } | {} | null };
 
-export type ProductVariantCreatedWebhookPayloadFragment = { __typename?: 'ProductVariantCreated', productVariant?: { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, product: { __typename?: 'Product', id: string, name: string, slug: string }, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null } | null };
+export type ProductVariantCreatedWebhookPayloadFragment = { productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null };
 
 export type ProductVariantCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProductVariantCreatedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated', productVariant?: { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, product: { __typename?: 'Product', id: string, name: string, slug: string }, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null } | null } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffUpdated' } | { __typename?: 'TransactionActionRequest' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type ProductVariantCreatedSubscription = { event?: { productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null } | {} | null };
 
-export type ProductVariantDeletedWebhookPayloadFragment = { __typename?: 'ProductVariantDeleted', productVariant?: { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, product: { __typename?: 'Product', id: string, name: string, slug: string }, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null } | null };
+export type ProductVariantDeletedWebhookPayloadFragment = { productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null };
 
 export type ProductVariantDeletedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProductVariantDeletedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted', productVariant?: { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, product: { __typename?: 'Product', id: string, name: string, slug: string }, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null } | null } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffUpdated' } | { __typename?: 'TransactionActionRequest' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type ProductVariantDeletedSubscription = { event?: { productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null } | {} | null };
 
-export type ProductVariantUpdatedWebhookPayloadFragment = { __typename?: 'ProductVariantUpdated', productVariant?: { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, product: { __typename?: 'Product', id: string, name: string, slug: string }, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null } | null };
+export type ProductVariantUpdatedWebhookPayloadFragment = { productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null };
 
 export type ProductVariantUpdatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProductVariantUpdatedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantUpdated', productVariant?: { __typename?: 'ProductVariant', id: string, name: string, sku?: string | null, product: { __typename?: 'Product', id: string, name: string, slug: string }, channelListings?: Array<{ __typename?: 'ProductVariantChannelListing', channel: { __typename?: 'Channel', id: string, slug: string }, price?: { __typename?: 'Money', amount: number, currency: string } | null }> | null } | null } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffUpdated' } | { __typename?: 'TransactionActionRequest' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type ProductVariantUpdatedSubscription = { event?: { productVariant?: { id: string, name: string, sku?: string | null, product: { id: string, name: string, slug: string }, channelListings?: Array<{ channel: { id: string, slug: string }, price?: { amount: number, currency: string } | null }> | null } | null } | {} | null };
 
 export const UntypedBulkImportProductFragmentDoc = gql`
     fragment BulkImportProduct on Product {
