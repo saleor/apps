@@ -83,7 +83,6 @@ export type Scalars = {
  * - ADDRESS_CREATED (async): An address was created.
  */
 export type AccountAddressCreate = {
-  readonly __typename?: 'AccountAddressCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -99,7 +98,6 @@ export type AccountAddressCreate = {
  * - ADDRESS_DELETED (async): An address was deleted.
  */
 export type AccountAddressDelete = {
-  readonly __typename?: 'AccountAddressDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -115,7 +113,6 @@ export type AccountAddressDelete = {
  * - ADDRESS_UPDATED (async): An address was updated.
  */
 export type AccountAddressUpdate = {
-  readonly __typename?: 'AccountAddressUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -130,7 +127,6 @@ export type AccountAddressUpdate = {
  * Added in Saleor 3.15.
  */
 export type AccountChangeEmailRequested = Event & {
-  readonly __typename?: 'AccountChangeEmailRequested';
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -159,7 +155,6 @@ export type AccountChangeEmailRequested = Event & {
  * Added in Saleor 3.15.
  */
 export type AccountConfirmationRequested = Event & {
-  readonly __typename?: 'AccountConfirmationRequested';
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -186,7 +181,6 @@ export type AccountConfirmationRequested = Event & {
  * Added in Saleor 3.15.
  */
 export type AccountConfirmed = Event & {
-  readonly __typename?: 'AccountConfirmed';
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -216,7 +210,6 @@ export type AccountConfirmed = Event & {
  * - ACCOUNT_DELETED (async): Account was deleted.
  */
 export type AccountDelete = {
-  readonly __typename?: 'AccountDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -229,7 +222,6 @@ export type AccountDelete = {
  * Added in Saleor 3.15.
  */
 export type AccountDeleteRequested = Event & {
-  readonly __typename?: 'AccountDeleteRequested';
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -256,7 +248,6 @@ export type AccountDeleteRequested = Event & {
  * Added in Saleor 3.15.
  */
 export type AccountDeleted = Event & {
-  readonly __typename?: 'AccountDeleted';
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -283,7 +274,6 @@ export type AccountDeleted = Event & {
  * Added in Saleor 3.15.
  */
 export type AccountEmailChanged = Event & {
-  readonly __typename?: 'AccountEmailChanged';
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -308,7 +298,6 @@ export type AccountEmailChanged = Event & {
 
 /** Represents errors in account mutations. */
 export type AccountError = {
-  readonly __typename?: 'AccountError';
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -386,7 +375,6 @@ export type AccountInput = {
  * - ACCOUNT_CONFIRMATION_REQUESTED (async): An user confirmation was requested. This event is always sent regardless of settings.
  */
 export type AccountRegister = {
-  readonly __typename?: 'AccountRegister';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -425,7 +413,6 @@ export type AccountRegisterInput = {
  * - ACCOUNT_DELETE_REQUESTED (async): An account delete requested.
  */
 export type AccountRequestDeletion = {
-  readonly __typename?: 'AccountRequestDeletion';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -440,7 +427,6 @@ export type AccountRequestDeletion = {
  * - CUSTOMER_UPDATED (async): A customer's address was updated.
  */
 export type AccountSetDefaultAddress = {
-  readonly __typename?: 'AccountSetDefaultAddress';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -454,7 +440,6 @@ export type AccountSetDefaultAddress = {
  * Added in Saleor 3.15.
  */
 export type AccountSetPasswordRequested = Event & {
-  readonly __typename?: 'AccountSetPasswordRequested';
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -485,7 +470,6 @@ export type AccountSetPasswordRequested = Event & {
  * - CUSTOMER_METADATA_UPDATED (async): Optionally called when customer's metadata was updated.
  */
 export type AccountUpdate = {
-  readonly __typename?: 'AccountUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -494,7 +478,6 @@ export type AccountUpdate = {
 
 /** Represents user address data. */
 export type Address = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Address';
   /** The city of the address. */
   readonly city: Scalars['String']['output'];
   /** The district of the address. */
@@ -598,7 +581,6 @@ export type AddressPrivateMetafieldsArgs = {
  * - ADDRESS_CREATED (async): A new address was created.
  */
 export type AddressCreate = {
-  readonly __typename?: 'AddressCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -613,7 +595,6 @@ export type AddressCreate = {
  * Added in Saleor 3.5.
  */
 export type AddressCreated = Event & {
-  readonly __typename?: 'AddressCreated';
   /** The address the event relates to. */
   readonly address?: Maybe<Address>;
   /** Time of the event. */
@@ -635,7 +616,6 @@ export type AddressCreated = Event & {
  * - ADDRESS_DELETED (async): An address was deleted.
  */
 export type AddressDelete = {
-  readonly __typename?: 'AddressDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -650,7 +630,6 @@ export type AddressDelete = {
  * Added in Saleor 3.5.
  */
 export type AddressDeleted = Event & {
-  readonly __typename?: 'AddressDeleted';
   /** The address the event relates to. */
   readonly address?: Maybe<Address>;
   /** Time of the event. */
@@ -715,7 +694,6 @@ export type AddressInput = {
  * - CUSTOMER_UPDATED (async): A customer was updated.
  */
 export type AddressSetDefault = {
-  readonly __typename?: 'AddressSetDefault';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -736,7 +714,6 @@ export type AddressTypeEnum =
  * - ADDRESS_UPDATED (async): An address was updated.
  */
 export type AddressUpdate = {
-  readonly __typename?: 'AddressUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
@@ -751,7 +728,6 @@ export type AddressUpdate = {
  * Added in Saleor 3.5.
  */
 export type AddressUpdated = Event & {
-  readonly __typename?: 'AddressUpdated';
   /** The address the event relates to. */
   readonly address?: Maybe<Address>;
   /** Time of the event. */
@@ -766,7 +742,6 @@ export type AddressUpdated = Event & {
 
 /** Represents address validation rules for a country. */
 export type AddressValidationData = {
-  readonly __typename?: 'AddressValidationData';
   /**
    * The address format of the address validation rule.
    *
@@ -835,7 +810,6 @@ export type AddressValidationData = {
 
 /** Represents allocation. */
 export type Allocation = Node & {
-  readonly __typename?: 'Allocation';
   /** The ID of allocation. */
   readonly id: Scalars['ID']['output'];
   /**
@@ -866,7 +840,6 @@ export type AllocationStrategyEnum =
 
 /** Represents app data. */
 export type App = Node & ObjectWithMetadata & {
-  readonly __typename?: 'App';
   /** Description of this app. */
   readonly aboutApp?: Maybe<Scalars['String']['output']>;
   /** JWT token used to authenticate by third-party app. */
@@ -1016,7 +989,6 @@ export type AppPrivateMetafieldsArgs = {
  * - APP_STATUS_CHANGED (async): An app was activated.
  */
 export type AppActivate = {
-  readonly __typename?: 'AppActivate';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -1031,7 +1003,6 @@ export type AppActivate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppBrand = {
-  readonly __typename?: 'AppBrand';
   /**
    * App's logos details.
    *
@@ -1050,7 +1021,6 @@ export type AppBrand = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppBrandLogo = {
-  readonly __typename?: 'AppBrandLogo';
   /**
    * URL to the default logo image.
    *
@@ -1075,7 +1045,6 @@ export type AppBrandLogoDefaultArgs = {
 };
 
 export type AppCountableConnection = {
-  readonly __typename?: 'AppCountableConnection';
   readonly edges: ReadonlyArray<AppCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -1084,7 +1053,6 @@ export type AppCountableConnection = {
 };
 
 export type AppCountableEdge = {
-  readonly __typename?: 'AppCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -1098,7 +1066,6 @@ export type AppCountableEdge = {
  * - APP_INSTALLED (async): An app was installed.
  */
 export type AppCreate = {
-  readonly __typename?: 'AppCreate';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -1116,7 +1083,6 @@ export type AppCreate = {
  * - APP_STATUS_CHANGED (async): An app was deactivated.
  */
 export type AppDeactivate = {
-  readonly __typename?: 'AppDeactivate';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -1132,7 +1098,6 @@ export type AppDeactivate = {
  * - APP_DELETED (async): An app was deleted.
  */
 export type AppDelete = {
-  readonly __typename?: 'AppDelete';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -1145,7 +1110,6 @@ export type AppDelete = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppDeleteFailedInstallation = {
-  readonly __typename?: 'AppDeleteFailedInstallation';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appInstallation?: Maybe<AppInstallation>;
@@ -1158,7 +1122,6 @@ export type AppDeleteFailedInstallation = {
  * Added in Saleor 3.4.
  */
 export type AppDeleted = Event & {
-  readonly __typename?: 'AppDeleted';
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
   /** Time of the event. */
@@ -1172,7 +1135,6 @@ export type AppDeleted = Event & {
 };
 
 export type AppError = {
-  readonly __typename?: 'AppError';
   /** The error code. */
   readonly code: AppErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -1202,7 +1164,6 @@ export type AppErrorCode =
 
 /** Represents app data. */
 export type AppExtension = Node & {
-  readonly __typename?: 'AppExtension';
   /** JWT token used to authenticate by third-party app extension. */
   readonly accessToken?: Maybe<Scalars['String']['output']>;
   /** The app assigned to app extension. */
@@ -1222,7 +1183,6 @@ export type AppExtension = Node & {
 };
 
 export type AppExtensionCountableConnection = {
-  readonly __typename?: 'AppExtensionCountableConnection';
   readonly edges: ReadonlyArray<AppExtensionCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -1231,7 +1191,6 @@ export type AppExtensionCountableConnection = {
 };
 
 export type AppExtensionCountableEdge = {
-  readonly __typename?: 'AppExtensionCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -1277,7 +1236,6 @@ export type AppExtensionTargetEnum =
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppFetchManifest = {
-  readonly __typename?: 'AppFetchManifest';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
@@ -1306,7 +1264,6 @@ export type AppInput = {
 
 /** Install new app by using app manifest. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS. */
 export type AppInstall = {
-  readonly __typename?: 'AppInstall';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appInstallation?: Maybe<AppInstallation>;
@@ -1326,7 +1283,6 @@ export type AppInstallInput = {
 
 /** Represents ongoing installation of app. */
 export type AppInstallation = Job & Node & {
-  readonly __typename?: 'AppInstallation';
   /** The name of the app installation. */
   readonly appName: Scalars['String']['output'];
   /**
@@ -1357,7 +1313,6 @@ export type AppInstallation = Job & Node & {
  * Added in Saleor 3.4.
  */
 export type AppInstalled = Event & {
-  readonly __typename?: 'AppInstalled';
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
   /** Time of the event. */
@@ -1378,7 +1333,6 @@ export type AppInstalled = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppManifestBrand = {
-  readonly __typename?: 'AppManifestBrand';
   /**
    * App's logos details.
    *
@@ -1397,7 +1351,6 @@ export type AppManifestBrand = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type AppManifestBrandLogo = {
-  readonly __typename?: 'AppManifestBrandLogo';
   /**
    * Data URL with a base64 encoded logo image.
    *
@@ -1422,7 +1375,6 @@ export type AppManifestBrandLogoDefaultArgs = {
 };
 
 export type AppManifestExtension = {
-  readonly __typename?: 'AppManifestExtension';
   /** Label of the extension to show in the dashboard. */
   readonly label: Scalars['String']['output'];
   /** Place where given extension will be mounted. */
@@ -1436,7 +1388,6 @@ export type AppManifestExtension = {
 };
 
 export type AppManifestRequiredSaleorVersion = {
-  readonly __typename?: 'AppManifestRequiredSaleorVersion';
   /**
    * Required Saleor version as semver range.
    *
@@ -1456,7 +1407,6 @@ export type AppManifestRequiredSaleorVersion = {
 };
 
 export type AppManifestWebhook = {
-  readonly __typename?: 'AppManifestWebhook';
   /** The asynchronous events that webhook wants to subscribe. */
   readonly asyncEvents?: Maybe<ReadonlyArray<WebhookEventTypeAsyncEnum>>;
   /** The name of the webhook. */
@@ -1478,7 +1428,6 @@ export type AppManifestWebhook = {
  * - APP_INSTALLED (async): An app was installed.
  */
 export type AppRetryInstall = {
-  readonly __typename?: 'AppRetryInstall';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appInstallation?: Maybe<AppInstallation>;
@@ -1504,7 +1453,6 @@ export type AppSortingInput = {
  * Added in Saleor 3.4.
  */
 export type AppStatusChanged = Event & {
-  readonly __typename?: 'AppStatusChanged';
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
   /** Time of the event. */
@@ -1519,7 +1467,6 @@ export type AppStatusChanged = Event & {
 
 /** Represents token data. */
 export type AppToken = Node & {
-  readonly __typename?: 'AppToken';
   /** Last 4 characters of the token. */
   readonly authToken?: Maybe<Scalars['String']['output']>;
   /** The ID of the app token. */
@@ -1534,7 +1481,6 @@ export type AppToken = Node & {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppTokenCreate = {
-  readonly __typename?: 'AppTokenCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appToken?: Maybe<AppToken>;
@@ -1549,7 +1495,6 @@ export type AppTokenCreate = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppTokenDelete = {
-  readonly __typename?: 'AppTokenDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appToken?: Maybe<AppToken>;
@@ -1565,7 +1510,6 @@ export type AppTokenInput = {
 
 /** Verify provided app token. */
 export type AppTokenVerify = {
-  readonly __typename?: 'AppTokenVerify';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
@@ -1589,7 +1533,6 @@ export type AppTypeEnum =
  * - APP_UPDATED (async): An app was updated.
  */
 export type AppUpdate = {
-  readonly __typename?: 'AppUpdate';
   readonly app?: Maybe<App>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
@@ -1602,7 +1545,6 @@ export type AppUpdate = {
  * Added in Saleor 3.4.
  */
 export type AppUpdated = Event & {
-  readonly __typename?: 'AppUpdated';
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
   /** Time of the event. */
@@ -1631,7 +1573,6 @@ export type AreaUnitsEnum =
  * Requires one of the following permissions: MANAGE_MENUS, MANAGE_SETTINGS.
  */
 export type AssignNavigation = {
-  readonly __typename?: 'AssignNavigation';
   readonly errors: ReadonlyArray<MenuError>;
   /** Assigned navigation menu. */
   readonly menu?: Maybe<Menu>;
@@ -1645,7 +1586,6 @@ export type AssignNavigation = {
  * Added in Saleor 3.1.
  */
 export type AssignedVariantAttribute = {
-  readonly __typename?: 'AssignedVariantAttribute';
   /** Attribute assigned to variant. */
   readonly attribute: Attribute;
   /** Determines, whether assigned attribute is allowed for variant selection. Supported variant types for variant selection are: ['dropdown', 'boolean', 'swatch', 'numeric'] */
@@ -1654,7 +1594,6 @@ export type AssignedVariantAttribute = {
 
 /** Custom attribute of a product. Attributes can be assigned to products and variants at the product type level. */
 export type Attribute = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Attribute';
   /**
    * Whether the attribute can be displayed in the admin product list. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
    * @deprecated This field will be removed in Saleor 4.0.
@@ -1810,7 +1749,6 @@ export type AttributeTranslationArgs = {
  * - ATTRIBUTE_CREATED (async): An attribute was created.
  */
 export type AttributeBulkCreate = {
-  readonly __typename?: 'AttributeBulkCreate';
   /** Returns how many objects were created. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<AttributeBulkCreateError>;
@@ -1819,7 +1757,6 @@ export type AttributeBulkCreate = {
 };
 
 export type AttributeBulkCreateError = {
-  readonly __typename?: 'AttributeBulkCreateError';
   /** The error code. */
   readonly code: AttributeBulkCreateErrorCode;
   /** The error message. */
@@ -1840,7 +1777,6 @@ export type AttributeBulkCreateErrorCode =
   | 'UNIQUE';
 
 export type AttributeBulkCreateResult = {
-  readonly __typename?: 'AttributeBulkCreateResult';
   /** Attribute data. */
   readonly attribute?: Maybe<Attribute>;
   /** List of errors occurred on create attempt. */
@@ -1856,7 +1792,6 @@ export type AttributeBulkCreateResult = {
  * - ATTRIBUTE_DELETED (async): An attribute was deleted.
  */
 export type AttributeBulkDelete = {
-  readonly __typename?: 'AttributeBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   /** Returns how many objects were affected. */
@@ -1874,7 +1809,6 @@ export type AttributeBulkDelete = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type AttributeBulkTranslate = {
-  readonly __typename?: 'AttributeBulkTranslate';
   /** Returns how many translations were created/updated. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<AttributeBulkTranslateError>;
@@ -1883,7 +1817,6 @@ export type AttributeBulkTranslate = {
 };
 
 export type AttributeBulkTranslateError = {
-  readonly __typename?: 'AttributeBulkTranslateError';
   /** The error code. */
   readonly code: AttributeTranslateErrorCode;
   /** The error message. */
@@ -1904,7 +1837,6 @@ export type AttributeBulkTranslateInput = {
 };
 
 export type AttributeBulkTranslateResult = {
-  readonly __typename?: 'AttributeBulkTranslateResult';
   /** List of errors occurred on translation attempt. */
   readonly errors?: Maybe<ReadonlyArray<AttributeBulkTranslateError>>;
   /** Attribute translation data. */
@@ -1924,7 +1856,6 @@ export type AttributeBulkTranslateResult = {
  * - ATTRIBUTE_VALUE_DELETED (async): Called optionally when an attribute value was deleted.
  */
 export type AttributeBulkUpdate = {
-  readonly __typename?: 'AttributeBulkUpdate';
   /** Returns how many objects were updated. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<AttributeBulkUpdateError>;
@@ -1933,7 +1864,6 @@ export type AttributeBulkUpdate = {
 };
 
 export type AttributeBulkUpdateError = {
-  readonly __typename?: 'AttributeBulkUpdateError';
   /** The error code. */
   readonly code: AttributeBulkUpdateErrorCode;
   /** The error message. */
@@ -1963,7 +1893,6 @@ export type AttributeBulkUpdateInput = {
 };
 
 export type AttributeBulkUpdateResult = {
-  readonly __typename?: 'AttributeBulkUpdateResult';
   /** Attribute data. */
   readonly attribute?: Maybe<Attribute>;
   /** List of errors occurred on update attempt. */
@@ -1984,7 +1913,6 @@ export type AttributeChoicesSortingInput = {
 };
 
 export type AttributeCountableConnection = {
-  readonly __typename?: 'AttributeCountableConnection';
   readonly edges: ReadonlyArray<AttributeCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -1993,7 +1921,6 @@ export type AttributeCountableConnection = {
 };
 
 export type AttributeCountableEdge = {
-  readonly __typename?: 'AttributeCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -2007,7 +1934,6 @@ export type AttributeCountableEdge = {
  * - ATTRIBUTE_CREATED (async): An attribute was created.
  */
 export type AttributeCreate = {
-  readonly __typename?: 'AttributeCreate';
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
@@ -2074,7 +2000,6 @@ export type AttributeCreateInput = {
  * Added in Saleor 3.5.
  */
 export type AttributeCreated = Event & {
-  readonly __typename?: 'AttributeCreated';
   /** The attribute the event relates to. */
   readonly attribute?: Maybe<Attribute>;
   /** Time of the event. */
@@ -2096,7 +2021,6 @@ export type AttributeCreated = Event & {
  * - ATTRIBUTE_DELETED (async): An attribute was deleted.
  */
 export type AttributeDelete = {
-  readonly __typename?: 'AttributeDelete';
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
@@ -2109,7 +2033,6 @@ export type AttributeDelete = {
  * Added in Saleor 3.5.
  */
 export type AttributeDeleted = Event & {
-  readonly __typename?: 'AttributeDeleted';
   /** The attribute the event relates to. */
   readonly attribute?: Maybe<Attribute>;
   /** Time of the event. */
@@ -2135,7 +2058,6 @@ export type AttributeEntityTypeEnumFilterInput = {
 };
 
 export type AttributeError = {
-  readonly __typename?: 'AttributeError';
   /** The error code. */
   readonly code: AttributeErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -2219,7 +2141,6 @@ export type AttributeInputTypeEnumFilterInput = {
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
  */
 export type AttributeReorderValues = {
-  readonly __typename?: 'AttributeReorderValues';
   /** Attribute from which values are reordered. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2256,7 +2177,6 @@ export type AttributeSortingInput = {
 
 /** Represents attribute's original translatable fields and related translations. */
 export type AttributeTranslatableContent = Node & {
-  readonly __typename?: 'AttributeTranslatableContent';
   /**
    * Custom attribute of a product.
    * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
@@ -2288,7 +2208,6 @@ export type AttributeTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type AttributeTranslate = {
-  readonly __typename?: 'AttributeTranslate';
   readonly attribute?: Maybe<Attribute>;
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2303,7 +2222,6 @@ export type AttributeTranslateErrorCode =
 
 /** Represents attribute translations. */
 export type AttributeTranslation = Node & {
-  readonly __typename?: 'AttributeTranslation';
   /** The ID of the attribute translation. */
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
@@ -2338,7 +2256,6 @@ export type AttributeTypeEnumFilterInput = {
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
  */
 export type AttributeUpdate = {
-  readonly __typename?: 'AttributeUpdate';
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
@@ -2401,7 +2318,6 @@ export type AttributeUpdateInput = {
  * Added in Saleor 3.5.
  */
 export type AttributeUpdated = Event & {
-  readonly __typename?: 'AttributeUpdated';
   /** The attribute the event relates to. */
   readonly attribute?: Maybe<Attribute>;
   /** Time of the event. */
@@ -2416,7 +2332,6 @@ export type AttributeUpdated = Event & {
 
 /** Represents a value of an attribute. */
 export type AttributeValue = Node & {
-  readonly __typename?: 'AttributeValue';
   /** Represents the boolean value of the attribute value. */
   readonly boolean?: Maybe<Scalars['Boolean']['output']>;
   /** Represents the date value of the attribute value. */
@@ -2471,7 +2386,6 @@ export type AttributeValueTranslationArgs = {
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
  */
 export type AttributeValueBulkDelete = {
-  readonly __typename?: 'AttributeValueBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   /** Returns how many objects were affected. */
@@ -2489,7 +2403,6 @@ export type AttributeValueBulkDelete = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type AttributeValueBulkTranslate = {
-  readonly __typename?: 'AttributeValueBulkTranslate';
   /** Returns how many translations were created/updated. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<AttributeValueBulkTranslateError>;
@@ -2498,7 +2411,6 @@ export type AttributeValueBulkTranslate = {
 };
 
 export type AttributeValueBulkTranslateError = {
-  readonly __typename?: 'AttributeValueBulkTranslateError';
   /** The error code. */
   readonly code: AttributeValueTranslateErrorCode;
   /** The error message. */
@@ -2519,7 +2431,6 @@ export type AttributeValueBulkTranslateInput = {
 };
 
 export type AttributeValueBulkTranslateResult = {
-  readonly __typename?: 'AttributeValueBulkTranslateResult';
   /** List of errors occurred on translation attempt. */
   readonly errors?: Maybe<ReadonlyArray<AttributeValueBulkTranslateError>>;
   /** Attribute value translation data. */
@@ -2527,7 +2438,6 @@ export type AttributeValueBulkTranslateResult = {
 };
 
 export type AttributeValueCountableConnection = {
-  readonly __typename?: 'AttributeValueCountableConnection';
   readonly edges: ReadonlyArray<AttributeValueCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -2536,7 +2446,6 @@ export type AttributeValueCountableConnection = {
 };
 
 export type AttributeValueCountableEdge = {
-  readonly __typename?: 'AttributeValueCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -2553,7 +2462,6 @@ export type AttributeValueCountableEdge = {
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
  */
 export type AttributeValueCreate = {
-  readonly __typename?: 'AttributeValueCreate';
   /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2599,7 +2507,6 @@ export type AttributeValueCreateInput = {
  * Added in Saleor 3.5.
  */
 export type AttributeValueCreated = Event & {
-  readonly __typename?: 'AttributeValueCreated';
   /** The attribute value the event relates to. */
   readonly attributeValue?: Maybe<AttributeValue>;
   /** Time of the event. */
@@ -2622,7 +2529,6 @@ export type AttributeValueCreated = Event & {
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
  */
 export type AttributeValueDelete = {
-  readonly __typename?: 'AttributeValueDelete';
   /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2637,7 +2543,6 @@ export type AttributeValueDelete = {
  * Added in Saleor 3.5.
  */
 export type AttributeValueDeleted = Event & {
-  readonly __typename?: 'AttributeValueDeleted';
   /** The attribute value the event relates to. */
   readonly attributeValue?: Maybe<AttributeValue>;
   /** Time of the event. */
@@ -2733,7 +2638,6 @@ export type AttributeValueSelectableTypeInput = {
 
 /** Represents attribute value's original translatable fields and related translations. */
 export type AttributeValueTranslatableContent = Node & {
-  readonly __typename?: 'AttributeValueTranslatableContent';
   /**
    * Associated attribute that can be translated.
    *
@@ -2779,7 +2683,6 @@ export type AttributeValueTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type AttributeValueTranslate = {
-  readonly __typename?: 'AttributeValueTranslate';
   readonly attributeValue?: Maybe<AttributeValue>;
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2794,7 +2697,6 @@ export type AttributeValueTranslateErrorCode =
 
 /** Represents attribute value translations. */
 export type AttributeValueTranslation = Node & {
-  readonly __typename?: 'AttributeValueTranslation';
   /** The ID of the attribute value translation. */
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
@@ -2839,7 +2741,6 @@ export type AttributeValueTranslationInput = {
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
  */
 export type AttributeValueUpdate = {
-  readonly __typename?: 'AttributeValueUpdate';
   /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -2885,7 +2786,6 @@ export type AttributeValueUpdateInput = {
  * Added in Saleor 3.5.
  */
 export type AttributeValueUpdated = Event & {
-  readonly __typename?: 'AttributeValueUpdated';
   /** The attribute value the event relates to. */
   readonly attributeValue?: Maybe<AttributeValue>;
   /** Time of the event. */
@@ -3008,7 +2908,6 @@ export type BulkAttributeValueInput = {
 };
 
 export type BulkProductError = {
-  readonly __typename?: 'BulkProductError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of channel IDs which causes the error. */
@@ -3028,7 +2927,6 @@ export type BulkProductError = {
 };
 
 export type BulkStockError = {
-  readonly __typename?: 'BulkStockError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -3049,7 +2947,6 @@ export type BulkStockError = {
  * Added in Saleor 3.7.
  */
 export type CalculateTaxes = Event & {
-  readonly __typename?: 'CalculateTaxes';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -3102,7 +2999,6 @@ export type CataloguePredicateInput = {
 
 /** Represents a single category of products. Categories allow to organize products in a tree-hierarchies which can be used for navigation in the storefront. */
 export type Category = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Category';
   /** List of ancestors of the category. */
   readonly ancestors?: Maybe<CategoryCountableConnection>;
   /** Background image of the category. */
@@ -3254,7 +3150,6 @@ export type CategoryTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryBulkDelete = {
-  readonly __typename?: 'CategoryBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -3263,7 +3158,6 @@ export type CategoryBulkDelete = {
 };
 
 export type CategoryCountableConnection = {
-  readonly __typename?: 'CategoryCountableConnection';
   readonly edges: ReadonlyArray<CategoryCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -3272,7 +3166,6 @@ export type CategoryCountableConnection = {
 };
 
 export type CategoryCountableEdge = {
-  readonly __typename?: 'CategoryCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -3285,7 +3178,6 @@ export type CategoryCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryCreate = {
-  readonly __typename?: 'CategoryCreate';
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3298,7 +3190,6 @@ export type CategoryCreate = {
  * Added in Saleor 3.2.
  */
 export type CategoryCreated = Event & {
-  readonly __typename?: 'CategoryCreated';
   /** The category the event relates to. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -3317,7 +3208,6 @@ export type CategoryCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryDelete = {
-  readonly __typename?: 'CategoryDelete';
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3330,7 +3220,6 @@ export type CategoryDelete = {
  * Added in Saleor 3.2.
  */
 export type CategoryDeleted = Event & {
-  readonly __typename?: 'CategoryDeleted';
   /** The category the event relates to. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -3410,7 +3299,6 @@ export type CategorySortingInput = {
 
 /** Represents category original translatable fields and related translations. */
 export type CategoryTranslatableContent = Node & {
-  readonly __typename?: 'CategoryTranslatableContent';
   /**
    * Represents a single category of products.
    * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
@@ -3459,7 +3347,6 @@ export type CategoryTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type CategoryTranslate = {
-  readonly __typename?: 'CategoryTranslate';
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3468,7 +3355,6 @@ export type CategoryTranslate = {
 
 /** Represents category translations. */
 export type CategoryTranslation = Node & {
-  readonly __typename?: 'CategoryTranslation';
   /**
    * Translated description of the category.
    *
@@ -3506,7 +3392,6 @@ export type CategoryTranslation = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CategoryUpdate = {
-  readonly __typename?: 'CategoryUpdate';
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3519,7 +3404,6 @@ export type CategoryUpdate = {
  * Added in Saleor 3.2.
  */
 export type CategoryUpdated = Event & {
-  readonly __typename?: 'CategoryUpdated';
   /** The category the event relates to. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -3543,7 +3427,6 @@ export type CategoryWhereInput = {
 
 /** Represents channel. */
 export type Channel = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Channel';
   /**
    * Shipping methods that are available for the channel.
    *
@@ -3725,7 +3608,6 @@ export type ChannelPrivateMetafieldsArgs = {
  * - CHANNEL_STATUS_CHANGED (async): A channel was activated.
  */
 export type ChannelActivate = {
-  readonly __typename?: 'ChannelActivate';
   /** Activated channel. */
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3742,7 +3624,6 @@ export type ChannelActivate = {
  * - CHANNEL_CREATED (async): A channel was created.
  */
 export type ChannelCreate = {
-  readonly __typename?: 'ChannelCreate';
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
@@ -3820,7 +3701,6 @@ export type ChannelCreateInput = {
  * Added in Saleor 3.2.
  */
 export type ChannelCreated = Event & {
-  readonly __typename?: 'ChannelCreated';
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -3842,7 +3722,6 @@ export type ChannelCreated = Event & {
  * - CHANNEL_STATUS_CHANGED (async): A channel was deactivated.
  */
 export type ChannelDeactivate = {
-  readonly __typename?: 'ChannelDeactivate';
   /** Deactivated channel. */
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -3859,7 +3738,6 @@ export type ChannelDeactivate = {
  * - CHANNEL_DELETED (async): A channel was deleted.
  */
 export type ChannelDelete = {
-  readonly __typename?: 'ChannelDelete';
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
@@ -3877,7 +3755,6 @@ export type ChannelDeleteInput = {
  * Added in Saleor 3.2.
  */
 export type ChannelDeleted = Event & {
-  readonly __typename?: 'ChannelDeleted';
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -3891,7 +3768,6 @@ export type ChannelDeleted = Event & {
 };
 
 export type ChannelError = {
-  readonly __typename?: 'ChannelError';
   /** The error code. */
   readonly code: ChannelErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -3932,7 +3808,6 @@ export type ChannelListingUpdateInput = {
  * Added in Saleor 3.15.
  */
 export type ChannelMetadataUpdated = Event & {
-  readonly __typename?: 'ChannelMetadataUpdated';
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -3953,7 +3828,6 @@ export type ChannelMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelReorderWarehouses = {
-  readonly __typename?: 'ChannelReorderWarehouses';
   /** Channel within the warehouses are reordered. */
   readonly channel?: Maybe<Channel>;
   readonly errors: ReadonlyArray<ChannelError>;
@@ -3965,7 +3839,6 @@ export type ChannelReorderWarehouses = {
  * Added in Saleor 3.2.
  */
 export type ChannelStatusChanged = Event & {
-  readonly __typename?: 'ChannelStatusChanged';
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -3991,7 +3864,6 @@ export type ChannelStatusChanged = Event & {
  * - CHANNEL_METADATA_UPDATED (async): Optionally triggered when public or private metadata is updated.
  */
 export type ChannelUpdate = {
-  readonly __typename?: 'ChannelUpdate';
   readonly channel?: Maybe<Channel>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
@@ -4075,7 +3947,6 @@ export type ChannelUpdateInput = {
  * Added in Saleor 3.2.
  */
 export type ChannelUpdated = Event & {
-  readonly __typename?: 'ChannelUpdated';
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -4090,7 +3961,6 @@ export type ChannelUpdated = Event & {
 
 /** Checkout object. */
 export type Checkout = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Checkout';
   /**
    * The authorize status of the checkout.
    *
@@ -4359,7 +4229,6 @@ export type CheckoutStoredPaymentMethodsArgs = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutAddPromoCode = {
-  readonly __typename?: 'CheckoutAddPromoCode';
   /** The checkout with the added gift card or voucher. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4402,7 +4271,6 @@ export type CheckoutAuthorizeStatusEnum =
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutBillingAddressUpdate = {
-  readonly __typename?: 'CheckoutBillingAddressUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4448,7 +4316,6 @@ export type CheckoutChargeStatusEnum =
  * - ORDER_CONFIRMED (async): Optionally triggered when newly created order are automatically marked as confirmed.
  */
 export type CheckoutComplete = {
-  readonly __typename?: 'CheckoutComplete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   /** Confirmation data used to process additional authorization steps. */
@@ -4461,7 +4328,6 @@ export type CheckoutComplete = {
 };
 
 export type CheckoutCountableConnection = {
-  readonly __typename?: 'CheckoutCountableConnection';
   readonly edges: ReadonlyArray<CheckoutCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -4470,7 +4336,6 @@ export type CheckoutCountableConnection = {
 };
 
 export type CheckoutCountableEdge = {
-  readonly __typename?: 'CheckoutCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -4486,7 +4351,6 @@ export type CheckoutCountableEdge = {
  * - CHECKOUT_CREATED (async): A checkout was created.
  */
 export type CheckoutCreate = {
-  readonly __typename?: 'CheckoutCreate';
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
@@ -4506,7 +4370,6 @@ export type CheckoutCreate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutCreateFromOrder = {
-  readonly __typename?: 'CheckoutCreateFromOrder';
   /** Created checkout. */
   readonly checkout?: Maybe<Checkout>;
   readonly errors: ReadonlyArray<CheckoutCreateFromOrderError>;
@@ -4515,7 +4378,6 @@ export type CheckoutCreateFromOrder = {
 };
 
 export type CheckoutCreateFromOrderError = {
-  readonly __typename?: 'CheckoutCreateFromOrderError';
   /** The error code. */
   readonly code: CheckoutCreateFromOrderErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -4532,7 +4394,6 @@ export type CheckoutCreateFromOrderErrorCode =
   | 'TAX_ERROR';
 
 export type CheckoutCreateFromOrderUnavailableVariant = {
-  readonly __typename?: 'CheckoutCreateFromOrderUnavailableVariant';
   /** The error code. */
   readonly code: CheckoutCreateFromOrderUnavailableVariantErrorCode;
   /** Order line ID that is unavailable. */
@@ -4578,7 +4439,6 @@ export type CheckoutCreateInput = {
  * Added in Saleor 3.2.
  */
 export type CheckoutCreated = Event & {
-  readonly __typename?: 'CheckoutCreated';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -4600,7 +4460,6 @@ export type CheckoutCreated = Event & {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutCustomerAttach = {
-  readonly __typename?: 'CheckoutCustomerAttach';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4617,7 +4476,6 @@ export type CheckoutCustomerAttach = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutCustomerDetach = {
-  readonly __typename?: 'CheckoutCustomerDetach';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4635,7 +4493,6 @@ export type CheckoutCustomerDetach = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutDeliveryMethodUpdate = {
-  readonly __typename?: 'CheckoutDeliveryMethodUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   readonly errors: ReadonlyArray<CheckoutError>;
@@ -4648,7 +4505,6 @@ export type CheckoutDeliveryMethodUpdate = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutEmailUpdate = {
-  readonly __typename?: 'CheckoutEmailUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4657,7 +4513,6 @@ export type CheckoutEmailUpdate = {
 };
 
 export type CheckoutError = {
-  readonly __typename?: 'CheckoutError';
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -4722,7 +4577,6 @@ export type CheckoutFilterInput = {
  * Added in Saleor 3.6.
  */
 export type CheckoutFilterShippingMethods = Event & {
-  readonly __typename?: 'CheckoutFilterShippingMethods';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -4749,7 +4603,6 @@ export type CheckoutFilterShippingMethods = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutFullyPaid = Event & {
-  readonly __typename?: 'CheckoutFullyPaid';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -4769,7 +4622,6 @@ export type CheckoutFullyPaid = Event & {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutLanguageCodeUpdate = {
-  readonly __typename?: 'CheckoutLanguageCodeUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4779,7 +4631,6 @@ export type CheckoutLanguageCodeUpdate = {
 
 /** Represents an item in the checkout. */
 export type CheckoutLine = Node & ObjectWithMetadata & {
-  readonly __typename?: 'CheckoutLine';
   /** The ID of the checkout line. */
   readonly id: Scalars['ID']['output'];
   /**
@@ -4889,7 +4740,6 @@ export type CheckoutLinePrivateMetafieldsArgs = {
 };
 
 export type CheckoutLineCountableConnection = {
-  readonly __typename?: 'CheckoutLineCountableConnection';
   readonly edges: ReadonlyArray<CheckoutLineCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -4898,7 +4748,6 @@ export type CheckoutLineCountableConnection = {
 };
 
 export type CheckoutLineCountableEdge = {
-  readonly __typename?: 'CheckoutLineCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -4912,7 +4761,6 @@ export type CheckoutLineCountableEdge = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutLineDelete = {
-  readonly __typename?: 'CheckoutLineDelete';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -4962,7 +4810,6 @@ export type CheckoutLineProblem = CheckoutLineProblemInsufficientStock | Checkou
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutLineProblemInsufficientStock = {
-  readonly __typename?: 'CheckoutLineProblemInsufficientStock';
   /** Available quantity of a variant. */
   readonly availableQuantity?: Maybe<Scalars['Int']['output']>;
   /** The line that has variant with insufficient stock. */
@@ -4979,7 +4826,6 @@ export type CheckoutLineProblemInsufficientStock = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutLineProblemVariantNotAvailable = {
-  readonly __typename?: 'CheckoutLineProblemVariantNotAvailable';
   /** The line that has variant that is not available. */
   readonly line: CheckoutLine;
 };
@@ -5014,7 +4860,6 @@ export type CheckoutLineUpdateInput = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutLinesAdd = {
-  readonly __typename?: 'CheckoutLinesAdd';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5029,7 +4874,6 @@ export type CheckoutLinesAdd = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutLinesDelete = {
-  readonly __typename?: 'CheckoutLinesDelete';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   readonly errors: ReadonlyArray<CheckoutError>;
@@ -5042,7 +4886,6 @@ export type CheckoutLinesDelete = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutLinesUpdate = {
-  readonly __typename?: 'CheckoutLinesUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5056,7 +4899,6 @@ export type CheckoutLinesUpdate = {
  * Added in Saleor 3.8.
  */
 export type CheckoutMetadataUpdated = Event & {
-  readonly __typename?: 'CheckoutMetadataUpdated';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -5071,7 +4913,6 @@ export type CheckoutMetadataUpdated = Event & {
 
 /** Create a new payment for given checkout. */
 export type CheckoutPaymentCreate = {
-  readonly __typename?: 'CheckoutPaymentCreate';
   /** Related checkout object. */
   readonly checkout?: Maybe<Checkout>;
   readonly errors: ReadonlyArray<PaymentError>;
@@ -5097,7 +4938,6 @@ export type CheckoutProblem = CheckoutLineProblemInsufficientStock | CheckoutLin
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutRemovePromoCode = {
-  readonly __typename?: 'CheckoutRemovePromoCode';
   /** The checkout with the removed gift card or voucher. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5113,7 +4953,6 @@ export type CheckoutRemovePromoCode = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type CheckoutSettings = {
-  readonly __typename?: 'CheckoutSettings';
   /**
    * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
    *
@@ -5152,7 +4991,6 @@ export type CheckoutSettingsInput = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutShippingAddressUpdate = {
-  readonly __typename?: 'CheckoutShippingAddressUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5168,7 +5006,6 @@ export type CheckoutShippingAddressUpdate = {
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutShippingMethodUpdate = {
-  readonly __typename?: 'CheckoutShippingMethodUpdate';
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5197,7 +5034,6 @@ export type CheckoutSortingInput = {
  * Added in Saleor 3.2.
  */
 export type CheckoutUpdated = Event & {
-  readonly __typename?: 'CheckoutUpdated';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -5218,7 +5054,6 @@ export type CheckoutValidationRules = {
 };
 
 export type ChoiceValue = {
-  readonly __typename?: 'ChoiceValue';
   /** The raw name of the choice. */
   readonly raw?: Maybe<Scalars['String']['output']>;
   /** The verbose name of the choice. */
@@ -5227,7 +5062,6 @@ export type ChoiceValue = {
 
 /** Represents a collection of products. */
 export type Collection = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Collection';
   /** Background image of the collection. */
   readonly backgroundImage?: Maybe<Image>;
   /** Channel given to retrieve this collection. Also used by federation gateway to resolve this object in a federated query. */
@@ -5354,7 +5188,6 @@ export type CollectionTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionAddProducts = {
-  readonly __typename?: 'CollectionAddProducts';
   /** Collection to which products will be added. */
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5368,7 +5201,6 @@ export type CollectionAddProducts = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionBulkDelete = {
-  readonly __typename?: 'CollectionBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
   /** Returns how many objects were affected. */
@@ -5378,7 +5210,6 @@ export type CollectionBulkDelete = {
 
 /** Represents collection channel listing. */
 export type CollectionChannelListing = Node & {
-  readonly __typename?: 'CollectionChannelListing';
   /** The channel to which the collection belongs. */
   readonly channel: Channel;
   /** The ID of the collection channel listing. */
@@ -5396,7 +5227,6 @@ export type CollectionChannelListing = Node & {
 };
 
 export type CollectionChannelListingError = {
-  readonly __typename?: 'CollectionChannelListingError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of channels IDs which causes the error. */
@@ -5417,7 +5247,6 @@ export type CollectionChannelListingError = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionChannelListingUpdate = {
-  readonly __typename?: 'CollectionChannelListingUpdate';
   /** An updated collection instance. */
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5434,7 +5263,6 @@ export type CollectionChannelListingUpdateInput = {
 
 /** Represents a connection to a list of collections. */
 export type CollectionCountableConnection = {
-  readonly __typename?: 'CollectionCountableConnection';
   readonly edges: ReadonlyArray<CollectionCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -5443,7 +5271,6 @@ export type CollectionCountableConnection = {
 };
 
 export type CollectionCountableEdge = {
-  readonly __typename?: 'CollectionCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -5456,7 +5283,6 @@ export type CollectionCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionCreate = {
-  readonly __typename?: 'CollectionCreate';
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
@@ -5510,7 +5336,6 @@ export type CollectionCreateInput = {
  * Added in Saleor 3.2.
  */
 export type CollectionCreated = Event & {
-  readonly __typename?: 'CollectionCreated';
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -5539,7 +5364,6 @@ export type CollectionCreatedCollectionArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionDelete = {
-  readonly __typename?: 'CollectionDelete';
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
@@ -5552,7 +5376,6 @@ export type CollectionDelete = {
  * Added in Saleor 3.2.
  */
 export type CollectionDeleted = Event & {
-  readonly __typename?: 'CollectionDeleted';
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -5576,7 +5399,6 @@ export type CollectionDeletedCollectionArgs = {
 };
 
 export type CollectionError = {
-  readonly __typename?: 'CollectionError';
   /** The error code. */
   readonly code: CollectionErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -5655,7 +5477,6 @@ export type CollectionInput = {
  * Added in Saleor 3.8.
  */
 export type CollectionMetadataUpdated = Event & {
-  readonly __typename?: 'CollectionMetadataUpdated';
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -5688,7 +5509,6 @@ export type CollectionPublished =
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionRemoveProducts = {
-  readonly __typename?: 'CollectionRemoveProducts';
   /** Collection from which products will be removed. */
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5702,7 +5522,6 @@ export type CollectionRemoveProducts = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionReorderProducts = {
-  readonly __typename?: 'CollectionReorderProducts';
   /** Collection from which products are reordered. */
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5749,7 +5568,6 @@ export type CollectionSortingInput = {
 
 /** Represents collection's original translatable fields and related translations. */
 export type CollectionTranslatableContent = Node & {
-  readonly __typename?: 'CollectionTranslatableContent';
   /**
    * Represents a collection of products.
    * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
@@ -5798,7 +5616,6 @@ export type CollectionTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type CollectionTranslate = {
-  readonly __typename?: 'CollectionTranslate';
   readonly collection?: Maybe<Collection>;
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -5807,7 +5624,6 @@ export type CollectionTranslate = {
 
 /** Represents collection translations. */
 export type CollectionTranslation = Node & {
-  readonly __typename?: 'CollectionTranslation';
   /**
    * Translated description of the collection.
    *
@@ -5845,7 +5661,6 @@ export type CollectionTranslation = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionUpdate = {
-  readonly __typename?: 'CollectionUpdate';
   readonly collection?: Maybe<Collection>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
@@ -5858,7 +5673,6 @@ export type CollectionUpdate = {
  * Added in Saleor 3.2.
  */
 export type CollectionUpdated = Event & {
-  readonly __typename?: 'CollectionUpdated';
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
   /** Time of the event. */
@@ -5892,7 +5706,6 @@ export type CollectionWhereInput = {
 
 /** Stores information about a single configuration field. */
 export type ConfigurationItem = {
-  readonly __typename?: 'ConfigurationItem';
   /** Help text for the field. */
   readonly helpText?: Maybe<Scalars['String']['output']>;
   /** Label for the field. */
@@ -5928,7 +5741,6 @@ export type ConfigurationTypeFieldEnum =
  * - ACCOUNT_CONFIRMED (async): Account was confirmed.
  */
 export type ConfirmAccount = {
-  readonly __typename?: 'ConfirmAccount';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -5947,7 +5759,6 @@ export type ConfirmAccount = {
  * - ACCOUNT_EMAIL_CHANGED (async): An account email was changed.
  */
 export type ConfirmEmailChange = {
-  readonly __typename?: 'ConfirmEmailChange';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -6213,7 +6024,6 @@ export type CountryCode =
   | 'ZW';
 
 export type CountryDisplay = {
-  readonly __typename?: 'CountryDisplay';
   /** Country code. */
   readonly code: Scalars['String']['output'];
   /** Country name. */
@@ -6246,7 +6056,6 @@ export type CountryRateUpdateInput = {
 
 /** Create JWT token. */
 export type CreateToken = {
-  readonly __typename?: 'CreateToken';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate access token. */
@@ -6261,7 +6070,6 @@ export type CreateToken = {
 };
 
 export type CreditCard = {
-  readonly __typename?: 'CreditCard';
   /** Card brand. */
   readonly brand: Scalars['String']['output'];
   /** Two-digit number representing the card’s expiration month. */
@@ -6283,7 +6091,6 @@ export type CreditCard = {
  * - CUSTOMER_DELETED (async): A customer account was deleted.
  */
 export type CustomerBulkDelete = {
-  readonly __typename?: 'CustomerBulkDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** Returns how many objects were affected. */
@@ -6292,7 +6099,6 @@ export type CustomerBulkDelete = {
 };
 
 export type CustomerBulkResult = {
-  readonly __typename?: 'CustomerBulkResult';
   /** Customer data. */
   readonly customer?: Maybe<User>;
   /** List of errors that occurred during the update attempt. */
@@ -6313,7 +6119,6 @@ export type CustomerBulkResult = {
  * - CUSTOMER_METADATA_UPDATED (async): Optionally called when customer's metadata was updated.
  */
 export type CustomerBulkUpdate = {
-  readonly __typename?: 'CustomerBulkUpdate';
   /** Returns how many objects were created. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<CustomerBulkUpdateError>;
@@ -6322,7 +6127,6 @@ export type CustomerBulkUpdate = {
 };
 
 export type CustomerBulkUpdateError = {
-  readonly __typename?: 'CustomerBulkUpdateError';
   /** The error code. */
   readonly code: CustomerBulkUpdateErrorCode;
   /** The error message. */
@@ -6362,7 +6166,6 @@ export type CustomerBulkUpdateInput = {
  * - ACCOUNT_SET_PASSWORD_REQUESTED (async): Setting a new password for the account is requested.
  */
 export type CustomerCreate = {
-  readonly __typename?: 'CustomerCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -6375,7 +6178,6 @@ export type CustomerCreate = {
  * Added in Saleor 3.2.
  */
 export type CustomerCreated = Event & {
-  readonly __typename?: 'CustomerCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -6397,7 +6199,6 @@ export type CustomerCreated = Event & {
  * - CUSTOMER_DELETED (async): A customer account was deleted.
  */
 export type CustomerDelete = {
-  readonly __typename?: 'CustomerDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -6406,7 +6207,6 @@ export type CustomerDelete = {
 
 /** History log of the customer. */
 export type CustomerEvent = Node & {
-  readonly __typename?: 'CustomerEvent';
   /** App that performed the action. */
   readonly app?: Maybe<App>;
   /** Number of objects concerned by the event. */
@@ -6508,7 +6308,6 @@ export type CustomerInput = {
  * Added in Saleor 3.8.
  */
 export type CustomerMetadataUpdated = Event & {
-  readonly __typename?: 'CustomerMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -6531,7 +6330,6 @@ export type CustomerMetadataUpdated = Event & {
  * - CUSTOMER_METADATA_UPDATED (async): Optionally called when customer's metadata was updated.
  */
 export type CustomerUpdate = {
-  readonly __typename?: 'CustomerUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -6544,7 +6342,6 @@ export type CustomerUpdate = {
  * Added in Saleor 3.2.
  */
 export type CustomerUpdated = Event & {
-  readonly __typename?: 'CustomerUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -6593,7 +6390,6 @@ export type DateTimeRangeInput = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type DeactivateAllUserTokens = {
-  readonly __typename?: 'DeactivateAllUserTokens';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -6624,7 +6420,6 @@ export type DecimalRangeInput = {
 
 /** Delete metadata of an object. To use it, you need to have access to the modified object. */
 export type DeleteMetadata = {
-  readonly __typename?: 'DeleteMetadata';
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6633,7 +6428,6 @@ export type DeleteMetadata = {
 
 /** Delete object's private metadata. To use it, you need to be an authenticated staff user or an app and have access to the modified object. */
 export type DeletePrivateMetadata = {
-  readonly __typename?: 'DeletePrivateMetadata';
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6649,7 +6443,6 @@ export type DeliveryMethod = ShippingMethod | Warehouse;
 
 /** Represents digital content associated with a product variant. */
 export type DigitalContent = Node & ObjectWithMetadata & {
-  readonly __typename?: 'DigitalContent';
   /** Indicator for automatic fulfillment of digital content. */
   readonly automaticFulfillment: Scalars['Boolean']['output'];
   /** File associated with digital content. */
@@ -6726,7 +6519,6 @@ export type DigitalContentPrivateMetafieldsArgs = {
 
 /** A connection to a list of digital content items. */
 export type DigitalContentCountableConnection = {
-  readonly __typename?: 'DigitalContentCountableConnection';
   readonly edges: ReadonlyArray<DigitalContentCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -6735,7 +6527,6 @@ export type DigitalContentCountableConnection = {
 };
 
 export type DigitalContentCountableEdge = {
-  readonly __typename?: 'DigitalContentCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -6748,7 +6539,6 @@ export type DigitalContentCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentCreate = {
-  readonly __typename?: 'DigitalContentCreate';
   readonly content?: Maybe<DigitalContent>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6762,7 +6552,6 @@ export type DigitalContentCreate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentDelete = {
-  readonly __typename?: 'DigitalContentDelete';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -6798,7 +6587,6 @@ export type DigitalContentInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentUpdate = {
-  readonly __typename?: 'DigitalContentUpdate';
   readonly content?: Maybe<DigitalContent>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6833,7 +6621,6 @@ export type DigitalContentUploadInput = {
 
 /** Represents a URL for digital content. */
 export type DigitalContentUrl = Node & {
-  readonly __typename?: 'DigitalContentUrl';
   /** Digital content associated with the URL. */
   readonly content: DigitalContent;
   /** Date and time when the digital content URL was created. */
@@ -6854,7 +6641,6 @@ export type DigitalContentUrl = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentUrlCreate = {
-  readonly __typename?: 'DigitalContentUrlCreate';
   readonly digitalContentUrl?: Maybe<DigitalContentUrl>;
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -6867,7 +6653,6 @@ export type DigitalContentUrlCreateInput = {
 };
 
 export type DiscountError = {
-  readonly __typename?: 'DiscountError';
   /** List of channels IDs which causes the error. */
   readonly channels?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -6929,7 +6714,6 @@ export type DistanceUnitsEnum =
 
 /** Represents API domain. */
 export type Domain = {
-  readonly __typename?: 'Domain';
   /** The host name of the domain. */
   readonly host: Scalars['String']['output'];
   /** Inform if SSL is enabled. */
@@ -6944,7 +6728,6 @@ export type Domain = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderBulkDelete = {
-  readonly __typename?: 'DraftOrderBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderError>;
@@ -6958,7 +6741,6 @@ export type DraftOrderBulkDelete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderComplete = {
-  readonly __typename?: 'DraftOrderComplete';
   readonly errors: ReadonlyArray<OrderError>;
   /** Completed order. */
   readonly order?: Maybe<Order>;
@@ -6972,7 +6754,6 @@ export type DraftOrderComplete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderCreate = {
-  readonly __typename?: 'DraftOrderCreate';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7022,7 +6803,6 @@ export type DraftOrderCreateInput = {
  * Added in Saleor 3.2.
  */
 export type DraftOrderCreated = Event & {
-  readonly __typename?: 'DraftOrderCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -7041,7 +6821,6 @@ export type DraftOrderCreated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderDelete = {
-  readonly __typename?: 'DraftOrderDelete';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7054,7 +6833,6 @@ export type DraftOrderDelete = {
  * Added in Saleor 3.2.
  */
 export type DraftOrderDeleted = Event & {
-  readonly __typename?: 'DraftOrderDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -7108,7 +6886,6 @@ export type DraftOrderInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderLinesBulkDelete = {
-  readonly __typename?: 'DraftOrderLinesBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderError>;
@@ -7122,7 +6899,6 @@ export type DraftOrderLinesBulkDelete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type DraftOrderUpdate = {
-  readonly __typename?: 'DraftOrderUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -7135,7 +6911,6 @@ export type DraftOrderUpdate = {
  * Added in Saleor 3.2.
  */
 export type DraftOrderUpdated = Event & {
-  readonly __typename?: 'DraftOrderUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -7169,7 +6944,6 @@ export type Event = {
 
 /** Event delivery. */
 export type EventDelivery = Node & {
-  readonly __typename?: 'EventDelivery';
   /** Event delivery attempts. */
   readonly attempts?: Maybe<EventDeliveryAttemptCountableConnection>;
   /** Creation time of an event delivery. */
@@ -7196,7 +6970,6 @@ export type EventDeliveryAttemptsArgs = {
 
 /** Event delivery attempts. */
 export type EventDeliveryAttempt = Node & {
-  readonly __typename?: 'EventDeliveryAttempt';
   /** Event delivery creation date and time. */
   readonly createdAt: Scalars['DateTime']['output'];
   /** Delivery attempt duration. */
@@ -7218,7 +6991,6 @@ export type EventDeliveryAttempt = Node & {
 };
 
 export type EventDeliveryAttemptCountableConnection = {
-  readonly __typename?: 'EventDeliveryAttemptCountableConnection';
   readonly edges: ReadonlyArray<EventDeliveryAttemptCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -7227,7 +6999,6 @@ export type EventDeliveryAttemptCountableConnection = {
 };
 
 export type EventDeliveryAttemptCountableEdge = {
-  readonly __typename?: 'EventDeliveryAttemptCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -7246,7 +7017,6 @@ export type EventDeliveryAttemptSortingInput = {
 };
 
 export type EventDeliveryCountableConnection = {
-  readonly __typename?: 'EventDeliveryCountableConnection';
   readonly edges: ReadonlyArray<EventDeliveryCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -7255,7 +7025,6 @@ export type EventDeliveryCountableConnection = {
 };
 
 export type EventDeliveryCountableEdge = {
-  readonly __typename?: 'EventDeliveryCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -7273,7 +7042,6 @@ export type EventDeliveryFilterInput = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type EventDeliveryRetry = {
-  readonly __typename?: 'EventDeliveryRetry';
   /** Event delivery. */
   readonly delivery?: Maybe<EventDelivery>;
   readonly errors: ReadonlyArray<WebhookError>;
@@ -7296,7 +7064,6 @@ export type EventDeliveryStatusEnum =
   | 'SUCCESS';
 
 export type ExportError = {
-  readonly __typename?: 'ExportError';
   /** The error code. */
   readonly code: ExportErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -7313,7 +7080,6 @@ export type ExportErrorCode =
 
 /** History log of export file. */
 export type ExportEvent = Node & {
-  readonly __typename?: 'ExportEvent';
   /** App which performed the action. Requires one of the following permissions: OWNER, MANAGE_APPS. */
   readonly app?: Maybe<App>;
   /** Date when event happened at in ISO 8601 format. */
@@ -7338,7 +7104,6 @@ export type ExportEventsEnum =
 
 /** Represents a job data of exported file. */
 export type ExportFile = Job & Node & {
-  readonly __typename?: 'ExportFile';
   /** The app which requests file export. */
   readonly app?: Maybe<App>;
   /** Created date time of job in ISO 8601 format. */
@@ -7360,7 +7125,6 @@ export type ExportFile = Job & Node & {
 };
 
 export type ExportFileCountableConnection = {
-  readonly __typename?: 'ExportFileCountableConnection';
   readonly edges: ReadonlyArray<ExportFileCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -7369,7 +7133,6 @@ export type ExportFileCountableConnection = {
 };
 
 export type ExportFileCountableEdge = {
-  readonly __typename?: 'ExportFileCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -7409,7 +7172,6 @@ export type ExportFileSortingInput = {
  * - GIFT_CARD_EXPORT_COMPLETED (async): A notification for the exported file.
  */
 export type ExportGiftCards = {
-  readonly __typename?: 'ExportGiftCards';
   readonly errors: ReadonlyArray<ExportError>;
   /** The newly created export file job which is responsible for export data. */
   readonly exportFile?: Maybe<ExportFile>;
@@ -7447,7 +7209,6 @@ export type ExportInfoInput = {
  * - PRODUCT_EXPORT_COMPLETED (async): A notification for the exported file.
  */
 export type ExportProducts = {
-  readonly __typename?: 'ExportProducts';
   readonly errors: ReadonlyArray<ExportError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly exportErrors: ReadonlyArray<ExportError>;
@@ -7489,7 +7250,6 @@ export type ExportScope =
  * - VOUCHER_CODE_EXPORT_COMPLETED (async): A notification for the exported file.
  */
 export type ExportVoucherCodes = {
-  readonly __typename?: 'ExportVoucherCodes';
   readonly errors: ReadonlyArray<ExportError>;
   /** The newly created export file job which is responsible for export data. */
   readonly exportFile?: Maybe<ExportFile>;
@@ -7506,7 +7266,6 @@ export type ExportVoucherCodesInput = {
 
 /** External authentication plugin. */
 export type ExternalAuthentication = {
-  readonly __typename?: 'ExternalAuthentication';
   /** ID of external authentication plugin. */
   readonly id: Scalars['String']['output'];
   /** Name of external authentication plugin. */
@@ -7515,7 +7274,6 @@ export type ExternalAuthentication = {
 
 /** Prepare external authentication URL for user by custom plugin. */
 export type ExternalAuthenticationUrl = {
-  readonly __typename?: 'ExternalAuthenticationUrl';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** The data returned by authentication plugin. */
@@ -7525,7 +7283,6 @@ export type ExternalAuthenticationUrl = {
 
 /** Logout user by custom plugin. */
 export type ExternalLogout = {
-  readonly __typename?: 'ExternalLogout';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -7534,7 +7291,6 @@ export type ExternalLogout = {
 };
 
 export type ExternalNotificationError = {
-  readonly __typename?: 'ExternalNotificationError';
   /** The error code. */
   readonly code: ExternalNotificationErrorCodes;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -7555,7 +7311,6 @@ export type ExternalNotificationErrorCodes =
  * Added in Saleor 3.1.
  */
 export type ExternalNotificationTrigger = {
-  readonly __typename?: 'ExternalNotificationTrigger';
   readonly errors: ReadonlyArray<ExternalNotificationError>;
 };
 
@@ -7570,7 +7325,6 @@ export type ExternalNotificationTriggerInput = {
 
 /** Obtain external access tokens for user by custom plugin. */
 export type ExternalObtainAccessTokens = {
-  readonly __typename?: 'ExternalObtainAccessTokens';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate external access token. */
@@ -7586,7 +7340,6 @@ export type ExternalObtainAccessTokens = {
 
 /** Refresh user's access by custom plugin. */
 export type ExternalRefresh = {
-  readonly __typename?: 'ExternalRefresh';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate external access token. */
@@ -7602,7 +7355,6 @@ export type ExternalRefresh = {
 
 /** Verify external authentication data by plugin. */
 export type ExternalVerify = {
-  readonly __typename?: 'ExternalVerify';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -7615,7 +7367,6 @@ export type ExternalVerify = {
 };
 
 export type File = {
-  readonly __typename?: 'File';
   /** Content type of the file. */
   readonly contentType?: Maybe<Scalars['String']['output']>;
   /** The URL of the file. */
@@ -7632,7 +7383,6 @@ export type FileTypesEnum =
  * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
  */
 export type FileUpload = {
-  readonly __typename?: 'FileUpload';
   readonly errors: ReadonlyArray<UploadError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly uploadErrors: ReadonlyArray<UploadError>;
@@ -7641,7 +7391,6 @@ export type FileUpload = {
 
 /** Represents order fulfillment. */
 export type Fulfillment = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Fulfillment';
   /** Date and time when fulfillment was created. */
   readonly created: Scalars['DateTime']['output'];
   /** Sequence in which the fulfillments were created for an order. */
@@ -7739,7 +7488,6 @@ export type FulfillmentPrivateMetafieldsArgs = {
  * - FULFILLMENT_APPROVED (async): Fulfillment is approved.
  */
 export type FulfillmentApprove = {
-  readonly __typename?: 'FulfillmentApprove';
   readonly errors: ReadonlyArray<OrderError>;
   /** An approved fulfillment. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -7755,7 +7503,6 @@ export type FulfillmentApprove = {
  * Added in Saleor 3.7.
  */
 export type FulfillmentApproved = Event & {
-  readonly __typename?: 'FulfillmentApproved';
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -7782,7 +7529,6 @@ export type FulfillmentApproved = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentCancel = {
-  readonly __typename?: 'FulfillmentCancel';
   readonly errors: ReadonlyArray<OrderError>;
   /** A canceled fulfillment. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -7803,7 +7549,6 @@ export type FulfillmentCancelInput = {
  * Added in Saleor 3.4.
  */
 export type FulfillmentCanceled = Event & {
-  readonly __typename?: 'FulfillmentCanceled';
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -7824,7 +7569,6 @@ export type FulfillmentCanceled = Event & {
  * Added in Saleor 3.4.
  */
 export type FulfillmentCreated = Event & {
-  readonly __typename?: 'FulfillmentCreated';
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -7847,7 +7591,6 @@ export type FulfillmentCreated = Event & {
 
 /** Represents line of the fulfillment. */
 export type FulfillmentLine = Node & {
-  readonly __typename?: 'FulfillmentLine';
   /** ID of the fulfillment line. */
   readonly id: Scalars['ID']['output'];
   /** The order line to which the fulfillment line is related. */
@@ -7862,7 +7605,6 @@ export type FulfillmentLine = Node & {
  * Added in Saleor 3.8.
  */
 export type FulfillmentMetadataUpdated = Event & {
-  readonly __typename?: 'FulfillmentMetadataUpdated';
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -7883,7 +7625,6 @@ export type FulfillmentMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentRefundProducts = {
-  readonly __typename?: 'FulfillmentRefundProducts';
   readonly errors: ReadonlyArray<OrderError>;
   /** A refunded fulfillment. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -7899,7 +7640,6 @@ export type FulfillmentRefundProducts = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type FulfillmentReturnProducts = {
-  readonly __typename?: 'FulfillmentReturnProducts';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which fulfillment was returned. */
   readonly order?: Maybe<Order>;
@@ -7928,7 +7668,6 @@ export type FulfillmentStatus =
  * Added in Saleor 3.16.
  */
 export type FulfillmentTrackingNumberUpdated = Event & {
-  readonly __typename?: 'FulfillmentTrackingNumberUpdated';
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Time of the event. */
@@ -7952,7 +7691,6 @@ export type FulfillmentTrackingNumberUpdated = Event & {
  * - FULFILLMENT_TRACKING_NUMBER_UPDATED (async): Fulfillment tracking number is updated.
  */
 export type FulfillmentUpdateTracking = {
-  readonly __typename?: 'FulfillmentUpdateTracking';
   readonly errors: ReadonlyArray<OrderError>;
   /** A fulfillment with updated tracking. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -7971,7 +7709,6 @@ export type FulfillmentUpdateTrackingInput = {
 
 /** Payment gateway client configuration key and value pair. */
 export type GatewayConfigLine = {
-  readonly __typename?: 'GatewayConfigLine';
   /** Gateway config key. */
   readonly field: Scalars['String']['output'];
   /** Gateway config value for key. */
@@ -7980,7 +7717,6 @@ export type GatewayConfigLine = {
 
 /** A gift card is a prepaid electronic payment card accepted in stores. They can be used during checkout by providing a valid gift card codes. */
 export type GiftCard = Node & ObjectWithMetadata & {
-  readonly __typename?: 'GiftCard';
   /**
    * App which created the gift card.
    *
@@ -8154,7 +7890,6 @@ export type GiftCardPrivateMetafieldsArgs = {
  * - GIFT_CARD_STATUS_CHANGED (async): A gift card was activated.
  */
 export type GiftCardActivate = {
-  readonly __typename?: 'GiftCardActivate';
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Activated gift card. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -8173,7 +7908,6 @@ export type GiftCardActivate = {
  * - GIFT_CARD_UPDATED (async): A gift card was updated.
  */
 export type GiftCardAddNote = {
-  readonly __typename?: 'GiftCardAddNote';
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Gift card note created. */
   readonly event?: Maybe<GiftCardEvent>;
@@ -8197,7 +7931,6 @@ export type GiftCardAddNoteInput = {
  * - GIFT_CARD_STATUS_CHANGED (async): A gift card was activated.
  */
 export type GiftCardBulkActivate = {
-  readonly __typename?: 'GiftCardBulkActivate';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<GiftCardError>;
@@ -8215,7 +7948,6 @@ export type GiftCardBulkActivate = {
  * - NOTIFY_USER (async): A notification for created gift card.
  */
 export type GiftCardBulkCreate = {
-  readonly __typename?: 'GiftCardBulkCreate';
   /** Returns how many objects were created. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<GiftCardError>;
@@ -8247,7 +7979,6 @@ export type GiftCardBulkCreateInput = {
  * - GIFT_CARD_STATUS_CHANGED (async): A gift card was deactivated.
  */
 export type GiftCardBulkDeactivate = {
-  readonly __typename?: 'GiftCardBulkDeactivate';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<GiftCardError>;
@@ -8264,14 +7995,12 @@ export type GiftCardBulkDeactivate = {
  * - GIFT_CARD_DELETED (async): A gift card was deleted.
  */
 export type GiftCardBulkDelete = {
-  readonly __typename?: 'GiftCardBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<GiftCardError>;
 };
 
 export type GiftCardCountableConnection = {
-  readonly __typename?: 'GiftCardCountableConnection';
   readonly edges: ReadonlyArray<GiftCardCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -8280,7 +8009,6 @@ export type GiftCardCountableConnection = {
 };
 
 export type GiftCardCountableEdge = {
-  readonly __typename?: 'GiftCardCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -8297,7 +8025,6 @@ export type GiftCardCountableEdge = {
  * - NOTIFY_USER (async): A notification for created gift card.
  */
 export type GiftCardCreate = {
-  readonly __typename?: 'GiftCardCreate';
   readonly errors: ReadonlyArray<GiftCardError>;
   readonly giftCard?: Maybe<GiftCard>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8365,7 +8092,6 @@ export type GiftCardCreateInput = {
  * Added in Saleor 3.2.
  */
 export type GiftCardCreated = Event & {
-  readonly __typename?: 'GiftCardCreated';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -8387,7 +8113,6 @@ export type GiftCardCreated = Event & {
  * - GIFT_CARD_STATUS_CHANGED (async): A gift card was deactivated.
  */
 export type GiftCardDeactivate = {
-  readonly __typename?: 'GiftCardDeactivate';
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Deactivated gift card. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -8406,7 +8131,6 @@ export type GiftCardDeactivate = {
  * - GIFT_CARD_DELETED (async): A gift card was deleted.
  */
 export type GiftCardDelete = {
-  readonly __typename?: 'GiftCardDelete';
   readonly errors: ReadonlyArray<GiftCardError>;
   readonly giftCard?: Maybe<GiftCard>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8419,7 +8143,6 @@ export type GiftCardDelete = {
  * Added in Saleor 3.2.
  */
 export type GiftCardDeleted = Event & {
-  readonly __typename?: 'GiftCardDeleted';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -8433,7 +8156,6 @@ export type GiftCardDeleted = Event & {
 };
 
 export type GiftCardError = {
-  readonly __typename?: 'GiftCardError';
   /** The error code. */
   readonly code: GiftCardErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -8460,7 +8182,6 @@ export type GiftCardErrorCode =
  * Added in Saleor 3.1.
  */
 export type GiftCardEvent = Node & {
-  readonly __typename?: 'GiftCardEvent';
   /** App that performed the action. Requires one of the following permissions: MANAGE_APPS, OWNER. */
   readonly app?: Maybe<App>;
   /** The gift card balance. */
@@ -8492,7 +8213,6 @@ export type GiftCardEvent = Node & {
 };
 
 export type GiftCardEventBalance = {
-  readonly __typename?: 'GiftCardEventBalance';
   /** Current balance of the gift card. */
   readonly currentBalance: Money;
   /** Initial balance of the gift card. */
@@ -8528,7 +8248,6 @@ export type GiftCardEventsEnum =
  * Added in Saleor 3.16.
  */
 export type GiftCardExportCompleted = Event & {
-  readonly __typename?: 'GiftCardExportCompleted';
   /** The export file for gift cards. */
   readonly export?: Maybe<ExportFile>;
   /** Time of the event. */
@@ -8561,7 +8280,6 @@ export type GiftCardFilterInput = {
  * Added in Saleor 3.8.
  */
 export type GiftCardMetadataUpdated = Event & {
-  readonly __typename?: 'GiftCardMetadataUpdated';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -8585,7 +8303,6 @@ export type GiftCardMetadataUpdated = Event & {
  * - NOTIFY_USER (async): A notification for gift card resend.
  */
 export type GiftCardResend = {
-  readonly __typename?: 'GiftCardResend';
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Gift card which has been sent. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -8608,7 +8325,6 @@ export type GiftCardResendInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type GiftCardSent = Event & {
-  readonly __typename?: 'GiftCardSent';
   /** Slug of a channel for which this gift card email was sent. */
   readonly channel?: Maybe<Scalars['String']['output']>;
   /** The gift card the event relates to. */
@@ -8627,7 +8343,6 @@ export type GiftCardSent = Event & {
 
 /** Gift card related settings from site settings. */
 export type GiftCardSettings = {
-  readonly __typename?: 'GiftCardSettings';
   /** The gift card expiry period settings. */
   readonly expiryPeriod?: Maybe<TimePeriod>;
   /** The gift card expiry type settings. */
@@ -8635,7 +8350,6 @@ export type GiftCardSettings = {
 };
 
 export type GiftCardSettingsError = {
-  readonly __typename?: 'GiftCardSettingsError';
   /** The error code. */
   readonly code: GiftCardSettingsErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -8659,7 +8373,6 @@ export type GiftCardSettingsExpiryTypeEnum =
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  */
 export type GiftCardSettingsUpdate = {
-  readonly __typename?: 'GiftCardSettingsUpdate';
   readonly errors: ReadonlyArray<GiftCardSettingsError>;
   /** Gift card settings. */
   readonly giftCardSettings?: Maybe<GiftCardSettings>;
@@ -8699,7 +8412,6 @@ export type GiftCardSortingInput = {
  * Added in Saleor 3.2.
  */
 export type GiftCardStatusChanged = Event & {
-  readonly __typename?: 'GiftCardStatusChanged';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -8718,7 +8430,6 @@ export type GiftCardStatusChanged = Event & {
  * Added in Saleor 3.1.
  */
 export type GiftCardTag = Node & {
-  readonly __typename?: 'GiftCardTag';
   /** ID of the tag associated with a gift card. */
   readonly id: Scalars['ID']['output'];
   /** Name of the tag associated with a gift card. */
@@ -8726,7 +8437,6 @@ export type GiftCardTag = Node & {
 };
 
 export type GiftCardTagCountableConnection = {
-  readonly __typename?: 'GiftCardTagCountableConnection';
   readonly edges: ReadonlyArray<GiftCardTagCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -8735,7 +8445,6 @@ export type GiftCardTagCountableConnection = {
 };
 
 export type GiftCardTagCountableEdge = {
-  readonly __typename?: 'GiftCardTagCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -8755,7 +8464,6 @@ export type GiftCardTagFilterInput = {
  * - GIFT_CARD_UPDATED (async): A gift card was updated.
  */
 export type GiftCardUpdate = {
-  readonly __typename?: 'GiftCardUpdate';
   readonly errors: ReadonlyArray<GiftCardError>;
   readonly giftCard?: Maybe<GiftCard>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -8807,7 +8515,6 @@ export type GiftCardUpdateInput = {
  * Added in Saleor 3.2.
  */
 export type GiftCardUpdated = Event & {
-  readonly __typename?: 'GiftCardUpdated';
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
   /** Time of the event. */
@@ -8836,7 +8543,6 @@ export type GlobalIdFilterInput = {
 
 /** Represents permission group data. */
 export type Group = Node & {
-  readonly __typename?: 'Group';
   /**
    * List of channels the group has access to.
    *
@@ -8870,7 +8576,6 @@ export type Group = Node & {
 };
 
 export type GroupCountableConnection = {
-  readonly __typename?: 'GroupCountableConnection';
   readonly edges: ReadonlyArray<GroupCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -8879,7 +8584,6 @@ export type GroupCountableConnection = {
 };
 
 export type GroupCountableEdge = {
-  readonly __typename?: 'GroupCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -8893,7 +8597,6 @@ export type IconThumbnailFormatEnum =
 
 /** Represents an image. */
 export type Image = {
-  readonly __typename?: 'Image';
   /** Alt text for an image. */
   readonly alt?: Maybe<Scalars['String']['output']>;
   /** The URL of the image. */
@@ -8909,7 +8612,6 @@ export type IntRangeInput = {
 
 /** Represents an Invoice. */
 export type Invoice = Job & Node & ObjectWithMetadata & {
-  readonly __typename?: 'Invoice';
   /** Date and time at which invoice was created. */
   readonly createdAt: Scalars['DateTime']['output'];
   /**
@@ -8999,7 +8701,6 @@ export type InvoicePrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceCreate = {
-  readonly __typename?: 'InvoiceCreate';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -9031,7 +8732,6 @@ export type InvoiceCreateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceDelete = {
-  readonly __typename?: 'InvoiceDelete';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -9044,7 +8744,6 @@ export type InvoiceDelete = {
  * Added in Saleor 3.2.
  */
 export type InvoiceDeleted = Event & {
-  readonly __typename?: 'InvoiceDeleted';
   /** The invoice the event relates to. */
   readonly invoice?: Maybe<Invoice>;
   /** Time of the event. */
@@ -9064,7 +8763,6 @@ export type InvoiceDeleted = Event & {
 };
 
 export type InvoiceError = {
-  readonly __typename?: 'InvoiceError';
   /** The error code. */
   readonly code: InvoiceErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -9092,7 +8790,6 @@ export type InvoiceErrorCode =
  * - INVOICE_REQUESTED (async): An invoice was requested.
  */
 export type InvoiceRequest = {
-  readonly __typename?: 'InvoiceRequest';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -9110,7 +8807,6 @@ export type InvoiceRequest = {
  * - INVOICE_DELETED (async): An invoice was requested to delete.
  */
 export type InvoiceRequestDelete = {
-  readonly __typename?: 'InvoiceRequestDelete';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -9123,7 +8819,6 @@ export type InvoiceRequestDelete = {
  * Added in Saleor 3.2.
  */
 export type InvoiceRequested = Event & {
-  readonly __typename?: 'InvoiceRequested';
   /** The invoice the event relates to. */
   readonly invoice?: Maybe<Invoice>;
   /** Time of the event. */
@@ -9152,7 +8847,6 @@ export type InvoiceRequested = Event & {
  * - NOTIFY_USER (async): A notification for invoice send
  */
 export type InvoiceSendNotification = {
-  readonly __typename?: 'InvoiceSendNotification';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -9165,7 +8859,6 @@ export type InvoiceSendNotification = {
  * Added in Saleor 3.2.
  */
 export type InvoiceSent = Event & {
-  readonly __typename?: 'InvoiceSent';
   /** The invoice the event relates to. */
   readonly invoice?: Maybe<Invoice>;
   /** Time of the event. */
@@ -9190,7 +8883,6 @@ export type InvoiceSent = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type InvoiceUpdate = {
-  readonly __typename?: 'InvoiceUpdate';
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -9998,7 +9690,6 @@ export type LanguageCodeEnum =
   | 'ZU_ZA';
 
 export type LanguageDisplay = {
-  readonly __typename?: 'LanguageDisplay';
   /** ISO 639 representation of the language name. */
   readonly code: LanguageCodeEnum;
   /** Full name of the language. */
@@ -10007,7 +9698,6 @@ export type LanguageDisplay = {
 
 /** Store the current and allowed usage. */
 export type LimitInfo = {
-  readonly __typename?: 'LimitInfo';
   /** Defines the allowed maximum resource usage, null means unlimited. */
   readonly allowedUsage: Limits;
   /** Defines the current resource usage. */
@@ -10015,7 +9705,6 @@ export type LimitInfo = {
 };
 
 export type Limits = {
-  readonly __typename?: 'Limits';
   /** Defines the number of channels. */
   readonly channels?: Maybe<Scalars['Int']['output']>;
   /** Defines the number of order. */
@@ -10036,7 +9725,6 @@ export type Limits = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ListStoredPaymentMethods = Event & {
-  readonly __typename?: 'ListStoredPaymentMethods';
   /** Channel in context which was used to fetch the list of payment methods. */
   readonly channel: Channel;
   /** Time of the event. */
@@ -10053,7 +9741,6 @@ export type ListStoredPaymentMethods = Event & {
 
 /** The manifest definition. */
 export type Manifest = {
-  readonly __typename?: 'Manifest';
   /** Description of the app displayed in the dashboard. */
   readonly about?: Maybe<Scalars['String']['output']>;
   /** App website rendered in the dashboard. */
@@ -10126,7 +9813,6 @@ export type Manifest = {
 
 /** Metadata for the Margin class. */
 export type Margin = {
-  readonly __typename?: 'Margin';
   /** The starting value of the margin. */
   readonly start?: Maybe<Scalars['Int']['output']>;
   /** The ending value of the margin. */
@@ -10211,7 +9897,6 @@ export type MediaSortingInput = {
 
 /** Represents a single menu - an object that is used to help navigate through the store. */
 export type Menu = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Menu';
   /** The ID of the menu. */
   readonly id: Scalars['ID']['output'];
   /** Menu items associated with this menu. */
@@ -10287,7 +9972,6 @@ export type MenuPrivateMetafieldsArgs = {
  * - MENU_DELETED (async): A menu was deleted.
  */
 export type MenuBulkDelete = {
-  readonly __typename?: 'MenuBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<MenuError>;
@@ -10296,7 +9980,6 @@ export type MenuBulkDelete = {
 };
 
 export type MenuCountableConnection = {
-  readonly __typename?: 'MenuCountableConnection';
   readonly edges: ReadonlyArray<MenuCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -10305,7 +9988,6 @@ export type MenuCountableConnection = {
 };
 
 export type MenuCountableEdge = {
-  readonly __typename?: 'MenuCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -10321,7 +10003,6 @@ export type MenuCountableEdge = {
  * - MENU_CREATED (async): A menu was created.
  */
 export type MenuCreate = {
-  readonly __typename?: 'MenuCreate';
   readonly errors: ReadonlyArray<MenuError>;
   readonly menu?: Maybe<Menu>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -10343,7 +10024,6 @@ export type MenuCreateInput = {
  * Added in Saleor 3.4.
  */
 export type MenuCreated = Event & {
-  readonly __typename?: 'MenuCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -10375,7 +10055,6 @@ export type MenuCreatedMenuArgs = {
  * - MENU_DELETED (async): A menu was deleted.
  */
 export type MenuDelete = {
-  readonly __typename?: 'MenuDelete';
   readonly errors: ReadonlyArray<MenuError>;
   readonly menu?: Maybe<Menu>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -10388,7 +10067,6 @@ export type MenuDelete = {
  * Added in Saleor 3.4.
  */
 export type MenuDeleted = Event & {
-  readonly __typename?: 'MenuDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -10412,7 +10090,6 @@ export type MenuDeletedMenuArgs = {
 };
 
 export type MenuError = {
-  readonly __typename?: 'MenuError';
   /** The error code. */
   readonly code: MenuErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -10448,7 +10125,6 @@ export type MenuInput = {
 
 /** Represents a single item of the related menu. Can store categories, collection or pages. */
 export type MenuItem = Node & ObjectWithMetadata & {
-  readonly __typename?: 'MenuItem';
   /** Category associated with the menu item. */
   readonly category?: Maybe<Category>;
   /** Represents the child items of the current menu item. */
@@ -10544,7 +10220,6 @@ export type MenuItemTranslationArgs = {
  * - MENU_ITEM_DELETED (async): A menu item was deleted.
  */
 export type MenuItemBulkDelete = {
-  readonly __typename?: 'MenuItemBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<MenuError>;
@@ -10553,7 +10228,6 @@ export type MenuItemBulkDelete = {
 };
 
 export type MenuItemCountableConnection = {
-  readonly __typename?: 'MenuItemCountableConnection';
   readonly edges: ReadonlyArray<MenuItemCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -10562,7 +10236,6 @@ export type MenuItemCountableConnection = {
 };
 
 export type MenuItemCountableEdge = {
-  readonly __typename?: 'MenuItemCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -10578,7 +10251,6 @@ export type MenuItemCountableEdge = {
  * - MENU_ITEM_CREATED (async): A menu item was created.
  */
 export type MenuItemCreate = {
-  readonly __typename?: 'MenuItemCreate';
   readonly errors: ReadonlyArray<MenuError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
@@ -10608,7 +10280,6 @@ export type MenuItemCreateInput = {
  * Added in Saleor 3.4.
  */
 export type MenuItemCreated = Event & {
-  readonly __typename?: 'MenuItemCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -10640,7 +10311,6 @@ export type MenuItemCreatedMenuItemArgs = {
  * - MENU_ITEM_DELETED (async): A menu item was deleted.
  */
 export type MenuItemDelete = {
-  readonly __typename?: 'MenuItemDelete';
   readonly errors: ReadonlyArray<MenuError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
@@ -10653,7 +10323,6 @@ export type MenuItemDelete = {
  * Added in Saleor 3.4.
  */
 export type MenuItemDeleted = Event & {
-  readonly __typename?: 'MenuItemDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -10703,7 +10372,6 @@ export type MenuItemInput = {
  * - MENU_ITEM_UPDATED (async): Optionally triggered when sort order or parent changed for menu item.
  */
 export type MenuItemMove = {
-  readonly __typename?: 'MenuItemMove';
   readonly errors: ReadonlyArray<MenuError>;
   /** Assigned menu to move within. */
   readonly menu?: Maybe<Menu>;
@@ -10729,7 +10397,6 @@ export type MenuItemSortingInput = {
 
 /** Represents menu item's original translatable fields and related translations. */
 export type MenuItemTranslatableContent = Node & {
-  readonly __typename?: 'MenuItemTranslatableContent';
   /** The ID of the menu item translatable content. */
   readonly id: Scalars['ID']['output'];
   /**
@@ -10761,7 +10428,6 @@ export type MenuItemTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type MenuItemTranslate = {
-  readonly __typename?: 'MenuItemTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly menuItem?: Maybe<MenuItem>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -10770,7 +10436,6 @@ export type MenuItemTranslate = {
 
 /** Represents menu item translations. */
 export type MenuItemTranslation = Node & {
-  readonly __typename?: 'MenuItemTranslation';
   /** The ID of the menu item translation. */
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
@@ -10794,7 +10459,6 @@ export type MenuItemTranslation = Node & {
  * - MENU_ITEM_UPDATED (async): A menu item was updated.
  */
 export type MenuItemUpdate = {
-  readonly __typename?: 'MenuItemUpdate';
   readonly errors: ReadonlyArray<MenuError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
@@ -10807,7 +10471,6 @@ export type MenuItemUpdate = {
  * Added in Saleor 3.4.
  */
 export type MenuItemUpdated = Event & {
-  readonly __typename?: 'MenuItemUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -10856,7 +10519,6 @@ export type MenuSortingInput = {
  * - MENU_UPDATED (async): A menu was updated.
  */
 export type MenuUpdate = {
-  readonly __typename?: 'MenuUpdate';
   readonly errors: ReadonlyArray<MenuError>;
   readonly menu?: Maybe<Menu>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -10869,7 +10531,6 @@ export type MenuUpdate = {
  * Added in Saleor 3.4.
  */
 export type MenuUpdated = Event & {
-  readonly __typename?: 'MenuUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -10893,7 +10554,6 @@ export type MenuUpdatedMenuArgs = {
 };
 
 export type MetadataError = {
-  readonly __typename?: 'MetadataError';
   /** The error code. */
   readonly code: MetadataErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -10924,7 +10584,6 @@ export type MetadataInput = {
 };
 
 export type MetadataItem = {
-  readonly __typename?: 'MetadataItem';
   /** Key of a metadata item. */
   readonly key: Scalars['String']['output'];
   /** Value of a metadata item. */
@@ -10933,7 +10592,6 @@ export type MetadataItem = {
 
 /** Represents amount of money in specific currency. */
 export type Money = {
-  readonly __typename?: 'Money';
   /** Amount of money. */
   readonly amount: Scalars['Float']['output'];
   /** Currency code. */
@@ -10949,7 +10607,6 @@ export type MoneyInput = {
 
 /** Represents a range of amounts of money. */
 export type MoneyRange = {
-  readonly __typename?: 'MoneyRange';
   /** Lower bound of a price range. */
   readonly start?: Maybe<Money>;
   /** Upper bound of a price range. */
@@ -10964,7 +10621,6 @@ export type MoveProductInput = {
 };
 
 export type Mutation = {
-  readonly __typename?: 'Mutation';
   /**
    * Create a new address for the customer.
    *
@@ -15435,7 +15091,6 @@ export type ObjectWithMetadataPrivateMetafieldsArgs = {
 
 /** Represents an order in the shop. */
 export type Order = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Order';
   /** List of actions that can be performed in the current state of an order. */
   readonly actions: ReadonlyArray<OrderAction>;
   /**
@@ -15818,7 +15473,6 @@ export type OrderAction =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderAddNote = {
-  readonly __typename?: 'OrderAddNote';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order note created. */
   readonly event?: Maybe<OrderEvent>;
@@ -15864,7 +15518,6 @@ export type OrderAuthorizeStatusEnum =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderBulkCancel = {
-  readonly __typename?: 'OrderBulkCancel';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderError>;
@@ -15882,7 +15535,6 @@ export type OrderBulkCancel = {
  * Requires one of the following permissions: MANAGE_ORDERS_IMPORT.
  */
 export type OrderBulkCreate = {
-  readonly __typename?: 'OrderBulkCreate';
   /** Returns how many objects were created. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderBulkCreateError>;
@@ -15914,7 +15566,6 @@ export type OrderBulkCreateDeliveryMethodInput = {
 };
 
 export type OrderBulkCreateError = {
-  readonly __typename?: 'OrderBulkCreateError';
   /** The error code. */
   readonly code?: Maybe<OrderBulkCreateErrorCode>;
   /** The error message. */
@@ -16118,7 +15769,6 @@ export type OrderBulkCreateOrderLineInput = {
 };
 
 export type OrderBulkCreateResult = {
-  readonly __typename?: 'OrderBulkCreateResult';
   /** List of errors occurred on create attempt. */
   readonly errors?: Maybe<ReadonlyArray<OrderBulkCreateError>>;
   /** Order data. */
@@ -16142,7 +15792,6 @@ export type OrderBulkCreateUserInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderBulkCreated = Event & {
-  readonly __typename?: 'OrderBulkCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -16161,7 +15810,6 @@ export type OrderBulkCreated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderCancel = {
-  readonly __typename?: 'OrderCancel';
   readonly errors: ReadonlyArray<OrderError>;
   /** Canceled order. */
   readonly order?: Maybe<Order>;
@@ -16175,7 +15823,6 @@ export type OrderCancel = {
  * Added in Saleor 3.2.
  */
 export type OrderCancelled = Event & {
-  readonly __typename?: 'OrderCancelled';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -16194,7 +15841,6 @@ export type OrderCancelled = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderCapture = {
-  readonly __typename?: 'OrderCapture';
   readonly errors: ReadonlyArray<OrderError>;
   /** Captured order. */
   readonly order?: Maybe<Order>;
@@ -16234,7 +15880,6 @@ export type OrderChargeStatusEnum =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderConfirm = {
-  readonly __typename?: 'OrderConfirm';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -16247,7 +15892,6 @@ export type OrderConfirm = {
  * Added in Saleor 3.2.
  */
 export type OrderConfirmed = Event & {
-  readonly __typename?: 'OrderConfirmed';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -16261,7 +15905,6 @@ export type OrderConfirmed = Event & {
 };
 
 export type OrderCountableConnection = {
-  readonly __typename?: 'OrderCountableConnection';
   readonly edges: ReadonlyArray<OrderCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -16270,7 +15913,6 @@ export type OrderCountableConnection = {
 };
 
 export type OrderCountableEdge = {
-  readonly __typename?: 'OrderCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -16295,14 +15937,12 @@ export type OrderCountableEdge = {
  * - ORDER_CONFIRMED (async): Optionally triggered when newly created order are automatically marked as confirmed.
  */
 export type OrderCreateFromCheckout = {
-  readonly __typename?: 'OrderCreateFromCheckout';
   readonly errors: ReadonlyArray<OrderCreateFromCheckoutError>;
   /** Placed order. */
   readonly order?: Maybe<Order>;
 };
 
 export type OrderCreateFromCheckoutError = {
-  readonly __typename?: 'OrderCreateFromCheckoutError';
   /** The error code. */
   readonly code: OrderCreateFromCheckoutErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -16337,7 +15977,6 @@ export type OrderCreateFromCheckoutErrorCode =
  * Added in Saleor 3.2.
  */
 export type OrderCreated = Event & {
-  readonly __typename?: 'OrderCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -16358,7 +15997,6 @@ export type OrderDirection =
 
 /** Contains all details related to the applied discount to the order. */
 export type OrderDiscount = Node & {
-  readonly __typename?: 'OrderDiscount';
   /** Returns amount of discount. */
   readonly amount: Money;
   /** The ID of discount applied. */
@@ -16387,7 +16025,6 @@ export type OrderDiscount = Node & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderDiscountAdd = {
-  readonly __typename?: 'OrderDiscountAdd';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which has been discounted. */
   readonly order?: Maybe<Order>;
@@ -16410,7 +16047,6 @@ export type OrderDiscountCommonInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderDiscountDelete = {
-  readonly __typename?: 'OrderDiscountDelete';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which has removed discount. */
   readonly order?: Maybe<Order>;
@@ -16431,7 +16067,6 @@ export type OrderDiscountType =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderDiscountUpdate = {
-  readonly __typename?: 'OrderDiscountUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which has been discounted. */
   readonly order?: Maybe<Order>;
@@ -16448,7 +16083,6 @@ export type OrderDraftFilterInput = {
 };
 
 export type OrderError = {
-  readonly __typename?: 'OrderError';
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -16505,7 +16139,6 @@ export type OrderErrorCode =
 
 /** History log of the order. */
 export type OrderEvent = Node & {
-  readonly __typename?: 'OrderEvent';
   /** Amount of money. */
   readonly amount?: Maybe<Scalars['Float']['output']>;
   /** App that performed the action. Requires of of the following permissions: MANAGE_APPS, MANAGE_ORDERS, OWNER. */
@@ -16565,7 +16198,6 @@ export type OrderEvent = Node & {
 };
 
 export type OrderEventCountableConnection = {
-  readonly __typename?: 'OrderEventCountableConnection';
   readonly edges: ReadonlyArray<OrderEventCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -16574,7 +16206,6 @@ export type OrderEventCountableConnection = {
 };
 
 export type OrderEventCountableEdge = {
-  readonly __typename?: 'OrderEventCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -16582,7 +16213,6 @@ export type OrderEventCountableEdge = {
 };
 
 export type OrderEventDiscountObject = {
-  readonly __typename?: 'OrderEventDiscountObject';
   /** Returns amount of discount. */
   readonly amount?: Maybe<Money>;
   /** Returns amount of discount. */
@@ -16600,7 +16230,6 @@ export type OrderEventDiscountObject = {
 };
 
 export type OrderEventOrderLineObject = {
-  readonly __typename?: 'OrderEventOrderLineObject';
   /** The discount applied to the order line. */
   readonly discount?: Maybe<OrderEventDiscountObject>;
   /** The variant name. */
@@ -16683,7 +16312,6 @@ export type OrderEventsEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderExpired = Event & {
-  readonly __typename?: 'OrderExpired';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -16723,7 +16351,6 @@ export type OrderFilterInput = {
  * Added in Saleor 3.6.
  */
 export type OrderFilterShippingMethods = Event & {
-  readonly __typename?: 'OrderFilterShippingMethods';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -16754,7 +16381,6 @@ export type OrderFilterShippingMethods = Event & {
  * - FULFILLMENT_APPROVED (async): A fulfillment is approved.
  */
 export type OrderFulfill = {
-  readonly __typename?: 'OrderFulfill';
   readonly errors: ReadonlyArray<OrderError>;
   /** List of created fulfillments. */
   readonly fulfillments?: Maybe<ReadonlyArray<Fulfillment>>;
@@ -16799,7 +16425,6 @@ export type OrderFulfillStockInput = {
  * Added in Saleor 3.2.
  */
 export type OrderFulfilled = Event & {
-  readonly __typename?: 'OrderFulfilled';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -16818,7 +16443,6 @@ export type OrderFulfilled = Event & {
  * Added in Saleor 3.2.
  */
 export type OrderFullyPaid = Event & {
-  readonly __typename?: 'OrderFullyPaid';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -16839,7 +16463,6 @@ export type OrderFullyPaid = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderFullyRefunded = Event & {
-  readonly __typename?: 'OrderFullyRefunded';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -16862,7 +16485,6 @@ export type OrderFullyRefunded = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderGrantRefundCreate = {
-  readonly __typename?: 'OrderGrantRefundCreate';
   readonly errors: ReadonlyArray<OrderGrantRefundCreateError>;
   /** Created granted refund. */
   readonly grantedRefund?: Maybe<OrderGrantedRefund>;
@@ -16871,7 +16493,6 @@ export type OrderGrantRefundCreate = {
 };
 
 export type OrderGrantRefundCreateError = {
-  readonly __typename?: 'OrderGrantRefundCreateError';
   /** The error code. */
   readonly code: OrderGrantRefundCreateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -16928,7 +16549,6 @@ export type OrderGrantRefundCreateInput = {
 };
 
 export type OrderGrantRefundCreateLineError = {
-  readonly __typename?: 'OrderGrantRefundCreateLineError';
   /** The error code. */
   readonly code: OrderGrantRefundCreateLineErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -16963,7 +16583,6 @@ export type OrderGrantRefundCreateLineInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderGrantRefundUpdate = {
-  readonly __typename?: 'OrderGrantRefundUpdate';
   readonly errors: ReadonlyArray<OrderGrantRefundUpdateError>;
   /** Created granted refund. */
   readonly grantedRefund?: Maybe<OrderGrantedRefund>;
@@ -16972,7 +16591,6 @@ export type OrderGrantRefundUpdate = {
 };
 
 export type OrderGrantRefundUpdateError = {
-  readonly __typename?: 'OrderGrantRefundUpdateError';
   /**
    * List of lines to add which cause the error.
    *
@@ -17054,7 +16672,6 @@ export type OrderGrantRefundUpdateLineAddInput = {
 };
 
 export type OrderGrantRefundUpdateLineError = {
-  readonly __typename?: 'OrderGrantRefundUpdateLineError';
   /** The error code. */
   readonly code: OrderGrantRefundUpdateLineErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -17078,7 +16695,6 @@ export type OrderGrantRefundUpdateLineErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderGrantedRefund = {
-  readonly __typename?: 'OrderGrantedRefund';
   /** Refund amount. */
   readonly amount: Money;
   /** App that performed the action. */
@@ -17136,7 +16752,6 @@ export type OrderGrantedRefund = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderGrantedRefundLine = {
-  readonly __typename?: 'OrderGrantedRefundLine';
   readonly id: Scalars['ID']['output'];
   /** Line of the order associated with this granted refund. */
   readonly orderLine: OrderLine;
@@ -17162,7 +16777,6 @@ export type OrderGrantedRefundStatusEnum =
 
 /** Represents order line of particular order. */
 export type OrderLine = Node & ObjectWithMetadata & {
-  readonly __typename?: 'OrderLine';
   /**
    * List of allocations across warehouses.
    *
@@ -17369,7 +16983,6 @@ export type OrderLineCreateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineDelete = {
-  readonly __typename?: 'OrderLineDelete';
   readonly errors: ReadonlyArray<OrderError>;
   /** A related order. */
   readonly order?: Maybe<Order>;
@@ -17385,7 +16998,6 @@ export type OrderLineDelete = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineDiscountRemove = {
-  readonly __typename?: 'OrderLineDiscountRemove';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which is related to line which has removed discount. */
   readonly order?: Maybe<Order>;
@@ -17401,7 +17013,6 @@ export type OrderLineDiscountRemove = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineDiscountUpdate = {
-  readonly __typename?: 'OrderLineDiscountUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which is related to the discounted line. */
   readonly order?: Maybe<Order>;
@@ -17422,7 +17033,6 @@ export type OrderLineInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLineUpdate = {
-  readonly __typename?: 'OrderLineUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   /** Related order. */
   readonly order?: Maybe<Order>;
@@ -17437,7 +17047,6 @@ export type OrderLineUpdate = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderLinesCreate = {
-  readonly __typename?: 'OrderLinesCreate';
   readonly errors: ReadonlyArray<OrderError>;
   /** Related order. */
   readonly order?: Maybe<Order>;
@@ -17453,7 +17062,6 @@ export type OrderLinesCreate = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderMarkAsPaid = {
-  readonly __typename?: 'OrderMarkAsPaid';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order marked as paid. */
   readonly order?: Maybe<Order>;
@@ -17467,7 +17075,6 @@ export type OrderMarkAsPaid = {
  * Added in Saleor 3.8.
  */
 export type OrderMetadataUpdated = Event & {
-  readonly __typename?: 'OrderMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17490,7 +17097,6 @@ export type OrderMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderNoteAdd = {
-  readonly __typename?: 'OrderNoteAdd';
   readonly errors: ReadonlyArray<OrderNoteAddError>;
   /** Order note created. */
   readonly event?: Maybe<OrderEvent>;
@@ -17499,7 +17105,6 @@ export type OrderNoteAdd = {
 };
 
 export type OrderNoteAddError = {
-  readonly __typename?: 'OrderNoteAddError';
   /** The error code. */
   readonly code?: Maybe<OrderNoteAddErrorCode>;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -17527,7 +17132,6 @@ export type OrderNoteInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderNoteUpdate = {
-  readonly __typename?: 'OrderNoteUpdate';
   readonly errors: ReadonlyArray<OrderNoteUpdateError>;
   /** Order note updated. */
   readonly event?: Maybe<OrderEvent>;
@@ -17536,7 +17140,6 @@ export type OrderNoteUpdate = {
 };
 
 export type OrderNoteUpdateError = {
-  readonly __typename?: 'OrderNoteUpdateError';
   /** The error code. */
   readonly code?: Maybe<OrderNoteUpdateErrorCode>;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -17566,7 +17169,6 @@ export type OrderOriginEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderPaid = Event & {
-  readonly __typename?: 'OrderPaid';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17594,7 +17196,6 @@ export type OrderPredicateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderRefund = {
-  readonly __typename?: 'OrderRefund';
   readonly errors: ReadonlyArray<OrderError>;
   /** A refunded order. */
   readonly order?: Maybe<Order>;
@@ -17635,7 +17236,6 @@ export type OrderRefundProductsInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type OrderRefunded = Event & {
-  readonly __typename?: 'OrderRefunded';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17681,7 +17281,6 @@ export type OrderReturnProductsInput = {
 
 /** Represents the channel-specific order settings. */
 export type OrderSettings = {
-  readonly __typename?: 'OrderSettings';
   /**
    * Determine if it is possible to place unpaid order by calling `checkoutComplete` mutation.
    *
@@ -17731,7 +17330,6 @@ export type OrderSettings = {
 };
 
 export type OrderSettingsError = {
-  readonly __typename?: 'OrderSettingsError';
   /** The error code. */
   readonly code: OrderSettingsErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -17800,7 +17398,6 @@ export type OrderSettingsInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderSettingsUpdate = {
-  readonly __typename?: 'OrderSettingsUpdate';
   readonly errors: ReadonlyArray<OrderSettingsError>;
   /** Order settings. */
   readonly orderSettings?: Maybe<OrderSettings>;
@@ -17874,7 +17471,6 @@ export type OrderStatusFilter =
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderUpdate = {
-  readonly __typename?: 'OrderUpdate';
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -17902,7 +17498,6 @@ export type OrderUpdateInput = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderUpdateShipping = {
-  readonly __typename?: 'OrderUpdateShipping';
   readonly errors: ReadonlyArray<OrderError>;
   /** Order with updated shipping method. */
   readonly order?: Maybe<Order>;
@@ -17921,7 +17516,6 @@ export type OrderUpdateShippingInput = {
  * Added in Saleor 3.2.
  */
 export type OrderUpdated = Event & {
-  readonly __typename?: 'OrderUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -17940,7 +17534,6 @@ export type OrderUpdated = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderVoid = {
-  readonly __typename?: 'OrderVoid';
   readonly errors: ReadonlyArray<OrderError>;
   /** A voided order. */
   readonly order?: Maybe<Order>;
@@ -17950,7 +17543,6 @@ export type OrderVoid = {
 
 /** A static page that can be manually added by a shop operator through the dashboard. */
 export type Page = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Page';
   /** List of attributes assigned to this product. */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /**
@@ -18062,7 +17654,6 @@ export type PageTranslationArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageAttributeAssign = {
-  readonly __typename?: 'PageAttributeAssign';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -18076,7 +17667,6 @@ export type PageAttributeAssign = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageAttributeUnassign = {
-  readonly __typename?: 'PageAttributeUnassign';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -18090,7 +17680,6 @@ export type PageAttributeUnassign = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageBulkDelete = {
-  readonly __typename?: 'PageBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<PageError>;
@@ -18104,7 +17693,6 @@ export type PageBulkDelete = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageBulkPublish = {
-  readonly __typename?: 'PageBulkPublish';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<PageError>;
@@ -18113,7 +17701,6 @@ export type PageBulkPublish = {
 };
 
 export type PageCountableConnection = {
-  readonly __typename?: 'PageCountableConnection';
   readonly edges: ReadonlyArray<PageCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -18122,7 +17709,6 @@ export type PageCountableConnection = {
 };
 
 export type PageCountableEdge = {
-  readonly __typename?: 'PageCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -18135,7 +17721,6 @@ export type PageCountableEdge = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageCreate = {
-  readonly __typename?: 'PageCreate';
   readonly errors: ReadonlyArray<PageError>;
   readonly page?: Maybe<Page>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -18181,7 +17766,6 @@ export type PageCreateInput = {
  * Added in Saleor 3.2.
  */
 export type PageCreated = Event & {
-  readonly __typename?: 'PageCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -18200,7 +17784,6 @@ export type PageCreated = Event & {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageDelete = {
-  readonly __typename?: 'PageDelete';
   readonly errors: ReadonlyArray<PageError>;
   readonly page?: Maybe<Page>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -18213,7 +17796,6 @@ export type PageDelete = {
  * Added in Saleor 3.2.
  */
 export type PageDeleted = Event & {
-  readonly __typename?: 'PageDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -18227,7 +17809,6 @@ export type PageDeleted = Event & {
 };
 
 export type PageError = {
-  readonly __typename?: 'PageError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -18259,7 +17840,6 @@ export type PageFilterInput = {
 
 /** The Relay compliant `PageInfo` type, containing data necessary to paginate this connection. */
 export type PageInfo = {
-  readonly __typename?: 'PageInfo';
   /** When paginating forwards, the cursor to continue. */
   readonly endCursor?: Maybe<Scalars['String']['output']>;
   /** When paginating forwards, are there more items? */
@@ -18307,7 +17887,6 @@ export type PageInput = {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageReorderAttributeValues = {
-  readonly __typename?: 'PageReorderAttributeValues';
   readonly errors: ReadonlyArray<PageError>;
   /** Page from which attribute values are reordered. */
   readonly page?: Maybe<Page>;
@@ -18356,7 +17935,6 @@ export type PageSortingInput = {
 
 /** Represents page's original translatable fields and related translations. */
 export type PageTranslatableContent = Node & {
-  readonly __typename?: 'PageTranslatableContent';
   /** List of page content attribute values that can be translated. */
   readonly attributeValues: ReadonlyArray<AttributeValueTranslatableContent>;
   /**
@@ -18407,7 +17985,6 @@ export type PageTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type PageTranslate = {
-  readonly __typename?: 'PageTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly page?: Maybe<PageTranslatableContent>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -18416,7 +17993,6 @@ export type PageTranslate = {
 
 /** Represents page translations. */
 export type PageTranslation = Node & {
-  readonly __typename?: 'PageTranslation';
   /**
    * Translated content of the page.
    *
@@ -18462,7 +18038,6 @@ export type PageTranslationInput = {
 
 /** Represents a type of page. It defines what attributes are available to pages of this type. */
 export type PageType = Node & ObjectWithMetadata & {
-  readonly __typename?: 'PageType';
   /** Page attributes of that page type. */
   readonly attributes?: Maybe<ReadonlyArray<Attribute>>;
   /**
@@ -18558,7 +18133,6 @@ export type PageTypePrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeBulkDelete = {
-  readonly __typename?: 'PageTypeBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<PageError>;
@@ -18567,7 +18141,6 @@ export type PageTypeBulkDelete = {
 };
 
 export type PageTypeCountableConnection = {
-  readonly __typename?: 'PageTypeCountableConnection';
   readonly edges: ReadonlyArray<PageTypeCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -18576,7 +18149,6 @@ export type PageTypeCountableConnection = {
 };
 
 export type PageTypeCountableEdge = {
-  readonly __typename?: 'PageTypeCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -18589,7 +18161,6 @@ export type PageTypeCountableEdge = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeCreate = {
-  readonly __typename?: 'PageTypeCreate';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -18611,7 +18182,6 @@ export type PageTypeCreateInput = {
  * Added in Saleor 3.5.
  */
 export type PageTypeCreated = Event & {
-  readonly __typename?: 'PageTypeCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -18630,7 +18200,6 @@ export type PageTypeCreated = Event & {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeDelete = {
-  readonly __typename?: 'PageTypeDelete';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -18643,7 +18212,6 @@ export type PageTypeDelete = {
  * Added in Saleor 3.5.
  */
 export type PageTypeDeleted = Event & {
-  readonly __typename?: 'PageTypeDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -18667,7 +18235,6 @@ export type PageTypeFilterInput = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeReorderAttributes = {
-  readonly __typename?: 'PageTypeReorderAttributes';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -18694,7 +18261,6 @@ export type PageTypeSortingInput = {
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeUpdate = {
-  readonly __typename?: 'PageTypeUpdate';
   readonly errors: ReadonlyArray<PageError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
@@ -18718,7 +18284,6 @@ export type PageTypeUpdateInput = {
  * Added in Saleor 3.5.
  */
 export type PageTypeUpdated = Event & {
-  readonly __typename?: 'PageTypeUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -18737,7 +18302,6 @@ export type PageTypeUpdated = Event & {
  * Requires one of the following permissions: MANAGE_PAGES.
  */
 export type PageUpdate = {
-  readonly __typename?: 'PageUpdate';
   readonly errors: ReadonlyArray<PageError>;
   readonly page?: Maybe<Page>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -18750,7 +18314,6 @@ export type PageUpdate = {
  * Added in Saleor 3.2.
  */
 export type PageUpdated = Event & {
-  readonly __typename?: 'PageUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -18769,7 +18332,6 @@ export type PageUpdated = Event & {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type PasswordChange = {
-  readonly __typename?: 'PasswordChange';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -18779,7 +18341,6 @@ export type PasswordChange = {
 
 /** Represents a payment of a given type. */
 export type Payment = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Payment';
   /**
    * List of actions that can be performed in the current state of a payment.
    *
@@ -18912,7 +18473,6 @@ export type PaymentPrivateMetafieldsArgs = {
  * Added in Saleor 3.6.
  */
 export type PaymentAuthorize = Event & {
-  readonly __typename?: 'PaymentAuthorize';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -18931,7 +18491,6 @@ export type PaymentAuthorize = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type PaymentCapture = {
-  readonly __typename?: 'PaymentCapture';
   readonly errors: ReadonlyArray<PaymentError>;
   /** Updated payment. */
   readonly payment?: Maybe<Payment>;
@@ -18945,7 +18504,6 @@ export type PaymentCapture = {
  * Added in Saleor 3.6.
  */
 export type PaymentCaptureEvent = Event & {
-  readonly __typename?: 'PaymentCaptureEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -18970,7 +18528,6 @@ export type PaymentChargeStatusEnum =
 
 /** Check payment balance. */
 export type PaymentCheckBalance = {
-  readonly __typename?: 'PaymentCheckBalance';
   /** Response from the gateway. */
   readonly data?: Maybe<Scalars['JSONString']['output']>;
   readonly errors: ReadonlyArray<PaymentError>;
@@ -18995,7 +18552,6 @@ export type PaymentCheckBalanceInput = {
  * Added in Saleor 3.6.
  */
 export type PaymentConfirmEvent = Event & {
-  readonly __typename?: 'PaymentConfirmEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19009,7 +18565,6 @@ export type PaymentConfirmEvent = Event & {
 };
 
 export type PaymentCountableConnection = {
-  readonly __typename?: 'PaymentCountableConnection';
   readonly edges: ReadonlyArray<PaymentCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -19018,7 +18573,6 @@ export type PaymentCountableConnection = {
 };
 
 export type PaymentCountableEdge = {
-  readonly __typename?: 'PaymentCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -19026,7 +18580,6 @@ export type PaymentCountableEdge = {
 };
 
 export type PaymentError = {
-  readonly __typename?: 'PaymentError';
   /** The error code. */
   readonly code: PaymentErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -19069,7 +18622,6 @@ export type PaymentFilterInput = {
 
 /** Available payment gateway backend with configuration necessary to setup client. */
 export type PaymentGateway = {
-  readonly __typename?: 'PaymentGateway';
   /** Payment gateway client configuration. */
   readonly config: ReadonlyArray<GatewayConfigLine>;
   /** Payment gateway supported currencies. */
@@ -19081,7 +18633,6 @@ export type PaymentGateway = {
 };
 
 export type PaymentGatewayConfig = {
-  readonly __typename?: 'PaymentGatewayConfig';
   /** The JSON data required to initialize the payment gateway. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
   readonly errors?: Maybe<ReadonlyArray<PaymentGatewayConfigError>>;
@@ -19090,7 +18641,6 @@ export type PaymentGatewayConfig = {
 };
 
 export type PaymentGatewayConfigError = {
-  readonly __typename?: 'PaymentGatewayConfigError';
   /** The error code. */
   readonly code: PaymentGatewayConfigErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -19112,14 +18662,12 @@ export type PaymentGatewayConfigErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentGatewayInitialize = {
-  readonly __typename?: 'PaymentGatewayInitialize';
   readonly errors: ReadonlyArray<PaymentGatewayInitializeError>;
   /** List of payment gateway configurations. */
   readonly gatewayConfigs?: Maybe<ReadonlyArray<PaymentGatewayConfig>>;
 };
 
 export type PaymentGatewayInitializeError = {
-  readonly __typename?: 'PaymentGatewayInitializeError';
   /** The error code. */
   readonly code: PaymentGatewayInitializeErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -19141,7 +18689,6 @@ export type PaymentGatewayInitializeErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentGatewayInitializeSession = Event & {
-  readonly __typename?: 'PaymentGatewayInitializeSession';
   /** Amount requested for initializing the payment gateway. */
   readonly amount?: Maybe<Scalars['PositiveDecimal']['output']>;
   /** Payment gateway data in JSON format, received from storefront. */
@@ -19171,7 +18718,6 @@ export type PaymentGatewayInitializeSession = Event & {
  * - PAYMENT_GATEWAY_INITIALIZE_TOKENIZATION_SESSION (sync): The customer requested to initialize payment gateway for tokenization.
  */
 export type PaymentGatewayInitializeTokenization = {
-  readonly __typename?: 'PaymentGatewayInitializeTokenization';
   /** A data returned by payment app. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
   readonly errors: ReadonlyArray<PaymentGatewayInitializeTokenizationError>;
@@ -19180,7 +18726,6 @@ export type PaymentGatewayInitializeTokenization = {
 };
 
 export type PaymentGatewayInitializeTokenizationError = {
-  readonly __typename?: 'PaymentGatewayInitializeTokenizationError';
   /** The error code. */
   readonly code: PaymentGatewayInitializeTokenizationErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -19217,7 +18762,6 @@ export type PaymentGatewayInitializeTokenizationResult =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentGatewayInitializeTokenizationSession = Event & {
-  readonly __typename?: 'PaymentGatewayInitializeTokenizationSession';
   /** Channel related to the requested action. */
   readonly channel: Channel;
   /** Payment gateway data in JSON format, received from storefront. */
@@ -19243,7 +18787,6 @@ export type PaymentGatewayToInitialize = {
 
 /** Initializes payment process when it is required by gateway. */
 export type PaymentInitialize = {
-  readonly __typename?: 'PaymentInitialize';
   readonly errors: ReadonlyArray<PaymentError>;
   /** Payment that was initialized. */
   readonly initializedPayment?: Maybe<PaymentInitialized>;
@@ -19253,7 +18796,6 @@ export type PaymentInitialize = {
 
 /** Server-side data generated by a payment gateway. Optional step when the payment provider requires an additional action to initialize payment session. */
 export type PaymentInitialized = {
-  readonly __typename?: 'PaymentInitialized';
   /** Initialized data by gateway. */
   readonly data?: Maybe<Scalars['JSONString']['output']>;
   /** ID of a payment gateway. */
@@ -19291,7 +18833,6 @@ export type PaymentInput = {
  * Added in Saleor 3.6.
  */
 export type PaymentListGateways = Event & {
-  readonly __typename?: 'PaymentListGateways';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -19317,7 +18858,6 @@ export type PaymentListGateways = Event & {
  * - PAYMENT_METHOD_INITIALIZE_TOKENIZATION_SESSION (sync): The customer requested to tokenize payment method.
  */
 export type PaymentMethodInitializeTokenization = {
-  readonly __typename?: 'PaymentMethodInitializeTokenization';
   /** A data returned by the payment app. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
   readonly errors: ReadonlyArray<PaymentMethodInitializeTokenizationError>;
@@ -19328,7 +18868,6 @@ export type PaymentMethodInitializeTokenization = {
 };
 
 export type PaymentMethodInitializeTokenizationError = {
-  readonly __typename?: 'PaymentMethodInitializeTokenizationError';
   /** The error code. */
   readonly code: PaymentMethodInitializeTokenizationErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -19352,7 +18891,6 @@ export type PaymentMethodInitializeTokenizationErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentMethodInitializeTokenizationSession = Event & {
-  readonly __typename?: 'PaymentMethodInitializeTokenizationSession';
   /** Channel related to the requested action. */
   readonly channel: Channel;
   /** Payment gateway data in JSON format, received from storefront. */
@@ -19384,7 +18922,6 @@ export type PaymentMethodInitializeTokenizationSession = Event & {
  * - PAYMENT_METHOD_PROCESS_TOKENIZATION_SESSION (sync): The customer continues payment method tokenization.
  */
 export type PaymentMethodProcessTokenization = {
-  readonly __typename?: 'PaymentMethodProcessTokenization';
   /** A data returned by the payment app. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
   readonly errors: ReadonlyArray<PaymentMethodProcessTokenizationError>;
@@ -19395,7 +18932,6 @@ export type PaymentMethodProcessTokenization = {
 };
 
 export type PaymentMethodProcessTokenizationError = {
-  readonly __typename?: 'PaymentMethodProcessTokenizationError';
   /** The error code. */
   readonly code: PaymentMethodProcessTokenizationErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -19419,7 +18955,6 @@ export type PaymentMethodProcessTokenizationErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PaymentMethodProcessTokenizationSession = Event & {
-  readonly __typename?: 'PaymentMethodProcessTokenizationSession';
   /** Channel related to the requested action. */
   readonly channel: Channel;
   /** Payment gateway data in JSON format, received from storefront. */
@@ -19439,7 +18974,6 @@ export type PaymentMethodProcessTokenizationSession = Event & {
 };
 
 export type PaymentMethodRequestDeleteError = {
-  readonly __typename?: 'PaymentMethodRequestDeleteError';
   /** The error code. */
   readonly code: StoredPaymentMethodRequestDeleteErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -19471,7 +19005,6 @@ export type PaymentMethodTokenizationResult =
  * Added in Saleor 3.6.
  */
 export type PaymentProcessEvent = Event & {
-  readonly __typename?: 'PaymentProcessEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19490,7 +19023,6 @@ export type PaymentProcessEvent = Event & {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type PaymentRefund = {
-  readonly __typename?: 'PaymentRefund';
   readonly errors: ReadonlyArray<PaymentError>;
   /** Updated payment. */
   readonly payment?: Maybe<Payment>;
@@ -19504,7 +19036,6 @@ export type PaymentRefund = {
  * Added in Saleor 3.6.
  */
 export type PaymentRefundEvent = Event & {
-  readonly __typename?: 'PaymentRefundEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19519,7 +19050,6 @@ export type PaymentRefundEvent = Event & {
 
 /** Represents the channel-specific payment settings. */
 export type PaymentSettings = {
-  readonly __typename?: 'PaymentSettings';
   /**
    * Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
    *
@@ -19543,7 +19073,6 @@ export type PaymentSettingsInput = {
 
 /** Represents a payment source stored for user in payment gateway, such as credit card. */
 export type PaymentSource = {
-  readonly __typename?: 'PaymentSource';
   /** Stored credit card details if available. */
   readonly creditCardInfo?: Maybe<CreditCard>;
   /** Payment gateway name. */
@@ -19566,7 +19095,6 @@ export type PaymentSource = {
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type PaymentVoid = {
-  readonly __typename?: 'PaymentVoid';
   readonly errors: ReadonlyArray<PaymentError>;
   /** Updated payment. */
   readonly payment?: Maybe<Payment>;
@@ -19580,7 +19108,6 @@ export type PaymentVoid = {
  * Added in Saleor 3.6.
  */
 export type PaymentVoidEvent = Event & {
-  readonly __typename?: 'PaymentVoidEvent';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19595,7 +19122,6 @@ export type PaymentVoidEvent = Event & {
 
 /** Represents a permission object in a friendly form. */
 export type Permission = {
-  readonly __typename?: 'Permission';
   /** Internal code for permission. */
   readonly code: PermissionEnum;
   /** Describe action(s) allowed to do by permission. */
@@ -19637,7 +19163,6 @@ export type PermissionEnum =
  * - PERMISSION_GROUP_CREATED (async)
  */
 export type PermissionGroupCreate = {
-  readonly __typename?: 'PermissionGroupCreate';
   readonly errors: ReadonlyArray<PermissionGroupError>;
   readonly group?: Maybe<Group>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -19675,7 +19200,6 @@ export type PermissionGroupCreateInput = {
  * Added in Saleor 3.6.
  */
 export type PermissionGroupCreated = Event & {
-  readonly __typename?: 'PermissionGroupCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19697,7 +19221,6 @@ export type PermissionGroupCreated = Event & {
  * - PERMISSION_GROUP_DELETED (async)
  */
 export type PermissionGroupDelete = {
-  readonly __typename?: 'PermissionGroupDelete';
   readonly errors: ReadonlyArray<PermissionGroupError>;
   readonly group?: Maybe<Group>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -19710,7 +19233,6 @@ export type PermissionGroupDelete = {
  * Added in Saleor 3.6.
  */
 export type PermissionGroupDeleted = Event & {
-  readonly __typename?: 'PermissionGroupDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19724,7 +19246,6 @@ export type PermissionGroupDeleted = Event & {
 };
 
 export type PermissionGroupError = {
-  readonly __typename?: 'PermissionGroupError';
   /** List of channels IDs which causes the error. */
   readonly channels?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -19776,7 +19297,6 @@ export type PermissionGroupSortingInput = {
  * - PERMISSION_GROUP_UPDATED (async)
  */
 export type PermissionGroupUpdate = {
-  readonly __typename?: 'PermissionGroupUpdate';
   readonly errors: ReadonlyArray<PermissionGroupError>;
   readonly group?: Maybe<Group>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -19826,7 +19346,6 @@ export type PermissionGroupUpdateInput = {
  * Added in Saleor 3.6.
  */
 export type PermissionGroupUpdated = Event & {
-  readonly __typename?: 'PermissionGroupUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -19841,7 +19360,6 @@ export type PermissionGroupUpdated = Event & {
 
 /** Plugin. */
 export type Plugin = {
-  readonly __typename?: 'Plugin';
   /** Channel-specific plugin configuration. */
   readonly channelConfigurations: ReadonlyArray<PluginConfiguration>;
   /** Description of the plugin. */
@@ -19856,7 +19374,6 @@ export type Plugin = {
 
 /** Stores information about a configuration of plugin. */
 export type PluginConfiguration = {
-  readonly __typename?: 'PluginConfiguration';
   /** Determines if plugin is active or not. */
   readonly active: Scalars['Boolean']['output'];
   /** The channel to which the plugin configuration is assigned to. */
@@ -19870,7 +19387,6 @@ export type PluginConfigurationType =
   | 'PER_CHANNEL';
 
 export type PluginCountableConnection = {
-  readonly __typename?: 'PluginCountableConnection';
   readonly edges: ReadonlyArray<PluginCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -19879,7 +19395,6 @@ export type PluginCountableConnection = {
 };
 
 export type PluginCountableEdge = {
-  readonly __typename?: 'PluginCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -19887,7 +19402,6 @@ export type PluginCountableEdge = {
 };
 
 export type PluginError = {
-  readonly __typename?: 'PluginError';
   /** The error code. */
   readonly code: PluginErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -19932,7 +19446,6 @@ export type PluginStatusInChannelsInput = {
  * Requires one of the following permissions: MANAGE_PLUGINS.
  */
 export type PluginUpdate = {
-  readonly __typename?: 'PluginUpdate';
   readonly errors: ReadonlyArray<PluginError>;
   readonly plugin?: Maybe<Plugin>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -19952,7 +19465,6 @@ export type PostalCodeRuleInclusionTypeEnum =
 
 /** Represents preorder settings for product variant. */
 export type PreorderData = {
-  readonly __typename?: 'PreorderData';
   /** Preorder end date. */
   readonly endDate?: Maybe<Scalars['DateTime']['output']>;
   /**
@@ -19978,7 +19490,6 @@ export type PreorderSettingsInput = {
 
 /** Represents preorder variant data for channel. */
 export type PreorderThreshold = {
-  readonly __typename?: 'PreorderThreshold';
   /** Preorder threshold for product variant in this channel. */
   readonly quantity?: Maybe<Scalars['Int']['output']>;
   /** Number of sold product variant in this channel. */
@@ -20001,7 +19512,6 @@ export type PriceRangeInput = {
 
 /** Represents an individual item for sale in the storefront. */
 export type Product = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Product';
   /**
    * Get a single attribute attached to product by attribute slug.
    *
@@ -20235,7 +19745,6 @@ export type ProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeAssign = {
-  readonly __typename?: 'ProductAttributeAssign';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -20264,7 +19773,6 @@ export type ProductAttributeAssignInput = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeAssignmentUpdate = {
-  readonly __typename?: 'ProductAttributeAssignmentUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -20293,7 +19801,6 @@ export type ProductAttributeType =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeUnassign = {
-  readonly __typename?: 'ProductAttributeUnassign';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -20311,7 +19818,6 @@ export type ProductAttributeUnassign = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductBulkCreate = {
-  readonly __typename?: 'ProductBulkCreate';
   /** Returns how many objects were created. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductBulkCreateError>;
@@ -20320,7 +19826,6 @@ export type ProductBulkCreate = {
 };
 
 export type ProductBulkCreateError = {
-  readonly __typename?: 'ProductBulkCreateError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of channel IDs which causes the error. */
@@ -20413,7 +19918,6 @@ export type ProductBulkCreateInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductBulkDelete = {
-  readonly __typename?: 'ProductBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -20422,7 +19926,6 @@ export type ProductBulkDelete = {
 };
 
 export type ProductBulkResult = {
-  readonly __typename?: 'ProductBulkResult';
   /** List of errors occurred on create attempt. */
   readonly errors?: Maybe<ReadonlyArray<ProductBulkCreateError>>;
   /** Product data. */
@@ -20443,7 +19946,6 @@ export type ProductBulkResult = {
  * - TRANSLATION_UPDATED (async): Called when a translation was updated.
  */
 export type ProductBulkTranslate = {
-  readonly __typename?: 'ProductBulkTranslate';
   /** Returns how many translations were created/updated. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductBulkTranslateError>;
@@ -20452,7 +19954,6 @@ export type ProductBulkTranslate = {
 };
 
 export type ProductBulkTranslateError = {
-  readonly __typename?: 'ProductBulkTranslateError';
   /** The error code. */
   readonly code: ProductTranslateErrorCode;
   /** The error message. */
@@ -20473,7 +19974,6 @@ export type ProductBulkTranslateInput = {
 };
 
 export type ProductBulkTranslateResult = {
-  readonly __typename?: 'ProductBulkTranslateResult';
   /** List of errors occurred on translation attempt. */
   readonly errors?: Maybe<ReadonlyArray<ProductBulkTranslateError>>;
   /** Product translation data. */
@@ -20482,7 +19982,6 @@ export type ProductBulkTranslateResult = {
 
 /** Represents product channel listing. */
 export type ProductChannelListing = Node & {
-  readonly __typename?: 'ProductChannelListing';
   /** @deprecated This field will be removed in Saleor 4.0. Use the `availableForPurchaseAt` field to fetch the available for purchase date. */
   readonly availableForPurchase?: Maybe<Scalars['Date']['output']>;
   /**
@@ -20588,7 +20087,6 @@ export type ProductChannelListingCreateInput = {
 };
 
 export type ProductChannelListingError = {
-  readonly __typename?: 'ProductChannelListingError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of channels IDs which causes the error. */
@@ -20611,7 +20109,6 @@ export type ProductChannelListingError = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductChannelListingUpdate = {
-  readonly __typename?: 'ProductChannelListingUpdate';
   readonly errors: ReadonlyArray<ProductChannelListingError>;
   /** An updated product instance. */
   readonly product?: Maybe<Product>;
@@ -20627,7 +20124,6 @@ export type ProductChannelListingUpdateInput = {
 };
 
 export type ProductCountableConnection = {
-  readonly __typename?: 'ProductCountableConnection';
   readonly edges: ReadonlyArray<ProductCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -20636,7 +20132,6 @@ export type ProductCountableConnection = {
 };
 
 export type ProductCountableEdge = {
-  readonly __typename?: 'ProductCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -20649,7 +20144,6 @@ export type ProductCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductCreate = {
-  readonly __typename?: 'ProductCreate';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -20721,7 +20215,6 @@ export type ProductCreateInput = {
  * Added in Saleor 3.2.
  */
 export type ProductCreated = Event & {
-  readonly __typename?: 'ProductCreated';
   /** The category of the product. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -20752,7 +20245,6 @@ export type ProductCreatedProductArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductDelete = {
-  readonly __typename?: 'ProductDelete';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -20765,7 +20257,6 @@ export type ProductDelete = {
  * Added in Saleor 3.2.
  */
 export type ProductDeleted = Event & {
-  readonly __typename?: 'ProductDeleted';
   /** The category of the product. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -20791,7 +20282,6 @@ export type ProductDeletedProductArgs = {
 };
 
 export type ProductError = {
-  readonly __typename?: 'ProductError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -20832,7 +20322,6 @@ export type ProductErrorCode =
  * Added in Saleor 3.16.
  */
 export type ProductExportCompleted = Event & {
-  readonly __typename?: 'ProductExportCompleted';
   /** The export file for products. */
   readonly export?: Maybe<ExportFile>;
   /** Time of the event. */
@@ -20915,7 +20404,6 @@ export type ProductFilterInput = {
 
 /** Represents a product image. */
 export type ProductImage = {
-  readonly __typename?: 'ProductImage';
   /** The alt text of the image. */
   readonly alt?: Maybe<Scalars['String']['output']>;
   /** The ID of the image. */
@@ -20992,7 +20480,6 @@ export type ProductInput = {
 
 /** Represents a product media. */
 export type ProductMedia = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ProductMedia';
   /** The alt text of the media. */
   readonly alt: Scalars['String']['output'];
   /** The unique ID of the product media. */
@@ -21090,7 +20577,6 @@ export type ProductMediaUrlArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaBulkDelete = {
-  readonly __typename?: 'ProductMediaBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -21104,7 +20590,6 @@ export type ProductMediaBulkDelete = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaCreate = {
-  readonly __typename?: 'ProductMediaCreate';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   readonly product?: Maybe<Product>;
@@ -21129,7 +20614,6 @@ export type ProductMediaCreateInput = {
  * Added in Saleor 3.12.
  */
 export type ProductMediaCreated = Event & {
-  readonly __typename?: 'ProductMediaCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -21148,7 +20632,6 @@ export type ProductMediaCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaDelete = {
-  readonly __typename?: 'ProductMediaDelete';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   readonly product?: Maybe<Product>;
@@ -21162,7 +20645,6 @@ export type ProductMediaDelete = {
  * Added in Saleor 3.12.
  */
 export type ProductMediaDeleted = Event & {
-  readonly __typename?: 'ProductMediaDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -21181,7 +20663,6 @@ export type ProductMediaDeleted = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaReorder = {
-  readonly __typename?: 'ProductMediaReorder';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ReadonlyArray<ProductMedia>>;
   readonly product?: Maybe<Product>;
@@ -21199,7 +20680,6 @@ export type ProductMediaType =
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductMediaUpdate = {
-  readonly __typename?: 'ProductMediaUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   readonly product?: Maybe<Product>;
@@ -21218,7 +20698,6 @@ export type ProductMediaUpdateInput = {
  * Added in Saleor 3.12.
  */
 export type ProductMediaUpdated = Event & {
-  readonly __typename?: 'ProductMediaUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -21237,7 +20716,6 @@ export type ProductMediaUpdated = Event & {
  * Added in Saleor 3.8.
  */
 export type ProductMetadataUpdated = Event & {
-  readonly __typename?: 'ProductMetadataUpdated';
   /** The category of the product. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -21340,7 +20818,6 @@ export type ProductOrderField =
 
 /** Represents availability of a product in the storefront. */
 export type ProductPricingInfo = {
-  readonly __typename?: 'ProductPricingInfo';
   /** The discount amount if in sale (null otherwise). */
   readonly discount?: Maybe<TaxedMoney>;
   /**
@@ -21373,7 +20850,6 @@ export type ProductPricingInfo = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductReorderAttributeValues = {
-  readonly __typename?: 'ProductReorderAttributeValues';
   readonly errors: ReadonlyArray<ProductError>;
   /** Product from which attribute values are reordered. */
   readonly product?: Maybe<Product>;
@@ -21388,7 +20864,6 @@ export type ProductStockFilterInput = {
 
 /** Represents product's original translatable fields and related translations. */
 export type ProductTranslatableContent = Node & {
-  readonly __typename?: 'ProductTranslatableContent';
   /** List of product attribute values that can be translated. */
   readonly attributeValues: ReadonlyArray<AttributeValueTranslatableContent>;
   /**
@@ -21439,7 +20914,6 @@ export type ProductTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ProductTranslate = {
-  readonly __typename?: 'ProductTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -21454,7 +20928,6 @@ export type ProductTranslateErrorCode =
 
 /** Represents product translations. */
 export type ProductTranslation = Node & {
-  readonly __typename?: 'ProductTranslation';
   /**
    * Translated description of the product.
    *
@@ -21488,7 +20961,6 @@ export type ProductTranslation = Node & {
 
 /** Represents a type of product. It defines what attributes are available to products of this type. */
 export type ProductType = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ProductType';
   /**
    * Variant attributes of that product type with attached variant selection.
    *
@@ -21637,7 +21109,6 @@ export type ProductTypeVariantAttributesArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeBulkDelete = {
-  readonly __typename?: 'ProductTypeBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -21650,7 +21121,6 @@ export type ProductTypeConfigurable =
   | 'SIMPLE';
 
 export type ProductTypeCountableConnection = {
-  readonly __typename?: 'ProductTypeCountableConnection';
   readonly edges: ReadonlyArray<ProductTypeCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -21659,7 +21129,6 @@ export type ProductTypeCountableConnection = {
 };
 
 export type ProductTypeCountableEdge = {
-  readonly __typename?: 'ProductTypeCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -21672,7 +21141,6 @@ export type ProductTypeCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeCreate = {
-  readonly __typename?: 'ProductTypeCreate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -21685,7 +21153,6 @@ export type ProductTypeCreate = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeDelete = {
-  readonly __typename?: 'ProductTypeDelete';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -21745,7 +21212,6 @@ export type ProductTypeKindEnum =
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeReorderAttributes = {
-  readonly __typename?: 'ProductTypeReorderAttributes';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -21774,7 +21240,6 @@ export type ProductTypeSortingInput = {
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductTypeUpdate = {
-  readonly __typename?: 'ProductTypeUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -21787,7 +21252,6 @@ export type ProductTypeUpdate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductUpdate = {
-  readonly __typename?: 'ProductUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -21800,7 +21264,6 @@ export type ProductUpdate = {
  * Added in Saleor 3.2.
  */
 export type ProductUpdated = Event & {
-  readonly __typename?: 'ProductUpdated';
   /** The category of the product. */
   readonly category?: Maybe<Category>;
   /** Time of the event. */
@@ -21827,7 +21290,6 @@ export type ProductUpdatedProductArgs = {
 
 /** Represents a version of a product such as different size or color. */
 export type ProductVariant = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ProductVariant';
   /** List of attributes assigned to this variant. */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /** Channel given to retrieve this product variant. Also used by federation gateway to resolve this object in a federated query. */
@@ -22009,7 +21471,6 @@ export type ProductVariantTranslationArgs = {
  * Added in Saleor 3.2.
  */
 export type ProductVariantBackInStock = Event & {
-  readonly __typename?: 'ProductVariantBackInStock';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22040,7 +21501,6 @@ export type ProductVariantBackInStockProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantBulkCreate = {
-  readonly __typename?: 'ProductVariantBulkCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly bulkProductErrors: ReadonlyArray<BulkProductError>;
   /** Returns how many objects were created. */
@@ -22109,7 +21569,6 @@ export type ProductVariantBulkCreateInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantBulkDelete = {
-  readonly __typename?: 'ProductVariantBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
@@ -22118,7 +21577,6 @@ export type ProductVariantBulkDelete = {
 };
 
 export type ProductVariantBulkError = {
-  readonly __typename?: 'ProductVariantBulkError';
   /** List of attributes IDs which causes the error. */
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of channel listings IDs which causes the error. */
@@ -22169,7 +21627,6 @@ export type ProductVariantBulkErrorCode =
   | 'UNIQUE';
 
 export type ProductVariantBulkResult = {
-  readonly __typename?: 'ProductVariantBulkResult';
   /** List of errors occurred on create attempt. */
   readonly errors?: Maybe<ReadonlyArray<ProductVariantBulkError>>;
   /** Product variant data. */
@@ -22190,7 +21647,6 @@ export type ProductVariantBulkResult = {
  * - TRANSLATION_UPDATED (async): A translation was updated.
  */
 export type ProductVariantBulkTranslate = {
-  readonly __typename?: 'ProductVariantBulkTranslate';
   /** Returns how many translations were created/updated. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductVariantBulkTranslateError>;
@@ -22199,7 +21655,6 @@ export type ProductVariantBulkTranslate = {
 };
 
 export type ProductVariantBulkTranslateError = {
-  readonly __typename?: 'ProductVariantBulkTranslateError';
   /** The error code. */
   readonly code: ProductVariantTranslateErrorCode;
   /** The error message. */
@@ -22220,7 +21675,6 @@ export type ProductVariantBulkTranslateInput = {
 };
 
 export type ProductVariantBulkTranslateResult = {
-  readonly __typename?: 'ProductVariantBulkTranslateResult';
   /** List of errors occurred on translation attempt. */
   readonly errors?: Maybe<ReadonlyArray<ProductVariantBulkTranslateError>>;
   /** Product variant translation data. */
@@ -22237,7 +21691,6 @@ export type ProductVariantBulkTranslateResult = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantBulkUpdate = {
-  readonly __typename?: 'ProductVariantBulkUpdate';
   /** Returns how many objects were updated. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductVariantBulkError>;
@@ -22313,7 +21766,6 @@ export type ProductVariantBulkUpdateInput = {
 
 /** Represents product variant channel listing. */
 export type ProductVariantChannelListing = Node & {
-  readonly __typename?: 'ProductVariantChannelListing';
   /** The channel to which the variant listing belongs. */
   readonly channel: Channel;
   /** Cost price of the variant. */
@@ -22357,7 +21809,6 @@ export type ProductVariantChannelListingAddInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantChannelListingUpdate = {
-  readonly __typename?: 'ProductVariantChannelListingUpdate';
   readonly errors: ReadonlyArray<ProductChannelListingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productChannelListingErrors: ReadonlyArray<ProductChannelListingError>;
@@ -22375,7 +21826,6 @@ export type ProductVariantChannelListingUpdateInput = {
 };
 
 export type ProductVariantCountableConnection = {
-  readonly __typename?: 'ProductVariantCountableConnection';
   readonly edges: ReadonlyArray<ProductVariantCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -22384,7 +21834,6 @@ export type ProductVariantCountableConnection = {
 };
 
 export type ProductVariantCountableEdge = {
-  readonly __typename?: 'ProductVariantCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -22397,7 +21846,6 @@ export type ProductVariantCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantCreate = {
-  readonly __typename?: 'ProductVariantCreate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -22457,7 +21905,6 @@ export type ProductVariantCreateInput = {
  * Added in Saleor 3.2.
  */
 export type ProductVariantCreated = Event & {
-  readonly __typename?: 'ProductVariantCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22486,7 +21933,6 @@ export type ProductVariantCreatedProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantDelete = {
-  readonly __typename?: 'ProductVariantDelete';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -22499,7 +21945,6 @@ export type ProductVariantDelete = {
  * Added in Saleor 3.2.
  */
 export type ProductVariantDeleted = Event & {
-  readonly __typename?: 'ProductVariantDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22579,7 +22024,6 @@ export type ProductVariantInput = {
  * Added in Saleor 3.8.
  */
 export type ProductVariantMetadataUpdated = Event & {
-  readonly __typename?: 'ProductVariantMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22608,7 +22052,6 @@ export type ProductVariantMetadataUpdatedProductVariantArgs = {
  * Added in Saleor 3.2.
  */
 export type ProductVariantOutOfStock = Event & {
-  readonly __typename?: 'ProductVariantOutOfStock';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22641,7 +22084,6 @@ export type ProductVariantOutOfStockProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantPreorderDeactivate = {
-  readonly __typename?: 'ProductVariantPreorderDeactivate';
   readonly errors: ReadonlyArray<ProductError>;
   /** Product variant with ended preorder. */
   readonly productVariant?: Maybe<ProductVariant>;
@@ -22653,7 +22095,6 @@ export type ProductVariantPreorderDeactivate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantReorder = {
-  readonly __typename?: 'ProductVariantReorder';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22666,7 +22107,6 @@ export type ProductVariantReorder = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantReorderAttributeValues = {
-  readonly __typename?: 'ProductVariantReorderAttributeValues';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -22680,7 +22120,6 @@ export type ProductVariantReorderAttributeValues = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantSetDefault = {
-  readonly __typename?: 'ProductVariantSetDefault';
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22706,7 +22145,6 @@ export type ProductVariantSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type ProductVariantStockUpdated = Event & {
-  readonly __typename?: 'ProductVariantStockUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22739,7 +22177,6 @@ export type ProductVariantStockUpdatedProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksCreate = {
-  readonly __typename?: 'ProductVariantStocksCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly bulkStockErrors: ReadonlyArray<BulkStockError>;
   readonly errors: ReadonlyArray<BulkStockError>;
@@ -22753,7 +22190,6 @@ export type ProductVariantStocksCreate = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksDelete = {
-  readonly __typename?: 'ProductVariantStocksDelete';
   readonly errors: ReadonlyArray<StockError>;
   /** Updated product variant. */
   readonly productVariant?: Maybe<ProductVariant>;
@@ -22767,7 +22203,6 @@ export type ProductVariantStocksDelete = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksUpdate = {
-  readonly __typename?: 'ProductVariantStocksUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly bulkStockErrors: ReadonlyArray<BulkStockError>;
   readonly errors: ReadonlyArray<BulkStockError>;
@@ -22786,7 +22221,6 @@ export type ProductVariantStocksUpdateInput = {
 
 /** Represents product variant's original translatable fields and related translations. */
 export type ProductVariantTranslatableContent = Node & {
-  readonly __typename?: 'ProductVariantTranslatableContent';
   /** List of product variant attribute values that can be translated. */
   readonly attributeValues: ReadonlyArray<AttributeValueTranslatableContent>;
   /** The ID of the product variant translatable content. */
@@ -22820,7 +22254,6 @@ export type ProductVariantTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ProductVariantTranslate = {
-  readonly __typename?: 'ProductVariantTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly productVariant?: Maybe<ProductVariant>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -22835,7 +22268,6 @@ export type ProductVariantTranslateErrorCode =
 
 /** Represents product variant translations. */
 export type ProductVariantTranslation = Node & {
-  readonly __typename?: 'ProductVariantTranslation';
   /** The ID of the product variant translation. */
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
@@ -22856,7 +22288,6 @@ export type ProductVariantTranslation = Node & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantUpdate = {
-  readonly __typename?: 'ProductVariantUpdate';
   readonly errors: ReadonlyArray<ProductError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
@@ -22869,7 +22300,6 @@ export type ProductVariantUpdate = {
  * Added in Saleor 3.2.
  */
 export type ProductVariantUpdated = Event & {
-  readonly __typename?: 'ProductVariantUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -22956,7 +22386,6 @@ export type ProductWhereInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type Promotion = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Promotion';
   /** Date time of promotion creation. */
   readonly createdAt: Scalars['DateTime']['output'];
   /** Description of the promotion. */
@@ -23091,14 +22520,12 @@ export type PromotionTranslationArgs = {
  * - PROMOTION_DELETED (async): A promotion was deleted.
  */
 export type PromotionBulkDelete = {
-  readonly __typename?: 'PromotionBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<DiscountError>;
 };
 
 export type PromotionCountableConnection = {
-  readonly __typename?: 'PromotionCountableConnection';
   readonly edges: ReadonlyArray<PromotionCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -23107,7 +22534,6 @@ export type PromotionCountableConnection = {
 };
 
 export type PromotionCountableEdge = {
-  readonly __typename?: 'PromotionCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -23128,13 +22554,11 @@ export type PromotionCountableEdge = {
  * - PROMOTION_STARTED (async): Optionally called if promotion was started.
  */
 export type PromotionCreate = {
-  readonly __typename?: 'PromotionCreate';
   readonly errors: ReadonlyArray<PromotionCreateError>;
   readonly promotion?: Maybe<Promotion>;
 };
 
 export type PromotionCreateError = {
-  readonly __typename?: 'PromotionCreateError';
   /** The error code. */
   readonly code: PromotionCreateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -23192,7 +22616,6 @@ export type PromotionCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionCreated = Event & {
-  readonly __typename?: 'PromotionCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23213,7 +22636,6 @@ export type PromotionCreated = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionCreatedEvent = Node & PromotionEventInterface & {
-  readonly __typename?: 'PromotionCreatedEvent';
   /**
    * User or App that created the promotion event.
    *
@@ -23240,13 +22662,11 @@ export type PromotionCreatedEvent = Node & PromotionEventInterface & {
  * - PROMOTION_DELETED (async): A promotion was deleted.
  */
 export type PromotionDelete = {
-  readonly __typename?: 'PromotionDelete';
   readonly errors: ReadonlyArray<PromotionDeleteError>;
   readonly promotion?: Maybe<Promotion>;
 };
 
 export type PromotionDeleteError = {
-  readonly __typename?: 'PromotionDeleteError';
   /** The error code. */
   readonly code: PromotionDeleteErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -23267,7 +22687,6 @@ export type PromotionDeleteErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionDeleted = Event & {
-  readonly __typename?: 'PromotionDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23288,7 +22707,6 @@ export type PromotionDeleted = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionEnded = Event & {
-  readonly __typename?: 'PromotionEnded';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23309,7 +22727,6 @@ export type PromotionEnded = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionEndedEvent = Node & PromotionEventInterface & {
-  readonly __typename?: 'PromotionEndedEvent';
   /**
    * User or App that created the promotion event.
    *
@@ -23356,7 +22773,6 @@ export type PromotionEventsEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionRule = Node & {
-  readonly __typename?: 'PromotionRule';
   /** The catalogue predicate that must be met to apply the rule reward. */
   readonly cataloguePredicate?: Maybe<Scalars['JSON']['output']>;
   /**
@@ -23451,13 +22867,11 @@ export type PromotionRuleTranslationArgs = {
  * - PROMOTION_RULE_CREATED (async): A promotion rule was created.
  */
 export type PromotionRuleCreate = {
-  readonly __typename?: 'PromotionRuleCreate';
   readonly errors: ReadonlyArray<PromotionRuleCreateError>;
   readonly promotionRule?: Maybe<PromotionRule>;
 };
 
 export type PromotionRuleCreateError = {
-  readonly __typename?: 'PromotionRuleCreateError';
   /** The error code. */
   readonly code: PromotionRuleCreateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -23535,7 +22949,6 @@ export type PromotionRuleCreateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionRuleCreated = Event & {
-  readonly __typename?: 'PromotionRuleCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23556,7 +22969,6 @@ export type PromotionRuleCreated = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionRuleCreatedEvent = Node & PromotionEventInterface & PromotionRuleEventInterface & {
-  readonly __typename?: 'PromotionRuleCreatedEvent';
   /**
    * User or App that created the promotion event.
    *
@@ -23585,13 +22997,11 @@ export type PromotionRuleCreatedEvent = Node & PromotionEventInterface & Promoti
  * - PROMOTION_RULE_DELETED (async): A promotion rule was deleted.
  */
 export type PromotionRuleDelete = {
-  readonly __typename?: 'PromotionRuleDelete';
   readonly errors: ReadonlyArray<PromotionRuleDeleteError>;
   readonly promotionRule?: Maybe<PromotionRule>;
 };
 
 export type PromotionRuleDeleteError = {
-  readonly __typename?: 'PromotionRuleDeleteError';
   /** The error code. */
   readonly code: PromotionRuleDeleteErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -23612,7 +23022,6 @@ export type PromotionRuleDeleteErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionRuleDeleted = Event & {
-  readonly __typename?: 'PromotionRuleDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23633,7 +23042,6 @@ export type PromotionRuleDeleted = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionRuleDeletedEvent = Node & PromotionEventInterface & PromotionRuleEventInterface & {
-  readonly __typename?: 'PromotionRuleDeletedEvent';
   /**
    * User or App that created the promotion event.
    *
@@ -23706,7 +23114,6 @@ export type PromotionRuleInput = {
  * Added in Saleor 3.17.
  */
 export type PromotionRuleTranslatableContent = Node & {
-  readonly __typename?: 'PromotionRuleTranslatableContent';
   /**
    * Description of the promotion rule.
    *
@@ -23745,7 +23152,6 @@ export type PromotionRuleTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type PromotionRuleTranslate = {
-  readonly __typename?: 'PromotionRuleTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly promotionRule?: Maybe<PromotionRule>;
 };
@@ -23756,7 +23162,6 @@ export type PromotionRuleTranslate = {
  * Added in Saleor 3.17.
  */
 export type PromotionRuleTranslation = Node & {
-  readonly __typename?: 'PromotionRuleTranslation';
   /**
    * Translated description of the promotion rule.
    *
@@ -23800,13 +23205,11 @@ export type PromotionRuleTranslationInput = {
  * - PROMOTION_RULE_UPDATED (async): A promotion rule was updated.
  */
 export type PromotionRuleUpdate = {
-  readonly __typename?: 'PromotionRuleUpdate';
   readonly errors: ReadonlyArray<PromotionRuleUpdateError>;
   readonly promotionRule?: Maybe<PromotionRule>;
 };
 
 export type PromotionRuleUpdateError = {
-  readonly __typename?: 'PromotionRuleUpdateError';
   /** List of channel IDs which causes the error. */
   readonly channels?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -23890,7 +23293,6 @@ export type PromotionRuleUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionRuleUpdated = Event & {
-  readonly __typename?: 'PromotionRuleUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23911,7 +23313,6 @@ export type PromotionRuleUpdated = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionRuleUpdatedEvent = Node & PromotionEventInterface & PromotionRuleEventInterface & {
-  readonly __typename?: 'PromotionRuleUpdatedEvent';
   /**
    * User or App that created the promotion event.
    *
@@ -23952,7 +23353,6 @@ export type PromotionSortingInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionStarted = Event & {
-  readonly __typename?: 'PromotionStarted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -23973,7 +23373,6 @@ export type PromotionStarted = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionStartedEvent = Node & PromotionEventInterface & {
-  readonly __typename?: 'PromotionStartedEvent';
   /**
    * User or App that created the promotion event.
    *
@@ -23993,7 +23392,6 @@ export type PromotionStartedEvent = Node & PromotionEventInterface & {
  * Added in Saleor 3.17.
  */
 export type PromotionTranslatableContent = Node & {
-  readonly __typename?: 'PromotionTranslatableContent';
   /**
    * Description of the promotion.
    *
@@ -24028,7 +23426,6 @@ export type PromotionTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type PromotionTranslate = {
-  readonly __typename?: 'PromotionTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly promotion?: Maybe<Promotion>;
 };
@@ -24039,7 +23436,6 @@ export type PromotionTranslate = {
  * Added in Saleor 3.17.
  */
 export type PromotionTranslation = Node & {
-  readonly __typename?: 'PromotionTranslation';
   /**
    * Translated description of the promotion.
    *
@@ -24096,13 +23492,11 @@ export type PromotionTypeEnumFilterInput = {
  * - PROMOTION_ENDED (async): Optionally called if promotion was ended.
  */
 export type PromotionUpdate = {
-  readonly __typename?: 'PromotionUpdate';
   readonly errors: ReadonlyArray<PromotionUpdateError>;
   readonly promotion?: Maybe<Promotion>;
 };
 
 export type PromotionUpdateError = {
-  readonly __typename?: 'PromotionUpdateError';
   /** The error code. */
   readonly code: PromotionUpdateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -24136,7 +23530,6 @@ export type PromotionUpdateInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionUpdated = Event & {
-  readonly __typename?: 'PromotionUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -24157,7 +23550,6 @@ export type PromotionUpdated = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type PromotionUpdatedEvent = Node & PromotionEventInterface & {
-  readonly __typename?: 'PromotionUpdatedEvent';
   /**
    * User or App that created the promotion event.
    *
@@ -24208,7 +23600,6 @@ export type PublishableChannelListingInput = {
 };
 
 export type Query = {
-  readonly __typename?: 'Query';
   readonly _entities?: Maybe<ReadonlyArray<Maybe<_Entity>>>;
   readonly _service?: Maybe<_Service>;
   /**
@@ -25247,7 +24638,6 @@ export type QueryWebhookSamplePayloadArgs = {
 
 /** Represents a reduced VAT rate for a particular type of goods. */
 export type ReducedRate = {
-  readonly __typename?: 'ReducedRate';
   /** Reduced VAT rate in percent. */
   readonly rate: Scalars['Float']['output'];
   /** A type of goods. */
@@ -25256,7 +24646,6 @@ export type ReducedRate = {
 
 /** Refresh JWT token. Mutation tries to take refreshToken from the input. If it fails it will try to take `refreshToken` from the http-only cookie `refreshToken`. `csrfToken` is required when `refreshToken` is provided as a cookie. */
 export type RefreshToken = {
-  readonly __typename?: 'RefreshToken';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -25287,7 +24676,6 @@ export type ReportingPeriod =
  * - ACCOUNT_CHANGE_EMAIL_REQUESTED (async): An account email change was requested.
  */
 export type RequestEmailChange = {
-  readonly __typename?: 'RequestEmailChange';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -25304,7 +24692,6 @@ export type RequestEmailChange = {
  * - STAFF_SET_PASSWORD_REQUESTED (async): Setting a new password for the staff account is requested.
  */
 export type RequestPasswordReset = {
-  readonly __typename?: 'RequestPasswordReset';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -25324,7 +24711,6 @@ export type RewardValueTypeEnum =
  * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
  */
 export type Sale = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Sale';
   /** List of categories this sale applies to. */
   readonly categories?: Maybe<CategoryCountableConnection>;
   /**
@@ -25520,7 +24906,6 @@ export type SaleVariantsArgs = {
  * - SALE_UPDATED (async): A sale was updated.
  */
 export type SaleAddCatalogues = {
-  readonly __typename?: 'SaleAddCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -25537,7 +24922,6 @@ export type SaleAddCatalogues = {
  * - SALE_DELETED (async): A sale was deleted.
  */
 export type SaleBulkDelete = {
-  readonly __typename?: 'SaleBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -25551,7 +24935,6 @@ export type SaleBulkDelete = {
  * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionRule` type instead.
  */
 export type SaleChannelListing = Node & {
-  readonly __typename?: 'SaleChannelListing';
   /** The channel in which the sale is available. */
   readonly channel: Channel;
   /** The currency in which the discount value is specified. */
@@ -25584,7 +24967,6 @@ export type SaleChannelListingInput = {
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleChannelListingUpdate = {
-  readonly __typename?: 'SaleChannelListingUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -25593,7 +24975,6 @@ export type SaleChannelListingUpdate = {
 };
 
 export type SaleCountableConnection = {
-  readonly __typename?: 'SaleCountableConnection';
   readonly edges: ReadonlyArray<SaleCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -25602,7 +24983,6 @@ export type SaleCountableConnection = {
 };
 
 export type SaleCountableEdge = {
-  readonly __typename?: 'SaleCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -25620,7 +25000,6 @@ export type SaleCountableEdge = {
  * - SALE_CREATED (async): A sale was created.
  */
 export type SaleCreate = {
-  readonly __typename?: 'SaleCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -25635,7 +25014,6 @@ export type SaleCreate = {
  * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionCreated` event instead.
  */
 export type SaleCreated = Event & {
-  readonly __typename?: 'SaleCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -25671,7 +25049,6 @@ export type SaleCreatedSaleArgs = {
  * - SALE_DELETED (async): A sale was deleted.
  */
 export type SaleDelete = {
-  readonly __typename?: 'SaleDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -25686,7 +25063,6 @@ export type SaleDelete = {
  * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionDeleted` event instead.
  */
 export type SaleDeleted = Event & {
-  readonly __typename?: 'SaleDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -25751,7 +25127,6 @@ export type SaleInput = {
  * - SALE_UPDATED (async): A sale was updated.
  */
 export type SaleRemoveCatalogues = {
-  readonly __typename?: 'SaleRemoveCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -25800,7 +25175,6 @@ export type SaleSortingInput = {
  * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionStarted` and `PromotionEnded` events instead.
  */
 export type SaleToggle = Event & {
-  readonly __typename?: 'SaleToggle';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -25835,7 +25209,6 @@ export type SaleToggleSaleArgs = {
  * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionTranslatableContent` instead.
  */
 export type SaleTranslatableContent = Node & {
-  readonly __typename?: 'SaleTranslatableContent';
   /** The ID of the sale translatable content. */
   readonly id: Scalars['ID']['output'];
   /** Name of the sale to translate. */
@@ -25875,7 +25248,6 @@ export type SaleTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type SaleTranslate = {
-  readonly __typename?: 'SaleTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly sale?: Maybe<Sale>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -25888,7 +25260,6 @@ export type SaleTranslate = {
  * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionTranslation` instead.
  */
 export type SaleTranslation = Node & {
-  readonly __typename?: 'SaleTranslation';
   /** The ID of the sale translation. */
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
@@ -25919,7 +25290,6 @@ export type SaleType =
  * - SALE_TOGGLE (async): Optionally triggered when a sale is started or stopped.
  */
 export type SaleUpdate = {
-  readonly __typename?: 'SaleUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -25934,7 +25304,6 @@ export type SaleUpdate = {
  * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionUpdated` event instead.
  */
 export type SaleUpdated = Event & {
-  readonly __typename?: 'SaleUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -25961,7 +25330,6 @@ export type SaleUpdatedSaleArgs = {
 
 /** Represents a custom attribute. */
 export type SelectedAttribute = {
-  readonly __typename?: 'SelectedAttribute';
   /** Name of an attribute displayed in the interface. */
   readonly attribute: Attribute;
   /** Values of an attribute. */
@@ -25982,12 +25350,10 @@ export type SelectedAttribute = {
  * - ACCOUNT_CONFIRMATION_REQUESTED (async): An account confirmation was requested. This event is always sent regardless of settings.
  */
 export type SendConfirmationEmail = {
-  readonly __typename?: 'SendConfirmationEmail';
   readonly errors: ReadonlyArray<SendConfirmationEmailError>;
 };
 
 export type SendConfirmationEmailError = {
-  readonly __typename?: 'SendConfirmationEmailError';
   /** The error code. */
   readonly code: SendConfirmationEmailErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -26011,7 +25377,6 @@ export type SeoInput = {
 
 /** Sets the user's password from the token sent by email using the RequestPasswordReset mutation. */
 export type SetPassword = {
-  readonly __typename?: 'SetPassword';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate access token. */
@@ -26026,7 +25391,6 @@ export type SetPassword = {
 };
 
 export type ShippingError = {
-  readonly __typename?: 'ShippingError';
   /** List of channels IDs which causes the error. */
   readonly channels?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
@@ -26055,7 +25419,6 @@ export type ShippingErrorCode =
  * Added in Saleor 3.6.
  */
 export type ShippingListMethodsForCheckout = Event & {
-  readonly __typename?: 'ShippingListMethodsForCheckout';
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
   /** Time of the event. */
@@ -26076,7 +25439,6 @@ export type ShippingListMethodsForCheckout = Event & {
 
 /** Shipping methods that can be used as means of shipping for orders and checkouts. */
 export type ShippingMethod = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ShippingMethod';
   /** Describes if this shipping method is active and can be selected. */
   readonly active: Scalars['Boolean']['output'];
   /**
@@ -26172,7 +25534,6 @@ export type ShippingMethodTranslationArgs = {
 
 /** Represents shipping method channel listing. */
 export type ShippingMethodChannelListing = Node & {
-  readonly __typename?: 'ShippingMethodChannelListing';
   /** The channel associated with the shipping method channel listing. */
   readonly channel: Channel;
   /** The ID of shipping method channel listing. */
@@ -26209,7 +25570,6 @@ export type ShippingMethodChannelListingInput = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingMethodChannelListingUpdate = {
-  readonly __typename?: 'ShippingMethodChannelListingUpdate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -26219,7 +25579,6 @@ export type ShippingMethodChannelListingUpdate = {
 
 /** Represents shipping method postal code rule. */
 export type ShippingMethodPostalCodeRule = Node & {
-  readonly __typename?: 'ShippingMethodPostalCodeRule';
   /** End address range. */
   readonly end?: Maybe<Scalars['String']['output']>;
   /** The ID of the object. */
@@ -26232,7 +25591,6 @@ export type ShippingMethodPostalCodeRule = Node & {
 
 /** Represents shipping method's original translatable fields and related translations. */
 export type ShippingMethodTranslatableContent = Node & {
-  readonly __typename?: 'ShippingMethodTranslatableContent';
   /**
    * Shipping method description to translate.
    *
@@ -26268,7 +25626,6 @@ export type ShippingMethodTranslatableContentTranslationArgs = {
 
 /** Represents shipping method translations. */
 export type ShippingMethodTranslation = Node & {
-  readonly __typename?: 'ShippingMethodTranslation';
   /**
    * Translated description of the shipping method.
    *
@@ -26291,7 +25648,6 @@ export type ShippingMethodTranslation = Node & {
 
 /** Shipping method are the methods you'll use to get customer's orders to them. They are directly exposed to the customers. */
 export type ShippingMethodType = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ShippingMethodType';
   /**
    * List of channels available for the method.
    *
@@ -26421,7 +25777,6 @@ export type ShippingMethodTypeEnum =
  * Added in Saleor 3.6.
  */
 export type ShippingMethodsPerCountry = {
-  readonly __typename?: 'ShippingMethodsPerCountry';
   /** The country code. */
   readonly countryCode: CountryCode;
   /** List of available shipping methods. */
@@ -26441,7 +25796,6 @@ export type ShippingPostalCodeRulesCreateInputRange = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceBulkDelete = {
-  readonly __typename?: 'ShippingPriceBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ShippingError>;
@@ -26455,7 +25809,6 @@ export type ShippingPriceBulkDelete = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceCreate = {
-  readonly __typename?: 'ShippingPriceCreate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -26470,7 +25823,6 @@ export type ShippingPriceCreate = {
  * Added in Saleor 3.2.
  */
 export type ShippingPriceCreated = Event & {
-  readonly __typename?: 'ShippingPriceCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -26511,7 +25863,6 @@ export type ShippingPriceCreatedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceDelete = {
-  readonly __typename?: 'ShippingPriceDelete';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -26527,7 +25878,6 @@ export type ShippingPriceDelete = {
  * Added in Saleor 3.2.
  */
 export type ShippingPriceDeleted = Event & {
-  readonly __typename?: 'ShippingPriceDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -26568,7 +25918,6 @@ export type ShippingPriceDeletedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceExcludeProducts = {
-  readonly __typename?: 'ShippingPriceExcludeProducts';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -26614,7 +25963,6 @@ export type ShippingPriceInput = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceRemoveProductFromExclude = {
-  readonly __typename?: 'ShippingPriceRemoveProductFromExclude';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -26628,7 +25976,6 @@ export type ShippingPriceRemoveProductFromExclude = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ShippingPriceTranslate = {
-  readonly __typename?: 'ShippingPriceTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   readonly shippingMethod?: Maybe<ShippingMethodType>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -26651,7 +25998,6 @@ export type ShippingPriceTranslationInput = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingPriceUpdate = {
-  readonly __typename?: 'ShippingPriceUpdate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -26666,7 +26012,6 @@ export type ShippingPriceUpdate = {
  * Added in Saleor 3.2.
  */
 export type ShippingPriceUpdated = Event & {
-  readonly __typename?: 'ShippingPriceUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -26703,7 +26048,6 @@ export type ShippingPriceUpdatedShippingZoneArgs = {
 
 /** Represents a shipping zone in the shop. Zones are the concept used only for grouping shipping methods in the dashboard, and are never exposed to the customers directly. */
 export type ShippingZone = Node & ObjectWithMetadata & {
-  readonly __typename?: 'ShippingZone';
   /** List of channels for shipping zone. */
   readonly channels: ReadonlyArray<Channel>;
   /** List of countries available for the method. */
@@ -26786,7 +26130,6 @@ export type ShippingZonePrivateMetafieldsArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneBulkDelete = {
-  readonly __typename?: 'ShippingZoneBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ShippingError>;
@@ -26795,7 +26138,6 @@ export type ShippingZoneBulkDelete = {
 };
 
 export type ShippingZoneCountableConnection = {
-  readonly __typename?: 'ShippingZoneCountableConnection';
   readonly edges: ReadonlyArray<ShippingZoneCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -26804,7 +26146,6 @@ export type ShippingZoneCountableConnection = {
 };
 
 export type ShippingZoneCountableEdge = {
-  readonly __typename?: 'ShippingZoneCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -26817,7 +26158,6 @@ export type ShippingZoneCountableEdge = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneCreate = {
-  readonly __typename?: 'ShippingZoneCreate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -26845,7 +26185,6 @@ export type ShippingZoneCreateInput = {
  * Added in Saleor 3.2.
  */
 export type ShippingZoneCreated = Event & {
-  readonly __typename?: 'ShippingZoneCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -26874,7 +26213,6 @@ export type ShippingZoneCreatedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneDelete = {
-  readonly __typename?: 'ShippingZoneDelete';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -26887,7 +26225,6 @@ export type ShippingZoneDelete = {
  * Added in Saleor 3.2.
  */
 export type ShippingZoneDeleted = Event & {
-  readonly __typename?: 'ShippingZoneDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -26921,7 +26258,6 @@ export type ShippingZoneFilterInput = {
  * Added in Saleor 3.8.
  */
 export type ShippingZoneMetadataUpdated = Event & {
-  readonly __typename?: 'ShippingZoneMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -26950,7 +26286,6 @@ export type ShippingZoneMetadataUpdatedShippingZoneArgs = {
  * Requires one of the following permissions: MANAGE_SHIPPING.
  */
 export type ShippingZoneUpdate = {
-  readonly __typename?: 'ShippingZoneUpdate';
   readonly errors: ReadonlyArray<ShippingError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
@@ -26982,7 +26317,6 @@ export type ShippingZoneUpdateInput = {
  * Added in Saleor 3.2.
  */
 export type ShippingZoneUpdated = Event & {
-  readonly __typename?: 'ShippingZoneUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -27007,7 +26341,6 @@ export type ShippingZoneUpdatedShippingZoneArgs = {
 
 /** Represents a shop resource containing general shop data and configuration. */
 export type Shop = ObjectWithMetadata & {
-  readonly __typename?: 'Shop';
   /**
    * Determines if user can login without confirmation when `enableAccountConfirmation` is enabled.
    *
@@ -27261,7 +26594,6 @@ export type ShopTranslationArgs = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopAddressUpdate = {
-  readonly __typename?: 'ShopAddressUpdate';
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
@@ -27277,7 +26609,6 @@ export type ShopAddressUpdate = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopDomainUpdate = {
-  readonly __typename?: 'ShopDomainUpdate';
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
@@ -27286,7 +26617,6 @@ export type ShopDomainUpdate = {
 };
 
 export type ShopError = {
-  readonly __typename?: 'ShopError';
   /** The error code. */
   readonly code: ShopErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -27310,7 +26640,6 @@ export type ShopErrorCode =
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type ShopFetchTaxRates = {
-  readonly __typename?: 'ShopFetchTaxRates';
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
@@ -27324,7 +26653,6 @@ export type ShopFetchTaxRates = {
  * Added in Saleor 3.15.
  */
 export type ShopMetadataUpdated = Event & {
-  readonly __typename?: 'ShopMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -27438,7 +26766,6 @@ export type ShopSettingsInput = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type ShopSettingsTranslate = {
-  readonly __typename?: 'ShopSettingsTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   /** Updated shop settings. */
   readonly shop?: Maybe<Shop>;
@@ -27460,7 +26787,6 @@ export type ShopSettingsTranslationInput = {
  * - SHOP_METADATA_UPDATED (async): Optionally triggered when public or private metadata is updated.
  */
 export type ShopSettingsUpdate = {
-  readonly __typename?: 'ShopSettingsUpdate';
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
@@ -27470,7 +26796,6 @@ export type ShopSettingsUpdate = {
 
 /** Represents shop translations. */
 export type ShopTranslation = Node & {
-  readonly __typename?: 'ShopTranslation';
   /** Translated description of sale. */
   readonly description: Scalars['String']['output'];
   /** Translated header text of sale. */
@@ -27497,7 +26822,6 @@ export type SiteDomainInput = {
  * - STAFF_DELETED (async): A staff account was deleted.
  */
 export type StaffBulkDelete = {
-  readonly __typename?: 'StaffBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<StaffError>;
@@ -27516,7 +26840,6 @@ export type StaffBulkDelete = {
  * - STAFF_SET_PASSWORD_REQUESTED (async): Setting a new password for the staff account is requested.
  */
 export type StaffCreate = {
-  readonly __typename?: 'StaffCreate';
   readonly errors: ReadonlyArray<StaffError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
@@ -27559,7 +26882,6 @@ export type StaffCreateInput = {
  * Added in Saleor 3.5.
  */
 export type StaffCreated = Event & {
-  readonly __typename?: 'StaffCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -27581,7 +26903,6 @@ export type StaffCreated = Event & {
  * - STAFF_DELETED (async): A staff account was deleted.
  */
 export type StaffDelete = {
-  readonly __typename?: 'StaffDelete';
   readonly errors: ReadonlyArray<StaffError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
@@ -27594,7 +26915,6 @@ export type StaffDelete = {
  * Added in Saleor 3.5.
  */
 export type StaffDeleted = Event & {
-  readonly __typename?: 'StaffDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -27608,7 +26928,6 @@ export type StaffDeleted = Event & {
 };
 
 export type StaffError = {
-  readonly __typename?: 'StaffError';
   /** A type of address that causes the error. */
   readonly addressType?: Maybe<AddressTypeEnum>;
   /** The error code. */
@@ -27634,7 +26953,6 @@ export type StaffMemberStatus =
 
 /** Represents a recipient of email notifications send by Saleor, such as notifications about new orders. Notifications can be assigned to staff users or arbitrary email addresses. */
 export type StaffNotificationRecipient = Node & {
-  readonly __typename?: 'StaffNotificationRecipient';
   /** Determines if a notification active. */
   readonly active?: Maybe<Scalars['Boolean']['output']>;
   /** Returns email address of a user subscribed to email notifications. */
@@ -27651,7 +26969,6 @@ export type StaffNotificationRecipient = Node & {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientCreate = {
-  readonly __typename?: 'StaffNotificationRecipientCreate';
   readonly errors: ReadonlyArray<ShopError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
@@ -27664,7 +26981,6 @@ export type StaffNotificationRecipientCreate = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientDelete = {
-  readonly __typename?: 'StaffNotificationRecipientDelete';
   readonly errors: ReadonlyArray<ShopError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
@@ -27686,7 +27002,6 @@ export type StaffNotificationRecipientInput = {
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientUpdate = {
-  readonly __typename?: 'StaffNotificationRecipientUpdate';
   readonly errors: ReadonlyArray<ShopError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
@@ -27699,7 +27014,6 @@ export type StaffNotificationRecipientUpdate = {
  * Added in Saleor 3.15.
  */
 export type StaffSetPasswordRequested = Event & {
-  readonly __typename?: 'StaffSetPasswordRequested';
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
   /** Time of the event. */
@@ -27729,7 +27043,6 @@ export type StaffSetPasswordRequested = Event & {
  * - STAFF_UPDATED (async): A staff account was updated.
  */
 export type StaffUpdate = {
-  readonly __typename?: 'StaffUpdate';
   readonly errors: ReadonlyArray<StaffError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
@@ -27772,7 +27085,6 @@ export type StaffUpdateInput = {
  * Added in Saleor 3.5.
  */
 export type StaffUpdated = Event & {
-  readonly __typename?: 'StaffUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -27793,7 +27105,6 @@ export type StaffUserInput = {
 
 /** Represents stock. */
 export type Stock = Node & {
-  readonly __typename?: 'Stock';
   /** The ID of stock. */
   readonly id: Scalars['ID']['output'];
   /** Information about the product variant. */
@@ -27825,7 +27136,6 @@ export type StockAvailability =
   | 'OUT_OF_STOCK';
 
 export type StockBulkResult = {
-  readonly __typename?: 'StockBulkResult';
   /** List of errors occurred on create or update attempt. */
   readonly errors?: Maybe<ReadonlyArray<StockBulkUpdateError>>;
   /** Stock data. */
@@ -27845,7 +27155,6 @@ export type StockBulkResult = {
  * - PRODUCT_VARIANT_STOCK_UPDATED (async): A product variant stock details were updated.
  */
 export type StockBulkUpdate = {
-  readonly __typename?: 'StockBulkUpdate';
   /** Returns how many objects were updated. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<StockBulkUpdateError>;
@@ -27854,7 +27163,6 @@ export type StockBulkUpdate = {
 };
 
 export type StockBulkUpdateError = {
-  readonly __typename?: 'StockBulkUpdateError';
   /** The error code. */
   readonly code: StockBulkUpdateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -27883,7 +27191,6 @@ export type StockBulkUpdateInput = {
 };
 
 export type StockCountableConnection = {
-  readonly __typename?: 'StockCountableConnection';
   readonly edges: ReadonlyArray<StockCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -27892,7 +27199,6 @@ export type StockCountableConnection = {
 };
 
 export type StockCountableEdge = {
-  readonly __typename?: 'StockCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -27900,7 +27206,6 @@ export type StockCountableEdge = {
 };
 
 export type StockError = {
-  readonly __typename?: 'StockError';
   /** The error code. */
   readonly code: StockErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -27935,7 +27240,6 @@ export type StockInput = {
  * Added in Saleor 3.7.
  */
 export type StockSettings = {
-  readonly __typename?: 'StockSettings';
   /** Allocation strategy defines the preference of warehouses for allocations and reservations. */
   readonly allocationStrategy: AllocationStrategyEnum;
 };
@@ -27981,7 +27285,6 @@ export type StorePaymentMethodEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StoredPaymentMethod = {
-  readonly __typename?: 'StoredPaymentMethod';
   /** Stored credit card details if available. */
   readonly creditCardInfo?: Maybe<CreditCard>;
   /** JSON data returned by Payment Provider app for this payment method. */
@@ -28007,7 +27310,6 @@ export type StoredPaymentMethod = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type StoredPaymentMethodDeleteRequested = Event & {
-  readonly __typename?: 'StoredPaymentMethodDeleteRequested';
   /** Channel related to the requested delete action. */
   readonly channel: Channel;
   /** Time of the event. */
@@ -28037,7 +27339,6 @@ export type StoredPaymentMethodDeleteRequested = Event & {
  * - STORED_PAYMENT_METHOD_DELETE_REQUESTED (sync): The customer requested to delete a payment method.
  */
 export type StoredPaymentMethodRequestDelete = {
-  readonly __typename?: 'StoredPaymentMethodRequestDelete';
   readonly errors: ReadonlyArray<PaymentMethodRequestDeleteError>;
   /** The result of deleting a stored payment method. */
   readonly result: StoredPaymentMethodRequestDeleteResult;
@@ -28079,7 +27380,6 @@ export type StringFilterInput = {
 };
 
 export type Subscription = {
-  readonly __typename?: 'Subscription';
   /**
    * Event sent when new draft order is created.
    *
@@ -28293,7 +27593,6 @@ export type TaxCalculationStrategy =
  * Added in Saleor 3.9.
  */
 export type TaxClass = Node & ObjectWithMetadata & {
-  readonly __typename?: 'TaxClass';
   /** Country-specific tax rates for this tax class. */
   readonly countries: ReadonlyArray<TaxClassCountryRate>;
   /** The ID of the object. */
@@ -28375,7 +27674,6 @@ export type TaxClassPrivateMetafieldsArgs = {
 };
 
 export type TaxClassCountableConnection = {
-  readonly __typename?: 'TaxClassCountableConnection';
   readonly edges: ReadonlyArray<TaxClassCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -28384,7 +27682,6 @@ export type TaxClassCountableConnection = {
 };
 
 export type TaxClassCountableEdge = {
-  readonly __typename?: 'TaxClassCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -28397,7 +27694,6 @@ export type TaxClassCountableEdge = {
  * Added in Saleor 3.9.
  */
 export type TaxClassCountryRate = {
-  readonly __typename?: 'TaxClassCountryRate';
   /** Country in which this tax rate applies. */
   readonly country: CountryDisplay;
   /** Tax rate value. */
@@ -28414,13 +27710,11 @@ export type TaxClassCountryRate = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxClassCreate = {
-  readonly __typename?: 'TaxClassCreate';
   readonly errors: ReadonlyArray<TaxClassCreateError>;
   readonly taxClass?: Maybe<TaxClass>;
 };
 
 export type TaxClassCreateError = {
-  readonly __typename?: 'TaxClassCreateError';
   /** The error code. */
   readonly code: TaxClassCreateErrorCode;
   /** List of country codes for which the configuration is invalid. */
@@ -28451,13 +27745,11 @@ export type TaxClassCreateInput = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxClassDelete = {
-  readonly __typename?: 'TaxClassDelete';
   readonly errors: ReadonlyArray<TaxClassDeleteError>;
   readonly taxClass?: Maybe<TaxClass>;
 };
 
 export type TaxClassDeleteError = {
-  readonly __typename?: 'TaxClassDeleteError';
   /** The error code. */
   readonly code: TaxClassDeleteErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -28503,13 +27795,11 @@ export type TaxClassSortingInput = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxClassUpdate = {
-  readonly __typename?: 'TaxClassUpdate';
   readonly errors: ReadonlyArray<TaxClassUpdateError>;
   readonly taxClass?: Maybe<TaxClass>;
 };
 
 export type TaxClassUpdateError = {
-  readonly __typename?: 'TaxClassUpdateError';
   /** The error code. */
   readonly code: TaxClassUpdateErrorCode;
   /** List of country codes for which the configuration is invalid. */
@@ -28541,7 +27831,6 @@ export type TaxClassUpdateInput = {
  * Added in Saleor 3.9.
  */
 export type TaxConfiguration = Node & ObjectWithMetadata & {
-  readonly __typename?: 'TaxConfiguration';
   /** A channel to which the tax configuration applies to. */
   readonly channel: Channel;
   /** Determines whether taxes are charged in the given channel. */
@@ -28637,7 +27926,6 @@ export type TaxConfigurationPrivateMetafieldsArgs = {
 };
 
 export type TaxConfigurationCountableConnection = {
-  readonly __typename?: 'TaxConfigurationCountableConnection';
   readonly edges: ReadonlyArray<TaxConfigurationCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -28646,7 +27934,6 @@ export type TaxConfigurationCountableConnection = {
 };
 
 export type TaxConfigurationCountableEdge = {
-  readonly __typename?: 'TaxConfigurationCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -28664,7 +27951,6 @@ export type TaxConfigurationFilterInput = {
  * Added in Saleor 3.9.
  */
 export type TaxConfigurationPerCountry = {
-  readonly __typename?: 'TaxConfigurationPerCountry';
   /** Determines whether taxes are charged in this country. */
   readonly chargeTaxes: Scalars['Boolean']['output'];
   /** Country in which this configuration applies. */
@@ -28706,13 +27992,11 @@ export type TaxConfigurationPerCountryInput = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxConfigurationUpdate = {
-  readonly __typename?: 'TaxConfigurationUpdate';
   readonly errors: ReadonlyArray<TaxConfigurationUpdateError>;
   readonly taxConfiguration?: Maybe<TaxConfiguration>;
 };
 
 export type TaxConfigurationUpdateError = {
-  readonly __typename?: 'TaxConfigurationUpdateError';
   /** The error code. */
   readonly code: TaxConfigurationUpdateErrorCode;
   /** List of country codes for which the configuration is invalid. */
@@ -28756,7 +28040,6 @@ export type TaxConfigurationUpdateInput = {
  * Added in Saleor 3.9.
  */
 export type TaxCountryConfiguration = {
-  readonly __typename?: 'TaxCountryConfiguration';
   /** A country for which tax class rates are grouped. */
   readonly country: CountryDisplay;
   /** List of tax class rates. */
@@ -28771,14 +28054,12 @@ export type TaxCountryConfiguration = {
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxCountryConfigurationDelete = {
-  readonly __typename?: 'TaxCountryConfigurationDelete';
   readonly errors: ReadonlyArray<TaxCountryConfigurationDeleteError>;
   /** Updated tax class rates grouped by a country. */
   readonly taxCountryConfiguration?: Maybe<TaxCountryConfiguration>;
 };
 
 export type TaxCountryConfigurationDeleteError = {
-  readonly __typename?: 'TaxCountryConfigurationDeleteError';
   /** The error code. */
   readonly code: TaxCountryConfigurationDeleteErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -28800,14 +28081,12 @@ export type TaxCountryConfigurationDeleteErrorCode =
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxCountryConfigurationUpdate = {
-  readonly __typename?: 'TaxCountryConfigurationUpdate';
   readonly errors: ReadonlyArray<TaxCountryConfigurationUpdateError>;
   /** Updated tax class rates grouped by a country. */
   readonly taxCountryConfiguration?: Maybe<TaxCountryConfiguration>;
 };
 
 export type TaxCountryConfigurationUpdateError = {
-  readonly __typename?: 'TaxCountryConfigurationUpdateError';
   /** The error code. */
   readonly code: TaxCountryConfigurationUpdateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -28833,13 +28112,11 @@ export type TaxCountryConfigurationUpdateErrorCode =
  * Requires one of the following permissions: MANAGE_TAXES.
  */
 export type TaxExemptionManage = {
-  readonly __typename?: 'TaxExemptionManage';
   readonly errors: ReadonlyArray<TaxExemptionManageError>;
   readonly taxableObject?: Maybe<TaxSourceObject>;
 };
 
 export type TaxExemptionManageError = {
-  readonly __typename?: 'TaxExemptionManageError';
   /** The error code. */
   readonly code: TaxExemptionManageErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -28860,7 +28137,6 @@ export type TaxSourceObject = Checkout | Order;
 
 /** Representation of tax types fetched from tax gateway. */
 export type TaxType = {
-  readonly __typename?: 'TaxType';
   /** Description of the tax type. */
   readonly description?: Maybe<Scalars['String']['output']>;
   /** External tax code used to identify given tax group. */
@@ -28869,7 +28145,6 @@ export type TaxType = {
 
 /** Taxable object. */
 export type TaxableObject = {
-  readonly __typename?: 'TaxableObject';
   /** The address data. */
   readonly address?: Maybe<Address>;
   readonly channel: Channel;
@@ -28889,7 +28164,6 @@ export type TaxableObject = {
 
 /** Taxable object discount. */
 export type TaxableObjectDiscount = {
-  readonly __typename?: 'TaxableObjectDiscount';
   /** The amount of the discount. */
   readonly amount: Money;
   /** The name of the discount. */
@@ -28904,7 +28178,6 @@ export type TaxableObjectDiscountTypeEnum =
   | 'SUBTOTAL';
 
 export type TaxableObjectLine = {
-  readonly __typename?: 'TaxableObjectLine';
   /** Determines if taxes are being charged for the product. */
   readonly chargeTaxes: Scalars['Boolean']['output'];
   /** The product name. */
@@ -28925,7 +28198,6 @@ export type TaxableObjectLine = {
 
 /** Represents a monetary value with taxes. In cases where taxes were not applied, net and gross values will be equal. */
 export type TaxedMoney = {
-  readonly __typename?: 'TaxedMoney';
   /** Currency code. */
   readonly currency: Scalars['String']['output'];
   /** Amount of money including taxes. */
@@ -28945,7 +28217,6 @@ export type TaxedMoneyInput = {
 
 /** Represents a range of monetary values. */
 export type TaxedMoneyRange = {
-  readonly __typename?: 'TaxedMoneyRange';
   /** Lower bound of a price range. */
   readonly start?: Maybe<TaxedMoney>;
   /** Upper bound of a price range. */
@@ -28958,7 +28229,6 @@ export type TaxedMoneyRange = {
  * Added in Saleor 3.12.
  */
 export type ThumbnailCreated = Event & {
-  readonly __typename?: 'ThumbnailCreated';
   /**
    * Thumbnail id.
    *
@@ -28999,7 +28269,6 @@ export type ThumbnailFormatEnum =
   | 'WEBP';
 
 export type TimePeriod = {
-  readonly __typename?: 'TimePeriod';
   /** The length of the period. */
   readonly amount: Scalars['Int']['output'];
   /** The type of the period. */
@@ -29031,7 +28300,6 @@ export type TokenizedPaymentFlowEnum =
 
 /** An object representing a single payment. */
 export type Transaction = Node & {
-  readonly __typename?: 'Transaction';
   /** Total amount of the transaction. */
   readonly amount?: Maybe<Money>;
   /** Date and time at which transaction was created. */
@@ -29053,7 +28321,6 @@ export type Transaction = Node & {
 };
 
 export type TransactionAction = {
-  readonly __typename?: 'TransactionAction';
   /** Determines the action type. */
   readonly actionType: TransactionActionEnum;
   /** Transaction request amount. Null when action type is VOID. */
@@ -29087,7 +28354,6 @@ export type TransactionActionEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionCancelationRequested = Event & {
-  readonly __typename?: 'TransactionCancelationRequested';
   /** Requested action data. */
   readonly action: TransactionAction;
   /** Time of the event. */
@@ -29110,7 +28376,6 @@ export type TransactionCancelationRequested = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionChargeRequested = Event & {
-  readonly __typename?: 'TransactionChargeRequested';
   /** Requested action data. */
   readonly action: TransactionAction;
   /** Time of the event. */
@@ -29135,13 +28400,11 @@ export type TransactionChargeRequested = Event & {
  * Requires one of the following permissions: HANDLE_PAYMENTS.
  */
 export type TransactionCreate = {
-  readonly __typename?: 'TransactionCreate';
   readonly errors: ReadonlyArray<TransactionCreateError>;
   readonly transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionCreateError = {
-  readonly __typename?: 'TransactionCreateError';
   /** The error code. */
   readonly code: TransactionCreateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -29205,7 +28468,6 @@ export type TransactionCreateInput = {
 
 /** Represents transaction's event. */
 export type TransactionEvent = Node & {
-  readonly __typename?: 'TransactionEvent';
   /**
    * The amount related to this event.
    *
@@ -29284,7 +28546,6 @@ export type TransactionEventInput = {
  * - ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
  */
 export type TransactionEventReport = {
-  readonly __typename?: 'TransactionEventReport';
   /** Defines if the reported event hasn't been processed earlier. */
   readonly alreadyProcessed?: Maybe<Scalars['Boolean']['output']>;
   readonly errors: ReadonlyArray<TransactionEventReportError>;
@@ -29295,7 +28556,6 @@ export type TransactionEventReport = {
 };
 
 export type TransactionEventReportError = {
-  readonly __typename?: 'TransactionEventReportError';
   /** The error code. */
   readonly code: TransactionEventReportErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -29377,7 +28637,6 @@ export type TransactionFlowStrategyEnum =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionInitialize = {
-  readonly __typename?: 'TransactionInitialize';
   /** The JSON data required to finalize the payment. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
   readonly errors: ReadonlyArray<TransactionInitializeError>;
@@ -29388,7 +28647,6 @@ export type TransactionInitialize = {
 };
 
 export type TransactionInitializeError = {
-  readonly __typename?: 'TransactionInitializeError';
   /** The error code. */
   readonly code: TransactionInitializeErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -29412,7 +28670,6 @@ export type TransactionInitializeErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionInitializeSession = Event & {
-  readonly __typename?: 'TransactionInitializeSession';
   /** Action to proceed for the transaction */
   readonly action: TransactionProcessAction;
   /**
@@ -29453,7 +28710,6 @@ export type TransactionInitializeSession = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionItem = Node & ObjectWithMetadata & {
-  readonly __typename?: 'TransactionItem';
   /** List of actions that can be performed in the current state of a payment. */
   readonly actions: ReadonlyArray<TransactionActionEnum>;
   /**
@@ -29636,7 +28892,6 @@ export type TransactionItemPrivateMetafieldsArgs = {
  * Added in Saleor 3.8.
  */
 export type TransactionItemMetadataUpdated = Event & {
-  readonly __typename?: 'TransactionItemMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -29669,7 +28924,6 @@ export type TransactionKind =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionProcess = {
-  readonly __typename?: 'TransactionProcess';
   /** The json data required to finalize the payment. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
   readonly errors: ReadonlyArray<TransactionProcessError>;
@@ -29680,7 +28934,6 @@ export type TransactionProcess = {
 };
 
 export type TransactionProcessAction = {
-  readonly __typename?: 'TransactionProcessAction';
   readonly actionType: TransactionFlowStrategyEnum;
   /** Transaction amount to process. */
   readonly amount: Scalars['PositiveDecimal']['output'];
@@ -29689,7 +28942,6 @@ export type TransactionProcessAction = {
 };
 
 export type TransactionProcessError = {
-  readonly __typename?: 'TransactionProcessError';
   /** The error code. */
   readonly code: TransactionProcessErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -29715,7 +28967,6 @@ export type TransactionProcessErrorCode =
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionProcessSession = Event & {
-  readonly __typename?: 'TransactionProcessSession';
   /** Action to proceed for the transaction */
   readonly action: TransactionProcessAction;
   /**
@@ -29750,7 +29001,6 @@ export type TransactionProcessSession = Event & {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type TransactionRefundRequested = Event & {
-  readonly __typename?: 'TransactionRefundRequested';
   /** Requested action data. */
   readonly action: TransactionAction;
   /**
@@ -29783,13 +29033,11 @@ export type TransactionRefundRequested = Event & {
  * Requires one of the following permissions: HANDLE_PAYMENTS.
  */
 export type TransactionRequestAction = {
-  readonly __typename?: 'TransactionRequestAction';
   readonly errors: ReadonlyArray<TransactionRequestActionError>;
   readonly transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionRequestActionError = {
-  readonly __typename?: 'TransactionRequestActionError';
   /** The error code. */
   readonly code: TransactionRequestActionErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -29814,13 +29062,11 @@ export type TransactionRequestActionErrorCode =
  * Requires one of the following permissions: HANDLE_PAYMENTS.
  */
 export type TransactionRequestRefundForGrantedRefund = {
-  readonly __typename?: 'TransactionRequestRefundForGrantedRefund';
   readonly errors: ReadonlyArray<TransactionRequestRefundForGrantedRefundError>;
   readonly transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionRequestRefundForGrantedRefundError = {
-  readonly __typename?: 'TransactionRequestRefundForGrantedRefundError';
   /** The error code. */
   readonly code: TransactionRequestRefundForGrantedRefundErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -29848,13 +29094,11 @@ export type TransactionRequestRefundForGrantedRefundErrorCode =
  * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
  */
 export type TransactionUpdate = {
-  readonly __typename?: 'TransactionUpdate';
   readonly errors: ReadonlyArray<TransactionUpdateError>;
   readonly transaction?: Maybe<TransactionItem>;
 };
 
 export type TransactionUpdateError = {
-  readonly __typename?: 'TransactionUpdateError';
   /** The error code. */
   readonly code: TransactionUpdateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -29919,7 +29163,6 @@ export type TransactionUpdateInput = {
 export type TranslatableItem = AttributeTranslatableContent | AttributeValueTranslatableContent | CategoryTranslatableContent | CollectionTranslatableContent | MenuItemTranslatableContent | PageTranslatableContent | ProductTranslatableContent | ProductVariantTranslatableContent | PromotionRuleTranslatableContent | PromotionTranslatableContent | SaleTranslatableContent | ShippingMethodTranslatableContent | VoucherTranslatableContent;
 
 export type TranslatableItemConnection = {
-  readonly __typename?: 'TranslatableItemConnection';
   readonly edges: ReadonlyArray<TranslatableItemEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -29928,7 +29171,6 @@ export type TranslatableItemConnection = {
 };
 
 export type TranslatableItemEdge = {
-  readonly __typename?: 'TranslatableItemEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -29956,7 +29198,6 @@ export type TranslatableKinds =
  * Added in Saleor 3.2.
  */
 export type TranslationCreated = Event & {
-  readonly __typename?: 'TranslationCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -29970,7 +29211,6 @@ export type TranslationCreated = Event & {
 };
 
 export type TranslationError = {
-  readonly __typename?: 'TranslationError';
   /** The error code. */
   readonly code: TranslationErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -30005,7 +29245,6 @@ export type TranslationTypes = AttributeTranslation | AttributeValueTranslation 
  * Added in Saleor 3.2.
  */
 export type TranslationUpdated = Event & {
-  readonly __typename?: 'TranslationUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -30039,7 +29278,6 @@ export type UpdateInvoiceInput = {
 
 /** Updates metadata of an object. To use it, you need to have access to the modified object. */
 export type UpdateMetadata = {
-  readonly __typename?: 'UpdateMetadata';
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -30048,7 +29286,6 @@ export type UpdateMetadata = {
 
 /** Updates private metadata of an object. To use it, you need to be an authenticated staff user or an app and have access to the modified object. */
 export type UpdatePrivateMetadata = {
-  readonly __typename?: 'UpdatePrivateMetadata';
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -30056,7 +29293,6 @@ export type UpdatePrivateMetadata = {
 };
 
 export type UploadError = {
-  readonly __typename?: 'UploadError';
   /** The error code. */
   readonly code: UploadErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -30070,7 +29306,6 @@ export type UploadErrorCode =
 
 /** Represents user data. */
 export type User = Node & ObjectWithMetadata & {
-  readonly __typename?: 'User';
   /**
    * List of channels the user has access to. The sum of channels from all user groups. If at least one group has `restrictedAccessToChannels` set to False - all channels are returned.
    *
@@ -30300,7 +29535,6 @@ export type UserStoredPaymentSourcesArgs = {
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type UserAvatarDelete = {
-  readonly __typename?: 'UserAvatarDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -30314,7 +29548,6 @@ export type UserAvatarDelete = {
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type UserAvatarUpdate = {
-  readonly __typename?: 'UserAvatarUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -30328,7 +29561,6 @@ export type UserAvatarUpdate = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type UserBulkSetActive = {
-  readonly __typename?: 'UserBulkSetActive';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** Returns how many objects were affected. */
@@ -30337,7 +29569,6 @@ export type UserBulkSetActive = {
 };
 
 export type UserCountableConnection = {
-  readonly __typename?: 'UserCountableConnection';
   readonly edges: ReadonlyArray<UserCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -30346,7 +29577,6 @@ export type UserCountableConnection = {
 };
 
 export type UserCountableEdge = {
-  readonly __typename?: 'UserCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -30408,7 +29638,6 @@ export type UserOrApp = App | User;
 
 /** Represents user's permissions. */
 export type UserPermission = {
-  readonly __typename?: 'UserPermission';
   /** Internal code for permission. */
   readonly code: PermissionEnum;
   /** Describe action(s) allowed to do by permission. */
@@ -30446,7 +29675,6 @@ export type UserSortingInput = {
 
 /** Represents a VAT rate for a country. */
 export type Vat = {
-  readonly __typename?: 'VAT';
   /** Country code. */
   readonly countryCode: Scalars['String']['output'];
   /** Country's VAT rate exceptions for specific types of goods. */
@@ -30466,7 +29694,6 @@ export type VariantAttributeScope =
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type VariantMediaAssign = {
-  readonly __typename?: 'VariantMediaAssign';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -30480,7 +29707,6 @@ export type VariantMediaAssign = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type VariantMediaUnassign = {
-  readonly __typename?: 'VariantMediaUnassign';
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -30490,7 +29716,6 @@ export type VariantMediaUnassign = {
 
 /** Represents availability of a variant in the storefront. */
 export type VariantPricingInfo = {
-  readonly __typename?: 'VariantPricingInfo';
   /** The discount amount if in sale (null otherwise). */
   readonly discount?: Maybe<TaxedMoney>;
   /**
@@ -30513,7 +29738,6 @@ export type VariantPricingInfo = {
 
 /** Verify JWT token. */
 export type VerifyToken = {
-  readonly __typename?: 'VerifyToken';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -30542,7 +29766,6 @@ export type VolumeUnitsEnum =
 
 /** Vouchers allow giving discounts to particular customers on categories, collections or specific products. They can be used during checkout by providing valid voucher codes. */
 export type Voucher = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Voucher';
   /** Determine if the voucher usage should be limited to one use per customer. */
   readonly applyOncePerCustomer: Scalars['Boolean']['output'];
   /** Determine if the voucher should be applied once per order. If set to True, the voucher is applied to a single cheapest eligible product in checkout. */
@@ -30739,7 +29962,6 @@ export type VoucherVariantsArgs = {
  * - VOUCHER_UPDATED (async): A voucher was updated.
  */
 export type VoucherAddCatalogues = {
-  readonly __typename?: 'VoucherAddCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -30756,7 +29978,6 @@ export type VoucherAddCatalogues = {
  * - VOUCHER_DELETED (async): A voucher was deleted.
  */
 export type VoucherBulkDelete = {
-  readonly __typename?: 'VoucherBulkDelete';
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -30766,7 +29987,6 @@ export type VoucherBulkDelete = {
 
 /** Represents voucher channel listing. */
 export type VoucherChannelListing = Node & {
-  readonly __typename?: 'VoucherChannelListing';
   /** The channel in which voucher can be applied. */
   readonly channel: Channel;
   /** Currency code for voucher in a channel. */
@@ -30804,7 +30024,6 @@ export type VoucherChannelListingInput = {
  * - VOUCHER_UPDATED (async): A voucher was updated.
  */
 export type VoucherChannelListingUpdate = {
-  readonly __typename?: 'VoucherChannelListingUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -30820,7 +30039,6 @@ export type VoucherChannelListingUpdate = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
 export type VoucherCode = {
-  readonly __typename?: 'VoucherCode';
   /** Code to use the voucher. */
   readonly code?: Maybe<Scalars['String']['output']>;
   /** Date time of code creation. */
@@ -30844,14 +30062,12 @@ export type VoucherCode = {
  * - VOUCHER_CODES_DELETED (async): A voucher codes were deleted.
  */
 export type VoucherCodeBulkDelete = {
-  readonly __typename?: 'VoucherCodeBulkDelete';
   /** Returns how many codes were deleted. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<VoucherCodeBulkDeleteError>;
 };
 
 export type VoucherCodeBulkDeleteError = {
-  readonly __typename?: 'VoucherCodeBulkDeleteError';
   /** The error code. */
   readonly code: VoucherCodeBulkDeleteErrorCode;
   /** The error message. */
@@ -30868,7 +30084,6 @@ export type VoucherCodeBulkDeleteErrorCode =
   | 'NOT_FOUND';
 
 export type VoucherCodeCountableConnection = {
-  readonly __typename?: 'VoucherCodeCountableConnection';
   readonly edges: ReadonlyArray<VoucherCodeCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -30877,7 +30092,6 @@ export type VoucherCodeCountableConnection = {
 };
 
 export type VoucherCodeCountableEdge = {
-  readonly __typename?: 'VoucherCodeCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -30890,7 +30104,6 @@ export type VoucherCodeCountableEdge = {
  * Added in Saleor 3.18.
  */
 export type VoucherCodeExportCompleted = Event & {
-  readonly __typename?: 'VoucherCodeExportCompleted';
   /** The export file for voucher codes. */
   readonly export?: Maybe<ExportFile>;
   /** Time of the event. */
@@ -30909,7 +30122,6 @@ export type VoucherCodeExportCompleted = Event & {
  * Added in Saleor 3.19.
  */
 export type VoucherCodesCreated = Event & {
-  readonly __typename?: 'VoucherCodesCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -30928,7 +30140,6 @@ export type VoucherCodesCreated = Event & {
  * Added in Saleor 3.19.
  */
 export type VoucherCodesDeleted = Event & {
-  readonly __typename?: 'VoucherCodesDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -30942,7 +30153,6 @@ export type VoucherCodesDeleted = Event & {
 };
 
 export type VoucherCountableConnection = {
-  readonly __typename?: 'VoucherCountableConnection';
   readonly edges: ReadonlyArray<VoucherCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -30951,7 +30161,6 @@ export type VoucherCountableConnection = {
 };
 
 export type VoucherCountableEdge = {
-  readonly __typename?: 'VoucherCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -30968,7 +30177,6 @@ export type VoucherCountableEdge = {
  * - VOUCHER_CODES_CREATED (async): A voucher codes were created.
  */
 export type VoucherCreate = {
-  readonly __typename?: 'VoucherCreate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -30981,7 +30189,6 @@ export type VoucherCreate = {
  * Added in Saleor 3.4.
  */
 export type VoucherCreated = Event & {
-  readonly __typename?: 'VoucherCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31013,7 +30220,6 @@ export type VoucherCreatedVoucherArgs = {
  * - VOUCHER_DELETED (async): A voucher was deleted.
  */
 export type VoucherDelete = {
-  readonly __typename?: 'VoucherDelete';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -31026,7 +30232,6 @@ export type VoucherDelete = {
  * Added in Saleor 3.4.
  */
 export type VoucherDeleted = Event & {
-  readonly __typename?: 'VoucherDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31127,7 +30332,6 @@ export type VoucherInput = {
  * Added in Saleor 3.8.
  */
 export type VoucherMetadataUpdated = Event & {
-  readonly __typename?: 'VoucherMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31159,7 +30363,6 @@ export type VoucherMetadataUpdatedVoucherArgs = {
  * - VOUCHER_UPDATED (async): A voucher was updated.
  */
 export type VoucherRemoveCatalogues = {
-  readonly __typename?: 'VoucherRemoveCatalogues';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -31216,7 +30419,6 @@ export type VoucherSortingInput = {
 
 /** Represents voucher's original translatable fields and related translations. */
 export type VoucherTranslatableContent = Node & {
-  readonly __typename?: 'VoucherTranslatableContent';
   /** The ID of the voucher translatable content. */
   readonly id: Scalars['ID']['output'];
   /** Voucher name to translate. */
@@ -31250,7 +30452,6 @@ export type VoucherTranslatableContentTranslationArgs = {
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type VoucherTranslate = {
-  readonly __typename?: 'VoucherTranslate';
   readonly errors: ReadonlyArray<TranslationError>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
@@ -31259,7 +30460,6 @@ export type VoucherTranslate = {
 
 /** Represents voucher translations. */
 export type VoucherTranslation = Node & {
-  readonly __typename?: 'VoucherTranslation';
   /** The ID of the voucher translation. */
   readonly id: Scalars['ID']['output'];
   /** Translation language. */
@@ -31289,7 +30489,6 @@ export type VoucherTypeEnum =
  * - VOUCHER_CODES_CREATED (async): A voucher code was created.
  */
 export type VoucherUpdate = {
-  readonly __typename?: 'VoucherUpdate';
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
@@ -31302,7 +30501,6 @@ export type VoucherUpdate = {
  * Added in Saleor 3.4.
  */
 export type VoucherUpdated = Event & {
-  readonly __typename?: 'VoucherUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31327,7 +30525,6 @@ export type VoucherUpdatedVoucherArgs = {
 
 /** Represents warehouse. */
 export type Warehouse = Node & ObjectWithMetadata & {
-  readonly __typename?: 'Warehouse';
   /** Address of the warehouse. */
   readonly address: Address;
   /**
@@ -31449,7 +30646,6 @@ export type WarehouseClickAndCollectOptionEnum =
   | 'LOCAL';
 
 export type WarehouseCountableConnection = {
-  readonly __typename?: 'WarehouseCountableConnection';
   readonly edges: ReadonlyArray<WarehouseCountableEdge>;
   /** Pagination data for this connection. */
   readonly pageInfo: PageInfo;
@@ -31458,7 +30654,6 @@ export type WarehouseCountableConnection = {
 };
 
 export type WarehouseCountableEdge = {
-  readonly __typename?: 'WarehouseCountableEdge';
   /** A cursor for use in pagination. */
   readonly cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
@@ -31471,7 +30666,6 @@ export type WarehouseCountableEdge = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseCreate = {
-  readonly __typename?: 'WarehouseCreate';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -31507,7 +30701,6 @@ export type WarehouseCreateInput = {
  * Added in Saleor 3.4.
  */
 export type WarehouseCreated = Event & {
-  readonly __typename?: 'WarehouseCreated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31526,7 +30719,6 @@ export type WarehouseCreated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseDelete = {
-  readonly __typename?: 'WarehouseDelete';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -31539,7 +30731,6 @@ export type WarehouseDelete = {
  * Added in Saleor 3.4.
  */
 export type WarehouseDeleted = Event & {
-  readonly __typename?: 'WarehouseDeleted';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31553,7 +30744,6 @@ export type WarehouseDeleted = Event & {
 };
 
 export type WarehouseError = {
-  readonly __typename?: 'WarehouseError';
   /** The error code. */
   readonly code: WarehouseErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -31588,7 +30778,6 @@ export type WarehouseFilterInput = {
  * Added in Saleor 3.8.
  */
 export type WarehouseMetadataUpdated = Event & {
-  readonly __typename?: 'WarehouseMetadataUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31607,7 +30796,6 @@ export type WarehouseMetadataUpdated = Event & {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseShippingZoneAssign = {
-  readonly __typename?: 'WarehouseShippingZoneAssign';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -31620,7 +30808,6 @@ export type WarehouseShippingZoneAssign = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseShippingZoneUnassign = {
-  readonly __typename?: 'WarehouseShippingZoneUnassign';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -31644,7 +30831,6 @@ export type WarehouseSortingInput = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseUpdate = {
-  readonly __typename?: 'WarehouseUpdate';
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -31686,7 +30872,6 @@ export type WarehouseUpdateInput = {
  * Added in Saleor 3.4.
  */
 export type WarehouseUpdated = Event & {
-  readonly __typename?: 'WarehouseUpdated';
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
@@ -31701,7 +30886,6 @@ export type WarehouseUpdated = Event & {
 
 /** Webhook. */
 export type Webhook = Node & {
-  readonly __typename?: 'Webhook';
   /** The app associated with Webhook. */
   readonly app: App;
   /** List of asynchronous webhook events. */
@@ -31757,7 +30941,6 @@ export type WebhookEventDeliveriesArgs = {
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
 export type WebhookCreate = {
-  readonly __typename?: 'WebhookCreate';
   readonly errors: ReadonlyArray<WebhookError>;
   readonly webhook?: Maybe<Webhook>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -31811,7 +30994,6 @@ export type WebhookCreateInput = {
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
 export type WebhookDelete = {
-  readonly __typename?: 'WebhookDelete';
   readonly errors: ReadonlyArray<WebhookError>;
   readonly webhook?: Maybe<Webhook>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -31828,14 +31010,12 @@ export type WebhookDelete = {
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type WebhookDryRun = {
-  readonly __typename?: 'WebhookDryRun';
   readonly errors: ReadonlyArray<WebhookDryRunError>;
   /** JSON payload, that would be sent out to webhook's target URL. */
   readonly payload?: Maybe<Scalars['JSONString']['output']>;
 };
 
 export type WebhookDryRunError = {
-  readonly __typename?: 'WebhookDryRunError';
   /** The error code. */
   readonly code: WebhookDryRunErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -31856,7 +31036,6 @@ export type WebhookDryRunErrorCode =
   | 'UNABLE_TO_PARSE';
 
 export type WebhookError = {
-  readonly __typename?: 'WebhookError';
   /** The error code. */
   readonly code: WebhookErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -31881,7 +31060,6 @@ export type WebhookErrorCode =
 
 /** Webhook event. */
 export type WebhookEvent = {
-  readonly __typename?: 'WebhookEvent';
   /** Internal name of the event type. */
   readonly eventType: WebhookEventTypeEnum;
   /** Display name of the event. */
@@ -31890,7 +31068,6 @@ export type WebhookEvent = {
 
 /** Asynchronous webhook event. */
 export type WebhookEventAsync = {
-  readonly __typename?: 'WebhookEventAsync';
   /** Internal name of the event type. */
   readonly eventType: WebhookEventTypeAsyncEnum;
   /** Display name of the event. */
@@ -31899,7 +31076,6 @@ export type WebhookEventAsync = {
 
 /** Synchronous webhook event. */
 export type WebhookEventSync = {
-  readonly __typename?: 'WebhookEventSync';
   /** Internal name of the event type. */
   readonly eventType: WebhookEventTypeSyncEnum;
   /** Display name of the event. */
@@ -32992,13 +32168,11 @@ export type WebhookSampleEventTypeEnum =
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type WebhookTrigger = {
-  readonly __typename?: 'WebhookTrigger';
   readonly delivery?: Maybe<EventDelivery>;
   readonly errors: ReadonlyArray<WebhookTriggerError>;
 };
 
 export type WebhookTriggerError = {
-  readonly __typename?: 'WebhookTriggerError';
   /** The error code. */
   readonly code: WebhookTriggerErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
@@ -33025,7 +32199,6 @@ export type WebhookTriggerErrorCode =
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
 export type WebhookUpdate = {
-  readonly __typename?: 'WebhookUpdate';
   readonly errors: ReadonlyArray<WebhookError>;
   readonly webhook?: Maybe<Webhook>;
   /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
@@ -33075,7 +32248,6 @@ export type WebhookUpdateInput = {
 
 /** Represents weight value in a specific weight unit. */
 export type Weight = {
-  readonly __typename?: 'Weight';
   /** Weight unit. */
   readonly unit: WeightUnitsEnum;
   /** Weight value. Returns a value with maximal three decimal places */
@@ -33094,11 +32266,10 @@ export type _Entity = Address | App | Category | Collection | Group | Order | Pa
 
 /** _Service manifest as defined by Federation spec. */
 export type _Service = {
-  readonly __typename?: '_Service';
   readonly sdl?: Maybe<Scalars['String']['output']>;
 };
 
-export type ChannelFragment = { readonly __typename?: 'Channel', readonly id: string, readonly slug: string };
+export type ChannelFragment = { readonly id: string, readonly slug: string };
 
 export type TransactionEventReportMutationVariables = Exact<{
   transactionId: Scalars['ID']['input'];
@@ -33111,21 +32282,21 @@ export type TransactionEventReportMutationVariables = Exact<{
 }>;
 
 
-export type TransactionEventReportMutation = { readonly __typename?: 'Mutation', readonly transactionEventReport?: { readonly __typename?: 'TransactionEventReport', readonly alreadyProcessed?: boolean | null, readonly errors: ReadonlyArray<{ readonly __typename?: 'TransactionEventReportError', readonly message?: string | null, readonly code: TransactionEventReportErrorCode }>, readonly transactionEvent?: { readonly __typename?: 'TransactionEvent', readonly id: string } | null } | null };
+export type TransactionEventReportMutation = { readonly transactionEventReport?: { readonly alreadyProcessed?: boolean | null, readonly errors: ReadonlyArray<{ readonly message?: string | null, readonly code: TransactionEventReportErrorCode }>, readonly transactionEvent?: { readonly id: string } | null } | null };
 
-export type PaymentGatewayInitializeSessionEventFragment = { readonly __typename?: 'PaymentGatewayInitializeSession', readonly version?: string | null, readonly sourceObject: { readonly __typename?: 'Checkout', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } | { readonly __typename?: 'Order', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } };
+export type PaymentGatewayInitializeSessionEventFragment = { readonly version?: string | null, readonly sourceObject: { readonly channel: { readonly id: string, readonly slug: string } } | { readonly channel: { readonly id: string, readonly slug: string } } };
 
 export type PaymentGatewayInitializeSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentGatewayInitializeSessionSubscription = { readonly __typename?: 'Subscription', readonly event?: { readonly __typename?: 'AccountChangeEmailRequested' } | { readonly __typename?: 'AccountConfirmationRequested' } | { readonly __typename?: 'AccountConfirmed' } | { readonly __typename?: 'AccountDeleteRequested' } | { readonly __typename?: 'AccountDeleted' } | { readonly __typename?: 'AccountEmailChanged' } | { readonly __typename?: 'AccountSetPasswordRequested' } | { readonly __typename?: 'AddressCreated' } | { readonly __typename?: 'AddressDeleted' } | { readonly __typename?: 'AddressUpdated' } | { readonly __typename?: 'AppDeleted' } | { readonly __typename?: 'AppInstalled' } | { readonly __typename?: 'AppStatusChanged' } | { readonly __typename?: 'AppUpdated' } | { readonly __typename?: 'AttributeCreated' } | { readonly __typename?: 'AttributeDeleted' } | { readonly __typename?: 'AttributeUpdated' } | { readonly __typename?: 'AttributeValueCreated' } | { readonly __typename?: 'AttributeValueDeleted' } | { readonly __typename?: 'AttributeValueUpdated' } | { readonly __typename?: 'CalculateTaxes' } | { readonly __typename?: 'CategoryCreated' } | { readonly __typename?: 'CategoryDeleted' } | { readonly __typename?: 'CategoryUpdated' } | { readonly __typename?: 'ChannelCreated' } | { readonly __typename?: 'ChannelDeleted' } | { readonly __typename?: 'ChannelMetadataUpdated' } | { readonly __typename?: 'ChannelStatusChanged' } | { readonly __typename?: 'ChannelUpdated' } | { readonly __typename?: 'CheckoutCreated' } | { readonly __typename?: 'CheckoutFilterShippingMethods' } | { readonly __typename?: 'CheckoutFullyPaid' } | { readonly __typename?: 'CheckoutMetadataUpdated' } | { readonly __typename?: 'CheckoutUpdated' } | { readonly __typename?: 'CollectionCreated' } | { readonly __typename?: 'CollectionDeleted' } | { readonly __typename?: 'CollectionMetadataUpdated' } | { readonly __typename?: 'CollectionUpdated' } | { readonly __typename?: 'CustomerCreated' } | { readonly __typename?: 'CustomerMetadataUpdated' } | { readonly __typename?: 'CustomerUpdated' } | { readonly __typename?: 'DraftOrderCreated' } | { readonly __typename?: 'DraftOrderDeleted' } | { readonly __typename?: 'DraftOrderUpdated' } | { readonly __typename?: 'FulfillmentApproved' } | { readonly __typename?: 'FulfillmentCanceled' } | { readonly __typename?: 'FulfillmentCreated' } | { readonly __typename?: 'FulfillmentMetadataUpdated' } | { readonly __typename?: 'FulfillmentTrackingNumberUpdated' } | { readonly __typename?: 'GiftCardCreated' } | { readonly __typename?: 'GiftCardDeleted' } | { readonly __typename?: 'GiftCardExportCompleted' } | { readonly __typename?: 'GiftCardMetadataUpdated' } | { readonly __typename?: 'GiftCardSent' } | { readonly __typename?: 'GiftCardStatusChanged' } | { readonly __typename?: 'GiftCardUpdated' } | { readonly __typename?: 'InvoiceDeleted' } | { readonly __typename?: 'InvoiceRequested' } | { readonly __typename?: 'InvoiceSent' } | { readonly __typename?: 'ListStoredPaymentMethods' } | { readonly __typename?: 'MenuCreated' } | { readonly __typename?: 'MenuDeleted' } | { readonly __typename?: 'MenuItemCreated' } | { readonly __typename?: 'MenuItemDeleted' } | { readonly __typename?: 'MenuItemUpdated' } | { readonly __typename?: 'MenuUpdated' } | { readonly __typename?: 'OrderBulkCreated' } | { readonly __typename?: 'OrderCancelled' } | { readonly __typename?: 'OrderConfirmed' } | { readonly __typename?: 'OrderCreated' } | { readonly __typename?: 'OrderExpired' } | { readonly __typename?: 'OrderFilterShippingMethods' } | { readonly __typename?: 'OrderFulfilled' } | { readonly __typename?: 'OrderFullyPaid' } | { readonly __typename?: 'OrderFullyRefunded' } | { readonly __typename?: 'OrderMetadataUpdated' } | { readonly __typename?: 'OrderPaid' } | { readonly __typename?: 'OrderRefunded' } | { readonly __typename?: 'OrderUpdated' } | { readonly __typename?: 'PageCreated' } | { readonly __typename?: 'PageDeleted' } | { readonly __typename?: 'PageTypeCreated' } | { readonly __typename?: 'PageTypeDeleted' } | { readonly __typename?: 'PageTypeUpdated' } | { readonly __typename?: 'PageUpdated' } | { readonly __typename?: 'PaymentAuthorize' } | { readonly __typename?: 'PaymentCaptureEvent' } | { readonly __typename?: 'PaymentConfirmEvent' } | { readonly __typename?: 'PaymentGatewayInitializeSession', readonly version?: string | null, readonly sourceObject: { readonly __typename?: 'Checkout', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } | { readonly __typename?: 'Order', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } } | { readonly __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { readonly __typename?: 'PaymentListGateways' } | { readonly __typename?: 'PaymentMethodInitializeTokenizationSession' } | { readonly __typename?: 'PaymentMethodProcessTokenizationSession' } | { readonly __typename?: 'PaymentProcessEvent' } | { readonly __typename?: 'PaymentRefundEvent' } | { readonly __typename?: 'PaymentVoidEvent' } | { readonly __typename?: 'PermissionGroupCreated' } | { readonly __typename?: 'PermissionGroupDeleted' } | { readonly __typename?: 'PermissionGroupUpdated' } | { readonly __typename?: 'ProductCreated' } | { readonly __typename?: 'ProductDeleted' } | { readonly __typename?: 'ProductExportCompleted' } | { readonly __typename?: 'ProductMediaCreated' } | { readonly __typename?: 'ProductMediaDeleted' } | { readonly __typename?: 'ProductMediaUpdated' } | { readonly __typename?: 'ProductMetadataUpdated' } | { readonly __typename?: 'ProductUpdated' } | { readonly __typename?: 'ProductVariantBackInStock' } | { readonly __typename?: 'ProductVariantCreated' } | { readonly __typename?: 'ProductVariantDeleted' } | { readonly __typename?: 'ProductVariantMetadataUpdated' } | { readonly __typename?: 'ProductVariantOutOfStock' } | { readonly __typename?: 'ProductVariantStockUpdated' } | { readonly __typename?: 'ProductVariantUpdated' } | { readonly __typename?: 'PromotionCreated' } | { readonly __typename?: 'PromotionDeleted' } | { readonly __typename?: 'PromotionEnded' } | { readonly __typename?: 'PromotionRuleCreated' } | { readonly __typename?: 'PromotionRuleDeleted' } | { readonly __typename?: 'PromotionRuleUpdated' } | { readonly __typename?: 'PromotionStarted' } | { readonly __typename?: 'PromotionUpdated' } | { readonly __typename?: 'SaleCreated' } | { readonly __typename?: 'SaleDeleted' } | { readonly __typename?: 'SaleToggle' } | { readonly __typename?: 'SaleUpdated' } | { readonly __typename?: 'ShippingListMethodsForCheckout' } | { readonly __typename?: 'ShippingPriceCreated' } | { readonly __typename?: 'ShippingPriceDeleted' } | { readonly __typename?: 'ShippingPriceUpdated' } | { readonly __typename?: 'ShippingZoneCreated' } | { readonly __typename?: 'ShippingZoneDeleted' } | { readonly __typename?: 'ShippingZoneMetadataUpdated' } | { readonly __typename?: 'ShippingZoneUpdated' } | { readonly __typename?: 'ShopMetadataUpdated' } | { readonly __typename?: 'StaffCreated' } | { readonly __typename?: 'StaffDeleted' } | { readonly __typename?: 'StaffSetPasswordRequested' } | { readonly __typename?: 'StaffUpdated' } | { readonly __typename?: 'StoredPaymentMethodDeleteRequested' } | { readonly __typename?: 'ThumbnailCreated' } | { readonly __typename?: 'TransactionCancelationRequested' } | { readonly __typename?: 'TransactionChargeRequested' } | { readonly __typename?: 'TransactionInitializeSession' } | { readonly __typename?: 'TransactionItemMetadataUpdated' } | { readonly __typename?: 'TransactionProcessSession' } | { readonly __typename?: 'TransactionRefundRequested' } | { readonly __typename?: 'TranslationCreated' } | { readonly __typename?: 'TranslationUpdated' } | { readonly __typename?: 'VoucherCodeExportCompleted' } | { readonly __typename?: 'VoucherCodesCreated' } | { readonly __typename?: 'VoucherCodesDeleted' } | { readonly __typename?: 'VoucherCreated' } | { readonly __typename?: 'VoucherDeleted' } | { readonly __typename?: 'VoucherMetadataUpdated' } | { readonly __typename?: 'VoucherUpdated' } | { readonly __typename?: 'WarehouseCreated' } | { readonly __typename?: 'WarehouseDeleted' } | { readonly __typename?: 'WarehouseMetadataUpdated' } | { readonly __typename?: 'WarehouseUpdated' } | null };
+export type PaymentGatewayInitializeSessionSubscription = { readonly event?: { readonly version?: string | null, readonly sourceObject: { readonly channel: { readonly id: string, readonly slug: string } } | { readonly channel: { readonly id: string, readonly slug: string } } } | {} | null };
 
-export type TransactionInitializeSessionEventFragment = { readonly __typename?: 'TransactionInitializeSession', readonly version?: string | null, readonly data?: JSONValue | null, readonly action: { readonly __typename?: 'TransactionProcessAction', readonly amount: number, readonly currency: string }, readonly sourceObject: { readonly __typename?: 'Checkout', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } | { readonly __typename?: 'Order', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } };
+export type TransactionInitializeSessionEventFragment = { readonly version?: string | null, readonly data?: JSONValue | null, readonly action: { readonly amount: number, readonly currency: string }, readonly sourceObject: { readonly channel: { readonly id: string, readonly slug: string } } | { readonly channel: { readonly id: string, readonly slug: string } } };
 
 export type TransactionInitializeSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TransactionInitializeSessionSubscription = { readonly __typename?: 'Subscription', readonly event?: { readonly __typename?: 'AccountChangeEmailRequested' } | { readonly __typename?: 'AccountConfirmationRequested' } | { readonly __typename?: 'AccountConfirmed' } | { readonly __typename?: 'AccountDeleteRequested' } | { readonly __typename?: 'AccountDeleted' } | { readonly __typename?: 'AccountEmailChanged' } | { readonly __typename?: 'AccountSetPasswordRequested' } | { readonly __typename?: 'AddressCreated' } | { readonly __typename?: 'AddressDeleted' } | { readonly __typename?: 'AddressUpdated' } | { readonly __typename?: 'AppDeleted' } | { readonly __typename?: 'AppInstalled' } | { readonly __typename?: 'AppStatusChanged' } | { readonly __typename?: 'AppUpdated' } | { readonly __typename?: 'AttributeCreated' } | { readonly __typename?: 'AttributeDeleted' } | { readonly __typename?: 'AttributeUpdated' } | { readonly __typename?: 'AttributeValueCreated' } | { readonly __typename?: 'AttributeValueDeleted' } | { readonly __typename?: 'AttributeValueUpdated' } | { readonly __typename?: 'CalculateTaxes' } | { readonly __typename?: 'CategoryCreated' } | { readonly __typename?: 'CategoryDeleted' } | { readonly __typename?: 'CategoryUpdated' } | { readonly __typename?: 'ChannelCreated' } | { readonly __typename?: 'ChannelDeleted' } | { readonly __typename?: 'ChannelMetadataUpdated' } | { readonly __typename?: 'ChannelStatusChanged' } | { readonly __typename?: 'ChannelUpdated' } | { readonly __typename?: 'CheckoutCreated' } | { readonly __typename?: 'CheckoutFilterShippingMethods' } | { readonly __typename?: 'CheckoutFullyPaid' } | { readonly __typename?: 'CheckoutMetadataUpdated' } | { readonly __typename?: 'CheckoutUpdated' } | { readonly __typename?: 'CollectionCreated' } | { readonly __typename?: 'CollectionDeleted' } | { readonly __typename?: 'CollectionMetadataUpdated' } | { readonly __typename?: 'CollectionUpdated' } | { readonly __typename?: 'CustomerCreated' } | { readonly __typename?: 'CustomerMetadataUpdated' } | { readonly __typename?: 'CustomerUpdated' } | { readonly __typename?: 'DraftOrderCreated' } | { readonly __typename?: 'DraftOrderDeleted' } | { readonly __typename?: 'DraftOrderUpdated' } | { readonly __typename?: 'FulfillmentApproved' } | { readonly __typename?: 'FulfillmentCanceled' } | { readonly __typename?: 'FulfillmentCreated' } | { readonly __typename?: 'FulfillmentMetadataUpdated' } | { readonly __typename?: 'FulfillmentTrackingNumberUpdated' } | { readonly __typename?: 'GiftCardCreated' } | { readonly __typename?: 'GiftCardDeleted' } | { readonly __typename?: 'GiftCardExportCompleted' } | { readonly __typename?: 'GiftCardMetadataUpdated' } | { readonly __typename?: 'GiftCardSent' } | { readonly __typename?: 'GiftCardStatusChanged' } | { readonly __typename?: 'GiftCardUpdated' } | { readonly __typename?: 'InvoiceDeleted' } | { readonly __typename?: 'InvoiceRequested' } | { readonly __typename?: 'InvoiceSent' } | { readonly __typename?: 'ListStoredPaymentMethods' } | { readonly __typename?: 'MenuCreated' } | { readonly __typename?: 'MenuDeleted' } | { readonly __typename?: 'MenuItemCreated' } | { readonly __typename?: 'MenuItemDeleted' } | { readonly __typename?: 'MenuItemUpdated' } | { readonly __typename?: 'MenuUpdated' } | { readonly __typename?: 'OrderBulkCreated' } | { readonly __typename?: 'OrderCancelled' } | { readonly __typename?: 'OrderConfirmed' } | { readonly __typename?: 'OrderCreated' } | { readonly __typename?: 'OrderExpired' } | { readonly __typename?: 'OrderFilterShippingMethods' } | { readonly __typename?: 'OrderFulfilled' } | { readonly __typename?: 'OrderFullyPaid' } | { readonly __typename?: 'OrderFullyRefunded' } | { readonly __typename?: 'OrderMetadataUpdated' } | { readonly __typename?: 'OrderPaid' } | { readonly __typename?: 'OrderRefunded' } | { readonly __typename?: 'OrderUpdated' } | { readonly __typename?: 'PageCreated' } | { readonly __typename?: 'PageDeleted' } | { readonly __typename?: 'PageTypeCreated' } | { readonly __typename?: 'PageTypeDeleted' } | { readonly __typename?: 'PageTypeUpdated' } | { readonly __typename?: 'PageUpdated' } | { readonly __typename?: 'PaymentAuthorize' } | { readonly __typename?: 'PaymentCaptureEvent' } | { readonly __typename?: 'PaymentConfirmEvent' } | { readonly __typename?: 'PaymentGatewayInitializeSession' } | { readonly __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { readonly __typename?: 'PaymentListGateways' } | { readonly __typename?: 'PaymentMethodInitializeTokenizationSession' } | { readonly __typename?: 'PaymentMethodProcessTokenizationSession' } | { readonly __typename?: 'PaymentProcessEvent' } | { readonly __typename?: 'PaymentRefundEvent' } | { readonly __typename?: 'PaymentVoidEvent' } | { readonly __typename?: 'PermissionGroupCreated' } | { readonly __typename?: 'PermissionGroupDeleted' } | { readonly __typename?: 'PermissionGroupUpdated' } | { readonly __typename?: 'ProductCreated' } | { readonly __typename?: 'ProductDeleted' } | { readonly __typename?: 'ProductExportCompleted' } | { readonly __typename?: 'ProductMediaCreated' } | { readonly __typename?: 'ProductMediaDeleted' } | { readonly __typename?: 'ProductMediaUpdated' } | { readonly __typename?: 'ProductMetadataUpdated' } | { readonly __typename?: 'ProductUpdated' } | { readonly __typename?: 'ProductVariantBackInStock' } | { readonly __typename?: 'ProductVariantCreated' } | { readonly __typename?: 'ProductVariantDeleted' } | { readonly __typename?: 'ProductVariantMetadataUpdated' } | { readonly __typename?: 'ProductVariantOutOfStock' } | { readonly __typename?: 'ProductVariantStockUpdated' } | { readonly __typename?: 'ProductVariantUpdated' } | { readonly __typename?: 'PromotionCreated' } | { readonly __typename?: 'PromotionDeleted' } | { readonly __typename?: 'PromotionEnded' } | { readonly __typename?: 'PromotionRuleCreated' } | { readonly __typename?: 'PromotionRuleDeleted' } | { readonly __typename?: 'PromotionRuleUpdated' } | { readonly __typename?: 'PromotionStarted' } | { readonly __typename?: 'PromotionUpdated' } | { readonly __typename?: 'SaleCreated' } | { readonly __typename?: 'SaleDeleted' } | { readonly __typename?: 'SaleToggle' } | { readonly __typename?: 'SaleUpdated' } | { readonly __typename?: 'ShippingListMethodsForCheckout' } | { readonly __typename?: 'ShippingPriceCreated' } | { readonly __typename?: 'ShippingPriceDeleted' } | { readonly __typename?: 'ShippingPriceUpdated' } | { readonly __typename?: 'ShippingZoneCreated' } | { readonly __typename?: 'ShippingZoneDeleted' } | { readonly __typename?: 'ShippingZoneMetadataUpdated' } | { readonly __typename?: 'ShippingZoneUpdated' } | { readonly __typename?: 'ShopMetadataUpdated' } | { readonly __typename?: 'StaffCreated' } | { readonly __typename?: 'StaffDeleted' } | { readonly __typename?: 'StaffSetPasswordRequested' } | { readonly __typename?: 'StaffUpdated' } | { readonly __typename?: 'StoredPaymentMethodDeleteRequested' } | { readonly __typename?: 'ThumbnailCreated' } | { readonly __typename?: 'TransactionCancelationRequested' } | { readonly __typename?: 'TransactionChargeRequested' } | { readonly __typename?: 'TransactionInitializeSession', readonly version?: string | null, readonly data?: JSONValue | null, readonly action: { readonly __typename?: 'TransactionProcessAction', readonly amount: number, readonly currency: string }, readonly sourceObject: { readonly __typename?: 'Checkout', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } | { readonly __typename?: 'Order', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } } | { readonly __typename?: 'TransactionItemMetadataUpdated' } | { readonly __typename?: 'TransactionProcessSession' } | { readonly __typename?: 'TransactionRefundRequested' } | { readonly __typename?: 'TranslationCreated' } | { readonly __typename?: 'TranslationUpdated' } | { readonly __typename?: 'VoucherCodeExportCompleted' } | { readonly __typename?: 'VoucherCodesCreated' } | { readonly __typename?: 'VoucherCodesDeleted' } | { readonly __typename?: 'VoucherCreated' } | { readonly __typename?: 'VoucherDeleted' } | { readonly __typename?: 'VoucherMetadataUpdated' } | { readonly __typename?: 'VoucherUpdated' } | { readonly __typename?: 'WarehouseCreated' } | { readonly __typename?: 'WarehouseDeleted' } | { readonly __typename?: 'WarehouseMetadataUpdated' } | { readonly __typename?: 'WarehouseUpdated' } | null };
+export type TransactionInitializeSessionSubscription = { readonly event?: { readonly version?: string | null, readonly data?: JSONValue | null, readonly action: { readonly amount: number, readonly currency: string }, readonly sourceObject: { readonly channel: { readonly id: string, readonly slug: string } } | { readonly channel: { readonly id: string, readonly slug: string } } } | {} | null };
 
 export const UntypedChannelFragmentDoc = gql`
     fragment Channel on Channel {
