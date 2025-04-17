@@ -1,11 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
-import {
-  createStripeWebhookSecret,
-  StripeWebhookSecret,
-} from "@/modules/stripe/stripe-webhook-secret";
-
 import {
   createStripeRestrictedKey,
   StripeRestrictedKey,
