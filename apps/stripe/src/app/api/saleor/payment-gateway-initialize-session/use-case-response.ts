@@ -19,7 +19,7 @@ class Success extends SuccessWebhookResponse {
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"PAYMENT_GATEWAY_INITIALIZE_SESSION">({
       data: Success.ResponseDataSchema.parse({
-        stripePublishableKey: this.pk.keyValue,
+        stripePublishableKey: this.pk,
       }),
     });
 

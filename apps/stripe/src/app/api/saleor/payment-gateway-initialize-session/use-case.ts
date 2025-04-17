@@ -57,6 +57,8 @@ export class PaymentGatewayInitializeSessionUseCase {
         return err(new AppIsNotConfiguredResponse());
       }
 
+      // TODO: Save transaction here
+
       return ok(new PaymentGatewayInitializeSessionUseCaseResponses.Success({ pk }));
     }
 

@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initalize-session-event";
+import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initialize-session-event";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
