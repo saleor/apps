@@ -1,26 +1,28 @@
 import { Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
+import { AppRootConfig } from "@/modules/app-config/app-root-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import { StripeConfig } from "./stripe-config";
 
-/**
- * Stripe webhook will provide ID of config from URL. Repo must be able to access it
- */
-export type StripeConfigByChannelIdAccessPattern = {
-  channelId: string;
+export type BaseAccessPattern = {
   saleorApiUrl: SaleorApiUrl;
   appId: string;
 };
 
 /**
+ * Stripe webhook will provide ID of config from URL. Repo must be able to access it
+ */
+export type StripeConfigByChannelIdAccessPattern = BaseAccessPattern & {
+  channelId: string;
+};
+
+/**
  * Saleor webhook will have available channel as access pattern. Repo must store channel<->config relation for this case
  */
-export type StripeConfigByConfigIdAccessPattern = {
+export type StripeConfigByConfigIdAccessPattern = BaseAccessPattern & {
   configId: string;
-  saleorApiUrl: SaleorApiUrl;
-  appId: string;
 };
 
 export type GetStripeConfigAccessPattern =
@@ -29,7 +31,6 @@ export type GetStripeConfigAccessPattern =
 
 export interface AppConfigRepo {
   saveStripeConfig: (args: {
-    channelId: string;
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
@@ -45,4 +46,9 @@ export interface AppConfigRepo {
     },
     stripeConfig: StripeConfig,
   ) => Promise<Result<void | null, InstanceType<typeof BaseError>>>;
+  getRootConfig: (
+    access: BaseAccessPattern,
+  ) => Promise<Result<AppRootConfig, InstanceType<typeof BaseError>>>;
 }
+
+// todo move errors definitions here

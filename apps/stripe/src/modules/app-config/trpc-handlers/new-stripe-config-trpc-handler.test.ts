@@ -2,11 +2,7 @@ import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import {
-  mockedAppToken,
-  mockedSaleorAppId,
-  mockedSaleorChannelId,
-} from "@/__tests__/mocks/constants";
+import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
@@ -58,7 +54,6 @@ describe("NewStripeConfigTrpcHandler", () => {
         name: "Test config",
         publishableKey: mockedStripePublishableKey,
         restrictedKey: mockedStripeRestrictedKey,
-        channelId: mockedSaleorChannelId,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `[TRPCError: Failed to create Stripe configuration. Data can't be saved.]`,
@@ -76,7 +71,6 @@ describe("NewStripeConfigTrpcHandler", () => {
         name: "", //empty name should throw
         publishableKey: mockedStripePublishableKey,
         restrictedKey: mockedStripeRestrictedKey,
-        channelId: mockedSaleorChannelId,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       [TRPCError: [
@@ -105,7 +99,6 @@ describe("NewStripeConfigTrpcHandler", () => {
         name: "Test config",
         publishableKey: mockedStripePublishableKey,
         restrictedKey: mockedStripeRestrictedKey,
-        channelId: mockedSaleorChannelId,
       }),
     ).resolves.not.toThrow();
 
@@ -116,10 +109,10 @@ describe("NewStripeConfigTrpcHandler", () => {
         config: {
           id: expect.any(String),
         },
-      }, `
+      },
+      `
       {
         "appId": "saleor-app-id",
-        "channelId": "Q2hhbm5lbDox",
         "config": {
           "id": Any<String>,
           "name": "Test config",
@@ -129,6 +122,7 @@ describe("NewStripeConfigTrpcHandler", () => {
         },
         "saleorApiUrl": "https://foo.bar.saleor.cloud/graphql/",
       }
-    `);
+    `,
+    );
   });
 });
