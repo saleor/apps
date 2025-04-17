@@ -12,9 +12,6 @@ const IndexPage: NextPage = () => {
 
   useEffect(() => {
     if (isMounted() && appBridgeState?.ready) {
-      // eslint-disable-next-line no-console
-      console.log("Installed into Saleor dashboard - handling redirect to configuration page");
-
       replace("/config");
     }
   }, [isMounted, appBridgeState?.ready, replace]);
