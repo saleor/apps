@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 1.23.0
+
+### Minor Changes
+
+- cd397beb: Added support for [Handlebars Helpers](https://github.com/helpers/handlebars-helpers) which adds more flexibility to the template syntax.
+
 ## 1.22.9
 
 ### Patch Changes
