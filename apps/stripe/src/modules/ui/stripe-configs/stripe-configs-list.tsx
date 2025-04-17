@@ -1,5 +1,5 @@
 import { Layout } from "@saleor/apps-ui";
-import { Box, Button, ChevronRightIcon, Chip, List, PropsWithBox, Text } from "@saleor/macaw-ui";
+import { Box, Button, ChevronRightIcon, Chip, List, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
 import {

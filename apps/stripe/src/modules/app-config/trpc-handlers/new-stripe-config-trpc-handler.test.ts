@@ -2,11 +2,7 @@ import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import {
-  mockedAppToken,
-  mockedSaleorAppId,
-  mockedSaleorChannelId,
-} from "@/__tests__/mocks/constants";
+import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
@@ -113,7 +109,8 @@ describe("NewStripeConfigTrpcHandler", () => {
         config: {
           id: expect.any(String),
         },
-      }, `
+      },
+      `
       {
         "appId": "saleor-app-id",
         "config": {
@@ -125,6 +122,7 @@ describe("NewStripeConfigTrpcHandler", () => {
         },
         "saleorApiUrl": "https://foo.bar.saleor.cloud/graphql/",
       }
-    `);
+    `,
+    );
   });
 });

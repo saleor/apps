@@ -16,14 +16,11 @@ type FormShape = {
 
 export const NewStripeConfigForm = () => {
   const router = useRouter();
-  const { data, error, mutate } = trpcClient.appConfig.saveNewStripeConfig.useMutation({
+  const { mutate } = trpcClient.appConfig.saveNewStripeConfig.useMutation({
     onSuccess() {
-      console.log("success");
-
       return router.push("/config");
     },
     onError() {
-      console.log("error");
       // todo show error
     },
   });
@@ -40,8 +37,6 @@ export const NewStripeConfigForm = () => {
     },
     resolver: zodResolver(newStripeConfigInputSchema),
   });
-
-  console.log(errors);
 
   const onSubmit = (values: FormShape) => {
     mutate({
