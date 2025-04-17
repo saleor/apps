@@ -32271,11 +32271,6 @@ export type _Service = {
 
 export type ChannelFragment = { readonly id: string, readonly slug: string };
 
-<<<<<<< HEAD
-export type PaymentGatewayInitializeSessionEventFragment = { readonly version?: string | null, readonly sourceObject: { readonly channel: { readonly id: string, readonly slug: string } } | { readonly channel: { readonly id: string, readonly slug: string } } };
-||||||| caa16ce7
-export type PaymentGatewayInitializeSessionEventFragment = { readonly __typename?: 'PaymentGatewayInitializeSession', readonly version?: string | null, readonly sourceObject: { readonly __typename?: 'Checkout', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } | { readonly __typename?: 'Order', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } };
-=======
 export type TransactionEventReportMutationVariables = Exact<{
   transactionId: Scalars['ID']['input'];
   message: Scalars['String']['input'];
@@ -32287,10 +32282,9 @@ export type TransactionEventReportMutationVariables = Exact<{
 }>;
 
 
-export type TransactionEventReportMutation = { readonly __typename?: 'Mutation', readonly transactionEventReport?: { readonly __typename?: 'TransactionEventReport', readonly alreadyProcessed?: boolean | null, readonly errors: ReadonlyArray<{ readonly __typename?: 'TransactionEventReportError', readonly message?: string | null, readonly code: TransactionEventReportErrorCode }>, readonly transactionEvent?: { readonly __typename?: 'TransactionEvent', readonly id: string } | null } | null };
+export type TransactionEventReportMutation = { readonly transactionEventReport?: { readonly alreadyProcessed?: boolean | null, readonly errors: ReadonlyArray<{ readonly message?: string | null, readonly code: TransactionEventReportErrorCode }>, readonly transactionEvent?: { readonly id: string } | null } | null };
 
-export type PaymentGatewayInitializeSessionEventFragment = { readonly __typename?: 'PaymentGatewayInitializeSession', readonly version?: string | null, readonly sourceObject: { readonly __typename?: 'Checkout', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } | { readonly __typename?: 'Order', readonly channel: { readonly __typename?: 'Channel', readonly id: string, readonly slug: string } } };
->>>>>>> main
+export type PaymentGatewayInitializeSessionEventFragment = { readonly version?: string | null, readonly sourceObject: { readonly channel: { readonly id: string, readonly slug: string } } | { readonly channel: { readonly id: string, readonly slug: string } } };
 
 export type PaymentGatewayInitializeSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
