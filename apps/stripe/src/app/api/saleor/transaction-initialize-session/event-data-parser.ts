@@ -7,7 +7,7 @@ import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 const TransactionInitializeEventDataSchema = z
   .object({
     paymentIntent: z.discriminatedUnion("paymentMethod", [
-      CardPaymentMethod.TransactionInitalizeSchema,
+      CardPaymentMethod.TransactionInitializeSchema,
     ]),
   })
   .strict()

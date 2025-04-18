@@ -5,7 +5,7 @@ import { TransactionFlowStrategyEnum } from "@/generated/graphql";
 import { PaymentMethod } from "./types";
 
 export class CardPaymentMethod implements PaymentMethod {
-  static TransactionInitalizeSchema = z
+  static TransactionInitializeSchema = z
     .object({
       paymentMethod: z.literal("card"),
     })

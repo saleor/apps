@@ -82,7 +82,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         TransactionInitalizeSessionUseCaseResponses.AuthorizationActionRequired,
     },
   ])(
-    "Returns $expectedSuccessResponse.name response if Stripe PaymentIntentsAPI succesuflly reponds and actionType is $actionType",
+    "Returns $expectedSuccessResponse.name response if Stripe PaymentIntentsAPI successfully responds and actionType is $actionType",
     async ({ actionType, expectedSuccessResponse }) => {
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
       const createPaymentIntent = vi.fn(async () =>
@@ -302,7 +302,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     ).resolves.toStrictEqual(err(new MalformedRequestResponse()));
   });
 
-  it("Returns 'BrokenAppRespone' when currency coming from Stripe is not supported", async () => {
+  it("Returns 'BrokenAppResponse' when currency coming from Stripe is not supported", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
     const createPaymentIntent = vi.fn(async () =>
       ok({

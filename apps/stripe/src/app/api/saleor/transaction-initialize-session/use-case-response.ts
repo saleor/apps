@@ -27,10 +27,10 @@ import {
   UnsupportedPaymentMethodErrorPublicCode,
 } from "./event-data-parser";
 
-type ReponseResult = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"]["result"];
+type ResponseResult = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"]["result"];
 
 class ChargeActionRequired extends SuccessWebhookResponse {
-  readonly result: ReponseResult = "CHARGE_ACTION_REQUIRED";
+  readonly result: ResponseResult = "CHARGE_ACTION_REQUIRED";
   readonly stripeClientSecret: StripeClientSecret;
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
@@ -71,11 +71,11 @@ class ChargeActionRequired extends SuccessWebhookResponse {
 }
 
 class AuthorizationActionRequired extends ChargeActionRequired {
-  readonly result: ReponseResult = "AUTHORIZATION_ACTION_REQUIRED";
+  readonly result: ResponseResult = "AUTHORIZATION_ACTION_REQUIRED";
 }
 
 class ChargeFailure extends SuccessWebhookResponse {
-  readonly result: ReponseResult = "CHARGE_FAILURE";
+  readonly result: ResponseResult = "CHARGE_FAILURE";
   readonly error: StripePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
   readonly saleorEventAmount: number;
 
@@ -125,7 +125,7 @@ class ChargeFailure extends SuccessWebhookResponse {
 }
 
 class AuthorizationFailure extends ChargeFailure {
-  readonly result: ReponseResult = "AUTHORIZATION_FAILURE";
+  readonly result: ResponseResult = "AUTHORIZATION_FAILURE";
 }
 
 export const TransactionInitalizeSessionUseCaseResponses = {
