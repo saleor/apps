@@ -1,11 +1,9 @@
-import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
+import {
+  buildSyncWebhookResponsePayload,
+  SyncWebhookResponsesMap,
+} from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
-import {
-  ParseErrorPublicCode,
-  TransactionInitializeSessionEventDataError,
-  UnsupportedPaymentMethodErrorPublicCode,
-} from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   createFailureWebhookResponseDataSchema,
@@ -23,10 +21,16 @@ import {
 } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
-// TODO: add support for other results e.g AUTHORIZE
+import {
+  ParseErrorPublicCode,
+  TransactionInitializeSessionEventDataError,
+  UnsupportedPaymentMethodErrorPublicCode,
+} from "./event-data-parser";
+
+type ResponseResult = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"]["result"];
 
 class ChargeActionRequired extends SuccessWebhookResponse {
-  readonly result = "CHARGE_ACTION_REQUIRED" as const;
+  readonly result: ResponseResult = "CHARGE_ACTION_REQUIRED";
   readonly stripeClientSecret: StripeClientSecret;
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
@@ -66,8 +70,12 @@ class ChargeActionRequired extends SuccessWebhookResponse {
   }
 }
 
+class AuthorizationActionRequired extends ChargeActionRequired {
+  readonly result: ResponseResult = "AUTHORIZATION_ACTION_REQUIRED";
+}
+
 class ChargeFailure extends SuccessWebhookResponse {
-  readonly result = "CHARGE_FAILURE" as const;
+  readonly result: ResponseResult = "CHARGE_FAILURE";
   readonly error: StripePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
   readonly saleorEventAmount: number;
 
@@ -116,9 +124,15 @@ class ChargeFailure extends SuccessWebhookResponse {
   }
 }
 
+class AuthorizationFailure extends ChargeFailure {
+  readonly result: ResponseResult = "AUTHORIZATION_FAILURE";
+}
+
 export const TransactionInitalizeSessionUseCaseResponses = {
   ChargeActionRequired,
+  AuthorizationActionRequired,
   ChargeFailure,
+  AuthorizationFailure,
 };
 
 export type TransactionInitalizeSessionUseCaseResponsesType = InstanceType<

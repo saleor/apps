@@ -2,16 +2,13 @@ import { err, ok } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
-
-const CardPaymentMethodSchema = z
-  .object({
-    paymentMethod: z.literal("card"),
-  })
-  .strict();
+import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 
 const TransactionInitializeEventDataSchema = z
   .object({
-    paymentIntent: z.discriminatedUnion("paymentMethod", [CardPaymentMethodSchema]),
+    paymentIntent: z.discriminatedUnion("paymentMethod", [
+      CardPaymentMethod.TransactionInitializeSchema,
+    ]),
   })
   .strict()
   .brand("TransactionInitializeRequestData");
