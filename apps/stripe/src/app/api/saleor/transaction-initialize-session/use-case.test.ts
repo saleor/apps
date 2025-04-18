@@ -53,6 +53,11 @@ describe("TransactionInitializeSessionUseCase", () => {
         automatic_payment_methods: {
           enabled: true,
         },
+        payment_method_options: {
+          card: {
+            request_three_d_secure: "automatic",
+          },
+        },
       },
     });
   });
