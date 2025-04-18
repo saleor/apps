@@ -3,12 +3,6 @@ import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import {
-  parseTransactionInitializeSessionEventData,
-  TransactionInitializeSessionEventData,
-  TransactionInitializeSessionEventDataError,
-} from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
-import { resolvePaymentMethodFromEventData } from "@/app/api/saleor/transaction-initialize-session/payment-method-resolver";
-import {
   TransactionFlowStrategyEnum,
   TransactionInitializeSessionEventFragment,
 } from "@/generated/graphql";
@@ -35,6 +29,12 @@ import {
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
+import {
+  parseTransactionInitializeSessionEventData,
+  TransactionInitializeSessionEventData,
+  TransactionInitializeSessionEventDataError,
+} from "./event-data-parser";
+import { resolvePaymentMethodFromEventData } from "./payment-method-resolver";
 import {
   TransactionInitalizeSessionUseCaseResponses,
   TransactionInitalizeSessionUseCaseResponsesType,

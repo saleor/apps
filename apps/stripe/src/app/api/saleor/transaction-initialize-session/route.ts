@@ -19,7 +19,7 @@ const useCase = new TransactionInitializeSessionUseCase({
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
 });
 
-const handler = transactionInitializeSessionWebhookDefinition.createHandler(async (req, ctx) => {
+const handler = transactionInitializeSessionWebhookDefinition.createHandler(async (_req, ctx) => {
   try {
     const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 

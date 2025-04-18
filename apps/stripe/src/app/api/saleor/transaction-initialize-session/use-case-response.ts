@@ -4,11 +4,6 @@ import {
 } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
-import {
-  ParseErrorPublicCode,
-  TransactionInitializeSessionEventDataError,
-  UnsupportedPaymentMethodErrorPublicCode,
-} from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   createFailureWebhookResponseDataSchema,
@@ -25,6 +20,12 @@ import {
   StripePaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+
+import {
+  ParseErrorPublicCode,
+  TransactionInitializeSessionEventDataError,
+  UnsupportedPaymentMethodErrorPublicCode,
+} from "./event-data-parser";
 
 type ReponseResult = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"]["result"];
 
