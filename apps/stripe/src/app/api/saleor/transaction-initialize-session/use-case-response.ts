@@ -59,7 +59,6 @@ class ChargeActionRequired extends SuccessWebhookResponse {
           stripeClientSecret: this.stripeClientSecret,
         },
       }),
-      // this.result now correctly matches the expected union type
       result: this.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
