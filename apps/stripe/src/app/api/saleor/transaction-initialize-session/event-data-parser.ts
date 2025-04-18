@@ -6,6 +6,7 @@ import { BaseError } from "@/lib/errors";
 const CardPaymentMethodSchema = z
   .object({
     paymentMethod: z.literal("card"),
+    requestThreeDSecure: z.enum(["any", "automatic", "challenge"]).optional().default("automatic"),
   })
   .strict();
 

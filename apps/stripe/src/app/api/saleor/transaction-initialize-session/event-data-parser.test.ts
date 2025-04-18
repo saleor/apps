@@ -20,6 +20,7 @@ describe("parseTransactionInitializeSessionEventData", () => {
     expect(result._unsafeUnwrap()).toStrictEqual({
       paymentIntent: {
         paymentMethod: "card",
+        requestThreeDSecure: "automatic",
       },
     });
   });
