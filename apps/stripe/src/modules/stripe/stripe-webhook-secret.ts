@@ -16,7 +16,7 @@ export const StripeWebhookSecretSchema = z
   .string()
   .min(1)
   .startsWith("whsec_")
-  .brand("StripeWebhookSecretSchema");
+  .brand("StripeWebhookSecret");
 
 export const createStripeWebhookSecret = (raw: string | null) =>
   fromThrowable(StripeWebhookSecretSchema.parse, (error) =>
