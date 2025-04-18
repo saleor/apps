@@ -43,7 +43,7 @@ export const orderFullyPaidWebhook = new SaleorAsyncWebhook<OrderFullyPaidWebhoo
 });
 
 const handler: NextJsWebhookHandler<OrderFullyPaidWebhookPayloadFragment> = async (
-  req,
+  _req,
   res,
   context,
 ) => {

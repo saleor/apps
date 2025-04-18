@@ -67,7 +67,7 @@ export const customerCreatedWebhook = new SaleorAsyncWebhook<CustomerCreatedWebh
 );
 
 const handler: NextJsWebhookHandler<CustomerCreatedWebhookPayloadFragment> = async (
-  req,
+  _req,
   res,
   context,
 ) => {

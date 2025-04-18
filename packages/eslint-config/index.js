@@ -90,6 +90,18 @@ export const config = [
       "no-console": "error",
       "@saleor/saleor-app/logger-leak": "error",
       "react-naming-convention/filename": ["error", { rule: "kebab-case" }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          args: "all",
+          argsIgnorePattern: "^_",
+          caughtErrors: "all",
+          caughtErrorsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          ignoreRestSiblings: true,
+        },
+      ],
     },
   },
   {
