@@ -82,7 +82,7 @@ export class StripeWebhookManager {
     try {
       const result = await client.nativeClient.webhookEndpoints.create({
         url: webhookUrl.value.toString(),
-        description: `Created by Saleor Stripe app, config name: ${config.name}`, //todo
+        description: `Created by Saleor Stripe app, config name: ${config.name}`,
         enabled_events: supportedStripeEvents,
         metadata: {
           saleorAppConfigurationId: config.configurationId,

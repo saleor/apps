@@ -4,7 +4,6 @@ import Stripe from "stripe";
 import { BaseError } from "@/lib/errors";
 import { StripeClient } from "@/modules/stripe/stripe-client";
 
-// todo test
 export class StripeAuthValidator {
   stripe: Stripe;
 

@@ -27,7 +27,6 @@ export const NewStripeConfigForm = () => {
     },
     onError(err) {
       notifyError("Error saving config", err.message);
-      // todo show error
     },
   });
 
