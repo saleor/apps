@@ -3,7 +3,7 @@ import { err, ok, Result } from "neverthrow";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { StripeConfig } from "@/modules/app-config/stripe-config";
+import { NewStripeConfigInput } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { supportedStripeEvents } from "@/modules/stripe/supported-stripe-events";
@@ -14,7 +14,9 @@ export class StripeWebhookManager {
   private logger = createLogger("StripeWebhookManager");
 
   async createWebhook(
-    config: StripeConfig,
+    config: NewStripeConfigInput & {
+      configurationId: string;
+    },
     { appUrl, saleorApiUrl }: { appUrl: string; saleorApiUrl: SaleorApiUrl },
   ): Promise<
     Result<
@@ -31,7 +33,7 @@ export class StripeWebhookManager {
     const webhookUrl = new URL(appUrl + "/stripe/webhook");
     const wp = WebhookParams.createFromParams({
       saleorApiUrl: saleorApiUrl,
-      configurationId: config.id,
+      configurationId: config.configurationId,
     });
 
     webhookUrl.searchParams.set(wp.configurationId, wp.configurationId);
@@ -47,7 +49,7 @@ export class StripeWebhookManager {
         description: `Created by Saleor Stripe app, config name: ${config.name}`, //todo
         enabled_events: supportedStripeEvents,
         metadata: {
-          saleorAppConfigurationId: config.id,
+          saleorAppConfigurationId: config.configurationId,
         },
       });
 

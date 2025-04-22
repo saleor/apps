@@ -9,6 +9,7 @@ import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeAuthValidator } from "@/modules/stripe/stripe-auth-validator";
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
@@ -19,6 +20,11 @@ import { protectedClientProcedure } from "@/modules/trpc/protected-client-proced
  */
 export class NewStripeConfigTrpcHandler {
   baseProcedure = protectedClientProcedure;
+  private readonly webhookManager = new StripeWebhookManager();
+
+  constructor(deps: { webhookManager: StripeWebhookManager }) {
+    this.webhookManager = deps.webhookManager;
+  }
 
   private validateRk(rk: StripeRestrictedKey) {
     const validator = StripeAuthValidator.createFromClient(
@@ -42,16 +48,24 @@ export class NewStripeConfigTrpcHandler {
         });
       }
 
-      const newConfig = StripeConfig.create({
+      const configId = new RandomId().generate();
+
+      /**
+       * Create model just to validate
+       */
+      const configValidation = StripeConfig.create({
         publishableKey: input.publishableKey,
         restrictedKey: input.restrictedKey,
         name: input.name,
-        id: new RandomId().generate(),
-        webhookSecret: createStripeWebhookSecret("whsec_TODO")._unsafeUnwrap(), //todo - pass after webhook is created
+        id: configId,
+        /**
+         * Is passed later after webhook is created
+         */
+        webhookSecret: createStripeWebhookSecret("whsec_TODO")._unsafeUnwrap(),
       });
 
       // TODO: Handle exact reasons, give good messages
-      if (newConfig.isErr()) {
+      if (configValidation.isErr()) {
         captureException(
           new BaseError(
             "Handler validation triggered outside of input validation. This means input validation is leaky.",
@@ -59,7 +73,7 @@ export class NewStripeConfigTrpcHandler {
         );
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Failed to create Stripe configuration: ${newConfig.error.message}`,
+          message: `Failed to create Stripe configuration: ${configValidation.error.message}`,
         });
       }
 
@@ -72,8 +86,69 @@ export class NewStripeConfigTrpcHandler {
         });
       }
 
+      const webhookCreationResult = await this.webhookManager.createWebhook(
+        {
+          name: configValidation.value.name,
+          restrictedKey: configValidation.value.restrictedKey,
+          publishableKey: configValidation.value.publishableKey,
+          configurationId: configId,
+        },
+        {
+          saleorApiUrl: saleorApiUrl.value,
+          appUrl: "todo",
+        },
+      );
+
+      if (webhookCreationResult.isErr()) {
+        // todo map errors
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Failed to create Stripe webhook. Please validate your credentials or contact support.",
+        });
+      }
+
+      const { secret, id } = webhookCreationResult.value;
+
+      const stripeWebhookSecretVo = createStripeWebhookSecret(secret);
+
+      if (stripeWebhookSecretVo.isErr()) {
+        captureException(
+          new BaseError("Secret from Stripe doesnt match expected format", {
+            cause: stripeWebhookSecretVo.error,
+          }),
+        );
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create Stripe webhook. Secret is invalid. Please contact support.",
+        });
+      }
+
+      const configToSave = StripeConfig.create({
+        name: configValidation.value.name,
+        restrictedKey: configValidation.value.restrictedKey,
+        publishableKey: configValidation.value.publishableKey,
+        id: configId,
+        webhookSecret: stripeWebhookSecretVo.value,
+        // todo add webhook id to config
+      });
+
+      if (configToSave.isErr()) {
+        captureException(
+          new BaseError("Failed to create Stripe configuration. This should not happen", {
+            cause: configToSave.error,
+          }),
+        );
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create Stripe configuration. Please contact support.",
+        });
+      }
+
       const saveResult = await ctx.configRepo.saveStripeConfig({
-        config: newConfig.value,
+        config: configToSave.value,
         saleorApiUrl: saleorApiUrl.value,
         appId: ctx.appId,
       });
