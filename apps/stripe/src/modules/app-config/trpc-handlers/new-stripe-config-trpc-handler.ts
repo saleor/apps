@@ -48,6 +48,15 @@ export class NewStripeConfigTrpcHandler {
         });
       }
 
+      if (!ctx.appUrl) {
+        captureException(new BaseError("Missing appUrl in TRPC request"));
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong, please contact support.",
+        });
+      }
+
       const configId = new RandomId().generate();
 
       /**
@@ -98,7 +107,7 @@ export class NewStripeConfigTrpcHandler {
         },
         {
           saleorApiUrl: saleorApiUrl.value,
-          appUrl: "todo",
+          appUrl: ctx.appUrl,
         },
       );
 

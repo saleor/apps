@@ -30,14 +30,14 @@ export class StripeWebhookManager {
     this.logger.debug("Will create Stripe webhook");
     const client = StripeClient.createFromRestrictedKey(config.restrictedKey);
 
-    const webhookUrl = new URL(appUrl + "/stripe/webhook");
+    const webhookUrl = new URL(appUrl + "/api/stripe/webhook");
     const wp = WebhookParams.createFromParams({
       saleorApiUrl: saleorApiUrl,
       configurationId: config.configurationId,
     });
 
-    webhookUrl.searchParams.set(wp.configurationId, wp.configurationId);
-    webhookUrl.searchParams.set(wp.saleorApiUrl, wp.saleorApiUrl);
+    webhookUrl.searchParams.set(WebhookParams.configurationIdIdSearchParam, wp.configurationId);
+    webhookUrl.searchParams.set(WebhookParams.saleorApiUrlSearchParam, wp.saleorApiUrl);
 
     this.logger.debug("Resolved webhook url", {
       webhookUrl,
