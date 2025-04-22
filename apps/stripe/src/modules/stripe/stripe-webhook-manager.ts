@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
@@ -6,12 +7,35 @@ import { createLogger } from "@/lib/logger";
 import { NewStripeConfigInput } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeClient } from "@/modules/stripe/stripe-client";
+import { StripeWebhookUrlBuilder } from "@/modules/stripe/stripe-webhook-url-builder";
 import { supportedStripeEvents } from "@/modules/stripe/supported-stripe-events";
 
-// todo test
+const CantCreateWebhookUrlError = BaseError.subclass("CantCreateWebhookUrlError", {
+  props: {
+    _internalName: "StripeWebhookManagerErrors.CantCreateWebhookUrlError" as const,
+  },
+});
+
+const InvalidDataError = BaseError.subclass("InvalidDataError", {
+  props: {
+    _internalName: "StripeWebhookManagerErrors.InvalidDataError" as const,
+  },
+});
+
+const CantCreateWebhookError = BaseError.subclass("CantCreateWebhookError", {
+  props: {
+    _internalName: "StripeWebhookManagerErrors.CantCreateWebhookError" as const,
+  },
+});
+
+export const StripeWebhookManagerErrors = {
+  CantCreateWebhookUrlError,
+  CantCreateWebhookError,
+};
 
 export class StripeWebhookManager {
   private logger = createLogger("StripeWebhookManager");
+  private urlBuilder = new StripeWebhookUrlBuilder();
 
   async createWebhook(
     config: NewStripeConfigInput & {
@@ -24,20 +48,32 @@ export class StripeWebhookManager {
         secret: string;
         id: string;
       },
-      InstanceType<typeof BaseError>
+      InstanceType<
+        | typeof StripeWebhookManagerErrors.CantCreateWebhookUrlError
+        | typeof StripeWebhookManagerErrors.CantCreateWebhookError
+      >
     >
   > {
     this.logger.debug("Will create Stripe webhook");
     const client = StripeClient.createFromRestrictedKey(config.restrictedKey);
 
-    const webhookUrl = new URL(appUrl + "/api/stripe/webhook");
-    const wp = WebhookParams.createFromParams({
-      saleorApiUrl: saleorApiUrl,
-      configurationId: config.configurationId,
+    const webhookUrl = this.urlBuilder.buildUrl({
+      appUrl,
+      webhookParams: WebhookParams.createFromParams({
+        saleorApiUrl: saleorApiUrl,
+        configurationId: config.configurationId,
+      }),
     });
 
-    webhookUrl.searchParams.set(WebhookParams.configurationIdIdSearchParam, wp.configurationId);
-    webhookUrl.searchParams.set(WebhookParams.saleorApiUrlSearchParam, wp.saleorApiUrl);
+    if (webhookUrl.isErr()) {
+      captureException(
+        new CantCreateWebhookUrlError("Failed to build URL", {
+          cause: webhookUrl.error,
+        }),
+      );
+
+      return err(new CantCreateWebhookUrlError("Cant create URL"));
+    }
 
     this.logger.debug("Resolved webhook url", {
       webhookUrl,
@@ -45,7 +81,7 @@ export class StripeWebhookManager {
 
     try {
       const result = await client.nativeClient.webhookEndpoints.create({
-        url: webhookUrl.toString(),
+        url: webhookUrl.value.toString(),
         description: `Created by Saleor Stripe app, config name: ${config.name}`, //todo
         enabled_events: supportedStripeEvents,
         metadata: {
@@ -63,16 +99,24 @@ export class StripeWebhookManager {
          * Here we create it, so it must be there
          * If not, this is Panic
          */
-        throw new BaseError("Stripe did not return secret from webhook. This should not happen");
+        throw new InvalidDataError(
+          "Stripe did not return secret from webhook. This should not happen",
+        );
       }
 
       return ok({ secret, id });
     } catch (e) {
       this.logger.warn("Error creating webhook", { error: e });
 
-      // todo handle error
+      if (e instanceof InvalidDataError) {
+        captureException(e);
+
+        return err(new CantCreateWebhookError("Result from Stripe was unexpected"));
+      }
+
+      // todo handle exact errors
       return err(
-        new BaseError("Error creating webhook", {
+        new CantCreateWebhookError("Error creating webhook", {
           cause: e,
         }),
       );

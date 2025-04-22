@@ -11,7 +11,7 @@ import pkg from "@/package.json";
 export class StripeClient {
   readonly nativeClient: Stripe;
 
-  private constructor(nativeClient: Stripe) {
+  constructor(nativeClient: Stripe) {
     this.nativeClient = nativeClient;
   }
 

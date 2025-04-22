@@ -84,8 +84,4 @@ export class WebhookParams {
       configurationId: params.configurationId,
     });
   }
-
-  createWebhookUrl() {
-    // todo
-  }
 }
