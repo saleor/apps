@@ -21,14 +21,14 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      captureMethod: "automatic_async",
+      captureMethod: undefined,
     },
     {
       actionType: "AUTHORIZATION" as const,
       captureMethod: "manual",
     },
   ])(
-    "Calls Stripe PaymentIntentsAPI to create payment intent with $captureMethod capture method when actionType is $actionType",
+    "Calls Stripe PaymentIntentsAPI to create payment intent with $captureMethod capture method for card when actionType is $actionType",
     async ({ actionType, captureMethod }) => {
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
       const createPaymentIntent = vi.fn(async () =>
@@ -65,7 +65,11 @@ describe("TransactionInitializeSessionUseCase", () => {
           automatic_payment_methods: {
             enabled: true,
           },
-          capture_method: captureMethod,
+          payment_method_options: {
+            card: {
+              capture_method: captureMethod,
+            },
+          },
         },
       });
     },

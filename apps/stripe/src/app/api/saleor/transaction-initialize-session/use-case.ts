@@ -15,6 +15,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
+import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
 import {
   createStripeClientSecret,
   StripeClientSecret,
@@ -61,7 +62,7 @@ export class TransactionInitializeSessionUseCase {
   private prepareStripeCreatePaymentIntentParams(args: {
     eventAction: TransactionInitializeSessionEventFragment["action"];
     eventData: TransactionInitializeSessionEventData;
-    paymentMethodSupportedFlow: TransactionFlowStrategyEnum;
+    selectedPaymentMethod: PaymentMethod;
   }): Result<Stripe.PaymentIntentCreateParams, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
       amount: args.eventAction.amount,
@@ -77,8 +78,11 @@ export class TransactionInitializeSessionUseCase {
         automatic_payment_methods: {
           enabled: true,
         },
-        capture_method:
-          args.paymentMethodSupportedFlow === "AUTHORIZATION" ? "manual" : "automatic_async",
+        payment_method_options: {
+          ...args.selectedPaymentMethod.getCreatePaymentIntentMethodOptions(
+            args.eventAction.actionType,
+          ),
+        },
       };
     });
   }
@@ -196,14 +200,11 @@ export class TransactionInitializeSessionUseCase {
     });
 
     const selectedPaymentMethod = resolvePaymentMethodFromEventData(eventDataResult.value);
-    const paymentMethodSupportedFlow = selectedPaymentMethod.getSupportedTransactionFlow(
-      event.action.actionType,
-    );
 
     const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams({
       eventData: eventDataResult.value,
       eventAction: event.action,
-      paymentMethodSupportedFlow: paymentMethodSupportedFlow,
+      selectedPaymentMethod,
     });
 
     if (stripePaymentIntentParamsResult.isErr()) {
@@ -219,7 +220,7 @@ export class TransactionInitializeSessionUseCase {
     if (createPaymentIntentResult.isErr()) {
       return this.handleCreatePaymentIntentError(
         createPaymentIntentResult.error,
-        paymentMethodSupportedFlow,
+        selectedPaymentMethod.getSupportedTransactionFlow(event.action.actionType),
         event.action.amount,
       );
     }
@@ -240,6 +241,10 @@ export class TransactionInitializeSessionUseCase {
     }
 
     const [saleorMoney, stripePaymentIntentId, stripeClientSecret] = mappedResponseResult.value;
+
+    const paymentMethodSupportedFlow = selectedPaymentMethod.getSupportedTransactionFlow(
+      event.action.actionType,
+    );
 
     if (paymentMethodSupportedFlow === "AUTHORIZATION") {
       return ok(
