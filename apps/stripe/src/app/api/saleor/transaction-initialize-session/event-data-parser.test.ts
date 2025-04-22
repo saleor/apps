@@ -5,7 +5,7 @@ import {
   parseTransactionInitializeSessionEventData,
   TransactionInitializeSessionEventData,
   UnsupportedPaymentMethodError,
-} from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
+} from "./event-data-parser";
 
 describe("parseTransactionInitializeSessionEventData", () => {
   it("should parse valid data coming from storefront", () => {
