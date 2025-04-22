@@ -1,0 +1,23 @@
+fragment TransactionProcessSessionEvent on TransactionProcessSession {
+  transaction {
+    pspReference
+  }
+  sourceObject {
+    ... on Checkout {
+      channel {
+        ...Channel
+      }
+    }
+    ... on Order {
+      channel {
+        ...Channel
+      }
+    }
+  }
+}
+
+subscription TransactionProcessSession {
+  event {
+    ...TransactionProcessSessionEvent
+  }
+}

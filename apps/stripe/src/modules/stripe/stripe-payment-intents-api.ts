@@ -3,6 +3,7 @@ import Stripe from "stripe";
 
 import { StripeClient } from "@/modules/stripe/stripe-client";
 
+import { StripePaymentIntentId } from "./stripe-payment-intent-id";
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 import { IStripePaymentIntentsApi } from "./types";
 
@@ -24,6 +25,13 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
       this.stripeApiWrapper.paymentIntents.create(args.params),
+      (error) => error,
+    );
+  }
+
+  async getPaymentIntent(args: { id: StripePaymentIntentId }) {
+    return ResultAsync.fromPromise(
+      this.stripeApiWrapper.paymentIntents.retrieve(args.id),
       (error) => error,
     );
   }

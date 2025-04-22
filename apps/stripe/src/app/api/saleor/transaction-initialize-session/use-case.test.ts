@@ -51,7 +51,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -109,7 +108,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       const responsePayload = await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -136,7 +134,6 @@ describe("TransactionInitializeSessionUseCase", () => {
     });
 
     const responsePayload = await uc.execute({
-      channelId: mockedSaleorChannelId,
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionInitializeSessionEvent(),
@@ -221,7 +218,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       const responsePayload = await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: eventWithNotSupportedPaymentMethod,
@@ -265,7 +261,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       const responsePayload = await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: eventWithAdditionalFieldinData,
@@ -298,7 +293,6 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     await expect(
       uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -327,7 +321,6 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     await expect(
       uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -357,7 +350,6 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     await expect(
       uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -387,7 +379,6 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     await expect(
       uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
