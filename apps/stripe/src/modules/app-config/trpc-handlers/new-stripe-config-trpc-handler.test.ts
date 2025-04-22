@@ -8,17 +8,23 @@ import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
+import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { BaseError } from "@/lib/errors";
 import { NewStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-stripe-config-trpc-handler";
 import { StripeClient } from "@/modules/stripe/stripe-client";
+import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { router } from "@/modules/trpc/trpc-server";
+
+const webhookCreator = new StripeWebhookManager();
 
 /**
  * TODO: Probably create some test abstraction to bootstrap trpc handler for testing
  */
 const getTestCaller = () => {
-  const instance = new NewStripeConfigTrpcHandler();
+  const instance = new NewStripeConfigTrpcHandler({
+    webhookManager: webhookCreator,
+  });
 
   // @ts-expect-error - context doesnt match but its applied in test
   instance.baseProcedure = TEST_Procedure;
@@ -29,6 +35,7 @@ const getTestCaller = () => {
 
   return {
     mockedAppConfigRepo,
+    webhookCreator,
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
@@ -53,6 +60,12 @@ describe("NewStripeConfigTrpcHandler", () => {
         nativeClient: stripe,
       };
     });
+    vi.spyOn(webhookCreator, "createWebhook").mockImplementation(async () =>
+      ok({
+        id: "whid_1234",
+        secret: mockStripeWebhookSecret,
+      }),
+    );
   });
 
   it("Returns error 500 if repository fails to save config", async () => {
