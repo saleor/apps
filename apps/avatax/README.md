@@ -168,3 +168,5 @@ Visit [AvaTax App documentation](https://docs.saleor.io/docs/3.x/developer/app-s
 ## OTEL
 
 Visit `@saleor/apps-otel` [README](../../packages/otel/README.md) to learn how to run app with OTEL locally.
+
+## Change
