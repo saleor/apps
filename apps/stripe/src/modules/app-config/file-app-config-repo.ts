@@ -35,6 +35,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
         restrictedKey: z.string(),
         publishableKey: z.string(),
         webhookSecret: z.string(),
+        webhookId: z.string(),
       }),
     ),
     channelMapping: z.record(z.string(), z.string()),
@@ -47,6 +48,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
       restrictedKey: config.restrictedKey,
       publishableKey: config.publishableKey,
       webhookSecret: config.webhookSecret,
+      webhookId: config.webhookId,
     };
   }
 
@@ -175,6 +177,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
         restrictedKey: restrictedKey,
         publishableKey: publishableKey,
         webhookSecret: whSecret,
+        webhookId: resolvedConfig.webhookId,
       })._unsafeUnwrap();
 
       return ok(stripeConfig);
@@ -226,6 +229,7 @@ export class FileAppConfigRepo implements AppConfigRepo {
               publishableKey: createStripePublishableKey(configJson.publishableKey)._unsafeUnwrap(),
               restrictedKey: createStripeRestrictedKey(configJson.restrictedKey)._unsafeUnwrap(),
               webhookSecret: createStripeWebhookSecret(configJson.webhookSecret)._unsafeUnwrap(),
+              webhookId: configJson.webhookId,
             })._unsafeUnwrap();
 
             return acc;

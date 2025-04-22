@@ -32,6 +32,7 @@ const getTestCaller = () => {
       token: mockedAppToken,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
+      appUrl: "https://localhost:3000",
     }),
   };
 };
