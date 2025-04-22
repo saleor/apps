@@ -73,7 +73,7 @@ export const fulfillmentCreatedWebhook =
   });
 
 const handler: NextJsWebhookHandler<FulfillmentCreatedWebhookPayloadFragment> = async (
-  req,
+  _req,
   res,
   context,
 ) => {
