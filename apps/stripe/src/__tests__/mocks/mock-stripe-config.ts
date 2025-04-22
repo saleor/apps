@@ -10,4 +10,5 @@ export const mockedStripeConfig = StripeConfig.create({
   publishableKey: mockedStripePublishableKey,
   restrictedKey: mockedStripeRestrictedKey,
   webhookSecret: mockStripeWebhookSecret,
+  webhookId: "wh_123456789",
 })._unsafeUnwrap();

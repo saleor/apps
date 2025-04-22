@@ -11,6 +11,7 @@ export class StripeConfig {
   readonly restrictedKey: StripeRestrictedKey;
   readonly publishableKey: StripePublishableKey;
   readonly webhookSecret: StripeWebhookSecret;
+  readonly webhookId: string;
 
   static ValidationError = BaseError.subclass("ValidationError", {
     props: {
@@ -24,18 +25,21 @@ export class StripeConfig {
     restrictedKey: StripeRestrictedKey;
     publishableKey: StripePublishableKey;
     webhookSecret: StripeWebhookSecret;
+    webhookId: string;
   }) {
     this.name = props.name;
     this.id = props.id;
     this.restrictedKey = props.restrictedKey;
     this.publishableKey = props.publishableKey;
     this.webhookSecret = props.webhookSecret;
+    this.webhookId = props.webhookId;
   }
 
   static create(args: {
     name: string;
     id: string;
     webhookSecret: StripeWebhookSecret;
+    webhookId: string;
     restrictedKey: StripeRestrictedKey;
     publishableKey: StripePublishableKey;
   }): Result<StripeConfig, InstanceType<typeof StripeConfig.ValidationError>> {
@@ -72,6 +76,7 @@ export class StripeConfig {
         restrictedKey: args.restrictedKey,
         publishableKey: args.publishableKey,
         webhookSecret: args.webhookSecret,
+        webhookId: args.webhookId,
       }),
     );
   }

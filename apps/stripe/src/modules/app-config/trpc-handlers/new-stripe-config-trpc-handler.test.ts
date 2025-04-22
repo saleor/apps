@@ -1,4 +1,5 @@
 import { err, ok } from "neverthrow";
+import Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
@@ -7,16 +8,23 @@ import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
+import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { BaseError } from "@/lib/errors";
 import { NewStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-stripe-config-trpc-handler";
+import { StripeClient } from "@/modules/stripe/stripe-client";
+import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { router } from "@/modules/trpc/trpc-server";
+
+const webhookCreator = new StripeWebhookManager();
 
 /**
  * TODO: Probably create some test abstraction to bootstrap trpc handler for testing
  */
 const getTestCaller = () => {
-  const instance = new NewStripeConfigTrpcHandler();
+  const instance = new NewStripeConfigTrpcHandler({
+    webhookManager: webhookCreator,
+  });
 
   // @ts-expect-error - context doesnt match but its applied in test
   instance.baseProcedure = TEST_Procedure;
@@ -27,19 +35,38 @@ const getTestCaller = () => {
 
   return {
     mockedAppConfigRepo,
+    webhookCreator,
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       token: mockedAppToken,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
+      appUrl: "https://localhost:3000",
     }),
   };
 };
 
 describe("NewStripeConfigTrpcHandler", () => {
+  const stripe = new Stripe("key");
+
   beforeEach(() => {
     vi.resetAllMocks();
+
+    vi.spyOn(stripe.paymentIntents, "list").mockImplementation(() => {
+      return Promise.resolve({}) as Stripe.ApiListPromise<Stripe.PaymentIntent>;
+    });
+    vi.spyOn(StripeClient, "createFromRestrictedKey").mockImplementation(() => {
+      return {
+        nativeClient: stripe,
+      };
+    });
+    vi.spyOn(webhookCreator, "createWebhook").mockImplementation(async () =>
+      ok({
+        id: "whid_1234",
+        secret: mockStripeWebhookSecret,
+      }),
+    );
   });
 
   it("Returns error 500 if repository fails to save config", async () => {
@@ -109,8 +136,7 @@ describe("NewStripeConfigTrpcHandler", () => {
         config: {
           id: expect.any(String),
         },
-      },
-      `
+      }, `
       {
         "appId": "saleor-app-id",
         "config": {
@@ -118,11 +144,34 @@ describe("NewStripeConfigTrpcHandler", () => {
           "name": "Test config",
           "publishableKey": "pk_live_1",
           "restrictedKey": "rk_live_AAAAABBBBCCCCCEEEEEEEFFFFFGGGGG",
-          "webhookSecret": "whsec_TODO",
+          "webhookId": "whid_1234",
+          "webhookSecret": "whsec_XYZ",
         },
         "saleorApiUrl": "https://foo.bar.saleor.cloud/graphql/",
       }
-    `,
-    );
+    `);
+  });
+
+  describe("Stripe Auth", () => {
+    it("Calls auth service and returns error if Stripe RK is invalid", () => {
+      // @ts-expect-error - mocking stripe client
+      vi.spyOn(stripe.paymentIntents, "list").mockImplementationOnce(async () => {
+        throw new Error("Invalid key");
+      });
+
+      const { caller } = getTestCaller();
+
+      return expect(() =>
+        caller.testProcedure({
+          name: "Test config",
+          publishableKey: mockedStripePublishableKey,
+          restrictedKey: mockedStripeRestrictedKey,
+        }),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `[TRPCError: Failed to create Stripe configuration. Restricted key is invalid]`,
+      );
+
+      expect(stripe.paymentIntents.list).toHaveBeenCalledOnce();
+    });
   });
 });
