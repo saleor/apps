@@ -136,8 +136,7 @@ describe("NewStripeConfigTrpcHandler", () => {
         config: {
           id: expect.any(String),
         },
-      },
-      `
+      }, `
       {
         "appId": "saleor-app-id",
         "config": {
@@ -145,12 +144,12 @@ describe("NewStripeConfigTrpcHandler", () => {
           "name": "Test config",
           "publishableKey": "pk_live_1",
           "restrictedKey": "rk_live_AAAAABBBBCCCCCEEEEEEEFFFFFGGGGG",
-          "webhookSecret": "whsec_TODO",
+          "webhookId": "whid_1234",
+          "webhookSecret": "whsec_XYZ",
         },
         "saleorApiUrl": "https://foo.bar.saleor.cloud/graphql/",
       }
-    `,
-    );
+    `);
   });
 
   describe("Stripe Auth", () => {
