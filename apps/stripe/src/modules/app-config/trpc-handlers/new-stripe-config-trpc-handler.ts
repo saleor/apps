@@ -60,8 +60,11 @@ export class NewStripeConfigTrpcHandler {
         id: configId,
         /**
          * Is passed later after webhook is created
+         * If we find this not elegant, we need to create "Partial" config model + final config model
+         * Or move validation to separate logic
          */
         webhookSecret: createStripeWebhookSecret("whsec_TODO")._unsafeUnwrap(),
+        webhookId: "wh_TODO",
       });
 
       // TODO: Handle exact reasons, give good messages
@@ -108,9 +111,9 @@ export class NewStripeConfigTrpcHandler {
         });
       }
 
-      const { secret, id } = webhookCreationResult.value;
+      const { secret: rawStripeWebhookSecret, id: stripeWebhookId } = webhookCreationResult.value;
 
-      const stripeWebhookSecretVo = createStripeWebhookSecret(secret);
+      const stripeWebhookSecretVo = createStripeWebhookSecret(rawStripeWebhookSecret);
 
       if (stripeWebhookSecretVo.isErr()) {
         captureException(
@@ -131,7 +134,7 @@ export class NewStripeConfigTrpcHandler {
         publishableKey: configValidation.value.publishableKey,
         id: configId,
         webhookSecret: stripeWebhookSecretVo.value,
-        // todo add webhook id to config
+        webhookId: stripeWebhookId,
       });
 
       if (configToSave.isErr()) {
