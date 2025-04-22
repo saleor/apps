@@ -59,6 +59,12 @@ export class TransactionRecorderFile implements TransactionRecorder {
 
       const transaction = currentFile[id];
 
+      if (!transaction) {
+        return err(
+          new TransactionRecorderError.TransactionMissingError("Transaction not found in Database"),
+        );
+      }
+
       return ok(
         new RecordedTransaction(
           transaction.saleorTransactionId,

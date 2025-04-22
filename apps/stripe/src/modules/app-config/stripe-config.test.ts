@@ -22,6 +22,7 @@ describe("StripeConfig", () => {
       publishableKey: mockedStripePublishableKey,
       restrictedKey: mockedStripeRestrictedKey,
       webhookSecret: mockStripeWebhookSecret,
+      webhookId: mockStripeWebhookSecret,
     });
 
     expect(result.isOk()).toBe(true);
@@ -38,6 +39,7 @@ describe("StripeConfig", () => {
       publishableKey: mockedStripePublishableKey,
       restrictedKey: mockedStripeRestrictedKey,
       webhookSecret: mockStripeWebhookSecret,
+      webhookId: mockStripeWebhookSecret,
     });
 
     expect(result.isErr()).toBe(true);
@@ -52,6 +54,7 @@ describe("StripeConfig", () => {
       publishableKey: mockedStripePublishableKey,
       restrictedKey: mockedStripeRestrictedKey,
       webhookSecret: mockStripeWebhookSecret,
+      webhookId: mockStripeWebhookSecret,
     });
 
     expect(result.isErr()).toBe(true);
@@ -66,6 +69,7 @@ describe("StripeConfig", () => {
       publishableKey: mockedStripePublishableKeyTest,
       restrictedKey: mockedStripeRestrictedKey,
       webhookSecret: mockStripeWebhookSecret,
+      webhookId: mockStripeWebhookSecret,
     })._unsafeUnwrapErr();
 
     const instance2 = StripeConfig.create({
@@ -74,11 +78,16 @@ describe("StripeConfig", () => {
       publishableKey: mockedStripePublishableKey,
       restrictedKey: mockedStripeRestrictedKeyTest,
       webhookSecret: mockStripeWebhookSecret,
+      webhookId: mockStripeWebhookSecret,
     })._unsafeUnwrapErr();
 
-    expect(instance1).toMatchInlineSnapshot(`[ValidationError: Publishable key and restricted key must be of the same environment - TEST or LIVE]`);
+    expect(instance1).toMatchInlineSnapshot(
+      `[ValidationError: Publishable key and restricted key must be of the same environment - TEST or LIVE]`,
+    );
 
-    expect(instance2).toMatchInlineSnapshot(`[ValidationError: Publishable key and restricted key must be of the same environment - TEST or LIVE]`);
+    expect(instance2).toMatchInlineSnapshot(
+      `[ValidationError: Publishable key and restricted key must be of the same environment - TEST or LIVE]`,
+    );
   });
 });
 

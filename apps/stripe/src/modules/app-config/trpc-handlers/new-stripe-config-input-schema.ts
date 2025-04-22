@@ -38,3 +38,5 @@ export const newStripeConfigInputSchema = z.object({
     );
   }),
 });
+
+export type NewStripeConfigInput = z.infer<typeof newStripeConfigInputSchema>;

@@ -13,6 +13,7 @@ export const createTrpcContextAppRouter = async ({ req }: FetchCreateContextFnOp
     appId: undefined as undefined | string,
     apiClient: null as Client | null,
     configRepo: appConfigPersistence as AppConfigRepo,
+    appUrl: req.headers.get("origin"),
   };
 };
 
