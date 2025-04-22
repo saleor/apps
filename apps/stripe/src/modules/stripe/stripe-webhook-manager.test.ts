@@ -134,16 +134,8 @@ describe("StripeWebhookManager", () => {
         {
           "description": "Created by Saleor Stripe app, config name: config name",
           "enabled_events": [
-            "payment_intent.created",
-            "payment_intent.canceled",
             "payment_intent.succeeded",
-            "payment_intent.processing",
-            "payment_intent.payment_failed",
-            "payment_intent.requires_action",
-            "payment_intent.partially_funded",
             "payment_intent.amount_capturable_updated",
-            "charge.refund.updated",
-            "charge.refunded",
           ],
           "metadata": {
             "saleorAppConfigurationId": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
