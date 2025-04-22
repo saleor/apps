@@ -10,12 +10,6 @@ export interface IStripePaymentIntentsApiFactory {
   create(args: { key: StripeRestrictedKey }): IStripePaymentIntentsApi;
 }
 
-export const CreatePaymentIntentError = BaseError.subclass("CreatePaymentIntentError", {
-  props: {
-    _internalName: "CreatePaymentIntentError" as const,
-  },
-});
-
 export interface IStripePaymentIntentsApi {
   createPaymentIntent(args: {
     params: Stripe.PaymentIntentCreateParams;
