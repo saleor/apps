@@ -29,6 +29,10 @@ import {
   StripePaymentIntentValidationError,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import {
+  RecordedTransaction,
+  TransactionRecorder,
+} from "@/modules/transactions-recording/transaction-recorder";
 
 import {
   parseTransactionInitializeSessionEventData,
@@ -50,13 +54,16 @@ export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
+  private transactionRecorder: TransactionRecorder;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
+    transactionRecorder: TransactionRecorder;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
+    this.transactionRecorder = deps.transactionRecorder;
   }
 
   private prepareStripeCreatePaymentIntentParams(args: {
@@ -245,6 +252,22 @@ export class TransactionInitializeSessionUseCase {
     const paymentMethodSupportedFlow = selectedPaymentMethod.getSupportedTransactionFlow(
       event.action.actionType,
     );
+
+    const recordResult = await this.transactionRecorder.recordTransaction(
+      new RecordedTransaction(
+        event.transaction.id,
+        stripePaymentIntentId,
+        paymentMethodSupportedFlow,
+      ),
+    );
+
+    if (recordResult.isErr()) {
+      this.logger.error("Failed to record transaction", {
+        error: recordResult.error,
+      });
+
+      return err(new BrokenAppResponse());
+    }
 
     if (paymentMethodSupportedFlow === "AUTHORIZATION") {
       return ok(

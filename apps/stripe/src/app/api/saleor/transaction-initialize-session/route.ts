@@ -10,6 +10,7 @@ import {
   UnhandledErrorResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
+import { transactionRecorder } from "@/modules/transactions-recording/transaction-recorder-impl";
 
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
@@ -17,6 +18,8 @@ import { transactionInitializeSessionWebhookDefinition } from "./webhook-definit
 const useCase = new TransactionInitializeSessionUseCase({
   appConfigRepo: appConfigPersistence,
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
+  // TODO: change it to use DynamoDB
+  transactionRecorder: transactionRecorder,
 });
 
 const handler = transactionInitializeSessionWebhookDefinition.createHandler(async (_req, ctx) => {

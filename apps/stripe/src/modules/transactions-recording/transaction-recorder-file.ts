@@ -36,7 +36,7 @@ export class TransactionRecorderFile implements TransactionRecorder {
   }
 
   private writeFile(transactions: InnerStructure) {
-    return fs.writeFileSync(JSON.stringify(transactions), "utf-8");
+    return fs.writeFileSync(this.filePath, JSON.stringify(transactions), "utf-8");
   }
 
   async recordTransaction(
