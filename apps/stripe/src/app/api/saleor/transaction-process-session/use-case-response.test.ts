@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripeInvalidRequestError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 
 import { TransactionProcessSessionUseCaseResponses } from "./use-case-response";
 
@@ -15,7 +16,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
           currency: "usd",
         })._unsafeUnwrap(),
         stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
-        stripeStatus: "requires_action",
+        stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -37,7 +38,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
           currency: "usd",
         })._unsafeUnwrap(),
         stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
-        stripeStatus: "requires_confirmation",
+        stripeStatus: createStripePaymentIntentStatus("requires_confirmation")._unsafeUnwrap(),
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -59,7 +60,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
           currency: "usd",
         })._unsafeUnwrap(),
         stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
-        stripeStatus: "requires_payment_method",
+        stripeStatus: createStripePaymentIntentStatus("requires_payment_method")._unsafeUnwrap(),
       });
       const fetchReponse = successResponse.getResponse();
 

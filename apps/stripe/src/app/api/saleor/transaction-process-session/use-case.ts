@@ -14,9 +14,9 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent.status";
 import { mapStripeGetPaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
 import {
