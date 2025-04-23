@@ -2,11 +2,7 @@ import { err, ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import {
-  mockedAppToken,
-  mockedConfigurationId,
-  mockedSaleorAppId,
-} from "@/__tests__/mocks/constants";
+import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
