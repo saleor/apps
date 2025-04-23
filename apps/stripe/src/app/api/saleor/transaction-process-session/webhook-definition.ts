@@ -6,8 +6,8 @@ import { saleorApp } from "@/lib/saleor-app";
 export const transactionProcessSessionWebhookDefinition =
   new SaleorSyncWebhook<TransactionProcessSession>({
     apl: saleorApp.apl,
-    event: "TRANSACTION_INITIALIZE_SESSION",
-    name: "Stripe Transaction Initialize Session",
+    event: "TRANSACTION_PROCESS_SESSION",
+    name: "Stripe Transaction Process Session",
     isActive: true, // TODO: disable in production
     query: TransactionProcessSessionDocument,
     webhookPath: "api/saleor/transaction-process-session",

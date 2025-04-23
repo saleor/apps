@@ -144,7 +144,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - there is a problem with the request to Stripe API",
+          "message": "Payment intent error - there is a problem with the request to Stripe API",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -227,7 +227,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - there is a problem with the request to Stripe API",
+          "message": "Payment intent error - there is a problem with the request to Stripe API",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);

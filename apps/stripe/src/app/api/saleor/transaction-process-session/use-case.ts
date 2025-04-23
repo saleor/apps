@@ -1,6 +1,8 @@
 import { err, ok, Result } from "neverthrow";
 
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
+import { assertUnreachable } from "@/lib/assert-unreachable";
+import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -10,6 +12,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
+import { mapStripeGetPaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
@@ -27,6 +30,12 @@ export class TransactionProcessSessionUseCase {
   private logger = createLogger("TransactionProcessSessionUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
+
+  static UseCaseError = BaseError.subclass("UseCaseError", {
+    props: {
+      _internalName: "TransactionProcessSessionUseCase.UseCaseError" as const,
+    },
+  });
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
@@ -78,7 +87,6 @@ export class TransactionProcessSessionUseCase {
         error: paymentIntentIdResult.error,
       });
 
-      // TODO: return failure
       return err(new MalformedRequestResponse());
     }
 
@@ -91,8 +99,16 @@ export class TransactionProcessSessionUseCase {
         error: getPaymentIntentResult.error,
       });
 
-      // TODO: return failure
-      return err(new MalformedRequestResponse());
+      const mappedError = mapStripeGetPaymentIntentErrorToApiError(getPaymentIntentResult.error);
+
+      // TODO: add support for AUTHORIZATION
+      return ok(
+        new TransactionProcessSessionUseCaseResponses.ChargeFailure({
+          error: mappedError,
+          saleorEventAmount: event.action.amount,
+          stripePaymentIntentId: paymentIntentIdResult.value,
+        }),
+      );
     }
 
     const saleorMoneyResult = SaleorMoney.createFromStripe({
@@ -105,17 +121,53 @@ export class TransactionProcessSessionUseCase {
         error: saleorMoneyResult.error,
       });
 
-      // TODO: return failure
-      return err(new MalformedRequestResponse());
+      return err(new BrokenAppResponse());
     }
 
-    // TODO: map statuses from Stripe to Saleor
-
-    return ok(
-      new TransactionProcessSessionUseCaseResponses.ChargeSuccess({
-        saleorMoney: saleorMoneyResult.value,
-        stripePaymentIntentId: paymentIntentIdResult.value,
-      }),
-    );
+    switch (getPaymentIntentResult.value.status) {
+      case "succeeded":
+        return ok(
+          new TransactionProcessSessionUseCaseResponses.ChargeSuccess({
+            saleorMoney: saleorMoneyResult.value,
+            stripePaymentIntentId: paymentIntentIdResult.value,
+          }),
+        );
+      case "requires_payment_method":
+      case "requires_confirmation":
+      case "requires_action":
+        // TODO: add support for AUTHORIZATION
+        return ok(
+          new TransactionProcessSessionUseCaseResponses.ChargeActionRequired({
+            saleorMoney: saleorMoneyResult.value,
+            stripePaymentIntentId: paymentIntentIdResult.value,
+            stripeStatus: getPaymentIntentResult.value.status,
+          }),
+        );
+      case "processing":
+        // TODO: add support for AUTHORIZATION
+        return ok(
+          new TransactionProcessSessionUseCaseResponses.ChargeRequest({
+            saleorMoney: saleorMoneyResult.value,
+            stripePaymentIntentId: paymentIntentIdResult.value,
+          }),
+        );
+      case "canceled":
+        // TODO: add support for AUTHORIZATION
+        return ok(
+          new TransactionProcessSessionUseCaseResponses.ChargeFailureForCancelledPaymentIntent({
+            saleorMoney: saleorMoneyResult.value,
+            stripePaymentIntentId: paymentIntentIdResult.value,
+          }),
+        );
+      case "requires_capture":
+        return ok(
+          new TransactionProcessSessionUseCaseResponses.AuthorizationSuccess({
+            saleorMoney: saleorMoneyResult.value,
+            stripePaymentIntentId: paymentIntentIdResult.value,
+          }),
+        );
+      default:
+        assertUnreachable(getPaymentIntentResult.value.status);
+    }
   }
 }

@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
+import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initialize-session-event";
 import {
@@ -42,6 +42,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent,
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -99,6 +100,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent,
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -125,6 +127,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
+        getPaymentIntent: vi.fn(),
       }),
     };
 
@@ -164,6 +167,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent,
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -175,7 +179,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
 
       const responsePayload = await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -200,6 +203,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -242,6 +246,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -283,6 +288,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
+        getPaymentIntent: vi.fn(),
       }),
     };
 
@@ -311,6 +317,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
+        getPaymentIntent: vi.fn(),
       }),
     };
 
@@ -340,6 +347,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
+        getPaymentIntent: vi.fn(),
       }),
     };
 
@@ -369,6 +377,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
+        getPaymentIntent: vi.fn(),
       }),
     };
 

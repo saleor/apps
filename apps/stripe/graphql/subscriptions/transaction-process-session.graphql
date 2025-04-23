@@ -2,6 +2,10 @@ fragment TransactionProcessSessionEvent on TransactionProcessSession {
   transaction {
     pspReference
   }
+  action {
+    amount
+    actionType
+  }
   sourceObject {
     ... on Checkout {
       channel {
