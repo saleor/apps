@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import { ok, Result } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
@@ -11,7 +11,7 @@ import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-
 import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
-import { AppConfigRepo, GetStripeConfigAccessPattern } from "./app-config-repo";
+import { AppConfigRepo, BaseAccessPattern, GetStripeConfigAccessPattern } from "./app-config-repo";
 
 export type FileAppConfigRepoSchema = z.infer<typeof FileAppConfigRepo.FileConfigSchema>;
 
@@ -238,5 +238,25 @@ export class FileAppConfigRepo implements AppConfigRepo {
         ),
       ),
     );
+  }
+
+  async updateMapping(
+    _access: BaseAccessPattern,
+    data: {
+      configId: string;
+      channelId: string;
+    },
+  ): Promise<Result<void | null, InstanceType<typeof BaseError>>> {
+    try {
+      const existingJson = this.readExistingAppConfigFromFileAsJson();
+
+      existingJson.channelMapping[data.channelId] = data.configId;
+
+      fs.writeFileSync(this.filePath, JSON.stringify(existingJson, null, 2), "utf-8");
+
+      return ok(null);
+    } catch (e) {
+      return err(new BaseError("Failed to update mapping", { cause: e }));
+    }
   }
 }
