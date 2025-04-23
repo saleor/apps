@@ -34,7 +34,7 @@ export class PaymentIntentSucceededHandler {
     const capturedAmount = intentObject.amount_received;
     const eventDate = createDateFromStripeEvent(event);
 
-    const isAuthorizationFlow = recordedTransaction.transactionFlow === "AUTHORIZATION";
+    const isAuthorizationFlow = recordedTransaction.saleorTransactionFlow === "AUTHORIZATION";
 
     const paramsResult = Result.combine([
       SaleorMoney.createFromStripe({
@@ -50,7 +50,7 @@ export class PaymentIntentSucceededHandler {
 
     const [amount, paymentIntentId] = paramsResult.value;
 
-    switch (recordedTransaction.transactionFlow) {
+    switch (recordedTransaction.saleorTransactionFlow) {
       case "AUTHORIZATION": {
         return ok(
           new TransactionAuthorizationSuccess({

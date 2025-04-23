@@ -160,7 +160,13 @@ describe("StripeWebhookUseCase", () => {
         eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
         mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction(mockedSaleorTransactionId, stripePiId, "CHARGE"),
+          [stripePiId]: new RecordedTransaction({
+            saleorTransactionId: mockedSaleorTransactionId,
+            stripePaymentIntentId: stripePiId,
+            saleorTransactionFlow: "CHARGE",
+            resolvedTransactionFlow: "CHARGE",
+            selectedPaymentMethod: "card",
+          }),
         };
 
         mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
@@ -216,11 +222,13 @@ describe("StripeWebhookUseCase", () => {
         eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
         mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction(
-            mockedSaleorTransactionId,
-            stripePiId,
-            "AUTHORIZATION",
-          ),
+          [stripePiId]: new RecordedTransaction({
+            saleorTransactionId: mockedSaleorTransactionId,
+            stripePaymentIntentId: stripePiId,
+            saleorTransactionFlow: "AUTHORIZATION",
+            resolvedTransactionFlow: "AUTHORIZATION",
+            selectedPaymentMethod: "card",
+          }),
         };
 
         mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {

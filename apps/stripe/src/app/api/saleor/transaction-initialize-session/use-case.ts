@@ -254,11 +254,13 @@ export class TransactionInitializeSessionUseCase {
     );
 
     const recordResult = await this.transactionRecorder.recordTransaction(
-      new RecordedTransaction(
-        event.transaction.id,
+      new RecordedTransaction({
+        saleorTransactionId: event.transaction.id,
         stripePaymentIntentId,
-        paymentMethodSupportedFlow,
-      ),
+        saleorTransactionFlow: event.action.actionType,
+        resolvedTransactionFlow: paymentMethodSupportedFlow,
+        selectedPaymentMethod: selectedPaymentMethod.type,
+      }),
     );
 
     if (recordResult.isErr()) {
