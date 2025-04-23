@@ -11,4 +11,5 @@ export const mockedAppConfigRepo: AppConfigRepo = {
   saveStripeConfig: vi.fn(),
   updateStripeConfig: vi.fn(),
   getRootConfig: vi.fn(),
+  updateMapping: vi.fn(),
 };

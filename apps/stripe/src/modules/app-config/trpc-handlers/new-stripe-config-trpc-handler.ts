@@ -13,11 +13,6 @@ import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
-/**
- * todo
- * - test
- * - webhook should be created here
- */
 export class NewStripeConfigTrpcHandler {
   baseProcedure = protectedClientProcedure;
   private readonly webhookManager = new StripeWebhookManager();
