@@ -186,4 +186,36 @@ describe("TransactionProcessSessionUseCase", () => {
       }),
     ).resolves.toStrictEqual(err(new BrokenAppResponse()));
   });
+
+  it("Returns 'BrokenAppResponse' when Stripe Payment Intent status is not supported", async () => {
+    const saleorEvent = getMockedTransactionProcessSessionEvent();
+    const getPaymentIntent = vi.fn(async () =>
+      ok({
+        amount: 100,
+        currency: "usd",
+        client_secret: "secret-value",
+        id: mockedStripePaymentIntentId.toString(), // stripe doesn't expect to get branded type here
+        status: "broken_status",
+      } as unknown as Stripe.PaymentIntent),
+    );
+    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
+      create: () => ({
+        createPaymentIntent: vi.fn(),
+        getPaymentIntent,
+      }),
+    };
+
+    const uc = new TransactionProcessSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+    });
+
+    await expect(
+      uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+  });
 });

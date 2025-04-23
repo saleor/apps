@@ -4,7 +4,6 @@ import {
 } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
-import { assertUnreachable } from "@/lib/assert-unreachable";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
@@ -14,6 +13,7 @@ import {
   StripeGetPaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent.status";
 
 type ResponseResult = SyncWebhookResponsesMap["TRANSACTION_PROCESS_SESSION"]["result"];
 
@@ -48,13 +48,13 @@ class AuthorizationSuccess extends ChargeSuccess {
 class ChargeActionRequired extends SuccessWebhookResponse {
   readonly result: ResponseResult = "CHARGE_ACTION_REQUIRED";
   readonly saleorMoney: SaleorMoney;
-  readonly stripeStatus: "requires_action" | "requires_confirmation" | "requires_payment_method";
+  readonly stripeStatus: StripePaymentIntentStatus;
   readonly stripePaymentIntentId: StripePaymentIntentId;
 
   constructor(args: {
     saleorMoney: SaleorMoney;
     stripePaymentIntentId: StripePaymentIntentId;
-    stripeStatus: "requires_action" | "requires_confirmation" | "requires_payment_method";
+    stripeStatus: StripePaymentIntentStatus;
   }) {
     super();
     this.stripeStatus = args.stripeStatus;
@@ -70,8 +70,6 @@ class ChargeActionRequired extends SuccessWebhookResponse {
         return "Payment intent requires confirmation";
       case "requires_payment_method":
         return "Payment intent requires payment method";
-      default:
-        assertUnreachable(this.stripeStatus);
     }
   }
 

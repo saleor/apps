@@ -1,4 +1,6 @@
+import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
+import Stripe from "stripe";
 
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { assertUnreachable } from "@/lib/assert-unreachable";
@@ -14,6 +16,7 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import { mapStripeGetPaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent.status";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
 import {
@@ -43,6 +46,18 @@ export class TransactionProcessSessionUseCase {
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
+  }
+
+  private mapStripeGetPaymentIntentToWebhookResponseParams(
+    stripePaymentIntentResponse: Stripe.PaymentIntent,
+  ) {
+    return Result.combine([
+      SaleorMoney.createFromStripe({
+        amount: stripePaymentIntentResponse.amount,
+        currency: stripePaymentIntentResponse.currency,
+      }),
+      createStripePaymentIntentStatus(stripePaymentIntentResponse.status),
+    ]);
   }
 
   async execute(args: {
@@ -111,24 +126,26 @@ export class TransactionProcessSessionUseCase {
       );
     }
 
-    const saleorMoneyResult = SaleorMoney.createFromStripe({
-      amount: getPaymentIntentResult.value.amount,
-      currency: getPaymentIntentResult.value.currency,
-    });
+    const mappedResponseResult = this.mapStripeGetPaymentIntentToWebhookResponseParams(
+      getPaymentIntentResult.value,
+    );
 
-    if (saleorMoneyResult.isErr()) {
-      this.logger.error("Failed to create saleor money", {
-        error: saleorMoneyResult.error,
+    if (mappedResponseResult.isErr()) {
+      captureException(mappedResponseResult.error);
+      this.logger.error("Failed to map Stripe Payment Intent to webhook response", {
+        error: mappedResponseResult.error,
       });
 
       return err(new BrokenAppResponse());
     }
 
-    switch (getPaymentIntentResult.value.status) {
+    const [saleorMoney, stripePaymentIntentStatus] = mappedResponseResult.value;
+
+    switch (stripePaymentIntentStatus) {
       case "succeeded":
         return ok(
           new TransactionProcessSessionUseCaseResponses.ChargeSuccess({
-            saleorMoney: saleorMoneyResult.value,
+            saleorMoney,
             stripePaymentIntentId: paymentIntentIdResult.value,
           }),
         );
@@ -138,16 +155,16 @@ export class TransactionProcessSessionUseCase {
         // TODO: add support for AUTHORIZATION
         return ok(
           new TransactionProcessSessionUseCaseResponses.ChargeActionRequired({
-            saleorMoney: saleorMoneyResult.value,
+            saleorMoney,
             stripePaymentIntentId: paymentIntentIdResult.value,
-            stripeStatus: getPaymentIntentResult.value.status,
+            stripeStatus: stripePaymentIntentStatus,
           }),
         );
       case "processing":
         // TODO: add support for AUTHORIZATION
         return ok(
           new TransactionProcessSessionUseCaseResponses.ChargeRequest({
-            saleorMoney: saleorMoneyResult.value,
+            saleorMoney,
             stripePaymentIntentId: paymentIntentIdResult.value,
           }),
         );
@@ -155,19 +172,19 @@ export class TransactionProcessSessionUseCase {
         // TODO: add support for AUTHORIZATION
         return ok(
           new TransactionProcessSessionUseCaseResponses.ChargeFailureForCancelledPaymentIntent({
-            saleorMoney: saleorMoneyResult.value,
+            saleorMoney,
             stripePaymentIntentId: paymentIntentIdResult.value,
           }),
         );
       case "requires_capture":
         return ok(
           new TransactionProcessSessionUseCaseResponses.AuthorizationSuccess({
-            saleorMoney: saleorMoneyResult.value,
+            saleorMoney,
             stripePaymentIntentId: paymentIntentIdResult.value,
           }),
         );
       default:
-        assertUnreachable(getPaymentIntentResult.value.status);
+        assertUnreachable(stripePaymentIntentStatus);
     }
   }
 }
