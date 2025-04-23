@@ -8,27 +8,49 @@ import { StripeFrontendConfigSerializedFields } from "@/modules/app-config/strip
 type Props = {
   channels: ChannelFragment[];
   configs: StripeFrontendConfigSerializedFields[];
+  mapping: Record<string, StripeFrontendConfigSerializedFields>;
+  onMappingChange(data: { channelId: string; configId: string }): void;
+  isLoading: boolean;
 };
 
-export const ChannelsConfigMapping = ({ channels, configs }: Props) => {
+const emptyValue = { value: "", label: "Not assigned" };
+
+export const ChannelsConfigMapping = ({
+  channels,
+  configs,
+  mapping,
+  onMappingChange,
+  isLoading,
+}: Props) => {
   return (
     <Layout.AppSectionCard>
       <Box>
         {channels.map((channel) => {
+          const isNotSelected = mapping[channel.id] === undefined;
+
+          const options = configs.map((item) => ({
+            value: item.id,
+            label: item.name,
+          }));
+
+          if (isNotSelected) {
+            options.unshift(emptyValue);
+          }
+
           return (
             <Box paddingY={2} key={channel.id} display="flex" justifyContent="space-between">
               <Text>{channel.slug}</Text>
-              <Box>
+              <Box __minWidth="200px">
                 <Select
-                  value={""}
-                  onChange={(value) => {}}
-                  options={[
-                    { value: "", label: "Not assigned" },
-                    ...configs.map((item) => ({
-                      value: item.id,
-                      label: item.name,
-                    })),
-                  ]}
+                  disabled={isLoading}
+                  value={mapping[channel.id]?.id ?? ""}
+                  onChange={(value) => {
+                    onMappingChange({
+                      configId: value,
+                      channelId: channel.id,
+                    });
+                  }}
+                  options={options}
                 />
               </Box>
             </Box>
