@@ -4,6 +4,7 @@ import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
 import { AppHeader } from "@/modules/ui/app-header";
+import { ChannelConfigMappingSection } from "@/modules/ui/channel-configs/channel-config-mapping-section";
 import { ChannelConfigSection } from "@/modules/ui/stripe-configs/channel-config-section";
 
 const ConfigPage: NextPage = () => {
@@ -43,7 +44,7 @@ const ConfigPage: NextPage = () => {
           </Box>
         }
       >
-        b
+        <ChannelConfigMappingSection />
       </Layout.AppSection>
     </Box>
   );
