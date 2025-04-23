@@ -15,9 +15,9 @@ export class ChannelsFetcher {
     },
   });
 
-  readonly client: Client;
+  readonly client: Pick<Client, "query">;
 
-  constructor(client: Client) {
+  constructor(client: Pick<Client, "query">) {
     this.client = client;
   }
 
@@ -38,6 +38,6 @@ export class ChannelsFetcher {
       return ok(channelsResponse.data.channels.map((c) => c));
     }
 
-    return err(new ChannelsFetcher.FetchError("Failed to fetch channels - data is missing"));
+    return err(new ChannelsFetcher.FetchError("Failed to fetch channels - channels data missing"));
   }
 }
