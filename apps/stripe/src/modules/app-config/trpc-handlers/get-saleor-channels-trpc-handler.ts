@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { ok } from "neverthrow";
 import { Client } from "urql";
 
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
