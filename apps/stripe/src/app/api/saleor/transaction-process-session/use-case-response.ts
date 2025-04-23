@@ -7,13 +7,13 @@ import { z } from "zod";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
+import { StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent.status";
 import {
   StripeApiErrorPublicCode,
   StripeCardErrorPublicCode,
   StripeGetPaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent.status";
 
 type ResponseResult = SyncWebhookResponsesMap["TRANSACTION_PROCESS_SESSION"]["result"];
 
