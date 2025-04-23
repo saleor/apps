@@ -1,9 +1,9 @@
-import { err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 import { Client } from "urql";
 
 import { BaseError } from "@/lib/errors";
 
-import { FetchChannelsDocument } from "../../../generated/graphql";
+import { ChannelFragment, FetchChannelsDocument } from "../../../generated/graphql";
 
 /**
  * Shared with Avatax, consider moving common services to package
@@ -21,7 +21,9 @@ export class ChannelsFetcher {
     this.client = client;
   }
 
-  async fetchChannels() {
+  async fetchChannels(): Promise<
+    Result<ChannelFragment[], InstanceType<typeof ChannelsFetcher.FetchError>>
+  > {
     const channelsResponse = await this.client.query(FetchChannelsDocument, {}).toPromise();
 
     if (channelsResponse.error) {
@@ -33,7 +35,7 @@ export class ChannelsFetcher {
     }
 
     if (channelsResponse.data?.channels) {
-      return ok(channelsResponse.data.channels);
+      return ok(channelsResponse.data.channels.map((c) => c));
     }
 
     return err(new ChannelsFetcher.FetchError("Failed to fetch channels - data is missing"));

@@ -27,7 +27,7 @@ export class GetSaleorChannelsTrpcHandler {
         });
       }
 
-      return ok(channelsResult.value);
+      return channelsResult.value;
     });
   }
 }
