@@ -1,8 +1,12 @@
 import { Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
+import { ResolvedTransationFlow } from "@/modules/resolved-transaction-flow";
+import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { TransactionFlow } from "@/modules/transaction-flow";
+
+import { SaleorTransationFlow } from "../saleor/saleor-transaction-flow";
+import { SaleorTransationId } from "../saleor/saleor-transaction-id";
 
 /**
  * Holds transaction that app records during it's lifetime.
@@ -12,18 +16,24 @@ import { TransactionFlow } from "@/modules/transaction-flow";
  * TODO: Persistence should not allow overwrites - it's invariant if we try to save the same data twice
  */
 export class RecordedTransaction {
-  readonly saleorTransactionId: string;
+  readonly saleorTransactionId: SaleorTransationId;
   readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly transactionFlow: TransactionFlow;
+  readonly saleorTransactionFlow: SaleorTransationFlow;
+  readonly resolvedTransactionFlow: ResolvedTransationFlow;
+  readonly selectedPaymentMethod: PaymentMethod["type"];
 
-  constructor(
-    saleorTransactionId: string,
-    stripePaymentIntentId: StripePaymentIntentId,
-    transactionFlow: TransactionFlow,
-  ) {
-    this.saleorTransactionId = saleorTransactionId;
-    this.stripePaymentIntentId = stripePaymentIntentId;
-    this.transactionFlow = transactionFlow;
+  constructor(args: {
+    saleorTransactionId: SaleorTransationId;
+    stripePaymentIntentId: StripePaymentIntentId;
+    saleorTransactionFlow: SaleorTransationFlow;
+    resolvedTransactionFlow: ResolvedTransationFlow;
+    selectedPaymentMethod: PaymentMethod["type"];
+  }) {
+    this.saleorTransactionId = args.saleorTransactionId;
+    this.stripePaymentIntentId = args.stripePaymentIntentId;
+    this.saleorTransactionFlow = args.saleorTransactionFlow;
+    this.resolvedTransactionFlow = args.resolvedTransactionFlow;
+    this.selectedPaymentMethod = args.selectedPaymentMethod;
   }
 }
 

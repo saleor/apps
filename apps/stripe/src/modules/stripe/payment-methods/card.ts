@@ -1,28 +1,32 @@
 import Stripe from "stripe";
 import { z } from "zod";
 
-import { TransactionFlowStrategyEnum } from "@/generated/graphql";
+import {
+  createResolvedTransactionFlow,
+  ResolvedTransationFlow,
+} from "@/modules/resolved-transaction-flow";
+import { SaleorTransationFlow } from "@/modules/saleor/saleor-transaction-flow";
 
 import { PaymentMethod } from "./types";
 
 export class CardPaymentMethod implements PaymentMethod {
+  type = "card" as const;
+
   static TransactionInitializeSchema = z
     .object({
       paymentMethod: z.literal("card"),
     })
     .strict();
 
-  // card support both AUTHORIZATION and CHARGE - hence we return the same value we get from Saleor
-  getSupportedTransactionFlow(
-    saleorTransactionFlow: TransactionFlowStrategyEnum,
-  ): "AUTHORIZATION" | "CHARGE" {
-    return saleorTransactionFlow;
+  // card support both AUTHORIZATION and CHARGE - hence we return the same value we get from SaleorTransationFlow
+  getResolvedTransactionFlow(saleorTransactionFlow: SaleorTransationFlow): ResolvedTransationFlow {
+    return createResolvedTransactionFlow(saleorTransactionFlow);
   }
 
   getCreatePaymentIntentMethodOptions(
-    saleorTransactionFlow: TransactionFlowStrategyEnum,
+    saleorTransactionFlow: SaleorTransationFlow,
   ): Stripe.PaymentIntentCreateParams.PaymentMethodOptions {
-    const transactionFlow = this.getSupportedTransactionFlow(saleorTransactionFlow);
+    const transactionFlow = this.getResolvedTransactionFlow(saleorTransactionFlow);
 
     return {
       card: {

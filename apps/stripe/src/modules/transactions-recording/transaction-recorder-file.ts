@@ -36,7 +36,7 @@ export class TransactionRecorderFile implements TransactionRecorder {
   }
 
   private writeFile(transactions: InnerStructure) {
-    return fs.writeFileSync(JSON.stringify(transactions), "utf-8");
+    return fs.writeFileSync(this.filePath, JSON.stringify(transactions), "utf-8");
   }
 
   async recordTransaction(
@@ -66,11 +66,15 @@ export class TransactionRecorderFile implements TransactionRecorder {
       }
 
       return ok(
-        new RecordedTransaction(
-          transaction.saleorTransactionId,
-          createStripePaymentIntentId(transaction.stripePaymentIntentId)._unsafeUnwrap(),
-          transaction.transactionFlow,
-        ),
+        new RecordedTransaction({
+          saleorTransactionFlow: transaction.saleorTransactionFlow,
+          resolvedTransactionFlow: transaction.resolvedTransactionFlow,
+          selectedPaymentMethod: transaction.selectedPaymentMethod,
+          saleorTransactionId: transaction.saleorTransactionId,
+          stripePaymentIntentId: createStripePaymentIntentId(
+            transaction.stripePaymentIntentId,
+          )._unsafeUnwrap(),
+        }),
       );
     } catch (e) {
       return err(

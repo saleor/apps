@@ -1,12 +1,12 @@
 import Stripe from "stripe";
 
-import { TransactionFlowStrategyEnum } from "@/generated/graphql";
+import { ResolvedTransationFlow } from "@/modules/resolved-transaction-flow";
+import { SaleorTransationFlow } from "@/modules/saleor/saleor-transaction-flow";
 
 export interface PaymentMethod {
-  getSupportedTransactionFlow(
-    saleorTransactionFlow: TransactionFlowStrategyEnum,
-  ): TransactionFlowStrategyEnum;
+  type: keyof Stripe.PaymentIntent.PaymentMethodOptions;
+  getResolvedTransactionFlow(saleorTransactionFlow: SaleorTransationFlow): ResolvedTransationFlow;
   getCreatePaymentIntentMethodOptions(
-    saleorTransactionFlow: TransactionFlowStrategyEnum,
+    saleorTransactionFlow: SaleorTransationFlow,
   ): Stripe.PaymentIntentCreateParams.PaymentMethodOptions;
 }
