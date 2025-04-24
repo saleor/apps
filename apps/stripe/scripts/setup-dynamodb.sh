@@ -10,6 +10,8 @@ TABLE_NAME="segment-main-table"
 AWS_REGION="localhost"
 ENDPOINT_URL="http://dynamodb:8000"
 
+echo "Starting DynamoDB setup"
+
 if ! aws dynamodb describe-table --table-name "$TABLE_NAME" --endpoint-url "$ENDPOINT_URL" --region "$AWS_REGION" >/dev/null 2>&1; then
 	aws dynamodb create-table --table-name "$TABLE_NAME" \
 		--attribute-definitions AttributeName=PK,AttributeType=S AttributeName=SK,AttributeType=S \
