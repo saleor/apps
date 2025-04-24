@@ -11,15 +11,15 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 
-import { TransactionInitializeSessionUseCase } from "./use-case";
-import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
+import { TransactionProcessSessionUseCase } from "./use-case";
+import { transactionProcessSessionWebhookDefinition } from "./webhook-definition";
 
-const useCase = new TransactionInitializeSessionUseCase({
+const useCase = new TransactionProcessSessionUseCase({
   appConfigRepo: appConfigPersistence,
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
 });
 
-const handler = transactionInitializeSessionWebhookDefinition.createHandler(async (_req, ctx) => {
+const handler = transactionProcessSessionWebhookDefinition.createHandler(async (_req, ctx) => {
   try {
     const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 

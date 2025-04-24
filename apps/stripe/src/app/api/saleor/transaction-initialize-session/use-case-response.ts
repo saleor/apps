@@ -17,7 +17,7 @@ import {
 import {
   StripeApiErrorPublicCode,
   StripeCardErrorPublicCode,
-  StripePaymentIntentAPIError,
+  StripeCreatePaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
@@ -76,7 +76,7 @@ class AuthorizationActionRequired extends ChargeActionRequired {
 
 class ChargeFailure extends SuccessWebhookResponse {
   readonly result: ResponseResult = "CHARGE_FAILURE";
-  readonly error: StripePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
+  readonly error: StripeCreatePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
   readonly saleorEventAmount: number;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
@@ -94,7 +94,7 @@ class ChargeFailure extends SuccessWebhookResponse {
   );
 
   constructor(args: {
-    error: StripePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
+    error: StripeCreatePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
     saleorEventAmount: number;
   }) {
     super();

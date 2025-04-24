@@ -155,12 +155,11 @@ export class TransactionInitializeSessionUseCase {
   }
 
   async execute(args: {
-    channelId: string;
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
   }): Promise<UseCaseExecuteResult> {
-    const { channelId, appId, saleorApiUrl, event } = args;
+    const { appId, saleorApiUrl, event } = args;
     const eventDataResult = parseTransactionInitializeSessionEventData(event.data);
 
     if (eventDataResult.isErr()) {
@@ -168,7 +167,7 @@ export class TransactionInitializeSessionUseCase {
     }
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
-      channelId,
+      channelId: event.sourceObject.channel.id,
       appId,
       saleorApiUrl,
     });
@@ -183,7 +182,7 @@ export class TransactionInitializeSessionUseCase {
 
     if (!stripeConfigForThisChannel.value) {
       this.logger.warn("Config for channel not found", {
-        channelId,
+        channelId: event.sourceObject.channel.id,
       });
 
       return err(new AppIsNotConfiguredResponse());

@@ -6,7 +6,7 @@ import { BaseError } from "@/lib/errors";
 export const StripeCardErrorPublicCode = "StripeCardError" as const;
 export const StripeApiErrorPublicCode = "StripeApiError" as const;
 
-export type StripePaymentIntentAPIError =
+type StripePaymentIntentAPIError =
   | InstanceType<typeof StripeCardError>
   | InstanceType<typeof StripeInvalidRequestError>
   | InstanceType<typeof StripeRateLimitError>
@@ -17,12 +17,15 @@ export type StripePaymentIntentAPIError =
   | InstanceType<typeof StripeIdempotencyError>
   | InstanceType<typeof StripeUnknownAPIError>;
 
+export type StripeCreatePaymentIntentAPIError = StripePaymentIntentAPIError;
+export type StripeGetPaymentIntentAPIError = Omit<StripePaymentIntentAPIError, "StripeCardError">;
+
 export const StripeCardError = BaseError.subclass("StripeCardError", {
   props: {
     _internalName: "StripePaymentIntentsApi.StripeCardError" as const,
     publicCode: StripeCardErrorPublicCode,
     publicMessage: "", // filed by Stripe - they recommend to show it to the storefront user
-    merchantMessage: "Payment intent not created - there is problem with processing of the card",
+    merchantMessage: "Payment intent error - there is problem with processing of the card",
   },
 });
 
@@ -31,8 +34,7 @@ export const StripeInvalidRequestError = BaseError.subclass("StripeInvalidReques
     _internalName: "StripePaymentIntentsApi.StripeInvalidRequestError" as const,
     publicCode: StripeApiErrorPublicCode,
     publicMessage: "There is a problem with the request to Stripe API",
-    merchantMessage:
-      "Payment intent not created - there is a problem with the request to Stripe API",
+    merchantMessage: "Payment intent error - there is a problem with the request to Stripe API",
     stripeCode: "",
     stripeParam: "",
   },
@@ -43,8 +45,7 @@ export const StripeRateLimitError = BaseError.subclass("StripeRateLimitError", {
     _internalName: "StripePaymentIntentsApi.StripeRateLimitError" as const,
     publicCode: StripeApiErrorPublicCode,
     publicMessage: "There is a problem with the request to Stripe API",
-    merchantMessage:
-      "Payment intent not created - there is a problem with the request to Stripe API",
+    merchantMessage: "Payment intent error - there is a problem with the request to Stripe API",
   },
 });
 
@@ -53,8 +54,7 @@ export const StripeConnectionError = BaseError.subclass("StripeConnectionError",
     _internalName: "StripePaymentIntentsApi.StripeConnectionError" as const,
     publicCode: StripeApiErrorPublicCode,
     publicMessage: "There is a problem with the request to Stripe API",
-    merchantMessage:
-      "Payment intent not created - there is a problem with the request to Stripe API",
+    merchantMessage: "Payment intent error - there is a problem with the request to Stripe API",
   },
 });
 
@@ -63,8 +63,7 @@ export const StripeAPIError = BaseError.subclass("StripeAPIError", {
     _internalName: "StripePaymentIntentsApi.StripeAPIError" as const,
     publicCode: StripeApiErrorPublicCode,
     publicMessage: "There is a problem with the request to Stripe API",
-    merchantMessage:
-      "Payment intent not created - there is a problem with the request to Stripe API",
+    merchantMessage: "Payment intent error - there is a problem with the request to Stripe API",
   },
 });
 
@@ -73,8 +72,7 @@ export const StripeAuthenticationError = BaseError.subclass("StripeAuthenticatio
     _internalName: "StripePaymentIntentsApi.StripeAuthenticationError" as const,
     publicCode: StripeApiErrorPublicCode,
     publicMessage: "There is a problem with the request to Stripe API",
-    merchantMessage:
-      "Payment intent not created - there is a problem with the request to Stripe API",
+    merchantMessage: "Payment intent error - there is a problem with the request to Stripe API",
   },
 });
 
@@ -83,8 +81,7 @@ export const StripePermissionError = BaseError.subclass("StripePermissionError",
     _internalName: "StripePaymentIntentsApi.StripePermissionError" as const,
     publicCode: StripeApiErrorPublicCode,
     publicMessage: "There is a problem with the request to Stripe API",
-    merchantMessage:
-      "Payment intent not created - there is a problem with the request to Stripe API",
+    merchantMessage: "Payment intent error - there is a problem with the request to Stripe API",
   },
 });
 
@@ -93,8 +90,7 @@ export const StripeIdempotencyError = BaseError.subclass("StripeIdempotencyError
     _internalName: "StripePaymentIntentsApi.StripeIdempotencyError" as const,
     publicCode: "StripeApiError" as const,
     publicMessage: "There is a problem with the request to Stripe API",
-    merchantMessage:
-      "Payment intent not created - there is a problem with the request to Stripe API",
+    merchantMessage: "Payment intent error - there is a problem with the request to Stripe API",
   },
 });
 
@@ -103,14 +99,13 @@ export const StripeUnknownAPIError = BaseError.subclass("StripeUnknownAPIError",
     _internalName: "StripePaymentIntentsApi.StripeUnknownAPIError" as const,
     publicCode: "StripeApiError" as const,
     publicMessage: "There is a problem with the request to Stripe API",
-    merchantMessage:
-      "Payment intent not created - there is a problem with the request to Stripe API",
+    merchantMessage: "Payment intent error - there is a problem with the request to Stripe API",
   },
 });
 
 export const mapStripeCreatePaymentIntentErrorToApiError = (
   error: unknown,
-): StripePaymentIntentAPIError => {
+): StripeCreatePaymentIntentAPIError => {
   switch (true) {
     case error instanceof Stripe.errors.StripeCardError:
       return new StripeCardError("Card payment error", {
@@ -118,6 +113,38 @@ export const mapStripeCreatePaymentIntentErrorToApiError = (
           publicMessage: error.message,
         },
       });
+    case error instanceof Stripe.errors.StripeInvalidRequestError:
+      return new StripeInvalidRequestError("Invalid parameters provided to Stripe API", {
+        props: {
+          stripeCode: error.code ?? "",
+          stripeParam: error.param ?? "",
+        },
+      });
+    case error instanceof Stripe.errors.StripeRateLimitError:
+      return new StripeRateLimitError("Too many requests made to the API too quickly");
+    case error instanceof Stripe.errors.StripeConnectionError:
+      return new StripeConnectionError("There was a network problem between app and Stripe");
+    case error instanceof Stripe.errors.StripeAPIError:
+      return new StripeAPIError("Something went wrong on Stripe end");
+    case error instanceof Stripe.errors.StripeAuthenticationError:
+      return new StripeAuthenticationError("App can’t authenticate with Stripe");
+    case error instanceof Stripe.errors.StripePermissionError:
+      return new StripePermissionError("API key doesn’t have permission to perform this action");
+    case error instanceof Stripe.errors.StripeIdempotencyError:
+      return new StripeIdempotencyError("Idempotency key error");
+    default:
+      captureException(error);
+
+      return new StripeUnknownAPIError("Unknown error", {
+        cause: error,
+      });
+  }
+};
+
+export const mapStripeGetPaymentIntentErrorToApiError = (
+  error: unknown,
+): StripeGetPaymentIntentAPIError => {
+  switch (true) {
     case error instanceof Stripe.errors.StripeInvalidRequestError:
       return new StripeInvalidRequestError("Invalid parameters provided to Stripe API", {
         props: {
