@@ -7,6 +7,9 @@ fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
   }
   # TODO: check recipient of the app
   data
+  transaction {
+    id
+  }
   sourceObject {
     ... on Checkout {
       channel {
