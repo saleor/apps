@@ -6,6 +6,7 @@ import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 import { SaleorTransationFlow } from "../saleor/saleor-transaction-flow";
+import { SaleorTransationId } from "../saleor/saleor-transaction-id";
 
 /**
  * Holds transaction that app records during it's lifetime.
@@ -15,14 +16,14 @@ import { SaleorTransationFlow } from "../saleor/saleor-transaction-flow";
  * TODO: Persistence should not allow overwrites - it's invariant if we try to save the same data twice
  */
 export class RecordedTransaction {
-  readonly saleorTransactionId: string;
+  readonly saleorTransactionId: SaleorTransationId;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly saleorTransactionFlow: SaleorTransationFlow;
   readonly resolvedTransactionFlow: ResolvedTransationFlow;
   readonly selectedPaymentMethod: PaymentMethod["type"];
 
   constructor(args: {
-    saleorTransactionId: string;
+    saleorTransactionId: SaleorTransationId;
     stripePaymentIntentId: StripePaymentIntentId;
     saleorTransactionFlow: SaleorTransationFlow;
     resolvedTransactionFlow: ResolvedTransationFlow;

@@ -1,5 +1,6 @@
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
+import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
 
 export const mockedSaleorChannelId = "Q2hhbm5lbDox";
 export const mockedConfigurationId = "81f323bd-91e2-4838-ab6e-5affd81ffc3b";
@@ -10,4 +11,8 @@ export const mockAdyenWebhookUrl = `${mockAppUrlBase}?${new URLSearchParams({
   [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
   [WebhookParams.configurationIdIdSearchParam]: mockedConfigurationId,
 }).toString()}`;
+/**
+ *  @deprecated - use `mockedSaleorTransactionIdBranded` instead
+ */
 export const mockedSaleorTransactionId = "mocked-transaction-id";
+export const mockedSaleorTransactionIdBranded = createSaleorTransactionId("mocked-transaction-id");

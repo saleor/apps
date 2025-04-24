@@ -14,10 +14,10 @@ describe("CardPaymentMethod", () => {
     ])(
       "should set capture_method to $captureMethod when flow is $flow",
       ({ flow, captureMethod }) => {
-        const saleorTransactionFlow = createSaleorTransactionFlow(flow)._unsafeUnwrap();
+        const saleorTransactionFlow = createSaleorTransactionFlow(flow);
         const result = cardPaymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow);
 
-        expect(result._unsafeUnwrap()).toStrictEqual({
+        expect(result).toStrictEqual({
           card: { capture_method: captureMethod },
         });
       },

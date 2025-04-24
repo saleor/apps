@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
+import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initialize-session-event";
@@ -400,7 +400,6 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     await expect(
       uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -408,7 +407,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     ).resolves.toStrictEqual(err(new BrokenAppResponse()));
   });
 
-  it("Returns 'BrokenAppResponse' when when TransactionRecorder returns error", async () => {
+  it("Returns 'BrokenAppResponse' when TransactionRecorder returns error", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
     const transactionRecorder = new MockedTransactionRecorder();
 
@@ -426,13 +425,14 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
+        getPaymentIntent: vi.fn(),
       }),
     };
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
-      transactionRecorder: new MockedTransactionRecorder(),
+      transactionRecorder,
     });
 
     await expect(
@@ -443,4 +443,56 @@ describe("TransactionInitializeSessionUseCase", () => {
       }),
     ).resolves.toStrictEqual(err(new BrokenAppResponse()));
   });
+
+  it.each([
+    {
+      actionType: "CHARGE" as const,
+    },
+    {
+      actionType: "AUTHORIZATION" as const,
+    },
+  ])(
+    "Calls TransactionRecorder with resolved data when handling $actionType action",
+    async ({ actionType }) => {
+      const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
+      const transactionRecorder = new MockedTransactionRecorder();
+
+      vi.spyOn(transactionRecorder, "recordTransaction");
+
+      const createPaymentIntent = vi.fn(async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          client_secret: "secret-value",
+          id: "pi_test",
+        } as Stripe.PaymentIntent),
+      );
+      const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
+        create: () => ({
+          createPaymentIntent,
+          getPaymentIntent: vi.fn(),
+        }),
+      };
+
+      const uc = new TransactionInitializeSessionUseCase({
+        appConfigRepo: mockedAppConfigRepo,
+        stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+        transactionRecorder,
+      });
+
+      await uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      });
+
+      expect(transactionRecorder.recordTransaction).toHaveBeenCalledWith({
+        resolvedTransactionFlow: actionType,
+        saleorTransactionFlow: actionType,
+        saleorTransactionId: "mocked-transaction-id",
+        selectedPaymentMethod: "card",
+        stripePaymentIntentId: "pi_test",
+      });
+    },
+  );
 });

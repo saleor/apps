@@ -13,7 +13,7 @@ describe("PaymentIntentSucceededHandler", () => {
       event.data.object.amount_capturable = 123_30;
 
       const transaction = getMockedRecordedTransaction({
-        resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION")._unsafeUnwrap(),
+        resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
       });
 
       const result = await new PaymentIntentSucceededHandler().processEvent({
@@ -40,7 +40,7 @@ describe("PaymentIntentSucceededHandler", () => {
       event.data.object.amount_received = 2137_11;
 
       const transaction = getMockedRecordedTransaction({
-        resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE")._unsafeUnwrap(),
+        resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
       });
 
       const result = await new PaymentIntentSucceededHandler().processEvent({

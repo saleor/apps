@@ -3,7 +3,7 @@ import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockAdyenWebhookUrl, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+import { mockAdyenWebhookUrl, mockedSaleorTransactionIdBranded } from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
@@ -163,10 +163,10 @@ describe("StripeWebhookUseCase", () => {
 
         mockTransactionRecorder.transactions = {
           [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionId,
+            saleorTransactionId: mockedSaleorTransactionIdBranded,
             stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("CHARGE")._unsafeUnwrap(),
-            resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE")._unsafeUnwrap(),
+            saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+            resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
             selectedPaymentMethod: "card",
           }),
         };
@@ -225,10 +225,10 @@ describe("StripeWebhookUseCase", () => {
 
         mockTransactionRecorder.transactions = {
           [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionId,
+            saleorTransactionId: mockedSaleorTransactionIdBranded,
             stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION")._unsafeUnwrap(),
-            resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION")._unsafeUnwrap(),
+            saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
+            resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
             selectedPaymentMethod: "card",
           }),
         };
