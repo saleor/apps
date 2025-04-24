@@ -11,7 +11,7 @@ export const transactionInitializeSessionWebhookDefinition =
     apl: saleorApp.apl,
     event: "TRANSACTION_INITIALIZE_SESSION",
     name: "Stripe Transaction Initialize Session",
-    isActive: true, // TODO: disable in production
+    isActive: true,
     query: TransactionInitializeSessionDocument,
     webhookPath: "api/saleor/transaction-initialize-session",
   });
