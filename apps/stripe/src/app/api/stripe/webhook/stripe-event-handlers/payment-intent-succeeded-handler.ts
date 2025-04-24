@@ -5,6 +5,7 @@ import {
   TransactionAuthorizationSuccess,
   TransactionChargeSuccess,
 } from "@/app/api/stripe/webhook/resolved-webhook-events";
+import { UnknownError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
 import {
@@ -34,7 +35,7 @@ export class PaymentIntentSucceededHandler {
     const capturedAmount = intentObject.amount_received;
     const eventDate = createDateFromStripeEvent(event);
 
-    const isAuthorizationFlow = recordedTransaction.saleorTransactionFlow === "AUTHORIZATION";
+    const isAuthorizationFlow = recordedTransaction.resolvedTransactionFlow === "AUTHORIZATION";
 
     const paramsResult = Result.combine([
       SaleorMoney.createFromStripe({
@@ -50,7 +51,7 @@ export class PaymentIntentSucceededHandler {
 
     const [amount, paymentIntentId] = paramsResult.value;
 
-    switch (recordedTransaction.saleorTransactionFlow) {
+    switch (recordedTransaction.resolvedTransactionFlow) {
       case "AUTHORIZATION": {
         return ok(
           new TransactionAuthorizationSuccess({
@@ -72,5 +73,9 @@ export class PaymentIntentSucceededHandler {
         );
       }
     }
+
+    throw new UnknownError(
+      `PaymentIntentSucceededHandler: Unknown transaction flow: ${recordedTransaction.resolvedTransactionFlow}`,
+    );
   }
 }

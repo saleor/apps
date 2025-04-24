@@ -10,6 +10,8 @@ import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-e
 import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
+import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
+import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
 import {
   ITransactionEventReporter,
   TransactionEventReportResultResult,
@@ -163,8 +165,8 @@ describe("StripeWebhookUseCase", () => {
           [stripePiId]: new RecordedTransaction({
             saleorTransactionId: mockedSaleorTransactionId,
             stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: "CHARGE",
-            resolvedTransactionFlow: "CHARGE",
+            saleorTransactionFlow: createSaleorTransactionFlow("CHARGE")._unsafeUnwrap(),
+            resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE")._unsafeUnwrap(),
             selectedPaymentMethod: "card",
           }),
         };
@@ -225,8 +227,8 @@ describe("StripeWebhookUseCase", () => {
           [stripePiId]: new RecordedTransaction({
             saleorTransactionId: mockedSaleorTransactionId,
             stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: "AUTHORIZATION",
-            resolvedTransactionFlow: "AUTHORIZATION",
+            saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION")._unsafeUnwrap(),
+            resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION")._unsafeUnwrap(),
             selectedPaymentMethod: "card",
           }),
         };

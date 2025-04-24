@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
+
 import { CardPaymentMethod } from "./card";
 
 describe("CardPaymentMethod", () => {
@@ -12,9 +14,10 @@ describe("CardPaymentMethod", () => {
     ])(
       "should set capture_method to $captureMethod when flow is $flow",
       ({ flow, captureMethod }) => {
-        const result = cardPaymentMethod.getCreatePaymentIntentMethodOptions(flow);
+        const saleorTransactionFlow = createSaleorTransactionFlow(flow)._unsafeUnwrap();
+        const result = cardPaymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow);
 
-        expect(result).toStrictEqual({
+        expect(result._unsafeUnwrap()).toStrictEqual({
           card: { capture_method: captureMethod },
         });
       },

@@ -1,9 +1,11 @@
 import { Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
+import { ResolvedTransationFlow } from "@/modules/resolved-transaction-flow";
 import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { TransactionFlow } from "@/modules/transaction-flow";
+
+import { SaleorTransationFlow } from "../saleor/saleor-transaction-flow";
 
 /**
  * Holds transaction that app records during it's lifetime.
@@ -15,15 +17,15 @@ import { TransactionFlow } from "@/modules/transaction-flow";
 export class RecordedTransaction {
   readonly saleorTransactionId: string;
   readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly saleorTransactionFlow: TransactionFlow;
-  readonly resolvedTransactionFlow: TransactionFlow;
+  readonly saleorTransactionFlow: SaleorTransationFlow;
+  readonly resolvedTransactionFlow: ResolvedTransationFlow;
   readonly selectedPaymentMethod: PaymentMethod["type"];
 
   constructor(args: {
     saleorTransactionId: string;
     stripePaymentIntentId: StripePaymentIntentId;
-    saleorTransactionFlow: TransactionFlow;
-    resolvedTransactionFlow: TransactionFlow;
+    saleorTransactionFlow: SaleorTransationFlow;
+    resolvedTransactionFlow: ResolvedTransationFlow;
     selectedPaymentMethod: PaymentMethod["type"];
   }) {
     this.saleorTransactionId = args.saleorTransactionId;
