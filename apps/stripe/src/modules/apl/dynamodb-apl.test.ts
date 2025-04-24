@@ -2,19 +2,15 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { err } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { MemoryAPLRepository } from "@/__tests__/mocks/memory-apl-repository";
+import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { BaseError } from "@/lib/errors";
 
 import { DynamoAPL } from "./dynamodb-apl";
 
 describe("DynamoAPL", () => {
-  const mockedAuthData: AuthData = {
-    saleorApiUrl: "saleorApiUrl",
-    token: "appToken",
-    appId: "saleorAppId",
-  };
-
   afterEach(() => {
     vi.restoreAllMocks();
   });
@@ -24,19 +20,19 @@ describe("DynamoAPL", () => {
     const apl = new DynamoAPL({ repository });
 
     repository.setEntry({
-      authData: mockedAuthData,
+      authData: mockAuthData,
     });
 
-    const result = await apl.get("saleorApiUrl");
+    const result = await apl.get(mockedSaleorApiUrl);
 
-    expect(result).toStrictEqual(mockedAuthData);
+    expect(result).toStrictEqual(mockAuthData);
   });
 
   it("should return undefined if auth data does not exist", async () => {
     const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
-    const result = await apl.get("saleorApiUrl");
+    const result = await apl.get(mockedSaleorApiUrl);
 
     expect(result).toBeUndefined();
   });
@@ -49,14 +45,14 @@ describe("DynamoAPL", () => {
       Promise.resolve(err(new BaseError("Error getting data"))),
     );
 
-    await expect(apl.get("saleorApiUrl")).rejects.toThrowError(DynamoAPL.GetAuthDataError);
+    await expect(apl.get(mockedSaleorApiUrl)).rejects.toThrowError(DynamoAPL.GetAuthDataError);
   });
 
   it("should set auth data", async () => {
     const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
-    const result = await apl.set(mockedAuthData);
+    const result = await apl.set(mockAuthData);
 
     expect(result).toBeUndefined();
 
@@ -64,7 +60,7 @@ describe("DynamoAPL", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(getEntryResult._unsafeUnwrap()).toStrictEqual(mockedAuthData);
+    expect(getEntryResult._unsafeUnwrap()).toStrictEqual(mockAuthData);
   });
 
   it("should throw an error if setting auth data fails", async () => {
@@ -74,7 +70,7 @@ describe("DynamoAPL", () => {
 
     const apl = new DynamoAPL({ repository });
 
-    await expect(apl.set(mockedAuthData)).rejects.toThrowError(DynamoAPL.SetAuthDataError);
+    await expect(apl.set(mockAuthData)).rejects.toThrowError(DynamoAPL.SetAuthDataError);
   });
 
   it("should update existing auth data", async () => {
@@ -82,21 +78,21 @@ describe("DynamoAPL", () => {
     const apl = new DynamoAPL({ repository });
 
     repository.setEntry({
-      authData: mockedAuthData,
+      authData: mockAuthData,
     });
 
     apl.set({
-      saleorApiUrl: mockedAuthData.saleorApiUrl,
-      token: "newAppToken",
-      appId: "newSaleorAppId",
+      saleorApiUrl: mockAuthData.saleorApiUrl,
+      token: mockedAppToken,
+      appId: mockedSaleorAppId,
     });
 
-    const getEntryResult = await apl.get(mockedAuthData.saleorApiUrl);
+    const getEntryResult = await apl.get(mockAuthData.saleorApiUrl);
 
     expect(getEntryResult).toStrictEqual({
-      saleorApiUrl: mockedAuthData.saleorApiUrl,
-      appId: "newSaleorAppId",
-      token: "newAppToken",
+      saleorApiUrl: mockAuthData.saleorApiUrl,
+      token: mockedAppToken,
+      appId: mockedSaleorAppId,
     });
   });
 
@@ -105,12 +101,12 @@ describe("DynamoAPL", () => {
     const apl = new DynamoAPL({ repository });
 
     repository.setEntry({
-      authData: mockedAuthData,
+      authData: mockAuthData,
     });
 
-    await apl.delete(mockedAuthData.saleorApiUrl);
+    await apl.delete(mockAuthData.saleorApiUrl);
 
-    const getEntryResult = await apl.get(mockedAuthData.saleorApiUrl);
+    const getEntryResult = await apl.get(mockAuthData.saleorApiUrl);
 
     expect(getEntryResult).toBeUndefined();
   });
@@ -119,20 +115,22 @@ describe("DynamoAPL", () => {
     const repository = new MemoryAPLRepository();
     const apl = new DynamoAPL({ repository });
 
-    await expect(apl.delete("saleorApiUrl")).rejects.toThrowError(DynamoAPL.DeleteAuthDataError);
+    await expect(apl.delete(mockedSaleorApiUrl)).rejects.toThrowError(
+      DynamoAPL.DeleteAuthDataError,
+    );
   });
 
   it("should get all auth data", async () => {
     const repository = new MemoryAPLRepository();
     const secondEntry: AuthData = {
-      saleorApiUrl: "saleorApiUrl2",
-      token: "appToken2",
-      appId: "saleorAppId2",
+      saleorApiUrl: "https://foo-bar.cloud/graphql/",
+      token: mockedAppToken,
+      appId: mockedSaleorAppId,
     };
     const apl = new DynamoAPL({ repository });
 
     repository.setEntry({
-      authData: mockedAuthData,
+      authData: mockAuthData,
     });
 
     repository.setEntry({
@@ -141,7 +139,7 @@ describe("DynamoAPL", () => {
 
     const result = await apl.getAll();
 
-    expect(result).toStrictEqual([mockedAuthData, secondEntry]);
+    expect(result).toStrictEqual([mockAuthData, secondEntry]);
   });
 
   it("should throw an error if getting all auth data fails", async () => {

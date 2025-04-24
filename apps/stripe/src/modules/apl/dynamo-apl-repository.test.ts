@@ -10,16 +10,19 @@ import { mockClient } from "aws-sdk-client-mock";
 import { SavedItem } from "dynamodb-toolbox";
 import { beforeEach, describe, expect, it } from "vitest";
 
+import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
+
+import { DynamoDbAplEntity, dynamoDbAplEntity } from "./apl-db-model";
 import { DynamoAPLRepository } from "./dynamo-apl-repository";
-import { SegmentAPLEntityType } from "./segment-main-table";
 
 describe("DynamoAPLRepository", () => {
   const mockDocumentClient = mockClient(DynamoDBDocumentClient);
 
   const mockedAuthData: AuthData = {
-    appId: "appId",
-    saleorApiUrl: "saleorApiUrl",
-    token: "appToken",
+    appId: mockedSaleorAppId,
+    saleorApiUrl: mockedSaleorApiUrl,
+    token: mockedAppToken,
   };
 
   beforeEach(() => {
@@ -27,12 +30,12 @@ describe("DynamoAPLRepository", () => {
   });
 
   it("should successfully get AuthData entry from DynamoDB", async () => {
-    const mockedAPLEntry: SavedItem<SegmentAPLEntityType> = {
-      PK: "saleorApiUrl",
+    const mockedAPLEntry: SavedItem<DynamoDbAplEntity> = {
+      PK: mockedSaleorApiUrl,
       SK: "APL",
-      token: "appToken",
-      saleorApiUrl: "saleorApiUrl",
-      appId: "appId",
+      token: mockedAppToken,
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
       _et: "APL",
       createdAt: "2023-01-01T00:00:00.000Z",
       modifiedAt: "2023-01-01T00:00:00.000Z",
@@ -42,26 +45,26 @@ describe("DynamoAPLRepository", () => {
       Item: mockedAPLEntry,
     });
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
-    const result = await repository.getEntry({ saleorApiUrl: "saleorApiUrl" });
+    const result = await repository.getEntry({ saleorApiUrl: mockedSaleorApiUrl });
 
     expect(result.isOk()).toBe(true);
 
     expect(result._unsafeUnwrap()).toStrictEqual({
-      appId: "appId",
+      appId: mockedSaleorAppId,
       jwks: undefined,
-      saleorApiUrl: "saleorApiUrl",
-      token: "appToken",
+      saleorApiUrl: mockedSaleorApiUrl,
+      token: mockedAppToken,
     });
   });
 
   it("should handle errors when getting AuthData from DynamoDB", async () => {
     mockDocumentClient.on(GetCommand, {}).rejectsOnce("Exception");
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
-    const result = await repository.getEntry({ saleorApiUrl: "saleorApiUrl" });
+    const result = await repository.getEntry({ saleorApiUrl: mockedSaleorApiUrl });
 
     expect(result.isErr()).toBe(true);
 
@@ -71,9 +74,9 @@ describe("DynamoAPLRepository", () => {
   it("should return null if AuthData entry does not exist in DynamoDB", async () => {
     mockDocumentClient.on(GetCommand, {}).resolvesOnce({});
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
-    const result = await repository.getEntry({ saleorApiUrl: "saleorApiUrl" });
+    const result = await repository.getEntry({ saleorApiUrl: mockedSaleorApiUrl });
 
     expect(result.isOk()).toBe(true);
 
@@ -83,7 +86,7 @@ describe("DynamoAPLRepository", () => {
   it("should successfully set AuthData entry in DynamoDB", async () => {
     mockDocumentClient.on(PutCommand, {}).resolvesOnce({});
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
     const result = await repository.setEntry({
       authData: mockedAuthData,
@@ -97,7 +100,7 @@ describe("DynamoAPLRepository", () => {
   it("should handle errors when setting AuthData entry DynamoDB", async () => {
     mockDocumentClient.on(PutCommand, {}).rejectsOnce("Exception");
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
     const result = await repository.setEntry({
       authData: mockedAuthData,
@@ -111,9 +114,9 @@ describe("DynamoAPLRepository", () => {
   it("should successfully delete AuthData entry from DynamoDB", async () => {
     mockDocumentClient.on(DeleteCommand, {}).resolvesOnce({});
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
-    const result = await repository.deleteEntry({ saleorApiUrl: "saleorApiUrl" });
+    const result = await repository.deleteEntry({ saleorApiUrl: mockedSaleorApiUrl });
 
     expect(result.isOk()).toBe(true);
 
@@ -123,9 +126,9 @@ describe("DynamoAPLRepository", () => {
   it("should handle errors when deleting AuthData entry from DynamoDB", async () => {
     mockDocumentClient.on(DeleteCommand, {}).rejectsOnce("Exception");
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
-    const result = await repository.deleteEntry({ saleorApiUrl: "saleorApiUrl" });
+    const result = await repository.deleteEntry({ saleorApiUrl: mockedSaleorApiUrl });
 
     expect(result.isErr()).toBe(true);
 
@@ -133,7 +136,7 @@ describe("DynamoAPLRepository", () => {
   });
 
   it("should successfully get all AuthData entries from DynamoDB", async () => {
-    const mockedAPLEntries: SavedItem<SegmentAPLEntityType>[] = [
+    const mockedAPLEntries: SavedItem<DynamoDbAplEntity>[] = [
       {
         PK: "saleorApiUrl",
         SK: "APL",
@@ -160,7 +163,7 @@ describe("DynamoAPLRepository", () => {
       Items: mockedAPLEntries,
     });
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
     const result = await repository.getAllEntries();
 
@@ -187,7 +190,7 @@ describe("DynamoAPLRepository", () => {
       Items: [],
     });
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
     const result = await repository.getAllEntries();
 
@@ -199,7 +202,7 @@ describe("DynamoAPLRepository", () => {
   it("should handle error when getting all AuthData entries from DynamoDB", async () => {
     mockDocumentClient.on(ScanCommand, {}).rejectsOnce("Exception");
 
-    const repository = new DynamoAPLRepository();
+    const repository = new DynamoAPLRepository({ entity: dynamoDbAplEntity });
 
     const result = await repository.getAllEntries();
 

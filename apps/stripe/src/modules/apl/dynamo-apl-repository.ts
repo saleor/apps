@@ -1,35 +1,39 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { DeleteItemCommand, GetItemCommand, PutItemCommand, ScanCommand } from "dynamodb-toolbox";
-import { err, ok, ResultAsync } from "neverthrow";
+import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { AplAccessPattern, DynamoDbAplEntity } from "@/modules/apl/apl-db-model";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import { APLRepository } from "./apl-repository";
 
 export class DynamoAPLRepository implements APLRepository {
   private logger = createLogger("DynamoAPLRepository");
 
-  private aplEntity = SegmentMainTableEntityFactory.createAPLEntity(segmentMainTable);
-
-  private segmentAPLMapper = new DynamoAPLMapper();
+  private aplEntity: DynamoDbAplEntity;
 
   static ReadEntityError = BaseError.subclass("ReadEntityError");
   static WriteEntityError = BaseError.subclass("WriteEntityError");
   static DeleteEntityError = BaseError.subclass("DeleteEntityError");
   static ScanEntityError = BaseError.subclass("ScanEntityError");
 
-  constructor() {}
+  constructor(deps: { entity: DynamoDbAplEntity }) {
+    this.aplEntity = deps.entity;
+  }
 
-  async getEntry(args: { saleorApiUrl: string }) {
+  async getEntry(args: {
+    saleorApiUrl: SaleorApiUrl;
+  }): Promise<Result<AuthData | null, InstanceType<typeof BaseError>>> {
     const getEntryResult = await ResultAsync.fromPromise(
       this.aplEntity
         .build(GetItemCommand)
         .key({
-          PK: SegmentMainTable.getAPLPrimaryKey({
+          PK: AplAccessPattern.getPK({
             saleorApiUrl: args.saleorApiUrl,
           }),
-          SK: SegmentMainTable.getAPLSortKey(),
+          SK: AplAccessPattern.getSK(),
         })
         .send(),
       (error) =>
@@ -50,14 +54,28 @@ export class DynamoAPLRepository implements APLRepository {
       return ok(null);
     }
 
-    return ok(this.segmentAPLMapper.dynamoEntityToAuthData(getEntryResult.value.Item));
+    const { appId, jwks, token, saleorApiUrl } = getEntryResult.value.Item;
+
+    return ok({
+      saleorApiUrl,
+      appId,
+      jwks,
+      token,
+    });
   }
 
-  async setEntry(args: { authData: AuthData }) {
+  async setEntry({ authData }: { authData: AuthData }) {
     const setEntryResult = await ResultAsync.fromPromise(
       this.aplEntity
         .build(PutItemCommand)
-        .item(this.segmentAPLMapper.authDataToDynamoPutEntity(args.authData))
+        .item({
+          PK: AplAccessPattern.getPK({ saleorApiUrl: authData.saleorApiUrl }),
+          SK: AplAccessPattern.getSK(),
+          token: authData.token,
+          saleorApiUrl: authData.saleorApiUrl,
+          appId: authData.appId,
+          jwks: authData.jwks,
+        })
         .send(),
       (error) =>
         new DynamoAPLRepository.WriteEntityError("Failed to write APL entity", {
@@ -81,10 +99,10 @@ export class DynamoAPLRepository implements APLRepository {
       this.aplEntity
         .build(DeleteItemCommand)
         .key({
-          PK: SegmentMainTable.getAPLPrimaryKey({
+          PK: AplAccessPattern.getPK({
             saleorApiUrl: args.saleorApiUrl,
           }),
-          SK: SegmentMainTable.getAPLSortKey(),
+          SK: AplAccessPattern.getSK(),
         })
         .send(),
       (error) =>
@@ -131,7 +149,18 @@ export class DynamoAPLRepository implements APLRepository {
     const possibleItems = scanEntriesResult.value.Items ?? [];
 
     if (possibleItems.length > 0) {
-      return ok(possibleItems.map(this.segmentAPLMapper.dynamoEntityToAuthData));
+      return ok(
+        possibleItems.map((item) => {
+          const { appId, jwks, token, saleorApiUrl } = item;
+
+          return {
+            saleorApiUrl,
+            appId,
+            jwks,
+            token,
+          };
+        }),
+      );
     }
 
     return ok(null);

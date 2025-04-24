@@ -125,7 +125,7 @@ export class DynamoAPL implements APL {
   }
 
   async isReady(): Promise<AplReadyResult> {
-    const ready = this.envVariablesRequriedByDynamoDBExist();
+    const ready = this.envVariablesRequiredByDynamoDBExist();
 
     return ready
       ? {
@@ -138,7 +138,7 @@ export class DynamoAPL implements APL {
   }
 
   async isConfigured(): Promise<AplConfiguredResult> {
-    const configured = this.envVariablesRequriedByDynamoDBExist();
+    const configured = this.envVariablesRequiredByDynamoDBExist();
 
     return configured
       ? {
@@ -150,7 +150,7 @@ export class DynamoAPL implements APL {
         };
   }
 
-  private envVariablesRequriedByDynamoDBExist() {
+  private envVariablesRequiredByDynamoDBExist() {
     const variables = [
       "DYNAMODB_MAIN_TABLE_NAME",
       "AWS_REGION",
@@ -158,6 +158,7 @@ export class DynamoAPL implements APL {
       "AWS_SECRET_ACCESS_KEY",
     ] as const;
 
-    return variables.every((variable) => !!env[variable]);
+    // Dont check for existence, in localhost keys are empty, so just check if envs are set
+    return variables.every((variable) => typeof env[variable] === "string");
   }
 }
