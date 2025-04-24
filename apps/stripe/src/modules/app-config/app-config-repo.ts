@@ -38,6 +38,7 @@ export interface AppConfigRepo {
   getStripeConfig: (
     access: GetStripeConfigAccessPattern,
   ) => Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>>;
+  // todo probably remove, we will just delete in mvp
   updateStripeConfig: (
     access: {
       configId: string;
@@ -49,6 +50,13 @@ export interface AppConfigRepo {
   getRootConfig: (
     access: BaseAccessPattern,
   ) => Promise<Result<AppRootConfig, InstanceType<typeof BaseError>>>;
+  updateMapping: (
+    access: BaseAccessPattern,
+    data: {
+      configId: string;
+      channelId: string;
+    },
+  ) => Promise<Result<void | null, InstanceType<typeof BaseError>>>;
 }
 
 // todo move errors definitions here
