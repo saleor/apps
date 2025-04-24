@@ -10,6 +10,17 @@ services:
       - "../..:/app"
       - "pnpm-store:/app/.pnpm-store"
 
+  dynamodb:
+    image: "amazon/dynamodb-local:latest"
+    ports:
+      - 8000:8000
+    volumes:
+      - "dynamodb-data:/home/dynamodblocal/data"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
+    user: root # needed to write to volume
+
 volumes:
   pnpm-store:
+    driver: local
+  dynamodb-data:
     driver: local

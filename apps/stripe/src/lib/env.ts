@@ -27,11 +27,10 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
     VERCEL_GIT_COMMIT_SHA: z.string().optional(),
     STRIPE_PARTNER_ID: z.string().optional(),
-    // Make optional in case of other implementation is used. DynamoDB will throw if it's env is not provided.
-    DYNAMODB_MAIN_TABLE_NAME: z.string().optional(),
-    AWS_REGION: z.string().optional(),
-    AWS_ACCESS_KEY_ID: z.string().optional(),
-    AWS_SECRET_ACCESS_KEY: z.string().optional(),
+    DYNAMODB_MAIN_TABLE_NAME: z.string(),
+    AWS_REGION: z.string(),
+    AWS_ACCESS_KEY_ID: z.string(),
+    AWS_SECRET_ACCESS_KEY: z.string(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),

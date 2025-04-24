@@ -7,7 +7,7 @@ import { APLRepository } from "@/modules/apl/apl-repository";
 import { createSaleorApiUrl, SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 /**
- * TODO: Extract to shared package, reuse in Segment
+ * TODO: Extract to app-sdk
  */
 export class DynamoAPL implements APL {
   static GetAuthDataError = BaseError.subclass("GetAuthDataError");
