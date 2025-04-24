@@ -1,5 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
+import { fromError } from "zod-validation-error";
+
+import { BaseError } from "@/lib/errors";
 
 // https://env.t3.gg/docs/recipes#booleans
 const booleanSchema = z
@@ -62,4 +65,13 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
+  onValidationError(issues) {
+    const validationError = fromError(issues);
+
+    const EnvValidationError = BaseError.subclass("EnvValidationError");
+
+    throw new EnvValidationError(validationError.toString(), {
+      cause: issues,
+    });
+  },
 });
