@@ -25,7 +25,8 @@ describe("Manifest handler", async () => {
         expect(body).toMatchInlineSnapshot(
           {
             version: expect.any(String),
-          }, `
+          },
+          `
           {
             "about": "App that allows merchants using the Saleor e-commerce platform to accept online payments from customers using Stripe as their payment processor.",
             "appUrl": "https://localhost:3000",
@@ -65,9 +66,19 @@ describe("Manifest handler", async () => {
                 ],
                 "targetUrl": "https://localhost:3000/api/saleor/transaction-initialize-session",
               },
+              {
+                "isActive": true,
+                "name": "Stripe Transaction Process Session",
+                "query": "subscription TransactionProcessSession { event { ...TransactionProcessSessionEvent }}fragment Channel on Channel { id slug}fragment TransactionProcessSessionEvent on TransactionProcessSession { transaction { pspReference } action { amount actionType } sourceObject { ... on Checkout { channel { ...Channel } } ... on Order { channel { ...Channel } } }}",
+                "syncEvents": [
+                  "TRANSACTION_PROCESS_SESSION",
+                ],
+                "targetUrl": "https://localhost:3000/api/saleor/transaction-process-session",
+              },
             ],
           }
-        `);
+        `,
+        );
       },
     });
   });

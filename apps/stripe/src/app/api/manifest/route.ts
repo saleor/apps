@@ -5,6 +5,7 @@ import { compose } from "@saleor/apps-shared/compose";
 
 import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionInitializeSessionWebhookDefinition } from "@/app/api/saleor/transaction-initialize-session/webhook-definition";
+import { transactionProcessSessionWebhookDefinition } from "@/app/api/saleor/transaction-process-session/webhook-definition";
 import { env } from "@/lib/env";
 import { withLoggerContext } from "@/lib/logger-context";
 import packageJson from "@/package.json";
@@ -12,7 +13,7 @@ import packageJson from "@/package.json";
 const handler = createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
     const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
-    const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
+    const apiBaseUrl = env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
       about:
@@ -21,7 +22,7 @@ const handler = createManifestHandler({
       author: "Saleor Commerce",
       brand: {
         logo: {
-          default: `${apiBaseURL}/logo.png`,
+          default: `${apiBaseUrl}/logo.png`,
         },
       },
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
@@ -32,11 +33,12 @@ const handler = createManifestHandler({
       permissions: ["HANDLE_PAYMENTS"],
       requiredSaleorVersion: ">=3.20 <4",
       supportUrl: "https://saleor.io/discord",
-      tokenTargetUrl: `${apiBaseURL}/api/register`,
+      tokenTargetUrl: `${apiBaseUrl}/api/register`,
       version: packageJson.version,
       webhooks: [
-        paymentGatewayInitializeSessionWebhookDefinition.getWebhookManifest(apiBaseURL),
-        transactionInitializeSessionWebhookDefinition.getWebhookManifest(apiBaseURL),
+        paymentGatewayInitializeSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
+        transactionInitializeSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
+        transactionProcessSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
       ],
     };
 

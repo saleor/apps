@@ -44,6 +44,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent,
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -54,7 +55,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -103,6 +103,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent,
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -113,7 +114,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       const responsePayload = await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -131,6 +131,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
+        getPaymentIntent: vi.fn(),
       }),
     };
 
@@ -141,7 +142,6 @@ describe("TransactionInitializeSessionUseCase", () => {
     });
 
     const responsePayload = await uc.execute({
-      channelId: mockedSaleorChannelId,
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionInitializeSessionEvent(),
@@ -172,6 +172,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent,
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -184,7 +185,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
 
       const responsePayload = await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -209,6 +209,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -228,7 +229,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       const responsePayload = await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: eventWithNotSupportedPaymentMethod,
@@ -253,6 +253,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
+          getPaymentIntent: vi.fn(),
         }),
       };
 
@@ -273,7 +274,6 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       const responsePayload = await uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: eventWithAdditionalFieldinData,
@@ -296,6 +296,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
+        getPaymentIntent: vi.fn(),
       }),
     };
 
@@ -307,7 +308,6 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     await expect(
       uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -326,6 +326,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
+        getPaymentIntent: vi.fn(),
       }),
     };
 
@@ -337,7 +338,6 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     await expect(
       uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -357,6 +357,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
+        getPaymentIntent: vi.fn(),
       }),
     };
 
@@ -368,7 +369,6 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     await expect(
       uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
@@ -388,6 +388,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
       create: () => ({
         createPaymentIntent,
+        getPaymentIntent: vi.fn(),
       }),
     };
 
@@ -436,7 +437,6 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     await expect(
       uc.execute({
-        channelId: mockedSaleorChannelId,
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,

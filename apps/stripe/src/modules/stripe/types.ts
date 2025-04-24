@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { BaseError } from "@/lib/errors";
 import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
+import { StripePaymentIntentId } from "./stripe-payment-intent-id";
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 
 export interface IStripePaymentIntentsApiFactory {
@@ -13,6 +14,9 @@ export interface IStripePaymentIntentsApiFactory {
 export interface IStripePaymentIntentsApi {
   createPaymentIntent(args: {
     params: Stripe.PaymentIntentCreateParams;
+  }): Promise<Result<Stripe.PaymentIntent, unknown>>;
+  getPaymentIntent(args: {
+    id: StripePaymentIntentId;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
 }
 
