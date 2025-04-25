@@ -3,7 +3,7 @@ import { Entity, schema, string } from "dynamodb-toolbox";
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
-export class DynamoDbChannelConfigMappingAccessPattern {
+class DynamoDbChannelConfigMappingAccessPattern {
   static getPK({ saleorApiUrl, appId }: { saleorApiUrl: SaleorApiUrl; appId: string }) {
     return DynamoMainTable.getPrimaryKeyScopedToInstallation({ saleorApiUrl, appId });
   }
@@ -17,14 +17,14 @@ export class DynamoDbChannelConfigMappingAccessPattern {
   }
 }
 
-export const DynamoDbChannelConfigMappingEntrySchema = schema({
+const DynamoDbChannelConfigMappingEntrySchema = schema({
   PK: string().key(),
   SK: string().key(),
   channelId: string(),
   configId: string(),
 });
 
-export const createChannelConfigMappingEntity = (table: DynamoMainTable) => {
+const createChannelConfigMappingEntity = (table: DynamoMainTable) => {
   return new Entity({
     table,
     name: "ChannelConfigMapping",
@@ -42,5 +42,17 @@ export const createChannelConfigMappingEntity = (table: DynamoMainTable) => {
   });
 };
 
-export const dynamoDbChannelConfigMappingEntity = createChannelConfigMappingEntity(dynamoMainTable);
+const dynamoDbChannelConfigMappingEntity = createChannelConfigMappingEntity(dynamoMainTable);
+
 export type DynamoDbChannelConfigMappingEntity = typeof dynamoDbChannelConfigMappingEntity;
+
+export const DynamoDbChannelConfigMapping = {
+  accessPattern: {
+    getPK: DynamoDbChannelConfigMappingAccessPattern.getPK,
+    getSKforSpecificChannel: DynamoDbChannelConfigMappingAccessPattern.getSKforSpecificChannel,
+    getSKforAllChannels: DynamoDbChannelConfigMappingAccessPattern.getSKforAllChannels,
+  },
+  entitySchema: DynamoDbChannelConfigMappingEntrySchema,
+  createEntity: createChannelConfigMappingEntity,
+  entity: dynamoDbChannelConfigMappingEntity,
+};

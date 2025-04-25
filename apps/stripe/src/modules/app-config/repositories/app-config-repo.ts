@@ -47,22 +47,16 @@ export interface AppConfigRepo {
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
-  }) => Promise<
-    Result<
-      null | void,
-      InstanceType<typeof AppConfigRepoError.FailureSavingConfig | typeof BaseError>
-    >
-  >;
+  }) => Promise<Result<null | void, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>>;
   getStripeConfig: (
     access: GetStripeConfigAccessPattern,
-  ) => Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>>;
+  ) => Promise<
+    Result<StripeConfig | null, InstanceType<typeof AppConfigRepoError.FailureFetchingConfig>>
+  >;
   getRootConfig: (
     access: BaseAccessPattern,
   ) => Promise<
-    Result<
-      AppRootConfig,
-      InstanceType<typeof AppConfigRepoError.FailureFetchingConfig | typeof BaseError>
-    >
+    Result<AppRootConfig, InstanceType<typeof AppConfigRepoError.FailureFetchingConfig>>
   >;
   updateMapping: (
     access: BaseAccessPattern,
@@ -70,10 +64,5 @@ export interface AppConfigRepo {
       configId: string;
       channelId: string;
     },
-  ) => Promise<
-    Result<
-      void | null,
-      InstanceType<typeof AppConfigRepoError.FailureSavingConfig | typeof BaseError>
-    >
-  >;
+  ) => Promise<Result<void | null, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>>;
 }

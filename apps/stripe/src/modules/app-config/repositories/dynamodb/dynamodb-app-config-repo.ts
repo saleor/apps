@@ -15,14 +15,12 @@ import {
   StripeConfigByConfigIdAccessPattern,
 } from "@/modules/app-config/repositories/app-config-repo";
 import {
-  DynamoDbChannelConfigMappingAccessPattern,
+  DynamoDbChannelConfigMapping,
   DynamoDbChannelConfigMappingEntity,
-  DynamoDbChannelConfigMappingEntrySchema,
 } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
 import {
+  DynamoDbStripeConfig,
   DynamoDbStripeConfigEntity,
-  DynamoDbStripeConfigSchema,
-  StripeConfigAccessPattern,
 } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
@@ -58,9 +56,9 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
       .entities(this.stripeConfigEntity)
       .query({
         range: {
-          beginsWith: StripeConfigAccessPattern.getSKforAllItems(),
+          beginsWith: DynamoDbStripeConfig.accessPattern.getSKforAllItems(),
         },
-        partition: StripeConfigAccessPattern.getPK({
+        partition: DynamoDbStripeConfig.accessPattern.getPK({
           appId: access.appId,
           saleorApiUrl: access.saleorApiUrl,
         }),
@@ -72,9 +70,9 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
       .entities(this.channelConfigMappingEntity)
       .query({
         range: {
-          beginsWith: DynamoDbChannelConfigMappingAccessPattern.getSKforAllChannels(),
+          beginsWith: DynamoDbChannelConfigMapping.accessPattern.getSKforAllChannels(),
         },
-        partition: DynamoDbChannelConfigMappingAccessPattern.getPK({
+        partition: DynamoDbChannelConfigMapping.accessPattern.getPK({
           appId: access.appId,
           saleorApiUrl: access.saleorApiUrl,
         }),
@@ -91,12 +89,12 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
        */
       const parsedConfigs =
         configs.Items?.map((item) => {
-          return DynamoDbStripeConfigSchema.build(Parser).parse(item);
+          return DynamoDbStripeConfig.entitySchema.build(Parser).parse(item);
         }) ?? [];
 
       const parsedMappings =
         mappings.Items?.map((item) => {
-          return DynamoDbChannelConfigMappingEntrySchema.build(Parser).parse(item);
+          return DynamoDbChannelConfigMapping.entitySchema.build(Parser).parse(item);
         }) ?? [];
 
       const rootConfig = new AppRootConfig(
@@ -132,8 +130,8 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
   private fetchStripeConfigByItsId(access: StripeConfigByConfigIdAccessPattern) {
     const query = this.stripeConfigEntity.build(GetItemCommand).key({
-      PK: StripeConfigAccessPattern.getPK(access),
-      SK: StripeConfigAccessPattern.getSKforSpecificItem({
+      PK: DynamoDbStripeConfig.accessPattern.getPK(access),
+      SK: DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({
         configId: access.configId,
       }),
     });
@@ -143,8 +141,8 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
   private fetchConfigIdFromChannelId(access: StripeConfigByChannelIdAccessPattern) {
     const query = this.channelConfigMappingEntity.build(GetItemCommand).key({
-      PK: DynamoDbChannelConfigMappingAccessPattern.getPK(access),
-      SK: DynamoDbChannelConfigMappingAccessPattern.getSKforSpecificChannel({
+      PK: DynamoDbChannelConfigMapping.accessPattern.getPK(access),
+      SK: DynamoDbChannelConfigMapping.accessPattern.getSKforSpecificChannel({
         channelId: access.channelId,
       }),
     });
@@ -153,7 +151,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
   }
 
   private mapRawDynamoConfigItemToConfigOrThrow(item: unknown) {
-    const parsed = DynamoDbStripeConfigSchema.build(Parser).parse(item);
+    const parsed = DynamoDbStripeConfig.entitySchema.build(Parser).parse(item);
 
     const configResult = StripeConfig.create({
       name: parsed.configName,
@@ -195,9 +193,9 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
           return ok(null);
         }
 
-        const parsed = DynamoDbChannelConfigMappingEntrySchema.build(Parser).parse(
-          configIdResult.Item,
-        );
+        const parsed = DynamoDbChannelConfigMapping.entitySchema
+          .build(Parser)
+          .parse(configIdResult.Item);
 
         configId = parsed.configId;
       } catch (e) {
@@ -259,8 +257,8 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
       stripeRk: config.restrictedKey,
       stripeWhId: config.webhookId,
       stripeWhSecret: config.webhookSecret,
-      PK: StripeConfigAccessPattern.getPK({ saleorApiUrl, appId }),
-      SK: StripeConfigAccessPattern.getSKforSpecificItem({ configId: config.id }),
+      PK: DynamoDbStripeConfig.accessPattern.getPK({ saleorApiUrl, appId }),
+      SK: DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({ configId: config.id }),
       configName: config.name,
     });
 
@@ -294,8 +292,8 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
     const command = this.channelConfigMappingEntity.build(PutItemCommand).item({
       configId: data.configId,
       channelId: data.channelId,
-      PK: DynamoDbChannelConfigMappingAccessPattern.getPK(access),
-      SK: DynamoDbChannelConfigMappingAccessPattern.getSKforSpecificChannel({
+      PK: DynamoDbChannelConfigMapping.accessPattern.getPK(access),
+      SK: DynamoDbChannelConfigMapping.accessPattern.getSKforSpecificChannel({
         channelId: data.channelId,
       }),
     });
