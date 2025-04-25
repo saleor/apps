@@ -2,8 +2,8 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
-import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { withLoggerContext } from "@/lib/logger-context";
+import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
   MalformedRequestResponse,
@@ -14,7 +14,7 @@ import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "./webhook-definition";
 
 const useCase = new PaymentGatewayInitializeSessionUseCase({
-  appConfigRepo: appConfigPersistence,
+  appConfigRepo: appConfigRepoImpl,
 });
 
 const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(

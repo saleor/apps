@@ -161,6 +161,8 @@ export class NewStripeConfigTrpcHandler {
       });
 
       if (saveResult.isErr()) {
+        captureException(saveResult.error);
+
         // TODO Handle exact errors
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

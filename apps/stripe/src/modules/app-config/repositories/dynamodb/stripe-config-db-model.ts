@@ -3,16 +3,21 @@ import { Entity, schema, string } from "dynamodb-toolbox";
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
-export class StripeConfigAccessPattern {
+class StripeConfigAccessPattern {
   static getPK({ saleorApiUrl, appId }: { saleorApiUrl: SaleorApiUrl; appId: string }) {
     return DynamoMainTable.getPrimaryKeyScopedToInstallation({ saleorApiUrl, appId });
   }
-  static getSK({ configId }: { configId: string }) {
+
+  static getSKforSpecificItem({ configId }: { configId: string }) {
     return `CONFIG_ID#${configId}` as const;
+  }
+
+  static getSKforAllItems() {
+    return `CONFIG_ID#` as const;
   }
 }
 
-const EntrySchema = schema({
+const DynamoDbStripeConfigSchema = schema({
   PK: string().key(),
   SK: string().key(),
   configName: string(),
@@ -23,11 +28,11 @@ const EntrySchema = schema({
   stripeWhId: string(),
 });
 
-export const createStripeConfigEntity = (table: DynamoMainTable) => {
+const createStripeConfigEntity = (table: DynamoMainTable) => {
   return new Entity({
     table,
     name: "StripeConfig",
-    schema: EntrySchema,
+    schema: DynamoDbStripeConfigSchema,
     timestamps: {
       created: {
         name: "createdAt",
@@ -41,5 +46,17 @@ export const createStripeConfigEntity = (table: DynamoMainTable) => {
   });
 };
 
-export const dynamoDbStripeConfigEntity = createStripeConfigEntity(dynamoMainTable);
+const dynamoDbStripeConfigEntity = createStripeConfigEntity(dynamoMainTable);
+
 export type DynamoDbStripeConfigEntity = typeof dynamoDbStripeConfigEntity;
+
+export const DynamoDbStripeConfig = {
+  accessPattern: {
+    getPK: StripeConfigAccessPattern.getPK,
+    getSKforSpecificItem: StripeConfigAccessPattern.getSKforSpecificItem,
+    getSKforAllItems: StripeConfigAccessPattern.getSKforAllItems,
+  },
+  entitySchema: DynamoDbStripeConfigSchema,
+  createEntity: createStripeConfigEntity,
+  entity: dynamoDbStripeConfigEntity,
+};
