@@ -3,20 +3,20 @@ import Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedSaleorAppId, mockedSaleorTransactionIdBranded } from "@/__tests__/mocks/constants";
+import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionProcessSessionEvent } from "@/__tests__/mocks/transaction-process-session-event";
-import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
-import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
+import { BaseError } from "@/lib/errors";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
+  MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
-import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
 
 import { TransactionProcessSessionUseCase } from "./use-case";
 import { TransactionProcessSessionUseCaseResponses } from "./use-case-response";
@@ -29,9 +29,24 @@ describe("TransactionProcessSessionUseCase", () => {
       paymentIntentStatus: "succeeded",
     },
     {
+      actionType: "AUTHORIZATION" as const,
+      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
+      paymentIntentStatus: "succeeded",
+    },
+    {
       actionType: "CHARGE" as const,
       expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "requires_payment_method",
+    },
+    {
+      actionType: "AUTHORIZATION" as const,
+      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
+      paymentIntentStatus: "requires_payment_method",
+    },
+    {
+      actionType: "AUTHORIZATION" as const,
+      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
+      paymentIntentStatus: "requires_confirmation",
     },
     {
       actionType: "CHARGE" as const,
@@ -39,14 +54,29 @@ describe("TransactionProcessSessionUseCase", () => {
       paymentIntentStatus: "requires_confirmation",
     },
     {
-      actionType: "CHARGE" as const,
+      actionType: "AUTHORIZATION" as const,
       expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "requires_action",
     },
     {
       actionType: "CHARGE" as const,
       expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
+      paymentIntentStatus: "requires_action",
+    },
+    {
+      actionType: "AUTHORIZATION" as const,
+      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "processing",
+    },
+    {
+      actionType: "CHARGE" as const,
+      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
+      paymentIntentStatus: "processing",
+    },
+    {
+      actionType: "AUTHORIZATION" as const,
+      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
+      paymentIntentStatus: "canceled",
     },
     {
       actionType: "CHARGE" as const,
@@ -63,6 +93,8 @@ describe("TransactionProcessSessionUseCase", () => {
     async ({ actionType, expectedResponse, paymentIntentStatus }) => {
       const saleorEvent = getMockedTransactionProcessSessionEvent({ actionType });
       const mockedTransationRecorder = new MockedTransactionRecorder();
+
+      mockedTransationRecorder.recordTransaction(getMockedRecordedTransaction());
       const getPaymentIntent = vi.fn(async () =>
         ok({
           amount: 100,
@@ -80,20 +112,7 @@ describe("TransactionProcessSessionUseCase", () => {
         }),
       };
 
-      vi.spyOn(
-        mockedTransationRecorder,
-        "getTransactionByStripePaymentIntentId",
-      ).mockImplementation(async () =>
-        ok(
-          new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: mockedStripePaymentIntentId,
-            saleorTransactionFlow: createSaleorTransactionFlow(actionType),
-            resolvedTransactionFlow: createResolvedTransactionFlow(actionType),
-            selectedPaymentMethod: "card",
-          }),
-        ),
-      );
+      vi.spyOn(mockedTransationRecorder, "getTransactionByStripePaymentIntentId");
 
       const uc = new TransactionProcessSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
@@ -112,6 +131,10 @@ describe("TransactionProcessSessionUseCase", () => {
       expect(getPaymentIntent).toHaveBeenCalledWith({
         id: mockedStripePaymentIntentId,
       });
+
+      expect(mockedTransationRecorder.getTransactionByStripePaymentIntentId).toHaveBeenCalledWith(
+        mockedStripePaymentIntentId,
+      );
     },
   );
 
@@ -151,32 +174,23 @@ describe("TransactionProcessSessionUseCase", () => {
       actionType: "CHARGE" as const,
       expectedFailureResponse: TransactionProcessSessionUseCaseResponses.Error,
     },
+    {
+      actionType: "AUTHORIZATION" as const,
+      expectedFailureResponse: TransactionProcessSessionUseCaseResponses.Error,
+    },
   ])(
     "Returns $expectedFailureResponse.name response if StripePaymentIntentsAPI throws error and actionType is $actionType",
     async ({ actionType, expectedFailureResponse }) => {
       const getPaymentIntent = vi.fn(async () => err(new StripeAPIError("Error from Stripe API")));
       const mockedTransationRecorder = new MockedTransactionRecorder();
+
+      mockedTransationRecorder.recordTransaction(getMockedRecordedTransaction());
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent: vi.fn(),
           getPaymentIntent,
         }),
       };
-
-      vi.spyOn(
-        mockedTransationRecorder,
-        "getTransactionByStripePaymentIntentId",
-      ).mockImplementation(async () =>
-        ok(
-          new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: mockedStripePaymentIntentId,
-            saleorTransactionFlow: createSaleorTransactionFlow(actionType),
-            resolvedTransactionFlow: createResolvedTransactionFlow(actionType),
-            selectedPaymentMethod: "card",
-          }),
-        ),
-      );
 
       const uc = new TransactionProcessSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
@@ -198,6 +212,9 @@ describe("TransactionProcessSessionUseCase", () => {
 
   it("Returns 'BrokenAppResponse' when currency coming from Stripe is not supported", async () => {
     const saleorEvent = getMockedTransactionProcessSessionEvent();
+    const mockedTransationRecorder = new MockedTransactionRecorder();
+
+    mockedTransationRecorder.recordTransaction(getMockedRecordedTransaction());
     const getPaymentIntent = vi.fn(async () =>
       ok({
         amount: 100,
@@ -214,7 +231,7 @@ describe("TransactionProcessSessionUseCase", () => {
     const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
-      transactionRecorder: new MockedTransactionRecorder(),
+      transactionRecorder: mockedTransationRecorder,
     });
 
     await expect(
@@ -228,6 +245,10 @@ describe("TransactionProcessSessionUseCase", () => {
 
   it("Returns 'BrokenAppResponse' when Stripe Payment Intent status is not supported", async () => {
     const saleorEvent = getMockedTransactionProcessSessionEvent();
+    const mockedTransationRecorder = new MockedTransactionRecorder();
+
+    mockedTransationRecorder.recordTransaction(getMockedRecordedTransaction());
+
     const getPaymentIntent = vi.fn(async () =>
       ok({
         amount: 100,
@@ -247,7 +268,7 @@ describe("TransactionProcessSessionUseCase", () => {
     const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
-      transactionRecorder: new MockedTransactionRecorder(),
+      transactionRecorder: mockedTransationRecorder,
     });
 
     await expect(
@@ -257,5 +278,44 @@ describe("TransactionProcessSessionUseCase", () => {
         event: saleorEvent,
       }),
     ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+  });
+
+  it("Returns 'MalformedRequestResponse' when there is an error with getting transactionRecord", async () => {
+    const saleorEvent = getMockedTransactionProcessSessionEvent();
+    const mockedTransationRecorder = new MockedTransactionRecorder();
+    const getPaymentIntent = vi.fn(async () =>
+      ok({
+        amount: 100,
+        currency: "usd",
+        client_secret: "secret-value",
+        id: mockedStripePaymentIntentId.toString(), // stripe doesn't expect to get branded type here
+        status: "succeeded",
+      } as Stripe.PaymentIntent),
+    );
+
+    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
+      create: () => ({
+        createPaymentIntent: vi.fn(),
+        getPaymentIntent,
+      }),
+    };
+
+    vi.spyOn(mockedTransationRecorder, "getTransactionByStripePaymentIntentId").mockImplementation(
+      async () => err(new BaseError("Error while getting transaction record")),
+    );
+
+    const uc = new TransactionProcessSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      transactionRecorder: mockedTransationRecorder,
+    });
+
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
   });
 });

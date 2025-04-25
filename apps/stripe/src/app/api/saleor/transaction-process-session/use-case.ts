@@ -146,7 +146,7 @@ export class TransactionProcessSessionUseCase {
         error: recordedTransactionResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(new MalformedRequestResponse());
     }
 
     if (getPaymentIntentResult.isErr()) {
