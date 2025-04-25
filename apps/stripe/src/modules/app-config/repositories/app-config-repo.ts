@@ -1,10 +1,10 @@
 import { Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
-import { AppRootConfig } from "@/modules/app-config/app-root-config";
+import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
-import { StripeConfig } from "./stripe-config";
+import { StripeConfig } from "../domain/stripe-config";
 
 export type BaseAccessPattern = {
   saleorApiUrl: SaleorApiUrl;

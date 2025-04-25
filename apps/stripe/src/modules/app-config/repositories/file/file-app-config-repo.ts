@@ -4,14 +4,14 @@ import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
-import { AppRootConfig } from "@/modules/app-config/app-root-config";
-import { StripeConfig } from "@/modules/app-config/stripe-config";
+import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
+import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
-import { AppConfigRepo, BaseAccessPattern, GetStripeConfigAccessPattern } from "./app-config-repo";
+import { AppConfigRepo, BaseAccessPattern, GetStripeConfigAccessPattern } from "../app-config-repo";
 
 export type FileAppConfigRepoSchema = z.infer<typeof FileAppConfigRepo.FileConfigSchema>;
 

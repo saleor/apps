@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import { BaseError } from "@/lib/errors";
 import { RandomId } from "@/lib/random-id";
-import { StripeConfig } from "@/modules/app-config/stripe-config";
+import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeAuthValidator } from "@/modules/stripe/stripe-auth-validator";
