@@ -1,4 +1,4 @@
-import { FileAppConfigRepo } from "@/modules/app-config/file-app-config-repo";
+import { FileAppConfigRepo } from "@/modules/app-config/repositories/file/file-app-config-repo";
 /*
  * TODO: Temp, replace with DB
  * todo docs that this can be replaced using fork

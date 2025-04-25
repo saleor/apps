@@ -5,7 +5,7 @@ import Stripe from "stripe";
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
+import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { AuthorizationErrorResult, ChargeErrorResult } from "@/modules/app-result/error-result";
 import { mapPaymentIntentStatusToAppResult } from "@/modules/app-result/map-payment-intent-status-to-app-result";
 import { ResolvedTransationFlow } from "@/modules/resolved-transaction-flow";

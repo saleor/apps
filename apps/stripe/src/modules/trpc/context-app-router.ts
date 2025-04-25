@@ -4,7 +4,7 @@ import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { Client } from "urql";
 
 import { appConfigPersistence } from "@/lib/app-config-persistence";
-import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
+import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 
 export const createTrpcContextAppRouter = async ({ req }: FetchCreateContextFnOptions) => {
   return {
