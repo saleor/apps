@@ -21,15 +21,15 @@ describe("PaymentIntentSucceededHandler", () => {
         recordedTransaction: transaction,
       });
 
-      const value = result._unsafeUnwrap();
+      const variables = result._unsafeUnwrap().resolveEventReportVariables();
 
-      expect(value.saleorEventType).toBe("AUTHORIZATION_SUCCESS");
+      expect(variables.type).toBe("AUTHORIZATION_SUCCESS");
       // comes from mock
-      expect(value.amount.currency).toStrictEqual("USD");
+      expect(variables.amount.currency).toStrictEqual("USD");
       // Converted to Saleor float
-      expect(value.amount.amount).toStrictEqual(123.3);
-      expect(value.pspRef).toStrictEqual(event.data.object.id);
-      expect(value.date).toBeInstanceOf(Date);
+      expect(variables.amount.amount).toStrictEqual(123.3);
+      expect(variables.pspReference).toStrictEqual(event.data.object.id);
+      expect(variables.time).toStrictEqual("2025-02-01T00:00:00.000Z");
     });
   });
 
@@ -48,15 +48,15 @@ describe("PaymentIntentSucceededHandler", () => {
         recordedTransaction: transaction,
       });
 
-      const value = result._unsafeUnwrap();
+      const variables = result._unsafeUnwrap().resolveEventReportVariables();
 
-      expect(value.saleorEventType).toBe("CHARGE_SUCCESS");
+      expect(variables.type).toBe("CHARGE_SUCCESS");
       // comes from mock
-      expect(value.amount.currency).toStrictEqual("USD");
+      expect(variables.amount.currency).toStrictEqual("USD");
       // Converted to Saleor float
-      expect(value.amount.amount).toStrictEqual(2137.11);
-      expect(value.pspRef).toStrictEqual(event.data.object.id);
-      expect(value.date).toBeInstanceOf(Date);
+      expect(variables.amount.amount).toStrictEqual(2137.11);
+      expect(variables.pspReference).toStrictEqual(event.data.object.id);
+      expect(variables.time).toStrictEqual("2025-02-01T00:00:00.000Z");
     });
   });
 });

@@ -8,7 +8,7 @@ export const transactionProcessSessionWebhookDefinition =
     apl: saleorApp.apl,
     event: "TRANSACTION_PROCESS_SESSION",
     name: "Stripe Transaction Process Session",
-    isActive: true, // TODO: disable in production
+    isActive: true,
     query: TransactionProcessSessionDocument,
     webhookPath: "api/saleor/transaction-process-session",
   });
