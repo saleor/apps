@@ -29,12 +29,20 @@ export type GetStripeConfigAccessPattern =
   | StripeConfigByChannelIdAccessPattern
   | StripeConfigByConfigIdAccessPattern;
 
+export const AppConfigRepoError = {
+  FailureSavingConfig: BaseError.subclass("FailureSavingConfigError", {
+    props: {
+      _internalName: "AppConfigRepoError.FailureSavingConfigError",
+    },
+  }),
+};
+
 export interface AppConfigRepo {
   saveStripeConfig: (args: {
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
-  }) => Promise<Result<null | void, InstanceType<typeof BaseError>>>;
+  }) => Promise<Result<null | void, InstanceType<typeof AppConfigRepoError | typeof BaseError>>>;
   getStripeConfig: (
     access: GetStripeConfigAccessPattern,
   ) => Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>>;

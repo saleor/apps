@@ -7,8 +7,13 @@ export class ChannelConfigMappingAccessPattern {
   static getPK({ saleorApiUrl, appId }: { saleorApiUrl: SaleorApiUrl; appId: string }) {
     return DynamoMainTable.getPrimaryKeyScopedToInstallation({ saleorApiUrl, appId });
   }
-  static getSK({ channelId }: { channelId: string }) {
+
+  static getSKforSpecificChannel({ channelId }: { channelId: string }) {
     return `CHANNEL_ID#${channelId}` as const;
+  }
+
+  static getSKforAllChannels() {
+    return `CHANNEL_ID#` as const;
   }
 }
 

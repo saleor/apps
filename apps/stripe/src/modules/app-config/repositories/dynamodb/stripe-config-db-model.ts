@@ -7,8 +7,13 @@ export class StripeConfigAccessPattern {
   static getPK({ saleorApiUrl, appId }: { saleorApiUrl: SaleorApiUrl; appId: string }) {
     return DynamoMainTable.getPrimaryKeyScopedToInstallation({ saleorApiUrl, appId });
   }
-  static getSK({ configId }: { configId: string }) {
+
+  static getSKforSpecificItem({ configId }: { configId: string }) {
     return `CONFIG_ID#${configId}` as const;
+  }
+
+  static getSKforAllItems() {
+    return `CONFIG_ID#` as const;
   }
 }
 
