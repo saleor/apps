@@ -110,23 +110,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
         ),
         parsedConfigs.reduce(
           (record, dynamoItem) => {
-            const configResult = StripeConfig.create({
-              name: dynamoItem.configName,
-              restrictedKey: createStripeRestrictedKey(dynamoItem.stripeRk)._unsafeUnwrap(), // make it throwable
-              webhookId: dynamoItem.stripeWhId,
-              id: dynamoItem.configId,
-              publishableKey: createStripePublishableKey(dynamoItem.stripePk)._unsafeUnwrap(), // make it throwable
-              webhookSecret: createStripeWebhookSecret(dynamoItem.stripeWhSecret)._unsafeUnwrap(), // make it throwable
-            });
-
-            if (configResult.isErr()) {
-              // Throw and catch it below, so neverthrow can continue
-              throw new BaseError("Failed to parse config from DynamoDB", {
-                cause: configResult.error,
-              });
-            }
-
-            record[dynamoItem.configId] = configResult.value;
+            record[dynamoItem.configId] = this.mapRawDynamoConfigItemToConfigOrThrow(dynamoItem);
 
             return record;
           },
@@ -168,12 +152,34 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
     return query.send();
   }
 
+  private mapRawDynamoConfigItemToConfigOrThrow(item: unknown) {
+    const parsed = DynamoDbStripeConfigSchema.build(Parser).parse(item);
+
+    const configResult = StripeConfig.create({
+      name: parsed.configName,
+      restrictedKey: createStripeRestrictedKey(parsed.stripeRk)._unsafeUnwrap(), // make it throwable
+      webhookId: parsed.stripeWhId,
+      id: parsed.configId,
+      publishableKey: createStripePublishableKey(parsed.stripePk)._unsafeUnwrap(), // make it throwable
+      webhookSecret: createStripeWebhookSecret(parsed.stripeWhSecret)._unsafeUnwrap(), // make it throwable
+    });
+
+    if (configResult.isErr()) {
+      // Throw and catch it below, so neverthrow can continue, to avoid too much boilerplate
+      throw new BaseError("Failed to parse config from DynamoDB", {
+        cause: configResult.error,
+      });
+    }
+
+    return configResult.value;
+  }
+
   async getStripeConfig(
     access: GetStripeConfigAccessPattern,
   ): Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>> {
     const channelId = "channelId" in access ? access.channelId : undefined;
     /**
-     * We eventually need config id, so its mutable. It's either provided or will be resolved later and written here
+     * We eventually need config id, so it's mutable. It's either provided or will be resolved later and written here
      */
     let configId = "configId" in access ? access.configId : undefined;
 
@@ -221,25 +227,9 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
         return ok(null);
       }
 
-      const dynamoItem = result.Item;
+      const parsedConfig = this.mapRawDynamoConfigItemToConfigOrThrow(result.Item);
 
-      const configResult = StripeConfig.create({
-        name: dynamoItem.configName,
-        restrictedKey: createStripeRestrictedKey(dynamoItem.stripeRk)._unsafeUnwrap(), // make it throwable
-        webhookId: dynamoItem.stripeWhId,
-        id: dynamoItem.configId,
-        publishableKey: createStripePublishableKey(dynamoItem.stripePk)._unsafeUnwrap(), // make it throwable
-        webhookSecret: createStripeWebhookSecret(dynamoItem.stripeWhSecret)._unsafeUnwrap(), // make it throwable
-      });
-
-      if (configResult.isErr()) {
-        // Throw and catch it below, so neverthrow can continue
-        throw new BaseError("Failed to parse config from DynamoDB", {
-          cause: configResult.error,
-        });
-      }
-
-      return ok(configResult.value);
+      return ok(parsedConfig);
     } catch (e) {
       this.logger.error("Failed to fetch config from DynamoDB", { cause: e });
 
