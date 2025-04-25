@@ -4,9 +4,6 @@ import { TRPCError } from "@trpc/server";
 import { BaseError } from "@/lib/errors";
 import { RandomId } from "@/lib/random-id";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
-import { dynamoDbChannelConfigMappingEntity } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
-import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
-import { dynamoDbStripeConfigEntity } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
 import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeAuthValidator } from "@/modules/stripe/stripe-auth-validator";
@@ -157,25 +154,11 @@ export class NewStripeConfigTrpcHandler {
         });
       }
 
-      const saveResult = await new DynamodbAppConfigRepo({
-        entities: {
-          stripeConfig: dynamoDbStripeConfigEntity,
-          channelConfigMapping: dynamoDbChannelConfigMappingEntity,
-        },
-      }).saveStripeConfig({
+      const saveResult = await ctx.configRepo.saveStripeConfig({
         config: configToSave.value,
         saleorApiUrl: saleorApiUrl.value,
         appId: ctx.appId,
       });
-
-      // todo enable this, but ensure dynamo is in ctx
-      /*
-       * const saveResult = await ctx.configRepo.saveStripeConfig({
-       *   config: configToSave.value,
-       *   saleorApiUrl: saleorApiUrl.value,
-       *   appId: ctx.appId,
-       * });
-       */
 
       if (saveResult.isErr()) {
         captureException(saveResult.error);

@@ -1,9 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
 import { StripeFrontendConfig } from "@/modules/app-config/domain/stripe-config";
-import { dynamoDbChannelConfigMappingEntity } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
-import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
-import { dynamoDbStripeConfigEntity } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
@@ -26,23 +23,10 @@ export class GetStripeConfigsListTrpcHandler {
         });
       }
 
-      const config = await new DynamodbAppConfigRepo({
-        entities: {
-          stripeConfig: dynamoDbStripeConfigEntity,
-          channelConfigMapping: dynamoDbChannelConfigMappingEntity,
-        },
-      }).getRootConfig({
+      const config = await ctx.configRepo.getRootConfig({
         saleorApiUrl: saleorApiUrl.value,
         appId: ctx.appId,
       });
-
-      /*
-       * todo restore and put dynamo to ctx
-       * const config = await ctx.configRepo.getRootConfig({
-       *   saleorApiUrl: saleorApiUrl.value,
-       *   appId: ctx.appId,
-       * });
-       */
 
       if (config.isErr()) {
         throw new TRPCError({
