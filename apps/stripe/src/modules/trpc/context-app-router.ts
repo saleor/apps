@@ -3,8 +3,8 @@ import { inferAsyncReturnType } from "@trpc/server";
 import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { Client } from "urql";
 
-import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 
 export const createTrpcContextAppRouter = async ({ req }: FetchCreateContextFnOptions) => {
   return {
@@ -12,7 +12,7 @@ export const createTrpcContextAppRouter = async ({ req }: FetchCreateContextFnOp
     saleorApiUrl: req.headers.get(SALEOR_API_URL_HEADER) as string | undefined,
     appId: undefined as undefined | string,
     apiClient: null as Client | null,
-    configRepo: appConfigPersistence as AppConfigRepo,
+    configRepo: appConfigRepoImpl as AppConfigRepo,
     appUrl: req.headers.get("origin"),
   };
 };

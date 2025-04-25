@@ -7,18 +7,18 @@ import { getAndParseStripeSignatureHeader } from "@/app/api/stripe/webhook/strip
 import { StripeWebhookErrorResponse } from "@/app/api/stripe/webhook/stripe-webhook-response";
 import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
-import { appConfigPersistence } from "@/lib/app-config-persistence";
 import { BaseError } from "@/lib/errors";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";
 import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { saleorApp } from "@/lib/saleor-app";
+import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { TransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
 import { transactionRecorder } from "@/modules/transactions-recording/transaction-recorder-impl";
 
 const useCase = new StripeWebhookUseCase({
-  appConfigRepo: appConfigPersistence,
+  appConfigRepo: appConfigRepoImpl,
   webhookEventVerifyFactory: (stripeClient) =>
     StripeWebhookSignatureValidator.createFromClient(stripeClient),
   apl: saleorApp.apl,

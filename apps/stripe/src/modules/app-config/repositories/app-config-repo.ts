@@ -29,34 +29,40 @@ export type GetStripeConfigAccessPattern =
   | StripeConfigByChannelIdAccessPattern
   | StripeConfigByConfigIdAccessPattern;
 
+export const AppConfigRepoError = {
+  FailureSavingConfig: BaseError.subclass("FailureSavingConfigError", {
+    props: {
+      _internalName: "AppConfigRepoError.FailureSavingConfigError",
+    },
+  }),
+  FailureFetchingConfig: BaseError.subclass("FailureFetchingConfigError", {
+    props: {
+      _internalName: "AppConfigRepoError.FailureFetchingConfigError",
+    },
+  }),
+};
+
 export interface AppConfigRepo {
   saveStripeConfig: (args: {
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
-  }) => Promise<Result<null | void, InstanceType<typeof BaseError>>>;
+  }) => Promise<Result<null | void, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>>;
   getStripeConfig: (
     access: GetStripeConfigAccessPattern,
-  ) => Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>>;
-  // todo probably remove, we will just delete in mvp
-  updateStripeConfig: (
-    access: {
-      configId: string;
-      saleorApiUrl: SaleorApiUrl;
-      appId: string;
-    },
-    stripeConfig: StripeConfig,
-  ) => Promise<Result<void | null, InstanceType<typeof BaseError>>>;
+  ) => Promise<
+    Result<StripeConfig | null, InstanceType<typeof AppConfigRepoError.FailureFetchingConfig>>
+  >;
   getRootConfig: (
     access: BaseAccessPattern,
-  ) => Promise<Result<AppRootConfig, InstanceType<typeof BaseError>>>;
+  ) => Promise<
+    Result<AppRootConfig, InstanceType<typeof AppConfigRepoError.FailureFetchingConfig>>
+  >;
   updateMapping: (
     access: BaseAccessPattern,
     data: {
       configId: string;
       channelId: string;
     },
-  ) => Promise<Result<void | null, InstanceType<typeof BaseError>>>;
+  ) => Promise<Result<void | null, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>>;
 }
-
-// todo move errors definitions here

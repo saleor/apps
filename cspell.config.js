@@ -68,5 +68,11 @@ export default {
   ],
   language: "en-US",
   useGitignore: true,
-  ignorePaths: ["**/graphql.ts", "**/CHANGELOG.md", "**/schema.graphql", "**/generated/types.ts"],
+  ignorePaths: [
+    "**/graphql.ts",
+    "**/CHANGELOG.md",
+    "**/schema.graphql",
+    "**/generated/types.ts",
+    "**/*.test.ts",
+  ],
 };
