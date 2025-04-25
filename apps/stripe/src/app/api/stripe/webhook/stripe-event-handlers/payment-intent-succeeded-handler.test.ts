@@ -29,7 +29,7 @@ describe("PaymentIntentSucceededHandler", () => {
       // Converted to Saleor float
       expect(variables.amount.amount).toStrictEqual(123.3);
       expect(variables.pspReference).toStrictEqual(event.data.object.id);
-      expect(variables.time).toStrictEqual("2025-01-31T23:00:00.000Z");
+      expect(variables.time).toStrictEqual("2025-02-01T00:00:00.000Z");
     });
   });
 
@@ -56,7 +56,7 @@ describe("PaymentIntentSucceededHandler", () => {
       // Converted to Saleor float
       expect(variables.amount.amount).toStrictEqual(2137.11);
       expect(variables.pspReference).toStrictEqual(event.data.object.id);
-      expect(variables.time).toStrictEqual("2025-01-31T23:00:00.000Z");
+      expect(variables.time).toStrictEqual("2025-02-01T00:00:00.000Z");
     });
   });
 });
