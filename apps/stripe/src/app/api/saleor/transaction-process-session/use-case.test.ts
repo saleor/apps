@@ -25,72 +25,59 @@ describe("TransactionProcessSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "succeeded",
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "succeeded",
     },
     {
       actionType: "CHARGE" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "requires_payment_method",
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "requires_payment_method",
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "requires_confirmation",
     },
     {
       actionType: "CHARGE" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "requires_confirmation",
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "requires_action",
     },
     {
       actionType: "CHARGE" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "requires_action",
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "processing",
     },
     {
       actionType: "CHARGE" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "processing",
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "canceled",
     },
     {
       actionType: "CHARGE" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "canceled",
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedResponse: TransactionProcessSessionUseCaseResponses.OK,
       paymentIntentStatus: "requires_capture",
     },
   ])(
-    "Calls Stripe PaymentIntentsAPI to get payment intent and returns $expectedResponse.name for actionType: $actionType and Stripe Payment Intent with status: $paymentIntentStatus",
-    async ({ actionType, expectedResponse, paymentIntentStatus }) => {
+    "Calls Stripe PaymentIntentsAPI to get payment intent and returns 'OK' response for actionType: $actionType and Stripe Payment Intent with status: $paymentIntentStatus",
+    async ({ actionType, paymentIntentStatus }) => {
       const saleorEvent = getMockedTransactionProcessSessionEvent({ actionType });
       const mockedTransationRecorder = new MockedTransactionRecorder();
 
@@ -126,7 +113,7 @@ describe("TransactionProcessSessionUseCase", () => {
         event: saleorEvent,
       });
 
-      expect(result._unsafeUnwrap()).toBeInstanceOf(expectedResponse);
+      expect(result._unsafeUnwrap()).toBeInstanceOf(TransactionProcessSessionUseCaseResponses.OK);
 
       expect(getPaymentIntent).toHaveBeenCalledWith({
         id: mockedStripePaymentIntentId,
@@ -172,15 +159,13 @@ describe("TransactionProcessSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionProcessSessionUseCaseResponses.Error,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionProcessSessionUseCaseResponses.Error,
     },
   ])(
-    "Returns $expectedFailureResponse.name response if StripePaymentIntentsAPI throws error and actionType is $actionType",
-    async ({ actionType, expectedFailureResponse }) => {
+    "Returns 'Error' response if StripePaymentIntentsAPI throws error and actionType is $actionType",
+    async ({ actionType }) => {
       const getPaymentIntent = vi.fn(async () => err(new StripeAPIError("Error from Stripe API")));
       const mockedTransationRecorder = new MockedTransactionRecorder();
 
@@ -206,7 +191,9 @@ describe("TransactionProcessSessionUseCase", () => {
         event: saleorEvent,
       });
 
-      expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
+      expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
+        TransactionProcessSessionUseCaseResponses.Error,
+      );
     },
   );
 
