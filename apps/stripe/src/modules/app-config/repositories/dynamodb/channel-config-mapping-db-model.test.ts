@@ -1,5 +1,5 @@
 import { Parser } from "dynamodb-toolbox";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   mockedConfigurationId,

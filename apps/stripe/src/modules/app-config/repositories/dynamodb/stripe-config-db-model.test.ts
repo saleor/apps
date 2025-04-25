@@ -1,4 +1,4 @@
-import { Parser, string } from "dynamodb-toolbox";
+import { Parser } from "dynamodb-toolbox";
 import { describe, expect, it } from "vitest";
 
 import { mockedConfigurationId, mockedSaleorAppId } from "@/__tests__/mocks/constants";
