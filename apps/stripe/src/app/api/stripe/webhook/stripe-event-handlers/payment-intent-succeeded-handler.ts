@@ -1,20 +1,24 @@
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
-import {
-  TransactionAuthorizationSuccess,
-  TransactionChargeSuccess,
-} from "@/app/api/stripe/webhook/resolved-webhook-events";
+import { TransactionResult } from "@/app/api/stripe/webhook/resolved-webhook-events";
+import { mapPaymentIntentStatusToAppResult } from "@/modules/app-result/map-payment-intent-status-to-app-result";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
 import {
   createStripePaymentIntentId,
   StripePaymentIntentValidationError,
 } from "@/modules/stripe/stripe-payment-intent-id";
+import {
+  createStripePaymentIntentStatus,
+  StripePaymentIntentStatusValidationError,
+} from "@/modules/stripe/stripe-payment-intent-status";
 import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
 
 type PossibleErrors = InstanceType<
-  typeof SaleorMoney.ValidationError | typeof StripePaymentIntentValidationError
+  | typeof SaleorMoney.ValidationError
+  | typeof StripePaymentIntentValidationError
+  | typeof StripePaymentIntentStatusValidationError
 >;
 
 /**
@@ -27,7 +31,7 @@ export class PaymentIntentSucceededHandler {
   }: {
     event: Stripe.PaymentIntentSucceededEvent;
     recordedTransaction: RecordedTransaction;
-  }): Promise<Result<TransactionAuthorizationSuccess | TransactionChargeSuccess, PossibleErrors>> {
+  }): Promise<Result<TransactionResult, PossibleErrors>> {
     const intentObject = event.data.object;
     const currency = intentObject.currency;
     const authorizedAmount = intentObject.amount_capturable;
@@ -42,35 +46,32 @@ export class PaymentIntentSucceededHandler {
         currency,
       }),
       createStripePaymentIntentId(intentObject.id),
+      createStripePaymentIntentStatus(intentObject.status),
     ]);
 
     if (paramsResult.isErr()) {
       return err(paramsResult.error);
     }
 
-    const [amount, paymentIntentId] = paramsResult.value;
+    const [saleorMoney, paymentIntentId, paymentIntentStatus] = paramsResult.value;
 
-    switch (recordedTransaction.transactionFlow) {
-      case "AUTHORIZATION": {
-        return ok(
-          new TransactionAuthorizationSuccess({
-            pspRef: paymentIntentId,
-            amount,
-            date: eventDate,
-            saleorTransactionId: recordedTransaction.saleorTransactionId,
-          }),
-        );
-      }
-      case "CHARGE": {
-        return ok(
-          new TransactionChargeSuccess({
-            pspRef: paymentIntentId,
-            amount,
-            date: eventDate,
-            saleorTransactionId: recordedTransaction.saleorTransactionId,
-          }),
-        );
-      }
-    }
+    const MappedResult = mapPaymentIntentStatusToAppResult(
+      paymentIntentStatus,
+      recordedTransaction.transactionFlow,
+    );
+
+    const result = new MappedResult({
+      saleorMoney,
+      stripePaymentIntentId: paymentIntentId,
+      stripeStatus: paymentIntentStatus,
+    });
+
+    return ok(
+      new TransactionResult({
+        appResult: result,
+        date: eventDate,
+        saleorTransactionId: recordedTransaction.saleorTransactionId,
+      }),
+    );
   }
 }

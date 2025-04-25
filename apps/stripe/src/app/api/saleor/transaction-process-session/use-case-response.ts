@@ -1,16 +1,10 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
+import { PaymentIntentResult } from "@/modules/saleor/payment-intent-result/types";
 import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
-import {
-  AuthorizationActionRequiredResult,
-  AuthorizationSuccessResult,
-  ChargeActionRequiredResult,
-  ChargeFailureForCancelledPaymentIntentResult,
-  ChargeRequestResult,
-  ChargeSuccessResult,
-} from "@/modules/stripe/payment-intent-handling-results";
+import { ChargeFailureForCancelledPaymentIntentResult } from "@/modules/stripe/payment-intent-handling-results";
 import {
   StripeApiErrorPublicCode,
   StripeCardErrorPublicCode,
@@ -18,8 +12,31 @@ import {
 } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
+class Success extends SuccessWebhookResponse {
+  readonly appResult: PaymentIntentResult;
+
+  constructor(args: { appResult: PaymentIntentResult }) {
+    super();
+    this.appResult = args.appResult;
+  }
+
+  getResponse(): Response {
+    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
+      result: this.appResult.result,
+      amount: this.appResult.saleorMoney.amount,
+      pspReference: this.appResult.stripePaymentIntentId,
+      // https://docs.stripe.com/payments/paymentintents/lifecycle
+      message: this.appResult.message,
+      // @ts-expect-error - this is a workaround for the type error
+      actions: this.appResult.actions,
+    });
+
+    return Response.json(typeSafeResponse, { status: this.statusCode });
+  }
+}
+
 abstract class FailureBase extends SuccessWebhookResponse {
-  readonly result = "" as "CHARGE_FAILURE" | "AUTHORIZATION_FAILURE";
+  abstract result: "CHARGE_FAILURE" | "AUTHORIZATION_FAILURE";
   readonly saleorEventAmount: number;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly error: StripeGetPaymentIntentAPIError;
@@ -27,11 +44,7 @@ abstract class FailureBase extends SuccessWebhookResponse {
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
       z.object({
-        code: z.union([
-          z.literal(StripeCardErrorPublicCode),
-          z.literal(StripeApiErrorPublicCode),
-          z.literal("PaymentIntentCancelledError"),
-        ]),
+        code: z.union([z.literal(StripeCardErrorPublicCode), z.literal(StripeApiErrorPublicCode)]),
         message: z.string(),
       }),
     ),
@@ -80,14 +93,9 @@ class AuthorizationFailure extends FailureBase {
 }
 
 export const TransactionProcessSessionUseCaseResponses = {
-  ChargeSuccess: ChargeSuccessResult,
-  AuthorizationSuccess: AuthorizationSuccessResult,
-  ChargeActionRequired: ChargeActionRequiredResult,
-  AuthorizationActionRequired: AuthorizationActionRequiredResult,
+  Success,
   ChargeFailure,
   AuthorizationFailure,
-  ChargeRequest: ChargeRequestResult,
-  AuthorizationRequest: AuthorizationActionRequiredResult,
   ChargeFailureForCancelledPaymentIntent: ChargeFailureForCancelledPaymentIntentResult,
   AuthorizationFailureForCancelledPaymentIntent: ChargeFailureForCancelledPaymentIntentResult,
 };

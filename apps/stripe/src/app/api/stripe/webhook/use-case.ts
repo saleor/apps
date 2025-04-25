@@ -171,7 +171,7 @@ export class StripeWebhookUseCase {
         }
 
         const reportResult = await transactionEventReporter.reportTransactionEvent(
-          resultEvent.value.getTransactionReportVariables(),
+          resultEvent.value.getTransactionEventReportVariables(),
         );
 
         if (reportResult.isErr()) {
