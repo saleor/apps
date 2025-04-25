@@ -2,7 +2,13 @@ import Stripe from "stripe";
 
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 
-export const getMockedPaymentIntentSucceededEvent = (): Stripe.PaymentIntentSucceededEvent => {
+type Params = {
+  status?: Stripe.PaymentIntent.Status;
+};
+
+export const getMockedPaymentIntentSucceededEvent = (
+  params?: Params,
+): Stripe.PaymentIntentSucceededEvent => {
   // Stripe returns timestamp in seconds
   const date = new Date(2025, 1, 1).getTime() / 1000;
 
@@ -55,7 +61,7 @@ export const getMockedPaymentIntentSucceededEvent = (): Stripe.PaymentIntentSucc
         source: null,
         statement_descriptor: null,
         statement_descriptor_suffix: null,
-        status: "succeeded",
+        status: params?.status ?? "succeeded",
         transfer_data: null,
         transfer_group: null,
       },
