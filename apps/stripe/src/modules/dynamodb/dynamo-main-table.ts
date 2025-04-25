@@ -38,6 +38,7 @@ export class DynamoMainTable extends Table<PartitionKey, SortKey> {
 
   /**
    * These PKs will be scoped per installation, so reinstalling the app will not access this data.
+   * Use Case: Logs, config, transactions.
    */
   static getPrimaryKeyScopedToInstallation({
     saleorApiUrl,
@@ -50,7 +51,8 @@ export class DynamoMainTable extends Table<PartitionKey, SortKey> {
   }
 
   /**
-   * These PKs will be scoped per installation, so reinstalling the app will not access this data.
+   * These PKs will be scoped tenant, so even after reinstalling they will be accessible
+   * Use case: APL
    */
   static getPrimaryKeyScopedToSaleorApiUrl({
     saleorApiUrl,

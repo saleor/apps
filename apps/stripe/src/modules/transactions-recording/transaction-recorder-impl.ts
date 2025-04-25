@@ -1,3 +1,4 @@
+import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
 import { TransactionRecorderFile } from "@/modules/transactions-recording/transaction-recorder-file";
 
 /**
@@ -6,4 +7,4 @@ import { TransactionRecorderFile } from "@/modules/transactions-recording/transa
  * TODO:
  * Document that this file in fork can be replaced with a different DB
  */
-export const transactionRecorder = new TransactionRecorderFile();
+export const transactionRecorder: TransactionRecorder = new TransactionRecorderFile();
