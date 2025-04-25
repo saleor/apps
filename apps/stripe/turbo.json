@@ -14,7 +14,11 @@
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",
-        "STRIPE_PARTNER_ID"
+        "STRIPE_PARTNER_ID",
+        "DYNAMODB_MAIN_TABLE_NAME",
+        "AWS_SECRET_ACCESS_KEY",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_REGION"
       ]
     }
   }

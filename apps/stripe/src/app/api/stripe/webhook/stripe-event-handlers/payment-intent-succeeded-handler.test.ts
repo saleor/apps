@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
 import { PaymentIntentSucceededHandler } from "@/app/api/stripe/webhook/stripe-event-handlers/payment-intent-succeeded-handler";
+import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 
 describe("PaymentIntentSucceededHandler", () => {
   describe("Authorization Flow", () => {
@@ -12,7 +13,7 @@ describe("PaymentIntentSucceededHandler", () => {
       event.data.object.amount_capturable = 123_30;
 
       const transaction = getMockedRecordedTransaction({
-        transactionFlow: "AUTHORIZATION",
+        resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
       });
 
       const result = await new PaymentIntentSucceededHandler().processEvent({
@@ -39,7 +40,7 @@ describe("PaymentIntentSucceededHandler", () => {
       event.data.object.amount_received = 2137_11;
 
       const transaction = getMockedRecordedTransaction({
-        transactionFlow: "CHARGE",
+        resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
       });
 
       const result = await new PaymentIntentSucceededHandler().processEvent({

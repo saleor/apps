@@ -1,7 +1,7 @@
 import { parseTransactionInitializeSessionEventData } from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 
-import { mockedSaleorChannelId } from "./constants";
+import { mockedSaleorChannelId, mockedSaleorTransactionId } from "./constants";
 
 export const getMockedTransactionInitializeSessionEvent = (args?: {
   actionType: "CHARGE" | "AUTHORIZATION";
@@ -10,6 +10,9 @@ export const getMockedTransactionInitializeSessionEvent = (args?: {
     amount: 100,
     currency: "USD",
     actionType: args?.actionType ?? "CHARGE",
+  },
+  transaction: {
+    id: mockedSaleorTransactionId,
   },
   data: parseTransactionInitializeSessionEventData({
     paymentIntent: {

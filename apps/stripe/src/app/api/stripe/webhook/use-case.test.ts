@@ -3,13 +3,15 @@ import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockAdyenWebhookUrl, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+import { mockAdyenWebhookUrl, mockedSaleorTransactionIdBranded } from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
 import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
+import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
+import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
 import {
   ITransactionEventReporter,
   TransactionEventReportResultResult,
@@ -160,7 +162,13 @@ describe("StripeWebhookUseCase", () => {
         eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
         mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction(mockedSaleorTransactionId, stripePiId, "CHARGE"),
+          [stripePiId]: new RecordedTransaction({
+            saleorTransactionId: mockedSaleorTransactionIdBranded,
+            stripePaymentIntentId: stripePiId,
+            saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+            resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+            selectedPaymentMethod: "card",
+          }),
         };
 
         mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
@@ -216,11 +224,13 @@ describe("StripeWebhookUseCase", () => {
         eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
         mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction(
-            mockedSaleorTransactionId,
-            stripePiId,
-            "AUTHORIZATION",
-          ),
+          [stripePiId]: new RecordedTransaction({
+            saleorTransactionId: mockedSaleorTransactionIdBranded,
+            stripePaymentIntentId: stripePiId,
+            saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
+            resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
+            selectedPaymentMethod: "card",
+          }),
         };
 
         mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
