@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import {
   StripeFrontendConfig,
   StripeFrontendConfigSerializedFields,
-} from "@/modules/app-config/stripe-config";
+} from "@/modules/app-config/domain/stripe-config";
 
 type Props = {
   configs: Array<StripeFrontendConfigSerializedFields>;

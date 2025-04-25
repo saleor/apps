@@ -3,7 +3,7 @@ import { Box, Select, Text } from "@saleor/macaw-ui";
 import React from "react";
 
 import { ChannelFragment } from "@/generated/graphql";
-import { StripeFrontendConfigSerializedFields } from "@/modules/app-config/stripe-config";
+import { StripeFrontendConfigSerializedFields } from "@/modules/app-config/domain/stripe-config";
 
 type Props = {
   channels: ChannelFragment[];

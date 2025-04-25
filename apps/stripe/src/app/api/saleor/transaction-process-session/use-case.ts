@@ -6,7 +6,7 @@ import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { assertUnreachable } from "@/lib/assert-unreachable";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { AppConfigRepo } from "@/modules/app-config/app-config-repo";
+import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
-import { AppRootConfig } from "@/modules/app-config/app-root-config";
-import { StripeConfig } from "@/modules/app-config/stripe-config";
+import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
+import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 
 describe("AppRootConfig", () => {
   describe("getAllConfigsAsList", () => {
