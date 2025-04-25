@@ -2,6 +2,9 @@ import "next-test-api-route-handler";
 
 import { vi } from "vitest";
 
+// eslint-disable-next-line turbo/no-undeclared-env-vars, n/no-process-env
+process.env.TZ = "UTC";
+
 vi.stubEnv("SECRET_KEY", "test_secret_key");
 vi.stubEnv("AWS_REGION", "localhost");
 vi.stubEnv("AWS_ACCESS_KEY_ID", "");

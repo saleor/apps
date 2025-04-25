@@ -11,7 +11,7 @@ export const paymentGatewayInitializeSessionWebhookDefinition =
     apl: saleorApp.apl,
     event: "PAYMENT_GATEWAY_INITIALIZE_SESSION",
     name: "Stripe Payment Gateway Initialize",
-    isActive: true, // TODO: disable in production
+    isActive: true,
     query: PaymentGatewayInitializeSessionDocument,
     webhookPath: "api/saleor/payment-gateway-initialize-session",
   });
