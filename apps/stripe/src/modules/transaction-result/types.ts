@@ -6,7 +6,7 @@ import { AuthorizationFailureResult, ChargeFailureResult } from "./failure-resul
 import { AuthorizationRequestResult, ChargeRequestResult } from "./request-result";
 import { AuthorizationSuccessResult, ChargeSuccessResult } from "./success-result";
 
-export type AppResult =
+export type TransactionResult =
   | ChargeSuccessResult
   | AuthorizationSuccessResult
   | ChargeActionRequiredResult

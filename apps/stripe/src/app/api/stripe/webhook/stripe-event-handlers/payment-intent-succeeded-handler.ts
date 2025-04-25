@@ -1,8 +1,7 @@
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
-import { TransactionResult } from "@/app/api/stripe/webhook/resolved-webhook-events";
-import { mapPaymentIntentStatusToAppResult } from "@/modules/app-result/map-payment-intent-status-to-app-result";
+import { TransactionEventReportVariablesResolver } from "@/app/api/stripe/webhook/transaction-event-report-variables-resolver";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
 import {
@@ -13,6 +12,7 @@ import {
   createStripePaymentIntentStatus,
   StripePaymentIntentStatusValidationError,
 } from "@/modules/stripe/stripe-payment-intent-status";
+import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
 import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
 
 type PossibleErrors = InstanceType<
@@ -31,7 +31,7 @@ export class PaymentIntentSucceededHandler {
   }: {
     event: Stripe.PaymentIntentSucceededEvent;
     recordedTransaction: RecordedTransaction;
-  }): Promise<Result<TransactionResult, PossibleErrors>> {
+  }): Promise<Result<TransactionEventReportVariablesResolver, PossibleErrors>> {
     const intentObject = event.data.object;
     const currency = intentObject.currency;
     const authorizedAmount = intentObject.amount_capturable;
@@ -55,7 +55,7 @@ export class PaymentIntentSucceededHandler {
 
     const [saleorMoney, paymentIntentId, paymentIntentStatus] = paramsResult.value;
 
-    const MappedResult = mapPaymentIntentStatusToAppResult(
+    const MappedResult = mapPaymentIntentStatusToTransactionResult(
       paymentIntentStatus,
       recordedTransaction.resolvedTransactionFlow,
     );
@@ -67,8 +67,8 @@ export class PaymentIntentSucceededHandler {
     });
 
     return ok(
-      new TransactionResult({
-        appResult: result,
+      new TransactionEventReportVariablesResolver({
+        transactionResult: result,
         date: eventDate,
         saleorTransactionId: recordedTransaction.saleorTransactionId,
       }),

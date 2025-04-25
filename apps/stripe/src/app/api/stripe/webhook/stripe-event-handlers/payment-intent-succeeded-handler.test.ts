@@ -21,7 +21,7 @@ describe("PaymentIntentSucceededHandler", () => {
         recordedTransaction: transaction,
       });
 
-      const variables = result._unsafeUnwrap().getTransactionEventReportVariables();
+      const variables = result._unsafeUnwrap().resolveEventReportVariables();
 
       expect(variables.type).toBe("AUTHORIZATION_SUCCESS");
       // comes from mock
@@ -48,7 +48,7 @@ describe("PaymentIntentSucceededHandler", () => {
         recordedTransaction: transaction,
       });
 
-      const variables = result._unsafeUnwrap().getTransactionEventReportVariables();
+      const variables = result._unsafeUnwrap().resolveEventReportVariables();
 
       expect(variables.type).toBe("CHARGE_SUCCESS");
       // comes from mock

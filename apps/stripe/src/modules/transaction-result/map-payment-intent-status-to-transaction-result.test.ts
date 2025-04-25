@@ -8,7 +8,7 @@ import {
   ChargeActionRequiredResult,
 } from "./action-required-result";
 import { AuthorizationFailureResult, ChargeFailureResult } from "./failure-result";
-import { mapPaymentIntentStatusToAppResult } from "./map-payment-intent-status-to-app-result";
+import { mapPaymentIntentStatusToTransactionResult } from "./map-payment-intent-status-to-transaction-result";
 import { AuthorizationRequestResult, ChargeRequestResult } from "./request-result";
 import { AuthorizationSuccessResult, ChargeSuccessResult } from "./success-result";
 
@@ -42,10 +42,13 @@ describe("mapPaymentIntentStatusToAppResult", () => {
         expectedResult: ChargeFailureResult,
       },
     ])(
-      "maps Stripe status: $status to appResult: $expectedResult.name",
+      "maps Stripe status: $status to transactionResult: $expectedResult.name",
       ({ status, expectedResult }) => {
         const stripeStatus = createStripePaymentIntentStatus(status)._unsafeUnwrap();
-        const result = mapPaymentIntentStatusToAppResult(stripeStatus, resolvedTransactionFlow);
+        const result = mapPaymentIntentStatusToTransactionResult(
+          stripeStatus,
+          resolvedTransactionFlow,
+        );
 
         expect(result).toBe(expectedResult);
       },
@@ -85,10 +88,13 @@ describe("mapPaymentIntentStatusToAppResult", () => {
         expectedResult: AuthorizationSuccessResult,
       },
     ])(
-      "maps Stripe status: $status to appResult: $expectedResult.name",
+      "maps Stripe status: $status to transactionResult: $expectedResult.name",
       ({ status, expectedResult }) => {
         const stripeStatus = createStripePaymentIntentStatus(status)._unsafeUnwrap();
-        const result = mapPaymentIntentStatusToAppResult(stripeStatus, resolvedTransactionFlow);
+        const result = mapPaymentIntentStatusToTransactionResult(
+          stripeStatus,
+          resolvedTransactionFlow,
+        );
 
         expect(result).toBe(expectedResult);
       },

@@ -6,8 +6,6 @@ import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { AuthorizationErrorResult, ChargeErrorResult } from "@/modules/app-result/error-result";
-import { mapPaymentIntentStatusToAppResult } from "@/modules/app-result/map-payment-intent-status-to-app-result";
 import { ResolvedTransationFlow } from "@/modules/resolved-transaction-flow";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
@@ -23,6 +21,11 @@ import {
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import {
+  AuthorizationErrorResult,
+  ChargeErrorResult,
+} from "@/modules/transaction-result/error-result";
+import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
 import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
 
 import {
@@ -159,7 +162,7 @@ export class TransactionProcessSessionUseCase {
       return ok(
         new TransactionProcessSessionUseCaseResponses.Error({
           error: mappedError,
-          appResult: this.getErrorAppResult(
+          transactionResult: this.getErrorAppResult(
             recordedTransactionResult.value.resolvedTransactionFlow,
             paymentIntentIdResult.value,
             event.action.amount,
@@ -183,7 +186,7 @@ export class TransactionProcessSessionUseCase {
 
     const [saleorMoney, stripePaymentIntentStatus] = mappedResponseResult.value;
 
-    const MappedResult = mapPaymentIntentStatusToAppResult(
+    const MappedResult = mapPaymentIntentStatusToTransactionResult(
       stripePaymentIntentStatus,
       recordedTransactionResult.value.resolvedTransactionFlow,
     );
@@ -194,6 +197,6 @@ export class TransactionProcessSessionUseCase {
       stripeStatus: stripePaymentIntentStatus,
     });
 
-    return ok(new TransactionProcessSessionUseCaseResponses.OK({ appResult: result }));
+    return ok(new TransactionProcessSessionUseCaseResponses.OK({ transactionResult: result }));
   }
 }

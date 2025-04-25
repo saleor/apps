@@ -5,40 +5,40 @@ import {
   mockedSaleorTransactionIdBranded,
 } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
-} from "@/modules/app-result/action-required-result";
+} from "@/modules/transaction-result/action-required-result";
 import {
   AuthorizationFailureResult,
   ChargeFailureResult,
-} from "@/modules/app-result/failure-result";
+} from "@/modules/transaction-result/failure-result";
 import {
   AuthorizationRequestResult,
   ChargeRequestResult,
-} from "@/modules/app-result/request-result";
+} from "@/modules/transaction-result/request-result";
 import {
   AuthorizationSuccessResult,
   ChargeSuccessResult,
-} from "@/modules/app-result/success-result";
-import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
+} from "@/modules/transaction-result/success-result";
 
-import { TransactionResult } from "./resolved-webhook-events";
+import { TransactionEventReportVariablesResolver } from "./transaction-event-report-variables-resolver";
 
-describe("TransactionResult", () => {
-  it("Returns valid transaction report variables for appResult: ChargeSuccess", () => {
-    const appResult = new ChargeSuccessResult({
+describe("TransactionEventReportVariablesResolver", () => {
+  it("Resolves valid transaction report variables for transactionResult: ChargeSuccess", () => {
+    const transactionResult = new ChargeSuccessResult({
       saleorMoney: getMockedSaleorMoney(),
       stripePaymentIntentId: mockedStripePaymentIntentId,
     });
 
-    const transactionResult = new TransactionResult({
-      appResult,
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       date: new Date("2023-10-01T00:00:00Z"),
     });
 
-    expect(transactionResult.getTransactionEventReportVariables()).toMatchInlineSnapshot(`
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
         "amount": SaleorMoney {
           "amount": 10,
@@ -53,19 +53,19 @@ describe("TransactionResult", () => {
     `);
   });
 
-  it("Returns valid transaction report variables for appResult: AuthorizationSuccess", () => {
-    const appResult = new AuthorizationSuccessResult({
+  it("Resolves valid transaction report variables for transactionResult: AuthorizationSuccess", () => {
+    const transactionResult = new AuthorizationSuccessResult({
       saleorMoney: getMockedSaleorMoney(),
       stripePaymentIntentId: mockedStripePaymentIntentId,
     });
 
-    const transactionResult = new TransactionResult({
-      appResult,
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       date: new Date("2023-10-01T00:00:00Z"),
     });
 
-    expect(transactionResult.getTransactionEventReportVariables()).toMatchInlineSnapshot(`
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
         "amount": SaleorMoney {
           "amount": 10,
@@ -80,20 +80,20 @@ describe("TransactionResult", () => {
     `);
   });
 
-  it("Returns valid transaction report variables for appResult: ChargeActionRequired", () => {
-    const appResult = new ChargeActionRequiredResult({
+  it("Resolves valid transaction report variables for transactionResult: ChargeActionRequired", () => {
+    const transactionResult = new ChargeActionRequiredResult({
       saleorMoney: getMockedSaleorMoney(),
       stripePaymentIntentId: mockedStripePaymentIntentId,
       stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
     });
 
-    const transactionResult = new TransactionResult({
-      appResult,
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       date: new Date("2023-10-01T00:00:00Z"),
     });
 
-    expect(transactionResult.getTransactionEventReportVariables()).toMatchInlineSnapshot(`
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
         "amount": SaleorMoney {
           "amount": 10,
@@ -108,20 +108,20 @@ describe("TransactionResult", () => {
     `);
   });
 
-  it("Returns valid transaction report variables for appResult: AuthorizationActionRequired", () => {
-    const appResult = new AuthorizationActionRequiredResult({
+  it("Resolves valid transaction report variables for transactionResult: AuthorizationActionRequired", () => {
+    const transactionResult = new AuthorizationActionRequiredResult({
       saleorMoney: getMockedSaleorMoney(),
       stripePaymentIntentId: mockedStripePaymentIntentId,
       stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
     });
 
-    const transactionResult = new TransactionResult({
-      appResult,
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       date: new Date("2023-10-01T00:00:00Z"),
     });
 
-    expect(transactionResult.getTransactionEventReportVariables()).toMatchInlineSnapshot(`
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
         "amount": SaleorMoney {
           "amount": 10,
@@ -136,19 +136,19 @@ describe("TransactionResult", () => {
     `);
   });
 
-  it("Returns valid transaction report variables for appResult: ChargeRequest", () => {
-    const appResult = new ChargeRequestResult({
+  it("Resolves valid transaction report variables for transactionResult: ChargeRequest", () => {
+    const transactionResult = new ChargeRequestResult({
       saleorMoney: getMockedSaleorMoney(),
       stripePaymentIntentId: mockedStripePaymentIntentId,
     });
 
-    const transactionResult = new TransactionResult({
-      appResult,
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       date: new Date("2023-10-01T00:00:00Z"),
     });
 
-    expect(transactionResult.getTransactionEventReportVariables()).toMatchInlineSnapshot(`
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
         "amount": SaleorMoney {
           "amount": 10,
@@ -163,19 +163,19 @@ describe("TransactionResult", () => {
     `);
   });
 
-  it("Returns valid transaction report variables for appResult: AuthorizationRequest", () => {
-    const appResult = new AuthorizationRequestResult({
+  it("Resolves valid transaction report variables for transactionResult: AuthorizationRequest", () => {
+    const transactionResult = new AuthorizationRequestResult({
       saleorMoney: getMockedSaleorMoney(),
       stripePaymentIntentId: mockedStripePaymentIntentId,
     });
 
-    const transactionResult = new TransactionResult({
-      appResult,
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       date: new Date("2023-10-01T00:00:00Z"),
     });
 
-    expect(transactionResult.getTransactionEventReportVariables()).toMatchInlineSnapshot(`
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
         "amount": SaleorMoney {
           "amount": 10,
@@ -190,19 +190,19 @@ describe("TransactionResult", () => {
     `);
   });
 
-  it("Returns valid transaction report variables for appResult: ChargeFailureResult", () => {
-    const appResult = new ChargeFailureResult({
+  it("Resolves valid transaction report variables for transactionResult: ChargeFailureResult", () => {
+    const transactionResult = new ChargeFailureResult({
       saleorMoney: getMockedSaleorMoney(),
       stripePaymentIntentId: mockedStripePaymentIntentId,
     });
 
-    const transactionResult = new TransactionResult({
-      appResult,
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       date: new Date("2023-10-01T00:00:00Z"),
     });
 
-    expect(transactionResult.getTransactionEventReportVariables()).toMatchInlineSnapshot(`
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
         "amount": SaleorMoney {
           "amount": 10,
@@ -217,19 +217,19 @@ describe("TransactionResult", () => {
     `);
   });
 
-  it("Returns valid transaction report variables for appResult: AuthorizationFailure", () => {
-    const appResult = new AuthorizationFailureResult({
+  it("Resolves valid transaction report variables for transactionResult: AuthorizationFailure", () => {
+    const transactionResult = new AuthorizationFailureResult({
       saleorMoney: getMockedSaleorMoney(),
       stripePaymentIntentId: mockedStripePaymentIntentId,
     });
 
-    const transactionResult = new TransactionResult({
-      appResult,
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       date: new Date("2023-10-01T00:00:00Z"),
     });
 
-    expect(transactionResult.getTransactionEventReportVariables()).toMatchInlineSnapshot(`
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
         "amount": SaleorMoney {
           "amount": 10,

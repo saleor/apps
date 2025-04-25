@@ -10,7 +10,7 @@ import { AuthorizationFailureResult, ChargeFailureResult } from "./failure-resul
 import { AuthorizationRequestResult, ChargeRequestResult } from "./request-result";
 import { AuthorizationSuccessResult, ChargeSuccessResult } from "./success-result";
 
-export const mapPaymentIntentStatusToAppResult = (
+export const mapPaymentIntentStatusToTransactionResult = (
   stripePaymentIntentStatus: StripePaymentIntentStatus,
   resolvedTransationFlow: ResolvedTransationFlow,
 ) => {
