@@ -1,12 +1,13 @@
-import { PaymentIntentResult } from "@/modules/saleor/payment-intent-result/types";
+import { AppResult } from "@/modules/app-result/types";
+import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
 import { TransactionEventReportInput } from "@/modules/saleor/transaction-event-reporter";
 
 export class TransactionResult {
-  readonly saleorTransactionId: string;
+  readonly saleorTransactionId: SaleorTransationId;
   readonly date: Date;
-  readonly appResult: PaymentIntentResult;
+  readonly appResult: AppResult;
 
-  constructor(args: { saleorTransactionId: string; date: Date; appResult: PaymentIntentResult }) {
+  constructor(args: { saleorTransactionId: SaleorTransationId; date: Date; appResult: AppResult }) {
     this.date = args.date;
     this.saleorTransactionId = args.saleorTransactionId;
     this.appResult = args.appResult;

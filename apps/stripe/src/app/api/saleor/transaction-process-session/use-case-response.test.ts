@@ -1,5 +1,22 @@
 import { describe, expect, it } from "vitest";
 
+import {
+  AuthorizationActionRequiredResult,
+  ChargeActionRequiredResult,
+} from "@/modules/app-result/action-required-result";
+import { AuthorizationErrorResult, ChargeErrorResult } from "@/modules/app-result/error-result";
+import {
+  AuthorizationFailureResult,
+  ChargeFailureResult,
+} from "@/modules/app-result/failure-result";
+import {
+  AuthorizationRequestResult,
+  ChargeRequestResult,
+} from "@/modules/app-result/request-result";
+import {
+  AuthorizationSuccessResult,
+  ChargeSuccessResult,
+} from "@/modules/app-result/success-result";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripeInvalidRequestError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
@@ -8,9 +25,64 @@ import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment
 import { TransactionProcessSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionProcessSessionUseCaseResponses", () => {
-  describe("ChargeActionRequired", () => {
-    it("getResponse() returns valid Response with status 200 and message indicating that intent requires action", async () => {
-      const successResponse = new TransactionProcessSessionUseCaseResponses.ChargeActionRequired({
+  // TODO: move to it.each
+  describe("OK", () => {
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeded if appResult is ChargeSuccess", async () => {
+      const appResult = new ChargeSuccessResult({
+        saleorMoney: SaleorMoney.createFromStripe({
+          amount: 10000,
+          currency: "usd",
+        })._unsafeUnwrap(),
+        stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
+      });
+      const response = new TransactionProcessSessionUseCaseResponses.OK({
+        appResult,
+      });
+      const fetchReponse = response.getResponse();
+
+      expect(fetchReponse.status).toBe(200);
+      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [
+            "REFUND",
+          ],
+          "amount": 100,
+          "message": "Payment intent succeeded",
+          "pspReference": "pi_1",
+          "result": "CHARGE_SUCCESS",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeded if appResult is AuthorizationSuccess", async () => {
+      const appResult = new AuthorizationSuccessResult({
+        saleorMoney: SaleorMoney.createFromStripe({
+          amount: 10000,
+          currency: "usd",
+        })._unsafeUnwrap(),
+        stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
+      });
+      const response = new TransactionProcessSessionUseCaseResponses.OK({
+        appResult,
+      });
+      const fetchReponse = response.getResponse();
+
+      expect(fetchReponse.status).toBe(200);
+      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [
+            "CANCEL",
+          ],
+          "amount": 100,
+          "message": "Payment intent succeeded",
+          "pspReference": "pi_1",
+          "result": "AUTHORIZATION_SUCCESS",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with status 200 and message indicating that intent requires action if appResult is ChargeActionRequired", async () => {
+      const appResult = new ChargeActionRequiredResult({
         saleorMoney: SaleorMoney.createFromStripe({
           amount: 10000,
           currency: "usd",
@@ -18,11 +90,15 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
         stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
       });
-      const fetchReponse = successResponse.getResponse();
+      const response = new TransactionProcessSessionUseCaseResponses.OK({
+        appResult,
+      });
+      const fetchReponse = response.getResponse();
 
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [],
           "amount": 100,
           "message": "Payment intent requires action",
           "pspReference": "pi_1",
@@ -31,85 +107,147 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       `);
     });
 
-    it("getResponse() returns valid Response with status 200 and message indicating that intent requires confirmation", async () => {
-      const successResponse = new TransactionProcessSessionUseCaseResponses.ChargeActionRequired({
+    it("getResponse() returns valid Response with status 200 and message indicating that intent requires action if appResult is AuthorizationActionRequired", async () => {
+      const appResult = new AuthorizationActionRequiredResult({
         saleorMoney: SaleorMoney.createFromStripe({
           amount: 10000,
           currency: "usd",
         })._unsafeUnwrap(),
         stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
-        stripeStatus: createStripePaymentIntentStatus("requires_confirmation")._unsafeUnwrap(),
+        stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
       });
-      const fetchReponse = successResponse.getResponse();
+      const response = new TransactionProcessSessionUseCaseResponses.OK({
+        appResult,
+      });
+      const fetchReponse = response.getResponse();
 
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [],
           "amount": 100,
-          "message": "Payment intent requires confirmation",
+          "message": "Payment intent requires action",
           "pspReference": "pi_1",
-          "result": "CHARGE_ACTION_REQUIRED",
+          "result": "AUTHORIZATION_ACTION_REQUIRED",
         }
       `);
     });
 
-    it("getResponse() returns valid Response with status 200 and message indicating that intent requires payment method", async () => {
-      const successResponse = new TransactionProcessSessionUseCaseResponses.ChargeActionRequired({
-        saleorMoney: SaleorMoney.createFromStripe({
-          amount: 10000,
-          currency: "usd",
-        })._unsafeUnwrap(),
-        stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
-        stripeStatus: createStripePaymentIntentStatus("requires_payment_method")._unsafeUnwrap(),
-      });
-      const fetchReponse = successResponse.getResponse();
-
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
-        {
-          "amount": 100,
-          "message": "Payment intent requires payment method",
-          "pspReference": "pi_1",
-          "result": "CHARGE_ACTION_REQUIRED",
-        }
-      `);
-    });
-  });
-
-  describe("ChargeSuccess", () => {
-    it("getResponse() returns valid Response with status 200 and message indicating that intent was succeeded", async () => {
-      const successResponse = new TransactionProcessSessionUseCaseResponses.ChargeSuccess({
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is processing if appResult is ChargeRequest", async () => {
+      const appResult = new ChargeRequestResult({
         saleorMoney: SaleorMoney.createFromStripe({
           amount: 10000,
           currency: "usd",
         })._unsafeUnwrap(),
         stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
       });
-      const fetchReponse = successResponse.getResponse();
+      const response = new TransactionProcessSessionUseCaseResponses.OK({
+        appResult,
+      });
+      const fetchReponse = response.getResponse();
 
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [],
           "amount": 100,
-          "message": "Payment intent succeeded",
+          "message": "Payment intent is processing",
           "pspReference": "pi_1",
-          "result": "CHARGE_SUCCESS",
+          "result": "CHARGE_REQUEST",
         }
       `);
     });
-  });
 
-  describe("ChargeFailure", () => {
-    it("getResponse() returns valid Response with status 200 and message with failure reason and additional information inside data object", async () => {
-      const successResponse = new TransactionProcessSessionUseCaseResponses.ChargeFailure({
-        error: new StripeInvalidRequestError("Invalid request"),
-        saleorEventAmount: 21.23,
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is processing if appResult is AuthorizationRequest", async () => {
+      const appResult = new AuthorizationRequestResult({
+        saleorMoney: SaleorMoney.createFromStripe({
+          amount: 10000,
+          currency: "usd",
+        })._unsafeUnwrap(),
         stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
       });
-      const fetchReponse = successResponse.getResponse();
+      const response = new TransactionProcessSessionUseCaseResponses.OK({
+        appResult,
+      });
+      const fetchReponse = response.getResponse();
 
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [],
+          "amount": 100,
+          "message": "Payment intent is processing",
+          "pspReference": "pi_1",
+          "result": "AUTHORIZATION_REQUEST",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is cancelled if appResult is ChargeFailure", async () => {
+      const appResult = new ChargeFailureResult({
+        saleorMoney: SaleorMoney.createFromStripe({
+          amount: 10000,
+          currency: "usd",
+        })._unsafeUnwrap(),
+        stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
+      });
+      const response = new TransactionProcessSessionUseCaseResponses.OK({
+        appResult,
+      });
+      const fetchReponse = response.getResponse();
+
+      expect(fetchReponse.status).toBe(200);
+      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [],
+          "amount": 100,
+          "message": "Payment intent was cancelled",
+          "pspReference": "pi_1",
+          "result": "CHARGE_FAILURE",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is cancelled if appResult is AuthorizationFailure", async () => {
+      const appResult = new AuthorizationFailureResult({
+        saleorMoney: SaleorMoney.createFromStripe({
+          amount: 10000,
+          currency: "usd",
+        })._unsafeUnwrap(),
+        stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
+      });
+      const response = new TransactionProcessSessionUseCaseResponses.OK({
+        appResult,
+      });
+      const fetchReponse = response.getResponse();
+
+      expect(fetchReponse.status).toBe(200);
+      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [],
+          "amount": 100,
+          "message": "Payment intent was cancelled",
+          "pspReference": "pi_1",
+          "result": "AUTHORIZATION_FAILURE",
+        }
+      `);
+    });
+
+    describe("Error", () => {
+      it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if appResult is ChargeError", async () => {
+        const appResult = new ChargeErrorResult({
+          saleorEventAmount: 21.23,
+          stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
+        });
+
+        const successResponse = new TransactionProcessSessionUseCaseResponses.Error({
+          error: new StripeInvalidRequestError("Invalid request"),
+          appResult,
+        });
+        const fetchReponse = successResponse.getResponse();
+
+        expect(fetchReponse.status).toBe(200);
+        expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
           "amount": 21.23,
           "data": {
@@ -127,53 +265,40 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
           "result": "CHARGE_FAILURE",
         }
       `);
-    });
-  });
+      });
 
-  describe("ChargeFailureForCancelledPaymentIntent", async () => {
-    it("getResponse() returns valid Response with status 200 and message indicating that payment intent was canceled", async () => {
-      const successResponse =
-        new TransactionProcessSessionUseCaseResponses.ChargeFailureForCancelledPaymentIntent({
-          saleorMoney: SaleorMoney.createFromStripe({
-            amount: 10000,
-            currency: "usd",
-          })._unsafeUnwrap(),
+      it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if appResult is AuthorizationError", async () => {
+        const appResult = new AuthorizationErrorResult({
+          saleorEventAmount: 21.23,
           stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
         });
-      const fetchReponse = successResponse.getResponse();
 
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
-        {
-          "amount": 100,
-          "message": "Payment intent was cancelled",
-          "pspReference": "pi_1",
-          "result": "CHARGE_FAILURE",
-        }
-      `);
-    });
-  });
+        const successResponse = new TransactionProcessSessionUseCaseResponses.Error({
+          error: new StripeInvalidRequestError("Invalid request"),
+          appResult,
+        });
+        const fetchReponse = successResponse.getResponse();
 
-  describe("ChargeRequest", () => {
-    it("getResponse() returns valid Response with status 200 and message indicating that intent is processing", async () => {
-      const successResponse = new TransactionProcessSessionUseCaseResponses.ChargeRequest({
-        saleorMoney: SaleorMoney.createFromStripe({
-          amount: 10000,
-          currency: "usd",
-        })._unsafeUnwrap(),
-        stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
+        expect(fetchReponse.status).toBe(200);
+        expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+          {
+            "amount": 21.23,
+            "data": {
+              "paymentIntent": {
+                "errors": [
+                  {
+                    "code": "StripeApiError",
+                    "message": "There is a problem with the request to Stripe API",
+                  },
+                ],
+              },
+            },
+            "message": "Payment intent error - there is a problem with the request to Stripe API",
+            "pspReference": "pi_1",
+            "result": "AUTHORIZATION_FAILURE",
+          }
+        `);
       });
-      const fetchReponse = successResponse.getResponse();
-
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
-        {
-          "amount": 100,
-          "message": "Payment intent is processing",
-          "pspReference": "pi_1",
-          "result": "CHARGE_REQUEST",
-        }
-      `);
     });
   });
 });

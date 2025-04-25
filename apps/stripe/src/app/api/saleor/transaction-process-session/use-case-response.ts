@@ -1,21 +1,20 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
-import { PaymentIntentResult } from "@/modules/saleor/payment-intent-result/types";
+import { AuthorizationErrorResult, ChargeErrorResult } from "@/modules/app-result/error-result";
+import { AppResult } from "@/modules/app-result/types";
 import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
-import { ChargeFailureForCancelledPaymentIntentResult } from "@/modules/stripe/payment-intent-handling-results";
 import {
   StripeApiErrorPublicCode,
   StripeCardErrorPublicCode,
   StripeGetPaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
-class Success extends SuccessWebhookResponse {
-  readonly appResult: PaymentIntentResult;
+class OK extends SuccessWebhookResponse {
+  readonly appResult: AppResult;
 
-  constructor(args: { appResult: PaymentIntentResult }) {
+  constructor(args: { appResult: AppResult }) {
     super();
     this.appResult = args.appResult;
   }
@@ -27,7 +26,7 @@ class Success extends SuccessWebhookResponse {
       pspReference: this.appResult.stripePaymentIntentId,
       // https://docs.stripe.com/payments/paymentintents/lifecycle
       message: this.appResult.message,
-      // @ts-expect-error - this is a workaround for the type error
+      // @ts-expect-error TODO: this is a workaround for the type error - remove after we update app-sdk
       actions: this.appResult.actions,
     });
 
@@ -35,10 +34,8 @@ class Success extends SuccessWebhookResponse {
   }
 }
 
-abstract class FailureBase extends SuccessWebhookResponse {
-  abstract result: "CHARGE_FAILURE" | "AUTHORIZATION_FAILURE";
-  readonly saleorEventAmount: number;
-  readonly stripePaymentIntentId: StripePaymentIntentId;
+class Error extends SuccessWebhookResponse {
+  readonly appResult: ChargeErrorResult | AuthorizationErrorResult;
   readonly error: StripeGetPaymentIntentAPIError;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
@@ -51,24 +48,21 @@ abstract class FailureBase extends SuccessWebhookResponse {
   );
 
   constructor(args: {
-    saleorEventAmount: number;
-    stripePaymentIntentId: StripePaymentIntentId;
+    appResult: ChargeErrorResult | AuthorizationErrorResult;
     error: StripeGetPaymentIntentAPIError;
   }) {
     super();
-    // TODO: remove this after Saleor allows to amount to be optional
-    this.saleorEventAmount = args.saleorEventAmount;
-    this.stripePaymentIntentId = args.stripePaymentIntentId;
+    this.appResult = args.appResult;
     this.error = args.error;
   }
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
-      result: this.result,
+      result: this.appResult.result,
       message: this.error.merchantMessage,
-      amount: this.saleorEventAmount,
-      pspReference: this.stripePaymentIntentId,
-      data: FailureBase.ResponseDataSchema.parse({
+      amount: this.appResult.saleorEventAmount,
+      pspReference: this.appResult.stripePaymentIntentId,
+      data: Error.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [
             {
@@ -84,20 +78,9 @@ abstract class FailureBase extends SuccessWebhookResponse {
   }
 }
 
-class ChargeFailure extends FailureBase {
-  readonly result = "CHARGE_FAILURE";
-}
-
-class AuthorizationFailure extends FailureBase {
-  readonly result = "AUTHORIZATION_FAILURE";
-}
-
 export const TransactionProcessSessionUseCaseResponses = {
-  Success,
-  ChargeFailure,
-  AuthorizationFailure,
-  ChargeFailureForCancelledPaymentIntent: ChargeFailureForCancelledPaymentIntentResult,
-  AuthorizationFailureForCancelledPaymentIntent: ChargeFailureForCancelledPaymentIntentResult,
+  OK,
+  Error,
 };
 
 export type TransactionProcessSessionUseCaseResponsesType = InstanceType<
