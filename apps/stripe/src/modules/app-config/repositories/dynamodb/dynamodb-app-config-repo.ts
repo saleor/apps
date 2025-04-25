@@ -1,9 +1,7 @@
-import { BatchGetCommand, GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
-import { execute } from "dynamodb-toolbox/table/actions/batchGet";
+import { GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
 import { err, ok, Result } from "neverthrow";
 
-import { assertUnreachable } from "@/lib/assert-unreachable";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
@@ -17,7 +15,7 @@ import {
   StripeConfigByConfigIdAccessPattern,
 } from "@/modules/app-config/repositories/app-config-repo";
 import {
-  ChannelConfigMappingAccessPattern,
+  DynamoDbChannelConfigMappingAccessPattern,
   DynamoDbChannelConfigMappingEntity,
   DynamoDbChannelConfigMappingEntrySchema,
 } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
@@ -74,9 +72,9 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
       .entities(this.channelConfigMappingEntity)
       .query({
         range: {
-          beginsWith: ChannelConfigMappingAccessPattern.getSKforAllChannels(),
+          beginsWith: DynamoDbChannelConfigMappingAccessPattern.getSKforAllChannels(),
         },
-        partition: ChannelConfigMappingAccessPattern.getPK({
+        partition: DynamoDbChannelConfigMappingAccessPattern.getPK({
           appId: access.appId,
           saleorApiUrl: access.saleorApiUrl,
         }),
@@ -138,6 +136,8 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
       return ok(rootConfig);
     } catch (e) {
+      this.logger.error("Failed to fetch RootConfig from DynamoDB", { cause: e });
+
       return err(
         new AppConfigRepoError.FailureFetchingConfig("Error fetching RootConfig from DynamoDB", {
           cause: e,
@@ -159,8 +159,8 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
   private fetchConfigIdFromChannelId(access: StripeConfigByChannelIdAccessPattern) {
     const query = this.channelConfigMappingEntity.build(GetItemCommand).key({
-      PK: ChannelConfigMappingAccessPattern.getPK(access),
-      SK: ChannelConfigMappingAccessPattern.getSKforSpecificChannel({
+      PK: DynamoDbChannelConfigMappingAccessPattern.getPK(access),
+      SK: DynamoDbChannelConfigMappingAccessPattern.getSKforSpecificChannel({
         channelId: access.channelId,
       }),
     });
@@ -241,6 +241,8 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
       return ok(configResult.value);
     } catch (e) {
+      this.logger.error("Failed to fetch config from DynamoDB", { cause: e });
+
       return err(
         new AppConfigRepoError.FailureFetchingConfig(
           "Error fetching specific config from DynamoDB",
@@ -250,8 +252,6 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
         ),
       );
     }
-
-    throw new BaseError("Unreachable code reached");
   }
 
   async saveStripeConfig({
@@ -284,6 +284,8 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
       return ok(null);
     } catch (e) {
+      this.logger.error("Failed to save config to DynamoDB", { cause: e });
+
       return err(
         new AppConfigRepoError.FailureSavingConfig("Failed to save config to DynamoDB", {
           cause: e,
@@ -292,24 +294,42 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
     }
   }
 
-  updateMapping(
+  async updateMapping(
     access: BaseAccessPattern,
     data: {
       configId: string;
       channelId: string;
     },
   ): Promise<Result<void | null, InstanceType<typeof BaseError>>> {
-    return Promise.resolve(undefined);
-  }
+    const command = this.channelConfigMappingEntity.build(PutItemCommand).item({
+      configId: data.configId,
+      channelId: data.channelId,
+      PK: DynamoDbChannelConfigMappingAccessPattern.getPK(access),
+      SK: DynamoDbChannelConfigMappingAccessPattern.getSKforSpecificChannel({
+        channelId: data.channelId,
+      }),
+    });
 
-  updateStripeConfig(
-    access: {
-      configId: string;
-      saleorApiUrl: SaleorApiUrl;
-      appId: string;
-    },
-    stripeConfig: StripeConfig,
-  ): Promise<Result<void | null, InstanceType<typeof BaseError>>> {
-    return Promise.resolve(undefined);
+    try {
+      const result = await command.send();
+
+      this.logger.info("Updated mapping in DynamoDB", {
+        dynamoHttpResponseStatusCode: result.$metadata.httpStatusCode,
+        configId: data.configId,
+        channelId: data.channelId,
+      });
+
+      return ok(null);
+    } catch (e) {
+      this.logger.error("Failed to update mapping in DynamoDB", {
+        error: e,
+      });
+
+      return err(
+        new AppConfigRepoError.FailureSavingConfig("Failed to update mapping in DynamoDB", {
+          cause: e,
+        }),
+      );
+    }
   }
 }

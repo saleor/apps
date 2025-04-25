@@ -56,15 +56,6 @@ export interface AppConfigRepo {
   getStripeConfig: (
     access: GetStripeConfigAccessPattern,
   ) => Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>>;
-  // todo probably remove, we will just delete in mvp
-  updateStripeConfig: (
-    access: {
-      configId: string;
-      saleorApiUrl: SaleorApiUrl;
-      appId: string;
-    },
-    stripeConfig: StripeConfig,
-  ) => Promise<Result<void | null, InstanceType<typeof BaseError>>>;
   getRootConfig: (
     access: BaseAccessPattern,
   ) => Promise<
@@ -79,7 +70,10 @@ export interface AppConfigRepo {
       configId: string;
       channelId: string;
     },
-  ) => Promise<Result<void | null, InstanceType<typeof BaseError>>>;
+  ) => Promise<
+    Result<
+      void | null,
+      InstanceType<typeof AppConfigRepoError.FailureSavingConfig | typeof BaseError>
+    >
+  >;
 }
-
-// todo move errors definitions here

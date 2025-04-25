@@ -3,7 +3,7 @@ import { Entity, schema, string } from "dynamodb-toolbox";
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
-export class ChannelConfigMappingAccessPattern {
+export class DynamoDbChannelConfigMappingAccessPattern {
   static getPK({ saleorApiUrl, appId }: { saleorApiUrl: SaleorApiUrl; appId: string }) {
     return DynamoMainTable.getPrimaryKeyScopedToInstallation({ saleorApiUrl, appId });
   }
