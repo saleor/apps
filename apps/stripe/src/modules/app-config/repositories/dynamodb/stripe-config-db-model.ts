@@ -17,7 +17,7 @@ export class StripeConfigAccessPattern {
   }
 }
 
-const EntrySchema = schema({
+export const DynamoDbStripeConfigSchema = schema({
   PK: string().key(),
   SK: string().key(),
   configName: string(),
@@ -32,7 +32,7 @@ export const createStripeConfigEntity = (table: DynamoMainTable) => {
   return new Entity({
     table,
     name: "StripeConfig",
-    schema: EntrySchema,
+    schema: DynamoDbStripeConfigSchema,
     timestamps: {
       created: {
         name: "createdAt",

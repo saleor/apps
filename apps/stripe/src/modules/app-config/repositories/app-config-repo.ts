@@ -35,6 +35,11 @@ export const AppConfigRepoError = {
       _internalName: "AppConfigRepoError.FailureSavingConfigError",
     },
   }),
+  FailureFetchingConfig: BaseError.subclass("FailureFetchingConfigError", {
+    props: {
+      _internalName: "AppConfigRepoError.FailureFetchingConfigError",
+    },
+  }),
 };
 
 export interface AppConfigRepo {
@@ -42,7 +47,12 @@ export interface AppConfigRepo {
     config: StripeConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
-  }) => Promise<Result<null | void, InstanceType<typeof AppConfigRepoError | typeof BaseError>>>;
+  }) => Promise<
+    Result<
+      null | void,
+      InstanceType<typeof AppConfigRepoError.FailureSavingConfig | typeof BaseError>
+    >
+  >;
   getStripeConfig: (
     access: GetStripeConfigAccessPattern,
   ) => Promise<Result<StripeConfig | null, InstanceType<typeof BaseError>>>;
@@ -57,7 +67,12 @@ export interface AppConfigRepo {
   ) => Promise<Result<void | null, InstanceType<typeof BaseError>>>;
   getRootConfig: (
     access: BaseAccessPattern,
-  ) => Promise<Result<AppRootConfig, InstanceType<typeof BaseError>>>;
+  ) => Promise<
+    Result<
+      AppRootConfig,
+      InstanceType<typeof AppConfigRepoError.FailureFetchingConfig | typeof BaseError>
+    >
+  >;
   updateMapping: (
     access: BaseAccessPattern,
     data: {

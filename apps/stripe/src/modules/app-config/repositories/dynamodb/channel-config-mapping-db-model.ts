@@ -17,7 +17,7 @@ export class ChannelConfigMappingAccessPattern {
   }
 }
 
-const EntrySchema = schema({
+export const DynamoDbChannelConfigMappingEntrySchema = schema({
   PK: string().key(),
   SK: string().key(),
   channelId: string(),
@@ -28,7 +28,7 @@ export const createChannelConfigMappingEntity = (table: DynamoMainTable) => {
   return new Entity({
     table,
     name: "ChannelConfigMapping",
-    schema: EntrySchema,
+    schema: DynamoDbChannelConfigMappingEntrySchema,
     timestamps: {
       created: {
         name: "createdAt",
@@ -42,5 +42,5 @@ export const createChannelConfigMappingEntity = (table: DynamoMainTable) => {
   });
 };
 
-export const channelConfigMappingEntity = createChannelConfigMappingEntity(dynamoMainTable);
-export type ChannelConfigMappingEntity = typeof channelConfigMappingEntity;
+export const dynamoDbChannelConfigMappingEntity = createChannelConfigMappingEntity(dynamoMainTable);
+export type DynamoDbChannelConfigMappingEntity = typeof dynamoDbChannelConfigMappingEntity;
