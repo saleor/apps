@@ -165,6 +165,7 @@ export class StripeWebhookUseCase {
         const eventHandler = new PaymentIntentSucceededHandler();
         const resultEvent = await eventHandler.processEvent({
           recordedTransaction: recordedTransaction.value,
+          stripePaymentIntentId: stripePaymentIntentId.value,
           event: event.value,
         });
 

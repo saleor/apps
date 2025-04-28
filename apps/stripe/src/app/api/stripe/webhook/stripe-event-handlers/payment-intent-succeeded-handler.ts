@@ -4,10 +4,7 @@ import Stripe from "stripe";
 import { TransactionEventReportVariablesResolver } from "@/app/api/stripe/webhook/transaction-event-report-variables-resolver";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
-import {
-  createStripePaymentIntentId,
-  StripePaymentIntentValidationError,
-} from "@/modules/stripe/stripe-payment-intent-id";
+import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import {
   createStripePaymentIntentStatus,
   StripePaymentIntentStatusValidationError,
@@ -16,9 +13,7 @@ import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction
 import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
 
 type PossibleErrors = InstanceType<
-  | typeof SaleorMoney.ValidationError
-  | typeof StripePaymentIntentValidationError
-  | typeof StripePaymentIntentStatusValidationError
+  typeof SaleorMoney.ValidationError | typeof StripePaymentIntentStatusValidationError
 >;
 
 /**
@@ -27,9 +22,11 @@ type PossibleErrors = InstanceType<
 export class PaymentIntentSucceededHandler {
   async processEvent({
     event,
+    stripePaymentIntentId,
     recordedTransaction,
   }: {
     event: Stripe.PaymentIntentSucceededEvent;
+    stripePaymentIntentId: StripePaymentIntentId;
     recordedTransaction: RecordedTransaction;
   }): Promise<Result<TransactionEventReportVariablesResolver, PossibleErrors>> {
     const intentObject = event.data.object;
@@ -45,8 +42,6 @@ export class PaymentIntentSucceededHandler {
         amount: isAuthorizationFlow ? authorizedAmount : capturedAmount,
         currency,
       }),
-      // TODO: use one definied above
-      createStripePaymentIntentId(intentObject.id),
       createStripePaymentIntentStatus(intentObject.status),
     ]);
 
@@ -54,7 +49,7 @@ export class PaymentIntentSucceededHandler {
       return err(paramsResult.error);
     }
 
-    const [saleorMoney, paymentIntentId, paymentIntentStatus] = paramsResult.value;
+    const [saleorMoney, paymentIntentStatus] = paramsResult.value;
 
     const MappedResult = mapPaymentIntentStatusToTransactionResult(
       paymentIntentStatus,
@@ -63,7 +58,7 @@ export class PaymentIntentSucceededHandler {
 
     const result = new MappedResult({
       saleorMoney,
-      stripePaymentIntentId: paymentIntentId,
+      stripePaymentIntentId,
       stripeStatus: paymentIntentStatus,
     });
 
