@@ -142,7 +142,10 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
   private fetchConfigIdFromChannelId(access: StripeConfigByChannelIdAccessPattern) {
     const query = this.channelConfigMappingEntity.build(GetItemCommand).key({
-      PK: DynamoDbChannelConfigMapping.accessPattern.getPK(access),
+      PK: DynamoDbChannelConfigMapping.accessPattern.getPK({
+        appId: access.appId,
+        saleorApiUrl: access.saleorApiUrl,
+      }),
       SK: DynamoDbChannelConfigMapping.accessPattern.getSKforSpecificChannel({
         channelId: access.channelId,
       }),
