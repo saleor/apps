@@ -2,8 +2,8 @@ import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
 import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
-import { ResolvedTransationFlow } from "../resolved-transaction-flow";
-import { SaleorTransationFlow } from "../saleor/saleor-transaction-flow";
+import { ResolvedTransationFlow } from "../../resolved-transaction-flow";
+import { SaleorTransationFlow } from "../../saleor/saleor-transaction-flow";
 
 /**
  * Holds transaction that app records during it's lifetime.

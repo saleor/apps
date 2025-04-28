@@ -31,7 +31,7 @@ import {
   StripePaymentIntentValidationError,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
-import { RecordedTransaction } from "@/modules/transactions-recording/recorded-transaction";
+import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import {

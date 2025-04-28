@@ -6,7 +6,7 @@ import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
-import { RecordedTransaction } from "@/modules/transactions-recording/recorded-transaction";
+import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 import {
   TransactionRecorderError,
   TransactionRecorderRepo,
