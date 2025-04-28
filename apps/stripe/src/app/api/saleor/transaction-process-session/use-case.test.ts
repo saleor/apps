@@ -121,6 +121,7 @@ describe("TransactionProcessSessionUseCase", () => {
       });
 
       expect(mockedTransationRecorder.getTransactionByStripePaymentIntentId).toHaveBeenCalledWith(
+        { saleorApiUrl: mockedSaleorApiUrl, appId: mockedSaleorAppId },
         mockedStripePaymentIntentId,
       );
     },

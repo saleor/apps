@@ -103,6 +103,18 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
         })
         .send();
 
+      if (result.$metadata.httpStatusCode != 200) {
+        return err(
+          new TransactionRecorderError.FailedFetchingTransactionError(
+            "Failed to read data from DynamoDB. HTTP status code: " +
+              result.$metadata.httpStatusCode,
+            {
+              cause: result,
+            },
+          ),
+        );
+      }
+
       if (result.Item) {
         const {
           selectedPaymentMethod,

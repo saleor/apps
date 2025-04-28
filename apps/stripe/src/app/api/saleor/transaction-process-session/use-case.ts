@@ -2,7 +2,6 @@ import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
-import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
@@ -142,7 +141,10 @@ export class TransactionProcessSessionUseCase {
 
     const recordedTransactionResult =
       await this.transactionRecorder.getTransactionByStripePaymentIntentId(
-        mockAuthData,
+        {
+          appId: args.appId,
+          saleorApiUrl: args.saleorApiUrl,
+        },
         paymentIntentIdResult.value,
       );
 
