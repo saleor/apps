@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
+import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
 import { PaymentIntentSucceededHandler } from "@/app/api/stripe/webhook/stripe-event-handlers/payment-intent-succeeded-handler";
 import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
@@ -19,11 +20,12 @@ describe("PaymentIntentSucceededHandler", () => {
       const result = await new PaymentIntentSucceededHandler().processEvent({
         event,
         recordedTransaction: transaction,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
       });
 
       const variables = result._unsafeUnwrap().resolveEventReportVariables();
 
-      expect(variables.type).toBe("AUTHORIZATION_SUCCESS");
+      expect(variables.type).toBe("CHARGE_SUCCESS");
       // comes from mock
       expect(variables.amount.currency).toStrictEqual("USD");
       // Converted to Saleor float
@@ -46,6 +48,7 @@ describe("PaymentIntentSucceededHandler", () => {
       const result = await new PaymentIntentSucceededHandler().processEvent({
         event,
         recordedTransaction: transaction,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
       });
 
       const variables = result._unsafeUnwrap().resolveEventReportVariables();

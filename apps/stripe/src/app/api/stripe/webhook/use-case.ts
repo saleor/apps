@@ -19,6 +19,8 @@ import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-int
 import { IStripeEventVerify } from "@/modules/stripe/types";
 import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
 
+import { PaymentIntentAmountCapturableUpdatedHandler } from "./stripe-event-handlers/payment-intent-amount-capturable-updated-handler";
+
 type SuccessResult = StripeWebhookSuccessResponse;
 type ErrorResult = StripeWebhookErrorResponse;
 
@@ -163,6 +165,7 @@ export class StripeWebhookUseCase {
         const eventHandler = new PaymentIntentSucceededHandler();
         const resultEvent = await eventHandler.processEvent({
           recordedTransaction: recordedTransaction.value,
+          stripePaymentIntentId: stripePaymentIntentId.value,
           event: event.value,
         });
 
@@ -180,8 +183,53 @@ export class StripeWebhookUseCase {
 
         return ok(new StripeWebhookSuccessResponse());
       }
+      case "payment_intent.amount_capturable_updated": {
+        const stripePaymentIntentIdResult = createStripePaymentIntentId(event.value.data.object.id);
+
+        if (stripePaymentIntentIdResult.isErr()) {
+          return err(new StripeWebhookErrorResponse(stripePaymentIntentIdResult.error));
+        }
+
+        this.logger.debug(`Resolved Payment Intent ID: ${stripePaymentIntentIdResult.value}`);
+        loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntentIdResult.value);
+
+        const recordedTransaction =
+          await this.transactionRecorder.getTransactionByStripePaymentIntentId(
+            stripePaymentIntentIdResult.value,
+          );
+
+        if (recordedTransaction.isErr()) {
+          this.logger.warn("Error fetching recorded transaction");
+
+          return err(new StripeWebhookErrorResponse(recordedTransaction.error));
+        }
+
+        this.logger.debug("Resolved previously saved transaction");
+
+        const eventHandler = new PaymentIntentAmountCapturableUpdatedHandler();
+        const resultEvent = await eventHandler.processEvent({
+          recordedTransaction: recordedTransaction.value,
+          stripePaymentIntentId: stripePaymentIntentIdResult.value,
+          event: event.value,
+        });
+
+        if (resultEvent.isErr()) {
+          return err(new StripeWebhookErrorResponse(resultEvent.error));
+        }
+
+        const reportResult = await transactionEventReporter.reportTransactionEvent(
+          resultEvent.value.resolveEventReportVariables(),
+        );
+
+        if (reportResult.isErr()) {
+          return err(new StripeWebhookErrorResponse(reportResult.error));
+        }
+
+        return ok(new StripeWebhookSuccessResponse());
+      }
+
       default: {
-        throw new Error("Event not implemented");
+        throw new BaseError(`Support for event ${event.value.type} not implemented`);
       }
     }
   }
