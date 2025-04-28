@@ -23,7 +23,7 @@ describe("PaymentIntentSucceededHandler", () => {
 
       const variables = result._unsafeUnwrap().resolveEventReportVariables();
 
-      expect(variables.type).toBe("AUTHORIZATION_SUCCESS");
+      expect(variables.type).toBe("CHARGE_SUCCESS");
       // comes from mock
       expect(variables.amount.currency).toStrictEqual("USD");
       // Converted to Saleor float

@@ -1,52 +1,51 @@
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
-import { TransactionEventReportVariablesResolver } from "@/app/api/stripe/webhook/transaction-event-report-variables-resolver";
+import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
-import {
-  createStripePaymentIntentId,
-  StripePaymentIntentValidationError,
-} from "@/modules/stripe/stripe-payment-intent-id";
+import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import {
   createStripePaymentIntentStatus,
   StripePaymentIntentStatusValidationError,
 } from "@/modules/stripe/stripe-payment-intent-status";
-import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
+import { AuthorizationSuccessResult } from "@/modules/transaction-result/success-result";
 import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
+
+import { TransactionEventReportVariablesResolver } from "../transaction-event-report-variables-resolver";
 
 type PossibleErrors = InstanceType<
   | typeof SaleorMoney.ValidationError
-  | typeof StripePaymentIntentValidationError
   | typeof StripePaymentIntentStatusValidationError
+  | typeof PaymentIntentAmountCapturableUpdatedHandler.NotSupportedStatusError
 >;
 
-/**
- * TODO: Probably extract some shared operations like parsing common fields from webhook
- */
-export class PaymentIntentSucceededHandler {
+export class PaymentIntentAmountCapturableUpdatedHandler {
+  static NotSupportedStatusError = BaseError.subclass("NotSupportedStatusError", {
+    props: {
+      _internalName: "PaymentIntentAmountCapturableUpdatedHandler.NotSupportedStatusError" as const,
+    },
+  });
+
   async processEvent({
     event,
+    stripePaymentIntentId,
     recordedTransaction,
   }: {
-    event: Stripe.PaymentIntentSucceededEvent;
+    event: Stripe.PaymentIntentAmountCapturableUpdatedEvent;
+    stripePaymentIntentId: StripePaymentIntentId;
     recordedTransaction: RecordedTransaction;
   }): Promise<Result<TransactionEventReportVariablesResolver, PossibleErrors>> {
     const intentObject = event.data.object;
     const currency = intentObject.currency;
     const authorizedAmount = intentObject.amount_capturable;
-    const capturedAmount = intentObject.amount_received;
     const eventDate = createDateFromStripeEvent(event);
-
-    const isAuthorizationFlow = recordedTransaction.resolvedTransactionFlow === "AUTHORIZATION";
 
     const paramsResult = Result.combine([
       SaleorMoney.createFromStripe({
-        amount: isAuthorizationFlow ? authorizedAmount : capturedAmount,
+        amount: authorizedAmount,
         currency,
       }),
-      // TODO: use one definied above
-      createStripePaymentIntentId(intentObject.id),
       createStripePaymentIntentStatus(intentObject.status),
     ]);
 
@@ -54,22 +53,29 @@ export class PaymentIntentSucceededHandler {
       return err(paramsResult.error);
     }
 
-    const [saleorMoney, paymentIntentId, paymentIntentStatus] = paramsResult.value;
+    const [saleorMoney, paymentIntentStatus] = paramsResult.value;
 
-    const MappedResult = mapPaymentIntentStatusToTransactionResult(
-      paymentIntentStatus,
-      recordedTransaction.resolvedTransactionFlow,
-    );
+    if (paymentIntentStatus !== "requires_capture") {
+      return err(
+        new PaymentIntentAmountCapturableUpdatedHandler.NotSupportedStatusError(
+          "PaymentIntent status is not 'requires_capture'",
+          {
+            props: {
+              status: paymentIntentStatus,
+            },
+          },
+        ),
+      );
+    }
 
-    const result = new MappedResult({
+    const authorizationSuccessResult = new AuthorizationSuccessResult({
       saleorMoney,
-      stripePaymentIntentId: paymentIntentId,
-      stripeStatus: paymentIntentStatus,
+      stripePaymentIntentId,
     });
 
     return ok(
       new TransactionEventReportVariablesResolver({
-        transactionResult: result,
+        transactionResult: authorizationSuccessResult,
         date: eventDate,
         saleorTransactionId: recordedTransaction.saleorTransactionId,
       }),

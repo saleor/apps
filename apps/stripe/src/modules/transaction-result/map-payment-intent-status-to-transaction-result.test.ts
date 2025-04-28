@@ -61,7 +61,7 @@ describe("mapPaymentIntentStatusToAppResult", () => {
     it.each([
       {
         status: "succeeded",
-        expectedResult: AuthorizationSuccessResult,
+        expectedResult: ChargeSuccessResult,
       },
       {
         status: "requires_payment_method",
