@@ -259,6 +259,10 @@ export class TransactionInitializeSessionUseCase {
     const [saleorMoney, stripePaymentIntentId, stripeClientSecret] = mappedResponseResult.value;
 
     const recordResult = await this.transactionRecorder.recordTransaction(
+      {
+        saleorApiUrl: args.saleorApiUrl,
+        appId: args.appId,
+      },
       new RecordedTransaction({
         saleorTransactionId: createSaleorTransactionId(event.transaction.id),
         stripePaymentIntentId,

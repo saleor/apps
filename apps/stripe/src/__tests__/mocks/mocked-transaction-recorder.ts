@@ -5,12 +5,14 @@ import { RecordedTransaction } from "@/modules/transactions-recording/domain/rec
 import {
   TransactionRecorderError,
   TransactionRecorderRepo,
+  TransactionRecorderRepoAccess,
 } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 export class MockedTransactionRecorder implements TransactionRecorderRepo {
   public transactions: Record<string, RecordedTransaction> = {};
 
   async recordTransaction(
+    _accessPattern: TransactionRecorderRepoAccess,
     transaction: RecordedTransaction,
   ): Promise<Result<null, TransactionRecorderError>> {
     this.transactions[transaction.stripePaymentIntentId] = transaction;
@@ -19,6 +21,7 @@ export class MockedTransactionRecorder implements TransactionRecorderRepo {
   }
 
   async getTransactionByStripePaymentIntentId(
+    _accessPattern: TransactionRecorderRepoAccess,
     id: StripePaymentIntentId,
   ): Promise<Result<RecordedTransaction, TransactionRecorderError>> {
     const transaction = this.transactions[id];
