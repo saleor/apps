@@ -6,11 +6,11 @@ import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
+import { RecordedTransaction } from "@/modules/transactions-recording/recorded-transaction";
 import {
-  RecordedTransaction,
-  TransactionRecorder,
   TransactionRecorderError,
-} from "@/modules/transactions-recording/transaction-recorder";
+  TransactionRecorderRepo,
+} from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 type InnerStructure = Record<string, RecordedTransaction>;
 
@@ -20,7 +20,7 @@ type InnerStructure = Record<string, RecordedTransaction>;
  *
  * TODO: Set up DynamoDB instead
  */
-export class TransactionRecorderFile implements TransactionRecorder {
+export class TransactionRecorderFile implements TransactionRecorderRepo {
   private filePath = ".transactions-record.json";
 
   private readAndParseFile(): InnerStructure {

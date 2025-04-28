@@ -17,7 +17,7 @@ import { ITransactionEventReporter } from "@/modules/saleor/transaction-event-re
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripeEventVerify } from "@/modules/stripe/types";
-import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
+import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 type SuccessResult = StripeWebhookSuccessResponse;
 type ErrorResult = StripeWebhookErrorResponse;
@@ -35,14 +35,14 @@ export class StripeWebhookUseCase {
   private webhookEventVerifyFactory: StripeVerifyEventFactory;
   private apl: APL;
   private logger = createLogger("StripeWebhookUseCase");
-  private transactionRecorder: TransactionRecorder;
+  private transactionRecorder: TransactionRecorderRepo;
   private transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     webhookEventVerifyFactory: StripeVerifyEventFactory;
     apl: APL;
-    transactionRecorder: TransactionRecorder;
+    transactionRecorder: TransactionRecorderRepo;
     transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
   }) {
     this.appConfigRepo = deps.appConfigRepo;

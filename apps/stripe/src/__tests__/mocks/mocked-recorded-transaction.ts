@@ -11,7 +11,7 @@ import {
 import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
 import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
+import { RecordedTransaction } from "@/modules/transactions-recording/recorded-transaction";
 
 type Params = {
   saleorTransactionId?: SaleorTransationId;

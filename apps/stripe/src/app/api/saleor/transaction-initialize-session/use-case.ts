@@ -31,10 +31,8 @@ import {
   StripePaymentIntentValidationError,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
-import {
-  RecordedTransaction,
-  TransactionRecorder,
-} from "@/modules/transactions-recording/transaction-recorder";
+import { RecordedTransaction } from "@/modules/transactions-recording/recorded-transaction";
+import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import {
   parseTransactionInitializeSessionEventData,
@@ -56,12 +54,12 @@ export class TransactionInitializeSessionUseCase {
   private logger = createLogger("TransactionInitializeSessionUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
-  private transactionRecorder: TransactionRecorder;
+  private transactionRecorder: TransactionRecorderRepo;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
-    transactionRecorder: TransactionRecorder;
+    transactionRecorder: TransactionRecorderRepo;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;

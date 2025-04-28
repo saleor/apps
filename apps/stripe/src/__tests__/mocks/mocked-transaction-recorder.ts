@@ -1,13 +1,13 @@
 import { err, ok, Result } from "neverthrow";
 
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { RecordedTransaction } from "@/modules/transactions-recording/recorded-transaction";
 import {
-  RecordedTransaction,
-  TransactionRecorder,
   TransactionRecorderError,
-} from "@/modules/transactions-recording/transaction-recorder";
+  TransactionRecorderRepo,
+} from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
-export class MockedTransactionRecorder implements TransactionRecorder {
+export class MockedTransactionRecorder implements TransactionRecorderRepo {
   public transactions: Record<string, RecordedTransaction> = {};
 
   async recordTransaction(

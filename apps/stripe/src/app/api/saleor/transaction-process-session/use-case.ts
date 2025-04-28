@@ -26,7 +26,7 @@ import {
   ChargeErrorResult,
 } from "@/modules/transaction-result/error-result";
 import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
-import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
+import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import {
   TransactionProcessSessionUseCaseResponses,
@@ -42,7 +42,7 @@ export class TransactionProcessSessionUseCase {
   private logger = createLogger("TransactionProcessSessionUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
-  private transactionRecorder: TransactionRecorder;
+  private transactionRecorder: TransactionRecorderRepo;
 
   static UseCaseError = BaseError.subclass("UseCaseError", {
     props: {
@@ -53,7 +53,7 @@ export class TransactionProcessSessionUseCase {
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
-    transactionRecorder: TransactionRecorder;
+    transactionRecorder: TransactionRecorderRepo;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;

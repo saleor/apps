@@ -18,7 +18,7 @@ import {
 } from "@/modules/saleor/transaction-event-reporter";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripeEventVerify, StripeEventParsingError } from "@/modules/stripe/types";
-import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
+import { RecordedTransaction } from "@/modules/transactions-recording/recorded-transaction";
 
 describe("StripeWebhookUseCase", () => {
   const rawEventBody = JSON.stringify({ id: 1 });
