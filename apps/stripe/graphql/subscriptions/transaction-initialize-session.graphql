@@ -1,33 +1,21 @@
 fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
-  version
+  ...EventMetadata
   action {
     amount
     currency
     actionType
   }
-  # TODO: check recipient of the app
   data
   transaction {
     id
   }
   sourceObject {
-    ... on Checkout {
-      channel {
-        ...Channel
-      }
-    }
-    ... on Order {
-      channel {
-        ...Channel
-      }
-    }
+    ...SourceObject
   }
 }
 
 subscription TransactionInitializeSession {
   event {
-    ... on TransactionInitializeSession {
-      ...TransactionInitializeSessionEvent
-    }
+    ...TransactionInitializeSessionEvent
   }
 }

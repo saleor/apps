@@ -42,9 +42,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "REFUND",
-          ],
+          "actions": [],
           "amount": 10,
           "message": "Payment intent succeeded",
           "pspReference": "pi_TEST_TEST_TEST",
@@ -67,7 +65,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
           "actions": [
-            "CANCEL",
+            "CHARGE",
           ],
           "amount": 10,
           "message": "Payment intent succeeded",
@@ -180,7 +178,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CHARGE",
+          ],
           "amount": 10,
           "message": "Payment intent was cancelled",
           "pspReference": "pi_TEST_TEST_TEST",

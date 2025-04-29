@@ -3,7 +3,7 @@ import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id
 
 export class ChargeFailureResult {
   readonly result = "CHARGE_FAILURE" as const;
-  readonly actions = [] as const;
+  readonly actions = ["CHARGE"] as const;
   readonly message = "Payment intent was cancelled";
 
   readonly saleorMoney: SaleorMoney;

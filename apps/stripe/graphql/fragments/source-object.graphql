@@ -1,0 +1,12 @@
+fragment SourceObject on OrderOrCheckout {
+  ... on Checkout {
+    channel {
+      ...Channel
+    }
+  }
+  ... on Order {
+    channel {
+      ...Channel
+    }
+  }
+}

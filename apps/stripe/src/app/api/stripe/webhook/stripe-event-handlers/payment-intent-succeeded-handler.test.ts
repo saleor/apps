@@ -11,7 +11,7 @@ describe("PaymentIntentSucceededHandler", () => {
     it("Resolved fields from Stripe properly", async () => {
       const event = getMockedPaymentIntentSucceededEvent();
 
-      event.data.object.amount_capturable = 123_30;
+      event.data.object.amount_received = 123_30;
 
       const transaction = getMockedRecordedTransaction({
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),

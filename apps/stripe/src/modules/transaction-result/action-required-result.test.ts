@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { getMockedSaleorMoney, mockedStripePaymentId } from "@/__tests__/mocks/constants";
+import { getMockedSaleorMoney } from "@/__tests__/mocks/constants";
+import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 
 import {
@@ -24,7 +25,7 @@ describe("ChargeActionRequiredResult", () => {
     ({ stripeStatus, expectedMessage }) => {
       const result = new ChargeActionRequiredResult({
         saleorMoney: getMockedSaleorMoney(),
-        stripePaymentIntentId: mockedStripePaymentId,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus(stripeStatus)._unsafeUnwrap(),
       });
 
@@ -36,7 +37,7 @@ describe("ChargeActionRequiredResult", () => {
     expect(() => {
       new ChargeActionRequiredResult({
         saleorMoney: getMockedSaleorMoney(),
-        stripePaymentIntentId: mockedStripePaymentId,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus("succeeded")._unsafeUnwrap(),
       });
     }).toThrow(
@@ -61,7 +62,7 @@ describe("AuthorizationActionRequiredResult", () => {
     ({ stripeStatus, expectedMessage }) => {
       const result = new AuthorizationActionRequiredResult({
         saleorMoney: getMockedSaleorMoney(),
-        stripePaymentIntentId: mockedStripePaymentId,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus(stripeStatus)._unsafeUnwrap(),
       });
 
@@ -73,7 +74,7 @@ describe("AuthorizationActionRequiredResult", () => {
     expect(() => {
       new AuthorizationActionRequiredResult({
         saleorMoney: getMockedSaleorMoney(),
-        stripePaymentIntentId: mockedStripePaymentId,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus("succeeded")._unsafeUnwrap(),
       });
     }).toThrow(

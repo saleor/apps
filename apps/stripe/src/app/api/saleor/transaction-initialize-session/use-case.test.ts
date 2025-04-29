@@ -41,10 +41,12 @@ describe("TransactionInitializeSessionUseCase", () => {
           id: "pi_test",
         } as Stripe.PaymentIntent),
       );
+      // TODO: extract to mocks
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent,
           getPaymentIntent: vi.fn(),
+          capturePaymentIntent: vi.fn(),
         }),
       };
 
@@ -104,6 +106,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         create: () => ({
           createPaymentIntent,
           getPaymentIntent: vi.fn(),
+          capturePaymentIntent: vi.fn(),
         }),
       };
 
@@ -132,6 +135,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       create: () => ({
         createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
         getPaymentIntent: vi.fn(),
+        capturePaymentIntent: vi.fn(),
       }),
     };
 
@@ -173,6 +177,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         create: () => ({
           createPaymentIntent,
           getPaymentIntent: vi.fn(),
+          capturePaymentIntent: vi.fn(),
         }),
       };
 
@@ -210,6 +215,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         create: () => ({
           createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
           getPaymentIntent: vi.fn(),
+          capturePaymentIntent: vi.fn(),
         }),
       };
 
@@ -254,6 +260,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         create: () => ({
           createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
           getPaymentIntent: vi.fn(),
+          capturePaymentIntent: vi.fn(),
         }),
       };
 
@@ -297,6 +304,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       create: () => ({
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
+        capturePaymentIntent: vi.fn(),
       }),
     };
 
@@ -327,6 +335,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       create: () => ({
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
+        capturePaymentIntent: vi.fn(),
       }),
     };
 
@@ -358,6 +367,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       create: () => ({
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
+        capturePaymentIntent: vi.fn(),
       }),
     };
 
@@ -389,6 +399,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       create: () => ({
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
+        capturePaymentIntent: vi.fn(),
       }),
     };
 
@@ -426,6 +437,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       create: () => ({
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
+        capturePaymentIntent: vi.fn(),
       }),
     };
 
@@ -471,6 +483,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         create: () => ({
           createPaymentIntent,
           getPaymentIntent: vi.fn(),
+          capturePaymentIntent: vi.fn(),
         }),
       };
 

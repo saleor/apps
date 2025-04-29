@@ -6,19 +6,24 @@ import { BaseError } from "@/lib/errors";
 export const StripeCardErrorPublicCode = "StripeCardError" as const;
 export const StripeApiErrorPublicCode = "StripeApiError" as const;
 
-type StripePaymentIntentAPIError =
-  | InstanceType<typeof StripeCardError>
-  | InstanceType<typeof StripeInvalidRequestError>
-  | InstanceType<typeof StripeRateLimitError>
-  | InstanceType<typeof StripeConnectionError>
-  | InstanceType<typeof StripeAPIError>
-  | InstanceType<typeof StripeAuthenticationError>
-  | InstanceType<typeof StripePermissionError>
-  | InstanceType<typeof StripeIdempotencyError>
-  | InstanceType<typeof StripeUnknownAPIError>;
+type StripePaymentIntentAPIError = InstanceType<
+  | typeof StripeCardError
+  | typeof StripeInvalidRequestError
+  | typeof StripeRateLimitError
+  | typeof StripeConnectionError
+  | typeof StripeAPIError
+  | typeof StripeAuthenticationError
+  | typeof StripePermissionError
+  | typeof StripeIdempotencyError
+  | typeof StripeUnknownAPIError
+>;
 
 export type StripeCreatePaymentIntentAPIError = StripePaymentIntentAPIError;
 export type StripeGetPaymentIntentAPIError = Omit<StripePaymentIntentAPIError, "StripeCardError">;
+export type StripeCapturePaymentIntentAPIError = Omit<
+  StripePaymentIntentAPIError,
+  "StripeCardError"
+>;
 
 export const StripeCardError = BaseError.subclass("StripeCardError", {
   props: {
@@ -172,3 +177,7 @@ export const mapStripeGetPaymentIntentErrorToApiError = (
       });
   }
 };
+
+export const mapStripeCapturePaymentIntentErrorToApiError = (
+  error: unknown,
+): StripeCapturePaymentIntentAPIError => mapStripeGetPaymentIntentErrorToApiError(error);

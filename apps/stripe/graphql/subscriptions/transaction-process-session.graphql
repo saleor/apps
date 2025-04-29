@@ -1,4 +1,5 @@
 fragment TransactionProcessSessionEvent on TransactionProcessSession {
+  ...EventMetadata
   transaction {
     pspReference
   }
@@ -7,16 +8,7 @@ fragment TransactionProcessSessionEvent on TransactionProcessSession {
     actionType
   }
   sourceObject {
-    ... on Checkout {
-      channel {
-        ...Channel
-      }
-    }
-    ... on Order {
-      channel {
-        ...Channel
-      }
-    }
+    ...SourceObject
   }
 }
 
