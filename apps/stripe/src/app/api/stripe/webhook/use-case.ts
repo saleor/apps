@@ -188,9 +188,7 @@ export class StripeWebhookUseCase {
 
         if (reportResult.isErr()) {
           if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
-            this.logger.info("Transaction event already reported", {
-              error: reportResult,
-            });
+            this.logger.info("Transaction event already reported");
 
             return ok(new StripeWebhookSuccessResponse());
           }
@@ -244,9 +242,7 @@ export class StripeWebhookUseCase {
 
         if (reportResult.isErr()) {
           if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
-            this.logger.info("Transaction event already reported", {
-              error: reportResult,
-            });
+            this.logger.info("Transaction event already reported");
 
             return ok(new StripeWebhookSuccessResponse());
           }

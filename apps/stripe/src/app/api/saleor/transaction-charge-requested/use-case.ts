@@ -1,4 +1,4 @@
-import { err, ok } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
 
 import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
@@ -14,7 +14,15 @@ import { mapStripeCapturePaymentIntentErrorToApiError } from "@/modules/stripe/s
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
-import { TransactionChargeRequestedUseCaseResponses } from "./use-case-response";
+import {
+  TransactionChargeRequestedUseCaseResponses,
+  TransactionChargeRequestedUseCaseResponsesType,
+} from "./use-case-response";
+
+type UseCaseExecuteResult = Result<
+  TransactionChargeRequestedUseCaseResponsesType,
+  AppIsNotConfiguredResponse | BrokenAppResponse | MalformedRequestResponse
+>;
 
 export class TransactionChargeRequestedUseCase {
   private logger = createLogger("TransactionChargeRequestedUseCase");
@@ -29,41 +37,14 @@ export class TransactionChargeRequestedUseCase {
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
   }
 
-  private resolveChannelId(event: TransactionChargeRequestedEventFragment) {
-    const channelId =
-      event.transaction?.checkout?.channel?.id || event.transaction?.order?.channel?.id;
-
-    if (channelId) {
-      return ok(channelId);
-    }
-
-    this.logger.error("Channel not found in event transaction", {
-      checkoutChannelId: event.transaction?.checkout?.channel?.id,
-      orderChannelId: event.transaction?.order?.channel?.id,
-    });
-
-    return err(null);
-  }
-
-  private resolveEventAmount(event: TransactionChargeRequestedEventFragment) {
-    if (event.action.amount) {
-      return ok(event.action.amount);
-    }
-
-    this.logger.error("Saleor event amount not found in event action", {
-      amount: event.action.amount,
-    });
-
-    return err(null);
-  }
-
   async execute(args: {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionChargeRequestedEventFragment;
-  }) {
+  }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event } = args;
 
+    // Additional validation as Saleor Graphql schema doesn't require these fields and they are needed to process the event
     if (!event.transaction) {
       this.logger.error("Transaction not found in event", {
         event,
@@ -72,14 +53,28 @@ export class TransactionChargeRequestedUseCase {
       return err(new MalformedRequestResponse());
     }
 
-    const channelIdResult = this.resolveChannelId(event);
+    const possibleChannelId =
+      event.transaction.checkout?.channel?.id || event.transaction.order?.channel?.id;
 
-    if (channelIdResult.isErr()) {
+    if (!possibleChannelId) {
+      this.logger.error("Channel not found in event transaction", {
+        checkoutChannelId: event.transaction?.checkout?.channel?.id,
+        orderChannelId: event.transaction?.order?.channel?.id,
+      });
+
+      return err(new MalformedRequestResponse());
+    }
+
+    if (!event.action.amount) {
+      this.logger.error("Saleor event amount not found in event action", {
+        amount: event.action.amount,
+      });
+
       return err(new MalformedRequestResponse());
     }
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
-      channelId: channelIdResult.value,
+      channelId: possibleChannelId,
       appId,
       saleorApiUrl,
     });
@@ -94,8 +89,7 @@ export class TransactionChargeRequestedUseCase {
 
     if (!stripeConfigForThisChannel.value) {
       this.logger.warn("Config for channel not found", {
-        channelId:
-          (event.transaction?.checkout?.channel?.id || event.transaction?.order?.channel?.id) ?? "",
+        channelId: possibleChannelId,
       });
 
       return err(new AppIsNotConfiguredResponse());
@@ -134,15 +128,9 @@ export class TransactionChargeRequestedUseCase {
         capturePaymentIntentResult.error,
       );
 
-      const saleorEventAmountResult = this.resolveEventAmount(event);
-
-      if (saleorEventAmountResult.isErr()) {
-        return err(new MalformedRequestResponse());
-      }
-
       return ok(
         new TransactionChargeRequestedUseCaseResponses.ChargeFailure({
-          saleorEventAmount: saleorEventAmountResult.value,
+          saleorEventAmount: event.action.amount,
           stripePaymentIntentId: paymentIntentIdResult.value,
           error: mappedError,
         }),
