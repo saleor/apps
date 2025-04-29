@@ -20,7 +20,7 @@ import {
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripeEventVerify } from "@/modules/stripe/types";
-import { TransactionRecorder } from "@/modules/transactions-recording/transaction-recorder";
+import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { PaymentIntentAmountCapturableUpdatedHandler } from "./stripe-event-handlers/payment-intent-amount-capturable-updated-handler";
 
@@ -40,14 +40,14 @@ export class StripeWebhookUseCase {
   private webhookEventVerifyFactory: StripeVerifyEventFactory;
   private apl: APL;
   private logger = createLogger("StripeWebhookUseCase");
-  private transactionRecorder: TransactionRecorder;
+  private transactionRecorder: TransactionRecorderRepo;
   private transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     webhookEventVerifyFactory: StripeVerifyEventFactory;
     apl: APL;
-    transactionRecorder: TransactionRecorder;
+    transactionRecorder: TransactionRecorderRepo;
     transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
@@ -154,11 +154,17 @@ export class StripeWebhookUseCase {
 
         const recordedTransaction =
           await this.transactionRecorder.getTransactionByStripePaymentIntentId(
+            {
+              appId: authData.appId,
+              saleorApiUrl: webhookParams.saleorApiUrl,
+            },
             stripePaymentIntentId.value,
           );
 
         if (recordedTransaction.isErr()) {
-          this.logger.warn("Error fetching recorded transaction");
+          this.logger.warn("Error fetching recorded transaction", {
+            error: recordedTransaction.error,
+          });
 
           return err(new StripeWebhookErrorResponse(recordedTransaction.error));
         }
@@ -206,6 +212,10 @@ export class StripeWebhookUseCase {
 
         const recordedTransaction =
           await this.transactionRecorder.getTransactionByStripePaymentIntentId(
+            {
+              appId: authData.appId,
+              saleorApiUrl: webhookParams.saleorApiUrl,
+            },
             stripePaymentIntentIdResult.value,
           );
 

@@ -10,7 +10,7 @@ import {
   StripePaymentIntentStatusValidationError,
 } from "@/modules/stripe/stripe-payment-intent-status";
 import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
-import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
+import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
 type PossibleErrors = InstanceType<
   typeof SaleorMoney.ValidationError | typeof StripePaymentIntentStatusValidationError

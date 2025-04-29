@@ -19,7 +19,7 @@ import {
 } from "@/modules/saleor/transaction-event-reporter";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripeEventVerify, StripeEventParsingError } from "@/modules/stripe/types";
-import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
+import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
 describe("StripeWebhookUseCase", () => {
   const rawEventBody = JSON.stringify({ id: 1 });
@@ -147,7 +147,7 @@ describe("StripeWebhookUseCase", () => {
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
         StripeWebhookErrorResponse {
-          "error": [TransactionRecorder.TransactionMissingError: Transaction not found],
+          "error": [TransactionRecorderRepo.TransactionMissingError: Transaction not found],
           "responseStatusCode": 500,
         }
       `);

@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
@@ -81,7 +82,7 @@ describe("TransactionProcessSessionUseCase", () => {
       const saleorEvent = getMockedTransactionProcessSessionEvent({ actionType });
       const mockedTransationRecorder = new MockedTransactionRecorder();
 
-      mockedTransationRecorder.recordTransaction(getMockedRecordedTransaction());
+      mockedTransationRecorder.recordTransaction(mockAuthData, getMockedRecordedTransaction());
       const getPaymentIntent = vi.fn(async () =>
         ok({
           amount: 100,
@@ -121,6 +122,7 @@ describe("TransactionProcessSessionUseCase", () => {
       });
 
       expect(mockedTransationRecorder.getTransactionByStripePaymentIntentId).toHaveBeenCalledWith(
+        { saleorApiUrl: mockedSaleorApiUrl, appId: mockedSaleorAppId },
         mockedStripePaymentIntentId,
       );
     },
@@ -171,7 +173,7 @@ describe("TransactionProcessSessionUseCase", () => {
       const getPaymentIntent = vi.fn(async () => err(new StripeAPIError("Error from Stripe API")));
       const mockedTransationRecorder = new MockedTransactionRecorder();
 
-      mockedTransationRecorder.recordTransaction(getMockedRecordedTransaction());
+      mockedTransationRecorder.recordTransaction(mockAuthData, getMockedRecordedTransaction());
       const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
         create: () => ({
           createPaymentIntent: vi.fn(),
@@ -204,7 +206,7 @@ describe("TransactionProcessSessionUseCase", () => {
     const saleorEvent = getMockedTransactionProcessSessionEvent();
     const mockedTransationRecorder = new MockedTransactionRecorder();
 
-    mockedTransationRecorder.recordTransaction(getMockedRecordedTransaction());
+    mockedTransationRecorder.recordTransaction(mockAuthData, getMockedRecordedTransaction());
     const getPaymentIntent = vi.fn(async () =>
       ok({
         amount: 100,
@@ -238,7 +240,7 @@ describe("TransactionProcessSessionUseCase", () => {
     const saleorEvent = getMockedTransactionProcessSessionEvent();
     const mockedTransationRecorder = new MockedTransactionRecorder();
 
-    mockedTransationRecorder.recordTransaction(getMockedRecordedTransaction());
+    mockedTransationRecorder.recordTransaction(mockAuthData, getMockedRecordedTransaction());
 
     const getPaymentIntent = vi.fn(async () =>
       ok({

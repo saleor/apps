@@ -14,7 +14,7 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
-import { TransactionRecorderError } from "@/modules/transactions-recording/transaction-recorder";
+import { TransactionRecorderError } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response";
@@ -418,7 +418,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     ).resolves.toStrictEqual(err(new BrokenAppResponse()));
   });
 
-  it("Returns 'BrokenAppResponse' when TransactionRecorder returns error", async () => {
+  it("Returns 'BrokenAppResponse' when TransactionRecorderRepo returns error", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
     const transactionRecorder = new MockedTransactionRecorder();
 
@@ -464,7 +464,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       actionType: "AUTHORIZATION" as const,
     },
   ])(
-    "Calls TransactionRecorder with resolved data when handling $actionType action",
+    "Calls TransactionRecorderRepo with resolved data when handling $actionType action",
     async ({ actionType }) => {
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
       const transactionRecorder = new MockedTransactionRecorder();
@@ -499,13 +499,19 @@ describe("TransactionInitializeSessionUseCase", () => {
         event: saleorEvent,
       });
 
-      expect(transactionRecorder.recordTransaction).toHaveBeenCalledWith({
-        resolvedTransactionFlow: actionType,
-        saleorTransactionFlow: actionType,
-        saleorTransactionId: "mocked-transaction-id",
-        selectedPaymentMethod: "card",
-        stripePaymentIntentId: "pi_test",
-      });
+      expect(transactionRecorder.recordTransaction).toHaveBeenCalledWith(
+        {
+          saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
+        },
+        {
+          resolvedTransactionFlow: actionType,
+          saleorTransactionFlow: actionType,
+          saleorTransactionId: "mocked-transaction-id",
+          selectedPaymentMethod: "card",
+          stripePaymentIntentId: "pi_test",
+        },
+      );
     },
   );
 });
