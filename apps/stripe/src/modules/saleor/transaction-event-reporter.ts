@@ -2,11 +2,12 @@ import { err, ok, Result } from "neverthrow";
 import { Client } from "urql";
 
 import {
+  TransactionActionEnum,
   TransactionEventReportDocument,
-  TransactionEventReportErrorCode,
   TransactionEventTypeEnum,
 } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
@@ -17,6 +18,7 @@ export type TransactionEventReportInput = {
   pspReference: StripePaymentIntentId;
   time: string;
   type: TransactionEventTypeEnum;
+  actions: TransactionActionEnum[];
 };
 
 export type PossibleTransactionEventReportErrors = InstanceType<typeof AlreadyReportedError>;
@@ -57,6 +59,7 @@ export interface ITransactionEventReporter {
 
 export class TransactionEventReporter implements ITransactionEventReporter {
   private gqlClient: Pick<Client, "mutation">;
+  private logger = createLogger("TransactionEventReporter");
 
   constructor(deps: { graphqlClient: Pick<Client, "mutation"> }) {
     this.gqlClient = deps.graphqlClient;
@@ -69,12 +72,32 @@ export class TransactionEventReporter implements ITransactionEventReporter {
       const mutationResult = await this.gqlClient.mutation(TransactionEventReportDocument, {
         ...input,
         amount: input.amount.amount,
+        availableActions: input.actions,
       });
 
       const { data, error } = mutationResult;
 
       if (error) {
-        switch (error.cause as TransactionEventReportErrorCode) {
+        return err(
+          new UnhandledError("Error reporting transaction event - server error", {
+            cause: error,
+          }),
+        );
+      }
+
+      const mutationErrors = data?.transactionEventReport?.errors ?? [];
+
+      const hasMoreThanOneError = mutationErrors.length > 1;
+
+      if (hasMoreThanOneError) {
+        this.logger.warn(
+          "TransactionEventReport mutation has more than one error - handling the first one",
+          mutationErrors,
+        );
+      }
+
+      if (mutationErrors.length > 0) {
+        switch (mutationErrors[0].code) {
           case "ALREADY_EXISTS": {
             return err(
               new AlreadyReportedError(`Event already reported`, {

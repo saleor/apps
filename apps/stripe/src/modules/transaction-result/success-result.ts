@@ -3,7 +3,7 @@ import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id
 
 export class ChargeSuccessResult {
   readonly result = "CHARGE_SUCCESS" as const;
-  readonly actions = ["REFUND"] as const;
+  readonly actions = [] as const;
   readonly message = "Payment intent succeeded";
 
   readonly saleorMoney: SaleorMoney;
@@ -17,7 +17,7 @@ export class ChargeSuccessResult {
 
 export class AuthorizationSuccessResult {
   readonly result = "AUTHORIZATION_SUCCESS" as const;
-  readonly actions = ["CANCEL"] as const;
+  readonly actions = ["CHARGE"] as const;
   readonly message = "Payment intent succeeded";
 
   readonly saleorMoney: SaleorMoney;

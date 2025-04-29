@@ -204,6 +204,7 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
+            "actions": [],
             "amount": SaleorMoney {
               "amount": 10.13,
               "currency": "USD",
@@ -266,8 +267,9 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
+            "actions": [],
             "amount": SaleorMoney {
-              "amount": 15.11,
+              "amount": 10.13,
               "currency": "USD",
             },
             "message": "Payment intent succeeded",
@@ -330,6 +332,7 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
+            "actions": [],
             "amount": SaleorMoney {
               "amount": 10.13,
               "currency": "USD",
@@ -394,8 +397,9 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
+            "actions": [],
             "amount": SaleorMoney {
-              "amount": 15.11,
+              "amount": 10.13,
               "currency": "USD",
             },
             "message": "Payment intent requires action",
@@ -458,6 +462,7 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
+            "actions": [],
             "amount": SaleorMoney {
               "amount": 10.13,
               "currency": "USD",
@@ -522,8 +527,9 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
+            "actions": [],
             "amount": SaleorMoney {
-              "amount": 15.11,
+              "amount": 10.13,
               "currency": "USD",
             },
             "message": "Payment intent is processing",
@@ -586,6 +592,7 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
+            "actions": [],
             "amount": SaleorMoney {
               "amount": 10.13,
               "currency": "USD",
@@ -650,8 +657,9 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
+            "actions": [],
             "amount": SaleorMoney {
-              "amount": 15.11,
+              "amount": 10.13,
               "currency": "USD",
             },
             "message": "Payment intent was cancelled",
@@ -715,6 +723,9 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
+            "actions": [
+              "CHARGE",
+            ],
             "amount": SaleorMoney {
               "amount": 10,
               "currency": "USD",

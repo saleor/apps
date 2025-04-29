@@ -13,7 +13,10 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { ITransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
+import {
+  ITransactionEventReporter,
+  TransactionEventReporterErrors,
+} from "@/modules/saleor/transaction-event-reporter";
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripeEventVerify } from "@/modules/stripe/types";
@@ -178,6 +181,14 @@ export class StripeWebhookUseCase {
         );
 
         if (reportResult.isErr()) {
+          if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
+            this.logger.info("Transaction event already reported", {
+              error: reportResult,
+            });
+
+            return ok(new StripeWebhookSuccessResponse());
+          }
+
           return err(new StripeWebhookErrorResponse(reportResult.error));
         }
 
@@ -222,6 +233,14 @@ export class StripeWebhookUseCase {
         );
 
         if (reportResult.isErr()) {
+          if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
+            this.logger.info("Transaction event already reported", {
+              error: reportResult,
+            });
+
+            return ok(new StripeWebhookSuccessResponse());
+          }
+
           return err(new StripeWebhookErrorResponse(reportResult.error));
         }
 

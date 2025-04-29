@@ -1,23 +1,12 @@
 fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession {
-  version
+  ...EventMetadata
   sourceObject {
-    ... on Checkout {
-      channel {
-        ...Channel
-      }
-    }
-    ... on Order {
-      channel {
-        ...Channel
-      }
-    }
+    ...SourceObject
   }
 }
 
 subscription PaymentGatewayInitializeSession {
   event {
-    ... on PaymentGatewayInitializeSession {
-      ...PaymentGatewayInitializeSessionEvent
-    }
+    ...PaymentGatewayInitializeSessionEvent
   }
 }

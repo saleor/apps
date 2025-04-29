@@ -51,7 +51,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Payment Gateway Initialize",
-                "query": "subscription PaymentGatewayInitializeSession { event { ... on PaymentGatewayInitializeSession { ...PaymentGatewayInitializeSessionEvent } }}fragment Channel on Channel { id slug}fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession { version sourceObject { ... on Checkout { channel { ...Channel } } ... on Order { channel { ...Channel } } }}",
+                "query": "subscription PaymentGatewayInitializeSession { event { ...PaymentGatewayInitializeSessionEvent }}fragment EventMetadata on Event { version}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { channel { ...Channel } } ... on Order { channel { ...Channel } }}fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession { ...EventMetadata sourceObject { ...SourceObject }}",
                 "syncEvents": [
                   "PAYMENT_GATEWAY_INITIALIZE_SESSION",
                 ],
@@ -60,7 +60,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Transaction Initialize Session",
-                "query": "subscription TransactionInitializeSession { event { ... on TransactionInitializeSession { ...TransactionInitializeSessionEvent } }}fragment Channel on Channel { id slug}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { version action { amount currency actionType } data transaction { id } sourceObject { ... on Checkout { channel { ...Channel } } ... on Order { channel { ...Channel } } }}",
+                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { channel { ...Channel } } ... on Order { channel { ...Channel } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency actionType } data transaction { id } sourceObject { ...SourceObject }}",
                 "syncEvents": [
                   "TRANSACTION_INITIALIZE_SESSION",
                 ],
@@ -69,7 +69,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Transaction Process Session",
-                "query": "subscription TransactionProcessSession { event { ...TransactionProcessSessionEvent }}fragment Channel on Channel { id slug}fragment TransactionProcessSessionEvent on TransactionProcessSession { transaction { pspReference } action { amount actionType } sourceObject { ... on Checkout { channel { ...Channel } } ... on Order { channel { ...Channel } } }}",
+                "query": "subscription TransactionProcessSession { event { ...TransactionProcessSessionEvent }}fragment EventMetadata on Event { version}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { channel { ...Channel } } ... on Order { channel { ...Channel } }}fragment TransactionProcessSessionEvent on TransactionProcessSession { ...EventMetadata transaction { pspReference } action { amount actionType } sourceObject { ...SourceObject }}",
                 "syncEvents": [
                   "TRANSACTION_PROCESS_SESSION",
                 ],
