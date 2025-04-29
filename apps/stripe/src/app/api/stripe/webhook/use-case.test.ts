@@ -592,7 +592,9 @@ describe("StripeWebhookUseCase", () => {
           },
           `
           {
-            "actions": [],
+            "actions": [
+              "CHARGE",
+            ],
             "amount": SaleorMoney {
               "amount": 10.13,
               "currency": "USD",

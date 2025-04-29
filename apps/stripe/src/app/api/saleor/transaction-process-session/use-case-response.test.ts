@@ -178,7 +178,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CHARGE",
+          ],
           "amount": 10,
           "message": "Payment intent was cancelled",
           "pspReference": "pi_TEST_TEST_TEST",

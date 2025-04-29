@@ -40,7 +40,9 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CHARGE",
+          ],
           "amount": 112.33,
           "message": "Payment intent error - there is a problem with the request to Stripe API",
           "pspReference": "pi_TEST_TEST_TEST",
