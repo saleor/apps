@@ -21,7 +21,7 @@ const DynamoDbChannelConfigMappingEntrySchema = schema({
   PK: string().key(),
   SK: string().key(),
   channelId: string(),
-  configId: string(),
+  configId: string().optional(),
 });
 
 const createChannelConfigMappingEntity = (table: DynamoMainTable) => {

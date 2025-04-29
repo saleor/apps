@@ -13,9 +13,7 @@ export const ChannelConfigSection = () => {
   }, []);
 
   if (error) {
-    // todo better ui
-
-    return <Text>Error fetching config: {error.message}</Text>;
+    return <Text color="critical1">Error fetching config: {error.message}</Text>;
   }
 
   if (data && data.length === 0) {

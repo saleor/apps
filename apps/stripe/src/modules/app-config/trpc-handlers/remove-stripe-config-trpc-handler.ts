@@ -98,11 +98,10 @@ export class RemoveStripeConfigTrpcHandler {
         const webhookRemovingResult = await this.webhookManager.removeWebhook(configToRemove);
 
         if (webhookRemovingResult.isErr()) {
-          captureException(webhookRemovingResult.error);
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to remove Stripe webhook. Please try again.",
-          });
+          /**
+           * Ignore - it's possible webhook was removed in Stripe, or in previous call. We can't transactional remove both webhook and our config,
+           * so we must accept that inconsistency and document it
+           */
         }
 
         /**
