@@ -108,7 +108,7 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
 
       const result = await operation.send();
 
-      if (result.$metadata.httpStatusCode != 200) {
+      if (result.$metadata.httpStatusCode !== 200) {
         return err(
           new TransactionRecorderError.FailedFetchingTransactionError(
             "Failed to read data from DynamoDB. HTTP status code: " +
