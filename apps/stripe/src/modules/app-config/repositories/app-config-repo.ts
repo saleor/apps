@@ -72,7 +72,7 @@ export interface AppConfigRepo {
   updateMapping: (
     access: BaseAccessPattern,
     data: {
-      configId: string;
+      configId: string | null;
       channelId: string;
     },
   ) => Promise<Result<void | null, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>>;
