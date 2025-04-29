@@ -16,11 +16,8 @@ export const mapPaymentIntentStatusToTransactionResult = (
 ) => {
   switch (stripePaymentIntentStatus) {
     case "succeeded":
-      if (resolvedTransationFlow === "CHARGE") {
-        return ChargeSuccessResult;
-      }
+      return ChargeSuccessResult;
 
-      return AuthorizationSuccessResult;
     case "requires_payment_method":
     case "requires_confirmation":
     case "requires_action":
