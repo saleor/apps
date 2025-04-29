@@ -201,6 +201,10 @@ export class StripeWebhookUseCase {
 
         const recordedTransaction =
           await this.transactionRecorder.getTransactionByStripePaymentIntentId(
+            {
+              appId: authData.appId,
+              saleorApiUrl: webhookParams.saleorApiUrl,
+            },
             stripePaymentIntentIdResult.value,
           );
 

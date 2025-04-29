@@ -147,7 +147,7 @@ describe("StripeWebhookUseCase", () => {
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
         StripeWebhookErrorResponse {
-          "error": [TransactionRecorder.TransactionMissingError: Transaction not found],
+          "error": [TransactionRecorderRepo.TransactionMissingError: Transaction not found],
           "responseStatusCode": 500,
         }
       `);
