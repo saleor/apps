@@ -10,7 +10,7 @@ import {
   StripePaymentIntentStatusValidationError,
 } from "@/modules/stripe/stripe-payment-intent-status";
 import { AuthorizationSuccessResult } from "@/modules/transaction-result/success-result";
-import { RecordedTransaction } from "@/modules/transactions-recording/transaction-recorder";
+import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
 import { TransactionEventReportVariablesResolver } from "../transaction-event-report-variables-resolver";
 
