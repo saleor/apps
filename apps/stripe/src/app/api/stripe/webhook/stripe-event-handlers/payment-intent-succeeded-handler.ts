@@ -31,15 +31,12 @@ export class PaymentIntentSucceededHandler {
   }): Promise<Result<TransactionEventReportVariablesResolver, PossibleErrors>> {
     const intentObject = event.data.object;
     const currency = intentObject.currency;
-    const authorizedAmount = intentObject.amount_capturable;
-    const capturedAmount = intentObject.amount_received;
+    const amountReceived = intentObject.amount_received;
     const eventDate = createDateFromStripeEvent(event);
-
-    const isAuthorizationFlow = recordedTransaction.resolvedTransactionFlow === "AUTHORIZATION";
 
     const paramsResult = Result.combine([
       SaleorMoney.createFromStripe({
-        amount: isAuthorizationFlow ? authorizedAmount : capturedAmount,
+        amount: amountReceived,
         currency,
       }),
       createStripePaymentIntentStatus(intentObject.status),

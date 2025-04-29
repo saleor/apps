@@ -14,8 +14,15 @@ describe("TransactionEventReporter", () => {
   it("Returns AlreadyReportedError if graphql error points ALREADY_EXISTS", async () => {
     // @ts-expect-error - patching only subset
     vi.spyOn(mockedGraphqlClient, "mutation").mockImplementationOnce(async () => ({
-      error: {
-        cause: "ALREADY_EXISTS",
+      data: {
+        transactionEventReport: {
+          errors: [
+            {
+              code: "ALREADY_EXISTS",
+              message: "Transaction with this pspReference already exists",
+            },
+          ],
+        },
       },
     }));
 
@@ -29,13 +36,12 @@ describe("TransactionEventReporter", () => {
       })._unsafeUnwrap(),
       pspReference: mockedStripePaymentIntentId,
       transactionId: mockedSaleorTransactionId,
+      actions: [],
     });
 
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      [TransactionEventReporter.AlreadyReportedError: ALREADY_EXISTS
-      {}
-      Event already reported]
-    `);
+    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+      `[TransactionEventReporter.AlreadyReportedError: Event already reported]`,
+    );
   });
 
   it("Returns AlreadyReportedError if data contains alreadyProcessed: true", async () => {
@@ -61,6 +67,7 @@ describe("TransactionEventReporter", () => {
       })._unsafeUnwrap(),
       pspReference: mockedStripePaymentIntentId,
       transactionId: mockedSaleorTransactionId,
+      actions: [],
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
@@ -91,6 +98,7 @@ describe("TransactionEventReporter", () => {
       })._unsafeUnwrap(),
       pspReference: mockedStripePaymentIntentId,
       transactionId: mockedSaleorTransactionId,
+      actions: [],
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`

@@ -4,6 +4,7 @@ import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as Sentry from "@sentry/nextjs";
 
 import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/payment-gateway-initialize-session/webhook-definition";
+import { transactionChargeRequestedWebhookDefinition } from "@/app/api/saleor/transaction-charge-requested/webhook-definition";
 import { transactionInitializeSessionWebhookDefinition } from "@/app/api/saleor/transaction-initialize-session/webhook-definition";
 import { transactionProcessSessionWebhookDefinition } from "@/app/api/saleor/transaction-process-session/webhook-definition";
 import { env } from "@/lib/env";
@@ -94,6 +95,10 @@ const runMigrations = async () => {
             },
             {
               ...transactionProcessSessionWebhookDefinition.getWebhookManifest(baseUrl),
+              isActive: enabled,
+            },
+            {
+              ...transactionChargeRequestedWebhookDefinition.getWebhookManifest(baseUrl),
               isActive: enabled,
             },
           ];

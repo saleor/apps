@@ -2,7 +2,6 @@ import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
-import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 export const mockedSaleorChannelId = "Q2hhbm5lbDox";
 export const mockedConfigurationId = "81f323bd-91e2-4838-ab6e-5affd81ffc3b";
@@ -24,5 +23,3 @@ export const getMockedSaleorMoney = (amount: number = 10_00, currency: string = 
     amount,
     currency,
   })._unsafeUnwrap();
-
-export const mockedStripePaymentId = createStripePaymentIntentId("pi_TEST_TEST")._unsafeUnwrap();
