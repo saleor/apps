@@ -10,7 +10,7 @@ import {
   UnhandledErrorResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
-import { transactionRecorder } from "@/modules/transactions-recording/transaction-recorder-impl";
+import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
 
 import { TransactionProcessSessionUseCase } from "./use-case";
 import { transactionProcessSessionWebhookDefinition } from "./webhook-definition";
