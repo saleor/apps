@@ -35,7 +35,6 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
     this.entity = params.entity;
   }
 
-  // TODO: Check against duplicate, do not allow to write it
   async recordTransaction(
     accessPattern: TransactionRecorderRepoAccess,
     transaction: RecordedTransaction,
@@ -43,7 +42,7 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
     try {
       this.logger.debug("Trying to write Transaction to DynamoDB", { transaction });
 
-      const result = await this.entity
+      const operation = this.entity
         .build(PutItemCommand)
         .item({
           PK: DynamoDbRecordedTransaction.accessPattern.getPK({
@@ -59,7 +58,14 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
           saleorTransactionFlow: transaction.saleorTransactionFlow,
           resolvedTransactionFlow: transaction.resolvedTransactionFlow,
         })
-        .send();
+        .options({
+          condition: {
+            attr: "paymentIntentId",
+            exists: false,
+          },
+        });
+
+      const result = await operation.send();
 
       if (result.$metadata.httpStatusCode === 200) {
         this.logger.info("Successfully wrote transaction to DynamoDB", {
@@ -93,15 +99,14 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
     id: StripePaymentIntentId,
   ): Promise<Result<RecordedTransaction, TransactionRecorderError>> {
     try {
-      const result = await this.entity
-        .build(GetItemCommand)
-        .key({
-          PK: DynamoDbRecordedTransaction.accessPattern.getPK(accessPattern),
-          SK: DynamoDbRecordedTransaction.accessPattern.getSKforSpecificItem({
-            paymentIntentId: id,
-          }),
-        })
-        .send();
+      const operation = this.entity.build(GetItemCommand).key({
+        PK: DynamoDbRecordedTransaction.accessPattern.getPK(accessPattern),
+        SK: DynamoDbRecordedTransaction.accessPattern.getSKforSpecificItem({
+          paymentIntentId: id,
+        }),
+      });
+
+      const result = await operation.send();
 
       if (result.$metadata.httpStatusCode != 200) {
         return err(
@@ -135,7 +140,14 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
         );
       } else {
         return err(
-          new TransactionRecorderError.TransactionMissingError("Transaction not found in Database"),
+          new TransactionRecorderError.TransactionMissingError(
+            "Transaction not found in Database",
+            {
+              props: {
+                paymentIntentId: id,
+              },
+            },
+          ),
         );
       }
     } catch (e) {

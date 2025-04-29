@@ -3,7 +3,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
-import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { PaymentIntentSucceededHandler } from "@/app/api/stripe/webhook/stripe-event-handlers/payment-intent-succeeded-handler";
 import {
   StripeWebhookErrorResponse,
@@ -150,12 +149,17 @@ export class StripeWebhookUseCase {
 
         const recordedTransaction =
           await this.transactionRecorder.getTransactionByStripePaymentIntentId(
-            mockAuthData,
+            {
+              appId: authData.appId,
+              saleorApiUrl: webhookParams.saleorApiUrl,
+            },
             stripePaymentIntentId.value,
           );
 
         if (recordedTransaction.isErr()) {
-          this.logger.warn("Error fetching recorded transaction");
+          this.logger.warn("Error fetching recorded transaction", {
+            error: recordedTransaction.error,
+          });
 
           return err(new StripeWebhookErrorResponse(recordedTransaction.error));
         }

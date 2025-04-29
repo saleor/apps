@@ -28,7 +28,7 @@ const Schema = schema({
 const createEntity = (table: DynamoMainTable) => {
   return new Entity({
     table,
-    name: "StripeConfig",
+    name: "RecordedTransaction",
     schema: Schema,
     timestamps: {
       created: {

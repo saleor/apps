@@ -486,13 +486,19 @@ describe("TransactionInitializeSessionUseCase", () => {
         event: saleorEvent,
       });
 
-      expect(transactionRecorder.recordTransaction).toHaveBeenCalledWith({
-        resolvedTransactionFlow: actionType,
-        saleorTransactionFlow: actionType,
-        saleorTransactionId: "mocked-transaction-id",
-        selectedPaymentMethod: "card",
-        stripePaymentIntentId: "pi_test",
-      });
+      expect(transactionRecorder.recordTransaction).toHaveBeenCalledWith(
+        {
+          saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
+        },
+        {
+          resolvedTransactionFlow: actionType,
+          saleorTransactionFlow: actionType,
+          saleorTransactionId: "mocked-transaction-id",
+          selectedPaymentMethod: "card",
+          stripePaymentIntentId: "pi_test",
+        },
+      );
     },
   );
 });

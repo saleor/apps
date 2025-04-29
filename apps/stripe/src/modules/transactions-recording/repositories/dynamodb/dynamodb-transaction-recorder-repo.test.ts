@@ -71,6 +71,7 @@ describe("DynamoDBTransactionRecorderRepo", () => {
       );
     });
 
+    // Make it integration test todo
     it.todo("Returns error if trying to save transaction already existing");
   });
 
