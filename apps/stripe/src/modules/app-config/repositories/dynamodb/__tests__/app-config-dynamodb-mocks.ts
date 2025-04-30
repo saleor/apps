@@ -3,6 +3,7 @@ import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
 } from "@/__tests__/mocks/constants";
+import { mockEncryptor } from "@/__tests__/mocks/mock-encryptor";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 
 const mockedStripeConfig = {
@@ -13,10 +14,11 @@ const mockedStripeConfig = {
   stripePk:
     "pk_test_51Ng2yKKFxIUko8m0IUBO8GvarTlXcNIpAATM9cE7S2GaoFLsTAsn5avHHjfLFVKewqTFwMb2wqOP87CEbgwljzf200aXXm38oM",
   modifiedAt: "2025-04-25T09:19:13.402Z",
-  stripeWhSecret: "whsec_ZOsiN376Ahfo0N8lWg7PYXNGpnDXShS5",
+  stripeWhSecret: mockEncryptor.encrypt("whsec_ZOsiN376Ahfo0N8lWg7PYXNGpnDXShS5"),
   SK: `CONFIG_ID#${mockedConfigurationId}`,
-  stripeRk:
+  stripeRk: mockEncryptor.encrypt(
     "rk_test_51Ng2yKKFxIUko8m0eaadRYweTPBGnnBA58rpt5JQ7Y7VqSBnQu39JHWoqMfd5lSxH9OH44Bm5NMOQkbzpaMdjD3v00VsW1DGyx",
+  ),
   PK: `${mockedSaleorApiUrl}#${mockedSaleorAppId}`,
   _et: "StripeConfig",
 };

@@ -2,6 +2,7 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
+import { withRecipientVerification } from "@/app/api/saleor/with-recipient-verification";
 import { withLoggerContext } from "@/lib/logger-context";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -18,7 +19,7 @@ const useCase = new PaymentGatewayInitializeSessionUseCase({
 });
 
 const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(
-  async (_req, ctx) => {
+  withRecipientVerification(async (_req, ctx) => {
     try {
       const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
@@ -50,7 +51,7 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(
 
       return response.getResponse();
     }
-  },
+  }),
 );
 
 export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);

@@ -67,6 +67,7 @@ describe("GetStripeConfigsChannelsMappingTrpcHandler", () => {
       ),
     );
 
+    // Missing webhook status is expected - we dont have to show this field in the UI
     return expect(caller.testProcedure()).resolves.toMatchInlineSnapshot(`
       {
         "c-id1": StripeFrontendConfig {
@@ -74,6 +75,7 @@ describe("GetStripeConfigsChannelsMappingTrpcHandler", () => {
           "name": "config-name",
           "publishableKey": "pk_live_1",
           "restrictedKey": "...GGGG",
+          "webhookStatus": undefined,
         },
       }
     `);

@@ -13,6 +13,7 @@ import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
 } from "@/__tests__/mocks/constants";
+import { mockEncryptor } from "@/__tests__/mocks/mock-encryptor";
 import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
@@ -49,6 +50,7 @@ describe("DynamodbAppConfigRepo", () => {
         stripeConfig: stripeConfigEntity,
         channelConfigMapping: channelMappingEntity,
       },
+      encryptor: mockEncryptor,
     });
   });
 
@@ -298,12 +300,16 @@ describe("DynamodbAppConfigRepo", () => {
 
       /**
        * Assert args that are sent to DynamoDB
+       *
+       * Warning: stripeRk and stripeWhSecret are encrypted and random
        */
       // @ts-expect-error - Item is not defined on mock
       expect(mockDocumentClient.calls()[0].args[0].input.Item).toMatchInlineSnapshot(
         {
           createdAt: expect.any(String),
           modifiedAt: expect.any(String),
+          stripeRk: expect.any(String),
+          stripeWhSecret: expect.any(String),
         },
         `
         {
@@ -315,9 +321,9 @@ describe("DynamodbAppConfigRepo", () => {
           "createdAt": Any<String>,
           "modifiedAt": Any<String>,
           "stripePk": "pk_live_1",
-          "stripeRk": "rk_live_AAAAABBBBCCCCCEEEEEEEFFFFFGGGGG",
+          "stripeRk": Any<String>,
           "stripeWhId": "wh_123456789",
-          "stripeWhSecret": "whsec_XYZ",
+          "stripeWhSecret": Any<String>,
         }
       `,
       );
