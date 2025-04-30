@@ -80,7 +80,7 @@ export function EditorJsPlaintextRenderer({ stringData }: EditorJSRendererProps)
 
   try {
     data = JSON.parse(stringData) as ejsData;
-  } catch (e) {
+  } catch {
     return;
   }
   if (!data) {

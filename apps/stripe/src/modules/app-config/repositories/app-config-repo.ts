@@ -40,6 +40,11 @@ export const AppConfigRepoError = {
       _internalName: "AppConfigRepoError.FailureFetchingConfigError",
     },
   }),
+  FailureRemovingConfig: BaseError.subclass("FailureRemovingConfigError", {
+    props: {
+      _internalName: "AppConfigRepoError.FailureRemovingConfig",
+    },
+  }),
 };
 
 export interface AppConfigRepo {
@@ -58,10 +63,16 @@ export interface AppConfigRepo {
   ) => Promise<
     Result<AppRootConfig, InstanceType<typeof AppConfigRepoError.FailureFetchingConfig>>
   >;
-  updateMapping: (
+  removeConfig: (
     access: BaseAccessPattern,
     data: {
       configId: string;
+    },
+  ) => Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureRemovingConfig>>>;
+  updateMapping: (
+    access: BaseAccessPattern,
+    data: {
+      configId: string | null;
       channelId: string;
     },
   ) => Promise<Result<void | null, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>>;

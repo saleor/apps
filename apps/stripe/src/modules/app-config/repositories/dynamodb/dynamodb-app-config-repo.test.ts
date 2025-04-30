@@ -1,4 +1,5 @@
 import {
+  DeleteCommand,
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
@@ -23,6 +24,9 @@ import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamod
 import { DynamoDbStripeConfig } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
 import { DynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 
+/**
+ * TODO: We should add integration tests.
+ */
 describe("DynamodbAppConfigRepo", () => {
   let repo: DynamodbAppConfigRepo;
 
@@ -71,6 +75,23 @@ describe("DynamodbAppConfigRepo", () => {
           ],
         });
 
+      const mappingItems = [
+        mockedDynamoConfigItems.mockedMapping,
+        {
+          ...mockedDynamoConfigItems.mockedMapping,
+          channelId: "another-channel-id-2",
+        },
+        {
+          // This one will be not visible in result
+          ...mockedDynamoConfigItems.mockedMapping,
+          channelId: "another-channel-id-3",
+        },
+      ];
+
+      // In dynamo field must be just deleted, not null, not undefined
+      // eslint-disable-next-line
+      delete (mappingItems[2] as any).configId;
+
       mockDocumentClient
         .on(QueryCommand, {
           KeyConditionExpression: "(#c0_1 = :c0_1) AND (begins_with(#c0_2, :c0_2))",
@@ -83,13 +104,7 @@ describe("DynamodbAppConfigRepo", () => {
           },
         })
         .resolvesOnce({
-          Items: [
-            mockedDynamoConfigItems.mockedMapping,
-            {
-              ...mockedDynamoConfigItems.mockedMapping,
-              channelId: "another-channel-id",
-            },
-          ],
+          Items: mappingItems,
         });
 
       const result = await repo.getRootConfig({
@@ -97,12 +112,15 @@ describe("DynamodbAppConfigRepo", () => {
         appId: mockedSaleorAppId,
       });
 
+      // Mapping was set to empty config, so it should be not available in a result
+      expect(result._unsafeUnwrap().chanelConfigMapping["another-channel-id-3"]).toBeUndefined();
+
       expect(result._unsafeUnwrap()).toBeInstanceOf(AppRootConfig);
       expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
         AppRootConfig {
           "chanelConfigMapping": {
             "Q2hhbm5lbDox": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
-            "another-channel-id": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
+            "another-channel-id-2": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
           },
           "stripeConfigsById": {
             "81f323bd-91e2-4838-ab6e-5affd81ffc3b": StripeConfig {
@@ -381,6 +399,75 @@ describe("DynamodbAppConfigRepo", () => {
       if (result.isErr()) {
         expect(result.error).toBeInstanceOf(AppConfigRepoError.FailureSavingConfig);
       }
+    });
+
+    it("Handles empty channelId to reset the mapping", async () => {
+      mockDocumentClient.on(PutCommand, {}).resolvesOnce({
+        $metadata: {
+          httpStatusCode: 200,
+        },
+      });
+
+      const result = await repo.updateMapping(
+        {
+          saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
+        },
+        {
+          /**
+           * instead of deleting just pass null to reset the mapping
+           */
+          configId: null,
+          channelId: mockedSaleorChannelId,
+        },
+      );
+
+      expect(result.isOk()).toBe(true);
+    });
+  });
+
+  describe("removeConfig", () => {
+    it("Removes config from DB by calling method on entity", async () => {
+      mockDocumentClient.on(DeleteCommand, {}).resolvesOnce({
+        $metadata: {
+          httpStatusCode: 200,
+        },
+      });
+
+      const result = await repo.removeConfig(
+        {
+          saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
+        },
+        {
+          configId: mockedConfigurationId,
+        },
+      );
+
+      expect(result.isOk()).toBe(true);
+    });
+
+    it("Returns FailureRemovingConfig when dynamoDb returns non 200 status", async () => {
+      mockDocumentClient.on(DeleteCommand, {}).resolvesOnce({
+        $metadata: {
+          httpStatusCode: 500,
+        },
+      });
+
+      const result = await repo.removeConfig(
+        {
+          saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
+        },
+        {
+          configId: mockedConfigurationId,
+        },
+      );
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[FailureRemovingConfigError: Failed to remove config from DynamoDB]`,
+      );
     });
   });
 });

@@ -15,6 +15,7 @@ describe("StripeWebhookManager", () => {
 
   beforeEach(() => {
     vi.spyOn(stripeSdkMock.webhookEndpoints, "create");
+    vi.spyOn(stripeSdkMock.webhookEndpoints, "del");
 
     vi.spyOn(StripeClient, "createFromRestrictedKey").mockImplementation(
       () => new StripeClient(stripeSdkMock),
@@ -44,7 +45,9 @@ describe("StripeWebhookManager", () => {
         },
       );
 
-      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`[CantCreateWebhookUrlError: Cant create URL]`);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[CantCreateWebhookUrlError: Cant create URL]`,
+      );
     });
 
     it("Returns InvalidDataError if Stripe secret was not returned", async () => {
@@ -97,6 +100,23 @@ describe("StripeWebhookManager", () => {
         Error creating webhook]
       `);
     });
+
+    it("Returns CantRemoveWebhookError if Stripe SDK returns any error", async () => {
+      vi.mocked(stripeSdkMock.webhookEndpoints.del).mockImplementationOnce(async () => {
+        return Promise.reject(new Error("Test error"));
+      });
+
+      const result = await instance.removeWebhook({
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+      });
+
+      expect(result.isErr()).toBe(true);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        [CantRemoveWebhookError: Test error
+        Error removing webhook]
+      `);
+    });
   });
 
   it("Calls stripe client to create endpoints with valid arguments, returns created ID and secret", async () => {
@@ -143,5 +163,24 @@ describe("StripeWebhookManager", () => {
           "url": "http://localhost:3000/api/stripe/webhook?configurationId=81f323bd-91e2-4838-ab6e-5affd81ffc3b&saleorApiUrl=https%3A%2F%2Ffoo.bar.saleor.cloud%2Fgraphql%2F",
         }
       `);
+  });
+
+  it("Calls stripe client to remove endpoint based on it's ID", async () => {
+    vi.mocked(stripeSdkMock.webhookEndpoints.del).mockImplementationOnce(async () => {
+      return {
+        id: "we_123",
+        object: "webhook_endpoint",
+        deleted: true,
+        lastResponse: {} as never,
+      };
+    });
+
+    const result = await instance.removeWebhook({
+      webhookId: "we_123",
+      restrictedKey: mockedStripeRestrictedKey,
+    });
+
+    expect(result.isOk()).toBe(true);
+    expect(stripeSdkMock.webhookEndpoints.del).toHaveBeenCalledWith("we_123");
   });
 });

@@ -7,6 +7,7 @@ import { createLogger } from "@/lib/logger";
 import { NewStripeConfigInput } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeClient } from "@/modules/stripe/stripe-client";
+import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookUrlBuilder } from "@/modules/stripe/stripe-webhook-url-builder";
 import { supportedStripeEvents } from "@/modules/stripe/supported-stripe-events";
 
@@ -28,14 +29,43 @@ const CantCreateWebhookError = BaseError.subclass("CantCreateWebhookError", {
   },
 });
 
+const CantRemoveWebhookError = BaseError.subclass("CantRemoveWebhookError", {
+  props: {
+    _internalName: "StripeWebhookManagerErrors.CantRemoveWebhookError" as const,
+  },
+});
+
 export const StripeWebhookManagerErrors = {
   CantCreateWebhookUrlError,
   CantCreateWebhookError,
+  CantRemoveWebhookError,
 };
 
 export class StripeWebhookManager {
   private logger = createLogger("StripeWebhookManager");
   private urlBuilder = new StripeWebhookUrlBuilder();
+
+  async removeWebhook({
+    webhookId,
+    restrictedKey,
+  }: {
+    webhookId: string;
+    restrictedKey: StripeRestrictedKey;
+  }) {
+    try {
+      const client = StripeClient.createFromRestrictedKey(restrictedKey);
+
+      await client.nativeClient.webhookEndpoints.del(webhookId);
+
+      this.logger.info("Successfully removed Stripe webhook", { id: webhookId });
+
+      return ok(null);
+    } catch (e) {
+      this.logger.error("Error removing webhook", { error: e });
+
+      return err(new CantRemoveWebhookError("Error removing webhook", { cause: e }));
+    }
+  }
 
   async createWebhook(
     config: NewStripeConfigInput & {
