@@ -1,5 +1,4 @@
 import { GetSaleorChannelsTrpcHandler } from "@/modules/app-config/trpc-handlers/get-saleor-channels-trpc-handler";
-import { GetStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/get-stripe-config-trpc-handler";
 import { GetStripeConfigsChannelsMappingTrpcHandler } from "@/modules/app-config/trpc-handlers/get-stripe-configs-channels-mapping-trpc-handler";
 import { GetStripeConfigsListTrpcHandler } from "@/modules/app-config/trpc-handlers/get-stripe-configs-list-trpc-handler";
 import { NewStripeConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-stripe-config-trpc-handler";
@@ -15,7 +14,6 @@ const webhookManager = new StripeWebhookManager();
  * TODO Figure out end-to-end router testing (must somehow check valid jwt token)
  */
 export const appConfigRouter = router({
-  getStripeConfig: new GetStripeConfigTrpcHandler().getTrpcProcedure(),
   saveNewStripeConfig: new NewStripeConfigTrpcHandler({
     webhookManager,
   }).getTrpcProcedure(),
