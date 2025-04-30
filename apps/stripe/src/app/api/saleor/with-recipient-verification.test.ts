@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
@@ -30,11 +30,11 @@ describe("withRecipientVerification", () => {
     expect(await response.text()).toStrictEqual("OK");
   });
 
-  it("Returns 403 if AuthData id does not match recipient id", async () => {
-    const handler = withRecipientVerification((_req, ctx) => {
-      expect(ctx.authData.appId).toStrictEqual(mockedSaleorAppId);
+  it("Returns 403 if AuthData id does not match recipient id, do not call actual handler", async () => {
+    const innerHandler = vi.fn();
 
-      return new Response("OK");
+    const handler = withRecipientVerification(() => {
+      return innerHandler();
     });
 
     const response = await handler(new NextRequest("https://example.com"), {
@@ -51,5 +51,6 @@ describe("withRecipientVerification", () => {
 
     expect(await response.text()).toStrictEqual("Recipient ID does not match auth data ID");
     expect(await response.status).toStrictEqual(403);
+    expect(innerHandler).not.toHaveBeenCalled();
   });
 });
