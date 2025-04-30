@@ -20,18 +20,13 @@ export const ConfigurationView = () => {
         </Text>
         <MainInstructions marginTop={1.5} />
       </Box>
-      <Layout.AppSection
-        includePadding
-        heading="Webhooks status"
-        sideContent={<WebhooksStatusInstructions />}
-      >
+      <Layout.AppSection heading="Webhooks status" sideContent={<WebhooksStatusInstructions />}>
         <Layout.AppSectionCard>
           <WebhooksStatus />
         </Layout.AppSectionCard>
       </Layout.AppSection>
 
       <Layout.AppSection
-        includePadding={false}
         marginTop={14}
         heading="Algolia settings"
         sideContent={
@@ -52,7 +47,6 @@ export const ConfigurationView = () => {
       </Layout.AppSection>
 
       <Layout.AppSection
-        includePadding={false}
         marginTop={14}
         heading="Algolia fields filtering"
         sideContent={
@@ -71,7 +65,6 @@ export const ConfigurationView = () => {
       </Layout.AppSection>
 
       <Layout.AppSection
-        includePadding
         marginTop={14}
         heading="Index products"
         sideContent={
@@ -84,7 +77,6 @@ export const ConfigurationView = () => {
       </Layout.AppSection>
 
       <Layout.AppSection
-        includePadding
         marginTop={14}
         heading="Set indices settings"
         sideContent={

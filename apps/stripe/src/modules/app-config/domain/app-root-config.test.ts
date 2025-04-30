@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 
+import { mockedConfigurationId } from "@/__tests__/mocks/constants";
 import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 
 describe("AppRootConfig", () => {
   describe("getAllConfigsAsList", () => {
-    it("Returnes stored configs as list", () => {
+    it("Returns stored configs as list", () => {
       const appRootConfig = new AppRootConfig(
         {
           "channel-1": "config-1",
@@ -44,6 +45,30 @@ describe("AppRootConfig", () => {
           },
         ]
       `);
+    });
+  });
+
+  describe("getChannelsBoundToGivenConfig", () => {
+    it("Returns empty list if no mapping found", () => {
+      const rootConfig = new AppRootConfig({}, {});
+
+      expect(rootConfig.getChannelsBoundToGivenConfig(mockedConfigurationId)).toStrictEqual([]);
+    });
+
+    it("Returns list of channels IDs if they are mapped to given config ID", () => {
+      const rootConfig = new AppRootConfig(
+        {
+          "channel-1": mockedConfigurationId,
+          "channel-2": mockedConfigurationId,
+          "channel-3": "another-config-id",
+        },
+        {},
+      );
+
+      expect(rootConfig.getChannelsBoundToGivenConfig(mockedConfigurationId)).toStrictEqual([
+        "channel-1",
+        "channel-2",
+      ]);
     });
   });
 });

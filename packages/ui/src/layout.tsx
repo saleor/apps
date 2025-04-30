@@ -4,7 +4,6 @@ import { ReactNode } from "react";
 type AppSectionProps = PropsWithBox<{
   heading: ReactNode;
   sideContent?: ReactNode;
-  includePadding?: boolean;
   leftColumnWidthPx?: number;
   maxWidthPx?: number;
 }>;
@@ -39,7 +38,6 @@ const AppSectionCard = ({
 const AppSection = ({
   heading,
   sideContent,
-  includePadding = true,
   leftColumnWidthPx = 400,
   maxWidthPx = 1200,
   children,

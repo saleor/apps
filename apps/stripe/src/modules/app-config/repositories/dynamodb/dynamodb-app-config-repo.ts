@@ -1,4 +1,4 @@
-import { GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
+import { DeleteItemCommand, GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
 import { err, ok, Result } from "neverthrow";
 
@@ -101,7 +101,9 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
       const rootConfig = new AppRootConfig(
         parsedMappings.reduce(
           (record, dynamoItem) => {
-            record[dynamoItem.channelId] = dynamoItem.configId;
+            if (dynamoItem.configId) {
+              record[dynamoItem.channelId] = dynamoItem.configId;
+            }
 
             return record;
           },
@@ -286,12 +288,12 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
   async updateMapping(
     access: BaseAccessPattern,
     data: {
-      configId: string;
+      configId: string | null;
       channelId: string;
     },
   ): Promise<Result<void | null, InstanceType<typeof BaseError>>> {
     const command = this.channelConfigMappingEntity.build(PutItemCommand).item({
-      configId: data.configId,
+      configId: data.configId ?? undefined,
       channelId: data.channelId,
       PK: DynamoDbChannelConfigMapping.accessPattern.getPK(access),
       SK: DynamoDbChannelConfigMapping.accessPattern.getSKforSpecificChannel({
@@ -316,6 +318,42 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
       return err(
         new AppConfigRepoError.FailureSavingConfig("Failed to update mapping in DynamoDB", {
+          cause: e,
+        }),
+      );
+    }
+  }
+
+  async removeConfig(
+    access: BaseAccessPattern,
+    data: {
+      configId: string;
+    },
+  ): Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureRemovingConfig>>> {
+    try {
+      const operation = this.stripeConfigEntity.build(DeleteItemCommand).key({
+        PK: DynamoDbStripeConfig.accessPattern.getPK(access),
+        SK: DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({
+          configId: data.configId,
+        }),
+      });
+
+      const result = await operation.send();
+
+      if (result.$metadata.httpStatusCode !== 200) {
+        return err(
+          new AppConfigRepoError.FailureRemovingConfig("Failed to remove config from DynamoDB", {
+            props: {
+              dynamoHttpResponseStatusCode: result.$metadata.httpStatusCode,
+            },
+          }),
+        );
+      }
+
+      return ok(null);
+    } catch (e) {
+      return err(
+        new AppConfigRepoError.FailureRemovingConfig("Failed to remove config from DynamoDB", {
           cause: e,
         }),
       );

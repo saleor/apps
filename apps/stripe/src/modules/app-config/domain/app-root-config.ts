@@ -15,4 +15,11 @@ export class AppRootConfig {
   getAllConfigsAsList() {
     return Object.values(this.stripeConfigsById);
   }
+
+  getChannelsBoundToGivenConfig(configId: string) {
+    const keyValues = Object.entries(this.chanelConfigMapping);
+    const filtered = keyValues.filter(([_, value]) => value === configId);
+
+    return filtered.map(([channelId]) => channelId);
+  }
 }
