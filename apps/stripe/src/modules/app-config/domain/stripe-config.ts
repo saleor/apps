@@ -87,6 +87,7 @@ export type StripeFrontendConfigSerializedFields = {
   readonly id: string;
   readonly restrictedKey: string;
   readonly publishableKey: string;
+  readonly webhookStatus?: "missing" | "disabled" | "active";
 };
 
 /**
@@ -98,12 +99,14 @@ export class StripeFrontendConfig implements StripeFrontendConfigSerializedField
   readonly id: string;
   readonly restrictedKey: string;
   readonly publishableKey: string;
+  webhookStatus?: StripeFrontendConfigSerializedFields["webhookStatus"];
 
   private constructor(fields: StripeFrontendConfigSerializedFields) {
     this.name = fields.name;
     this.id = fields.id;
     this.restrictedKey = fields.restrictedKey;
     this.publishableKey = fields.publishableKey;
+    this.webhookStatus = fields.webhookStatus;
   }
 
   private static getMaskedKeyValue(key: StripeRestrictedKey) {
