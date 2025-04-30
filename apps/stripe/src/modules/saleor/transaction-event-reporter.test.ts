@@ -12,17 +12,14 @@ describe("TransactionEventReporter", () => {
   });
 
   it("Returns AlreadyReportedError if graphql error points ALREADY_EXISTS", async () => {
-    // @ts-expect-error - patching only subset
-    vi.spyOn(mockedGraphqlClient, "mutation").mockImplementationOnce(async () => ({
-      data: {
-        transactionEventReport: {
-          errors: [
-            {
-              code: "ALREADY_EXISTS",
-              message: "Transaction with this pspReference already exists",
-            },
-          ],
-        },
+    vi.spyOn(mockedGraphqlClient, "request").mockImplementationOnce(async () => ({
+      transactionEventReport: {
+        errors: [
+          {
+            code: "ALREADY_EXISTS",
+            message: "Transaction with this pspReference already exists",
+          },
+        ],
       },
     }));
 
@@ -40,19 +37,19 @@ describe("TransactionEventReporter", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
-      `[TransactionEventReporter.AlreadyReportedError: Event already reported]`,
+      `
+      [TransactionEventReporter.AlreadyReportedError: Transaction with this pspReference already exists
+      Event already reported]
+    `,
     );
   });
 
   it("Returns AlreadyReportedError if data contains alreadyProcessed: true", async () => {
-    // @ts-expect-error - patching only subset
-    vi.spyOn(mockedGraphqlClient, "mutation").mockImplementationOnce(async () => ({
-      data: {
-        transactionEventReport: {
-          alreadyProcessed: true,
-          transactionEvent: {
-            id: "asd",
-          },
+    vi.spyOn(mockedGraphqlClient, "request").mockImplementationOnce(async () => ({
+      transactionEventReport: {
+        alreadyProcessed: true,
+        transactionEvent: {
+          id: "asd",
         },
       },
     }));
@@ -76,14 +73,11 @@ describe("TransactionEventReporter", () => {
   });
 
   it("returns event id in case of success", async () => {
-    // @ts-expect-error - patching only subset
-    vi.spyOn(mockedGraphqlClient, "mutation").mockImplementationOnce(async () => ({
-      data: {
-        transactionEventReport: {
-          alreadyProcessed: false,
-          transactionEvent: {
-            id: "asd",
-          },
+    vi.spyOn(mockedGraphqlClient, "request").mockImplementationOnce(async () => ({
+      transactionEventReport: {
+        alreadyProcessed: false,
+        transactionEvent: {
+          id: "asd",
         },
       },
     }));

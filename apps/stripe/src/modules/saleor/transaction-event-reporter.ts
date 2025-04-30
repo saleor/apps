@@ -1,5 +1,5 @@
-import { err, ok, Result } from "neverthrow";
-import { Client } from "urql";
+import { GraphQLClient } from "graphql-request";
+import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import {
   TransactionActionEnum,
@@ -58,10 +58,10 @@ export interface ITransactionEventReporter {
 }
 
 export class TransactionEventReporter implements ITransactionEventReporter {
-  private gqlClient: Pick<Client, "mutation">;
+  private gqlClient: GraphQLClient;
   private logger = createLogger("TransactionEventReporter");
 
-  constructor(deps: { graphqlClient: Pick<Client, "mutation"> }) {
+  constructor(deps: { graphqlClient: GraphQLClient }) {
     this.gqlClient = deps.graphqlClient;
   }
 
@@ -69,23 +69,26 @@ export class TransactionEventReporter implements ITransactionEventReporter {
     input: TransactionEventReportInput,
   ): Promise<Result<TransactionEventReportResultResult, PossibleTransactionEventReportErrors>> {
     try {
-      const mutationResult = await this.gqlClient.mutation(TransactionEventReportDocument, {
-        ...input,
-        amount: input.amount.amount,
-        availableActions: input.actions,
-      });
+      const mutationResult = await ResultAsync.fromPromise(
+        this.gqlClient.request(TransactionEventReportDocument, {
+          ...input,
+          amount: input.amount.amount,
+          availableActions: input.actions,
+        }),
+        (error) => BaseError.normalize(error),
+      );
 
-      const { data, error } = mutationResult;
-
-      if (error) {
+      if (mutationResult.isErr()) {
         return err(
           new UnhandledError("Error reporting transaction event - server error", {
-            cause: error,
+            cause: mutationResult.error,
           }),
         );
       }
 
-      const mutationErrors = data?.transactionEventReport?.errors ?? [];
+      const { transactionEventReport } = mutationResult.value;
+
+      const mutationErrors = transactionEventReport?.errors ?? [];
 
       const hasMoreThanOneError = mutationErrors.length > 1;
 
@@ -100,15 +103,15 @@ export class TransactionEventReporter implements ITransactionEventReporter {
         switch (mutationErrors[0].code) {
           case "ALREADY_EXISTS": {
             return err(
-              new AlreadyReportedError(`Event already reported`, {
-                cause: error,
+              new AlreadyReportedError("Event already reported", {
+                cause: BaseError.normalize(mutationErrors[0]),
               }),
             );
           }
           case "GRAPHQL_ERROR": {
             return err(
               new GraphqlError("Error reporting transaction event", {
-                cause: error,
+                cause: BaseError.normalize(mutationErrors[0]),
               }),
             );
           }
@@ -118,31 +121,27 @@ export class TransactionEventReporter implements ITransactionEventReporter {
           case "REQUIRED": {
             return err(
               new UnhandledError("Error reporting transaction event", {
-                cause: error,
+                cause: BaseError.normalize(mutationErrors[0]),
               }),
             );
           }
         }
       }
 
-      if (!data?.transactionEventReport?.transactionEvent) {
-        return err(
-          new UnhandledError("Error reporting transaction event: missing resolved data", {
-            cause: error,
-          }),
-        );
+      if (!transactionEventReport?.transactionEvent) {
+        return err(new UnhandledError("Error reporting transaction event: missing resolved data"));
       }
 
-      if (data.transactionEventReport.alreadyProcessed) {
+      if (transactionEventReport.alreadyProcessed) {
         return err(
           new AlreadyReportedError(
-            `Event already reported: ${data.transactionEventReport.transactionEvent.id}`,
+            `Event already reported: ${transactionEventReport.transactionEvent.id}`,
           ),
         );
       }
 
       return ok({
-        createdEventId: data.transactionEventReport.transactionEvent.id,
+        createdEventId: transactionEventReport.transactionEvent.id,
       });
     } catch (e) {
       return err(

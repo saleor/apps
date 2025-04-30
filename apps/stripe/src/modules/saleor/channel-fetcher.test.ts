@@ -6,21 +6,14 @@ import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 
 describe("ChannelFetcher", () => {
   beforeEach(() => {
-    vi.spyOn(mockedGraphqlClient, "query");
+    vi.spyOn(mockedGraphqlClient, "request");
   });
 
   it("Returns FetchError if graphql query fails", async () => {
     const instance = new ChannelsFetcher(mockedGraphqlClient);
 
-    // @ts-expect-error - patching only subset
-    vi.mocked(mockedGraphqlClient.query).mockImplementationOnce(() => {
-      return {
-        async toPromise() {
-          return {
-            error: "Test gql error",
-          };
-        },
-      };
+    vi.mocked(mockedGraphqlClient.request).mockImplementationOnce(async () => {
+      throw new Error("Test gql error");
     });
 
     const result = await instance.fetchChannels();
@@ -34,15 +27,10 @@ describe("ChannelFetcher", () => {
   it("Returns FetchError if channels are missing", async () => {
     const instance = new ChannelsFetcher(mockedGraphqlClient);
 
-    // @ts-expect-error - patching only subset
-    vi.mocked(mockedGraphqlClient.query).mockImplementationOnce(() => {
+    vi.mocked(mockedGraphqlClient.request).mockImplementationOnce(async () => {
       return {
-        async toPromise() {
-          return {
-            data: {
-              channels: null,
-            },
-          };
+        data: {
+          channels: null,
         },
       };
     });
@@ -70,16 +58,9 @@ describe("ChannelFetcher", () => {
       },
     ];
 
-    // @ts-expect-error - patching only subset
-    vi.mocked(mockedGraphqlClient.query).mockImplementationOnce(() => {
+    vi.mocked(mockedGraphqlClient.request).mockImplementationOnce(async () => {
       return {
-        async toPromise() {
-          return {
-            data: {
-              channels: channels,
-            },
-          };
-        },
+        channels: channels,
       };
     });
 

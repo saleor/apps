@@ -1,17 +1,15 @@
-import { createOtelUrqlExchange } from "@saleor/apps-otel/src/otel-urql-exchange-factory";
-import {
-  createGraphQLClient,
-  CreateGraphQLClientArgs,
-} from "@saleor/apps-shared/create-graphql-client";
-
-import { appInternalTracer } from "./tracing";
+import { CreateGraphQLClientArgs } from "@saleor/apps-shared/create-graphql-client";
+import { GraphQLClient } from "graphql-request";
 
 type CreateGraphQLClientProps = Omit<CreateGraphQLClientArgs, "opts">;
 
-export const createInstrumentedGraphqlClient = (props: CreateGraphQLClientProps) =>
-  createGraphQLClient({
-    ...props,
-    opts: {
-      prependingFetchExchanges: [createOtelUrqlExchange({ tracer: appInternalTracer })],
-    },
+// TODO: add otel exchange
+export const createInstrumentedGraphqlClient = (props: CreateGraphQLClientProps) => {
+  return new GraphQLClient(props.saleorApiUrl, {
+    headers: props.token
+      ? {
+          "Authorization-Bearer": props.token,
+        }
+      : {},
   });
+};

@@ -1,5 +1,5 @@
-import { err, ok, Result } from "neverthrow";
-import { Client } from "urql";
+import { GraphQLClient } from "graphql-request";
+import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
 
@@ -15,18 +15,21 @@ export class ChannelsFetcher {
     },
   });
 
-  readonly client: Pick<Client, "query">;
+  readonly client: GraphQLClient;
 
-  constructor(client: Pick<Client, "query">) {
+  constructor(client: GraphQLClient) {
     this.client = client;
   }
 
   async fetchChannels(): Promise<
     Result<ChannelFragment[], InstanceType<typeof ChannelsFetcher.FetchError>>
   > {
-    const channelsResponse = await this.client.query(FetchChannelsDocument, {}).toPromise();
+    const channelsResponse = await ResultAsync.fromPromise(
+      this.client.request(FetchChannelsDocument, {}),
+      (error) => BaseError.normalize(error),
+    );
 
-    if (channelsResponse.error) {
+    if (channelsResponse.isErr()) {
       return err(
         new ChannelsFetcher.FetchError("Failed to fetch channels", {
           cause: channelsResponse.error,
@@ -34,8 +37,8 @@ export class ChannelsFetcher {
       );
     }
 
-    if (channelsResponse.data?.channels) {
-      return ok(channelsResponse.data.channels.map((c) => c));
+    if (channelsResponse.value.channels) {
+      return ok(channelsResponse.value.channels.map((c) => c));
     }
 
     return err(new ChannelsFetcher.FetchError("Failed to fetch channels - channels data missing"));

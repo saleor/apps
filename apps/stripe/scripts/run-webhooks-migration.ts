@@ -60,6 +60,7 @@ const runMigrations = async () => {
       const runner = new WebhookMigrationRunner({
         dryRun,
         logger,
+        // @ts-expect-error - fix this in the future
         client,
         saleorApiUrl,
         getManifests: async ({ appDetails }) => {
