@@ -53,7 +53,7 @@ describe("StripePaymentIntentHandler", () => {
         createResolvedTransactionFlow("AUTHORIZATION"),
         createResolvedTransactionFlow("CHARGE"),
       ])(
-        "should resolve fields from Stripe event properly for '%s' flow",
+        "should resolve fields with type: 'CHARGE' from Stripe event properly for '%s' flow",
         (resolvedTransactionFlow) => {
           const event = getMockedPaymentIntentSucceededEvent();
 
@@ -95,7 +95,7 @@ describe("StripePaymentIntentHandler", () => {
           expectedType: "CHARGE_REQUEST",
         },
       ])(
-        "should resolve fields from Stripe event properly for $resolvedTransactionFlow flow",
+        "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
         ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentProcessingEvent();
 
@@ -137,7 +137,7 @@ describe("StripePaymentIntentHandler", () => {
           expectedType: "CHARGE_ACTION_REQUIRED",
         },
       ])(
-        "should resolve fields from Stripe event properly for $resolvedTransactionFlow flow",
+        "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
         ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentRequiresActionEvent();
 
@@ -179,7 +179,7 @@ describe("StripePaymentIntentHandler", () => {
           expectedType: "AUTHORIZATION_SUCCESS",
         },
       ])(
-        "should resolve fields from Stripe event properly for $resolvedTransactionFlow flow",
+        "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
         ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentAmountCapturableUpdatedEvent();
 
@@ -221,7 +221,7 @@ describe("StripePaymentIntentHandler", () => {
           expectedType: "CHARGE_FAILURE",
         },
       ])(
-        "should resolve fields from Stripe event properly for $resolvedTransactionFlow flow",
+        "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
         ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentPaymentFailedEvent();
 

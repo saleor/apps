@@ -4,7 +4,10 @@ import Stripe from "stripe";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
+import {
+  createStripePaymentIntentStatus,
+  StripePaymentIntentStatusValidationError,
+} from "@/modules/stripe/stripe-payment-intent-status";
 import {
   AuthorizationFailureResult,
   ChargeFailureResult,
@@ -20,6 +23,10 @@ export type SupportedEvents =
   | Stripe.PaymentIntentRequiresActionEvent
   | Stripe.PaymentIntentAmountCapturableUpdatedEvent
   | Stripe.PaymentIntentPaymentFailedEvent;
+
+type PossibleErrors = InstanceType<
+  typeof SaleorMoney.ValidationError | typeof StripePaymentIntentStatusValidationError
+>;
 
 export class StripePaymentIntentHandler {
   private prepareTransactionEventReportParams(event: SupportedEvents) {
@@ -67,7 +74,7 @@ export class StripePaymentIntentHandler {
     event: SupportedEvents;
     recordedTransaction: RecordedTransaction;
     stripePaymentIntentId: StripePaymentIntentId;
-  }) {
+  }): Result<TransactionEventReportVariablesResolver, PossibleErrors> {
     const {
       event,
       recordedTransaction: { resolvedTransactionFlow, saleorTransactionId },
