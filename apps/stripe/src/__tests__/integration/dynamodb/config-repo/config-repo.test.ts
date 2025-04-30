@@ -1,0 +1,151 @@
+import { createLogger } from "vite";
+import { describe, expect, it, vi } from "vitest";
+
+import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
+import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
+import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
+import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
+import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
+import { RandomId } from "@/lib/random-id";
+import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
+import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
+import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
+import { DynamoDbStripeConfig } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
+
+const testLogger = createLogger();
+
+describe("ConfigRepo with DynamoDB integration test", () => {
+  it("Creates and reads a configuration", async () => {
+    const repo = new DynamodbAppConfigRepo({
+      entities: {
+        channelConfigMapping: DynamoDbChannelConfigMapping.entity,
+        stripeConfig: DynamoDbStripeConfig.entity,
+      },
+    });
+
+    // keep it random, so we additionally check that DB has dynamic value, not some leftover
+    const randomId = new RandomId().generate();
+
+    testLogger.info(`Will write config with ID: ${randomId}`);
+
+    await repo.saveStripeConfig({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      config: StripeConfig.create({
+        publishableKey: mockedStripePublishableKey,
+        name: "Config name",
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+        webhookSecret: mockStripeWebhookSecret,
+        id: randomId,
+      })._unsafeUnwrap(),
+    });
+
+    testLogger.info(`Attempting to read config with ID: ${randomId}`);
+
+    const stripeConfig = await repo.getStripeConfig({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      configId: randomId,
+    });
+
+    expect(stripeConfig.isOk()).toBe(true);
+    testLogger.info(`Read config with ID: ${stripeConfig._unsafeUnwrap()?.id}`);
+    expect(stripeConfig._unsafeUnwrap()?.id).toStrictEqual(randomId);
+  });
+
+  it("Creates 2 configurations, then assigns them sequentially to channel", async () => {
+    const repo = new DynamodbAppConfigRepo({
+      entities: {
+        channelConfigMapping: DynamoDbChannelConfigMapping.entity,
+        stripeConfig: DynamoDbStripeConfig.entity,
+      },
+    });
+
+    // Given
+
+    const channelId = mockedSaleorChannelId;
+    const config1id = new RandomId().generate();
+    const config2id = new RandomId().generate();
+
+    await repo.saveStripeConfig({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      config: StripeConfig.create({
+        publishableKey: mockedStripePublishableKey,
+        name: "Config name",
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+        webhookSecret: mockStripeWebhookSecret,
+        id: config1id,
+      })._unsafeUnwrap(),
+    });
+
+    await repo.saveStripeConfig({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      config: StripeConfig.create({
+        publishableKey: mockedStripePublishableKey,
+        name: "Config name",
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+        webhookSecret: mockStripeWebhookSecret,
+        id: config2id,
+      })._unsafeUnwrap(),
+    });
+
+    const currentMapping = await repo.getRootConfig({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+    });
+
+    expect(currentMapping.isOk()).toBe(true);
+
+    const unpackedMapping = currentMapping._unsafeUnwrap();
+
+    // Assert it's empty
+    expect(unpackedMapping.chanelConfigMapping).toStrictEqual({});
+
+    await repo.updateMapping(
+      {
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      },
+      {
+        configId: config1id,
+        channelId,
+      },
+    );
+
+    const newMappingAfterFirstWrite = (
+      await repo.getRootConfig({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      })
+    )._unsafeUnwrap();
+
+    expect(newMappingAfterFirstWrite.chanelConfigMapping[channelId]).toStrictEqual(config1id);
+
+    await repo.updateMapping(
+      {
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      },
+      {
+        configId: config2id,
+        channelId,
+      },
+    );
+
+    const newMappingAfterSecondWrite = (
+      await repo.getRootConfig({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      })
+    )._unsafeUnwrap();
+
+    expect(newMappingAfterSecondWrite.chanelConfigMapping[channelId]).toStrictEqual(config2id);
+  });
+
+  it.todo("Created config and removes it");
+});

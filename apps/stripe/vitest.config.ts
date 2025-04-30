@@ -25,6 +25,15 @@ export default defineConfig({
           setupFiles: "./src/__tests__/setup.integration.ts",
         },
       },
+      {
+        extends: true,
+        test: {
+          globalSetup: "./src/__tests__/global-setup.integration-dynamo.ts",
+          include: ["src/__tests__/integration/dynamodb/**/*.test.{ts,ts}"],
+          name: "integration:dynamodb",
+          setupFiles: "./src/__tests__/setup.integration-dynamo.ts",
+        },
+      },
     ],
     sequence: {
       /**
