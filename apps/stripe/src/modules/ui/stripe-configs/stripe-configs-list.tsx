@@ -1,11 +1,13 @@
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
-import { Box, Button, ChevronRightIcon, Chip, List, Text } from "@saleor/macaw-ui";
+import { Box, Button, Chip, Text, TrashBinIcon } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
 import {
   StripeFrontendConfig,
   StripeFrontendConfigSerializedFields,
 } from "@/modules/app-config/domain/stripe-config";
+import { trpcClient } from "@/modules/trpc/trpc-client";
 
 type Props = {
   configs: Array<StripeFrontendConfigSerializedFields>;
@@ -13,6 +15,21 @@ type Props = {
 
 export const StripeConfigsList = ({ configs, ...props }: Props) => {
   const router = useRouter();
+  const { notifyError, notifySuccess } = useDashboardNotification();
+  const configsList = trpcClient.appConfig.getStripeConfigsList.useQuery();
+  const mappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
+  const { mutate, isLoading } = trpcClient.appConfig.removeStripeConfig.useMutation({
+    onSuccess() {
+      notifySuccess("Configuration deleted");
+    },
+    onError(err) {
+      notifyError("Error deleting config", err.message);
+    },
+    onSettled() {
+      mappings.refetch();
+      configsList.refetch();
+    },
+  });
 
   return (
     <Layout.AppSectionCard
@@ -22,7 +39,7 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
         </Box>
       }
     >
-      <List {...props}>
+      <Box {...props}>
         {configs.map((config) => {
           const configInstance = StripeFrontendConfig.createFromSerializedFields(config);
           const envValue = configInstance.getStripeEnvValue();
@@ -48,27 +65,37 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
               color="success1"
               size="large"
             >
-              <Text color="success1" size={1}>
+              <Text color="accent1" size={1}>
                 {configInstance.getStripeEnvValue()}
               </Text>
             </Chip>
           );
 
           return (
-            <List.Item padding={4} key={configInstance.id}>
-              <Box display={"flex"} justifyContent="space-between" width={"100%"}>
+            <Box padding={4} key={configInstance.id}>
+              <Box
+                display={"flex"}
+                justifyContent="space-between"
+                width={"100%"}
+                alignItems={"center"}
+              >
                 <Text marginRight={4} display="block">
                   {configInstance.name}
                 </Text>
                 {envValue === "TEST" ? testEnvChip : liveEnvChip}
-                <Text marginLeft={4} display="block">
-                  <ChevronRightIcon />
-                </Text>
+                <Button
+                  disabled={isLoading}
+                  marginLeft={4}
+                  display="block"
+                  icon={<TrashBinIcon color="critical2" />}
+                  variant="tertiary"
+                  onClick={() => mutate({ configId: configInstance.id })}
+                />
               </Box>
-            </List.Item>
+            </Box>
           );
         })}
-      </List>
+      </Box>
     </Layout.AppSectionCard>
   );
 };

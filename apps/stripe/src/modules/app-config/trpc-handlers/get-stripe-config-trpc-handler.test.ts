@@ -1,5 +1,5 @@
 import { err, ok } from "neverthrow";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import {
@@ -38,10 +38,6 @@ const getTestCaller = () => {
 };
 
 describe("GetStripeConfigTrpcHandler", () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   it("Returns serialized config if found in repo", async () => {
     const { caller } = getTestCaller();
 
