@@ -8,6 +8,7 @@ import {
   mockedSaleorAppId,
 } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
+import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { BaseError } from "@/lib/errors";
@@ -23,6 +24,8 @@ const getTestCaller = () => {
   const testRouter = router({
     testProcedure: instance.getTrpcProcedure(),
   });
+
+  mockedAppConfigRepo.getStripeConfig.mockImplementation(async () => ok(mockedStripeConfig));
 
   return {
     mockedAppConfigRepo,

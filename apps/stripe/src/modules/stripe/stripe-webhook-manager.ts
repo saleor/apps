@@ -45,7 +45,6 @@ export class StripeWebhookManager {
   private logger = createLogger("StripeWebhookManager");
   private urlBuilder = new StripeWebhookUrlBuilder();
 
-  // todo test
   async removeWebhook({
     webhookId,
     restrictedKey,

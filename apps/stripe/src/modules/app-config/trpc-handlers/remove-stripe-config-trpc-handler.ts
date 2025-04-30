@@ -95,7 +95,10 @@ export class RemoveStripeConfigTrpcHandler {
           });
         }
 
-        const webhookRemovingResult = await this.webhookManager.removeWebhook(configToRemove);
+        const webhookRemovingResult = await this.webhookManager.removeWebhook({
+          webhookId: configToRemove.webhookId,
+          restrictedKey: configToRemove.restrictedKey,
+        });
 
         if (webhookRemovingResult.isErr()) {
           /**

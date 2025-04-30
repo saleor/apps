@@ -1,9 +1,10 @@
 import { err, ok } from "neverthrow";
 import Stripe from "stripe";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionChargeRequestedEvent } from "@/__tests__/mocks/transaction-charge-requested-event";
@@ -19,6 +20,10 @@ import { TransactionChargeRequestedUseCase } from "./use-case";
 import { TransactionChargeRequestedUseCaseResponses } from "./use-case-response";
 
 describe("TransactionChargeRequestedUseCase", () => {
+  beforeEach(() => {
+    mockedAppConfigRepo.getStripeConfig.mockImplementation(async () => ok(mockedStripeConfig));
+  });
+
   it("Calls Stripe PaymentIntent API to capture payment intent and returns ChargeSuccess when payment intent is captured successfully", async () => {
     const capturePaymentIntent = vi.fn(async () =>
       ok({
