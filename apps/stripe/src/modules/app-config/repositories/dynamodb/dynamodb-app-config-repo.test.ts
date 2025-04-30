@@ -28,7 +28,6 @@ import { DynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 /**
  * TODO: We should add integration tests.
  */
-
 describe("DynamodbAppConfigRepo", () => {
   let repo: DynamodbAppConfigRepo;
 
