@@ -1,9 +1,8 @@
 import { ok } from "neverthrow";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
-import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { PaymentGatewayInitializeSessionUseCaseResponses } from "@/app/api/saleor/payment-gateway-initialize-session/use-case-response";
@@ -12,10 +11,6 @@ import { AppIsNotConfiguredResponse } from "@/modules/saleor/saleor-webhook-resp
 import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 
 describe("PaymentGatewayInitializeSessionUseCase", () => {
-  beforeEach(() => {
-    mockedAppConfigRepo.getStripeConfig.mockImplementation(async () => ok(mockedStripeConfig));
-  });
-
   it('Returns Success response with publishable key within "data" object if found in configuration', async () => {
     const uc = new PaymentGatewayInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,

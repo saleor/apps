@@ -1,5 +1,5 @@
 import { err, ok } from "neverthrow";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import {
@@ -8,7 +8,6 @@ import {
   mockedSaleorAppId,
 } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
-import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { BaseError } from "@/lib/errors";
@@ -25,8 +24,6 @@ const getTestCaller = () => {
     testProcedure: instance.getTrpcProcedure(),
   });
 
-  mockedAppConfigRepo.getStripeConfig.mockImplementation(async () => ok(mockedStripeConfig));
-
   return {
     mockedAppConfigRepo,
     caller: testRouter.createCaller({
@@ -41,10 +38,6 @@ const getTestCaller = () => {
 };
 
 describe("GetStripeConfigTrpcHandler", () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   it("Returns serialized config if found in repo", async () => {
     const { caller } = getTestCaller();
 
