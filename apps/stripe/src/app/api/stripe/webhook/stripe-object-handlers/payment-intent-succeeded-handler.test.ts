@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
-import { PaymentIntentSucceededHandler } from "@/app/api/stripe/webhook/stripe-event-handlers/payment-intent-succeeded-handler";
+import { PaymentIntentSucceededHandler } from "@/app/api/stripe/webhook/stripe-object-handlers/payment-intent-succeeded-handler";
 import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 
 describe("PaymentIntentSucceededHandler", () => {

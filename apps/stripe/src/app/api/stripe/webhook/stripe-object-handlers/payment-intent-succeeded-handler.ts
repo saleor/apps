@@ -25,7 +25,10 @@ export class PaymentIntentSucceededHandler {
     stripePaymentIntentId,
     recordedTransaction,
   }: {
-    event: Stripe.PaymentIntentSucceededEvent;
+    event:
+      | Stripe.PaymentIntentSucceededEvent
+      | Stripe.PaymentIntentProcessingEvent
+      | Stripe.PaymentIntentRequiresActionEvent;
     stripePaymentIntentId: StripePaymentIntentId;
     recordedTransaction: RecordedTransaction;
   }): Promise<Result<TransactionEventReportVariablesResolver, PossibleErrors>> {

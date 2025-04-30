@@ -3,7 +3,6 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
-import { PaymentIntentSucceededHandler } from "@/app/api/stripe/webhook/stripe-event-handlers/payment-intent-succeeded-handler";
 import {
   StripeWebhookErrorResponse,
   StripeWebhookSuccessResponse,
@@ -22,7 +21,7 @@ import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-int
 import { IStripeEventVerify } from "@/modules/stripe/types";
 import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
-import { PaymentIntentAmountCapturableUpdatedHandler } from "./stripe-event-handlers/payment-intent-amount-capturable-updated-handler";
+import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 
 type SuccessResult = StripeWebhookSuccessResponse;
 type ErrorResult = StripeWebhookErrorResponse;
@@ -136,13 +135,8 @@ export class StripeWebhookUseCase {
 
     this.logger.debug(`Resolved event type: ${event.value.type}`);
 
-    /*
-     * TODO: There may be more than one object in single event (data.object)
-     * todo: implement rest of events
-     * todo: extract shared pieces, maybe this code should be run once and handlers implement the same interface?
-     */
-    switch (event.value.type) {
-      case "payment_intent.succeeded": {
+    switch (event.value.data.object.object) {
+      case "payment_intent": {
         const stripePaymentIntentId = createStripePaymentIntentId(event.value.data.object.id);
 
         if (stripePaymentIntentId.isErr()) {
@@ -171,73 +165,33 @@ export class StripeWebhookUseCase {
 
         this.logger.debug("Resolved previously saved transaction");
 
-        const eventHandler = new PaymentIntentSucceededHandler();
-        const resultEvent = await eventHandler.processEvent({
-          recordedTransaction: recordedTransaction.value,
-          stripePaymentIntentId: stripePaymentIntentId.value,
-          event: event.value,
-        });
+        const handler = new StripePaymentIntentHandler();
+        const isSupportedEvent = handler.checkIfEventIsSupported(event.value);
 
-        if (resultEvent.isErr()) {
-          return err(new StripeWebhookErrorResponse(resultEvent.error));
-        }
+        if (!isSupportedEvent) {
+          this.logger.error("Event is not supported by StripePaymentIntentHandler", {
+            event: event.value.type,
+          });
 
-        const reportResult = await transactionEventReporter.reportTransactionEvent(
-          resultEvent.value.resolveEventReportVariables(),
-        );
-
-        if (reportResult.isErr()) {
-          if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
-            this.logger.info("Transaction event already reported");
-
-            return ok(new StripeWebhookSuccessResponse());
-          }
-
-          return err(new StripeWebhookErrorResponse(reportResult.error));
-        }
-
-        return ok(new StripeWebhookSuccessResponse());
-      }
-      case "payment_intent.amount_capturable_updated": {
-        const stripePaymentIntentIdResult = createStripePaymentIntentId(event.value.data.object.id);
-
-        if (stripePaymentIntentIdResult.isErr()) {
-          return err(new StripeWebhookErrorResponse(stripePaymentIntentIdResult.error));
-        }
-
-        this.logger.debug(`Resolved Payment Intent ID: ${stripePaymentIntentIdResult.value}`);
-        loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntentIdResult.value);
-
-        const recordedTransaction =
-          await this.transactionRecorder.getTransactionByStripePaymentIntentId(
-            {
-              appId: authData.appId,
-              saleorApiUrl: webhookParams.saleorApiUrl,
-            },
-            stripePaymentIntentIdResult.value,
+          return err(
+            new StripeWebhookErrorResponse(
+              new BaseError("Event is not supported by StripePaymentIntentHandler"),
+            ),
           );
-
-        if (recordedTransaction.isErr()) {
-          this.logger.warn("Error fetching recorded transaction");
-
-          return err(new StripeWebhookErrorResponse(recordedTransaction.error));
         }
 
-        this.logger.debug("Resolved previously saved transaction");
-
-        const eventHandler = new PaymentIntentAmountCapturableUpdatedHandler();
-        const resultEvent = await eventHandler.processEvent({
-          recordedTransaction: recordedTransaction.value,
-          stripePaymentIntentId: stripePaymentIntentIdResult.value,
+        const processingResult = handler.processPaymentIntentEvent({
           event: event.value,
+          stripePaymentIntentId: stripePaymentIntentId.value,
+          recordedTransaction: recordedTransaction.value,
         });
 
-        if (resultEvent.isErr()) {
-          return err(new StripeWebhookErrorResponse(resultEvent.error));
+        if (processingResult.isErr()) {
+          return err(new StripeWebhookErrorResponse(processingResult.error));
         }
 
         const reportResult = await transactionEventReporter.reportTransactionEvent(
-          resultEvent.value.resolveEventReportVariables(),
+          processingResult.value.resolveEventReportVariables(),
         );
 
         if (reportResult.isErr()) {
@@ -254,7 +208,7 @@ export class StripeWebhookUseCase {
       }
 
       default: {
-        throw new BaseError(`Support for event ${event.value.type} not implemented`);
+        throw new BaseError(`Support for object ${event.value.data.object.object} not implemented`);
       }
     }
   }

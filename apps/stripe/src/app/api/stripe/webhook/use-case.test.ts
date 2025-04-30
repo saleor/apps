@@ -1,12 +1,17 @@
 import { APL } from "@saleor/app-sdk/APL";
 import { err, ok } from "neverthrow";
+import Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockAdyenWebhookUrl, mockedSaleorTransactionIdBranded } from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
+import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { getMockedPaymentIntentAmountCapturableUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-amount-capturable-updated";
+import { getMockedPaymentIntentPaymentFailedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-failed";
+import { getMockedPaymentIntentProcessingEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-processing";
+import { getMockedPaymentIntentRequiresActionEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-requires-action";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
 import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
@@ -152,595 +157,621 @@ describe("StripeWebhookUseCase", () => {
         }
       `);
     });
+
+    it("Returns error if event is not supported by StripePaymentIntentHandler", async () => {
+      const event = {
+        type: "payment_intent.created",
+        data: { object: { object: "payment_intent", id: mockedStripePaymentIntentId.toString() } },
+      } as Stripe.PaymentIntentCreatedEvent;
+
+      const stripePiId = mockedStripePaymentIntentId;
+
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+          selectedPaymentMethod: "card",
+        }),
+      };
+
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
+        };
+
+        return ok(data);
+      });
+
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        StripeWebhookErrorResponse {
+          "error": [BaseError: Event is not supported by StripePaymentIntentHandler],
+          "responseStatusCode": 500,
+        }
+      `);
+    });
   });
 
   describe("Success cases", () => {
-    describe("Stripe.PaymentIntentSucceededEvent", () => {
-      it("Reports CHARGE_SUCCESS transaction event to Saleor", async () => {
-        const event = getMockedPaymentIntentSucceededEvent();
-        const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    it("Reports CHARGE_SUCCESS transaction event to Saleor when handling payment_intent.success event and resolvedFlow is CHARGE", async () => {
+      const event = getMockedPaymentIntentSucceededEvent();
+      const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
 
-        eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
-        mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
-            resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
-            selectedPaymentMethod: "card",
-          }),
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+          selectedPaymentMethod: "card",
+        }),
+      };
+
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
         };
 
-        mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
-          const data: TransactionEventReportResultResult = {
-            createdEventId: "TEST_EVENT_ID",
-          };
-
-          return ok(data);
-        });
-
-        const result = await instance.execute({
-          rawBody: "TEST BODY",
-          signatureHeader: "SIGNATURE",
-          webhookParams: webhookParams,
-        });
-
-        expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-          StripeWebhookSuccessResponse {
-            "responseStatusCode": 200,
-          }
-        `);
-
-        expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
-
-        expect(
-          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
-        ).toMatchInlineSnapshot(
-          {
-            time: expect.toSatisfy(
-              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
-            ),
-          },
-          `
-          {
-            "actions": [],
-            "amount": SaleorMoney {
-              "amount": 10.13,
-              "currency": "USD",
-            },
-            "message": "Payment intent succeeded",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "time": toSatisfy<[Function anonymous]>,
-            "transactionId": "mocked-transaction-id",
-            "type": "CHARGE_SUCCESS",
-          }
-        `,
-        );
+        return ok(data);
       });
 
-      it("Reports AUTHORIZATION_SUCCESS transaction event to Saleor", async () => {
-        const event = getMockedPaymentIntentSucceededEvent();
-        const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
-
-        eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
-
-        mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
-            resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
-            selectedPaymentMethod: "card",
-          }),
-        };
-
-        mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
-          const data: TransactionEventReportResultResult = {
-            createdEventId: "TEST_EVENT_ID",
-          };
-
-          return ok(data);
-        });
-
-        const result = await instance.execute({
-          rawBody: "TEST BODY",
-          signatureHeader: "SIGNATURE",
-          webhookParams: webhookParams,
-        });
-
-        expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-          StripeWebhookSuccessResponse {
-            "responseStatusCode": 200,
-          }
-        `);
-
-        expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
-
-        expect(
-          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
-        ).toMatchInlineSnapshot(
-          {
-            time: expect.toSatisfy(
-              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
-            ),
-          },
-          `
-          {
-            "actions": [],
-            "amount": SaleorMoney {
-              "amount": 10.13,
-              "currency": "USD",
-            },
-            "message": "Payment intent succeeded",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "time": toSatisfy<[Function anonymous]>,
-            "transactionId": "mocked-transaction-id",
-            "type": "CHARGE_SUCCESS",
-          }
-        `,
-        );
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
       });
 
-      it("Reports CHARGE_ACTION_REQUIRED transaction event to Saleor", async () => {
-        const event = getMockedPaymentIntentSucceededEvent({
-          status: "requires_action",
-        });
-        const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
 
-        eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+      expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
-        mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
-            resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
-            selectedPaymentMethod: "card",
-          }),
-        };
-
-        mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
-          const data: TransactionEventReportResultResult = {
-            createdEventId: "TEST_EVENT_ID",
-          };
-
-          return ok(data);
-        });
-
-        const result = await instance.execute({
-          rawBody: "TEST BODY",
-          signatureHeader: "SIGNATURE",
-          webhookParams: webhookParams,
-        });
-
-        expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-          StripeWebhookSuccessResponse {
-            "responseStatusCode": 200,
-          }
-        `);
-
-        expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
-
-        expect(
-          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
-        ).toMatchInlineSnapshot(
-          {
-            time: expect.toSatisfy(
-              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
-            ),
+      expect(
+        vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
+        {
+          time: expect.toSatisfy(
+            (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+          ),
+        },
+        `
+        {
+          "actions": [],
+          "amount": SaleorMoney {
+            "amount": 10.13,
+            "currency": "USD",
           },
-          `
-          {
-            "actions": [],
-            "amount": SaleorMoney {
-              "amount": 10.13,
-              "currency": "USD",
-            },
-            "message": "Payment intent requires action",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "time": toSatisfy<[Function anonymous]>,
-            "transactionId": "mocked-transaction-id",
-            "type": "CHARGE_ACTION_REQUIRED",
-          }
-        `,
-        );
-      });
-
-      it("Reports AUTHORIZATION_ACTION_REQUIRED transaction event to Saleor", async () => {
-        const event = getMockedPaymentIntentSucceededEvent({
-          status: "requires_action",
-        });
-        const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
-
-        eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
-
-        mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
-            resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
-            selectedPaymentMethod: "card",
-          }),
-        };
-
-        mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
-          const data: TransactionEventReportResultResult = {
-            createdEventId: "TEST_EVENT_ID",
-          };
-
-          return ok(data);
-        });
-
-        const result = await instance.execute({
-          rawBody: "TEST BODY",
-          signatureHeader: "SIGNATURE",
-          webhookParams: webhookParams,
-        });
-
-        expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-          StripeWebhookSuccessResponse {
-            "responseStatusCode": 200,
-          }
-        `);
-
-        expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
-
-        expect(
-          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
-        ).toMatchInlineSnapshot(
-          {
-            time: expect.toSatisfy(
-              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
-            ),
-          },
-          `
-          {
-            "actions": [],
-            "amount": SaleorMoney {
-              "amount": 10.13,
-              "currency": "USD",
-            },
-            "message": "Payment intent requires action",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "time": toSatisfy<[Function anonymous]>,
-            "transactionId": "mocked-transaction-id",
-            "type": "AUTHORIZATION_ACTION_REQUIRED",
-          }
-        `,
-        );
-      });
-
-      it("Report CHARGE_REQUEST transaction event to Saleor", async () => {
-        const event = getMockedPaymentIntentSucceededEvent({
-          status: "processing",
-        });
-        const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
-
-        eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
-
-        mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
-            resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
-            selectedPaymentMethod: "card",
-          }),
-        };
-
-        mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
-          const data: TransactionEventReportResultResult = {
-            createdEventId: "TEST_EVENT_ID",
-          };
-
-          return ok(data);
-        });
-
-        const result = await instance.execute({
-          rawBody: "TEST BODY",
-          signatureHeader: "SIGNATURE",
-          webhookParams: webhookParams,
-        });
-
-        expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-          StripeWebhookSuccessResponse {
-            "responseStatusCode": 200,
-          }
-        `);
-
-        expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
-
-        expect(
-          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
-        ).toMatchInlineSnapshot(
-          {
-            time: expect.toSatisfy(
-              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
-            ),
-          },
-          `
-          {
-            "actions": [],
-            "amount": SaleorMoney {
-              "amount": 10.13,
-              "currency": "USD",
-            },
-            "message": "Payment intent is processing",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "time": toSatisfy<[Function anonymous]>,
-            "transactionId": "mocked-transaction-id",
-            "type": "CHARGE_REQUEST",
-          }
-        `,
-        );
-      });
-
-      it("Report AUTHORIZATION_REQUEST transaction event to Saleor", async () => {
-        const event = getMockedPaymentIntentSucceededEvent({
-          status: "processing",
-        });
-        const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
-
-        eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
-
-        mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
-            resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
-            selectedPaymentMethod: "card",
-          }),
-        };
-
-        mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
-          const data: TransactionEventReportResultResult = {
-            createdEventId: "TEST_EVENT_ID",
-          };
-
-          return ok(data);
-        });
-
-        const result = await instance.execute({
-          rawBody: "TEST BODY",
-          signatureHeader: "SIGNATURE",
-          webhookParams: webhookParams,
-        });
-
-        expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-          StripeWebhookSuccessResponse {
-            "responseStatusCode": 200,
-          }
-        `);
-
-        expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
-
-        expect(
-          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
-        ).toMatchInlineSnapshot(
-          {
-            time: expect.toSatisfy(
-              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
-            ),
-          },
-          `
-          {
-            "actions": [],
-            "amount": SaleorMoney {
-              "amount": 10.13,
-              "currency": "USD",
-            },
-            "message": "Payment intent is processing",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "time": toSatisfy<[Function anonymous]>,
-            "transactionId": "mocked-transaction-id",
-            "type": "AUTHORIZATION_REQUEST",
-          }
-        `,
-        );
-      });
-
-      it("Reports CHARGE_FAILED transaction event to Saleor", async () => {
-        const event = getMockedPaymentIntentSucceededEvent({
-          status: "canceled",
-        });
-        const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
-
-        eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
-
-        mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
-            resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
-            selectedPaymentMethod: "card",
-          }),
-        };
-
-        mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
-          const data: TransactionEventReportResultResult = {
-            createdEventId: "TEST_EVENT_ID",
-          };
-
-          return ok(data);
-        });
-
-        const result = await instance.execute({
-          rawBody: "TEST BODY",
-          signatureHeader: "SIGNATURE",
-          webhookParams: webhookParams,
-        });
-
-        expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-          StripeWebhookSuccessResponse {
-            "responseStatusCode": 200,
-          }
-        `);
-
-        expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
-
-        expect(
-          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
-        ).toMatchInlineSnapshot(
-          {
-            time: expect.toSatisfy(
-              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
-            ),
-          },
-          `
-          {
-            "actions": [
-              "CHARGE",
-            ],
-            "amount": SaleorMoney {
-              "amount": 10.13,
-              "currency": "USD",
-            },
-            "message": "Payment intent was cancelled",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "time": toSatisfy<[Function anonymous]>,
-            "transactionId": "mocked-transaction-id",
-            "type": "CHARGE_FAILURE",
-          }
-        `,
-        );
-      });
-
-      it("Reports AUTHORIZATION_FAILED transaction event to Saleor", async () => {
-        const event = getMockedPaymentIntentSucceededEvent({
-          status: "canceled",
-        });
-        const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
-
-        eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
-
-        mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
-            resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
-            selectedPaymentMethod: "card",
-          }),
-        };
-
-        mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
-          const data: TransactionEventReportResultResult = {
-            createdEventId: "TEST_EVENT_ID",
-          };
-
-          return ok(data);
-        });
-
-        const result = await instance.execute({
-          rawBody: "TEST BODY",
-          signatureHeader: "SIGNATURE",
-          webhookParams: webhookParams,
-        });
-
-        expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-          StripeWebhookSuccessResponse {
-            "responseStatusCode": 200,
-          }
-        `);
-
-        expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
-
-        expect(
-          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
-        ).toMatchInlineSnapshot(
-          {
-            time: expect.toSatisfy(
-              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
-            ),
-          },
-          `
-          {
-            "actions": [],
-            "amount": SaleorMoney {
-              "amount": 10.13,
-              "currency": "USD",
-            },
-            "message": "Payment intent was cancelled",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "time": toSatisfy<[Function anonymous]>,
-            "transactionId": "mocked-transaction-id",
-            "type": "AUTHORIZATION_FAILURE",
-          }
-        `,
-        );
-      });
+          "message": "Payment intent succeeded",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "time": toSatisfy<[Function anonymous]>,
+          "transactionId": "mocked-transaction-id",
+          "type": "CHARGE_SUCCESS",
+        }
+      `,
+      );
     });
 
-    describe("Stripe.PaymentIntentAmountCapturableUpdatedEvent", () => {
-      it("Reports AUTHORIZATION_SUCCESS transaction event to Saleor", async () => {
-        const event = getMockedPaymentIntentAmountCapturableUpdatedEvent();
+    it("Reports CHARGE_SUCCESS transaction event to Saleor when handling payment_intent.success event resolvedFlow is AUTHORIZATION", async () => {
+      const event = getMockedPaymentIntentSucceededEvent();
+      const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
 
-        const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
-        eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
+          selectedPaymentMethod: "card",
+        }),
+      };
 
-        mockTransactionRecorder.transactions = {
-          [stripePiId]: new RecordedTransaction({
-            saleorTransactionId: mockedSaleorTransactionIdBranded,
-            stripePaymentIntentId: stripePiId,
-            saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
-            resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
-            selectedPaymentMethod: "card",
-          }),
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
         };
 
-        mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
-          const data: TransactionEventReportResultResult = {
-            createdEventId: "TEST_EVENT_ID",
-          };
-
-          return ok(data);
-        });
-
-        const result = await instance.execute({
-          rawBody: "TEST BODY",
-          signatureHeader: "SIGNATURE",
-          webhookParams: webhookParams,
-        });
-
-        expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-          StripeWebhookSuccessResponse {
-            "responseStatusCode": 200,
-          }
-        `);
-
-        expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
-
-        expect(
-          vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
-        ).toMatchInlineSnapshot(
-          {
-            time: expect.toSatisfy(
-              (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
-            ),
-          },
-          `
-          {
-            "actions": [
-              "CHARGE",
-            ],
-            "amount": SaleorMoney {
-              "amount": 10,
-              "currency": "USD",
-            },
-            "message": "Payment intent succeeded",
-            "pspReference": "pi_TEST_TEST_TEST",
-            "time": toSatisfy<[Function anonymous]>,
-            "transactionId": "mocked-transaction-id",
-            "type": "AUTHORIZATION_SUCCESS",
-          }
-        `,
-        );
+        return ok(data);
       });
+
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+      expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+      expect(
+        vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
+        {
+          time: expect.toSatisfy(
+            (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+          ),
+        },
+        `
+        {
+          "actions": [],
+          "amount": SaleorMoney {
+            "amount": 10.13,
+            "currency": "USD",
+          },
+          "message": "Payment intent succeeded",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "time": toSatisfy<[Function anonymous]>,
+          "transactionId": "mocked-transaction-id",
+          "type": "CHARGE_SUCCESS",
+        }
+      `,
+      );
+    });
+
+    it("Reports CHARGE_ACTION_REQUIRED transaction event to Saleor when handling payment_intent.requires_action event", async () => {
+      const event = getMockedPaymentIntentRequiresActionEvent();
+      const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+          selectedPaymentMethod: "card",
+        }),
+      };
+
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
+        };
+
+        return ok(data);
+      });
+
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+      expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+      expect(
+        vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
+        {
+          time: expect.toSatisfy(
+            (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+          ),
+        },
+        `
+        {
+          "actions": [],
+          "amount": SaleorMoney {
+            "amount": 10.13,
+            "currency": "USD",
+          },
+          "message": "Payment intent requires action",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "time": toSatisfy<[Function anonymous]>,
+          "transactionId": "mocked-transaction-id",
+          "type": "CHARGE_ACTION_REQUIRED",
+        }
+      `,
+      );
+    });
+
+    it("Reports AUTHORIZATION_ACTION_REQUIRED transaction event to Saleor when handling payment_intent.requires_action event", async () => {
+      const event = getMockedPaymentIntentRequiresActionEvent();
+      const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
+          selectedPaymentMethod: "card",
+        }),
+      };
+
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
+        };
+
+        return ok(data);
+      });
+
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+      expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+      expect(
+        vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
+        {
+          time: expect.toSatisfy(
+            (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+          ),
+        },
+        `
+        {
+          "actions": [],
+          "amount": SaleorMoney {
+            "amount": 10.13,
+            "currency": "USD",
+          },
+          "message": "Payment intent requires action",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "time": toSatisfy<[Function anonymous]>,
+          "transactionId": "mocked-transaction-id",
+          "type": "AUTHORIZATION_ACTION_REQUIRED",
+        }
+      `,
+      );
+    });
+
+    it("Report CHARGE_REQUEST transaction event to Saleor when handling payment_intent.processing event", async () => {
+      const event = getMockedPaymentIntentProcessingEvent();
+      const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+          selectedPaymentMethod: "card",
+        }),
+      };
+
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
+        };
+
+        return ok(data);
+      });
+
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+      expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+      expect(
+        vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
+        {
+          time: expect.toSatisfy(
+            (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+          ),
+        },
+        `
+        {
+          "actions": [],
+          "amount": SaleorMoney {
+            "amount": 10.13,
+            "currency": "USD",
+          },
+          "message": "Payment intent is processing",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "time": toSatisfy<[Function anonymous]>,
+          "transactionId": "mocked-transaction-id",
+          "type": "CHARGE_REQUEST",
+        }
+      `,
+      );
+    });
+
+    it("Report AUTHORIZATION_REQUEST transaction event to Saleor when handling payment_intent.processing event", async () => {
+      const event = getMockedPaymentIntentProcessingEvent();
+      const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
+          selectedPaymentMethod: "card",
+        }),
+      };
+
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
+        };
+
+        return ok(data);
+      });
+
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+      expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+      expect(
+        vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
+        {
+          time: expect.toSatisfy(
+            (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+          ),
+        },
+        `
+        {
+          "actions": [],
+          "amount": SaleorMoney {
+            "amount": 10.13,
+            "currency": "USD",
+          },
+          "message": "Payment intent is processing",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "time": toSatisfy<[Function anonymous]>,
+          "transactionId": "mocked-transaction-id",
+          "type": "AUTHORIZATION_REQUEST",
+        }
+      `,
+      );
+    });
+
+    it("Reports CHARGE_FAILED transaction event to Saleor when handling payment_intent.payment_failed event", async () => {
+      const event = getMockedPaymentIntentPaymentFailedEvent();
+      const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+          selectedPaymentMethod: "card",
+        }),
+      };
+
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
+        };
+
+        return ok(data);
+      });
+
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+      expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+      expect(
+        vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
+        {
+          time: expect.toSatisfy(
+            (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+          ),
+        },
+        `
+        {
+          "actions": [
+            "CHARGE",
+          ],
+          "amount": SaleorMoney {
+            "amount": 10.13,
+            "currency": "USD",
+          },
+          "message": "Payment intent was cancelled",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "time": toSatisfy<[Function anonymous]>,
+          "transactionId": "mocked-transaction-id",
+          "type": "CHARGE_FAILURE",
+        }
+      `,
+      );
+    });
+
+    it("Reports AUTHORIZATION_FAILED transaction event to Saleor when handling payment_intent.payment_failed event", async () => {
+      const event = getMockedPaymentIntentPaymentFailedEvent();
+      const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
+          selectedPaymentMethod: "card",
+        }),
+      };
+
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
+        };
+
+        return ok(data);
+      });
+
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+      expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+      expect(
+        vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
+        {
+          time: expect.toSatisfy(
+            (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+          ),
+        },
+        `
+        {
+          "actions": [],
+          "amount": SaleorMoney {
+            "amount": 10.13,
+            "currency": "USD",
+          },
+          "message": "Payment intent was cancelled",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "time": toSatisfy<[Function anonymous]>,
+          "transactionId": "mocked-transaction-id",
+          "type": "AUTHORIZATION_FAILURE",
+        }
+      `,
+      );
+    });
+
+    it("Reports AUTHORIZATION_SUCCESS transaction event to Saleor when handling payment_intent.amount_capturable_updated event", async () => {
+      const event = getMockedPaymentIntentAmountCapturableUpdatedEvent();
+
+      const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+
+      eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+      mockTransactionRecorder.transactions = {
+        [stripePiId]: new RecordedTransaction({
+          saleorTransactionId: mockedSaleorTransactionIdBranded,
+          stripePaymentIntentId: stripePiId,
+          saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
+          resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
+          selectedPaymentMethod: "card",
+        }),
+      };
+
+      mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+        const data: TransactionEventReportResultResult = {
+          createdEventId: "TEST_EVENT_ID",
+        };
+
+        return ok(data);
+      });
+
+      const result = await instance.execute({
+        rawBody: "TEST BODY",
+        signatureHeader: "SIGNATURE",
+        webhookParams: webhookParams,
+      });
+
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+      expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+      expect(
+        vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+      ).toMatchInlineSnapshot(
+        {
+          time: expect.toSatisfy(
+            (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+          ),
+        },
+        `
+        {
+          "actions": [
+            "CHARGE",
+          ],
+          "amount": SaleorMoney {
+            "amount": 10,
+            "currency": "USD",
+          },
+          "message": "Payment intent succeeded",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "time": toSatisfy<[Function anonymous]>,
+          "transactionId": "mocked-transaction-id",
+          "type": "AUTHORIZATION_SUCCESS",
+        }
+      `,
+      );
     });
   });
 });
