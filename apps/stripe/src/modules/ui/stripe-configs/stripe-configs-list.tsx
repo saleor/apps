@@ -13,6 +13,9 @@ type Props = {
   configs: Array<StripeFrontendConfigSerializedFields>;
 };
 
+const webhookDisabled = <Text color="warning1">Webhook disabled, app will not work properly</Text>;
+const webhookMissing = <Text color="critical1">Webhook missing, create config again</Text>;
+
 export const StripeConfigsList = ({ configs, ...props }: Props) => {
   const router = useRouter();
   const { notifyError, notifySuccess } = useDashboardNotification();
@@ -71,6 +74,13 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
             </Chip>
           );
 
+          const webhookStatusInfo =
+            configInstance.webhookStatus === "disabled"
+              ? webhookDisabled
+              : configInstance.webhookStatus === "missing"
+              ? webhookMissing
+              : null;
+
           return (
             <Box padding={4} key={configInstance.id}>
               <Box
@@ -92,6 +102,7 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
                   onClick={() => mutate({ configId: configInstance.id })}
                 />
               </Box>
+              {webhookStatusInfo}
             </Box>
           );
         })}
