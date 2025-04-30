@@ -49,7 +49,9 @@ describe("withRecipientVerification", () => {
       schemaVersion: [3, 20],
     });
 
-    expect(await response.text()).toStrictEqual("Recipient ID does not match auth data ID");
+    expect(await response.json()).toStrictEqual({
+      message: "Recipient ID does not match auth data ID",
+    });
     expect(await response.status).toStrictEqual(403);
     expect(innerHandler).not.toHaveBeenCalled();
   });
