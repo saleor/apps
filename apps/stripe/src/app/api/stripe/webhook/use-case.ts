@@ -31,9 +31,6 @@ type R = Promise<Result<SuccessResult, ErrorResult>>;
 type StripeVerifyEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
 type SaleorTransactionEventReporterFactory = (authData: AuthData) => ITransactionEventReporter;
 
-/**
- * TODO: We need to store events to DB to handle deduplication
- */
 export class StripeWebhookUseCase {
   private appConfigRepo: AppConfigRepo;
   private webhookEventVerifyFactory: StripeVerifyEventFactory;
