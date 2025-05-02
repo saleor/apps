@@ -2,6 +2,7 @@ import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import {
@@ -74,6 +75,7 @@ export class StripePaymentIntentHandler {
     event: SupportedEvents;
     recordedTransaction: RecordedTransaction;
     stripePaymentIntentId: StripePaymentIntentId;
+    stripeEnv: StripeEnv;
   }): Result<TransactionEventReportVariablesResolver, PossibleErrors> {
     const {
       event,
@@ -102,6 +104,7 @@ export class StripePaymentIntentHandler {
           saleorMoney,
           stripePaymentIntentId: stripePaymentIntentId,
           stripeStatus: paymentIntentStatus,
+          stripeEnv: args.stripeEnv,
         });
 
         return ok(
@@ -109,6 +112,7 @@ export class StripePaymentIntentHandler {
             transactionResult: result,
             date: eventDate,
             saleorTransactionId: saleorTransactionId,
+            isLive: args.stripeEnv === "LIVE",
           }),
         );
       }
@@ -119,10 +123,12 @@ export class StripePaymentIntentHandler {
             ? new AuthorizationFailureResult({
                 saleorMoney,
                 stripePaymentIntentId: stripePaymentIntentId,
+                stripeEnv: args.stripeEnv,
               })
             : new ChargeFailureResult({
                 saleorMoney,
                 stripePaymentIntentId: stripePaymentIntentId,
+                stripeEnv: args.stripeEnv,
               });
 
         return ok(
@@ -130,6 +136,7 @@ export class StripePaymentIntentHandler {
             transactionResult: failureResult,
             date: eventDate,
             saleorTransactionId: saleorTransactionId,
+            isLive: args.stripeEnv === "LIVE",
           }),
         );
       }

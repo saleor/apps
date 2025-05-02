@@ -11,10 +11,28 @@ export class TransactionEventReportVariablesResolver {
     saleorTransactionId: SaleorTransationId;
     date: Date;
     transactionResult: TransactionResult;
+    isLive: boolean;
   }) {
     this.date = args.date;
     this.saleorTransactionId = args.saleorTransactionId;
     this.transactionResult = args.transactionResult;
+  }
+
+  /*
+   * todo add test to check this
+   * todo check if urls are correct
+   */
+  private createExternalReference() {
+    switch (this.transactionResult.stripeEnv) {
+      case "LIVE":
+        return `https://dashboard.stripe.com/payments/${encodeURIComponent(
+          this.transactionResult.stripePaymentIntentId,
+        )}`;
+      case "TEST":
+        return `https://dashboard.stripe.com/test/payments/${encodeURIComponent(
+          this.transactionResult.stripePaymentIntentId,
+        )}`;
+    }
   }
 
   resolveEventReportVariables(): TransactionEventReportInput {
@@ -27,6 +45,7 @@ export class TransactionEventReportVariablesResolver {
       pspReference: this.transactionResult.stripePaymentIntentId,
       // @ts-expect-error TODO: this is a workaround for the type error - remove after we update app-sdk
       actions: this.transactionResult.actions,
+      externalReference: this.createExternalReference(),
     };
   }
 }

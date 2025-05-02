@@ -1,6 +1,7 @@
 import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
+import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
@@ -33,6 +34,10 @@ export class StripeConfig {
     this.publishableKey = props.publishableKey;
     this.webhookSecret = props.webhookSecret;
     this.webhookId = props.webhookId;
+  }
+
+  getStripeEnvValue(): StripeEnv {
+    return this.publishableKey.startsWith("pk_test") ? "TEST" : "LIVE";
   }
 
   static create(args: {

@@ -22,7 +22,6 @@ const useCase = new StripeWebhookUseCase({
   webhookEventVerifyFactory: (stripeClient) =>
     StripeWebhookSignatureValidator.createFromClient(stripeClient),
   apl: saleorApp.apl,
-  // todo
   transactionRecorder: transactionRecorder,
   transactionEventReporterFactory(authData) {
     return new TransactionEventReporter({
