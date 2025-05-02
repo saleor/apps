@@ -11,7 +11,6 @@ export class TransactionEventReportVariablesResolver {
     saleorTransactionId: SaleorTransationId;
     date: Date;
     transactionResult: TransactionResult;
-    isLive: boolean;
   }) {
     this.date = args.date;
     this.saleorTransactionId = args.saleorTransactionId;

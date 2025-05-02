@@ -31,6 +31,7 @@ class OK extends SuccessWebhookResponse {
       message: this.transactionResult.message,
       // @ts-expect-error TODO: this is a workaround for the type error - remove after we update app-sdk
       actions: this.transactionResult.actions,
+      // todo resolve url
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });

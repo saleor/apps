@@ -3,7 +3,6 @@ import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
-import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { ResolvedTransationFlow } from "@/modules/resolved-transaction-flow";
@@ -14,6 +13,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
+import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { mapStripeGetPaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import {
   createStripePaymentIntentId,
@@ -44,12 +44,6 @@ export class TransactionProcessSessionUseCase {
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
   private transactionRecorder: TransactionRecorderRepo;
 
-  static UseCaseError = BaseError.subclass("UseCaseError", {
-    props: {
-      _internalName: "TransactionProcessSessionUseCase.UseCaseError" as const,
-    },
-  });
-
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
@@ -72,21 +66,29 @@ export class TransactionProcessSessionUseCase {
     ]);
   }
 
-  private getErrorAppResult(
-    resolvedTransactionFlow: ResolvedTransationFlow,
-    stripePaymentIntentId: StripePaymentIntentId,
-    saleorEventAmount: number,
-  ) {
+  private getErrorAppResult({
+    resolvedTransactionFlow,
+    stripePaymentIntentId,
+    saleorEventAmount,
+    stripeEnv,
+  }: {
+    resolvedTransactionFlow: ResolvedTransationFlow;
+    stripePaymentIntentId: StripePaymentIntentId;
+    saleorEventAmount: number;
+    stripeEnv: StripeEnv;
+  }) {
     if (resolvedTransactionFlow === "CHARGE") {
       return new ChargeErrorResult({
         stripePaymentIntentId,
         saleorEventAmount,
+        stripeEnv,
       });
     }
 
     return new AuthorizationErrorResult({
       stripePaymentIntentId,
       saleorEventAmount,
+      stripeEnv,
     });
   }
 
@@ -166,11 +168,12 @@ export class TransactionProcessSessionUseCase {
       return ok(
         new TransactionProcessSessionUseCaseResponses.Error({
           error: mappedError,
-          transactionResult: this.getErrorAppResult(
-            recordedTransactionResult.value.resolvedTransactionFlow,
-            paymentIntentIdResult.value,
-            event.action.amount,
-          ),
+          transactionResult: this.getErrorAppResult({
+            resolvedTransactionFlow: recordedTransactionResult.value.resolvedTransactionFlow,
+            stripePaymentIntentId: paymentIntentIdResult.value,
+            saleorEventAmount: event.action.amount,
+            stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+          }),
         }),
       );
     }
@@ -199,6 +202,7 @@ export class TransactionProcessSessionUseCase {
       saleorMoney,
       stripePaymentIntentId: paymentIntentIdResult.value,
       stripeStatus: stripePaymentIntentStatus,
+      stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
     });
 
     return ok(new TransactionProcessSessionUseCaseResponses.OK({ transactionResult: result }));
