@@ -1,5 +1,9 @@
 #!/usr/bin/env zx
 
+/*
+  eslint-disable no-console, n/no-process-env
+ */
+
 import { $ } from "zx";
 
 const TABLE_NAME = process.env.INTEGRATION_DYNAMO_TABLE_NAME ?? "stripe-main-table-integration";
@@ -13,7 +17,7 @@ export const deleteTable = async () => {
     await $`aws dynamodb delete-table --table-name ${TABLE_NAME} --endpoint-url ${ENDPOINT_URL}`;
 
     console.log("success: table deleted");
-  } catch (e) {
+  } catch {
     console.log("error deleting, it may exist already");
   }
 };

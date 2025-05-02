@@ -27,7 +27,6 @@ import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-
 import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
-// todo: Add pagination to queries
 export class DynamodbAppConfigRepo implements AppConfigRepo {
   private logger = createLogger("DynamodbAppConfigRepo");
 

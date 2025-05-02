@@ -1,10 +1,9 @@
 import "next-test-api-route-handler";
 
-import { execSync } from "node:child_process";
-
 import { beforeEach, vi } from "vitest";
 
-import { deleteTable } from "./restore-table.mjs";
+import { deleteTable } from "./restore-table";
+import { createTable } from "./setup-table";
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars, n/no-process-env
 process.env.TZ = "UTC";
@@ -20,8 +19,13 @@ vi.stubEnv("DYNAMODB_MAIN_TABLE_NAME", "stripe-main-table-integration");
 beforeEach(async () => {
   await deleteTable();
 
-  // execSync("./src/__tests__/integration/dynamodb/delete-dynamodb-table.sh");
-  execSync("./src/__tests__/integration/dynamodb/setup-dynamodb.sh");
+  await createTable().catch(() => {
+    /*
+     * it doesn't actually work - looks like vitest is still isolating processes so it doesn't kill ALL of them
+     * todo this probably should be fix for early exist
+     */
+    process.exit(1);
+  });
 });
 
 export {};

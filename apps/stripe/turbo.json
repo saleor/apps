@@ -18,7 +18,10 @@
         "DYNAMODB_MAIN_TABLE_NAME",
         "AWS_SECRET_ACCESS_KEY",
         "AWS_ACCESS_KEY_ID",
-        "AWS_REGION"
+        "AWS_REGION",
+        "INTEGRATION_DYNAMO_TABLE_NAME",
+        "INTEGRATION_DYNAMO_REGION",
+        "INTEGRATION_DYNAMO_ENDPOINT"
       ]
     }
   }
