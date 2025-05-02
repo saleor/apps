@@ -1,0 +1,14 @@
+name: saleor-app-stripe_integration_tests
+services:
+  dynamodb:
+    image: "amazon/dynamodb-local:latest"
+    ports:
+      - 8000:8000
+    volumes:
+      - "dynamodb-data:/home/dynamodblocal/data"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
+    user: root # needed to write to volume
+
+volumes:
+  dynamodb-data:
+    driver: local

@@ -19,6 +19,7 @@
     "test": "vitest",
     "test:ci": "vitest run --coverage",
     "test:integration": "vitest --project=integration",
+    "test:integration:dynamodb": "vitest --project=integration:dynamodb",
     "test:unit": "vitest --project=unit"
   },
   "config": {
