@@ -35,15 +35,44 @@ const CantRemoveWebhookError = BaseError.subclass("CantRemoveWebhookError", {
   },
 });
 
+const CantFetchWebhookError = BaseError.subclass("CantRemoveWebhookError", {
+  props: {
+    _internalName: "StripeWebhookManagerErrors.CantRemoveWebhookError" as const,
+  },
+});
+
 export const StripeWebhookManagerErrors = {
   CantCreateWebhookUrlError,
   CantCreateWebhookError,
   CantRemoveWebhookError,
+  CantFetchWebhookError,
 };
 
 export class StripeWebhookManager {
   private logger = createLogger("StripeWebhookManager");
   private urlBuilder = new StripeWebhookUrlBuilder();
+
+  async getWebhook({
+    webhookId,
+    restrictedKey,
+  }: {
+    webhookId: string;
+    restrictedKey: StripeRestrictedKey;
+  }) {
+    try {
+      const client = StripeClient.createFromRestrictedKey(restrictedKey);
+
+      const webhook = await client.nativeClient.webhookEndpoints.retrieve(webhookId);
+
+      return ok({
+        status: webhook.status as "enabled" | "disabled",
+      });
+    } catch (e) {
+      this.logger.error("Error retrieving webhook", { error: e });
+
+      return err(new CantFetchWebhookError("Error retrieving webhook", { cause: e }));
+    }
+  }
 
   async removeWebhook({
     webhookId,
