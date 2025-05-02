@@ -7,7 +7,7 @@ import type { TestProject } from "vitest/node";
 
 // eslint-disable-next-line import/no-default-export
 export default function setup(project: TestProject) {
-  const configPath = path.join(__dirname, "integration/dynamodb/docker-compose.yml");
+  const configPath = path.join(__dirname, "./docker-compose.yml");
 
   execSync(`docker compose -f ${configPath} -p stripe-dynamodb-integration up -d`);
 

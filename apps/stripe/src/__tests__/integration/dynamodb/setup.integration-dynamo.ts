@@ -4,6 +4,8 @@ import { execSync } from "node:child_process";
 
 import { beforeEach, vi } from "vitest";
 
+import { deleteTable } from "./restore-table.mjs";
+
 // eslint-disable-next-line turbo/no-undeclared-env-vars, n/no-process-env
 process.env.TZ = "UTC";
 
@@ -15,8 +17,10 @@ vi.stubEnv("AWS_ENDPOINT_URL", "http://localhost:8000");
 vi.stubEnv("DYNAMODB_MAIN_TABLE_NAME", "stripe-main-table-integration");
 
 // todo extract envs
-beforeEach(() => {
-  execSync("./src/__tests__/integration/dynamodb/delete-dynamodb-table.sh");
+beforeEach(async () => {
+  await deleteTable();
+
+  // execSync("./src/__tests__/integration/dynamodb/delete-dynamodb-table.sh");
   execSync("./src/__tests__/integration/dynamodb/setup-dynamodb.sh");
 });
 
