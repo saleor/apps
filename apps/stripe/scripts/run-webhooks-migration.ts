@@ -1,5 +1,6 @@
 import { parseArgs } from "node:util";
 
+import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 import * as Sentry from "@sentry/nextjs";
 
@@ -8,7 +9,6 @@ import { transactionChargeRequestedWebhookDefinition } from "@/app/api/saleor/tr
 import { transactionInitializeSessionWebhookDefinition } from "@/app/api/saleor/transaction-initialize-session/webhook-definition";
 import { transactionProcessSessionWebhookDefinition } from "@/app/api/saleor/transaction-process-session/webhook-definition";
 import { env } from "@/lib/env";
-import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { saleorApp } from "@/lib/saleor-app";
 
 import { createMigrationScriptLogger } from "./migration-logger";
@@ -52,7 +52,7 @@ const runMigrations = async () => {
 
       logger.info(`Migrating webhooks for ${saleorApiUrl}`);
 
-      const client = createInstrumentedGraphqlClient({
+      const client = createGraphQLClient({
         saleorApiUrl: saleorApiUrl,
         token: token,
       });
@@ -60,7 +60,6 @@ const runMigrations = async () => {
       const runner = new WebhookMigrationRunner({
         dryRun,
         logger,
-        // @ts-expect-error - fix this in the future
         client,
         saleorApiUrl,
         getManifests: async ({ appDetails }) => {
