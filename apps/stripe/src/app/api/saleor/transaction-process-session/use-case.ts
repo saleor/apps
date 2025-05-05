@@ -5,7 +5,7 @@ import Stripe from "stripe";
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { ResolvedTransationFlow } from "@/modules/resolved-transaction-flow";
+import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
@@ -72,7 +72,7 @@ export class TransactionProcessSessionUseCase {
     saleorEventAmount,
     stripeEnv,
   }: {
-    resolvedTransactionFlow: ResolvedTransationFlow;
+    resolvedTransactionFlow: ResolvedTransactionFlow;
     stripePaymentIntentId: StripePaymentIntentId;
     saleorEventAmount: number;
     stripeEnv: StripeEnv;
@@ -129,16 +129,8 @@ export class TransactionProcessSessionUseCase {
 
     const paymentIntentIdResult = createStripePaymentIntentId(event.transaction.pspReference);
 
-    if (paymentIntentIdResult.isErr()) {
-      this.logger.error("Failed to create payment intent id", {
-        error: paymentIntentIdResult.error,
-      });
-
-      return err(new MalformedRequestResponse());
-    }
-
     const getPaymentIntentResult = await stripePaymentIntentsApi.getPaymentIntent({
-      id: paymentIntentIdResult.value,
+      id: paymentIntentIdResult,
     });
 
     const recordedTransactionResult =
@@ -147,7 +139,7 @@ export class TransactionProcessSessionUseCase {
           appId: args.appId,
           saleorApiUrl: args.saleorApiUrl,
         },
-        paymentIntentIdResult.value,
+        paymentIntentIdResult,
       );
 
     if (recordedTransactionResult.isErr()) {
@@ -170,7 +162,7 @@ export class TransactionProcessSessionUseCase {
           error: mappedError,
           transactionResult: this.getErrorAppResult({
             resolvedTransactionFlow: recordedTransactionResult.value.resolvedTransactionFlow,
-            stripePaymentIntentId: paymentIntentIdResult.value,
+            stripePaymentIntentId: paymentIntentIdResult,
             saleorEventAmount: event.action.amount,
             stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           }),
@@ -200,7 +192,7 @@ export class TransactionProcessSessionUseCase {
 
     const result = new MappedResult({
       saleorMoney,
-      stripePaymentIntentId: paymentIntentIdResult.value,
+      stripePaymentIntentId: paymentIntentIdResult,
       stripeStatus: stripePaymentIntentStatus,
       stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
     });

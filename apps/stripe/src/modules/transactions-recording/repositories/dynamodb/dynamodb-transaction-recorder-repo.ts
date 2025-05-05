@@ -134,7 +134,7 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
             resolvedTransactionFlow: createResolvedTransactionFlow(resolvedTransactionFlow),
             saleorTransactionFlow: createSaleorTransactionFlow(saleorTransactionFlow),
             saleorTransactionId: createSaleorTransactionId(saleorTransactionId),
-            stripePaymentIntentId: createStripePaymentIntentId(paymentIntentId)._unsafeUnwrap(), // todo unwrap this from neverthrow
+            stripePaymentIntentId: createStripePaymentIntentId(paymentIntentId),
             selectedPaymentMethod: selectedPaymentMethod as PaymentMethod["type"],
           }),
         );

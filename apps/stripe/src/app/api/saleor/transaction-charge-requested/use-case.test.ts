@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionChargeRequestedEvent } from "@/__tests__/mocks/transaction-charge-requested-event";
 import {
@@ -19,27 +20,25 @@ import { TransactionChargeRequestedUseCase } from "./use-case";
 import { TransactionChargeRequestedUseCaseResponses } from "./use-case-response";
 
 describe("TransactionChargeRequestedUseCase", () => {
+  const stripePaymentIntentsApiFactory = {
+    create: () => mockedStripePaymentIntentsApi,
+  } satisfies IStripePaymentIntentsApiFactory;
+
   it("Calls Stripe PaymentIntent API to capture payment intent and returns ChargeSuccess when payment intent is captured successfully", async () => {
-    const capturePaymentIntent = vi.fn(async () =>
-      ok({
-        amount: 100,
-        currency: "usd",
-        id: mockedStripePaymentIntentId.toString(), // stripe doesn't expect to get branded type here
-        status: "succeeded",
-      } as Stripe.PaymentIntent),
-    );
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent: vi.fn(),
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent,
-        cancelPaymentIntent: vi.fn(),
-      }),
-    };
+    const spy = vi
+      .spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent")
+      .mockImplementationOnce(async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          id: mockedStripePaymentIntentId.toString(), // stripe doesn't expect to get branded type here
+          status: "succeeded",
+        } as Stripe.PaymentIntent),
+      );
 
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
     });
 
     const result = await uc.execute({
@@ -52,27 +51,19 @@ describe("TransactionChargeRequestedUseCase", () => {
       TransactionChargeRequestedUseCaseResponses.ChargeSuccess,
     );
 
-    expect(capturePaymentIntent).toHaveBeenCalledWith({
+    expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
     });
   });
 
   it("Calls Stripe PaymentIntent API to capture payment intent and returns ChargeFailure when payment intent capture fails", async () => {
-    const capturePaymentIntent = vi.fn(async () =>
-      err(new StripeAPIError("Error from Stripe API")),
-    );
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent: vi.fn(),
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent,
-        cancelPaymentIntent: vi.fn(),
-      }),
-    };
+    const spy = vi
+      .spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent")
+      .mockImplementationOnce(async () => err(new StripeAPIError("Error from Stripe API")));
 
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
     });
 
     const result = await uc.execute({
@@ -85,7 +76,7 @@ describe("TransactionChargeRequestedUseCase", () => {
       TransactionChargeRequestedUseCaseResponses.ChargeFailure,
     );
 
-    expect(capturePaymentIntent).toHaveBeenCalledWith({
+    expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
     });
   });
@@ -95,18 +86,9 @@ describe("TransactionChargeRequestedUseCase", () => {
       .spyOn(mockedAppConfigRepo, "getStripeConfig")
       .mockImplementationOnce(async () => ok(null));
 
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent: vi.fn(),
-        cancelPaymentIntent: vi.fn(),
-      }),
-    };
-
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
     });
 
     const responsePayload = await uc.execute({
@@ -123,24 +105,15 @@ describe("TransactionChargeRequestedUseCase", () => {
   });
 
   it("Returns 'BrokenAppResponse' when currency coming from Stripe is not supported", async () => {
-    const capturePaymentIntent = vi.fn(async () =>
+    vi.spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent").mockImplementation(async () =>
       ok({
         amount: 100,
         currency: "abc",
       } as Stripe.PaymentIntent),
     );
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent: vi.fn(),
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent: capturePaymentIntent,
-        cancelPaymentIntent: vi.fn(),
-      }),
-    };
-
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
     });
 
     const response = await uc.execute({
@@ -155,18 +128,9 @@ describe("TransactionChargeRequestedUseCase", () => {
   it("Returns 'MalformedRequestResponse' when Saleor event has no transaction", async () => {
     const saleorEvent = { ...getMockedTransactionChargeRequestedEvent(), transaction: null };
 
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent: vi.fn(),
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent: vi.fn(),
-        cancelPaymentIntent: vi.fn(),
-      }),
-    };
-
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
     });
 
     const response = await uc.execute({
@@ -188,18 +152,9 @@ describe("TransactionChargeRequestedUseCase", () => {
       },
     };
 
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent: vi.fn(),
-        getPaymentIntent: vi.fn(),
-        cancelPaymentIntent: vi.fn(),
-        capturePaymentIntent: vi.fn(),
-      }),
-    };
-
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
     });
 
     const response = await uc.execute({
@@ -219,21 +174,13 @@ describe("TransactionChargeRequestedUseCase", () => {
       },
     };
 
-    const capturePaymentIntent = vi.fn(async () =>
+    vi.spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent").mockImplementation(async () =>
       err(new StripeAPIError("Error from Stripe API")),
     );
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent: vi.fn(),
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent,
-        cancelPaymentIntent: vi.fn(),
-      }),
-    };
 
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
     });
 
     const response = await uc.execute({

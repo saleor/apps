@@ -107,16 +107,8 @@ export class TransactionChargeRequestedUseCase {
 
     const paymentIntentIdResult = createStripePaymentIntentId(event.transaction.pspReference);
 
-    if (paymentIntentIdResult.isErr()) {
-      this.logger.error("Failed to create payment intent id", {
-        error: paymentIntentIdResult.error,
-      });
-
-      return err(new MalformedRequestResponse());
-    }
-
     const capturePaymentIntentResult = await stripePaymentIntentsApi.capturePaymentIntent({
-      id: paymentIntentIdResult.value,
+      id: paymentIntentIdResult,
     });
 
     if (capturePaymentIntentResult.isErr()) {
@@ -131,7 +123,7 @@ export class TransactionChargeRequestedUseCase {
       return ok(
         new TransactionChargeRequestedUseCaseResponses.ChargeFailure({
           saleorEventAmount: event.action.amount,
-          stripePaymentIntentId: paymentIntentIdResult.value,
+          stripePaymentIntentId: paymentIntentIdResult,
           error: mappedError,
         }),
       );
@@ -155,7 +147,7 @@ export class TransactionChargeRequestedUseCase {
     return ok(
       new TransactionChargeRequestedUseCaseResponses.ChargeSuccess({
         saleorMoney,
-        stripePaymentIntentId: paymentIntentIdResult.value,
+        stripePaymentIntentId: paymentIntentIdResult,
       }),
     );
   }

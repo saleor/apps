@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import {
   createResolvedTransactionFlow,
-  ResolvedTransationFlow,
+  ResolvedTransactionFlow,
 } from "@/modules/resolved-transaction-flow";
 import { SaleorTransationFlow } from "@/modules/saleor/saleor-transaction-flow";
 
@@ -19,7 +19,7 @@ export class CardPaymentMethod implements PaymentMethod {
     .strict();
 
   // card support both AUTHORIZATION and CHARGE - hence we return the same value we get from SaleorTransationFlow
-  getResolvedTransactionFlow(saleorTransactionFlow: SaleorTransationFlow): ResolvedTransationFlow {
+  getResolvedTransactionFlow(saleorTransactionFlow: SaleorTransationFlow): ResolvedTransactionFlow {
     return createResolvedTransactionFlow(saleorTransactionFlow);
   }
 

@@ -63,7 +63,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
 
   it("Reports CHARGE_SUCCESS transaction event to Saleor when handling payment_intent.success event and resolvedFlow is CHARGE", async () => {
     const event = getMockedPaymentIntentSucceededEvent();
-    const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
@@ -127,7 +127,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
 
   it("Reports CHARGE_SUCCESS transaction event to Saleor when handling payment_intent.success event resolvedFlow is AUTHORIZATION", async () => {
     const event = getMockedPaymentIntentSucceededEvent();
-    const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
@@ -191,7 +191,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
 
   it("Reports CHARGE_ACTION_REQUIRED transaction event to Saleor when handling payment_intent.requires_action event", async () => {
     const event = getMockedPaymentIntentRequiresActionEvent();
-    const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
@@ -257,7 +257,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
 
   it("Reports AUTHORIZATION_ACTION_REQUIRED transaction event to Saleor when handling payment_intent.requires_action event", async () => {
     const event = getMockedPaymentIntentRequiresActionEvent();
-    const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
@@ -323,7 +323,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
 
   it("Report CHARGE_REQUEST transaction event to Saleor when handling payment_intent.processing event", async () => {
     const event = getMockedPaymentIntentProcessingEvent();
-    const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
@@ -389,7 +389,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
 
   it("Report AUTHORIZATION_REQUEST transaction event to Saleor when handling payment_intent.processing event", async () => {
     const event = getMockedPaymentIntentProcessingEvent();
-    const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
@@ -455,7 +455,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
 
   it("Reports CHARGE_FAILED transaction event to Saleor when handling payment_intent.payment_failed event", async () => {
     const event = getMockedPaymentIntentPaymentFailedEvent();
-    const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
@@ -521,7 +521,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
 
   it("Reports AUTHORIZATION_FAILED transaction event to Saleor when handling payment_intent.payment_failed event", async () => {
     const event = getMockedPaymentIntentPaymentFailedEvent();
-    const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 
@@ -588,7 +588,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
   it("Reports AUTHORIZATION_SUCCESS transaction event to Saleor when handling payment_intent.amount_capturable_updated event", async () => {
     const event = getMockedPaymentIntentAmountCapturableUpdatedEvent();
 
-    const stripePiId = createStripePaymentIntentId(event.data.object.id)._unsafeUnwrap();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
 
     eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
 

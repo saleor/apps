@@ -7,4 +7,4 @@ const resolvedTransactionFlowSchema = z
 export const createResolvedTransactionFlow = (raw: string) =>
   resolvedTransactionFlowSchema.parse(raw);
 
-export type ResolvedTransationFlow = z.infer<typeof resolvedTransactionFlowSchema>;
+export type ResolvedTransactionFlow = z.infer<typeof resolvedTransactionFlowSchema>;
