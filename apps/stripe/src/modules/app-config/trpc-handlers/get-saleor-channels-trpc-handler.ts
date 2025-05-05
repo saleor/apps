@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { Client } from "urql";
+import { GraphQLClient } from "graphql-request";
 
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
@@ -7,9 +7,9 @@ import { protectedClientProcedure } from "@/modules/trpc/protected-client-proced
 export class GetSaleorChannelsTrpcHandler {
   baseProcedure = protectedClientProcedure;
 
-  private readonly channelsFetcherFactory: (client: Client) => ChannelsFetcher;
+  private readonly channelsFetcherFactory: (client: GraphQLClient) => ChannelsFetcher;
 
-  constructor(deps: { channelsFetcherFactory: (client: Client) => ChannelsFetcher }) {
+  constructor(deps: { channelsFetcherFactory: (client: GraphQLClient) => ChannelsFetcher }) {
     this.channelsFetcherFactory = deps.channelsFetcherFactory;
   }
 

@@ -57,6 +57,7 @@
     "currency-codes": "2.2.0",
     "currency.js": "2.0.4",
     "dynamodb-toolbox": "1.8.2",
+    "graphql-request": "7.1.2",
     "graphql-tag": "2.12.6",
     "modern-errors": "7.0.1",
     "modern-errors-serialize": "6.1.0",
