@@ -6,4 +6,5 @@ export const mockedStripePaymentIntentsApi = {
   createPaymentIntent: vi.fn(),
   getPaymentIntent: vi.fn(),
   capturePaymentIntent: vi.fn(),
+  cancelPaymentIntent: vi.fn(),
 } satisfies IStripePaymentIntentsApi;

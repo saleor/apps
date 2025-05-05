@@ -87,7 +87,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Transaction Cancelation Requested",
-                "query": "subscription TransactionCancelationRequested { event { ...TransactionCancelationRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionCancelationRequestedEvent on TransactionCancelationRequested { ...EventMetadata action { amount } transaction { pspReference checkout { channel { ...Channel } } order { channel { ...Channel } } }}",
+                "query": "subscription TransactionCancelationRequested { event { ...TransactionCancelationRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionCancelationRequestedEvent on TransactionCancelationRequested { ...EventMetadata transaction { pspReference checkout { channel { ...Channel } } order { channel { ...Channel } } }}",
                 "syncEvents": [
                   "TRANSACTION_CANCELATION_REQUESTED",
                 ],

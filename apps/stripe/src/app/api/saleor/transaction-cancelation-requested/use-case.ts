@@ -97,18 +97,10 @@ export class TransactionCancelationRequestedUseCase {
       id: event.transaction.pspReference,
     });
 
-    const paymentIntentIdResult = createStripePaymentIntentId(event.transaction.pspReference);
-
-    if (paymentIntentIdResult.isErr()) {
-      this.logger.error("Failed to create payment intent id", {
-        error: paymentIntentIdResult.error,
-      });
-
-      return err(new MalformedRequestResponse());
-    }
+    const stripePaymentIntentId = createStripePaymentIntentId(event.transaction.pspReference);
 
     const cancelPaymentIntentResult = await stripePaymentIntentsApi.cancelPaymentIntent({
-      id: paymentIntentIdResult.value,
+      id: stripePaymentIntentId,
     });
 
     if (cancelPaymentIntentResult.isErr()) {
@@ -124,7 +116,7 @@ export class TransactionCancelationRequestedUseCase {
         new TransactionCancelationRequestedUseCaseResponses.CancelFailure({
           // TODO: what to add here?
           saleorEventAmount: 0,
-          stripePaymentIntentId: paymentIntentIdResult.value,
+          stripePaymentIntentId,
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           error: mappedError,
         }),
@@ -149,7 +141,7 @@ export class TransactionCancelationRequestedUseCase {
     return ok(
       new TransactionCancelationRequestedUseCaseResponses.CancelSuccess({
         saleorMoney,
-        stripePaymentIntentId: paymentIntentIdResult.value,
+        stripePaymentIntentId,
         stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
       }),
     );
