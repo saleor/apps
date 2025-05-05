@@ -27,6 +27,7 @@ describe("ChargeActionRequiredResult", () => {
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus(stripeStatus)._unsafeUnwrap(),
+        stripeEnv: "LIVE",
       });
 
       expect(result.message).toBe(expectedMessage);
@@ -39,6 +40,7 @@ describe("ChargeActionRequiredResult", () => {
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus("succeeded")._unsafeUnwrap(),
+        stripeEnv: "LIVE",
       });
     }).toThrow(
       "Payment intent status succeeded is not supported for CHARGE_ACTION_REQUIRED transaction flow",
@@ -64,6 +66,7 @@ describe("AuthorizationActionRequiredResult", () => {
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus(stripeStatus)._unsafeUnwrap(),
+        stripeEnv: "LIVE",
       });
 
       expect(result.message).toBe(expectedMessage);
@@ -76,6 +79,7 @@ describe("AuthorizationActionRequiredResult", () => {
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus("succeeded")._unsafeUnwrap(),
+        stripeEnv: "LIVE",
       });
     }).toThrow(
       "Payment intent status succeeded is not supported for AUTHORIZATION_ACTION_REQUIRED transaction flow",

@@ -112,7 +112,6 @@ export class StripePaymentIntentHandler {
             transactionResult: result,
             date: eventDate,
             saleorTransactionId: saleorTransactionId,
-            isLive: args.stripeEnv === "LIVE",
           }),
         );
       }
@@ -136,7 +135,6 @@ export class StripePaymentIntentHandler {
             transactionResult: failureResult,
             date: eventDate,
             saleorTransactionId: saleorTransactionId,
-            isLive: args.stripeEnv === "LIVE",
           }),
         );
       }

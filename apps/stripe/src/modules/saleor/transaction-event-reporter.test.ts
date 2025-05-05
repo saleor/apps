@@ -5,6 +5,7 @@ import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { TransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
+import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 
 describe("TransactionEventReporter", () => {
   const instance = new TransactionEventReporter({
@@ -37,6 +38,7 @@ describe("TransactionEventReporter", () => {
       pspReference: mockedStripePaymentIntentId,
       transactionId: mockedSaleorTransactionId,
       actions: [],
+      externalReference: generateStripeDashboardUrl(mockedStripePaymentIntentId, "LIVE"),
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
@@ -68,6 +70,7 @@ describe("TransactionEventReporter", () => {
       pspReference: mockedStripePaymentIntentId,
       transactionId: mockedSaleorTransactionId,
       actions: [],
+      externalReference: generateStripeDashboardUrl(mockedStripePaymentIntentId, "LIVE"),
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
@@ -99,6 +102,7 @@ describe("TransactionEventReporter", () => {
       pspReference: mockedStripePaymentIntentId,
       transactionId: mockedSaleorTransactionId,
       actions: [],
+      externalReference: generateStripeDashboardUrl(mockedStripePaymentIntentId, "LIVE"),
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`

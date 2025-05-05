@@ -29,7 +29,7 @@ import { TransactionProcessSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionProcessSessionUseCaseResponses", () => {
   describe("OK", () => {
-    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeded if transactionResult is ChargeSuccess", async () => {
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeeded if transactionResult is ChargeSuccess", async () => {
       const transactionResult = new ChargeSuccessResult({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
@@ -38,10 +38,10 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
       });
-      const fetchReponse = response.getResponse();
+      const fetchResponse = response.getResponse();
 
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
           "actions": [],
           "amount": 10,
@@ -53,7 +53,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       `);
     });
 
-    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeded if transactionResult is AuthorizationSuccess", async () => {
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeeded if transactionResult is AuthorizationSuccess", async () => {
       const transactionResult = new AuthorizationSuccessResult({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
@@ -89,10 +89,10 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
       });
-      const fetchReponse = response.getResponse();
+      const fetchResponse = response.getResponse();
 
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
           "actions": [],
           "amount": 10,
@@ -162,10 +162,10 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
       });
-      const fetchReponse = response.getResponse();
+      const fetchResponse = response.getResponse();
 
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
           "actions": [],
           "amount": 10,
