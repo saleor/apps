@@ -6,6 +6,7 @@ mutation TransactionEventReport(
   $time: DateTime!
   $type: TransactionEventTypeEnum!
   $availableActions: [TransactionActionEnum!]
+  $externalUrl: String
 ) {
   transactionEventReport(
     id: $transactionId
@@ -15,6 +16,7 @@ mutation TransactionEventReport(
     time: $time
     type: $type
     availableActions: $availableActions
+    externalUrl: $externalUrl
   ) {
     alreadyProcessed
     errors {

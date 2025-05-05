@@ -1,5 +1,6 @@
 import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
 import { TransactionEventReportInput } from "@/modules/saleor/transaction-event-reporter";
+import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import { TransactionResult } from "@/modules/transaction-result/types";
 
 export class TransactionEventReportVariablesResolver {
@@ -27,6 +28,10 @@ export class TransactionEventReportVariablesResolver {
       pspReference: this.transactionResult.stripePaymentIntentId,
       // @ts-expect-error TODO: this is a workaround for the type error - remove after we update app-sdk
       actions: this.transactionResult.actions,
+      externalReference: generateStripeDashboardUrl(
+        this.transactionResult.stripePaymentIntentId,
+        this.transactionResult.stripeEnv,
+      ),
     };
   }
 }

@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
+import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import {
   StripeApiErrorPublicCode,
   StripeCardErrorPublicCode,
@@ -31,6 +32,10 @@ class OK extends SuccessWebhookResponse {
       message: this.transactionResult.message,
       // @ts-expect-error TODO: this is a workaround for the type error - remove after we update app-sdk
       actions: this.transactionResult.actions,
+      externalUrl: generateStripeDashboardUrl(
+        this.transactionResult.stripePaymentIntentId,
+        this.transactionResult.stripeEnv,
+      ),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
@@ -65,6 +70,10 @@ class Error extends SuccessWebhookResponse {
       message: this.error.merchantMessage,
       amount: this.transactionResult.saleorEventAmount,
       pspReference: this.transactionResult.stripePaymentIntentId,
+      externalUrl: generateStripeDashboardUrl(
+        this.transactionResult.stripePaymentIntentId,
+        this.transactionResult.stripeEnv,
+      ),
       data: Error.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [

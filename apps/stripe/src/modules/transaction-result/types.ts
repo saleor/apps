@@ -1,3 +1,5 @@
+import { StripeEnv } from "@/modules/stripe/stripe-env";
+
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
@@ -15,3 +17,11 @@ export type TransactionResult =
   | AuthorizationRequestResult
   | ChargeFailureResult
   | AuthorizationFailureResult;
+
+export abstract class ResultBase {
+  readonly stripeEnv: StripeEnv;
+
+  constructor(stripeEnv: StripeEnv) {
+    this.stripeEnv = stripeEnv;
+  }
+}

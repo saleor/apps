@@ -41,12 +41,12 @@ import {
 } from "./event-data-parser";
 import { resolvePaymentMethodFromEventData } from "./payment-method-resolver";
 import {
-  TransactionInitalizeSessionUseCaseResponses,
-  TransactionInitalizeSessionUseCaseResponsesType,
+  TransactionInitializeSessionUseCaseResponses,
+  TransactionInitializeSessionUseCaseResponsesType,
 } from "./use-case-response";
 
 type UseCaseExecuteResult = Result<
-  TransactionInitalizeSessionUseCaseResponsesType,
+  TransactionInitializeSessionUseCaseResponsesType,
   AppIsNotConfiguredResponse | BrokenAppResponse | MalformedRequestResponse
 >;
 
@@ -121,7 +121,7 @@ export class TransactionInitializeSessionUseCase {
 
     if (resolvedTransactionFlow === "AUTHORIZATION") {
       return ok(
-        new TransactionInitalizeSessionUseCaseResponses.AuthorizationFailure({
+        new TransactionInitializeSessionUseCaseResponses.AuthorizationFailure({
           error: mappedError,
           saleorEventAmount: saleorEventAmount,
         }),
@@ -129,7 +129,7 @@ export class TransactionInitializeSessionUseCase {
     }
 
     return ok(
-      new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
+      new TransactionInitializeSessionUseCaseResponses.ChargeFailure({
         error: mappedError,
         saleorEventAmount: saleorEventAmount,
       }),
@@ -145,7 +145,7 @@ export class TransactionInitializeSessionUseCase {
 
     if (saleorTransactionFlow === "AUTHORIZATION") {
       return ok(
-        new TransactionInitalizeSessionUseCaseResponses.AuthorizationFailure({
+        new TransactionInitializeSessionUseCaseResponses.AuthorizationFailure({
           error,
           saleorEventAmount,
         }),
@@ -153,7 +153,7 @@ export class TransactionInitializeSessionUseCase {
     }
 
     return ok(
-      new TransactionInitalizeSessionUseCaseResponses.ChargeFailure({
+      new TransactionInitializeSessionUseCaseResponses.ChargeFailure({
         error,
         saleorEventAmount,
       }),
@@ -282,7 +282,7 @@ export class TransactionInitializeSessionUseCase {
 
     if (resolvedTransactionFlow === "AUTHORIZATION") {
       return ok(
-        new TransactionInitalizeSessionUseCaseResponses.AuthorizationActionRequired({
+        new TransactionInitializeSessionUseCaseResponses.AuthorizationActionRequired({
           stripeClientSecret,
           saleorMoney,
           stripePaymentIntentId,
@@ -291,7 +291,7 @@ export class TransactionInitializeSessionUseCase {
     }
 
     return ok(
-      new TransactionInitalizeSessionUseCaseResponses.ChargeActionRequired({
+      new TransactionInitializeSessionUseCaseResponses.ChargeActionRequired({
         stripeClientSecret,
         saleorMoney,
         stripePaymentIntentId,
