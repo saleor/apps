@@ -75,6 +75,24 @@ describe("Manifest handler", async () => {
                 ],
                 "targetUrl": "https://localhost:3000/api/saleor/transaction-process-session",
               },
+              {
+                "isActive": true,
+                "name": "Stripe Transaction Charge Requested",
+                "query": "subscription TransactionChargeRequested { event { ...TransactionChargeRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionChargeRequestedEvent on TransactionChargeRequested { ...EventMetadata action { amount } transaction { pspReference checkout { channel { ...Channel } } order { channel { ...Channel } } }}",
+                "syncEvents": [
+                  "TRANSACTION_CHARGE_REQUESTED",
+                ],
+                "targetUrl": "https://localhost:3000/api/saleor/transaction-charge-requested",
+              },
+              {
+                "isActive": true,
+                "name": "Stripe Transaction Cancelation Requested",
+                "query": "subscription TransactionCancelationRequested { event { ...TransactionCancelationRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionCancelationRequestedEvent on TransactionCancelationRequested { ...EventMetadata action { amount } transaction { pspReference checkout { channel { ...Channel } } order { channel { ...Channel } } }}",
+                "syncEvents": [
+                  "TRANSACTION_CANCELATION_REQUESTED",
+                ],
+                "targetUrl": "https://localhost:3000/api/saleor/transaction-cancelation-requested",
+              },
             ],
           }
         `,

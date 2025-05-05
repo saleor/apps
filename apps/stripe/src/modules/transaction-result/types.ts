@@ -4,6 +4,7 @@ import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
 } from "./action-required-result";
+import { CancelSuccessResult } from "./cancel-result";
 import { AuthorizationFailureResult, ChargeFailureResult } from "./failure-result";
 import { AuthorizationRequestResult, ChargeRequestResult } from "./request-result";
 import { AuthorizationSuccessResult, ChargeSuccessResult } from "./success-result";
@@ -16,7 +17,8 @@ export type TransactionResult =
   | ChargeRequestResult
   | AuthorizationRequestResult
   | ChargeFailureResult
-  | AuthorizationFailureResult;
+  | AuthorizationFailureResult
+  | CancelSuccessResult;
 
 export abstract class ResultBase {
   readonly stripeEnv: StripeEnv;

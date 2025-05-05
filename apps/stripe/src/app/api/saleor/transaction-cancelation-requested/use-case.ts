@@ -10,7 +10,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { mapStripeCapturePaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
+import { mapStripeCancelPaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
@@ -65,14 +65,6 @@ export class TransactionCancelationRequestedUseCase {
       return err(new MalformedRequestResponse());
     }
 
-    if (!event.action.amount) {
-      this.logger.error("Saleor event amount not found in event action", {
-        amount: event.action.amount,
-      });
-
-      return err(new MalformedRequestResponse());
-    }
-
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
       channelId: possibleChannelId,
       appId,
@@ -101,8 +93,8 @@ export class TransactionCancelationRequestedUseCase {
       key: restrictedKey,
     });
 
-    this.logger.debug("Creating Stripe payment intent with params", {
-      params: args.event.action,
+    this.logger.debug("Canceling Stripe payment intent with id", {
+      id: event.transaction.pspReference,
     });
 
     const paymentIntentIdResult = createStripePaymentIntentId(event.transaction.pspReference);
@@ -115,30 +107,33 @@ export class TransactionCancelationRequestedUseCase {
       return err(new MalformedRequestResponse());
     }
 
-    const capturePaymentIntentResult = await stripePaymentIntentsApi.cancelPaymentIntent({
+    const cancelPaymentIntentResult = await stripePaymentIntentsApi.cancelPaymentIntent({
       id: paymentIntentIdResult.value,
     });
 
-    if (capturePaymentIntentResult.isErr()) {
+    if (cancelPaymentIntentResult.isErr()) {
       this.logger.error("Failed to capture payment intent", {
-        error: capturePaymentIntentResult.error,
+        error: cancelPaymentIntentResult.error,
       });
 
-      const mappedError = mapStripeCapturePaymentIntentErrorToApiError(
-        capturePaymentIntentResult.error,
+      const mappedError = mapStripeCancelPaymentIntentErrorToApiError(
+        cancelPaymentIntentResult.error,
       );
 
       return ok(
         new TransactionCancelationRequestedUseCaseResponses.CancelFailure({
-          saleorEventAmount: event.action.amount,
+          // TODO: what to add here?
+          saleorEventAmount: 0,
           stripePaymentIntentId: paymentIntentIdResult.value,
+          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+          error: mappedError,
         }),
       );
     }
 
     const saleorMoneyResult = SaleorMoney.createFromStripe({
-      amount: capturePaymentIntentResult.value.amount,
-      currency: capturePaymentIntentResult.value.currency,
+      amount: cancelPaymentIntentResult.value.amount,
+      currency: cancelPaymentIntentResult.value.currency,
     });
 
     if (saleorMoneyResult.isErr()) {
@@ -155,6 +150,7 @@ export class TransactionCancelationRequestedUseCase {
       new TransactionCancelationRequestedUseCaseResponses.CancelSuccess({
         saleorMoney,
         stripePaymentIntentId: paymentIntentIdResult.value,
+        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
       }),
     );
   }

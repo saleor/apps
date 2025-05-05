@@ -97,19 +97,21 @@ export class TransactionEventReporter implements ITransactionEventReporter {
         );
       }
 
+      this.logger.info("Mutation errors", mutationErrors, data);
+
       if (mutationErrors.length > 0) {
         switch (mutationErrors[0].code) {
           case "ALREADY_EXISTS": {
             return err(
               new AlreadyReportedError(`Event already reported`, {
-                cause: error,
+                cause: BaseError.normalize(mutationErrors[0]),
               }),
             );
           }
           case "GRAPHQL_ERROR": {
             return err(
               new GraphqlError("Error reporting transaction event", {
-                cause: error,
+                cause: BaseError.normalize(mutationErrors[0]),
               }),
             );
           }
@@ -119,7 +121,7 @@ export class TransactionEventReporter implements ITransactionEventReporter {
           case "REQUIRED": {
             return err(
               new UnhandledError("Error reporting transaction event", {
-                cause: error,
+                cause: BaseError.normalize(mutationErrors[0]),
               }),
             );
           }
@@ -129,7 +131,7 @@ export class TransactionEventReporter implements ITransactionEventReporter {
       if (!data?.transactionEventReport?.transactionEvent) {
         return err(
           new UnhandledError("Error reporting transaction event: missing resolved data", {
-            cause: error,
+            cause: BaseError.normalize(mutationErrors[0]),
           }),
         );
       }

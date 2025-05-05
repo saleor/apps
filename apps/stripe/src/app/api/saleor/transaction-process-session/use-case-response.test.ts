@@ -69,6 +69,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         {
           "actions": [
             "CHARGE",
+            "CANCEL",
           ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
@@ -94,7 +95,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchResponse.status).toBe(200);
       expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent requires action",
@@ -119,7 +122,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent requires action",
@@ -143,7 +148,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent is processing",
@@ -167,7 +174,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchResponse.status).toBe(200);
       expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent is processing",
@@ -217,7 +226,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent was cancelled",
@@ -244,6 +255,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         expect(fetchReponse.status).toBe(200);
         expect(await fetchReponse.json()).toMatchInlineSnapshot(`
           {
+            "actions": [
+              "CHARGE",
+            ],
             "amount": 21.23,
             "data": {
               "paymentIntent": {
@@ -279,6 +293,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         expect(fetchReponse.status).toBe(200);
         expect(await fetchReponse.json()).toMatchInlineSnapshot(`
           {
+            "actions": [
+              "CANCEL",
+            ],
             "amount": 21.23,
             "data": {
               "paymentIntent": {

@@ -73,6 +73,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       {
         "actions": [
           "CHARGE",
+          "CANCEL",
         ],
         "amount": SaleorMoney {
           "amount": 10,
@@ -104,7 +105,9 @@ describe("TransactionEventReportVariablesResolver", () => {
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10,
           "currency": "USD",
@@ -135,7 +138,9 @@ describe("TransactionEventReportVariablesResolver", () => {
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10,
           "currency": "USD",
@@ -165,7 +170,9 @@ describe("TransactionEventReportVariablesResolver", () => {
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10,
           "currency": "USD",
@@ -195,7 +202,9 @@ describe("TransactionEventReportVariablesResolver", () => {
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10,
           "currency": "USD",
@@ -257,7 +266,9 @@ describe("TransactionEventReportVariablesResolver", () => {
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10,
           "currency": "USD",

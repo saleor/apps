@@ -101,8 +101,8 @@ export class TransactionChargeRequestedUseCase {
       key: restrictedKey,
     });
 
-    this.logger.debug("Creating Stripe payment intent with params", {
-      params: args.event.action,
+    this.logger.debug("Capturing Stripe payment intent with id", {
+      id: event.transaction.pspReference,
     });
 
     const paymentIntentIdResult = createStripePaymentIntentId(event.transaction.pspReference);

@@ -31,10 +31,11 @@ type ResponseResult = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"][
 
 class ChargeActionRequired extends SuccessWebhookResponse {
   readonly result: ResponseResult = "CHARGE_ACTION_REQUIRED";
+  readonly actions = ["CANCEL"] as const;
+
   readonly stripeClientSecret: StripeClientSecret;
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly actions = ["CANCEL"] as const;
 
   private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
     z.object({

@@ -237,7 +237,9 @@ describe("StripeWebhookUseCase - Success cases", () => {
       },
       `
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10.13,
           "currency": "USD",
@@ -301,7 +303,9 @@ describe("StripeWebhookUseCase - Success cases", () => {
       },
       `
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10.13,
           "currency": "USD",
@@ -365,7 +369,9 @@ describe("StripeWebhookUseCase - Success cases", () => {
       },
       `
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10.13,
           "currency": "USD",
@@ -429,7 +435,9 @@ describe("StripeWebhookUseCase - Success cases", () => {
       },
       `
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10.13,
           "currency": "USD",
@@ -559,7 +567,9 @@ describe("StripeWebhookUseCase - Success cases", () => {
       },
       `
       {
-        "actions": [],
+        "actions": [
+          "CANCEL",
+        ],
         "amount": SaleorMoney {
           "amount": 10.13,
           "currency": "USD",
@@ -626,6 +636,7 @@ describe("StripeWebhookUseCase - Success cases", () => {
       {
         "actions": [
           "CHARGE",
+          "CANCEL",
         ],
         "amount": SaleorMoney {
           "amount": 10,

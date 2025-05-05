@@ -25,6 +25,7 @@ class OK extends SuccessWebhookResponse {
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
+      // @ts-expect-error TODO: fix this type
       result: this.transactionResult.result,
       amount: this.transactionResult.saleorMoney.amount,
       pspReference: this.transactionResult.stripePaymentIntentId,
