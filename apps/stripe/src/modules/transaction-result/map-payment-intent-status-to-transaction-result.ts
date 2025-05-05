@@ -1,5 +1,5 @@
 import { assertUnreachable } from "@/lib/assert-unreachable";
-import { ResolvedTransationFlow } from "@/modules/resolved-transaction-flow";
+import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 
 import {
@@ -12,7 +12,7 @@ import { AuthorizationSuccessResult, ChargeSuccessResult } from "./success-resul
 
 export const mapPaymentIntentStatusToTransactionResult = (
   stripePaymentIntentStatus: StripePaymentIntentStatus,
-  resolvedTransactionFlow: ResolvedTransationFlow,
+  resolvedTransactionFlow: ResolvedTransactionFlow,
 ) => {
   switch (stripePaymentIntentStatus) {
     case "succeeded":
