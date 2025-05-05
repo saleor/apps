@@ -34,6 +34,7 @@ class ChargeActionRequired extends SuccessWebhookResponse {
   readonly stripeClientSecret: StripeClientSecret;
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
+  readonly actions = ["CANCEL"] as const;
 
   private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
     z.object({
@@ -64,6 +65,7 @@ class ChargeActionRequired extends SuccessWebhookResponse {
       pspReference: this.stripePaymentIntentId,
       // https://docs.stripe.com/payments/paymentintents/lifecycle
       message: "Payment intent requires payment method",
+      actions: this.actions,
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
@@ -78,6 +80,7 @@ class ChargeFailure extends SuccessWebhookResponse {
   readonly result: ResponseResult = "CHARGE_FAILURE";
   readonly error: StripeCreatePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
   readonly saleorEventAmount: number;
+  readonly actions = ["CANCEL"] as const;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
@@ -118,6 +121,7 @@ class ChargeFailure extends SuccessWebhookResponse {
           ],
         },
       }),
+      actions: this.actions,
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });

@@ -33,6 +33,7 @@ describe("TransactionChargeRequestedUseCase", () => {
         createPaymentIntent: vi.fn(),
         getPaymentIntent: vi.fn(),
         capturePaymentIntent,
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -65,6 +66,7 @@ describe("TransactionChargeRequestedUseCase", () => {
         createPaymentIntent: vi.fn(),
         getPaymentIntent: vi.fn(),
         capturePaymentIntent,
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -98,6 +100,7 @@ describe("TransactionChargeRequestedUseCase", () => {
         createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -131,6 +134,7 @@ describe("TransactionChargeRequestedUseCase", () => {
         createPaymentIntent: vi.fn(),
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: capturePaymentIntent,
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -156,6 +160,7 @@ describe("TransactionChargeRequestedUseCase", () => {
         createPaymentIntent: vi.fn(),
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -187,6 +192,7 @@ describe("TransactionChargeRequestedUseCase", () => {
       create: () => ({
         createPaymentIntent: vi.fn(),
         getPaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
       }),
     };
@@ -221,6 +227,7 @@ describe("TransactionChargeRequestedUseCase", () => {
         createPaymentIntent: vi.fn(),
         getPaymentIntent: vi.fn(),
         capturePaymentIntent,
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 

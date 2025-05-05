@@ -5,6 +5,7 @@ import { ResultBase } from "@/modules/transaction-result/types";
 // todo this is duplicated with FailureResult
 export class ChargeErrorResult extends ResultBase {
   readonly result = "CHARGE_FAILURE" as const;
+  readonly actions = ["CHARGE"] as const;
 
   readonly saleorEventAmount: number;
   readonly stripePaymentIntentId: StripePaymentIntentId;
@@ -23,6 +24,7 @@ export class ChargeErrorResult extends ResultBase {
 
 export class AuthorizationErrorResult extends ResultBase {
   readonly result = "AUTHORIZATION_FAILURE" as const;
+  readonly actions = ["CANCEL"] as const;
 
   readonly saleorEventAmount: number;
   readonly stripePaymentIntentId: StripePaymentIntentId;

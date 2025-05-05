@@ -2,13 +2,12 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
-import { StripeCapturePaymentIntentAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
-class ChargeSuccess extends SuccessWebhookResponse {
-  readonly result = "CHARGE_SUCCESS";
-  readonly actions = []; // TODO: figure out what actions are available here
-  readonly message = "Payment intent sucessfully charged";
+class CancelSuccess extends SuccessWebhookResponse {
+  readonly result = "CANCEL_SUCCESS";
+  readonly actions = [];
+  readonly message = "Payment intent sucessfully canceled";
 
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
@@ -18,9 +17,8 @@ class ChargeSuccess extends SuccessWebhookResponse {
     this.saleorMoney = args.saleorMoney;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
-
   getResponse(): Response {
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CHARGE_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
       result: this.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
@@ -32,32 +30,25 @@ class ChargeSuccess extends SuccessWebhookResponse {
   }
 }
 
-class ChargeFailure extends SuccessWebhookResponse {
-  readonly result = "CHARGE_FAILURE";
-  readonly actions = ["CHARGE"] as const;
-  readonly error: StripeCapturePaymentIntentAPIError;
+class CancelFailure extends SuccessWebhookResponse {
+  readonly result = "CANCEL_FAILURE";
+  readonly actions = ["CANCEL"] as const;
 
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly saleorEventAmount: number;
 
-  constructor(args: {
-    saleorEventAmount: number;
-    stripePaymentIntentId: StripePaymentIntentId;
-    error: StripeCapturePaymentIntentAPIError;
-  }) {
+  constructor(args: { saleorEventAmount: number; stripePaymentIntentId: StripePaymentIntentId }) {
     super();
     this.stripePaymentIntentId = args.stripePaymentIntentId;
-    // TODO: remove this after Saleor allows to amount to be optional
     this.saleorEventAmount = args.saleorEventAmount;
-    this.error = args.error;
   }
 
   getResponse(): Response {
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CHARGE_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
       result: this.result,
       pspReference: this.stripePaymentIntentId,
       amount: this.saleorEventAmount,
-      message: this.error.merchantMessage,
+      message: "Payment intent cancelation failed",
       actions: this.actions,
     });
 
@@ -65,11 +56,11 @@ class ChargeFailure extends SuccessWebhookResponse {
   }
 }
 
-export const TransactionChargeRequestedUseCaseResponses = {
-  ChargeSuccess,
-  ChargeFailure,
+export const TransactionCancelationRequestedUseCaseResponses = {
+  CancelSuccess,
+  CancelFailure,
 };
 
-export type TransactionChargeRequestedUseCaseResponsesType = InstanceType<
-  (typeof TransactionChargeRequestedUseCaseResponses)[keyof typeof TransactionChargeRequestedUseCaseResponses]
+export type TransactionCancelationRequestedUseCaseResponsesType = InstanceType<
+  (typeof TransactionCancelationRequestedUseCaseResponses)[keyof typeof TransactionCancelationRequestedUseCaseResponses]
 >;

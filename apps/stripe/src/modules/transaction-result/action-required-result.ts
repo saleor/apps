@@ -7,7 +7,7 @@ import { ResultBase } from "@/modules/transaction-result/types";
 
 export class ChargeActionRequiredResult extends ResultBase {
   readonly result = "CHARGE_ACTION_REQUIRED" as const;
-  readonly actions = [] as const;
+  readonly actions = ["CANCEL"] as const;
 
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
@@ -44,7 +44,7 @@ export class ChargeActionRequiredResult extends ResultBase {
 
 export class AuthorizationActionRequiredResult extends ResultBase {
   readonly result = "AUTHORIZATION_ACTION_REQUIRED" as const;
-  readonly actions = [] as const;
+  readonly actions = ["CANCEL"] as const;
 
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;

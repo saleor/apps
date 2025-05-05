@@ -98,6 +98,7 @@ describe("TransactionProcessSessionUseCase", () => {
           createPaymentIntent: vi.fn(),
           getPaymentIntent,
           capturePaymentIntent: vi.fn(),
+          cancelPaymentIntent: vi.fn(),
         }),
       };
 
@@ -138,6 +139,7 @@ describe("TransactionProcessSessionUseCase", () => {
         createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -179,6 +181,7 @@ describe("TransactionProcessSessionUseCase", () => {
           createPaymentIntent: vi.fn(),
           getPaymentIntent,
           capturePaymentIntent: vi.fn(),
+          cancelPaymentIntent: vi.fn(),
         }),
       };
 
@@ -218,6 +221,7 @@ describe("TransactionProcessSessionUseCase", () => {
         createPaymentIntent: vi.fn(),
         getPaymentIntent,
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -256,6 +260,7 @@ describe("TransactionProcessSessionUseCase", () => {
         createPaymentIntent: vi.fn(),
         getPaymentIntent,
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -292,6 +297,7 @@ describe("TransactionProcessSessionUseCase", () => {
         createPaymentIntent: vi.fn(),
         getPaymentIntent,
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 

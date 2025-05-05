@@ -18,7 +18,7 @@ export type TransactionEventReportInput = {
   pspReference: StripePaymentIntentId;
   time: string;
   type: TransactionEventTypeEnum;
-  actions: TransactionActionEnum[];
+  actions: readonly TransactionActionEnum[];
   externalReference: string;
 };
 

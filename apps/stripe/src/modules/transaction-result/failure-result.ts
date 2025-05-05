@@ -25,7 +25,7 @@ export class ChargeFailureResult extends ResultBase {
 
 export class AuthorizationFailureResult extends ResultBase {
   readonly result = "AUTHORIZATION_FAILURE" as const;
-  readonly actions = [] as const;
+  readonly actions = ["CANCEL"] as const;
   readonly message = "Payment intent was cancelled";
 
   readonly saleorMoney: SaleorMoney;

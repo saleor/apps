@@ -47,6 +47,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           createPaymentIntent,
           getPaymentIntent: vi.fn(),
           capturePaymentIntent: vi.fn(),
+          cancelPaymentIntent: vi.fn(),
         }),
       };
 
@@ -107,6 +108,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           createPaymentIntent,
           getPaymentIntent: vi.fn(),
           capturePaymentIntent: vi.fn(),
+          cancelPaymentIntent: vi.fn(),
         }),
       };
 
@@ -136,6 +138,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -178,6 +181,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           createPaymentIntent,
           getPaymentIntent: vi.fn(),
           capturePaymentIntent: vi.fn(),
+          cancelPaymentIntent: vi.fn(),
         }),
       };
 
@@ -216,6 +220,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
           getPaymentIntent: vi.fn(),
           capturePaymentIntent: vi.fn(),
+          cancelPaymentIntent: vi.fn(),
         }),
       };
 
@@ -261,6 +266,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
           getPaymentIntent: vi.fn(),
           capturePaymentIntent: vi.fn(),
+          cancelPaymentIntent: vi.fn(),
         }),
       };
 
@@ -305,6 +311,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -336,6 +343,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -368,6 +376,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -400,6 +409,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -438,6 +448,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         createPaymentIntent,
         getPaymentIntent: vi.fn(),
         capturePaymentIntent: vi.fn(),
+        cancelPaymentIntent: vi.fn(),
       }),
     };
 
@@ -484,6 +495,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           createPaymentIntent,
           getPaymentIntent: vi.fn(),
           capturePaymentIntent: vi.fn(),
+          cancelPaymentIntent: vi.fn(),
         }),
       };
 
