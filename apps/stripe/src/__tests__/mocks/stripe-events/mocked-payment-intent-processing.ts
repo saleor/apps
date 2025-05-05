@@ -1,32 +1,29 @@
 import Stripe from "stripe";
 
-import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripePaymentIntentId } from "../mocked-stripe-payment-intent-id";
 
-export const getMockedPaymentIntentSucceededEvent = (): Stripe.PaymentIntentSucceededEvent => {
+export const getMockedPaymentIntentProcessingEvent = (): Stripe.PaymentIntentProcessingEvent => {
   // Stripe returns timestamp in seconds
   const date = new Date(2025, 1, 1).getTime() / 1000;
 
   return {
-    account: "",
-    api_version: "",
-    request: { id: null, idempotency_key: null },
-    object: "event",
-    livemode: false,
-    pending_webhooks: 0,
-    id: "evt_event-id",
+    type: "payment_intent.processing",
     created: date,
-    type: "payment_intent.succeeded",
+    id: "evt_event-id",
+    livemode: false,
+    api_version: "",
+    object: "event",
+    request: { id: null, idempotency_key: null },
+    pending_webhooks: 0,
     data: {
       object: {
-        currency: "usd",
-        amount_received: 1013,
-        amount_capturable: 1511,
-        object: "payment_intent",
-        amount: 1000,
         id: mockedStripePaymentIntentId,
+        amount: 1000,
+        amount_received: 1013,
+        amount_capturable: 0,
+        object: "payment_intent",
+        currency: "usd",
         created: date,
-        livemode: false,
-        amount_details: {},
         application: null,
         application_fee_amount: null,
         automatic_payment_methods: null,
@@ -39,6 +36,7 @@ export const getMockedPaymentIntentSucceededEvent = (): Stripe.PaymentIntentSucc
         description: null,
         last_payment_error: null,
         latest_charge: null,
+        livemode: false,
         metadata: {},
         next_action: null,
         on_behalf_of: null,
@@ -55,7 +53,7 @@ export const getMockedPaymentIntentSucceededEvent = (): Stripe.PaymentIntentSucc
         source: null,
         statement_descriptor: null,
         statement_descriptor_suffix: null,
-        status: "succeeded",
+        status: "processing",
         transfer_data: null,
         transfer_group: null,
       },
