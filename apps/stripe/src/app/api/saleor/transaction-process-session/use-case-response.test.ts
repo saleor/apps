@@ -33,6 +33,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const transactionResult = new ChargeSuccessResult({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "TEST",
       });
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
@@ -44,6 +45,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         {
           "actions": [],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent succeeded",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_SUCCESS",
@@ -55,6 +57,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const transactionResult = new AuthorizationSuccessResult({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
@@ -68,6 +71,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
             "CHARGE",
           ],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent succeeded",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_SUCCESS",
@@ -80,6 +84,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
+        stripeEnv: "LIVE",
       });
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
@@ -91,6 +96,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         {
           "actions": [],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent requires action",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_ACTION_REQUIRED",
@@ -103,6 +109,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
+        stripeEnv: "LIVE",
       });
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
@@ -114,6 +121,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         {
           "actions": [],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent requires action",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_ACTION_REQUIRED",
@@ -125,6 +133,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const transactionResult = new ChargeRequestResult({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
@@ -136,6 +145,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         {
           "actions": [],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent is processing",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_REQUEST",
@@ -147,6 +157,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const transactionResult = new AuthorizationRequestResult({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
@@ -158,6 +169,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         {
           "actions": [],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent is processing",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_REQUEST",
@@ -169,6 +181,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const transactionResult = new ChargeFailureResult({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
@@ -182,6 +195,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
             "CHARGE",
           ],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent was cancelled",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_FAILURE",
@@ -193,6 +207,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const transactionResult = new AuthorizationFailureResult({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
       const response = new TransactionProcessSessionUseCaseResponses.OK({
         transactionResult,
@@ -204,6 +219,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         {
           "actions": [],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent was cancelled",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_FAILURE",
@@ -216,6 +232,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         const transactionResult = new ChargeErrorResult({
           saleorEventAmount: 21.23,
           stripePaymentIntentId: mockedStripePaymentIntentId,
+          stripeEnv: "LIVE",
         });
 
         const successResponse = new TransactionProcessSessionUseCaseResponses.Error({
@@ -238,6 +255,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
                 ],
               },
             },
+            "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
             "message": "Payment intent error - there is a problem with the request to Stripe API",
             "pspReference": "pi_TEST_TEST_TEST",
             "result": "CHARGE_FAILURE",
@@ -249,6 +267,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         const transactionResult = new AuthorizationErrorResult({
           saleorEventAmount: 21.23,
           stripePaymentIntentId: mockedStripePaymentIntentId,
+          stripeEnv: "LIVE",
         });
 
         const successResponse = new TransactionProcessSessionUseCaseResponses.Error({
@@ -271,6 +290,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
                 ],
               },
             },
+            "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
             "message": "Payment intent error - there is a problem with the request to Stripe API",
             "pspReference": "pi_TEST_TEST_TEST",
             "result": "AUTHORIZATION_FAILURE",

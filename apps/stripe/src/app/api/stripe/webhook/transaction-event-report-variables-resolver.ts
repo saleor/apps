@@ -1,5 +1,6 @@
 import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
 import { TransactionEventReportInput } from "@/modules/saleor/transaction-event-reporter";
+import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import { TransactionResult } from "@/modules/transaction-result/types";
 
 export class TransactionEventReportVariablesResolver {
@@ -17,23 +18,6 @@ export class TransactionEventReportVariablesResolver {
     this.transactionResult = args.transactionResult;
   }
 
-  /*
-   * todo add test to check this
-   * todo check if urls are correct
-   */
-  private createExternalReference() {
-    switch (this.transactionResult.stripeEnv) {
-      case "LIVE":
-        return `https://dashboard.stripe.com/payments/${encodeURIComponent(
-          this.transactionResult.stripePaymentIntentId,
-        )}`;
-      case "TEST":
-        return `https://dashboard.stripe.com/test/payments/${encodeURIComponent(
-          this.transactionResult.stripePaymentIntentId,
-        )}`;
-    }
-  }
-
   resolveEventReportVariables(): TransactionEventReportInput {
     return {
       transactionId: this.saleorTransactionId,
@@ -44,7 +28,10 @@ export class TransactionEventReportVariablesResolver {
       pspReference: this.transactionResult.stripePaymentIntentId,
       // @ts-expect-error TODO: this is a workaround for the type error - remove after we update app-sdk
       actions: this.transactionResult.actions,
-      externalReference: this.createExternalReference(),
+      externalReference: generateStripeDashboardUrl(
+        this.transactionResult.stripePaymentIntentId,
+        this.transactionResult.stripeEnv,
+      ),
     };
   }
 }

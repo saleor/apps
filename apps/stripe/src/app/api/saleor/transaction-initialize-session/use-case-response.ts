@@ -124,17 +124,18 @@ class ChargeFailure extends SuccessWebhookResponse {
   }
 }
 
+// todo refactor, this is confusing, extract base class instead Failure extending Success
 class AuthorizationFailure extends ChargeFailure {
   readonly result: ResponseResult = "AUTHORIZATION_FAILURE";
 }
 
-export const TransactionInitalizeSessionUseCaseResponses = {
+export const TransactionInitializeSessionUseCaseResponses = {
   ChargeActionRequired,
   AuthorizationActionRequired,
   ChargeFailure,
   AuthorizationFailure,
 };
 
-export type TransactionInitalizeSessionUseCaseResponsesType = InstanceType<
-  (typeof TransactionInitalizeSessionUseCaseResponses)[keyof typeof TransactionInitalizeSessionUseCaseResponses]
+export type TransactionInitializeSessionUseCaseResponsesType = InstanceType<
+  (typeof TransactionInitializeSessionUseCaseResponses)[keyof typeof TransactionInitializeSessionUseCaseResponses]
 >;
