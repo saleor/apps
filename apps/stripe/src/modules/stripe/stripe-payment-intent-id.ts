@@ -1,4 +1,3 @@
-import { fromThrowable } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
@@ -19,9 +18,6 @@ const StripePaymentIntentIdSchema = z
   .startsWith("pi_")
   .brand("StripePaymentIntentId");
 
-export const createStripePaymentIntentId = (raw: string) =>
-  fromThrowable(StripePaymentIntentIdSchema.parse, (error) =>
-    StripePaymentIntentValidationError.normalize(error),
-  )(raw);
+export const createStripePaymentIntentId = (raw: string) => StripePaymentIntentIdSchema.parse(raw);
 
 export type StripePaymentIntentId = z.infer<typeof StripePaymentIntentIdSchema>;
