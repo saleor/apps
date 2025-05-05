@@ -136,12 +136,8 @@ export class StripeWebhookUseCase {
       case "payment_intent": {
         const stripePaymentIntentId = createStripePaymentIntentId(event.value.data.object.id);
 
-        if (stripePaymentIntentId.isErr()) {
-          return err(new StripeWebhookErrorResponse(stripePaymentIntentId.error));
-        }
-
-        this.logger.debug(`Resolved Payment Intent ID: ${stripePaymentIntentId.value}`);
-        loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntentId.value);
+        this.logger.debug(`Resolved Payment Intent ID: ${stripePaymentIntentId}`);
+        loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntentId);
 
         const recordedTransaction =
           await this.transactionRecorder.getTransactionByStripePaymentIntentId(
@@ -149,7 +145,7 @@ export class StripeWebhookUseCase {
               appId: authData.appId,
               saleorApiUrl: webhookParams.saleorApiUrl,
             },
-            stripePaymentIntentId.value,
+            stripePaymentIntentId,
           );
 
         if (recordedTransaction.isErr()) {
@@ -179,7 +175,7 @@ export class StripeWebhookUseCase {
 
         const processingResult = handler.processPaymentIntentEvent({
           event: event.value,
-          stripePaymentIntentId: stripePaymentIntentId.value,
+          stripePaymentIntentId: stripePaymentIntentId,
           recordedTransaction: recordedTransaction.value,
           stripeEnv: config.value.getStripeEnvValue(),
         });

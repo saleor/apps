@@ -18,7 +18,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
             amount: 10000,
             currency: "usd",
           })._unsafeUnwrap(),
-          stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
+          stripePaymentIntentId: createStripePaymentIntentId("pi_1"),
         },
       );
       const fetchReponse = successResponse.getResponse();
@@ -49,7 +49,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
             amount: 10000,
             currency: "usd",
           })._unsafeUnwrap(),
-          stripePaymentIntentId: createStripePaymentIntentId("pi_1")._unsafeUnwrap(),
+          stripePaymentIntentId: createStripePaymentIntentId("pi_1"),
         });
       const fetchReponse = successResponse.getResponse();
 
