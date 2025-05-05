@@ -12,7 +12,7 @@ import { AuthorizationSuccessResult, ChargeSuccessResult } from "./success-resul
 
 export const mapPaymentIntentStatusToTransactionResult = (
   stripePaymentIntentStatus: StripePaymentIntentStatus,
-  resolvedTransationFlow: ResolvedTransationFlow,
+  resolvedTransactionFlow: ResolvedTransationFlow,
 ) => {
   switch (stripePaymentIntentStatus) {
     case "succeeded":
@@ -21,19 +21,19 @@ export const mapPaymentIntentStatusToTransactionResult = (
     case "requires_payment_method":
     case "requires_confirmation":
     case "requires_action":
-      if (resolvedTransationFlow === "CHARGE") {
+      if (resolvedTransactionFlow === "CHARGE") {
         return ChargeActionRequiredResult;
       }
 
       return AuthorizationActionRequiredResult;
     case "processing":
-      if (resolvedTransationFlow === "CHARGE") {
+      if (resolvedTransactionFlow === "CHARGE") {
         return ChargeRequestResult;
       }
 
       return AuthorizationRequestResult;
     case "canceled":
-      if (resolvedTransationFlow === "CHARGE") {
+      if (resolvedTransactionFlow === "CHARGE") {
         return ChargeFailureResult;
       }
 

@@ -108,19 +108,20 @@ describe("StripeWebhookUseCase - Success cases", () => {
         ),
       },
       `
-        {
-          "actions": [],
-          "amount": SaleorMoney {
-            "amount": 10.13,
-            "currency": "USD",
-          },
-          "message": "Payment intent succeeded",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "time": toSatisfy<[Function anonymous]>,
-          "transactionId": "mocked-transaction-id",
-          "type": "CHARGE_SUCCESS",
-        }
-      `,
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10.13,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent succeeded",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "CHARGE_SUCCESS",
+      }
+    `,
     );
   });
 
@@ -171,19 +172,20 @@ describe("StripeWebhookUseCase - Success cases", () => {
         ),
       },
       `
-        {
-          "actions": [],
-          "amount": SaleorMoney {
-            "amount": 10.13,
-            "currency": "USD",
-          },
-          "message": "Payment intent succeeded",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "time": toSatisfy<[Function anonymous]>,
-          "transactionId": "mocked-transaction-id",
-          "type": "CHARGE_SUCCESS",
-        }
-      `,
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10.13,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent succeeded",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "CHARGE_SUCCESS",
+      }
+    `,
     );
   });
 
@@ -234,19 +236,20 @@ describe("StripeWebhookUseCase - Success cases", () => {
         ),
       },
       `
-        {
-          "actions": [],
-          "amount": SaleorMoney {
-            "amount": 10.13,
-            "currency": "USD",
-          },
-          "message": "Payment intent requires action",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "time": toSatisfy<[Function anonymous]>,
-          "transactionId": "mocked-transaction-id",
-          "type": "CHARGE_ACTION_REQUIRED",
-        }
-      `,
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10.13,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent requires action",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "CHARGE_ACTION_REQUIRED",
+      }
+    `,
     );
   });
 
@@ -297,19 +300,20 @@ describe("StripeWebhookUseCase - Success cases", () => {
         ),
       },
       `
-        {
-          "actions": [],
-          "amount": SaleorMoney {
-            "amount": 10.13,
-            "currency": "USD",
-          },
-          "message": "Payment intent requires action",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "time": toSatisfy<[Function anonymous]>,
-          "transactionId": "mocked-transaction-id",
-          "type": "AUTHORIZATION_ACTION_REQUIRED",
-        }
-      `,
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10.13,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent requires action",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "AUTHORIZATION_ACTION_REQUIRED",
+      }
+    `,
     );
   });
 
@@ -360,19 +364,20 @@ describe("StripeWebhookUseCase - Success cases", () => {
         ),
       },
       `
-        {
-          "actions": [],
-          "amount": SaleorMoney {
-            "amount": 10.13,
-            "currency": "USD",
-          },
-          "message": "Payment intent is processing",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "time": toSatisfy<[Function anonymous]>,
-          "transactionId": "mocked-transaction-id",
-          "type": "CHARGE_REQUEST",
-        }
-      `,
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10.13,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent is processing",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "CHARGE_REQUEST",
+      }
+    `,
     );
   });
 
@@ -423,19 +428,20 @@ describe("StripeWebhookUseCase - Success cases", () => {
         ),
       },
       `
-        {
-          "actions": [],
-          "amount": SaleorMoney {
-            "amount": 10.13,
-            "currency": "USD",
-          },
-          "message": "Payment intent is processing",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "time": toSatisfy<[Function anonymous]>,
-          "transactionId": "mocked-transaction-id",
-          "type": "AUTHORIZATION_REQUEST",
-        }
-      `,
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10.13,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent is processing",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "AUTHORIZATION_REQUEST",
+      }
+    `,
     );
   });
 
@@ -486,21 +492,22 @@ describe("StripeWebhookUseCase - Success cases", () => {
         ),
       },
       `
-        {
-          "actions": [
-            "CHARGE",
-          ],
-          "amount": SaleorMoney {
-            "amount": 10.13,
-            "currency": "USD",
-          },
-          "message": "Payment intent was cancelled",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "time": toSatisfy<[Function anonymous]>,
-          "transactionId": "mocked-transaction-id",
-          "type": "CHARGE_FAILURE",
-        }
-      `,
+      {
+        "actions": [
+          "CHARGE",
+        ],
+        "amount": SaleorMoney {
+          "amount": 10.13,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent was cancelled",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "CHARGE_FAILURE",
+      }
+    `,
     );
   });
 
@@ -551,19 +558,20 @@ describe("StripeWebhookUseCase - Success cases", () => {
         ),
       },
       `
-        {
-          "actions": [],
-          "amount": SaleorMoney {
-            "amount": 10.13,
-            "currency": "USD",
-          },
-          "message": "Payment intent was cancelled",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "time": toSatisfy<[Function anonymous]>,
-          "transactionId": "mocked-transaction-id",
-          "type": "AUTHORIZATION_FAILURE",
-        }
-      `,
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10.13,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent was cancelled",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "AUTHORIZATION_FAILURE",
+      }
+    `,
     );
   });
 
@@ -615,21 +623,22 @@ describe("StripeWebhookUseCase - Success cases", () => {
         ),
       },
       `
-        {
-          "actions": [
-            "CHARGE",
-          ],
-          "amount": SaleorMoney {
-            "amount": 10,
-            "currency": "USD",
-          },
-          "message": "Payment intent succeeded",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "time": toSatisfy<[Function anonymous]>,
-          "transactionId": "mocked-transaction-id",
-          "type": "AUTHORIZATION_SUCCESS",
-        }
-      `,
+      {
+        "actions": [
+          "CHARGE",
+        ],
+        "amount": SaleorMoney {
+          "amount": 10,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent succeeded",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "AUTHORIZATION_SUCCESS",
+      }
+    `,
     );
   });
 });

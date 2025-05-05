@@ -17,7 +17,7 @@ import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import { TransactionRecorderError } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { TransactionInitializeSessionUseCase } from "./use-case";
-import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response";
+import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionInitializeSessionUseCase", () => {
   it.each([
@@ -83,12 +83,12 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedSuccessResponse: TransactionInitalizeSessionUseCaseResponses.ChargeActionRequired,
+      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.ChargeActionRequired,
     },
     {
       actionType: "AUTHORIZATION" as const,
       expectedSuccessResponse:
-        TransactionInitalizeSessionUseCaseResponses.AuthorizationActionRequired,
+        TransactionInitializeSessionUseCaseResponses.AuthorizationActionRequired,
     },
   ])(
     "Returns $expectedSuccessResponse.name response if Stripe PaymentIntentsAPI successfully responds and actionType is $actionType",
@@ -161,11 +161,11 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.ChargeFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.ChargeFailure,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.AuthorizationFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.AuthorizationFailure,
     },
   ])(
     "Returns $expectedFailureResponse.name response if StripePaymentIntentsAPI throws error and actionType is $actionType",
@@ -202,11 +202,11 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.ChargeFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.ChargeFailure,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.AuthorizationFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.AuthorizationFailure,
     },
   ])(
     "Returns $expectedFailureResponse.name response when receives not supported payment method in data and actionType is $actionType",
@@ -247,11 +247,11 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.ChargeFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.ChargeFailure,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.AuthorizationFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.AuthorizationFailure,
     },
   ])(
     "Returns $expectedFailureResponse.name response when receives additional field in data and actionType is $actionType",

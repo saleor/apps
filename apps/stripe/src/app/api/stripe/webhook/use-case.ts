@@ -181,6 +181,7 @@ export class StripeWebhookUseCase {
           event: event.value,
           stripePaymentIntentId: stripePaymentIntentId.value,
           recordedTransaction: recordedTransaction.value,
+          stripeEnv: config.value.getStripeEnvValue(),
         });
 
         if (processingResult.isErr()) {

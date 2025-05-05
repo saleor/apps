@@ -67,6 +67,7 @@ describe("StripePaymentIntentHandler", () => {
             event,
             recordedTransaction,
             stripePaymentIntentId: mockedStripePaymentIntentId,
+            stripeEnv: "LIVE",
           });
 
           const { type, amount, pspReference, time } = result
@@ -109,6 +110,7 @@ describe("StripePaymentIntentHandler", () => {
             event,
             recordedTransaction,
             stripePaymentIntentId: mockedStripePaymentIntentId,
+            stripeEnv: "LIVE",
           });
 
           const { type, amount, pspReference, time } = result
@@ -151,6 +153,7 @@ describe("StripePaymentIntentHandler", () => {
             event,
             recordedTransaction,
             stripePaymentIntentId: mockedStripePaymentIntentId,
+            stripeEnv: "LIVE",
           });
 
           const { type, amount, pspReference, time } = result
@@ -193,6 +196,7 @@ describe("StripePaymentIntentHandler", () => {
             event,
             recordedTransaction,
             stripePaymentIntentId: mockedStripePaymentIntentId,
+            stripeEnv: "LIVE",
           });
 
           const { type, amount, pspReference, time } = result
@@ -235,6 +239,7 @@ describe("StripePaymentIntentHandler", () => {
             event,
             recordedTransaction,
             stripePaymentIntentId: mockedStripePaymentIntentId,
+            stripeEnv: "LIVE",
           });
 
           const { type, amount, pspReference, time } = result
