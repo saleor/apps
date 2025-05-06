@@ -32,19 +32,29 @@ type PossibleErrors = InstanceType<
 >;
 
 export class StripePaymentIntentHandler {
+  private resolveAmount(event: SupportedEvents) {
+    const amount = event.data.object.amount;
+    const amountCapturable = event.data.object.amount_capturable;
+    const amountReceived = event.data.object.amount_received;
+
+    switch (event.type) {
+      case "payment_intent.amount_capturable_updated":
+        return amountCapturable;
+      case "payment_intent.canceled":
+        return amount;
+      default:
+        return amountReceived;
+    }
+  }
+
   private prepareTransactionEventReportParams(event: SupportedEvents) {
     const intentObject = event.data.object;
     const currency = intentObject.currency;
-    const amountCapturable = intentObject.amount_capturable;
-    const amountReceived = intentObject.amount_received;
     const eventDate = createDateFromStripeEvent(event);
 
     const paramsResult = Result.combine([
       SaleorMoney.createFromStripe({
-        amount:
-          event.type === "payment_intent.amount_capturable_updated"
-            ? amountCapturable
-            : amountReceived,
+        amount: this.resolveAmount(event),
         currency,
       }),
       createStripePaymentIntentStatus(intentObject.status),
@@ -146,7 +156,6 @@ export class StripePaymentIntentHandler {
         return ok(
           new TransactionEventReportVariablesResolver({
             transactionResult: new CancelSuccessResult({
-              // TODO: what amount should I send here?
               saleorMoney,
               stripePaymentIntentId: stripePaymentIntentId,
               stripeEnv: args.stripeEnv,

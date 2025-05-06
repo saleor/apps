@@ -13,6 +13,10 @@ import {
 import { mapStripeCancelPaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import {
+  CancelFailureResult,
+  CancelSuccessResult,
+} from "@/modules/transaction-result/cancel-result";
 
 import {
   TransactionCancelationRequestedUseCaseResponses,
@@ -114,10 +118,12 @@ export class TransactionCancelationRequestedUseCase {
 
       return ok(
         new TransactionCancelationRequestedUseCaseResponses.CancelFailure({
-          // TODO: what to add here?
-          saleorEventAmount: 0,
-          stripePaymentIntentId,
-          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+          transactionResult: new CancelFailureResult({
+            // TODO: remove this when Saleor won't require amount in the event
+            saleorEventAmount: 0,
+            stripePaymentIntentId,
+            stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+          }),
           error: mappedError,
         }),
       );
@@ -140,9 +146,11 @@ export class TransactionCancelationRequestedUseCase {
 
     return ok(
       new TransactionCancelationRequestedUseCaseResponses.CancelSuccess({
-        saleorMoney,
-        stripePaymentIntentId,
-        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+        transactionResult: new CancelSuccessResult({
+          saleorMoney,
+          stripePaymentIntentId,
+          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+        }),
       }),
     );
   }

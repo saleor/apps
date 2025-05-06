@@ -22,3 +22,22 @@ export class CancelSuccessResult extends ResultBase {
     this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 }
+
+export class CancelFailureResult extends ResultBase {
+  readonly result = "CANCEL_FAILURE" as const;
+  readonly actions = ["CANCEL"] as const;
+
+  readonly stripePaymentIntentId: StripePaymentIntentId;
+  readonly saleorEventAmount: number;
+
+  constructor(args: {
+    saleorEventAmount: number;
+    stripePaymentIntentId: StripePaymentIntentId;
+    stripeEnv: StripeEnv;
+  }) {
+    super(args.stripeEnv);
+
+    this.saleorEventAmount = args.saleorEventAmount;
+    this.stripePaymentIntentId = args.stripePaymentIntentId;
+  }
+}

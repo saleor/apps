@@ -1,42 +1,34 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
 import {
   StripeCancelPaymentIntentAPIError,
   StripeCapturePaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import {
+  CancelFailureResult,
+  CancelSuccessResult,
+} from "@/modules/transaction-result/cancel-result";
 
 class CancelSuccess extends SuccessWebhookResponse {
-  readonly result = "CANCEL_SUCCESS";
-  readonly actions = [];
-  readonly message = "Payment intent sucessfully canceled";
+  readonly transactionResult: CancelSuccessResult;
 
-  readonly saleorMoney: SaleorMoney;
-  readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly stripeEnv: StripeEnv;
-
-  constructor(args: {
-    saleorMoney: SaleorMoney;
-    stripePaymentIntentId: StripePaymentIntentId;
-    stripeEnv: StripeEnv;
-  }) {
+  constructor(args: { transactionResult: CancelSuccessResult }) {
     super();
-    this.saleorMoney = args.saleorMoney;
-    this.stripePaymentIntentId = args.stripePaymentIntentId;
-    this.stripeEnv = args.stripeEnv;
+    this.transactionResult = args.transactionResult;
   }
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
-      result: this.result,
-      amount: this.saleorMoney.amount,
-      pspReference: this.stripePaymentIntentId,
-      message: this.message,
-      actions: this.actions,
-      externalUrl: generateStripeDashboardUrl(this.stripePaymentIntentId, this.stripeEnv),
+      result: this.transactionResult.result,
+      amount: this.transactionResult.saleorMoney.amount,
+      pspReference: this.transactionResult.stripePaymentIntentId,
+      message: this.transactionResult.message,
+      actions: this.transactionResult.actions,
+      externalUrl: generateStripeDashboardUrl(
+        this.transactionResult.stripePaymentIntentId,
+        this.transactionResult.stripeEnv,
+      ),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
@@ -44,35 +36,29 @@ class CancelSuccess extends SuccessWebhookResponse {
 }
 
 class CancelFailure extends SuccessWebhookResponse {
-  readonly result = "CANCEL_FAILURE";
-  readonly actions = ["CANCEL"] as const;
+  readonly transactionResult: CancelFailureResult;
   readonly error: StripeCancelPaymentIntentAPIError;
 
-  readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly saleorEventAmount: number;
-  readonly stripeEnv: StripeEnv;
-
   constructor(args: {
-    saleorEventAmount: number;
-    stripePaymentIntentId: StripePaymentIntentId;
+    transactionResult: CancelFailureResult;
     error: StripeCapturePaymentIntentAPIError;
-    stripeEnv: StripeEnv;
   }) {
     super();
-    this.stripePaymentIntentId = args.stripePaymentIntentId;
-    this.saleorEventAmount = args.saleorEventAmount;
+    this.transactionResult = args.transactionResult;
     this.error = args.error;
-    this.stripeEnv = args.stripeEnv;
   }
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
-      result: this.result,
-      pspReference: this.stripePaymentIntentId,
-      amount: this.saleorEventAmount,
+      result: this.transactionResult.result,
+      pspReference: this.transactionResult.stripePaymentIntentId,
+      amount: this.transactionResult.saleorEventAmount,
       message: this.error.merchantMessage,
-      actions: this.actions,
-      externalUrl: generateStripeDashboardUrl(this.stripePaymentIntentId, this.stripeEnv),
+      actions: this.transactionResult.actions,
+      externalUrl: generateStripeDashboardUrl(
+        this.transactionResult.stripePaymentIntentId,
+        this.transactionResult.stripeEnv,
+      ),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });

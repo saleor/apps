@@ -29,6 +29,7 @@ import {
 
 type ResponseResult = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"]["result"];
 
+// TODO: refactor this to use TransactionResult
 class ChargeActionRequired extends SuccessWebhookResponse {
   readonly result: ResponseResult = "CHARGE_ACTION_REQUIRED";
   readonly actions = ["CANCEL"] as const;

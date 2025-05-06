@@ -5,6 +5,7 @@ import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-response
 import { StripeCapturePaymentIntentAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
+// TODO: refactor this to use TransactionResult
 class ChargeSuccess extends SuccessWebhookResponse {
   readonly result = "CHARGE_SUCCESS";
   readonly actions = []; // TODO: figure out what actions are available here

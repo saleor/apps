@@ -10,10 +10,35 @@ import {
   StripeGetPaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
 import {
+  AuthorizationActionRequiredResult,
+  ChargeActionRequiredResult,
+} from "@/modules/transaction-result/action-required-result";
+import {
   AuthorizationErrorResult,
   ChargeErrorResult,
 } from "@/modules/transaction-result/error-result";
-import { TransactionResult } from "@/modules/transaction-result/types";
+import {
+  AuthorizationFailureResult,
+  ChargeFailureResult,
+} from "@/modules/transaction-result/failure-result";
+import {
+  AuthorizationRequestResult,
+  ChargeRequestResult,
+} from "@/modules/transaction-result/request-result";
+import {
+  AuthorizationSuccessResult,
+  ChargeSuccessResult,
+} from "@/modules/transaction-result/success-result";
+
+type TransactionResult =
+  | ChargeSuccessResult
+  | AuthorizationSuccessResult
+  | ChargeActionRequiredResult
+  | AuthorizationActionRequiredResult
+  | ChargeRequestResult
+  | AuthorizationRequestResult
+  | ChargeFailureResult
+  | AuthorizationFailureResult;
 
 class OK extends SuccessWebhookResponse {
   readonly transactionResult: TransactionResult;
@@ -25,7 +50,6 @@ class OK extends SuccessWebhookResponse {
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
-      // @ts-expect-error TODO: fix this type
       result: this.transactionResult.result,
       amount: this.transactionResult.saleorMoney.amount,
       pspReference: this.transactionResult.stripePaymentIntentId,

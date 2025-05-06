@@ -21,6 +21,8 @@ export class ChargeActionRequiredResult extends ResultBase {
         return "Payment intent requires confirmation";
       case "requires_payment_method":
         return "Payment intent requires payment method";
+      case "canceled":
+        return "Payment intent was canceled";
       default:
         throw new BaseError(
           `Payment intent status ${stripeStatus} is not supported for CHARGE_ACTION_REQUIRED transaction flow`,
