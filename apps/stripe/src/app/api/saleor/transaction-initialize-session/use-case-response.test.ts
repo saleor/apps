@@ -19,6 +19,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
             currency: "usd",
           })._unsafeUnwrap(),
           stripePaymentIntentId: createStripePaymentIntentId("pi_1"),
+          stripeEnv: "LIVE",
         },
       );
       const fetchReponse = successResponse.getResponse();
@@ -35,6 +36,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               "stripeClientSecret": "stripe-client-secret",
             },
           },
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_1",
           "message": "Payment intent requires payment method",
           "pspReference": "pi_1",
           "result": "CHARGE_ACTION_REQUIRED",
@@ -53,6 +55,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
             currency: "usd",
           })._unsafeUnwrap(),
           stripePaymentIntentId: createStripePaymentIntentId("pi_1"),
+          stripeEnv: "TEST",
         });
       const fetchReponse = successResponse.getResponse();
 
@@ -68,6 +71,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               "stripeClientSecret": "stripe-client-secret",
             },
           },
+          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_1",
           "message": "Payment intent requires payment method",
           "pspReference": "pi_1",
           "result": "AUTHORIZATION_ACTION_REQUIRED",

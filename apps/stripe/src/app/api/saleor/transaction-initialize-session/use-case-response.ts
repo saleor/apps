@@ -10,10 +10,12 @@ import {
   createSuccessWebhookResponseDataSchema,
 } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
+import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import {
   StripeClientSecret,
   StripeClientSecretSchema,
 } from "@/modules/stripe/stripe-client-secret";
+import { StripeEnv } from "@/modules/stripe/stripe-env";
 import {
   StripeApiErrorPublicCode,
   StripeCardErrorPublicCode,
@@ -37,6 +39,7 @@ class ChargeActionRequired extends SuccessWebhookResponse {
   readonly stripeClientSecret: StripeClientSecret;
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
+  readonly stripeEnv: StripeEnv;
 
   private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
     z.object({
@@ -48,11 +51,13 @@ class ChargeActionRequired extends SuccessWebhookResponse {
     stripeClientSecret: StripeClientSecret;
     saleorMoney: SaleorMoney;
     stripePaymentIntentId: StripePaymentIntentId;
+    stripeEnv: StripeEnv;
   }) {
     super();
     this.stripeClientSecret = args.stripeClientSecret;
     this.saleorMoney = args.saleorMoney;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
+    this.stripeEnv = args.stripeEnv;
   }
 
   getResponse() {
@@ -68,6 +73,7 @@ class ChargeActionRequired extends SuccessWebhookResponse {
       // https://docs.stripe.com/payments/paymentintents/lifecycle
       message: "Payment intent requires payment method",
       actions: this.actions,
+      externalUrl: generateStripeDashboardUrl(this.stripePaymentIntentId, this.stripeEnv),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });

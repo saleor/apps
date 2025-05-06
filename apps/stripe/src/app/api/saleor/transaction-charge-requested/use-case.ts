@@ -125,6 +125,7 @@ export class TransactionChargeRequestedUseCase {
           saleorEventAmount: event.action.amount,
           stripePaymentIntentId: paymentIntentIdResult,
           error: mappedError,
+          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         }),
       );
     }
@@ -148,6 +149,7 @@ export class TransactionChargeRequestedUseCase {
       new TransactionChargeRequestedUseCaseResponses.ChargeSuccess({
         saleorMoney,
         stripePaymentIntentId: paymentIntentIdResult,
+        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
       }),
     );
   }

@@ -286,6 +286,7 @@ export class TransactionInitializeSessionUseCase {
           stripeClientSecret,
           saleorMoney,
           stripePaymentIntentId,
+          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         }),
       );
     }
@@ -295,6 +296,7 @@ export class TransactionInitializeSessionUseCase {
         stripeClientSecret,
         saleorMoney,
         stripePaymentIntentId,
+        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
       }),
     );
   }
