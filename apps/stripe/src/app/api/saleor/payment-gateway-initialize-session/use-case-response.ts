@@ -4,7 +4,7 @@ import { z } from "zod";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 
-class Success extends SuccessWebhookResponse {
+class Ok extends SuccessWebhookResponse {
   readonly pk: StripePublishableKey;
 
   private static ResponseDataSchema = z.object({
@@ -18,7 +18,7 @@ class Success extends SuccessWebhookResponse {
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"PAYMENT_GATEWAY_INITIALIZE_SESSION">({
-      data: Success.ResponseDataSchema.parse({
+      data: Ok.ResponseDataSchema.parse({
         stripePublishableKey: this.pk,
       }),
     });
@@ -28,7 +28,7 @@ class Success extends SuccessWebhookResponse {
 }
 
 export const PaymentGatewayInitializeSessionUseCaseResponses = {
-  Success,
+  Ok,
 };
 
 export type PaymentGatewayInitializeSessionUseCaseResponsesType = InstanceType<
