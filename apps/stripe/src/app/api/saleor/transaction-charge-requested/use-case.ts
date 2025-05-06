@@ -13,7 +13,7 @@ import {
 import { mapStripeCapturePaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
-import { ChargeErrorResult } from "@/modules/transaction-result/error-result";
+import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
 import {
@@ -124,11 +124,11 @@ export class TransactionChargeRequestedUseCase {
 
       return ok(
         new TransactionChargeRequestedUseCaseResponses.Error({
-          transactionResult: new ChargeErrorResult({
-            saleorEventAmount: event.action.amount,
+          transactionResult: new ChargeFailureResult({
             stripePaymentIntentId: paymentIntentIdResult,
             stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           }),
+          saleorEventAmount: event.action.amount,
           error: mappedError,
         }),
       );
@@ -152,10 +152,10 @@ export class TransactionChargeRequestedUseCase {
     return ok(
       new TransactionChargeRequestedUseCaseResponses.Ok({
         transactionResult: new ChargeSuccessResult({
-          saleorMoney,
           stripePaymentIntentId: paymentIntentIdResult,
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         }),
+        saleorMoney,
       }),
     );
   }

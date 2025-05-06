@@ -144,20 +144,17 @@ export class TransactionInitializeSessionUseCase {
 
   private resolveOkTransactionResult({
     transactionFlow,
-    saleorMoney,
     stripeStatus,
     stripePaymentIntentId,
     stripeEnv,
   }: {
     transactionFlow: ResolvedTransactionFlow;
-    saleorMoney: SaleorMoney;
     stripeStatus: StripePaymentIntentStatus;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeEnv: StripeEnv;
   }): ChargeActionRequiredResult | AuthorizationActionRequiredResult {
     if (transactionFlow === "AUTHORIZATION") {
       return new AuthorizationActionRequiredResult({
-        saleorMoney,
         stripeStatus,
         stripePaymentIntentId,
         stripeEnv,
@@ -165,7 +162,6 @@ export class TransactionInitializeSessionUseCase {
     }
 
     return new ChargeActionRequiredResult({
-      saleorMoney,
       stripeStatus,
       stripePaymentIntentId,
       stripeEnv,
@@ -305,7 +301,6 @@ export class TransactionInitializeSessionUseCase {
 
     const transactionResult = this.resolveOkTransactionResult({
       transactionFlow: resolvedTransactionFlow,
-      saleorMoney,
       stripeStatus,
       stripePaymentIntentId,
       stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
@@ -313,6 +308,7 @@ export class TransactionInitializeSessionUseCase {
 
     return ok(
       new TransactionInitializeSessionUseCaseResponses.Ok({
+        saleorMoney,
         transactionResult,
         stripeClientSecret,
       }),

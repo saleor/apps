@@ -22,11 +22,11 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe client secret", async () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Ok({
         transactionResult: new ChargeActionRequiredResult({
-          saleorMoney: getMockedSaleorMoney(),
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeStatus: createStripePaymentIntentStatus("requires_payment_method")._unsafeUnwrap(),
           stripeEnv: "LIVE",
         }),
+        saleorMoney: getMockedSaleorMoney(),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
       });
       const fetchReponse = response.getResponse();
@@ -53,11 +53,11 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe client secret", async () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Ok({
         transactionResult: new AuthorizationActionRequiredResult({
-          saleorMoney: getMockedSaleorMoney(),
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeStatus: createStripePaymentIntentStatus("requires_payment_method")._unsafeUnwrap(),
           stripeEnv: "TEST",
         }),
+        saleorMoney: getMockedSaleorMoney(),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
       });
       const fetchReponse = response.getResponse();

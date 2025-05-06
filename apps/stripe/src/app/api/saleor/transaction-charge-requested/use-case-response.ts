@@ -1,23 +1,26 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
+import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import { StripeCapturePaymentIntentAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
-import { ChargeErrorResult } from "@/modules/transaction-result/error-result";
+import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
 class Ok extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult;
+  readonly saleorMoney: SaleorMoney;
 
-  constructor(args: { transactionResult: ChargeSuccessResult }) {
+  constructor(args: { transactionResult: ChargeSuccessResult; saleorMoney: SaleorMoney }) {
     super();
     this.transactionResult = args.transactionResult;
+    this.saleorMoney = args.saleorMoney;
   }
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CHARGE_REQUESTED">({
       result: this.transactionResult.result,
-      amount: this.transactionResult.saleorMoney.amount,
+      amount: this.saleorMoney.amount,
       pspReference: this.transactionResult.stripePaymentIntentId,
       message: this.transactionResult.message,
       actions: this.transactionResult.actions,
@@ -32,16 +35,19 @@ class Ok extends SuccessWebhookResponse {
 }
 
 class Error extends SuccessWebhookResponse {
-  readonly transactionResult: ChargeErrorResult;
+  readonly transactionResult: ChargeFailureResult;
   readonly error: StripeCapturePaymentIntentAPIError;
+  readonly saleorEventAmount: number;
 
   constructor(args: {
     error: StripeCapturePaymentIntentAPIError;
-    transactionResult: ChargeErrorResult;
+    transactionResult: ChargeFailureResult;
+    saleorEventAmount: number;
   }) {
     super();
     this.error = args.error;
     this.transactionResult = args.transactionResult;
+    this.saleorEventAmount = args.saleorEventAmount;
   }
 
   getResponse(): Response {
@@ -49,7 +55,7 @@ class Error extends SuccessWebhookResponse {
       result: this.transactionResult.result,
       pspReference: this.transactionResult.stripePaymentIntentId,
       // TODO: remove this after Saleor allows to amount to be optional
-      amount: this.transactionResult.saleorEventAmount,
+      amount: this.saleorEventAmount,
       message: this.error.merchantMessage,
       actions: this.transactionResult.actions,
       externalUrl: generateStripeDashboardUrl(

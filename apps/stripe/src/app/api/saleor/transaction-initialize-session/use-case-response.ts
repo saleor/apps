@@ -1,6 +1,7 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
+import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   createFailureWebhookResponseDataSchema,
   createSuccessWebhookResponseDataSchema,
@@ -34,6 +35,7 @@ import {
 class Ok extends SuccessWebhookResponse {
   readonly transactionResult: ChargeActionRequiredResult | AuthorizationActionRequiredResult;
   readonly stripeClientSecret: StripeClientSecret;
+  readonly saleorMoney: SaleorMoney;
 
   private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
     z.object({
@@ -44,10 +46,12 @@ class Ok extends SuccessWebhookResponse {
   constructor(args: {
     transactionResult: ChargeActionRequiredResult | AuthorizationActionRequiredResult;
     stripeClientSecret: StripeClientSecret;
+    saleorMoney: SaleorMoney;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.stripeClientSecret = args.stripeClientSecret;
+    this.saleorMoney = args.saleorMoney;
   }
 
   getResponse() {
@@ -58,7 +62,7 @@ class Ok extends SuccessWebhookResponse {
         },
       }),
       result: this.transactionResult.result,
-      amount: this.transactionResult.saleorMoney.amount,
+      amount: this.saleorMoney.amount,
       pspReference: this.transactionResult.stripePaymentIntentId,
       // https://docs.stripe.com/payments/paymentintents/lifecycle
       message: "Payment intent requires payment method",

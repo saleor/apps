@@ -22,9 +22,9 @@ import {
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
-  AuthorizationErrorResult,
-  ChargeErrorResult,
-} from "@/modules/transaction-result/error-result";
+  AuthorizationFailureResult,
+  ChargeFailureResult,
+} from "@/modules/transaction-result/failure-result";
 import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
 import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
@@ -69,25 +69,21 @@ export class TransactionProcessSessionUseCase {
   private getErrorAppResult({
     resolvedTransactionFlow,
     stripePaymentIntentId,
-    saleorEventAmount,
     stripeEnv,
   }: {
     resolvedTransactionFlow: ResolvedTransactionFlow;
     stripePaymentIntentId: StripePaymentIntentId;
-    saleorEventAmount: number;
     stripeEnv: StripeEnv;
   }) {
     if (resolvedTransactionFlow === "CHARGE") {
-      return new ChargeErrorResult({
+      return new ChargeFailureResult({
         stripePaymentIntentId,
-        saleorEventAmount,
         stripeEnv,
       });
     }
 
-    return new AuthorizationErrorResult({
+    return new AuthorizationFailureResult({
       stripePaymentIntentId,
-      saleorEventAmount,
       stripeEnv,
     });
   }
@@ -163,9 +159,9 @@ export class TransactionProcessSessionUseCase {
           transactionResult: this.getErrorAppResult({
             resolvedTransactionFlow: recordedTransactionResult.value.resolvedTransactionFlow,
             stripePaymentIntentId: paymentIntentIdResult,
-            saleorEventAmount: event.action.amount,
             stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           }),
+          saleorEventAmount: event.action.amount,
         }),
       );
     }
@@ -191,12 +187,13 @@ export class TransactionProcessSessionUseCase {
     );
 
     const result = new MappedResult({
-      saleorMoney,
       stripePaymentIntentId: paymentIntentIdResult,
       stripeStatus: stripePaymentIntentStatus,
       stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
     });
 
-    return ok(new TransactionProcessSessionUseCaseResponses.Ok({ transactionResult: result }));
+    return ok(
+      new TransactionProcessSessionUseCaseResponses.Ok({ transactionResult: result, saleorMoney }),
+    );
   }
 }

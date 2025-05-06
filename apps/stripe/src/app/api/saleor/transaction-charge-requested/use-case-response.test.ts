@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getMockedSaleorMoney } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
-import { ChargeErrorResult } from "@/modules/transaction-result/error-result";
+import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
 import { TransactionChargeRequestedUseCaseResponses } from "./use-case-response";
@@ -13,10 +13,10 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const successResponse = new TransactionChargeRequestedUseCaseResponses.Ok({
         transactionResult: new ChargeSuccessResult({
-          saleorMoney: getMockedSaleorMoney(),
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeEnv: "TEST",
         }),
+        saleorMoney: getMockedSaleorMoney(),
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -34,15 +34,15 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
     });
   });
 
-  describe("Error with ChargeErrorResult", () => {
+  describe("Error with ChargeFailureResult", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const successResponse = new TransactionChargeRequestedUseCaseResponses.Error({
-        transactionResult: new ChargeErrorResult({
-          saleorEventAmount: 112.33,
+        transactionResult: new ChargeFailureResult({
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeEnv: "LIVE",
         }),
         error: new StripeAPIError("Error from stripe"),
+        saleorEventAmount: 112.33,
       });
       const fetchReponse = successResponse.getResponse();
 
