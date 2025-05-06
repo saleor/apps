@@ -1,39 +1,37 @@
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { ResultBase } from "@/modules/transaction-result/types";
 
-// todo this is duplicated with FailureResult
-export class ChargeErrorResult extends ResultBase {
-  readonly result = "CHARGE_FAILURE" as const;
+import { AuthroizationFailureBase, ChargeFailureBase } from "./failure-result";
 
+export class ChargeErrorResult extends ChargeFailureBase {
   readonly saleorEventAmount: number;
-  readonly stripePaymentIntentId: StripePaymentIntentId;
 
   constructor(args: {
     saleorEventAmount: number;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeEnv: StripeEnv;
   }) {
-    super(args.stripeEnv);
+    super({
+      stripePaymentIntentId: args.stripePaymentIntentId,
+      stripeEnv: args.stripeEnv,
+    });
 
     this.saleorEventAmount = args.saleorEventAmount;
-    this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 }
 
-export class AuthorizationErrorResult extends ResultBase {
-  readonly result = "AUTHORIZATION_FAILURE" as const;
-
+export class AuthorizationErrorResult extends AuthroizationFailureBase {
   readonly saleorEventAmount: number;
-  readonly stripePaymentIntentId: StripePaymentIntentId;
 
   constructor(args: {
     saleorEventAmount: number;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeEnv: StripeEnv;
   }) {
-    super(args.stripeEnv);
+    super({
+      stripePaymentIntentId: args.stripePaymentIntentId,
+      stripeEnv: args.stripeEnv,
+    });
     this.saleorEventAmount = args.saleorEventAmount;
-    this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 }
