@@ -12,6 +12,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
       const successResponse = new TransactionChargeRequestedUseCaseResponses.ChargeSuccess({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "TEST",
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -20,6 +21,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
         {
           "actions": [],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent sucessfully charged",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_SUCCESS",
@@ -34,6 +36,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
         saleorEventAmount: 112.33,
         error: new StripeAPIError("Error from stripe"),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -44,6 +47,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
             "CHARGE",
           ],
           "amount": 112.33,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent error - there is a problem with the request to Stripe API",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_FAILURE",
