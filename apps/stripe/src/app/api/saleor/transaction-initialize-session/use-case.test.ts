@@ -22,9 +22,9 @@ import {
 import { TransactionRecorderError } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import {
-  TransactionInitializeAuthorizationErrorResult,
-  TransactionInitializeChargeErrorResult,
-} from "./error-result";
+  TransactionInitializeAuthorizationFailureResult,
+  TransactionInitializeChargeFailureResult,
+} from "./failure-result";
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
@@ -91,12 +91,12 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.Ok,
+      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.Success,
       extectedResultType: ChargeActionRequiredResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.Ok,
+      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.Success,
       extectedResultType: AuthorizationActionRequiredResult,
     },
   ])(
@@ -158,13 +158,13 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Error,
-      extectedResultType: TransactionInitializeChargeErrorResult,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Error,
-      extectedResultType: TransactionInitializeAuthorizationErrorResult,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeAuthorizationFailureResult,
     },
   ])(
     "Returns $expectedFailureResponse.name response with $extectedResultType.name result if StripePaymentIntentsAPI throws error and actionType is $actionType",
@@ -195,13 +195,13 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Error,
-      extectedResultType: TransactionInitializeChargeErrorResult,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Error,
-      extectedResultType: TransactionInitializeAuthorizationErrorResult,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeAuthorizationFailureResult,
     },
   ])(
     "Returns $expectedFailureResponse.name response with $extectedResultType.name result when receives not supported payment method in data and actionType is $actionType",
@@ -235,13 +235,13 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Error,
-      extectedResultType: TransactionInitializeChargeErrorResult,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Error,
-      extectedResultType: TransactionInitializeAuthorizationErrorResult,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeAuthorizationFailureResult,
     },
   ])(
     "Returns $expectedFailureResponse.name response with $extectedResultType.name result when receives additional field in data and actionType is $actionType",

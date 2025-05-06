@@ -45,13 +45,13 @@ import { RecordedTransaction } from "@/modules/transactions-recording/domain/rec
 import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import {
-  TransactionInitializeAuthorizationErrorResult,
-  TransactionInitializeChargeErrorResult,
-} from "./error-result";
-import {
   parseTransactionInitializeSessionEventData,
   TransactionInitializeSessionEventData,
 } from "./event-data-parser";
+import {
+  TransactionInitializeAuthorizationFailureResult,
+  TransactionInitializeChargeFailureResult,
+} from "./failure-result";
 import { resolvePaymentMethodFromEventData } from "./payment-method-resolver";
 import {
   TransactionInitializeSessionUseCaseResponses,
@@ -130,14 +130,14 @@ export class TransactionInitializeSessionUseCase {
   private resolveErrorTransactionResult(
     transactionFlow: ResolvedTransactionFlow | SaleorTransationFlow,
     event: TransactionInitializeSessionEventFragment,
-  ): TransactionInitializeChargeErrorResult | TransactionInitializeAuthorizationErrorResult {
+  ): TransactionInitializeChargeFailureResult | TransactionInitializeAuthorizationFailureResult {
     if (transactionFlow === "AUTHORIZATION") {
-      return new TransactionInitializeAuthorizationErrorResult({
+      return new TransactionInitializeAuthorizationFailureResult({
         saleorEventAmount: event.action.amount,
       });
     }
 
-    return new TransactionInitializeChargeErrorResult({
+    return new TransactionInitializeChargeFailureResult({
       saleorEventAmount: event.action.amount,
     });
   }
@@ -183,7 +183,7 @@ export class TransactionInitializeSessionUseCase {
       this.logger.error("Failed to parse event data", { error: eventDataResult.error });
 
       return ok(
-        new TransactionInitializeSessionUseCaseResponses.Error({
+        new TransactionInitializeSessionUseCaseResponses.Failure({
           transactionResult: this.resolveErrorTransactionResult(saleorTransactionFlow, event),
           error: eventDataResult.error,
         }),
@@ -252,7 +252,7 @@ export class TransactionInitializeSessionUseCase {
       this.logger.error("Failed to create payment intent", { error: mappedError });
 
       return ok(
-        new TransactionInitializeSessionUseCaseResponses.Error({
+        new TransactionInitializeSessionUseCaseResponses.Failure({
           transactionResult: this.resolveErrorTransactionResult(resolvedTransactionFlow, event),
           error: mappedError,
         }),
@@ -307,7 +307,7 @@ export class TransactionInitializeSessionUseCase {
     });
 
     return ok(
-      new TransactionInitializeSessionUseCaseResponses.Ok({
+      new TransactionInitializeSessionUseCaseResponses.Success({
         saleorMoney,
         transactionResult,
         stripeClientSecret,

@@ -7,7 +7,7 @@ import { StripeCapturePaymentIntentAPIError } from "@/modules/stripe/stripe-paym
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
-class Ok extends SuccessWebhookResponse {
+class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult;
   readonly saleorMoney: SaleorMoney;
 
@@ -34,7 +34,7 @@ class Ok extends SuccessWebhookResponse {
   }
 }
 
-class Error extends SuccessWebhookResponse {
+class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
   readonly error: StripeCapturePaymentIntentAPIError;
   readonly saleorEventAmount: number;
@@ -69,8 +69,8 @@ class Error extends SuccessWebhookResponse {
 }
 
 export const TransactionChargeRequestedUseCaseResponses = {
-  Ok,
-  Error,
+  Success,
+  Failure,
 };
 
 export type TransactionChargeRequestedUseCaseResponsesType = InstanceType<

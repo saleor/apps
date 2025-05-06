@@ -9,9 +9,9 @@ import { ChargeSuccessResult } from "@/modules/transaction-result/success-result
 import { TransactionChargeRequestedUseCaseResponses } from "./use-case-response";
 
 describe("TransactionChargeRequestedUseCaseResponses", () => {
-  describe("Ok with ChargeSuccessResult", () => {
+  describe("Success with ChargeSuccessResult", () => {
     it("getResponse() returns valid Response with status 200", async () => {
-      const successResponse = new TransactionChargeRequestedUseCaseResponses.Ok({
+      const successResponse = new TransactionChargeRequestedUseCaseResponses.Success({
         transactionResult: new ChargeSuccessResult({
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeEnv: "TEST",
@@ -34,9 +34,9 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
     });
   });
 
-  describe("Error with ChargeFailureResult", () => {
+  describe("Failure with ChargeFailureResult", () => {
     it("getResponse() returns valid Response with status 200", async () => {
-      const successResponse = new TransactionChargeRequestedUseCaseResponses.Error({
+      const successResponse = new TransactionChargeRequestedUseCaseResponses.Failure({
         transactionResult: new ChargeFailureResult({
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeEnv: "LIVE",

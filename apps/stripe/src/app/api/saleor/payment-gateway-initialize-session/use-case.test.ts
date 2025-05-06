@@ -23,7 +23,7 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
     });
 
     expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      PaymentGatewayInitializeSessionUseCaseResponses.Ok,
+      PaymentGatewayInitializeSessionUseCaseResponses.Success,
     );
 
     const jsonResponse = await responsePayload._unsafeUnwrap().getResponse().json();

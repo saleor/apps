@@ -5,9 +5,9 @@ import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publ
 import { PaymentGatewayInitializeSessionUseCaseResponses } from "./use-case-response";
 
 describe("PaymentGatewayInitializeSessionUseCaseResponses", () => {
-  describe("Ok", () => {
+  describe("Success", () => {
     it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe PK", async () => {
-      const successResponse = new PaymentGatewayInitializeSessionUseCaseResponses.Ok({
+      const successResponse = new PaymentGatewayInitializeSessionUseCaseResponses.Success({
         pk: mockedStripePublishableKey,
       });
       const fetchReponse = successResponse.getResponse();

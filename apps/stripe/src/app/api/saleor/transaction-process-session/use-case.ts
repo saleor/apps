@@ -66,7 +66,7 @@ export class TransactionProcessSessionUseCase {
     ]);
   }
 
-  private getErrorAppResult({
+  private getFailureAppResult({
     resolvedTransactionFlow,
     stripePaymentIntentId,
     stripeEnv,
@@ -154,9 +154,9 @@ export class TransactionProcessSessionUseCase {
       const mappedError = mapStripeGetPaymentIntentErrorToApiError(getPaymentIntentResult.error);
 
       return ok(
-        new TransactionProcessSessionUseCaseResponses.Error({
+        new TransactionProcessSessionUseCaseResponses.Failure({
           error: mappedError,
-          transactionResult: this.getErrorAppResult({
+          transactionResult: this.getFailureAppResult({
             resolvedTransactionFlow: recordedTransactionResult.value.resolvedTransactionFlow,
             stripePaymentIntentId: paymentIntentIdResult,
             stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
@@ -193,7 +193,10 @@ export class TransactionProcessSessionUseCase {
     });
 
     return ok(
-      new TransactionProcessSessionUseCaseResponses.Ok({ transactionResult: result, saleorMoney }),
+      new TransactionProcessSessionUseCaseResponses.Success({
+        transactionResult: result,
+        saleorMoney,
+      }),
     );
   }
 }

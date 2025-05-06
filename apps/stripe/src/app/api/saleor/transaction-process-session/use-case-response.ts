@@ -16,7 +16,7 @@ import {
 } from "@/modules/transaction-result/failure-result";
 import { TransactionResult } from "@/modules/transaction-result/types";
 
-class Ok extends SuccessWebhookResponse {
+class Success extends SuccessWebhookResponse {
   readonly transactionResult: TransactionResult;
   readonly saleorMoney: SaleorMoney;
 
@@ -44,7 +44,7 @@ class Ok extends SuccessWebhookResponse {
   }
 }
 
-class Error extends SuccessWebhookResponse {
+class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult | AuthorizationFailureResult;
   readonly error: StripeGetPaymentIntentAPIError;
   readonly saleorEventAmount: number;
@@ -79,7 +79,7 @@ class Error extends SuccessWebhookResponse {
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),
-      data: Error.ResponseDataSchema.parse({
+      data: Failure.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [
             {
@@ -96,8 +96,8 @@ class Error extends SuccessWebhookResponse {
 }
 
 export const TransactionProcessSessionUseCaseResponses = {
-  Ok,
-  Error,
+  Success,
+  Failure,
 };
 
 export type TransactionProcessSessionUseCaseResponsesType = InstanceType<

@@ -49,7 +49,9 @@ describe("TransactionChargeRequestedUseCase", () => {
       event: getMockedTransactionChargeRequestedEvent(),
     });
 
-    expect(result._unsafeUnwrap()).toBeInstanceOf(TransactionChargeRequestedUseCaseResponses.Ok);
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionChargeRequestedUseCaseResponses.Success,
+    );
 
     expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeSuccessResult);
 
@@ -74,7 +76,9 @@ describe("TransactionChargeRequestedUseCase", () => {
       event: getMockedTransactionChargeRequestedEvent(),
     });
 
-    expect(result._unsafeUnwrap()).toBeInstanceOf(TransactionChargeRequestedUseCaseResponses.Error);
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionChargeRequestedUseCaseResponses.Failure,
+    );
     expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
 
     expect(spy).toHaveBeenCalledWith({

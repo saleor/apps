@@ -123,7 +123,7 @@ export class TransactionChargeRequestedUseCase {
       );
 
       return ok(
-        new TransactionChargeRequestedUseCaseResponses.Error({
+        new TransactionChargeRequestedUseCaseResponses.Failure({
           transactionResult: new ChargeFailureResult({
             stripePaymentIntentId: paymentIntentIdResult,
             stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
@@ -150,7 +150,7 @@ export class TransactionChargeRequestedUseCase {
     const saleorMoney = saleorMoneyResult.value;
 
     return ok(
-      new TransactionChargeRequestedUseCaseResponses.Ok({
+      new TransactionChargeRequestedUseCaseResponses.Success({
         transactionResult: new ChargeSuccessResult({
           stripePaymentIntentId: paymentIntentIdResult,
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),

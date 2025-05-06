@@ -1,5 +1,5 @@
-// special result classes only for transaction initialize session - for such errors we don't have pspReference or actions for staff user
-export class TransactionInitializeChargeErrorResult {
+// special result classes only for transaction initialize session - for such failures we don't have pspReference or actions for staff user
+export class TransactionInitializeChargeFailureResult {
   readonly result = "CHARGE_FAILURE" as const;
   readonly saleorEventAmount: number;
 
@@ -8,7 +8,7 @@ export class TransactionInitializeChargeErrorResult {
   }
 }
 
-export class TransactionInitializeAuthorizationErrorResult {
+export class TransactionInitializeAuthorizationFailureResult {
   readonly result = "AUTHORIZATION_FAILURE" as const;
   readonly saleorEventAmount: number;
 

@@ -23,16 +23,16 @@ import {
 } from "@/modules/transaction-result/action-required-result";
 
 import {
-  TransactionInitializeAuthorizationErrorResult,
-  TransactionInitializeChargeErrorResult,
-} from "./error-result";
-import {
   ParseErrorPublicCode,
   TransactionInitializeSessionEventDataError,
   UnsupportedPaymentMethodErrorPublicCode,
 } from "./event-data-parser";
+import {
+  TransactionInitializeAuthorizationFailureResult,
+  TransactionInitializeChargeFailureResult,
+} from "./failure-result";
 
-class Ok extends SuccessWebhookResponse {
+class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeActionRequiredResult | AuthorizationActionRequiredResult;
   readonly stripeClientSecret: StripeClientSecret;
   readonly saleorMoney: SaleorMoney;
@@ -56,7 +56,7 @@ class Ok extends SuccessWebhookResponse {
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
-      data: Ok.ResponseDataSchema.parse({
+      data: Success.ResponseDataSchema.parse({
         paymentIntent: {
           stripeClientSecret: this.stripeClientSecret,
         },
@@ -76,10 +76,10 @@ class Ok extends SuccessWebhookResponse {
   }
 }
 
-class Error extends SuccessWebhookResponse {
+class Failure extends SuccessWebhookResponse {
   readonly transactionResult:
-    | TransactionInitializeChargeErrorResult
-    | TransactionInitializeAuthorizationErrorResult;
+    | TransactionInitializeChargeFailureResult
+    | TransactionInitializeAuthorizationFailureResult;
   readonly error: StripeCreatePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
@@ -98,8 +98,8 @@ class Error extends SuccessWebhookResponse {
 
   constructor(args: {
     transactionResult:
-      | TransactionInitializeChargeErrorResult
-      | TransactionInitializeAuthorizationErrorResult;
+      | TransactionInitializeChargeFailureResult
+      | TransactionInitializeAuthorizationFailureResult;
     error: StripeCreatePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
   }) {
     super();
@@ -112,7 +112,7 @@ class Error extends SuccessWebhookResponse {
       result: this.transactionResult.result,
       message: this.error.merchantMessage,
       amount: this.transactionResult.saleorEventAmount,
-      data: Error.ResponseDataSchema.parse({
+      data: Failure.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [
             {
@@ -129,8 +129,8 @@ class Error extends SuccessWebhookResponse {
 }
 
 export const TransactionInitializeSessionUseCaseResponses = {
-  Ok,
-  Error,
+  Success,
+  Failure,
 };
 
 export type TransactionInitializeSessionUseCaseResponsesType = InstanceType<

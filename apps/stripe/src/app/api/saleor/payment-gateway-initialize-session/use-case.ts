@@ -57,7 +57,7 @@ export class PaymentGatewayInitializeSessionUseCase {
         return err(new AppIsNotConfiguredResponse());
       }
 
-      return ok(new PaymentGatewayInitializeSessionUseCaseResponses.Ok({ pk }));
+      return ok(new PaymentGatewayInitializeSessionUseCaseResponses.Success({ pk }));
     }
 
     if (stripeConfigForThisChannel.isErr()) {
