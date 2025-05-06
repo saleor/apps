@@ -1,6 +1,6 @@
 import { err, ok, Result } from "neverthrow";
 
-import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
+import { TransactionCancelationRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -44,7 +44,7 @@ export class TransactionCancelationRequestedUseCase {
   async execute(args: {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
-    event: TransactionChargeRequestedEventFragment;
+    event: TransactionCancelationRequestedEventFragment;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event } = args;
 

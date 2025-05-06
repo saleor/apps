@@ -7,6 +7,7 @@ import { mockAdyenWebhookUrl, mockedSaleorTransactionIdBranded } from "@/__tests
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { getMockedPaymentIntentAmountCapturableUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-amount-capturable-updated";
+import { getMockedPaymentIntentPaymentCanceledEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-canceled";
 import { getMockedPaymentIntentPaymentFailedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-failed";
 import { getMockedPaymentIntentProcessingEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-processing";
 import { getMockedPaymentIntentRequiresActionEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-requires-action";
@@ -648,6 +649,172 @@ describe("StripeWebhookUseCase - Success cases", () => {
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_SUCCESS",
+      }
+    `,
+    );
+  });
+});
+
+describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => {
+  const mockApl = {
+    get: vi.fn(),
+    set: vi.fn(),
+    delete: vi.fn(),
+    getAll: vi.fn(),
+  } satisfies APL;
+
+  let instance: StripeWebhookUseCase;
+
+  const eventVerify = {
+    verifyEvent: vi.fn(),
+  } satisfies IStripeEventVerify;
+
+  const webhookParams = WebhookParams.createFromWebhookUrl(mockAdyenWebhookUrl)._unsafeUnwrap();
+
+  const mockEventReporter = {
+    reportTransactionEvent: vi.fn(),
+  } satisfies ITransactionEventReporter;
+
+  const mockTransactionRecorder = new MockedTransactionRecorder();
+
+  beforeEach(() => {
+    mockApl.get.mockImplementation(async () => mockAuthData);
+    mockTransactionRecorder.reset();
+
+    instance = new StripeWebhookUseCase({
+      apl: mockApl,
+      appConfigRepo: mockedAppConfigRepo,
+      webhookEventVerifyFactory: () => eventVerify,
+      transactionEventReporterFactory() {
+        return mockEventReporter;
+      },
+      transactionRecorder: mockTransactionRecorder,
+    });
+  });
+
+  it("Reports CANCEL_SUCCESS transaction event to Saleor when handling payment_intent.canceled event and resolvedFlow is CHARGE", async () => {
+    const event = getMockedPaymentIntentPaymentCanceledEvent();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    mockTransactionRecorder.transactions = {
+      [stripePiId]: new RecordedTransaction({
+        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        stripePaymentIntentId: stripePiId,
+        saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+        resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+        selectedPaymentMethod: "card",
+      }),
+    };
+
+    mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+      const data: TransactionEventReportResultResult = {
+        createdEventId: "TEST_EVENT_ID",
+      };
+
+      return ok(data);
+    });
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+    expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+    expect(
+      vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+    ).toMatchInlineSnapshot(
+      {
+        time: expect.toSatisfy(
+          (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+        ),
+      },
+      `
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent was cancelled",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "CANCEL_SUCCESS",
+      }
+    `,
+    );
+  });
+
+  it("Reports CANCEL_SUCCESS transaction event to Saleor when handling payment_intent.canceled event and resolvedFlow is AUTHORIZATION", async () => {
+    const event = getMockedPaymentIntentPaymentCanceledEvent();
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    mockTransactionRecorder.transactions = {
+      [stripePiId]: new RecordedTransaction({
+        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        stripePaymentIntentId: stripePiId,
+        saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
+        resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
+        selectedPaymentMethod: "card",
+      }),
+    };
+
+    mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+      const data: TransactionEventReportResultResult = {
+        createdEventId: "TEST_EVENT_ID",
+      };
+
+      return ok(data);
+    });
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+    expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+    expect(
+      vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+    ).toMatchInlineSnapshot(
+      {
+        time: expect.toSatisfy(
+          (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+        ),
+      },
+      `
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Payment intent was cancelled",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "CANCEL_SUCCESS",
       }
     `,
     );

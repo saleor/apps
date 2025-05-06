@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { getMockedPaymentIntentAmountCapturableUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-amount-capturable-updated";
+import { getMockedPaymentIntentPaymentCanceledEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-canceled";
 import { getMockedPaymentIntentPaymentFailedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-failed";
 import { getMockedPaymentIntentProcessingEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-processing";
 import { getMockedPaymentIntentRequiresActionEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-requires-action";
@@ -13,7 +14,7 @@ import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-fl
 import { StripePaymentIntentHandler } from "./stripe-payment-intent-handler";
 
 describe("StripePaymentIntentHandler", () => {
-  describe.todo("checkIfEventIsSupported", () => {
+  describe("checkIfEventIsSupported", () => {
     it.each([
       {
         event: getMockedPaymentIntentSucceededEvent(),
@@ -29,6 +30,9 @@ describe("StripePaymentIntentHandler", () => {
       },
       {
         event: getMockedPaymentIntentPaymentFailedEvent(),
+      },
+      {
+        event: getMockedPaymentIntentPaymentCanceledEvent(),
       },
     ])("should return true for supported event: $event.type", ({ event }) => {
       const result = new StripePaymentIntentHandler().checkIfEventIsSupported(event);
@@ -230,6 +234,49 @@ describe("StripePaymentIntentHandler", () => {
           const event = getMockedPaymentIntentPaymentFailedEvent();
 
           event.data.object.amount_received = 123_30;
+
+          const recordedTransaction = getMockedRecordedTransaction({
+            resolvedTransactionFlow,
+          });
+
+          const result = new StripePaymentIntentHandler().processPaymentIntentEvent({
+            event,
+            recordedTransaction,
+            stripePaymentIntentId: mockedStripePaymentIntentId,
+            stripeEnv: "LIVE",
+          });
+
+          const { type, amount, pspReference, time } = result
+            ._unsafeUnwrap()
+            .resolveEventReportVariables();
+
+          expect(type).toBe(expectedType);
+          // comes from mock
+          expect(amount.currency).toStrictEqual("USD");
+          // Converted to Saleor float
+          expect(amount.amount).toStrictEqual(123.3);
+          expect(pspReference).toStrictEqual(event.data.object.id);
+          expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
+        },
+      );
+    });
+
+    describe("type: payment_intent.canceled", () => {
+      it.each([
+        {
+          resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
+          expectedType: "CANCEL_SUCCESS",
+        },
+        {
+          resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+          expectedType: "CANCEL_SUCCESS",
+        },
+      ])(
+        "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
+        ({ resolvedTransactionFlow, expectedType }) => {
+          const event = getMockedPaymentIntentPaymentCanceledEvent();
+
+          event.data.object.amount = 123_30;
 
           const recordedTransaction = getMockedRecordedTransaction({
             resolvedTransactionFlow,
