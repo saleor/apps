@@ -46,10 +46,17 @@ const UnhandledError = BaseError.subclass("TransactionEventReporter.UnhandledErr
   },
 });
 
+const ServerError = BaseError.subclass("TransactionEventReporter.ServerError", {
+  props: {
+    _internalName: "TransactionEventReporter.ServerError",
+  },
+});
+
 export const TransactionEventReporterErrors = {
   AlreadyReportedError,
   GraphqlError,
   UnhandledError,
+  ServerError,
 };
 
 export interface ITransactionEventReporter {
@@ -80,7 +87,7 @@ export class TransactionEventReporter implements ITransactionEventReporter {
 
       if (error) {
         return err(
-          new UnhandledError("Error reporting transaction event - server error", {
+          new ServerError("Server error while reporting transaction event", {
             cause: error,
           }),
         );
@@ -88,30 +95,29 @@ export class TransactionEventReporter implements ITransactionEventReporter {
 
       const mutationErrors = data?.transactionEventReport?.errors ?? [];
 
-      const hasMoreThanOneError = mutationErrors.length > 1;
-
-      if (hasMoreThanOneError) {
-        this.logger.warn(
-          "TransactionEventReport mutation has more than one error - handling the first one",
-          mutationErrors,
-        );
-      }
-
-      this.logger.info("Mutation errors", mutationErrors, data);
-
       if (mutationErrors.length > 0) {
-        switch (mutationErrors[0].code) {
+        const hasMoreThanOneError = mutationErrors.length > 1;
+
+        if (hasMoreThanOneError) {
+          this.logger.warn(
+            "TransactionEventReport mutation has more than one GraphQL error - handling the first one",
+            mutationErrors,
+          );
+        }
+        const mutationError = mutationErrors[0];
+
+        switch (mutationError.code) {
           case "ALREADY_EXISTS": {
             return err(
-              new AlreadyReportedError(`Event already reported`, {
-                cause: BaseError.normalize(mutationErrors[0]),
+              new AlreadyReportedError("Event already reported", {
+                cause: BaseError.normalize(mutationError),
               }),
             );
           }
           case "GRAPHQL_ERROR": {
             return err(
               new GraphqlError("Error reporting transaction event", {
-                cause: BaseError.normalize(mutationErrors[0]),
+                cause: BaseError.normalize(mutationError),
               }),
             );
           }
@@ -121,7 +127,7 @@ export class TransactionEventReporter implements ITransactionEventReporter {
           case "REQUIRED": {
             return err(
               new UnhandledError("Error reporting transaction event", {
-                cause: BaseError.normalize(mutationErrors[0]),
+                cause: BaseError.normalize(mutationError),
               }),
             );
           }
@@ -129,11 +135,7 @@ export class TransactionEventReporter implements ITransactionEventReporter {
       }
 
       if (!data?.transactionEventReport?.transactionEvent) {
-        return err(
-          new UnhandledError("Error reporting transaction event: missing resolved data", {
-            cause: BaseError.normalize(mutationErrors[0]),
-          }),
-        );
+        return err(new UnhandledError("Error reporting transaction event: missing resolved data"));
       }
 
       if (data.transactionEventReport.alreadyProcessed) {
