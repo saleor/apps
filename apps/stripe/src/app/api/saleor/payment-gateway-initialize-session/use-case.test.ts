@@ -11,7 +11,7 @@ import { AppIsNotConfiguredResponse } from "@/modules/saleor/saleor-webhook-resp
 import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 
 describe("PaymentGatewayInitializeSessionUseCase", () => {
-  it('Returns Ok response with publishable key within "data" object if found in configuration', async () => {
+  it('Returns Success response with publishable key within "data" object if found in configuration', async () => {
     const uc = new PaymentGatewayInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
     });
