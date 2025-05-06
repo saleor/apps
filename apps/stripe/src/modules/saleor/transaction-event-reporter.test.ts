@@ -42,7 +42,10 @@ describe("TransactionEventReporter", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
-      `[TransactionEventReporter.AlreadyReportedError: Event already reported]`,
+      `
+      [TransactionEventReporter.AlreadyReportedError: Transaction with this pspReference already exists
+      Event already reported]
+    `,
     );
   });
 
