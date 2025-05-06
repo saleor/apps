@@ -34,7 +34,7 @@ class ChargeSuccess extends SuccessWebhookResponse {
 
 class ChargeFailure extends SuccessWebhookResponse {
   readonly result = "CHARGE_FAILURE";
-  readonly actions = ["CHARGE"];
+  readonly actions = ["CHARGE"] as const;
   readonly error: StripeCapturePaymentIntentAPIError;
 
   readonly stripePaymentIntentId: StripePaymentIntentId;
@@ -58,7 +58,6 @@ class ChargeFailure extends SuccessWebhookResponse {
       pspReference: this.stripePaymentIntentId,
       amount: this.saleorEventAmount,
       message: this.error.merchantMessage,
-      // @ts-expect-error TODO: this is a workaround for the type error - remove after we update app-sdk
       actions: this.actions,
     });
 

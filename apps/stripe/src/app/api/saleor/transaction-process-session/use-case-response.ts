@@ -30,7 +30,6 @@ class OK extends SuccessWebhookResponse {
       pspReference: this.transactionResult.stripePaymentIntentId,
       // https://docs.stripe.com/payments/paymentintents/lifecycle
       message: this.transactionResult.message,
-      // @ts-expect-error TODO: this is a workaround for the type error - remove after we update app-sdk
       actions: this.transactionResult.actions,
       externalUrl: generateStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
