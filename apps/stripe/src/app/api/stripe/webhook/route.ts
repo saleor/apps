@@ -1,3 +1,4 @@
+import { trace } from "@opentelemetry/api";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { Result } from "neverthrow";
@@ -63,6 +64,10 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
   loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, webhookParams.saleorApiUrl);
   loggerContext.set(ObservabilityAttributes.CONFIGURATION_ID, webhookParams.configurationId);
 
+  trace
+    .getActiveSpan()
+    ?.setAttribute(ObservabilityAttributes.SALEOR_API_URL, webhookParams.saleorApiUrl);
+
   logger.info("Received webhook from Stripe");
 
   try {
@@ -106,8 +111,6 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
 };
 
 /**
- * todo:
- * - wrap with middleware that will attach OTEL attributes from headers
  * - integration test
  */
 export const POST = withLoggerContext(StripeWebhookHandler);
