@@ -26,7 +26,6 @@ export class TransactionEventReportVariablesResolver {
       message: this.transactionResult.message,
       time: this.date.toISOString(),
       pspReference: this.transactionResult.stripePaymentIntentId,
-      // @ts-expect-error TODO: this is a workaround for the type error - remove after we update app-sdk
       actions: this.transactionResult.actions,
       externalReference: generateStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
