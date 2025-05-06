@@ -3,16 +3,20 @@ import { describe, expect, it } from "vitest";
 import { getMockedSaleorMoney } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
+import { ChargeErrorResult } from "@/modules/transaction-result/error-result";
+import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
 import { TransactionChargeRequestedUseCaseResponses } from "./use-case-response";
 
 describe("TransactionChargeRequestedUseCaseResponses", () => {
-  describe("ChargeSuccess", () => {
+  describe("Ok with ChargeSuccessResult", () => {
     it("getResponse() returns valid Response with status 200", async () => {
-      const successResponse = new TransactionChargeRequestedUseCaseResponses.ChargeSuccess({
-        saleorMoney: getMockedSaleorMoney(),
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "TEST",
+      const successResponse = new TransactionChargeRequestedUseCaseResponses.Ok({
+        transactionResult: new ChargeSuccessResult({
+          saleorMoney: getMockedSaleorMoney(),
+          stripePaymentIntentId: mockedStripePaymentIntentId,
+          stripeEnv: "TEST",
+        }),
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -22,7 +26,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
           "actions": [],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
-          "message": "Payment intent sucessfully charged",
+          "message": "Payment intent succeeded",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_SUCCESS",
         }
@@ -30,13 +34,15 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
     });
   });
 
-  describe("ChargeFailure", () => {
+  describe("Error with ChargeErrorResult", () => {
     it("getResponse() returns valid Response with status 200", async () => {
-      const successResponse = new TransactionChargeRequestedUseCaseResponses.ChargeFailure({
-        saleorEventAmount: 112.33,
+      const successResponse = new TransactionChargeRequestedUseCaseResponses.Error({
+        transactionResult: new ChargeErrorResult({
+          saleorEventAmount: 112.33,
+          stripePaymentIntentId: mockedStripePaymentIntentId,
+          stripeEnv: "LIVE",
+        }),
         error: new StripeAPIError("Error from stripe"),
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "LIVE",
       });
       const fetchReponse = successResponse.getResponse();
 

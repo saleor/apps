@@ -28,14 +28,14 @@ import {
 import { TransactionProcessSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionProcessSessionUseCaseResponses", () => {
-  describe("OK", () => {
+  describe("Ok", () => {
     it("getResponse() returns valid Response with status 200 and message indicating that intent is succeeded if transactionResult is ChargeSuccess", async () => {
       const transactionResult = new ChargeSuccessResult({
         saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeEnv: "TEST",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Ok({
         transactionResult,
       });
       const fetchResponse = response.getResponse();
@@ -59,7 +59,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Ok({
         transactionResult,
       });
       const fetchReponse = response.getResponse();
@@ -86,7 +86,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
         stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Ok({
         transactionResult,
       });
       const fetchResponse = response.getResponse();
@@ -111,7 +111,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
         stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Ok({
         transactionResult,
       });
       const fetchReponse = response.getResponse();
@@ -135,7 +135,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Ok({
         transactionResult,
       });
       const fetchReponse = response.getResponse();
@@ -159,7 +159,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Ok({
         transactionResult,
       });
       const fetchResponse = response.getResponse();
@@ -183,7 +183,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Ok({
         transactionResult,
       });
       const fetchReponse = response.getResponse();
@@ -209,7 +209,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Ok({
         transactionResult,
       });
       const fetchReponse = response.getResponse();

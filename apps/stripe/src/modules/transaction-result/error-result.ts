@@ -3,6 +3,9 @@ import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id
 
 import { AuthroizationFailureBase, ChargeFailureBase } from "./failure-result";
 
+/**
+ * Error result class used when there is an error in Saleor webhook e.g with getting PaymentIntent and we need to send the error back to Saleor
+ */
 export class ChargeErrorResult extends ChargeFailureBase {
   readonly saleorEventAmount: number;
 
@@ -20,6 +23,9 @@ export class ChargeErrorResult extends ChargeFailureBase {
   }
 }
 
+/**
+ * Error result class used when there is an error in Saleor webhook e.g with getting PaymentIntent and we need to send the error back to Saleor
+ */
 export class AuthorizationErrorResult extends AuthroizationFailureBase {
   readonly saleorEventAmount: number;
 

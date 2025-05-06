@@ -197,6 +197,6 @@ export class TransactionProcessSessionUseCase {
       stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
     });
 
-    return ok(new TransactionProcessSessionUseCaseResponses.OK({ transactionResult: result }));
+    return ok(new TransactionProcessSessionUseCaseResponses.Ok({ transactionResult: result }));
   }
 }

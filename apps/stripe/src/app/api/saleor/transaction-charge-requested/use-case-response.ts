@@ -1,77 +1,61 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripeCapturePaymentIntentAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { ChargeErrorResult } from "@/modules/transaction-result/error-result";
+import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
-class ChargeSuccess extends SuccessWebhookResponse {
-  readonly result = "CHARGE_SUCCESS";
-  readonly actions = []; // TODO: figure out what actions are available here
-  readonly message = "Payment intent sucessfully charged";
+class Ok extends SuccessWebhookResponse {
+  readonly transactionResult: ChargeSuccessResult;
 
-  readonly saleorMoney: SaleorMoney;
-  readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly stripeEnv: StripeEnv;
-
-  constructor(args: {
-    saleorMoney: SaleorMoney;
-    stripePaymentIntentId: StripePaymentIntentId;
-    stripeEnv: StripeEnv;
-  }) {
+  constructor(args: { transactionResult: ChargeSuccessResult }) {
     super();
-    this.saleorMoney = args.saleorMoney;
-    this.stripePaymentIntentId = args.stripePaymentIntentId;
-    this.stripeEnv = args.stripeEnv;
+    this.transactionResult = args.transactionResult;
   }
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CHARGE_REQUESTED">({
-      result: this.result,
-      amount: this.saleorMoney.amount,
-      pspReference: this.stripePaymentIntentId,
-      message: this.message,
-      actions: this.actions,
-      externalUrl: generateStripeDashboardUrl(this.stripePaymentIntentId, this.stripeEnv),
+      result: this.transactionResult.result,
+      amount: this.transactionResult.saleorMoney.amount,
+      pspReference: this.transactionResult.stripePaymentIntentId,
+      message: this.transactionResult.message,
+      actions: this.transactionResult.actions,
+      externalUrl: generateStripeDashboardUrl(
+        this.transactionResult.stripePaymentIntentId,
+        this.transactionResult.stripeEnv,
+      ),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
 }
 
-class ChargeFailure extends SuccessWebhookResponse {
-  readonly result = "CHARGE_FAILURE";
-  readonly actions = ["CHARGE"] as const;
+class Error extends SuccessWebhookResponse {
+  readonly transactionResult: ChargeErrorResult;
   readonly error: StripeCapturePaymentIntentAPIError;
 
-  readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly saleorEventAmount: number;
-  readonly stripeEnv: StripeEnv;
-
   constructor(args: {
-    saleorEventAmount: number;
-    stripePaymentIntentId: StripePaymentIntentId;
     error: StripeCapturePaymentIntentAPIError;
-    stripeEnv: StripeEnv;
+    transactionResult: ChargeErrorResult;
   }) {
     super();
-    this.stripePaymentIntentId = args.stripePaymentIntentId;
-    // TODO: remove this after Saleor allows to amount to be optional
-    this.saleorEventAmount = args.saleorEventAmount;
     this.error = args.error;
-    this.stripeEnv = args.stripeEnv;
+    this.transactionResult = args.transactionResult;
   }
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CHARGE_REQUESTED">({
-      result: this.result,
-      pspReference: this.stripePaymentIntentId,
-      amount: this.saleorEventAmount,
+      result: this.transactionResult.result,
+      pspReference: this.transactionResult.stripePaymentIntentId,
+      // TODO: remove this after Saleor allows to amount to be optional
+      amount: this.transactionResult.saleorEventAmount,
       message: this.error.merchantMessage,
-      actions: this.actions,
-      externalUrl: generateStripeDashboardUrl(this.stripePaymentIntentId, this.stripeEnv),
+      actions: this.transactionResult.actions,
+      externalUrl: generateStripeDashboardUrl(
+        this.transactionResult.stripePaymentIntentId,
+        this.transactionResult.stripeEnv,
+      ),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
@@ -79,8 +63,8 @@ class ChargeFailure extends SuccessWebhookResponse {
 }
 
 export const TransactionChargeRequestedUseCaseResponses = {
-  ChargeSuccess,
-  ChargeFailure,
+  Ok,
+  Error,
 };
 
 export type TransactionChargeRequestedUseCaseResponsesType = InstanceType<

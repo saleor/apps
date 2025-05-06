@@ -15,7 +15,7 @@ import {
 } from "@/modules/transaction-result/error-result";
 import { TransactionResult } from "@/modules/transaction-result/types";
 
-class OK extends SuccessWebhookResponse {
+class Ok extends SuccessWebhookResponse {
   readonly transactionResult: TransactionResult;
 
   constructor(args: { transactionResult: TransactionResult }) {
@@ -90,7 +90,7 @@ class Error extends SuccessWebhookResponse {
 }
 
 export const TransactionProcessSessionUseCaseResponses = {
-  OK,
+  Ok,
   Error,
 };
 

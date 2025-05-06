@@ -114,7 +114,7 @@ describe("TransactionProcessSessionUseCase", () => {
         event: saleorEvent,
       });
 
-      expect(result._unsafeUnwrap()).toBeInstanceOf(TransactionProcessSessionUseCaseResponses.OK);
+      expect(result._unsafeUnwrap()).toBeInstanceOf(TransactionProcessSessionUseCaseResponses.Ok);
 
       expect(spy).toHaveBeenCalledWith({
         id: mockedStripePaymentIntentId,
