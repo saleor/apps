@@ -14,13 +14,16 @@ import { $ } from "zx";
 export default async function setup(_project: TestProject) {
   const configPath = path.join(__dirname, "./docker-compose.yml");
 
-  execSync(`docker compose -f ${configPath} -p stripe-dynamodb-integration up -d`);
+  // eslint-disable-next-line n/no-process-env
+  if (!process.env.CI) {
+    execSync(`docker compose -f ${configPath} -p stripe-dynamodb-integration up -d`);
 
-  return async () => {
-    console.log("stopping docker compose");
-    // looks like it doesn't close the container todo
-    const res = await $`docker compose -f ${configPath} down`;
+    return async () => {
+      console.log("stopping docker compose");
+      // looks like it doesn't close the container todo
+      const res = await $`docker compose -f ${configPath} down`;
 
-    console.log(res);
-  };
+      console.log(res);
+    };
+  }
 }
