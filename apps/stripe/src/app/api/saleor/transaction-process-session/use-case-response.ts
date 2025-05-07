@@ -1,6 +1,7 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
+import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
@@ -10,48 +11,25 @@ import {
   StripeGetPaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
 import {
-  AuthorizationActionRequiredResult,
-  ChargeActionRequiredResult,
-} from "@/modules/transaction-result/action-required-result";
-import {
-  AuthorizationErrorResult,
-  ChargeErrorResult,
-} from "@/modules/transaction-result/error-result";
-import {
   AuthorizationFailureResult,
   ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
-import {
-  AuthorizationRequestResult,
-  ChargeRequestResult,
-} from "@/modules/transaction-result/request-result";
-import {
-  AuthorizationSuccessResult,
-  ChargeSuccessResult,
-} from "@/modules/transaction-result/success-result";
+import { TransactionResult } from "@/modules/transaction-result/types";
 
-type TransactionResult =
-  | ChargeSuccessResult
-  | AuthorizationSuccessResult
-  | ChargeActionRequiredResult
-  | AuthorizationActionRequiredResult
-  | ChargeRequestResult
-  | AuthorizationRequestResult
-  | ChargeFailureResult
-  | AuthorizationFailureResult;
-
-class OK extends SuccessWebhookResponse {
+class Success extends SuccessWebhookResponse {
   readonly transactionResult: TransactionResult;
+  readonly saleorMoney: SaleorMoney;
 
-  constructor(args: { transactionResult: TransactionResult }) {
+  constructor(args: { transactionResult: TransactionResult; saleorMoney: SaleorMoney }) {
     super();
     this.transactionResult = args.transactionResult;
+    this.saleorMoney = args.saleorMoney;
   }
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
       result: this.transactionResult.result,
-      amount: this.transactionResult.saleorMoney.amount,
+      amount: this.saleorMoney.amount,
       pspReference: this.transactionResult.stripePaymentIntentId,
       // https://docs.stripe.com/payments/paymentintents/lifecycle
       message: this.transactionResult.message,
@@ -66,9 +44,10 @@ class OK extends SuccessWebhookResponse {
   }
 }
 
-class Error extends SuccessWebhookResponse {
-  readonly transactionResult: ChargeErrorResult | AuthorizationErrorResult;
+class Failure extends SuccessWebhookResponse {
+  readonly transactionResult: ChargeFailureResult | AuthorizationFailureResult;
   readonly error: StripeGetPaymentIntentAPIError;
+  readonly saleorEventAmount: number;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
@@ -80,25 +59,27 @@ class Error extends SuccessWebhookResponse {
   );
 
   constructor(args: {
-    transactionResult: ChargeErrorResult | AuthorizationErrorResult;
+    transactionResult: ChargeFailureResult | AuthorizationFailureResult;
     error: StripeGetPaymentIntentAPIError;
+    saleorEventAmount: number;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.error = args.error;
+    this.saleorEventAmount = args.saleorEventAmount;
   }
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
       result: this.transactionResult.result,
       message: this.error.merchantMessage,
-      amount: this.transactionResult.saleorEventAmount,
+      amount: this.saleorEventAmount,
       pspReference: this.transactionResult.stripePaymentIntentId,
       externalUrl: generateStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),
-      data: Error.ResponseDataSchema.parse({
+      data: Failure.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [
             {
@@ -116,8 +97,8 @@ class Error extends SuccessWebhookResponse {
 }
 
 export const TransactionProcessSessionUseCaseResponses = {
-  OK,
-  Error,
+  Success,
+  Failure,
 };
 
 export type TransactionProcessSessionUseCaseResponsesType = InstanceType<

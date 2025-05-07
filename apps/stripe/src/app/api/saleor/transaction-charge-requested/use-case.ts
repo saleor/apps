@@ -13,6 +13,8 @@ import {
 import { mapStripeCapturePaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
+import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
 import {
   TransactionChargeRequestedUseCaseResponses,
@@ -121,11 +123,13 @@ export class TransactionChargeRequestedUseCase {
       );
 
       return ok(
-        new TransactionChargeRequestedUseCaseResponses.ChargeFailure({
+        new TransactionChargeRequestedUseCaseResponses.Failure({
+          transactionResult: new ChargeFailureResult({
+            stripePaymentIntentId: paymentIntentIdResult,
+            stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+          }),
           saleorEventAmount: event.action.amount,
-          stripePaymentIntentId: paymentIntentIdResult,
           error: mappedError,
-          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         }),
       );
     }
@@ -146,10 +150,12 @@ export class TransactionChargeRequestedUseCase {
     const saleorMoney = saleorMoneyResult.value;
 
     return ok(
-      new TransactionChargeRequestedUseCaseResponses.ChargeSuccess({
+      new TransactionChargeRequestedUseCaseResponses.Success({
+        transactionResult: new ChargeSuccessResult({
+          stripePaymentIntentId: paymentIntentIdResult,
+          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+        }),
         saleorMoney,
-        stripePaymentIntentId: paymentIntentIdResult,
-        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
       }),
     );
   }

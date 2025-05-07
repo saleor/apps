@@ -1,5 +1,4 @@
 import { BaseError } from "@/lib/errors";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
@@ -9,7 +8,6 @@ export class ChargeActionRequiredResult extends ResultBase {
   readonly result = "CHARGE_ACTION_REQUIRED" as const;
   readonly actions = ["CANCEL"] as const;
 
-  readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly message: string;
 
@@ -31,14 +29,12 @@ export class ChargeActionRequiredResult extends ResultBase {
   }
 
   constructor(args: {
-    saleorMoney: SaleorMoney;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeStatus: StripePaymentIntentStatus;
     stripeEnv: StripeEnv;
   }) {
     super(args.stripeEnv);
 
-    this.saleorMoney = args.saleorMoney;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.message = this.getMessageFromStripeStatus(args.stripeStatus);
   }
@@ -48,7 +44,6 @@ export class AuthorizationActionRequiredResult extends ResultBase {
   readonly result = "AUTHORIZATION_ACTION_REQUIRED" as const;
   readonly actions = ["CANCEL"] as const;
 
-  readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly message: string;
 
@@ -68,14 +63,12 @@ export class AuthorizationActionRequiredResult extends ResultBase {
   }
 
   constructor(args: {
-    saleorMoney: SaleorMoney;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeStatus: StripePaymentIntentStatus;
     stripeEnv: StripeEnv;
   }) {
     super(args.stripeEnv);
 
-    this.saleorMoney = args.saleorMoney;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.message = this.getMessageFromStripeStatus(args.stripeStatus);
   }

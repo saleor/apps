@@ -15,8 +15,16 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import {
+  AuthorizationActionRequiredResult,
+  ChargeActionRequiredResult,
+} from "@/modules/transaction-result/action-required-result";
 import { TransactionRecorderError } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
+import {
+  TransactionInitializeAuthorizationFailureResult,
+  TransactionInitializeChargeFailureResult,
+} from "./failure-result";
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
@@ -83,16 +91,17 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.ChargeActionRequired,
+      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.Success,
+      extectedResultType: ChargeActionRequiredResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedSuccessResponse:
-        TransactionInitializeSessionUseCaseResponses.AuthorizationActionRequired,
+      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.Success,
+      extectedResultType: AuthorizationActionRequiredResult,
     },
   ])(
-    "Returns $expectedSuccessResponse.name response if Stripe PaymentIntentsAPI successfully responds and actionType is $actionType",
-    async ({ actionType, expectedSuccessResponse }) => {
+    "Returns $expectedSuccessResponse.name response with $extectedResultType.name result if Stripe PaymentIntentsAPI successfully responds and actionType is $actionType",
+    async ({ actionType, expectedSuccessResponse, extectedResultType }) => {
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
 
       vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
@@ -102,6 +111,7 @@ describe("TransactionInitializeSessionUseCase", () => {
             currency: "usd",
             client_secret: "secret-value",
             id: "pi_test",
+            status: "requires_payment_method",
           } as Stripe.PaymentIntent),
       );
       const uc = new TransactionInitializeSessionUseCase({
@@ -117,6 +127,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedSuccessResponse);
+      expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(extectedResultType);
     },
   );
 
@@ -147,15 +158,17 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.ChargeFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.AuthorizationFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeAuthorizationFailureResult,
     },
   ])(
-    "Returns $expectedFailureResponse.name response if StripePaymentIntentsAPI throws error and actionType is $actionType",
-    async ({ actionType, expectedFailureResponse }) => {
+    "Returns $expectedFailureResponse.name response with $extectedResultType.name result if StripePaymentIntentsAPI throws error and actionType is $actionType",
+    async ({ actionType, expectedFailureResponse, extectedResultType }) => {
       vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
         async () => err(new StripeAPIError("Error from Stripe API")),
       );
@@ -175,21 +188,24 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
+      expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(extectedResultType);
     },
   );
 
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.ChargeFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.AuthorizationFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeAuthorizationFailureResult,
     },
   ])(
-    "Returns $expectedFailureResponse.name response when receives not supported payment method in data and actionType is $actionType",
-    async ({ actionType, expectedFailureResponse }) => {
+    "Returns $expectedFailureResponse.name response with $extectedResultType.name result when receives not supported payment method in data and actionType is $actionType",
+    async ({ actionType, expectedFailureResponse, extectedResultType }) => {
       const eventWithNotSupportedPaymentMethod = {
         ...getMockedTransactionInitializeSessionEvent({ actionType }),
         data: {
@@ -212,21 +228,24 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
+      expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(extectedResultType);
     },
   );
 
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.ChargeFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.AuthorizationFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeAuthorizationFailureResult,
     },
   ])(
-    "Returns $expectedFailureResponse.name response when receives additional field in data and actionType is $actionType",
-    async ({ actionType, expectedFailureResponse }) => {
+    "Returns $expectedFailureResponse.name response with $extectedResultType.name result when receives additional field in data and actionType is $actionType",
+    async ({ actionType, expectedFailureResponse, extectedResultType }) => {
       const eventWithAdditionalFieldinData = {
         ...getMockedTransactionInitializeSessionEvent({ actionType }),
         data: {
@@ -250,6 +269,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
+      expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(extectedResultType);
     },
   );
 
@@ -411,6 +431,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           currency: "usd",
           client_secret: "secret-value",
           id: "pi_test",
+          status: "requires_payment_method",
         } as Stripe.PaymentIntent),
       );
 

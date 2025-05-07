@@ -114,7 +114,6 @@ export class StripePaymentIntentHandler {
         );
 
         const result = new MappedResult({
-          saleorMoney,
           stripePaymentIntentId: stripePaymentIntentId,
           stripeStatus: paymentIntentStatus,
           stripeEnv: args.stripeEnv,
@@ -122,6 +121,7 @@ export class StripePaymentIntentHandler {
 
         return ok(
           new TransactionEventReportVariablesResolver({
+            saleorMoney,
             transactionResult: result,
             date: eventDate,
             saleorTransactionId: saleorTransactionId,
@@ -133,18 +133,17 @@ export class StripePaymentIntentHandler {
         const failureResult =
           resolvedTransactionFlow === "AUTHORIZATION"
             ? new AuthorizationFailureResult({
-                saleorMoney,
                 stripePaymentIntentId: stripePaymentIntentId,
                 stripeEnv: args.stripeEnv,
               })
             : new ChargeFailureResult({
-                saleorMoney,
                 stripePaymentIntentId: stripePaymentIntentId,
                 stripeEnv: args.stripeEnv,
               });
 
         return ok(
           new TransactionEventReportVariablesResolver({
+            saleorMoney,
             transactionResult: failureResult,
             date: eventDate,
             saleorTransactionId: saleorTransactionId,
