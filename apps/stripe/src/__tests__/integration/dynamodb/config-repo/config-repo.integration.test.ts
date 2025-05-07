@@ -31,7 +31,7 @@ describe("ConfigRepo with DynamoDB integration test", () => {
     });
 
     if (stripeConfig.isErr()) {
-      testLogger.error("Error fetching config before each test", {
+      console.error("Error fetching config before each test", {
         error: stripeConfig.error,
       });
     }
