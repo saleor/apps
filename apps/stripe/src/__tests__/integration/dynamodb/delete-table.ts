@@ -8,8 +8,8 @@ const TABLE_NAME = process.env.INTEGRATION_DYNAMO_TABLE_NAME ?? "stripe-main-tab
 
 const client = new DynamoDBClient({
   credentials: {
-    accessKeyId: "",
-    secretAccessKey: "",
+    accessKeyId: "test",
+    secretAccessKey: "test",
   },
   region: "localhost",
   endpoint: "http://localhost:8000",
