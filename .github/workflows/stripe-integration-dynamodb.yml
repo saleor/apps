@@ -7,8 +7,8 @@ on:
 
   push:
     paths:
-      - apps/stripe
-      - packages
+      - apps/stripe/**
+      - packages/**
       - package.json
 
 jobs:
