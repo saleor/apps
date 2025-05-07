@@ -2,7 +2,7 @@ import "next-test-api-route-handler";
 
 import { beforeEach, vi } from "vitest";
 
-import { deleteTable } from "./restore-table";
+import { deleteTable } from "./delete-table";
 import { createTable } from "./setup-table";
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars, n/no-process-env

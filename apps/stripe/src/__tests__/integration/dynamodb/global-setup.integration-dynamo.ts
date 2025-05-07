@@ -21,9 +21,7 @@ export default async function setup(_project: TestProject) {
     return async () => {
       console.log("stopping docker compose");
       // looks like it doesn't close the container todo
-      const res = await $`docker compose -f ${configPath} down`;
-
-      console.log(res);
+      await $`docker compose -f ${configPath} down`;
     };
   }
 }

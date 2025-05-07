@@ -1,20 +1,22 @@
-#!/usr/bin/env zx
-
 /*
   eslint-disable no-console, n/no-process-env
  */
 
-import { $ } from "zx";
+import { DeleteTableCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 const TABLE_NAME = process.env.INTEGRATION_DYNAMO_TABLE_NAME ?? "stripe-main-table-integration";
-// const AWS_REGION = process.env.INTEGRATION_DYNAMO_REGION ?? "localhost";
-const ENDPOINT_URL = process.env.INTEGRATION_DYNAMO_ENDPOINT ?? "http://localhost:8000";
+
+const client = new DynamoDBClient();
 
 export const deleteTable = async () => {
   try {
     console.log("dropping table");
 
-    await $`aws dynamodb delete-table --table-name ${TABLE_NAME} --endpoint-url ${ENDPOINT_URL}`;
+    await client.send(
+      new DeleteTableCommand({
+        TableName: TABLE_NAME,
+      }),
+    );
 
     console.log("success: table deleted");
   } catch {
