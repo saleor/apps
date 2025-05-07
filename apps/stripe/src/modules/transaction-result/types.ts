@@ -1,17 +1,9 @@
-import {
-  AuthorizationActionRequiredResult,
-  ChargeActionRequiredResult,
-} from "./action-required-result";
-import { AuthorizationFailureResult, ChargeFailureResult } from "./failure-result";
-import { AuthorizationRequestResult, ChargeRequestResult } from "./request-result";
-import { AuthorizationSuccessResult, ChargeSuccessResult } from "./success-result";
+import { StripeEnv } from "@/modules/stripe/stripe-env";
 
-export type TransactionResult =
-  | ChargeSuccessResult
-  | AuthorizationSuccessResult
-  | ChargeActionRequiredResult
-  | AuthorizationActionRequiredResult
-  | ChargeRequestResult
-  | AuthorizationRequestResult
-  | ChargeFailureResult
-  | AuthorizationFailureResult;
+export abstract class ResultBase {
+  readonly stripeEnv: StripeEnv;
+
+  constructor(stripeEnv: StripeEnv) {
+    this.stripeEnv = stripeEnv;
+  }
+}

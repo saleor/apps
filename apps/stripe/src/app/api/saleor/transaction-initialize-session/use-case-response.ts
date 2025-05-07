@@ -1,7 +1,4 @@
-import {
-  buildSyncWebhookResponsePayload,
-  SyncWebhookResponsesMap,
-} from "@saleor/app-sdk/handlers/shared";
+import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
@@ -10,6 +7,7 @@ import {
   createSuccessWebhookResponseDataSchema,
 } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
+import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import {
   StripeClientSecret,
   StripeClientSecretSchema,
@@ -19,21 +17,25 @@ import {
   StripeCardErrorPublicCode,
   StripeCreatePaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import {
+  AuthorizationActionRequiredResult,
+  ChargeActionRequiredResult,
+} from "@/modules/transaction-result/action-required-result";
 
 import {
   ParseErrorPublicCode,
   TransactionInitializeSessionEventDataError,
   UnsupportedPaymentMethodErrorPublicCode,
 } from "./event-data-parser";
+import {
+  TransactionInitializeAuthorizationFailureResult,
+  TransactionInitializeChargeFailureResult,
+} from "./failure-result";
 
-type ResponseResult = SyncWebhookResponsesMap["TRANSACTION_INITIALIZE_SESSION"]["result"];
-
-class ChargeActionRequired extends SuccessWebhookResponse {
-  readonly result: ResponseResult = "CHARGE_ACTION_REQUIRED";
+class Success extends SuccessWebhookResponse {
+  readonly transactionResult: ChargeActionRequiredResult | AuthorizationActionRequiredResult;
   readonly stripeClientSecret: StripeClientSecret;
   readonly saleorMoney: SaleorMoney;
-  readonly stripePaymentIntentId: StripePaymentIntentId;
 
   private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
     z.object({
@@ -42,42 +44,43 @@ class ChargeActionRequired extends SuccessWebhookResponse {
   );
 
   constructor(args: {
+    transactionResult: ChargeActionRequiredResult | AuthorizationActionRequiredResult;
     stripeClientSecret: StripeClientSecret;
     saleorMoney: SaleorMoney;
-    stripePaymentIntentId: StripePaymentIntentId;
   }) {
     super();
+    this.transactionResult = args.transactionResult;
     this.stripeClientSecret = args.stripeClientSecret;
     this.saleorMoney = args.saleorMoney;
-    this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
-      data: ChargeActionRequired.ResponseDataSchema.parse({
+      data: Success.ResponseDataSchema.parse({
         paymentIntent: {
           stripeClientSecret: this.stripeClientSecret,
         },
       }),
-      result: this.result,
+      result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
-      pspReference: this.stripePaymentIntentId,
+      pspReference: this.transactionResult.stripePaymentIntentId,
       // https://docs.stripe.com/payments/paymentintents/lifecycle
       message: "Payment intent requires payment method",
+      externalUrl: generateStripeDashboardUrl(
+        this.transactionResult.stripePaymentIntentId,
+        this.transactionResult.stripeEnv,
+      ),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
 }
 
-class AuthorizationActionRequired extends ChargeActionRequired {
-  readonly result: ResponseResult = "AUTHORIZATION_ACTION_REQUIRED";
-}
-
-class ChargeFailure extends SuccessWebhookResponse {
-  readonly result: ResponseResult = "CHARGE_FAILURE";
+class Failure extends SuccessWebhookResponse {
+  readonly transactionResult:
+    | TransactionInitializeChargeFailureResult
+    | TransactionInitializeAuthorizationFailureResult;
   readonly error: StripeCreatePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
-  readonly saleorEventAmount: number;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
@@ -94,21 +97,22 @@ class ChargeFailure extends SuccessWebhookResponse {
   );
 
   constructor(args: {
+    transactionResult:
+      | TransactionInitializeChargeFailureResult
+      | TransactionInitializeAuthorizationFailureResult;
     error: StripeCreatePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
-    saleorEventAmount: number;
   }) {
     super();
+    this.transactionResult = args.transactionResult;
     this.error = args.error;
-    // TODO: remove this after Saleor allows to amount to be optional
-    this.saleorEventAmount = args.saleorEventAmount;
   }
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
-      result: this.result,
+      result: this.transactionResult.result,
       message: this.error.merchantMessage,
-      amount: this.saleorEventAmount,
-      data: ChargeFailure.ResponseDataSchema.parse({
+      amount: this.transactionResult.saleorEventAmount,
+      data: Failure.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [
             {
@@ -124,17 +128,11 @@ class ChargeFailure extends SuccessWebhookResponse {
   }
 }
 
-class AuthorizationFailure extends ChargeFailure {
-  readonly result: ResponseResult = "AUTHORIZATION_FAILURE";
-}
-
-export const TransactionInitalizeSessionUseCaseResponses = {
-  ChargeActionRequired,
-  AuthorizationActionRequired,
-  ChargeFailure,
-  AuthorizationFailure,
+export const TransactionInitializeSessionUseCaseResponses = {
+  Success,
+  Failure,
 };
 
-export type TransactionInitalizeSessionUseCaseResponsesType = InstanceType<
-  (typeof TransactionInitalizeSessionUseCaseResponses)[keyof typeof TransactionInitalizeSessionUseCaseResponses]
+export type TransactionInitializeSessionUseCaseResponsesType = InstanceType<
+  (typeof TransactionInitializeSessionUseCaseResponses)[keyof typeof TransactionInitializeSessionUseCaseResponses]
 >;

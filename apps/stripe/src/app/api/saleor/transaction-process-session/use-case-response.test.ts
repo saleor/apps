@@ -9,10 +9,6 @@ import {
   ChargeActionRequiredResult,
 } from "@/modules/transaction-result/action-required-result";
 import {
-  AuthorizationErrorResult,
-  ChargeErrorResult,
-} from "@/modules/transaction-result/error-result";
-import {
   AuthorizationFailureResult,
   ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
@@ -28,22 +24,24 @@ import {
 import { TransactionProcessSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionProcessSessionUseCaseResponses", () => {
-  describe("OK", () => {
-    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeded if transactionResult is ChargeSuccess", async () => {
+  describe("Success", () => {
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeeded if transactionResult is ChargeSuccess", async () => {
       const transactionResult = new ChargeSuccessResult({
-        saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "TEST",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        saleorMoney: getMockedSaleorMoney(),
         transactionResult,
       });
-      const fetchReponse = response.getResponse();
+      const fetchResponse = response.getResponse();
 
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
           "actions": [],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent succeeded",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_SUCCESS",
@@ -51,12 +49,13 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       `);
     });
 
-    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeded if transactionResult is AuthorizationSuccess", async () => {
+    it("getResponse() returns valid Response with status 200 and message indicating that intent is succeeded if transactionResult is AuthorizationSuccess", async () => {
       const transactionResult = new AuthorizationSuccessResult({
-        saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        saleorMoney: getMockedSaleorMoney(),
         transactionResult,
       });
       const fetchReponse = response.getResponse();
@@ -66,8 +65,10 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         {
           "actions": [
             "CHARGE",
+            "CANCEL",
           ],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent succeeded",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_SUCCESS",
@@ -77,20 +78,24 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent requires action if transactionResult is ChargeActionRequired", async () => {
       const transactionResult = new ChargeActionRequiredResult({
-        saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
+        stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        saleorMoney: getMockedSaleorMoney(),
         transactionResult,
       });
-      const fetchReponse = response.getResponse();
+      const fetchResponse = response.getResponse();
 
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent requires action",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_ACTION_REQUIRED",
@@ -100,11 +105,12 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent requires action if transactionResult is AuthorizationActionRequired", async () => {
       const transactionResult = new AuthorizationActionRequiredResult({
-        saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
+        stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        saleorMoney: getMockedSaleorMoney(),
         transactionResult,
       });
       const fetchReponse = response.getResponse();
@@ -112,8 +118,11 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent requires action",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_ACTION_REQUIRED",
@@ -123,10 +132,11 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent is processing if transactionResult is ChargeRequest", async () => {
       const transactionResult = new ChargeRequestResult({
-        saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        saleorMoney: getMockedSaleorMoney(),
         transactionResult,
       });
       const fetchReponse = response.getResponse();
@@ -134,8 +144,11 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent is processing",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_REQUEST",
@@ -145,19 +158,23 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent is processing if transactionResult is AuthorizationRequest", async () => {
       const transactionResult = new AuthorizationRequestResult({
-        saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        saleorMoney: getMockedSaleorMoney(),
         transactionResult,
       });
-      const fetchReponse = response.getResponse();
+      const fetchResponse = response.getResponse();
 
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent is processing",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_REQUEST",
@@ -167,10 +184,11 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent is cancelled if transactionResult is ChargeFailure", async () => {
       const transactionResult = new ChargeFailureResult({
-        saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        saleorMoney: getMockedSaleorMoney(),
         transactionResult,
       });
       const fetchReponse = response.getResponse();
@@ -182,6 +200,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
             "CHARGE",
           ],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent was cancelled",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_FAILURE",
@@ -191,10 +210,11 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent is cancelled if transactionResult is AuthorizationFailure", async () => {
       const transactionResult = new AuthorizationFailureResult({
-        saleorMoney: getMockedSaleorMoney(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
-      const response = new TransactionProcessSessionUseCaseResponses.OK({
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        saleorMoney: getMockedSaleorMoney(),
         transactionResult,
       });
       const fetchReponse = response.getResponse();
@@ -202,8 +222,11 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent was cancelled",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_FAILURE",
@@ -211,14 +234,15 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       `);
     });
 
-    describe("Error", () => {
-      it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if transactionResult is ChargeError", async () => {
-        const transactionResult = new ChargeErrorResult({
-          saleorEventAmount: 21.23,
+    describe("Failure", () => {
+      it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if transactionResult is ChargeFailure", async () => {
+        const transactionResult = new ChargeFailureResult({
           stripePaymentIntentId: mockedStripePaymentIntentId,
+          stripeEnv: "LIVE",
         });
 
-        const successResponse = new TransactionProcessSessionUseCaseResponses.Error({
+        const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
+          saleorEventAmount: 21.23,
           error: new StripeInvalidRequestError("Invalid request"),
           transactionResult,
         });
@@ -227,6 +251,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         expect(fetchReponse.status).toBe(200);
         expect(await fetchReponse.json()).toMatchInlineSnapshot(`
           {
+            "actions": [
+              "CHARGE",
+            ],
             "amount": 21.23,
             "data": {
               "paymentIntent": {
@@ -238,6 +265,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
                 ],
               },
             },
+            "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
             "message": "Payment intent error - there is a problem with the request to Stripe API",
             "pspReference": "pi_TEST_TEST_TEST",
             "result": "CHARGE_FAILURE",
@@ -245,13 +273,14 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         `);
       });
 
-      it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if transactionResult is AuthorizationError", async () => {
-        const transactionResult = new AuthorizationErrorResult({
-          saleorEventAmount: 21.23,
+      it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if transactionResult is AuthorizationFailure", async () => {
+        const transactionResult = new AuthorizationFailureResult({
           stripePaymentIntentId: mockedStripePaymentIntentId,
+          stripeEnv: "LIVE",
         });
 
-        const successResponse = new TransactionProcessSessionUseCaseResponses.Error({
+        const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
+          saleorEventAmount: 21.23,
           error: new StripeInvalidRequestError("Invalid request"),
           transactionResult,
         });
@@ -260,6 +289,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         expect(fetchReponse.status).toBe(200);
         expect(await fetchReponse.json()).toMatchInlineSnapshot(`
           {
+            "actions": [
+              "CANCEL",
+            ],
             "amount": 21.23,
             "data": {
               "paymentIntent": {
@@ -271,6 +303,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
                 ],
               },
             },
+            "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
             "message": "Payment intent error - there is a problem with the request to Stripe API",
             "pspReference": "pi_TEST_TEST_TEST",
             "result": "AUTHORIZATION_FAILURE",

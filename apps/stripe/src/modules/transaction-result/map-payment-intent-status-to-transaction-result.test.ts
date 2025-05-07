@@ -7,7 +7,6 @@ import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
 } from "./action-required-result";
-import { AuthorizationFailureResult, ChargeFailureResult } from "./failure-result";
 import { mapPaymentIntentStatusToTransactionResult } from "./map-payment-intent-status-to-transaction-result";
 import { AuthorizationRequestResult, ChargeRequestResult } from "./request-result";
 import { AuthorizationSuccessResult, ChargeSuccessResult } from "./success-result";
@@ -39,7 +38,7 @@ describe("mapPaymentIntentStatusToAppResult", () => {
       },
       {
         status: "canceled",
-        expectedResult: ChargeFailureResult,
+        expectedResult: ChargeActionRequiredResult,
       },
     ])(
       "maps Stripe status: $status to transactionResult: $expectedResult.name",
@@ -81,7 +80,7 @@ describe("mapPaymentIntentStatusToAppResult", () => {
       },
       {
         status: "canceled",
-        expectedResult: AuthorizationFailureResult,
+        expectedResult: AuthorizationActionRequiredResult,
       },
       {
         status: "requires_capture",

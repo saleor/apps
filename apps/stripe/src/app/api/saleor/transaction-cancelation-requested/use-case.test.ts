@@ -7,7 +7,7 @@ import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { getMockedTransactionChargeRequestedEvent } from "@/__tests__/mocks/transaction-charge-requested-event";
+import { getMockedTransactionCancelationRequestedEvent } from "@/__tests__/mocks/transaction-cancelation-request-event";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
@@ -15,30 +15,32 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
-import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
-import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
+import {
+  CancelFailureResult,
+  CancelSuccessResult,
+} from "@/modules/transaction-result/cancel-result";
 
-import { TransactionChargeRequestedUseCase } from "./use-case";
-import { TransactionChargeRequestedUseCaseResponses } from "./use-case-response";
+import { TransactionCancelationRequestedUseCase } from "./use-case";
+import { TransactionCancelationRequestedUseCaseResponses } from "./use-case-response";
 
-describe("TransactionChargeRequestedUseCase", () => {
+describe("TransactionCancelationRequestedUseCase", () => {
   const stripePaymentIntentsApiFactory = {
     create: () => mockedStripePaymentIntentsApi,
   } satisfies IStripePaymentIntentsApiFactory;
 
-  it("Calls Stripe PaymentIntent API to capture payment intent and returns ChargeSuccess when payment intent is captured successfully", async () => {
+  it("Calls Stripe PaymentIntent API to cancel payment intent and returns Success with CancelSuccessResult when payment intent is canceled successfully", async () => {
     const spy = vi
-      .spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent")
+      .spyOn(mockedStripePaymentIntentsApi, "cancelPaymentIntent")
       .mockImplementationOnce(async () =>
         ok({
           amount: 100,
           currency: "usd",
           id: mockedStripePaymentIntentId.toString(), // stripe doesn't expect to get branded type here
-          status: "succeeded",
+          status: "canceled",
         } as Stripe.PaymentIntent),
       );
 
-    const uc = new TransactionChargeRequestedUseCase({
+    const uc = new TransactionCancelationRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
     });
@@ -46,26 +48,25 @@ describe("TransactionChargeRequestedUseCase", () => {
     const result = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: getMockedTransactionChargeRequestedEvent(),
+      event: getMockedTransactionCancelationRequestedEvent(),
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
-      TransactionChargeRequestedUseCaseResponses.Success,
+      TransactionCancelationRequestedUseCaseResponses.Success,
     );
-
-    expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeSuccessResult);
+    expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(CancelSuccessResult);
 
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
     });
   });
 
-  it("Calls Stripe PaymentIntent API to capture payment intent and returns ChargeFailureResult when payment intent capture fails", async () => {
+  it("Calls Stripe PaymentIntent API to cancel payment intent and returns Failure with CancelFailureResult when payment intent cancel fails", async () => {
     const spy = vi
-      .spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent")
+      .spyOn(mockedStripePaymentIntentsApi, "cancelPaymentIntent")
       .mockImplementationOnce(async () => err(new StripeAPIError("Error from Stripe API")));
 
-    const uc = new TransactionChargeRequestedUseCase({
+    const uc = new TransactionCancelationRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
     });
@@ -73,13 +74,13 @@ describe("TransactionChargeRequestedUseCase", () => {
     const result = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: getMockedTransactionChargeRequestedEvent(),
+      event: getMockedTransactionCancelationRequestedEvent(),
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
-      TransactionChargeRequestedUseCaseResponses.Failure,
+      TransactionCancelationRequestedUseCaseResponses.Failure,
     );
-    expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
+    expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(CancelFailureResult);
 
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
@@ -91,7 +92,7 @@ describe("TransactionChargeRequestedUseCase", () => {
       .spyOn(mockedAppConfigRepo, "getStripeConfig")
       .mockImplementationOnce(async () => ok(null));
 
-    const uc = new TransactionChargeRequestedUseCase({
+    const uc = new TransactionCancelationRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
     });
@@ -99,7 +100,7 @@ describe("TransactionChargeRequestedUseCase", () => {
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: getMockedTransactionChargeRequestedEvent(),
+      event: getMockedTransactionCancelationRequestedEvent(),
     });
 
     const err = responsePayload._unsafeUnwrapErr();
@@ -110,13 +111,13 @@ describe("TransactionChargeRequestedUseCase", () => {
   });
 
   it("Returns 'BrokenAppResponse' when currency coming from Stripe is not supported", async () => {
-    vi.spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent").mockImplementation(async () =>
+    vi.spyOn(mockedStripePaymentIntentsApi, "cancelPaymentIntent").mockImplementation(async () =>
       ok({
         amount: 100,
         currency: "abc",
       } as Stripe.PaymentIntent),
     );
-    const uc = new TransactionChargeRequestedUseCase({
+    const uc = new TransactionCancelationRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
     });
@@ -124,16 +125,16 @@ describe("TransactionChargeRequestedUseCase", () => {
     const response = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: getMockedTransactionChargeRequestedEvent(),
+      event: getMockedTransactionCancelationRequestedEvent(),
     });
 
     expect(response._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
   it("Returns 'MalformedRequestResponse' when Saleor event has no transaction", async () => {
-    const saleorEvent = { ...getMockedTransactionChargeRequestedEvent(), transaction: null };
+    const saleorEvent = { ...getMockedTransactionCancelationRequestedEvent(), transaction: null };
 
-    const uc = new TransactionChargeRequestedUseCase({
+    const uc = new TransactionCancelationRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
     });
@@ -149,7 +150,7 @@ describe("TransactionChargeRequestedUseCase", () => {
 
   it("Returns 'MalformedRequestResponse' when Saleor event has no channel for Saleor Checkout or Order", async () => {
     const saleorEvent = {
-      ...getMockedTransactionChargeRequestedEvent(),
+      ...getMockedTransactionCancelationRequestedEvent(),
       transaction: {
         checkout: null,
         order: null,
@@ -157,33 +158,7 @@ describe("TransactionChargeRequestedUseCase", () => {
       },
     };
 
-    const uc = new TransactionChargeRequestedUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory,
-    });
-
-    const response = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: saleorEvent,
-    });
-
-    expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
-  });
-
-  it("Returns 'MalformedRequestResponse' when Saleor event has no amount for action and payment intent capture fails", async () => {
-    const saleorEvent = {
-      ...getMockedTransactionChargeRequestedEvent(),
-      action: {
-        amount: null,
-      },
-    };
-
-    vi.spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent").mockImplementation(async () =>
-      err(new StripeAPIError("Error from Stripe API")),
-    );
-
-    const uc = new TransactionChargeRequestedUseCase({
+    const uc = new TransactionCancelationRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
     });

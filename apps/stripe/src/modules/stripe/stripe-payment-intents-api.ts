@@ -46,4 +46,13 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
       (error) => error,
     );
   }
+
+  async cancelPaymentIntent(args: {
+    id: StripePaymentIntentId;
+  }): Promise<Result<Stripe.PaymentIntent, unknown>> {
+    return ResultAsync.fromPromise(
+      this.stripeApiWrapper.paymentIntents.cancel(args.id),
+      (error) => error,
+    );
+  }
 }

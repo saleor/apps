@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/transaction-initialize-session-event";
@@ -14,12 +15,24 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import {
+  AuthorizationActionRequiredResult,
+  ChargeActionRequiredResult,
+} from "@/modules/transaction-result/action-required-result";
 import { TransactionRecorderError } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
+import {
+  TransactionInitializeAuthorizationFailureResult,
+  TransactionInitializeChargeFailureResult,
+} from "./failure-result";
 import { TransactionInitializeSessionUseCase } from "./use-case";
-import { TransactionInitalizeSessionUseCaseResponses } from "./use-case-response";
+import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionInitializeSessionUseCase", () => {
+  const stripePaymentIntentsApiFactory = {
+    create: () => mockedStripePaymentIntentsApi,
+  } satisfies IStripePaymentIntentsApiFactory;
+
   it.each([
     {
       actionType: "CHARGE" as const,
@@ -33,26 +46,21 @@ describe("TransactionInitializeSessionUseCase", () => {
     "Calls Stripe PaymentIntentsAPI to create payment intent with $captureMethod capture method for card when actionType is $actionType",
     async ({ actionType, captureMethod }) => {
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
-      const createPaymentIntent = vi.fn(async () =>
-        ok({
-          amount: 100,
-          currency: "usd",
-          client_secret: "secret-value",
-          id: "pi_test",
-        } as Stripe.PaymentIntent),
-      );
-      // TODO: extract to mocks
-      const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-        create: () => ({
-          createPaymentIntent,
-          getPaymentIntent: vi.fn(),
-          capturePaymentIntent: vi.fn(),
-        }),
-      };
+
+      const spy = vi
+        .spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent")
+        .mockImplementationOnce(async () =>
+          ok({
+            amount: 100,
+            currency: "usd",
+            client_secret: "secret-value",
+            id: "pi_test",
+          } as Stripe.PaymentIntent),
+        );
 
       const uc = new TransactionInitializeSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+        stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
       });
 
@@ -62,7 +70,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         event: saleorEvent,
       });
 
-      expect(createPaymentIntent).toHaveBeenCalledWith({
+      expect(spy).toHaveBeenCalledWith({
         params: {
           // Saleor API sends amount in floats - Stripe wants amount in ints
           amount: saleorEvent.action.amount * 100,
@@ -83,36 +91,32 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedSuccessResponse: TransactionInitalizeSessionUseCaseResponses.ChargeActionRequired,
+      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.Success,
+      extectedResultType: ChargeActionRequiredResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedSuccessResponse:
-        TransactionInitalizeSessionUseCaseResponses.AuthorizationActionRequired,
+      expectedSuccessResponse: TransactionInitializeSessionUseCaseResponses.Success,
+      extectedResultType: AuthorizationActionRequiredResult,
     },
   ])(
-    "Returns $expectedSuccessResponse.name response if Stripe PaymentIntentsAPI successfully responds and actionType is $actionType",
-    async ({ actionType, expectedSuccessResponse }) => {
+    "Returns $expectedSuccessResponse.name response with $extectedResultType.name result if Stripe PaymentIntentsAPI successfully responds and actionType is $actionType",
+    async ({ actionType, expectedSuccessResponse, extectedResultType }) => {
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
-      const createPaymentIntent = vi.fn(async () =>
-        ok({
-          amount: 100,
-          currency: "usd",
-          client_secret: "secret-value",
-          id: "pi_test",
-        } as Stripe.PaymentIntent),
-      );
-      const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-        create: () => ({
-          createPaymentIntent,
-          getPaymentIntent: vi.fn(),
-          capturePaymentIntent: vi.fn(),
-        }),
-      };
 
+      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+        async () =>
+          ok({
+            amount: 100,
+            currency: "usd",
+            client_secret: "secret-value",
+            id: "pi_test",
+            status: "requires_payment_method",
+          } as Stripe.PaymentIntent),
+      );
       const uc = new TransactionInitializeSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+        stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
       });
 
@@ -123,6 +127,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedSuccessResponse);
+      expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(extectedResultType);
     },
   );
 
@@ -131,17 +136,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       .spyOn(mockedAppConfigRepo, "getStripeConfig")
       .mockImplementationOnce(async () => ok(null));
 
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent: vi.fn(),
-      }),
-    };
-
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
     });
 
@@ -161,29 +158,24 @@ describe("TransactionInitializeSessionUseCase", () => {
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.ChargeFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.AuthorizationFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeAuthorizationFailureResult,
     },
   ])(
-    "Returns $expectedFailureResponse.name response if StripePaymentIntentsAPI throws error and actionType is $actionType",
-    async ({ actionType, expectedFailureResponse }) => {
-      const createPaymentIntent = vi.fn(async () =>
-        err(new StripeAPIError("Error from Stripe API")),
+    "Returns $expectedFailureResponse.name response with $extectedResultType.name result if StripePaymentIntentsAPI throws error and actionType is $actionType",
+    async ({ actionType, expectedFailureResponse, extectedResultType }) => {
+      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+        async () => err(new StripeAPIError("Error from Stripe API")),
       );
-      const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-        create: () => ({
-          createPaymentIntent,
-          getPaymentIntent: vi.fn(),
-          capturePaymentIntent: vi.fn(),
-        }),
-      };
 
       const uc = new TransactionInitializeSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+        stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
       });
 
@@ -196,29 +188,24 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
+      expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(extectedResultType);
     },
   );
 
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.ChargeFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.AuthorizationFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeAuthorizationFailureResult,
     },
   ])(
-    "Returns $expectedFailureResponse.name response when receives not supported payment method in data and actionType is $actionType",
-    async ({ actionType, expectedFailureResponse }) => {
-      const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-        create: () => ({
-          createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
-          getPaymentIntent: vi.fn(),
-          capturePaymentIntent: vi.fn(),
-        }),
-      };
-
+    "Returns $expectedFailureResponse.name response with $extectedResultType.name result when receives not supported payment method in data and actionType is $actionType",
+    async ({ actionType, expectedFailureResponse, extectedResultType }) => {
       const eventWithNotSupportedPaymentMethod = {
         ...getMockedTransactionInitializeSessionEvent({ actionType }),
         data: {
@@ -230,7 +217,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
       const uc = new TransactionInitializeSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+        stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
       });
 
@@ -241,29 +228,24 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
+      expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(extectedResultType);
     },
   );
 
   it.each([
     {
       actionType: "CHARGE" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.ChargeFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
-      expectedFailureResponse: TransactionInitalizeSessionUseCaseResponses.AuthorizationFailure,
+      expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
+      extectedResultType: TransactionInitializeAuthorizationFailureResult,
     },
   ])(
-    "Returns $expectedFailureResponse.name response when receives additional field in data and actionType is $actionType",
-    async ({ actionType, expectedFailureResponse }) => {
-      const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-        create: () => ({
-          createPaymentIntent: vi.fn(async () => ok({} as Stripe.PaymentIntent)),
-          getPaymentIntent: vi.fn(),
-          capturePaymentIntent: vi.fn(),
-        }),
-      };
-
+    "Returns $expectedFailureResponse.name response with $extectedResultType.name result when receives additional field in data and actionType is $actionType",
+    async ({ actionType, expectedFailureResponse, extectedResultType }) => {
       const eventWithAdditionalFieldinData = {
         ...getMockedTransactionInitializeSessionEvent({ actionType }),
         data: {
@@ -276,7 +258,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
       const uc = new TransactionInitializeSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+        stripePaymentIntentsApiFactory,
         transactionRecorder: new MockedTransactionRecorder(),
       });
 
@@ -287,6 +269,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
+      expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(extectedResultType);
     },
   );
 
@@ -299,18 +282,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         actionType: "CHARGE" as const,
       },
     };
-    const createPaymentIntent = vi.fn(async () => ok({} as Stripe.PaymentIntent));
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent,
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent: vi.fn(),
-      }),
-    };
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
     });
 
@@ -325,23 +300,18 @@ describe("TransactionInitializeSessionUseCase", () => {
 
   it("Returns 'BrokenAppResponse' when currency coming from Stripe is not supported", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
-    const createPaymentIntent = vi.fn(async () =>
-      ok({
-        amount: 100,
-        currency: "abc",
-      } as Stripe.PaymentIntent),
+
+    vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+      async () =>
+        ok({
+          amount: 100,
+          currency: "abc",
+        } as Stripe.PaymentIntent),
     );
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent,
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent: vi.fn(),
-      }),
-    };
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
     });
 
@@ -356,24 +326,19 @@ describe("TransactionInitializeSessionUseCase", () => {
 
   it("Returns 'BrokenAppResponse' when Stripe PaymentIntentsAPI didn't returned required client_secret field", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
-    const createPaymentIntent = vi.fn(async () =>
-      ok({
-        amount: 100,
-        currency: "usd",
-        id: "pi_test",
-      } as Stripe.PaymentIntent),
+
+    vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+      async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          id: "pi_test",
+        } as Stripe.PaymentIntent),
     );
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent,
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent: vi.fn(),
-      }),
-    };
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
     });
 
@@ -388,24 +353,19 @@ describe("TransactionInitializeSessionUseCase", () => {
 
   it("Returns 'BrokenAppResponse' when Stripe PaymentIntentsAPI didn't returned required payment id", async () => {
     const saleorEvent = getMockedTransactionInitializeSessionEvent();
-    const createPaymentIntent = vi.fn(async () =>
-      ok({
-        amount: 100,
-        currency: "usd",
-        client_secret: "secret-value",
-      } as Stripe.PaymentIntent),
+
+    vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+      async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          client_secret: "secret-value",
+        } as Stripe.PaymentIntent),
     );
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent,
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent: vi.fn(),
-      }),
-    };
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
       transactionRecorder: new MockedTransactionRecorder(),
     });
 
@@ -426,24 +386,18 @@ describe("TransactionInitializeSessionUseCase", () => {
       err(new TransactionRecorderError.TransactionMissingError("Transaction recorder error")),
     );
 
-    const createPaymentIntent = vi.fn(async () =>
-      ok({
-        amount: 100,
-        currency: "usd",
-        client_secret: "secret-value",
-      } as Stripe.PaymentIntent),
+    vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+      async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          client_secret: "secret-value",
+        } as Stripe.PaymentIntent),
     );
-    const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-      create: () => ({
-        createPaymentIntent,
-        getPaymentIntent: vi.fn(),
-        capturePaymentIntent: vi.fn(),
-      }),
-    };
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+      stripePaymentIntentsApiFactory,
       transactionRecorder,
     });
 
@@ -471,25 +425,19 @@ describe("TransactionInitializeSessionUseCase", () => {
 
       vi.spyOn(transactionRecorder, "recordTransaction");
 
-      const createPaymentIntent = vi.fn(async () =>
+      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementation(async () =>
         ok({
           amount: 100,
           currency: "usd",
           client_secret: "secret-value",
           id: "pi_test",
+          status: "requires_payment_method",
         } as Stripe.PaymentIntent),
       );
-      const testStripePaymentsIntentsApiFactory: IStripePaymentIntentsApiFactory = {
-        create: () => ({
-          createPaymentIntent,
-          getPaymentIntent: vi.fn(),
-          capturePaymentIntent: vi.fn(),
-        }),
-      };
 
       const uc = new TransactionInitializeSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory: testStripePaymentsIntentsApiFactory,
+        stripePaymentIntentsApiFactory,
         transactionRecorder,
       });
 

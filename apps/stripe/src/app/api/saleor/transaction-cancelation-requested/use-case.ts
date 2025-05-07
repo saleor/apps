@@ -1,6 +1,6 @@
 import { err, ok, Result } from "neverthrow";
 
-import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
+import { TransactionCancelationRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -10,24 +10,26 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { mapStripeCapturePaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
+import { mapStripeCancelPaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
-import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
-import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
+import {
+  CancelFailureResult,
+  CancelSuccessResult,
+} from "@/modules/transaction-result/cancel-result";
 
 import {
-  TransactionChargeRequestedUseCaseResponses,
-  TransactionChargeRequestedUseCaseResponsesType,
+  TransactionCancelationRequestedUseCaseResponses,
+  TransactionCancelationRequestedUseCaseResponsesType,
 } from "./use-case-response";
 
 type UseCaseExecuteResult = Result<
-  TransactionChargeRequestedUseCaseResponsesType,
+  TransactionCancelationRequestedUseCaseResponsesType,
   AppIsNotConfiguredResponse | BrokenAppResponse | MalformedRequestResponse
 >;
 
-export class TransactionChargeRequestedUseCase {
-  private logger = createLogger("TransactionChargeRequestedUseCase");
+export class TransactionCancelationRequestedUseCase {
+  private logger = createLogger("TransactionCancelationRequestedUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
 
@@ -42,7 +44,7 @@ export class TransactionChargeRequestedUseCase {
   async execute(args: {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
-    event: TransactionChargeRequestedEventFragment;
+    event: TransactionCancelationRequestedEventFragment;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event } = args;
 
@@ -62,14 +64,6 @@ export class TransactionChargeRequestedUseCase {
       this.logger.error("Channel not found in event transaction", {
         checkoutChannelId: event.transaction?.checkout?.channel?.id,
         orderChannelId: event.transaction?.order?.channel?.id,
-      });
-
-      return err(new MalformedRequestResponse());
-    }
-
-    if (!event.action.amount) {
-      this.logger.error("Saleor event amount not found in event action", {
-        amount: event.action.amount,
       });
 
       return err(new MalformedRequestResponse());
@@ -103,40 +97,41 @@ export class TransactionChargeRequestedUseCase {
       key: restrictedKey,
     });
 
-    this.logger.debug("Capturing Stripe payment intent with id", {
+    this.logger.debug("Canceling Stripe payment intent with id", {
       id: event.transaction.pspReference,
     });
 
-    const paymentIntentIdResult = createStripePaymentIntentId(event.transaction.pspReference);
+    const stripePaymentIntentId = createStripePaymentIntentId(event.transaction.pspReference);
 
-    const capturePaymentIntentResult = await stripePaymentIntentsApi.capturePaymentIntent({
-      id: paymentIntentIdResult,
+    const cancelPaymentIntentResult = await stripePaymentIntentsApi.cancelPaymentIntent({
+      id: stripePaymentIntentId,
     });
 
-    if (capturePaymentIntentResult.isErr()) {
+    if (cancelPaymentIntentResult.isErr()) {
       this.logger.error("Failed to capture payment intent", {
-        error: capturePaymentIntentResult.error,
+        error: cancelPaymentIntentResult.error,
       });
 
-      const mappedError = mapStripeCapturePaymentIntentErrorToApiError(
-        capturePaymentIntentResult.error,
+      const mappedError = mapStripeCancelPaymentIntentErrorToApiError(
+        cancelPaymentIntentResult.error,
       );
 
       return ok(
-        new TransactionChargeRequestedUseCaseResponses.Failure({
-          transactionResult: new ChargeFailureResult({
-            stripePaymentIntentId: paymentIntentIdResult,
+        new TransactionCancelationRequestedUseCaseResponses.Failure({
+          // TODO: remove this when Saleor won't require amount in the event
+          saleorEventAmount: 0,
+          transactionResult: new CancelFailureResult({
+            stripePaymentIntentId,
             stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           }),
-          saleorEventAmount: event.action.amount,
           error: mappedError,
         }),
       );
     }
 
     const saleorMoneyResult = SaleorMoney.createFromStripe({
-      amount: capturePaymentIntentResult.value.amount,
-      currency: capturePaymentIntentResult.value.currency,
+      amount: cancelPaymentIntentResult.value.amount,
+      currency: cancelPaymentIntentResult.value.currency,
     });
 
     if (saleorMoneyResult.isErr()) {
@@ -150,12 +145,12 @@ export class TransactionChargeRequestedUseCase {
     const saleorMoney = saleorMoneyResult.value;
 
     return ok(
-      new TransactionChargeRequestedUseCaseResponses.Success({
-        transactionResult: new ChargeSuccessResult({
-          stripePaymentIntentId: paymentIntentIdResult,
+      new TransactionCancelationRequestedUseCaseResponses.Success({
+        saleorMoney,
+        transactionResult: new CancelSuccessResult({
+          stripePaymentIntentId,
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         }),
-        saleorMoney,
       }),
     );
   }

@@ -21,6 +21,9 @@ export interface IStripePaymentIntentsApi {
   capturePaymentIntent(args: {
     id: StripePaymentIntentId;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
+  cancelPaymentIntent(args: {
+    id: StripePaymentIntentId;
+  }): Promise<Result<Stripe.PaymentIntent, unknown>>;
 }
 
 export interface IStripeEventVerify {
