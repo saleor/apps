@@ -32,5 +32,5 @@ export const PaymentGatewayInitializeSessionUseCaseResponses = {
 };
 
 export type PaymentGatewayInitializeSessionUseCaseResponsesType = InstanceType<
-  (typeof PaymentGatewayInitializeSessionUseCaseResponses)[keyof typeof PaymentGatewayInitializeSessionUseCaseResponses]
+  typeof PaymentGatewayInitializeSessionUseCaseResponses.Success
 >;

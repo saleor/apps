@@ -134,5 +134,6 @@ export const TransactionInitializeSessionUseCaseResponses = {
 };
 
 export type TransactionInitializeSessionUseCaseResponsesType = InstanceType<
-  (typeof TransactionInitializeSessionUseCaseResponses)[keyof typeof TransactionInitializeSessionUseCaseResponses]
+  | typeof TransactionInitializeSessionUseCaseResponses.Success
+  | typeof TransactionInitializeSessionUseCaseResponses.Failure
 >;

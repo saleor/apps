@@ -4,25 +4,22 @@ import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import {
-  StripeCancelPaymentIntentAPIError,
-  StripeCapturePaymentIntentAPIError,
-} from "@/modules/stripe/stripe-payment-intent-api-error";
-import {
-  CancelFailureResult,
-  CancelSuccessResult,
-} from "@/modules/transaction-result/cancel-result";
+  RefundFailureResult,
+  RefundSuccessResult,
+} from "@/modules/transaction-result/refund-result";
 
 class Success extends SuccessWebhookResponse {
-  readonly transactionResult: CancelSuccessResult;
+  readonly transactionResult: RefundSuccessResult;
   readonly saleorMoney: SaleorMoney;
 
-  constructor(args: { transactionResult: CancelSuccessResult; saleorMoney: SaleorMoney }) {
+  constructor(args: { transactionResult: RefundSuccessResult; saleorMoney: SaleorMoney }) {
     super();
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
   }
+
   getResponse(): Response {
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_REFUND_REQUESTED">({
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.transactionResult.stripePaymentIntentId,
@@ -39,27 +36,23 @@ class Success extends SuccessWebhookResponse {
 }
 
 class Failure extends SuccessWebhookResponse {
-  readonly transactionResult: CancelFailureResult;
-  readonly error: StripeCancelPaymentIntentAPIError;
+  readonly transactionResult: RefundFailureResult;
   readonly saleorEventAmount: number;
 
-  constructor(args: {
-    transactionResult: CancelFailureResult;
-    error: StripeCapturePaymentIntentAPIError;
-    saleorEventAmount: number;
-  }) {
+  constructor(args: { transactionResult: RefundFailureResult; saleorEventAmount: number }) {
     super();
     this.transactionResult = args.transactionResult;
-    this.error = args.error;
     this.saleorEventAmount = args.saleorEventAmount;
   }
 
   getResponse(): Response {
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_REFUND_REQUESTED">({
       result: this.transactionResult.result,
       pspReference: this.transactionResult.stripePaymentIntentId,
+      // TODO: remove this after Saleor allows to amount to be optional
       amount: this.saleorEventAmount,
-      message: this.error.merchantMessage,
+      // TODO: figure out how to get the error message
+      message: this.transactionResult.message,
       actions: this.transactionResult.actions,
       externalUrl: generateStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
@@ -71,12 +64,12 @@ class Failure extends SuccessWebhookResponse {
   }
 }
 
-export const TransactionCancelationRequestedUseCaseResponses = {
+export const TransactionRefundRequestedUseCaseResponses = {
   Success,
   Failure,
 };
 
-export type TransactionCancelationRequestedUseCaseResponsesType = InstanceType<
-  | typeof TransactionCancelationRequestedUseCaseResponses.Success
-  | typeof TransactionCancelationRequestedUseCaseResponses.Failure
+export type TransactionRefundRequestedUseCaseResponsesType = InstanceType<
+  | typeof TransactionRefundRequestedUseCaseResponses.Success
+  | typeof TransactionRefundRequestedUseCaseResponses.Failure
 >;

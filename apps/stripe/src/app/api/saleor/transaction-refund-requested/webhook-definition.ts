@@ -1,0 +1,17 @@
+import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
+
+import {
+  TransactionRefundRequested,
+  TransactionRefundRequestedDocument,
+} from "@/generated/graphql";
+import { saleorApp } from "@/lib/saleor-app";
+
+export const transactionRefundRequestedWebhookDefinition =
+  new SaleorSyncWebhook<TransactionRefundRequested>({
+    apl: saleorApp.apl,
+    event: "TRANSACTION_REFUND_REQUESTED",
+    name: "Stripe Transaction Refund Requested",
+    isActive: true,
+    query: TransactionRefundRequestedDocument,
+    webhookPath: "api/saleor/transaction-refund-requested",
+  });

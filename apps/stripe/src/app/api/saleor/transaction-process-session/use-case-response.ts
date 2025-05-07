@@ -123,5 +123,6 @@ export const TransactionProcessSessionUseCaseResponses = {
 };
 
 export type TransactionProcessSessionUseCaseResponsesType = InstanceType<
-  (typeof TransactionProcessSessionUseCaseResponses)[keyof typeof TransactionProcessSessionUseCaseResponses]
+  | typeof TransactionProcessSessionUseCaseResponses.Success
+  | typeof TransactionProcessSessionUseCaseResponses.Failure
 >;

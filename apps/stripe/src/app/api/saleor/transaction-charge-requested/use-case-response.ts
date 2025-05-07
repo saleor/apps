@@ -74,5 +74,6 @@ export const TransactionChargeRequestedUseCaseResponses = {
 };
 
 export type TransactionChargeRequestedUseCaseResponsesType = InstanceType<
-  (typeof TransactionChargeRequestedUseCaseResponses)[keyof typeof TransactionChargeRequestedUseCaseResponses]
+  | typeof TransactionChargeRequestedUseCaseResponses.Success
+  | typeof TransactionChargeRequestedUseCaseResponses.Failure
 >;
