@@ -15,6 +15,8 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
+import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
 import { TransactionChargeRequestedUseCase } from "./use-case";
 import { TransactionChargeRequestedUseCaseResponses } from "./use-case-response";
@@ -48,15 +50,17 @@ describe("TransactionChargeRequestedUseCase", () => {
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
-      TransactionChargeRequestedUseCaseResponses.ChargeSuccess,
+      TransactionChargeRequestedUseCaseResponses.Success,
     );
+
+    expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeSuccessResult);
 
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
     });
   });
 
-  it("Calls Stripe PaymentIntent API to capture payment intent and returns ChargeFailure when payment intent capture fails", async () => {
+  it("Calls Stripe PaymentIntent API to capture payment intent and returns ChargeFailureResult when payment intent capture fails", async () => {
     const spy = vi
       .spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent")
       .mockImplementationOnce(async () => err(new StripeAPIError("Error from Stripe API")));
@@ -73,8 +77,9 @@ describe("TransactionChargeRequestedUseCase", () => {
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
-      TransactionChargeRequestedUseCaseResponses.ChargeFailure,
+      TransactionChargeRequestedUseCaseResponses.Failure,
     );
+    expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
 
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
