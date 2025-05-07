@@ -9,6 +9,7 @@ import {
   createStripePaymentIntentStatus,
   StripePaymentIntentStatusValidationError,
 } from "@/modules/stripe/stripe-payment-intent-status";
+import { CancelSuccessResult } from "@/modules/transaction-result/cancel-result";
 import {
   AuthorizationFailureResult,
   ChargeFailureResult,
@@ -23,26 +24,37 @@ export type SupportedEvents =
   | Stripe.PaymentIntentProcessingEvent
   | Stripe.PaymentIntentRequiresActionEvent
   | Stripe.PaymentIntentAmountCapturableUpdatedEvent
-  | Stripe.PaymentIntentPaymentFailedEvent;
+  | Stripe.PaymentIntentPaymentFailedEvent
+  | Stripe.PaymentIntentCanceledEvent;
 
 type PossibleErrors = InstanceType<
   typeof SaleorMoney.ValidationError | typeof StripePaymentIntentStatusValidationError
 >;
 
 export class StripePaymentIntentHandler {
+  private resolveAmount(event: SupportedEvents) {
+    const amount = event.data.object.amount;
+    const amountCapturable = event.data.object.amount_capturable;
+    const amountReceived = event.data.object.amount_received;
+
+    switch (event.type) {
+      case "payment_intent.amount_capturable_updated":
+        return amountCapturable;
+      case "payment_intent.canceled":
+        return amount;
+      default:
+        return amountReceived;
+    }
+  }
+
   private prepareTransactionEventReportParams(event: SupportedEvents) {
     const intentObject = event.data.object;
     const currency = intentObject.currency;
-    const amountCapturable = intentObject.amount_capturable;
-    const amountReceived = intentObject.amount_received;
     const eventDate = createDateFromStripeEvent(event);
 
     const paramsResult = Result.combine([
       SaleorMoney.createFromStripe({
-        amount:
-          event.type === "payment_intent.amount_capturable_updated"
-            ? amountCapturable
-            : amountReceived,
+        amount: this.resolveAmount(event),
         currency,
       }),
       createStripePaymentIntentStatus(intentObject.status),
@@ -67,7 +79,8 @@ export class StripePaymentIntentHandler {
       event.type === "payment_intent.processing" ||
       event.type === "payment_intent.requires_action" ||
       event.type === "payment_intent.amount_capturable_updated" ||
-      event.type === "payment_intent.payment_failed"
+      event.type === "payment_intent.payment_failed" ||
+      event.type === "payment_intent.canceled"
     );
   }
 
@@ -132,6 +145,20 @@ export class StripePaymentIntentHandler {
           new TransactionEventReportVariablesResolver({
             saleorMoney,
             transactionResult: failureResult,
+            date: eventDate,
+            saleorTransactionId: saleorTransactionId,
+          }),
+        );
+      }
+
+      case "payment_intent.canceled": {
+        return ok(
+          new TransactionEventReportVariablesResolver({
+            transactionResult: new CancelSuccessResult({
+              stripePaymentIntentId: stripePaymentIntentId,
+              stripeEnv: args.stripeEnv,
+            }),
+            saleorMoney,
             date: eventDate,
             saleorTransactionId: saleorTransactionId,
           }),

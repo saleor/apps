@@ -24,6 +24,10 @@ export type StripeCapturePaymentIntentAPIError = Omit<
   StripePaymentIntentAPIError,
   "StripeCardError"
 >;
+export type StripeCancelPaymentIntentAPIError = Omit<
+  StripePaymentIntentAPIError,
+  "StripeCardError"
+>;
 
 export const StripeCardError = BaseError.subclass("StripeCardError", {
   props: {
@@ -181,3 +185,7 @@ export const mapStripeGetPaymentIntentErrorToApiError = (
 export const mapStripeCapturePaymentIntentErrorToApiError = (
   error: unknown,
 ): StripeCapturePaymentIntentAPIError => mapStripeGetPaymentIntentErrorToApiError(error);
+
+export const mapStripeCancelPaymentIntentErrorToApiError = (
+  error: unknown,
+): StripeCancelPaymentIntentAPIError => mapStripeGetPaymentIntentErrorToApiError(error);
