@@ -30,6 +30,12 @@ describe("ConfigRepo with DynamoDB integration test", () => {
       appId: mockedSaleorAppId,
     });
 
+    if (stripeConfig.isErr()) {
+      testLogger.error("Error fetching config before each test", {
+        error: stripeConfig.error,
+      });
+    }
+
     /**
      * Ensure DB is clean before each test
      */

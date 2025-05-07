@@ -26,7 +26,7 @@ export const deleteTable = async () => {
     );
 
     console.log("success: table deleted");
-  } catch (err: unknown) {
-    console.error("Failed to delete table", err);
+  } catch {
+    console.warn("Failed to delete table - it may already exists");
   }
 };
