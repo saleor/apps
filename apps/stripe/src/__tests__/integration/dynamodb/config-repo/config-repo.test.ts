@@ -2,6 +2,7 @@ import { createLogger } from "vite";
 import { describe, expect, it } from "vitest";
 
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
+import { mockEncryptor } from "@/__tests__/mocks/mock-encryptor";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -20,6 +21,7 @@ describe("ConfigRepo with DynamoDB integration test", () => {
       channelConfigMapping: DynamoDbChannelConfigMapping.entity,
       stripeConfig: DynamoDbStripeConfig.entity,
     },
+    encryptor: mockEncryptor,
   });
 
   it("Creates and reads a configuration", async () => {

@@ -20,6 +20,7 @@
     "test:ci": "vitest run --coverage",
     "test:integration": "vitest --project=integration",
     "test:integration:dynamodb": "vitest --project=integration:dynamodb",
+    "test:integration:dynamodb:ci": "CI=1 vitest --project=integration:dynamodb",
     "test:unit": "vitest --project=unit"
   },
   "config": {
@@ -73,7 +74,6 @@
     "zod-validation-error": "3.4.0"
   },
   "devDependencies": {
-    "zx": "8.5.3",
     "@graphql-codegen/cli": "5.0.2",
     "@graphql-codegen/introspection": "4.0.3",
     "@graphql-codegen/typed-document-node": "5.0.5",
@@ -98,6 +98,7 @@
     "typescript": "5.8.2",
     "vite": "6.2.4",
     "vite-tsconfig-paths": "5.1.4",
-    "vitest": "3.1.1"
+    "vitest": "3.1.1",
+    "zx": "8.5.3"
   }
 }
