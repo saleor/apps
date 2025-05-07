@@ -19,7 +19,7 @@ import { RecordedTransaction } from "@/modules/transactions-recording/domain/rec
 
 import { TransactionEventReportVariablesResolver } from "../transaction-event-report-variables-resolver";
 
-export type SupportedEvents =
+export type StripePaymentIntentHandlerSupportedEvents =
   | Stripe.PaymentIntentSucceededEvent
   | Stripe.PaymentIntentProcessingEvent
   | Stripe.PaymentIntentRequiresActionEvent
@@ -32,7 +32,7 @@ type PossibleErrors = InstanceType<
 >;
 
 export class StripePaymentIntentHandler {
-  private resolveAmount(event: SupportedEvents) {
+  private resolveAmount(event: StripePaymentIntentHandlerSupportedEvents) {
     const amount = event.data.object.amount;
     const amountCapturable = event.data.object.amount_capturable;
     const amountReceived = event.data.object.amount_received;
@@ -47,7 +47,7 @@ export class StripePaymentIntentHandler {
     }
   }
 
-  private prepareTransactionEventReportParams(event: SupportedEvents) {
+  private prepareTransactionEventReportParams(event: StripePaymentIntentHandlerSupportedEvents) {
     const intentObject = event.data.object;
     const currency = intentObject.currency;
     const eventDate = createDateFromStripeEvent(event);
@@ -73,7 +73,7 @@ export class StripePaymentIntentHandler {
     });
   }
 
-  checkIfEventIsSupported(event: Stripe.Event): event is SupportedEvents {
+  checkIfEventIsSupported(event: Stripe.Event): event is StripePaymentIntentHandlerSupportedEvents {
     return (
       event.type === "payment_intent.succeeded" ||
       event.type === "payment_intent.processing" ||
@@ -85,7 +85,7 @@ export class StripePaymentIntentHandler {
   }
 
   processPaymentIntentEvent(args: {
-    event: SupportedEvents;
+    event: StripePaymentIntentHandlerSupportedEvents;
     recordedTransaction: RecordedTransaction;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeEnv: StripeEnv;
