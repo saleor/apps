@@ -2,8 +2,8 @@ import "next-test-api-route-handler";
 
 import { beforeEach, vi } from "vitest";
 
+import { createTable } from "./create-table";
 import { deleteTable } from "./delete-table";
-import { createTable } from "./setup-table";
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars, n/no-process-env
 process.env.TZ = "UTC";
@@ -19,13 +19,7 @@ vi.stubEnv("DYNAMODB_MAIN_TABLE_NAME", "stripe-main-table-integration");
 beforeEach(async () => {
   await deleteTable();
 
-  await createTable().catch(() => {
-    /*
-     * it doesn't actually work - looks like vitest is still isolating processes so it doesn't kill ALL of them
-     * todo this probably should be fix for early exist
-     */
-    process.exit(1);
-  });
+  await createTable();
 });
 
 export {};

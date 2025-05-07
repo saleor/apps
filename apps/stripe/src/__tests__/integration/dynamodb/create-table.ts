@@ -3,10 +3,13 @@
 */
 
 import { CreateTableCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { fromEnv } from "@aws-sdk/credential-providers";
 
 const TABLE_NAME = process.env.INTEGRATION_DYNAMO_TABLE_NAME ?? "stripe-main-table-integration";
 
-const client = new DynamoDBClient();
+const client = new DynamoDBClient({
+  credentials: fromEnv(),
+});
 
 export const createTable = async () => {
   console.log("Creating table");
