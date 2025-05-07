@@ -2,6 +2,7 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next-app-router"
 import { AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
+import { captureException } from "@sentry/nextjs";
 
 import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionCancelationRequestedWebhookDefinition } from "@/app/api/saleor/transaction-cancelation-requested/webhook-definition";
@@ -45,6 +46,8 @@ const handler = createManifestHandler({
         transactionCancelationRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
       ],
     };
+
+    captureException(new Error("test"));
 
     return manifest;
   },
