@@ -29,3 +29,17 @@ export class RefundFailureResult extends ResultBase {
     this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 }
+
+export class RefundRequestResult extends ResultBase {
+  readonly result = "REFUND_REQUEST" as const;
+  readonly actions = [] as const;
+  readonly message = "Refund is processing";
+
+  readonly stripePaymentIntentId: StripePaymentIntentId;
+
+  constructor(args: { stripePaymentIntentId: StripePaymentIntentId; stripeEnv: StripeEnv }) {
+    super(args.stripeEnv);
+
+    this.stripePaymentIntentId = args.stripePaymentIntentId;
+  }
+}

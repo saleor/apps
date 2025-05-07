@@ -41,7 +41,7 @@ describe("mapPaymentIntentStatusToAppResult", () => {
         expectedResult: ChargeActionRequiredResult,
       },
     ])(
-      "maps Stripe status: $status to transactionResult: $expectedResult.name",
+      "maps Stripe PaymentIntent status: $status to transactionResult: $expectedResult.name",
       ({ status, expectedResult }) => {
         const stripeStatus = createStripePaymentIntentStatus(status)._unsafeUnwrap();
         const result = mapPaymentIntentStatusToTransactionResult(

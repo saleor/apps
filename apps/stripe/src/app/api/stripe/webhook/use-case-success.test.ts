@@ -110,7 +110,9 @@ describe("StripeWebhookUseCase - Success cases", () => {
       },
       `
       {
-        "actions": [],
+        "actions": [
+          "REFUND",
+        ],
         "amount": SaleorMoney {
           "amount": 10.13,
           "currency": "USD",
@@ -174,7 +176,9 @@ describe("StripeWebhookUseCase - Success cases", () => {
       },
       `
       {
-        "actions": [],
+        "actions": [
+          "REFUND",
+        ],
         "amount": SaleorMoney {
           "amount": 10.13,
           "currency": "USD",

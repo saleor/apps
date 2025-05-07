@@ -44,6 +44,7 @@ export class StripeRefundHandler {
     return event.type === "charge.refund.updated";
   }
 
+  // TODO: exteact this to a common place
   private resolveTransactionResult(
     status: Stripe.ChargeRefundUpdatedEvent["data"]["object"]["status"],
     stripePaymentIntentId: StripePaymentIntentId,

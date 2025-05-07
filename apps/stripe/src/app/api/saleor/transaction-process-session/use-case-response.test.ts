@@ -39,7 +39,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchResponse.status).toBe(200);
       expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "REFUND",
+          ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent succeeded",
