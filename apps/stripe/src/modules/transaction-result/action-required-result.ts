@@ -6,7 +6,7 @@ import { ResultBase } from "@/modules/transaction-result/types";
 
 export class ChargeActionRequiredResult extends ResultBase {
   readonly result = "CHARGE_ACTION_REQUIRED" as const;
-  readonly actions = [] as const;
+  readonly actions = ["CANCEL"] as const;
 
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly message: string;
@@ -19,6 +19,8 @@ export class ChargeActionRequiredResult extends ResultBase {
         return "Payment intent requires confirmation";
       case "requires_payment_method":
         return "Payment intent requires payment method";
+      case "canceled":
+        return "Payment intent was canceled";
       default:
         throw new BaseError(
           `Payment intent status ${stripeStatus} is not supported for CHARGE_ACTION_REQUIRED transaction flow`,
@@ -40,7 +42,7 @@ export class ChargeActionRequiredResult extends ResultBase {
 
 export class AuthorizationActionRequiredResult extends ResultBase {
   readonly result = "AUTHORIZATION_ACTION_REQUIRED" as const;
-  readonly actions = [] as const;
+  readonly actions = ["CANCEL"] as const;
 
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly message: string;

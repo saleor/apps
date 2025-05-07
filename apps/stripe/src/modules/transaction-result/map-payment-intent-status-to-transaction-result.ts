@@ -6,7 +6,6 @@ import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
 } from "./action-required-result";
-import { AuthorizationFailureResult, ChargeFailureResult } from "./failure-result";
 import { AuthorizationRequestResult, ChargeRequestResult } from "./request-result";
 import { AuthorizationSuccessResult, ChargeSuccessResult } from "./success-result";
 
@@ -21,6 +20,7 @@ export const mapPaymentIntentStatusToTransactionResult = (
     case "requires_payment_method":
     case "requires_confirmation":
     case "requires_action":
+    case "canceled":
       if (resolvedTransactionFlow === "CHARGE") {
         return ChargeActionRequiredResult;
       }
@@ -32,12 +32,6 @@ export const mapPaymentIntentStatusToTransactionResult = (
       }
 
       return AuthorizationRequestResult;
-    case "canceled":
-      if (resolvedTransactionFlow === "CHARGE") {
-        return ChargeFailureResult;
-      }
-
-      return AuthorizationFailureResult;
     case "requires_capture":
       return AuthorizationSuccessResult;
     default:
