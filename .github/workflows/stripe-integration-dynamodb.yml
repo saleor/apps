@@ -1,4 +1,6 @@
 name: Stripe - integration tests with DynamoDB
+permissions:
+  contents: read
 
 on: [push]
 
