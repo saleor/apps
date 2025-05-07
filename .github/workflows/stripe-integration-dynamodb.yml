@@ -6,6 +6,12 @@ on:
   workflow_dispatch:
 
   push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - synchronize
+      - opened
     paths:
       - apps/stripe/**
       - packages/**
