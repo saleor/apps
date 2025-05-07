@@ -1732,9 +1732,6 @@ importers:
       vitest:
         specifier: 3.1.1
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
-      zx:
-        specifier: 8.5.3
-        version: 8.5.3
 
   packages/eslint-config:
     devDependencies:
@@ -11293,11 +11290,6 @@ packages:
 
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
-
-  zx@8.5.3:
-    resolution: {integrity: sha512-TsGLAt8Ngr4wDXLZmN9BT+6FWVLFbqdQ0qpXkV3tIfH7F+MgN/WUeSY7W4nNqAntjWunmnRaznpyxtJRPhCbUQ==}
-    engines: {node: '>= 12.17.0'}
-    hasBin: true
 
 snapshots:
 
@@ -22901,5 +22893,3 @@ snapshots:
   zod@3.21.4: {}
 
   zod@3.23.8: {}
-
-  zx@8.5.3: {}
