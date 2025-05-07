@@ -2,7 +2,7 @@ name: Stripe - integration tests with DynamoDB
 permissions:
   contents: read
 
-
+# Env for testing entities
 env:
   AWS_REGION: "localhost"
   AWS_ACCESS_KEY_ID: "test"
@@ -46,6 +46,7 @@ jobs:
         with:
           compose-file: "apps/stripe/src/__tests__/integration/dynamodb/docker-compose.yml"
         env:
+          # Env for DB itself
           AWS_REGION: "localhost"
           AWS_ACCESS_KEY_ID: "test"
           AWS_SECRET_ACCESS_KEY: "test"
