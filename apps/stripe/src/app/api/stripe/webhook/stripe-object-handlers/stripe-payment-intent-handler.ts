@@ -155,10 +155,10 @@ export class StripePaymentIntentHandler {
         return ok(
           new TransactionEventReportVariablesResolver({
             transactionResult: new CancelSuccessResult({
-              saleorMoney,
               stripePaymentIntentId: stripePaymentIntentId,
               stripeEnv: args.stripeEnv,
             }),
+            saleorMoney,
             date: eventDate,
             saleorTransactionId: saleorTransactionId,
           }),

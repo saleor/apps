@@ -15,6 +15,10 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import {
+  CancelFailureResult,
+  CancelSuccessResult,
+} from "@/modules/transaction-result/cancel-result";
 
 import { TransactionCancelationRequestedUseCase } from "./use-case";
 import { TransactionCancelationRequestedUseCaseResponses } from "./use-case-response";
@@ -24,7 +28,7 @@ describe("TransactionCancelationRequestedUseCase", () => {
     create: () => mockedStripePaymentIntentsApi,
   } satisfies IStripePaymentIntentsApiFactory;
 
-  it("Calls Stripe PaymentIntent API to cancel payment intent and returns CancelSuccess when payment intent is canceled successfully", async () => {
+  it("Calls Stripe PaymentIntent API to cancel payment intent and returns Success with CancelSuccessResult when payment intent is canceled successfully", async () => {
     const spy = vi
       .spyOn(mockedStripePaymentIntentsApi, "cancelPaymentIntent")
       .mockImplementationOnce(async () =>
@@ -48,15 +52,16 @@ describe("TransactionCancelationRequestedUseCase", () => {
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
-      TransactionCancelationRequestedUseCaseResponses.CancelSuccess,
+      TransactionCancelationRequestedUseCaseResponses.Success,
     );
+    expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(CancelSuccessResult);
 
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,
     });
   });
 
-  it("Calls Stripe PaymentIntent API to cancel payment intent and returns CancelFailure when payment intent cancel fails", async () => {
+  it("Calls Stripe PaymentIntent API to cancel payment intent and returns Failure with CancelFailureResult when payment intent cancel fails", async () => {
     const spy = vi
       .spyOn(mockedStripePaymentIntentsApi, "cancelPaymentIntent")
       .mockImplementationOnce(async () => err(new StripeAPIError("Error from Stripe API")));
@@ -73,8 +78,9 @@ describe("TransactionCancelationRequestedUseCase", () => {
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
-      TransactionCancelationRequestedUseCaseResponses.CancelFailure,
+      TransactionCancelationRequestedUseCaseResponses.Failure,
     );
+    expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(CancelFailureResult);
 
     expect(spy).toHaveBeenCalledWith({
       id: mockedStripePaymentIntentId,

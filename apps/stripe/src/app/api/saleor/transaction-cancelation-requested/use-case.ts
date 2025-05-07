@@ -117,10 +117,10 @@ export class TransactionCancelationRequestedUseCase {
       );
 
       return ok(
-        new TransactionCancelationRequestedUseCaseResponses.CancelFailure({
+        new TransactionCancelationRequestedUseCaseResponses.Failure({
+          // TODO: remove this when Saleor won't require amount in the event
+          saleorEventAmount: 0,
           transactionResult: new CancelFailureResult({
-            // TODO: remove this when Saleor won't require amount in the event
-            saleorEventAmount: 0,
             stripePaymentIntentId,
             stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           }),
@@ -145,9 +145,9 @@ export class TransactionCancelationRequestedUseCase {
     const saleorMoney = saleorMoneyResult.value;
 
     return ok(
-      new TransactionCancelationRequestedUseCaseResponses.CancelSuccess({
+      new TransactionCancelationRequestedUseCaseResponses.Success({
+        saleorMoney,
         transactionResult: new CancelSuccessResult({
-          saleorMoney,
           stripePaymentIntentId,
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         }),

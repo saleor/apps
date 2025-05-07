@@ -34,9 +34,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
           "amount": 100,
           "data": {
             "paymentIntent": {
@@ -68,9 +65,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
           "amount": 100,
           "data": {
             "paymentIntent": {
@@ -99,9 +93,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
           "amount": 21.23,
           "data": {
             "paymentIntent": {
@@ -131,9 +122,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
           "amount": 21.123,
           "data": {
             "paymentIntent": {
@@ -163,9 +151,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
           "amount": 100.123,
           "data": {
             "paymentIntent": {
@@ -197,9 +182,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
           "amount": 21.23,
           "data": {
             "paymentIntent": {
@@ -229,9 +211,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
           "amount": 21.123,
           "data": {
             "paymentIntent": {
@@ -261,9 +240,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
           "amount": 100.123,
           "data": {
             "paymentIntent": {

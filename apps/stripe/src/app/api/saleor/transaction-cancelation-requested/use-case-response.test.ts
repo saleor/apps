@@ -11,11 +11,11 @@ import {
 import { TransactionCancelationRequestedUseCaseResponses } from "./use-case-response";
 
 describe("TransactionCancelationRequestedUseCaseResponses", () => {
-  describe("ChargeSuccess", () => {
+  describe("Success", () => {
     it("getResponse() returns valid Response with status 200", async () => {
-      const response = new TransactionCancelationRequestedUseCaseResponses.CancelSuccess({
+      const response = new TransactionCancelationRequestedUseCaseResponses.Success({
+        saleorMoney: getMockedSaleorMoney(),
         transactionResult: new CancelSuccessResult({
-          saleorMoney: getMockedSaleorMoney(),
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeEnv: "TEST",
         }),
@@ -37,14 +37,14 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
     });
   });
 
-  describe("ChargeFailure", () => {
+  describe("Failure", () => {
     it("getResponse() returns valid Response with status 200", async () => {
-      const response = new TransactionCancelationRequestedUseCaseResponses.CancelFailure({
+      const response = new TransactionCancelationRequestedUseCaseResponses.Failure({
         transactionResult: new CancelFailureResult({
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeEnv: "LIVE",
-          saleorEventAmount: 0,
         }),
+        saleorEventAmount: 0,
         error: new StripeAPIError("Error from stripe"),
       });
       const fetchReponse = response.getResponse();

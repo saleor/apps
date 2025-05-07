@@ -122,7 +122,6 @@ class Failure extends SuccessWebhookResponse {
           ],
         },
       }),
-      actions: this.actions,
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });

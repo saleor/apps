@@ -60,8 +60,10 @@ describe("StripePaymentIntentHandler", () => {
         "should resolve fields with type: 'CHARGE' from Stripe event properly for '%s' flow",
         (resolvedTransactionFlow) => {
           const event = getMockedPaymentIntentSucceededEvent();
+          const amountToUse = 123_30;
+          const amountExpected = 123.3; // Converted to Saleor float
 
-          event.data.object.amount_received = 123_30;
+          event.data.object.amount_received = amountToUse;
 
           const recordedTransaction = getMockedRecordedTransaction({
             resolvedTransactionFlow,
@@ -81,8 +83,7 @@ describe("StripePaymentIntentHandler", () => {
           expect(type).toBe("CHARGE_SUCCESS");
           // comes from mock
           expect(amount.currency).toStrictEqual("USD");
-          // Converted to Saleor float
-          expect(amount.amount).toStrictEqual(123.3);
+          expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
         },
@@ -146,8 +147,10 @@ describe("StripePaymentIntentHandler", () => {
         "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
         ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentRequiresActionEvent();
+          const amountToUse = 123_30;
+          const amountExpected = 123.3; // Converted to Saleor float
 
-          event.data.object.amount_received = 123_30;
+          event.data.object.amount_received = amountToUse;
 
           const recordedTransaction = getMockedRecordedTransaction({
             resolvedTransactionFlow,
@@ -167,8 +170,7 @@ describe("StripePaymentIntentHandler", () => {
           expect(type).toBe(expectedType);
           // comes from mock
           expect(amount.currency).toStrictEqual("USD");
-          // Converted to Saleor float
-          expect(amount.amount).toStrictEqual(123.3);
+          expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
         },
@@ -189,8 +191,10 @@ describe("StripePaymentIntentHandler", () => {
         "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
         ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentAmountCapturableUpdatedEvent();
+          const amountToUse = 123_30;
+          const amountExpected = 123.3; // Converted to Saleor float
 
-          event.data.object.amount_capturable = 123_30;
+          event.data.object.amount_capturable = amountToUse;
 
           const recordedTransaction = getMockedRecordedTransaction({
             resolvedTransactionFlow,
@@ -210,8 +214,7 @@ describe("StripePaymentIntentHandler", () => {
           expect(type).toBe(expectedType);
           // comes from mock
           expect(amount.currency).toStrictEqual("USD");
-          // Converted to Saleor float
-          expect(amount.amount).toStrictEqual(123.3);
+          expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
         },
@@ -232,8 +235,10 @@ describe("StripePaymentIntentHandler", () => {
         "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
         ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentPaymentFailedEvent();
+          const amountToUse = 123_30;
+          const amountExpected = 123.3; // Converted to Saleor float
 
-          event.data.object.amount_received = 123_30;
+          event.data.object.amount_received = amountToUse;
 
           const recordedTransaction = getMockedRecordedTransaction({
             resolvedTransactionFlow,
@@ -253,8 +258,7 @@ describe("StripePaymentIntentHandler", () => {
           expect(type).toBe(expectedType);
           // comes from mock
           expect(amount.currency).toStrictEqual("USD");
-          // Converted to Saleor float
-          expect(amount.amount).toStrictEqual(123.3);
+          expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
         },
@@ -275,8 +279,10 @@ describe("StripePaymentIntentHandler", () => {
         "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
         ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentPaymentCanceledEvent();
+          const amountToUse = 123_30;
+          const amountExpected = 123.3; // Converted to Saleor float
 
-          event.data.object.amount = 123_30;
+          event.data.object.amount = amountToUse;
 
           const recordedTransaction = getMockedRecordedTransaction({
             resolvedTransactionFlow,
@@ -296,8 +302,7 @@ describe("StripePaymentIntentHandler", () => {
           expect(type).toBe(expectedType);
           // comes from mock
           expect(amount.currency).toStrictEqual("USD");
-          // Converted to Saleor float
-          expect(amount.amount).toStrictEqual(123.3);
+          expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
         },

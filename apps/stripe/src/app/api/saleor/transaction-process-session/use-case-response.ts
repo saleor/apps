@@ -11,10 +11,31 @@ import {
   StripeGetPaymentIntentAPIError,
 } from "@/modules/stripe/stripe-payment-intent-api-error";
 import {
+  AuthorizationActionRequiredResult,
+  ChargeActionRequiredResult,
+} from "@/modules/transaction-result/action-required-result";
+import {
   AuthorizationFailureResult,
   ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
-import { TransactionResult } from "@/modules/transaction-result/types";
+import {
+  AuthorizationRequestResult,
+  ChargeRequestResult,
+} from "@/modules/transaction-result/request-result";
+import {
+  AuthorizationSuccessResult,
+  ChargeSuccessResult,
+} from "@/modules/transaction-result/success-result";
+
+type TransactionResult =
+  | ChargeSuccessResult
+  | AuthorizationSuccessResult
+  | ChargeActionRequiredResult
+  | AuthorizationActionRequiredResult
+  | ChargeRequestResult
+  | AuthorizationRequestResult
+  | ChargeFailureResult
+  | AuthorizationFailureResult;
 
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: TransactionResult;
