@@ -12,7 +12,7 @@ export default defineConfig({
         extends: true,
         test: {
           include: ["src/**/*.test.ts"],
-          exclude: ["src/**/*.integration.test.ts", "src/__tests__/integration"], // exclude integration tests so vitest doesn't run them twice
+          exclude: ["src/**/*.integration.test.ts", "src/__tests__/integration/**"], // exclude integration tests so vitest doesn't run them twice
           name: "unit",
           setupFiles: "./src/__tests__/setup.units.ts",
         },
