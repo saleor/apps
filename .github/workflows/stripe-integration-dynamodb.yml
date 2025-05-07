@@ -26,4 +26,4 @@ jobs:
 
       - name: Execute tests
         run: |
-          pnpm run test:integration:dynamodb
+          pnpm run --filter=saleor-app-payment-stripe test:integration:dynamodb
