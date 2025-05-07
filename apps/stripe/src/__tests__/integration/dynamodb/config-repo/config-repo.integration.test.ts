@@ -1,5 +1,5 @@
 import { createLogger } from "vite";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockEncryptor } from "@/__tests__/mocks/mock-encryptor";
@@ -22,6 +22,19 @@ describe("ConfigRepo with DynamoDB integration test", () => {
       stripeConfig: DynamoDbStripeConfig.entity,
     },
     encryptor: mockEncryptor,
+  });
+
+  beforeEach(async () => {
+    const stripeConfig = await repo.getRootConfig({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+    });
+
+    /**
+     * Ensure DB is clean before each test
+     */
+    expect(stripeConfig._unsafeUnwrap().stripeConfigsById).toStrictEqual({});
+    expect(stripeConfig._unsafeUnwrap().chanelConfigMapping).toStrictEqual({});
   });
 
   it("Creates and reads a configuration", async () => {

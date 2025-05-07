@@ -1,4 +1,3 @@
-import { truncate } from "knip/dist/util/string";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
@@ -13,7 +12,7 @@ export default defineConfig({
         extends: true,
         test: {
           include: ["src/**/*.test.ts"],
-          exclude: ["src/**/*.integration.test.ts"], // exclude integration tests so vitest doesn't run them twice
+          exclude: ["src/**/*.integration.test.ts", "src/__tests__/integration"], // exclude integration tests so vitest doesn't run them twice
           name: "unit",
           setupFiles: "./src/__tests__/setup.units.ts",
         },
@@ -29,19 +28,14 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          sequence: {
+            concurrent: false,
+          },
+
           globalSetup: "./src/__tests__/integration/dynamodb/global-setup.integration-dynamo.ts",
           include: ["src/__tests__/integration/dynamodb/**/*.test.{ts,ts}"],
           name: "integration:dynamodb",
           setupFiles: "./src/__tests__/integration/dynamodb/setup.integration-dynamo.ts",
-          poolOptions: {
-            forks: {
-              /*
-               * todo this likely have side effect with test isolation, so maybe we need different way to force sequence
-               * https://vitest.dev/config/#pooloptions-forks-singlefork
-               */
-              singleFork: true,
-            },
-          },
         },
       },
     ],
