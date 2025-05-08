@@ -21,6 +21,7 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
   }
 
   async createPaymentIntent(args: {
+    // TODO: narrow type here
     params: Stripe.PaymentIntentCreateParams;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(

@@ -41,7 +41,9 @@ describe("TransactionEventReportVariablesResolver", () => {
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
-        "actions": [],
+        "actions": [
+          "REFUND",
+        ],
         "amount": SaleorMoney {
           "amount": 10,
           "currency": "USD",

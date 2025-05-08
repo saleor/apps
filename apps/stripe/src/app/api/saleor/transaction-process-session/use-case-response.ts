@@ -6,10 +6,10 @@ import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import {
+  StripeApiError,
   StripeApiErrorPublicCode,
   StripeCardErrorPublicCode,
-  StripeGetPaymentIntentAPIError,
-} from "@/modules/stripe/stripe-payment-intent-api-error";
+} from "@/modules/stripe/stripe-api-error";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
@@ -67,7 +67,7 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult | AuthorizationFailureResult;
-  readonly error: StripeGetPaymentIntentAPIError;
+  readonly error: StripeApiError;
   readonly saleorEventAmount: number;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
@@ -81,7 +81,7 @@ class Failure extends SuccessWebhookResponse {
 
   constructor(args: {
     transactionResult: ChargeFailureResult | AuthorizationFailureResult;
-    error: StripeGetPaymentIntentAPIError;
+    error: StripeApiError;
     saleorEventAmount: number;
   }) {
     super();
@@ -123,5 +123,6 @@ export const TransactionProcessSessionUseCaseResponses = {
 };
 
 export type TransactionProcessSessionUseCaseResponsesType = InstanceType<
-  (typeof TransactionProcessSessionUseCaseResponses)[keyof typeof TransactionProcessSessionUseCaseResponses]
+  | typeof TransactionProcessSessionUseCaseResponses.Success
+  | typeof TransactionProcessSessionUseCaseResponses.Failure
 >;

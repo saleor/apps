@@ -7,6 +7,6 @@ export const supportedStripeEvents: Array<Stripe.WebhookEndpointCreateParams.Ena
   "payment_intent.requires_action",
   "payment_intent.succeeded",
   "payment_intent.canceled",
-];
 
-// todo make exhaustive check in stripe webhook to ensure we handle all
+  "charge.refund.updated",
+];

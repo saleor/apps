@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { describe, expect, it } from "vitest";
 
 import {
-  mapStripeCreatePaymentIntentErrorToApiError,
+  mapStripeErrorToApiError,
   StripeAPIError,
   StripeAuthenticationError,
   StripeCardError,
@@ -12,9 +12,9 @@ import {
   StripePermissionError,
   StripeRateLimitError,
   StripeUnknownAPIError,
-} from "./stripe-payment-intent-api-error";
+} from "./stripe-api-error";
 
-describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
+describe("mapStripeErrorToApiError", () => {
   it("maps Stripe.errors.StripeCardError to app StripeCardError", () => {
     const stripeError = new Stripe.errors.StripeCardError({
       message: "Card declined",
@@ -22,7 +22,7 @@ describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
       code: "card_declined",
     });
 
-    const result = mapStripeCreatePaymentIntentErrorToApiError(stripeError);
+    const result = mapStripeErrorToApiError(stripeError);
 
     expect(result).toBeInstanceOf(StripeCardError);
   });
@@ -35,7 +35,7 @@ describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
       code: "param_required",
     });
 
-    const result = mapStripeCreatePaymentIntentErrorToApiError(stripeError);
+    const result = mapStripeErrorToApiError(stripeError);
 
     expect(result).toBeInstanceOf(StripeInvalidRequestError);
   });
@@ -46,7 +46,7 @@ describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
       type: "rate_limit_error",
     });
 
-    const result = mapStripeCreatePaymentIntentErrorToApiError(stripeError);
+    const result = mapStripeErrorToApiError(stripeError);
 
     expect(result).toBeInstanceOf(StripeRateLimitError);
   });
@@ -57,7 +57,7 @@ describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
       type: "api_error",
     });
 
-    const result = mapStripeCreatePaymentIntentErrorToApiError(stripeError);
+    const result = mapStripeErrorToApiError(stripeError);
 
     expect(result).toBeInstanceOf(StripeConnectionError);
     expect(result.message).toBe("There was a network problem between app and Stripe");
@@ -69,7 +69,7 @@ describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
       type: "api_error",
     });
 
-    const result = mapStripeCreatePaymentIntentErrorToApiError(stripeError);
+    const result = mapStripeErrorToApiError(stripeError);
 
     expect(result).toBeInstanceOf(StripeAPIError);
   });
@@ -80,7 +80,7 @@ describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
       type: "authentication_error",
     });
 
-    const result = mapStripeCreatePaymentIntentErrorToApiError(stripeError);
+    const result = mapStripeErrorToApiError(stripeError);
 
     expect(result).toBeInstanceOf(StripeAuthenticationError);
   });
@@ -91,7 +91,7 @@ describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
       type: "invalid_request_error",
     });
 
-    const result = mapStripeCreatePaymentIntentErrorToApiError(stripeError);
+    const result = mapStripeErrorToApiError(stripeError);
 
     expect(result).toBeInstanceOf(StripePermissionError);
   });
@@ -102,7 +102,7 @@ describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
       type: "idempotency_error",
     });
 
-    const result = mapStripeCreatePaymentIntentErrorToApiError(stripeError);
+    const result = mapStripeErrorToApiError(stripeError);
 
     expect(result).toBeInstanceOf(StripeIdempotencyError);
   });
@@ -110,7 +110,7 @@ describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
   it("maps unknown error to StripeUnknownAPIError", () => {
     const unknownError = new Error("Unknown error");
 
-    const result = mapStripeCreatePaymentIntentErrorToApiError(unknownError);
+    const result = mapStripeErrorToApiError(unknownError);
 
     expect(result).toBeInstanceOf(StripeUnknownAPIError);
   });

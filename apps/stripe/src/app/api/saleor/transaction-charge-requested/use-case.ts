@@ -10,7 +10,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { mapStripeCapturePaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
+import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
@@ -118,9 +118,7 @@ export class TransactionChargeRequestedUseCase {
         error: capturePaymentIntentResult.error,
       });
 
-      const mappedError = mapStripeCapturePaymentIntentErrorToApiError(
-        capturePaymentIntentResult.error,
-      );
+      const mappedError = mapStripeErrorToApiError(capturePaymentIntentResult.error);
 
       return ok(
         new TransactionChargeRequestedUseCaseResponses.Failure({

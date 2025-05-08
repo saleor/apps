@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
+import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedPaymentIntentAmountCapturableUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-amount-capturable-updated";
 import { getMockedPaymentIntentPaymentCanceledEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-canceled";
 import { getMockedPaymentIntentPaymentFailedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-failed";
@@ -14,41 +16,25 @@ import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-fl
 import { StripePaymentIntentHandler } from "./stripe-payment-intent-handler";
 
 describe("StripePaymentIntentHandler", () => {
-  describe("checkIfEventIsSupported", () => {
-    it.each([
-      {
-        event: getMockedPaymentIntentSucceededEvent(),
-      },
-      {
-        event: getMockedPaymentIntentProcessingEvent(),
-      },
-      {
-        event: getMockedPaymentIntentRequiresActionEvent(),
-      },
-      {
-        event: getMockedPaymentIntentAmountCapturableUpdatedEvent(),
-      },
-      {
-        event: getMockedPaymentIntentPaymentFailedEvent(),
-      },
-      {
-        event: getMockedPaymentIntentPaymentCanceledEvent(),
-      },
-    ])("should return true for supported event: $event.type", ({ event }) => {
-      const result = new StripePaymentIntentHandler().checkIfEventIsSupported(event);
+  it("should return NotSupportedEventError for unsupported event", async () => {
+    const mockTransactionRecorder = new MockedTransactionRecorder();
+    const event = {
+      type: "payment_intent.created",
+    } as unknown as Stripe.Event;
 
-      expect(result).toBe(true);
+    const handler = new StripePaymentIntentHandler();
+
+    const result = await handler.processPaymentIntentEvent({
+      event,
+      stripeEnv: "LIVE",
+      transactionRecorder: mockTransactionRecorder,
+      appId: "appId",
+      saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    it("should return false for unsupported event", () => {
-      const event = {
-        type: "payment_intent.created",
-      } as unknown as Stripe.Event;
-
-      const result = new StripePaymentIntentHandler().checkIfEventIsSupported(event);
-
-      expect(result).toBe(false);
-    });
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+      StripePaymentIntentHandler.NotSupportedEventError,
+    );
   });
 
   describe("processPaymentIntentEvent", () => {
@@ -58,21 +44,27 @@ describe("StripePaymentIntentHandler", () => {
         createResolvedTransactionFlow("CHARGE"),
       ])(
         "should resolve fields with type: 'CHARGE' from Stripe event properly for '%s' flow",
-        (resolvedTransactionFlow) => {
+        async (resolvedTransactionFlow) => {
+          const mockTransactionRecorder = new MockedTransactionRecorder();
+
+          mockTransactionRecorder.transactions = {
+            [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
+              resolvedTransactionFlow,
+            }),
+          };
+
           const event = getMockedPaymentIntentSucceededEvent();
           const amountToUse = 123_30;
           const amountExpected = 123.3; // Converted to Saleor float
 
           event.data.object.amount_received = amountToUse;
 
-          const recordedTransaction = getMockedRecordedTransaction({
-            resolvedTransactionFlow,
-          });
-
-          const result = new StripePaymentIntentHandler().processPaymentIntentEvent({
+          const handler = new StripePaymentIntentHandler();
+          const result = await handler.processPaymentIntentEvent({
             event,
-            recordedTransaction,
-            stripePaymentIntentId: mockedStripePaymentIntentId,
+            transactionRecorder: mockTransactionRecorder,
+            appId: "appId",
+            saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
           });
 
@@ -102,19 +94,27 @@ describe("StripePaymentIntentHandler", () => {
         },
       ])(
         "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
-        ({ resolvedTransactionFlow, expectedType }) => {
+        async ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentProcessingEvent();
+          const mockTransactionRecorder = new MockedTransactionRecorder();
 
-          event.data.object.amount_received = 123_30;
+          mockTransactionRecorder.transactions = {
+            [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
+              resolvedTransactionFlow,
+            }),
+          };
 
-          const recordedTransaction = getMockedRecordedTransaction({
-            resolvedTransactionFlow,
-          });
+          const amountToUse = 123_30;
+          const amountExpected = 123.3; // Converted to Saleor float
 
-          const result = new StripePaymentIntentHandler().processPaymentIntentEvent({
+          event.data.object.amount_received = amountToUse;
+
+          const handler = new StripePaymentIntentHandler();
+          const result = await handler.processPaymentIntentEvent({
             event,
-            recordedTransaction,
-            stripePaymentIntentId: mockedStripePaymentIntentId,
+            transactionRecorder: mockTransactionRecorder,
+            appId: "appId",
+            saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
           });
 
@@ -126,7 +126,7 @@ describe("StripePaymentIntentHandler", () => {
           // comes from mock
           expect(amount.currency).toStrictEqual("USD");
           // Converted to Saleor float
-          expect(amount.amount).toStrictEqual(123.3);
+          expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
         },
@@ -145,21 +145,28 @@ describe("StripePaymentIntentHandler", () => {
         },
       ])(
         "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
-        ({ resolvedTransactionFlow, expectedType }) => {
+        async ({ resolvedTransactionFlow, expectedType }) => {
+          const mockTransactionRecorder = new MockedTransactionRecorder();
+
+          mockTransactionRecorder.transactions = {
+            [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
+              resolvedTransactionFlow,
+            }),
+          };
+
           const event = getMockedPaymentIntentRequiresActionEvent();
           const amountToUse = 123_30;
           const amountExpected = 123.3; // Converted to Saleor float
 
           event.data.object.amount_received = amountToUse;
 
-          const recordedTransaction = getMockedRecordedTransaction({
-            resolvedTransactionFlow,
-          });
+          const handler = new StripePaymentIntentHandler();
 
-          const result = new StripePaymentIntentHandler().processPaymentIntentEvent({
+          const result = await handler.processPaymentIntentEvent({
             event,
-            recordedTransaction,
-            stripePaymentIntentId: mockedStripePaymentIntentId,
+            transactionRecorder: mockTransactionRecorder,
+            appId: "appId",
+            saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
           });
 
@@ -189,21 +196,27 @@ describe("StripePaymentIntentHandler", () => {
         },
       ])(
         "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
-        ({ resolvedTransactionFlow, expectedType }) => {
+        async ({ resolvedTransactionFlow, expectedType }) => {
+          const mockTransactionRecorder = new MockedTransactionRecorder();
+
+          mockTransactionRecorder.transactions = {
+            [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
+              resolvedTransactionFlow,
+            }),
+          };
+
           const event = getMockedPaymentIntentAmountCapturableUpdatedEvent();
           const amountToUse = 123_30;
           const amountExpected = 123.3; // Converted to Saleor float
 
           event.data.object.amount_capturable = amountToUse;
 
-          const recordedTransaction = getMockedRecordedTransaction({
-            resolvedTransactionFlow,
-          });
-
-          const result = new StripePaymentIntentHandler().processPaymentIntentEvent({
+          const handler = new StripePaymentIntentHandler();
+          const result = await handler.processPaymentIntentEvent({
             event,
-            recordedTransaction,
-            stripePaymentIntentId: mockedStripePaymentIntentId,
+            transactionRecorder: mockTransactionRecorder,
+            appId: "appId",
+            saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
           });
 
@@ -233,21 +246,27 @@ describe("StripePaymentIntentHandler", () => {
         },
       ])(
         "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
-        ({ resolvedTransactionFlow, expectedType }) => {
+        async ({ resolvedTransactionFlow, expectedType }) => {
+          const mockTransactionRecorder = new MockedTransactionRecorder();
+
+          mockTransactionRecorder.transactions = {
+            [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
+              resolvedTransactionFlow,
+            }),
+          };
+
           const event = getMockedPaymentIntentPaymentFailedEvent();
           const amountToUse = 123_30;
           const amountExpected = 123.3; // Converted to Saleor float
 
           event.data.object.amount_received = amountToUse;
 
-          const recordedTransaction = getMockedRecordedTransaction({
-            resolvedTransactionFlow,
-          });
-
-          const result = new StripePaymentIntentHandler().processPaymentIntentEvent({
+          const handler = new StripePaymentIntentHandler();
+          const result = await handler.processPaymentIntentEvent({
             event,
-            recordedTransaction,
-            stripePaymentIntentId: mockedStripePaymentIntentId,
+            transactionRecorder: mockTransactionRecorder,
+            appId: "appId",
+            saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
           });
 
@@ -277,21 +296,27 @@ describe("StripePaymentIntentHandler", () => {
         },
       ])(
         "should resolve fields with type: $expectedType from Stripe event properly for $resolvedTransactionFlow flow",
-        ({ resolvedTransactionFlow, expectedType }) => {
+        async ({ resolvedTransactionFlow, expectedType }) => {
           const event = getMockedPaymentIntentPaymentCanceledEvent();
+          const mockTransactionRecorder = new MockedTransactionRecorder();
+
+          mockTransactionRecorder.transactions = {
+            [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
+              resolvedTransactionFlow,
+            }),
+          };
+
           const amountToUse = 123_30;
           const amountExpected = 123.3; // Converted to Saleor float
 
           event.data.object.amount = amountToUse;
 
-          const recordedTransaction = getMockedRecordedTransaction({
-            resolvedTransactionFlow,
-          });
-
-          const result = new StripePaymentIntentHandler().processPaymentIntentEvent({
+          const handler = new StripePaymentIntentHandler();
+          const result = await handler.processPaymentIntentEvent({
             event,
-            recordedTransaction,
-            stripePaymentIntentId: mockedStripePaymentIntentId,
+            transactionRecorder: mockTransactionRecorder,
+            appId: "appId",
+            saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
           });
 

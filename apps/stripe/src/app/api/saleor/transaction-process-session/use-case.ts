@@ -13,8 +13,8 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
+import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
-import { mapStripeGetPaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
@@ -151,7 +151,7 @@ export class TransactionProcessSessionUseCase {
         error: getPaymentIntentResult.error,
       });
 
-      const mappedError = mapStripeGetPaymentIntentErrorToApiError(getPaymentIntentResult.error);
+      const mappedError = mapStripeErrorToApiError(getPaymentIntentResult.error);
 
       return ok(
         new TransactionProcessSessionUseCaseResponses.Failure({

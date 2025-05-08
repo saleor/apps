@@ -1,7 +1,7 @@
 import { APL, AuthData } from "@saleor/app-sdk/APL";
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
+import Stripe from "stripe";
 
 import {
   StripeWebhookErrorResponse,
@@ -10,18 +10,19 @@ import {
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
   ITransactionEventReporter,
   TransactionEventReporterErrors,
 } from "@/modules/saleor/transaction-event-reporter";
 import { StripeClient } from "@/modules/stripe/stripe-client";
-import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { IStripeEventVerify } from "@/modules/stripe/types";
 import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
+import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
 
 type SuccessResult = StripeWebhookSuccessResponse;
 type ErrorResult = StripeWebhookErrorResponse;
@@ -51,6 +52,48 @@ export class StripeWebhookUseCase {
     this.apl = deps.apl;
     this.transactionRecorder = deps.transactionRecorder;
     this.transactionEventReporterFactory = deps.transactionEventReporterFactory;
+  }
+
+  private async processEvent({
+    event,
+    saleorApiUrl,
+    appId,
+    stripeEnv,
+  }: {
+    event: Stripe.Event;
+    saleorApiUrl: SaleorApiUrl;
+    appId: string;
+    stripeEnv: StripeEnv;
+  }) {
+    switch (event.data.object.object) {
+      case "payment_intent": {
+        const handler = new StripePaymentIntentHandler();
+
+        return handler.processPaymentIntentEvent({
+          event,
+          stripeEnv,
+          transactionRecorder: this.transactionRecorder,
+          appId,
+          saleorApiUrl,
+        });
+      }
+
+      case "refund": {
+        const handler = new StripeRefundHandler();
+
+        return handler.processRefundEvent({
+          event,
+          stripeEnv,
+          transactionRecorder: this.transactionRecorder,
+          appId,
+          saleorApiUrl,
+        });
+      }
+
+      default: {
+        throw new BaseError(`Support for object ${event.data.object.object} not implemented`);
+      }
+    }
   }
 
   async execute({
@@ -132,78 +175,31 @@ export class StripeWebhookUseCase {
 
     this.logger.debug(`Resolved event type: ${event.value.type}`);
 
-    switch (event.value.data.object.object) {
-      case "payment_intent": {
-        const stripePaymentIntentId = createStripePaymentIntentId(event.value.data.object.id);
+    const processingResult = await this.processEvent({
+      event: event.value,
+      saleorApiUrl: webhookParams.saleorApiUrl,
+      appId: authData.appId,
+      stripeEnv: config.value.getStripeEnvValue(),
+    });
 
-        this.logger.debug(`Resolved Payment Intent ID: ${stripePaymentIntentId}`);
-        loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntentId);
+    if (processingResult.isErr()) {
+      return err(new StripeWebhookErrorResponse(processingResult.error));
+    }
 
-        const recordedTransaction =
-          await this.transactionRecorder.getTransactionByStripePaymentIntentId(
-            {
-              appId: authData.appId,
-              saleorApiUrl: webhookParams.saleorApiUrl,
-            },
-            stripePaymentIntentId,
-          );
+    const reportResult = await transactionEventReporter.reportTransactionEvent(
+      processingResult.value.resolveEventReportVariables(),
+    );
 
-        if (recordedTransaction.isErr()) {
-          this.logger.warn("Error fetching recorded transaction", {
-            error: recordedTransaction.error,
-          });
-
-          return err(new StripeWebhookErrorResponse(recordedTransaction.error));
-        }
-
-        this.logger.debug("Resolved previously saved transaction");
-
-        const handler = new StripePaymentIntentHandler();
-        const isSupportedEvent = handler.checkIfEventIsSupported(event.value);
-
-        if (!isSupportedEvent) {
-          this.logger.error("Event is not supported by StripePaymentIntentHandler", {
-            event: event.value.type,
-          });
-
-          return err(
-            new StripeWebhookErrorResponse(
-              new BaseError("Event is not supported by StripePaymentIntentHandler"),
-            ),
-          );
-        }
-
-        const processingResult = handler.processPaymentIntentEvent({
-          event: event.value,
-          stripePaymentIntentId: stripePaymentIntentId,
-          recordedTransaction: recordedTransaction.value,
-          stripeEnv: config.value.getStripeEnvValue(),
-        });
-
-        if (processingResult.isErr()) {
-          return err(new StripeWebhookErrorResponse(processingResult.error));
-        }
-
-        const reportResult = await transactionEventReporter.reportTransactionEvent(
-          processingResult.value.resolveEventReportVariables(),
-        );
-
-        if (reportResult.isErr()) {
-          if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
-            this.logger.info("Transaction event already reported");
-
-            return ok(new StripeWebhookSuccessResponse());
-          }
-
-          return err(new StripeWebhookErrorResponse(reportResult.error));
-        }
+    if (reportResult.isErr()) {
+      if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
+        this.logger.info("Transaction event already reported");
 
         return ok(new StripeWebhookSuccessResponse());
       }
 
-      default: {
-        throw new BaseError(`Support for object ${event.value.data.object.object} not implemented`);
-      }
+      return err(new StripeWebhookErrorResponse(reportResult.error));
     }
+
+    return ok(new StripeWebhookSuccessResponse());
   }
 }

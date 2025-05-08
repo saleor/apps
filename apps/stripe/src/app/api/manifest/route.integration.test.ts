@@ -93,6 +93,15 @@ describe("Manifest handler", async () => {
                 ],
                 "targetUrl": "https://localhost:3000/api/saleor/transaction-cancelation-requested",
               },
+              {
+                "isActive": true,
+                "name": "Stripe Transaction Refund Requested",
+                "query": "subscription TransactionRefundRequested { event { ...TransactionRefundRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionRefundRequestedEvent on TransactionRefundRequested { ...EventMetadata action { amount currency } transaction { pspReference checkout { channel { ...Channel } } order { channel { ...Channel } } }}",
+                "syncEvents": [
+                  "TRANSACTION_REFUND_REQUESTED",
+                ],
+                "targetUrl": "https://localhost:3000/api/saleor/transaction-refund-requested",
+              },
             ],
           }
         `,
