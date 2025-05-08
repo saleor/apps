@@ -261,7 +261,7 @@ export class StripeWebhookUseCase {
             ),
           );
         }
-        const processingResult = handler.processChargeEvent({
+        const processingResult = handler.processRefundEvent({
           event: event.value,
           recordedTransaction: recordedTransaction.value,
           stripeEnv: config.value.getStripeEnvValue(),
