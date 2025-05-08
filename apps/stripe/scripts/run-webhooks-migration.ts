@@ -8,6 +8,7 @@ import { transactionCancelationRequestedWebhookDefinition } from "@/app/api/sale
 import { transactionChargeRequestedWebhookDefinition } from "@/app/api/saleor/transaction-charge-requested/webhook-definition";
 import { transactionInitializeSessionWebhookDefinition } from "@/app/api/saleor/transaction-initialize-session/webhook-definition";
 import { transactionProcessSessionWebhookDefinition } from "@/app/api/saleor/transaction-process-session/webhook-definition";
+import { transactionRefundRequestedWebhookDefinition } from "@/app/api/saleor/transaction-refund-requested/webhook-definition";
 import { env } from "@/lib/env";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { saleorApp } from "@/lib/saleor-app";
@@ -104,6 +105,10 @@ const runMigrations = async () => {
             },
             {
               ...transactionCancelationRequestedWebhookDefinition.getWebhookManifest(baseUrl),
+              isActive: enabled,
+            },
+            {
+              ...transactionRefundRequestedWebhookDefinition.getWebhookManifest(baseUrl),
               isActive: enabled,
             },
           ];

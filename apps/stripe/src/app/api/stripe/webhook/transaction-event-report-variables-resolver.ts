@@ -12,6 +12,11 @@ import {
   ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
 import {
+  RefundFailureResult,
+  RefundRequestResult,
+  RefundSuccessResult,
+} from "@/modules/transaction-result/refund-result";
+import {
   AuthorizationRequestResult,
   ChargeRequestResult,
 } from "@/modules/transaction-result/request-result";
@@ -29,7 +34,10 @@ type WebhookTransactionResult =
   | AuthorizationRequestResult
   | ChargeFailureResult
   | AuthorizationFailureResult
-  | CancelSuccessResult;
+  | CancelSuccessResult
+  | RefundSuccessResult
+  | RefundFailureResult
+  | RefundRequestResult;
 
 export class TransactionEventReportVariablesResolver {
   readonly saleorTransactionId: SaleorTransationId;

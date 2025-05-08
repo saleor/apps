@@ -4,7 +4,7 @@ import { ResultBase } from "@/modules/transaction-result/types";
 
 export class ChargeSuccessResult extends ResultBase {
   readonly result = "CHARGE_SUCCESS" as const;
-  readonly actions = [] as const;
+  readonly actions = ["REFUND"] as const;
   readonly message = "Payment intent succeeded";
 
   readonly stripePaymentIntentId: StripePaymentIntentId;

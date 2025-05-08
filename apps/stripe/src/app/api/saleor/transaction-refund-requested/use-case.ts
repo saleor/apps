@@ -1,6 +1,6 @@
 import { err, ok, Result } from "neverthrow";
 
-import { TransactionCancelationRequestedEventFragment } from "@/generated/graphql";
+import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -11,40 +11,38 @@ import {
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
+import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
-import {
-  CancelFailureResult,
-  CancelSuccessResult,
-} from "@/modules/transaction-result/cancel-result";
+import { IStripeRefundsApiFactory } from "@/modules/stripe/types";
+import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
 import {
-  TransactionCancelationRequestedUseCaseResponses,
-  TransactionCancelationRequestedUseCaseResponsesType,
+  TransactionRefundRequestedUseCaseResponses,
+  TransactionRefundRequestedUseCaseResponsesType,
 } from "./use-case-response";
 
 type UseCaseExecuteResult = Result<
-  TransactionCancelationRequestedUseCaseResponsesType,
+  TransactionRefundRequestedUseCaseResponsesType,
   AppIsNotConfiguredResponse | BrokenAppResponse | MalformedRequestResponse
 >;
 
-export class TransactionCancelationRequestedUseCase {
-  private logger = createLogger("TransactionCancelationRequestedUseCase");
+export class TransactionRefundRequestedUseCase {
+  private logger = createLogger("TransactionRefundRequestedUseCase");
   private appConfigRepo: AppConfigRepo;
-  private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
+  private stripeRefundsApiFactory: IStripeRefundsApiFactory;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
-    stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
+    stripeRefundsApiFactory: IStripeRefundsApiFactory;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
-    this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
+    this.stripeRefundsApiFactory = deps.stripeRefundsApiFactory;
   }
 
   async execute(args: {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
-    event: TransactionCancelationRequestedEventFragment;
+    event: TransactionRefundRequestedEventFragment;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event } = args;
 
@@ -64,6 +62,14 @@ export class TransactionCancelationRequestedUseCase {
       this.logger.error("Channel not found in event transaction", {
         checkoutChannelId: event.transaction?.checkout?.channel?.id,
         orderChannelId: event.transaction?.order?.channel?.id,
+      });
+
+      return err(new MalformedRequestResponse());
+    }
+
+    if (!event.action.amount) {
+      this.logger.error("Saleor event amount not found in event action", {
+        amount: event.action.amount,
       });
 
       return err(new MalformedRequestResponse());
@@ -93,43 +99,64 @@ export class TransactionCancelationRequestedUseCase {
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
 
-    const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({
+    const stripeRefundsApi = this.stripeRefundsApiFactory.create({
       key: restrictedKey,
     });
 
-    this.logger.debug("Canceling Stripe payment intent with id", {
+    this.logger.debug("Refunding Stripe payment intent with id", {
       id: event.transaction.pspReference,
+      action: event.action,
     });
 
     const stripePaymentIntentId = createStripePaymentIntentId(event.transaction.pspReference);
+    const stripeEnv = stripeConfigForThisChannel.value.getStripeEnvValue();
 
-    const cancelPaymentIntentResult = await stripePaymentIntentsApi.cancelPaymentIntent({
-      id: stripePaymentIntentId,
+    const stripeMoneyResult = StripeMoney.createFromSaleorAmount({
+      amount: event.action.amount,
+      currency: event.action.currency,
     });
 
-    if (cancelPaymentIntentResult.isErr()) {
-      this.logger.error("Failed to capture payment intent", {
-        error: cancelPaymentIntentResult.error,
+    if (stripeMoneyResult.isErr()) {
+      this.logger.error("Failed to create Stripe money", {
+        error: stripeMoneyResult.error,
       });
 
-      const mappedError = mapStripeErrorToApiError(cancelPaymentIntentResult.error);
+      return err(new MalformedRequestResponse());
+    }
+
+    const createRefundResult = await stripeRefundsApi.createRefund({
+      paymentIntentId: stripePaymentIntentId,
+      stripeMoney: stripeMoneyResult.value,
+    });
+
+    if (createRefundResult.isErr()) {
+      const error = mapStripeErrorToApiError(createRefundResult.error);
+
+      this.logger.error("Failed to create refund", {
+        error,
+      });
 
       return ok(
-        new TransactionCancelationRequestedUseCaseResponses.Failure({
-          // TODO: remove this when Saleor won't require amount in the event
-          saleorEventAmount: 0,
-          transactionResult: new CancelFailureResult({
+        new TransactionRefundRequestedUseCaseResponses.Failure({
+          transactionResult: new RefundFailureResult({
             stripePaymentIntentId,
-            stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+            stripeEnv,
           }),
-          error: mappedError,
+          saleorEventAmount: event.action.amount,
+          error,
         }),
       );
     }
 
+    const refund = createRefundResult.value;
+
+    this.logger.debug("Refund created", {
+      refund,
+    });
+
     const saleorMoneyResult = SaleorMoney.createFromStripe({
-      amount: cancelPaymentIntentResult.value.amount,
-      currency: cancelPaymentIntentResult.value.currency,
+      amount: refund.amount,
+      currency: refund.currency,
     });
 
     if (saleorMoneyResult.isErr()) {
@@ -140,15 +167,9 @@ export class TransactionCancelationRequestedUseCase {
       return err(new BrokenAppResponse());
     }
 
-    const saleorMoney = saleorMoneyResult.value;
-
     return ok(
-      new TransactionCancelationRequestedUseCaseResponses.Success({
-        saleorMoney,
-        transactionResult: new CancelSuccessResult({
-          stripePaymentIntentId,
-          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
-        }),
+      new TransactionRefundRequestedUseCaseResponses.Success({
+        stripePaymentIntentId,
       }),
     );
   }

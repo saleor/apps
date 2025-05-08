@@ -3,14 +3,16 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 
-import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/saleor/payment-gateway-initialize-session/webhook-definition";
-import { transactionCancelationRequestedWebhookDefinition } from "@/app/api/saleor/transaction-cancelation-requested/webhook-definition";
-import { transactionChargeRequestedWebhookDefinition } from "@/app/api/saleor/transaction-charge-requested/webhook-definition";
-import { transactionInitializeSessionWebhookDefinition } from "@/app/api/saleor/transaction-initialize-session/webhook-definition";
-import { transactionProcessSessionWebhookDefinition } from "@/app/api/saleor/transaction-process-session/webhook-definition";
 import { env } from "@/lib/env";
 import { withLoggerContext } from "@/lib/logger-context";
 import packageJson from "@/package.json";
+
+import { paymentGatewayInitializeSessionWebhookDefinition } from "../saleor/payment-gateway-initialize-session/webhook-definition";
+import { transactionCancelationRequestedWebhookDefinition } from "../saleor/transaction-cancelation-requested/webhook-definition";
+import { transactionChargeRequestedWebhookDefinition } from "../saleor/transaction-charge-requested/webhook-definition";
+import { transactionInitializeSessionWebhookDefinition } from "../saleor/transaction-initialize-session/webhook-definition";
+import { transactionProcessSessionWebhookDefinition } from "../saleor/transaction-process-session/webhook-definition";
+import { transactionRefundRequestedWebhookDefinition } from "../saleor/transaction-refund-requested/webhook-definition";
 
 const handler = createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
@@ -43,6 +45,7 @@ const handler = createManifestHandler({
         transactionProcessSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionChargeRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionCancelationRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
+        transactionRefundRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
       ],
     };
 

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getMockedSaleorMoney } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
-import { StripeInvalidRequestError } from "@/modules/stripe/stripe-payment-intent-api-error";
+import { StripeInvalidRequestError } from "@/modules/stripe/stripe-api-error";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import {
   AuthorizationActionRequiredResult,
@@ -39,7 +39,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchResponse.status).toBe(200);
       expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [],
+          "actions": [
+            "REFUND",
+          ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent succeeded",
@@ -266,7 +268,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
               },
             },
             "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-            "message": "Payment intent error - there is a problem with the request to Stripe API",
+            "message": "There is a problem with the request to Stripe API",
             "pspReference": "pi_TEST_TEST_TEST",
             "result": "CHARGE_FAILURE",
           }
@@ -304,7 +306,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
               },
             },
             "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-            "message": "Payment intent error - there is a problem with the request to Stripe API",
+            "message": "There is a problem with the request to Stripe API",
             "pspReference": "pi_TEST_TEST_TEST",
             "result": "AUTHORIZATION_FAILURE",
           }

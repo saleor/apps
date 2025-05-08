@@ -3,7 +3,7 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
-import { StripeCapturePaymentIntentAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
+import { StripeApiError } from "@/modules/stripe/stripe-api-error";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
@@ -36,11 +36,11 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
-  readonly error: StripeCapturePaymentIntentAPIError;
+  readonly error: StripeApiError;
   readonly saleorEventAmount: number;
 
   constructor(args: {
-    error: StripeCapturePaymentIntentAPIError;
+    error: StripeApiError;
     transactionResult: ChargeFailureResult;
     saleorEventAmount: number;
   }) {
@@ -74,5 +74,6 @@ export const TransactionChargeRequestedUseCaseResponses = {
 };
 
 export type TransactionChargeRequestedUseCaseResponsesType = InstanceType<
-  (typeof TransactionChargeRequestedUseCaseResponses)[keyof typeof TransactionChargeRequestedUseCaseResponses]
+  | typeof TransactionChargeRequestedUseCaseResponses.Success
+  | typeof TransactionChargeRequestedUseCaseResponses.Failure
 >;
