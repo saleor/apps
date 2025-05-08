@@ -12,11 +12,10 @@ import {
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { createStripeRefundStatus } from "@/modules/stripe/stripe-refund-status";
 import { IStripeRefundsApiFactory } from "@/modules/stripe/types";
-import {
-  RefundFailureResult,
-  RefundSuccessResult,
-} from "@/modules/transaction-result/refund-result";
+import { mapRefundStatusToTransactionResult } from "@/modules/transaction-result/map-refund-status-to-transaction-result";
+import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
 import {
   TransactionRefundRequestedUseCaseResponses,
@@ -167,11 +166,15 @@ export class TransactionRefundRequestedUseCase {
       return err(new BrokenAppResponse());
     }
 
+    const MappedResult = mapRefundStatusToTransactionResult(
+      createStripeRefundStatus(refund.status),
+    );
+
     return ok(
       new TransactionRefundRequestedUseCaseResponses.Success({
-        transactionResult: new RefundSuccessResult({
-          stripeEnv,
+        transactionResult: new MappedResult({
           stripePaymentIntentId,
+          stripeEnv,
         }),
         saleorMoney: saleorMoneyResult.value,
       }),

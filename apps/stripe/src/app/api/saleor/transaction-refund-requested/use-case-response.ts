@@ -5,14 +5,18 @@ import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-response
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import {
   RefundFailureResult,
+  RefundRequestResult,
   RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 
 class Success extends SuccessWebhookResponse {
-  readonly transactionResult: RefundSuccessResult;
+  readonly transactionResult: RefundSuccessResult | RefundFailureResult | RefundRequestResult;
   readonly saleorMoney: SaleorMoney;
 
-  constructor(args: { transactionResult: RefundSuccessResult; saleorMoney: SaleorMoney }) {
+  constructor(args: {
+    transactionResult: RefundSuccessResult | RefundFailureResult | RefundRequestResult;
+    saleorMoney: SaleorMoney;
+  }) {
     super();
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
@@ -20,6 +24,7 @@ class Success extends SuccessWebhookResponse {
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_REFUND_REQUESTED">({
+      // @ts-expect-error - check why Saleor doesn't allow RefundRequestedResult here
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.transactionResult.stripePaymentIntentId,
@@ -51,7 +56,7 @@ class Failure extends SuccessWebhookResponse {
       pspReference: this.transactionResult.stripePaymentIntentId,
       // TODO: remove this after Saleor allows to amount to be optional
       amount: this.saleorEventAmount,
-      // TODO: figure out how to get the error message
+      // TODO: figure out how to get the error message to not be generic
       message: this.transactionResult.message,
       actions: this.transactionResult.actions,
       externalUrl: generateStripeDashboardUrl(
