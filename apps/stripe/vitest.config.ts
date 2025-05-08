@@ -12,7 +12,7 @@ export default defineConfig({
         extends: true,
         test: {
           include: ["src/**/*.test.ts"],
-          exclude: ["src/**/*.integration.test.ts"], // exclude integration tests so vitest doesn't run them twice
+          exclude: ["src/**/*.integration.test.ts", "src/__tests__/integration/**"], // exclude integration tests so vitest doesn't run them twice
           name: "unit",
           setupFiles: "./src/__tests__/setup.units.ts",
         },
@@ -23,6 +23,19 @@ export default defineConfig({
           include: ["src/**/*.integration.test.{ts,tsx}"],
           name: "integration",
           setupFiles: "./src/__tests__/setup.integration.ts",
+        },
+      },
+      {
+        extends: true,
+        test: {
+          sequence: {
+            concurrent: false,
+          },
+
+          globalSetup: "./src/__tests__/integration/dynamodb/global-setup.integration-dynamo.ts",
+          include: ["src/__tests__/integration/dynamodb/**/*.test.{ts,ts}"],
+          name: "integration:dynamodb",
+          setupFiles: "./src/__tests__/integration/dynamodb/setup.integration-dynamo.ts",
         },
       },
     ],

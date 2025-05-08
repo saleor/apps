@@ -17,8 +17,9 @@
     "migrate:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts --dry-run",
     "start": "next start",
     "test": "vitest",
-    "test:ci": "vitest run --coverage",
+    "test:ci": "pnpm run test:unit",
     "test:integration": "vitest --project=integration",
+    "test:integration:dynamodb": "vitest --project=integration:dynamodb",
     "test:unit": "vitest --project=unit"
   },
   "config": {

@@ -1,0 +1,57 @@
+name: Stripe - integration tests with DynamoDB
+permissions:
+  contents: read
+
+# Env for testing entities
+env:
+  AWS_REGION: "localhost"
+  AWS_ACCESS_KEY_ID: "test"
+  AWS_SECRET_ACCESS_KEY: "test"
+  AWS_ENDPOINT_URL: "http://localhost:8000"
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - synchronize
+      - opened
+    paths:
+      - apps/stripe/**
+      - packages/**
+      - package.json
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Setup PNPM
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run docker compose
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: "apps/stripe/src/__tests__/integration/dynamodb/docker-compose.yml"
+        env:
+          # Env for DB itself
+          AWS_REGION: "localhost"
+          AWS_ACCESS_KEY_ID: "test"
+          AWS_SECRET_ACCESS_KEY: "test"
+          AWS_ENDPOINT_URL: "http://localhost:8000"
+
+      - name: Execute tests
+        run: |
+          pnpm run --filter=saleor-app-payment-stripe test:integration:dynamodb

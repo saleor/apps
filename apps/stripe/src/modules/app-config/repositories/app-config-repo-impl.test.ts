@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 
 describe("App Config Repo Implementation", () => {
-  it("Exports instance of repo, doesnt throw", () => {
+  it("Exports instance of repo, doesn't throw", () => {
     expect(appConfigRepoImpl).toBeDefined();
   });
 });
