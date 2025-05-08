@@ -1,10 +1,15 @@
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
+import { BaseError } from "@/lib/errors";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import {
+  createStripePaymentIntentId,
+  StripePaymentIntentId,
+} from "@/modules/stripe/stripe-payment-intent-id";
 import {
   createStripePaymentIntentStatus,
   StripePaymentIntentStatusValidationError,
@@ -15,7 +20,10 @@ import {
   ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
 import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
-import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
+import {
+  TransactionRecorderError,
+  TransactionRecorderRepo,
+} from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { TransactionEventReportVariablesResolver } from "../transaction-event-report-variables-resolver";
 
@@ -27,11 +35,28 @@ export type StripePaymentIntentHandlerSupportedEvents =
   | Stripe.PaymentIntentPaymentFailedEvent
   | Stripe.PaymentIntentCanceledEvent;
 
-type PossibleErrors = InstanceType<
-  typeof SaleorMoney.ValidationError | typeof StripePaymentIntentStatusValidationError
->;
+type PossibleErrors =
+  | InstanceType<
+      | typeof SaleorMoney.ValidationError
+      | typeof StripePaymentIntentStatusValidationError
+      | typeof StripePaymentIntentHandler.NotSupportedEventError
+      | typeof StripePaymentIntentHandler.MalformedEventError
+    >
+  | TransactionRecorderError;
 
 export class StripePaymentIntentHandler {
+  static NotSupportedEventError = BaseError.subclass("NotSupportedEventError", {
+    props: {
+      __internalName: "StripePaymentIntentHandler.NotSupportedEventError",
+    },
+  });
+
+  static MalformedEventError = BaseError.subclass("MalformedEventError", {
+    props: {
+      __internalName: "StripePaymentIntentHandler.MalformedEventError",
+    },
+  });
+
   private resolveAmount(event: StripePaymentIntentHandlerSupportedEvents) {
     const amount = event.data.object.amount;
     const amountCapturable = event.data.object.amount_capturable;
@@ -73,7 +98,9 @@ export class StripePaymentIntentHandler {
     });
   }
 
-  checkIfEventIsSupported(event: Stripe.Event): event is StripePaymentIntentHandlerSupportedEvents {
+  private checkIfEventIsSupported(
+    event: Stripe.Event,
+  ): event is StripePaymentIntentHandlerSupportedEvents {
     return (
       event.type === "payment_intent.succeeded" ||
       event.type === "payment_intent.processing" ||
@@ -84,17 +111,65 @@ export class StripePaymentIntentHandler {
     );
   }
 
-  processPaymentIntentEvent(args: {
-    event: StripePaymentIntentHandlerSupportedEvents;
-    recordedTransaction: RecordedTransaction;
+  private async resolveTransactionRecord({
+    transactionRecorder,
+    stripePaymentIntentId,
+    appId,
+    saleorApiUrl,
+  }: {
+    transactionRecorder: TransactionRecorderRepo;
     stripePaymentIntentId: StripePaymentIntentId;
+    appId: string;
+    saleorApiUrl: SaleorApiUrl;
+  }) {
+    const recordedTransactionResult =
+      await transactionRecorder.getTransactionByStripePaymentIntentId(
+        {
+          appId,
+          saleorApiUrl,
+        },
+        stripePaymentIntentId,
+      );
+
+    if (recordedTransactionResult.isErr()) {
+      return err(recordedTransactionResult.error);
+    }
+
+    return ok(recordedTransactionResult.value);
+  }
+
+  async processPaymentIntentEvent({
+    event,
+    stripeEnv,
+    transactionRecorder,
+    appId,
+    saleorApiUrl,
+  }: {
+    event: Stripe.Event;
     stripeEnv: StripeEnv;
-  }): Result<TransactionEventReportVariablesResolver, PossibleErrors> {
-    const {
-      event,
-      recordedTransaction: { resolvedTransactionFlow, saleorTransactionId },
+    transactionRecorder: TransactionRecorderRepo;
+    appId: string;
+    saleorApiUrl: SaleorApiUrl;
+  }): Promise<Result<TransactionEventReportVariablesResolver, PossibleErrors>> {
+    if (!this.checkIfEventIsSupported(event)) {
+      return err(new StripePaymentIntentHandler.NotSupportedEventError("Unsupported event type"));
+    }
+
+    const stripePaymentIntentId = createStripePaymentIntentId(event.data.object.id);
+
+    const recordedTransactionResult = await this.resolveTransactionRecord({
+      transactionRecorder,
       stripePaymentIntentId,
-    } = args;
+      appId,
+      saleorApiUrl,
+    });
+
+    if (recordedTransactionResult.isErr()) {
+      return err(recordedTransactionResult.error);
+    }
+
+    const { resolvedTransactionFlow, saleorTransactionId } = recordedTransactionResult.value;
+
     const paramsResult = this.prepareTransactionEventReportParams(event);
 
     if (paramsResult.isErr()) {
@@ -116,7 +191,7 @@ export class StripePaymentIntentHandler {
         const result = new MappedResult({
           stripePaymentIntentId: stripePaymentIntentId,
           stripeStatus: paymentIntentStatus,
-          stripeEnv: args.stripeEnv,
+          stripeEnv,
         });
 
         return ok(
@@ -134,11 +209,11 @@ export class StripePaymentIntentHandler {
           resolvedTransactionFlow === "AUTHORIZATION"
             ? new AuthorizationFailureResult({
                 stripePaymentIntentId: stripePaymentIntentId,
-                stripeEnv: args.stripeEnv,
+                stripeEnv,
               })
             : new ChargeFailureResult({
                 stripePaymentIntentId: stripePaymentIntentId,
-                stripeEnv: args.stripeEnv,
+                stripeEnv,
               });
 
         return ok(
@@ -156,7 +231,7 @@ export class StripePaymentIntentHandler {
           new TransactionEventReportVariablesResolver({
             transactionResult: new CancelSuccessResult({
               stripePaymentIntentId: stripePaymentIntentId,
-              stripeEnv: args.stripeEnv,
+              stripeEnv,
             }),
             saleorMoney,
             date: eventDate,

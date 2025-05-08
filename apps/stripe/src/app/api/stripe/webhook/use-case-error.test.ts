@@ -188,7 +188,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
       StripeWebhookErrorResponse {
-        "error": [BaseError: Event is not supported by StripePaymentIntentHandler],
+        "error": [NotSupportedEventError: Unsupported event type],
         "responseStatusCode": 500,
       }
     `);
@@ -236,7 +236,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
       StripeWebhookErrorResponse {
-        "error": [BaseError: Event is not supported by StripeRefundHandler],
+        "error": [NotSupportedEventError: Unsupported event type],
         "responseStatusCode": 500,
       }
     `);
