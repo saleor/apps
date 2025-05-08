@@ -9,10 +9,10 @@ import {
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import {
+  StripeApiError,
   StripeApiErrorPublicCode,
-  StripeApiErrors,
   StripeCardErrorPublicCode,
-} from "@/modules/stripe/stripe-api-errors";
+} from "@/modules/stripe/stripe-api-error";
 import {
   StripeClientSecret,
   StripeClientSecretSchema,
@@ -80,7 +80,7 @@ class Failure extends SuccessWebhookResponse {
   readonly transactionResult:
     | TransactionInitializeChargeFailureResult
     | TransactionInitializeAuthorizationFailureResult;
-  readonly error: StripeApiErrors | TransactionInitializeSessionEventDataError;
+  readonly error: StripeApiError | TransactionInitializeSessionEventDataError;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
@@ -100,7 +100,7 @@ class Failure extends SuccessWebhookResponse {
     transactionResult:
       | TransactionInitializeChargeFailureResult
       | TransactionInitializeAuthorizationFailureResult;
-    error: StripeApiErrors | TransactionInitializeSessionEventDataError;
+    error: StripeApiError | TransactionInitializeSessionEventDataError;
   }) {
     super();
     this.transactionResult = args.transactionResult;

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getMockedSaleorMoney } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
-import { StripeAPIError } from "@/modules/stripe/stripe-api-errors";
+import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import {
   CancelFailureResult,
   CancelSuccessResult,

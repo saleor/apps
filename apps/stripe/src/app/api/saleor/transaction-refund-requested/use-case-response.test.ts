@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getMockedSaleorMoney } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import {
   RefundFailureResult,
   RefundRequestResult,
@@ -96,6 +97,7 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
           stripePaymentIntentId: mockedStripePaymentIntentId,
         }),
         saleorEventAmount: 112.33,
+        error: new StripeAPIError("Error from stripe"),
       });
       const fetchReponse = response.getResponse();
 
@@ -107,7 +109,7 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
           ],
           "amount": 112.33,
           "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
-          "message": "Refund failed",
+          "message": "There is a problem with the request to Stripe API",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "REFUND_FAILURE",
         }

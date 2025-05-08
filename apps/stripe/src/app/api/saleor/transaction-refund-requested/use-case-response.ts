@@ -3,6 +3,7 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
+import { StripeApiError } from "@/modules/stripe/stripe-api-error";
 import {
   RefundFailureResult,
   RefundRequestResult,
@@ -43,11 +44,17 @@ class Success extends SuccessWebhookResponse {
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: RefundFailureResult;
   readonly saleorEventAmount: number;
+  readonly error: StripeApiError;
 
-  constructor(args: { transactionResult: RefundFailureResult; saleorEventAmount: number }) {
+  constructor(args: {
+    transactionResult: RefundFailureResult;
+    saleorEventAmount: number;
+    readonly error: StripeApiError;
+  }) {
     super();
     this.transactionResult = args.transactionResult;
     this.saleorEventAmount = args.saleorEventAmount;
+    this.error = args.error;
   }
 
   getResponse(): Response {
@@ -57,7 +64,7 @@ class Failure extends SuccessWebhookResponse {
       // TODO: remove this after Saleor allows to amount to be optional
       amount: this.saleorEventAmount,
       // TODO: figure out how to get the error message to not be generic
-      message: this.transactionResult.message,
+      message: this.error.merchantMessage,
       actions: this.transactionResult.actions,
       externalUrl: generateStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,

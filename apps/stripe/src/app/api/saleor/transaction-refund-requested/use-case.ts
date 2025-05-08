@@ -10,6 +10,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
+import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripeRefundStatus } from "@/modules/stripe/stripe-refund-status";
@@ -131,8 +132,10 @@ export class TransactionRefundRequestedUseCase {
     });
 
     if (createRefundResult.isErr()) {
+      const error = mapStripeErrorToApiError(createRefundResult.error);
+
       this.logger.error("Failed to create refund", {
-        error: createRefundResult.error,
+        error,
       });
 
       return ok(
@@ -142,6 +145,7 @@ export class TransactionRefundRequestedUseCase {
             stripeEnv,
           }),
           saleorEventAmount: event.action.amount,
+          error,
         }),
       );
     }

@@ -10,7 +10,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-errors";
+import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";

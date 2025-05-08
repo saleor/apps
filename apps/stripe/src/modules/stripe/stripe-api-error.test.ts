@@ -12,9 +12,9 @@ import {
   StripePermissionError,
   StripeRateLimitError,
   StripeUnknownAPIError,
-} from "./stripe-api-errors";
+} from "./stripe-api-error";
 
-describe("mapStripeCreatePaymentIntentErrorToApiError", () => {
+describe("mapStripeErrorToApiError", () => {
   it("maps Stripe.errors.StripeCardError to app StripeCardError", () => {
     const stripeError = new Stripe.errors.StripeCardError({
       message: "Card declined",

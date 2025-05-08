@@ -18,7 +18,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-errors";
+import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import {
   createStripeClientSecret,
   StripeClientSecret,

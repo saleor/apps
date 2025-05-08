@@ -6,7 +6,7 @@ import { BaseError } from "@/lib/errors";
 export const StripeCardErrorPublicCode = "StripeCardError" as const;
 export const StripeApiErrorPublicCode = "StripeApiError" as const;
 
-export type StripeApiErrors = InstanceType<
+export type StripeApiError = InstanceType<
   | typeof StripeCardError
   | typeof StripeInvalidRequestError
   | typeof StripeRateLimitError
@@ -101,7 +101,7 @@ export const StripeUnknownAPIError = BaseError.subclass("StripeUnknownAPIError",
   },
 });
 
-export const mapStripeErrorToApiError = (error: unknown): StripeApiErrors => {
+export const mapStripeErrorToApiError = (error: unknown): StripeApiError => {
   switch (true) {
     case error instanceof Stripe.errors.StripeCardError:
       return new StripeCardError("Card payment error", {

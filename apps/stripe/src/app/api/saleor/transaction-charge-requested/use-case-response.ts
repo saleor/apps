@@ -3,7 +3,7 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
-import { StripeApiErrors } from "@/modules/stripe/stripe-api-errors";
+import { StripeApiError } from "@/modules/stripe/stripe-api-error";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
@@ -36,11 +36,11 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
-  readonly error: StripeApiErrors;
+  readonly error: StripeApiError;
   readonly saleorEventAmount: number;
 
   constructor(args: {
-    error: StripeApiErrors;
+    error: StripeApiError;
     transactionResult: ChargeFailureResult;
     saleorEventAmount: number;
   }) {
