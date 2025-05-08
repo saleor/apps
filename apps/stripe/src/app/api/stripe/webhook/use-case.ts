@@ -2,6 +2,7 @@ import { APL, AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
+import Stripe from "stripe";
 
 import {
   StripeWebhookErrorResponse,
@@ -12,12 +13,16 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
   ITransactionEventReporter,
   TransactionEventReporterErrors,
 } from "@/modules/saleor/transaction-event-reporter";
 import { StripeClient } from "@/modules/stripe/stripe-client";
-import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import {
+  createStripePaymentIntentId,
+  StripePaymentIntentId,
+} from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripeEventVerify } from "@/modules/stripe/types";
 import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
@@ -52,6 +57,59 @@ export class StripeWebhookUseCase {
     this.apl = deps.apl;
     this.transactionRecorder = deps.transactionRecorder;
     this.transactionEventReporterFactory = deps.transactionEventReporterFactory;
+  }
+
+  private resolvePaymentIntentIdFromRefund(refund: Stripe.Refund) {
+    const paymentIntentId = refund.payment_intent;
+
+    if (!paymentIntentId) {
+      this.logger.error("Refund event does not contain payment_intent", {
+        event: refund,
+      });
+
+      return err(
+        new StripeWebhookErrorResponse(
+          new BaseError("Refund event does not contain payment_intent"),
+        ),
+      );
+    }
+
+    if (typeof paymentIntentId !== "string") {
+      return ok(createStripePaymentIntentId(paymentIntentId.id));
+    }
+
+    return ok(createStripePaymentIntentId(paymentIntentId));
+  }
+
+  private async resolveTransactionRecord({
+    stripePaymentIntentId,
+    saleorApiUrl,
+    appId,
+  }: {
+    appId: string;
+    saleorApiUrl: SaleorApiUrl;
+    stripePaymentIntentId: StripePaymentIntentId;
+  }) {
+    const recordedTransactionResult =
+      await this.transactionRecorder.getTransactionByStripePaymentIntentId(
+        {
+          appId: appId,
+          saleorApiUrl,
+        },
+        stripePaymentIntentId,
+      );
+
+    if (recordedTransactionResult.isErr()) {
+      this.logger.warn("Error fetching recorded transaction", {
+        error: recordedTransactionResult.error,
+      });
+
+      return err(new StripeWebhookErrorResponse(recordedTransactionResult.error));
+    }
+
+    this.logger.debug("Resolved previously saved transaction");
+
+    return ok(recordedTransactionResult.value);
   }
 
   async execute({
@@ -140,23 +198,6 @@ export class StripeWebhookUseCase {
         this.logger.debug(`Resolved Payment Intent ID: ${stripePaymentIntentId}`);
         loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntentId);
 
-        const recordedTransaction =
-          await this.transactionRecorder.getTransactionByStripePaymentIntentId(
-            {
-              appId: authData.appId,
-              saleorApiUrl: webhookParams.saleorApiUrl,
-            },
-            stripePaymentIntentId,
-          );
-
-        if (recordedTransaction.isErr()) {
-          this.logger.warn("Error fetching recorded transaction", {
-            error: recordedTransaction.error,
-          });
-
-          return err(new StripeWebhookErrorResponse(recordedTransaction.error));
-        }
-
         this.logger.debug("Resolved previously saved transaction");
 
         const handler = new StripePaymentIntentHandler();
@@ -174,10 +215,20 @@ export class StripeWebhookUseCase {
           );
         }
 
+        const recordedTransactionResult = await this.resolveTransactionRecord({
+          stripePaymentIntentId,
+          saleorApiUrl: webhookParams.saleorApiUrl,
+          appId: authData.appId,
+        });
+
+        if (recordedTransactionResult.isErr()) {
+          return err(recordedTransactionResult.error);
+        }
+
         const processingResult = handler.processPaymentIntentEvent({
           event: event.value,
           stripePaymentIntentId: stripePaymentIntentId,
-          recordedTransaction: recordedTransaction.value,
+          recordedTransaction: recordedTransactionResult.value,
           stripeEnv: config.value.getStripeEnvValue(),
         });
 
@@ -203,67 +254,45 @@ export class StripeWebhookUseCase {
       }
 
       case "refund": {
-        const paymentIntentId = event.value.data.object.payment_intent;
+        const paymentIntentResult = this.resolvePaymentIntentIdFromRefund(event.value.data.object);
 
-        if (!paymentIntentId) {
-          return err(
-            new StripeWebhookErrorResponse(
-              new BaseError("Charge event does not contain payment_intent"),
-            ),
-          );
+        if (paymentIntentResult.isErr()) {
+          return err(paymentIntentResult.error);
         }
 
-        if (typeof paymentIntentId !== "string") {
-          // TODO: resolve this case with payment_intent.id
-          return err(
-            new StripeWebhookErrorResponse(
-              new BaseError("Charge event does not contain payment_intent as string"),
-            ),
-          );
-        }
-
-        const stripePaymentIntentId = createStripePaymentIntentId(paymentIntentId);
+        const stripePaymentIntentId = paymentIntentResult.value;
 
         this.logger.debug(`Resolved Payment Intent ID: ${stripePaymentIntentId}`);
         loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntentId);
-
-        // TODO: extract this to a function
-        const recordedTransaction =
-          await this.transactionRecorder.getTransactionByStripePaymentIntentId(
-            {
-              appId: authData.appId,
-              saleorApiUrl: webhookParams.saleorApiUrl,
-            },
-            stripePaymentIntentId,
-          );
-
-        if (recordedTransaction.isErr()) {
-          this.logger.warn("Error fetching recorded transaction", {
-            error: recordedTransaction.error,
-          });
-
-          return err(new StripeWebhookErrorResponse(recordedTransaction.error));
-        }
-
-        this.logger.debug("Resolved previously saved transaction");
 
         const handler = new StripeRefundHandler();
         const isSupportedEvent = handler.checkIfEventIsSupported(event.value);
 
         if (!isSupportedEvent) {
-          this.logger.error("Event is not supported by StripeChargeHandler", {
+          this.logger.error("Event is not supported by StripeRefundHandler", {
             event: event.value.type,
           });
 
           return err(
             new StripeWebhookErrorResponse(
-              new BaseError("Event is not supported by StripeChargeHandler"),
+              new BaseError("Event is not supported by StripeRefundHandler"),
             ),
           );
         }
+
+        const recordedTransactionResult = await this.resolveTransactionRecord({
+          stripePaymentIntentId,
+          saleorApiUrl: webhookParams.saleorApiUrl,
+          appId: authData.appId,
+        });
+
+        if (recordedTransactionResult.isErr()) {
+          return err(recordedTransactionResult.error);
+        }
+
         const processingResult = handler.processRefundEvent({
           event: event.value,
-          recordedTransaction: recordedTransaction.value,
+          recordedTransaction: recordedTransactionResult.value,
           stripeEnv: config.value.getStripeEnvValue(),
         });
 
@@ -271,6 +300,7 @@ export class StripeWebhookUseCase {
         if (processingResult.isErr()) {
           return err(new StripeWebhookErrorResponse(processingResult.error));
         }
+
         const reportResult = await transactionEventReporter.reportTransactionEvent(
           processingResult.value.resolveEventReportVariables(),
         );

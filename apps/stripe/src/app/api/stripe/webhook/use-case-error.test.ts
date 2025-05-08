@@ -193,4 +193,52 @@ describe("StripeWebhookUseCase - Error cases", () => {
       }
     `);
   });
+
+  it("Returns error if event is not supported by StripeRefundHandler", async () => {
+    const event = {
+      type: "refund.created",
+      data: {
+        object: {
+          object: "refund",
+          id: "re_id",
+          payment_intent: mockedStripePaymentIntentId.toString(),
+        },
+      },
+    } as Stripe.RefundCreatedEvent;
+
+    const stripePiId = mockedStripePaymentIntentId;
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    mockTransactionRecorder.transactions = {
+      [stripePiId]: new RecordedTransaction({
+        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        stripePaymentIntentId: stripePiId,
+        saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+        resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+        selectedPaymentMethod: "card",
+      }),
+    };
+
+    mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+      const data: TransactionEventReportResultResult = {
+        createdEventId: "TEST_EVENT_ID",
+      };
+
+      return ok(data);
+    });
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+      StripeWebhookErrorResponse {
+        "error": [BaseError: Event is not supported by StripeRefundHandler],
+        "responseStatusCode": 500,
+      }
+    `);
+  });
 });

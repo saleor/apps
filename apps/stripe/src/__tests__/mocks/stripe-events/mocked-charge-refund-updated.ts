@@ -2,7 +2,13 @@ import Stripe from "stripe";
 
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 
-export const getMockedChargeRefundUpdatedEvent = (): Stripe.ChargeRefundUpdatedEvent => {
+type Options = {
+  status?: Stripe.Refund["status"];
+};
+
+export const getMockedChargeRefundUpdatedEvent = (
+  opts?: Options,
+): Stripe.ChargeRefundUpdatedEvent => {
   // Stripe returns timestamp in seconds
   const date = new Date(2025, 1, 1).getTime() / 1000;
 
@@ -25,7 +31,7 @@ export const getMockedChargeRefundUpdatedEvent = (): Stripe.ChargeRefundUpdatedE
         created: date,
         metadata: {},
         presentment_details: { presentment_amount: 0, presentment_currency: "usd" },
-        status: "succeeded",
+        status: opts?.status ?? "succeeded",
         balance_transaction: null,
         charge: "ch_charge-id",
         payment_intent: mockedStripePaymentIntentId,

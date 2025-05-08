@@ -12,6 +12,8 @@ import { TransactionEventReportVariablesResolver } from "../transaction-event-re
 
 export type StripeChargeHandlerSupportedEvents = Stripe.ChargeRefundUpdatedEvent;
 
+type PossibleErrors = InstanceType<typeof SaleorMoney.ValidationError>;
+
 export class StripeRefundHandler {
   private prepareTransactionEventReportParams(event: StripeChargeHandlerSupportedEvents) {
     const chargeObject = event.data.object;
@@ -45,7 +47,7 @@ export class StripeRefundHandler {
     event: StripeChargeHandlerSupportedEvents;
     recordedTransaction: RecordedTransaction;
     stripeEnv: StripeEnv;
-  }) {
+  }): Result<TransactionEventReportVariablesResolver, PossibleErrors> {
     const {
       event,
       recordedTransaction: { saleorTransactionId, stripePaymentIntentId },

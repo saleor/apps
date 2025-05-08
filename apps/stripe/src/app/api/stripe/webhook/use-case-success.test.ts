@@ -5,7 +5,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockAdyenWebhookUrl, mockedSaleorTransactionIdBranded } from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
+import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
+import { getMockedChargeRefundUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-charge-refund-updated";
 import { getMockedPaymentIntentAmountCapturableUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-amount-capturable-updated";
 import { getMockedPaymentIntentPaymentCanceledEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-canceled";
 import { getMockedPaymentIntentPaymentFailedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-failed";
@@ -819,6 +821,239 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CANCEL_SUCCESS",
+      }
+    `,
+    );
+  });
+});
+
+describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
+  const mockApl = {
+    get: vi.fn(),
+    set: vi.fn(),
+    delete: vi.fn(),
+    getAll: vi.fn(),
+  } satisfies APL;
+
+  let instance: StripeWebhookUseCase;
+
+  const eventVerify = {
+    verifyEvent: vi.fn(),
+  } satisfies IStripeEventVerify;
+
+  const webhookParams = WebhookParams.createFromWebhookUrl(mockAdyenWebhookUrl)._unsafeUnwrap();
+
+  const mockEventReporter = {
+    reportTransactionEvent: vi.fn(),
+  } satisfies ITransactionEventReporter;
+
+  const mockTransactionRecorder = new MockedTransactionRecorder();
+
+  beforeEach(() => {
+    mockApl.get.mockImplementation(async () => mockAuthData);
+    mockTransactionRecorder.reset();
+
+    instance = new StripeWebhookUseCase({
+      apl: mockApl,
+      appConfigRepo: mockedAppConfigRepo,
+      webhookEventVerifyFactory: () => eventVerify,
+      transactionEventReporterFactory() {
+        return mockEventReporter;
+      },
+      transactionRecorder: mockTransactionRecorder,
+    });
+  });
+
+  it("Reports REFUND_SUCCESS transaction event when refund is success", async () => {
+    const event = getMockedChargeRefundUpdatedEvent();
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    mockTransactionRecorder.transactions = {
+      [mockedStripePaymentIntentId]: new RecordedTransaction({
+        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+        resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+        selectedPaymentMethod: "card",
+      }),
+    };
+
+    mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+      const data: TransactionEventReportResultResult = {
+        createdEventId: "TEST_EVENT_ID",
+      };
+
+      return ok(data);
+    });
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+    expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+    expect(
+      vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+    ).toMatchInlineSnapshot(
+      {
+        time: expect.toSatisfy(
+          (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+        ),
+      },
+      `
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Refund was successful",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "REFUND_SUCCESS",
+      }
+    `,
+    );
+  });
+
+  it("Reports REFUND_FAILURE transaction event when refund is failed", async () => {
+    const event = getMockedChargeRefundUpdatedEvent({
+      status: "failed",
+    });
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    mockTransactionRecorder.transactions = {
+      [mockedStripePaymentIntentId]: new RecordedTransaction({
+        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+        resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+        selectedPaymentMethod: "card",
+      }),
+    };
+
+    mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+      const data: TransactionEventReportResultResult = {
+        createdEventId: "TEST_EVENT_ID",
+      };
+
+      return ok(data);
+    });
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+    expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+    expect(
+      vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+    ).toMatchInlineSnapshot(
+      {
+        time: expect.toSatisfy(
+          (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+        ),
+      },
+      `
+      {
+        "actions": [
+          "REFUND",
+        ],
+        "amount": SaleorMoney {
+          "amount": 10,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Refund failed",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "REFUND_FAILURE",
+      }
+    `,
+    );
+  });
+
+  it("Reports REFUND_REQUEST transaction event when refund is pending", async () => {
+    const event = getMockedChargeRefundUpdatedEvent({
+      status: "pending",
+    });
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    mockTransactionRecorder.transactions = {
+      [mockedStripePaymentIntentId]: new RecordedTransaction({
+        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+        resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+        selectedPaymentMethod: "card",
+      }),
+    };
+
+    mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+      const data: TransactionEventReportResultResult = {
+        createdEventId: "TEST_EVENT_ID",
+      };
+
+      return ok(data);
+    });
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        StripeWebhookSuccessResponse {
+          "responseStatusCode": 200,
+        }
+      `);
+
+    expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
+
+    expect(
+      vi.mocked(mockEventReporter.reportTransactionEvent).mock.calls[0][0],
+    ).toMatchInlineSnapshot(
+      {
+        time: expect.toSatisfy(
+          (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
+        ),
+      },
+      `
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10,
+          "currency": "USD",
+        },
+        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "message": "Refund is processing",
+        "pspReference": "pi_TEST_TEST_TEST",
+        "time": toSatisfy<[Function anonymous]>,
+        "transactionId": "mocked-transaction-id",
+        "type": "REFUND_REQUEST",
       }
     `,
     );
