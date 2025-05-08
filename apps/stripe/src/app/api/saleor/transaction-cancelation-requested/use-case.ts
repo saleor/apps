@@ -10,7 +10,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { mapStripeCancelPaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
+import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-errors";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
@@ -112,9 +112,7 @@ export class TransactionCancelationRequestedUseCase {
         error: cancelPaymentIntentResult.error,
       });
 
-      const mappedError = mapStripeCancelPaymentIntentErrorToApiError(
-        cancelPaymentIntentResult.error,
-      );
+      const mappedError = mapStripeErrorToApiError(cancelPaymentIntentResult.error);
 
       return ok(
         new TransactionCancelationRequestedUseCaseResponses.Failure({

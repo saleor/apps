@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getMockedSaleorMoney } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
-import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
+import { StripeAPIError } from "@/modules/stripe/stripe-api-errors";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
@@ -56,7 +56,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
           ],
           "amount": 112.33,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-          "message": "Payment intent error - there is a problem with the request to Stripe API",
+          "message": "There is a problem with the request to Stripe API",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_FAILURE",
         }

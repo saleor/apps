@@ -13,7 +13,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
+import { StripeAPIError } from "@/modules/stripe/stripe-api-errors";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";

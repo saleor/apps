@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { getMockedSaleorMoney } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { StripeAPIError } from "@/modules/stripe/stripe-api-errors";
 import { createStripeClientSecret } from "@/modules/stripe/stripe-client-secret";
-import { StripeAPIError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import {
   AuthorizationActionRequiredResult,
@@ -162,7 +162,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent error - there is a problem with the request to Stripe API",
+          "message": "There is a problem with the request to Stripe API",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -251,7 +251,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent error - there is a problem with the request to Stripe API",
+          "message": "There is a problem with the request to Stripe API",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);

@@ -9,14 +9,14 @@ import {
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import {
+  StripeApiErrorPublicCode,
+  StripeApiErrors,
+  StripeCardErrorPublicCode,
+} from "@/modules/stripe/stripe-api-errors";
+import {
   StripeClientSecret,
   StripeClientSecretSchema,
 } from "@/modules/stripe/stripe-client-secret";
-import {
-  StripeApiErrorPublicCode,
-  StripeCardErrorPublicCode,
-  StripeCreatePaymentIntentAPIError,
-} from "@/modules/stripe/stripe-payment-intent-api-error";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
@@ -80,7 +80,7 @@ class Failure extends SuccessWebhookResponse {
   readonly transactionResult:
     | TransactionInitializeChargeFailureResult
     | TransactionInitializeAuthorizationFailureResult;
-  readonly error: StripeCreatePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
+  readonly error: StripeApiErrors | TransactionInitializeSessionEventDataError;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
@@ -100,7 +100,7 @@ class Failure extends SuccessWebhookResponse {
     transactionResult:
       | TransactionInitializeChargeFailureResult
       | TransactionInitializeAuthorizationFailureResult;
-    error: StripeCreatePaymentIntentAPIError | TransactionInitializeSessionEventDataError;
+    error: StripeApiErrors | TransactionInitializeSessionEventDataError;
   }) {
     super();
     this.transactionResult = args.transactionResult;

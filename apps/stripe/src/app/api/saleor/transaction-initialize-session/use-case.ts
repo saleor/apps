@@ -18,6 +18,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
+import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-errors";
 import {
   createStripeClientSecret,
   StripeClientSecret,
@@ -25,7 +26,6 @@ import {
 } from "@/modules/stripe/stripe-client-secret";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
-import { mapStripeCreatePaymentIntentErrorToApiError } from "@/modules/stripe/stripe-payment-intent-api-error";
 import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
@@ -245,9 +245,7 @@ export class TransactionInitializeSessionUseCase {
     });
 
     if (createPaymentIntentResult.isErr()) {
-      const mappedError = mapStripeCreatePaymentIntentErrorToApiError(
-        createPaymentIntentResult.error,
-      );
+      const mappedError = mapStripeErrorToApiError(createPaymentIntentResult.error);
 
       this.logger.error("Failed to create payment intent", { error: mappedError });
 
