@@ -1,41 +1,27 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
 import { StripeApiError } from "@/modules/stripe/stripe-api-error";
-import {
-  RefundFailureResult,
-  RefundRequestResult,
-  RefundSuccessResult,
-} from "@/modules/transaction-result/refund-result";
+import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
 class Success extends SuccessWebhookResponse {
-  readonly transactionResult: RefundSuccessResult | RefundFailureResult | RefundRequestResult;
-  readonly saleorMoney: SaleorMoney;
+  readonly stripePaymentIntentId: StripePaymentIntentId;
 
-  constructor(args: {
-    transactionResult: RefundSuccessResult | RefundFailureResult | RefundRequestResult;
-    saleorMoney: SaleorMoney;
-  }) {
+  constructor(args: { stripePaymentIntentId: StripePaymentIntentId }) {
     super();
-    this.transactionResult = args.transactionResult;
-    this.saleorMoney = args.saleorMoney;
+    this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 
   getResponse(): Response {
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_REFUND_REQUESTED">({
-      // @ts-expect-error - check why Saleor doesn't allow RefundRequestedResult here
-      result: this.transactionResult.result,
-      amount: this.saleorMoney.amount,
-      pspReference: this.transactionResult.stripePaymentIntentId,
-      message: this.transactionResult.message,
-      actions: this.transactionResult.actions,
-      externalUrl: generateStripeDashboardUrl(
-        this.transactionResult.stripePaymentIntentId,
-        this.transactionResult.stripeEnv,
-      ),
-    });
+    /*
+     * We are using async flow here as currently Saleor doesn't allow `REFUND_REQUEST` to be returned in `TRANSACTION_REFUND_REQUESTED` webhook response. App will report actual refund status when handling Stripe webhook.
+     * https://docs.saleor.io/developer/extending/webhooks/synchronous-events/transaction#async-flow-2
+     */
+    const typeSafeResponse = {
+      pspReference: this.stripePaymentIntentId,
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
