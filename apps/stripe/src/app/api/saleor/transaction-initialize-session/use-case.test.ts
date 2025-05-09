@@ -55,6 +55,7 @@ describe("TransactionInitializeSessionUseCase", () => {
             currency: "usd",
             client_secret: "secret-value",
             id: "pi_test",
+            status: "requires_payment_method",
           } as Stripe.PaymentIntent),
         );
 
@@ -306,6 +307,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         ok({
           amount: 100,
           currency: "abc",
+          status: "requires_payment_method",
         } as Stripe.PaymentIntent),
     );
 
@@ -333,6 +335,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           amount: 100,
           currency: "usd",
           id: "pi_test",
+          status: "requires_payment_method",
         } as Stripe.PaymentIntent),
     );
 
@@ -360,6 +363,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           amount: 100,
           currency: "usd",
           client_secret: "secret-value",
+          status: "requires_payment_method",
         } as Stripe.PaymentIntent),
     );
 
@@ -392,6 +396,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           amount: 100,
           currency: "usd",
           client_secret: "secret-value",
+          status: "requires_payment_method",
         } as Stripe.PaymentIntent),
     );
 
