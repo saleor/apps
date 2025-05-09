@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockedConfigurationId } from "@/__tests__/mocks/constants";
+import { mockedConfigurationId, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -42,6 +42,7 @@ describe("StripeWebhookManager", () => {
         {
           appUrl: "not url",
           saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
         },
       );
 
@@ -69,6 +70,7 @@ describe("StripeWebhookManager", () => {
         {
           appUrl: "http://localhost:3000",
           saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
         },
       );
 
@@ -92,6 +94,7 @@ describe("StripeWebhookManager", () => {
         {
           appUrl: "http://localhost:3000",
           saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
         },
       );
 
@@ -138,6 +141,7 @@ describe("StripeWebhookManager", () => {
       {
         appUrl: "http://localhost:3000",
         saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
       },
     );
 
@@ -165,7 +169,7 @@ describe("StripeWebhookManager", () => {
           "metadata": {
             "saleorAppConfigurationId": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
           },
-          "url": "http://localhost:3000/api/stripe/webhook?configurationId=81f323bd-91e2-4838-ab6e-5affd81ffc3b&saleorApiUrl=https%3A%2F%2Ffoo.bar.saleor.cloud%2Fgraphql%2F",
+          "url": "http://localhost:3000/api/stripe/webhook?configurationId=81f323bd-91e2-4838-ab6e-5affd81ffc3b&saleorApiUrl=https%3A%2F%2Ffoo.bar.saleor.cloud%2Fgraphql%2F&appId=saleor-app-id",
         }
       `);
   });

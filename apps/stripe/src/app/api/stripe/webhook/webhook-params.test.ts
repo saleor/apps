@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { mockedConfigurationId } from "@/__tests__/mocks/constants";
+import { mockedConfigurationId, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 
@@ -8,6 +8,7 @@ describe("WebhookParams", () => {
   const validSearchParams = new URLSearchParams({
     [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
     [WebhookParams.configurationIdIdSearchParam]: mockedConfigurationId,
+    [WebhookParams.appIdSearchParam]: mockedSaleorAppId,
   });
 
   const validUrl = new URL(
@@ -17,7 +18,7 @@ describe("WebhookParams", () => {
   // Ensure testing entities are valid from human perspective
   it("Valid url is valid", () => {
     expect(validUrl).toMatchInlineSnapshot(
-      `"https://test-deployment.com/?saleorApiUrl=https%3A%2F%2Ffoo.bar.saleor.cloud%2Fgraphql%2F&configurationId=81f323bd-91e2-4838-ab6e-5affd81ffc3b"`,
+      `"https://test-deployment.com/?saleorApiUrl=https%3A%2F%2Ffoo.bar.saleor.cloud%2Fgraphql%2F&configurationId=81f323bd-91e2-4838-ab6e-5affd81ffc3b&appId=saleor-app-id"`,
     );
   });
 
@@ -112,6 +113,53 @@ describe("WebhookParams", () => {
 
       expect(error).toMatchInlineSnapshot(`
         [ParsingError: configurationId URL param is invalid
+        Cant parse Stripe incoming webhook URL]
+      `);
+    });
+  });
+
+  describe("working on appId", () => {
+    it("Parses appId to the field", () => {
+      const result = WebhookParams.createFromWebhookUrl(validUrl);
+
+      const vo = result._unsafeUnwrap();
+
+      expect(vo.appId).toStrictEqual(mockedSaleorAppId);
+    });
+
+    it("Throws if appId is missing", () => {
+      const params = new URLSearchParams({
+        [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
+        [WebhookParams.configurationIdIdSearchParam]: mockedConfigurationId,
+      });
+
+      const result = WebhookParams.createFromWebhookUrl(
+        new URL("https://test-deployment.com?" + params.toString()).toString(),
+      );
+
+      const error = result._unsafeUnwrapErr();
+
+      expect(error).toMatchInlineSnapshot(`
+        [ParsingError: appId URL param is invalid
+        Cant parse Stripe incoming webhook URL]
+      `);
+    });
+
+    it("Throws if appId is malformed", () => {
+      const params = new URLSearchParams({
+        [WebhookParams.configurationIdIdSearchParam]: mockedConfigurationId,
+        [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
+        [WebhookParams.appIdSearchParam]: "",
+      });
+
+      const result = WebhookParams.createFromWebhookUrl(
+        new URL(`https://test-deployment.com?${params.toString()}`).toString(),
+      );
+
+      const error = result._unsafeUnwrapErr();
+
+      expect(error).toMatchInlineSnapshot(`
+        [ParsingError: appId URL param is invalid
         Cant parse Stripe incoming webhook URL]
       `);
     });

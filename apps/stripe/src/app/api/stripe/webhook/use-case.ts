@@ -130,6 +130,19 @@ export class StripeWebhookUseCase {
       );
     }
 
+    if (authData.appId !== webhookParams.appId) {
+      this.logger.error(
+        "Received webhook with different appId than expected. There may be old webhook from uninstalled app",
+      );
+
+      /*
+       * todo that next?
+       * - return 200?
+       * - return 500?
+       * - remove webhook and return 200?
+       */
+    }
+
     const transactionEventReporter = this.transactionEventReporterFactory(authData);
 
     const config = await this.appConfigRepo.getStripeConfig({
