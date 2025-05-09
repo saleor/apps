@@ -49,7 +49,6 @@ class Failure extends SuccessWebhookResponse {
       pspReference: this.transactionResult.stripePaymentIntentId,
       // TODO: remove this after Saleor allows to amount to be optional
       amount: this.saleorEventAmount,
-      // TODO: figure out how to get the error message to not be generic
       message: this.error.merchantMessage,
       actions: this.transactionResult.actions,
       externalUrl: generateStripeDashboardUrl(

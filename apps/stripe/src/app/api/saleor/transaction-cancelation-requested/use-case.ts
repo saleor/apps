@@ -94,11 +94,11 @@ export class TransactionCancelationRequestedUseCase {
     });
 
     if (cancelPaymentIntentResult.isErr()) {
-      this.logger.error("Failed to capture payment intent", {
-        error: cancelPaymentIntentResult.error,
-      });
+      const error = mapStripeErrorToApiError(cancelPaymentIntentResult.error);
 
-      const mappedError = mapStripeErrorToApiError(cancelPaymentIntentResult.error);
+      this.logger.error("Failed to capture payment intent", {
+        error,
+      });
 
       return ok(
         new TransactionCancelationRequestedUseCaseResponses.Failure({
@@ -108,7 +108,7 @@ export class TransactionCancelationRequestedUseCase {
             stripePaymentIntentId,
             stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           }),
-          error: mappedError,
+          error,
         }),
       );
     }

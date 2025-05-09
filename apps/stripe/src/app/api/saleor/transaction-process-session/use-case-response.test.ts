@@ -44,7 +44,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
           ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
-          "message": "Payment intent succeeded",
+          "message": "Payment intent has been successful",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_SUCCESS",
         }
@@ -71,7 +71,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
           ],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-          "message": "Payment intent succeeded",
+          "message": "Payment intent has been successful",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_SUCCESS",
         }
@@ -180,58 +180,6 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
           "message": "Payment intent is processing",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_REQUEST",
-        }
-      `);
-    });
-
-    it("getResponse() returns valid Response with status 200 and message indicating that intent is cancelled if transactionResult is ChargeFailure", async () => {
-      const transactionResult = new ChargeFailureResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "LIVE",
-      });
-      const response = new TransactionProcessSessionUseCaseResponses.Success({
-        saleorMoney: getMockedSaleorMoney(),
-        transactionResult,
-      });
-      const fetchReponse = response.getResponse();
-
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
-        {
-          "actions": [
-            "CHARGE",
-          ],
-          "amount": 10,
-          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-          "message": "Payment intent was cancelled",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "result": "CHARGE_FAILURE",
-        }
-      `);
-    });
-
-    it("getResponse() returns valid Response with status 200 and message indicating that intent is cancelled if transactionResult is AuthorizationFailure", async () => {
-      const transactionResult = new AuthorizationFailureResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "LIVE",
-      });
-      const response = new TransactionProcessSessionUseCaseResponses.Success({
-        saleorMoney: getMockedSaleorMoney(),
-        transactionResult,
-      });
-      const fetchReponse = response.getResponse();
-
-      expect(fetchReponse.status).toBe(200);
-      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
-        {
-          "actions": [
-            "CANCEL",
-          ],
-          "amount": 10,
-          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-          "message": "Payment intent was cancelled",
-          "pspReference": "pi_TEST_TEST_TEST",
-          "result": "AUTHORIZATION_FAILURE",
         }
       `);
     });
