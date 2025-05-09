@@ -94,11 +94,11 @@ export class TransactionChargeRequestedUseCase {
     });
 
     if (capturePaymentIntentResult.isErr()) {
-      this.logger.error("Failed to capture payment intent", {
-        error: capturePaymentIntentResult.error,
-      });
+      const error = mapStripeErrorToApiError(capturePaymentIntentResult.error);
 
-      const mappedError = mapStripeErrorToApiError(capturePaymentIntentResult.error);
+      this.logger.error("Failed to capture payment intent", {
+        error,
+      });
 
       return ok(
         new TransactionChargeRequestedUseCaseResponses.Failure({
@@ -107,7 +107,7 @@ export class TransactionChargeRequestedUseCase {
             stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           }),
           saleorEventAmount: amount,
-          error: mappedError,
+          error,
         }),
       );
     }

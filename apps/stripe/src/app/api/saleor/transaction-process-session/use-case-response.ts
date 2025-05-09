@@ -33,9 +33,7 @@ type TransactionResult =
   | ChargeActionRequiredResult
   | AuthorizationActionRequiredResult
   | ChargeRequestResult
-  | AuthorizationRequestResult
-  | ChargeFailureResult
-  | AuthorizationFailureResult;
+  | AuthorizationRequestResult;
 
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: TransactionResult;

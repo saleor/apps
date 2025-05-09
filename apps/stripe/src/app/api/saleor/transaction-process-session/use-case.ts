@@ -134,15 +134,15 @@ export class TransactionProcessSessionUseCase {
     }
 
     if (getPaymentIntentResult.isErr()) {
-      this.logger.error("Failed to get payment intent", {
-        error: getPaymentIntentResult.error,
-      });
+      const error = mapStripeErrorToApiError(getPaymentIntentResult.error);
 
-      const mappedError = mapStripeErrorToApiError(getPaymentIntentResult.error);
+      this.logger.error("Failed to get payment intent", {
+        error,
+      });
 
       return ok(
         new TransactionProcessSessionUseCaseResponses.Failure({
-          error: mappedError,
+          error,
           transactionResult: this.getFailureAppResult({
             resolvedTransactionFlow: recordedTransactionResult.value.resolvedTransactionFlow,
             stripePaymentIntentId: paymentIntentIdResult,

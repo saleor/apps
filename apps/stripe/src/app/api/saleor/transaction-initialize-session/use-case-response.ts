@@ -64,8 +64,7 @@ class Success extends SuccessWebhookResponse {
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.transactionResult.stripePaymentIntentId,
-      // https://docs.stripe.com/payments/paymentintents/lifecycle
-      message: "Payment intent requires payment method",
+      message: this.transactionResult.message,
       externalUrl: generateStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
