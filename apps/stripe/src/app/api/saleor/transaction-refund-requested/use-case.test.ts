@@ -147,7 +147,7 @@ describe("TransactionRefundRequestedUseCase", () => {
     expect(response._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
-  it("Returns 'MalformedRequestResponse' when Saleor event has no transaction", async () => {
+  it("Throws error when Saleor event has no transaction", async () => {
     const saleorEvent = { ...getMockedTransactionRefundRequestedEvent(), transaction: null };
 
     const uc = new TransactionRefundRequestedUseCase({
@@ -155,16 +155,18 @@ describe("TransactionRefundRequestedUseCase", () => {
       stripeRefundsApiFactory,
     });
 
-    const response = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: saleorEvent,
-    });
-
-    expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    await expect(
+      uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[MissingTransactionError: Transaction not found in event]`,
+    );
   });
 
-  it("Returns 'MalformedRequestResponse' when Saleor event has no channel for Saleor Checkout or Order", async () => {
+  it("Throws error when Saleor event has no channel for Saleor Checkout or Order", async () => {
     const saleorEvent = {
       ...getMockedTransactionRefundRequestedEvent(),
       transaction: {
@@ -179,16 +181,18 @@ describe("TransactionRefundRequestedUseCase", () => {
       stripeRefundsApiFactory,
     });
 
-    const response = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: saleorEvent,
-    });
-
-    expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    await expect(
+      uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[MissingChannelIdError: Channel ID not found in event Checkout or Order]`,
+    );
   });
 
-  it("Returns 'MalformedRequestResponse' when Saleor event has no amount for action", async () => {
+  it("Throws error when Saleor event has no amount for action", async () => {
     const saleorEvent = {
       ...getMockedTransactionRefundRequestedEvent(),
       action: {
@@ -202,12 +206,12 @@ describe("TransactionRefundRequestedUseCase", () => {
       stripeRefundsApiFactory,
     });
 
-    const response = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: saleorEvent,
-    });
-
-    expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    await expect(
+      uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`[MissingAmountError: Amount not found in event]`);
   });
 });
