@@ -11,7 +11,6 @@ import { getMockedTransactionCancelationRequestedEvent } from "@/__tests__/mocks
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
-  MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
@@ -131,7 +130,7 @@ describe("TransactionCancelationRequestedUseCase", () => {
     expect(response._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
-  it("Returns 'MalformedRequestResponse' when Saleor event has no transaction", async () => {
+  it("Throws error when Saleor event has no transaction", async () => {
     const saleorEvent = { ...getMockedTransactionCancelationRequestedEvent(), transaction: null };
 
     const uc = new TransactionCancelationRequestedUseCase({
@@ -139,16 +138,18 @@ describe("TransactionCancelationRequestedUseCase", () => {
       stripePaymentIntentsApiFactory,
     });
 
-    const response = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: saleorEvent,
-    });
-
-    expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    await expect(
+      uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[MissingTransactionError: Transaction not found in event]`,
+    );
   });
 
-  it("Returns 'MalformedRequestResponse' when Saleor event has no channel for Saleor Checkout or Order", async () => {
+  it("Throws error when Saleor event has no channel for Saleor Checkout or Order", async () => {
     const saleorEvent = {
       ...getMockedTransactionCancelationRequestedEvent(),
       transaction: {
@@ -163,12 +164,14 @@ describe("TransactionCancelationRequestedUseCase", () => {
       stripePaymentIntentsApiFactory,
     });
 
-    const response = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: saleorEvent,
-    });
-
-    expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    await expect(
+      uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[MissingChannelIdError: Channel ID not found in event Checkout or Order]`,
+    );
   });
 });

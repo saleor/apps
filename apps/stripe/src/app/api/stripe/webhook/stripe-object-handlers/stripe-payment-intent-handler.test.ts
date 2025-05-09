@@ -54,8 +54,8 @@ describe("StripePaymentIntentHandler", () => {
           };
 
           const event = getMockedPaymentIntentSucceededEvent();
-          const amountToUse = 123_30;
-          const amountExpected = 123.3; // Converted to Saleor float
+          const amountToUse = 123_312;
+          const amountExpected = 123.312; // Converted to Saleor float
 
           event.data.object.amount_received = amountToUse;
 
@@ -74,7 +74,7 @@ describe("StripePaymentIntentHandler", () => {
 
           expect(type).toBe("CHARGE_SUCCESS");
           // comes from mock
-          expect(amount.currency).toStrictEqual("USD");
+          expect(amount.currency).toStrictEqual("IQD");
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
@@ -105,7 +105,7 @@ describe("StripePaymentIntentHandler", () => {
           };
 
           const amountToUse = 123_30;
-          const amountExpected = 123.3; // Converted to Saleor float
+          const amountExpected = 12330; // Converted to Saleor float
 
           event.data.object.amount_received = amountToUse;
 
@@ -124,7 +124,7 @@ describe("StripePaymentIntentHandler", () => {
 
           expect(type).toBe(expectedType);
           // comes from mock
-          expect(amount.currency).toStrictEqual("USD");
+          expect(amount.currency).toStrictEqual("JPY");
           // Converted to Saleor float
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
@@ -155,8 +155,8 @@ describe("StripePaymentIntentHandler", () => {
           };
 
           const event = getMockedPaymentIntentRequiresActionEvent();
-          const amountToUse = 123_30;
-          const amountExpected = 123.3; // Converted to Saleor float
+          const amountToUse = 123_367;
+          const amountExpected = 12.3367; // Converted to Saleor float
 
           event.data.object.amount_received = amountToUse;
 
@@ -176,7 +176,7 @@ describe("StripePaymentIntentHandler", () => {
 
           expect(type).toBe(expectedType);
           // comes from mock
-          expect(amount.currency).toStrictEqual("USD");
+          expect(amount.currency).toStrictEqual("UYW");
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");

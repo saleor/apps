@@ -20,10 +20,10 @@ export const getMockedPaymentIntentRequiresActionEvent =
         object: {
           id: mockedStripePaymentIntentId,
           amount: 1000,
-          amount_received: 1013,
+          amount_received: 101234,
           amount_capturable: 0,
           object: "payment_intent",
-          currency: "usd",
+          currency: "uyw",
           created: date,
           application: null,
           application_fee_amount: null,
