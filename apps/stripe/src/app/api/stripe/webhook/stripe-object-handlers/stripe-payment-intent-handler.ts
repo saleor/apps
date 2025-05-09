@@ -184,12 +184,10 @@ export class StripePaymentIntentHandler {
             ? new AuthorizationFailureResult({
                 stripePaymentIntentId: stripePaymentIntentId,
                 stripeEnv,
-                message: "Payment intent failed",
               })
             : new ChargeFailureResult({
                 stripePaymentIntentId: stripePaymentIntentId,
                 stripeEnv,
-                message: "Payment intent failed",
               });
 
         return ok(
