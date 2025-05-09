@@ -18,7 +18,7 @@ export const getMockedPaymentIntentSucceededEvent = (): Stripe.PaymentIntentSucc
     type: "payment_intent.succeeded",
     data: {
       object: {
-        currency: "usd",
+        currency: "iqd",
         amount_received: 1013,
         amount_capturable: 1511,
         object: "payment_intent",

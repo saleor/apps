@@ -11,7 +11,6 @@ import { getMockedTransactionChargeRequestedEvent } from "@/__tests__/mocks/tran
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
-  MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
@@ -131,7 +130,7 @@ describe("TransactionChargeRequestedUseCase", () => {
     expect(response._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
-  it("Returns 'MalformedRequestResponse' when Saleor event has no transaction", async () => {
+  it("Throws error when Saleor event has no transaction", async () => {
     const saleorEvent = { ...getMockedTransactionChargeRequestedEvent(), transaction: null };
 
     const uc = new TransactionChargeRequestedUseCase({
@@ -139,16 +138,18 @@ describe("TransactionChargeRequestedUseCase", () => {
       stripePaymentIntentsApiFactory,
     });
 
-    const response = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: saleorEvent,
-    });
-
-    expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    await expect(
+      uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[MissingTransactionError: Transaction not found in event]`,
+    );
   });
 
-  it("Returns 'MalformedRequestResponse' when Saleor event has no channel for Saleor Checkout or Order", async () => {
+  it("Throws error when Saleor event has no channel for Saleor Checkout or Order", async () => {
     const saleorEvent = {
       ...getMockedTransactionChargeRequestedEvent(),
       transaction: {
@@ -163,16 +164,18 @@ describe("TransactionChargeRequestedUseCase", () => {
       stripePaymentIntentsApiFactory,
     });
 
-    const response = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: saleorEvent,
-    });
-
-    expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    await expect(
+      uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `[MissingChannelIdError: Channel ID not found in event Checkout or Order]`,
+    );
   });
 
-  it("Returns 'MalformedRequestResponse' when Saleor event has no amount for action and payment intent capture fails", async () => {
+  it("Throws error when Saleor event has no amount for action and payment intent capture fails", async () => {
     const saleorEvent = {
       ...getMockedTransactionChargeRequestedEvent(),
       action: {
@@ -189,12 +192,12 @@ describe("TransactionChargeRequestedUseCase", () => {
       stripePaymentIntentsApiFactory,
     });
 
-    const response = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: saleorEvent,
-    });
-
-    expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    await expect(
+      uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: saleorEvent,
+      }),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`[MissingAmountError: Amount not found in event]`);
   });
 });

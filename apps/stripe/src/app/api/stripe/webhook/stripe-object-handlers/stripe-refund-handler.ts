@@ -47,21 +47,17 @@ export class StripeRefundHandler {
     const currency = chargeObject.currency;
     const eventDate = createDateFromStripeEvent(event);
 
-    const paramsResult = Result.combine([
-      SaleorMoney.createFromStripe({
-        amount: chargeObject.amount,
-        currency,
-      }),
-    ]);
+    const saleorMoneyResult = SaleorMoney.createFromStripe({
+      amount: chargeObject.amount,
+      currency,
+    });
 
-    if (paramsResult.isErr()) {
-      return err(paramsResult.error);
+    if (saleorMoneyResult.isErr()) {
+      return err(saleorMoneyResult.error);
     }
 
-    const [saleorMoney] = paramsResult.value;
-
     return ok({
-      saleorMoney,
+      saleorMoney: saleorMoneyResult.value,
       eventDate,
     });
   }

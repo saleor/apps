@@ -22,7 +22,7 @@ export const getMockedPaymentIntentProcessingEvent = (): Stripe.PaymentIntentPro
         amount_received: 1013,
         amount_capturable: 0,
         object: "payment_intent",
-        currency: "usd",
+        currency: "jpy",
         created: date,
         application: null,
         application_fee_amount: null,
