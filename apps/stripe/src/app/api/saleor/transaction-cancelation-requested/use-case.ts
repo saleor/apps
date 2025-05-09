@@ -3,8 +3,8 @@ import { err, ok, Result } from "neverthrow";
 import { TransactionCancelationRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
@@ -127,10 +127,9 @@ export class TransactionCancelationRequestedUseCase {
       );
     }
 
-    const saleorMoneyResult = SaleorMoney.createFromStripe({
-      amount: cancelPaymentIntentResult.value.amount,
-      currency: cancelPaymentIntentResult.value.currency,
-    });
+    const saleorMoneyResult = resolveSaleorMoneyFromStripePaymentIntent(
+      cancelPaymentIntentResult.value,
+    );
 
     if (saleorMoneyResult.isErr()) {
       this.logger.error("Failed to create Saleor money", {
@@ -140,11 +139,9 @@ export class TransactionCancelationRequestedUseCase {
       return err(new BrokenAppResponse());
     }
 
-    const saleorMoney = saleorMoneyResult.value;
-
     return ok(
       new TransactionCancelationRequestedUseCaseResponses.Success({
-        saleorMoney,
+        saleorMoney: saleorMoneyResult.value,
         transactionResult: new CancelSuccessResult({
           stripePaymentIntentId,
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),

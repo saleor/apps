@@ -81,7 +81,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message indicating that intent requires action if transactionResult is ChargeActionRequired", async () => {
       const transactionResult = new ChargeActionRequiredResult({
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
+        stripeStatus: createStripePaymentIntentStatus("requires_action"),
         stripeEnv: "LIVE",
       });
       const response = new TransactionProcessSessionUseCaseResponses.Success({
@@ -108,7 +108,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message indicating that intent requires action if transactionResult is AuthorizationActionRequired", async () => {
       const transactionResult = new AuthorizationActionRequiredResult({
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
+        stripeStatus: createStripePaymentIntentStatus("requires_action"),
         stripeEnv: "LIVE",
       });
       const response = new TransactionProcessSessionUseCaseResponses.Success({

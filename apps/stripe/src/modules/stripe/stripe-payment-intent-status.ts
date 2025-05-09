@@ -1,16 +1,4 @@
-import { fromThrowable } from "neverthrow";
 import { z } from "zod";
-
-import { BaseError } from "@/lib/errors";
-
-export const StripePaymentIntentStatusValidationError = BaseError.subclass(
-  "StripePaymentIntentStatusValidationError",
-  {
-    props: {
-      _internalName: "StripePaymentIntentStatusValidationError" as const,
-    },
-  },
-);
 
 const StripePaymentIntentStatusSchema = z
   .enum([
@@ -25,8 +13,6 @@ const StripePaymentIntentStatusSchema = z
   .brand("StripePaymentIntentStatus");
 
 export const createStripePaymentIntentStatus = (raw: string) =>
-  fromThrowable(StripePaymentIntentStatusSchema.parse, (error) =>
-    StripePaymentIntentStatusValidationError.normalize(error),
-  )(raw);
+  StripePaymentIntentStatusSchema.parse(raw);
 
 export type StripePaymentIntentStatus = z.infer<typeof StripePaymentIntentStatusSchema>;
