@@ -218,7 +218,9 @@ export class StripeWebhookUseCase {
       if (processingResult.isErr()) {
         return err(
           new StripeWebhookErrorResponse(
-            new BaseError("Received legacy webhook but failed to handle removing it"),
+            new BaseError("Received legacy webhook but failed to handle removing it", {
+              cause: processingResult.error,
+            }),
           ),
         );
       } else {
