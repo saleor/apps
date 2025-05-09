@@ -21,6 +21,7 @@ import {
   TransactionEventReportResultResult,
 } from "@/modules/saleor/transaction-event-reporter";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { IStripeEventVerify } from "@/modules/stripe/types";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
@@ -61,6 +62,7 @@ describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
         return mockEventReporter;
       },
       transactionRecorder: mockTransactionRecorder,
+      webhookManager: new StripeWebhookManager(),
     });
   });
 
@@ -210,6 +212,7 @@ describe("StripeWebhookUseCase - handling payment_intent.amount_capturable_updat
         return mockEventReporter;
       },
       transactionRecorder: mockTransactionRecorder,
+      webhookManager: new StripeWebhookManager(),
     });
   });
 
@@ -295,6 +298,7 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
         return mockEventReporter;
       },
       transactionRecorder: mockTransactionRecorder,
+      webhookManager: new StripeWebhookManager(),
     });
   });
 
@@ -444,6 +448,7 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         return mockEventReporter;
       },
       transactionRecorder: mockTransactionRecorder,
+      webhookManager: new StripeWebhookManager(),
     });
   });
 
@@ -593,6 +598,7 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
         return mockEventReporter;
       },
       transactionRecorder: mockTransactionRecorder,
+      webhookManager: new StripeWebhookManager(),
     });
   });
 
@@ -742,6 +748,7 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         return mockEventReporter;
       },
       transactionRecorder: mockTransactionRecorder,
+      webhookManager: new StripeWebhookManager(),
     });
   });
 
@@ -887,6 +894,7 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
         return mockEventReporter;
       },
       transactionRecorder: mockTransactionRecorder,
+      webhookManager: new StripeWebhookManager(),
     });
   });
 

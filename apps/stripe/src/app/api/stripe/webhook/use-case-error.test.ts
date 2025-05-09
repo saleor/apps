@@ -18,6 +18,7 @@ import {
   ITransactionEventReporter,
   TransactionEventReportResultResult,
 } from "@/modules/saleor/transaction-event-reporter";
+import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { IStripeEventVerify, StripeEventParsingError } from "@/modules/stripe/types";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
@@ -57,6 +58,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
         return mockEventReporter;
       },
       transactionRecorder: mockTransactionRecorder,
+      webhookManager: new StripeWebhookManager(),
     });
   });
 
