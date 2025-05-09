@@ -201,6 +201,7 @@ describe("TransactionProcessSessionUseCase", () => {
       ok({
         amount: 100,
         currency: "abc",
+        status: "succeeded",
       } as Stripe.PaymentIntent),
     );
 
@@ -219,7 +220,7 @@ describe("TransactionProcessSessionUseCase", () => {
     ).resolves.toStrictEqual(err(new BrokenAppResponse()));
   });
 
-  it("Returns 'BrokenAppResponse' when Stripe Payment Intent status is not supported", async () => {
+  it("Throws error when Stripe Payment Intent status is not supported", async () => {
     const saleorEvent = getMockedTransactionProcessSessionEvent();
     const mockedTransationRecorder = new MockedTransactionRecorder();
 
@@ -247,7 +248,25 @@ describe("TransactionProcessSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`
+      [ZodError: [
+        {
+          "received": "broken_status",
+          "code": "invalid_enum_value",
+          "options": [
+            "requires_action",
+            "requires_confirmation",
+            "requires_payment_method",
+            "canceled",
+            "processing",
+            "requires_capture",
+            "succeeded"
+          ],
+          "path": [],
+          "message": "Invalid enum value. Expected 'requires_action' | 'requires_confirmation' | 'requires_payment_method' | 'canceled' | 'processing' | 'requires_capture' | 'succeeded', received 'broken_status'"
+        }
+      ]]
+    `);
   });
 
   it("Returns 'MalformedRequestResponse' when there is an error with getting transactionRecord", async () => {

@@ -2,6 +2,7 @@ import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
+import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
@@ -10,10 +11,7 @@ import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
-import {
-  createStripePaymentIntentStatus,
-  StripePaymentIntentStatusValidationError,
-} from "@/modules/stripe/stripe-payment-intent-status";
+import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import { CancelSuccessResult } from "@/modules/transaction-result/cancel-result";
 import {
   AuthorizationFailureResult,
@@ -38,7 +36,6 @@ export type StripePaymentIntentHandlerSupportedEvents =
 type PossibleErrors =
   | InstanceType<
       | typeof SaleorMoney.ValidationError
-      | typeof StripePaymentIntentStatusValidationError
       | typeof StripePaymentIntentHandler.NotSupportedEventError
       | typeof StripePaymentIntentHandler.MalformedEventError
     >
@@ -57,42 +54,19 @@ export class StripePaymentIntentHandler {
     },
   });
 
-  private resolveAmount(event: StripePaymentIntentHandlerSupportedEvents) {
-    const amount = event.data.object.amount;
-    const amountCapturable = event.data.object.amount_capturable;
-    const amountReceived = event.data.object.amount_received;
-
-    switch (event.type) {
-      case "payment_intent.amount_capturable_updated":
-        return amountCapturable;
-      case "payment_intent.canceled":
-        return amount;
-      default:
-        return amountReceived;
-    }
-  }
-
   private prepareTransactionEventReportParams(event: StripePaymentIntentHandlerSupportedEvents) {
-    const intentObject = event.data.object;
-    const currency = intentObject.currency;
     const eventDate = createDateFromStripeEvent(event);
 
-    const paramsResult = Result.combine([
-      SaleorMoney.createFromStripe({
-        amount: this.resolveAmount(event),
-        currency,
-      }),
-      createStripePaymentIntentStatus(intentObject.status),
-    ]);
+    const paymentIntentStatus = createStripePaymentIntentStatus(event.data.object.status);
 
-    if (paramsResult.isErr()) {
-      return err(paramsResult.error);
+    const saleorMoneyResult = resolveSaleorMoneyFromStripePaymentIntent(event.data.object);
+
+    if (saleorMoneyResult.isErr()) {
+      return err(saleorMoneyResult.error);
     }
 
-    const [saleorMoney, paymentIntentStatus] = paramsResult.value;
-
     return ok({
-      saleorMoney,
+      saleorMoney: saleorMoneyResult.value,
       paymentIntentStatus,
       eventDate,
     });

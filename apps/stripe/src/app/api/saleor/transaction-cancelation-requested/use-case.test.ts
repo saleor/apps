@@ -115,6 +115,7 @@ describe("TransactionCancelationRequestedUseCase", () => {
       ok({
         amount: 100,
         currency: "abc",
+        status: "canceled",
       } as Stripe.PaymentIntent),
     );
     const uc = new TransactionCancelationRequestedUseCase({

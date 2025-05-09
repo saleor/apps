@@ -94,7 +94,7 @@ describe("TransactionEventReportVariablesResolver", () => {
   it("Resolves valid transaction report variables for transactionResult: ChargeActionRequired", () => {
     const transactionResult = new ChargeActionRequiredResult({
       stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
+      stripeStatus: createStripePaymentIntentStatus("requires_action"),
       stripeEnv: "LIVE",
     });
 
@@ -127,7 +127,7 @@ describe("TransactionEventReportVariablesResolver", () => {
   it("Resolves valid transaction report variables for transactionResult: AuthorizationActionRequired", () => {
     const transactionResult = new AuthorizationActionRequiredResult({
       stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeStatus: createStripePaymentIntentStatus("requires_action")._unsafeUnwrap(),
+      stripeStatus: createStripePaymentIntentStatus("requires_action"),
       stripeEnv: "LIVE",
     });
 

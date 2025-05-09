@@ -6,6 +6,7 @@ import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
+import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
@@ -34,7 +35,6 @@ import {
 import {
   createStripePaymentIntentStatus,
   StripePaymentIntentStatus,
-  StripePaymentIntentStatusValidationError,
 } from "@/modules/stripe/stripe-payment-intent-status";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
@@ -106,24 +106,20 @@ export class TransactionInitializeSessionUseCase {
   }
 
   private mapStripePaymentIntentToWebhookResponse(
-    stripePaymentIntentResponse: Stripe.PaymentIntent,
+    paymentIntent: Stripe.PaymentIntent,
   ): Result<
     [SaleorMoney, StripePaymentIntentId, StripeClientSecret, StripePaymentIntentStatus],
     InstanceType<
       | typeof StripePaymentIntentValidationError
       | typeof SaleorMoney.ValidationError
       | typeof StripeClientSecretValidationError
-      | typeof StripePaymentIntentStatusValidationError
     >
   > {
     return Result.combine([
-      SaleorMoney.createFromStripe({
-        amount: stripePaymentIntentResponse.amount,
-        currency: stripePaymentIntentResponse.currency,
-      }),
-      fromThrowable(createStripePaymentIntentId)(stripePaymentIntentResponse.id),
-      createStripeClientSecret(stripePaymentIntentResponse.client_secret),
-      createStripePaymentIntentStatus(stripePaymentIntentResponse.status),
+      resolveSaleorMoneyFromStripePaymentIntent(paymentIntent),
+      fromThrowable(createStripePaymentIntentId)(paymentIntent.id),
+      createStripeClientSecret(paymentIntent.client_secret),
+      fromThrowable(createStripePaymentIntentStatus)(paymentIntent.status),
     ]);
   }
 
