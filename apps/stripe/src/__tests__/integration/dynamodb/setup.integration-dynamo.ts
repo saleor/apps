@@ -11,7 +11,6 @@ process.env.TZ = "UTC";
 vi.stubEnv("SECRET_KEY", "test_secret_key");
 vi.stubEnv("DYNAMODB_MAIN_TABLE_NAME", "stripe-main-table-integration");
 
-// todo extract envs
 beforeEach(async () => {
   await deleteTable();
 
