@@ -100,7 +100,7 @@ export class StripeWebhookManager {
     config: NewStripeConfigInput & {
       configurationId: string;
     },
-    { appUrl, saleorApiUrl }: { appUrl: string; saleorApiUrl: SaleorApiUrl },
+    { appUrl, saleorApiUrl, appId }: { appUrl: string; saleorApiUrl: SaleorApiUrl; appId: string },
   ): Promise<
     Result<
       {
@@ -121,6 +121,7 @@ export class StripeWebhookManager {
       webhookParams: WebhookParams.createFromParams({
         saleorApiUrl: saleorApiUrl,
         configurationId: config.configurationId,
+        appId,
       }),
     });
 
