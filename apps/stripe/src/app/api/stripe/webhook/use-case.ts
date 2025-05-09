@@ -249,6 +249,8 @@ export class StripeWebhookUseCase {
     }
 
     if (!config.value) {
+      this.logger.warn("Config for given webhook is missing");
+
       return err(
         new StripeWebhookErrorResponse(
           new BaseError("Config missing, app is not configured properly"),
