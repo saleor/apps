@@ -113,6 +113,7 @@ describe("TransactionChargeRequestedUseCase", () => {
       ok({
         amount: 100,
         currency: "abc",
+        status: "succeeded",
       } as Stripe.PaymentIntent),
     );
     const uc = new TransactionChargeRequestedUseCase({

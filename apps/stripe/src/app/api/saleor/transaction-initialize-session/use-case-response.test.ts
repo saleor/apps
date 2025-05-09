@@ -23,7 +23,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Success({
         transactionResult: new ChargeActionRequiredResult({
           stripePaymentIntentId: mockedStripePaymentIntentId,
-          stripeStatus: createStripePaymentIntentStatus("requires_payment_method")._unsafeUnwrap(),
+          stripeStatus: createStripePaymentIntentStatus("requires_payment_method"),
           stripeEnv: "LIVE",
         }),
         saleorMoney: getMockedSaleorMoney(10000),
@@ -54,7 +54,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Success({
         transactionResult: new AuthorizationActionRequiredResult({
           stripePaymentIntentId: mockedStripePaymentIntentId,
-          stripeStatus: createStripePaymentIntentStatus("requires_payment_method")._unsafeUnwrap(),
+          stripeStatus: createStripePaymentIntentStatus("requires_payment_method"),
           stripeEnv: "TEST",
         }),
         saleorMoney: getMockedSaleorMoney(10000),

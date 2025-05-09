@@ -1,13 +1,12 @@
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
-import Stripe from "stripe";
 
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
+import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
@@ -52,18 +51,6 @@ export class TransactionProcessSessionUseCase {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
     this.transactionRecorder = deps.transactionRecorder;
-  }
-
-  private mapStripeGetPaymentIntentToWebhookResponseParams(
-    stripePaymentIntentResponse: Stripe.PaymentIntent,
-  ) {
-    return Result.combine([
-      SaleorMoney.createFromStripe({
-        amount: stripePaymentIntentResponse.amount,
-        currency: stripePaymentIntentResponse.currency,
-      }),
-      createStripePaymentIntentStatus(stripePaymentIntentResponse.status),
-    ]);
   }
 
   private getFailureAppResult({
@@ -166,20 +153,22 @@ export class TransactionProcessSessionUseCase {
       );
     }
 
-    const mappedResponseResult = this.mapStripeGetPaymentIntentToWebhookResponseParams(
+    const saleorMoneyResult = resolveSaleorMoneyFromStripePaymentIntent(
       getPaymentIntentResult.value,
     );
 
-    if (mappedResponseResult.isErr()) {
-      captureException(mappedResponseResult.error);
-      this.logger.error("Failed to map Stripe Payment Intent to webhook response", {
-        error: mappedResponseResult.error,
+    if (saleorMoneyResult.isErr()) {
+      captureException(saleorMoneyResult.error);
+      this.logger.error("Failed to create Saleor Money from Stripe getPaymentIntent call", {
+        error: saleorMoneyResult.error,
       });
 
       return err(new BrokenAppResponse());
     }
 
-    const [saleorMoney, stripePaymentIntentStatus] = mappedResponseResult.value;
+    const stripePaymentIntentStatus = createStripePaymentIntentStatus(
+      getPaymentIntentResult.value.status,
+    );
 
     const MappedResult = mapPaymentIntentStatusToTransactionResult(
       stripePaymentIntentStatus,
@@ -195,7 +184,7 @@ export class TransactionProcessSessionUseCase {
     return ok(
       new TransactionProcessSessionUseCaseResponses.Success({
         transactionResult: result,
-        saleorMoney,
+        saleorMoney: saleorMoneyResult.value,
       }),
     );
   }

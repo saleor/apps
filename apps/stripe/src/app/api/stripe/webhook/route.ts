@@ -15,6 +15,7 @@ import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { saleorApp } from "@/lib/saleor-app";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { TransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
+import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
 import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
 
@@ -29,6 +30,7 @@ const useCase = new StripeWebhookUseCase({
       graphqlClient: createInstrumentedGraphqlClient(authData),
     });
   },
+  webhookManager: new StripeWebhookManager(),
 });
 
 const logger = createLogger("StripeWebhookHandler");

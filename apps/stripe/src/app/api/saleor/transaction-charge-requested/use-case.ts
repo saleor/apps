@@ -3,8 +3,8 @@ import { err, ok, Result } from "neverthrow";
 import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
@@ -112,10 +112,9 @@ export class TransactionChargeRequestedUseCase {
       );
     }
 
-    const saleorMoneyResult = SaleorMoney.createFromStripe({
-      amount: capturePaymentIntentResult.value.amount,
-      currency: capturePaymentIntentResult.value.currency,
-    });
+    const saleorMoneyResult = resolveSaleorMoneyFromStripePaymentIntent(
+      capturePaymentIntentResult.value,
+    );
 
     if (saleorMoneyResult.isErr()) {
       this.logger.error("Failed to create Saleor money", {

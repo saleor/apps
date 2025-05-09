@@ -24,7 +24,7 @@ describe("ChargeActionRequiredResult", () => {
     ({ stripeStatus, expectedMessage }) => {
       const result = new ChargeActionRequiredResult({
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus(stripeStatus)._unsafeUnwrap(),
+        stripeStatus: createStripePaymentIntentStatus(stripeStatus),
         stripeEnv: "LIVE",
       });
 
@@ -36,7 +36,7 @@ describe("ChargeActionRequiredResult", () => {
     expect(() => {
       new ChargeActionRequiredResult({
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus("succeeded")._unsafeUnwrap(),
+        stripeStatus: createStripePaymentIntentStatus("succeeded"),
         stripeEnv: "LIVE",
       });
     }).toThrow(
@@ -61,7 +61,7 @@ describe("AuthorizationActionRequiredResult", () => {
     ({ stripeStatus, expectedMessage }) => {
       const result = new AuthorizationActionRequiredResult({
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus(stripeStatus)._unsafeUnwrap(),
+        stripeStatus: createStripePaymentIntentStatus(stripeStatus),
         stripeEnv: "LIVE",
       });
 
@@ -73,7 +73,7 @@ describe("AuthorizationActionRequiredResult", () => {
     expect(() => {
       new AuthorizationActionRequiredResult({
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus("succeeded")._unsafeUnwrap(),
+        stripeStatus: createStripePaymentIntentStatus("succeeded"),
         stripeEnv: "LIVE",
       });
     }).toThrow(
