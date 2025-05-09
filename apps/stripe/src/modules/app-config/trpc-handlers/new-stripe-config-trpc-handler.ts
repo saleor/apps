@@ -103,6 +103,7 @@ export class NewStripeConfigTrpcHandler {
         {
           saleorApiUrl: saleorApiUrl.value,
           appUrl: ctx.appUrl,
+          appId: ctx.appId,
         },
       );
 

@@ -18,6 +18,8 @@ import {
 } from "@/modules/saleor/transaction-event-reporter";
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
+import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { IStripeEventVerify } from "@/modules/stripe/types";
 import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
@@ -39,6 +41,7 @@ export class StripeWebhookUseCase {
   private logger = createLogger("StripeWebhookUseCase");
   private transactionRecorder: TransactionRecorderRepo;
   private transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
+  private webhookManager: StripeWebhookManager;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
@@ -46,12 +49,34 @@ export class StripeWebhookUseCase {
     apl: APL;
     transactionRecorder: TransactionRecorderRepo;
     transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
+    webhookManager: StripeWebhookManager;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.webhookEventVerifyFactory = deps.webhookEventVerifyFactory;
     this.apl = deps.apl;
     this.transactionRecorder = deps.transactionRecorder;
     this.transactionEventReporterFactory = deps.transactionEventReporterFactory;
+    this.webhookManager = deps.webhookManager;
+  }
+
+  private async removeStripeWebhook({
+    webhookId,
+    restrictedKey,
+  }: {
+    webhookId: string;
+    restrictedKey: StripeRestrictedKey;
+  }) {
+    const result = await this.webhookManager.removeWebhook({ webhookId, restrictedKey });
+
+    if (result.isErr()) {
+      this.logger.error(`Failed to remove webhook ${webhookId}`, result.error);
+
+      return err(new BaseError("Failed to remove webhook", { cause: result.error }));
+    }
+
+    this.logger.info(`Webhook ${webhookId} removed successfully`);
+
+    return ok(null);
   }
 
   private async processEvent({
@@ -96,6 +121,59 @@ export class StripeWebhookUseCase {
     }
   }
 
+  /**
+   * It handles case when
+   * 1. App was installed and configured. Webhook exists in Stripe
+   * 2. App is removed - webhook is not
+   * 3. App is reinstalled and configured again
+   * 4. There are now 2 webhooks - old and new. Old one will always fail.
+   *
+   * At this point we detect an old webhook because it has different appId in URL (from previous installation).
+   * Now we can use that to fetch old config from DB and remove the webhook.
+   */
+  private async processLegacyWebhook(webhookParams: WebhookParams) {
+    const legacyConfig = await this.appConfigRepo.getStripeConfig({
+      configId: webhookParams.configurationId,
+      // Use app ID from webhook, not AuthData, so we have it frozen in time
+      appId: webhookParams.appId,
+      saleorApiUrl: webhookParams.saleorApiUrl,
+    });
+
+    if (legacyConfig.isErr()) {
+      captureException(
+        new BaseError(
+          "Failed to fetch config attached to legacy Webhook, this requires manual cleanup",
+          {
+            cause: legacyConfig.error,
+          },
+        ),
+      );
+
+      return err(
+        new BaseError("Failed to fetch legacy config", {
+          cause: legacyConfig.error,
+        }),
+      );
+    }
+
+    if (!legacyConfig.value) {
+      this.logger.error("Legacy config is empty, this requires manual cleanup");
+
+      return err(new BaseError("Legacy config is empty"));
+    }
+
+    const removalResult = await this.removeStripeWebhook({
+      webhookId: legacyConfig.value.webhookId,
+      restrictedKey: legacyConfig.value.restrictedKey,
+    });
+
+    if (removalResult.isErr()) {
+      return err(new BaseError("Failed to remove legacy webhook", { cause: removalResult.error }));
+    }
+
+    return ok(null);
+  }
+
   async execute({
     rawBody,
     signatureHeader,
@@ -128,6 +206,26 @@ export class StripeWebhookUseCase {
           new BaseError("Missing Saleor Auth Data. App installation is broken"),
         ),
       );
+    }
+
+    if (authData.appId !== webhookParams.appId) {
+      this.logger.error(
+        "Received webhook with different appId than expected. There may be old webhook from uninstalled app. Will try to remove it now.",
+      );
+
+      const processingResult = await this.processLegacyWebhook(webhookParams);
+
+      if (processingResult.isErr()) {
+        return err(
+          new StripeWebhookErrorResponse(
+            new BaseError("Received legacy webhook but failed to handle removing it", {
+              cause: processingResult.error,
+            }),
+          ),
+        );
+      } else {
+        return ok(new StripeWebhookSuccessResponse());
+      }
     }
 
     const transactionEventReporter = this.transactionEventReporterFactory(authData);

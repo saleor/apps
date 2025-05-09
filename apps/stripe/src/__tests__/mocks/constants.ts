@@ -11,6 +11,7 @@ export const mockAppUrlBase = "https://my-app.saleor.app";
 export const mockAdyenWebhookUrl = `${mockAppUrlBase}?${new URLSearchParams({
   [WebhookParams.saleorApiUrlSearchParam]: mockedSaleorApiUrl,
   [WebhookParams.configurationIdIdSearchParam]: mockedConfigurationId,
+  [WebhookParams.appIdSearchParam]: mockedSaleorAppId,
 }).toString()}`;
 /**
  *  @deprecated - use `mockedSaleorTransactionIdBranded` instead

@@ -21,6 +21,7 @@ export class StripeWebhookUrlBuilder {
         WebhookParams.saleorApiUrlSearchParam,
         webhookParams.saleorApiUrl,
       );
+      webhookUrl.searchParams.set(WebhookParams.appIdSearchParam, webhookParams.appId);
 
       return ok(webhookUrl.toString());
     } catch (e) {
