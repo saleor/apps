@@ -11,18 +11,13 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          sequence: {
+            shuffle: true,
+          },
           include: ["src/**/*.test.ts"],
-          exclude: ["src/**/*.integration.test.ts", "src/__tests__/integration/**"], // exclude integration tests so vitest doesn't run them twice
+          exclude: ["src/__tests__/integration/**"], // exclude integration tests so vitest doesn't run them twice
           name: "unit",
           setupFiles: "./src/__tests__/setup.units.ts",
-        },
-      },
-      {
-        extends: true,
-        test: {
-          include: ["src/**/*.integration.test.{ts,tsx}"],
-          name: "integration",
-          setupFiles: "./src/__tests__/setup.integration.ts",
         },
       },
       {
@@ -39,12 +34,5 @@ export default defineConfig({
         },
       },
     ],
-    sequence: {
-      /**
-       * Shuffle tests to avoid side effects, where test_2 relies on something that test_1 did.
-       * Now tests will fail a little earlier
-       */
-      shuffle: true,
-    },
   },
 });
