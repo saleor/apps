@@ -186,7 +186,7 @@ export class TransactionProcessSessionUseCase {
       new TransactionProcessSessionUseCaseResponses.Success({
         transactionResult: result,
         saleorMoney: saleorMoneyResult.value,
-        eventTime: createDateFromPaymentIntent(getPaymentIntentResult.value),
+        date: createDateFromPaymentIntent(getPaymentIntentResult.value),
       }),
     );
   }
