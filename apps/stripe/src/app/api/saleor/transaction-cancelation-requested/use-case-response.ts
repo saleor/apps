@@ -12,12 +12,19 @@ import {
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: CancelSuccessResult;
   readonly saleorMoney: SaleorMoney;
+  readonly date: Date | null;
 
-  constructor(args: { transactionResult: CancelSuccessResult; saleorMoney: SaleorMoney }) {
+  constructor(args: {
+    transactionResult: CancelSuccessResult;
+    saleorMoney: SaleorMoney;
+    date: Date | null;
+  }) {
     super();
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
+    this.date = args.date;
   }
+
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
       result: this.transactionResult.result,
@@ -29,6 +36,7 @@ class Success extends SuccessWebhookResponse {
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),
+      time: this.date?.toISOString(),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });

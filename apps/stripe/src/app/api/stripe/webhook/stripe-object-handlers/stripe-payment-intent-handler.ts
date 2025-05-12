@@ -5,8 +5,8 @@ import { BaseError } from "@/lib/errors";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { createDateFromStripeEvent } from "@/modules/stripe/stripe-dates";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
-import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
 import {
   createStripePaymentIntentId,
   StripePaymentIntentId,

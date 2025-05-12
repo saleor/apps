@@ -38,11 +38,17 @@ type TransactionResult =
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: TransactionResult;
   readonly saleorMoney: SaleorMoney;
+  readonly date: Date | null;
 
-  constructor(args: { transactionResult: TransactionResult; saleorMoney: SaleorMoney }) {
+  constructor(args: {
+    transactionResult: TransactionResult;
+    saleorMoney: SaleorMoney;
+    date: Date | null;
+  }) {
     super();
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
+    this.date = args.date;
   }
 
   getResponse(): Response {
@@ -57,6 +63,7 @@ class Success extends SuccessWebhookResponse {
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),
+      time: this.date?.toISOString(),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
