@@ -13,6 +13,6 @@ export const resolvePaymentMethodFromEventData = (
     case "klarna":
       return new KlarnaPaymentMethod();
     default:
-      assertUnreachable(eventData.paymentIntent.paymentMethod);
+      assertUnreachable(eventData.paymentIntent);
   }
 };
