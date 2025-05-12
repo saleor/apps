@@ -1,7 +1,7 @@
 import { Permission } from "@saleor/app-sdk/types";
-import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
 import { initTRPC } from "@trpc/server";
 
+import { REQUIRED_CLIENT_PERMISSIONS } from "@/lib/required-client-permissions";
 import { TrpcContextAppRouter } from "@/modules/trpc/context-app-router";
 
 interface Meta {
@@ -13,7 +13,7 @@ const t = initTRPC
   .meta<Meta>()
   .create({
     defaultMeta: {
-      requiredClientPermissions: [...REQUIRED_SALEOR_PERMISSIONS, "HANDLE_PAYMENTS"],
+      requiredClientPermissions: REQUIRED_CLIENT_PERMISSIONS,
     },
   });
 

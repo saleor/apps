@@ -1,8 +1,9 @@
+import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  plugins: [react(), tsconfigPaths()],
   test: {
     css: false,
     mockReset: true,
@@ -18,6 +19,7 @@ export default defineConfig({
           exclude: ["src/__tests__/integration/**"], // exclude integration tests so vitest doesn't run them twice
           name: "unit",
           setupFiles: "./src/__tests__/setup.units.ts",
+          environment: "jsdom",
         },
       },
       {
@@ -26,7 +28,6 @@ export default defineConfig({
           sequence: {
             concurrent: false,
           },
-
           globalSetup: "./src/__tests__/integration/dynamodb/global-setup.integration-dynamo.ts",
           include: ["src/__tests__/integration/dynamodb/**/*.test.{ts,ts}"],
           name: "integration:dynamodb",
