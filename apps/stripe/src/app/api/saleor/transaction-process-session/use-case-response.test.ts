@@ -152,9 +152,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
+          "actions": [],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent is processing",
@@ -179,9 +177,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       expect(fetchResponse.status).toBe(200);
       expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
-          "actions": [
-            "CANCEL",
-          ],
+          "actions": [],
           "amount": 10,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent is processing",

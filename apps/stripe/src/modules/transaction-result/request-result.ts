@@ -4,7 +4,7 @@ import { ResultBase } from "@/modules/transaction-result/types";
 
 export class ChargeRequestResult extends ResultBase {
   readonly result = "CHARGE_REQUEST" as const;
-  readonly actions = ["CANCEL"] as const;
+  readonly actions = [];
   readonly message = "Payment intent is processing";
 
   readonly stripePaymentIntentId: StripePaymentIntentId;
@@ -18,7 +18,7 @@ export class ChargeRequestResult extends ResultBase {
 
 export class AuthorizationRequestResult extends ResultBase {
   readonly result = "AUTHORIZATION_REQUEST" as const;
-  readonly actions = ["CANCEL"] as const;
+  readonly actions = [];
   readonly message = "Payment intent is processing";
 
   readonly stripePaymentIntentId: StripePaymentIntentId;

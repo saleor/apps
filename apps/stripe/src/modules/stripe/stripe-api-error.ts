@@ -86,7 +86,7 @@ export const StripePermissionError = BaseError.subclass("StripePermissionError",
 export const StripeIdempotencyError = BaseError.subclass("StripeIdempotencyError", {
   props: {
     _internalName: "StripePaymentIntentsApi.StripeIdempotencyError" as const,
-    publicCode: "StripeApiError" as const,
+    publicCode: StripeApiErrorPublicCode,
     publicMessage: "There is a problem with the request to Stripe API",
     merchantMessage: "There is a problem with the request to Stripe API",
   },
@@ -95,7 +95,7 @@ export const StripeIdempotencyError = BaseError.subclass("StripeIdempotencyError
 export const StripeUnknownAPIError = BaseError.subclass("StripeUnknownAPIError", {
   props: {
     _internalName: "StripePaymentIntentsApi.StripeUnknownAPIError" as const,
-    publicCode: "StripeApiError" as const,
+    publicCode: StripeApiErrorPublicCode,
     publicMessage: "There is a problem with the request to Stripe API",
     merchantMessage: "There is a problem with the request to Stripe API",
   },
