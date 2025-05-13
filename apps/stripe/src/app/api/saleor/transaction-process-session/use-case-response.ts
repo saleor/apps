@@ -4,7 +4,7 @@ import { z } from "zod";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
-import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
+import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import {
   StripeApiError,
   StripeApiErrorPublicCode,
@@ -59,7 +59,7 @@ class Success extends SuccessWebhookResponse {
       // https://docs.stripe.com/payments/paymentintents/lifecycle
       message: this.transactionResult.message,
       actions: this.transactionResult.actions,
-      externalUrl: generateStripeDashboardUrl(
+      externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),
@@ -101,7 +101,7 @@ class Failure extends SuccessWebhookResponse {
       message: this.error.merchantMessage,
       amount: this.saleorEventAmount,
       pspReference: this.transactionResult.stripePaymentIntentId,
-      externalUrl: generateStripeDashboardUrl(
+      externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),

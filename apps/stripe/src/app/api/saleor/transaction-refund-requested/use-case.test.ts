@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripeRefundId } from "@/__tests__/mocks/mocked-stripe-refund-id";
 import { mockedStripeRefundsApi } from "@/__tests__/mocks/mocked-stripe-refunds-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionRefundRequestedEvent } from "@/__tests__/mocks/transaction-refund-request-event";
@@ -31,6 +32,7 @@ describe("TransactionRefundRequestedUseCase", () => {
         status: "succeeded",
         amount: 100,
         currency: "usd",
+        id: mockedStripeRefundId.toString(),
       } as Stripe.Refund),
     );
 
