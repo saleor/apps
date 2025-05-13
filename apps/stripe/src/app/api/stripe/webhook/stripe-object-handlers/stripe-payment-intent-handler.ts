@@ -6,12 +6,12 @@ import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/reso
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
-import { createDateFromStripeEvent } from "@/modules/stripe/stripe-event-date";
 import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
+import { createTimestampFromStripeEvent } from "@/modules/stripe/stripe-timestamps";
 import { CancelSuccessResult } from "@/modules/transaction-result/cancel-result";
 import {
   AuthorizationFailureResult,
@@ -55,7 +55,7 @@ export class StripePaymentIntentHandler {
   });
 
   private prepareTransactionEventReportParams(event: StripePaymentIntentHandlerSupportedEvents) {
-    const eventDate = createDateFromStripeEvent(event);
+    const timestamp = createTimestampFromStripeEvent(event);
 
     const paymentIntentStatus = createStripePaymentIntentStatus(event.data.object.status);
 
@@ -68,7 +68,7 @@ export class StripePaymentIntentHandler {
     return ok({
       saleorMoney: saleorMoneyResult.value,
       paymentIntentStatus,
-      eventDate,
+      timestamp,
     });
   }
 
@@ -150,7 +150,7 @@ export class StripePaymentIntentHandler {
       return err(paramsResult.error);
     }
 
-    const { saleorMoney, paymentIntentStatus, eventDate } = paramsResult.value;
+    const { saleorMoney, paymentIntentStatus, timestamp } = paramsResult.value;
 
     switch (event.type) {
       case "payment_intent.succeeded":
@@ -172,8 +172,8 @@ export class StripePaymentIntentHandler {
           new TransactionEventReportVariablesResolver({
             saleorMoney,
             transactionResult: result,
-            date: eventDate,
-            saleorTransactionId: saleorTransactionId,
+            timestamp,
+            saleorTransactionId,
           }),
         );
       }
@@ -194,8 +194,8 @@ export class StripePaymentIntentHandler {
           new TransactionEventReportVariablesResolver({
             saleorMoney,
             transactionResult: failureResult,
-            date: eventDate,
-            saleorTransactionId: saleorTransactionId,
+            timestamp,
+            saleorTransactionId,
           }),
         );
       }
@@ -208,8 +208,8 @@ export class StripePaymentIntentHandler {
               stripeEnv,
             }),
             saleorMoney,
-            date: eventDate,
-            saleorTransactionId: saleorTransactionId,
+            timestamp,
+            saleorTransactionId,
           }),
         );
       }

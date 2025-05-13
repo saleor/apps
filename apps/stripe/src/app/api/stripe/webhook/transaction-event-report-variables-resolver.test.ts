@@ -36,7 +36,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -68,7 +68,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       transactionResult,
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -102,7 +102,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -135,7 +135,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -167,7 +167,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -199,7 +199,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -231,7 +231,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -263,7 +263,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       transactionResult,
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
