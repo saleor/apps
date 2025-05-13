@@ -33,7 +33,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
-        date: null,
+        timestamp: null,
       });
       const fetchResponse = response.getResponse();
 
@@ -60,7 +60,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
-        date: null,
+        timestamp: null,
       });
       const fetchReponse = response.getResponse();
 
@@ -89,7 +89,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
-        date: new Date(2025, 1, 1, 21, 37),
+        timestamp: new Date(2025, 1, 1, 21, 37),
       });
       const fetchResponse = response.getResponse();
 
@@ -118,7 +118,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
-        date: null,
+        timestamp: null,
       });
       const fetchReponse = response.getResponse();
 
@@ -145,7 +145,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
-        date: null,
+        timestamp: null,
       });
       const fetchReponse = response.getResponse();
 
@@ -172,7 +172,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
-        date: null,
+        timestamp: null,
       });
       const fetchResponse = response.getResponse();
 

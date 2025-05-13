@@ -13,13 +13,13 @@ import {
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
-import { createDateFromPaymentIntent } from "@/modules/stripe/stripe-dates";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
+import { createTimestampFromPaymentIntent } from "@/modules/stripe/stripe-timestamps";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   AuthorizationFailureResult,
@@ -186,7 +186,7 @@ export class TransactionProcessSessionUseCase {
       new TransactionProcessSessionUseCaseResponses.Success({
         transactionResult: result,
         saleorMoney: saleorMoneyResult.value,
-        date: createDateFromPaymentIntent(getPaymentIntentResult.value),
+        timestamp: createTimestampFromPaymentIntent(getPaymentIntentResult.value),
       }),
     );
   }

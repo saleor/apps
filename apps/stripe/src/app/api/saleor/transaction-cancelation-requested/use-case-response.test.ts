@@ -19,7 +19,7 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeEnv: "TEST",
         }),
-        date: new Date(2023, 0, 1),
+        timestamp: new Date(2023, 0, 1),
       });
       const fetchReponse = response.getResponse();
 

@@ -4,10 +4,12 @@ import { createStripePaymentIntentStatus } from "./stripe-payment-intent-status"
 
 const convertUnixTimestampToDate = (timestamp: number): Date => new Date(timestamp * 1000);
 
-export const createDateFromStripeEvent = (event: Stripe.Event): Date =>
+export const createTimestampFromStripeEvent = (event: Stripe.Event): Date =>
   convertUnixTimestampToDate(event.created);
 
-export const createDateFromPaymentIntent = (paymentIntent: Stripe.PaymentIntent): Date | null => {
+export const createTimestampFromPaymentIntent = (
+  paymentIntent: Stripe.PaymentIntent,
+): Date | null => {
   const status = createStripePaymentIntentStatus(paymentIntent.status);
 
   if (status === "canceled" && paymentIntent.canceled_at) {

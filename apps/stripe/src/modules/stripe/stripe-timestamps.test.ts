@@ -2,11 +2,11 @@ import Stripe from "stripe";
 import { describe, expect, it } from "vitest";
 
 import {
-  createDateFromPaymentIntent,
-  createDateFromStripeEvent,
-} from "@/modules/stripe/stripe-dates";
+  createTimestampFromPaymentIntent,
+  createTimestampFromStripeEvent,
+} from "@/modules/stripe/stripe-timestamps";
 
-describe("createDateFromStripeEvent", () => {
+describe("createTimestampFromStripeEvent", () => {
   it("Parses date from SECONDS that are returned from Stripe", () => {
     const theDate = new Date("2023-10-10T00:00:00Z");
 
@@ -14,13 +14,13 @@ describe("createDateFromStripeEvent", () => {
       created: theDate.getTime() / 1000,
     } as unknown as Stripe.Event;
 
-    const result = createDateFromStripeEvent(event);
+    const result = createTimestampFromStripeEvent(event);
 
     expect(result).toStrictEqual(theDate);
   });
 });
 
-describe("createDateFromCanceledPaymentIntent", () => {
+describe("createTimestampFromPaymentIntent", () => {
   it("Returns date from canceled_at field if PaymentIntent has canceled status", () => {
     const theDate = new Date("2023-10-10T00:00:00Z");
 
@@ -29,7 +29,7 @@ describe("createDateFromCanceledPaymentIntent", () => {
       canceled_at: theDate.getTime() / 1000,
     } as Stripe.PaymentIntent;
 
-    const result = createDateFromPaymentIntent(paymentIntent);
+    const result = createTimestampFromPaymentIntent(paymentIntent);
 
     expect(result).toStrictEqual(theDate);
   });
@@ -40,7 +40,7 @@ describe("createDateFromCanceledPaymentIntent", () => {
       canceled_at: null,
     } as Stripe.PaymentIntent;
 
-    const result = createDateFromPaymentIntent(paymentIntent);
+    const result = createTimestampFromPaymentIntent(paymentIntent);
 
     expect(result).toBeNull();
   });

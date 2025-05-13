@@ -4,13 +4,13 @@ import Stripe from "stripe";
 import { BaseError } from "@/lib/errors";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
-import { createDateFromStripeEvent } from "@/modules/stripe/stripe-dates";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripeRefundStatus } from "@/modules/stripe/stripe-refund-status";
+import { createTimestampFromStripeEvent } from "@/modules/stripe/stripe-timestamps";
 import { mapRefundStatusToTransactionResult } from "@/modules/transaction-result/map-refund-status-to-transaction-result";
 import {
   TransactionRecorderError,
@@ -45,7 +45,7 @@ export class StripeRefundHandler {
   private prepareTransactionEventReportParams(event: StripeChargeHandlerSupportedEvents) {
     const chargeObject = event.data.object;
     const currency = chargeObject.currency;
-    const eventDate = createDateFromStripeEvent(event);
+    const timestamp = createTimestampFromStripeEvent(event);
 
     const saleorMoneyResult = SaleorMoney.createFromStripe({
       amount: chargeObject.amount,
@@ -58,7 +58,7 @@ export class StripeRefundHandler {
 
     return ok({
       saleorMoney: saleorMoneyResult.value,
-      eventDate,
+      timestamp,
     });
   }
 
@@ -151,7 +151,7 @@ export class StripeRefundHandler {
       return err(paramsResult.error);
     }
 
-    const { saleorMoney, eventDate } = paramsResult.value;
+    const { saleorMoney, timestamp } = paramsResult.value;
 
     const MappedResult = mapRefundStatusToTransactionResult(
       createStripeRefundStatus(event.data.object.status),
@@ -167,7 +167,7 @@ export class StripeRefundHandler {
             }),
             saleorTransactionId: recordedTransactionResult.value.saleorTransactionId,
             saleorMoney,
-            date: eventDate,
+            timestamp,
           }),
         );
       }

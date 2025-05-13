@@ -12,17 +12,17 @@ import {
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: CancelSuccessResult;
   readonly saleorMoney: SaleorMoney;
-  readonly date: Date | null;
+  readonly timestamp: Date | null;
 
   constructor(args: {
     transactionResult: CancelSuccessResult;
     saleorMoney: SaleorMoney;
-    date: Date | null;
+    timestamp: Date | null;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
-    this.date = args.date;
+    this.timestamp = args.timestamp;
   }
 
   getResponse(): Response {
@@ -36,7 +36,7 @@ class Success extends SuccessWebhookResponse {
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),
-      time: this.date?.toISOString(),
+      time: this.timestamp?.toISOString(),
     });
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
