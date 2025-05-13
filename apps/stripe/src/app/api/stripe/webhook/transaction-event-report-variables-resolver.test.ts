@@ -5,6 +5,7 @@ import {
   mockedSaleorTransactionIdBranded,
 } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripeRefundId } from "@/__tests__/mocks/mocked-stripe-refund-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import {
   AuthorizationActionRequiredResult,
@@ -14,6 +15,11 @@ import {
   AuthorizationFailureResult,
   ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
+import {
+  RefundFailureResult,
+  RefundRequestResult,
+  RefundSuccessResult,
+} from "@/modules/transaction-result/refund-result";
 import {
   AuthorizationRequestResult,
   ChargeRequestResult,
@@ -277,6 +283,100 @@ describe("TransactionEventReportVariablesResolver", () => {
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_FAILURE",
+      }
+    `);
+  });
+
+  it("Resolves valid transaction report variables for transactionResult: RefundSuccess", () => {
+    const transactionResult = new RefundSuccessResult({
+      stripeRefundId: mockedStripeRefundId,
+      stripeEnv: "LIVE",
+    });
+
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
+      saleorMoney: getMockedSaleorMoney(),
+      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      timestamp: new Date("2023-10-01T00:00:00Z"),
+    });
+
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
+      {
+        "actions": [
+          "REFUND",
+        ],
+        "amount": SaleorMoney {
+          "amount": 10,
+          "currency": "USD",
+        },
+        "externalUrl": "https://dashboard.stripe.com/refunds/re_TEST_TEST_TEST",
+        "message": "Refund was successful",
+        "pspReference": "re_TEST_TEST_TEST",
+        "time": "2023-10-01T00:00:00.000Z",
+        "transactionId": "mocked-transaction-id",
+        "type": "REFUND_SUCCESS",
+      }
+    `);
+  });
+
+  it("Resolves valid transaction report variables for transactionResult: RefundFailure", () => {
+    const transactionResult = new RefundFailureResult({
+      stripeRefundId: mockedStripeRefundId,
+      stripeEnv: "LIVE",
+    });
+
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
+      saleorMoney: getMockedSaleorMoney(),
+      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      timestamp: new Date("2023-10-01T00:00:00Z"),
+    });
+
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
+      {
+        "actions": [
+          "REFUND",
+        ],
+        "amount": SaleorMoney {
+          "amount": 10,
+          "currency": "USD",
+        },
+        "externalUrl": "https://dashboard.stripe.com/refunds/re_TEST_TEST_TEST",
+        "message": "Refund failed",
+        "pspReference": "re_TEST_TEST_TEST",
+        "time": "2023-10-01T00:00:00.000Z",
+        "transactionId": "mocked-transaction-id",
+        "type": "REFUND_FAILURE",
+      }
+    `);
+  });
+
+  it("Resolves valid transaction report variables for transactionResult: RefundRequest", () => {
+    const transactionResult = new RefundRequestResult({
+      stripeRefundId: mockedStripeRefundId,
+      stripeEnv: "LIVE",
+    });
+
+    const resolver = new TransactionEventReportVariablesResolver({
+      transactionResult,
+      saleorMoney: getMockedSaleorMoney(),
+      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      timestamp: new Date("2023-10-01T00:00:00Z"),
+    });
+
+    expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
+      {
+        "actions": [],
+        "amount": SaleorMoney {
+          "amount": 10,
+          "currency": "USD",
+        },
+        "externalUrl": "https://dashboard.stripe.com/refunds/re_TEST_TEST_TEST",
+        "message": "Refund is processing",
+        "pspReference": "re_TEST_TEST_TEST",
+        "time": "2023-10-01T00:00:00.000Z",
+        "transactionId": "mocked-transaction-id",
+        "type": "REFUND_REQUEST",
       }
     `);
   });

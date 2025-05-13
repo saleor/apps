@@ -1,17 +1,19 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
-import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
+import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import { StripeApiError } from "@/modules/stripe/stripe-api-error";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
+import { StripeRefundId } from "@/modules/stripe/stripe-refund-id";
+
+import { TransactionRefundRequestedFailureResult } from "./refund-failure";
 
 class Success extends SuccessWebhookResponse {
-  readonly stripePaymentIntentId: StripePaymentIntentId;
+  readonly stripeRefundId: StripeRefundId;
 
-  constructor(args: { stripePaymentIntentId: StripePaymentIntentId }) {
+  constructor(args: { stripeRefundId: StripeRefundId }) {
     super();
-    this.stripePaymentIntentId = args.stripePaymentIntentId;
+    this.stripeRefundId = args.stripeRefundId;
   }
 
   getResponse(): Response {
@@ -20,7 +22,7 @@ class Success extends SuccessWebhookResponse {
      * https://docs.saleor.io/developer/extending/webhooks/synchronous-events/transaction#async-flow-2
      */
     const typeSafeResponse = {
-      pspReference: this.stripePaymentIntentId,
+      pspReference: this.stripeRefundId,
     };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
@@ -28,31 +30,34 @@ class Success extends SuccessWebhookResponse {
 }
 
 class Failure extends SuccessWebhookResponse {
-  readonly transactionResult: RefundFailureResult;
+  readonly transactionResult: TransactionRefundRequestedFailureResult;
   readonly saleorEventAmount: number;
   readonly error: StripeApiError;
+  readonly stripePaymentIntentId: StripePaymentIntentId;
 
   constructor(args: {
-    transactionResult: RefundFailureResult;
+    transactionResult: TransactionRefundRequestedFailureResult;
     saleorEventAmount: number;
-    readonly error: StripeApiError;
+    error: StripeApiError;
+    stripePaymentIntentId: StripePaymentIntentId;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.saleorEventAmount = args.saleorEventAmount;
     this.error = args.error;
+    this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_REFUND_REQUESTED">({
       result: this.transactionResult.result,
-      pspReference: this.transactionResult.stripePaymentIntentId,
+      pspReference: this.stripePaymentIntentId,
       // TODO: remove this after Saleor allows to amount to be optional
       amount: this.saleorEventAmount,
       message: this.error.merchantMessage,
       actions: this.transactionResult.actions,
-      externalUrl: generateStripeDashboardUrl(
-        this.transactionResult.stripePaymentIntentId,
+      externalUrl: generatePaymentIntentStripeDashboardUrl(
+        this.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),
     });
