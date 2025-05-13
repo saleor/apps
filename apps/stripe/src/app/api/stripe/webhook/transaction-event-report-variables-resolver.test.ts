@@ -36,7 +36,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -48,7 +48,7 @@ describe("TransactionEventReportVariablesResolver", () => {
           "amount": 10,
           "currency": "USD",
         },
-        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent has been successful",
         "pspReference": "pi_TEST_TEST_TEST",
         "time": "2023-10-01T00:00:00.000Z",
@@ -68,7 +68,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       transactionResult,
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -81,7 +81,7 @@ describe("TransactionEventReportVariablesResolver", () => {
           "amount": 10,
           "currency": "USD",
         },
-        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent has been successful",
         "pspReference": "pi_TEST_TEST_TEST",
         "time": "2023-10-01T00:00:00.000Z",
@@ -102,7 +102,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -114,7 +114,7 @@ describe("TransactionEventReportVariablesResolver", () => {
           "amount": 10,
           "currency": "USD",
         },
-        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent requires action",
         "pspReference": "pi_TEST_TEST_TEST",
         "time": "2023-10-01T00:00:00.000Z",
@@ -135,7 +135,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -147,7 +147,7 @@ describe("TransactionEventReportVariablesResolver", () => {
           "amount": 10,
           "currency": "USD",
         },
-        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent requires action",
         "pspReference": "pi_TEST_TEST_TEST",
         "time": "2023-10-01T00:00:00.000Z",
@@ -167,7 +167,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -177,7 +177,7 @@ describe("TransactionEventReportVariablesResolver", () => {
           "amount": 10,
           "currency": "USD",
         },
-        "externalReference": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
+        "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent is processing",
         "pspReference": "pi_TEST_TEST_TEST",
         "time": "2023-10-01T00:00:00.000Z",
@@ -197,7 +197,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -207,7 +207,7 @@ describe("TransactionEventReportVariablesResolver", () => {
           "amount": 10,
           "currency": "USD",
         },
-        "externalReference": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
+        "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent is processing",
         "pspReference": "pi_TEST_TEST_TEST",
         "time": "2023-10-01T00:00:00.000Z",
@@ -227,7 +227,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -239,7 +239,7 @@ describe("TransactionEventReportVariablesResolver", () => {
           "amount": 10,
           "currency": "USD",
         },
-        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent failed",
         "pspReference": "pi_TEST_TEST_TEST",
         "time": "2023-10-01T00:00:00.000Z",
@@ -259,7 +259,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       transactionResult,
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
-      date: new Date("2023-10-01T00:00:00Z"),
+      timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -271,7 +271,7 @@ describe("TransactionEventReportVariablesResolver", () => {
           "amount": 10,
           "currency": "USD",
         },
-        "externalReference": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+        "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent failed",
         "pspReference": "pi_TEST_TEST_TEST",
         "time": "2023-10-01T00:00:00.000Z",

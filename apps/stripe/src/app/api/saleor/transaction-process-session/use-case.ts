@@ -19,6 +19,7 @@ import {
   StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
+import { createTimestampFromPaymentIntent } from "@/modules/stripe/stripe-timestamps";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   AuthorizationFailureResult,
@@ -185,6 +186,7 @@ export class TransactionProcessSessionUseCase {
       new TransactionProcessSessionUseCaseResponses.Success({
         transactionResult: result,
         saleorMoney: saleorMoneyResult.value,
+        timestamp: createTimestampFromPaymentIntent(getPaymentIntentResult.value),
       }),
     );
   }

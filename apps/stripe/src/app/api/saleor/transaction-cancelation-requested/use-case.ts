@@ -16,6 +16,7 @@ import {
 } from "@/modules/saleor/transaction-requested-event-helpers";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { createTimestampFromPaymentIntent } from "@/modules/stripe/stripe-timestamps";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   CancelFailureResult,
@@ -132,6 +133,7 @@ export class TransactionCancelationRequestedUseCase {
           stripePaymentIntentId,
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         }),
+        timestamp: createTimestampFromPaymentIntent(cancelPaymentIntentResult.value),
       }),
     );
   }

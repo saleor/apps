@@ -33,6 +33,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
+        timestamp: null,
       });
       const fetchResponse = response.getResponse();
 
@@ -59,6 +60,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
+        timestamp: null,
       });
       const fetchReponse = response.getResponse();
 
@@ -87,6 +89,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
+        timestamp: new Date(2025, 1, 1, 21, 37),
       });
       const fetchResponse = response.getResponse();
 
@@ -101,6 +104,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
           "message": "Payment intent requires action",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_ACTION_REQUIRED",
+          "time": "2025-02-01T21:37:00.000Z",
         }
       `);
     });
@@ -114,6 +118,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
+        timestamp: null,
       });
       const fetchReponse = response.getResponse();
 
@@ -140,6 +145,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
+        timestamp: null,
       });
       const fetchReponse = response.getResponse();
 
@@ -164,6 +170,7 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
+        timestamp: null,
       });
       const fetchResponse = response.getResponse();
 
