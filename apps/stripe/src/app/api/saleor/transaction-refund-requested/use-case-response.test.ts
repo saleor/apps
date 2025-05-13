@@ -1,23 +1,24 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripeRefundId } from "@/__tests__/mocks/mocked-stripe-refund-id";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
-import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
+import { TransactionRefundRequestedFailureResult } from "./refund-failure";
 import { TransactionRefundRequestedUseCaseResponses } from "./use-case-response";
 
 describe("TransactionRefundRequestedUseCaseResponses", () => {
   describe("Success", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionRefundRequestedUseCaseResponses.Success({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeRefundId: mockedStripeRefundId,
       });
       const fetchReponse = response.getResponse();
 
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "pspReference": "pi_TEST_TEST_TEST",
+          "pspReference": "re_TEST_TEST_TEST",
         }
       `);
     });
@@ -26,10 +27,10 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
   describe("Failure", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionRefundRequestedUseCaseResponses.Failure({
-        transactionResult: new RefundFailureResult({
+        transactionResult: new TransactionRefundRequestedFailureResult({
           stripeEnv: "TEST",
-          stripePaymentIntentId: mockedStripePaymentIntentId,
         }),
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorEventAmount: 112.33,
         error: new StripeAPIError("Error from stripe"),
       });

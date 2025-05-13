@@ -7,7 +7,7 @@ import {
   createSuccessWebhookResponseDataSchema,
 } from "@/modules/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
-import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
+import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import {
   StripeApiError,
   StripeApiErrorPublicCode,
@@ -65,7 +65,7 @@ class Success extends SuccessWebhookResponse {
       amount: this.saleorMoney.amount,
       pspReference: this.transactionResult.stripePaymentIntentId,
       message: this.transactionResult.message,
-      externalUrl: generateStripeDashboardUrl(
+      externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),

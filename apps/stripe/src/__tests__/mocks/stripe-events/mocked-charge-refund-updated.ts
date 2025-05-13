@@ -2,6 +2,8 @@ import Stripe from "stripe";
 
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 
+import { mockedStripeRefundId } from "../mocked-stripe-refund-id";
+
 type Options = {
   status?: Stripe.Refund["status"];
 };
@@ -27,7 +29,7 @@ export const getMockedChargeRefundUpdatedEvent = (
         currency: "usd",
         object: "refund",
         amount: 1000,
-        id: "re_refund-id",
+        id: mockedStripeRefundId,
         created: date,
         metadata: {},
         presentment_details: { presentment_amount: 0, presentment_currency: "usd" },

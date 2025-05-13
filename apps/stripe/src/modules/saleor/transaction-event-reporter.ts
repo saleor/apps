@@ -11,11 +11,13 @@ import { createLogger } from "@/lib/logger";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
+import { StripeRefundId } from "../stripe/stripe-refund-id";
+
 export type TransactionEventReportInput = {
   transactionId: string;
   message: string;
   amount: SaleorMoney;
-  pspReference: StripePaymentIntentId;
+  pspReference: StripePaymentIntentId | StripeRefundId;
   time: string;
   type: TransactionEventTypeEnum;
   actions: readonly TransactionActionEnum[];

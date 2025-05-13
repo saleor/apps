@@ -2,7 +2,7 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
-import { generateStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-url";
+import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import { StripeApiError } from "@/modules/stripe/stripe-api-error";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
@@ -24,7 +24,7 @@ class Success extends SuccessWebhookResponse {
       pspReference: this.transactionResult.stripePaymentIntentId,
       message: this.transactionResult.message,
       actions: this.transactionResult.actions,
-      externalUrl: generateStripeDashboardUrl(
+      externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),
@@ -58,7 +58,7 @@ class Failure extends SuccessWebhookResponse {
       amount: this.saleorEventAmount,
       message: this.error.merchantMessage,
       actions: this.transactionResult.actions,
-      externalUrl: generateStripeDashboardUrl(
+      externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),

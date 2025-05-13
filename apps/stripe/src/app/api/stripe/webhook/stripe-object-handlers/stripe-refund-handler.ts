@@ -9,6 +9,7 @@ import {
   createStripePaymentIntentId,
   StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
+import { createStripeRefundId } from "@/modules/stripe/stripe-refund-id";
 import { createStripeRefundStatus } from "@/modules/stripe/stripe-refund-status";
 import { createTimestampFromStripeEvent } from "@/modules/stripe/stripe-timestamps";
 import { mapRefundStatusToTransactionResult } from "@/modules/transaction-result/map-refund-status-to-transaction-result";
@@ -162,7 +163,7 @@ export class StripeRefundHandler {
         return ok(
           new TransactionEventReportVariablesResolver({
             transactionResult: new MappedResult({
-              stripePaymentIntentId: stripePaymentIntentIdResult.value,
+              stripeRefundId: createStripeRefundId(event.data.object.id),
               stripeEnv,
             }),
             saleorTransactionId: recordedTransactionResult.value.saleorTransactionId,

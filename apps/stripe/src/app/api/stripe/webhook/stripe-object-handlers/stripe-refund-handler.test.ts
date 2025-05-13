@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripeRefundId } from "@/__tests__/mocks/mocked-stripe-refund-id";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedChargeRefundUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-charge-refund-updated";
@@ -70,7 +71,7 @@ describe("StripeRefundHandler", () => {
           // comes from mock
           expect(amount.currency).toStrictEqual("USD");
           expect(amount.amount).toStrictEqual(amountExpected);
-          expect(pspReference).toStrictEqual(event.data.object.payment_intent);
+          expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
         },
       );
@@ -135,7 +136,7 @@ describe("StripeRefundHandler", () => {
 
         const { pspReference } = result._unsafeUnwrap().resolveEventReportVariables();
 
-        expect(pspReference).toStrictEqual(mockedStripePaymentIntentId);
+        expect(pspReference).toStrictEqual(mockedStripeRefundId);
       });
     });
   });
