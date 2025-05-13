@@ -4,6 +4,8 @@ import {
   getMockedSaleorMoney,
   mockedSaleorTransactionIdBranded,
 } from "@/__tests__/mocks/constants";
+import { getMockedPaymentIntentDashboardUrl } from "@/__tests__/mocks/mocked-payment-intent-dashboard-url";
+import { getMockedRefundDashboardUrl } from "@/__tests__/mocks/mocked-refund-dashboard-url";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripeRefundId } from "@/__tests__/mocks/mocked-stripe-refund-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
@@ -33,14 +35,15 @@ import { TransactionEventReportVariablesResolver } from "./transaction-event-rep
 
 describe("TransactionEventReportVariablesResolver", () => {
   it("Resolves valid transaction report variables for transactionResult: ChargeSuccess", () => {
-    const transactionResult = new ChargeSuccessResult({
-      stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeEnv: "LIVE",
-    });
+    const transactionResult = new ChargeSuccessResult();
 
     const resolver = new TransactionEventReportVariablesResolver({
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
+      stripeObjectId: mockedStripePaymentIntentId,
+      externalUrl: getMockedPaymentIntentDashboardUrl({
+        stripeEnv: "LIVE",
+      }),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
@@ -65,14 +68,15 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: AuthorizationSuccess", () => {
-    const transactionResult = new AuthorizationSuccessResult({
-      stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeEnv: "LIVE",
-    });
+    const transactionResult = new AuthorizationSuccessResult();
 
     const resolver = new TransactionEventReportVariablesResolver({
       transactionResult,
+      stripeObjectId: mockedStripePaymentIntentId,
       saleorMoney: getMockedSaleorMoney(),
+      externalUrl: getMockedPaymentIntentDashboardUrl({
+        stripeEnv: "LIVE",
+      }),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
@@ -98,13 +102,15 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: ChargeActionRequired", () => {
-    const transactionResult = new ChargeActionRequiredResult({
-      stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeStatus: createStripePaymentIntentStatus("requires_action"),
-      stripeEnv: "LIVE",
-    });
+    const transactionResult = new ChargeActionRequiredResult(
+      createStripePaymentIntentStatus("requires_action"),
+    );
 
     const resolver = new TransactionEventReportVariablesResolver({
+      stripeObjectId: mockedStripePaymentIntentId,
+      externalUrl: getMockedPaymentIntentDashboardUrl({
+        stripeEnv: "LIVE",
+      }),
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
@@ -131,14 +137,16 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: AuthorizationActionRequired", () => {
-    const transactionResult = new AuthorizationActionRequiredResult({
-      stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeStatus: createStripePaymentIntentStatus("requires_action"),
-      stripeEnv: "LIVE",
-    });
+    const transactionResult = new AuthorizationActionRequiredResult(
+      createStripePaymentIntentStatus("requires_action"),
+    );
 
     const resolver = new TransactionEventReportVariablesResolver({
       saleorMoney: getMockedSaleorMoney(),
+      stripeObjectId: mockedStripePaymentIntentId,
+      externalUrl: getMockedPaymentIntentDashboardUrl({
+        stripeEnv: "LIVE",
+      }),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),
@@ -164,13 +172,12 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: ChargeRequest", () => {
-    const transactionResult = new ChargeRequestResult({
-      stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeEnv: "TEST",
-    });
+    const transactionResult = new ChargeRequestResult();
 
     const resolver = new TransactionEventReportVariablesResolver({
       saleorMoney: getMockedSaleorMoney(),
+      stripeObjectId: mockedStripePaymentIntentId,
+      externalUrl: getMockedPaymentIntentDashboardUrl(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),
@@ -194,13 +201,12 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: AuthorizationRequest", () => {
-    const transactionResult = new AuthorizationRequestResult({
-      stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeEnv: "TEST",
-    });
+    const transactionResult = new AuthorizationRequestResult();
 
     const resolver = new TransactionEventReportVariablesResolver({
       saleorMoney: getMockedSaleorMoney(),
+      stripeObjectId: mockedStripePaymentIntentId,
+      externalUrl: getMockedPaymentIntentDashboardUrl(),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),
@@ -224,13 +230,14 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: ChargeFailureResult", () => {
-    const transactionResult = new ChargeFailureResult({
-      stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeEnv: "LIVE",
-    });
+    const transactionResult = new ChargeFailureResult();
 
     const resolver = new TransactionEventReportVariablesResolver({
       saleorMoney: getMockedSaleorMoney(),
+      stripeObjectId: mockedStripePaymentIntentId,
+      externalUrl: getMockedPaymentIntentDashboardUrl({
+        stripeEnv: "LIVE",
+      }),
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),
@@ -256,13 +263,14 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: AuthorizationFailure", () => {
-    const transactionResult = new AuthorizationFailureResult({
-      stripePaymentIntentId: mockedStripePaymentIntentId,
-      stripeEnv: "LIVE",
-    });
+    const transactionResult = new AuthorizationFailureResult();
 
     const resolver = new TransactionEventReportVariablesResolver({
       transactionResult,
+      stripeObjectId: mockedStripePaymentIntentId,
+      externalUrl: getMockedPaymentIntentDashboardUrl({
+        stripeEnv: "LIVE",
+      }),
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),
@@ -288,13 +296,12 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: RefundSuccess", () => {
-    const transactionResult = new RefundSuccessResult({
-      stripeRefundId: mockedStripeRefundId,
-      stripeEnv: "LIVE",
-    });
+    const transactionResult = new RefundSuccessResult();
 
     const resolver = new TransactionEventReportVariablesResolver({
       transactionResult,
+      stripeObjectId: mockedStripeRefundId,
+      externalUrl: getMockedRefundDashboardUrl(),
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),
@@ -320,13 +327,12 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: RefundFailure", () => {
-    const transactionResult = new RefundFailureResult({
-      stripeRefundId: mockedStripeRefundId,
-      stripeEnv: "LIVE",
-    });
+    const transactionResult = new RefundFailureResult();
 
     const resolver = new TransactionEventReportVariablesResolver({
       transactionResult,
+      stripeObjectId: mockedStripeRefundId,
+      externalUrl: getMockedRefundDashboardUrl(),
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),
@@ -352,13 +358,12 @@ describe("TransactionEventReportVariablesResolver", () => {
   });
 
   it("Resolves valid transaction report variables for transactionResult: RefundRequest", () => {
-    const transactionResult = new RefundRequestResult({
-      stripeRefundId: mockedStripeRefundId,
-      stripeEnv: "LIVE",
-    });
+    const transactionResult = new RefundRequestResult();
 
     const resolver = new TransactionEventReportVariablesResolver({
       transactionResult,
+      stripeObjectId: mockedStripeRefundId,
+      externalUrl: getMockedRefundDashboardUrl(),
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionIdBranded,
       timestamp: new Date("2023-10-01T00:00:00Z"),

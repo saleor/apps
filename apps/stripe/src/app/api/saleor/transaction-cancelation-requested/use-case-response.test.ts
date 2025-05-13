@@ -15,10 +15,9 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionCancelationRequestedUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
-        transactionResult: new CancelSuccessResult({
-          stripePaymentIntentId: mockedStripePaymentIntentId,
-          stripeEnv: "TEST",
-        }),
+        transactionResult: new CancelSuccessResult(),
+        stripeEnv: "TEST",
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         timestamp: new Date(2023, 0, 1),
       });
       const fetchReponse = response.getResponse();
@@ -42,10 +41,9 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
   describe("Failure", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionCancelationRequestedUseCaseResponses.Failure({
-        transactionResult: new CancelFailureResult({
-          stripePaymentIntentId: mockedStripePaymentIntentId,
-          stripeEnv: "LIVE",
-        }),
+        transactionResult: new CancelFailureResult(),
+        stripeEnv: "LIVE",
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorEventAmount: 0,
         error: new StripeAPIError("Error from stripe"),
       });

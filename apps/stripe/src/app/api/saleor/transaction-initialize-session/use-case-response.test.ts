@@ -9,23 +9,23 @@ import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
 } from "@/modules/transaction-result/action-required-result";
+import {
+  AuthorizationFailureResult,
+  ChargeFailureResult,
+} from "@/modules/transaction-result/failure-result";
 
 import { ParseError, UnsupportedPaymentMethodError } from "./event-data-parser";
-import {
-  TransactionInitializeAuthorizationFailureResult,
-  TransactionInitializeChargeFailureResult,
-} from "./failure-result";
 import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
 describe("TransactionInitalizeSessionUseCaseResponses", () => {
   describe("Success with ChargeActionRequired as result", () => {
     it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe client secret", async () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Success({
-        transactionResult: new ChargeActionRequiredResult({
-          stripePaymentIntentId: mockedStripePaymentIntentId,
-          stripeStatus: createStripePaymentIntentStatus("requires_payment_method"),
-          stripeEnv: "LIVE",
-        }),
+        transactionResult: new ChargeActionRequiredResult(
+          createStripePaymentIntentStatus("requires_payment_method"),
+        ),
+        stripeEnv: "LIVE",
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(10000),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
       });
@@ -52,11 +52,11 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
   describe("Success with AuthorizationActionRequired as result", () => {
     it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe client secret", async () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Success({
-        transactionResult: new AuthorizationActionRequiredResult({
-          stripePaymentIntentId: mockedStripePaymentIntentId,
-          stripeStatus: createStripePaymentIntentStatus("requires_payment_method"),
-          stripeEnv: "TEST",
-        }),
+        transactionResult: new AuthorizationActionRequiredResult(
+          createStripePaymentIntentStatus("requires_payment_method"),
+        ),
+        stripeEnv: "TEST",
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(10000),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
       });
@@ -83,9 +83,8 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
   describe("Failure with TransactionInitializeChargeErrorResult as a result", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and additional information inside data object", async () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Failure({
-        transactionResult: new TransactionInitializeChargeFailureResult({
-          saleorEventAmount: 21.23,
-        }),
+        transactionResult: new ChargeFailureResult(),
+        saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
       });
       const fetchReponse = response.getResponse();
@@ -112,9 +111,8 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message with failure reason and BadRequest error inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
-        transactionResult: new TransactionInitializeChargeFailureResult({
-          saleorEventAmount: 21.123,
-        }),
+        transactionResult: new ChargeFailureResult(),
+        saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
       });
       const fetchReponse = successResponse.getResponse();
@@ -141,9 +139,8 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message with failure reason and StripeCreatePaymentIntentError error inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
-        transactionResult: new TransactionInitializeChargeFailureResult({
-          saleorEventAmount: 100.123,
-        }),
+        transactionResult: new ChargeFailureResult(),
+        saleorEventAmount: 100.123,
         error: new StripeAPIError("Error from Stripe API"),
       });
       const fetchReponse = successResponse.getResponse();
@@ -172,9 +169,8 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
   describe("Error with TransactionInitializeAuthorizationErrorResult as a result", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and additional information inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
-        transactionResult: new TransactionInitializeAuthorizationFailureResult({
-          saleorEventAmount: 21.23,
-        }),
+        transactionResult: new AuthorizationFailureResult(),
+        saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
       });
       const fetchReponse = successResponse.getResponse();
@@ -201,9 +197,8 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message with failure reason and BadRequest error inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
-        transactionResult: new TransactionInitializeAuthorizationFailureResult({
-          saleorEventAmount: 21.123,
-        }),
+        transactionResult: new AuthorizationFailureResult(),
+        saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
       });
       const fetchReponse = successResponse.getResponse();
@@ -230,9 +225,8 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
 
     it("getResponse() returns valid Response with status 200 and message with failure reason and StripeCreatePaymentIntentError error inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
-        transactionResult: new TransactionInitializeAuthorizationFailureResult({
-          saleorEventAmount: 100.123,
-        }),
+        transactionResult: new AuthorizationFailureResult(),
+        saleorEventAmount: 100.123,
         error: new StripeAPIError("Error from Stripe API"),
       });
       const fetchReponse = successResponse.getResponse();

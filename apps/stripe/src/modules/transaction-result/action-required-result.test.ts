@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 
 import {
@@ -22,11 +21,7 @@ describe("ChargeActionRequiredResult", () => {
   ])(
     "should create instance with message: $expectedMessage for Stripe status:$stripeStatus",
     ({ stripeStatus, expectedMessage }) => {
-      const result = new ChargeActionRequiredResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus(stripeStatus),
-        stripeEnv: "LIVE",
-      });
+      const result = new ChargeActionRequiredResult(createStripePaymentIntentStatus(stripeStatus));
 
       expect(result.message).toBe(expectedMessage);
     },
@@ -34,11 +29,7 @@ describe("ChargeActionRequiredResult", () => {
 
   it("should throw error for unsupported status", () => {
     expect(() => {
-      new ChargeActionRequiredResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus("succeeded"),
-        stripeEnv: "LIVE",
-      });
+      new ChargeActionRequiredResult(createStripePaymentIntentStatus("succeeded"));
     }).toThrow(
       "Payment intent status succeeded is not supported for CHARGE_ACTION_REQUIRED transaction flow",
     );
@@ -59,11 +50,9 @@ describe("AuthorizationActionRequiredResult", () => {
   ])(
     "should create instance with message: $expectedMessage for Stripe status:$stripeStatus",
     ({ stripeStatus, expectedMessage }) => {
-      const result = new AuthorizationActionRequiredResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus(stripeStatus),
-        stripeEnv: "LIVE",
-      });
+      const result = new AuthorizationActionRequiredResult(
+        createStripePaymentIntentStatus(stripeStatus),
+      );
 
       expect(result.message).toBe(expectedMessage);
     },
@@ -71,11 +60,7 @@ describe("AuthorizationActionRequiredResult", () => {
 
   it("should throw error for unsupported status", () => {
     expect(() => {
-      new AuthorizationActionRequiredResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus("succeeded"),
-        stripeEnv: "LIVE",
-      });
+      new AuthorizationActionRequiredResult(createStripePaymentIntentStatus("succeeded"));
     }).toThrow(
       "Payment intent status succeeded is not supported for AUTHORIZATION_ACTION_REQUIRED transaction flow",
     );
