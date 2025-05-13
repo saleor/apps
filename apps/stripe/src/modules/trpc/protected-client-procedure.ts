@@ -1,5 +1,4 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
-import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
 import { TRPCError } from "@trpc/server";
 
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
@@ -89,10 +88,7 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
       appId: ctx.appId,
       token: ctx.token,
       saleorApiUrl: ctx.saleorApiUrl,
-      requiredPermissions: [
-        ...REQUIRED_SALEOR_PERMISSIONS,
-        ...(meta?.requiredClientPermissions || []),
-      ],
+      requiredPermissions: meta?.requiredClientPermissions,
     });
   } catch {
     logger.debug("JWT verification failed, throwing");

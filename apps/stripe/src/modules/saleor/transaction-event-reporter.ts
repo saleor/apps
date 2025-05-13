@@ -19,7 +19,7 @@ export type TransactionEventReportInput = {
   time: string;
   type: TransactionEventTypeEnum;
   actions: readonly TransactionActionEnum[];
-  externalReference: string;
+  externalUrl: string;
 };
 
 export type PossibleTransactionEventReportErrors = InstanceType<typeof AlreadyReportedError>;
