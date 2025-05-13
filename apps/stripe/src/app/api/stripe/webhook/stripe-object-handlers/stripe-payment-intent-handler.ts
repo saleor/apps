@@ -5,6 +5,7 @@ import { BaseError } from "@/lib/errors";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import {
   createStripePaymentIntentId,
@@ -152,28 +153,24 @@ export class StripePaymentIntentHandler {
 
     const { saleorMoney, paymentIntentStatus, timestamp } = paramsResult.value;
 
+    const externalUrl = generatePaymentIntentStripeDashboardUrl(stripePaymentIntentId, stripeEnv);
+
     switch (event.type) {
       case "payment_intent.succeeded":
       case "payment_intent.processing":
       case "payment_intent.requires_action":
       case "payment_intent.amount_capturable_updated": {
-        const MappedResult = mapPaymentIntentStatusToTransactionResult(
-          paymentIntentStatus,
-          resolvedTransactionFlow,
-        );
-
-        const result = new MappedResult({
-          stripePaymentIntentId: stripePaymentIntentId,
-          stripeStatus: paymentIntentStatus,
-          stripeEnv,
-        });
-
         return ok(
           new TransactionEventReportVariablesResolver({
             saleorMoney,
-            transactionResult: result,
+            transactionResult: mapPaymentIntentStatusToTransactionResult(
+              paymentIntentStatus,
+              resolvedTransactionFlow,
+            ),
             timestamp,
             saleorTransactionId,
+            stripeObjectId: stripePaymentIntentId,
+            externalUrl,
           }),
         );
       }
@@ -181,14 +178,8 @@ export class StripePaymentIntentHandler {
       case "payment_intent.payment_failed": {
         const failureResult =
           resolvedTransactionFlow === "AUTHORIZATION"
-            ? new AuthorizationFailureResult({
-                stripePaymentIntentId: stripePaymentIntentId,
-                stripeEnv,
-              })
-            : new ChargeFailureResult({
-                stripePaymentIntentId: stripePaymentIntentId,
-                stripeEnv,
-              });
+            ? new AuthorizationFailureResult()
+            : new ChargeFailureResult();
 
         return ok(
           new TransactionEventReportVariablesResolver({
@@ -196,6 +187,8 @@ export class StripePaymentIntentHandler {
             transactionResult: failureResult,
             timestamp,
             saleorTransactionId,
+            stripeObjectId: stripePaymentIntentId,
+            externalUrl,
           }),
         );
       }
@@ -203,13 +196,12 @@ export class StripePaymentIntentHandler {
       case "payment_intent.canceled": {
         return ok(
           new TransactionEventReportVariablesResolver({
-            transactionResult: new CancelSuccessResult({
-              stripePaymentIntentId: stripePaymentIntentId,
-              stripeEnv,
-            }),
+            transactionResult: new CancelSuccessResult(),
             saleorMoney,
             timestamp,
             saleorTransactionId,
+            stripeObjectId: stripePaymentIntentId,
+            externalUrl,
           }),
         );
       }

@@ -49,7 +49,7 @@ describe("mapPaymentIntentStatusToAppResult", () => {
           resolvedTransactionFlow,
         );
 
-        expect(result).toBe(expectedResult);
+        expect(result).toBeInstanceOf(expectedResult);
       },
     );
   });
@@ -95,7 +95,7 @@ describe("mapPaymentIntentStatusToAppResult", () => {
           resolvedTransactionFlow,
         );
 
-        expect(result).toBe(expectedResult);
+        expect(result).toBeInstanceOf(expectedResult);
       },
     );
   });

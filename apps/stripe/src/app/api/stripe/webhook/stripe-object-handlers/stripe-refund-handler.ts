@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { BaseError } from "@/lib/errors";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { generateRefundStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import {
   createStripePaymentIntentId,
@@ -154,21 +155,20 @@ export class StripeRefundHandler {
 
     const { saleorMoney, timestamp } = paramsResult.value;
 
-    const MappedResult = mapRefundStatusToTransactionResult(
-      createStripeRefundStatus(event.data.object.status),
-    );
+    const refundId = createStripeRefundId(event.data.object.id);
 
     switch (event.type) {
       case "charge.refund.updated": {
         return ok(
           new TransactionEventReportVariablesResolver({
-            transactionResult: new MappedResult({
-              stripeRefundId: createStripeRefundId(event.data.object.id),
-              stripeEnv,
-            }),
+            transactionResult: mapRefundStatusToTransactionResult(
+              createStripeRefundStatus(event.data.object.status),
+            ),
+            stripeObjectId: refundId,
             saleorTransactionId: recordedTransactionResult.value.saleorTransactionId,
             saleorMoney,
             timestamp,
+            externalUrl: generateRefundStripeDashboardUrl(refundId, stripeEnv),
           }),
         );
       }

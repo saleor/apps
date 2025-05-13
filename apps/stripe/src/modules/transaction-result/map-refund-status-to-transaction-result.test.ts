@@ -17,7 +17,7 @@ describe("mapRefundStatusToTransactionResult", () => {
       const stripeStatus = createStripeRefundStatus(status);
       const result = mapRefundStatusToTransactionResult(stripeStatus);
 
-      expect(result).toBe(expectedResult);
+      expect(result).toBeInstanceOf(expectedResult);
     },
   );
 });

@@ -15,25 +15,25 @@ export const mapPaymentIntentStatusToTransactionResult = (
 ) => {
   switch (stripePaymentIntentStatus) {
     case "succeeded":
-      return ChargeSuccessResult;
+      return new ChargeSuccessResult();
 
     case "requires_payment_method":
     case "requires_confirmation":
     case "requires_action":
     case "canceled":
       if (resolvedTransactionFlow === "CHARGE") {
-        return ChargeActionRequiredResult;
+        return new ChargeActionRequiredResult(stripePaymentIntentStatus);
       }
 
-      return AuthorizationActionRequiredResult;
+      return new AuthorizationActionRequiredResult(stripePaymentIntentStatus);
     case "processing":
       if (resolvedTransactionFlow === "CHARGE") {
-        return ChargeRequestResult;
+        return new ChargeRequestResult();
       }
 
-      return AuthorizationRequestResult;
+      return new AuthorizationRequestResult();
     case "requires_capture":
-      return AuthorizationSuccessResult;
+      return new AuthorizationSuccessResult();
     default:
       assertUnreachable(stripePaymentIntentStatus);
   }
