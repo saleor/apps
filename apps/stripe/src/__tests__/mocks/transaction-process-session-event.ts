@@ -14,6 +14,8 @@ export const getMockedTransactionProcessSessionEvent = (args?: {
     pspReference: mockedStripePaymentIntentId,
   },
   sourceObject: {
+    id: "mock-channel-1",
+    __typename: "Checkout",
     channel: {
       id: mockedSaleorChannelId,
       slug: "channel-slug",

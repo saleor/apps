@@ -12,6 +12,7 @@ export const getMockedTransactionRefundRequestedEvent =
     transaction: {
       pspReference: mockedStripePaymentIntentId,
       checkout: {
+        id: "mock-channel-1",
         channel: {
           id: mockedSaleorChannelId,
           slug: "channel-slug",
