@@ -41,17 +41,17 @@ type WebhookTransactionResult =
 
 export class TransactionEventReportVariablesResolver {
   readonly saleorTransactionId: SaleorTransationId;
-  readonly date: Date;
+  readonly timestamp: Date;
   readonly transactionResult: WebhookTransactionResult;
   readonly saleorMoney: SaleorMoney;
 
   constructor(args: {
     saleorTransactionId: SaleorTransationId;
-    date: Date;
+    timestamp: Date;
     transactionResult: WebhookTransactionResult;
     saleorMoney: SaleorMoney;
   }) {
-    this.date = args.date;
+    this.timestamp = args.timestamp;
     this.saleorTransactionId = args.saleorTransactionId;
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
@@ -63,7 +63,7 @@ export class TransactionEventReportVariablesResolver {
       amount: this.saleorMoney,
       type: this.transactionResult.result,
       message: this.transactionResult.message,
-      time: this.date.toISOString(),
+      time: this.timestamp.toISOString(),
       pspReference: this.transactionResult.stripePaymentIntentId,
       actions: this.transactionResult.actions,
       externalUrl: generateStripeDashboardUrl(

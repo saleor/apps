@@ -19,6 +19,7 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
           stripePaymentIntentId: mockedStripePaymentIntentId,
           stripeEnv: "TEST",
         }),
+        timestamp: new Date(2023, 0, 1),
       });
       const fetchReponse = response.getResponse();
 
@@ -32,6 +33,7 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
           "message": "Payment intent was cancelled",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CANCEL_SUCCESS",
+          "time": "2023-01-01T00:00:00.000Z",
         }
       `);
     });
