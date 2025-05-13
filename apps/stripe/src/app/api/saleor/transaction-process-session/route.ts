@@ -26,10 +26,7 @@ const useCase = new TransactionProcessSessionUseCase({
 const handler = transactionProcessSessionWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, ctx) => {
     try {
-      setObservabilitySourceObjectId({
-        __typename: ctx.payload.transaction?.checkout?.id ? "Checkout" : "Order",
-        id: ctx.payload.transaction?.checkout?.id ?? ctx.payload.transaction?.order?.id ?? null,
-      });
+      setObservabilitySourceObjectId(ctx.payload.sourceObject);
 
       const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 

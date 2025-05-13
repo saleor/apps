@@ -11,11 +11,8 @@ export const setObservabilitySourceObjectId = (so: {
     return;
   }
 
-  const attributeName =
-    so.__typename === "Checkout"
-      ? ObservabilityAttributes.CHECKOUT_ID
-      : ObservabilityAttributes.ORDER_ID;
-
-  loggerContext.set(attributeName, so.id);
-  trace.getActiveSpan()?.setAttribute(attributeName, so.id);
+  loggerContext.set(ObservabilityAttributes.SOURCE_OBJECT_ID, so.id);
+  loggerContext.set(ObservabilityAttributes.SOURCE_OBJECT_TYPE, so.__typename);
+  trace.getActiveSpan()?.setAttribute(ObservabilityAttributes.SOURCE_OBJECT_ID, so.id);
+  trace.getActiveSpan()?.setAttribute(ObservabilityAttributes.SOURCE_OBJECT_TYPE, so.__typename);
 };

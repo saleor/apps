@@ -1,10 +1,13 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 
-import { TransactionProcessSession, TransactionProcessSessionDocument } from "@/generated/graphql";
+import {
+  TransactionProcessSessionDocument,
+  TransactionProcessSessionEventFragment,
+} from "@/generated/graphql";
 import { saleorApp } from "@/lib/saleor-app";
 
 export const transactionProcessSessionWebhookDefinition =
-  new SaleorSyncWebhook<TransactionProcessSession>({
+  new SaleorSyncWebhook<TransactionProcessSessionEventFragment>({
     apl: saleorApp.apl,
     event: "TRANSACTION_PROCESS_SESSION",
     name: "Stripe Transaction Process Session",

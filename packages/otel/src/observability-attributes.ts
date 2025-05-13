@@ -13,4 +13,6 @@ export const ObservabilityAttributes = {
   SALEOR_EVENT: "saleorEvent",
   TENANT_DOMAIN: "saleor.environment_domain",
   PSP_REFERENCE: "pspReference",
+  SOURCE_OBJECT_ID: "sourceObjectId",
+  SOURCE_OBJECT_TYPE: "sourceObjectType",
 } as const;
