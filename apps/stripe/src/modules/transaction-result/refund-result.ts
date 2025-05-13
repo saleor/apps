@@ -4,7 +4,7 @@ import { ResultBase } from "./types";
 
 export class RefundSuccessResult extends ResultBase {
   readonly result = "REFUND_SUCCESS" as const;
-  readonly actions = ["REFUND"] as const;
+  readonly actions = [] as const;
   readonly message = "Refund was successful";
 
   readonly stripePaymentIntentId: StripePaymentIntentId;
