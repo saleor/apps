@@ -6,11 +6,13 @@ fragment TransactionChargeRequestedEvent on TransactionChargeRequested {
   transaction {
     pspReference
     checkout {
+      id
       channel {
         ...Channel
       }
     }
     order {
+      id
       channel {
         ...Channel
       }
