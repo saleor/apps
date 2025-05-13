@@ -1,9 +1,11 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, fromThrowable, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
+import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
@@ -254,6 +256,8 @@ export class TransactionInitializeSessionUseCase {
     }
 
     const stripePaymentIntent = createPaymentIntentResult.value;
+
+    loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntent.id);
 
     this.logger.debug("Stripe created payment intent", { stripeResponse: stripePaymentIntent });
 

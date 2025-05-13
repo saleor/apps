@@ -2,6 +2,12 @@ fragment TransactionProcessSessionEvent on TransactionProcessSession {
   ...EventMetadata
   transaction {
     pspReference
+    checkout {
+      id
+    }
+    order {
+      id
+    }
   }
   action {
     amount
