@@ -4,8 +4,15 @@ import { NextPage } from "next";
 
 import { AppBreadcrumbs } from "@/modules/ui/app-breadcrumbs";
 import { NewStripeConfigForm } from "@/modules/ui/stripe-configs/new-stripe-config-form";
+import { useHasAppAccess } from "@/modules/ui/use-has-app-access";
 
 const NewConfiguration: NextPage = () => {
+  const { haveAccessToApp } = useHasAppAccess();
+
+  if (!haveAccessToApp) {
+    return <Text>You do not have permission to access this page.</Text>;
+  }
+
   return (
     <Box>
       <AppBreadcrumbs
