@@ -3,6 +3,7 @@ import Stripe from "stripe";
 
 import { StripeClient } from "@/modules/stripe/stripe-client";
 
+import { StripeMoney } from "./stripe-money";
 import { StripePaymentIntentId } from "./stripe-payment-intent-id";
 import { StripeRestrictedKey } from "./stripe-restricted-key";
 import { IStripePaymentIntentsApi } from "./types";
@@ -21,11 +22,24 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
   }
 
   async createPaymentIntent(args: {
-    // TODO: narrow type here
-    params: Stripe.PaymentIntentCreateParams;
+    stripeMoney: StripeMoney;
+    intentParams: Pick<
+      Stripe.PaymentIntentCreateParams,
+      "automatic_payment_methods" | "payment_method_options"
+    >;
+    idempotencyKey: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.create(args.params),
+      this.stripeApiWrapper.paymentIntents.create(
+        {
+          ...args.intentParams,
+          amount: args.stripeMoney.amount,
+          currency: args.stripeMoney.currency,
+        },
+        {
+          idempotencyKey: args.idempotencyKey,
+        },
+      ),
       (error) => error,
     );
   }

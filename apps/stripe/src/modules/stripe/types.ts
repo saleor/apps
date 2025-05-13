@@ -25,7 +25,12 @@ export interface IStripeRefundsApi {
 
 export interface IStripePaymentIntentsApi {
   createPaymentIntent(args: {
-    params: Stripe.PaymentIntentCreateParams;
+    stripeMoney: StripeMoney;
+    intentParams: Pick<
+      Stripe.PaymentIntentCreateParams,
+      "automatic_payment_methods" | "payment_method_options"
+    >;
+    idempotencyKey: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
   getPaymentIntent(args: {
     id: StripePaymentIntentId;

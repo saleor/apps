@@ -36,7 +36,7 @@ import {
   createStripePaymentIntentStatus,
   StripePaymentIntentStatus,
 } from "@/modules/stripe/stripe-payment-intent-status";
-import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import { IStripePaymentIntentsApi, IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
@@ -83,25 +83,33 @@ export class TransactionInitializeSessionUseCase {
     eventAction: TransactionInitializeSessionEventFragment["action"];
     eventData: TransactionInitializeSessionEventData;
     selectedPaymentMethodOptions: Stripe.PaymentIntentCreateParams.PaymentMethodOptions;
-  }): Result<Stripe.PaymentIntentCreateParams, InstanceType<typeof StripeMoney.ValdationError>> {
+    idempotencyKey: string;
+  }): Result<
+    Parameters<IStripePaymentIntentsApi["createPaymentIntent"]>,
+    InstanceType<typeof StripeMoney.ValdationError>
+  > {
     return StripeMoney.createFromSaleorAmount({
       amount: args.eventAction.amount,
       currency: args.eventAction.currency,
-    }).map((result) => {
-      return {
-        amount: result.amount,
-        currency: result.currency,
-        /*
-         * Enable all payment methods configured in the Stripe Dashboard.
-         * The app validated if it allow payment method before.
-         */
-        automatic_payment_methods: {
-          enabled: true,
+    }).map((stripeMoney) => {
+      return [
+        {
+          stripeMoney,
+          idempotencyKey: args.idempotencyKey,
+          intentParams: {
+            /*
+             * Enable all payment methods configured in the Stripe Dashboard.
+             * The app validated if it allow payment method before.
+             */
+            automatic_payment_methods: {
+              enabled: true,
+            },
+            payment_method_options: {
+              ...args.selectedPaymentMethodOptions,
+            },
+          },
         },
-        payment_method_options: {
-          ...args.selectedPaymentMethodOptions,
-        },
-      };
+      ];
     });
   }
 
@@ -228,6 +236,7 @@ export class TransactionInitializeSessionUseCase {
       eventAction: event.action,
       selectedPaymentMethodOptions:
         selectedPaymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow),
+      idempotencyKey: event.idempotencyKey,
     });
 
     if (stripePaymentIntentParamsResult.isErr()) {
@@ -236,9 +245,9 @@ export class TransactionInitializeSessionUseCase {
       return err(new MalformedRequestResponse());
     }
 
-    const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent({
-      params: stripePaymentIntentParamsResult.value,
-    });
+    const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent(
+      ...stripePaymentIntentParamsResult.value,
+    );
 
     if (createPaymentIntentResult.isErr()) {
       const mappedError = mapStripeErrorToApiError(createPaymentIntentResult.error);

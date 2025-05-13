@@ -25,4 +25,5 @@ export const getMockedTransactionInitializeSessionEvent = (args?: {
       slug: "channel-slug",
     },
   },
+  idempotencyKey: "idempotency-key",
 });
