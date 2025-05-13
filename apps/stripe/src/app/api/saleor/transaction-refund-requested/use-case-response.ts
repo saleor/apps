@@ -3,10 +3,10 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import { StripeApiError } from "@/modules/stripe/stripe-api-error";
+import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripeRefundId } from "@/modules/stripe/stripe-refund-id";
-
-import { TransactionRefundRequestedFailureResult } from "./refund-failure";
+import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
 class Success extends SuccessWebhookResponse {
   readonly stripeRefundId: StripeRefundId;
@@ -30,22 +30,25 @@ class Success extends SuccessWebhookResponse {
 }
 
 class Failure extends SuccessWebhookResponse {
-  readonly transactionResult: TransactionRefundRequestedFailureResult;
+  readonly transactionResult: RefundFailureResult;
   readonly saleorEventAmount: number;
   readonly error: StripeApiError;
   readonly stripePaymentIntentId: StripePaymentIntentId;
+  readonly stripeEnv: StripeEnv;
 
   constructor(args: {
-    transactionResult: TransactionRefundRequestedFailureResult;
+    transactionResult: RefundFailureResult;
     saleorEventAmount: number;
     error: StripeApiError;
     stripePaymentIntentId: StripePaymentIntentId;
+    stripeEnv: StripeEnv;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.saleorEventAmount = args.saleorEventAmount;
     this.error = args.error;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
+    this.stripeEnv = args.stripeEnv;
   }
 
   getResponse(): Response {
@@ -58,7 +61,7 @@ class Failure extends SuccessWebhookResponse {
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.stripePaymentIntentId,
-        this.transactionResult.stripeEnv,
+        this.stripeEnv,
       ),
     });
 

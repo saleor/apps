@@ -13,11 +13,7 @@ import {
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
-import {
-  createStripePaymentIntentId,
-  StripePaymentIntentId,
-} from "@/modules/stripe/stripe-payment-intent-id";
+import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import { createTimestampFromPaymentIntent } from "@/modules/stripe/stripe-timestamps";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
@@ -54,26 +50,12 @@ export class TransactionProcessSessionUseCase {
     this.transactionRecorder = deps.transactionRecorder;
   }
 
-  private getFailureAppResult({
-    resolvedTransactionFlow,
-    stripePaymentIntentId,
-    stripeEnv,
-  }: {
-    resolvedTransactionFlow: ResolvedTransactionFlow;
-    stripePaymentIntentId: StripePaymentIntentId;
-    stripeEnv: StripeEnv;
-  }) {
+  private getFailureAppResult(resolvedTransactionFlow: ResolvedTransactionFlow) {
     if (resolvedTransactionFlow === "CHARGE") {
-      return new ChargeFailureResult({
-        stripePaymentIntentId,
-        stripeEnv,
-      });
+      return new ChargeFailureResult();
     }
 
-    return new AuthorizationFailureResult({
-      stripePaymentIntentId,
-      stripeEnv,
-    });
+    return new AuthorizationFailureResult();
   }
 
   async execute(args: {
@@ -144,11 +126,11 @@ export class TransactionProcessSessionUseCase {
       return ok(
         new TransactionProcessSessionUseCaseResponses.Failure({
           error,
-          transactionResult: this.getFailureAppResult({
-            resolvedTransactionFlow: recordedTransactionResult.value.resolvedTransactionFlow,
-            stripePaymentIntentId: paymentIntentIdResult,
-            stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
-          }),
+          transactionResult: this.getFailureAppResult(
+            recordedTransactionResult.value.resolvedTransactionFlow,
+          ),
+          stripePaymentIntentId: paymentIntentIdResult,
+          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           saleorEventAmount: event.action.amount,
         }),
       );
@@ -167,24 +149,14 @@ export class TransactionProcessSessionUseCase {
       return err(new BrokenAppResponse());
     }
 
-    const stripePaymentIntentStatus = createStripePaymentIntentStatus(
-      getPaymentIntentResult.value.status,
-    );
-
-    const MappedResult = mapPaymentIntentStatusToTransactionResult(
-      stripePaymentIntentStatus,
-      recordedTransactionResult.value.resolvedTransactionFlow,
-    );
-
-    const result = new MappedResult({
-      stripePaymentIntentId: paymentIntentIdResult,
-      stripeStatus: stripePaymentIntentStatus,
-      stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
-    });
-
     return ok(
       new TransactionProcessSessionUseCaseResponses.Success({
-        transactionResult: result,
+        transactionResult: mapPaymentIntentStatusToTransactionResult(
+          createStripePaymentIntentStatus(getPaymentIntentResult.value.status),
+          recordedTransactionResult.value.resolvedTransactionFlow,
+        ),
+        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+        stripePaymentIntentId: paymentIntentIdResult,
         saleorMoney: saleorMoneyResult.value,
         timestamp: createTimestampFromPaymentIntent(getPaymentIntentResult.value),
       }),

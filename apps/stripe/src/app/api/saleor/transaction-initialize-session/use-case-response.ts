@@ -17,25 +17,29 @@ import {
   StripeClientSecret,
   StripeClientSecretSchema,
 } from "@/modules/stripe/stripe-client-secret";
+import { StripeEnv } from "@/modules/stripe/stripe-env";
+import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
 } from "@/modules/transaction-result/action-required-result";
+import {
+  AuthorizationFailureResult,
+  ChargeFailureResult,
+} from "@/modules/transaction-result/failure-result";
 
 import {
   ParseErrorPublicCode,
   TransactionInitializeSessionEventDataError,
   UnsupportedPaymentMethodErrorPublicCode,
 } from "./event-data-parser";
-import {
-  TransactionInitializeAuthorizationFailureResult,
-  TransactionInitializeChargeFailureResult,
-} from "./failure-result";
 
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeActionRequiredResult | AuthorizationActionRequiredResult;
   readonly stripeClientSecret: StripeClientSecret;
   readonly saleorMoney: SaleorMoney;
+  readonly stripePaymentIntentId: StripePaymentIntentId;
+  readonly stripeEnv: StripeEnv;
 
   private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
     z.object({
@@ -47,11 +51,15 @@ class Success extends SuccessWebhookResponse {
     transactionResult: ChargeActionRequiredResult | AuthorizationActionRequiredResult;
     stripeClientSecret: StripeClientSecret;
     saleorMoney: SaleorMoney;
+    stripePaymentIntentId: StripePaymentIntentId;
+    stripeEnv: StripeEnv;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.stripeClientSecret = args.stripeClientSecret;
     this.saleorMoney = args.saleorMoney;
+    this.stripePaymentIntentId = args.stripePaymentIntentId;
+    this.stripeEnv = args.stripeEnv;
   }
 
   getResponse() {
@@ -63,11 +71,11 @@ class Success extends SuccessWebhookResponse {
       }),
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
-      pspReference: this.transactionResult.stripePaymentIntentId,
+      pspReference: this.stripePaymentIntentId,
       message: this.transactionResult.message,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
-        this.transactionResult.stripePaymentIntentId,
-        this.transactionResult.stripeEnv,
+        this.stripePaymentIntentId,
+        this.stripeEnv,
       ),
     });
 
@@ -76,9 +84,8 @@ class Success extends SuccessWebhookResponse {
 }
 
 class Failure extends SuccessWebhookResponse {
-  readonly transactionResult:
-    | TransactionInitializeChargeFailureResult
-    | TransactionInitializeAuthorizationFailureResult;
+  readonly transactionResult: ChargeFailureResult | AuthorizationFailureResult;
+  readonly saleorEventAmount: number;
   readonly error: StripeApiError | TransactionInitializeSessionEventDataError;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
@@ -96,21 +103,22 @@ class Failure extends SuccessWebhookResponse {
   );
 
   constructor(args: {
-    transactionResult:
-      | TransactionInitializeChargeFailureResult
-      | TransactionInitializeAuthorizationFailureResult;
+    transactionResult: ChargeFailureResult | AuthorizationFailureResult;
     error: StripeApiError | TransactionInitializeSessionEventDataError;
+    saleorEventAmount: number;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.error = args.error;
+    this.saleorEventAmount = args.saleorEventAmount;
   }
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
+      // We don't have pspReference in this case or actions because there is no payment intent created
       result: this.transactionResult.result,
       message: this.error.merchantMessage,
-      amount: this.transactionResult.saleorEventAmount,
+      amount: this.saleorEventAmount,
       data: Failure.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [
