@@ -172,9 +172,7 @@ describe("TransactionEventReportVariablesResolver", () => {
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
-        "actions": [
-          "CANCEL",
-        ],
+        "actions": [],
         "amount": SaleorMoney {
           "amount": 10,
           "currency": "USD",
@@ -204,9 +202,7 @@ describe("TransactionEventReportVariablesResolver", () => {
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
       {
-        "actions": [
-          "CANCEL",
-        ],
+        "actions": [],
         "amount": SaleorMoney {
           "amount": 10,
           "currency": "USD",
