@@ -20,8 +20,8 @@ import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripeRefundId } from "@/modules/stripe/stripe-refund-id";
 import { IStripeRefundsApiFactory } from "@/modules/stripe/types";
+import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
-import { TransactionRefundRequestedFailureResult } from "./refund-failure";
 import {
   TransactionRefundRequestedUseCaseResponses,
   TransactionRefundRequestedUseCaseResponsesType,
@@ -119,9 +119,8 @@ export class TransactionRefundRequestedUseCase {
 
       return ok(
         new TransactionRefundRequestedUseCaseResponses.Failure({
-          transactionResult: new TransactionRefundRequestedFailureResult({
-            stripeEnv,
-          }),
+          transactionResult: new RefundFailureResult(),
+          stripeEnv,
           stripePaymentIntentId,
           saleorEventAmount: amount,
           error,

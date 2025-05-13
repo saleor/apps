@@ -102,10 +102,9 @@ export class TransactionChargeRequestedUseCase {
 
       return ok(
         new TransactionChargeRequestedUseCaseResponses.Failure({
-          transactionResult: new ChargeFailureResult({
-            stripePaymentIntentId: paymentIntentIdResult,
-            stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
-          }),
+          transactionResult: new ChargeFailureResult(),
+          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+          stripePaymentIntentId: paymentIntentIdResult,
           saleorEventAmount: amount,
           error,
         }),
@@ -128,10 +127,9 @@ export class TransactionChargeRequestedUseCase {
 
     return ok(
       new TransactionChargeRequestedUseCaseResponses.Success({
-        transactionResult: new ChargeSuccessResult({
-          stripePaymentIntentId: paymentIntentIdResult,
-          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
-        }),
+        transactionResult: new ChargeSuccessResult(),
+        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+        stripePaymentIntentId: paymentIntentIdResult,
         saleorMoney,
       }),
     );

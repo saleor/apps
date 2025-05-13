@@ -6,13 +6,13 @@ import { RefundFailureResult, RefundRequestResult, RefundSuccessResult } from ".
 export const mapRefundStatusToTransactionResult = (stripeRefundStatus: StripeRefundStatus) => {
   switch (stripeRefundStatus) {
     case "succeeded":
-      return RefundSuccessResult;
+      return new RefundSuccessResult();
     case "pending":
     case "requires_action":
-      return RefundRequestResult;
+      return new RefundRequestResult();
     case "failed":
     case "canceled":
-      return RefundFailureResult;
+      return new RefundFailureResult();
     default:
       assertUnreachable(stripeRefundStatus);
   }

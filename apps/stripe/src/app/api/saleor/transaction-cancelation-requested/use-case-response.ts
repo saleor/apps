@@ -4,6 +4,8 @@ import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import { StripeApiError } from "@/modules/stripe/stripe-api-error";
+import { StripeEnv } from "@/modules/stripe/stripe-env";
+import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import {
   CancelFailureResult,
   CancelSuccessResult,
@@ -13,28 +15,34 @@ class Success extends SuccessWebhookResponse {
   readonly transactionResult: CancelSuccessResult;
   readonly saleorMoney: SaleorMoney;
   readonly timestamp: Date | null;
+  readonly stripePaymentIntentId: StripePaymentIntentId;
+  readonly stripeEnv: StripeEnv;
 
   constructor(args: {
     transactionResult: CancelSuccessResult;
     saleorMoney: SaleorMoney;
     timestamp: Date | null;
+    stripePaymentIntentId: StripePaymentIntentId;
+    stripeEnv: StripeEnv;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
     this.timestamp = args.timestamp;
+    this.stripePaymentIntentId = args.stripePaymentIntentId;
+    this.stripeEnv = args.stripeEnv;
   }
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
-      pspReference: this.transactionResult.stripePaymentIntentId,
+      pspReference: this.stripePaymentIntentId,
       message: this.transactionResult.message,
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
-        this.transactionResult.stripePaymentIntentId,
-        this.transactionResult.stripeEnv,
+        this.stripePaymentIntentId,
+        this.stripeEnv,
       ),
       time: this.timestamp?.toISOString(),
     });
@@ -47,28 +55,34 @@ class Failure extends SuccessWebhookResponse {
   readonly transactionResult: CancelFailureResult;
   readonly error: StripeApiError;
   readonly saleorEventAmount: number;
+  readonly stripePaymentIntentId: StripePaymentIntentId;
+  readonly stripeEnv: StripeEnv;
 
   constructor(args: {
     transactionResult: CancelFailureResult;
     error: StripeApiError;
     saleorEventAmount: number;
+    stripePaymentIntentId: StripePaymentIntentId;
+    stripeEnv: StripeEnv;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.error = args.error;
     this.saleorEventAmount = args.saleorEventAmount;
+    this.stripePaymentIntentId = args.stripePaymentIntentId;
+    this.stripeEnv = args.stripeEnv;
   }
 
   getResponse(): Response {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
       result: this.transactionResult.result,
-      pspReference: this.transactionResult.stripePaymentIntentId,
+      pspReference: this.stripePaymentIntentId,
       amount: this.saleorEventAmount,
       message: this.error.merchantMessage,
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
-        this.transactionResult.stripePaymentIntentId,
-        this.transactionResult.stripeEnv,
+        this.stripePaymentIntentId,
+        this.stripeEnv,
       ),
     });
 
