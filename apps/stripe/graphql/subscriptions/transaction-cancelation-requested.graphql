@@ -3,11 +3,13 @@ fragment TransactionCancelationRequestedEvent on TransactionCancelationRequested
   transaction {
     pspReference
     checkout {
+      id
       channel {
         ...Channel
       }
     }
     order {
+      id
       channel {
         ...Channel
       }

@@ -7,11 +7,13 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
   transaction {
     pspReference
     checkout {
+      id
       channel {
         ...Channel
       }
     }
     order {
+      id
       channel {
         ...Channel
       }

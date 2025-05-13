@@ -1,7 +1,9 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { err, ok, Result } from "neverthrow";
 
 import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
+import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -54,6 +56,8 @@ export class TransactionChargeRequestedUseCase {
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
     const amount = getAmountFromRequestedEventPayload(event);
+
+    loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
       channelId,

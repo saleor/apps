@@ -1,10 +1,14 @@
 fragment SourceObject on OrderOrCheckout {
   ... on Checkout {
+    __typename
+    id
     channel {
       ...Channel
     }
   }
   ... on Order {
+    __typename
+    id
     channel {
       ...Channel
     }
