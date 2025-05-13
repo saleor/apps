@@ -158,7 +158,7 @@ describe("StripePaymentIntentHandler", () => {
           const amountToUse = 123_367;
           const amountExpected = 12.3367; // Converted to Saleor float
 
-          event.data.object.amount_received = amountToUse;
+          event.data.object.amount = amountToUse;
 
           const handler = new StripePaymentIntentHandler();
 

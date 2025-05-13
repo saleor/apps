@@ -66,7 +66,7 @@ export class TransactionEventReportVariablesResolver {
       time: this.date.toISOString(),
       pspReference: this.transactionResult.stripePaymentIntentId,
       actions: this.transactionResult.actions,
-      externalReference: generateStripeDashboardUrl(
+      externalUrl: generateStripeDashboardUrl(
         this.transactionResult.stripePaymentIntentId,
         this.transactionResult.stripeEnv,
       ),
