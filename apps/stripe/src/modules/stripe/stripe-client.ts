@@ -20,7 +20,7 @@ export class StripeClient {
       typescript: true,
       httpClient: Stripe.createFetchHttpClient(fetch), // this allow us to mock the fetch
       appInfo: {
-        name: "Saleor App Payment Stripe",
+        name: "Saleor App Payment Stripe v2",
         version: pkg.version,
         url: "https://apps.saleor.io/apps/stripe",
         partner_id: env.STRIPE_PARTNER_ID,

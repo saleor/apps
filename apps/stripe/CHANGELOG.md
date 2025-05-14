@@ -1,4 +1,4 @@
-# saleor-app-payment-stripe
+# saleor-app-payment-stripe-v2
 
 ## 0.0.2
 
