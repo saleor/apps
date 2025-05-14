@@ -23,15 +23,19 @@ export interface IStripeRefundsApi {
   }): Promise<Result<Stripe.Refund, unknown>>;
 }
 
+export interface CreatePaymentIntentArgs {
+  stripeMoney: StripeMoney;
+  intentParams: Pick<
+    Stripe.PaymentIntentCreateParams,
+    "automatic_payment_methods" | "payment_method_options"
+  >;
+  idempotencyKey: string;
+}
+
 export interface IStripePaymentIntentsApi {
-  createPaymentIntent(args: {
-    stripeMoney: StripeMoney;
-    intentParams: Pick<
-      Stripe.PaymentIntentCreateParams,
-      "automatic_payment_methods" | "payment_method_options"
-    >;
-    idempotencyKey: string;
-  }): Promise<Result<Stripe.PaymentIntent, unknown>>;
+  createPaymentIntent(
+    args: CreatePaymentIntentArgs,
+  ): Promise<Result<Stripe.PaymentIntent, unknown>>;
   getPaymentIntent(args: {
     id: StripePaymentIntentId;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;

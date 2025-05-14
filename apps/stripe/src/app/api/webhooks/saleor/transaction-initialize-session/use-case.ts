@@ -37,7 +37,7 @@ import {
   createStripePaymentIntentStatus,
   StripePaymentIntentStatus,
 } from "@/modules/stripe/stripe-payment-intent-status";
-import { IStripePaymentIntentsApi, IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import { CreatePaymentIntentArgs, IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
@@ -85,32 +85,27 @@ export class TransactionInitializeSessionUseCase {
     eventData: TransactionInitializeSessionEventData;
     selectedPaymentMethodOptions: Stripe.PaymentIntentCreateParams.PaymentMethodOptions;
     idempotencyKey: string;
-  }): Result<
-    Parameters<IStripePaymentIntentsApi["createPaymentIntent"]>,
-    InstanceType<typeof StripeMoney.ValdationError>
-  > {
+  }): Result<CreatePaymentIntentArgs, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
       amount: args.eventAction.amount,
       currency: args.eventAction.currency,
     }).map((stripeMoney) => {
-      return [
-        {
-          stripeMoney,
-          idempotencyKey: args.idempotencyKey,
-          intentParams: {
-            /*
-             * Enable all payment methods configured in the Stripe Dashboard.
-             * The app validated if it allow payment method before.
-             */
-            automatic_payment_methods: {
-              enabled: true,
-            },
-            payment_method_options: {
-              ...args.selectedPaymentMethodOptions,
-            },
+      return {
+        stripeMoney,
+        idempotencyKey: args.idempotencyKey,
+        intentParams: {
+          /*
+           * Enable all payment methods configured in the Stripe Dashboard.
+           * The app validated if it allow payment method before.
+           */
+          automatic_payment_methods: {
+            enabled: true,
+          },
+          payment_method_options: {
+            ...args.selectedPaymentMethodOptions,
           },
         },
-      ];
+      };
     });
   }
 
@@ -231,7 +226,7 @@ export class TransactionInitializeSessionUseCase {
     }
 
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent(
-      ...stripePaymentIntentParamsResult.value,
+      stripePaymentIntentParamsResult.value,
     );
 
     if (createPaymentIntentResult.isErr()) {
