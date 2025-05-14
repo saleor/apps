@@ -10,6 +10,16 @@ export class StripeWebhookSuccessResponse {
   }
 }
 
+export class StripeWebhookMalformedErrorResponse {
+  readonly responseStatusCode = 400;
+
+  getResponse() {
+    return new Response("Malformed request", {
+      status: this.responseStatusCode,
+    });
+  }
+}
+
 export class StripeWebhookErrorResponse {
   readonly error: InstanceType<typeof BaseError>;
   readonly responseStatusCode = 500;
