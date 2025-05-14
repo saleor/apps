@@ -4,13 +4,6 @@ import { captureException } from "@sentry/nextjs";
 import { Result } from "neverthrow";
 import { NextRequest } from "next/server";
 
-import { getAndParseStripeSignatureHeader } from "@/app/api/stripe/webhook/stripe-signature-header";
-import {
-  StripeWebhookErrorResponse,
-  StripeWebhookMalformedErrorResponse,
-} from "@/app/api/stripe/webhook/stripe-webhook-response";
-import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
-import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";
@@ -21,6 +14,14 @@ import { TransactionEventReporter } from "@/modules/saleor/transaction-event-rep
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
 import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
+
+import { getAndParseStripeSignatureHeader } from "./stripe-signature-header";
+import {
+  StripeWebhookErrorResponse,
+  StripeWebhookMalformedErrorResponse,
+} from "./stripe-webhook-response";
+import { StripeWebhookUseCase } from "./use-case";
+import { WebhookParams } from "./webhook-params";
 
 const useCase = new StripeWebhookUseCase({
   appConfigRepo: appConfigRepoImpl,

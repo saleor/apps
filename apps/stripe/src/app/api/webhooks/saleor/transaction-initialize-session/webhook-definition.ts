@@ -13,5 +13,5 @@ export const transactionInitializeSessionWebhookDefinition =
     name: "Stripe Transaction Initialize Session",
     isActive: true,
     query: TransactionInitializeSessionDocument,
-    webhookPath: "api/saleor/transaction-initialize-session",
+    webhookPath: "api/webhooks/saleor/transaction-initialize-session",
   });

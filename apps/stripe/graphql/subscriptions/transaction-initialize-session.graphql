@@ -12,6 +12,7 @@ fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
   sourceObject {
     ...SourceObject
   }
+  idempotencyKey
 }
 
 subscription TransactionInitializeSession {

@@ -7,12 +7,12 @@ import { env } from "@/lib/env";
 import { withLoggerContext } from "@/lib/logger-context";
 import packageJson from "@/package.json";
 
-import { paymentGatewayInitializeSessionWebhookDefinition } from "../saleor/payment-gateway-initialize-session/webhook-definition";
-import { transactionCancelationRequestedWebhookDefinition } from "../saleor/transaction-cancelation-requested/webhook-definition";
-import { transactionChargeRequestedWebhookDefinition } from "../saleor/transaction-charge-requested/webhook-definition";
-import { transactionInitializeSessionWebhookDefinition } from "../saleor/transaction-initialize-session/webhook-definition";
-import { transactionProcessSessionWebhookDefinition } from "../saleor/transaction-process-session/webhook-definition";
-import { transactionRefundRequestedWebhookDefinition } from "../saleor/transaction-refund-requested/webhook-definition";
+import { paymentGatewayInitializeSessionWebhookDefinition } from "../webhooks/saleor/payment-gateway-initialize-session/webhook-definition";
+import { transactionCancelationRequestedWebhookDefinition } from "../webhooks/saleor/transaction-cancelation-requested/webhook-definition";
+import { transactionChargeRequestedWebhookDefinition } from "../webhooks/saleor/transaction-charge-requested/webhook-definition";
+import { transactionInitializeSessionWebhookDefinition } from "../webhooks/saleor/transaction-initialize-session/webhook-definition";
+import { transactionProcessSessionWebhookDefinition } from "../webhooks/saleor/transaction-process-session/webhook-definition";
+import { transactionRefundRequestedWebhookDefinition } from "../webhooks/saleor/transaction-refund-requested/webhook-definition";
 
 const handler = createManifestHandler({
   async manifestFactory({ appBaseUrl }) {
