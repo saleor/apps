@@ -7,12 +7,13 @@ import { mockAdyenWebhookUrl } from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
-import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
-import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { ITransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { IStripeEventVerify } from "@/modules/stripe/types";
+
+import { StripeWebhookUseCase } from "./use-case";
+import { WebhookParams } from "./webhook-params";
 
 describe("StripeWebhookUseCase - Legacy event cases", () => {
   const rawEventBody = JSON.stringify({ id: 1 });

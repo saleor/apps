@@ -13,5 +13,5 @@ export const transactionChargeRequestedWebhookDefinition =
     name: "Stripe Transaction Charge Requested",
     isActive: true,
     query: TransactionChargeRequestedDocument,
-    webhookPath: "api/saleor/transaction-charge-requested",
+    webhookPath: "api/webhooks/saleor/transaction-charge-requested",
   });

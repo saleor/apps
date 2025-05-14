@@ -1,5 +1,5 @@
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
+import { WebhookParams } from "@/app/api/webhooks/stripe/webhook-params";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
 

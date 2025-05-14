@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  getAndParseStripeSignatureHeader,
-  stripeSignatureHeader,
-} from "@/app/api/stripe/webhook/stripe-signature-header";
+import { getAndParseStripeSignatureHeader, stripeSignatureHeader } from "./stripe-signature-header";
 
 describe("getAndParseStripeSignatureHeader", () => {
   it("Returns raw value from headers", () => {
