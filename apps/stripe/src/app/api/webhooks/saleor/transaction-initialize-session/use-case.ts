@@ -259,18 +259,20 @@ export class TransactionInitializeSessionUseCase {
     const [saleorMoney, stripePaymentIntentId, stripeClientSecret, stripeStatus] =
       mappedResponseResult.value;
 
+    const recordedTransaction = new RecordedTransaction({
+      saleorTransactionId: createSaleorTransactionId(event.transaction.id),
+      stripePaymentIntentId,
+      saleorTransactionFlow: saleorTransactionFlow,
+      resolvedTransactionFlow: resolvedTransactionFlow,
+      selectedPaymentMethod: selectedPaymentMethod.type,
+    });
+
     const recordResult = await this.transactionRecorder.recordTransaction(
       {
         saleorApiUrl: args.saleorApiUrl,
         appId: args.appId,
       },
-      new RecordedTransaction({
-        saleorTransactionId: createSaleorTransactionId(event.transaction.id),
-        stripePaymentIntentId,
-        saleorTransactionFlow: saleorTransactionFlow,
-        resolvedTransactionFlow: resolvedTransactionFlow,
-        selectedPaymentMethod: selectedPaymentMethod.type,
-      }),
+      recordedTransaction,
     );
 
     if (recordResult.isErr()) {
@@ -280,6 +282,10 @@ export class TransactionInitializeSessionUseCase {
 
       return err(new BrokenAppResponse());
     }
+
+    this.logger.info("Wrote Transaction to DynamoDB", {
+      transaction: recordedTransaction,
+    });
 
     const transactionResult = this.resolveOkTransactionResult({
       transactionFlow: resolvedTransactionFlow,
