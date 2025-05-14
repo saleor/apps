@@ -1,8 +1,10 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
-import { withLoggerContext } from "@/lib/logger-context";
+import { createLogger } from "@/lib/logger";
+import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -21,6 +23,8 @@ const useCase = new TransactionChargeRequestedUseCase({
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
 });
 
+const logger = createLogger("TRANSACTION_CHARGE_REQUESTED route");
+
 const handler = transactionChargeRequestedWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, ctx) => {
     try {
@@ -28,6 +32,18 @@ const handler = transactionChargeRequestedWebhookDefinition.createHandler(
         __typename: ctx.payload.transaction?.checkout?.id ? "Checkout" : "Order",
         id: ctx.payload.transaction?.checkout?.id ?? ctx.payload.transaction?.order?.id ?? null,
       });
+
+      loggerContext.set(
+        ObservabilityAttributes.PSP_REFERENCE,
+        ctx.payload.transaction?.pspReference ?? null,
+      );
+
+      loggerContext.set(
+        ObservabilityAttributes.TRANSACTION_AMOUNT,
+        ctx.payload.action.amount ?? null,
+      );
+
+      logger.info("Received webhook request");
 
       const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
@@ -46,14 +62,27 @@ const handler = transactionChargeRequestedWebhookDefinition.createHandler(
 
       return result.match(
         (result) => {
+          logger.info("Successfully processed webhook request", {
+            httpsStatusCode: result.statusCode,
+            stripeEnv: result.stripeEnv,
+            transactionResult: result.transactionResult.result,
+          });
+
           return result.getResponse();
         },
         (err) => {
+          logger.warn("Failed to process webhook request", {
+            httpsStatusCode: err.statusCode,
+            reason: err.message,
+          });
+
           return err.getResponse();
         },
       );
     } catch (error) {
       captureException(error);
+      logger.error("Unhandled error", { error: error });
+
       const response = new UnhandledErrorResponse();
 
       return response.getResponse();

@@ -68,7 +68,7 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
       const result = await operation.send();
 
       if (result.$metadata.httpStatusCode === 200) {
-        this.logger.info("Successfully wrote transaction to DynamoDB", {
+        this.logger.debug("Successfully wrote transaction to DynamoDB", {
           transaction,
         });
 

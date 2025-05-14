@@ -23,7 +23,7 @@ export const env = createEnv({
     MANIFEST_APP_ID: z.string().optional().default("saleor.app.payment.stripe-v2"),
     OTEL_ACCESS_TOKEN: z.string().optional(),
     OTEL_ENABLED: booleanSchema.optional().default("false"),
-    OTEL_SERVICE_NAME: z.string().optional(),
+    OTEL_SERVICE_NAME: z.string().optional().default("saleor-app-payment-stripe-v2"),
     PORT: z.coerce.number().optional().default(3000),
     REPOSITORY_URL: z.string().optional(),
     SECRET_KEY: z.string(),

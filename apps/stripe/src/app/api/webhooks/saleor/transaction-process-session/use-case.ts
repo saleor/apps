@@ -146,6 +146,7 @@ export class TransactionProcessSessionUseCase {
 
     if (saleorMoneyResult.isErr()) {
       captureException(saleorMoneyResult.error);
+
       this.logger.error("Failed to create Saleor Money from Stripe getPaymentIntent call", {
         error: saleorMoneyResult.error,
       });
