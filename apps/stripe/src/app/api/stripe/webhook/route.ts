@@ -5,7 +5,10 @@ import { Result } from "neverthrow";
 import { NextRequest } from "next/server";
 
 import { getAndParseStripeSignatureHeader } from "@/app/api/stripe/webhook/stripe-signature-header";
-import { StripeWebhookErrorResponse } from "@/app/api/stripe/webhook/stripe-webhook-response";
+import {
+  StripeWebhookErrorResponse,
+  StripeWebhookMalformedErrorResponse,
+} from "@/app/api/stripe/webhook/stripe-webhook-response";
 import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
@@ -51,9 +54,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
       error: requiredUrlAttributes.error,
     });
 
-    return new Response(`Invalid request: ${requiredUrlAttributes.error.message}`, {
-      status: 400,
-    });
+    return new StripeWebhookMalformedErrorResponse().getResponse();
   }
 
   const [stripeSignatureHeader, webhookParams] = requiredUrlAttributes.value;
