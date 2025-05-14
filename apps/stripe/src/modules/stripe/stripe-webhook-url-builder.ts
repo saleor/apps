@@ -1,6 +1,6 @@
 import { err, ok } from "neverthrow";
 
-import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
+import { WebhookParams } from "@/app/api/webhooks/stripe/webhook-params";
 import { BaseError } from "@/lib/errors";
 
 /**
@@ -11,7 +11,7 @@ import { BaseError } from "@/lib/errors";
 export class StripeWebhookUrlBuilder {
   buildUrl({ appUrl, webhookParams }: { appUrl: string; webhookParams: WebhookParams }) {
     try {
-      const webhookUrl = new URL(appUrl + "/api/stripe/webhook");
+      const webhookUrl = new URL(appUrl + "/api/webhooks/stripe");
 
       webhookUrl.searchParams.set(
         WebhookParams.configurationIdIdSearchParam,

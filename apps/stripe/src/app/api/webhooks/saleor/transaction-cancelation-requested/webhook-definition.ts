@@ -13,5 +13,5 @@ export const transactionCancelationRequestedWebhookDefinition =
     name: "Stripe Transaction Cancelation Requested",
     isActive: true,
     query: TransactionCancelationRequestedDocument,
-    webhookPath: "api/saleor/transaction-cancelation-requested",
+    webhookPath: "api/webhooks/saleor/transaction-cancelation-requested",
   });

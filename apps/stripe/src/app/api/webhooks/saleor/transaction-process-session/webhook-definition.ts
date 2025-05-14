@@ -13,5 +13,5 @@ export const transactionProcessSessionWebhookDefinition =
     name: "Stripe Transaction Process Session",
     isActive: true,
     query: TransactionProcessSessionDocument,
-    webhookPath: "api/saleor/transaction-process-session",
+    webhookPath: "api/webhooks/saleor/transaction-process-session",
   });

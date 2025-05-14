@@ -5,10 +5,10 @@ import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { PaymentGatewayInitializeSessionUseCaseResponses } from "@/app/api/saleor/payment-gateway-initialize-session/use-case-response";
 import { AppIsNotConfiguredResponse } from "@/modules/saleor/saleor-webhook-responses";
 
 import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
+import { PaymentGatewayInitializeSessionUseCaseResponses } from "./use-case-response";
 
 describe("PaymentGatewayInitializeSessionUseCase", () => {
   it('Returns Success response with publishable key within "data" object if found in configuration', async () => {

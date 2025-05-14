@@ -2,7 +2,6 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
-import { withRecipientVerification } from "@/app/api/saleor/with-recipient-verification";
 import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
@@ -12,22 +11,22 @@ import {
   UnhandledErrorResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
+import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
 
-import { TransactionChargeRequestedUseCase } from "./use-case";
-import { transactionChargeRequestedWebhookDefinition } from "./webhook-definition";
+import { withRecipientVerification } from "../with-recipient-verification";
+import { TransactionInitializeSessionUseCase } from "./use-case";
+import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
 
-const useCase = new TransactionChargeRequestedUseCase({
+const useCase = new TransactionInitializeSessionUseCase({
   appConfigRepo: appConfigRepoImpl,
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
+  transactionRecorder: transactionRecorder,
 });
 
-const handler = transactionChargeRequestedWebhookDefinition.createHandler(
+const handler = transactionInitializeSessionWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, ctx) => {
     try {
-      setObservabilitySourceObjectId({
-        __typename: ctx.payload.transaction?.checkout?.id ? "Checkout" : "Order",
-        id: ctx.payload.transaction?.checkout?.id ?? ctx.payload.transaction?.order?.id ?? null,
-      });
+      setObservabilitySourceObjectId(ctx.payload.sourceObject);
 
       const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
