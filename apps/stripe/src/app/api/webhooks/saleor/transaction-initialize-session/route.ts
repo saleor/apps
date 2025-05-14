@@ -53,6 +53,7 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
           logger.info("Successfully processed webhook request", {
             httpsStatusCode: result.statusCode,
             resolvedEvent: result.transactionResult.result,
+            // todo: would be good to print stripeEnv here as well, but it's not available
           });
 
           return result.getResponse();

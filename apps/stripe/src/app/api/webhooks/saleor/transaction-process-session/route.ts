@@ -2,6 +2,7 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
+import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
@@ -23,10 +24,14 @@ const useCase = new TransactionProcessSessionUseCase({
   transactionRecorder: transactionRecorder,
 });
 
+const logger = createLogger("TRANSACTION_PROCESS_SESSION route");
+
 const handler = transactionProcessSessionWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, ctx) => {
     try {
       setObservabilitySourceObjectId(ctx.payload.sourceObject);
+
+      logger.info("Received webhook request");
 
       const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
@@ -45,14 +50,27 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(
 
       return result.match(
         (result) => {
+          logger.info("Successfully processed webhook request", {
+            httpsStatusCode: result.statusCode,
+            resolvedEvent: result.transactionResult.result,
+            stripeEnv: result.stripeEnv,
+          });
+
           return result.getResponse();
         },
         (err) => {
+          logger.warn("Failed to process webhook request", {
+            httpsStatusCode: err.statusCode,
+            reason: err.message,
+          });
+
           return err.getResponse();
         },
       );
     } catch (error) {
       captureException(error);
+      logger.error("Unhandled error", { error: error });
+
       const response = new UnhandledErrorResponse();
 
       return response.getResponse();

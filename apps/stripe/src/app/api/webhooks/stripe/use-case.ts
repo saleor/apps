@@ -215,7 +215,7 @@ export class StripeWebhookUseCase {
     }
 
     if (authData.appId !== webhookParams.appId) {
-      this.logger.error(
+      this.logger.warn(
         "Received webhook with different appId than expected. There may be old webhook from uninstalled app. Will try to remove it now.",
       );
 
@@ -250,6 +250,7 @@ export class StripeWebhookUseCase {
       });
 
       captureException(error);
+      this.logger.error(error.message, { error: error });
 
       return err(new StripeWebhookErrorResponse(error));
     }
@@ -276,6 +277,8 @@ export class StripeWebhookUseCase {
     this.logger.debug("Event verified");
 
     if (event.isErr()) {
+      this.logger.warn("Failed to verify Stripe event", { error: event.error });
+
       return err(new StripeWebhookErrorResponse(event.error));
     }
 
@@ -289,6 +292,8 @@ export class StripeWebhookUseCase {
     });
 
     if (processingResult.isErr()) {
+      this.logger.error("Failed to process Stripe event", { error: processingResult.error });
+
       return err(new StripeWebhookErrorResponse(processingResult.error));
     }
 
@@ -298,10 +303,12 @@ export class StripeWebhookUseCase {
 
     if (reportResult.isErr()) {
       if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
-        this.logger.info("Transaction event already reported");
+        this.logger.debug("Transaction event already reported");
 
         return ok(new StripeWebhookSuccessResponse());
       }
+
+      this.logger.error("Failed to report transaction event", { error: reportResult.error });
 
       return err(new StripeWebhookErrorResponse(reportResult.error));
     }
