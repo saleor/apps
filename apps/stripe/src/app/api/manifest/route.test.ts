@@ -25,8 +25,7 @@ describe("Manifest handler", async () => {
         expect(body).toMatchInlineSnapshot(
           {
             version: expect.any(String),
-          },
-          `
+          }, `
           {
             "about": "App that allows merchants using the Saleor e-commerce platform to accept online payments from customers using Stripe as their payment processor.",
             "appUrl": "https://localhost:3000",
@@ -55,7 +54,7 @@ describe("Manifest handler", async () => {
                 "syncEvents": [
                   "PAYMENT_GATEWAY_INITIALIZE_SESSION",
                 ],
-                "targetUrl": "https://localhost:3000/api/saleor/payment-gateway-initialize-session",
+                "targetUrl": "https://localhost:3000/api/webhooks/saleor/payment-gateway-initialize-session",
               },
               {
                 "isActive": true,
@@ -64,7 +63,7 @@ describe("Manifest handler", async () => {
                 "syncEvents": [
                   "TRANSACTION_INITIALIZE_SESSION",
                 ],
-                "targetUrl": "https://localhost:3000/api/saleor/transaction-initialize-session",
+                "targetUrl": "https://localhost:3000/api/webhooks/saleor/transaction-initialize-session",
               },
               {
                 "isActive": true,
@@ -73,7 +72,7 @@ describe("Manifest handler", async () => {
                 "syncEvents": [
                   "TRANSACTION_PROCESS_SESSION",
                 ],
-                "targetUrl": "https://localhost:3000/api/saleor/transaction-process-session",
+                "targetUrl": "https://localhost:3000/api/webhooks/saleor/transaction-process-session",
               },
               {
                 "isActive": true,
@@ -82,7 +81,7 @@ describe("Manifest handler", async () => {
                 "syncEvents": [
                   "TRANSACTION_CHARGE_REQUESTED",
                 ],
-                "targetUrl": "https://localhost:3000/api/saleor/transaction-charge-requested",
+                "targetUrl": "https://localhost:3000/api/webhooks/saleor/transaction-charge-requested",
               },
               {
                 "isActive": true,
@@ -91,7 +90,7 @@ describe("Manifest handler", async () => {
                 "syncEvents": [
                   "TRANSACTION_CANCELATION_REQUESTED",
                 ],
-                "targetUrl": "https://localhost:3000/api/saleor/transaction-cancelation-requested",
+                "targetUrl": "https://localhost:3000/api/webhooks/saleor/transaction-cancelation-requested",
               },
               {
                 "isActive": true,
@@ -100,12 +99,11 @@ describe("Manifest handler", async () => {
                 "syncEvents": [
                   "TRANSACTION_REFUND_REQUESTED",
                 ],
-                "targetUrl": "https://localhost:3000/api/saleor/transaction-refund-requested",
+                "targetUrl": "https://localhost:3000/api/webhooks/saleor/transaction-refund-requested",
               },
             ],
           }
-        `,
-        );
+        `);
       },
     });
   });

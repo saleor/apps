@@ -13,5 +13,5 @@ export const transactionRefundRequestedWebhookDefinition =
     name: "Stripe Transaction Refund Requested",
     isActive: true,
     query: TransactionRefundRequestedDocument,
-    webhookPath: "api/saleor/transaction-refund-requested",
+    webhookPath: "api/webhooks/saleor/transaction-refund-requested",
   });

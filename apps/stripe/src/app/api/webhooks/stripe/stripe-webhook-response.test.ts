@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 
+import { BaseError } from "@/lib/errors";
+
 import {
   StripeWebhookErrorResponse,
   StripeWebhookSuccessResponse,
-} from "@/app/api/stripe/webhook/stripe-webhook-response";
-import { BaseError } from "@/lib/errors";
+} from "./stripe-webhook-response";
 
 describe("StripeWebhookSuccessResponse", () => {
   it("Returns response with status 200 and fixed message to Stripe", async () => {
