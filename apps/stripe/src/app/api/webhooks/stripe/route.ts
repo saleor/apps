@@ -17,8 +17,8 @@ import { transactionRecorder } from "@/modules/transactions-recording/repositori
 
 import { getAndParseStripeSignatureHeader } from "./stripe-signature-header";
 import {
-  StripeWebhookErrorResponse,
-  StripeWebhookMalformedErrorResponse,
+  StripeWebhookNonRetryableErrorResponse,
+  StripeWebhookRetryableErrorResponse,
 } from "./stripe-webhook-response";
 import { StripeWebhookUseCase } from "./use-case";
 import { WebhookParams } from "./webhook-params";
@@ -55,7 +55,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
       error: requiredUrlAttributes.error,
     });
 
-    return new StripeWebhookMalformedErrorResponse().getResponse();
+    return new StripeWebhookNonRetryableErrorResponse().getResponse();
   }
 
   const [stripeSignatureHeader, webhookParams] = requiredUrlAttributes.value;
@@ -110,7 +110,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
 
     captureException(panicError);
 
-    return new StripeWebhookErrorResponse(panicError).getResponse();
+    return new StripeWebhookRetryableErrorResponse(panicError).getResponse();
   }
 };
 

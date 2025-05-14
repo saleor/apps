@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import { BaseError } from "@/lib/errors";
 
 import {
-  StripeWebhookErrorResponse,
-  StripeWebhookMalformedErrorResponse,
+  StripeWebhookNonRetryableErrorResponse,
+  StripeWebhookRetryableErrorResponse,
   StripeWebhookSuccessResponse,
 } from "./stripe-webhook-response";
 
@@ -17,18 +17,20 @@ describe("StripeWebhookSuccessResponse", () => {
   });
 });
 
-describe("StripeWebhookErrorResponse", () => {
-  it("Returns response with status 200 and fixed message to Stripe", async () => {
-    const response = new StripeWebhookErrorResponse(new BaseError("Inner reason")).getResponse();
+describe("StripeWebhookRetryableErrorResponse", () => {
+  it("Returns response with status 500 and fixed message to Stripe", async () => {
+    const response = new StripeWebhookRetryableErrorResponse(
+      new BaseError("Inner reason"),
+    ).getResponse();
 
     expect(response.status).toBe(500);
     await expect(response.text()).resolves.toMatchInlineSnapshot(`"Server error"`);
   });
 });
 
-describe("StripeWebhookMalformedErrorResponse", () => {
+describe("StripeWebhookNonRetryableErrorResponse", () => {
   it("Returns response with status 400 and fixed message to Stripe", async () => {
-    const response = new StripeWebhookMalformedErrorResponse().getResponse();
+    const response = new StripeWebhookNonRetryableErrorResponse().getResponse();
 
     expect(response.status).toBe(400);
     await expect(response.text()).resolves.toMatchInlineSnapshot(`"Malformed request"`);

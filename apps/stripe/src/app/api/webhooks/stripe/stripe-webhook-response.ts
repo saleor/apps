@@ -10,7 +10,7 @@ export class StripeWebhookSuccessResponse {
   }
 }
 
-export class StripeWebhookMalformedErrorResponse {
+export class StripeWebhookNonRetryableErrorResponse {
   readonly responseStatusCode = 400;
 
   getResponse() {
@@ -20,7 +20,7 @@ export class StripeWebhookMalformedErrorResponse {
   }
 }
 
-export class StripeWebhookErrorResponse {
+export class StripeWebhookRetryableErrorResponse {
   readonly error: InstanceType<typeof BaseError>;
   readonly responseStatusCode = 500;
 
@@ -40,4 +40,4 @@ export class StripeWebhookErrorResponse {
  */
 export type PossibleStripeWebhookResponses =
   | StripeWebhookSuccessResponse
-  | StripeWebhookErrorResponse;
+  | StripeWebhookRetryableErrorResponse;

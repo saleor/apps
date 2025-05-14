@@ -73,9 +73,8 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [BaseError: Missing Saleor Auth Data. App installation is broken],
-        "responseStatusCode": 500,
+      StripeWebhookNonRetryableErrorResponse {
+        "responseStatusCode": 400,
       }
     `);
   });
@@ -92,10 +91,8 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [BaseError: Test error - cant fetch config
-      Failed to fetch config from database],
-        "responseStatusCode": 500,
+      StripeWebhookNonRetryableErrorResponse {
+        "responseStatusCode": 400,
       }
     `);
   });
@@ -110,9 +107,8 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [BaseError: Config missing, app is not configured properly],
-        "responseStatusCode": 500,
+      StripeWebhookNonRetryableErrorResponse {
+        "responseStatusCode": 400,
       }
     `);
   });
@@ -129,9 +125,8 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [StripeEventParsingError: Error because its test],
-        "responseStatusCode": 500,
+      StripeWebhookNonRetryableErrorResponse {
+        "responseStatusCode": 400,
       }
     `);
   });
@@ -148,7 +143,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
+      StripeWebhookRetryableErrorResponse {
         "error": [TransactionRecorderRepo.TransactionMissingError: Transaction not found],
         "responseStatusCode": 500,
       }
@@ -190,7 +185,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
+      StripeWebhookRetryableErrorResponse {
         "error": [NotSupportedEventError: Unsupported event type],
         "responseStatusCode": 500,
       }
@@ -238,7 +233,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
+      StripeWebhookRetryableErrorResponse {
         "error": [NotSupportedEventError: Unsupported event type],
         "responseStatusCode": 500,
       }

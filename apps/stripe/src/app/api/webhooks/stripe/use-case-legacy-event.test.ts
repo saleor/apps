@@ -98,7 +98,7 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
       expect(result.isErr()).toBe(true);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        StripeWebhookErrorResponse {
+        StripeWebhookRetryableErrorResponse {
           "error": [BaseError: Legacy config is empty
         Received legacy webhook but failed to handle removing it],
           "responseStatusCode": 500,
@@ -122,7 +122,7 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
       expect(result.isErr()).toBe(true);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        StripeWebhookErrorResponse {
+        StripeWebhookRetryableErrorResponse {
           "error": [BaseError: test err
         Failed to fetch config attached to legacy Webhook, this requires manual cleanup
         Failed to fetch legacy config
@@ -148,7 +148,7 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
       expect(result.isErr()).toBe(true);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        StripeWebhookErrorResponse {
+        StripeWebhookRetryableErrorResponse {
           "error": [BaseError: error removing webhook
         Failed to remove webhook
         Failed to remove legacy webhook

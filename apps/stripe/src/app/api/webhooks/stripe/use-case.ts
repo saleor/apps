@@ -23,13 +23,14 @@ import { TransactionRecorderRepo } from "@/modules/transactions-recording/reposi
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
 import {
-  StripeWebhookErrorResponse,
+  StripeWebhookNonRetryableErrorResponse,
+  StripeWebhookRetryableErrorResponse,
   StripeWebhookSuccessResponse,
 } from "./stripe-webhook-response";
 import { WebhookParams } from "./webhook-params";
 
 type SuccessResult = StripeWebhookSuccessResponse;
-type ErrorResult = StripeWebhookErrorResponse;
+type ErrorResult = StripeWebhookRetryableErrorResponse | StripeWebhookNonRetryableErrorResponse;
 
 type R = Promise<Result<SuccessResult, ErrorResult>>;
 
@@ -207,11 +208,7 @@ export class StripeWebhookUseCase {
         (s) => s.setLevel("warning"),
       );
 
-      return err(
-        new StripeWebhookErrorResponse(
-          new BaseError("Missing Saleor Auth Data. App installation is broken"),
-        ),
-      );
+      return err(new StripeWebhookNonRetryableErrorResponse());
     }
 
     if (authData.appId !== webhookParams.appId) {
@@ -223,7 +220,7 @@ export class StripeWebhookUseCase {
 
       if (processingResult.isErr()) {
         return err(
-          new StripeWebhookErrorResponse(
+          new StripeWebhookRetryableErrorResponse(
             new BaseError("Received legacy webhook but failed to handle removing it", {
               cause: processingResult.error,
             }),
@@ -251,17 +248,13 @@ export class StripeWebhookUseCase {
 
       captureException(error);
 
-      return err(new StripeWebhookErrorResponse(error));
+      return err(new StripeWebhookNonRetryableErrorResponse());
     }
 
     if (!config.value) {
       this.logger.warn("Config for given webhook is missing");
 
-      return err(
-        new StripeWebhookErrorResponse(
-          new BaseError("Config missing, app is not configured properly"),
-        ),
-      );
+      return err(new StripeWebhookNonRetryableErrorResponse());
     }
 
     const stripeClient = StripeClient.createFromRestrictedKey(config.value.restrictedKey);
@@ -276,7 +269,12 @@ export class StripeWebhookUseCase {
     this.logger.debug("Event verified");
 
     if (event.isErr()) {
-      return err(new StripeWebhookErrorResponse(event.error));
+      this.logger.error("Failed to verify event", {
+        error: event.error,
+      });
+      captureException(event.error);
+
+      return err(new StripeWebhookNonRetryableErrorResponse());
     }
 
     this.logger.debug(`Resolved event type: ${event.value.type}`);
@@ -289,7 +287,7 @@ export class StripeWebhookUseCase {
     });
 
     if (processingResult.isErr()) {
-      return err(new StripeWebhookErrorResponse(processingResult.error));
+      return err(new StripeWebhookRetryableErrorResponse(processingResult.error));
     }
 
     const reportResult = await transactionEventReporter.reportTransactionEvent(
@@ -303,7 +301,7 @@ export class StripeWebhookUseCase {
         return ok(new StripeWebhookSuccessResponse());
       }
 
-      return err(new StripeWebhookErrorResponse(reportResult.error));
+      return err(new StripeWebhookRetryableErrorResponse(reportResult.error));
     }
 
     return ok(new StripeWebhookSuccessResponse());
