@@ -38,6 +38,11 @@ const handler = transactionChargeRequestedWebhookDefinition.createHandler(
         ctx.payload.transaction?.pspReference ?? null,
       );
 
+      loggerContext.set(
+        ObservabilityAttributes.TRANSACTION_AMOUNT,
+        ctx.payload.action.amount ?? null,
+      );
+
       logger.info("Received webhook request");
 
       const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);

@@ -1,9 +1,10 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
 import { createLogger } from "@/lib/logger";
-import { withLoggerContext } from "@/lib/logger-context";
+import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -30,6 +31,11 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, ctx) => {
     try {
       setObservabilitySourceObjectId(ctx.payload.sourceObject);
+
+      loggerContext.set(
+        ObservabilityAttributes.TRANSACTION_AMOUNT,
+        ctx.payload.action.amount ?? null,
+      );
 
       logger.info("Received webhook request");
 
