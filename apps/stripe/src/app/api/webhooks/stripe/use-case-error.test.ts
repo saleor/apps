@@ -73,8 +73,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookNonRetryableErrorResponse {
-        "responseStatusCode": 400,
+      StripeWebhookAppIsNotConfiguredResponse {
+        "message": "App is not configured",
+        "statusCode": 400,
       }
     `);
   });
@@ -91,8 +92,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookNonRetryableErrorResponse {
-        "responseStatusCode": 400,
+      StripeWebhookAppIsNotConfiguredResponse {
+        "message": "App is not configured",
+        "statusCode": 400,
       }
     `);
   });
@@ -107,8 +109,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookNonRetryableErrorResponse {
-        "responseStatusCode": 400,
+      StripeWebhookAppIsNotConfiguredResponse {
+        "message": "App is not configured",
+        "statusCode": 400,
       }
     `);
   });
@@ -125,8 +128,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookNonRetryableErrorResponse {
-        "responseStatusCode": 400,
+      StripeWebhookMalformedRequestResponse {
+        "message": "Malformed request",
+        "statusCode": 400,
       }
     `);
   });
@@ -143,9 +147,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookRetryableErrorResponse {
-        "error": [TransactionRecorderRepo.TransactionMissingError: Transaction not found],
-        "responseStatusCode": 500,
+      StripeWebhookSeverErrorResponse {
+        "message": "Server error",
+        "statusCode": 500,
       }
     `);
   });
@@ -185,9 +189,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookRetryableErrorResponse {
-        "error": [NotSupportedEventError: Unsupported event type],
-        "responseStatusCode": 500,
+      StripeWebhookSeverErrorResponse {
+        "message": "Server error",
+        "statusCode": 500,
       }
     `);
   });
@@ -233,9 +237,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookRetryableErrorResponse {
-        "error": [NotSupportedEventError: Unsupported event type],
-        "responseStatusCode": 500,
+      StripeWebhookSeverErrorResponse {
+        "message": "Server error",
+        "statusCode": 500,
       }
     `);
   });

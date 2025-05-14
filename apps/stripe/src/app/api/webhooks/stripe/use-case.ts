@@ -23,16 +23,18 @@ import { TransactionRecorderRepo } from "@/modules/transactions-recording/reposi
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
 import {
-  StripeWebhookNonRetryableErrorResponse,
-  StripeWebhookRetryableErrorResponse,
+  PossibleStripeWebhookErrorResponses,
+  PossibleStripeWebhookSuccessResponses,
+  StripeWebhookAppIsNotConfiguredResponse,
+  StripeWebhookMalformedRequestResponse,
+  StripeWebhookSeverErrorResponse,
   StripeWebhookSuccessResponse,
-} from "./stripe-webhook-response";
+} from "./stripe-webhook-responses";
 import { WebhookParams } from "./webhook-params";
 
-type SuccessResult = StripeWebhookSuccessResponse;
-type ErrorResult = StripeWebhookRetryableErrorResponse | StripeWebhookNonRetryableErrorResponse;
-
-type R = Promise<Result<SuccessResult, ErrorResult>>;
+type R = Promise<
+  Result<PossibleStripeWebhookSuccessResponses, PossibleStripeWebhookErrorResponses>
+>;
 
 type StripeVerifyEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
 type SaleorTransactionEventReporterFactory = (authData: AuthData) => ITransactionEventReporter;
@@ -208,7 +210,7 @@ export class StripeWebhookUseCase {
         (s) => s.setLevel("warning"),
       );
 
-      return err(new StripeWebhookNonRetryableErrorResponse());
+      return err(new StripeWebhookAppIsNotConfiguredResponse());
     }
 
     if (authData.appId !== webhookParams.appId) {
@@ -219,13 +221,11 @@ export class StripeWebhookUseCase {
       const processingResult = await this.processLegacyWebhook(webhookParams);
 
       if (processingResult.isErr()) {
-        return err(
-          new StripeWebhookRetryableErrorResponse(
-            new BaseError("Received legacy webhook but failed to handle removing it", {
-              cause: processingResult.error,
-            }),
-          ),
-        );
+        this.logger.error("Received legacy webhook but failed to handle removing it", {
+          error: processingResult.error,
+        });
+
+        return err(new StripeWebhookAppIsNotConfiguredResponse());
       } else {
         return ok(new StripeWebhookSuccessResponse());
       }
@@ -242,20 +242,19 @@ export class StripeWebhookUseCase {
     this.logger.debug("Configuration for config resolved");
 
     if (config.isErr()) {
-      const error = new BaseError("Failed to fetch config from database", {
-        cause: config.error,
+      this.logger.error("Failed to fetch config from database", {
+        error: config.error,
       });
 
-      captureException(error);
-      this.logger.error(error.message, { error: error });
+      captureException(config.error);
 
-      return err(new StripeWebhookNonRetryableErrorResponse());
+      return err(new StripeWebhookAppIsNotConfiguredResponse());
     }
 
     if (!config.value) {
-      this.logger.warn("Config for given webhook is missing");
+      this.logger.error("Config for given webhook is missing");
 
-      return err(new StripeWebhookNonRetryableErrorResponse());
+      return err(new StripeWebhookAppIsNotConfiguredResponse());
     }
 
     const stripeClient = StripeClient.createFromRestrictedKey(config.value.restrictedKey);
@@ -274,7 +273,7 @@ export class StripeWebhookUseCase {
         error: event.error,
       });
 
-      return err(new StripeWebhookNonRetryableErrorResponse());
+      return err(new StripeWebhookMalformedRequestResponse());
     }
 
     this.logger.debug(`Resolved event type: ${event.value.type}`);
@@ -287,7 +286,11 @@ export class StripeWebhookUseCase {
     });
 
     if (processingResult.isErr()) {
-      return err(new StripeWebhookRetryableErrorResponse(processingResult.error));
+      this.logger.error("Failed to process event", {
+        error: processingResult.error,
+      });
+
+      return err(new StripeWebhookSeverErrorResponse());
     }
 
     const reportResult = await transactionEventReporter.reportTransactionEvent(
@@ -307,7 +310,11 @@ export class StripeWebhookUseCase {
         return ok(new StripeWebhookSuccessResponse());
       }
 
-      return err(new StripeWebhookRetryableErrorResponse(reportResult.error));
+      this.logger.error("Failed to report transaction event", {
+        error: reportResult.error,
+      });
+
+      return err(new StripeWebhookSeverErrorResponse());
     }
 
     return ok(new StripeWebhookSuccessResponse());
