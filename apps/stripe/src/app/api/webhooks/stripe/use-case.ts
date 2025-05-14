@@ -212,7 +212,7 @@ export class StripeWebhookUseCase {
     }
 
     if (authData.appId !== webhookParams.appId) {
-      this.logger.error(
+      this.logger.warn(
         "Received webhook with different appId than expected. There may be old webhook from uninstalled app. Will try to remove it now.",
       );
 
@@ -247,6 +247,7 @@ export class StripeWebhookUseCase {
       });
 
       captureException(error);
+      this.logger.error(error.message, { error: error });
 
       return err(new StripeWebhookNonRetryableErrorResponse());
     }
@@ -272,7 +273,6 @@ export class StripeWebhookUseCase {
       this.logger.error("Failed to verify event", {
         error: event.error,
       });
-      captureException(event.error);
 
       return err(new StripeWebhookNonRetryableErrorResponse());
     }
@@ -293,6 +293,12 @@ export class StripeWebhookUseCase {
     const reportResult = await transactionEventReporter.reportTransactionEvent(
       processingResult.value.resolveEventReportVariables(),
     );
+
+    this.logger.info("Transaction event reported", {
+      transactionId: processingResult.value.saleorTransactionId,
+      amount: processingResult.value.saleorMoney.amount,
+      result: processingResult.value.transactionResult,
+    });
 
     if (reportResult.isErr()) {
       if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {

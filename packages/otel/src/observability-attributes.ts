@@ -15,4 +15,5 @@ export const ObservabilityAttributes = {
   PSP_REFERENCE: "pspReference",
   SOURCE_OBJECT_ID: "sourceObjectId",
   SOURCE_OBJECT_TYPE: "sourceObjectType",
+  TRANSACTION_AMOUNT: "transactionAmount",
 } as const;

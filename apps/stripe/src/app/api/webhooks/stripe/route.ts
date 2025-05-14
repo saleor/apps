@@ -62,7 +62,6 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
 
   /**
    * todo:
-   * - move shared attribute keys to some lib, maybe shared monorepo
    * - improve logger context to accept single record
    */
   loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, webhookParams.saleorApiUrl);
@@ -83,26 +82,27 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
 
     /**
      * todo:
-     * - attach operations context to Response, so we can print them to logger here
+     * - attach operations context to Response, so we can print them to logger here (like what was reported)
      */
     return result.match(
       (success) => {
-        logger.info("Success processing Stripe webhook");
+        logger.info("Success processing Stripe webhook", {
+          httpsStatusCode: success.responseStatusCode,
+        });
 
         return success.getResponse();
       },
       (error) => {
         logger.error("Error processing Stripe webhook", {
           error: error,
+          httpsStatusCode: error.responseStatusCode,
         });
 
         return error.getResponse();
       },
     );
   } catch (e) {
-    logger.error("Unhandled Error processing Stripe webhook UseCase", {
-      error: e,
-    });
+    logger.error("Unhandled error", { error: e });
 
     const panicError = new BaseError("Unhandled Error processing Stripe webhook UseCase", {
       cause: e,
