@@ -20,12 +20,12 @@ import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
 } from "@/modules/transaction-result/action-required-result";
+import {
+  AuthorizationFailureResult,
+  ChargeFailureResult,
+} from "@/modules/transaction-result/failure-result";
 import { TransactionRecorderError } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
-import {
-  TransactionInitializeAuthorizationFailureResult,
-  TransactionInitializeChargeFailureResult,
-} from "./failure-result";
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
@@ -160,12 +160,12 @@ describe("TransactionInitializeSessionUseCase", () => {
     {
       actionType: "CHARGE" as const,
       expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
-      extectedResultType: TransactionInitializeChargeFailureResult,
+      extectedResultType: ChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
       expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
-      extectedResultType: TransactionInitializeAuthorizationFailureResult,
+      extectedResultType: AuthorizationFailureResult,
     },
   ])(
     "Returns $expectedFailureResponse.name response with $extectedResultType.name result if StripePaymentIntentsAPI throws error and actionType is $actionType",
@@ -197,12 +197,12 @@ describe("TransactionInitializeSessionUseCase", () => {
     {
       actionType: "CHARGE" as const,
       expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
-      extectedResultType: TransactionInitializeChargeFailureResult,
+      extectedResultType: ChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
       expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
-      extectedResultType: TransactionInitializeAuthorizationFailureResult,
+      extectedResultType: AuthorizationFailureResult,
     },
   ])(
     "Returns $expectedFailureResponse.name response with $extectedResultType.name result when receives not supported payment method in data and actionType is $actionType",
@@ -237,12 +237,12 @@ describe("TransactionInitializeSessionUseCase", () => {
     {
       actionType: "CHARGE" as const,
       expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
-      extectedResultType: TransactionInitializeChargeFailureResult,
+      extectedResultType: ChargeFailureResult,
     },
     {
       actionType: "AUTHORIZATION" as const,
       expectedFailureResponse: TransactionInitializeSessionUseCaseResponses.Failure,
-      extectedResultType: TransactionInitializeAuthorizationFailureResult,
+      extectedResultType: AuthorizationFailureResult,
     },
   ])(
     "Returns $expectedFailureResponse.name response with $extectedResultType.name result when receives additional field in data and actionType is $actionType",

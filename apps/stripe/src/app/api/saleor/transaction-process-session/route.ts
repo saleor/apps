@@ -4,6 +4,7 @@ import { captureException } from "@sentry/nextjs";
 
 import { withRecipientVerification } from "@/app/api/saleor/with-recipient-verification";
 import { withLoggerContext } from "@/lib/logger-context";
+import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
@@ -25,6 +26,8 @@ const useCase = new TransactionProcessSessionUseCase({
 const handler = transactionProcessSessionWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, ctx) => {
     try {
+      setObservabilitySourceObjectId(ctx.payload.sourceObject);
+
       const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
       if (saleorApiUrlResult.isErr()) {

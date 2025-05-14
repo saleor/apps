@@ -1,7 +1,9 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { err, ok, Result } from "neverthrow";
 
 import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
+import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
@@ -20,8 +22,8 @@ import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripeRefundId } from "@/modules/stripe/stripe-refund-id";
 import { IStripeRefundsApiFactory } from "@/modules/stripe/types";
+import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
-import { TransactionRefundRequestedFailureResult } from "./refund-failure";
 import {
   TransactionRefundRequestedUseCaseResponses,
   TransactionRefundRequestedUseCaseResponsesType,
@@ -55,6 +57,8 @@ export class TransactionRefundRequestedUseCase {
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
     const amount = getAmountFromRequestedEventPayload(event);
+
+    loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
 
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
       channelId,
@@ -119,9 +123,8 @@ export class TransactionRefundRequestedUseCase {
 
       return ok(
         new TransactionRefundRequestedUseCaseResponses.Failure({
-          transactionResult: new TransactionRefundRequestedFailureResult({
-            stripeEnv,
-          }),
+          transactionResult: new RefundFailureResult(),
+          stripeEnv,
           stripePaymentIntentId,
           saleorEventAmount: amount,
           error,

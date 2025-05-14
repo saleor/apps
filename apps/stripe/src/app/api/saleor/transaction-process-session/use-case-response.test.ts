@@ -26,11 +26,11 @@ import { TransactionProcessSessionUseCaseResponses } from "./use-case-response";
 describe("TransactionProcessSessionUseCaseResponses", () => {
   describe("Success", () => {
     it("getResponse() returns valid Response with status 200 and message indicating that intent is succeeded if transactionResult is ChargeSuccess", async () => {
-      const transactionResult = new ChargeSuccessResult({
+      const transactionResult = new ChargeSuccessResult();
+
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeEnv: "TEST",
-      });
-      const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: null,
@@ -53,14 +53,14 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
     });
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent is succeeded if transactionResult is AuthorizationSuccess", async () => {
-      const transactionResult = new AuthorizationSuccessResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "LIVE",
-      });
+      const transactionResult = new AuthorizationSuccessResult();
+
       const response = new TransactionProcessSessionUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: null,
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
       });
       const fetchReponse = response.getResponse();
 
@@ -81,12 +81,13 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
     });
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent requires action if transactionResult is ChargeActionRequired", async () => {
-      const transactionResult = new ChargeActionRequiredResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus("requires_action"),
-        stripeEnv: "LIVE",
-      });
+      const transactionResult = new ChargeActionRequiredResult(
+        createStripePaymentIntentStatus("requires_action"),
+      );
       const response = new TransactionProcessSessionUseCaseResponses.Success({
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        stripeEnv: "LIVE",
+
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: new Date(2025, 1, 1, 21, 37),
@@ -110,12 +111,12 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
     });
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent requires action if transactionResult is AuthorizationActionRequired", async () => {
-      const transactionResult = new AuthorizationActionRequiredResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeStatus: createStripePaymentIntentStatus("requires_action"),
-        stripeEnv: "LIVE",
-      });
+      const transactionResult = new AuthorizationActionRequiredResult(
+        createStripePaymentIntentStatus("requires_action"),
+      );
       const response = new TransactionProcessSessionUseCaseResponses.Success({
+        stripeEnv: "LIVE",
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: null,
@@ -138,11 +139,10 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
     });
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent is processing if transactionResult is ChargeRequest", async () => {
-      const transactionResult = new ChargeRequestResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "LIVE",
-      });
+      const transactionResult = new ChargeRequestResult();
       const response = new TransactionProcessSessionUseCaseResponses.Success({
+        stripeEnv: "LIVE",
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: null,
@@ -163,11 +163,10 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
     });
 
     it("getResponse() returns valid Response with status 200 and message indicating that intent is processing if transactionResult is AuthorizationRequest", async () => {
-      const transactionResult = new AuthorizationRequestResult({
-        stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "LIVE",
-      });
+      const transactionResult = new AuthorizationRequestResult();
       const response = new TransactionProcessSessionUseCaseResponses.Success({
+        stripeEnv: "LIVE",
+        stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: null,
@@ -189,12 +188,11 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
 
     describe("Failure", () => {
       it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if transactionResult is ChargeFailure", async () => {
-        const transactionResult = new ChargeFailureResult({
-          stripePaymentIntentId: mockedStripePaymentIntentId,
-          stripeEnv: "LIVE",
-        });
+        const transactionResult = new ChargeFailureResult();
 
         const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
+          stripeEnv: "LIVE",
+          stripePaymentIntentId: mockedStripePaymentIntentId,
           saleorEventAmount: 21.23,
           error: new StripeInvalidRequestError("Invalid request"),
           transactionResult,
@@ -227,13 +225,12 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       });
 
       it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if transactionResult is AuthorizationFailure", async () => {
-        const transactionResult = new AuthorizationFailureResult({
-          stripePaymentIntentId: mockedStripePaymentIntentId,
-          stripeEnv: "LIVE",
-        });
+        const transactionResult = new AuthorizationFailureResult();
 
         const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
           saleorEventAmount: 21.23,
+          stripeEnv: "LIVE",
+          stripePaymentIntentId: mockedStripePaymentIntentId,
           error: new StripeInvalidRequestError("Invalid request"),
           transactionResult,
         });

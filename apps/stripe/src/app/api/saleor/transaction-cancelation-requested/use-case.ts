@@ -1,7 +1,9 @@
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { err, ok, Result } from "neverthrow";
 
 import { TransactionCancelationRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
+import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -56,6 +58,8 @@ export class TransactionCancelationRequestedUseCase {
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
 
+    loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
+
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
       channelId,
       appId,
@@ -105,10 +109,9 @@ export class TransactionCancelationRequestedUseCase {
         new TransactionCancelationRequestedUseCaseResponses.Failure({
           // TODO: remove this when Saleor won't require amount in the event
           saleorEventAmount: 0,
-          transactionResult: new CancelFailureResult({
-            stripePaymentIntentId,
-            stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
-          }),
+          stripePaymentIntentId,
+          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+          transactionResult: new CancelFailureResult(),
           error,
         }),
       );
@@ -129,10 +132,9 @@ export class TransactionCancelationRequestedUseCase {
     return ok(
       new TransactionCancelationRequestedUseCaseResponses.Success({
         saleorMoney: saleorMoneyResult.value,
-        transactionResult: new CancelSuccessResult({
-          stripePaymentIntentId,
-          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
-        }),
+        stripePaymentIntentId,
+        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+        transactionResult: new CancelSuccessResult(),
         timestamp: createTimestampFromPaymentIntent(cancelPaymentIntentResult.value),
       }),
     );

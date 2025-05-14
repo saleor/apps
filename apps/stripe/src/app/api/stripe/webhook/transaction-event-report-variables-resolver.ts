@@ -1,10 +1,6 @@
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
 import { TransactionEventReportInput } from "@/modules/saleor/transaction-event-reporter";
-import {
-  generatePaymentIntentStripeDashboardUrl,
-  generateRefundStripeDashboardUrl,
-} from "@/modules/stripe/generate-stripe-dashboard-urls";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripeRefundId } from "@/modules/stripe/stripe-refund-id";
 import {
@@ -49,45 +45,23 @@ export class TransactionEventReportVariablesResolver {
   readonly timestamp: Date;
   readonly transactionResult: WebhookTransactionResult;
   readonly saleorMoney: SaleorMoney;
+  readonly stripeObjectId: StripePaymentIntentId | StripeRefundId;
+  readonly externalUrl: string;
 
   constructor(args: {
     saleorTransactionId: SaleorTransationId;
     timestamp: Date;
     transactionResult: WebhookTransactionResult;
     saleorMoney: SaleorMoney;
+    stripeObjectId: StripePaymentIntentId | StripeRefundId;
+    externalUrl: string;
   }) {
     this.timestamp = args.timestamp;
     this.saleorTransactionId = args.saleorTransactionId;
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
-  }
-
-  private resolvePspReference(): StripePaymentIntentId | StripeRefundId {
-    switch (this.transactionResult.result) {
-      case "REFUND_FAILURE":
-      case "REFUND_REQUEST":
-      case "REFUND_SUCCESS":
-        return this.transactionResult.stripeRefundId;
-      default:
-        return this.transactionResult.stripePaymentIntentId;
-    }
-  }
-
-  private resolveExternalUrl(): string {
-    switch (this.transactionResult.result) {
-      case "REFUND_FAILURE":
-      case "REFUND_REQUEST":
-      case "REFUND_SUCCESS":
-        return generateRefundStripeDashboardUrl(
-          this.transactionResult.stripeRefundId,
-          this.transactionResult.stripeEnv,
-        );
-      default:
-        return generatePaymentIntentStripeDashboardUrl(
-          this.transactionResult.stripePaymentIntentId,
-          this.transactionResult.stripeEnv,
-        );
-    }
+    this.stripeObjectId = args.stripeObjectId;
+    this.externalUrl = args.externalUrl;
   }
 
   resolveEventReportVariables(): TransactionEventReportInput {
@@ -97,9 +71,9 @@ export class TransactionEventReportVariablesResolver {
       type: this.transactionResult.result,
       message: this.transactionResult.message,
       time: this.timestamp.toISOString(),
-      pspReference: this.resolvePspReference(),
+      pspReference: this.stripeObjectId,
       actions: this.transactionResult.actions,
-      externalUrl: this.resolveExternalUrl(),
+      externalUrl: this.externalUrl,
     };
   }
 }

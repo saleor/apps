@@ -1,4 +1,5 @@
 import { APL, AuthData } from "@saleor/app-sdk/APL";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
@@ -10,6 +11,7 @@ import {
 import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
@@ -92,6 +94,8 @@ export class StripeWebhookUseCase {
   }) {
     switch (event.data.object.object) {
       case "payment_intent": {
+        loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, event.data.object.id);
+
         const handler = new StripePaymentIntentHandler();
 
         return handler.processPaymentIntentEvent({
@@ -104,6 +108,8 @@ export class StripeWebhookUseCase {
       }
 
       case "refund": {
+        loggerContext.set("stripeRefundId", event.data.object.id);
+
         const handler = new StripeRefundHandler();
 
         return handler.processRefundEvent({
