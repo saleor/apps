@@ -2,7 +2,6 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
-import { withRecipientVerification } from "@/app/api/saleor/with-recipient-verification";
 import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
@@ -11,19 +10,16 @@ import {
   MalformedRequestResponse,
   UnhandledErrorResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
-import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
-import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
 
-import { TransactionProcessSessionUseCase } from "./use-case";
-import { transactionProcessSessionWebhookDefinition } from "./webhook-definition";
+import { withRecipientVerification } from "../with-recipient-verification";
+import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
+import { paymentGatewayInitializeSessionWebhookDefinition } from "./webhook-definition";
 
-const useCase = new TransactionProcessSessionUseCase({
+const useCase = new PaymentGatewayInitializeSessionUseCase({
   appConfigRepo: appConfigRepoImpl,
-  stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
-  transactionRecorder: transactionRecorder,
 });
 
-const handler = transactionProcessSessionWebhookDefinition.createHandler(
+const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, ctx) => {
     try {
       setObservabilitySourceObjectId(ctx.payload.sourceObject);
@@ -31,16 +27,17 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(
       const saleorApiUrlResult = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
       if (saleorApiUrlResult.isErr()) {
-        captureException(saleorApiUrlResult.error);
         const response = new MalformedRequestResponse();
+
+        captureException(saleorApiUrlResult.error);
 
         return response.getResponse();
       }
 
       const result = await useCase.execute({
+        channelId: ctx.payload.sourceObject.channel.id,
         appId: ctx.authData.appId,
         saleorApiUrl: saleorApiUrlResult.value,
-        event: ctx.payload,
       });
 
       return result.match(
@@ -60,5 +57,4 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(
   }),
 );
 
-// TODO: write integration test for this route
 export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);

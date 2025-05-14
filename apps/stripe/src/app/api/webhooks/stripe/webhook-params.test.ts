@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { mockedConfigurationId, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
+
+import { WebhookParams } from "./webhook-params";
 
 describe("WebhookParams", () => {
   const validSearchParams = new URLSearchParams({

@@ -9,8 +9,6 @@ import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
-import { StripeWebhookUseCase } from "@/app/api/stripe/webhook/use-case";
-import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
@@ -21,6 +19,9 @@ import {
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { IStripeEventVerify, StripeEventParsingError } from "@/modules/stripe/types";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
+
+import { StripeWebhookUseCase } from "./use-case";
+import { WebhookParams } from "./webhook-params";
 
 describe("StripeWebhookUseCase - Error cases", () => {
   const rawEventBody = JSON.stringify({ id: 1 });

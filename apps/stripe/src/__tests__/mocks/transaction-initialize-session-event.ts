@@ -1,4 +1,4 @@
-import { parseTransactionInitializeSessionEventData } from "@/app/api/saleor/transaction-initialize-session/event-data-parser";
+import { parseTransactionInitializeSessionEventData } from "@/app/api/webhooks/saleor/transaction-initialize-session/event-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 
 import { mockedSaleorChannelId, mockedSaleorTransactionId } from "./constants";

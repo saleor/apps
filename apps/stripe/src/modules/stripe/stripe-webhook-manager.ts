@@ -1,7 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
-import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
+import { WebhookParams } from "@/app/api/webhooks/stripe/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { NewStripeConfigInput } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";

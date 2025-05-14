@@ -169,7 +169,7 @@ describe("StripeWebhookManager", () => {
           "metadata": {
             "saleorAppConfigurationId": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
           },
-          "url": "http://localhost:3000/api/stripe/webhook?configurationId=81f323bd-91e2-4838-ab6e-5affd81ffc3b&saleorApiUrl=https%3A%2F%2Ffoo.bar.saleor.cloud%2Fgraphql%2F&appId=saleor-app-id",
+          "url": "http://localhost:3000/api/webhooks/stripe?configurationId=81f323bd-91e2-4838-ab6e-5affd81ffc3b&saleorApiUrl=https%3A%2F%2Ffoo.bar.saleor.cloud%2Fgraphql%2F&appId=saleor-app-id",
         }
       `);
   });

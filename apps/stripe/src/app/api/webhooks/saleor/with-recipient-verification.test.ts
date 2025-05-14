@@ -3,7 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
-import { withRecipientVerification } from "@/app/api/saleor/with-recipient-verification";
+
+import { withRecipientVerification } from "./with-recipient-verification";
 
 describe("withRecipientVerification", () => {
   it("Calls handler if AuthData id matches payload recipient id", async () => {

@@ -4,11 +4,6 @@ import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
-import {
-  StripeWebhookErrorResponse,
-  StripeWebhookSuccessResponse,
-} from "@/app/api/stripe/webhook/stripe-webhook-response";
-import { WebhookParams } from "@/app/api/stripe/webhook/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
@@ -27,6 +22,11 @@ import { TransactionRecorderRepo } from "@/modules/transactions-recording/reposi
 
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
+import {
+  StripeWebhookErrorResponse,
+  StripeWebhookSuccessResponse,
+} from "./stripe-webhook-response";
+import { WebhookParams } from "./webhook-params";
 
 type SuccessResult = StripeWebhookSuccessResponse;
 type ErrorResult = StripeWebhookErrorResponse;
