@@ -14,6 +14,7 @@ import {
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
+import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   AuthorizationActionRequiredResult,
@@ -72,10 +73,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       });
 
       expect(spy).toHaveBeenCalledWith({
-        params: {
-          // Saleor API sends amount in floats - Stripe wants amount in ints
-          amount: saleorEvent.action.amount * 100,
-          currency: "usd",
+        stripeMoney: expect.any(StripeMoney),
+        idempotencyKey: saleorEvent.idempotencyKey,
+        intentParams: {
           automatic_payment_methods: {
             enabled: true,
           },

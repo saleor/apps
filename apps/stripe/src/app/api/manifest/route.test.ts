@@ -59,7 +59,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Transaction Initialize Session",
-                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } } ... on Order { __typename id channel { ...Channel } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency actionType } data transaction { id } sourceObject { ...SourceObject }}",
+                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } } ... on Order { __typename id channel { ...Channel } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency actionType } data transaction { id } sourceObject { ...SourceObject } idempotencyKey}",
                 "syncEvents": [
                   "TRANSACTION_INITIALIZE_SESSION",
                 ],
