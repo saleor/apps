@@ -13,10 +13,12 @@ export const EmptyConfigs = () => {
         </Box>
       }
     >
-      <Text display="block" as="h2" size={6} marginBottom={4}>
-        It looks so empty!
+      <Text as="h2" size={5} marginBottom={4}>
+        No configurations found
       </Text>
-      <Text>Create your first Stripe configuration</Text>
+      <Text size={3} color="default2">
+        Create your first Stripe configuration to get started
+      </Text>
     </Layout.AppSectionCard>
   );
 };

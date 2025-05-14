@@ -1,4 +1,4 @@
-import { Layout } from "@saleor/apps-ui";
+import { Layout, TextLink } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
@@ -30,8 +30,16 @@ const NewConfiguration: NextPage = () => {
 
       <Layout.AppSection
         marginBottom={14}
-        heading="Adding Stripe configuration"
-        sideContent={<Text>Provide required settings to configure Stripe</Text>}
+        heading="Stripe configuration"
+        sideContent={
+          <Text>
+            All settings are required. Consult Stripe{" "}
+            <TextLink href="https://docs.stripe.com/keys" newTab>
+              docs
+            </TextLink>{" "}
+            to learn more about Publishable and Restricted keys.
+          </Text>
+        }
       >
         <NewStripeConfigForm />
       </Layout.AppSection>
