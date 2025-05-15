@@ -5,7 +5,7 @@ import nodePlugin from "eslint-plugin-n";
 export default [
   ...config,
   {
-    name: "saleor-app-payment-stripe/custom-config",
+    name: "saleor-app-payment-stripe-v2/custom-config",
     files: ["**/*.ts"],
     plugins: {
       n: nodePlugin,
@@ -15,7 +15,7 @@ export default [
     },
   },
   {
-    name: "saleor-app-payment-stripe/override-no-process-env",
+    name: "saleor-app-payment-stripe-v2/override-no-process-env",
     files: ["next.config.ts", "src/lib/env.ts", "src/instrumentation.ts"],
     rules: {
       "n/no-process-env": "off",
