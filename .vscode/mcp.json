@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "Saleor GraphQL API": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/mcp/start-mcp-graphql.sh"
+    }
+  }
+}

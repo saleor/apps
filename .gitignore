@@ -7,42 +7,39 @@ node_modules
 .pnpm-store
 
 # testing
-coverage
+coverage/
 
 # next.js
 .next/
 out/
 build
 
-# misc
-.DS_Store
-*.pem
+# editors
 .idea/
+.vscode/*
+!.vscode/mcp.json
+.cursor/*
+!.cursor/mcp.json
 
-# debug
+# logs / cache
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+.eslintcache
+.sentryclirc
+.cspellcache
+*.tsbuildinfo
+.turbo
 
+# env files
 .env
-
-# local env files
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# turbo
-.turbo
-
+# misc
 .saleor-app-auth.json
-coverage/
-.eslintcache
-
-.sentryclirc
-
-.vscode/
-.cspellcache
-
-*.tsbuildinfo
+.DS_Store
+*.pem
