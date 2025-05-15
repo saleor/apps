@@ -1,5 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-source ./mcp/.env
+set -a
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/.env"
+set +a
 
-ENDPOINT="${MCP_GRAPHQL_ENDPOINT}" HEADERS='{"Authorization":"Bearer ${MCP_GRAPHQL_TOKEN}"}' npx mcp-graphql
+ENDPOINT="$MCP_GRAPHQL_ENDPOINT" HEADERS="{\"Authorization\":\"Bearer $MCP_GRAPHQL_TOKEN\"}" npx mcp-graphql
