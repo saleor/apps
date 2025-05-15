@@ -4,6 +4,8 @@ import { env } from "@/lib/env";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import pkg from "@/package.json";
 
+import { STRIPE_API_VERSION } from "./stripe-api-version";
+
 /**
  * Holds native client,
  * provides a single initialization place for Stripe SDK
@@ -19,6 +21,7 @@ export class StripeClient {
     const nativeClient = new Stripe(key, {
       typescript: true,
       httpClient: Stripe.createFetchHttpClient(fetch), // this allow us to mock the fetch
+      apiVersion: STRIPE_API_VERSION,
       appInfo: {
         name: "Saleor App Stripe",
         version: pkg.version,
