@@ -11,6 +11,8 @@ import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookUrlBuilder } from "@/modules/stripe/stripe-webhook-url-builder";
 import { supportedStripeEvents } from "@/modules/stripe/supported-stripe-events";
 
+import { STRIPE_API_VERSION } from "./stripe-api-version";
+
 const CantCreateWebhookUrlError = BaseError.subclass("CantCreateWebhookUrlError", {
   props: {
     _internalName: "StripeWebhookManagerErrors.CantCreateWebhookUrlError" as const,
@@ -142,11 +144,12 @@ export class StripeWebhookManager {
     try {
       const result = await client.nativeClient.webhookEndpoints.create({
         url: webhookUrl.value.toString(),
-        description: `Created by Saleor Stripe app, config name: ${config.name}`,
+        description: `Created by Saleor App Payment Stripe, config name: ${config.name}`,
         enabled_events: supportedStripeEvents,
         metadata: {
           saleorAppConfigurationId: config.configurationId,
         },
+        api_version: STRIPE_API_VERSION,
       });
 
       const { secret, id } = result;
