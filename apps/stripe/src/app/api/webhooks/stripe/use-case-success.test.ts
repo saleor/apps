@@ -97,10 +97,11 @@ describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -163,10 +164,11 @@ describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -248,10 +250,11 @@ describe("StripeWebhookUseCase - handling payment_intent.amount_capturable_updat
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -333,10 +336,11 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -399,10 +403,11 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -483,10 +488,11 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -545,10 +551,11 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -625,10 +632,11 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -691,10 +699,11 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -775,10 +784,11 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -839,10 +849,11 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -920,10 +931,11 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -987,10 +999,11 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 
@@ -1054,10 +1067,11 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        StripeWebhookSuccessResponse {
-          "responseStatusCode": 200,
-        }
-      `);
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
+      }
+    `);
 
     expect(mockEventReporter.reportTransactionEvent).toHaveBeenCalledOnce();
 

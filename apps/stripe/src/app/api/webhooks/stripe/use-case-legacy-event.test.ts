@@ -98,10 +98,9 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
       expect(result.isErr()).toBe(true);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        StripeWebhookErrorResponse {
-          "error": [BaseError: Legacy config is empty
-        Received legacy webhook but failed to handle removing it],
-          "responseStatusCode": 500,
+        StripeWebhookAppIsNotConfiguredResponse {
+          "message": "App is not configured",
+          "statusCode": 400,
         }
       `);
 
@@ -122,12 +121,9 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
       expect(result.isErr()).toBe(true);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        StripeWebhookErrorResponse {
-          "error": [BaseError: test err
-        Failed to fetch config attached to legacy Webhook, this requires manual cleanup
-        Failed to fetch legacy config
-        Received legacy webhook but failed to handle removing it],
-          "responseStatusCode": 500,
+        StripeWebhookAppIsNotConfiguredResponse {
+          "message": "App is not configured",
+          "statusCode": 400,
         }
       `);
 
@@ -148,12 +144,9 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
       expect(result.isErr()).toBe(true);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        StripeWebhookErrorResponse {
-          "error": [BaseError: error removing webhook
-        Failed to remove webhook
-        Failed to remove legacy webhook
-        Received legacy webhook but failed to handle removing it],
-          "responseStatusCode": 500,
+        StripeWebhookAppIsNotConfiguredResponse {
+          "message": "App is not configured",
+          "statusCode": 400,
         }
       `);
 
