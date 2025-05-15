@@ -2,6 +2,7 @@ import { err, ok } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
+import { ApplePayPaymentMethod } from "@/modules/stripe/payment-methods/apple-pay";
 import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
 
@@ -10,6 +11,7 @@ const TransactionInitializeEventDataSchema = z
     paymentIntent: z.discriminatedUnion("paymentMethod", [
       CardPaymentMethod.TransactionInitializeSchema,
       KlarnaPaymentMethod.TransactionInitializeSchema,
+      ApplePayPaymentMethod.TransactionInitializeSchema,
     ]),
   })
   .strict()
