@@ -16,7 +16,10 @@ import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook
 import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
 
 import { getAndParseStripeSignatureHeader } from "./stripe-signature-header";
-import { StripeWebhookErrorResponse } from "./stripe-webhook-response";
+import {
+  StripeWebhookMalformedRequestResponse,
+  StripeWebhookSeverErrorResponse,
+} from "./stripe-webhook-responses";
 import { StripeWebhookUseCase } from "./use-case";
 import { WebhookParams } from "./webhook-params";
 
@@ -52,9 +55,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
       error: requiredUrlAttributes.error,
     });
 
-    return new Response(`Invalid request: ${requiredUrlAttributes.error.message}`, {
-      status: 400,
-    });
+    return new StripeWebhookMalformedRequestResponse().getResponse();
   }
 
   const [stripeSignatureHeader, webhookParams] = requiredUrlAttributes.value;
@@ -86,7 +87,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
     return result.match(
       (success) => {
         logger.info("Success processing Stripe webhook", {
-          httpsStatusCode: success.responseStatusCode,
+          httpsStatusCode: success.statusCode,
         });
 
         return success.getResponse();
@@ -94,7 +95,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
       (error) => {
         logger.error("Error processing Stripe webhook", {
           error: error,
-          httpsStatusCode: error.responseStatusCode,
+          httpsStatusCode: error.statusCode,
         });
 
         return error.getResponse();
@@ -109,7 +110,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
 
     captureException(panicError);
 
-    return new StripeWebhookErrorResponse(panicError).getResponse();
+    return new StripeWebhookSeverErrorResponse().getResponse();
   }
 };
 

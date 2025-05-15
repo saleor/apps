@@ -73,9 +73,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [BaseError: Missing Saleor Auth Data. App installation is broken],
-        "responseStatusCode": 500,
+      StripeWebhookAppIsNotConfiguredResponse {
+        "message": "App is not configured",
+        "statusCode": 400,
       }
     `);
   });
@@ -92,10 +92,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [BaseError: Test error - cant fetch config
-      Failed to fetch config from database],
-        "responseStatusCode": 500,
+      StripeWebhookAppIsNotConfiguredResponse {
+        "message": "App is not configured",
+        "statusCode": 400,
       }
     `);
   });
@@ -110,9 +109,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [BaseError: Config missing, app is not configured properly],
-        "responseStatusCode": 500,
+      StripeWebhookAppIsNotConfiguredResponse {
+        "message": "App is not configured",
+        "statusCode": 400,
       }
     `);
   });
@@ -129,9 +128,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [StripeEventParsingError: Error because its test],
-        "responseStatusCode": 500,
+      StripeWebhookMalformedRequestResponse {
+        "message": "Malformed request",
+        "statusCode": 400,
       }
     `);
   });
@@ -148,9 +147,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [TransactionRecorderRepo.TransactionMissingError: Transaction not found],
-        "responseStatusCode": 500,
+      StripeWebhookSeverErrorResponse {
+        "message": "Server error",
+        "statusCode": 500,
       }
     `);
   });
@@ -190,9 +189,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [NotSupportedEventError: Unsupported event type],
-        "responseStatusCode": 500,
+      StripeWebhookSeverErrorResponse {
+        "message": "Server error",
+        "statusCode": 500,
       }
     `);
   });
@@ -238,9 +237,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookErrorResponse {
-        "error": [NotSupportedEventError: Unsupported event type],
-        "responseStatusCode": 500,
+      StripeWebhookSeverErrorResponse {
+        "message": "Server error",
+        "statusCode": 500,
       }
     `);
   });
