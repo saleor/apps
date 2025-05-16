@@ -33,7 +33,10 @@ const handler = createManifestHandler({
       extensions: [],
       homepageUrl: "https://github.com/saleor/apps",
       id: env.MANIFEST_APP_ID,
-      name: "Stripe",
+      /**
+       * Can set custom name, e.g. in Development to recognize the app
+       */
+      name: env.APP_NAME,
       permissions: ["HANDLE_PAYMENTS"],
       requiredSaleorVersion: ">=3.20 <4",
       supportUrl: "https://saleor.io/discord",
