@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
 import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
+import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-pay";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
 
 const TransactionInitializeEventDataSchema = z
@@ -10,6 +11,7 @@ const TransactionInitializeEventDataSchema = z
     paymentIntent: z.discriminatedUnion("paymentMethod", [
       CardPaymentMethod.TransactionInitializeSchema,
       KlarnaPaymentMethod.TransactionInitializeSchema,
+      GooglePayPaymentMethod.TransactionInitializeSchema,
     ]),
   })
   .strict()
@@ -50,6 +52,7 @@ export const parseTransactionInitializeSessionEventData = (raw: unknown) => {
 
   if (hasInvalidUnionDiscriminator) {
     return err(
+      // todo print payment method from the frontend
       new UnsupportedPaymentMethodError("Payment method is not supported", {
         cause: parsingResult.error,
       }),
