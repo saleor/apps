@@ -30,6 +30,7 @@ const config: IGraphQLConfig = {
                   UUID: "string",
                   WeightScalar: "number",
                   Day: "string",
+                  Hour: "number",
                 },
               },
               plugins: [

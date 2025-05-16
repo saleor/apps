@@ -35,7 +35,7 @@ const handler = createManifestHandler({
       id: env.MANIFEST_APP_ID,
       name: "Stripe",
       permissions: ["HANDLE_PAYMENTS"],
-      requiredSaleorVersion: ">=3.20 <4",
+      requiredSaleorVersion: ">=3.21 <4",
       supportUrl: "https://saleor.io/discord",
       tokenTargetUrl: `${apiBaseUrl}/api/register`,
       version: packageJson.version,
