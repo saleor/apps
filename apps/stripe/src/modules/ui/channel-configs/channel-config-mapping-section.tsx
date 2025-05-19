@@ -1,5 +1,6 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Box, Text } from "@saleor/macaw-ui";
+import { Layout } from "@saleor/apps-ui";
+import { Skeleton, Text } from "@saleor/macaw-ui";
 import { useEffect } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
@@ -42,15 +43,37 @@ export const ChannelConfigMappingSection = () => {
   const mappingExist = allMappings.data;
 
   if (anythingLoading) {
-    return <Box>Loading...</Box>;
+    return (
+      <Layout.AppSectionCard>
+        <Skeleton />
+      </Layout.AppSectionCard>
+    );
   }
 
   if (!channelsExist) {
-    return <Text>No channels found. You must have at least one channel</Text>;
+    return (
+      <Layout.AppSectionCard>
+        <Text as="h2" size={5} marginBottom={4}>
+          No channels found.
+        </Text>
+        <Text size={3} color="default2">
+          You must have at least one channel in your Saleor store.
+        </Text>
+      </Layout.AppSectionCard>
+    );
   }
 
   if (!configsExist) {
-    return <Text>No configs found. Create at least one configuration first</Text>;
+    return (
+      <Layout.AppSectionCard>
+        <Text as="h2" size={5} marginBottom={4}>
+          No mappings found
+        </Text>
+        <Text size={3} color="default2">
+          Create your first Stripe configuration to get started.
+        </Text>
+      </Layout.AppSectionCard>
+    );
   }
 
   if (configsExist && channelsExist && mappingExist) {
