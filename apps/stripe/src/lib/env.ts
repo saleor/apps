@@ -35,6 +35,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
     APPSTORE_URL: z.string().optional(),
+    APP_NAME: z.string().optional().default("Stripe"),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
@@ -65,6 +66,7 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     APPSTORE_URL: process.env.APPSTORE_URL,
+    APP_NAME: process.env.APP_NAME,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
   onValidationError(issues) {
