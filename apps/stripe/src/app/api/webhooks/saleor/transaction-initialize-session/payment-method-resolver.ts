@@ -1,4 +1,5 @@
 import { assertUnreachable } from "@/lib/assert-unreachable";
+import { ApplePayPaymentMethod } from "@/modules/stripe/payment-methods/apple-pay";
 import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-pay";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
@@ -15,6 +16,8 @@ export const resolvePaymentMethodFromEventData = (
       return new KlarnaPaymentMethod();
     case "google_pay":
       return new GooglePayPaymentMethod();
+    case "apple_pay":
+      return new ApplePayPaymentMethod();
     default:
       assertUnreachable(eventData.paymentIntent);
   }

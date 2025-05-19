@@ -2,6 +2,7 @@ import { err, ok } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
+import { ApplePayPaymentMethod } from "@/modules/stripe/payment-methods/apple-pay";
 import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-pay";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
@@ -12,6 +13,7 @@ const TransactionInitializeEventDataSchema = z
       CardPaymentMethod.TransactionInitializeSchema,
       KlarnaPaymentMethod.TransactionInitializeSchema,
       GooglePayPaymentMethod.TransactionInitializeSchema,
+      ApplePayPaymentMethod.TransactionInitializeSchema,
     ]),
   })
   .strict()
