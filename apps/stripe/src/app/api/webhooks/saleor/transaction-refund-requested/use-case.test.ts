@@ -193,27 +193,4 @@ describe("TransactionRefundRequestedUseCase", () => {
       `[MissingChannelIdError: Channel ID not found in event Checkout or Order]`,
     );
   });
-
-  it("Throws error when Saleor event has no amount for action", async () => {
-    const saleorEvent = {
-      ...getMockedTransactionRefundRequestedEvent(),
-      action: {
-        amount: null,
-        currency: "USD",
-      },
-    };
-
-    const uc = new TransactionRefundRequestedUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      stripeRefundsApiFactory,
-    });
-
-    await expect(
-      uc.execute({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        event: saleorEvent,
-      }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`[MissingAmountError: Amount not found in event]`);
-  });
 });

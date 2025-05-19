@@ -42,7 +42,6 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
         stripeEnv: "LIVE",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         error: new StripeAPIError("Error from stripe"),
-        saleorEventAmount: 112.33,
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -52,7 +51,6 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
           "actions": [
             "CHARGE",
           ],
-          "amount": 112.33,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "There is a problem with the request to Stripe API",
           "pspReference": "pi_TEST_TEST_TEST",

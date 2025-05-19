@@ -13,7 +13,6 @@ import {
   MalformedRequestResponse,
 } from "@/modules/saleor/saleor-webhook-responses";
 import {
-  getAmountFromRequestedEventPayload,
   getChannelIdFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
 } from "@/modules/saleor/transaction-requested-event-helpers";
@@ -55,7 +54,6 @@ export class TransactionChargeRequestedUseCase {
 
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
-    const amount = getAmountFromRequestedEventPayload(event);
 
     loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
 
@@ -109,7 +107,6 @@ export class TransactionChargeRequestedUseCase {
           transactionResult: new ChargeFailureResult(),
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           stripePaymentIntentId: paymentIntentIdResult,
-          saleorEventAmount: amount,
           error,
         }),
       );

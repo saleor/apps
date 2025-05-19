@@ -168,7 +168,6 @@ export class TransactionInitializeSessionUseCase {
       return ok(
         new TransactionInitializeSessionUseCaseResponses.Failure({
           transactionResult: this.resolveErrorTransactionResult(saleorTransactionFlow),
-          saleorEventAmount: event.action.amount,
           error: eventDataResult.error,
         }),
       );
@@ -237,7 +236,6 @@ export class TransactionInitializeSessionUseCase {
       return ok(
         new TransactionInitializeSessionUseCaseResponses.Failure({
           transactionResult: this.resolveErrorTransactionResult(resolvedTransactionFlow),
-          saleorEventAmount: event.action.amount,
           error: mappedError,
         }),
       );

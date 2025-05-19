@@ -25,7 +25,8 @@ describe("Manifest handler", async () => {
         expect(body).toMatchInlineSnapshot(
           {
             version: expect.any(String),
-          }, `
+          },
+          `
           {
             "about": "App that allows merchants using the Saleor e-commerce platform to accept online payments from customers using Stripe as their payment processor.",
             "appUrl": "https://localhost:3000",
@@ -42,7 +43,7 @@ describe("Manifest handler", async () => {
             "permissions": [
               "HANDLE_PAYMENTS",
             ],
-            "requiredSaleorVersion": ">=3.20 <4",
+            "requiredSaleorVersion": ">=3.21 <4",
             "supportUrl": "https://saleor.io/discord",
             "tokenTargetUrl": "https://localhost:3000/api/register",
             "version": Any<String>,
@@ -103,7 +104,8 @@ describe("Manifest handler", async () => {
               },
             ],
           }
-        `);
+        `,
+        );
       },
     });
   });

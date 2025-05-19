@@ -44,7 +44,6 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
         transactionResult: new CancelFailureResult(),
         stripeEnv: "LIVE",
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        saleorEventAmount: 0,
         error: new StripeAPIError("Error from stripe"),
       });
       const fetchReponse = response.getResponse();
@@ -56,7 +55,6 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
           "actions": [
             "CANCEL",
           ],
-          "amount": 0,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "There is a problem with the request to Stripe API",
           "pspReference": "pi_TEST_TEST_TEST",

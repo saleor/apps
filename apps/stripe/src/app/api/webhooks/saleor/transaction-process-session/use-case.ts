@@ -135,7 +135,6 @@ export class TransactionProcessSessionUseCase {
           ),
           stripePaymentIntentId: paymentIntentIdResult,
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
-          saleorEventAmount: event.action.amount,
         }),
       );
     }

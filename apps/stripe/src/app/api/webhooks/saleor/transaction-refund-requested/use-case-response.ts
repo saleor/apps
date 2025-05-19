@@ -31,32 +31,30 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: RefundFailureResult;
-  readonly saleorEventAmount: number;
   readonly error: StripeApiError;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly stripeEnv: StripeEnv;
 
   constructor(args: {
     transactionResult: RefundFailureResult;
-    saleorEventAmount: number;
     error: StripeApiError;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeEnv: StripeEnv;
   }) {
     super();
     this.transactionResult = args.transactionResult;
-    this.saleorEventAmount = args.saleorEventAmount;
     this.error = args.error;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.stripeEnv = args.stripeEnv;
   }
 
   getResponse(): Response {
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_REFUND_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<
+      "TRANSACTION_REFUND_REQUESTED",
+      "3.21"
+    >({
       result: this.transactionResult.result,
       pspReference: this.stripePaymentIntentId,
-      // TODO: remove this after Saleor allows to amount to be optional
-      amount: this.saleorEventAmount,
       message: this.error.merchantMessage,
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(

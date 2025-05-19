@@ -84,7 +84,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and additional information inside data object", async () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Failure({
         transactionResult: new ChargeFailureResult(),
-        saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
       });
       const fetchReponse = response.getResponse();
@@ -92,7 +91,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "amount": 21.23,
           "data": {
             "paymentIntent": {
               "errors": [
@@ -112,7 +110,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and BadRequest error inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
         transactionResult: new ChargeFailureResult(),
-        saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
       });
       const fetchReponse = successResponse.getResponse();
@@ -120,7 +117,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "amount": 21.123,
           "data": {
             "paymentIntent": {
               "errors": [
@@ -140,7 +136,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and StripeCreatePaymentIntentError error inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
         transactionResult: new ChargeFailureResult(),
-        saleorEventAmount: 100.123,
         error: new StripeAPIError("Error from Stripe API"),
       });
       const fetchReponse = successResponse.getResponse();
@@ -148,7 +143,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "amount": 100.123,
           "data": {
             "paymentIntent": {
               "errors": [
@@ -170,7 +164,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and additional information inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
         transactionResult: new AuthorizationFailureResult(),
-        saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
       });
       const fetchReponse = successResponse.getResponse();
@@ -178,7 +171,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "amount": 21.23,
           "data": {
             "paymentIntent": {
               "errors": [
@@ -198,7 +190,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and BadRequest error inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
         transactionResult: new AuthorizationFailureResult(),
-        saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
       });
       const fetchReponse = successResponse.getResponse();
@@ -206,7 +197,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "amount": 21.123,
           "data": {
             "paymentIntent": {
               "errors": [
@@ -226,7 +216,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and message with failure reason and StripeCreatePaymentIntentError error inside data object", async () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
         transactionResult: new AuthorizationFailureResult(),
-        saleorEventAmount: 100.123,
         error: new StripeAPIError("Error from Stripe API"),
       });
       const fetchReponse = successResponse.getResponse();
@@ -234,7 +223,6 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "amount": 100.123,
           "data": {
             "paymentIntent": {
               "errors": [

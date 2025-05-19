@@ -60,19 +60,21 @@ class Success extends SuccessWebhookResponse {
   }
 
   getResponse(): Response {
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
-      result: this.transactionResult.result,
-      amount: this.saleorMoney.amount,
-      pspReference: this.stripePaymentIntentId,
-      // https://docs.stripe.com/payments/paymentintents/lifecycle
-      message: this.transactionResult.message,
-      actions: this.transactionResult.actions,
-      externalUrl: generatePaymentIntentStripeDashboardUrl(
-        this.stripePaymentIntentId,
-        this.stripeEnv,
-      ),
-      time: this.timestamp?.toISOString(),
-    });
+    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION", "3.21">(
+      {
+        result: this.transactionResult.result,
+        amount: this.saleorMoney.amount,
+        pspReference: this.stripePaymentIntentId,
+        // https://docs.stripe.com/payments/paymentintents/lifecycle
+        message: this.transactionResult.message,
+        actions: this.transactionResult.actions,
+        externalUrl: generatePaymentIntentStripeDashboardUrl(
+          this.stripePaymentIntentId,
+          this.stripeEnv,
+        ),
+        time: this.timestamp?.toISOString(),
+      },
+    );
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
@@ -81,7 +83,6 @@ class Success extends SuccessWebhookResponse {
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult | AuthorizationFailureResult;
   readonly error: StripeApiError;
-  readonly saleorEventAmount: number;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly stripeEnv: StripeEnv;
 
@@ -97,40 +98,39 @@ class Failure extends SuccessWebhookResponse {
   constructor(args: {
     transactionResult: ChargeFailureResult | AuthorizationFailureResult;
     error: StripeApiError;
-    saleorEventAmount: number;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeEnv: StripeEnv;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.error = args.error;
-    this.saleorEventAmount = args.saleorEventAmount;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.stripeEnv = args.stripeEnv;
   }
 
   getResponse() {
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
-      result: this.transactionResult.result,
-      message: this.error.merchantMessage,
-      amount: this.saleorEventAmount,
-      pspReference: this.stripePaymentIntentId,
-      externalUrl: generatePaymentIntentStripeDashboardUrl(
-        this.stripePaymentIntentId,
-        this.stripeEnv,
-      ),
-      data: Failure.ResponseDataSchema.parse({
-        paymentIntent: {
-          errors: [
-            {
-              code: this.error.publicCode,
-              message: this.error.publicMessage,
-            },
-          ],
-        },
-      }),
-      actions: this.transactionResult.actions,
-    });
+    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION", "3.21">(
+      {
+        result: this.transactionResult.result,
+        message: this.error.merchantMessage,
+        pspReference: this.stripePaymentIntentId,
+        externalUrl: generatePaymentIntentStripeDashboardUrl(
+          this.stripePaymentIntentId,
+          this.stripeEnv,
+        ),
+        data: Failure.ResponseDataSchema.parse({
+          paymentIntent: {
+            errors: [
+              {
+                code: this.error.publicCode,
+                message: this.error.publicMessage,
+              },
+            ],
+          },
+        }),
+        actions: this.transactionResult.actions,
+      },
+    );
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
