@@ -6,6 +6,7 @@ import { ApplePayPaymentMethod } from "@/modules/stripe/payment-methods/apple-pa
 import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-pay";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
+import { PayPalPaymentMethod } from "@/modules/stripe/payment-methods/paypal";
 
 const TransactionInitializeEventDataSchema = z
   .object({
@@ -14,6 +15,7 @@ const TransactionInitializeEventDataSchema = z
       KlarnaPaymentMethod.TransactionInitializeSchema,
       GooglePayPaymentMethod.TransactionInitializeSchema,
       ApplePayPaymentMethod.TransactionInitializeSchema,
+      PayPalPaymentMethod.TransactionInitializeSchema,
     ]),
   })
   .strict()

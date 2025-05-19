@@ -3,6 +3,7 @@ import { ApplePayPaymentMethod } from "@/modules/stripe/payment-methods/apple-pa
 import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-pay";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
+import { PayPalPaymentMethod } from "@/modules/stripe/payment-methods/paypal";
 
 import { TransactionInitializeSessionEventData } from "./event-data-parser";
 
@@ -18,6 +19,8 @@ export const resolvePaymentMethodFromEventData = (
       return new GooglePayPaymentMethod();
     case "apple_pay":
       return new ApplePayPaymentMethod();
+    case "paypal":
+      return new PayPalPaymentMethod();
     default:
       assertUnreachable(eventData.paymentIntent);
   }
