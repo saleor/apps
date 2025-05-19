@@ -22,9 +22,13 @@ const ConfigPage: NextPage = () => {
         heading="Stripe configurations"
         sideContent={
           <Box display="flex" flexDirection="column" gap={4}>
-            <Text>App allows to create multiple configurations for Stripe</Text>
             <Text>
-              You can set up multiple environments and assign them to each channel individually
+              App allows to create and use multiple Stripe configurations e.g one for test mode and
+              the other for live mode.
+            </Text>
+            <Text>
+              You can set up multiple Stripe configurations and assign them to each channel
+              individually.
             </Text>
           </Box>
         }
@@ -35,8 +39,8 @@ const ConfigPage: NextPage = () => {
         heading="Channels configurations"
         sideContent={
           <Box display="flex" flexDirection="column" gap={4}>
-            <Text>Assign created Stripe configurations per channel</Text>
-            <Text>You can configure multiple channels to use the same configuration</Text>
+            <Text>Assign created Stripe configurations to Saleor channel.</Text>
+            <Text>You can configure multiple channels to use the same Stripe configuration.</Text>
           </Box>
         }
       >

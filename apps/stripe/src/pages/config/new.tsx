@@ -32,13 +32,29 @@ const NewConfiguration: NextPage = () => {
         marginBottom={14}
         heading="Stripe configuration"
         sideContent={
-          <Text>
-            All settings are required. Consult Stripe{" "}
-            <TextLink href="https://docs.stripe.com/keys" newTab>
-              docs
-            </TextLink>{" "}
-            to learn more about Publishable and Restricted keys.
-          </Text>
+          <Box display="flex" flexDirection="column" gap={4}>
+            <Text>
+              Consult Stripe{" "}
+              <TextLink href="https://docs.stripe.com/keys" newTab>
+                documentation
+              </TextLink>{" "}
+              to learn more about Publishable and Restricted keys.
+            </Text>
+
+            <Box>
+              <Text>
+                Check required Restricted key scopes in Saleor app
+                <TextLink
+                  href="https://docs.saleor.io/developer/app-store/apps/stripe/overview"
+                  newTab
+                >
+                  {" "}
+                  configuration documentation
+                </TextLink>
+                .
+              </Text>
+            </Box>
+          </Box>
         }
       >
         <NewStripeConfigForm />

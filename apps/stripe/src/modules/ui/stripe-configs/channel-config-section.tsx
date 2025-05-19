@@ -1,4 +1,5 @@
-import { Box, Text } from "@saleor/macaw-ui";
+import { Layout } from "@saleor/apps-ui";
+import { Skeleton, Text } from "@saleor/macaw-ui";
 import { useEffect } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
@@ -24,5 +25,9 @@ export const ChannelConfigSection = () => {
     return <StripeConfigsList configs={data} />;
   }
 
-  return <Box>Loading...</Box>;
+  return (
+    <Layout.AppSectionCard footer={<Skeleton />}>
+      <Skeleton />
+    </Layout.AppSectionCard>
+  );
 };
