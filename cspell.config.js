@@ -40,6 +40,7 @@ export default {
     "corepack",
     "datocms",
     "devcontainer",
+    "klarna",
     "klaviyo",
     "mailhog",
     "milis",
