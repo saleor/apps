@@ -9,11 +9,11 @@ import { SaleorTransationFlow } from "@/modules/saleor/saleor-transaction-flow";
 
 import { PaymentMethod } from "./types";
 
+/**
+ * https://stripe.com/docs/apple-pay
+ */
 export class ApplePayPaymentMethod implements PaymentMethod {
-  /*
-   * Under the hood, Apple Pay is a card payment method
-   * https://stripe.com/docs/apple-pay
-   */
+  // Under the hood, Apple Pay is a card payment method
   type = "card" as const;
 
   static TransactionInitializeSchema = z
