@@ -58,13 +58,13 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
               borderColor="transparent"
               size="large"
             >
-              <Text __color={"#FFF"} size={1}>
+              <Text __color={"#FFF"} size={1} whiteSpace="nowrap">
                 Stripe test mode
               </Text>
             </Chip>
           );
           const liveEnvChip = (
-            <Chip marginLeft={"auto"} size="large">
+            <Chip marginLeft={"auto"} size="large" whiteSpace="nowrap">
               <Text size={1}>Stripe live mode</Text>
             </Chip>
           );
@@ -84,7 +84,7 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
                   setIsModalOpen(false);
                 }}
               />
-              <Box padding={4} key={configInstance.id}>
+              <Box paddingY={4} key={configInstance.id}>
                 <Box
                   display={"flex"}
                   justifyContent="space-between"
