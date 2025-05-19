@@ -105,29 +105,43 @@ export const mapStripeErrorToApiError = (error: unknown): StripeApiError => {
   switch (true) {
     case error instanceof Stripe.errors.StripeCardError:
       return new StripeCardError("Card payment error", {
+        cause: error,
         props: {
           publicMessage: error.message,
         },
       });
     case error instanceof Stripe.errors.StripeInvalidRequestError:
       return new StripeInvalidRequestError("Invalid parameters provided to Stripe API", {
+        cause: error,
         props: {
           stripeCode: error.code ?? "",
           stripeParam: error.param ?? "",
         },
       });
     case error instanceof Stripe.errors.StripeRateLimitError:
-      return new StripeRateLimitError("Too many requests made to the API too quickly");
+      return new StripeRateLimitError("Too many requests made to the API too quickly", {
+        cause: error,
+      });
     case error instanceof Stripe.errors.StripeConnectionError:
-      return new StripeConnectionError("There was a network problem between app and Stripe");
+      return new StripeConnectionError("There was a network problem between app and Stripe", {
+        cause: error,
+      });
     case error instanceof Stripe.errors.StripeAPIError:
-      return new StripeAPIError("Something went wrong on Stripe end");
+      return new StripeAPIError("Something went wrong on Stripe end", {
+        cause: error,
+      });
     case error instanceof Stripe.errors.StripeAuthenticationError:
-      return new StripeAuthenticationError("App can’t authenticate with Stripe");
+      return new StripeAuthenticationError("App can’t authenticate with Stripe", {
+        cause: error,
+      });
     case error instanceof Stripe.errors.StripePermissionError:
-      return new StripePermissionError("API key doesn’t have permission to perform this action");
+      return new StripePermissionError("API key doesn’t have permission to perform this action", {
+        cause: error,
+      });
     case error instanceof Stripe.errors.StripeIdempotencyError:
-      return new StripeIdempotencyError("Idempotency key error");
+      return new StripeIdempotencyError("Idempotency key error", {
+        cause: error,
+      });
     default:
       captureException(error);
 

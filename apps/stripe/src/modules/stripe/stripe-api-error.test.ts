@@ -60,7 +60,10 @@ describe("mapStripeErrorToApiError", () => {
     const result = mapStripeErrorToApiError(stripeError);
 
     expect(result).toBeInstanceOf(StripeConnectionError);
-    expect(result.message).toBe("There was a network problem between app and Stripe");
+    expect(result.message).toMatchInlineSnapshot(`
+      "Error: Connection failed
+      There was a network problem between app and Stripe"
+    `);
   });
 
   it("maps Stripe.errors.StripeAPIError to StripeAPIError", () => {
