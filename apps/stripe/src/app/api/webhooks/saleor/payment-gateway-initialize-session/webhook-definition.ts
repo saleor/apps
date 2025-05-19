@@ -1,5 +1,6 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 
+import { verifyWebhookSignature } from "@/app/api/webhooks/saleor/verify-signature";
 import {
   PaymentGatewayInitializeSessionDocument,
   PaymentGatewayInitializeSessionEventFragment,
@@ -14,4 +15,5 @@ export const paymentGatewayInitializeSessionWebhookDefinition =
     isActive: true,
     query: PaymentGatewayInitializeSessionDocument,
     webhookPath: "api/webhooks/saleor/payment-gateway-initialize-session",
+    verifySignatureFn: verifyWebhookSignature,
   });

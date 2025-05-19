@@ -1,4 +1,7 @@
+import * as path from "node:path";
+
 import react from "@vitejs/plugin-react";
+import { loadEnv } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
@@ -32,6 +35,7 @@ export default defineConfig({
           include: ["src/__tests__/integration/dynamodb/**/*.test.{ts,ts}"],
           name: "integration:dynamodb",
           setupFiles: "./src/__tests__/integration/dynamodb/setup.integration-dynamo.ts",
+          env: loadEnv("", path.join(__dirname, "src/__tests__/integration/dynamodb"), ""),
         },
       },
     ],
