@@ -15,5 +15,7 @@ export const paymentGatewayInitializeSessionWebhookDefinition =
     isActive: true,
     query: PaymentGatewayInitializeSessionDocument,
     webhookPath: "api/webhooks/saleor/payment-gateway-initialize-session",
-    verifySignatureFn: verifyWebhookSignature,
+    verifySignatureFn: (jwks, signature, rawBody) => {
+      return verifyWebhookSignature(jwks, signature, rawBody);
+    },
   });

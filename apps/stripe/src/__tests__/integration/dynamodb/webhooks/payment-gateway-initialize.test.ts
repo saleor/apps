@@ -1,36 +1,49 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
+import { mockEncryptor } from "@/__tests__/mocks/mock-encryptor";
+import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
+import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
+import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as manifestHandlers from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
+import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
+import { RandomId } from "@/lib/random-id";
 import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
 import { DynamoAPLRepository } from "@/modules/apl/dynamo-apl-repository";
 import { DynamoAPL } from "@/modules/apl/dynamodb-apl";
+import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
+import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
+import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
+import { DynamoDbStripeConfig } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
+import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
-const realSaleorApiUrl = "https://hackathon-shipping.eu.saleor.cloud/graphql/";
+const realSaleorApiUrl = createSaleorApiUrl(
+  "https://hackathon-shipping.eu.saleor.cloud/graphql/",
+)._unsafeUnwrap();
+
+const randomId = new RandomId().generate();
 
 describe("PaymentGatewayInitialize webhook: integration", async () => {
-  beforeEach(async () => {});
-
-  /**
-   * Verify snapshot - if your changes cause manifest to be different, ensure changes are expected
-   */
-  it("TEST", async () => {
-    // todo looks like it's not called for some reason
+  beforeEach(async () => {
     vi.spyOn(verifyWebhookSignatureModule, "verifyWebhookSignature").mockImplementation(
-      async () => {
-        console.log("I should be called");
-      },
+      async () => {},
     );
+
+    const repo = new DynamodbAppConfigRepo({
+      entities: {
+        channelConfigMapping: DynamoDbChannelConfigMapping.entity,
+        stripeConfig: DynamoDbStripeConfig.entity,
+      },
+      encryptor: mockEncryptor,
+    });
 
     const apl = new DynamoAPL({
       repository: new DynamoAPLRepository({
         entity: dynamoDbAplEntity,
       }),
     });
-
-    vi.spyOn(apl, "set");
 
     await apl.set({
       saleorApiUrl: realSaleorApiUrl,
@@ -39,20 +52,66 @@ describe("PaymentGatewayInitialize webhook: integration", async () => {
       jwks: "{}",
     });
 
+    await repo.saveStripeConfig({
+      saleorApiUrl: realSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      config: StripeConfig.create({
+        publishableKey: mockedStripePublishableKey,
+        name: "Config name",
+        webhookId: "we_123",
+        restrictedKey: mockedStripeRestrictedKey,
+        webhookSecret: mockStripeWebhookSecret,
+        id: randomId,
+      })._unsafeUnwrap(),
+    });
+
+    await repo.updateMapping(
+      {
+        saleorApiUrl: realSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      },
+      {
+        configId: randomId,
+        channelId: mockedSaleorChannelId,
+      },
+    );
+  });
+
+  /**
+   * Verify snapshot - if your changes cause manifest to be different, ensure changes are expected
+   */
+  it("TEST", async () => {
+    // TODO: Why we pass it directly, should subscription resolve to have event {} first? (todo check api response in logs)
+    const eventPayload = {
+      sourceObject: {
+        __typename: "Checkout",
+        channel: {
+          slug: "default-channel",
+          id: mockedSaleorChannelId,
+        },
+        id: "checkout-id",
+      },
+      recipient: {
+        id: mockedSaleorAppId,
+      },
+    } satisfies PaymentGatewayInitializeSessionEventFragment;
+
     await testApiHandler({
       appHandler: manifestHandlers,
       async test({ fetch }) {
-        const body = await fetch({
+        const response = await fetch({
           method: "POST",
-          body: JSON.stringify({}), //todo fill payload
+          body: JSON.stringify(eventPayload),
           headers: new Headers({
             "saleor-api-url": realSaleorApiUrl,
             "saleor-event": "payment_gateway_initialize_session",
             "saleor-signature": "mock-signature",
           }),
-        }).then((r) => r.json());
+        });
 
-        console.log(body);
+        // const body = await response.json();
+
+        expect(response.status).toStrictEqual(200);
       },
     });
   });
