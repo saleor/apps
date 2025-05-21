@@ -8,6 +8,9 @@ env:
   AWS_ACCESS_KEY_ID: "test"
   AWS_SECRET_ACCESS_KEY: "test"
   AWS_ENDPOINT_URL: "http://localhost:8000"
+  APL: dynamodb
+  TEST_STRIPE_PK: ${{ secrets.STRIPE_INTEGRATION_TEST_PK }}
+  TEST_STRIPE_RK: ${{ secrets.STRIPE_INTEGRATION_TEST_RK }}
 
 on:
   workflow_dispatch:
