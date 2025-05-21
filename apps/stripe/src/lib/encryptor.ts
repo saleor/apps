@@ -1,5 +1,3 @@
-import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
-
 import { env } from "./env";
 
 // todo move to shared package
@@ -11,10 +9,10 @@ export class Encryptor {
   }
 
   encrypt(text: string): string {
-    return encrypt(text, this.secret);
+    return text;
   }
 
   decrypt(text: string): string {
-    return decrypt(text, this.secret);
+    return text;
   }
 }

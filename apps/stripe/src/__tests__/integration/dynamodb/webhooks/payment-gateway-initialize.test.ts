@@ -25,25 +25,25 @@ const realSaleorApiUrl = createSaleorApiUrl(
 
 const randomId = new RandomId().generate();
 
+const repo = new DynamodbAppConfigRepo({
+  entities: {
+    channelConfigMapping: DynamoDbChannelConfigMapping.entity,
+    stripeConfig: DynamoDbStripeConfig.entity,
+  },
+  encryptor: mockEncryptor,
+});
+
+const apl = new DynamoAPL({
+  repository: new DynamoAPLRepository({
+    entity: dynamoDbAplEntity,
+  }),
+});
+
 describe("PaymentGatewayInitialize webhook: integration", async () => {
   beforeEach(async () => {
     vi.spyOn(verifyWebhookSignatureModule, "verifyWebhookSignature").mockImplementation(
       async () => {},
     );
-
-    const repo = new DynamodbAppConfigRepo({
-      entities: {
-        channelConfigMapping: DynamoDbChannelConfigMapping.entity,
-        stripeConfig: DynamoDbStripeConfig.entity,
-      },
-      encryptor: mockEncryptor,
-    });
-
-    const apl = new DynamoAPL({
-      repository: new DynamoAPLRepository({
-        entity: dynamoDbAplEntity,
-      }),
-    });
 
     await apl.set({
       saleorApiUrl: realSaleorApiUrl,
@@ -109,7 +109,9 @@ describe("PaymentGatewayInitialize webhook: integration", async () => {
           }),
         });
 
-        // const body = await response.json();
+        const body = await response.json();
+
+        expect(body).toStrictEqual({ data: { stripePublishableKey: "pk_live_1" } });
 
         expect(response.status).toStrictEqual(200);
       },
