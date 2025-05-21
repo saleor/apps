@@ -2,13 +2,13 @@ import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
-import { mockEncryptor } from "@/__tests__/mocks/mock-encryptor";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as manifestHandlers from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
 import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
+import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
 import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
 import { DynamoAPLRepository } from "@/modules/apl/dynamo-apl-repository";
@@ -30,7 +30,7 @@ const repo = new DynamodbAppConfigRepo({
     channelConfigMapping: DynamoDbChannelConfigMapping.entity,
     stripeConfig: DynamoDbStripeConfig.entity,
   },
-  encryptor: mockEncryptor,
+  encryptor: new Encryptor(),
 });
 
 const apl = new DynamoAPL({
@@ -80,7 +80,7 @@ describe("PaymentGatewayInitialize webhook: integration", async () => {
   /**
    * Verify snapshot - if your changes cause manifest to be different, ensure changes are expected
    */
-  it("TEST", async () => {
+  it("Returns response with stored publishable key from the config", async () => {
     // TODO: Why we pass it directly, should subscription resolve to have event {} first? (todo check api response in logs)
     const eventPayload = {
       sourceObject: {

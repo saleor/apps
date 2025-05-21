@@ -12,7 +12,9 @@ export class Encryptor {
 
   encrypt(text: string): string {
     const iv = crypto.randomBytes(16); // 16 bytes IV for AES
+
     const cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(this.secret, "hex"), iv);
+
     const encrypted = Buffer.concat([cipher.update(text, "utf8"), cipher.final()]);
 
     return iv.toString("hex") + ":" + encrypted.toString("hex");
