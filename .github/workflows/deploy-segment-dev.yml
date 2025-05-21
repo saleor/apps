@@ -32,7 +32,7 @@ jobs:
       - run: aws s3 cp function.zip s3://${{secrets.AWS_APPS_DEV_DEPLOYMENT_BUCKET}}/saleor-cloud-dev-segment-app.zip
       - name: Deploy to AWS Lambda
         run: |
-          aws lambda update-function-code
-            --s3-bucket     ${{ secrets.AWS_APPS_DEV_DEPLOYMENT_BUCKET }}
-            --s3-key        saleor-cloud-dev-segment-app.zip
+          aws lambda update-function-code \
+            --s3-bucket     ${{ secrets.AWS_APPS_DEV_DEPLOYMENT_BUCKET }} \
+            --s3-key        saleor-cloud-dev-segment-app.zip \
             --function-name saleor-cloud-dev-segment-app
