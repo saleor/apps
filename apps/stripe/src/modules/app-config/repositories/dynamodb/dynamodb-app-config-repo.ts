@@ -218,8 +218,6 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
         configId = parsed.configId;
       } catch (e) {
-        console.error(e);
-
         return err(
           new AppConfigRepoError.FailureFetchingConfig(
             "Error fetching specific config from DynamoDB",
@@ -251,8 +249,6 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
       return ok(parsedConfig);
     } catch (e) {
       this.logger.error("Failed to fetch config from DynamoDB", { cause: e });
-
-      console.error(e);
 
       return err(
         new AppConfigRepoError.FailureFetchingConfig(
@@ -296,8 +292,6 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
       return ok(null);
     } catch (e) {
       this.logger.error("Failed to save config to DynamoDB", { cause: e });
-
-      console.error(e);
 
       return err(
         new AppConfigRepoError.FailureSavingConfig("Failed to save config to DynamoDB", {
@@ -374,8 +368,6 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
 
       return ok(null);
     } catch (e) {
-      console.error(e);
-
       return err(
         new AppConfigRepoError.FailureRemovingConfig("Failed to remove config from DynamoDB", {
           cause: e,

@@ -136,7 +136,8 @@ describe("NewStripeConfigTrpcHandler", () => {
         config: {
           id: expect.any(String),
         },
-      }, `
+      },
+      `
       {
         "appId": "saleor-app-id",
         "config": {
@@ -149,7 +150,8 @@ describe("NewStripeConfigTrpcHandler", () => {
         },
         "saleorApiUrl": "https://foo.bar.saleor.cloud/graphql/",
       }
-    `);
+    `,
+    );
   });
 
   describe("Stripe Auth", () => {
