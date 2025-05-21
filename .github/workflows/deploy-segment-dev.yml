@@ -14,5 +14,25 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_DEV_DEPLOYMENT_ROLE }}
+          role-to-assume: ${{ secrets.AWS_APPS_DEV_DEPLOYMENT_ROLE }}
           aws-region: eu-west-1
+
+      - name: Build
+        run: |
+          echo > index.js <<EOF
+          exports.handler = async (event) => {
+                const response = {
+                    statusCode: 200,
+                    body: JSON.stringify('Hello from Lambda!'),
+                };
+                return response;
+            };
+          EOF
+          zip function.zip index.js
+      - run: aws s3 cp function.zip s3://${{secrets.AWS_APPS_DEV_DEPLOYMENT_BUCKET}}/saleor-cloud-dev-segment-app.zip
+      - name: Deploy to AWS Lambda
+        run: |
+          aws lambda update-function-code
+            --s3-bucket     ${{ secrets.AWS_APPS_DEV_DEPLOYMENT_BUCKET }}
+            --s3-key        saleor-cloud-dev-segment-app.zip
+            --function-name saleor-cloud-dev-segment-app
