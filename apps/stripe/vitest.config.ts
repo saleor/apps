@@ -36,6 +36,16 @@ export default defineConfig({
           name: "integration:dynamodb",
           setupFiles: "./src/__tests__/integration/dynamodb/setup.integration-dynamo.ts",
           env: loadEnv("", path.join(__dirname, "src/__tests__/integration/dynamodb"), ""),
+          pool: "threads",
+          poolOptions: {
+            threads: {
+              /*
+               * Without a single thread, tests across the files are re-using the same dynamodb.
+               * If they become slow, we can spawn separate table per suite
+               */
+              singleThread: true,
+            },
+          },
         },
       },
     ],
