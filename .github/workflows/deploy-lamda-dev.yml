@@ -1,6 +1,6 @@
 name: Deploy Segment app to dev
 
-on: [workflow_dispatch]
+on: [push]
 
 jobs:
   deploy:
