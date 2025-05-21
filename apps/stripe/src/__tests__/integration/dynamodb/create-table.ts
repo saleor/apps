@@ -37,7 +37,6 @@ export const createTable = async () => {
     // todo stop printing aws output in case of success
   } catch (e) {
     console.error("Error creating table");
-    console.error(e);
     throw new Error("Failed to create table", {
       cause: e,
     });
