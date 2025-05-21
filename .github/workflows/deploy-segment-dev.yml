@@ -2,6 +2,9 @@ name: Deploy Segment app to dev
 
 on: [push]
 
+permissions:
+  id-token: write # This is required for requesting the JWT
+
 jobs:
   deploy:
     runs-on: ubuntu-22.04
