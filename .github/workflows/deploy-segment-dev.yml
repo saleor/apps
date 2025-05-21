@@ -19,7 +19,7 @@ jobs:
 
       - name: Build
         run: |
-          echo > index.js <<EOF
+          cat > index.js << EOF
           exports.handler = async (event) => {
                 const response = {
                     statusCode: 200,
