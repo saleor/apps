@@ -1,6 +1,5 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
-import { ResponseMessageFormatter } from "@/app/api/webhooks/saleor/response-message-formatter";
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { AppContext } from "@/lib/app-context";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
