@@ -34,6 +34,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: null,
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchResponse = response.getResponse();
 
@@ -61,6 +64,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         timestamp: null,
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeEnv: "LIVE",
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -91,6 +97,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: new Date(2025, 1, 1, 21, 37),
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchResponse = response.getResponse();
 
@@ -120,6 +129,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: null,
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -146,6 +158,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: null,
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -170,6 +185,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         saleorMoney: getMockedSaleorMoney(),
         transactionResult,
         timestamp: null,
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchResponse = response.getResponse();
 
@@ -191,11 +209,13 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         const transactionResult = new ChargeFailureResult();
 
         const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
-          stripeEnv: "LIVE",
           stripePaymentIntentId: mockedStripePaymentIntentId,
           saleorEventAmount: 21.23,
           error: new StripeInvalidRequestError("Invalid request"),
           transactionResult,
+          appContext: {
+            stripeEnv: null,
+          },
         });
         const fetchReponse = successResponse.getResponse();
 
@@ -229,7 +249,9 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
 
         const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
           saleorEventAmount: 21.23,
-          stripeEnv: "LIVE",
+          appContext: {
+            stripeEnv: null,
+          },
           stripePaymentIntentId: mockedStripePaymentIntentId,
           error: new StripeInvalidRequestError("Invalid request"),
           transactionResult,

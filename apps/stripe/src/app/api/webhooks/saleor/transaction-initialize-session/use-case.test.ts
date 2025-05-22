@@ -296,7 +296,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).resolves.toStrictEqual(err(new MalformedRequestResponse()));
+    ).resolves.toStrictEqual(err(new MalformedRequestResponse({ stripeEnv: null })));
   });
 
   it("Returns 'BrokenAppResponse' when currency coming from Stripe is not supported", async () => {
@@ -323,7 +323,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    ).resolves.toStrictEqual(err(new BrokenAppResponse({ stripeEnv: null })));
   });
 
   it("Returns 'BrokenAppResponse' when Stripe PaymentIntentsAPI didn't returned required client_secret field", async () => {
@@ -351,7 +351,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    ).resolves.toStrictEqual(err(new BrokenAppResponse({ stripeEnv: null })));
   });
 
   it("Returns 'BrokenAppResponse' when Stripe PaymentIntentsAPI didn't returned required payment id", async () => {
@@ -379,7 +379,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    ).resolves.toStrictEqual(err(new BrokenAppResponse({ stripeEnv: null })));
   });
 
   it("Returns 'BrokenAppResponse' when TransactionRecorderRepo returns error", async () => {
@@ -412,7 +412,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    ).resolves.toStrictEqual(err(new BrokenAppResponse({ stripeEnv: null })));
   });
 
   it.each([

@@ -3,6 +3,7 @@ import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
+import { appContextContainer } from "@/lib/app-context";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
@@ -80,7 +81,12 @@ export class TransactionProcessSessionUseCase {
         error: stripeConfigForThisChannel.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(
+          appContextContainer.getContextValue(),
+          stripeConfigForThisChannel.error,
+        ),
+      );
     }
 
     if (!stripeConfigForThisChannel.value) {
@@ -88,7 +94,7 @@ export class TransactionProcessSessionUseCase {
         channelId: event.sourceObject.channel.id,
       });
 
-      return err(new AppIsNotConfiguredResponse());
+      return err(new AppIsNotConfiguredResponse(appContextContainer.getContextValue()));
     }
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
@@ -117,7 +123,12 @@ export class TransactionProcessSessionUseCase {
         error: recordedTransactionResult.error,
       });
 
-      return err(new MalformedRequestResponse());
+      return err(
+        new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          recordedTransactionResult.error,
+        ),
+      );
     }
 
     if (getPaymentIntentResult.isErr()) {
@@ -134,8 +145,8 @@ export class TransactionProcessSessionUseCase {
             recordedTransactionResult.value.resolvedTransactionFlow,
           ),
           stripePaymentIntentId: paymentIntentIdResult,
-          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           saleorEventAmount: event.action.amount,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -151,7 +162,9 @@ export class TransactionProcessSessionUseCase {
         error: saleorMoneyResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(appContextContainer.getContextValue(), saleorMoneyResult.error),
+      );
     }
 
     return ok(
@@ -164,6 +177,7 @@ export class TransactionProcessSessionUseCase {
         stripePaymentIntentId: paymentIntentIdResult,
         saleorMoney: saleorMoneyResult.value,
         timestamp: createTimestampFromPaymentIntent(getPaymentIntentResult.value),
+        appContext: appContextContainer.getContextValue(),
       }),
     );
   }

@@ -2,6 +2,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { err, ok, Result } from "neverthrow";
 
 import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
+import { appContextContainer } from "@/lib/app-context";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
@@ -70,7 +71,12 @@ export class TransactionChargeRequestedUseCase {
         error: stripeConfigForThisChannel.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(
+          appContextContainer.getContextValue(),
+          stripeConfigForThisChannel.error,
+        ),
+      );
     }
 
     if (!stripeConfigForThisChannel.value) {
@@ -78,7 +84,7 @@ export class TransactionChargeRequestedUseCase {
         channelId,
       });
 
-      return err(new AppIsNotConfiguredResponse());
+      return err(new AppIsNotConfiguredResponse(appContextContainer.getContextValue()));
     }
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
@@ -111,6 +117,7 @@ export class TransactionChargeRequestedUseCase {
           stripePaymentIntentId: paymentIntentIdResult,
           saleorEventAmount: amount,
           error,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -124,7 +131,9 @@ export class TransactionChargeRequestedUseCase {
         error: saleorMoneyResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(appContextContainer.getContextValue(), saleorMoneyResult.error),
+      );
     }
 
     const saleorMoney = saleorMoneyResult.value;
@@ -135,6 +144,7 @@ export class TransactionChargeRequestedUseCase {
         stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         stripePaymentIntentId: paymentIntentIdResult,
         saleorMoney,
+        appContext: appContextContainer.getContextValue(),
       }),
     );
   }

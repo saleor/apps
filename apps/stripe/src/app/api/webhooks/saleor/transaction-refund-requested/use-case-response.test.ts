@@ -12,6 +12,9 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionRefundRequestedUseCaseResponses.Success({
         stripeRefundId: mockedStripeRefundId,
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -28,10 +31,12 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionRefundRequestedUseCaseResponses.Failure({
         transactionResult: new RefundFailureResult(),
-        stripeEnv: "TEST",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorEventAmount: 112.33,
         error: new StripeAPIError("Error from stripe"),
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchReponse = response.getResponse();
 

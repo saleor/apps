@@ -1,5 +1,6 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 
+import { AppContext } from "@/lib/app-context";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
@@ -14,18 +15,21 @@ class Success extends SuccessWebhookResponse {
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly stripeEnv: StripeEnv;
+  readonly message: string;
 
   constructor(args: {
     transactionResult: ChargeSuccessResult;
     saleorMoney: SaleorMoney;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeEnv: StripeEnv;
+    appContext: AppContext;
   }) {
-    super();
+    super(args.appContext);
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.stripeEnv = args.stripeEnv;
+    this.message = this.transactionResult.message;
   }
 
   getResponse(): Response {
@@ -33,7 +37,7 @@ class Success extends SuccessWebhookResponse {
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
-      message: this.transactionResult.message,
+      message: this.formatErrorMessage(),
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.stripePaymentIntentId,
@@ -51,6 +55,7 @@ class Failure extends SuccessWebhookResponse {
   readonly saleorEventAmount: number;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly stripeEnv: StripeEnv;
+  readonly message: string;
 
   constructor(args: {
     error: StripeApiError;
@@ -58,13 +63,15 @@ class Failure extends SuccessWebhookResponse {
     saleorEventAmount: number;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeEnv: StripeEnv;
+    appContext: AppContext;
   }) {
-    super();
+    super(args.appContext, args.error);
     this.error = args.error;
     this.transactionResult = args.transactionResult;
     this.saleorEventAmount = args.saleorEventAmount;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.stripeEnv = args.stripeEnv;
+    this.message = this.error.merchantMessage;
   }
 
   getResponse(): Response {
@@ -73,7 +80,7 @@ class Failure extends SuccessWebhookResponse {
       pspReference: this.stripePaymentIntentId,
       // TODO: remove this after Saleor allows to amount to be optional
       amount: this.saleorEventAmount,
-      message: this.error.merchantMessage,
+      message: this.formatErrorMessage(),
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.stripePaymentIntentId,

@@ -16,6 +16,9 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
         stripePaymentIntentId: mockedStripePaymentIntentId,
         stripeEnv: "TEST",
         saleorMoney: getMockedSaleorMoney(),
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -43,6 +46,9 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
         stripePaymentIntentId: mockedStripePaymentIntentId,
         error: new StripeAPIError("Error from stripe"),
         saleorEventAmount: 112.33,
+        appContext: {
+          stripeEnv: null,
+        },
       });
       const fetchReponse = successResponse.getResponse();
 

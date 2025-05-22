@@ -2,6 +2,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { err, ok, Result } from "neverthrow";
 
 import { TransactionCancelationRequestedEventFragment } from "@/generated/graphql";
+import { appContextContainer } from "@/lib/app-context";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
@@ -71,7 +72,12 @@ export class TransactionCancelationRequestedUseCase {
         error: stripeConfigForThisChannel.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(
+          appContextContainer.getContextValue(),
+          stripeConfigForThisChannel.error,
+        ),
+      );
     }
 
     if (!stripeConfigForThisChannel.value) {
@@ -79,7 +85,7 @@ export class TransactionCancelationRequestedUseCase {
         channelId,
       });
 
-      return err(new AppIsNotConfiguredResponse());
+      return err(new AppIsNotConfiguredResponse(appContextContainer.getContextValue()));
     }
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
@@ -113,6 +119,7 @@ export class TransactionCancelationRequestedUseCase {
           stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           transactionResult: new CancelFailureResult(),
           error,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -126,7 +133,9 @@ export class TransactionCancelationRequestedUseCase {
         error: saleorMoneyResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(appContextContainer.getContextValue(), saleorMoneyResult.error),
+      );
     }
 
     return ok(
@@ -136,6 +145,7 @@ export class TransactionCancelationRequestedUseCase {
         stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         transactionResult: new CancelSuccessResult(),
         timestamp: createTimestampFromPaymentIntent(cancelPaymentIntentResult.value),
+        appContext: appContextContainer.getContextValue(),
       }),
     );
   }

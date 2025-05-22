@@ -62,7 +62,12 @@ export class PaymentGatewayInitializeSessionUseCase {
         stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
       });
 
-      return ok(new PaymentGatewayInitializeSessionUseCaseResponses.Success({ pk }));
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Success({
+          pk,
+          appContext: appContextContainer.getContextValue(),
+        }),
+      );
     }
 
     if (stripeConfigForThisChannel.isErr()) {

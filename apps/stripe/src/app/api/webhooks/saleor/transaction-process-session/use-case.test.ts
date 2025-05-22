@@ -217,7 +217,13 @@ describe("TransactionProcessSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
       }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    ).resolves.toStrictEqual(
+      err(
+        new BrokenAppResponse({
+          stripeEnv: null,
+        }),
+      ),
+    );
   });
 
   it("Throws error when Stripe Payment Intent status is not supported", async () => {

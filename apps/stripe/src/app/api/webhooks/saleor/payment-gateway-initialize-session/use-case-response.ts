@@ -1,18 +1,20 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
+import { AppContext } from "@/lib/app-context";
 import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 
 class Success extends SuccessWebhookResponse {
   readonly pk: StripePublishableKey;
+  message: string = ""; // todo not cool, maybe drop inheritance and compose
 
   private static ResponseDataSchema = z.object({
     stripePublishableKey: z.string(),
   });
 
-  constructor(args: { pk: StripePublishableKey }) {
-    super();
+  constructor(args: { pk: StripePublishableKey; appContext: AppContext }) {
+    super(args.appContext);
     this.pk = args.pk;
   }
 

@@ -171,6 +171,7 @@ export class TransactionInitializeSessionUseCase {
           transactionResult: this.resolveErrorTransactionResult(saleorTransactionFlow),
           saleorEventAmount: event.action.amount,
           error: eventDataResult.error,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -250,6 +251,7 @@ export class TransactionInitializeSessionUseCase {
           transactionResult: this.resolveErrorTransactionResult(resolvedTransactionFlow),
           saleorEventAmount: event.action.amount,
           error: mappedError,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -316,6 +318,7 @@ export class TransactionInitializeSessionUseCase {
         stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         transactionResult,
         stripeClientSecret,
+        appContext: appContextContainer.getContextValue(),
       }),
     );
   }

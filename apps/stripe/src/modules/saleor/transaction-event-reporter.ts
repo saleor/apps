@@ -21,7 +21,7 @@ export type TransactionEventReportInput = {
   time: string;
   type: TransactionEventTypeEnum;
   actions: readonly TransactionActionEnum[];
-  externalUrl: string;
+  externalUrl?: string;
 };
 
 export type PossibleTransactionEventReportErrors = InstanceType<typeof AlreadyReportedError>;

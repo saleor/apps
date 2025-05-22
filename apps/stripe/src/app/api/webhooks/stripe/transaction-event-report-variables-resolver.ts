@@ -46,7 +46,7 @@ export class TransactionEventReportVariablesResolver {
   readonly transactionResult: WebhookTransactionResult;
   readonly saleorMoney: SaleorMoney;
   readonly stripeObjectId: StripePaymentIntentId | StripeRefundId;
-  readonly externalUrl: string;
+  readonly externalUrl?: string;
 
   constructor(args: {
     saleorTransactionId: SaleorTransationId;
@@ -54,7 +54,7 @@ export class TransactionEventReportVariablesResolver {
     transactionResult: WebhookTransactionResult;
     saleorMoney: SaleorMoney;
     stripeObjectId: StripePaymentIntentId | StripeRefundId;
-    externalUrl: string;
+    externalUrl: string | undefined;
   }) {
     this.timestamp = args.timestamp;
     this.saleorTransactionId = args.saleorTransactionId;
