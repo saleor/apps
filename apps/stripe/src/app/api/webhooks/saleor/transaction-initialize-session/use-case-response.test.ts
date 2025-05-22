@@ -24,12 +24,11 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new ChargeActionRequiredResult(
           createStripePaymentIntentStatus("requires_payment_method"),
         ),
-        stripeEnv: "LIVE",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(10000),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
         appContext: {
-          stripeEnv: "TEST",
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = response.getResponse();
@@ -58,12 +57,12 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new AuthorizationActionRequiredResult(
           createStripePaymentIntentStatus("requires_payment_method"),
         ),
-        stripeEnv: "TEST",
+
         stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(10000),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
         appContext: {
-          stripeEnv: "TEST",
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = response.getResponse();
@@ -77,7 +76,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               "stripeClientSecret": "stripe-client-secret",
             },
           },
-          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent requires payment method",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_ACTION_REQUIRED",
@@ -93,7 +92,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
         appContext: {
-          stripeEnv: "TEST",
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = response.getResponse();
@@ -124,7 +123,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
         appContext: {
-          stripeEnv: "TEST",
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = successResponse.getResponse();
@@ -157,7 +156,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
           cause: new Error("Inner error"),
         }),
         appContext: {
-          stripeEnv: "TEST",
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = successResponse.getResponse();
@@ -190,7 +189,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
         appContext: {
-          stripeEnv: "TEST",
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = successResponse.getResponse();
@@ -221,7 +220,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
         appContext: {
-          stripeEnv: "TEST",
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = successResponse.getResponse();
@@ -252,7 +251,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         saleorEventAmount: 100.123,
         error: new StripeAPIError("Error from Stripe API"),
         appContext: {
-          stripeEnv: "TEST",
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = successResponse.getResponse();

@@ -3,6 +3,10 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
+import {
+  MalformedRequestResponse,
+  UnhandledErrorResponse,
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
@@ -10,10 +14,6 @@ import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import {
-  MalformedRequestResponse,
-  UnhandledErrorResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 
 import { withRecipientVerification } from "../with-recipient-verification";

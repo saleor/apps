@@ -14,7 +14,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
       const successResponse = new TransactionChargeRequestedUseCaseResponses.Success({
         transactionResult: new ChargeSuccessResult(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "TEST",
+        stripeEnv: "LIVE",
         saleorMoney: getMockedSaleorMoney(),
         appContext: {
           stripeEnv: null,
@@ -29,7 +29,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
             "REFUND",
           ],
           "amount": 10,
-          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent has been successful",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_SUCCESS",

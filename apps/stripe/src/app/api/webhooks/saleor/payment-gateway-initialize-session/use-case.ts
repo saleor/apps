@@ -1,14 +1,14 @@
 import { err, ok, Result } from "neverthrow";
 
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
 
 import {
   PaymentGatewayInitializeSessionUseCaseResponses,
@@ -55,7 +55,12 @@ export class PaymentGatewayInitializeSessionUseCase {
           channelId,
         });
 
-        return err(new AppIsNotConfiguredResponse(appContextContainer.getContextValue()));
+        return err(
+          new AppIsNotConfiguredResponse(
+            appContextContainer.getContextValue(),
+            new BaseError("Config for channel not found"),
+          ),
+        );
       }
 
       appContextContainer.set({

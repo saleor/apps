@@ -1,10 +1,10 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
+import { createFailureWebhookResponseDataSchema } from "@/app/api/webhooks/saleor/saleor-webhook-response-schema";
+import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { AppContext } from "@/lib/app-context";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
-import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-webhook-response-schema";
-import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import {
   StripeApiError,
@@ -50,7 +50,6 @@ class Success extends SuccessWebhookResponse {
     saleorMoney: SaleorMoney;
     timestamp: Date | null;
     stripePaymentIntentId: StripePaymentIntentId;
-    stripeEnv: StripeEnv;
     appContext: AppContext;
   }) {
     super(args.appContext);
@@ -67,7 +66,7 @@ class Success extends SuccessWebhookResponse {
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
-      message: this.formatErrorMessage(),
+      message: this.messageFormatter.formatMessage(this.message),
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.stripePaymentIntentId,
@@ -114,7 +113,7 @@ class Failure extends SuccessWebhookResponse {
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
       result: this.transactionResult.result,
-      message: this.formatErrorMessage(),
+      message: this.messageFormatter.formatMessage(this.message, this.error),
       amount: this.saleorEventAmount,
       pspReference: this.stripePaymentIntentId,
       externalUrl: generatePaymentIntentStripeDashboardUrl(

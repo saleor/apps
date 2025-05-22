@@ -1,52 +1,27 @@
+import { ResponseMessageFormatter } from "@/app/api/webhooks/saleor/response-message-formatter";
 import { AppContext } from "@/lib/app-context";
 
 export abstract class SuccessWebhookResponse {
   statusCode = 200;
   appContext: AppContext;
-  error?: Error;
-  abstract message: string;
+  messageFormatter: ResponseMessageFormatter;
 
-  constructor(appContext: AppContext, error?: Error) {
+  protected constructor(appContext: AppContext) {
     this.appContext = appContext;
-    this.error = error;
+    this.messageFormatter = new ResponseMessageFormatter(appContext);
   }
-
-  protected verboseErrorEnabled = () => this.appContext.stripeEnv === "TEST";
-
-  protected formatErrorMessage = (overwriteRootMessage?: string) => {
-    if (this.verboseErrorEnabled() && this.error?.message) {
-      // todo probably should restore entire chain
-      return `${overwriteRootMessage ?? this.message}: ${this.error?.message}`;
-    }
-
-    return this.message;
-  };
 }
 
 export abstract class ErrorWebhookResponse {
   statusCode = 500;
+  error: Error;
   appContext: AppContext;
-  error?: Error;
-  abstract message: string;
+  messageFormatter: ResponseMessageFormatter;
 
-  /**
-   * Allow to show verbose error message in test environment
-   * todo: add docs
-   */
-  protected verboseErrorEnabled = () => this.appContext.stripeEnv === "TEST";
-
-  protected formatErrorMessage = () => {
-    if (this.verboseErrorEnabled() && this.error?.message) {
-      // todo probably should restore entire chain
-      return `${this.message}: ${this.error?.message}`;
-    }
-
-    return this.message;
-  };
-
-  constructor(appContext: AppContext, error?: Error) {
-    this.appContext = appContext;
+  constructor(appContext: AppContext, error: Error) {
     this.error = error;
+    this.appContext = appContext;
+    this.messageFormatter = new ResponseMessageFormatter(appContext);
   }
 }
 
@@ -56,7 +31,7 @@ export class BrokenAppResponse extends ErrorWebhookResponse {
   getResponse() {
     return Response.json(
       {
-        message: this.formatErrorMessage(),
+        message: this.messageFormatter.formatMessage(this.message),
       },
       { status: this.statusCode },
     );
@@ -83,7 +58,7 @@ export class UnhandledErrorResponse extends ErrorWebhookResponse {
   getResponse() {
     return Response.json(
       {
-        message: this.formatErrorMessage(),
+        message: this.messageFormatter.formatMessage(this.message, this.error),
       },
       { status: this.statusCode },
     );
@@ -96,7 +71,7 @@ export class MalformedRequestResponse extends ErrorWebhookResponse {
   getResponse() {
     return Response.json(
       {
-        message: this.formatErrorMessage(),
+        message: this.messageFormatter.formatMessage(this.message, this.error),
       },
       { status: this.statusCode },
     );

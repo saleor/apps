@@ -1,18 +1,19 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { err, ok, Result } from "neverthrow";
 
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+  MalformedRequestResponse,
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
 import { appContextContainer } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  MalformedRequestResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
 import {
   getAmountFromRequestedEventPayload,
   getChannelIdFromRequestedEventPayload,
@@ -84,7 +85,12 @@ export class TransactionChargeRequestedUseCase {
         channelId,
       });
 
-      return err(new AppIsNotConfiguredResponse(appContextContainer.getContextValue()));
+      return err(
+        new AppIsNotConfiguredResponse(
+          appContextContainer.getContextValue(),
+          new BaseError("Config for channel not found"),
+        ),
+      );
     }
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;

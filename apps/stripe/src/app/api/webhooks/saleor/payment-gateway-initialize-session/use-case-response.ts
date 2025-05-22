@@ -1,8 +1,8 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
+import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { AppContext } from "@/lib/app-context";
-import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 
 class Success extends SuccessWebhookResponse {

@@ -16,7 +16,7 @@ describe("TransactionCancellationRequestedUseCaseResponses", () => {
       const response = new TransactionCancelationRequestedUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult: new CancelSuccessResult(),
-        stripeEnv: "TEST",
+        stripeEnv: "LIVE",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         timestamp: new Date(2023, 0, 1),
         appContext: {
@@ -31,7 +31,7 @@ describe("TransactionCancellationRequestedUseCaseResponses", () => {
         {
           "actions": [],
           "amount": 10,
-          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent was cancelled",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CANCEL_SUCCESS",

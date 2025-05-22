@@ -3,8 +3,14 @@ import { captureException } from "@sentry/nextjs";
 import { err, fromThrowable, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+  MalformedRequestResponse,
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { appContextContainer } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
@@ -17,11 +23,6 @@ import {
   SaleorTransationFlow,
 } from "@/modules/saleor/saleor-transaction-flow";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  MalformedRequestResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import {
   createStripeClientSecret,
@@ -200,7 +201,12 @@ export class TransactionInitializeSessionUseCase {
         channelId: event.sourceObject.channel.id,
       });
 
-      return err(new AppIsNotConfiguredResponse(appContextContainer.getContextValue()));
+      return err(
+        new AppIsNotConfiguredResponse(
+          appContextContainer.getContextValue(),
+          new BaseError("Config not found"),
+        ),
+      );
     }
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
@@ -315,7 +321,6 @@ export class TransactionInitializeSessionUseCase {
       new TransactionInitializeSessionUseCaseResponses.Success({
         saleorMoney,
         stripePaymentIntentId,
-        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         transactionResult,
         stripeClientSecret,
         appContext: appContextContainer.getContextValue(),
