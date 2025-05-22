@@ -111,7 +111,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - provided payment method is not supported",
+          "message": "Payment intent failed",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -142,7 +142,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - storefront sent invalid data",
+          "message": "Payment intent failed",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -175,7 +175,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "There is a problem with the request to Stripe API",
+          "message": "Payment intent failed",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -209,7 +209,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "There is a problem with the request to Stripe API: Inner error
+          "message": "Payment intent failed: Inner error
         Error from Stripe API",
           "result": "CHARGE_FAILURE",
         }
@@ -243,7 +243,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - provided payment method is not supported",
+          "message": "Payment intent failed",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);
@@ -274,7 +274,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - storefront sent invalid data",
+          "message": "Payment intent failed",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);
@@ -305,7 +305,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "There is a problem with the request to Stripe API",
+          "message": "Payment intent failed",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);

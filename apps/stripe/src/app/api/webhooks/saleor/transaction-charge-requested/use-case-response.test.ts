@@ -58,7 +58,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
           ],
           "amount": 112.33,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-          "message": "There is a problem with the request to Stripe API",
+          "message": "Payment intent failed",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_FAILURE",
         }
