@@ -10,7 +10,7 @@ describe("PaymentGatewayInitializeSessionUseCaseResponses", () => {
       const successResponse = new PaymentGatewayInitializeSessionUseCaseResponses.Success({
         pk: mockedStripePublishableKey,
         appContext: {
-          stripeEnv: null,
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = successResponse.getResponse();

@@ -122,7 +122,6 @@ export class TransactionCancelationRequestedUseCase {
           // TODO: remove this when Saleor won't require amount in the event
           saleorEventAmount: 0,
           stripePaymentIntentId,
-          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           transactionResult: new CancelFailureResult(),
           error,
           appContext: appContextContainer.getContextValue(),
@@ -148,7 +147,6 @@ export class TransactionCancelationRequestedUseCase {
       new TransactionCancelationRequestedUseCaseResponses.Success({
         saleorMoney: saleorMoneyResult.value,
         stripePaymentIntentId,
-        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         transactionResult: new CancelSuccessResult(),
         timestamp: createTimestampFromPaymentIntent(cancelPaymentIntentResult.value),
         appContext: appContextContainer.getContextValue(),

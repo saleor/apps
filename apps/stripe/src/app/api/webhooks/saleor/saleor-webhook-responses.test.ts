@@ -10,7 +10,10 @@ import { BaseError } from "@/lib/errors";
 
 describe("BrokenAppResponse", () => {
   it("getResponse() returns valid Response with status 500 and message with error reason", async () => {
-    const getConfigResponse = new BrokenAppResponse({ stripeEnv: null }, new Error("Inner error"));
+    const getConfigResponse = new BrokenAppResponse(
+      { stripeEnv: "LIVE" },
+      new Error("Inner error"),
+    );
     const fetchResponse = getConfigResponse.getResponse();
 
     expect(fetchResponse.status).toBe(500);
@@ -25,7 +28,7 @@ describe("BrokenAppResponse", () => {
 describe("AppIsNotConfiguredResponse", () => {
   it("getResponse() returns valid Response with status 400 and message with error reason", async () => {
     const missingConfigResponse = new AppIsNotConfiguredResponse(
-      { stripeEnv: null },
+      { stripeEnv: "LIVE" },
       new Error("Inner error"),
     );
     const fetchResponse = missingConfigResponse.getResponse();
@@ -42,7 +45,7 @@ describe("AppIsNotConfiguredResponse", () => {
 describe("UnhandledErrorResponse", () => {
   it("getResponse() returns valid Response with status 500 and message with error reason", async () => {
     const unhandledResponse = new UnhandledErrorResponse(
-      { stripeEnv: null },
+      { stripeEnv: "LIVE" },
       new Error("Inner error"),
     );
     const fetchResponse = unhandledResponse.getResponse();
@@ -59,7 +62,7 @@ describe("UnhandledErrorResponse", () => {
 describe("MalformedRequestResponse", () => {
   it("getResponse() returns valid Response with status 500 and message with error reason", async () => {
     const saleorApiUrlResponse = new MalformedRequestResponse(
-      { stripeEnv: null },
+      { stripeEnv: "LIVE" },
       new Error("Inner error"),
     );
     const fetchResponse = saleorApiUrlResponse.getResponse();

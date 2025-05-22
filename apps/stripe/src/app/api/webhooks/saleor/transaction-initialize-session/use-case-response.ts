@@ -39,7 +39,6 @@ class Success extends SuccessWebhookResponse {
   readonly stripeClientSecret: StripeClientSecret;
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly message: string;
 
   private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
     z.object({
@@ -59,7 +58,6 @@ class Success extends SuccessWebhookResponse {
     this.stripeClientSecret = args.stripeClientSecret;
     this.saleorMoney = args.saleorMoney;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
-    this.message = this.transactionResult.message;
   }
 
   getResponse() {
@@ -87,7 +85,6 @@ class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult | AuthorizationFailureResult;
   readonly saleorEventAmount: number;
   readonly error: StripeApiError | TransactionInitializeSessionEventDataError;
-  readonly message: string;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
@@ -113,14 +110,13 @@ class Failure extends SuccessWebhookResponse {
     this.transactionResult = args.transactionResult;
     this.error = args.error;
     this.saleorEventAmount = args.saleorEventAmount;
-    this.message = this.error.merchantMessage;
   }
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
       // We don't have pspReference in this case or actions because there is no payment intent created
       result: this.transactionResult.result,
-      message: this.messageFormatter.formatMessage(this.message, this.error),
+      message: this.messageFormatter.formatMessage(this.transactionResult.message, this.error),
       amount: this.saleorEventAmount,
       data: Failure.ResponseDataSchema.parse({
         paymentIntent: {

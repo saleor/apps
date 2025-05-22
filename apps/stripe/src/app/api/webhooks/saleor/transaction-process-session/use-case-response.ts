@@ -42,7 +42,6 @@ class Success extends SuccessWebhookResponse {
   readonly saleorMoney: SaleorMoney;
   readonly timestamp: Date | null;
   readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly message: string;
 
   constructor(args: {
     transactionResult: TransactionResult;
@@ -56,7 +55,6 @@ class Success extends SuccessWebhookResponse {
     this.saleorMoney = args.saleorMoney;
     this.timestamp = args.timestamp;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
-    this.message = this.transactionResult.message;
   }
 
   getResponse(): Response {
@@ -65,7 +63,7 @@ class Success extends SuccessWebhookResponse {
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
-      message: this.messageFormatter.formatMessage(this.message),
+      message: this.messageFormatter.formatMessage(this.transactionResult.message),
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.stripePaymentIntentId,
@@ -83,7 +81,6 @@ class Failure extends SuccessWebhookResponse {
   readonly error: StripeApiError;
   readonly saleorEventAmount: number;
   readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly message: string;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
@@ -106,13 +103,12 @@ class Failure extends SuccessWebhookResponse {
     this.error = args.error;
     this.saleorEventAmount = args.saleorEventAmount;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
-    this.message = this.error.merchantMessage;
   }
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
       result: this.transactionResult.result,
-      message: this.messageFormatter.formatMessage(this.message, this.error),
+      message: this.messageFormatter.formatMessage(this.error.merchantMessage, this.error),
       amount: this.saleorEventAmount,
       pspReference: this.stripePaymentIntentId,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
@@ -124,7 +120,7 @@ class Failure extends SuccessWebhookResponse {
           errors: [
             {
               code: this.error.publicCode,
-              message: this.error.publicMessage,
+              message: this.messageFormatter.formatMessage(this.error.publicMessage, this.error),
             },
           ],
         },

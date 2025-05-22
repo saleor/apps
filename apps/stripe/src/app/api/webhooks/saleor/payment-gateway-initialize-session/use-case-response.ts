@@ -7,7 +7,6 @@ import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 
 class Success extends SuccessWebhookResponse {
   readonly pk: StripePublishableKey;
-  message: string = ""; // todo not cool, maybe drop inheritance and compose
 
   private static ResponseDataSchema = z.object({
     stripePublishableKey: z.string(),

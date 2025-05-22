@@ -119,7 +119,6 @@ export class TransactionChargeRequestedUseCase {
       return ok(
         new TransactionChargeRequestedUseCaseResponses.Failure({
           transactionResult: new ChargeFailureResult(),
-          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           stripePaymentIntentId: paymentIntentIdResult,
           saleorEventAmount: amount,
           error,
@@ -147,7 +146,6 @@ export class TransactionChargeRequestedUseCase {
     return ok(
       new TransactionChargeRequestedUseCaseResponses.Success({
         transactionResult: new ChargeSuccessResult(),
-        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         stripePaymentIntentId: paymentIntentIdResult,
         saleorMoney,
         appContext: appContextContainer.getContextValue(),

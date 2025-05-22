@@ -64,7 +64,7 @@ const handler = transactionCancelationRequestedWebhookDefinition.createHandler(
         (result) => {
           logger.info("Successfully processed webhook request", {
             httpsStatusCode: result.statusCode,
-            stripeEnv: result.stripeEnv,
+            stripeEnv: result.appContext.stripeEnv,
             transactionResult: result.transactionResult.result,
           });
 

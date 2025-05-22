@@ -14,10 +14,9 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
       const successResponse = new TransactionChargeRequestedUseCaseResponses.Success({
         transactionResult: new ChargeSuccessResult(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "LIVE",
         saleorMoney: getMockedSaleorMoney(),
         appContext: {
-          stripeEnv: null,
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = successResponse.getResponse();
@@ -42,12 +41,11 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const successResponse = new TransactionChargeRequestedUseCaseResponses.Failure({
         transactionResult: new ChargeFailureResult(),
-        stripeEnv: "LIVE",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         error: new StripeAPIError("Error from stripe"),
         saleorEventAmount: 112.33,
         appContext: {
-          stripeEnv: null,
+          stripeEnv: "LIVE",
         },
       });
       const fetchReponse = successResponse.getResponse();
