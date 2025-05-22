@@ -1,9 +1,33 @@
+import { AppContext } from "@/lib/app-context";
+
 export abstract class SuccessWebhookResponse {
   statusCode = 200;
 }
 
 export abstract class ErrorWebhookResponse {
   statusCode = 500;
+  appContext: AppContext;
+  error?: Error;
+  abstract message: string;
+
+  /**
+   * Allow to show verbose error message in test environment
+   * todo: add docs
+   */
+  protected verboseErrorEnabled = () => this.appContext.stripeEnv === "TEST";
+
+  protected formatErrorMessage = () => {
+    if (this.verboseErrorEnabled() && this.error?.message) {
+      return `${this.message}: ${this.error?.message}`;
+    }
+
+    return this.message;
+  };
+
+  constructor(appContext: AppContext, error?: Error) {
+    this.appContext = appContext;
+    this.error = error;
+  }
 }
 
 export class BrokenAppResponse extends ErrorWebhookResponse {
@@ -12,7 +36,7 @@ export class BrokenAppResponse extends ErrorWebhookResponse {
   getResponse() {
     return Response.json(
       {
-        message: this.message,
+        message: this.formatErrorMessage(),
       },
       { status: this.statusCode },
     );
@@ -36,14 +60,10 @@ export class AppIsNotConfiguredResponse extends ErrorWebhookResponse {
 export class UnhandledErrorResponse extends ErrorWebhookResponse {
   readonly message = "Unhandled error";
 
-  constructor() {
-    super();
-  }
-
   getResponse() {
     return Response.json(
       {
-        message: this.message,
+        message: this.formatErrorMessage(),
       },
       { status: this.statusCode },
     );
@@ -56,7 +76,7 @@ export class MalformedRequestResponse extends ErrorWebhookResponse {
   getResponse() {
     return Response.json(
       {
-        message: this.message,
+        message: this.formatErrorMessage(),
       },
       { status: this.statusCode },
     );

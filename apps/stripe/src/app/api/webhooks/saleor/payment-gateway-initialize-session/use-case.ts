@@ -1,5 +1,6 @@
 import { err, ok, Result } from "neverthrow";
 
+import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
@@ -54,8 +55,12 @@ export class PaymentGatewayInitializeSessionUseCase {
           channelId,
         });
 
-        return err(new AppIsNotConfiguredResponse());
+        return err(new AppIsNotConfiguredResponse(appContextContainer.getContextValue()));
       }
+
+      appContextContainer.set({
+        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+      });
 
       return ok(new PaymentGatewayInitializeSessionUseCaseResponses.Success({ pk }));
     }
@@ -65,7 +70,12 @@ export class PaymentGatewayInitializeSessionUseCase {
         error: stripeConfigForThisChannel.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(
+          appContextContainer.getContextValue(),
+          stripeConfigForThisChannel.error,
+        ),
+      );
     }
 
     throw new PaymentGatewayInitializeSessionUseCase.UseCaseError("Leaky logic, should not happen");
