@@ -3,6 +3,8 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
+import { appContextContainer } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
@@ -43,7 +45,10 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
 
       if (saleorApiUrlResult.isErr()) {
         captureException(saleorApiUrlResult.error);
-        const response = new MalformedRequestResponse();
+        const response = new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          saleorApiUrlResult.error,
+        );
 
         return response.getResponse();
       }
@@ -77,7 +82,10 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
       captureException(error);
       logger.error("Unhandled error", { error: error });
 
-      const response = new UnhandledErrorResponse();
+      const response = new UnhandledErrorResponse(
+        appContextContainer.getContextValue(),
+        BaseError.normalize(error),
+      );
 
       return response.getResponse();
     }
@@ -85,4 +93,8 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
 );
 
 // TODO: write integration test for this route
-export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
+export const POST = compose(
+  withLoggerContext,
+  appContextContainer.wrapRequest,
+  withSpanAttributesAppRouter,
+)(handler);

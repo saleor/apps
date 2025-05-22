@@ -1,6 +1,7 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
+import { AppContext } from "@/lib/app-context";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   createFailureWebhookResponseDataSchema,
@@ -40,6 +41,7 @@ class Success extends SuccessWebhookResponse {
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly stripeEnv: StripeEnv;
+  readonly message: string;
 
   private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
     z.object({
@@ -53,13 +55,15 @@ class Success extends SuccessWebhookResponse {
     saleorMoney: SaleorMoney;
     stripePaymentIntentId: StripePaymentIntentId;
     stripeEnv: StripeEnv;
+    appContext: AppContext;
   }) {
-    super();
+    super(args.appContext);
     this.transactionResult = args.transactionResult;
     this.stripeClientSecret = args.stripeClientSecret;
     this.saleorMoney = args.saleorMoney;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.stripeEnv = args.stripeEnv;
+    this.message = this.transactionResult.message;
   }
 
   getResponse() {
@@ -87,6 +91,7 @@ class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult | AuthorizationFailureResult;
   readonly saleorEventAmount: number;
   readonly error: StripeApiError | TransactionInitializeSessionEventDataError;
+  readonly message: string;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
@@ -106,25 +111,27 @@ class Failure extends SuccessWebhookResponse {
     transactionResult: ChargeFailureResult | AuthorizationFailureResult;
     error: StripeApiError | TransactionInitializeSessionEventDataError;
     saleorEventAmount: number;
+    appContext: AppContext;
   }) {
-    super();
+    super(args.appContext, args.error);
     this.transactionResult = args.transactionResult;
     this.error = args.error;
     this.saleorEventAmount = args.saleorEventAmount;
+    this.message = this.error.merchantMessage;
   }
 
   getResponse() {
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
       // We don't have pspReference in this case or actions because there is no payment intent created
       result: this.transactionResult.result,
-      message: this.error.merchantMessage,
+      message: this.formatErrorMessage(),
       amount: this.saleorEventAmount,
       data: Failure.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [
             {
               code: this.error.publicCode,
-              message: this.error.publicMessage,
+              message: this.formatErrorMessage(this.error.publicMessage),
             },
           ],
         },

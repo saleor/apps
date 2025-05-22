@@ -4,6 +4,7 @@ import { err, fromThrowable, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { appContextContainer } from "@/lib/app-context";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
@@ -185,7 +186,12 @@ export class TransactionInitializeSessionUseCase {
         error: stripeConfigForThisChannel.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(
+          appContextContainer.getContextValue(),
+          stripeConfigForThisChannel.error,
+        ),
+      );
     }
 
     if (!stripeConfigForThisChannel.value) {
@@ -193,7 +199,7 @@ export class TransactionInitializeSessionUseCase {
         channelId: event.sourceObject.channel.id,
       });
 
-      return err(new AppIsNotConfiguredResponse());
+      return err(new AppIsNotConfiguredResponse(appContextContainer.getContextValue()));
     }
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
@@ -222,7 +228,12 @@ export class TransactionInitializeSessionUseCase {
     if (stripePaymentIntentParamsResult.isErr()) {
       captureException(stripePaymentIntentParamsResult.error);
 
-      return err(new MalformedRequestResponse());
+      return err(
+        new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          stripePaymentIntentParamsResult.error,
+        ),
+      );
     }
 
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent(
@@ -257,7 +268,9 @@ export class TransactionInitializeSessionUseCase {
         error: mappedResponseResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(appContextContainer.getContextValue(), mappedResponseResult.error),
+      );
     }
 
     const [saleorMoney, stripePaymentIntentId, stripeClientSecret, stripeStatus] =
@@ -284,7 +297,7 @@ export class TransactionInitializeSessionUseCase {
         error: recordResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(new BrokenAppResponse(appContextContainer.getContextValue(), recordResult.error));
     }
 
     this.logger.info("Wrote Transaction to DynamoDB", {

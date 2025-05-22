@@ -2,6 +2,25 @@ import { AppContext } from "@/lib/app-context";
 
 export abstract class SuccessWebhookResponse {
   statusCode = 200;
+  appContext: AppContext;
+  error?: Error;
+  abstract message: string;
+
+  constructor(appContext: AppContext, error?: Error) {
+    this.appContext = appContext;
+    this.error = error;
+  }
+
+  protected verboseErrorEnabled = () => this.appContext.stripeEnv === "TEST";
+
+  protected formatErrorMessage = (overwriteRootMessage?: string) => {
+    if (this.verboseErrorEnabled() && this.error?.message) {
+      // todo probably should restore entire chain
+      return `${overwriteRootMessage ?? this.message}: ${this.error?.message}`;
+    }
+
+    return this.message;
+  };
 }
 
 export abstract class ErrorWebhookResponse {
@@ -18,6 +37,7 @@ export abstract class ErrorWebhookResponse {
 
   protected formatErrorMessage = () => {
     if (this.verboseErrorEnabled() && this.error?.message) {
+      // todo probably should restore entire chain
       return `${this.message}: ${this.error?.message}`;
     }
 

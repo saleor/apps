@@ -28,6 +28,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(10000),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
+        appContext: {
+          stripeEnv: "TEST",
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -59,6 +62,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(10000),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
+        appContext: {
+          stripeEnv: "TEST",
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -86,6 +92,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new ChargeFailureResult(),
         saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
+        appContext: {
+          stripeEnv: "TEST",
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -114,6 +123,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new ChargeFailureResult(),
         saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
+        appContext: {
+          stripeEnv: "TEST",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -141,7 +153,12 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
         transactionResult: new ChargeFailureResult(),
         saleorEventAmount: 100.123,
-        error: new StripeAPIError("Error from Stripe API"),
+        error: new StripeAPIError("Error from Stripe API", {
+          cause: new Error("Inner error"),
+        }),
+        appContext: {
+          stripeEnv: "TEST",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -172,6 +189,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new AuthorizationFailureResult(),
         saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
+        appContext: {
+          stripeEnv: "TEST",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -200,6 +220,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new AuthorizationFailureResult(),
         saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
+        appContext: {
+          stripeEnv: "TEST",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -228,6 +251,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new AuthorizationFailureResult(),
         saleorEventAmount: 100.123,
         error: new StripeAPIError("Error from Stripe API"),
+        appContext: {
+          stripeEnv: "TEST",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
