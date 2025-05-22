@@ -31,7 +31,7 @@ export class BrokenAppResponse extends ErrorWebhookResponse {
   getResponse() {
     return Response.json(
       {
-        message: this.messageFormatter.formatMessage(this.message),
+        message: this.messageFormatter.formatMessage(this.message, this.error),
       },
       { status: this.statusCode },
     );
@@ -45,7 +45,7 @@ export class AppIsNotConfiguredResponse extends ErrorWebhookResponse {
   getResponse() {
     return Response.json(
       {
-        message: this.message,
+        message: this.messageFormatter.formatMessage(this.message, this.error),
       },
       { status: this.statusCode },
     );

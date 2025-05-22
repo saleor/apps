@@ -17,7 +17,7 @@ import {
 import { ParseError, UnsupportedPaymentMethodError } from "./event-data-parser";
 import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
-describe("TransactionInitalizeSessionUseCaseResponses", () => {
+describe("TransactionInitializeSessionUseCaseResponses", () => {
   describe("Success with ChargeActionRequired as result", () => {
     it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe client secret", async () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Success({
@@ -176,6 +176,41 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
             },
           },
           "message": "There is a problem with the request to Stripe API",
+          "result": "CHARGE_FAILURE",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with status 200 and message with failure reason and StripeCreatePaymentIntentError error inside data object - TEST env passes Stripe error details", async () => {
+      const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
+        transactionResult: new ChargeFailureResult(),
+        saleorEventAmount: 100.123,
+        error: new StripeAPIError("Error from Stripe API", {
+          cause: new Error("Inner error"),
+        }),
+        appContext: {
+          stripeEnv: "TEST",
+        },
+      });
+      const fetchReponse = successResponse.getResponse();
+
+      expect(fetchReponse.status).toBe(200);
+      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+        {
+          "amount": 100.123,
+          "data": {
+            "paymentIntent": {
+              "errors": [
+                {
+                  "code": "StripeApiError",
+                  "message": "There is a problem with the request to Stripe API: Inner error
+        Error from Stripe API",
+                },
+              ],
+            },
+          },
+          "message": "There is a problem with the request to Stripe API: Inner error
+        Error from Stripe API",
           "result": "CHARGE_FAILURE",
         }
       `);
