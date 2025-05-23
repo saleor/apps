@@ -83,16 +83,21 @@ export class TransactionInitializeSessionUseCase {
   }
 
   private prepareStripeCreatePaymentIntentParams(args: {
-    eventAction: TransactionInitializeSessionEventFragment["action"];
+    event: TransactionInitializeSessionEventFragment;
     eventData: TransactionInitializeSessionEventData;
     selectedPaymentMethodOptions: Stripe.PaymentIntentCreateParams.PaymentMethodOptions;
     idempotencyKey: string;
   }): Result<CreatePaymentIntentArgs, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
-      amount: args.eventAction.amount,
-      currency: args.eventAction.currency,
+      amount: args.event.action.amount,
+      currency: args.event.action.currency,
     }).map((stripeMoney) => {
       return {
+        metadata: {
+          saleor_source_id: args.event.sourceObject.id,
+          saleor_source_type: args.event.sourceObject.__typename,
+          saleor_transaction_id: createSaleorTransactionId(args.event.transaction.id),
+        },
         stripeMoney,
         idempotencyKey: args.idempotencyKey,
         intentParams: {
@@ -230,7 +235,7 @@ export class TransactionInitializeSessionUseCase {
 
     const stripePaymentIntentParamsResult = this.prepareStripeCreatePaymentIntentParams({
       eventData: eventDataResult.value,
-      eventAction: event.action,
+      event: event,
       selectedPaymentMethodOptions:
         selectedPaymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow),
       idempotencyKey: event.idempotencyKey,
