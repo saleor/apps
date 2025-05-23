@@ -20,6 +20,10 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
     return new StripePaymentIntentsApi(stripeApiWrapper.nativeClient);
   }
 
+  static createFromClient(client: StripeClient) {
+    return new StripePaymentIntentsApi(client.nativeClient);
+  }
+
   async createPaymentIntent(
     args: CreatePaymentIntentArgs,
   ): Promise<Result<Stripe.PaymentIntent, unknown>> {
