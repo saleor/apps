@@ -1,5 +1,6 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 
+import { verifyWebhookSignature } from "@/app/api/webhooks/saleor/verify-signature";
 import {
   TransactionInitializeSessionDocument,
   TransactionInitializeSessionEventFragment,
@@ -14,4 +15,7 @@ export const transactionInitializeSessionWebhookDefinition =
     isActive: true,
     query: TransactionInitializeSessionDocument,
     webhookPath: "api/webhooks/saleor/transaction-initialize-session",
+    verifySignatureFn: (jwks, signature, rawBody) => {
+      return verifyWebhookSignature(jwks, signature, rawBody);
+    },
   });

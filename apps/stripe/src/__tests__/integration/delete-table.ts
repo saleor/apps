@@ -4,7 +4,7 @@
 
 import { DeleteTableCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
-const TABLE_NAME = process.env.INTEGRATION_DYNAMO_TABLE_NAME ?? "stripe-main-table-integration";
+const TABLE_NAME = process.env.DYNAMODB_MAIN_TABLE_NAME;
 
 const client = new DynamoDBClient();
 
@@ -19,7 +19,7 @@ export const deleteTable = async () => {
     );
 
     console.log("success: table deleted");
-  } catch {
-    console.warn("Failed to delete table - it may already exists");
+  } catch (e) {
+    console.warn("Failed to delete table - it may already be removed", e);
   }
 };

@@ -18,7 +18,7 @@
     "start": "next start",
     "test": "pnpm run test:unit",
     "test:ci": "pnpm run test:unit",
-    "test:integration:dynamodb": "vitest --project=integration:dynamodb",
+    "test:integration": "vitest --project=integration",
     "test:unit": "vitest --project=unit"
   },
   "config": {

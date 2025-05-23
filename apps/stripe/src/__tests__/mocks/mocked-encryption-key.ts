@@ -1,1 +1,2 @@
-export const mockedEncryptionKey = "1Pt4FNyQsLDmlphDRZT2iTfdjFFBxky9";
+export const mockedEncryptionKey =
+  "16591C63BA4D13E8C370B8049F50096166FDEC13202AD8E05E44206E8BFAE30B";
