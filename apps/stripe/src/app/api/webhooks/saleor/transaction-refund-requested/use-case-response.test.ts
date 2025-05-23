@@ -45,8 +45,6 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
           "actions": [
             "REFUND",
           ],
-          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
-          "amount": 112.33,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "There is a problem with the request to Stripe API",
           "pspReference": "pi_TEST_TEST_TEST",

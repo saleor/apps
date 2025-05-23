@@ -190,7 +190,6 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
-          "amount": 100.123,
           "data": {
             "paymentIntent": {
               "errors": [
