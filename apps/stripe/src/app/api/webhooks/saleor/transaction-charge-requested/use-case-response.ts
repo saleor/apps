@@ -32,7 +32,10 @@ class Success extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CHARGE_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<
+      "TRANSACTION_CHARGE_REQUESTED",
+      "3.21"
+    >({
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
@@ -51,20 +54,17 @@ class Success extends SuccessWebhookResponse {
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
   readonly error: StripeApiError;
-  readonly saleorEventAmount: number;
   readonly stripePaymentIntentId: StripePaymentIntentId;
 
   constructor(args: {
     error: StripeApiError;
     transactionResult: ChargeFailureResult;
-    saleorEventAmount: number;
     stripePaymentIntentId: StripePaymentIntentId;
     appContext: AppContext;
   }) {
     super(args.appContext);
     this.error = args.error;
     this.transactionResult = args.transactionResult;
-    this.saleorEventAmount = args.saleorEventAmount;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 
@@ -73,11 +73,12 @@ class Failure extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CHARGE_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<
+      "TRANSACTION_CHARGE_REQUESTED",
+      "3.21"
+    >({
       result: this.transactionResult.result,
       pspReference: this.stripePaymentIntentId,
-      // TODO: remove this after Saleor allows to amount to be optional
-      amount: this.saleorEventAmount,
       message: this.messageFormatter.formatMessage(this.transactionResult.message, this.error),
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(

@@ -33,21 +33,18 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: RefundFailureResult;
-  readonly saleorEventAmount: number;
   readonly error: StripeApiError;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly message: string;
 
   constructor(args: {
     transactionResult: RefundFailureResult;
-    saleorEventAmount: number;
     error: StripeApiError;
     stripePaymentIntentId: StripePaymentIntentId;
     appContext: AppContext;
   }) {
     super(args.appContext);
     this.transactionResult = args.transactionResult;
-    this.saleorEventAmount = args.saleorEventAmount;
     this.error = args.error;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.message = this.error.merchantMessage;
@@ -58,11 +55,12 @@ class Failure extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_REFUND_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<
+      "TRANSACTION_REFUND_REQUESTED",
+      "3.21"
+    >({
       result: this.transactionResult.result,
       pspReference: this.stripePaymentIntentId,
-      // TODO: remove this after Saleor allows to amount to be optional
-      amount: this.saleorEventAmount,
       message: this.messageFormatter.formatMessage(this.message, this.error),
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(

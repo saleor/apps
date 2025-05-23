@@ -123,8 +123,6 @@ export class TransactionCancelationRequestedUseCase {
 
       return ok(
         new TransactionCancelationRequestedUseCaseResponses.Failure({
-          // TODO: remove this when Saleor won't require amount in the event
-          saleorEventAmount: 0,
           stripePaymentIntentId,
           transactionResult: new CancelFailureResult(),
           error,

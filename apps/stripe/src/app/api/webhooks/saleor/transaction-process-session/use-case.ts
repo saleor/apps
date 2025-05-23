@@ -155,7 +155,6 @@ export class TransactionProcessSessionUseCase {
             recordedTransactionResult.value.resolvedTransactionFlow,
           ),
           stripePaymentIntentId: paymentIntentIdResult,
-          saleorEventAmount: event.action.amount,
           appContext: appContextContainer.getContextValue(),
         }),
       );
