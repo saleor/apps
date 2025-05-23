@@ -7,6 +7,7 @@ import {
 } from "@/app/api/webhooks/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { AppContext } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import {
@@ -61,6 +62,10 @@ class Success extends SuccessWebhookResponse {
   }
 
   getResponse() {
+    if (!this.appContext.stripeEnv) {
+      throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
+    }
+
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_INITIALIZE_SESSION">({
       data: Success.ResponseDataSchema.parse({
         paymentIntent: {

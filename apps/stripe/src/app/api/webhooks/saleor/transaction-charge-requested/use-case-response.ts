@@ -2,6 +2,7 @@ import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared
 
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { AppContext } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import { StripeApiError } from "@/modules/stripe/stripe-api-error";
@@ -27,6 +28,10 @@ class Success extends SuccessWebhookResponse {
   }
 
   getResponse(): Response {
+    if (!this.appContext.stripeEnv) {
+      throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
+    }
+
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CHARGE_REQUESTED">({
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
@@ -64,6 +69,10 @@ class Failure extends SuccessWebhookResponse {
   }
 
   getResponse(): Response {
+    if (!this.appContext.stripeEnv) {
+      throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
+    }
+
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CHARGE_REQUESTED">({
       result: this.transactionResult.result,
       pspReference: this.stripePaymentIntentId,

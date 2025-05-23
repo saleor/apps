@@ -94,6 +94,10 @@ export class TransactionRefundRequestedUseCase {
       );
     }
 
+    appContextContainer.set({
+      stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+    });
+
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
 
     const stripeRefundsApi = this.stripeRefundsApiFactory.create({

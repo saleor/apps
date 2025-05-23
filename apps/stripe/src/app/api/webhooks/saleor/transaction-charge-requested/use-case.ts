@@ -93,6 +93,10 @@ export class TransactionChargeRequestedUseCase {
       );
     }
 
+    appContextContainer.set({
+      stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+    });
+
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
 
     const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({

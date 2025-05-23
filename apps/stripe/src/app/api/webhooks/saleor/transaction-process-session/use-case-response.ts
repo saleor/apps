@@ -4,6 +4,7 @@ import { z } from "zod";
 import { createFailureWebhookResponseDataSchema } from "@/app/api/webhooks/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { AppContext } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import {
@@ -58,6 +59,10 @@ class Success extends SuccessWebhookResponse {
   }
 
   getResponse(): Response {
+    if (!this.appContext.stripeEnv) {
+      throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
+    }
+
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
       // https://docs.stripe.com/payments/paymentintents/lifecycle
       result: this.transactionResult.result,
@@ -106,6 +111,10 @@ class Failure extends SuccessWebhookResponse {
   }
 
   getResponse() {
+    if (!this.appContext.stripeEnv) {
+      throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
+    }
+
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
       result: this.transactionResult.result,
       message: this.messageFormatter.formatMessage(this.error.merchantMessage, this.error),

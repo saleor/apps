@@ -4,6 +4,7 @@ import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
+import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
@@ -256,6 +257,10 @@ export class StripeWebhookUseCase {
 
       return err(new StripeWebhookAppIsNotConfiguredResponse());
     }
+
+    appContextContainer.set({
+      stripeEnv: config.value.getStripeEnvValue(),
+    });
 
     const stripeClient = StripeClient.createFromRestrictedKey(config.value.restrictedKey);
     const eventVerifier = this.webhookEventVerifyFactory(stripeClient);
