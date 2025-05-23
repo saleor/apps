@@ -17,12 +17,6 @@ const MissingChannelIdError = BaseError.subclass("MissingChannelIdError", {
   },
 });
 
-const MissingAmountError = BaseError.subclass("MissingAmountError", {
-  props: {
-    __internalName: "MissingAmountError",
-  },
-});
-
 /**
  * Additional helper as Saleor Graphql schema doesn't require transaction and it is needed to process the event
  */
@@ -58,18 +52,4 @@ export const getChannelIdFromRequestedEventPayload = (
   }
 
   return possibleChannelId;
-};
-
-/**
- *
- * Additional helper as Saleor Graphql schema doesn't require amount and it is needed to process the event
- */
-export const getAmountFromRequestedEventPayload = (
-  event: TransactionRefundRequestedEventFragment | TransactionChargeRequestedEventFragment,
-) => {
-  if (!event.action.amount) {
-    throw new MissingAmountError("Amount not found in event");
-  }
-
-  return event.action.amount;
 };

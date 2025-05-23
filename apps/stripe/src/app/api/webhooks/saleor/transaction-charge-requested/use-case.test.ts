@@ -174,30 +174,4 @@ describe("TransactionChargeRequestedUseCase", () => {
       `[MissingChannelIdError: Channel ID not found in event Checkout or Order]`,
     );
   });
-
-  it("Throws error when Saleor event has no amount for action and payment intent capture fails", async () => {
-    const saleorEvent = {
-      ...getMockedTransactionChargeRequestedEvent(),
-      action: {
-        amount: null,
-      },
-    };
-
-    vi.spyOn(mockedStripePaymentIntentsApi, "capturePaymentIntent").mockImplementation(async () =>
-      err(new StripeAPIError("Error from Stripe API")),
-    );
-
-    const uc = new TransactionChargeRequestedUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory,
-    });
-
-    await expect(
-      uc.execute({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        event: saleorEvent,
-      }),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`[MissingAmountError: Amount not found in event]`);
-  });
 });

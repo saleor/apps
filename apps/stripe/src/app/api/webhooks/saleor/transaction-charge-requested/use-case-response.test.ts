@@ -43,7 +43,6 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
         transactionResult: new ChargeFailureResult(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
         error: new StripeAPIError("Error from stripe"),
-        saleorEventAmount: 112.33,
         appContext: {
           stripeEnv: "LIVE",
         },
@@ -56,7 +55,6 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
           "actions": [
             "CHARGE",
           ],
-          "amount": 112.33,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent failed",
           "pspReference": "pi_TEST_TEST_TEST",

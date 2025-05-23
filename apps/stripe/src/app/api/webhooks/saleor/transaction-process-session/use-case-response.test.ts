@@ -204,7 +204,6 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
 
         const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
           stripePaymentIntentId: mockedStripePaymentIntentId,
-          saleorEventAmount: 21.23,
           error: new StripeInvalidRequestError("Invalid request"),
           transactionResult,
           appContext: {
@@ -219,7 +218,6 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
             "actions": [
               "CHARGE",
             ],
-            "amount": 21.23,
             "data": {
               "paymentIntent": {
                 "errors": [
@@ -242,7 +240,6 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
         const transactionResult = new AuthorizationFailureResult();
 
         const successResponse = new TransactionProcessSessionUseCaseResponses.Failure({
-          saleorEventAmount: 21.23,
           appContext: {
             stripeEnv: "LIVE",
           },
@@ -258,7 +255,6 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
             "actions": [
               "CANCEL",
             ],
-            "amount": 21.23,
             "data": {
               "paymentIntent": {
                 "errors": [

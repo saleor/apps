@@ -32,7 +32,6 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
       const response = new TransactionRefundRequestedUseCaseResponses.Failure({
         transactionResult: new RefundFailureResult(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        saleorEventAmount: 112.33,
         error: new StripeAPIError("Error from stripe"),
         appContext: {
           stripeEnv: "LIVE",
@@ -46,7 +45,6 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
           "actions": [
             "REFUND",
           ],
-          "amount": 112.33,
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "There is a problem with the request to Stripe API",
           "pspReference": "pi_TEST_TEST_TEST",
