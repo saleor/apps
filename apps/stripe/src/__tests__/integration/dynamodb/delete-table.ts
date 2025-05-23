@@ -1,7 +1,3 @@
-/*
-  eslint-disable no-console, n/no-process-env
- */
-
 import { DeleteTableCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 const TABLE_NAME = process.env.INTEGRATION_DYNAMO_TABLE_NAME ?? "stripe-main-table-integration";

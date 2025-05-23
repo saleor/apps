@@ -16,9 +16,29 @@ export default [
   },
   {
     name: "saleor-app-payment-stripe-v2/override-no-process-env",
-    files: ["next.config.ts", "src/lib/env.ts", "src/instrumentation.ts"],
+    files: [
+      "next.config.ts",
+      "src/lib/env.ts",
+      "src/instrumentation.ts",
+      "*.test.ts",
+      "src/__tests__/**",
+    ],
     rules: {
       "n/no-process-env": "off",
+    },
+  },
+  {
+    name: "saleor-app-payment-stripe-v2/override-turbo-env-requirement",
+    files: ["src/__tests__/**", "*.test.ts"],
+    rules: {
+      "turbo/no-undeclared-env-vars": "off",
+    },
+  },
+  {
+    name: "saleor-app-payment-stripe-v2/allow-console-in-tests",
+    files: ["src/__tests__/**", "*.test.ts"],
+    rules: {
+      "no-console": "off",
     },
   },
 ];

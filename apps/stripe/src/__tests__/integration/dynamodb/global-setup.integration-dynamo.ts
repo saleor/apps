@@ -1,7 +1,3 @@
-/*
-eslint-disable no-console
- */
-
 import "next-test-api-route-handler";
 
 import { execSync } from "node:child_process";
@@ -15,7 +11,6 @@ const wait = () => new Promise((resolve) => setTimeout(resolve, 1000));
 export default async function setup(_project: TestProject) {
   const configPath = path.join(__dirname, "./docker-compose.yml");
 
-  // eslint-disable-next-line n/no-process-env
   if (!process.env.CI) {
     execSync(`docker compose -f ${configPath} -p stripe-dynamodb-integration up -d`);
 

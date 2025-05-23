@@ -4,7 +4,6 @@ import { beforeEach, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 
-// eslint-disable-next-line turbo/no-undeclared-env-vars, n/no-process-env
 process.env.TZ = "UTC";
 
 vi.stubEnv("SECRET_KEY", "test_secret_key");
