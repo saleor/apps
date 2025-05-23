@@ -2,6 +2,7 @@ import { Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
+import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
 import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
 import { StripeMoney } from "./stripe-money";
@@ -23,6 +24,12 @@ export interface IStripeRefundsApi {
   }): Promise<Result<Stripe.Refund, unknown>>;
 }
 
+export type AllowedStripeIntentMetadata = {
+  saleor_transaction_id?: SaleorTransationId;
+  saleor_source_id?: string;
+  saleor_source_type?: "Checkout" | "Order";
+};
+
 export interface CreatePaymentIntentArgs {
   stripeMoney: StripeMoney;
   intentParams: Pick<
@@ -30,6 +37,7 @@ export interface CreatePaymentIntentArgs {
     "automatic_payment_methods" | "payment_method_options"
   >;
   idempotencyKey: string;
+  metadata?: AllowedStripeIntentMetadata;
 }
 
 export interface IStripePaymentIntentsApi {
