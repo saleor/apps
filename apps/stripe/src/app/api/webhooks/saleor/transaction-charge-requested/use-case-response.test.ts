@@ -14,8 +14,10 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
       const successResponse = new TransactionChargeRequestedUseCaseResponses.Success({
         transactionResult: new ChargeSuccessResult(),
         stripePaymentIntentId: mockedStripePaymentIntentId,
-        stripeEnv: "TEST",
         saleorMoney: getMockedSaleorMoney(),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -26,7 +28,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
             "REFUND",
           ],
           "amount": 10,
-          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent has been successful",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_SUCCESS",
@@ -39,9 +41,11 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const successResponse = new TransactionChargeRequestedUseCaseResponses.Failure({
         transactionResult: new ChargeFailureResult(),
-        stripeEnv: "LIVE",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         error: new StripeAPIError("Error from stripe"),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -52,7 +56,7 @@ describe("TransactionChargeRequestedUseCaseResponses", () => {
             "CHARGE",
           ],
           "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
-          "message": "There is a problem with the request to Stripe API",
+          "message": "Payment intent failed",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CHARGE_FAILURE",
         }

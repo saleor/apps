@@ -10,18 +10,18 @@ import { SaleorTransationFlow } from "@/modules/saleor/saleor-transaction-flow";
 import { PaymentMethod } from "./types";
 
 /**
- * https://docs.stripe.com/payments/klarna
+ * https://docs.stripe.com/payments/paypal
  */
-export class KlarnaPaymentMethod implements PaymentMethod {
-  type = "klarna" as const;
+export class PayPalPaymentMethod implements PaymentMethod {
+  type = "paypal" as const;
 
   static TransactionInitializeSchema = z
     .object({
-      paymentMethod: z.literal("klarna"),
+      paymentMethod: z.literal("paypal"),
     })
     .strict();
 
-  // Klarna support both AUTHORIZATION and CHARGE - hence we return the same value we get from SaleorTransationFlow
+  // paypal support both AUTHORIZATION and CHARGE - hence we return the same value we get from SaleorTransationFlow
   getResolvedTransactionFlow(saleorTransactionFlow: SaleorTransationFlow): ResolvedTransactionFlow {
     return createResolvedTransactionFlow(saleorTransactionFlow);
   }
@@ -32,9 +32,9 @@ export class KlarnaPaymentMethod implements PaymentMethod {
     const transactionFlow = this.getResolvedTransactionFlow(saleorTransactionFlow);
 
     return {
-      klarna: {
+      paypal: {
         /*
-         * override `capture_method` only for klarna payment method - so storefront does not need to
+         * override `capture_method` only for paypal payment method - so storefront does not need to
          * implement different logic for AUTHORIZATION and CHARGE
          */
         capture_method: transactionFlow === "AUTHORIZATION" ? "manual" : undefined,

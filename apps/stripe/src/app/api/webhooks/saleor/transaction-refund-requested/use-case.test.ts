@@ -13,7 +13,7 @@ import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
   MalformedRequestResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { IStripeRefundsApiFactory } from "@/modules/stripe/types";

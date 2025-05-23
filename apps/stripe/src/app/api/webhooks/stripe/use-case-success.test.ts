@@ -503,7 +503,8 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         time: expect.toSatisfy(
           (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
         ),
-      }, `
+      },
+      `
       {
         "actions": [],
         "amount": SaleorMoney {
@@ -517,7 +518,8 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_REQUEST",
       }
-    `);
+    `,
+    );
   });
 
   it("Report AUTHORIZATION_REQUEST transaction event to Saleor when resolved flow is AUTHORIZATION", async () => {
@@ -566,7 +568,8 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         time: expect.toSatisfy(
           (d) => new Date(d).getTime() === new Date(event.data.object.created * 1000).getTime(),
         ),
-      }, `
+      },
+      `
       {
         "actions": [],
         "amount": SaleorMoney {
@@ -580,7 +583,8 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_REQUEST",
       }
-    `);
+    `,
+    );
   });
 });
 

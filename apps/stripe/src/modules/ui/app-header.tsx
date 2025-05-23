@@ -8,11 +8,11 @@ export const AppHeader = ({ ...props }: BoxProps) => {
         Configuration
       </Text>
       <Text>
-        Configure your Stripe App. Read the{" "}
-        <TextLink href="https://docs.saleor.io/docs/3.x/developer/app-store/apps/stripe" newTab>
-          docs
+        Configure the app by connecting to Stripe. Read the{" "}
+        <TextLink href="https://docs.saleor.io/developer/app-store/apps/stripe/overview" newTab>
+          documentation
         </TextLink>{" "}
-        to learn more
+        to learn more.
       </Text>
       <Box>{props.children}</Box>
     </Box>

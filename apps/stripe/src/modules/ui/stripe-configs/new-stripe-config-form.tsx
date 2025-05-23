@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
-import { Box, Button } from "@saleor/macaw-ui";
+import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
@@ -13,6 +13,19 @@ type FormShape = {
   restrictedKey: string;
   name: string;
   publishableKey: string;
+};
+
+const RequiredInputLabel = (props: { labelText: string }) => {
+  return (
+    <Box>
+      <Text size={2} color="default2">
+        {props.labelText}
+      </Text>{" "}
+      <Text size={2} color="critical2">
+        *
+      </Text>
+    </Box>
+  );
 };
 
 export const NewStripeConfigForm = () => {
@@ -33,7 +46,7 @@ export const NewStripeConfigForm = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isLoading },
   } = useForm<FormShape>({
     defaultValues: {
       restrictedKey: "",
@@ -54,40 +67,48 @@ export const NewStripeConfigForm = () => {
   return (
     <Layout.AppSectionCard
       footer={
-        <Button form="new_stripe_config_form" type="submit">
-          Save
-        </Button>
+        <Box display="flex" justifyContent="space-between">
+          <Button
+            onClick={() => router.push("/")}
+            variant="tertiary"
+            data-testid="create-avatax-cancel-button"
+          >
+            Go back
+          </Button>
+          <Button form="new_stripe_config_form" type="submit">
+            {isLoading ? "Saving..." : "Save"}
+          </Button>
+        </Box>
       }
     >
       <Box id="new_stripe_config_form" as="form" onSubmit={handleSubmit(onSubmit)}>
         <Box display="flex" flexDirection="column" gap={6}>
           <Input
-            label="Configuration name"
+            label={<RequiredInputLabel labelText="Configuration name" />}
             name="name"
             control={control}
             helperText={
               errors.name?.message ??
-              "Friendly name of your configuration. For example 'Live' or 'UK Live' "
+              "Friendly name of your configuration. For example 'Live' or 'UK Live'."
             }
             error={!!errors.name}
           />
           <Input
-            label="Publishable key"
+            label={<RequiredInputLabel labelText="Publishable key" />}
             name="publishableKey"
             control={control}
             helperText={
-              errors.publishableKey?.message ?? "Publishable key generated in Stripe dashboard"
+              errors.publishableKey?.message ?? "Publishable key generated in Stripe dashboard."
             }
             error={!!errors.publishableKey}
           />
           <Input
-            label="Restricted key"
+            label={<RequiredInputLabel labelText="Restricted key" />}
             name="restrictedKey"
             control={control}
             type="password"
             helperText={
-              errors.restrictedKey?.message ??
-              "Restricted key generated in Stripe dashboard. You won't be able to see it again"
+              errors.restrictedKey?.message ?? "Restricted key generated in Stripe dashboard."
             }
             error={!!errors.restrictedKey}
           />
@@ -96,5 +117,3 @@ export const NewStripeConfigForm = () => {
     </Layout.AppSectionCard>
   );
 };
-
-// todo link to stripe docs

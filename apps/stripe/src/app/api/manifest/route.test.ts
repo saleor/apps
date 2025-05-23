@@ -3,12 +3,18 @@ import { describe, expect, it, vi } from "vitest";
 
 import * as manifestHandlers from "./route";
 
-vi.mock("@/lib/env", () => ({
-  env: {
-    APP_IFRAME_BASE_URL: "https://localhost:3000",
-    APP_API_BASE_URL: "https://localhost:3000",
-  },
-}));
+vi.mock("@/lib/env", async () => {
+  const originalModule = await vi.importActual("@/lib/env");
+
+  return {
+    env: {
+      // @ts-expect-error - it doesn't inherit the type
+      ...originalModule.env,
+      APP_IFRAME_BASE_URL: "https://localhost:3000",
+      APP_API_BASE_URL: "https://localhost:3000",
+    },
+  };
+});
 
 describe("Manifest handler", async () => {
   /**
@@ -39,6 +45,7 @@ describe("Manifest handler", async () => {
             "dataPrivacyUrl": "https://saleor.io/legal/privacy/",
             "extensions": [],
             "homepageUrl": "https://github.com/saleor/apps",
+            "id": "saleor.app.payment.stripe-v2",
             "name": "Stripe",
             "permissions": [
               "HANDLE_PAYMENTS",
