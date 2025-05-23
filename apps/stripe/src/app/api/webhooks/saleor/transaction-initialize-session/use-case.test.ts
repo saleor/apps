@@ -86,9 +86,9 @@ describe("TransactionInitializeSessionUseCase", () => {
           },
         },
         metadata: {
-          sourceId: saleorEvent.sourceObject.id,
-          sourceType: saleorEvent.sourceObject.__typename,
-          transactionId: saleorEvent.transaction.id,
+          saleor_source_id: saleorEvent.sourceObject.id,
+          saleor_source_type: saleorEvent.sourceObject.__typename,
+          saleor_transaction_id: saleorEvent.transaction.id,
         },
       });
 

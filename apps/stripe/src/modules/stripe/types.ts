@@ -25,9 +25,9 @@ export interface IStripeRefundsApi {
 }
 
 export type AllowedStripeIntentMetadata = {
-  transactionId?: SaleorTransationId;
-  sourceId?: string;
-  sourceType?: "Checkout" | "Order";
+  saleor_transaction_id?: SaleorTransationId;
+  saleor_source_id?: string;
+  saleor_source_type?: "Checkout" | "Order";
 };
 
 export interface CreatePaymentIntentArgs {

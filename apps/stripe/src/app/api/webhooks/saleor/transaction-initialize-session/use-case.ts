@@ -94,9 +94,9 @@ export class TransactionInitializeSessionUseCase {
     }).map((stripeMoney) => {
       return {
         metadata: {
-          sourceId: args.event.sourceObject.id,
-          sourceType: args.event.sourceObject.__typename,
-          transactionId: createSaleorTransactionId(args.event.transaction.id),
+          saleor_source_id: args.event.sourceObject.id,
+          saleor_source_type: args.event.sourceObject.__typename,
+          saleor_transaction_id: createSaleorTransactionId(args.event.transaction.id),
         },
         stripeMoney,
         idempotencyKey: args.idempotencyKey,

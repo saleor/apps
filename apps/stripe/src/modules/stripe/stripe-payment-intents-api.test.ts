@@ -25,9 +25,9 @@ describe("StripePaymentIntentsApi", () => {
           currency: "USD",
         })._unsafeUnwrap(),
         metadata: {
-          sourceId: "checkout-id",
-          sourceType: "Checkout",
-          transactionId: mockedSaleorTransactionIdBranded,
+          saleor_source_id: "checkout-id",
+          saleor_source_type: "Checkout",
+          saleor_transaction_id: mockedSaleorTransactionIdBranded,
         },
         intentParams: {
           automatic_payment_methods: { enabled: true },
