@@ -5,7 +5,6 @@ import { beforeEach, vi } from "vitest";
 import { createTable } from "./create-table";
 import { deleteTable } from "./delete-table";
 
-// eslint-disable-next-line turbo/no-undeclared-env-vars, n/no-process-env
 process.env.TZ = "UTC";
 
 vi.stubEnv("SECRET_KEY", "test_secret_key");
