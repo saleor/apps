@@ -1,13 +1,13 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { paymentGatewayInitializeFixture } from "@/__tests__/integration/webhooks/fixtures/payment-gateway-initialize-fixture";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as manifestHandlers from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
-import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
 import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
 import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
@@ -82,27 +82,12 @@ describe("PaymentGatewayInitialize webhook: integration", async () => {
    * Verify snapshot - if your changes cause manifest to be different, ensure changes are expected
    */
   it("Returns response with stored publishable key from the config", async () => {
-    // TODO: Why we pass it directly, should subscription resolve to have event {} first? (todo check api response in logs)
-    const eventPayload = {
-      sourceObject: {
-        __typename: "Checkout",
-        channel: {
-          slug: "default-channel",
-          id: mockedSaleorChannelId,
-        },
-        id: "checkout-id",
-      },
-      recipient: {
-        id: mockedSaleorAppId,
-      },
-    } satisfies PaymentGatewayInitializeSessionEventFragment;
-
     await testApiHandler({
       appHandler: manifestHandlers,
       async test({ fetch }) {
         const response = await fetch({
           method: "POST",
-          body: JSON.stringify(eventPayload),
+          body: JSON.stringify(paymentGatewayInitializeFixture()),
           headers: new Headers({
             "saleor-api-url": realSaleorApiUrl,
             "saleor-event": "payment_gateway_initialize_session",

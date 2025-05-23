@@ -1,16 +1,11 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  mockedSaleorAppId,
-  mockedSaleorChannelId,
-  mockedSaleorTransactionIdBranded,
-} from "@/__tests__/mocks/constants";
+import { transactionInitializeSessionFixture } from "@/__tests__/integration/webhooks/fixtures/transaction-initialize-session-fixture";
+import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
-import { parseTransactionInitializeSessionEventData } from "@/app/api/webhooks/saleor/transaction-initialize-session/event-data-parser";
 import * as manifestHandlers from "@/app/api/webhooks/saleor/transaction-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
-import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
 import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
@@ -93,41 +88,12 @@ describe("TransactionInitializeSession webhook: integration", async () => {
    * Verify snapshot - if your changes cause manifest to be different, ensure changes are expected
    */
   it("Returns response with CHARGE_ACTION_REQUIRED and client secret in data", async () => {
-    // TODO: Why we pass it directly, should subscription resolve to have event {} first? (todo check api response in logs)
-    const eventPayload = {
-      sourceObject: {
-        __typename: "Checkout",
-        channel: {
-          slug: "default-channel",
-          id: mockedSaleorChannelId,
-        },
-        id: "checkout-id",
-      },
-      recipient: {
-        id: mockedSaleorAppId,
-      },
-      data: parseTransactionInitializeSessionEventData({
-        paymentIntent: {
-          paymentMethod: "card",
-        },
-      })._unsafeUnwrap(),
-      action: {
-        actionType: "CHARGE",
-        amount: 123.3,
-        currency: "USD",
-      },
-      idempotencyKey: "123",
-      transaction: {
-        id: mockedSaleorTransactionIdBranded,
-      },
-    } satisfies TransactionInitializeSessionEventFragment;
-
     await testApiHandler({
       appHandler: manifestHandlers,
       async test({ fetch }) {
         const response = await fetch({
           method: "POST",
-          body: JSON.stringify(eventPayload),
+          body: JSON.stringify(transactionInitializeSessionFixture()),
           headers: new Headers({
             "saleor-api-url": realSaleorApiUrl,
             "saleor-event": "transaction_initialize_session",
