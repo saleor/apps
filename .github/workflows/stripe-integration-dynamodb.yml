@@ -51,7 +51,7 @@ jobs:
       - name: Run docker compose
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
-          compose-file: "apps/stripe/src/__tests__/integration/dynamodb/docker-compose.yml"
+          compose-file: "apps/stripe/src/__tests__/integration/docker-compose.yml"
         env:
           # Env for DB itself
           AWS_REGION: "localhost"
@@ -61,4 +61,4 @@ jobs:
 
       - name: Execute tests
         run: |
-          pnpm run --filter=saleor-app-payment-stripe-v2 test:integration:dynamodb
+          pnpm run --filter=saleor-app-payment-stripe-v2 test:integration
