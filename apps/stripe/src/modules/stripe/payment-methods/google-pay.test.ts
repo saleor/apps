@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
-import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
+import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-pay";
 
-describe("KlarnaPaymentMethod", () => {
-  const paymentMethod = new KlarnaPaymentMethod();
+describe("GooglePayPaymentMethod", () => {
+  const cardPaymentMethod = new GooglePayPaymentMethod();
 
   describe("getCreatePaymentIntentMethodOptions", () => {
     it.each([
@@ -14,10 +14,10 @@ describe("KlarnaPaymentMethod", () => {
       "should set capture_method to $captureMethod when flow is $flow",
       ({ flow, captureMethod }) => {
         const saleorTransactionFlow = createSaleorTransactionFlow(flow);
-        const result = paymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow);
+        const result = cardPaymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow);
 
         expect(result).toStrictEqual({
-          klarna: { capture_method: captureMethod },
+          card: { capture_method: captureMethod },
         });
       },
     );

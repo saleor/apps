@@ -11,7 +11,7 @@ import { getMockedTransactionCancelationRequestedEvent } from "@/__tests__/mocks
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {

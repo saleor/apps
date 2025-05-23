@@ -2,18 +2,20 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+  MalformedRequestResponse,
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
+import { appContextContainer } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  MalformedRequestResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
@@ -80,7 +82,12 @@ export class TransactionProcessSessionUseCase {
         error: stripeConfigForThisChannel.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(
+          appContextContainer.getContextValue(),
+          stripeConfigForThisChannel.error,
+        ),
+      );
     }
 
     if (!stripeConfigForThisChannel.value) {
@@ -88,8 +95,17 @@ export class TransactionProcessSessionUseCase {
         channelId: event.sourceObject.channel.id,
       });
 
-      return err(new AppIsNotConfiguredResponse());
+      return err(
+        new AppIsNotConfiguredResponse(
+          appContextContainer.getContextValue(),
+          new BaseError("Config for channel not found"),
+        ),
+      );
     }
+
+    appContextContainer.set({
+      stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+    });
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
 
@@ -117,7 +133,12 @@ export class TransactionProcessSessionUseCase {
         error: recordedTransactionResult.error,
       });
 
-      return err(new MalformedRequestResponse());
+      return err(
+        new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          recordedTransactionResult.error,
+        ),
+      );
     }
 
     if (getPaymentIntentResult.isErr()) {
@@ -134,8 +155,8 @@ export class TransactionProcessSessionUseCase {
             recordedTransactionResult.value.resolvedTransactionFlow,
           ),
           stripePaymentIntentId: paymentIntentIdResult,
-          stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
           saleorEventAmount: event.action.amount,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -151,7 +172,9 @@ export class TransactionProcessSessionUseCase {
         error: saleorMoneyResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(appContextContainer.getContextValue(), saleorMoneyResult.error),
+      );
     }
 
     return ok(
@@ -160,10 +183,10 @@ export class TransactionProcessSessionUseCase {
           createStripePaymentIntentStatus(getPaymentIntentResult.value.status),
           recordedTransactionResult.value.resolvedTransactionFlow,
         ),
-        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         stripePaymentIntentId: paymentIntentIdResult,
         saleorMoney: saleorMoneyResult.value,
         timestamp: createTimestampFromPaymentIntent(getPaymentIntentResult.value),
+        appContext: appContextContainer.getContextValue(),
       }),
     );
   }

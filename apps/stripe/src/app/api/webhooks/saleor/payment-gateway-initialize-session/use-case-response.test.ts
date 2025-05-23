@@ -9,6 +9,9 @@ describe("PaymentGatewayInitializeSessionUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe PK", async () => {
       const successResponse = new PaymentGatewayInitializeSessionUseCaseResponses.Success({
         pk: mockedStripePublishableKey,
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 

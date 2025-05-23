@@ -1,13 +1,16 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
-import { Box, Button, Chip, Text, TrashBinIcon } from "@saleor/macaw-ui";
+import { Box, Button, Chip, Modal, Text, TrashBinIcon } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 import {
   StripeFrontendConfig,
   StripeFrontendConfigSerializedFields,
 } from "@/modules/app-config/domain/stripe-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
+
+import { DeleteConfigurationModalContent } from "./delete-configuration-modal-content";
 
 type Props = {
   configs: Array<StripeFrontendConfigSerializedFields>;
@@ -21,6 +24,7 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
   const { notifyError, notifySuccess } = useDashboardNotification();
   const configsList = trpcClient.appConfig.getStripeConfigsList.useQuery();
   const mappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { mutate, isLoading } = trpcClient.appConfig.removeStripeConfig.useMutation({
     onSuccess() {
       notifySuccess("Configuration deleted");
@@ -49,28 +53,19 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
 
           const testEnvChip = (
             <Chip
-              marginLeft={"auto"}
-              backgroundColor="warning1"
-              borderColor="warning1"
-              color="warning1"
+              marginLeft="auto"
+              __backgroundColor="#CC4B00"
+              borderColor="transparent"
               size="large"
             >
-              <Text color="warning1" size={1}>
-                {configInstance.getStripeEnvValue()}
+              <Text __color={"#FFF"} size={1} whiteSpace="nowrap">
+                Stripe test mode
               </Text>
             </Chip>
           );
           const liveEnvChip = (
-            <Chip
-              marginLeft={"auto"}
-              backgroundColor="success1"
-              borderColor="success1"
-              color="success1"
-              size="large"
-            >
-              <Text color="accent1" size={1}>
-                {configInstance.getStripeEnvValue()}
-              </Text>
+            <Chip marginLeft={"auto"} size="large" whiteSpace="nowrap">
+              <Text size={1}>Stripe live mode</Text>
             </Chip>
           );
 
@@ -82,28 +77,37 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
               : null;
 
           return (
-            <Box padding={4} key={configInstance.id}>
-              <Box
-                display={"flex"}
-                justifyContent="space-between"
-                width={"100%"}
-                alignItems={"center"}
-              >
-                <Text marginRight={4} display="block">
-                  {configInstance.name}
-                </Text>
-                {envValue === "TEST" ? testEnvChip : liveEnvChip}
-                <Button
-                  disabled={isLoading}
-                  marginLeft={4}
-                  display="block"
-                  icon={<TrashBinIcon color="critical2" />}
-                  variant="tertiary"
-                  onClick={() => mutate({ configId: configInstance.id })}
-                />
+            <Modal open={isModalOpen} onChange={setIsModalOpen}>
+              <DeleteConfigurationModalContent
+                onDeleteClick={() => {
+                  mutate({ configId: configInstance.id });
+                  setIsModalOpen(false);
+                }}
+              />
+              <Box paddingY={4} key={configInstance.id}>
+                <Box
+                  display={"flex"}
+                  justifyContent="space-between"
+                  width={"100%"}
+                  alignItems={"center"}
+                >
+                  <Text marginRight={4} display="block">
+                    {configInstance.name}
+                  </Text>
+                  {envValue === "TEST" ? testEnvChip : liveEnvChip}
+                  <Modal.Trigger>
+                    <Button
+                      disabled={isLoading}
+                      marginLeft={4}
+                      display="block"
+                      icon={<TrashBinIcon />}
+                      variant="secondary"
+                    />
+                  </Modal.Trigger>
+                </Box>
+                {webhookStatusInfo}
               </Box>
-              {webhookStatusInfo}
-            </Box>
+            </Modal>
           );
         })}
       </Box>

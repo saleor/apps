@@ -17,17 +17,19 @@ import {
 import { ParseError, UnsupportedPaymentMethodError } from "./event-data-parser";
 import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
-describe("TransactionInitalizeSessionUseCaseResponses", () => {
+describe("TransactionInitializeSessionUseCaseResponses", () => {
   describe("Success with ChargeActionRequired as result", () => {
     it("getResponse() returns valid Response with status 200 and formatted 'data' object containing Stripe client secret", async () => {
       const response = new TransactionInitializeSessionUseCaseResponses.Success({
         transactionResult: new ChargeActionRequiredResult(
           createStripePaymentIntentStatus("requires_payment_method"),
         ),
-        stripeEnv: "LIVE",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(10000),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -55,10 +57,13 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new AuthorizationActionRequiredResult(
           createStripePaymentIntentStatus("requires_payment_method"),
         ),
-        stripeEnv: "TEST",
+
         stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorMoney: getMockedSaleorMoney(10000),
         stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -71,7 +76,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               "stripeClientSecret": "stripe-client-secret",
             },
           },
-          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent requires payment method",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "AUTHORIZATION_ACTION_REQUIRED",
@@ -86,6 +91,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new ChargeFailureResult(),
         saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -103,7 +111,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - provided payment method is not supported",
+          "message": "Payment intent failed",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -114,6 +122,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new ChargeFailureResult(),
         saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -131,7 +142,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - storefront sent invalid data",
+          "message": "Payment intent failed",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -141,7 +152,12 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
       const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
         transactionResult: new ChargeFailureResult(),
         saleorEventAmount: 100.123,
-        error: new StripeAPIError("Error from Stripe API"),
+        error: new StripeAPIError("Error from Stripe API", {
+          cause: new Error("Inner error"),
+        }),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -159,7 +175,42 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "There is a problem with the request to Stripe API",
+          "message": "Payment intent failed",
+          "result": "CHARGE_FAILURE",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with status 200 and message with failure reason and StripeCreatePaymentIntentError error inside data object - TEST env passes Stripe error details", async () => {
+      const successResponse = new TransactionInitializeSessionUseCaseResponses.Failure({
+        transactionResult: new ChargeFailureResult(),
+        saleorEventAmount: 100.123,
+        error: new StripeAPIError("Error from Stripe API", {
+          cause: new Error("Inner error"),
+        }),
+        appContext: {
+          stripeEnv: "TEST",
+        },
+      });
+      const fetchReponse = successResponse.getResponse();
+
+      expect(fetchReponse.status).toBe(200);
+      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+        {
+          "amount": 100.123,
+          "data": {
+            "paymentIntent": {
+              "errors": [
+                {
+                  "code": "StripeApiError",
+                  "message": "There is a problem with the request to Stripe API: Inner error
+        Error from Stripe API",
+                },
+              ],
+            },
+          },
+          "message": "Payment intent failed: Inner error
+        Error from Stripe API",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -172,6 +223,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new AuthorizationFailureResult(),
         saleorEventAmount: 21.23,
         error: new UnsupportedPaymentMethodError("UnsupportedPaymentMethodError"),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -189,7 +243,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - provided payment method is not supported",
+          "message": "Payment intent failed",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);
@@ -200,6 +254,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new AuthorizationFailureResult(),
         saleorEventAmount: 21.123,
         error: new ParseError("Invalid data"),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -217,7 +274,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent not created - storefront sent invalid data",
+          "message": "Payment intent failed",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);
@@ -228,6 +285,9 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
         transactionResult: new AuthorizationFailureResult(),
         saleorEventAmount: 100.123,
         error: new StripeAPIError("Error from Stripe API"),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = successResponse.getResponse();
 
@@ -245,7 +305,7 @@ describe("TransactionInitalizeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "There is a problem with the request to Stripe API",
+          "message": "Payment intent failed",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);

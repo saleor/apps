@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
-import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
 
-describe("KlarnaPaymentMethod", () => {
-  const paymentMethod = new KlarnaPaymentMethod();
+import { PayPalPaymentMethod } from "./paypal";
+
+describe("PayPalPaymentMethod", () => {
+  const paymentMethod = new PayPalPaymentMethod();
 
   describe("getCreatePaymentIntentMethodOptions", () => {
     it.each([
@@ -17,7 +18,7 @@ describe("KlarnaPaymentMethod", () => {
         const result = paymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow);
 
         expect(result).toStrictEqual({
-          klarna: { capture_method: captureMethod },
+          paypal: { capture_method: captureMethod },
         });
       },
     );
