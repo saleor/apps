@@ -10,15 +10,17 @@ import {
 
 import { TransactionCancelationRequestedUseCaseResponses } from "./use-case-response";
 
-describe("TransactionCancelationRequestedUseCaseResponses", () => {
+describe("TransactionCancellationRequestedUseCaseResponses", () => {
   describe("Success", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionCancelationRequestedUseCaseResponses.Success({
         saleorMoney: getMockedSaleorMoney(),
         transactionResult: new CancelSuccessResult(),
-        stripeEnv: "TEST",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         timestamp: new Date(2023, 0, 1),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -28,7 +30,7 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
         {
           "actions": [],
           "amount": 10,
-          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "Payment intent was cancelled",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "CANCEL_SUCCESS",
@@ -42,10 +44,12 @@ describe("TransactionCancelationRequestedUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionCancelationRequestedUseCaseResponses.Failure({
         transactionResult: new CancelFailureResult(),
-        stripeEnv: "LIVE",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorEventAmount: 0,
         error: new StripeAPIError("Error from stripe"),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = response.getResponse();
 

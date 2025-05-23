@@ -12,7 +12,7 @@ import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
   MalformedRequestResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
@@ -290,13 +290,13 @@ describe("TransactionInitializeSessionUseCase", () => {
       transactionRecorder: new MockedTransactionRecorder(),
     });
 
-    await expect(
-      uc.execute({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        event: saleorEvent,
-      }),
-    ).resolves.toStrictEqual(err(new MalformedRequestResponse()));
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
   });
 
   it("Returns 'BrokenAppResponse' when currency coming from Stripe is not supported", async () => {
@@ -317,13 +317,13 @@ describe("TransactionInitializeSessionUseCase", () => {
       transactionRecorder: new MockedTransactionRecorder(),
     });
 
-    await expect(
-      uc.execute({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        event: saleorEvent,
-      }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
   it("Returns 'BrokenAppResponse' when Stripe PaymentIntentsAPI didn't returned required client_secret field", async () => {
@@ -345,13 +345,13 @@ describe("TransactionInitializeSessionUseCase", () => {
       transactionRecorder: new MockedTransactionRecorder(),
     });
 
-    await expect(
-      uc.execute({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        event: saleorEvent,
-      }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
   it("Returns 'BrokenAppResponse' when Stripe PaymentIntentsAPI didn't returned required payment id", async () => {
@@ -373,13 +373,13 @@ describe("TransactionInitializeSessionUseCase", () => {
       transactionRecorder: new MockedTransactionRecorder(),
     });
 
-    await expect(
-      uc.execute({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        event: saleorEvent,
-      }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
   it("Returns 'BrokenAppResponse' when TransactionRecorderRepo returns error", async () => {
@@ -406,13 +406,13 @@ describe("TransactionInitializeSessionUseCase", () => {
       transactionRecorder,
     });
 
-    await expect(
-      uc.execute({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        event: saleorEvent,
-      }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
   it.each([

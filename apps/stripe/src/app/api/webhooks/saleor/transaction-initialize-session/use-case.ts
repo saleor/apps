@@ -3,7 +3,14 @@ import { captureException } from "@sentry/nextjs";
 import { err, fromThrowable, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+  MalformedRequestResponse,
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { appContextContainer } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
@@ -16,11 +23,6 @@ import {
   SaleorTransationFlow,
 } from "@/modules/saleor/saleor-transaction-flow";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  MalformedRequestResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import {
   createStripeClientSecret,
@@ -170,6 +172,7 @@ export class TransactionInitializeSessionUseCase {
           transactionResult: this.resolveErrorTransactionResult(saleorTransactionFlow),
           saleorEventAmount: event.action.amount,
           error: eventDataResult.error,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -185,7 +188,12 @@ export class TransactionInitializeSessionUseCase {
         error: stripeConfigForThisChannel.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(
+          appContextContainer.getContextValue(),
+          stripeConfigForThisChannel.error,
+        ),
+      );
     }
 
     if (!stripeConfigForThisChannel.value) {
@@ -193,8 +201,17 @@ export class TransactionInitializeSessionUseCase {
         channelId: event.sourceObject.channel.id,
       });
 
-      return err(new AppIsNotConfiguredResponse());
+      return err(
+        new AppIsNotConfiguredResponse(
+          appContextContainer.getContextValue(),
+          new BaseError("Config not found"),
+        ),
+      );
     }
+
+    appContextContainer.set({
+      stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+    });
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
 
@@ -222,7 +239,12 @@ export class TransactionInitializeSessionUseCase {
     if (stripePaymentIntentParamsResult.isErr()) {
       captureException(stripePaymentIntentParamsResult.error);
 
-      return err(new MalformedRequestResponse());
+      return err(
+        new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          stripePaymentIntentParamsResult.error,
+        ),
+      );
     }
 
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent(
@@ -239,6 +261,7 @@ export class TransactionInitializeSessionUseCase {
           transactionResult: this.resolveErrorTransactionResult(resolvedTransactionFlow),
           saleorEventAmount: event.action.amount,
           error: mappedError,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -257,7 +280,9 @@ export class TransactionInitializeSessionUseCase {
         error: mappedResponseResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(appContextContainer.getContextValue(), mappedResponseResult.error),
+      );
     }
 
     const [saleorMoney, stripePaymentIntentId, stripeClientSecret, stripeStatus] =
@@ -284,7 +309,7 @@ export class TransactionInitializeSessionUseCase {
         error: recordResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(new BrokenAppResponse(appContextContainer.getContextValue(), recordResult.error));
     }
 
     this.logger.info("Wrote Transaction to DynamoDB", {
@@ -300,9 +325,9 @@ export class TransactionInitializeSessionUseCase {
       new TransactionInitializeSessionUseCaseResponses.Success({
         saleorMoney,
         stripePaymentIntentId,
-        stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
         transactionResult,
         stripeClientSecret,
+        appContext: appContextContainer.getContextValue(),
       }),
     );
   }
