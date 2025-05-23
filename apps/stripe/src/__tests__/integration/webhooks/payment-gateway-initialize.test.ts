@@ -1,16 +1,13 @@
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  mockedSaleorAppId,
-  mockedSaleorChannelId,
-  mockedSaleorTransactionIdBranded,
-} from "@/__tests__/mocks/constants";
+import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
+import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
+import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
-import { parseTransactionInitializeSessionEventData } from "@/app/api/webhooks/saleor/transaction-initialize-session/event-data-parser";
-import * as manifestHandlers from "@/app/api/webhooks/saleor/transaction-initialize-session/route";
+import * as manifestHandlers from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
-import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
 import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
 import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
@@ -21,11 +18,10 @@ import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/
 import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
 import { DynamoDbStripeConfig } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
-import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
 const realSaleorApiUrl = createSaleorApiUrl(
-  "https://hackathon-shipping.eu.saleor.cloud/graphql/",
+  // eslint-disable-next-line n/no-process-env,turbo/no-undeclared-env-vars
+  process.env.INTEGRATION_TEST_SALEOR_API_URL as string,
 )._unsafeUnwrap();
 
 const randomId = new RandomId().generate();
@@ -44,7 +40,7 @@ const apl = new DynamoAPL({
   }),
 });
 
-describe("TransactionInitializeSession webhook: integration", async () => {
+describe("PaymentGatewayInitialize webhook: integration", async () => {
   beforeEach(async () => {
     vi.spyOn(verifyWebhookSignatureModule, "verifyWebhookSignature").mockImplementation(
       async () => {},
@@ -61,16 +57,10 @@ describe("TransactionInitializeSession webhook: integration", async () => {
       saleorApiUrl: realSaleorApiUrl,
       appId: mockedSaleorAppId,
       config: StripeConfig.create({
-        publishableKey: createStripePublishableKey(
-          // eslint-disable-next-line n/no-process-env,turbo/no-undeclared-env-vars
-          process.env.TEST_STRIPE_PK as string,
-        )._unsafeUnwrap(),
+        publishableKey: mockedStripePublishableKey,
         name: "Config name",
         webhookId: "we_123",
-        restrictedKey: createStripeRestrictedKey(
-          // eslint-disable-next-line n/no-process-env,turbo/no-undeclared-env-vars
-          process.env.TEST_STRIPE_RK as string,
-        )._unsafeUnwrap(),
+        restrictedKey: mockedStripeRestrictedKey,
         webhookSecret: mockStripeWebhookSecret,
         id: randomId,
       })._unsafeUnwrap(),
@@ -91,7 +81,7 @@ describe("TransactionInitializeSession webhook: integration", async () => {
   /**
    * Verify snapshot - if your changes cause manifest to be different, ensure changes are expected
    */
-  it("Returns response with CHARGE_ACTION_REQUIRED and client secret in data", async () => {
+  it("Returns response with stored publishable key from the config", async () => {
     // TODO: Why we pass it directly, should subscription resolve to have event {} first? (todo check api response in logs)
     const eventPayload = {
       sourceObject: {
@@ -105,21 +95,7 @@ describe("TransactionInitializeSession webhook: integration", async () => {
       recipient: {
         id: mockedSaleorAppId,
       },
-      data: parseTransactionInitializeSessionEventData({
-        paymentIntent: {
-          paymentMethod: "card",
-        },
-      })._unsafeUnwrap(),
-      action: {
-        actionType: "CHARGE",
-        amount: 123.3,
-        currency: "USD",
-      },
-      idempotencyKey: "123",
-      transaction: {
-        id: mockedSaleorTransactionIdBranded,
-      },
-    } satisfies TransactionInitializeSessionEventFragment;
+    } satisfies PaymentGatewayInitializeSessionEventFragment;
 
     await testApiHandler({
       appHandler: manifestHandlers,
@@ -129,25 +105,14 @@ describe("TransactionInitializeSession webhook: integration", async () => {
           body: JSON.stringify(eventPayload),
           headers: new Headers({
             "saleor-api-url": realSaleorApiUrl,
-            "saleor-event": "transaction_initialize_session",
+            "saleor-event": "payment_gateway_initialize_session",
             "saleor-signature": "mock-signature",
           }),
         });
 
         const body = await response.json();
 
-        expect(body).toStrictEqual({
-          data: {
-            paymentIntent: {
-              stripeClientSecret: expect.stringContaining("pi_"),
-            },
-          },
-          result: "CHARGE_ACTION_REQUIRED",
-          amount: 123.3,
-          pspReference: expect.stringContaining("pi_"),
-          message: "Payment intent requires payment method",
-          externalUrl: expect.stringContaining("https://dashboard.stripe.com/test/payments/pi_"),
-        });
+        expect(body).toStrictEqual({ data: { stripePublishableKey: "pk_live_1" } });
 
         expect(response.status).toStrictEqual(200);
       },

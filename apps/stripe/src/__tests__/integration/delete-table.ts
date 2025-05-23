@@ -4,7 +4,7 @@
 
 import { DeleteTableCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
-const TABLE_NAME = process.env.INTEGRATION_DYNAMO_TABLE_NAME ?? "stripe-main-table-integration";
+const TABLE_NAME = process.env.DYNAMODB_MAIN_TABLE_NAME;
 
 const client = new DynamoDBClient();
 
