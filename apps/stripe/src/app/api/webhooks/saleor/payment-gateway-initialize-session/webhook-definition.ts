@@ -1,4 +1,4 @@
-import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
+import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/aws-lambda";
 
 import {
   PaymentGatewayInitializeSessionDocument,
