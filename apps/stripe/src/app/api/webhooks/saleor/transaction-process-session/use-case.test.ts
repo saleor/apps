@@ -11,12 +11,12 @@ import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-p
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionProcessSessionEvent } from "@/__tests__/mocks/transaction-process-session-event";
-import { BaseError } from "@/lib/errors";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
   MalformedRequestResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
+import { BaseError } from "@/lib/errors";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
@@ -211,13 +211,13 @@ describe("TransactionProcessSessionUseCase", () => {
       transactionRecorder: mockedTransationRecorder,
     });
 
-    await expect(
-      uc.execute({
-        saleorApiUrl: mockedSaleorApiUrl,
-        appId: mockedSaleorAppId,
-        event: saleorEvent,
-      }),
-    ).resolves.toStrictEqual(err(new BrokenAppResponse()));
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
   it("Throws error when Stripe Payment Intent status is not supported", async () => {

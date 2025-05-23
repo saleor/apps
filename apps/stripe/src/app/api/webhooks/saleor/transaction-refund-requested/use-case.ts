@@ -1,17 +1,19 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { err, ok, Result } from "neverthrow";
 
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+  MalformedRequestResponse,
+} from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
+import { appContextContainer } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  MalformedRequestResponse,
-} from "@/modules/saleor/saleor-webhook-responses";
 import {
   getAmountFromRequestedEventPayload,
   getChannelIdFromRequestedEventPayload,
@@ -71,7 +73,12 @@ export class TransactionRefundRequestedUseCase {
         error: stripeConfigForThisChannel.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(
+          appContextContainer.getContextValue(),
+          stripeConfigForThisChannel.error,
+        ),
+      );
     }
 
     if (!stripeConfigForThisChannel.value) {
@@ -79,8 +86,17 @@ export class TransactionRefundRequestedUseCase {
         channelId,
       });
 
-      return err(new AppIsNotConfiguredResponse());
+      return err(
+        new AppIsNotConfiguredResponse(
+          appContextContainer.getContextValue(),
+          new BaseError("Config for channel not found"),
+        ),
+      );
     }
+
+    appContextContainer.set({
+      stripeEnv: stripeConfigForThisChannel.value.getStripeEnvValue(),
+    });
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
 
@@ -94,7 +110,6 @@ export class TransactionRefundRequestedUseCase {
     });
 
     const stripePaymentIntentId = createStripePaymentIntentId(transaction.pspReference);
-    const stripeEnv = stripeConfigForThisChannel.value.getStripeEnvValue();
 
     const stripeMoneyResult = StripeMoney.createFromSaleorAmount({
       amount: amount,
@@ -106,7 +121,12 @@ export class TransactionRefundRequestedUseCase {
         error: stripeMoneyResult.error,
       });
 
-      return err(new MalformedRequestResponse());
+      return err(
+        new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          stripeMoneyResult.error,
+        ),
+      );
     }
 
     const createRefundResult = await stripeRefundsApi.createRefund({
@@ -124,10 +144,10 @@ export class TransactionRefundRequestedUseCase {
       return ok(
         new TransactionRefundRequestedUseCaseResponses.Failure({
           transactionResult: new RefundFailureResult(),
-          stripeEnv,
           stripePaymentIntentId,
           saleorEventAmount: amount,
           error,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -148,12 +168,15 @@ export class TransactionRefundRequestedUseCase {
         error: saleorMoneyResult.error,
       });
 
-      return err(new BrokenAppResponse());
+      return err(
+        new BrokenAppResponse(appContextContainer.getContextValue(), saleorMoneyResult.error),
+      );
     }
 
     return ok(
       new TransactionRefundRequestedUseCaseResponses.Success({
         stripeRefundId: createStripeRefundId(refund.id),
+        appContext: appContextContainer.getContextValue(),
       }),
     );
   }

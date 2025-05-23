@@ -1,16 +1,17 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
+import { createFailureWebhookResponseDataSchema } from "@/app/api/webhooks/saleor/saleor-webhook-response-schema";
+import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
+import { AppContext } from "@/lib/app-context";
+import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
-import { createFailureWebhookResponseDataSchema } from "@/modules/saleor/saleor-webhook-response-schema";
-import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import {
   StripeApiError,
   StripeApiErrorPublicCode,
   StripeCardErrorPublicCode,
 } from "@/modules/stripe/stripe-api-error";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import {
   AuthorizationActionRequiredResult,
@@ -42,34 +43,36 @@ class Success extends SuccessWebhookResponse {
   readonly saleorMoney: SaleorMoney;
   readonly timestamp: Date | null;
   readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly stripeEnv: StripeEnv;
 
   constructor(args: {
     transactionResult: TransactionResult;
     saleorMoney: SaleorMoney;
     timestamp: Date | null;
     stripePaymentIntentId: StripePaymentIntentId;
-    stripeEnv: StripeEnv;
+    appContext: AppContext;
   }) {
-    super();
+    super(args.appContext);
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
     this.timestamp = args.timestamp;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
-    this.stripeEnv = args.stripeEnv;
   }
 
   getResponse(): Response {
+    if (!this.appContext.stripeEnv) {
+      throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
+    }
+
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
+      // https://docs.stripe.com/payments/paymentintents/lifecycle
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
-      // https://docs.stripe.com/payments/paymentintents/lifecycle
-      message: this.transactionResult.message,
+      message: this.messageFormatter.formatMessage(this.transactionResult.message),
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.stripePaymentIntentId,
-        this.stripeEnv,
+        this.appContext.stripeEnv,
       ),
       time: this.timestamp?.toISOString(),
     });
@@ -83,7 +86,6 @@ class Failure extends SuccessWebhookResponse {
   readonly error: StripeApiError;
   readonly saleorEventAmount: number;
   readonly stripePaymentIntentId: StripePaymentIntentId;
-  readonly stripeEnv: StripeEnv;
 
   private static ResponseDataSchema = createFailureWebhookResponseDataSchema(
     z.array(
@@ -99,32 +101,35 @@ class Failure extends SuccessWebhookResponse {
     error: StripeApiError;
     saleorEventAmount: number;
     stripePaymentIntentId: StripePaymentIntentId;
-    stripeEnv: StripeEnv;
+    appContext: AppContext;
   }) {
-    super();
+    super(args.appContext);
     this.transactionResult = args.transactionResult;
     this.error = args.error;
     this.saleorEventAmount = args.saleorEventAmount;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
-    this.stripeEnv = args.stripeEnv;
   }
 
   getResponse() {
+    if (!this.appContext.stripeEnv) {
+      throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
+    }
+
     const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION">({
       result: this.transactionResult.result,
-      message: this.error.merchantMessage,
+      message: this.messageFormatter.formatMessage(this.error.merchantMessage, this.error),
       amount: this.saleorEventAmount,
       pspReference: this.stripePaymentIntentId,
       externalUrl: generatePaymentIntentStripeDashboardUrl(
         this.stripePaymentIntentId,
-        this.stripeEnv,
+        this.appContext.stripeEnv,
       ),
       data: Failure.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [
             {
               code: this.error.publicCode,
-              message: this.error.publicMessage,
+              message: this.messageFormatter.formatMessage(this.error.publicMessage, this.error),
             },
           ],
         },
