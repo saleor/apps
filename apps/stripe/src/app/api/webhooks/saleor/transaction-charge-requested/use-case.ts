@@ -15,7 +15,6 @@ import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
-  getAmountFromRequestedEventPayload,
   getChannelIdFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
 } from "@/modules/saleor/transaction-requested-event-helpers";
@@ -57,7 +56,6 @@ export class TransactionChargeRequestedUseCase {
 
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
-    const amount = getAmountFromRequestedEventPayload(event);
 
     loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
 
@@ -124,7 +122,6 @@ export class TransactionChargeRequestedUseCase {
         new TransactionChargeRequestedUseCaseResponses.Failure({
           transactionResult: new ChargeFailureResult(),
           stripePaymentIntentId: paymentIntentIdResult,
-          saleorEventAmount: amount,
           error,
           appContext: appContextContainer.getContextValue(),
         }),

@@ -37,7 +37,10 @@ class Success extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<
+      "TRANSACTION_CANCELATION_REQUESTED",
+      "3.21"
+    >({
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
@@ -57,20 +60,17 @@ class Success extends SuccessWebhookResponse {
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: CancelFailureResult;
   readonly error: StripeApiError;
-  readonly saleorEventAmount: number;
   readonly stripePaymentIntentId: StripePaymentIntentId;
 
   constructor(args: {
     transactionResult: CancelFailureResult;
     error: StripeApiError;
-    saleorEventAmount: number;
     stripePaymentIntentId: StripePaymentIntentId;
     appContext: AppContext;
   }) {
     super(args.appContext);
     this.transactionResult = args.transactionResult;
     this.error = args.error;
-    this.saleorEventAmount = args.saleorEventAmount;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
   }
 
@@ -79,10 +79,12 @@ class Failure extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_CANCELATION_REQUESTED">({
+    const typeSafeResponse = buildSyncWebhookResponsePayload<
+      "TRANSACTION_CANCELATION_REQUESTED",
+      "3.21"
+    >({
       result: this.transactionResult.result,
       pspReference: this.stripePaymentIntentId,
-      amount: this.saleorEventAmount,
       message: this.messageFormatter.formatMessage(this.error.merchantMessage, this.error),
       actions: this.transactionResult.actions,
       externalUrl: generatePaymentIntentStripeDashboardUrl(

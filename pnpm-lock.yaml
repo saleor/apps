@@ -43,8 +43,8 @@ catalogs:
       specifier: 1.30.0
       version: 1.30.0
     '@saleor/app-sdk':
-      specifier: 1.0.4
-      version: 1.0.4
+      specifier: 0.0.0-pr-20250519070613
+      version: 0.0.0-pr-20250519070613
     '@saleor/macaw-ui':
       specifier: 1.1.10
       version: 1.1.10
@@ -100,7 +100,7 @@ importers:
         version: 8.17.5
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 1.0.4(graphql@16.7.1)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 0.0.0-pr-20250519070613(graphql@16.7.1)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       cspell:
         specifier: 8.17.5
         version: 8.17.5
@@ -5183,8 +5183,8 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@saleor/app-sdk@1.0.4':
-    resolution: {integrity: sha512-b4cg+X3vtJNcXqKSqrNlgo9UV5ozQkGCdcotRhyECOkb7RVm3JwY67CckWEM9dz7J/ZjuvE0v1YEabBNKGQ97Q==}
+  '@saleor/app-sdk@0.0.0-pr-20250519070613':
+    resolution: {integrity: sha512-xYmgXPc9DeOrrX4PSMXP8NpB8m7tF2WXX094cdkioW+3GtUJNQ+8YzO01RqON/RIpzxFAWPbm2HqXoNFNbBY8Q==}
     peerDependencies:
       '@vercel/kv': ^1.0.0
       graphql: '>=16.6.0'
@@ -15643,7 +15643,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@saleor/app-sdk@1.0.4(graphql@16.7.1)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/app-sdk@0.0.0-pr-20250519070613(graphql@16.7.1)(next@15.2.4(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.30.0
