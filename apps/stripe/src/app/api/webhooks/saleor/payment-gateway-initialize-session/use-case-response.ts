@@ -1,7 +1,8 @@
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
-import { SuccessWebhookResponse } from "@/modules/saleor/saleor-webhook-responses";
+import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
+import { AppContext } from "@/lib/app-context";
 import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 
 class Success extends SuccessWebhookResponse {
@@ -11,8 +12,8 @@ class Success extends SuccessWebhookResponse {
     stripePublishableKey: z.string(),
   });
 
-  constructor(args: { pk: StripePublishableKey }) {
-    super();
+  constructor(args: { pk: StripePublishableKey; appContext: AppContext }) {
+    super(args.appContext);
     this.pk = args.pk;
   }
 

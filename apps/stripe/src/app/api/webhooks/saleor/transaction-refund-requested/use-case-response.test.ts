@@ -12,6 +12,9 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionRefundRequestedUseCaseResponses.Success({
         stripeRefundId: mockedStripeRefundId,
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -28,10 +31,12 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
     it("getResponse() returns valid Response with status 200", async () => {
       const response = new TransactionRefundRequestedUseCaseResponses.Failure({
         transactionResult: new RefundFailureResult(),
-        stripeEnv: "TEST",
         stripePaymentIntentId: mockedStripePaymentIntentId,
         saleorEventAmount: 112.33,
         error: new StripeAPIError("Error from stripe"),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
       });
       const fetchReponse = response.getResponse();
 
@@ -42,7 +47,7 @@ describe("TransactionRefundRequestedUseCaseResponses", () => {
             "REFUND",
           ],
           "amount": 112.33,
-          "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
           "message": "There is a problem with the request to Stripe API",
           "pspReference": "pi_TEST_TEST_TEST",
           "result": "REFUND_FAILURE",

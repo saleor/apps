@@ -5,7 +5,7 @@ import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { AppIsNotConfiguredResponse } from "@/modules/saleor/saleor-webhook-responses";
+import { AppIsNotConfiguredResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 
 import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 import { PaymentGatewayInitializeSessionUseCaseResponses } from "./use-case-response";
