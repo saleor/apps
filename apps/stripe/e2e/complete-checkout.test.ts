@@ -1,77 +1,58 @@
 import { expect, test } from "@playwright/test";
 
-import {
-  CheckoutCompleteDocument,
-  CheckoutCreateDocument,
-  CheckoutDeliveryMethodUpdateDocument,
-} from "./generated/graphql";
-import { callSaleorGraphqlApi } from "./helpers";
+import { SaleorApi } from "./api/saleor-api";
+import { env } from "./env";
+import { StripeCheckoutFormPage } from "./pages/stripe-checkout-form-page";
+import { SummaryPage } from "./pages/summary-page";
 
-const apiUrl = "https://ext-team-latest-e2e.staging.saleor.cloud/graphql/";
+test("Complete checkout with transactionFlowStrategy: charge", async ({ request, page }) => {
+  const saleorApi = new SaleorApi(request);
+  const stripeCheckoutFormPage = new StripeCheckoutFormPage(page);
+  const summaryPage = new SummaryPage(page);
 
-test("Complete checkout with charge", async ({ request, page }) => {
-  const createCheckoutResponse = await callSaleorGraphqlApi(request, CheckoutCreateDocument, {
-    channelSlug: "pln-charge",
-    variantId: "UHJvZHVjdFZhcmlhbnQ6MzQ2",
-    email: "e2e-test@saleor.io",
+  const checkoutId = await saleorApi.createCheckout({
+    channelSlug: env.E2E_CHARGE_CHANNEL_SLUG,
   });
 
-  const checkoutId = createCheckoutResponse.data.checkoutCreate?.checkout?.id;
+  await stripeCheckoutFormPage.goto({ checkoutId });
+  await stripeCheckoutFormPage.fillCardInformation();
+  await stripeCheckoutFormPage.pay();
 
-  expect(checkoutId).toBeDefined();
+  await summaryPage.processSession();
 
-  const deliveryMethodId =
-    createCheckoutResponse.data.checkoutCreate?.checkout?.shippingMethods[0].id;
-
-  expect(deliveryMethodId).toBeDefined();
-
-  await callSaleorGraphqlApi(request, CheckoutDeliveryMethodUpdateDocument, {
-    checkoutId: checkoutId!,
-    deliveryMethodId: deliveryMethodId!,
+  const order = await saleorApi.completeCheckout({
+    checkoutId,
   });
 
-  const encodedGraphqlUrl = encodeURIComponent(apiUrl);
-  const gateway = "stripe";
-  const appId = "saleor.app.payment.stripe-v2";
+  expect(order.id, "order.id").toBeDefined();
+  expect(order.status, "order.status").toBe("UNFULFILLED");
+  expect(order.chargeStatus, "order.chargeStatus").toBe("FULL");
+  expect(order.paymentStatus, "order.paymentStatus").toBe("FULLY_CHARGED");
+  expect(order.authorizeStatus, "order.authorizeStatus").toBe("FULL");
+});
 
-  const path = `/env/${encodedGraphqlUrl}/checkout/${checkoutId}/payment-gateway/${gateway}/${appId}`;
+test("Complete checkout with transactionFlowStrategy: authorize", async ({ request, page }) => {
+  const saleorApi = new SaleorApi(request);
+  const stripeCheckoutFormPage = new StripeCheckoutFormPage(page);
+  const summaryPage = new SummaryPage(page);
 
-  await page.goto(path);
-
-  const cardNumberInput = page
-    .frameLocator('[title="Secure payment input frame"]')
-    .locator('input[name="number"]');
-
-  await cardNumberInput.click();
-  await cardNumberInput.fill("4242424242424242");
-
-  const cardExpiryInput = page
-    .frameLocator('[title="Secure payment input frame"]')
-    .locator('input[name="expiry"]');
-
-  await cardExpiryInput.click();
-  await cardExpiryInput.fill("01/50");
-
-  const cardCvcInput = page
-    .frameLocator('[title="Secure payment input frame"]')
-    .locator('input[name="cvc"]');
-
-  await cardCvcInput.click();
-  await cardCvcInput.fill("123");
-
-  await page.getByTestId("button-pay").click();
-
-  await page.getByTestId("button-force-process-session").click();
-
-  await page.waitForTimeout(1_000);
-
-  const checkoutComplete = await callSaleorGraphqlApi(request, CheckoutCompleteDocument, {
-    checkoutId: checkoutId!,
+  const checkoutId = await saleorApi.createCheckout({
+    channelSlug: env.E2E_AUTHORIZATION_CHANNEL_SLUG,
   });
 
-  expect(checkoutComplete.data.checkoutComplete?.order?.id).toBeDefined();
-  expect(checkoutComplete.data.checkoutComplete?.order?.status).toBe("UNFULFILLED");
-  expect(checkoutComplete.data.checkoutComplete?.order?.chargeStatus).toBe("FULL");
-  expect(checkoutComplete.data.checkoutComplete?.order?.paymentStatus).toBe("FULLY_CHARGED");
-  expect(checkoutComplete.data.checkoutComplete?.order?.authorizeStatus).toBe("FULL");
+  await stripeCheckoutFormPage.goto({ checkoutId });
+  await stripeCheckoutFormPage.fillCardInformation();
+  await stripeCheckoutFormPage.pay();
+
+  await summaryPage.processSession();
+
+  const order = await saleorApi.completeCheckout({
+    checkoutId,
+  });
+
+  expect(order.id, "order.id").toBeDefined();
+  expect(order.status, "order.status").toBe("UNFULFILLED");
+  expect(order.chargeStatus, "order.chargeStatus").toBe("NONE");
+  expect(order.paymentStatus, "order.paymentStatus").toBe("NOT_CHARGED");
+  expect(order.authorizeStatus, "order.authorizeStatus").toBe("FULL");
 });

@@ -1,16 +1,16 @@
-/* eslint-disable n/no-process-env */
 import { defineConfig, devices } from "@playwright/test";
+import { env } from "e2e/env";
 
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  forbidOnly: !!env.CI,
+  retries: env.CI ? 2 : 0,
+  workers: env.CI ? 1 : undefined,
   reporter: "html",
   use: {
     trace: "on-first-retry",
-    baseURL: "http://localhost:3001",
+    baseURL: env.E2E_BASE_URL,
   },
   projects: [
     {
