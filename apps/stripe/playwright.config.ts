@@ -10,6 +10,8 @@ export default defineConfig({
   reporter: "html",
   use: {
     trace: "on-first-retry",
+    screenshot: "only-on-failure",
+    video: "on-first-retry",
     baseURL: env.E2E_BASE_URL,
   },
   projects: [
