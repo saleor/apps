@@ -10,7 +10,7 @@ export class SummaryPage {
   }
 
   async processSession() {
-    await this.page.waitForTimeout(1000); // Wait for 1 second to ensure the session is processed
+    await this.page.waitForLoadState("networkidle"); // Ensure the page is fully loaded
     await this.processSessionButton.click();
     await this.page.waitForTimeout(1000); // Wait for 1 second to ensure the session is processed
   }
