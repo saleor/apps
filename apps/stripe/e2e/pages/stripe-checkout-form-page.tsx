@@ -6,6 +6,7 @@ export class StripeCheckoutFormPage {
   readonly cardNumberInput: Locator;
   readonly cardExpiryInput: Locator;
   readonly cardCvcInput: Locator;
+  readonly zipCodeInput: Locator;
   readonly payButton: Locator;
 
   constructor(page: Page) {
@@ -19,6 +20,9 @@ export class StripeCheckoutFormPage {
     this.cardCvcInput = page
       .frameLocator('[title="Secure payment input frame"]')
       .locator('input[name="cvc"]');
+    this.zipCodeInput = page
+      .frameLocator('[title="Secure payment input frame"]')
+      .locator('input[name="postalCode"]');
     this.payButton = page.getByTestId("button-pay");
   }
 
@@ -43,6 +47,9 @@ export class StripeCheckoutFormPage {
 
     await this.cardCvcInput.click();
     await this.cardCvcInput.fill("123");
+
+    await this.zipCodeInput.click();
+    await this.zipCodeInput.fill("10001");
   }
 
   async pay() {
