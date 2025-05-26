@@ -11,7 +11,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  setup-saleor-envs:
+  setup-saleor-env:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -46,7 +46,7 @@ jobs:
       fail-fast: false
       matrix:
         saleor: [319, 320, latest]
-    needs: setup-saleor-envs
+    needs: setup-saleor-env
     env:
       SALEOR_VERSION: ${{ matrix.saleor }}
     steps:
@@ -84,7 +84,7 @@ jobs:
       fail-fast: false
       matrix:
         saleor: [latest]
-    needs: setup-saleor-envs
+    needs: setup-saleor-env
     env:
       SALEOR_VERSION: ${{ matrix.saleor }}
     steps:
