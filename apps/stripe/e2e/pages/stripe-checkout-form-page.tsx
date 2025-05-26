@@ -1,4 +1,5 @@
 import { Locator, Page } from "@playwright/test";
+import { env } from "e2e/env";
 
 export class StripeCheckoutFormPage {
   private readonly page: Page;
@@ -22,9 +23,7 @@ export class StripeCheckoutFormPage {
   }
 
   private constructPath(checkoutId: string) {
-    const encodedGraphqlUrl = encodeURIComponent(
-      "https://ext-team-latest-e2e.staging.saleor.cloud/graphql/",
-    );
+    const encodedGraphqlUrl = encodeURIComponent(env.E2E_SALEOR_API_URL);
     const gateway = "stripe";
     const appId = "saleor.app.payment.stripe-v2";
 

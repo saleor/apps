@@ -22,7 +22,6 @@ export class SaleorApi {
   ): Promise<{ data: TResult }> {
     const response = await this.request.post(env.E2E_SALEOR_API_URL, {
       data: {
-        // TODO: figure out if we need that?
         query: print(ast),
         variables,
       },

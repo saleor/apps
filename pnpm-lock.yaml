@@ -1617,12 +1617,6 @@ importers:
       dynamodb-toolbox:
         specifier: 1.8.2
         version: 1.8.2(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
-      graphql:
-        specifier: 16.7.1
-        version: 16.7.1
-      graphql-tag:
-        specifier: 2.12.6
-        version: 2.12.6(graphql@16.7.1)
       modern-errors:
         specifier: 7.0.1
         version: 7.0.1
@@ -1729,9 +1723,15 @@ importers:
       eslint-plugin-n:
         specifier: 17.16.2
         version: 17.16.2(eslint@9.23.0(jiti@2.4.2))
+      graphql:
+        specifier: 16.7.1
+        version: 16.7.1
       graphql-config:
         specifier: 5.0.3
         version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.8.2)
+      graphql-tag:
+        specifier: 2.12.6
+        version: 2.12.6(graphql@16.7.1)
       next-test-api-route-handler:
         specifier: 4.0.16
         version: 4.0.16(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))

@@ -11,7 +11,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  e2e:
+  e2e-avatax:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -36,7 +36,7 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --filter=saleor-app-avatax
+        run: pnpm install --frozen-lockfile
       - name: Get Saleor snapshot
         run: |
           BACKUP=$(pnpm dlx saleor backup list --name="snapshot-ext-$SALEOR_VERSION-e2e" --latest --json)
@@ -45,7 +45,7 @@ jobs:
       - name: Restore Saleor snapshot
         run: |
           pnpm dlx saleor backup restore --from="$BACKUP_ID" --environment="ext-$SALEOR_VERSION-e2e" --skip-webhooks-update
-      - name: Load secrets
+      - name: Load secrets for Avatax e2e tests
         uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
         with:
           export-env: true
@@ -59,6 +59,59 @@ jobs:
           AWS_REGION: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_REGION"
           AWS_ACCESS_KEY_ID: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_ACCESS_KEY_ID"
           AWS_SECRET_ACCESS_KEY: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_SECRET_ACCESS_KEY"
-      - name: Run e2e tests
+      - name: Run Avatax e2e tests
         run: pnpm --filter=saleor-app-avatax e2e
-      # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304
+
+  e2e-stripe:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        saleor: [latest]
+    env:
+      ACCESS_TOKEN: ${{ secrets.saleor-token }}
+      SALEOR_VERSION: ${{ matrix.saleor }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Saleor CLI
+        run: |
+          jq --null-input \
+             --arg token "Token $ACCESS_TOKEN" \
+             '{"token":$token,"telemetry":"false","saleor_env":"staging","cloud_api_url":"https://cloud.staging.saleor.io/platform/api","organization_slug":"saleor","organization_name":"Saleor"}' > ~/.config/saleor.json
+      - name: Setup PNPM
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Get Saleor snapshot
+        run: |
+          BACKUP=$(pnpm dlx saleor backup list --name="snapshot-ext-$SALEOR_VERSION-e2e" --latest --json)
+          BACKUP_ID=$(echo "$BACKUP" | jq -r '.[0].key')
+          echo "BACKUP_ID=$BACKUP_ID" >> "$GITHUB_ENV"
+      - name: Restore Saleor snapshot
+        run: |
+          pnpm dlx saleor backup restore --from="$BACKUP_ID" --environment="ext-$SALEOR_VERSION-e2e" --skip-webhooks-update
+      - name: Load secrets for Stripe e2e tests
+        uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.op-service-account-token }}
+          E2E_BASE_URL: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_BASE_URL"
+          E2E_SALEOR_API_URL: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_SALEOR_API_URL"
+          E2E_CHARGE_CHANNEL_SLUG: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_CHARGE_CHANNEL_SLUG"
+          E2E_AUTHORIZATION_CHANNEL_SLUG: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_AUTHORIZATION_CHANNEL_SLUG"
+      - name: Run Stripe e2e tests
+        run: pnpm --filter=saleor-app-payment-stripe-v2 test:e2e
+      - name: Upload HTML report to GitHub Actions Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: "playwright-report-${{ env.SALEOR_VERSION }}"
+          path: apps/stripe/playwright-report
+          retention-days: 1
