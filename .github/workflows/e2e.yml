@@ -10,6 +10,11 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  contents: read
+  id-token: write
+  actions: read
+
 jobs:
   setup-saleor-env:
     runs-on: ubuntu-22.04
@@ -109,6 +114,8 @@ jobs:
           E2E_SALEOR_API_URL: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_SALEOR_API_URL"
           E2E_CHARGE_CHANNEL_SLUG: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_CHARGE_CHANNEL_SLUG"
           E2E_AUTHORIZATION_CHANNEL_SLUG: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_AUTHORIZATION_CHANNEL_SLUG"
+      - name: Install playwright dependencies
+        run: pnpm exec playwright install --with-deps
       - name: Run Stripe e2e tests
         run: pnpm --filter=saleor-app-payment-stripe-v2 test:e2e
       - name: Upload HTML report to GitHub Actions Artifacts
