@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "saleor-app-payment-stripe-v2",
+  "name": "saleor-app-payment-stripe",
   "version": "2.0.0",
   "private": true,
   "type": "module",
