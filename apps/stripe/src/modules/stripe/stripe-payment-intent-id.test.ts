@@ -13,8 +13,9 @@ describe("createStripePaymentIntentId", () => {
     expect(() => createStripePaymentIntentId("")).toThrowError();
   });
 
-  it("should return error when payment intent id does not start with pi_", () => {
-    expect(() => createStripePaymentIntentId("invalid123")).toThrowError();
+  it("should NOT return error when payment intent id does not start with pi_", () => {
+    // Do not break the flow, but Sentry will be called
+    expect(() => createStripePaymentIntentId("invalid123")).not.toThrow();
   });
 
   it("shouldn't be assignable without createStripePaymentIntentId", () => {
