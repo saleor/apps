@@ -105,7 +105,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Install playwright dependencies
-        run: pnpm --filter=saleor-app-payment-stripe-v2 exec playwright install --with-deps chromium
+        run: pnpm --filter=saleor-app-payment-stripe exec playwright install --with-deps chromium
       - name: Load secrets for Stripe e2e tests
         uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
         with:
@@ -117,7 +117,7 @@ jobs:
           E2E_CHARGE_CHANNEL_SLUG: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_CHARGE_CHANNEL_SLUG"
           E2E_AUTHORIZATION_CHANNEL_SLUG: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_AUTHORIZATION_CHANNEL_SLUG"
       - name: Run Stripe e2e tests
-        run: pnpm --filter=saleor-app-payment-stripe-v2 test:e2e
+        run: pnpm --filter=saleor-app-payment-stripe test:e2e
       - name: Upload HTML report to GitHub Actions Artifacts
         uses: actions/upload-artifact@v4
         if: always()
