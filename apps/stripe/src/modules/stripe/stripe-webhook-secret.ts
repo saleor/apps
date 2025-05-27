@@ -1,3 +1,4 @@
+import { captureMessage } from "@sentry/nextjs";
 import { fromThrowable } from "neverthrow";
 import { z } from "zod";
 
@@ -15,7 +16,18 @@ export const StripeWebhookSecretValidationError = BaseError.subclass(
 export const StripeWebhookSecretSchema = z
   .string()
   .min(1)
-  .startsWith("whsec_")
+  .refine((v) => {
+    if (!v.startsWith("whsec_")) {
+      captureMessage("Received unexpected Stripe Webhook Secret format", (scope) => {
+        scope.setLevel("warning");
+        scope.setExtra("first4letters", v.slice(0, 4));
+
+        return scope;
+      });
+    }
+
+    return true;
+  })
   .brand("StripeWebhookSecret");
 
 export const createStripeWebhookSecret = (raw: string | null) =>

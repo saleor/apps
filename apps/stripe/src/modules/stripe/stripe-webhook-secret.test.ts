@@ -12,9 +12,14 @@ describe("StripeWebhookSecret", () => {
 
     expect(brandedString).toStrictEqual("whsec_XYZ");
   });
+  it("Creates from unexpected valid string", () => {
+    const brandedString = createStripeWebhookSecret("unexpected_prefix_xyz")._unsafeUnwrap();
 
-  it.each(["", "test"])("Throws if invalid value passed: %s", (value) => {
-    expect(createStripeWebhookSecret(value)._unsafeUnwrapErr()).toBeInstanceOf(
+    expect(brandedString).toStrictEqual("unexpected_prefix_xyz");
+  });
+
+  it("Throws if empty value passed", () => {
+    expect(createStripeWebhookSecret("")._unsafeUnwrapErr()).toBeInstanceOf(
       StripeWebhookSecretValidationError,
     );
   });
