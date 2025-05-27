@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Load secrets for Avatax e2e tests
+      - name: Load secrets for Stripe integration tests
         uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
         with:
           export-env: true
