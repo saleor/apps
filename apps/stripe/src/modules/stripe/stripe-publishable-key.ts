@@ -1,3 +1,4 @@
+import { captureMessage } from "@sentry/nextjs";
 import { fromThrowable } from "neverthrow";
 import { z } from "zod";
 
@@ -16,7 +17,18 @@ export const StripePublishableKeySchema = z
   .string()
   .min(1)
   .refine((value) => {
-    return value.startsWith("pk_test_") || value.startsWith("pk_live_");
+    const expected = value.startsWith("pk_test_") || value.startsWith("pk_live_");
+
+    if (!expected) {
+      captureMessage("Received unexpected Stripe PK format", (scope) => {
+        scope.setLevel("warning");
+        scope.setExtra("first8letters", value.slice(0, 8));
+
+        return scope;
+      });
+    }
+
+    return true;
   })
   .brand("StripePublishableKey");
 

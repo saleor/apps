@@ -21,11 +21,11 @@ describe("StripePublishableKey", () => {
       expect(result._unsafeUnwrap()).toBe("pk_live_valid456");
     });
 
-    it("should return error for invalid key format", () => {
+    it("should accepted potentially invalid key, even if format is not expected", () => {
       const result = createStripePublishableKey("invalid_key");
 
-      expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripePublishableKeyValidationError);
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap()).toBe("invalid_key");
     });
 
     it("should return error if key is empty", () => {
@@ -42,11 +42,6 @@ describe("StripePublishableKey", () => {
             "inclusive": true,
             "exact": false,
             "message": "String must contain at least 1 character(s)",
-            "path": []
-          },
-          {
-            "code": "custom",
-            "message": "Invalid input",
             "path": []
           }
         ]"
