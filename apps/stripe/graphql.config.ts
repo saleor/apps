@@ -2,6 +2,27 @@ import { IGraphQLConfig } from "graphql-config";
 
 const config: IGraphQLConfig = {
   projects: {
+    e2e: {
+      schema: "graphql/schema.graphql",
+      documents: ["e2e/**/*.graphql"],
+      extensions: {
+        codegen: {
+          generates: {
+            "e2e/generated/graphql.ts": {
+              plugins: [
+                {
+                  typescript: {
+                    enumsAsTypes: true,
+                  },
+                },
+                "typescript-operations",
+                "typed-document-node",
+              ],
+            },
+          },
+        },
+      },
+    },
     default: {
       schema: "graphql/schema.graphql",
       documents: ["graphql/**/*.graphql"],

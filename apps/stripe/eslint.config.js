@@ -22,6 +22,7 @@ export default [
       "src/instrumentation.ts",
       "*.test.ts",
       "src/__tests__/**",
+      "e2e/**",
     ],
     rules: {
       "n/no-process-env": "off",
@@ -29,7 +30,7 @@ export default [
   },
   {
     name: "saleor-app-payment-stripe/override-turbo-env-requirement",
-    files: ["src/__tests__/**", "*.test.ts"],
+    files: ["src/__tests__/**", "*.test.ts", "e2e/**"],
     rules: {
       "turbo/no-undeclared-env-vars": "off",
     },

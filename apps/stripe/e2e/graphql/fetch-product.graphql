@@ -1,0 +1,16 @@
+query FetchProduct($channelSlug: String!) {
+  products(
+    where: { isAvailable: true, isPublished: true, isVisibleInListing: true }
+    channel: $channelSlug
+    first: 1
+  ) {
+    edges {
+      node {
+        name
+        defaultVariant {
+          id
+        }
+      }
+    }
+  }
+}
