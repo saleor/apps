@@ -52,12 +52,7 @@ In the `apps` folder, you will find the following applications:
 - [Search](./apps/search) - connect Saleor with search engines.
 - [Segment](./apps/segment/) - connect Saleor with Twilio Segment.
 - [SMTP](./apps/smtp) - email communication with customers.
-
-#### Other official apps
-
-Some of the Saleor apps are available in separate repositories:
-
-- [Stripe](https://github.com/saleor/saleor-app-payment-stripe)
+- [Stripe](./apps/stripe/) - connect Saleor with Stripe
 
 #### Example apps
 
