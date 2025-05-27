@@ -79,7 +79,7 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
         cause: result,
       });
     } catch (e) {
-      this.logger.error("Failed to write transaction to DynamoDB", {
+      this.logger.debug("Failed to write transaction to DynamoDB", {
         error: e,
       });
 
