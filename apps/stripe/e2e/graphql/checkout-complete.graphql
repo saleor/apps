@@ -1,0 +1,16 @@
+mutation checkoutComplete($checkoutId: ID!) {
+  checkoutComplete(id: $checkoutId) {
+    order {
+      id
+      status
+      chargeStatus
+      paymentStatus
+      authorizeStatus
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

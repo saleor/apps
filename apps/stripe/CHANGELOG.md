@@ -1,14 +1,7 @@
-# saleor-app-payment-stripe-v2
+# saleor-app-payment-stripe
 
-## 0.0.2
+## 2.0.1
 
 ### Patch Changes
 
-- Updated dependencies [e3c75265]
-- Updated dependencies [b4ed42c9]
-- Updated dependencies [e3c75265]
-- Updated dependencies [b4ed42c9]
-  - @saleor/apps-otel@2.2.0
-  - @saleor/apps-shared@1.12.3
-  - @saleor/apps-logger@1.5.5
-  - @saleor/apps-trpc@4.0.3
+- af4f38ec: App doesn't throw anymore when ID from Stripe doesn't match expected format. Previously app was checking format like "pk*live*" or "whsec\_". Now it will inform Sentry that it faced unexpected value, but continue to work.

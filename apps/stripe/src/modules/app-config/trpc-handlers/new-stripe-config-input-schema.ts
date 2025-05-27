@@ -17,7 +17,7 @@ export const newStripeConfigInputSchema = z.object({
       () => {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Invalid Publishable Key format, it should start with pk_live_ or pk_test_",
+          message: "Invalid Publishable Key format",
         });
 
         return z.NEVER;
@@ -30,7 +30,7 @@ export const newStripeConfigInputSchema = z.object({
       () => {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Invalid Restricted Key format, it should start with rk_test_ or rk_live_",
+          message: "Invalid Restricted Key format",
         });
 
         return z.NEVER;

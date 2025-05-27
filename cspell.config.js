@@ -69,6 +69,7 @@ export default {
     "BYOA",
     "Dockerfiles",
     "Devcontainers",
+    "whsec",
   ],
   language: "en-US",
   useGitignore: true,

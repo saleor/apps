@@ -5,7 +5,7 @@ import nodePlugin from "eslint-plugin-n";
 export default [
   ...config,
   {
-    name: "saleor-app-payment-stripe-v2/custom-config",
+    name: "saleor-app-payment-stripe/custom-config",
     files: ["**/*.ts"],
     plugins: {
       n: nodePlugin,
@@ -15,27 +15,28 @@ export default [
     },
   },
   {
-    name: "saleor-app-payment-stripe-v2/override-no-process-env",
+    name: "saleor-app-payment-stripe/override-no-process-env",
     files: [
       "next.config.ts",
       "src/lib/env.ts",
       "src/instrumentation.ts",
       "*.test.ts",
       "src/__tests__/**",
+      "e2e/**",
     ],
     rules: {
       "n/no-process-env": "off",
     },
   },
   {
-    name: "saleor-app-payment-stripe-v2/override-turbo-env-requirement",
-    files: ["src/__tests__/**", "*.test.ts"],
+    name: "saleor-app-payment-stripe/override-turbo-env-requirement",
+    files: ["src/__tests__/**", "*.test.ts", "e2e/**"],
     rules: {
       "turbo/no-undeclared-env-vars": "off",
     },
   },
   {
-    name: "saleor-app-payment-stripe-v2/allow-console-in-tests",
+    name: "saleor-app-payment-stripe/allow-console-in-tests",
     files: ["src/__tests__/**", "*.test.ts"],
     rules: {
       "no-console": "off",

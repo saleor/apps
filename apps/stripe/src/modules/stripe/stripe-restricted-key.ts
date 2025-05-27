@@ -1,3 +1,4 @@
+import { captureMessage } from "@sentry/nextjs";
 import { fromThrowable } from "neverthrow";
 import { z } from "zod";
 
@@ -15,14 +16,20 @@ export const StripeRestrictedKeyValidationError = BaseError.subclass(
 export const StripeRestrictedKeySchema = z
   .string()
   .min(1)
-  .refine(
-    (value) => {
-      return value.startsWith("rk_test_") || value.startsWith("rk_live_");
-    },
-    {
-      message: "Must start with 'rk_test_' or 'rk_live_",
-    },
-  )
+  .refine((value) => {
+    const expected = value.startsWith("rk_test_") || value.startsWith("rk_live_");
+
+    if (!expected) {
+      captureMessage("Received unexpected Stripe PK format", (scope) => {
+        scope.setLevel("warning");
+        scope.setExtra("first8letters", value.slice(0, 8));
+
+        return scope;
+      });
+    }
+
+    return true;
+  })
   .brand("StripeRestrictedKey");
 
 export const createStripeRestrictedKey = (raw: string | null) =>
