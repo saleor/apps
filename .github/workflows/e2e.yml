@@ -10,8 +10,13 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  contents: read
+  id-token: write
+  actions: read
+
 jobs:
-  e2e:
+  setup-saleor-env:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -31,12 +36,6 @@ jobs:
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           run_install: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: ".nvmrc"
-          cache: "pnpm"
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --filter=saleor-app-avatax
       - name: Get Saleor snapshot
         run: |
           BACKUP=$(pnpm dlx saleor backup list --name="snapshot-ext-$SALEOR_VERSION-e2e" --latest --json)
@@ -45,7 +44,29 @@ jobs:
       - name: Restore Saleor snapshot
         run: |
           pnpm dlx saleor backup restore --from="$BACKUP_ID" --environment="ext-$SALEOR_VERSION-e2e" --skip-webhooks-update
-      - name: Load secrets
+
+  e2e-avatax:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        saleor: [319, 320, latest]
+    needs: setup-saleor-env
+    env:
+      SALEOR_VERSION: ${{ matrix.saleor }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Load secrets for Avatax e2e tests
         uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
         with:
           export-env: true
@@ -59,6 +80,48 @@ jobs:
           AWS_REGION: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_REGION"
           AWS_ACCESS_KEY_ID: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_ACCESS_KEY_ID"
           AWS_SECRET_ACCESS_KEY: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_SECRET_ACCESS_KEY"
-      - name: Run e2e tests
+      - name: Run Avatax e2e tests
         run: pnpm --filter=saleor-app-avatax e2e
-      # TODO: Add HTML report: https://linear.app/saleor/issue/SHOPX-304
+
+  e2e-stripe:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        saleor: [latest]
+    needs: setup-saleor-env
+    env:
+      SALEOR_VERSION: ${{ matrix.saleor }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PNPM
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install playwright dependencies
+        run: pnpm --filter=saleor-app-payment-stripe exec playwright install --with-deps chromium
+      - name: Load secrets for Stripe e2e tests
+        uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.op-service-account-token }}
+          E2E_BASE_URL: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_BASE_URL"
+          E2E_SALEOR_API_URL: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_SALEOR_API_URL"
+          E2E_CHARGE_CHANNEL_SLUG: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_CHARGE_CHANNEL_SLUG"
+          E2E_AUTHORIZATION_CHANNEL_SLUG: "op://Continuous Integration/saleor-app-payments-stripe-e2e-${{ env.SALEOR_VERSION }}/E2E_AUTHORIZATION_CHANNEL_SLUG"
+      - name: Run Stripe e2e tests
+        run: pnpm --filter=saleor-app-payment-stripe test:e2e
+      - name: Upload HTML report to GitHub Actions Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: "playwright-report-${{ env.SALEOR_VERSION }}"
+          path: apps/stripe/playwright-report
+          retention-days: 1
