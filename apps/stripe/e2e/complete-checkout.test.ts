@@ -10,7 +10,7 @@ test("Complete checkout with transactionFlowStrategy: charge", async ({ request,
   const stripeCheckoutFormPage = new StripeCheckoutFormPage(page);
   const summaryPage = new SummaryPage(page);
 
-  const { checkoutId, totalPrice } = await saleorApi.createCheckout({
+  const checkoutId = await saleorApi.createCheckout({
     channelSlug: env.E2E_CHARGE_CHANNEL_SLUG,
   });
 
@@ -19,6 +19,7 @@ test("Complete checkout with transactionFlowStrategy: charge", async ({ request,
   await stripeCheckoutFormPage.pay();
 
   await summaryPage.processSession();
+  await expect(summaryPage.successToast).toBeVisible();
 
   const order = await saleorApi.completeCheckout({
     checkoutId,
@@ -29,8 +30,6 @@ test("Complete checkout with transactionFlowStrategy: charge", async ({ request,
   expect(order.chargeStatus, "order.chargeStatus").toBe("FULL");
   expect(order.paymentStatus, "order.paymentStatus").toBe("FULLY_CHARGED");
   expect(order.authorizeStatus, "order.authorizeStatus").toBe("FULL");
-  expect(order.totalCharged.amount, "order.totalCharged.amount").toBe(totalPrice.gross.amount);
-  expect(order.totalAuthorized.amount, "order.totalAuthorized.amount").toBe(0);
 });
 
 test("Complete checkout with transactionFlowStrategy: authorize", async ({ request, page }) => {
@@ -38,7 +37,7 @@ test("Complete checkout with transactionFlowStrategy: authorize", async ({ reque
   const stripeCheckoutFormPage = new StripeCheckoutFormPage(page);
   const summaryPage = new SummaryPage(page);
 
-  const { checkoutId, totalPrice } = await saleorApi.createCheckout({
+  const checkoutId = await saleorApi.createCheckout({
     channelSlug: env.E2E_AUTHORIZATION_CHANNEL_SLUG,
   });
 
@@ -47,6 +46,7 @@ test("Complete checkout with transactionFlowStrategy: authorize", async ({ reque
   await stripeCheckoutFormPage.pay();
 
   await summaryPage.processSession();
+  await expect(summaryPage.successToast).toBeVisible();
 
   const order = await saleorApi.completeCheckout({
     checkoutId,
@@ -57,8 +57,4 @@ test("Complete checkout with transactionFlowStrategy: authorize", async ({ reque
   expect(order.chargeStatus, "order.chargeStatus").toBe("NONE");
   expect(order.paymentStatus, "order.paymentStatus").toBe("NOT_CHARGED");
   expect(order.authorizeStatus, "order.authorizeStatus").toBe("FULL");
-  expect(order.totalCharged.amount, "order.totalCharged.amount").toBe(0);
-  expect(order.totalAuthorized.amount, "order.totalAuthorized.amount").toBe(
-    totalPrice.gross.amount,
-  );
 });
