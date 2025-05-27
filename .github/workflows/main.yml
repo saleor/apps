@@ -30,7 +30,7 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
       - name: Check linter
         run: pnpm lint
       - name: Check types
@@ -60,7 +60,7 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
       - name: Run tests
         run: pnpm test:ci
       - name: Upload coverage reports to Codecov
