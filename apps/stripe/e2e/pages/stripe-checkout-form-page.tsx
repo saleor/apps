@@ -38,7 +38,7 @@ export class StripeCheckoutFormPage {
     await this.page.goto(this.constructPath(args.checkoutId));
   }
 
-  async fillCardInformation() {
+  async fillPaymentInformation() {
     await this.cardNumberInput.click();
     await this.cardNumberInput.fill("4242424242424242");
 
@@ -48,7 +48,7 @@ export class StripeCheckoutFormPage {
     await this.cardCvcInput.click();
     await this.cardCvcInput.fill("123");
 
-    // Default channels are set to Poland so we need to ensure the country is set to Poland as well to avoid issues with Stripe geolocation.
+    // Default channels are set to Poland so we need to ensure the country is set to Poland as well to avoid issues with Stripe changing countries based on IP.
     await this.countryInput.selectOption("PL");
   }
 

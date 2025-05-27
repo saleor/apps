@@ -71,12 +71,22 @@ export class SaleorApi {
       throw new Error("No delivery method found");
     }
 
-    await this.updateCheckoutDeliveryMethod({
+    const updateCheckoutReponse = await this.updateCheckoutDeliveryMethod({
       deliveryMethodId,
       checkoutId,
     });
 
-    return checkoutId;
+    const totalPrice =
+      updateCheckoutReponse.data.checkoutDeliveryMethodUpdate?.checkout?.totalPrice;
+
+    if (!totalPrice) {
+      throw new Error("Checkout delivery method update failed");
+    }
+
+    return {
+      checkoutId,
+      totalPrice,
+    };
   }
 
   async completeCheckout(args: { checkoutId: string }) {
