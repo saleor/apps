@@ -6,12 +6,6 @@ mutation checkoutComplete($checkoutId: ID!) {
       chargeStatus
       paymentStatus
       authorizeStatus
-      totalAuthorized {
-        amount
-      }
-      totalCharged {
-        amount
-      }
     }
     errors {
       field
