@@ -22,7 +22,7 @@
     "test:ci": "pnpm run test:unit",
     "test:e2e": "tsx --env-file-if-exists=.env ./scripts/run-e2e.ts",
     "test:e2e-ui": "tsx --env-file-if-exists=.env ./scripts/run-e2e.ts --ui",
-    "test:integration:dynamodb": "vitest --project=integration:dynamodb",
+    "test:integration": "vitest --project=integration",
     "test:unit": "vitest --project=unit"
   },
   "config": {

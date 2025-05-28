@@ -1,16 +1,14 @@
 import { DeleteTableCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
-const TABLE_NAME = process.env.DYNAMODB_MAIN_TABLE_NAME;
-
 const client = new DynamoDBClient();
 
-export const deleteTable = async () => {
+export const deleteTable = async (tableName: string) => {
   try {
     console.log("dropping table");
 
     await client.send(
       new DeleteTableCommand({
-        TableName: TABLE_NAME,
+        TableName: tableName,
       }),
     );
 
