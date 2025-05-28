@@ -4,7 +4,7 @@ import { Encryptor } from "@/lib/encryptor";
 
 describe("Encryptor", () => {
   it("Encrypts and decrypts a string", () => {
-    const encryptionKey = "tq5FSykni9uGL05utFBISaxr0lCLtbBB";
+    const encryptionKey = "C2BBB6A1306F2103D1222BE09DC4364DEFDDCAC783CDE3CDE9F8A88D3D8B0442";
 
     const encryptor = new Encryptor(encryptionKey);
 

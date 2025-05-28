@@ -14,12 +14,14 @@ export default async function setup(_project: TestProject) {
   if (!process.env.CI) {
     execSync(`docker compose -f ${configPath} -p stripe-dynamodb-integration up -d`);
 
-    // Dirty way to make container is ready. There should be a better way. Or we move container outside of global setup to handle it manually.
+    /*
+     * Dirty way to make a container ready. There should be a better way.
+     * Alternatively, allow just creating DB outside of the global setup
+     */
     await wait();
 
     return async () => {
       console.log("stopping docker compose");
-      // looks like it doesn't close the container todo
       execSync(`docker compose -p stripe-dynamodb-integration down`);
     };
   }
