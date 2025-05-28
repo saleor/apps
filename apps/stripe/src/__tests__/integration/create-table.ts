@@ -1,16 +1,14 @@
 import { CreateTableCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
-const TABLE_NAME = process.env.INTEGRATION_DYNAMO_TABLE_NAME ?? "stripe-main-table-integration";
-
 const client = new DynamoDBClient();
 
-export const createTable = async () => {
-  console.log("Creating table");
+export const createTable = async (tableName: string) => {
+  console.log("Creating table: ", tableName);
 
   try {
     await client.send(
       new CreateTableCommand({
-        TableName: TABLE_NAME,
+        TableName: tableName,
         ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 },
         KeySchema: [
           { AttributeName: "PK", KeyType: "HASH" },
@@ -32,7 +30,7 @@ export const createTable = async () => {
     console.log("Table created");
     // todo stop printing aws output in case of success
   } catch (e) {
-    console.error("Error creating table");
+    console.error("Error creating table", e);
     throw new Error("Failed to create table", {
       cause: e,
     });

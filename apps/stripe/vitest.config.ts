@@ -1,4 +1,7 @@
+import * as path from "node:path";
+
 import react from "@vitejs/plugin-react";
+import { loadEnv } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
@@ -28,10 +31,21 @@ export default defineConfig({
           sequence: {
             concurrent: false,
           },
-          globalSetup: "./src/__tests__/integration/dynamodb/global-setup.integration-dynamo.ts",
-          include: ["src/__tests__/integration/dynamodb/**/*.test.{ts,ts}"],
-          name: "integration:dynamodb",
-          setupFiles: "./src/__tests__/integration/dynamodb/setup.integration-dynamo.ts",
+          globalSetup: "./src/__tests__/integration/global-setup.integration.ts",
+          include: ["src/__tests__/integration/**/*.test.{ts,ts}"],
+          name: "integration",
+          setupFiles: "./src/__tests__/integration/setup.integration.ts",
+          env: loadEnv("", path.join(__dirname, "src/__tests__/integration"), ""),
+          pool: "threads",
+          poolOptions: {
+            threads: {
+              /*
+               * Without a single thread, tests across the files are re-using the same dynamodb.
+               * If they become slow, we can spawn separate table per suite
+               */
+              singleThread: true,
+            },
+          },
         },
       },
     ],
