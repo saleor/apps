@@ -20,7 +20,6 @@ import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-
 import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
 const realSaleorApiUrl = createSaleorApiUrl(
-  // eslint-disable-next-line turbo/no-undeclared-env-vars,n/no-process-env
   process.env.INTEGRATION_TEST_SALEOR_API_URL as string,
 )._unsafeUnwrap();
 
@@ -58,13 +57,11 @@ describe("TransactionInitializeSession webhook: integration", async () => {
       appId: mockedSaleorAppId,
       config: StripeConfig.create({
         publishableKey: createStripePublishableKey(
-          // eslint-disable-next-line n/no-process-env,turbo/no-undeclared-env-vars
           process.env.TEST_STRIPE_PK as string,
         )._unsafeUnwrap(),
         name: "Config name",
         webhookId: "we_123",
         restrictedKey: createStripeRestrictedKey(
-          // eslint-disable-next-line n/no-process-env,turbo/no-undeclared-env-vars
           process.env.TEST_STRIPE_RK as string,
         )._unsafeUnwrap(),
         webhookSecret: mockStripeWebhookSecret,

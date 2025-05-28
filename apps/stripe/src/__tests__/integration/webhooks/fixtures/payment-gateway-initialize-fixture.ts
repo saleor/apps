@@ -1,9 +1,8 @@
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
 
-export const paymentGatewayInitializeFixture = () => {
-  // TODO: Why we pass it directly, should subscription resolve to have event {} first? (todo check api response in logs)
-  const eventPayload = {
+export const paymentGatewayInitializeFixture = (): PaymentGatewayInitializeSessionEventFragment => {
+  return {
     sourceObject: {
       __typename: "Checkout",
       channel: {
@@ -15,7 +14,5 @@ export const paymentGatewayInitializeFixture = () => {
     recipient: {
       id: mockedSaleorAppId,
     },
-  } satisfies PaymentGatewayInitializeSessionEventFragment;
-
-  return eventPayload;
+  };
 };

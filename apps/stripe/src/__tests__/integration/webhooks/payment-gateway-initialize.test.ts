@@ -20,7 +20,6 @@ import { DynamoDbStripeConfig } from "@/modules/app-config/repositories/dynamodb
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 const realSaleorApiUrl = createSaleorApiUrl(
-  // eslint-disable-next-line n/no-process-env,turbo/no-undeclared-env-vars
   process.env.INTEGRATION_TEST_SALEOR_API_URL as string,
 )._unsafeUnwrap();
 
