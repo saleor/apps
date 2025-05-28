@@ -157,6 +157,7 @@ export const config = [
           ],
         },
       ],
+      "turbo/no-undeclared-env-vars": "off",
     },
   },
   {

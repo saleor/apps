@@ -5,13 +5,10 @@
 <div align="center">
   <a href="https://saleor.io/">🏠 Website</a>
   <span> • </span>
-  <a href="https://docs.saleor.io/docs/3.x/">📚 Docs</a>
+  <a href="https://docs.saleor.io/developer/app-store/apps/stripe/overview">📚 Docs</a>
   <span> • </span>
   <a href="https://saleor.io/blog/">📰 Blog</a>
 </div>
-
-> [!WARNING]
-> This app is currently under development - expect errors and bugs
 
 ## Local development setup
 

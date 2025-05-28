@@ -8,13 +8,6 @@ env:
   AWS_ACCESS_KEY_ID: "test"
   AWS_SECRET_ACCESS_KEY: "test"
   AWS_ENDPOINT_URL: "http://localhost:8000"
-  APL: dynamodb
-  TEST_STRIPE_PK: ${{ secrets.STRIPE_INTEGRATION_TEST_PK }}
-  TEST_STRIPE_RK: ${{ secrets.STRIPE_INTEGRATION_TEST_RK }}
-  # Random key for testing
-  SECRET_KEY: ${{ secrets.STRIPE_INTEGRATION_TEST_ENCRYPTION_KEY }}
-  INTEGRATION_TEST_SALEOR_API_URL: "https://ext-team-latest-e2e.staging.saleor.cloud/graphql/"
-  DYNAMODB_MAIN_TABLE_NAME: "stripe-main-table-integration"
 
 on:
   workflow_dispatch:
@@ -46,19 +39,23 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
+      - name: Load secrets for Stripe integration tests
+        uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          AWS_REGION: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_REGION"
+          AWS_ACCESS_KEY_ID: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_ACCESS_KEY_ID"
+          AWS_SECRET_ACCESS_KEY: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_SECRET_ACCESS_KEY"
+          AWS_ENDPOINT_URL: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_ENDPOINT_URL"
       - name: Run docker compose
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: "apps/stripe/src/__tests__/integration/docker-compose.yml"
-        env:
-          # Env for DB itself
-          AWS_REGION: "localhost"
-          AWS_ACCESS_KEY_ID: "test"
-          AWS_SECRET_ACCESS_KEY: "test"
-          AWS_ENDPOINT_URL: "http://localhost:8000"
 
       - name: Execute tests
         run: |
-          pnpm run --filter=saleor-app-payment-stripe-v2 test:integration
+          pnpm run --filter=saleor-app-payment-stripe test:integration

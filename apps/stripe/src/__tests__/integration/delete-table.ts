@@ -1,7 +1,3 @@
-/*
-  eslint-disable no-console, n/no-process-env
- */
-
 import { DeleteTableCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 const TABLE_NAME = process.env.DYNAMODB_MAIN_TABLE_NAME;

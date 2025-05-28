@@ -22,22 +22,6 @@ describe("StripeRestrictedKey", () => {
       expect(result._unsafeUnwrap()).toBe("rk_live_valid456");
     });
 
-    it("should return error for invalid key format", () => {
-      const result = createStripeRestrictedKey("invalid_key");
-
-      expect(result.isErr()).toBe(true);
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(StripeRestrictedKeyValidationError);
-      expect(result._unsafeUnwrapErr().message).toMatchInlineSnapshot(`
-        "ZodError: [
-          {
-            "code": "custom",
-            "message": "Must start with 'rk_test_' or 'rk_live_",
-            "path": []
-          }
-        ]"
-      `);
-    });
-
     it("should return error if key is empty", () => {
       const result = createStripeRestrictedKey("");
 
@@ -52,11 +36,6 @@ describe("StripeRestrictedKey", () => {
             "inclusive": true,
             "exact": false,
             "message": "String must contain at least 1 character(s)",
-            "path": []
-          },
-          {
-            "code": "custom",
-            "message": "Must start with 'rk_test_' or 'rk_live_",
             "path": []
           }
         ]"

@@ -1,7 +1,3 @@
-/*
-  eslint-disable no-console
-*/
-
 import { CreateTableCommand, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 const client = new DynamoDBClient();
@@ -32,6 +28,7 @@ export const createTable = async (tableName: string) => {
     );
 
     console.log("Table created");
+    // todo stop printing aws output in case of success
   } catch (e) {
     console.error("Error creating table", e);
     throw new Error("Failed to create table", {

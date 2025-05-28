@@ -1,0 +1,41 @@
+mutation checkoutCreate($channelSlug: String!, $variantId: ID!, $email: String!) {
+  checkoutCreate(
+    input: {
+      channel: $channelSlug
+      lines: [{ quantity: 10, variantId: $variantId }]
+      email: $email
+      shippingAddress: {
+        city: "Wroclaw"
+        country: PL
+        firstName: "John"
+        lastName: "Smith"
+        phone: "+12125094995"
+        postalCode: "55-025"
+        streetAddress1: "Rynek 1"
+      }
+      billingAddress: {
+        city: "Wroclaw"
+        country: PL
+        countryArea: "NY"
+        firstName: "John"
+        lastName: "Smith"
+        phone: "+12125094995"
+        postalCode: "55-025"
+        streetAddress1: "Rynek 1"
+      }
+      languageCode: EN_US
+    }
+  ) {
+    errors {
+      field
+      message
+      code
+    }
+    checkout {
+      id
+      shippingMethods {
+        id
+      }
+    }
+  }
+}

@@ -45,7 +45,7 @@ const NewConfiguration: NextPage = () => {
               <Text>
                 Check required Restricted key scopes in Saleor app
                 <TextLink
-                  href="https://docs.saleor.io/developer/app-store/apps/stripe/overview"
+                  href="https://docs.saleor.io/developer/app-store/apps/stripe/configuration"
                   newTab
                 >
                   {" "}
