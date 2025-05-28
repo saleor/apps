@@ -4,10 +4,8 @@ permissions:
 
 # Env for testing entities
 env:
-  AWS_REGION: "localhost"
-  AWS_ACCESS_KEY_ID: "test"
-  AWS_SECRET_ACCESS_KEY: "test"
-  AWS_ENDPOINT_URL: "http://localhost:8000"
+  DYNAMODB_MAIN_TABLE_NAME: stripe-main-table-integration
+  SECRET_KEY: {{secrets.STRIPE_INTEGRATION_TEST_ENCRYPTION_KEY}}
 
 on:
   workflow_dispatch:
@@ -51,6 +49,10 @@ jobs:
           AWS_ACCESS_KEY_ID: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_ACCESS_KEY_ID"
           AWS_SECRET_ACCESS_KEY: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_SECRET_ACCESS_KEY"
           AWS_ENDPOINT_URL: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_ENDPOINT_URL"
+          DYNAMODB_MAIN_TABLE_NAME: "op://Continuous Integration/saleor-app-payments-stripe-integration/DYNAMODB_MAIN_TABLE_NAME"
+          TEST_STRIPE_PK: "op://Continuous Integration/saleor-app-payments-stripe-integration/TEST_STRIPE_PK"
+          TEST_STRIPE_RK: "op://Continuous Integration/saleor-app-payments-stripe-integration/TEST_STRIPE_RK"
+          INTEGRATION_TEST_SALEOR_API_URL: "https://ext-team-latest-e2e.staging.saleor.cloud/graphql/"
       - name: Run docker compose
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
