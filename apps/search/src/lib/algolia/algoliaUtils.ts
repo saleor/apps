@@ -229,7 +229,16 @@ export function productAndVariantToAlgolia({
     collections: product.collections?.map((collection) => collection.name) || [],
     metadata: metadataToAlgoliaAttribute(variant.product.metadata),
     variantMetadata: metadataToAlgoliaAttribute(variant.metadata),
-    otherVariants: variant.product.variants?.map((v) => v.id).filter((v) => v !== variant.id) || [],
+    otherVariants:
+      variant.product.variants
+        ?.filter((v) => {
+          // Filter out the current variant
+          if (v.id === variant.id) return false;
+
+          // Filter out variants that don't have channel listings for the current channel
+          return v.channelListings?.some((cl) => cl.channel.slug === channel) ?? false;
+        })
+        .map((v) => v.id) || [],
   } satisfies Record<AlgoliaRootFields | string, unknown>;
 
   // todo refactor
