@@ -9,7 +9,7 @@ import {
   StaffUserTokenCreate,
   UpdateMetadata,
 } from "../generated/graphql";
-import { getCompleteMoney } from "../utils/moneyUtils";
+import { getCompleteMoney } from "../utils/money";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=4846&case_id=24363
 describe("App should exempt taxes on draft order with metadata avataxEntityCode TC: AVATAX_36", () => {

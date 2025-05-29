@@ -28,7 +28,7 @@
       ]
     },
     "e2e": {
-      "env": ["TEST_SALEOR_API_URL", "E2E_USER_NAME", "E2E_USER_PASSWORD"]
+      "env": ["TEST_SALEOR_API_URL", "E2E_USER_NAME", "E2E_USER_PASSWORD", "E2E_SALEOR_VERSION"]
     }
   }
 }

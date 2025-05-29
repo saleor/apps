@@ -28,6 +28,10 @@ beforeAll(() => {
     throw new Error("Cannot run tests TEST_SALEOR_API_URL is invalid");
   }
 
+  if (!env.E2E_SALEOR_VERSION) {
+    throw new Error("Cannot run tests E2E_SALEOR_VERSION is not set");
+  }
+
   settings.setRequestDefaultRetryCount(3); // retry up to 3 times by default
   settings.setRequestDefaultRetryDelay(50); // wait 50ms between retries
   settings.setLogLevel("DEBUG");
@@ -42,5 +46,6 @@ beforeAll(() => {
    * This is a timeout for sync webhooks in Saleor
    */
   request.setDefaultTimeout(21_000);
+
   stash.loadData("./e2e/data");
 });

@@ -10,34 +10,28 @@ import {
   DraftOrderUpdateShippingMethod,
   StaffUserTokenCreate,
 } from "../generated/graphql";
-import { getCompleteMoney, getMoney } from "../utils/moneyUtils";
+import { getCompleteMoney } from "../utils/money";
 
-// Testmo: https://saleor.testmo.net/repositories/6?group_id=4846&case_id=18388
-describe("App should calculate taxes on draft order with products on catalog promotion TC: AVATAX_24", () => {
-  const testCase = e2e(
-    "Draft order with products on catalog promotion [pricesEnteredWithTax: True]",
-  );
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18382
+describe("App should calculate taxes for draft order with product with tax class TC: AVATAX_18", () => {
+  const testCase = e2e("Product with tax class [pricesEnteredWithTax: True]");
   const staffCredentials = {
     email: env.E2E_USER_NAME,
     password: env.E2E_USER_PASSWORD,
   };
 
   const CURRENCY = "USD";
-  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 328.22;
-  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 301.46;
-  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 26.76;
+  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
+  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
+  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
 
-  const SHIPPING_GROSS_PRICE = 69.31;
-  const SHIPPING_NET_PRICE = 63.65;
-  const SHIPPING_TAX_PRICE = 5.66;
+  const TOTAL_GROSS_SHIPPING_PRICE = 69.31;
+  const TOTAL_NET_SHIPPING_PRICE = 63.65;
+  const TOTAL_TAX_SHIPPING_PRICE = 5.66;
 
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 397.53;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 365.11;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 32.42;
-
-  const UNDISCOUNTED_TOTAL_GROSS_PRICE_AFTER_SHIPPING = 414.81;
-  const UNDISCOUNTED_TOTAL_NET_PRICE_AFTER_SHIPPING = 381;
-  const UNDISCOUNTED_TOTAL_TAX_PRICE_AFTER_SHIPPING = 33.81;
+  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.88;
 
   it("creates token for staff user", async () => {
     await testCase
@@ -57,9 +51,9 @@ describe("App should calculate taxes on draft order with products on catalog pro
       .stores("StaffUserToken", "data.tokenCreate.token")
       .retry();
   });
-  it("creates order in channel pricesEnteredWithTax: True", async () => {
+  it("creates order with product with tax class", async () => {
     await testCase
-      .step("Create order in channel")
+      .step("Create order with product with tax class")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(CreateDraftOrder)
@@ -81,34 +75,29 @@ describe("App should calculate taxes on draft order with products on catalog pro
       })
       .stores("OrderID", "data.draftOrderCreate.order.id");
   });
-  it("should add lines to draft order", async () => {
+  it("should create order lines as staff user", async () => {
     await testCase
-      .step("add prodcuts")
+      .step("Create order lines as staff user")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(CreateOrderLines)
       .withGraphQLVariables({
         orderId: "$S{OrderID}",
-        input: [
-          {
-            quantity: 1,
-            variantId: "$M{Product.ProductOnCatalogPromotion.variantId}",
-          },
-        ],
+        input: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
       })
       .expectStatus(200)
-      .expectJson("data.orderLinesCreate.orderLines[0].quantity", 1)
+      .expectJson("data.orderLinesCreate.orderLines[0].quantity", 10)
       .expectJson(
-        "data.orderLinesCreate.order.total.gross",
-        getMoney(TOTAL_GROSS_PRICE_BEFORE_SHIPPING, CURRENCY),
+        "data.orderLinesCreate.order.total.gross.amount",
+        TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
       );
   });
-  it("should update order address", async () => {
+  it("should update order as staff user", async () => {
     await testCase
-      .step("Update addresses on draft order")
+      .step("Update order as staff user")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(DraftOrderUpdateAddress)
@@ -134,9 +123,9 @@ describe("App should calculate taxes on draft order with products on catalog pro
       );
   });
 
-  it("should update order's shipping method", async () => {
+  it("should update order's shipping method as staff user", async () => {
     await testCase
-      .step("Add shipping method")
+      .step("Update shipping method as staff user")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(DraftOrderUpdateShippingMethod)
@@ -163,18 +152,9 @@ describe("App should calculate taxes on draft order with products on catalog pro
       .expectJson(
         "data.orderUpdateShipping.order.shippingPrice",
         getCompleteMoney({
-          gross: SHIPPING_GROSS_PRICE,
-          net: SHIPPING_NET_PRICE,
-          tax: SHIPPING_TAX_PRICE,
-          currency: CURRENCY,
-        }),
-      )
-      .expectJson(
-        "data.orderUpdateShipping.order.undiscountedTotal",
-        getCompleteMoney({
-          gross: UNDISCOUNTED_TOTAL_GROSS_PRICE_AFTER_SHIPPING,
-          net: UNDISCOUNTED_TOTAL_NET_PRICE_AFTER_SHIPPING,
-          tax: UNDISCOUNTED_TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          gross: TOTAL_GROSS_SHIPPING_PRICE,
+          net: TOTAL_NET_SHIPPING_PRICE,
+          tax: TOTAL_TAX_SHIPPING_PRICE,
           currency: CURRENCY,
         }),
       );
