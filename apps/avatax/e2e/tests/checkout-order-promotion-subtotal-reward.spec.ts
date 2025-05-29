@@ -8,7 +8,7 @@ import {
   CompleteCheckout,
   CreateCheckout,
 } from "../generated/graphql";
-import { getCompleteMoney, getMoney } from "../utils/moneyUtils";
+import { getCompleteMoney, getMoney } from "../utils/money";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=139&pagination_current=2&case_id=24373
 describe("App should calculate taxes for checkout with order promotion with subtotal reward TC: AVATAX_40", () => {

@@ -29,7 +29,7 @@ export class StripeCheckoutFormPage {
   private constructPath(checkoutId: string) {
     const encodedGraphqlUrl = encodeURIComponent(env.E2E_SALEOR_API_URL);
     const gateway = "stripe";
-    const appId = "saleor.app.payment.stripe-v2";
+    const appId = "saleor.app.payment.stripe";
 
     return `/env/${encodedGraphqlUrl}/checkout/${checkoutId}/payment-gateway/${gateway}/${appId}`;
   }
