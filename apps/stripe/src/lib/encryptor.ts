@@ -4,6 +4,9 @@ import { env } from "./env";
 
 // todo move to shared package
 export class Encryptor {
+  /**
+   * 16 or 32 bytes of hex string
+   */
   private secret: string;
 
   constructor(secret = env.SECRET_KEY) {
