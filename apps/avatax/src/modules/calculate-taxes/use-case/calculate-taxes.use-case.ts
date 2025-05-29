@@ -179,7 +179,7 @@ export class CalculateTaxesUseCase {
       );
     }
 
-    this.logger.info("Found active connection service. Calculating taxes...");
+    this.logger.debug("Found active connection service. Calculating taxes...");
 
     const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
 

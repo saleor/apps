@@ -4,7 +4,9 @@ import { createLogger } from "../logger";
 import { AppConfig } from "./app-config";
 
 export class AppConfigurationLogger {
-  constructor(private injectedLogger: Pick<ReturnType<typeof createLogger>, "info" | "warn">) {}
+  constructor(
+    private injectedLogger: Pick<ReturnType<typeof createLogger>, "info" | "warn" | "debug">,
+  ) {}
 
   logConfiguration(configuration: AppConfig, channelSlug: string) {
     const config = configuration.getConfigForChannelSlug(channelSlug);
@@ -20,7 +22,7 @@ export class AppConfigurationLogger {
 
     const resolvedAvataxConfig = config.value.avataxConfig;
 
-    this.injectedLogger.info("Received configuration", {
+    this.injectedLogger.debug("Received configuration", {
       [ObservabilityAttributes.CHANNEL_SLUG]: channelSlug,
       /**
        * Be careful changing these values. They are likely used as a metric in Datadog
