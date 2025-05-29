@@ -12,6 +12,17 @@ import {
 export const newStripeConfigInputSchema = z.object({
   name: z.string().min(1),
   publishableKey: z.string().transform((value, ctx): StripePublishableKey => {
+    const validPrefix = value.startsWith("pk_test_") || value.startsWith("pk_live_");
+
+    if (!validPrefix) {
+      ctx.addIssue({
+        message: "Invalid Publishable Key format. Must start with 'pk_test_' or 'pk_live_'.",
+        code: z.ZodIssueCode.custom,
+      });
+
+      return z.NEVER;
+    }
+
     return createStripePublishableKey(value).match(
       (parsed) => parsed,
       () => {
@@ -25,6 +36,17 @@ export const newStripeConfigInputSchema = z.object({
     );
   }),
   restrictedKey: z.string().transform((value, ctx): StripeRestrictedKey => {
+    const validPrefix = value.startsWith("rk_test_") || value.startsWith("rk_live_");
+
+    if (!validPrefix) {
+      ctx.addIssue({
+        message: "Invalid Restricted Key format. Must start with 'pk_test_' or 'pk_live_'.",
+        code: z.ZodIssueCode.custom,
+      });
+
+      return z.NEVER;
+    }
+
     return createStripeRestrictedKey(value).match(
       (parsed) => parsed,
       () => {
