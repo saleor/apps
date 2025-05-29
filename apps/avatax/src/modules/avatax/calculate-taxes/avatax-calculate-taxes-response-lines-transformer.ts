@@ -52,7 +52,7 @@ export class AvataxCalculateTaxesResponseLinesTransformer {
         const hasFee = line.details?.some((details) => details.isFee);
 
         if (hasFee) {
-          this.logger.info("Product line has a fee. App will report this fee as tax_rate", {
+          this.logger.debug("Product line has a fee. App will report this fee as tax_rate", {
             details: line.details,
           });
         }

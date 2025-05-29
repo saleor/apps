@@ -2,6 +2,8 @@ import { captureException } from "@sentry/nextjs";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { err, ok } from "neverthrow";
 
+import { loggerContext } from "@/logger-context";
+
 import { createLogger } from "../../../logger";
 import { SaleorOrderConfirmedEvent } from "../../saleor";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
@@ -85,6 +87,8 @@ export class AvataxOrderConfirmedPayloadTransformer {
       legacyUserId: confirmedOrderEvent.getUserId(),
       source: "Order",
     });
+
+    loggerContext.set("customerCode", customerCode);
 
     const addressPayload = this.getSaleorAddress(confirmedOrderEvent);
 
