@@ -5,7 +5,9 @@ on:
     - cron: "7 7 * * *" # every day at 07:07 AM UTC
 
 jobs:
-  e2e-dispatch:
+  e2e-cron:
+    permissions:
+      contents: read
     uses: ./.github/workflows/e2e.yml
     secrets:
       saleor-token: ${{ secrets.SALEOR_TOKEN }}
