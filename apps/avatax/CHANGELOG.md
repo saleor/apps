@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.16.1
+
+### Patch Changes
+
+- 3259b3ca: Changed some logger "info" logs to "debug" to reduce the number of verbose logs
+
 ## 1.16.0
 
 ### Minor Changes
