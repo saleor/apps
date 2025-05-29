@@ -1,0 +1,12 @@
+name: E2E staging (scheduled)
+
+on:
+  schedule:
+    - cron: "7 7 * * *" # every day at 07:07 AM UTC
+
+jobs:
+  e2e-dispatch:
+    uses: ./.github/workflows/e2e.yml
+    secrets:
+      saleor-token: ${{ secrets.SALEOR_TOKEN }}
+      op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}

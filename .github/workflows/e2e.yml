@@ -84,6 +84,19 @@ jobs:
         env:
           E2E_SALEOR_VERSION: ${{ matrix.saleor }}
         run: pnpm --filter=saleor-app-avatax e2e
+      - name: Notify Slack on failure
+        if: ${{ failure() }}
+        uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
+        with:
+          webhook: ${{ secrets.AVATAX_APP_SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "*AvaTax app e2e failure*: ${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "App e2e failed for ${{env.SALEOR_VERSION}}: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View details>"
 
   e2e-stripe:
     runs-on: ubuntu-22.04
@@ -127,3 +140,16 @@ jobs:
           name: "playwright-report-${{ env.SALEOR_VERSION }}"
           path: apps/stripe/playwright-report
           retention-days: 1
+      - name: Notify Slack on failure
+        if: ${{ failure() }}
+        uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
+        with:
+          webhook: ${{ secrets.STRIPE_APP_SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "*Stripe app e2e failure*: ${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "App e2e failed for ${{env.SALEOR_VERSION}}: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View details>"
