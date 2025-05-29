@@ -1,6 +1,13 @@
 fragment ProductData on Product {
   variants {
     id
+    channelListings {
+      id
+      channel {
+        slug
+        currencyCode
+      }
+    }
   }
   id
   name

@@ -127,5 +127,108 @@ describe("algoliaUtils", function () {
       // @ts-expect-error - record is not typed (attributes are dynamic keys)
       expect(mappedEntity.attributes["booleanFalse"]).toBe(false);
     });
+
+    it("Filters out inactive variants from otherVariants", () => {
+      const currentChannel = "channel-1";
+      const mappedEntity = productAndVariantToAlgolia({
+        channel: currentChannel,
+        enabledKeys: ["otherVariants"],
+        variant: {
+          id: "variant-1",
+          attributes: [],
+          name: "Variant 1",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "product-1",
+            name: "Product 1",
+            description: undefined,
+            slug: "product-1",
+            variants: [
+              // Current variant - should be excluded
+              {
+                id: "variant-1",
+                channelListings: [
+                  {
+                    id: "cl-1",
+                    channel: {
+                      slug: currentChannel,
+                      currencyCode: "USD",
+                    },
+                  },
+                ],
+              },
+              // Active variant in current channel - should be included
+              {
+                id: "variant-2",
+                channelListings: [
+                  {
+                    id: "cl-2",
+                    channel: {
+                      slug: currentChannel,
+                      currencyCode: "USD",
+                    },
+                  },
+                ],
+              },
+              // Inactive variant (no channel listing) - should be excluded
+              {
+                id: "variant-3",
+                channelListings: [],
+              },
+              // Variant with other channel listing - should be excluded
+              {
+                id: "variant-4",
+                channelListings: [
+                  {
+                    id: "cl-4",
+                    channel: {
+                      slug: "other-channel",
+                      currencyCode: "EUR",
+                    },
+                  },
+                ],
+              },
+              // Variant with multiple channels including current one - should be included
+              {
+                id: "variant-5",
+                channelListings: [
+                  {
+                    id: "cl-5a",
+                    channel: {
+                      slug: "other-channel",
+                      currencyCode: "EUR",
+                    },
+                  },
+                  {
+                    id: "cl-5b",
+                    channel: {
+                      slug: currentChannel,
+                      currencyCode: "USD",
+                    },
+                  },
+                ],
+              },
+            ],
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+        },
+      });
+
+      // Should only include variant-2 and variant-5 (active in current channel)
+      expect(mappedEntity.otherVariants).toHaveLength(2);
+      expect(mappedEntity.otherVariants).toContain("variant-2");
+      expect(mappedEntity.otherVariants).toContain("variant-5");
+      // Should not include current variant or inactive variants
+      expect(mappedEntity.otherVariants).not.toContain("variant-1");
+      expect(mappedEntity.otherVariants).not.toContain("variant-3");
+      expect(mappedEntity.otherVariants).not.toContain("variant-4");
+    });
   });
 });
