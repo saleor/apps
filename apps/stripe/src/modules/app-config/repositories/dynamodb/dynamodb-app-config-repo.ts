@@ -270,18 +270,18 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
     saleorApiUrl: SaleorApiUrl;
     appId: string;
   }): Promise<Result<void | null, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>> {
-    const command = this.stripeConfigEntity.build(PutItemCommand).item({
-      configId: config.id,
-      stripePk: config.publishableKey,
-      stripeRk: this.encryptor.encrypt(config.restrictedKey),
-      stripeWhId: config.webhookId,
-      stripeWhSecret: this.encryptor.encrypt(config.webhookSecret),
-      PK: DynamoDbStripeConfig.accessPattern.getPK({ saleorApiUrl, appId }),
-      SK: DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({ configId: config.id }),
-      configName: config.name,
-    });
-
     try {
+      const command = this.stripeConfigEntity.build(PutItemCommand).item({
+        configId: config.id,
+        stripePk: config.publishableKey,
+        stripeRk: this.encryptor.encrypt(config.restrictedKey),
+        stripeWhId: config.webhookId,
+        stripeWhSecret: this.encryptor.encrypt(config.webhookSecret),
+        PK: DynamoDbStripeConfig.accessPattern.getPK({ saleorApiUrl, appId }),
+        SK: DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({ configId: config.id }),
+        configName: config.name,
+      });
+
       const response = await command.send();
 
       this.logger.info("Saved config to DynamoDB", {

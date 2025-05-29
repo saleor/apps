@@ -5,25 +5,28 @@ import {
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
   CreateCheckout,
+  UpdateMetadata,
 } from "../generated/graphql";
-import { getCompleteMoney } from "../utils/moneyUtils";
+import { getCompleteMoney } from "../utils/money";
 
-// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18384
-describe("App should calculate taxes for checkout with product with tax class TC: AVATAX_20", () => {
-  const testCase = e2e("Checkout for product with tax class [pricesEnteredWithTax: True]");
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=16247
+describe("App should exempt taxes for checkout with metadata avataxCustomerCode TC: AVATAX_15", () => {
+  const testCase = e2e("Checkout with avataxCustomerCode  [pricesEnteredWithTax: False]");
 
+  const metadata = [
+    {
+      key: "avataxCustomerCode",
+      value: "SHOPX",
+    },
+  ];
   const CURRENCY = "USD";
-  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
-  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
-  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
+  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 16.33;
+  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 15;
+  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.33;
 
-  const SHIPPING_GROSS_PRICE = 69.31;
-  const SHIPPING_NET_PRICE = 63.65;
-  const SHIPPING_TAX_PRICE = 5.66;
+  const SHIPPING_NET_PRICE = 69.31;
 
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.88;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 84.31;
 
   it("should have created a checkout", async () => {
     await testCase
@@ -32,10 +35,10 @@ describe("App should calculate taxes for checkout with product with tax class TC
       .post("/graphql/")
       .withGraphQLQuery(CreateCheckout)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "Checkout:PricesWithTax",
+        "@DATA:TEMPLATE@": "Checkout:USA",
         "@OVERRIDES@": {
           lines: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
-          channelSlug: "$M{Channel.PricesWithTax.slug}",
+          channelSlug: "$M{Channel.USA.slug}",
         },
       })
       .expectStatus(200)
@@ -50,7 +53,19 @@ describe("App should calculate taxes for checkout with product with tax class TC
       )
       .stores("CheckoutId", "data.checkoutCreate.checkout.id");
   });
-
+  it("should apply the customer metadata to the checkout", async () => {
+    await testCase
+      .step("Update checkout with customer metadata")
+      .spec()
+      .post("/graphql/")
+      .withGraphQLQuery(UpdateMetadata)
+      .withGraphQLVariables({
+        id: "$S{CheckoutId}",
+        input: metadata,
+      })
+      .expectStatus(200)
+      .expectJson("data.updateMetadata.item.metadata", metadata);
+  });
   it("should update delivery method and calculate shipping price", async () => {
     await testCase
       .step("Add delivery method")
@@ -64,23 +79,22 @@ describe("App should calculate taxes for checkout with product with tax class TC
       .expectJson(
         "data.checkoutDeliveryMethodUpdate.checkout.totalPrice",
         getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
+          gross: TOTAL_NET_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
-          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          tax: 0,
           currency: CURRENCY,
         }),
       )
       .expectJson(
         "data.checkoutDeliveryMethodUpdate.checkout.shippingPrice",
         getCompleteMoney({
-          gross: SHIPPING_GROSS_PRICE,
+          gross: SHIPPING_NET_PRICE,
           net: SHIPPING_NET_PRICE,
-          tax: SHIPPING_TAX_PRICE,
+          tax: 0,
           currency: CURRENCY,
         }),
       );
   });
-
   it("should finalize the checkout", async () => {
     await testCase
       .step("Complete checkout")
@@ -92,21 +106,20 @@ describe("App should calculate taxes for checkout with product with tax class TC
       .expectJson(
         "data.checkoutComplete.order.total",
         getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
+          gross: TOTAL_NET_PRICE_AFTER_SHIPPING,
           net: TOTAL_NET_PRICE_AFTER_SHIPPING,
-          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          tax: 0,
           currency: CURRENCY,
         }),
       )
       .expectJson(
         "data.checkoutComplete.order.shippingPrice",
         getCompleteMoney({
-          gross: SHIPPING_GROSS_PRICE,
+          gross: SHIPPING_NET_PRICE,
           net: SHIPPING_NET_PRICE,
-          tax: SHIPPING_TAX_PRICE,
+          tax: 0,
           currency: CURRENCY,
         }),
-      )
-      .stores("OrderID", "data.checkoutComplete.order.id");
+      );
   });
 });
