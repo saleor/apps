@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.23.10
+
+### Patch Changes
+
+- ec6949ac: Filter inactive variants from "otherVariants" in the Algolia sync.
+
 ## 1.23.9
 
 ### Patch Changes
