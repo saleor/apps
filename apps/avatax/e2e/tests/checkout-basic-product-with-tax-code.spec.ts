@@ -2,20 +2,17 @@ import { e2e } from "pactum";
 import { describe, it } from "vitest";
 
 import {
-  CheckoutAddBilling,
-  CheckoutAddShipping,
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
-  CreateCheckoutNoAddress,
+  CreateCheckout,
 } from "../generated/graphql";
-import { getCompleteMoney } from "../utils/moneyUtils";
+import { getCompleteMoney } from "../utils/money";
 
-// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18385
-describe("App should calculate taxes for checkout on update shipping address TC: AVATAX_21", () => {
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18384
+describe("App should calculate taxes for checkout with product with tax class TC: AVATAX_20", () => {
   const testCase = e2e("Checkout for product with tax class [pricesEnteredWithTax: True]");
 
   const CURRENCY = "USD";
-
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
   const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
@@ -28,18 +25,12 @@ describe("App should calculate taxes for checkout on update shipping address TC:
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
   const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.88;
 
-  const addressVerification = {
-    city: "$M{Address.NewYork.city}",
-    streetAddress1: "$M{Address.NewYork.streetAddress1}",
-    postalCode: "$M{Address.NewYork.postalCode}",
-  };
-
   it("should have created a checkout", async () => {
     await testCase
       .step("Create checkout")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(CreateCheckoutNoAddress)
+      .withGraphQLQuery(CreateCheckout)
       .withGraphQLVariables({
         "@DATA:TEMPLATE@": "Checkout:PricesWithTax",
         "@OVERRIDES@": {
@@ -52,70 +43,12 @@ describe("App should calculate taxes for checkout on update shipping address TC:
         "data.checkoutCreate.checkout.totalPrice",
         getCompleteMoney({
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
-          net: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
-          tax: 0,
+          net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
+          tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
           currency: CURRENCY,
         }),
       )
       .stores("CheckoutId", "data.checkoutCreate.checkout.id");
-  });
-
-  it("should add a valid shipping address", async () => {
-    await testCase
-      .step("Add shipping address")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(CheckoutAddShipping)
-      .withGraphQLVariables({
-        id: "$S{CheckoutId}",
-        shippingAddress: "$M{Address.NewYork}",
-      })
-      .expectStatus(200)
-      .inspect()
-      .expectJsonLike(
-        "data.checkoutShippingAddressUpdate.checkout.shippingAddress",
-        addressVerification,
-      )
-      .expectJson("data.checkoutShippingAddressUpdate.checkout.billingAddress", null)
-      .expectJson(
-        "data.checkoutShippingAddressUpdate.checkout.totalPrice",
-        getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
-          net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
-          tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
-          currency: CURRENCY,
-        }),
-      );
-  });
-
-  it("should add a valid billing address", async () => {
-    await testCase
-      .step("Add billing address")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(CheckoutAddBilling)
-      .withGraphQLVariables({
-        id: "$S{CheckoutId}",
-        billingAddress: "$M{Address.NewYork}",
-      })
-      .expectStatus(200)
-      .expectJsonLike(
-        "data.checkoutBillingAddressUpdate.checkout.shippingAddress",
-        addressVerification,
-      )
-      .expectJsonLike(
-        "data.checkoutBillingAddressUpdate.checkout.billingAddress",
-        addressVerification,
-      )
-      .expectJson(
-        "data.checkoutBillingAddressUpdate.checkout.totalPrice",
-        getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
-          net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
-          tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
-          currency: CURRENCY,
-        }),
-      );
   });
 
   it("should update delivery method and calculate shipping price", async () => {

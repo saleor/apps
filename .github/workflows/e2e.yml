@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        saleor: [319, 320, latest]
+        saleor: [319, 320, 321, latest]
     env:
       ACCESS_TOKEN: ${{ secrets.saleor-token }}
       SALEOR_VERSION: ${{ matrix.saleor }}
@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        saleor: [319, 320, latest]
+        saleor: [319, 320, 321, latest]
     needs: setup-saleor-env
     env:
       SALEOR_VERSION: ${{ matrix.saleor }}
@@ -81,6 +81,8 @@ jobs:
           AWS_ACCESS_KEY_ID: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_ACCESS_KEY_ID"
           AWS_SECRET_ACCESS_KEY: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_SECRET_ACCESS_KEY"
       - name: Run Avatax e2e tests
+        env:
+          E2E_SALEOR_VERSION: ${{ matrix.saleor }}
         run: pnpm --filter=saleor-app-avatax e2e
 
   e2e-stripe:
