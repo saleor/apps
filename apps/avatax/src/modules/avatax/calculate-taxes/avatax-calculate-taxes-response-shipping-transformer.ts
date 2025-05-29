@@ -1,6 +1,8 @@
 import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import Decimal from "decimal.js-light";
 
+import { loggerContext } from "@/logger-context";
+
 import { createLogger } from "../../../logger";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
@@ -19,9 +21,11 @@ export function transformAvataxTransactionModelIntoShipping(
   const shippingLine = avataxShippingLine.getFromAvaTaxTransactionModel(transaction);
 
   if (!shippingLine) {
-    logger.info(
+    logger.debug(
       "Shipping line was not found in the response from AvaTax. The app will return 0s for shipping fields.",
     );
+
+    loggerContext.set("shippingLine", "missing");
 
     return {
       shipping_price_gross_amount: 0,
@@ -41,7 +45,9 @@ export function transformAvataxTransactionModelIntoShipping(
     );
     const totalAmount = new Decimal(lineAmount).sub(new Decimal(discountAmount)).toNumber();
 
-    logger.info(
+    loggerContext.set("shippingLine", "non-taxable");
+
+    logger.debug(
       "Transforming non-taxable shipping line from AvaTax to Saleor CalculateTaxesResponse",
       {
         shipping_price_gross_amount: totalAmount,
@@ -65,7 +71,7 @@ export function transformAvataxTransactionModelIntoShipping(
   const hasFee = shippingLine.details?.some((details) => details.isFee);
 
   if (hasFee) {
-    logger.info("Shipping line has a fee. App will report this fee as shipping_tax_rate", {
+    logger.debug("Shipping line has a fee. App will report this fee as shipping_tax_rate", {
       details: shippingLine.details,
     });
   }
@@ -83,7 +89,9 @@ export function transformAvataxTransactionModelIntoShipping(
     .toDecimalPlaces(2)
     .toNumber();
 
-  logger.info("Transforming taxable shipping line from AvaTax to Saleor CalculateTaxesResponse", {
+  loggerContext.set("shippingLine", "taxed");
+
+  logger.debug("Transforming taxable shipping line from AvaTax to Saleor CalculateTaxesResponse", {
     shipping_price_gross_amount: shippingGrossAmount,
     shipping_price_net_amount: shippingTaxableAmount,
     tax_code: shippingLine.taxCode,

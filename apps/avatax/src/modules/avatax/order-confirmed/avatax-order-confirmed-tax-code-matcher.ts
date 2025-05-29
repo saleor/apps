@@ -13,7 +13,7 @@ export class AvataxOrderConfirmedTaxCodeMatcher {
     const possibleMatch = this.mapTaxClassWithTaxMatch(taxClassId, matches);
 
     if (possibleMatch) {
-      this.logger.info("Matched tax class with tax code", {
+      this.logger.debug("Matched tax class with tax code", {
         taxClassId,
         taxCode: possibleMatch.data.avataxTaxCode,
       });
@@ -21,7 +21,7 @@ export class AvataxOrderConfirmedTaxCodeMatcher {
       return possibleMatch.data.avataxTaxCode;
     }
 
-    this.logger.info("Tax class not matched with tax code, returning default tax class id", {
+    this.logger.debug("Tax class not matched with tax code, returning default tax class id", {
       taxClassId: DEFAULT_TAX_CLASS_ID,
     });
 
