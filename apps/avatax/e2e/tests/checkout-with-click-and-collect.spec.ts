@@ -6,7 +6,7 @@ import {
   CompleteCheckout,
   CreateCheckout,
 } from "../generated/graphql";
-import { getCompleteMoney } from "../utils/moneyUtils";
+import { getCompleteMoney } from "../utils/money";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18383
 describe("App should calculate taxes for checkout with click and collect TC: AVATAX_19", () => {

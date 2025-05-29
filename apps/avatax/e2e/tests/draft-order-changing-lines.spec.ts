@@ -6,32 +6,45 @@ import {
   CreateDraftOrder,
   CreateOrderLines,
   DraftOrderComplete,
-  DraftOrderUpdateAddress,
   DraftOrderUpdateShippingMethod,
+  OrderLineDelete,
+  OrderLineUpdate,
   StaffUserTokenCreate,
 } from "../generated/graphql";
-import { getCompleteMoney } from "../utils/moneyUtils";
+import { getCompleteMoney } from "../utils/money";
 
-// Testmo: https://saleor.testmo.net/repositories/6?group_id=139&case_id=18382
-describe("App should calculate taxes for draft order with product with tax class TC: AVATAX_18", () => {
-  const testCase = e2e("Product with tax class [pricesEnteredWithTax: True]");
+// Testmo: https://saleor.testmo.net/repositories/6?group_id=4846&pagination_current=2&case_id=18390
+describe("App should calculate taxes on draft order when changing lines TC: AVATAX_26", () => {
+  const testCase = e2e("Changing lines on draft order [pricesEnteredWithTax: True]");
   const staffCredentials = {
     email: env.E2E_USER_NAME,
     password: env.E2E_USER_PASSWORD,
   };
 
   const CURRENCY = "USD";
-  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
-  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
-  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
+  const TOTAL_GROSS_PRICE_ONE_LINE = 15;
+  const TOTAL_NET_PRICE_ONE_LINE = 13.78;
+  const TOTAL_TAX_PRICE_ONE_LINE = 1.22;
+
+  const TOTAL_GROSS_PRICE_THREE_LINES = 344.5;
+  const TOTAL_NET_PRICE_THREE_LINE = 316.43;
+  const TOTAL_TAX_PRICE_THREE_LINE = 28.07;
+
+  const TOTAL_GROSS_PRICE_AFTER_REMOVING_LINE = 45;
+  const TOTAL_NET_PRICE_AFTER_REMOVING_LINE = 41.34;
+  const TOTAL_TAX_PRICE_AFTER_REMOVING_LINE = 3.66;
+
+  const TOTAL_GROSS_PRICE_AFTER_CHANGING_QUANTITY = 34.5;
+  const TOTAL_NET_PRICE_AFTER_CHANGING_QUANTITY = 31.68;
+  const TOTAL_TAX_PRICE_AFTER_CHANGING_QUANTITY = 2.82;
 
   const TOTAL_GROSS_SHIPPING_PRICE = 69.31;
   const TOTAL_NET_SHIPPING_PRICE = 63.65;
   const TOTAL_TAX_SHIPPING_PRICE = 5.66;
 
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.88;
+  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 103.81;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 95.33;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 8.48;
 
   it("creates token for staff user", async () => {
     await testCase
@@ -51,14 +64,14 @@ describe("App should calculate taxes for draft order with product with tax class
       .stores("StaffUserToken", "data.tokenCreate.token")
       .retry();
   });
-  it("creates order with product with tax class", async () => {
+  it("creates order with lines and addresses", async () => {
     await testCase
-      .step("Create order with product with tax class")
+      .step("Create order with lines and addressess")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(CreateDraftOrder)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:PricesWithTax",
+        "@DATA:TEMPLATE@": "DraftOrder:LinesAndAddresses",
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
@@ -73,56 +86,100 @@ describe("App should calculate taxes for draft order with product with tax class
           },
         },
       })
-      .stores("OrderID", "data.draftOrderCreate.order.id");
+      .expectJson(
+        "data.draftOrderCreate.order.total",
+        getCompleteMoney({
+          gross: TOTAL_GROSS_PRICE_ONE_LINE,
+          net: TOTAL_NET_PRICE_ONE_LINE,
+          tax: TOTAL_TAX_PRICE_ONE_LINE,
+          currency: CURRENCY,
+        }),
+      )
+      .stores("OrderID", "data.draftOrderCreate.order.id")
+      .stores("FirstOrderLineID", "data.draftOrderCreate.order.lines[0].id");
   });
-  it("should create order lines as staff user", async () => {
+  it("should add another lines to draft order", async () => {
     await testCase
-      .step("Create order lines as staff user")
+      .step("Add new products to order")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(CreateOrderLines)
       .withGraphQLVariables({
         orderId: "$S{OrderID}",
-        input: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
+        input: [
+          { quantity: 1, variantId: "$M{Product.Regular.variantId}" },
+          { quantity: 1, variantId: "$M{Product.ExpensiveTshirt.variantId}" },
+        ],
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
       })
       .expectStatus(200)
-      .expectJson("data.orderLinesCreate.orderLines[0].quantity", 10)
+      .expectJsonLength("data.orderLinesCreate.order.lines", 3)
       .expectJson(
-        "data.orderLinesCreate.order.total.gross.amount",
-        TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
-      );
+        "data.orderLinesCreate.order.total",
+        getCompleteMoney({
+          gross: TOTAL_GROSS_PRICE_THREE_LINES,
+          net: TOTAL_NET_PRICE_THREE_LINE,
+          tax: TOTAL_TAX_PRICE_THREE_LINE,
+          currency: CURRENCY,
+        }),
+      )
+      .stores("SecondOrderLineID", "data.orderLinesCreate.order.lines[1].id")
+      .stores("ThirdOrderLineID", "data.orderLinesCreate.order.lines[2].id");
   });
-  it("should update order as staff user", async () => {
+  //remove line
+  it("should remove line from order", async () => {
     await testCase
-      .step("Update order as staff user")
+      .step("Remove line from order")
       .spec()
       .post("/graphql/")
-      .withGraphQLQuery(DraftOrderUpdateAddress)
+      .withGraphQLQuery(OrderLineDelete)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:Address",
-        "@OVERRIDES@": {
-          orderId: "$S{OrderID}",
+        lineId: "$S{ThirdOrderLineID}",
+      })
+      .withHeaders({
+        Authorization: "Bearer $S{StaffUserToken}",
+      })
+      .expectStatus(200)
+      .expectJsonLength("data.orderLineDelete.order.lines", 2)
+      .expectJson(
+        "data.orderLineDelete.order.total",
+        getCompleteMoney({
+          gross: TOTAL_GROSS_PRICE_AFTER_REMOVING_LINE,
+          net: TOTAL_NET_PRICE_AFTER_REMOVING_LINE,
+          tax: TOTAL_TAX_PRICE_AFTER_REMOVING_LINE,
+          currency: CURRENCY,
+        }),
+      );
+  });
+  it("should update order line", async () => {
+    await testCase
+      .step("Update order line")
+      .spec()
+      .post("/graphql/")
+      .withGraphQLQuery(OrderLineUpdate)
+      .withGraphQLVariables({
+        lineId: "$S{FirstOrderLineID}",
+        input: {
+          quantity: 3,
         },
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
       })
       .expectStatus(200)
-      .expectJson("data.draftOrderUpdate.order.id", "$S{OrderID}")
+      .expectJson("data.orderLineUpdate.order.id", "$S{OrderID}")
       .expectJson(
-        "data.draftOrderUpdate.order.total",
+        "data.orderLineUpdate.order.total",
         getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
-          net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
-          tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
+          gross: TOTAL_GROSS_PRICE_AFTER_CHANGING_QUANTITY,
+          net: TOTAL_NET_PRICE_AFTER_CHANGING_QUANTITY,
+          tax: TOTAL_TAX_PRICE_AFTER_CHANGING_QUANTITY,
           currency: CURRENCY,
         }),
       );
   });
-
   it("should update order's shipping method as staff user", async () => {
     await testCase
       .step("Update shipping method as staff user")

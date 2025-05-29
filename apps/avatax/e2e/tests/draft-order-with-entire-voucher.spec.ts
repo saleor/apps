@@ -1,3 +1,4 @@
+import { isTestRunAgainstSaleor320AndLower } from "e2e/utils/saleor-version-compatibility";
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
 
@@ -11,7 +12,7 @@ import {
   DraftOrderUpdateVoucher,
   StaffUserTokenCreate,
 } from "../generated/graphql";
-import { getCompleteMoney } from "../utils/moneyUtils";
+import { getCompleteMoney } from "../utils/money";
 
 // Testmo: https://saleor.testmo.net/repositories/6?group_id=4846&case_id=18392
 describe("App should calculate taxes on draft order with entire order voucher applied TC: AVATAX_28", () => {
@@ -171,6 +172,15 @@ describe("App should calculate taxes on draft order with entire order voucher ap
   });
 
   it("should add voucher code to draft order", async () => {
+    // Starting from 3.21 Saleor improved rounding of prices, hence we assert different values
+    const UNDISCOUNTED_TOTAL_GROSS_PRICE_AFTER_SHIPPING = isTestRunAgainstSaleor320AndLower()
+      ? 108.12
+      : 108.11;
+    const UNDISCOUNTED_TOTAL_NET_PRICE_AFTER_SHIPPING = 99.31;
+    const UNDISCOUNTED_TOTAL_TAX_PRICE_AFTER_SHIPPING = isTestRunAgainstSaleor320AndLower()
+      ? 8.81
+      : 8.8;
+
     await testCase
       .step("add voucher to draft order")
       .spec()
@@ -208,14 +218,15 @@ describe("App should calculate taxes on draft order with entire order voucher ap
       .expectJson(
         "data.draftOrderUpdate.order.undiscountedTotal",
         getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
-          net: TOTAL_NET_PRICE_AFTER_SHIPPING,
-          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
+          gross: UNDISCOUNTED_TOTAL_GROSS_PRICE_AFTER_SHIPPING,
+          net: UNDISCOUNTED_TOTAL_NET_PRICE_AFTER_SHIPPING,
+          tax: UNDISCOUNTED_TOTAL_TAX_PRICE_AFTER_SHIPPING,
           currency: CURRENCY,
         }),
       )
       .expectJson("data.draftOrderUpdate.order.discounts[0].type", "VOUCHER");
   });
+
   it("should complete draft order", async () => {
     await testCase
       .step("Complete draft order")
