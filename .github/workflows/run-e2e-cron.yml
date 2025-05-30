@@ -2,12 +2,14 @@ name: E2E staging (scheduled)
 
 on:
   schedule:
-    - cron: "7 7 * * *" # every day at 07:07 AM UTC
+    - cron: "7 7 * * 1-5" # Mon-Fri at 07:07 AM UTC
 
 jobs:
   e2e-cron:
     permissions:
       contents: read
+      actions: read
+      id-token: write
     uses: ./.github/workflows/e2e.yml
     secrets:
       saleor-token: ${{ secrets.SALEOR_TOKEN }}
