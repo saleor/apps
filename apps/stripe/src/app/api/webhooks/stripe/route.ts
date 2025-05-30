@@ -1,9 +1,11 @@
 import { trace } from "@opentelemetry/api";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 import { Result } from "neverthrow";
 import { NextRequest } from "next/server";
 
+import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";
@@ -118,4 +120,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
 /**
  * - integration test
  */
-export const POST = withLoggerContext(StripeWebhookHandler);
+export const POST = compose(
+  withLoggerContext,
+  appContextContainer.wrapRequest,
+)(StripeWebhookHandler);
