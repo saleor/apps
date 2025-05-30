@@ -147,9 +147,9 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookSeverErrorResponse {
-        "message": "Server error",
-        "statusCode": 500,
+      StripeWebhookTransactionMissingReponse {
+        "message": "Transaction is missing",
+        "statusCode": 400,
       }
     `);
   });
