@@ -19,7 +19,10 @@ import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { IStripeEventVerify } from "@/modules/stripe/types";
-import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
+import {
+  TransactionRecorderError,
+  TransactionRecorderRepo,
+} from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
@@ -30,6 +33,7 @@ import {
   StripeWebhookMalformedRequestResponse,
   StripeWebhookSeverErrorResponse,
   StripeWebhookSuccessResponse,
+  StripeWebhookTransactionMissingReponse,
 } from "./stripe-webhook-responses";
 import { WebhookParams } from "./webhook-params";
 
@@ -294,6 +298,10 @@ export class StripeWebhookUseCase {
       this.logger.error("Failed to process event", {
         error: processingResult.error,
       });
+
+      if (processingResult.error instanceof TransactionRecorderError.TransactionMissingError) {
+        return err(new StripeWebhookTransactionMissingReponse());
+      }
 
       return err(new StripeWebhookSeverErrorResponse());
     }
