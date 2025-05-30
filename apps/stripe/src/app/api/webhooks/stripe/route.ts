@@ -8,6 +8,7 @@ import { BaseError } from "@/lib/errors";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";
 import { loggerContext, withLoggerContext } from "@/lib/logger-context";
+import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { saleorApp } from "@/lib/saleor-app";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { TransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
@@ -64,7 +65,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
    * todo:
    * - improve logger context to accept single record
    */
-  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, webhookParams.saleorApiUrl);
+  setObservabilitySaleorApiUrl(webhookParams.saleorApiUrl);
   loggerContext.set(ObservabilityAttributes.CONFIGURATION_ID, webhookParams.configurationId);
 
   trace
@@ -93,7 +94,7 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
         return success.getResponse();
       },
       (error) => {
-        logger.error("Error processing Stripe webhook", {
+        logger.warn("Failed to process Stripe webhook", {
           error: error,
           httpsStatusCode: error.statusCode,
         });
