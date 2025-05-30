@@ -47,9 +47,20 @@ export class StripeWebhookSeverErrorResponse extends RetryableErrorWebhookRespon
   }
 }
 
+export class StripeWebhookTransactionMissingReponse extends NonRetryableErrorWebhookResponse {
+  readonly message = "Transaction is missing";
+
+  getResponse() {
+    return new Response(this.message, {
+      status: this.statusCode,
+    });
+  }
+}
+
 export type PossibleStripeWebhookSuccessResponses = StripeWebhookSuccessResponse;
 
 export type PossibleStripeWebhookErrorResponses =
   | StripeWebhookMalformedRequestResponse
   | StripeWebhookAppIsNotConfiguredResponse
-  | StripeWebhookSeverErrorResponse;
+  | StripeWebhookSeverErrorResponse
+  | StripeWebhookTransactionMissingReponse;
