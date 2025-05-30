@@ -10,6 +10,7 @@ import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
+import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -43,6 +44,8 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(
 
         return response.getResponse();
       }
+
+      setObservabilitySaleorApiUrl(saleorApiUrlResult.value, ctx.payload.version);
 
       const result = await useCase.execute({
         channelId: ctx.payload.sourceObject.channel.id,

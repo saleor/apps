@@ -11,6 +11,7 @@ import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext, withLoggerContext } from "@/lib/logger-context";
+import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -52,6 +53,8 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
 
         return response.getResponse();
       }
+
+      setObservabilitySaleorApiUrl(saleorApiUrlResult.value, ctx.payload.version);
 
       const result = await useCase.execute({
         appId: ctx.authData.appId,
