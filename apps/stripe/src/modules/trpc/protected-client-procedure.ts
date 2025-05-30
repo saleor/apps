@@ -1,4 +1,6 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { setTag } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
@@ -78,6 +80,8 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
         "Missing saleorApiUrl in request. This middleware can be used after auth is attached",
     });
   }
+
+  setTag(ObservabilityAttributes.SALEOR_API_URL, ctx.saleorApiUrl);
 
   try {
     logger.debug("trying to verify JWT token from frontend", {
