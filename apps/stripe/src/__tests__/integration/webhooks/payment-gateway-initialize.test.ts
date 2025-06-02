@@ -19,9 +19,9 @@ import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamod
 import { DynamoDbStripeConfig } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
-const realSaleorApiUrl = createSaleorApiUrl(
-  process.env.INTEGRATION_TEST_SALEOR_API_URL as string,
-)._unsafeUnwrap();
+import { env } from "../env";
+
+const realSaleorApiUrl = createSaleorApiUrl(env.INTEGRATION_SALEOR_API_URL)._unsafeUnwrap();
 
 const randomId = new RandomId().generate();
 

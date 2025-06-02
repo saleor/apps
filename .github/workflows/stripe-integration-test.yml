@@ -1,11 +1,4 @@
-name: Stripe app - integration tests with DynamoDB
-permissions:
-  contents: read
-
-# Env for testing entities
-env:
-  DYNAMODB_MAIN_TABLE_NAME: stripe-main-table-integration
-  SECRET_KEY: {{secrets.STRIPE_INTEGRATION_TEST_ENCRYPTION_KEY}}
+name: Stripe app - integration tests
 
 on:
   workflow_dispatch:
@@ -22,12 +15,15 @@ on:
       - packages/**
       - package.json
 
+permissions:
+  contents: read
+
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4
       - name: Setup PNPM
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
@@ -38,7 +34,6 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-
       - name: Load secrets for Stripe integration tests
         uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
         with:
@@ -50,14 +45,14 @@ jobs:
           AWS_SECRET_ACCESS_KEY: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_SECRET_ACCESS_KEY"
           AWS_ENDPOINT_URL: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_ENDPOINT_URL"
           DYNAMODB_MAIN_TABLE_NAME: "op://Continuous Integration/saleor-app-payments-stripe-integration/DYNAMODB_MAIN_TABLE_NAME"
-          TEST_STRIPE_PK: "op://Continuous Integration/saleor-app-payments-stripe-integration/TEST_STRIPE_PK"
-          TEST_STRIPE_RK: "op://Continuous Integration/saleor-app-payments-stripe-integration/TEST_STRIPE_RK"
-          INTEGRATION_TEST_SALEOR_API_URL: "https://ext-team-latest-e2e.staging.saleor.cloud/graphql/"
+          INTEGRATION_STRIPE_RK: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_STRIPE_RK"
+          INTEGRATION_STRIPE_PK: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_STRIPE_PK"
+          INTEGRATION_SALEOR_API_URL: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_SALEOR_API_URL"
+          SECRET_KEY: "op://Continuous Integration/saleor-app-payments-stripe-integration/SECRET_KEY"
+          APL: "op://Continuous Integration/saleor-app-payments-stripe-integration/APL"
       - name: Run docker compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
+        uses: hoverkraft-tech/compose-action@8be2d741e891ac9b8ac20825e6f3904149599925 # v2.2.0
         with:
           compose-file: "apps/stripe/src/__tests__/integration/docker-compose.yml"
-
-      - name: Execute tests
-        run: |
-          pnpm run --filter=saleor-app-payment-stripe test:integration
+      - name: Run integration tests
+        run: pnpm run --filter=saleor-app-payment-stripe test:integration

@@ -18,11 +18,12 @@ export default [
     name: "saleor-app-payment-stripe/override-no-process-env",
     files: [
       "next.config.ts",
+      "playwright.config.ts",
       "src/lib/env.ts",
+      "e2e/env.ts",
+      "src/__tests__/integration/env.ts",
       "src/instrumentation.ts",
-      "*.test.ts",
-      "src/__tests__/**",
-      "e2e/**",
+      "src/__tests__/**/*setup.*.ts",
     ],
     rules: {
       "n/no-process-env": "off",
