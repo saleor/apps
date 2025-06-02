@@ -57,7 +57,7 @@ describe("TransactionInitializeSession webhook: integration", async () => {
       appId: mockedSaleorAppId,
       config: StripeConfig.create({
         publishableKey: createStripePublishableKey(
-          process.env.TEST_STRIPE_PK as string,
+          process.env.INTEGRATION_TEST_STRIPE_PK as string,
         )._unsafeUnwrap(),
         name: "Config name",
         webhookId: "we_123",

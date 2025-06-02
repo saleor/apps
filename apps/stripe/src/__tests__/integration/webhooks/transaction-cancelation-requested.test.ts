@@ -60,7 +60,7 @@ const apl = new DynamoAPL({
 });
 
 const restrictedKey = createStripeRestrictedKey(
-  process.env.TEST_STRIPE_RK as string,
+  process.env.INTEGRATION_TEST_STRIPE_RK as string,
 )._unsafeUnwrap();
 
 const paymentIntentApi = new StripePaymentIntentsApiFactory().create({
@@ -87,7 +87,7 @@ describe("TransactionCancellationRequested webhook: integration", async () => {
       appId: mockedSaleorAppId,
       config: StripeConfig.create({
         publishableKey: createStripePublishableKey(
-          process.env.TEST_STRIPE_PK as string,
+          process.env.INTEGRATION_TEST_STRIPE_PK as string,
         )._unsafeUnwrap(),
         name: "Config name",
         webhookId: "we_123",
