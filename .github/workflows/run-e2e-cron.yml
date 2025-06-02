@@ -14,3 +14,5 @@ jobs:
     secrets:
       saleor-token: ${{ secrets.SALEOR_TOKEN }}
       op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      avatax-app-slack-webhook-url: ${{ secrets.AVATAX_APP_SLACK_WEBHOOK_URL }}
+      stripe-app-slack-webhook-url: ${{ secrets.STRIPE_APP_SLACK_WEBHOOK_URL }}
