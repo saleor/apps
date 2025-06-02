@@ -4,8 +4,7 @@ permissions:
 
 # Env for testing entities
 env:
-  DYNAMODB_MAIN_TABLE_NAME: stripe-main-table-integration
-  SECRET_KEY: {{secrets.STRIPE_INTEGRATION_TEST_ENCRYPTION_KEY}}
+  SECRET_KEY: ${{ secrets.STRIPE_INTEGRATION_TEST_ENCRYPTION_KEY }}
 
 on:
   workflow_dispatch:
@@ -24,7 +23,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4.2.2
@@ -54,10 +53,9 @@ jobs:
           TEST_STRIPE_RK: "op://Continuous Integration/saleor-app-payments-stripe-integration/TEST_STRIPE_RK"
           INTEGRATION_TEST_SALEOR_API_URL: "https://ext-team-latest-e2e.staging.saleor.cloud/graphql/"
       - name: Run docker compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
+        uses: hoverkraft-tech/compose-action@8be2d741e891ac9b8ac20825e6f3904149599925 # v2.2.0
         with:
           compose-file: "apps/stripe/src/__tests__/integration/docker-compose.yml"
 
       - name: Execute tests
-        run: |
-          pnpm run --filter=saleor-app-payment-stripe test:integration
+        run: pnpm run --filter=saleor-app-payment-stripe test:integration
