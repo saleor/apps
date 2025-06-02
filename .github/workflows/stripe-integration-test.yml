@@ -45,9 +45,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_SECRET_ACCESS_KEY"
           AWS_ENDPOINT_URL: "op://Continuous Integration/saleor-app-payments-stripe-integration/AWS_ENDPOINT_URL"
           DYNAMODB_MAIN_TABLE_NAME: "op://Continuous Integration/saleor-app-payments-stripe-integration/DYNAMODB_MAIN_TABLE_NAME"
-          INTEGRATION_TEST_STRIPE_PK: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_TEST_STRIPE_PK"
-          INTEGRATION_TEST_STRIPE_RK: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_TEST_STRIPE_RK"
-          INTEGRATION_TEST_SALEOR_API_URL: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_TEST_SALEOR_API_URL"
+          INTEGRATION_STRIPE_RK: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_STRIPE_RK"
+          INTEGRATION_STRIPE_PK: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_STRIPE_PK"
+          INTEGRATION_SALEOR_API_URL: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_SALEOR_API_URL"
           SECRET_KEY: "op://Continuous Integration/saleor-app-payments-stripe-integration/SECRET_KEY"
       - name: Run docker compose
         uses: hoverkraft-tech/compose-action@8be2d741e891ac9b8ac20825e6f3904149599925 # v2.2.0

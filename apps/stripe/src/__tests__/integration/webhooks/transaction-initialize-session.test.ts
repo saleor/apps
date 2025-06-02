@@ -20,7 +20,7 @@ import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-
 import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 
 const realSaleorApiUrl = createSaleorApiUrl(
-  process.env.INTEGRATION_TEST_SALEOR_API_URL as string,
+  process.env.INTEGRATION_SALEOR_API_URL as string,
 )._unsafeUnwrap();
 
 const randomId = new RandomId().generate();
@@ -57,12 +57,12 @@ describe("TransactionInitializeSession webhook: integration", async () => {
       appId: mockedSaleorAppId,
       config: StripeConfig.create({
         publishableKey: createStripePublishableKey(
-          process.env.INTEGRATION_TEST_STRIPE_PK as string,
+          process.env.INTEGRATION_STRIPE_PK as string,
         )._unsafeUnwrap(),
         name: "Config name",
         webhookId: "we_123",
         restrictedKey: createStripeRestrictedKey(
-          process.env.TEST_STRIPE_RK as string,
+          process.env.INTEGRATION_STRIPE_RK as string,
         )._unsafeUnwrap(),
         webhookSecret: mockStripeWebhookSecret,
         id: randomId,

@@ -36,7 +36,7 @@ import { DynamoDbRecordedTransaction } from "@/modules/transactions-recording/re
 import { transactionCancelationRequestedFixture } from "./fixtures/transaction-cancelation-requested-fixture";
 
 const realSaleorApiUrl = createSaleorApiUrl(
-  process.env.INTEGRATION_TEST_SALEOR_API_URL as string,
+  process.env.INTEGRATION_SALEOR_API_URL as string,
 )._unsafeUnwrap();
 
 const randomId = new RandomId().generate();
@@ -60,7 +60,7 @@ const apl = new DynamoAPL({
 });
 
 const restrictedKey = createStripeRestrictedKey(
-  process.env.INTEGRATION_TEST_STRIPE_RK as string,
+  process.env.INTEGRATION_STRIPE_RK as string,
 )._unsafeUnwrap();
 
 const paymentIntentApi = new StripePaymentIntentsApiFactory().create({
@@ -87,7 +87,7 @@ describe("TransactionCancellationRequested webhook: integration", async () => {
       appId: mockedSaleorAppId,
       config: StripeConfig.create({
         publishableKey: createStripePublishableKey(
-          process.env.INTEGRATION_TEST_STRIPE_PK as string,
+          process.env.INTEGRATION_STRIPE_PK as string,
         )._unsafeUnwrap(),
         name: "Config name",
         webhookId: "we_123",
