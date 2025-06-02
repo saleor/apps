@@ -32,6 +32,9 @@ test("Complete checkout with transactionFlowStrategy: charge", async ({ request,
   expect(order.authorizeStatus, "order.authorizeStatus").toBe("FULL");
 });
 
+// baseUrl is set here so t3-oss/env-nextjs can be used in the test
+test.use({ baseURL: env.E2E_BASE_URL });
+
 test("Complete checkout with transactionFlowStrategy: authorize", async ({ request, page }) => {
   const saleorApi = new SaleorApi(request);
   const stripeCheckoutFormPage = new StripeCheckoutFormPage(page);

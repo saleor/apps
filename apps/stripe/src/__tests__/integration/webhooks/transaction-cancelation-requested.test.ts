@@ -33,11 +33,10 @@ import { RecordedTransaction } from "@/modules/transactions-recording/domain/rec
 import { DynamoDBTransactionRecorderRepo } from "@/modules/transactions-recording/repositories/dynamodb/dynamodb-transaction-recorder-repo";
 import { DynamoDbRecordedTransaction } from "@/modules/transactions-recording/repositories/dynamodb/recorded-transaction-db-model";
 
+import { env } from "../env";
 import { transactionCancelationRequestedFixture } from "./fixtures/transaction-cancelation-requested-fixture";
 
-const realSaleorApiUrl = createSaleorApiUrl(
-  process.env.INTEGRATION_SALEOR_API_URL as string,
-)._unsafeUnwrap();
+const realSaleorApiUrl = createSaleorApiUrl(env.INTEGRATION_SALEOR_API_URL)._unsafeUnwrap();
 
 const randomId = new RandomId().generate();
 
@@ -59,9 +58,7 @@ const apl = new DynamoAPL({
   }),
 });
 
-const restrictedKey = createStripeRestrictedKey(
-  process.env.INTEGRATION_STRIPE_RK as string,
-)._unsafeUnwrap();
+const restrictedKey = createStripeRestrictedKey(env.INTEGRATION_STRIPE_RK)._unsafeUnwrap();
 
 const paymentIntentApi = new StripePaymentIntentsApiFactory().create({
   key: restrictedKey,
@@ -86,9 +83,7 @@ describe("TransactionCancellationRequested webhook: integration", async () => {
       saleorApiUrl: realSaleorApiUrl,
       appId: mockedSaleorAppId,
       config: StripeConfig.create({
-        publishableKey: createStripePublishableKey(
-          process.env.INTEGRATION_STRIPE_PK as string,
-        )._unsafeUnwrap(),
+        publishableKey: createStripePublishableKey(env.INTEGRATION_STRIPE_PK)._unsafeUnwrap(),
         name: "Config name",
         webhookId: "we_123",
         restrictedKey,
