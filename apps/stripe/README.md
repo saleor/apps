@@ -53,3 +53,31 @@ pnpm dev
 > To install app in Saleor Cloud, you need to expose your local server to the internet (tunnel). You can use Saleor CLI to do that. See this [guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/developing-with-tunnels) for more details.
 
 6. Install app on the Saleor dashboard.
+
+### Integration tests
+
+To run integration tests:
+
+1. Create a file named `.env.test` and use the contents of the [`.env.test.example`](./.env.test.example) file as a reference.
+2. Change values of `INTEGRATION_*` variables
+3. Run tests:
+
+```shell
+pnpm run test:integration
+```
+
+Tests are using mocking Saleor and using local DynamoDB in Docker but are calling real Stripe API.
+
+### E2E tests
+
+To run e2e tests:
+
+1. Create a file named `.env.test` and use the contents of the [`.env.test.example`](./.env.test.example) file as a reference.
+2. Change values of `E2E_*` variables
+3. Run tests:
+
+```shell
+pnpm run test:e2e
+```
+
+Tests are using Stripe staging app that is already installed on Saleor environments.
