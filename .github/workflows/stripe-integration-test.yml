@@ -49,6 +49,7 @@ jobs:
           INTEGRATION_STRIPE_PK: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_STRIPE_PK"
           INTEGRATION_SALEOR_API_URL: "op://Continuous Integration/saleor-app-payments-stripe-integration/INTEGRATION_SALEOR_API_URL"
           SECRET_KEY: "op://Continuous Integration/saleor-app-payments-stripe-integration/SECRET_KEY"
+          APL: "op://Continuous Integration/saleor-app-payments-stripe-integration/APL"
       - name: Run docker compose
         uses: hoverkraft-tech/compose-action@8be2d741e891ac9b8ac20825e6f3904149599925 # v2.2.0
         with:
