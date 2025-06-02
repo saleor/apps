@@ -6,6 +6,10 @@ on:
         required: true
       op-service-account-token:
         required: true
+      avatax-app-slack-webhook-url:
+        required: true
+      stripe-app-slack-webhook-url:
+        required: true
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -85,10 +89,10 @@ jobs:
           E2E_SALEOR_VERSION: ${{ matrix.saleor }}
         run: pnpm --filter=saleor-app-avatax e2e
       - name: Notify Slack on failure
-        if: ${{ failure() }}
+        if: failure()
         uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
         with:
-          webhook: ${{ secrets.AVATAX_APP_SLACK_WEBHOOK_URL }}
+          webhook: ${{ secrets.avatax-app-slack-webhook-url }}
           webhook-type: incoming-webhook
           payload: |
             text: "*AvaTax app e2e failure*: ${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
@@ -141,10 +145,10 @@ jobs:
           path: apps/stripe/playwright-report
           retention-days: 1
       - name: Notify Slack on failure
-        if: ${{ failure() }}
+        if: failure()
         uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
         with:
-          webhook: ${{ secrets.STRIPE_APP_SLACK_WEBHOOK_URL }}
+          webhook: ${{ secrets.stripe-app-slack-webhook-url }}
           webhook-type: incoming-webhook
           payload: |
             text: "*Stripe app e2e failure*: ${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
