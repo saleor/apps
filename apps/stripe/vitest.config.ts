@@ -1,5 +1,3 @@
-import * as path from "node:path";
-
 import react from "@vitejs/plugin-react";
 import { loadEnv } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -35,7 +33,7 @@ export default defineConfig({
           include: ["src/__tests__/integration/**/*.test.{ts,ts}"],
           name: "integration",
           setupFiles: "./src/__tests__/integration/setup.integration.ts",
-          env: loadEnv("", path.join(__dirname, "src/__tests__/integration"), ""),
+          env: loadEnv("test", process.cwd(), ""),
           pool: "threads",
           poolOptions: {
             threads: {

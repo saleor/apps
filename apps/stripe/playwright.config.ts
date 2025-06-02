@@ -1,5 +1,16 @@
+import { existsSync } from "node:fs";
+import { loadEnvFile } from "node:process";
+
 import { defineConfig, devices } from "@playwright/test";
 import { env } from "e2e/env";
+
+const envPath = ".env.test";
+
+if (existsSync(envPath)) {
+  // eslint-disable-next-line no-console
+  console.log(`Loading environment variables from ${envPath}`);
+  loadEnvFile(envPath);
+}
 
 export default defineConfig({
   testDir: "./e2e",

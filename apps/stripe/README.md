@@ -58,8 +58,9 @@ pnpm dev
 
 To run integration tests:
 
-1. Create `.env` file inside `__tests__/integration` based on `__tests__/integration/.env.test`
-2. Run tests:
+1. Create a file named `.env.test` and use the contents of the [`.env.test.example`](./.env.test.example) file as a reference.
+2. Change values of `INTEGRATION_*` variables
+3. Run tests:
 
 ```shell
 pnpm run test:integration
@@ -71,16 +72,9 @@ Tests are using mocking Saleor and using local DynamoDB in Docker but are callin
 
 To run e2e tests:
 
-1. Add env variables to `.env` in root of this folder:
-
-```
-E2E_BASE_URL= # Test client url that will be used by e2e to pay with Stripe
-E2E_SALEOR_API_URL= # Saleor API url that tests will run against
-E2E_CHARGE_CHANNEL_SLUG= # Slug of channel that has transactionFlow: CHARGE set
-E2E_AUTHORIZATION_CHANNEL_SLUG= # Slug of channel that has transactionFlow: AUTHORIZATION set
-```
-
-2. Run tests:
+1. Create a file named `.env.test` and use the contents of the [`.env.test.example`](./.env.test.example) file as a reference.
+2. Change values of `E2E_*` variables
+3. Run tests:
 
 ```shell
 pnpm run test:e2e

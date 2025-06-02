@@ -22,4 +22,5 @@ export const env = createEnv({
     E2E_CHARGE_CHANNEL_SLUG: process.env.E2E_CHARGE_CHANNEL_SLUG,
     E2E_AUTHORIZATION_CHANNEL_SLUG: process.env.E2E_AUTHORIZATION_CHANNEL_SLUG,
   },
+  skipValidation: true, // Validation is triggered before playwright config has load env variables hence we skip it here
 });
