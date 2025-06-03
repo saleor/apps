@@ -56,4 +56,22 @@ describe("newStripeConfigInputSchema", () => {
       ]]
     `);
   });
+
+  it("Returns custom error if TEST and LIVE keys are mixed", () => {
+    expect(() =>
+      newStripeConfigInputSchema.parse({
+        name: "test",
+        restrictedKey: "rk_live_asd",
+        publishableKey: "pk_test_asd",
+      }),
+    ).toThrowErrorMatchingInlineSnapshot(`
+      [ZodError: [
+        {
+          "code": "custom",
+          "message": "Both Publishable and Restricted Keys must be live or test",
+          "path": []
+        }
+      ]]
+    `);
+  });
 });
