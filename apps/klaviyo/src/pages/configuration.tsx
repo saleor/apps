@@ -137,7 +137,7 @@ function Configuration() {
             Application is misconfigured. If you would like to know more how auth configuration is
             kept,{" "}
             <a
-              href="https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md"
+              href="https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/apl"
               target="_blank"
               rel="noreferrer"
             >
