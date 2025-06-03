@@ -10,12 +10,12 @@ export interface CreateGraphQLClientArgs {
 }
 
 /*
- * Creates instance of urql client with optional auth exchange (if token is provided).
- * Accessing public parts of the Saleor API is possible without providing access token.
+ * Creates the instance of the urql client with optional auth exchange (if token is provided).
+ * Accessing public parts of the Saleor API is possible without providing an access token.
  * When trying to access fields or operations protected by permissions.
  * Token can be obtained:
- * - by accessing token from appBridge https://github.com/saleor/saleor-app-sdk/blob/main/docs/app-bridge.md
- * - by using token created during the app registration, saved in the APL https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md
+ * - by accessing token from appBridge https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/app-bridge
+ * - by using token created during the app registration, saved in the APL https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/apl
  * - by token create mutation https://docs.saleor.io/docs/3.x/api-usage/authentication
  *
  * In the context of developing Apps, the two first options are recommended.
