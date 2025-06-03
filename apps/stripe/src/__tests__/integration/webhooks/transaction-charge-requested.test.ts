@@ -64,6 +64,11 @@ const paymentIntentApi = new StripePaymentIntentsApiFactory().create({
   key: restrictedKey,
 });
 
+const stripeMoney = StripeMoney.createFromSaleorAmount({
+  amount: 123.33,
+  currency: "USD",
+})._unsafeUnwrap();
+
 let stripePaymentIntentId: StripePaymentIntentId;
 
 describe("TransactionChargeRequested webhook: integration", async () => {
@@ -104,10 +109,7 @@ describe("TransactionChargeRequested webhook: integration", async () => {
     );
 
     const paymentIntentResult = await paymentIntentApi.createPaymentIntent({
-      stripeMoney: StripeMoney.createFromSaleorAmount({
-        amount: 123.33,
-        currency: "USD",
-      })._unsafeUnwrap(),
+      stripeMoney,
       idempotencyKey: randomId,
       intentParams: {
         automatic_payment_methods: {
@@ -150,7 +152,12 @@ describe("TransactionChargeRequested webhook: integration", async () => {
       async test({ fetch }) {
         const response = await fetch({
           method: "POST",
-          body: JSON.stringify(transactionChargeRequestedFixture(stripePaymentIntentId)),
+          body: JSON.stringify(
+            transactionChargeRequestedFixture({
+              stripePaymentIntentId,
+              amount: stripeMoney.amount,
+            }),
+          ),
           headers: new Headers({
             "saleor-api-url": realSaleorApiUrl,
             "saleor-event": "transaction_charge_requested",
