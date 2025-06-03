@@ -34,7 +34,11 @@ export interface CreatePaymentIntentArgs {
   stripeMoney: StripeMoney;
   intentParams: Pick<
     Stripe.PaymentIntentCreateParams,
-    "automatic_payment_methods" | "payment_method_options" | "confirm" | "payment_method"
+    | "automatic_payment_methods"
+    | "payment_method_options"
+    | "confirm"
+    | "payment_method"
+    | "return_url"
   >;
   idempotencyKey: string;
   metadata?: AllowedStripeIntentMetadata;

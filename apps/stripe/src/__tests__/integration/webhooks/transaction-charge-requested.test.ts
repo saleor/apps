@@ -112,9 +112,9 @@ describe("TransactionChargeRequested webhook: integration", async () => {
       stripeMoney,
       idempotencyKey: randomId,
       intentParams: {
+        return_url: "https://saleor-stripe-integration-test.com",
         automatic_payment_methods: {
           enabled: true,
-          allow_redirects: "never",
         },
         payment_method_options: {
           card: {
