@@ -9,7 +9,7 @@ import { SaleorApp } from "@saleor/app-sdk/saleor-app";
  * For multi-tenant applications and deployments please use UpstashAPL.
  *
  * To read more about storing auth data, read the
- * [APL documentation](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
+ * [APL documentation](https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/apl)
  */
 const aplType = process.env.APL ?? "file";
 let apl: APL;
