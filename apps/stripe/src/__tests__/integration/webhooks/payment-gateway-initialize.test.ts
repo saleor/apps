@@ -6,7 +6,7 @@ import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/cons
 import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
-import * as manifestHandlers from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/route";
+import * as paymentGatewayInitializeSessionHandlers from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
 import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
@@ -82,7 +82,7 @@ describe("PaymentGatewayInitialize webhook: integration", async () => {
    */
   it("Returns response with stored publishable key from the config", async () => {
     await testApiHandler({
-      appHandler: manifestHandlers,
+      appHandler: paymentGatewayInitializeSessionHandlers,
       async test({ fetch }) {
         const response = await fetch({
           method: "POST",

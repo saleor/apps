@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { transactionInitializeSessionFixture } from "@/__tests__/integration/webhooks/fixtures/transaction-initialize-session-fixture";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
-import * as manifestHandlers from "@/app/api/webhooks/saleor/transaction-initialize-session/route";
+import * as initializeSessionHandlers from "@/app/api/webhooks/saleor/transaction-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
 import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
@@ -82,7 +82,7 @@ describe("TransactionInitializeSession webhook: integration", async () => {
    */
   it("Returns response with CHARGE_ACTION_REQUIRED and client secret in data", async () => {
     await testApiHandler({
-      appHandler: manifestHandlers,
+      appHandler: initializeSessionHandlers,
       async test({ fetch }) {
         const response = await fetch({
           method: "POST",

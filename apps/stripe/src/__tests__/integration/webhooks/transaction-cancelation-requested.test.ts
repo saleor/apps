@@ -7,7 +7,7 @@ import {
   mockedSaleorTransactionIdBranded,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
-import * as manifestHandlers from "@/app/api/webhooks/saleor/transaction-cancelation-requested/route";
+import * as cancelationRequestedHandlers from "@/app/api/webhooks/saleor/transaction-cancelation-requested/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
 import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
@@ -143,7 +143,7 @@ describe("TransactionCancellationRequested webhook: integration", async () => {
    */
   it("Returns response with CANCEL_SUCCESS", async () => {
     await testApiHandler({
-      appHandler: manifestHandlers,
+      appHandler: cancelationRequestedHandlers,
       async test({ fetch }) {
         const response = await fetch({
           method: "POST",
