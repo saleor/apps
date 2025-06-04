@@ -19,6 +19,13 @@ export const newStripeConfigInputSchema = z
         ctx.addIssue({
           message: "Invalid Publishable Key format. Must start with 'pk_test_' or 'pk_live_'.",
           code: z.ZodIssueCode.custom,
+          /**
+           * Fatal flag is needed to avoid executing "refine" later.
+           * So only if keys validation succeeds, refine is executed, otherwise it's aborted earlier.
+           *
+           * Without this flag, refine doesn't receive values anymore and it fails internally to validate
+           */
+          fatal: true,
         });
 
         return z.NEVER;
@@ -30,6 +37,7 @@ export const newStripeConfigInputSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Invalid Publishable Key format",
+            fatal: true,
           });
 
           return z.NEVER;
@@ -43,6 +51,7 @@ export const newStripeConfigInputSchema = z
         ctx.addIssue({
           message: "Invalid Restricted Key format. Must start with 'pk_test_' or 'pk_live_'.",
           code: z.ZodIssueCode.custom,
+          fatal: true,
         });
 
         return z.NEVER;
@@ -54,6 +63,7 @@ export const newStripeConfigInputSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Invalid Restricted Key format",
+            fatal: true,
           });
 
           return z.NEVER;

@@ -49,6 +49,7 @@ describe("newStripeConfigInputSchema", () => {
         {
           "message": "Invalid Restricted Key format. Must start with 'pk_test_' or 'pk_live_'.",
           "code": "custom",
+          "fatal": true,
           "path": [
             "restrictedKey"
           ]
