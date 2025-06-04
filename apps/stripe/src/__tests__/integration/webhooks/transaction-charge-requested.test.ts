@@ -7,7 +7,7 @@ import {
   mockedSaleorTransactionIdBranded,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
-import * as cancelationRequestedHandlers from "@/app/api/webhooks/saleor/transaction-cancelation-requested/route";
+import * as chargeRequestedHandlers from "@/app/api/webhooks/saleor/transaction-charge-requested/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
 import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
@@ -34,7 +34,7 @@ import { DynamoDBTransactionRecorderRepo } from "@/modules/transactions-recordin
 import { DynamoDbRecordedTransaction } from "@/modules/transactions-recording/repositories/dynamodb/recorded-transaction-db-model";
 
 import { env } from "../env";
-import { transactionCancelationRequestedFixture } from "./fixtures/transaction-cancelation-requested-fixture";
+import { transactionChargeRequestedFixture } from "./fixtures/transaction-charge-requested-fixture";
 
 const realSaleorApiUrl = createSaleorApiUrl(env.INTEGRATION_SALEOR_API_URL)._unsafeUnwrap();
 
@@ -64,9 +64,14 @@ const paymentIntentApi = new StripePaymentIntentsApiFactory().create({
   key: restrictedKey,
 });
 
+const stripeMoney = StripeMoney.createFromSaleorAmount({
+  amount: 123.33,
+  currency: "USD",
+})._unsafeUnwrap();
+
 let stripePaymentIntentId: StripePaymentIntentId;
 
-describe("TransactionCancellationRequested webhook: integration", async () => {
+describe("TransactionChargeRequested webhook: integration", async () => {
   beforeEach(async () => {
     vi.spyOn(verifyWebhookSignatureModule, "verifyWebhookSignature").mockImplementation(
       async () => {},
@@ -104,12 +109,10 @@ describe("TransactionCancellationRequested webhook: integration", async () => {
     );
 
     const paymentIntentResult = await paymentIntentApi.createPaymentIntent({
-      stripeMoney: StripeMoney.createFromSaleorAmount({
-        amount: 123.33,
-        currency: "USD",
-      })._unsafeUnwrap(),
+      stripeMoney,
       idempotencyKey: randomId,
       intentParams: {
+        return_url: "https://saleor-stripe-integration-test.com",
         automatic_payment_methods: {
           enabled: true,
         },
@@ -118,6 +121,8 @@ describe("TransactionCancellationRequested webhook: integration", async () => {
             capture_method: "manual",
           },
         },
+        payment_method: "pm_card_visa",
+        confirm: true,
       },
     });
 
@@ -141,16 +146,21 @@ describe("TransactionCancellationRequested webhook: integration", async () => {
   /**
    * Verify snapshot - if your changes cause manifest to be different, ensure changes are expected
    */
-  it("Returns response with CANCEL_SUCCESS", async () => {
+  it("Returns response with CHARGE_SUCCESS", async () => {
     await testApiHandler({
-      appHandler: cancelationRequestedHandlers,
+      appHandler: chargeRequestedHandlers,
       async test({ fetch }) {
         const response = await fetch({
           method: "POST",
-          body: JSON.stringify(transactionCancelationRequestedFixture(stripePaymentIntentId)),
+          body: JSON.stringify(
+            transactionChargeRequestedFixture({
+              stripePaymentIntentId,
+              amount: stripeMoney.amount,
+            }),
+          ),
           headers: new Headers({
             "saleor-api-url": realSaleorApiUrl,
-            "saleor-event": "transaction_cancelation_requested",
+            "saleor-event": "transaction_charge_requested",
             "saleor-signature": "mock-signature",
           }),
         });
@@ -158,13 +168,12 @@ describe("TransactionCancellationRequested webhook: integration", async () => {
         const body = await response.json();
 
         expect(body).toStrictEqual({
-          result: "CANCEL_SUCCESS",
+          result: "CHARGE_SUCCESS",
           amount: 123.33,
-          actions: [],
+          actions: ["REFUND"],
           pspReference: expect.stringContaining("pi_"),
-          message: "Payment intent was cancelled",
+          message: "Payment intent has been successful",
           externalUrl: expect.stringContaining("https://dashboard.stripe.com/test/payments/pi_"),
-          time: expect.any(String),
         });
 
         expect(response.status).toStrictEqual(200);
