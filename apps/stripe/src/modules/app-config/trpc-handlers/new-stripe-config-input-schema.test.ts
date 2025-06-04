@@ -42,6 +42,7 @@ describe("newStripeConfigInputSchema", () => {
         {
           "message": "Invalid Publishable Key format. Must start with 'pk_test_' or 'pk_live_'.",
           "code": "custom",
+          "fatal": true,
           "path": [
             "publishableKey"
           ]
