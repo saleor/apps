@@ -23,7 +23,7 @@ import { env } from "../env";
 
 const realSaleorApiUrl = createSaleorApiUrl(env.INTEGRATION_SALEOR_API_URL)._unsafeUnwrap();
 
-const randomId = new RandomId().generate();
+const configId = new RandomId().generate();
 
 const repo = new DynamodbAppConfigRepo({
   entities: {
@@ -61,7 +61,7 @@ describe("PaymentGatewayInitialize webhook: integration", async () => {
         webhookId: "we_123",
         restrictedKey: mockedStripeRestrictedKey,
         webhookSecret: mockStripeWebhookSecret,
-        id: randomId,
+        id: configId,
       })._unsafeUnwrap(),
     });
 
@@ -71,15 +71,12 @@ describe("PaymentGatewayInitialize webhook: integration", async () => {
         appId: mockedSaleorAppId,
       },
       {
-        configId: randomId,
+        configId: configId,
         channelId: mockedSaleorChannelId,
       },
     );
   });
 
-  /**
-   * Verify snapshot - if your changes cause manifest to be different, ensure changes are expected
-   */
   it("Returns response with stored publishable key from the config", async () => {
     await testApiHandler({
       appHandler: paymentGatewayInitializeSessionHandlers,

@@ -6,6 +6,8 @@ import {
 } from "@/generated/graphql";
 import { saleorApp } from "@/lib/saleor-app";
 
+import { verifyWebhookSignature } from "../verify-signature";
+
 export const transactionProcessSessionWebhookDefinition =
   new SaleorSyncWebhook<TransactionProcessSessionEventFragment>({
     apl: saleorApp.apl,
@@ -14,4 +16,7 @@ export const transactionProcessSessionWebhookDefinition =
     isActive: true,
     query: TransactionProcessSessionDocument,
     webhookPath: "api/webhooks/saleor/transaction-process-session",
+    verifySignatureFn: (jwks, signature, rawBody) => {
+      return verifyWebhookSignature(jwks, signature, rawBody);
+    },
   });
