@@ -38,7 +38,7 @@ import { transactionChargeRequestedFixture } from "./fixtures/transaction-charge
 
 const realSaleorApiUrl = createSaleorApiUrl(env.INTEGRATION_SALEOR_API_URL)._unsafeUnwrap();
 
-const randomId = new RandomId().generate();
+const configId = new RandomId().generate();
 
 const configRepo = new DynamodbAppConfigRepo({
   entities: {
@@ -93,7 +93,7 @@ describe("TransactionChargeRequested webhook: integration", async () => {
         webhookId: "we_123",
         restrictedKey,
         webhookSecret: mockStripeWebhookSecret,
-        id: randomId,
+        id: configId,
       })._unsafeUnwrap(),
     });
 
@@ -103,14 +103,14 @@ describe("TransactionChargeRequested webhook: integration", async () => {
         appId: mockedSaleorAppId,
       },
       {
-        configId: randomId,
+        configId: configId,
         channelId: mockedSaleorChannelId,
       },
     );
 
     const paymentIntentResult = await paymentIntentApi.createPaymentIntent({
       stripeMoney,
-      idempotencyKey: randomId,
+      idempotencyKey: new RandomId().generate(),
       intentParams: {
         return_url: "https://saleor-stripe-integration-test.com",
         automatic_payment_methods: {
@@ -143,9 +143,6 @@ describe("TransactionChargeRequested webhook: integration", async () => {
     );
   });
 
-  /**
-   * Verify snapshot - if your changes cause manifest to be different, ensure changes are expected
-   */
   it("Returns response with CHARGE_SUCCESS", async () => {
     await testApiHandler({
       appHandler: chargeRequestedHandlers,
