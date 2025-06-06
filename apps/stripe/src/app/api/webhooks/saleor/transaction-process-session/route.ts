@@ -95,7 +95,6 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(
   }),
 );
 
-// TODO: write integration test for this route
 export const POST = compose(
   withLoggerContext,
   appContextContainer.wrapRequest,
