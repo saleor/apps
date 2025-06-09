@@ -101,7 +101,6 @@ const handler = transactionChargeRequestedWebhookDefinition.createHandler(
   }),
 );
 
-// TODO: write integration test for this route
 export const POST = compose(
   withLoggerContext,
   appContextContainer.wrapRequest,

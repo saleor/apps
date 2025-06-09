@@ -6,6 +6,8 @@ import {
 } from "@/generated/graphql";
 import { saleorApp } from "@/lib/saleor-app";
 
+import { verifyWebhookSignature } from "../verify-signature";
+
 export const transactionRefundRequestedWebhookDefinition =
   new SaleorSyncWebhook<TransactionRefundRequestedEventFragment>({
     apl: saleorApp.apl,
@@ -14,4 +16,7 @@ export const transactionRefundRequestedWebhookDefinition =
     isActive: true,
     query: TransactionRefundRequestedDocument,
     webhookPath: "api/webhooks/saleor/transaction-refund-requested",
+    verifySignatureFn: (jwks, signature, rawBody) => {
+      return verifyWebhookSignature(jwks, signature, rawBody);
+    },
   });
