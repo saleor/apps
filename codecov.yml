@@ -26,11 +26,12 @@ coverage:
         flags: [shared]
       packages-webhook-utils:
         flags: [webhook-utils]
-    ignore:
-      - "**/graphql/**/*"
-      - "**/generated/**/*"
-      - "**/scripts/**/*"
-      - "**.config.{js,ts}"
+
+ignore:
+  - "**/graphql/**/*"
+  - "**/generated/**/*"
+  - "**/scripts/**/*"
+  - "**.config.{js,ts}"
 
 flags:
   avatax:
