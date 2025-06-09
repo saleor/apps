@@ -28,10 +28,16 @@ coverage:
         flags: [webhook-utils]
 
 ignore:
-  - "**/graphql/**/*"
-  - "**/generated/**/*"
-  - "**/scripts/**/*"
-  - "**.config.{js,ts}"
+  - "apps/*/scripts/**/*"
+  - "packages/*/scripts/**/*"
+  - "apps/*/e2e/**/*"
+  - "packages/*/e2e/**/*"
+  - "apps/*/graphql/**/*"
+  - "packages/*/graphql/**/*"
+  - "apps/*/generated/**/*"
+  - "packages/*/generated/**/*"
+  - "apps/*.config.{js,ts}"
+  - "packages/*.config.{js,ts}"
 
 flags:
   avatax:
