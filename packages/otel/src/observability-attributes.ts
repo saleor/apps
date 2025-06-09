@@ -11,7 +11,7 @@ export const ObservabilityAttributes = {
   VERCEL_ENV: "vercel.env",
   PATH: "path",
   SALEOR_EVENT: "saleorEvent",
-  TENANT_DOMAIN: "saleor.environment_domain",
+  TENANT_DOMAIN: "saleor.environment.domain",
   PSP_REFERENCE: "pspReference",
   SOURCE_OBJECT_ID: "sourceObjectId",
   SOURCE_OBJECT_TYPE: "sourceObjectType",
