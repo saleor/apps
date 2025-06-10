@@ -2,10 +2,10 @@ coverage:
   status:
     patch:
       default:
-        informational: true
+        target: auto
     project:
       default:
-        informational: true
+        target: auto
       app-avatax:
         flags: [avatax]
       app-cms:
@@ -26,6 +26,14 @@ coverage:
         flags: [shared]
       packages-webhook-utils:
         flags: [webhook-utils]
+
+ignore:
+  - "**/scripts/**"
+  - "**/e2e/**"
+  - "**/graphql/**"
+  - "**/generated/**"
+  - "**/*.config.js"
+  - "**/*.config.ts"
 
 flags:
   avatax:
