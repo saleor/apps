@@ -69,67 +69,67 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: avatax
-          files: apps/avatax/coverage/coverage-final.json, apps/avatax/coverage/clover.xml
+          files: apps/avatax/coverage/coverage-final.json,apps/avatax/coverage/clover.xml
       - name: Upload coverage for cms
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: cms
-          files: apps/cms/coverage/coverage-final.json, apps/cms/coverage/clover.xml
+          files: apps/cms/coverage/coverage-final.json,apps/cms/coverage/clover.xml
       - name: Upload coverage for products-feed
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: products-feed
-          files: apps/products-feed/coverage/coverage-final.json, apps/products-feed/coverage/clover.xml
+          files: apps/products-feed/coverage/coverage-final.json,apps/products-feed/coverage/clover.xml
       - name: Upload coverage for search
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: search
-          files: apps/search/coverage/coverage-final.json, apps/search/coverage/clover.xml
+          files: apps/search/coverage/coverage-final.json,apps/search/coverage/clover.xml
       - name: Upload coverage for segment
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: segment
-          files: apps/segment/coverage/coverage-final.json, apps/segment/coverage/clover.xml
+          files: apps/segment/coverage/coverage-final.json,apps/segment/coverage/clover.xml
       - name: Upload coverage for smtp
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: smtp
-          files: apps/smtp/coverage/coverage-final.json, apps/smtp/coverage/clover.xml
+          files: apps/smtp/coverage/coverage-final.json,apps/smtp/coverage/clover.xml
       - name: Upload coverage for stripe
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: stripe
-          files: apps/stripe/coverage/coverage-final.json, apps/stripe/coverage/clover.xml
+          files: apps/stripe/coverage/coverage-final.json,apps/stripe/coverage/clover.xml
       - name: Upload coverage for logger
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: logger
-          files: packages/logger/coverage/coverage-final.json, packages/logger/coverage/clover.xml
+          files: packages/logger/coverage/coverage-final.json,packages/logger/coverage/clover.xml
       - name: Upload coverage for shared
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: shared
-          files: packages/shared/coverage/coverage-final.json, packages/shared/coverage/clover.xml
+          files: packages/shared/coverage/coverage-final.json,packages/shared/coverage/clover.xml
       - name: Upload coverage for webhook-utils
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: webhook-utils
-          files: packages/webhook-utils/coverage/coverage-final.json, packages/webhook-utils/coverage/clover.xml
+          files: packages/webhook-utils/coverage/coverage-final.json,packages/webhook-utils/coverage/clover.xml
