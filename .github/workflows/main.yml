@@ -68,3 +68,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
+          flags: avatax,cms,products-feed,search,segment,smtp,stripe,logger,shared,webhook-utils

@@ -32,7 +32,8 @@ ignore:
   - "**/e2e/**"
   - "**/graphql/**"
   - "**/generated/**"
-  - "**/*.config.{js,ts}"
+  - "**/*.config.js"
+  - "**/*.config.ts"
 
 flags:
   avatax:
