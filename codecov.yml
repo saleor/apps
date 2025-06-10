@@ -27,6 +27,13 @@ coverage:
       packages-webhook-utils:
         flags: [webhook-utils]
 
+ignore:
+  - "**/scripts/**"
+  - "**/e2e/**"
+  - "**/graphql/**"
+  - "**/generated/**"
+  - "**/*.config.{js,ts}"
+
 flags:
   avatax:
     paths:
