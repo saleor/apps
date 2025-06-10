@@ -69,67 +69,67 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: avatax
-          files: apps/apps/apps/avatax/coverage/coverage-final.json, apps/apps/apps/avatax/coverage/clover.xml
+          files: apps/avatax/coverage/coverage-final.json, apps/avatax/coverage/clover.xml
       - name: Upload coverage for cms
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: cms
-          files: apps/apps/apps/cms/coverage
+          files: apps/cms/coverage/coverage-final.json, apps/cms/coverage/clover.xml
       - name: Upload coverage for products-feed
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: products-feed
-          files: apps/apps/apps/products-feed/coverage
+          files: apps/products-feed/coverage/coverage-final.json, apps/products-feed/coverage/clover.xml
       - name: Upload coverage for search
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: search
-          files: apps/apps/apps/search/coverage
+          files: apps/search/coverage/coverage-final.json, apps/search/coverage/clover.xml
       - name: Upload coverage for segment
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: segment
-          files: apps/apps/apps/segment/coverage
+          files: apps/segment/coverage/coverage-final.json, apps/segment/coverage/clover.xml
       - name: Upload coverage for smtp
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: smtp
-          files: apps/apps/apps/smtp/coverage
+          files: apps/smtp/coverage/coverage-final.json, apps/smtp/coverage/clover.xml
       - name: Upload coverage for stripe
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: stripe
-          files: apps/apps/apps/stripe/coverage
+          files: apps/stripe/coverage/coverage-final.json, apps/stripe/coverage/clover.xml
       - name: Upload coverage for logger
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: logger
-          files: apps/apps/packages/logger/coverage
+          files: packages/logger/coverage/coverage-final.json, packages/logger/coverage/clover.xml
       - name: Upload coverage for shared
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: shared
-          files: apps/apps/packages/shared/coverage
+          files: packages/shared/coverage/coverage-final.json, packages/shared/coverage/clover.xml
       - name: Upload coverage for webhook-utils
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
           flags: webhook-utils
-          files: apps/apps/packages/webhook-utils/coverage
+          files: packages/webhook-utils/coverage/coverage-final.json, packages/webhook-utils/coverage/clover.xml
