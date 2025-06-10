@@ -44,6 +44,29 @@ jobs:
 
   test:
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        include:
+          - flag: avatax
+            path: apps/avatax
+          - flag: cms
+            path: apps/cms
+          - flag: products-feed
+            path: apps/products-feed
+          - flag: search
+            path: apps/search
+          - flag: segment
+            path: apps/segment
+          - flag: smtp
+            path: apps/smtp
+          - flag: stripe
+            path: apps/stripe
+          - flag: logger
+            path: packages/logger
+          - flag: shared
+            path: packages/shared
+          - flag: webhook-utils
+            path: packages/webhook-utils
     env:
       HUSKY: 0
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -68,4 +91,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
-          flags: avatax,cms,products-feed,search,segment,smtp,stripe,logger,shared,webhook-utils
+          flags: ${{ matrix.flag }}
+          files: ${{ matrix.path }}/coverage
