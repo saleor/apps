@@ -30,69 +30,31 @@ coverage:
 flags:
   avatax:
     paths:
-      - apps/avatax/
-    ignore:
-      - apps/avatax/scripts/
-      - apps/avatax/e2e/
-      - apps/avatax/graphql/
-      - apps/avatax/generated/
+      - apps/avatax/src/
   cms:
     paths:
-      - apps/cms/
-    ignore:
-      - apps/cms/scripts/
-      - apps/cms/e2e/
-      - apps/cms/graphql/
-      - apps/cms/generated/
+      - apps/cms/src/
   products-feed:
     paths:
-      - apps/products-feed/
-    ignore:
-      - apps/products-feed/scripts/
-      - apps/products-feed/e2e/
-      - apps/products-feed/graphql/
-      - apps/products-feed/generated/
+      - apps/products-feed/src/
   search:
     paths:
-      - apps/search/
-    ignore:
-      - apps/search/scripts/
-      - apps/search/e2e/
-      - apps/search/graphql/
-      - apps/search/generated/
+      - apps/search/src/
   segment:
     paths:
-      - apps/segment/
-    ignore:
-      - apps/segment/scripts/
-      - apps/segment/e2e/
-      - apps/segment/graphql/
-      - apps/segment/generated/
+      - apps/segment/src/
   smtp:
     paths:
-      - apps/smtp/
-    ignore:
-      - apps/smtp/scripts/
-      - apps/smtp/e2e/
-      - apps/smtp/graphql/
-      - apps/smtp/generated/
+      - apps/smtp/src/
   stripe:
     paths:
-      - apps/stripe/
-    ignore:
-      - apps/stripe/scripts/
-      - apps/stripe/e2e/
-      - apps/stripe/graphql/
-      - apps/stripe/generated/
+      - apps/stripe/src/
   logger:
     paths:
-      - packages/logger/
+      - packages/logger/src/
   shared:
     paths:
-      - packages/shared/
+      - packages/shared/src/
   webhook-utils:
     paths:
-      - packages/webhook-utils/
-    ignore:
-      - packages/webhook-utils/graphql/
-      - packages/webhook-utils/generated/
+      - packages/webhook-utils/src/
