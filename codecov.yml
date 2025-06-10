@@ -38,31 +38,31 @@ ignore:
 flags:
   avatax:
     paths:
-      - apps/avatax/src/
+      - apps/avatax/
   cms:
     paths:
-      - apps/cms/src/
+      - apps/cms/
   products-feed:
     paths:
-      - apps/products-feed/src/
+      - apps/products-feed/
   search:
     paths:
-      - apps/search/src/
+      - apps/search/
   segment:
     paths:
-      - apps/segment/src/
+      - apps/segment/
   smtp:
     paths:
-      - apps/smtp/src/
+      - apps/smtp/
   stripe:
     paths:
-      - apps/stripe/src/
+      - apps/stripe/
   logger:
     paths:
-      - packages/logger/src/
+      - packages/logger/
   shared:
     paths:
-      - packages/shared/src/
+      - packages/shared/
   webhook-utils:
     paths:
-      - packages/webhook-utils/src/
+      - packages/webhook-utils/
