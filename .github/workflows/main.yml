@@ -44,29 +44,6 @@ jobs:
 
   test:
     runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        include:
-          - flag: avatax
-            path: apps/avatax
-          - flag: cms
-            path: apps/cms
-          - flag: products-feed
-            path: apps/products-feed
-          - flag: search
-            path: apps/search
-          - flag: segment
-            path: apps/segment
-          - flag: smtp
-            path: apps/smtp
-          - flag: stripe
-            path: apps/stripe
-          - flag: logger
-            path: packages/logger
-          - flag: shared
-            path: packages/shared
-          - flag: webhook-utils
-            path: packages/webhook-utils
     env:
       HUSKY: 0
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -86,10 +63,73 @@ jobs:
         run: pnpm install
       - name: Run tests
         run: pnpm test:ci
-      - name: Upload coverage reports to Codecov
+      - name: Upload coverage for avatax
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
-          flags: ${{ matrix.flag }}
-          files: ${{ matrix.path }}/coverage
+          flags: avatax
+          files: apps/avatax/coverage
+      - name: Upload coverage for cms
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: cms
+          files: apps/cms/coverage
+      - name: Upload coverage for products-feed
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: products-feed
+          files: apps/products-feed/coverage
+      - name: Upload coverage for search
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: search
+          files: apps/search/coverage
+      - name: Upload coverage for segment
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: segment
+          files: apps/segment/coverage
+      - name: Upload coverage for smtp
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: smtp
+          files: apps/smtp/coverage
+      - name: Upload coverage for stripe
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: stripe
+          files: apps/stripe/coverage
+      - name: Upload coverage for logger
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: logger
+          files: packages/logger/coverage
+      - name: Upload coverage for shared
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: shared
+          files: packages/shared/coverage
+      - name: Upload coverage for webhook-utils
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: webhook-utils
+          files: packages/webhook-utils/coverage
