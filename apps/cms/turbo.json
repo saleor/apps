@@ -13,7 +13,9 @@
         "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "STRAPI_BATCH_SIZE",
+        "STRAPI_MILIS_DELAY_BETWEEN_BATCHES"
       ]
     }
   }

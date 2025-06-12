@@ -20,8 +20,6 @@ const strapiFindOperationResult = z.object({
 export class StrapiClient {
   private client: Strapi;
   private logger = createLogger("StrapiClient");
-  private readonly BATCH_SIZE = 5;
-  private readonly BATCH_DELAY_MS = 1000;
 
   constructor(options: { url: string; token: string }) {
     this.client = new Strapi({
@@ -34,20 +32,6 @@ export class StrapiClient {
     });
   }
 
-  private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  private chunkArray<T>(array: T[], chunkSize: number): T[][] {
-    const chunks: T[][] = [];
-
-    for (let i = 0; i < array.length; i += chunkSize) {
-      chunks.push(array.slice(i, i + chunkSize));
-    }
-
-    return chunks;
-  }
-
   private getProducts(configuration: StrapiProviderConfig.FullShape, saleorVariantId: string) {
     return this.client
       .find(configuration.itemType, {
@@ -57,7 +41,6 @@ export class StrapiClient {
           },
         },
       })
-
       .then((response) => {
         const parsedResponse = strapiFindOperationResult.parse(response);
 
@@ -82,12 +65,12 @@ export class StrapiClient {
 
     const strapiProducts = await this.getProducts(configuration, variant.id);
 
-    this.logger.trace("Fetched products from strapi that will be deleted", {
+    this.logger.debug("Fetched products from strapi that will be deleted", {
       productIds: strapiProducts?.map((p) => p.id) ?? [],
     });
 
     if (!strapiProducts) {
-      this.logger.info("No product found in Strapi, skipping deletion");
+      this.logger.debug("No product found in Strapi, skipping deletion");
 
       return;
     }
@@ -110,14 +93,14 @@ export class StrapiClient {
       configId: configuration.id,
     });
 
-    this.logger.trace("Fetching mapped field...");
+    this.logger.debug("Fetching mapped field...");
 
     const mappedFields = FieldsMapper.mapProductVariantToConfigurationFields({
       variant,
       configMapping: configuration.productVariantFieldsMapping,
     });
 
-    this.logger.trace("Fetched mappedd fieds");
+    this.logger.debug("Fetched mapped fields");
 
     return this.client.create(configuration.itemType, mappedFields);
   }
@@ -142,7 +125,7 @@ export class StrapiClient {
       const strapiProducts = await this.getProducts(configuration, variant.id);
 
       if (!strapiProducts) {
-        this.logger.info("No product found in Strapi, skipping update");
+        this.logger.debug("No product found in Strapi, skipping update");
 
         return;
       }
@@ -150,47 +133,18 @@ export class StrapiClient {
       strapiProductIdsToUpdate = strapiProducts.map((strapiProduct) => strapiProduct.id);
     }
 
-    this.logger.trace("Found products to update", { strapiProductIdsToUpdate });
+    this.logger.debug("Found products to update", { strapiProductIdsToUpdate });
 
     const mappedFields = FieldsMapper.mapProductVariantToConfigurationFields({
       variant,
       configMapping: configuration.productVariantFieldsMapping,
     });
 
-    // Split product IDs into batches
-    const productIdBatches = this.chunkArray(strapiProductIdsToUpdate, this.BATCH_SIZE);
-
-    // Process each batch with delay between batches using reduce for sequential processing
-    const results = await productIdBatches.reduce(
-      async (previousPromise, batch, index) => {
-        const accumulatedResults = await previousPromise;
-
-        this.logger.trace(`Processing batch ${index + 1}/${productIdBatches.length}`, {
-          batchSize: batch.length,
-          productIds: batch,
-        });
-
-        // Process all products in the current batch concurrently
-        const batchResults = await Promise.all(
-          batch.map((strapiProductId) => {
-            return this.client.update(configuration.itemType, strapiProductId, mappedFields);
-          }),
-        );
-
-        accumulatedResults.push(...batchResults);
-
-        // Add delay between batches (except for the last batch)
-        if (index < productIdBatches.length - 1) {
-          this.logger.trace(`Waiting ${this.BATCH_DELAY_MS}ms before next batch`);
-          await this.delay(this.BATCH_DELAY_MS);
-        }
-
-        return accumulatedResults;
-      },
-      Promise.resolve([] as unknown[]),
+    return Promise.all(
+      strapiProductIdsToUpdate.map((strapiProductId) => {
+        return this.client.update(configuration.itemType, strapiProductId, mappedFields);
+      }),
     );
-
-    return results;
   }
 
   async upsertProduct({
@@ -207,7 +161,7 @@ export class StrapiClient {
     const strapiProducts = await this.getProducts(configuration, variant.id);
 
     if (strapiProducts) {
-      this.logger.trace("Found products to upsert", {
+      this.logger.debug("Found products to upsert", {
         strapiProducts: strapiProducts.map((p) => p.id),
       });
 
@@ -217,7 +171,7 @@ export class StrapiClient {
         }),
       );
     } else {
-      this.logger.info("No products found, will try to upload");
+      this.logger.debug("No products found, will try to upload");
 
       return this.uploadProduct({ configuration, variant });
     }
