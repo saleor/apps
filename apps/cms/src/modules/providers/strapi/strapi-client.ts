@@ -65,12 +65,12 @@ export class StrapiClient {
 
     const strapiProducts = await this.getProducts(configuration, variant.id);
 
-    this.logger.trace("Fetched products from strapi that will be deleted", {
+    this.logger.debug("Fetched products from strapi that will be deleted", {
       productIds: strapiProducts?.map((p) => p.id) ?? [],
     });
 
     if (!strapiProducts) {
-      this.logger.info("No product found in Strapi, skipping deletion");
+      this.logger.debug("No product found in Strapi, skipping deletion");
 
       return;
     }
@@ -93,14 +93,14 @@ export class StrapiClient {
       configId: configuration.id,
     });
 
-    this.logger.trace("Fetching mapped field...");
+    this.logger.debug("Fetching mapped field...");
 
     const mappedFields = FieldsMapper.mapProductVariantToConfigurationFields({
       variant,
       configMapping: configuration.productVariantFieldsMapping,
     });
 
-    this.logger.trace("Fetched mappedd fieds");
+    this.logger.debug("Fetched mapped fields");
 
     return this.client.create(configuration.itemType, mappedFields);
   }
@@ -125,7 +125,7 @@ export class StrapiClient {
       const strapiProducts = await this.getProducts(configuration, variant.id);
 
       if (!strapiProducts) {
-        this.logger.info("No product found in Strapi, skipping update");
+        this.logger.debug("No product found in Strapi, skipping update");
 
         return;
       }
@@ -133,7 +133,7 @@ export class StrapiClient {
       strapiProductIdsToUpdate = strapiProducts.map((strapiProduct) => strapiProduct.id);
     }
 
-    this.logger.trace("Found products to update", { strapiProductIdsToUpdate });
+    this.logger.debug("Found products to update", { strapiProductIdsToUpdate });
 
     const mappedFields = FieldsMapper.mapProductVariantToConfigurationFields({
       variant,
@@ -161,7 +161,7 @@ export class StrapiClient {
     const strapiProducts = await this.getProducts(configuration, variant.id);
 
     if (strapiProducts) {
-      this.logger.trace("Found products to upsert", {
+      this.logger.debug("Found products to upsert", {
         strapiProducts: strapiProducts.map((p) => p.id),
       });
 
@@ -171,7 +171,7 @@ export class StrapiClient {
         }),
       );
     } else {
-      this.logger.info("No products found, will try to upload");
+      this.logger.debug("No products found, will try to upload");
 
       return this.uploadProduct({ configuration, variant });
     }

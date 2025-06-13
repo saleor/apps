@@ -100,7 +100,7 @@ export const BulkSyncView = ({
       onUploadSuccess({ variantId }) {
         setItemStatus(variantId, "success");
       },
-      onUploadError({ error, variantId }) {
+      onUploadError({ variantId }) {
         // User will be notified about the error in the UI
         setItemStatus(variantId, "error");
       },
@@ -146,7 +146,6 @@ export const BulkSyncView = ({
             }
 
             case "fetched":
-
             case "uploading": {
               return (
                 <SaleorProductsFetchedStep
