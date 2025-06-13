@@ -1,5 +1,13 @@
 # saleor-app-avatax
 
+## 1.16.2
+
+### Patch Changes
+
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-otel@2.3.0
+  - @saleor/apps-logger@1.5.6
+
 ## 1.16.1
 
 ### Patch Changes

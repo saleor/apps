@@ -1,5 +1,14 @@
 # saleor-app-payment-stripe
 
+## 2.0.4
+
+### Patch Changes
+
+- 339fbd95: Fixed new config validation - now it will earlier catch mismatched PK and RK (live + test mix) and Sentry will not be called
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-otel@2.3.0
+  - @saleor/apps-logger@1.5.6
+
 ## 2.0.3
 
 ### Patch Changes
