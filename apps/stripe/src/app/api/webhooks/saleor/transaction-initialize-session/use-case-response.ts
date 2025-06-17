@@ -1,4 +1,3 @@
-import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
 import {
@@ -6,6 +5,10 @@ import {
   createSuccessWebhookResponseDataSchema,
 } from "@/app/api/webhooks/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
+import {
+  TransactionSessionActionRequired,
+  TransactionSessionFailure,
+} from "@/generated/json-schema/transaction-initialize-session";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
@@ -66,15 +69,13 @@ class Success extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<
-      "TRANSACTION_INITIALIZE_SESSION",
-      "3.21"
-    >({
+    const typeSafeResponse: TransactionSessionActionRequired = {
       data: Success.ResponseDataSchema.parse({
         paymentIntent: {
           stripeClientSecret: this.stripeClientSecret,
         },
       }),
+      actions: this.transactionResult.actions,
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
@@ -83,7 +84,7 @@ class Success extends SuccessWebhookResponse {
         this.stripePaymentIntentId,
         this.appContext.stripeEnv,
       ),
-    });
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
@@ -118,13 +119,11 @@ class Failure extends SuccessWebhookResponse {
   }
 
   getResponse() {
-    const typeSafeResponse = buildSyncWebhookResponsePayload<
-      "TRANSACTION_INITIALIZE_SESSION",
-      "3.21"
-    >({
+    const typeSafeResponse: TransactionSessionFailure = {
       // We don't have pspReference in this case or actions because there is no payment intent created
       result: this.transactionResult.result,
       message: this.messageFormatter.formatMessage(this.transactionResult.message, this.error),
+      actions: this.transactionResult.actions,
       data: Failure.ResponseDataSchema.parse({
         paymentIntent: {
           errors: [
@@ -135,7 +134,7 @@ class Failure extends SuccessWebhookResponse {
           ],
         },
       }),
-    });
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }

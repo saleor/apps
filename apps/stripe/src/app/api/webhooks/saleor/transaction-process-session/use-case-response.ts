@@ -1,8 +1,12 @@
-import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { z } from "zod";
 
 import { createFailureWebhookResponseDataSchema } from "@/app/api/webhooks/saleor/saleor-webhook-response-schema";
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
+import {
+  TransactionSessionActionRequired,
+  TransactionSessionFailure,
+  TransactionSessionSuccess,
+} from "@/generated/json-schema/transaction-process-session";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
@@ -63,21 +67,19 @@ class Success extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION", "3.21">(
-      {
-        result: this.transactionResult.result,
-        amount: this.saleorMoney.amount,
-        pspReference: this.stripePaymentIntentId,
-        // https://docs.stripe.com/payments/paymentintents/lifecycle
-        message: this.transactionResult.message,
-        actions: this.transactionResult.actions,
-        externalUrl: generatePaymentIntentStripeDashboardUrl(
-          this.stripePaymentIntentId,
-          this.appContext.stripeEnv,
-        ),
-        time: this.timestamp?.toISOString(),
-      },
-    );
+    const typeSafeResponse: TransactionSessionSuccess | TransactionSessionActionRequired = {
+      result: this.transactionResult.result,
+      amount: this.saleorMoney.amount,
+      pspReference: this.stripePaymentIntentId,
+      // https://docs.stripe.com/payments/paymentintents/lifecycle
+      message: this.transactionResult.message,
+      actions: this.transactionResult.actions,
+      externalUrl: generatePaymentIntentStripeDashboardUrl(
+        this.stripePaymentIntentId,
+        this.appContext.stripeEnv,
+      ),
+      time: this.timestamp?.toISOString(),
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
@@ -114,28 +116,26 @@ class Failure extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<"TRANSACTION_PROCESS_SESSION", "3.21">(
-      {
-        result: this.transactionResult.result,
-        message: this.error.merchantMessage,
-        pspReference: this.stripePaymentIntentId,
-        externalUrl: generatePaymentIntentStripeDashboardUrl(
-          this.stripePaymentIntentId,
-          this.appContext.stripeEnv,
-        ),
-        data: Failure.ResponseDataSchema.parse({
-          paymentIntent: {
-            errors: [
-              {
-                code: this.error.publicCode,
-                message: this.error.publicMessage,
-              },
-            ],
-          },
-        }),
-        actions: this.transactionResult.actions,
-      },
-    );
+    const typeSafeResponse: TransactionSessionFailure = {
+      result: this.transactionResult.result,
+      message: this.error.merchantMessage,
+      pspReference: this.stripePaymentIntentId,
+      externalUrl: generatePaymentIntentStripeDashboardUrl(
+        this.stripePaymentIntentId,
+        this.appContext.stripeEnv,
+      ),
+      data: Failure.ResponseDataSchema.parse({
+        paymentIntent: {
+          errors: [
+            {
+              code: this.error.publicCode,
+              message: this.error.publicMessage,
+            },
+          ],
+        },
+      }),
+      actions: this.transactionResult.actions,
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }

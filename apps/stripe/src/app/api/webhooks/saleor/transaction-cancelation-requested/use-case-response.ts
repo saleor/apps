@@ -1,6 +1,8 @@
-import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
-
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
+import {
+  TransactionCancelationRequestedSyncFailure,
+  TransactionCancelationRequestedSyncSuccess,
+} from "@/generated/json-schema/transaction-cancelation-requested";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
@@ -37,10 +39,7 @@ class Success extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<
-      "TRANSACTION_CANCELATION_REQUESTED",
-      "3.21"
-    >({
+    const typeSafeResponse: TransactionCancelationRequestedSyncSuccess = {
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
@@ -51,7 +50,7 @@ class Success extends SuccessWebhookResponse {
         this.appContext.stripeEnv,
       ),
       time: this.timestamp?.toISOString(),
-    });
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
@@ -79,10 +78,7 @@ class Failure extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<
-      "TRANSACTION_CANCELATION_REQUESTED",
-      "3.21"
-    >({
+    const typeSafeResponse: TransactionCancelationRequestedSyncFailure = {
       result: this.transactionResult.result,
       pspReference: this.stripePaymentIntentId,
       message: this.messageFormatter.formatMessage(this.error.merchantMessage, this.error),
@@ -91,7 +87,7 @@ class Failure extends SuccessWebhookResponse {
         this.stripePaymentIntentId,
         this.appContext.stripeEnv,
       ),
-    });
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
