@@ -25,7 +25,6 @@ const handler = createManifestHandler({
         },
       },
       dataPrivacyUrl: "https://saleor.io/legal/privacy/",
-      extensions: [],
       homepageUrl: "https://github.com/saleor/apps",
       id: env.MANIFEST_APP_ID,
       name: "AvaTax",
@@ -35,6 +34,20 @@ const handler = createManifestHandler({
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,
       webhooks: appWebhooks.map((w) => w.getWebhookManifest(apiBaseURL)),
+      extensions: [
+        {
+          target: "WIDGET",
+          options: {
+            widgetTarget: {
+              method: "POST",
+            },
+          },
+          label: "AvaTax details",
+          mount: "ORDER_DETAILS_WIDGETS",
+          url: appBaseUrl + "/api/order-details",
+          permissions: [],
+        },
+      ],
     };
 
     return manifest;

@@ -43,8 +43,8 @@ catalogs:
       specifier: 1.30.0
       version: 1.30.0
     '@saleor/app-sdk':
-      specifier: 1.0.5
-      version: 1.0.5
+      specifier: 1.1.1
+      version: 1.1.1
     '@saleor/macaw-ui':
       specifier: 1.1.10
       version: 1.1.10
@@ -100,7 +100,7 @@ importers:
         version: 8.17.5
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 1.0.5(graphql@16.7.1)(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.1.1(graphql@16.7.1)(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       cspell:
         specifier: 8.17.5
         version: 8.17.5
@@ -1737,7 +1737,7 @@ importers:
         version: 15.0.4
       next-test-api-route-handler:
         specifier: 4.0.16
-        version: 4.0.16(next@15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 4.0.16(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       tsx:
         specifier: 4.19.3
         version: 4.19.3
@@ -5136,8 +5136,8 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@saleor/app-sdk@1.0.5':
-    resolution: {integrity: sha512-6h/OZIMcXIpRK4S2QpXJ3kTYJ05OYk9cLIXjlCrEbAJFHOPwdD5kwivGbAestkgM9SpYNNSBu5L4ZeW6+UoKnQ==}
+  '@saleor/app-sdk@1.1.1':
+    resolution: {integrity: sha512-pHSS7V6wN3nnmcv0yY218zDeYEE45O2ebdqCmudN1QHUiV3dhDScI7ypZvAyM5YHCws4sr67kr4187R0kmVslQ==}
     peerDependencies:
       '@vercel/kv': ^1.0.0
       graphql: '>=16.6.0'
@@ -15517,7 +15517,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@saleor/app-sdk@1.0.5(graphql@16.7.1)(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/app-sdk@1.1.1(graphql@16.7.1)(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.30.0
@@ -20552,7 +20552,7 @@ snapshots:
 
   neverthrow@6.2.1: {}
 
-  next-test-api-route-handler@4.0.16(next@15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
+  next-test-api-route-handler@4.0.16(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
     dependencies:
       '@whatwg-node/server': 0.10.3
       cookie: 1.0.2
