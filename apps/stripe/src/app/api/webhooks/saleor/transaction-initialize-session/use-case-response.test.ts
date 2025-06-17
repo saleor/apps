@@ -36,6 +36,9 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 100,
           "data": {
             "paymentIntent": {
@@ -70,6 +73,9 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [
+            "CANCEL",
+          ],
           "amount": 100,
           "data": {
             "paymentIntent": {
@@ -99,6 +105,9 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [
+            "CHARGE",
+          ],
           "data": {
             "paymentIntent": {
               "errors": [
@@ -128,6 +137,9 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [
+            "CHARGE",
+          ],
           "data": {
             "paymentIntent": {
               "errors": [
@@ -159,6 +171,9 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [
+            "CHARGE",
+          ],
           "data": {
             "paymentIntent": {
               "errors": [
@@ -190,6 +205,9 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [
+            "CHARGE",
+          ],
           "data": {
             "paymentIntent": {
               "errors": [
@@ -223,6 +241,9 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [
+            "CANCEL",
+          ],
           "data": {
             "paymentIntent": {
               "errors": [
@@ -252,6 +273,9 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [
+            "CANCEL",
+          ],
           "data": {
             "paymentIntent": {
               "errors": [
@@ -281,6 +305,9 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
       expect(fetchReponse.status).toBe(200);
       expect(await fetchReponse.json()).toMatchInlineSnapshot(`
         {
+          "actions": [
+            "CANCEL",
+          ],
           "data": {
             "paymentIntent": {
               "errors": [
