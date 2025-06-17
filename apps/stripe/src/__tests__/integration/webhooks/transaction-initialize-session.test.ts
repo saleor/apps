@@ -99,6 +99,7 @@ describe("TransactionInitializeSession webhook: integration", async () => {
               stripeClientSecret: expect.stringContaining("pi_"),
             },
           },
+          actions: ["CANCEL"],
           result: "CHARGE_ACTION_REQUIRED",
           amount: 123.3,
           pspReference: expect.stringContaining("pi_"),
