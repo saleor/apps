@@ -10,7 +10,7 @@ const FALLBACK_CUSTOMER_CODE = "0";
 
 type NullableString = string | null | undefined;
 
-// see: docs.saleor.io/docs/3.x/developer/app-store/apps/taxes/avatax/overview#customer-code
+// see: https://docs.saleor.io/developer/app-store/apps/avatax/configuration#customer-code
 export const avataxCustomerCode = {
   resolve({
     avataxCustomerCode,

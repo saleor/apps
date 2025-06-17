@@ -1,7 +1,7 @@
 import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
 
 const SALEOR_EVENTS_DOCS_URL =
-  "https://docs.saleor.io/docs/3.x/developer/extending/apps/asynchronous-webhooks#available-webhook-events";
+  "https://docs.saleor.io/developer/extending/webhooks/asynchronous-events#available-webhook-events";
 
 export const MainInstructions = ({ children, ...props }: PropsWithBox<{}>) => {
   return (

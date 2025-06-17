@@ -24,7 +24,7 @@ export default withSpanAttributes(
         extensions: [
           /**
            * Optionally, extend Dashboard with custom UIs
-           * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
+           * https://docs.saleor.io/developer/extending/apps/extending-dashboard-with-apps
            */
         ],
         homepageUrl: "https://github.com/saleor/apps",

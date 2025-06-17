@@ -27,7 +27,7 @@ export default wrapWithLoggerContext(
           extensions: [
             /**
              * Optionally, extend Dashboard with custom UIs
-             * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
+             * https://docs.saleor.io/developer/extending/apps/extending-dashboard-with-apps
              */
           ],
           homepageUrl: "https://github.com/saleor/apps",
@@ -36,7 +36,7 @@ export default wrapWithLoggerContext(
           permissions: [
             /**
              * Set permissions for app if needed
-             * https://docs.saleor.io/docs/3.x/developer/permissions
+             * https://docs.saleor.io/developer/permissions
              */
             "MANAGE_PRODUCTS",
             "MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES",

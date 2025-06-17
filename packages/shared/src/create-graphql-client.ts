@@ -16,7 +16,7 @@ export interface CreateGraphQLClientArgs {
  * Token can be obtained:
  * - by accessing token from appBridge https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/app-bridge
  * - by using token created during the app registration, saved in the APL https://docs.saleor.io/developer/extending/apps/developing-apps/app-sdk/apl
- * - by token create mutation https://docs.saleor.io/docs/3.x/api-usage/authentication
+ * - by token create mutation https://docs.saleor.io/api-usage/authentication
  *
  * In the context of developing Apps, the two first options are recommended.
  */
