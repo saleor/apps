@@ -1,6 +1,8 @@
-import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
-
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
+import {
+  TransactionChargeRequestedSyncFailure,
+  TransactionChargeRequestedSyncSuccess,
+} from "@/generated/json-schema/transaction-charge-requested";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
@@ -32,10 +34,7 @@ class Success extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<
-      "TRANSACTION_CHARGE_REQUESTED",
-      "3.21"
-    >({
+    const typeSafeResponse: TransactionChargeRequestedSyncSuccess = {
       result: this.transactionResult.result,
       amount: this.saleorMoney.amount,
       pspReference: this.stripePaymentIntentId,
@@ -45,7 +44,7 @@ class Success extends SuccessWebhookResponse {
         this.stripePaymentIntentId,
         this.appContext.stripeEnv,
       ),
-    });
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
@@ -73,10 +72,7 @@ class Failure extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<
-      "TRANSACTION_CHARGE_REQUESTED",
-      "3.21"
-    >({
+    const typeSafeResponse: TransactionChargeRequestedSyncFailure = {
       result: this.transactionResult.result,
       pspReference: this.stripePaymentIntentId,
       message: this.messageFormatter.formatMessage(this.transactionResult.message, this.error),
@@ -85,7 +81,7 @@ class Failure extends SuccessWebhookResponse {
         this.stripePaymentIntentId,
         this.appContext.stripeEnv,
       ),
-    });
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }

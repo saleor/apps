@@ -1,6 +1,8 @@
-import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
-
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
+import {
+  TransactionRefundRequestedAsync,
+  TransactionRefundRequestedSyncFailure,
+} from "@/generated/json-schema/transaction-refund-requested";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
@@ -23,7 +25,7 @@ class Success extends SuccessWebhookResponse {
      * We are using async flow here as currently Saleor doesn't allow `REFUND_REQUEST` to be returned in `TRANSACTION_REFUND_REQUESTED` webhook response. App will report actual refund status when handling Stripe webhook.
      * https://docs.saleor.io/developer/extending/webhooks/synchronous-events/transaction#async-flow-2
      */
-    const typeSafeResponse = {
+    const typeSafeResponse: TransactionRefundRequestedAsync = {
       pspReference: this.stripeRefundId,
     };
 
@@ -55,10 +57,7 @@ class Failure extends SuccessWebhookResponse {
       throw new BaseError("Stripe environment is not set. Ensure AppContext is set earlier");
     }
 
-    const typeSafeResponse = buildSyncWebhookResponsePayload<
-      "TRANSACTION_REFUND_REQUESTED",
-      "3.21"
-    >({
+    const typeSafeResponse: TransactionRefundRequestedSyncFailure = {
       result: this.transactionResult.result,
       pspReference: this.stripePaymentIntentId,
       message: this.messageFormatter.formatMessage(this.message, this.error),
@@ -67,7 +66,7 @@ class Failure extends SuccessWebhookResponse {
         this.stripePaymentIntentId,
         this.appContext.stripeEnv,
       ),
-    });
+    };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });
   }
