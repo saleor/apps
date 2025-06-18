@@ -19,17 +19,12 @@ export class AvataxTransactionDetailsFetcher {
       credentials,
     });
 
-    try {
-      const response = await avataxClient.getTransactionByCode({
-        transactionCode: transactionCode,
-        companyCode: companyCode,
-        include: "TaxDetailsByTaxType",
-      });
+    const response = await avataxClient.getTransactionByCode({
+      transactionCode: transactionCode,
+      companyCode: companyCode,
+      include: "TaxDetailsByTaxType",
+    });
 
-      return response;
-    } catch (error) {
-      console.error("Error fetching transaction details:", error);
-      throw error;
-    }
+    return response;
   }
 }
