@@ -1,0 +1,9 @@
+query OrderAvataxId($id: ID!) {
+    order(id: $id) {
+        channel {
+            id,
+            slug
+        }
+        avataxId: metafield(key: "avataxId")
+    }
+}

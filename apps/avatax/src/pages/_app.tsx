@@ -19,6 +19,10 @@ import { GraphQLProvider } from "../providers/GraphQLProvider";
 export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
 
 function NextApp({ Component, pageProps }: AppProps) {
+  if (pageProps.skipApp) {
+    return <Component {...pageProps} />;
+  }
+
   return (
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
