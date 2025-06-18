@@ -90,9 +90,7 @@ If you want to use your own database, you can implement your own APL. [Check the
 
 ### Learn more about Saleor Apps
 
-[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
-
-[Configuring apps in dashboard](https://docs.saleor.io/docs/3.x/dashboard/apps)
+[Apps guide](https://docs.saleor.io/developer/extending/apps/overview)
 
 ## OTEL
 

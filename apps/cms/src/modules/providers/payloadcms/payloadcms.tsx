@@ -15,7 +15,7 @@ export const PayloadCMS = {
       </Text>
       <Text as="p" marginBottom={2}>
         Consult{" "}
-        <TextLink newTab href="https://docs.saleor.io/docs/3.x/developer/app-store/apps/cms">
+        <TextLink newTab href="https://docs.saleor.io/developer/app-store/apps/cms">
           docs
         </TextLink>{" "}
         for more information how to set up Payload CMS.

@@ -18,7 +18,7 @@ export const AppHeader = ({ ...props }: Props) => {
       </Text>
       <Text>
         Read the{" "}
-        <TextLink href="https://docs.saleor.io/docs/3.x/developer/app-store/apps/segment" newTab>
+        <TextLink href="https://docs.saleor.io/developer/app-store/apps/segment/overview" newTab>
           docs
         </TextLink>{" "}
         to learn more
