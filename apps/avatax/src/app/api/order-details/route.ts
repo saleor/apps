@@ -1,7 +1,9 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
+import { getCSSVariables } from "@saleor/macaw-ui";
 import { NextRequest } from "next/server";
 
+import styles from "!!raw-loader!@saleor/macaw-ui/style";
 import { metadataCache } from "@/lib/app-metadata-cache";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
@@ -12,8 +14,6 @@ import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider
 
 import { OrderAvataxIdDocument } from "../../../../generated/graphql";
 import { apl } from "../../../../saleor-app";
-
-// const style = readFileSync;
 
 const orderDetailsHandler = async (req: NextRequest) => {
   const body = await req.formData();
@@ -116,19 +116,38 @@ const orderDetailsHandler = async (req: NextRequest) => {
   const html = `
   <html lang="en">
   <head>
+<style>
+body, html {
+margin:0;
+padding:0;
+}
 
+.main {
+
+}
+
+.row{
+width: 100%;
+display: flex;
+justify-content: space-between;
+padding-top: 10px;
+padding-bottom: 10px;
+}
+
+${styles}
+</style>
 </head>
     <body>
-      <table>
+      <main>
       ${Object.entries(meaningfulFields)
         .map(
-          ([key, value]) => `<tr>
-<td>${key}: </td>
-<td>${value}</td>
-</tr>`,
+          ([key, value]) => `<div class="row">
+<span class="key">${key}: </span>
+<span class="value">${value}</span>
+</div>`,
         )
         .join(" ")}
-      </table>
+      </main>
     </body>
   
   </html>

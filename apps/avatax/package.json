@@ -101,6 +101,7 @@
     "graphql-config": "5.0.3",
     "pactum": "^3.6.0",
     "pactum-matchers": "^1.1.6",
+    "raw-loader": "^4.0.2",
     "tsx": "4.19.3",
     "typescript": "5.8.2",
     "vite": "6.2.4",
