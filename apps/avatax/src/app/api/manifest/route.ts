@@ -44,7 +44,7 @@ const handler = createManifestHandler({
           },
           label: "AvaTax details",
           mount: "ORDER_DETAILS_WIDGETS",
-          url: appBaseUrl + "/api/order-details",
+          url: apiBaseURL + "/api/order-details",
           permissions: [],
         },
       ],

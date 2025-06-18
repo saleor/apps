@@ -7,10 +7,12 @@ export class AvataxTransactionDetailsFetcher {
     isSandbox,
     credentials,
     transactionCode,
+    companyCode,
   }: {
     isSandbox: boolean;
     credentials: { username: string; password: string };
-    transactionCode: number;
+    transactionCode: string;
+    companyCode: string;
   }) {
     const avataxClient = this.avataxSdkClientFactory.createClient({
       isSandbox,
@@ -18,8 +20,9 @@ export class AvataxTransactionDetailsFetcher {
     });
 
     try {
-      const response = await avataxClient.getTransactionById({
-        id: transactionCode,
+      const response = await avataxClient.getTransactionByCode({
+        transactionCode: transactionCode,
+        companyCode: companyCode,
         include: "TaxDetailsByTaxType",
       });
 
