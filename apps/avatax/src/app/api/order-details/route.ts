@@ -171,9 +171,8 @@ const orderDetailsHandler = async (req: NextRequest) => {
 
   const qs = new URLSearchParams(meaningfulFields);
 
-  const result = await fetch(
-    new URL("/order-details?" + qs.toString(), req.url.replace("https", "http")),
-  );
+  // in localhost you may need to replace to http
+  const result = await fetch(new URL("/order-details?" + qs.toString(), req.url));
 
   return new Response(await result.text(), {
     headers: {
