@@ -5,7 +5,7 @@
 <div align="center">
   <a href="https://saleor.io/">🏠 Website</a>
   <span> • </span>
-  <a href="https://docs.saleor.io/docs/3.x/">📚 Docs</a>
+  <a href="https://docs.saleor.io/">📚 Docs</a>
   <span> • </span>
   <a href="https://saleor.io/blog/">📰 Blog</a>
 </div>
@@ -52,7 +52,7 @@ pnpm dev
 4. App will be available under `http://localhost:3000`
 
 > [!NOTE]
-> To install app in Saleor Cloud, you need to expose your local server to the internet (tunnel). You can use Saleor CLI to do that. See this [guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/developing-with-tunnels) for more details.
+> To install app in Saleor Cloud, you need to expose your local server to the internet (tunnel). You can use Saleor CLI to do that. See this [guide](https://docs.saleor.io/developer/extending/apps/developing-with-tunnels) for more details.
 
 6. Install app on the Saleor dashboard.
 7. After installation, configure the app as follows:
@@ -62,7 +62,7 @@ pnpm dev
 
 > [!NOTE]
 > This section refers to apps hosted by Saleor or using REST APL. If you self host AvaTax app you need to write your own logic for updating migration scripts.
-> See [How to update app webhooks](https://docs.saleor.io/docs/3.x/developer/extending/apps/updating-app-webhooks) for more info.
+> See [How to update app webhooks](https://docs.saleor.io/developer/extending/apps/updating-app-webhooks for more info.
 
 You need to set `REST_APL_TOKEN` & `REST_APL_ENDPOINT` in our `.env` file first.
 
