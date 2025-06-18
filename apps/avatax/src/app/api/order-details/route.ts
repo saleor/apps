@@ -114,7 +114,10 @@ const orderDetailsHandler = async (req: NextRequest) => {
     exemptNo: transactionDetails.exemptNo ?? "",
     totalExempt: transactionDetails.totalExempt?.toString() ?? "",
     totalTaxable: transactionDetails.totalTaxable?.toString() ?? "",
-    // todo print taxable and non-taxable lines
+    /*
+     * todo print taxable and non-taxable lines
+     * todo add link to avalara dashboard
+     */
   };
 
   const qs = new URLSearchParams(meaningfulFields);
