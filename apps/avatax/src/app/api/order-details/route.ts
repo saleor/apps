@@ -1,9 +1,8 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
+import { ExtensionPOSTAttributes } from "@saleor/app-sdk/types";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
-import { getCSSVariables } from "@saleor/macaw-ui";
 import { NextRequest } from "next/server";
 
-import styles from "!!raw-loader!@saleor/macaw-ui/style";
 import { metadataCache } from "@/lib/app-metadata-cache";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
@@ -15,14 +14,19 @@ import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider
 import { OrderAvataxIdDocument } from "../../../../generated/graphql";
 import { apl } from "../../../../saleor-app";
 
-const orderDetailsHandler = async (req: NextRequest) => {
+const getFieldsFromRequest = async (req: NextRequest) => {
   const body = await req.formData();
 
-  // ExtensionPOSTAttributes structure
-  const orderId = body.get("orderId") as string;
-  const saleorApiUrl = body.get("saleorApiUrl") as string;
-  const accessToken = body.get("accessToken") as string;
-  const appId = body.get("appId") as string;
+  return {
+    orderId: body.get("orderId") as string | undefined,
+    saleorApiUrl: body.get("saleorApiUrl") as string,
+    accessToken: body.get("accessToken") as string,
+    appId: body.get("appId") as string,
+  } satisfies ExtensionPOSTAttributes;
+};
+
+const orderDetailsHandler = async (req: NextRequest) => {
+  const { orderId, saleorApiUrl, appId, accessToken } = await getFieldsFromRequest(req);
 
   try {
     await verifyJWT({
@@ -65,7 +69,7 @@ const orderDetailsHandler = async (req: NextRequest) => {
   const avataxId = orderMetadata.data?.order?.avataxId;
 
   if (!avataxId) {
-    return new Response("Missing avatax ID in metadata", {
+    return new Response("AvaTax was not used for this order", {
       status: 400,
     });
   }
@@ -113,48 +117,13 @@ const orderDetailsHandler = async (req: NextRequest) => {
     // todo print taxable and non-taxable lines
   };
 
-  const html = `
-  <html lang="en">
-  <head>
-<style>
-body, html {
-margin:0;
-padding:0;
-}
+  const qs = new URLSearchParams(meaningfulFields);
 
-.main {
+  const result = await fetch(
+    new URL("/order-details?" + qs.toString(), req.url.replace("https", "http")),
+  );
 
-}
-
-.row{
-width: 100%;
-display: flex;
-justify-content: space-between;
-padding-top: 10px;
-padding-bottom: 10px;
-}
-
-${styles}
-</style>
-</head>
-    <body>
-      <main>
-      ${Object.entries(meaningfulFields)
-        .map(
-          ([key, value]) => `<div class="row">
-<span class="key">${key}: </span>
-<span class="value">${value}</span>
-</div>`,
-        )
-        .join(" ")}
-      </main>
-    </body>
-  
-  </html>
-  
-  `;
-
-  return new Response(html, {
+  return new Response(await result.text(), {
     headers: {
       "Content-Type": "text/html",
     },
