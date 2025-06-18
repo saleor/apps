@@ -13,6 +13,8 @@ import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider
 import { OrderAvataxIdDocument } from "../../../../generated/graphql";
 import { apl } from "../../../../saleor-app";
 
+// const style = readFileSync;
+
 const orderDetailsHandler = async (req: NextRequest) => {
   const body = await req.formData();
 
@@ -105,22 +107,39 @@ const orderDetailsHandler = async (req: NextRequest) => {
   });
 
   const meaningfulFields = {
-    exemptNo: transactionDetails.exemptNo,
-    totalExempt: transactionDetails.totalExempt,
-    totalTaxable: transactionDetails.totalTaxable,
+    exemptNo: transactionDetails.exemptNo ?? "",
+    totalExempt: transactionDetails.totalExempt?.toString() ?? "",
+    totalTaxable: transactionDetails.totalTaxable?.toString() ?? "",
     // todo print taxable and non-taxable lines
   };
 
-  return new Response(
-    `<html>
-${JSON.stringify(meaningfulFields, null, 2)}
-</html>`,
-    {
-      headers: {
-        "Content-Type": "text/html",
-      },
+  const html = `
+  <html lang="en">
+  <head>
+
+</head>
+    <body>
+      <table>
+      ${Object.entries(meaningfulFields)
+        .map(
+          ([key, value]) => `<tr>
+<td>${key}: </td>
+<td>${value}</td>
+</tr>`,
+        )
+        .join(" ")}
+      </table>
+    </body>
+  
+  </html>
+  
+  `;
+
+  return new Response(html, {
+    headers: {
+      "Content-Type": "text/html",
     },
-  );
+  });
 };
 
 export const POST = orderDetailsHandler;
