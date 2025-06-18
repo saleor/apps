@@ -1,5 +1,14 @@
 # saleor-app-search
 
+## 1.23.11
+
+### Patch Changes
+
+- c490ca75: Fixed link to Saleor docs. After this change links should point to the newest version of docs without redirects.
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-otel@2.3.0
+  - @saleor/apps-logger@1.5.6
+
 ## 1.23.10
 
 ### Patch Changes
