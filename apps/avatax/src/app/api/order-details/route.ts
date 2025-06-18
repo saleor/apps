@@ -1,6 +1,7 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
 import { ExtensionPOSTAttributes } from "@saleor/app-sdk/types";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
+import { TransactionModel } from "avatax/lib/models/TransactionModel";
 import { NextRequest } from "next/server";
 
 import { metadataCache } from "@/lib/app-metadata-cache";
@@ -25,6 +26,32 @@ const getFieldsFromRequest = async (req: NextRequest) => {
   } satisfies ExtensionPOSTAttributes;
 };
 
+type CacheValue = {
+  avataxTransaction: TransactionModel;
+};
+
+type CacheKeySet = {
+  orderId: string;
+  saleorApiUrl: string;
+  appId: string;
+  avataxId: string;
+};
+
+// In memory cache that sometimes will speed up lambda
+const cache = new Map<string, CacheValue>();
+
+const generateCacheKey = ({ saleorApiUrl, appId, orderId, avataxId }: CacheKeySet) =>
+  [saleorApiUrl, appId, orderId, avataxId].join("-");
+
+const addToCache = (keySet: CacheKeySet, value: CacheValue) => {
+  cache.set(generateCacheKey(keySet), value);
+};
+
+const getFromCache = (keySet: CacheKeySet): CacheValue | undefined => {
+  return cache.get(generateCacheKey(keySet));
+};
+
+// todo add caching on http. Probably we need to add stuff to GET for that
 const orderDetailsHandler = async (req: NextRequest) => {
   const { orderId, saleorApiUrl, appId, accessToken } = await getFieldsFromRequest(req);
 
@@ -74,7 +101,15 @@ const orderDetailsHandler = async (req: NextRequest) => {
     });
   }
 
-  const channelSlug = orderMetadata.data!.order!.channel.slug;
+  if (!orderMetadata.data?.order) {
+    return new Response("Order can't be resolved", {
+      status: 400,
+    });
+  }
+
+  const cachedValue = getFromCache({ saleorApiUrl, appId, orderId, avataxId });
+
+  const channelSlug = orderMetadata.data.order.channel.slug;
 
   const settingsManager = createSettingsManager(client, appId, metadataCache);
 
@@ -103,12 +138,26 @@ const orderDetailsHandler = async (req: NextRequest) => {
 
   const detailsService = new AvataxTransactionDetailsFetcher(new AvataxSdkClientFactory());
 
-  const transactionDetails = await detailsService.fetchTransactionDetails({
-    isSandbox: thisConfig.isSandbox,
-    credentials: thisConfig.credentials,
-    transactionCode: avataxId,
-    companyCode: thisConfig.companyCode,
-  });
+  const transactionDetails =
+    cachedValue?.avataxTransaction ??
+    (await detailsService.fetchTransactionDetails({
+      isSandbox: thisConfig.isSandbox,
+      credentials: thisConfig.credentials,
+      transactionCode: avataxId,
+      companyCode: thisConfig.companyCode,
+    }));
+
+  addToCache(
+    {
+      appId,
+      orderId,
+      avataxId,
+      saleorApiUrl,
+    },
+    {
+      avataxTransaction: transactionDetails,
+    },
+  );
 
   const meaningfulFields = {
     exemptNo: transactionDetails.exemptNo ?? "",
