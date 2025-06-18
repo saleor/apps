@@ -97,8 +97,6 @@ const orderDetailsHandler = async (req: NextRequest) => {
 
   const detailsService = new AvataxTransactionDetailsFetcher(new AvataxSdkClientFactory());
 
-  console.log({ avataxId });
-
   const transactionDetails = await detailsService.fetchTransactionDetails({
     isSandbox: thisConfig.isSandbox,
     credentials: thisConfig.credentials,
@@ -106,9 +104,23 @@ const orderDetailsHandler = async (req: NextRequest) => {
     companyCode: thisConfig.companyCode,
   });
 
-  console.log(transactionDetails);
+  const meaningfulFields = {
+    exemptNo: transactionDetails.exemptNo,
+    totalExempt: transactionDetails.totalExempt,
+    totalTaxable: transactionDetails.totalTaxable,
+    // todo print taxable and non-taxable lines
+  };
 
-  return new Response("wip");
+  return new Response(
+    `<html>
+${JSON.stringify(meaningfulFields, null, 2)}
+</html>`,
+    {
+      headers: {
+        "Content-Type": "text/html",
+      },
+    },
+  );
 };
 
 export const POST = orderDetailsHandler;
