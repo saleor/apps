@@ -1,7 +1,7 @@
 import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
-  mockedSaleorTransactionIdBranded,
+  mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { parseTransactionInitializeSessionEventData } from "@/app/api/webhooks/saleor/transaction-initialize-session/event-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
@@ -32,7 +32,7 @@ export const transactionInitializeSessionFixture =
       },
       idempotencyKey: "123",
       transaction: {
-        id: mockedSaleorTransactionIdBranded,
+        id: mockedSaleorTransactionId,
       },
     };
   };
