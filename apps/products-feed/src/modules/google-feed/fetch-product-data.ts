@@ -1,6 +1,5 @@
 // TODO: Refactor this file to fetcher-like class
 
-import { url } from "inspector";
 import { Client } from "urql";
 
 import {
@@ -21,7 +20,7 @@ export type ProductVariant = Omit<BasicProductDataFragment, "product"> &
   ProductAttributesFragment & { product: RelatedProductsFragment };
 
 export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
-  const logger = createLogger("getCursors", { saleorApiUrl: url, channel });
+  const logger = createLogger("getCursors");
 
   logger.debug(`Fetching product cursors for channel ${channel}`);
 
@@ -79,7 +78,7 @@ const fetchVariants = async ({
   channel: string;
   imageSize?: number;
 }): Promise<ProductVariant[]> => {
-  const logger = createLogger("fetchVariants", { saleorApiUrl: url, channel });
+  const logger = createLogger("fetchVariants");
 
   logger.debug(`Fetching variants for channel ${channel} with cursor ${after}`);
 
@@ -212,8 +211,6 @@ export const fetchProductData = async ({
   imageSize,
 }: FetchProductDataArgs) => {
   const logger = createLogger("fetchProductData", {
-    saleorApiUrl: url,
-    channel,
     route: "Google Product Feed",
   });
 
