@@ -7,11 +7,13 @@ on:
 jobs:
   assign_creator:
     if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-    - name: Assign PR to creator
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        PR_URL: ${{ github.event.pull_request.html_url }}
-        CREATOR: ${{ github.event.pull_request.user.login }}
-      run: gh pr edit "$PR_URL" --add-assignee "$CREATOR"
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Assign PR to creator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          CREATOR: ${{ github.event.pull_request.user.login }}
+        run: gh pr edit "$PR_URL" --add-assignee "$CREATOR"
