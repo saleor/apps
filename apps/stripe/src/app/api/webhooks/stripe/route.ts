@@ -117,9 +117,6 @@ const StripeWebhookHandler = async (request: NextRequest): Promise<Response> => 
   }
 };
 
-/**
- * - integration test
- */
 export const POST = compose(
   withLoggerContext,
   appContextContainer.wrapRequest,
