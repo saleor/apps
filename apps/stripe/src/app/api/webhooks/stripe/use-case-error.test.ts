@@ -4,7 +4,7 @@ import Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockAdyenWebhookUrl, mockedSaleorTransactionIdBranded } from "@/__tests__/mocks/constants";
+import { mockAdyenWebhookUrl, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
@@ -166,7 +166,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
 
     mockTransactionRecorder.transactions = {
       [stripePiId]: new RecordedTransaction({
-        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        saleorTransactionId: mockedSaleorTransactionId,
         stripePaymentIntentId: stripePiId,
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
@@ -214,7 +214,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
 
     mockTransactionRecorder.transactions = {
       [stripePiId]: new RecordedTransaction({
-        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        saleorTransactionId: mockedSaleorTransactionId,
         stripePaymentIntentId: stripePiId,
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),

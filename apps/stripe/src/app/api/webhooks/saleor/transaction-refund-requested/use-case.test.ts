@@ -8,7 +8,7 @@ import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-pay
 import { mockedStripeRefundId } from "@/__tests__/mocks/mocked-stripe-refund-id";
 import { mockedStripeRefundsApi } from "@/__tests__/mocks/mocked-stripe-refunds-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { getMockedTransactionRefundRequestedEvent } from "@/__tests__/mocks/transaction-refund-request-event";
+import { getMockedTransactionRefundRequestedEvent } from "@/__tests__/mocks/saleor-events/transaction-refund-request-event";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,

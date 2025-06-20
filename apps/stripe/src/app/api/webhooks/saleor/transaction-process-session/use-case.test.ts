@@ -10,7 +10,7 @@ import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-pay
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { getMockedTransactionProcessSessionEvent } from "@/__tests__/mocks/transaction-process-session-event";
+import { getMockedTransactionProcessSessionEvent } from "@/__tests__/mocks/saleor-events/transaction-process-session-event";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,

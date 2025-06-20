@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
-  mockedSaleorTransactionIdBranded,
+  mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as cancelationRequestedHandlers from "@/app/api/webhooks/saleor/transaction-cancelation-requested/route";
@@ -129,7 +129,7 @@ describe("TransactionCancellationRequested webhook: integration", async () => {
         appId: mockedSaleorAppId,
       },
       new RecordedTransaction({
-        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        saleorTransactionId: mockedSaleorTransactionId,
         stripePaymentIntentId,
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
