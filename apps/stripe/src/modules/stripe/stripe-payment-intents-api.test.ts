@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { mockedSaleorTransactionIdBranded } from "@/__tests__/mocks/constants";
+import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
 import { StripeClient } from "@/modules/stripe/stripe-client";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
@@ -27,7 +27,7 @@ describe("StripePaymentIntentsApi", () => {
         metadata: {
           saleor_source_id: "checkout-id",
           saleor_source_type: "Checkout",
-          saleor_transaction_id: mockedSaleorTransactionIdBranded,
+          saleor_transaction_id: mockedSaleorTransactionId,
         },
         intentParams: {
           automatic_payment_methods: { enabled: true },

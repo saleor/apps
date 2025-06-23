@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  getMockedSaleorMoney,
-  mockedSaleorTransactionIdBranded,
-} from "@/__tests__/mocks/constants";
+import { getMockedSaleorMoney, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { getMockedPaymentIntentDashboardUrl } from "@/__tests__/mocks/mocked-payment-intent-dashboard-url";
 import { getMockedRefundDashboardUrl } from "@/__tests__/mocks/mocked-refund-dashboard-url";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
@@ -44,7 +41,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       externalUrl: getMockedPaymentIntentDashboardUrl({
         stripeEnv: "LIVE",
       }),
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -77,7 +74,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       externalUrl: getMockedPaymentIntentDashboardUrl({
         stripeEnv: "LIVE",
       }),
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -113,7 +110,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       }),
       saleorMoney: getMockedSaleorMoney(),
       transactionResult,
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -148,7 +145,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         stripeEnv: "LIVE",
       }),
       transactionResult,
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -179,7 +176,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       stripeObjectId: mockedStripePaymentIntentId,
       externalUrl: getMockedPaymentIntentDashboardUrl(),
       transactionResult,
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -208,7 +205,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       stripeObjectId: mockedStripePaymentIntentId,
       externalUrl: getMockedPaymentIntentDashboardUrl(),
       transactionResult,
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -239,7 +236,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         stripeEnv: "LIVE",
       }),
       transactionResult,
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -272,7 +269,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         stripeEnv: "LIVE",
       }),
       saleorMoney: getMockedSaleorMoney(),
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -303,7 +300,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       stripeObjectId: mockedStripeRefundId,
       externalUrl: getMockedRefundDashboardUrl(),
       saleorMoney: getMockedSaleorMoney(),
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -334,7 +331,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       stripeObjectId: mockedStripeRefundId,
       externalUrl: getMockedRefundDashboardUrl(),
       saleorMoney: getMockedSaleorMoney(),
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
@@ -365,7 +362,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       stripeObjectId: mockedStripeRefundId,
       externalUrl: getMockedRefundDashboardUrl(),
       saleorMoney: getMockedSaleorMoney(),
-      saleorTransactionId: mockedSaleorTransactionIdBranded,
+      saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
     });
 
