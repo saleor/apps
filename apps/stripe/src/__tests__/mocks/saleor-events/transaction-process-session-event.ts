@@ -1,7 +1,7 @@
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 
-import { mockedSaleorChannelId } from "./constants";
-import { mockedStripePaymentIntentId } from "./mocked-stripe-payment-intent-id";
+import { mockedSaleorChannelId } from "../constants";
+import { mockedStripePaymentIntentId } from "../mocked-stripe-payment-intent-id";
 
 export const getMockedTransactionProcessSessionEvent = (args?: {
   actionType: "CHARGE" | "AUTHORIZATION";

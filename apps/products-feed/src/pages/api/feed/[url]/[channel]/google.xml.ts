@@ -1,5 +1,6 @@
 import { SpanStatusCode } from "@opentelemetry/api";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
@@ -83,6 +84,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });
+
+  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
+
+  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
 
   if (!client) {
     logger.error("Can't create the gql client");

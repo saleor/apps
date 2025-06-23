@@ -1,5 +1,16 @@
 # @saleor/apps-logger
 
+## 1.6.0
+
+### Minor Changes
+
+- d3702072: Move logger name to `logger.name` instead of adding it to logger message. Thanks to that log management software will properly ingest log name.
+
+### Patch Changes
+
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-otel@2.3.0
+
 ## 1.5.5
 
 ### Patch Changes
