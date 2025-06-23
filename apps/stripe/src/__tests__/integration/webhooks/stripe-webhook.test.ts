@@ -4,7 +4,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from
 import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
-  mockedSaleorTransactionIdBranded,
+  mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as stripeWebhookHandlers from "@/app/api/webhooks/stripe/route";
@@ -83,8 +83,8 @@ describe("Stripe Webhook: integration", () => {
   beforeAll(() =>
     mswServer.listen({
       onUnhandledRequest: (request, print) => {
-        if (request.url === "http://localhost:8000/") {
-          return; // Do not warn for DynamoDB local
+        if (request.url.includes(env.AWS_ENDPOINT_URL)) {
+          return; // Do not print warnings for DynamoDB local
         }
         print.warning();
       },
@@ -146,7 +146,7 @@ describe("Stripe Webhook: integration", () => {
         appId: mockedSaleorAppId,
       },
       new RecordedTransaction({
-        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        saleorTransactionId: mockedSaleorTransactionId,
         stripePaymentIntentId,
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
