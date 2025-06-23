@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.0.5
+
+### Patch Changes
+
+- c9d8b68c: Move generated types from JSON schema to `generated/app-webhooks-types` folder.
+
 ## 2.0.4
 
 ### Patch Changes
