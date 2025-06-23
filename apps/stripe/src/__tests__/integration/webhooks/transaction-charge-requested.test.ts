@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
-  mockedSaleorTransactionIdBranded,
+  mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as chargeRequestedHandlers from "@/app/api/webhooks/saleor/transaction-charge-requested/route";
@@ -134,7 +134,7 @@ describe("TransactionChargeRequested webhook: integration", async () => {
         appId: mockedSaleorAppId,
       },
       new RecordedTransaction({
-        saleorTransactionId: mockedSaleorTransactionIdBranded,
+        saleorTransactionId: mockedSaleorTransactionId,
         stripePaymentIntentId,
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),

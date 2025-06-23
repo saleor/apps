@@ -1,4 +1,4 @@
-import { mockedSaleorTransactionIdBranded } from "@/__tests__/mocks/constants";
+import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import {
   createResolvedTransactionFlow,
@@ -23,7 +23,7 @@ type Params = {
 
 export const getMockedRecordedTransaction = (params?: Params): RecordedTransaction => {
   const finalParams = {
-    saleorTransactionId: mockedSaleorTransactionIdBranded,
+    saleorTransactionId: mockedSaleorTransactionId,
     stripePaymentIntentId: mockedStripePaymentIntentId,
     saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
     resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),

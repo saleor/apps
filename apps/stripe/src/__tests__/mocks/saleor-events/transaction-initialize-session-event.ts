@@ -1,7 +1,7 @@
 import { parseTransactionInitializeSessionEventData } from "@/app/api/webhooks/saleor/transaction-initialize-session/event-data-parser";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 
-import { mockedSaleorChannelId, mockedSaleorTransactionId } from "./constants";
+import { mockedSaleorChannelId, mockedSaleorTransactionId } from "../constants";
 
 export const getMockedTransactionInitializeSessionEvent = (args?: {
   actionType: "CHARGE" | "AUTHORIZATION";
