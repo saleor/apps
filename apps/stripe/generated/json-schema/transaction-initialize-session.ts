@@ -47,6 +47,46 @@ export type JsonValue =
   | unknown[]
   | null;
 /**
+ * Details of the payment method used for the transaction.
+ */
+export type Paymentmethoddetails = (OtherPaymentMethodDetails | CardPaymentMethodDetails) | null;
+/**
+ * Type of the payment method used for the transaction.
+ */
+export type Type = "OTHER";
+/**
+ * Name of the payment method used for the transaction.
+ */
+export type Name = string;
+/**
+ * Type of the payment method used for the transaction.
+ */
+export type Type1 = "CARD";
+/**
+ * Name of the payment method used for the transaction.
+ */
+export type Name1 = string;
+/**
+ * Brand of the card used for the transaction.
+ */
+export type Brand = string | null;
+/**
+ * First digits of the card used for the transaction.
+ */
+export type Firstdigits = string | null;
+/**
+ * Last digits of the card used for the transaction.
+ */
+export type Lastdigits = string | null;
+/**
+ * Expiration month of the card used for the transaction.
+ */
+export type Expmonth = number | null;
+/**
+ * Expiration year of the card used for the transaction.
+ */
+export type Expyear = number | null;
+/**
  * Psp reference received from payment provider.
  */
 export type Pspreference1 = string;
@@ -84,6 +124,10 @@ export type JsonValue1 =
   | unknown[]
   | null;
 /**
+ * Details of the payment method used for the transaction.
+ */
+export type Paymentmethoddetails1 = (OtherPaymentMethodDetails | CardPaymentMethodDetails) | null;
+/**
  * Psp reference received from payment provider.
  */
 export type Pspreference2 = string;
@@ -120,6 +164,10 @@ export type JsonValue2 =
     }
   | unknown[]
   | null;
+/**
+ * Details of the payment method used for the transaction.
+ */
+export type Paymentmethoddetails2 = (OtherPaymentMethodDetails | CardPaymentMethodDetails) | null;
 
 export interface TransactionSessionSuccess {
   pspReference: Pspreference;
@@ -130,6 +178,20 @@ export interface TransactionSessionSuccess {
   actions?: Actions;
   result: Result;
   data?: JsonValue;
+  paymentMethodDetails?: Paymentmethoddetails;
+}
+export interface OtherPaymentMethodDetails {
+  type: Type;
+  name: Name;
+}
+export interface CardPaymentMethodDetails {
+  type: Type1;
+  name: Name1;
+  brand?: Brand;
+  firstDigits?: Firstdigits;
+  lastDigits?: Lastdigits;
+  expMonth?: Expmonth;
+  expYear?: Expyear;
 }
 export interface TransactionSessionFailure {
   pspReference?: Pspreference1;
@@ -140,6 +202,7 @@ export interface TransactionSessionFailure {
   actions?: Actions1;
   result: Result1;
   data?: JsonValue1;
+  paymentMethodDetails?: Paymentmethoddetails1;
 }
 export interface TransactionSessionActionRequired {
   pspReference?: Pspreference2;
@@ -150,4 +213,5 @@ export interface TransactionSessionActionRequired {
   actions?: Actions2;
   result: Result2;
   data?: JsonValue2;
+  paymentMethodDetails?: Paymentmethoddetails2;
 }
