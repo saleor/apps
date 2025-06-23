@@ -1,5 +1,5 @@
 import { testApiHandler } from "next-test-api-route-handler";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   mockedSaleorAppId,
@@ -8,6 +8,7 @@ import {
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as stripeWebhookHandlers from "@/app/api/webhooks/stripe/route";
+import { WebhookParams } from "@/app/api/webhooks/stripe/webhook-params";
 import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
 import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
@@ -31,6 +32,7 @@ import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-
 import { createStripeRefundId } from "@/modules/stripe/stripe-refund-id";
 import { StripeRefundsApiFactory } from "@/modules/stripe/stripe-refunds-api-factory";
 import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { StripeWebhookUrlBuilder } from "@/modules/stripe/stripe-webhook-url-builder";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 import { DynamoDBTransactionRecorderRepo } from "@/modules/transactions-recording/repositories/dynamodb/dynamodb-transaction-recorder-repo";
 import { DynamoDbRecordedTransaction } from "@/modules/transactions-recording/repositories/dynamodb/recorded-transaction-db-model";
@@ -78,6 +80,10 @@ const stripeMoney = StripeMoney.createFromSaleorAmount({
 })._unsafeUnwrap();
 
 let stripePaymentIntentId: StripePaymentIntentId;
+
+const saleorRequestSpy = vi.fn();
+
+const urlBuilder = new StripeWebhookUrlBuilder();
 
 describe("Stripe Webhook: integration", () => {
   beforeAll(() =>
@@ -153,6 +159,16 @@ describe("Stripe Webhook: integration", () => {
         selectedPaymentMethod: "card",
       }),
     );
+
+    mswServer.events.on("response:mocked", async ({ request }) => {
+      const requestJSON = await request.json();
+
+      saleorRequestSpy({
+        url: request.url,
+        method: request.method,
+        body: requestJSON,
+      });
+    });
   });
 
   it("should successfully process a payment intent event", async () => {
@@ -167,11 +183,18 @@ describe("Stripe Webhook: integration", () => {
       secret: mockStripeWebhookSecret,
     });
 
+    const webhookUrl = urlBuilder.buildUrl({
+      appUrl: "https://stripe-v2.saleor.app/api/webhooks/stripe",
+      webhookParams: WebhookParams.createFromParams({
+        configurationId: configId,
+        saleorApiUrl: realSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      }),
+    });
+
     await testApiHandler({
       appHandler: stripeWebhookHandlers,
-      url: `/api/webhooks/stripe?configurationId=${configId}&saleorApiUrl=${encodeURIComponent(
-        realSaleorApiUrl.toString(),
-      )}&appId=${mockedSaleorAppId}`,
+      url: webhookUrl._unsafeUnwrap().toString(),
       async test({ fetch }) {
         const response = await fetch({
           method: "POST",
@@ -184,6 +207,21 @@ describe("Stripe Webhook: integration", () => {
         const body = await response.text();
 
         expect(body).toStrictEqual("Ok");
+
+        const requestSpyData = saleorRequestSpy.mock.calls[0][0];
+
+        expect(requestSpyData.body.variables).toStrictEqual({
+          actions: ["REFUND"],
+          amount: 1.013,
+          availableActions: ["REFUND"],
+          // TODO: check if exnds with
+          externalUrl: expect.any(String),
+          message: "Payment intent has been successful",
+          pspReference: stripePaymentIntentId,
+          time: expect.any(String),
+          transactionId: "mocked-transaction-id",
+          type: "CHARGE_SUCCESS",
+        });
       },
     });
   });
@@ -207,11 +245,18 @@ describe("Stripe Webhook: integration", () => {
       secret: mockStripeWebhookSecret,
     });
 
+    const webhookUrl = urlBuilder.buildUrl({
+      appUrl: "https://stripe-v2.saleor.app/api/webhooks/stripe",
+      webhookParams: WebhookParams.createFromParams({
+        configurationId: configId,
+        saleorApiUrl: realSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      }),
+    });
+
     await testApiHandler({
       appHandler: stripeWebhookHandlers,
-      url: `/api/webhooks/stripe?configurationId=${configId}&saleorApiUrl=${encodeURIComponent(
-        realSaleorApiUrl.toString(),
-      )}&appId=${mockedSaleorAppId}`,
+      url: webhookUrl._unsafeUnwrap().toString(),
       async test({ fetch }) {
         const response = await fetch({
           method: "POST",
@@ -224,6 +269,10 @@ describe("Stripe Webhook: integration", () => {
         const body = await response.text();
 
         expect(body).toStrictEqual("Ok");
+
+        // const requestSpyData = saleorRequestSpy.mock.calls[0][0];
+
+        // expect(requestSpyData.body.variables).toStrictEqual({});
       },
     });
   });
