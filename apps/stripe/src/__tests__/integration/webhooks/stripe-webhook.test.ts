@@ -81,7 +81,7 @@ const stripeMoney = StripeMoney.createFromSaleorAmount({
 
 let stripePaymentIntentId: StripePaymentIntentId;
 
-const saleorRequestSpy = vi.fn();
+const saleorRequestVarsSpy = vi.fn();
 
 const urlBuilder = new StripeWebhookUrlBuilder();
 
@@ -161,13 +161,10 @@ describe("Stripe Webhook: integration", () => {
     );
 
     mswServer.events.on("response:mocked", async ({ request }) => {
-      const requestJSON = await request.json();
+      const clonedRequest = request.clone();
+      const requestJSON = await clonedRequest.json();
 
-      saleorRequestSpy({
-        url: request.url,
-        method: request.method,
-        body: requestJSON,
-      });
+      saleorRequestVarsSpy(requestJSON);
     });
   });
 
@@ -208,18 +205,17 @@ describe("Stripe Webhook: integration", () => {
 
         expect(body).toStrictEqual("Ok");
 
-        const requestSpyData = saleorRequestSpy.mock.calls[0][0];
+        const requestSpyData = saleorRequestVarsSpy.mock.calls[0][0];
 
-        expect(requestSpyData.body.variables).toStrictEqual({
+        expect(requestSpyData.variables).toStrictEqual({
           actions: ["REFUND"],
           amount: 1.013,
           availableActions: ["REFUND"],
-          // TODO: check if exnds with
-          externalUrl: expect.any(String),
+          externalUrl: expect.stringContaining(stripePaymentIntentId),
           message: "Payment intent has been successful",
           pspReference: stripePaymentIntentId,
           time: expect.any(String),
-          transactionId: "mocked-transaction-id",
+          transactionId: mockedSaleorTransactionId,
           type: "CHARGE_SUCCESS",
         });
       },
@@ -270,9 +266,19 @@ describe("Stripe Webhook: integration", () => {
 
         expect(body).toStrictEqual("Ok");
 
-        // const requestSpyData = saleorRequestSpy.mock.calls[0][0];
+        const requestSpyData = saleorRequestVarsSpy.mock.calls[0][0];
 
-        // expect(requestSpyData.body.variables).toStrictEqual({});
+        expect(requestSpyData.variables).toStrictEqual({
+          actions: ["REFUND"],
+          amount: 10,
+          availableActions: ["REFUND"],
+          externalUrl: expect.stringContaining(stripeRefundId),
+          message: "Refund was successful",
+          pspReference: stripeRefundId,
+          time: expect.any(String),
+          transactionId: mockedSaleorTransactionId,
+          type: "REFUND_SUCCESS",
+        });
       },
     });
   });
