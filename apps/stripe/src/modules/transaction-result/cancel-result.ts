@@ -1,4 +1,4 @@
-import { Actions } from "@/generated/json-schema/transaction-cancelation-requested";
+import { Actions } from "@/generated/app-webhooks-types/transaction-cancelation-requested";
 
 export class CancelSuccessResult {
   readonly result = "CANCEL_SUCCESS" as const;

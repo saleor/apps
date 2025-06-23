@@ -1,4 +1,4 @@
-import { Actions } from "@/generated/json-schema/transaction-initialize-session";
+import { Actions } from "@/generated/app-webhooks-types/transaction-initialize-session";
 import { BaseError } from "@/lib/errors";
 import { StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 

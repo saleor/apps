@@ -2,7 +2,7 @@ import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook
 import {
   TransactionRefundRequestedAsync,
   TransactionRefundRequestedSyncFailure,
-} from "@/generated/json-schema/transaction-refund-requested";
+} from "@/generated/app-webhooks-types/transaction-refund-requested";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
