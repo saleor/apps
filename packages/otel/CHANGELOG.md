@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 2.3.0
+
+### Minor Changes
+
+- c68f1e9f: Change `TENANT_DOMAIN` observability attribute key name to be in sync with what Saleor uses (`saleor.environment.domain` instead of saleor.environment_domain`).
+
 ## 2.2.0
 
 ### Minor Changes

@@ -1,5 +1,19 @@
 # saleor-app-avatax
 
+## 1.17.0
+
+### Minor Changes
+
+- 0650e0d3: Added a new App Extension to Order Details page in the Dashboard (3.22 and above). It will show some of the AvaTax metadata if it was used to calculate taxes
+
+### Patch Changes
+
+- c490ca75: Fixed link to Saleor docs. After this change links should point to the newest version of docs without redirects.
+- Updated dependencies [d3702072]
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-logger@1.6.0
+  - @saleor/apps-otel@2.3.0
+
 ## 1.16.1
 
 ### Patch Changes

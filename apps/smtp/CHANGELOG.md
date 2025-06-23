@@ -1,5 +1,14 @@
 # saleor-app-smtp
 
+## 1.3.10
+
+### Patch Changes
+
+- Updated dependencies [d3702072]
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-logger@1.6.0
+  - @saleor/apps-otel@2.3.0
+
 ## 1.3.9
 
 ### Patch Changes
