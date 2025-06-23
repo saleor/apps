@@ -1,5 +1,16 @@
 # saleor-app-payment-stripe
 
+## 2.0.4
+
+### Patch Changes
+
+- 339fbd95: Fixed new config validation - now it will earlier catch mismatched PK and RK (live + test mix) and Sentry will not be called
+- 799be59a: Added generated types from Saleor JSON schemas for webhooks. Fixed missing actions for TransactionInitializeSession. After this change staff user can cancel transaction even if there is no payment made but payment intent has been created.
+- Updated dependencies [d3702072]
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-logger@1.6.0
+  - @saleor/apps-otel@2.3.0
+
 ## 2.0.3
 
 ### Patch Changes

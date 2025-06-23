@@ -1,5 +1,15 @@
 # saleor-app-segment
 
+## 2.1.10
+
+### Patch Changes
+
+- c490ca75: Fixed link to Saleor docs. After this change links should point to the newest version of docs without redirects.
+- Updated dependencies [d3702072]
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-logger@1.6.0
+  - @saleor/apps-otel@2.3.0
+
 ## 2.1.9
 
 ### Patch Changes
