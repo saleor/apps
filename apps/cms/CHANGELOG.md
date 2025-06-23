@@ -1,5 +1,19 @@
 # saleor-app-cms
 
+## 2.12.0
+
+### Minor Changes
+
+- fe9c5cd0: Added bulk processing of uploading products to Strapi CMS. After this change you can use `STRAPI_BATCH_SIZE` to control number to request send in the same batch to Strapi API with `STRAPI_MILIS_DELAY_BETWEEN_BATCHES` controlling how frequent those batches are send to Strapi API.
+
+### Patch Changes
+
+- c490ca75: Fixed link to Saleor docs. After this change links should point to the newest version of docs without redirects.
+- Updated dependencies [d3702072]
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-logger@1.6.0
+  - @saleor/apps-otel@2.3.0
+
 ## 2.11.9
 
 ### Patch Changes

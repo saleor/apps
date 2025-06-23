@@ -1,5 +1,15 @@
 # saleor-app-products-feed
 
+## 1.23.1
+
+### Patch Changes
+
+- 608b05f3: Fix logging when app is calling Google. After this change channelSlug and saleorApiUrl should be visible inside logs.
+- Updated dependencies [d3702072]
+- Updated dependencies [c68f1e9f]
+  - @saleor/apps-logger@1.6.0
+  - @saleor/apps-otel@2.3.0
+
 ## 1.23.0
 
 ### Minor Changes
