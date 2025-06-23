@@ -1,4 +1,4 @@
-import { Actions } from "@/generated/json-schema/transaction-charge-requested";
+import { Actions } from "@/generated/app-webhooks-types/transaction-charge-requested";
 
 export class ChargeFailureResult {
   readonly result = "CHARGE_FAILURE" as const;
