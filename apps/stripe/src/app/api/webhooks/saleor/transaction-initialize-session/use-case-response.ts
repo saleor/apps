@@ -8,7 +8,7 @@ import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook
 import {
   TransactionSessionActionRequired,
   TransactionSessionFailure,
-} from "@/generated/json-schema/transaction-initialize-session";
+} from "@/generated/app-webhooks-types/transaction-initialize-session";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";

@@ -6,7 +6,7 @@ import {
   TransactionSessionActionRequired,
   TransactionSessionFailure,
   TransactionSessionSuccess,
-} from "@/generated/json-schema/transaction-process-session";
+} from "@/generated/app-webhooks-types/transaction-process-session";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";

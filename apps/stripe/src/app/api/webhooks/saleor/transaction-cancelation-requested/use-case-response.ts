@@ -2,7 +2,7 @@ import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook
 import {
   TransactionCancelationRequestedSyncFailure,
   TransactionCancelationRequestedSyncSuccess,
-} from "@/generated/json-schema/transaction-cancelation-requested";
+} from "@/generated/app-webhooks-types/transaction-cancelation-requested";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";

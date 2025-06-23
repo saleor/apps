@@ -49,7 +49,7 @@ async function generateAppWebhooksTypes() {
         additionalProperties: false,
       });
 
-      writeFileSync(`./generated/json-schema/${fileName}.ts`, compiledTypes);
+      writeFileSync(`./generated/app-webhooks-types/${fileName}.ts`, compiledTypes);
     }),
   );
 }
