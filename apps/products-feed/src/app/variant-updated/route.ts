@@ -2,12 +2,22 @@ import { variantUpdatedWebhookManifest } from "./webhook-manifest";
 
 interface IDynamoDbRepo {
   setDirtyVariant(variantId: string): Promise<void>;
+  getDirtyVariants(
+    access: { saleorApiUrl: string; appId: string },
+    limit: number,
+  ): Promise<string[]>;
 }
 
 //todo move somewhere
-class DynamoDbRepo implements IDynamoDbRepo {
+export class DynamoDbRepo implements IDynamoDbRepo {
   setDirtyVariant(variantId: string): Promise<void> {
     // todo implement
+    throw new Error("Method not implemented.");
+  }
+  getDirtyVariants(
+    access: { saleorApiUrl: string; appId: string },
+    limit = 100,
+  ): Promise<string[]> {
     throw new Error("Method not implemented.");
   }
 }

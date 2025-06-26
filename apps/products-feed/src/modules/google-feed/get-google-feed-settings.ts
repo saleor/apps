@@ -8,6 +8,7 @@ import { AppConfigMetadataManager } from "../app-configuration/app-config-metada
 
 export class GoogleFeedSettingsFetcher {
   private logger = createLogger("GoogleFeedSettingsFetcher");
+  private cachedConfig: AppConfig | null = null;
 
   static createFromAuthData(authData: AuthData) {
     const client = createInstrumentedGraphqlClient({
@@ -26,9 +27,7 @@ export class GoogleFeedSettingsFetcher {
     this.settingsManager = params.settingsManager;
   }
 
-  async fetch(channelSlug: string) {
-    this.logger.trace("Fetching Google Feed settings");
-
+  private async fetchAppConfig() {
     const configString = await this.settingsManager.get();
 
     if (!configString) {
@@ -36,6 +35,17 @@ export class GoogleFeedSettingsFetcher {
     }
 
     const appConfig = AppConfig.parse(configString);
+
+    return appConfig;
+  }
+
+  async fetch(channelSlug: string) {
+    this.logger.trace("Fetching Google Feed settings");
+
+    const appConfig = this.cachedConfig ?? (await this.fetchAppConfig());
+
+    this.cachedConfig = appConfig;
+
     const channelConfig = appConfig.getUrlsForChannel(channelSlug);
 
     if (!channelConfig) {

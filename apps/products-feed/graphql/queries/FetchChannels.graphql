@@ -1,0 +1,6 @@
+query AllChannels{
+    channels {
+        id,
+        slug
+    }
+}
