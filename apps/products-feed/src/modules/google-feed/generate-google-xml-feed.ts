@@ -25,6 +25,7 @@ interface GenerateGoogleXmlFeedArgs {
 
 const logger = createLogger("generateGoogleXmlFeed");
 
+// todo make it frontend-side
 export const generateGoogleXmlFeed = ({
   attributeMapping,
   productVariants,
