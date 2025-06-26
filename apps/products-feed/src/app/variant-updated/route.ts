@@ -10,15 +10,15 @@ interface IDynamoDbRepo {
 
 //todo move somewhere
 export class DynamoDbRepo implements IDynamoDbRepo {
-  setDirtyVariant(variantId: string): Promise<void> {
+  async setDirtyVariant(variantId: string): Promise<void> {
     // todo implement
-    throw new Error("Method not implemented.");
+    return;
   }
-  getDirtyVariants(
+  async getDirtyVariants(
     access: { saleorApiUrl: string; appId: string },
     limit = 100,
   ): Promise<string[]> {
-    throw new Error("Method not implemented.");
+    return ["foo"];
   }
 }
 

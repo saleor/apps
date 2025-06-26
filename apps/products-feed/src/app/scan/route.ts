@@ -68,7 +68,7 @@ export const POST = async (req: NextRequest) => {
   ).filter(Boolean) as AuthData[];
 
   for (const validAuthData of healthyInstances) {
-    const urlToSpawn = new URL("/process-feed", selfUrl.origin);
+    const urlToSpawn = new URL("/process-feed", selfUrl.origin.replace("https", "http")); // todo
     const dto: ProcessingDto = {
       authData: validAuthData,
     };
@@ -78,6 +78,7 @@ export const POST = async (req: NextRequest) => {
         ContentType: "application/json",
       },
       body: JSON.stringify(dto),
+      method: "POST",
     });
   }
 

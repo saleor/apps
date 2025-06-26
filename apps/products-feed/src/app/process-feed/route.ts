@@ -42,6 +42,8 @@ export const POST = async (req: NextRequest) => {
   const allChannelsResponse = await client.query(AllChannelsDocument, {});
   const allChannelsSlugs = allChannelsResponse.data?.channels?.map((c) => c.slug);
 
+  console.log("allChannelsSlugs", allChannelsSlugs);
+
   if (!allChannelsSlugs || !allChannelsSlugs.length) {
     return new Response("Cant process channels");
   }
@@ -96,7 +98,7 @@ export const POST = async (req: NextRequest) => {
 
     const xmlAsJsObject = xmlParser.parse(xmlFileContent);
 
-    console.log(xmlAsJsObject);
+    console.log(xmlAsJsObject[1].rss[0].channel[2]);
 
     /*
      * todo
