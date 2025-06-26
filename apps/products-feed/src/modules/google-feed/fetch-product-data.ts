@@ -200,25 +200,19 @@ const fetchVariants = async ({
 interface FetchProductDataArgs {
   client: Client;
   channel: string;
-  cursors?: Array<string>;
   imageSize?: number;
 }
 
-export const fetchProductData = async ({
-  client,
-  channel,
-  cursors,
-  imageSize,
-}: FetchProductDataArgs) => {
+export const fetchProductData = async ({ client, channel, imageSize }: FetchProductDataArgs) => {
   const logger = createLogger("fetchProductData", {
     route: "Google Product Feed",
   });
 
   logger.debug(`Fetching product data for channel ${channel}`);
 
-  const cachedCursors = cursors || (await getCursors({ client, channel }));
+  const cursors = await getCursors({ client, channel });
 
-  const pageCursors = [undefined, ...cachedCursors];
+  const pageCursors = [undefined, ...cursors];
 
   logger.debug(`Query generated ${pageCursors.length} cursors`);
 
