@@ -1,43 +1,29 @@
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Box, Button, Input, PropsWithBox, Text } from "@saleor/macaw-ui";
-
-import { useGetFeedApiUrl } from "../feed-url/use-get-feed-api-url";
+import { Box, Button, PropsWithBox, Text } from "@saleor/macaw-ui";
+import { useRouter } from "next/router";
 
 interface FeedPreviewCardProps {
   channelSlug: string;
 }
 
 export const FeedPreviewCard = ({ channelSlug, ...props }: PropsWithBox<FeedPreviewCardProps>) => {
-  const { appBridge } = useAppBridge();
-
-  const googleFeedUrl = useGetFeedApiUrl(channelSlug);
-
-  if (!googleFeedUrl) {
-    // Should never happen
-    return null;
-  }
-
-  const openUrlInNewTab = async (url: string) => {
-    await appBridge?.dispatch(actions.Redirect({ to: url, newContext: true }));
-  };
+  const router = useRouter();
 
   return (
     <Box {...props}>
       <Text size={5} fontWeight="bold" as={"h2"} marginBottom={1.5}>
-        Test your feed
+        Create initial feed
       </Text>
-      <Input
-        label="Google feed URL"
-        value={googleFeedUrl}
-        onFocus={(e) => {
-          e.target.select();
-        }}
-        helperText="Dedicated URL for your Google Merchant Feed. Click to select and copy."
-      />
-
-      <Box display={"flex"} justifyContent={"flex-end"}>
-        <Button variant="secondary" onClick={() => openUrlInNewTab(googleFeedUrl)} marginTop={3}>
-          Open feed in a new tab
+      <Text as="p" marginBottom={4}>
+        First feed generation must be processed manually, by clicking the button below. Further
+        updates will be triggered every 3h in the background for products that have been modified.
+      </Text>
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          onClick={() => {
+            router.push("/generate-initial-feed?channelSlug=" + channelSlug);
+          }}
+        >
+          Create feed for {channelSlug}
         </Button>
       </Box>
     </Box>
