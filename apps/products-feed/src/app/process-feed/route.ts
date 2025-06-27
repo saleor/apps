@@ -1,23 +1,15 @@
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
-import { XMLParser } from "fast-xml-parser";
 import { NextRequest } from "next/server";
 
 import { AllChannelsDocument } from "../../../generated/graphql";
+import { xmlParser } from "../../lib/xml";
 import { createS3ClientFromConfiguration } from "../../modules/file-storage/s3/create-s3-client-from-configuration";
 import { getFileName } from "../../modules/file-storage/s3/urls-and-names";
 import { GoogleFeedSettingsFetcher } from "../../modules/google-feed/get-google-feed-settings";
-import { ProcessingDto } from "../scan/route";
-import { DynamoDbRepo } from "../variant-updated/route";
+import { ProcessingDto } from "../dto";
+import { DynamodbVariantsStorageImpl } from "../dynamodb-variants-storage.impl";
 
-// todo move to shared class with XMLBuilder
-const xmlParser = new XMLParser({
-  attributeNamePrefix: "@_",
-  attributesGroupName: "@",
-  textNodeName: "#text",
-  ignoreAttributes: false,
-  preserveOrder: true,
-});
-const repo = new DynamoDbRepo();
+const repo = new DynamodbVariantsStorageImpl();
 
 // todo: this must be protected to be only called from vercel, add some tokens etc
 export const POST = async (req: NextRequest) => {
