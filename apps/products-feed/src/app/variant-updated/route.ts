@@ -1,7 +1,5 @@
-import { DbVariantsStorageImpl } from "../../modules/db-variants-storage/db-variants-storage.impl";
+import { dbVariantsStorage } from "../../modules/db-variants-storage/db-variants-storage.impl";
 import { variantUpdatedWebhookManifest } from "./webhook-manifest";
-
-const repo = new DbVariantsStorageImpl();
 
 export const POST = variantUpdatedWebhookManifest.createHandler(async (req, ctx) => {
   const productVariantId = ctx.payload.productVariant?.id;
@@ -12,7 +10,7 @@ export const POST = variantUpdatedWebhookManifest.createHandler(async (req, ctx)
     });
   }
 
-  await repo.setDirtyVariant(productVariantId);
+  await dbVariantsStorage.setDirtyVariant(ctx.authData, productVariantId);
 
   /**
    *  1. Get product from subscription

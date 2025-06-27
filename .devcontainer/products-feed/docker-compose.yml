@@ -21,3 +21,5 @@ services:
 volumes:
   pnpm-store:
     driver: local
+  dynamodb-data:
+    driver: local
