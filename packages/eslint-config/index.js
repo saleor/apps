@@ -168,6 +168,7 @@ export const config = [
       "src/app/global-error.tsx",
       "**/*.config.{ts,js}",
       "**/vitest.workspace.ts",
+      "**/codegen.ts",
     ],
     rules: {
       "import/no-default-export": "off",

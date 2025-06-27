@@ -1,0 +1,12 @@
+fragment FulfillmentTrackingNumberUpdatedEvent on FulfillmentTrackingNumberUpdated {
+  ...EventMetadata
+  fulfillment {
+    trackingNumber
+  }
+}
+
+subscription FulfillmentTrackingNumberUpdated {
+  event {
+    ...FulfillmentTrackingNumberUpdatedEvent
+  }
+}
