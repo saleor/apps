@@ -38,7 +38,7 @@ const validateRequestParams = (req: NextApiRequest) => {
 };
 
 /**
- * TODO Refactor and test
+ * @deprecated this will happen on the frontend now
  */
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
