@@ -16,6 +16,7 @@
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",
         "FORCE_BASE_URL",
+        "DYNAMODB_MAIN_TABLE_NAME",
         "CRON_SECRET"
       ]
     }

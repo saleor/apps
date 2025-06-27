@@ -1,7 +1,7 @@
-import { DynamodbVariantsStorageImpl } from "../dynamodb-variants-storage.impl";
+import { DbVariantsStorageImpl } from "../../modules/db-variants-storage/db-variants-storage.impl";
 import { variantUpdatedWebhookManifest } from "./webhook-manifest";
 
-const repo = new DynamodbVariantsStorageImpl();
+const repo = new DbVariantsStorageImpl();
 
 export const POST = variantUpdatedWebhookManifest.createHandler(async (req, ctx) => {
   const productVariantId = ctx.payload.productVariant?.id;
