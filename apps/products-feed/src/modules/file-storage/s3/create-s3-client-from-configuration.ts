@@ -13,5 +13,6 @@ export const createS3ClientFromConfiguration = ({
       secretAccessKey: secretAccessKey,
     },
     region: region,
+    forcePathStyle: true,
   });
 };

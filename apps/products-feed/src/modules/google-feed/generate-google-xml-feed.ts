@@ -1,6 +1,6 @@
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared/editor-js-plaintext-renderer";
-import { XMLBuilder } from "fast-xml-parser";
 
+import { xmlBuilder } from "../../lib/xml";
 import { createLogger } from "../../logger";
 import { RootConfig } from "../app-configuration/app-config";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
@@ -13,7 +13,7 @@ import { priceMapping } from "./price-mapping";
 import { productToProxy } from "./product-to-proxy";
 import { shopDetailsToProxy } from "./shop-details-to-proxy";
 
-interface GenerateGoogleXmlFeedArgs {
+export interface GenerateGoogleXmlFeedArgs {
   productVariants: ProductVariant[];
   storefrontUrl: string;
   productStorefrontUrl: string;
@@ -25,6 +25,7 @@ interface GenerateGoogleXmlFeedArgs {
 
 const logger = createLogger("generateGoogleXmlFeed");
 
+// todo make it frontend-side
 export const generateGoogleXmlFeed = ({
   attributeMapping,
   productVariants,
@@ -110,21 +111,6 @@ export const generateGoogleXmlFeed = ({
     totalLength: productVariants.length,
   });
 
-  logger.trace("Creating XMLBuilder");
-
-  const builder = new XMLBuilder({
-    attributeNamePrefix: "@_",
-    attributesGroupName: "@",
-    textNodeName: "#text",
-    ignoreAttributes: false,
-    format: true,
-    indentBy: "  ",
-    suppressEmptyNode: false,
-    preserveOrder: true,
-  });
-
-  logger.trace("XMLBuilder created");
-
   const channelData = shopDetailsToProxy({
     title: shopName,
     description: shopDescription,
@@ -162,5 +148,5 @@ export const generateGoogleXmlFeed = ({
 
   logger.debug("Feed generated. Returning formatted XML");
 
-  return builder.build(data);
+  return xmlBuilder.build(data);
 };

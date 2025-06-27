@@ -1,0 +1,11 @@
+fragment ProductVariantUpdatedEvent on ProductVariantUpdated {
+  productVariant {
+    id
+  }
+}
+
+subscription ProductVariantUpdated {
+  event {
+    ...ProductVariantUpdatedEvent
+  }
+}
