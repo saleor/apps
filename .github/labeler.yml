@@ -29,3 +29,7 @@
 "App Payment: Stripe":
   - changed-files:
       - any-glob-to-any-file: "apps/stripe/**/*"
+
+"App Payment: NP Atobarai":
+  - changed-files:
+      - any-glob-to-any-file: "apps/np-atobarai/**/*"
