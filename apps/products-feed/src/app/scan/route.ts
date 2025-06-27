@@ -1,43 +1,25 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { NextRequest } from "next/server";
-import { Client } from "urql";
 
-import { AppMeDocument } from "../../../generated/graphql";
 import { apl } from "../../saleor-app";
+import { ProcessingDto } from "../dto";
+import { InstanceVerifier } from "./services/saleor-instance-verifier";
 
-// todo modern errors
-class InstanceVerificationFailureError extends Error {}
-
-class InstanceVerifier {
-  constructor(private client: Client) {}
-
-  ping(appId: string) {
-    return this.client
-      .query(AppMeDocument, {})
-      .toPromise()
-      .then((res) => {
-        const idsMatching = res.data?.app?.id === appId;
-
-        if (!idsMatching) {
-          throw new InstanceVerificationFailureError("Failed to verify app");
-        }
-      })
-      .catch((e) => {
-        throw new InstanceVerificationFailureError("Failed to verify app", { cause: e });
-      });
-  }
-}
-
-export interface ProcessingDto {
-  authData: AuthData;
-}
+const isAuthorized = (req: NextRequest) =>
+  req.headers.get("Authorization") === (process.env.CRON_SECRET as string);
 
 /**
  * Execute by CRON, to periodically spawn work on data feed
+ *
+ * Must be GET - Vercel uses GET method
  */
-export const POST = async (req: NextRequest) => {
-  const selfUrl = new URL(req.url);
+export const GET = async (req: NextRequest) => {
+  if (!isAuthorized(req)) {
+    return new Response("Not Authorized", { status: 401 });
+  }
+
+  const selfOrigin = (process.env.FORCE_BASE_URL as string) ?? new URL(req.url).origin;
 
   /*
    * 1. Verify if source is cron
@@ -50,12 +32,12 @@ export const POST = async (req: NextRequest) => {
   const healthyInstances = (
     await Promise.all(
       allInstalledInstances.map((authData) => {
-        const instanceVerifier = new InstanceVerifier(
-          createGraphQLClient({
-            saleorApiUrl: authData.saleorApiUrl,
-            token: authData.token,
-          }),
-        );
+        const graphqlClient = createGraphQLClient({
+          saleorApiUrl: authData.saleorApiUrl,
+          token: authData.token,
+        });
+
+        const instanceVerifier = new InstanceVerifier(graphqlClient);
 
         return instanceVerifier
           .ping(authData.appId)
@@ -68,7 +50,7 @@ export const POST = async (req: NextRequest) => {
   ).filter(Boolean) as AuthData[];
 
   for (const validAuthData of healthyInstances) {
-    const urlToSpawn = new URL("/process-feed", selfUrl.origin.replace("https", "http")); // todo
+    const urlToSpawn = new URL("/process-feed", selfOrigin);
     const dto: ProcessingDto = {
       authData: validAuthData,
     };

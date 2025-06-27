@@ -1,28 +1,7 @@
+import { DynamodbVariantsStorageImpl } from "../dynamodb-variants-storage.impl";
 import { variantUpdatedWebhookManifest } from "./webhook-manifest";
 
-interface IDynamoDbRepo {
-  setDirtyVariant(variantId: string): Promise<void>;
-  getDirtyVariants(
-    access: { saleorApiUrl: string; appId: string },
-    limit: number,
-  ): Promise<string[]>;
-}
-
-//todo move somewhere
-export class DynamoDbRepo implements IDynamoDbRepo {
-  async setDirtyVariant(variantId: string): Promise<void> {
-    // todo implement
-    return;
-  }
-  async getDirtyVariants(
-    access: { saleorApiUrl: string; appId: string },
-    limit = 100,
-  ): Promise<string[]> {
-    return ["foo"];
-  }
-}
-
-const repo = new DynamoDbRepo();
+const repo = new DynamodbVariantsStorageImpl();
 
 export const POST = variantUpdatedWebhookManifest.createHandler(async (req, ctx) => {
   const productVariantId = ctx.payload.productVariant?.id;

@@ -14,7 +14,9 @@
         "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "FORCE_BASE_URL",
+        "CRON_SECRET"
       ]
     }
   }
