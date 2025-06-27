@@ -1,4 +1,3 @@
-import { url } from "inspector";
 import { Client } from "urql";
 
 import { ShopDetailsDocument } from "../../../generated/graphql";
@@ -11,7 +10,6 @@ interface FetchShopDataArgs {
 
 export const fetchShopData = async ({ client, channel }: FetchShopDataArgs) => {
   const logger = createLogger("fetchShopData", {
-    saleorApiUrl: url,
     channel,
     route: "Google Product Feed",
   });

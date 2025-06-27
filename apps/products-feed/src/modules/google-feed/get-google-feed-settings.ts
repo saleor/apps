@@ -10,7 +10,7 @@ export class GoogleFeedSettingsFetcher {
   private logger = createLogger("GoogleFeedSettingsFetcher");
   private cachedConfig: AppConfig | null = null;
 
-  static createFromAuthData(authData: AuthData) {
+  static createFromAuthData(authData: Pick<AuthData, "saleorApiUrl" | "token">) {
     const client = createInstrumentedGraphqlClient({
       saleorApiUrl: authData.saleorApiUrl,
       token: authData.token,

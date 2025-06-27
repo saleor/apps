@@ -1,5 +1,4 @@
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared/editor-js-plaintext-renderer";
-import { XMLBuilder } from "fast-xml-parser";
 
 import { xmlBuilder } from "../../lib/xml";
 import { createLogger } from "../../logger";
@@ -14,7 +13,7 @@ import { priceMapping } from "./price-mapping";
 import { productToProxy } from "./product-to-proxy";
 import { shopDetailsToProxy } from "./shop-details-to-proxy";
 
-interface GenerateGoogleXmlFeedArgs {
+export interface GenerateGoogleXmlFeedArgs {
   productVariants: ProductVariant[];
   storefrontUrl: string;
   productStorefrontUrl: string;
