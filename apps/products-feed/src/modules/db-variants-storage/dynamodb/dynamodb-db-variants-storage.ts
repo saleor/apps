@@ -13,7 +13,7 @@ import { DynamoDbDirtyVariant } from "./db-variant-storage-dynamodb-model";
 export class DynamodbDbVariantsStorage implements DbVariantsStorage {
   private logger = createLogger("DynamodbDbVariantsStorage");
 
-  async getDirtyVariants(access: AccessPattern, limit: number): Promise<string[]> {
+  async getDirtyVariants(access: AccessPattern, limit = 100): Promise<string[]> {
     const command = DynamoDbDirtyVariant.entity.table
       .build(QueryCommand)
       .entities(DynamoDbDirtyVariant.entity)
