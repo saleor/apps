@@ -3,13 +3,13 @@ import { NextRequest } from "next/server";
 
 import { AllChannelsDocument } from "../../../generated/graphql";
 import { xmlParser } from "../../lib/xml";
+import { DbVariantsStorageImpl } from "../../modules/db-variants-storage/db-variants-storage.impl";
 import { createS3ClientFromConfiguration } from "../../modules/file-storage/s3/create-s3-client-from-configuration";
 import { getFileName } from "../../modules/file-storage/s3/urls-and-names";
 import { GoogleFeedSettingsFetcher } from "../../modules/google-feed/get-google-feed-settings";
 import { ProcessingDto } from "../dto";
-import { DynamodbVariantsStorageImpl } from "../dynamodb-variants-storage.impl";
 
-const repo = new DynamodbVariantsStorageImpl();
+const repo = new DbVariantsStorageImpl();
 
 // todo: this must be protected to be only called from vercel, add some tokens etc
 export const POST = async (req: NextRequest) => {
