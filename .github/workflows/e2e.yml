@@ -84,7 +84,7 @@ jobs:
           AWS_REGION: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_REGION"
           AWS_ACCESS_KEY_ID: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_ACCESS_KEY_ID"
           AWS_SECRET_ACCESS_KEY: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_SECRET_ACCESS_KEY"
-      - name: Run Avatax e2e tests
+      - name: Run AvaTax e2e tests
         env:
           E2E_SALEOR_VERSION: ${{ matrix.saleor }}
         run: pnpm --filter=saleor-app-avatax e2e
@@ -100,7 +100,7 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "App e2e failed for ${{env.SALEOR_VERSION}}: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View details>"
+                  text: "AvaTax app e2e failed for ${{env.SALEOR_VERSION}}: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View details>"
 
   e2e-stripe:
     runs-on: ubuntu-22.04
@@ -156,4 +156,4 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "App e2e failed for ${{env.SALEOR_VERSION}}: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View details>"
+                  text: "Stripe pp e2e failed for ${{env.SALEOR_VERSION}}: <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View details>"
