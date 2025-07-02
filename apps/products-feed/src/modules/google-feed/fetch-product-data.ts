@@ -32,6 +32,10 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
 
   const cursors: Array<string> = [];
 
+  if (result.data?.productVariants?.pageInfo.startCursor) {
+    cursors.push(result.data.productVariants.pageInfo.startCursor);
+  }
+
   processingLimit.drain();
 
   while (result.data?.productVariants?.pageInfo.hasNextPage) {

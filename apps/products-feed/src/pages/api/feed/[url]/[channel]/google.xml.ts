@@ -1,4 +1,5 @@
 import { SpanStatusCode } from "@opentelemetry/api";
+import { getBaseUrl } from "@saleor/app-sdk/headers";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -109,9 +110,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let titleTemplate: RootConfig["titleTemplate"] | undefined;
   let imageSize: RootConfig["imageSize"] | undefined;
 
+  let channelSettings: any;
+
   try {
     const settingsFetcher = GoogleFeedSettingsFetcher.createFromAuthData(authData);
     const settings = await settingsFetcher.fetch(channel);
+
+    channelSettings = settings;
 
     logger.info("Settings has been fetched", {
       storefrontUrl: settings.storefrontUrl,
@@ -211,6 +216,36 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const cursors = await getCursors({ client, channel });
+
+    const baseUrl = getBaseUrl(req.headers);
+
+    const xmlUrlResponses = await Promise.all(
+      cursors.map((cursor) => {
+        const urlToFetch = new URL(
+          `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
+            channel,
+          )}/${encodeURIComponent(cursor)}/generate-chunk`,
+          baseUrl,
+        );
+
+        return fetch(urlToFetch, {
+          body: JSON.stringify({
+            authData,
+            channelSettings: channelSettings,
+          }),
+          headers: {
+            ContentType: "application/json",
+          },
+          method: "POST",
+        }).then((r) => r.json());
+      }),
+    );
+
+    logger.debug("Fetched download urls", { xmlUrlResponses });
+
+    const chunks = await Promise.all(
+      xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.body)),
+    );
 
     /*
      * todo 1. const results =  await Promise.all(fetch(...))

@@ -7,17 +7,17 @@ import { uploadFile } from "../../../../../../modules/file-storage/s3/upload-fil
 import {
   getChunkFileName,
   getDownloadUrl,
-  getFileName,
 } from "../../../../../../modules/file-storage/s3/urls-and-names";
-import {
-  fetchProductData,
-  fetchVariants,
-} from "../../../../../../modules/google-feed/fetch-product-data";
+import { FeedXmlBuilder } from "../../../../../../modules/google-feed/feed-xml-builder";
+import { fetchVariants } from "../../../../../../modules/google-feed/fetch-product-data";
 import { GoogleFeedSettingsFetcher } from "../../../../../../modules/google-feed/get-google-feed-settings";
+import { productVariantToProxy } from "../../../../../../modules/google-feed/product-variant-to-proxy";
 
 type ConfiguredChannelSettings = Awaited<
   ReturnType<typeof GoogleFeedSettingsFetcher.prototype.fetch>
 >;
+
+const xmlBuilder = new FeedXmlBuilder();
 
 // todo auth / private network
 const handler: NextApiHandler = async (req, res) => {
@@ -40,7 +40,16 @@ const handler: NextApiHandler = async (req, res) => {
     after: cursor,
   });
 
-  // todo generate XML
+  const productProxies = productVariants.map((v) =>
+    productVariantToProxy({
+      variant: v,
+      attributeMapping: channelSettings.attributeMapping,
+      titleTemplate: channelSettings.titleTemplate,
+      productStorefrontUrl: channelSettings.productStorefrontUrl,
+    }),
+  );
+
+  const xmlChunk = xmlBuilder.buildItemsChunk(productProxies);
 
   if (!channelSettings.s3BucketConfiguration) {
     return res.status(400).send({ message: "Bucket not configured" });
@@ -56,7 +65,7 @@ const handler: NextApiHandler = async (req, res) => {
   await uploadFile({
     s3Client,
     bucketName: channelSettings.s3BucketConfiguration.bucketName,
-    buffer: Buffer.from("todo"),
+    buffer: Buffer.from(xmlChunk),
     fileName,
   });
 
