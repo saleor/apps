@@ -7,7 +7,6 @@ import { uploadFile } from "../../../../../../modules/file-storage/s3/upload-fil
 import {
   getChunkDownloadUrl,
   getChunkFileName,
-  getDownloadUrl,
 } from "../../../../../../modules/file-storage/s3/urls-and-names";
 import { FeedXmlBuilder } from "../../../../../../modules/google-feed/feed-xml-builder";
 import { fetchVariants } from "../../../../../../modules/google-feed/fetch-product-data";
@@ -20,8 +19,13 @@ type ConfiguredChannelSettings = Awaited<
 
 const xmlBuilder = new FeedXmlBuilder();
 
-// todo auth / private network
 const handler: NextApiHandler = async (req, res) => {
+  const secret = req.headers["Authorization-Bearer"];
+
+  if (secret !== process.env.REQUEST_SECRET) {
+    return res.status(401).send("Unauthorized");
+  }
+
   const params = req.query;
   const parsedBody = JSON.parse(req.body);
   const { authData, channelSettings } = parsedBody as {
