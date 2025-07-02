@@ -15,14 +15,17 @@ export class FeedXmlBuilder {
   });
 
   buildItemsChunk(items: Array<{ item: GoogleProxyItem[] }>) {
-    return this.builder.build(items)
+    return this.builder.build(items);
   }
 
   /**
    * TODO:
    * - inject products as XML instead js objects to reduce memory
    */
-  buildRootXml(params: {
+  buildRootXml({
+    items,
+    channelData,
+  }: {
     items: Array<{ item: GoogleProxyItem[] }>;
     channelData: GoogleProxyItem[];
   }) {

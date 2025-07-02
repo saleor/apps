@@ -22,7 +22,8 @@ const xmlBuilder = new FeedXmlBuilder();
 // todo auth / private network
 const handler: NextApiHandler = async (req, res) => {
   const params = req.query;
-  const { authData, channelSettings } = req.body as {
+  const parsedBody = JSON.parse(req.body);
+  const { authData, channelSettings } = parsedBody as {
     authData: AuthData;
     channelSettings: ConfiguredChannelSettings;
   };
