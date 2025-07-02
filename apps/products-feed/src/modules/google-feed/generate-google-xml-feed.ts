@@ -1,11 +1,11 @@
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared/editor-js-plaintext-renderer";
-import { XMLBuilder } from "fast-xml-parser";
 
 import { createLogger } from "../../logger";
 import { RootConfig } from "../app-configuration/app-config";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
 import { transformTemplateFormat } from "../handlebarsTemplates/transform-template-format";
 import { getMappedAttributes } from "./attribute-mapping";
+import { FeedXmlBuilder } from "./feed-xml-builder";
 import { ProductVariant } from "./fetch-product-data";
 import { getRelatedMedia, getVariantMediaMap } from "./get-related-media";
 import { getWeightAttributeValue } from "./get-weight-attribute-value";
@@ -112,17 +112,6 @@ export const generateGoogleXmlFeed = ({
 
   logger.trace("Creating XMLBuilder");
 
-  const builder = new XMLBuilder({
-    attributeNamePrefix: "@_",
-    attributesGroupName: "@",
-    textNodeName: "#text",
-    ignoreAttributes: false,
-    format: true,
-    indentBy: "  ",
-    suppressEmptyNode: false,
-    preserveOrder: true,
-  });
-
   logger.trace("XMLBuilder created");
 
   const channelData = shopDetailsToProxy({
@@ -131,36 +120,10 @@ export const generateGoogleXmlFeed = ({
     storefrontUrl,
   });
 
-  logger.trace("Coverted shop details to proxy format");
+  const xmlBuilder = new FeedXmlBuilder();
 
-  const data = [
-    {
-      "?xml": [
-        {
-          "#text": "",
-        },
-      ],
-      ":@": {
-        "@_version": "1.0",
-        "@_encoding": "utf-8",
-      },
-    },
-
-    {
-      rss: [
-        {
-          // @ts-ignore - This is "just an object" that is transformed to XML. I don't see good way to type it, other than "any"
-          channel: channelData.concat(items),
-        },
-      ],
-      ":@": {
-        "@_xmlns:g": "http://base.google.com/ns/1.0",
-        "@_version": "2.0",
-      },
-    },
-  ];
-
-  logger.debug("Feed generated. Returning formatted XML");
-
-  return builder.build(data);
+  return xmlBuilder.buildRootXml({
+    items,
+    channelData,
+  });
 };
