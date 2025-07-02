@@ -8,6 +8,7 @@ import { createS3ClientFromConfiguration } from "../../modules/file-storage/s3/c
 import { getFileName } from "../../modules/file-storage/s3/urls-and-names";
 import { GoogleFeedSettingsFetcher } from "../../modules/google-feed/get-google-feed-settings";
 import { ProcessingDto } from "../dto";
+import { fetchProductData } from "../../modules/google-feed/fetch-product-data";
 
 const repo = dbVariantsStorage;
 
@@ -53,7 +54,7 @@ export const POST = async (req: NextRequest) => {
   // todo this should be parallel, change to services, use promise all
   for (const channelSetting of allSettingsPerChannel) {
     if (!channelSetting.settings.s3BucketConfiguration) {
-      // todo what should happen? why it can be null?
+      // app not confiuged, skip
       continue;
     }
 
@@ -89,6 +90,10 @@ export const POST = async (req: NextRequest) => {
     const xmlAsJsObject = xmlParser.parse(xmlFileContent);
 
     console.log(xmlAsJsObject[1].rss[0].channel[2]);
+
+    const variants = await Promise.all(
+      dirtyVariants.map(id => fetchProductData({ client, channel: , imageSize }))
+    )
 
     /*
      * todo

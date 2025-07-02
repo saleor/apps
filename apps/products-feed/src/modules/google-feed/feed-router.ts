@@ -56,7 +56,7 @@ export const feedRouter = router({
       };
     }),
   /**
-   * @deprecated: use this on the fronend, use Saleor S3
+   * @deprecated: use this on the frontend, use Saleor S3
    */
   generateAndUploadFeed: protectedClientProcedure
     .input(
