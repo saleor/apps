@@ -31,6 +31,7 @@ export default {
     },
   ],
   words: [
+    "atobarai",
     "avalara",
     "avatax",
     "bruno",
