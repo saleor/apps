@@ -217,6 +217,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }),
         headers: {
           ContentType: "application/json",
+          "Authorization-Bearer": process.env.REQUEST_SECRET as string,
         },
         method: "POST",
       }).then((r) => r.json());
