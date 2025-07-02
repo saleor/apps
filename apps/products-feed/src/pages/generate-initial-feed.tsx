@@ -1,4 +1,4 @@
-import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Box, Button, Text } from "@saleor/macaw-ui";
@@ -13,7 +13,7 @@ import { AppSection } from "../modules/ui/app-section";
 import { Paragraph } from "../modules/ui/paragraph";
 
 const CreateFeedUi = ({ channelSlug }: { channelSlug: string }) => {
-  const { appBridgeState, appBridge } = useAppBridge();
+  const { appBridgeState } = useAppBridge();
   const [started, setStarted] = useState<boolean>(false);
   const { data: appConfig } = trpcClient.appConfiguration.fetch.useQuery(undefined, {
     enabled: started,
