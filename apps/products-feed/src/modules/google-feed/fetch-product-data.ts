@@ -67,7 +67,7 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
   return cursors;
 };
 
-const fetchVariants = async ({
+export const fetchVariants = async ({
   client,
   after,
   channel,

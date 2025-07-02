@@ -16,6 +16,7 @@ import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
 import {
   fetchProductData,
+  getCursors,
   ProductVariant,
 } from "../../../../../modules/google-feed/fetch-product-data";
 import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
@@ -39,6 +40,12 @@ const validateRequestParams = (req: NextApiRequest) => {
 
 /**
  * TODO Refactor and test
+ */
+
+/**
+ * 1. Promise.all child lambdas
+ * 2. each lambda build XML chunk and upload
+ * 3. After that, create root XML
  */
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
@@ -203,6 +210,14 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let productVariants: ProductVariant[] = [];
 
   try {
+    const cursors = await getCursors({ client, channel });
+
+    /*
+     * todo 1. const results =  await Promise.all(fetch(...))
+     * todo 2. const chunks = results.map(fetchXml(chunk))
+     * todo 3. root = chunks.merge()
+     */
+
     productVariants = await fetchProductData({ client, channel, imageSize });
 
     const totalAttributes = productVariants
