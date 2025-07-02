@@ -18,17 +18,11 @@ export class FeedXmlBuilder {
     return this.builder.build(items);
   }
 
-  /**
-   * TODO:
-   * - inject products as XML instead js objects to reduce memory
-   */
-  buildRootXml({
-    items,
-    channelData,
-  }: {
-    items: Array<{ item: GoogleProxyItem[] }>;
-    channelData: GoogleProxyItem[];
-  }) {
+  injectProductsString(rootXml: string, productsXml: string) {
+    return rootXml.replace("</channel>", productsXml + "\n</channel>");
+  }
+
+  buildRootXml({ channelData }: { channelData: GoogleProxyItem[] }) {
     const data = [
       {
         "?xml": [
@@ -45,8 +39,7 @@ export class FeedXmlBuilder {
       {
         rss: [
           {
-            // @ts-ignore - This is "just an object" that is transformed to XML. I don't see good way to type it, other than "any"
-            channel: channelData.concat(items),
+            channel: channelData,
           },
         ],
         ":@": {

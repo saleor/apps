@@ -15,6 +15,7 @@ import { createS3ClientFromConfiguration } from "../../../../../modules/file-sto
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
 import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
+import { FeedXmlBuilder } from "../../../../../modules/google-feed/feed-xml-builder";
 import {
   fetchProductData,
   getCursors,
@@ -23,6 +24,7 @@ import {
 import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
 import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
 import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
+import { shopDetailsToProxy } from "../../../../../modules/google-feed/shop-details-to-proxy";
 import { apl } from "../../../../../saleor-app";
 
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
@@ -246,6 +248,20 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
 
     const mergedChunks = chunks.join("\n");
+
+    const xmlBuilder = new FeedXmlBuilder();
+
+    const channelData = shopDetailsToProxy({
+      title: shopName,
+      description: shopDescription,
+      storefrontUrl,
+    });
+
+    const rootXml = xmlBuilder.buildRootXml({
+      channelData,
+    });
+
+    const rootXmlWithProducts = xmlBuilder.injectProductsString(rootXml, mergedChunks);
 
     // todo build root xml
 
