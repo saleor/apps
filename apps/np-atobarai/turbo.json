@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turbo.build/schema.v2.json",
+  "extends": ["//"],
+  "tasks": {
+    "deploy": {
+      "env": [
+        "ALLOWED_DOMAIN_PATTERN",
+        "APL",
+        "APP_API_BASE_URL",
+        "APP_IFRAME_BASE_URL",
+        "MANIFEST_APP_ID",
+        "MANIFEST_APP_ID",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "SECRET_KEY",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_PROJECT",
+        "APP_NAME"
+      ]
+    }
+  }
+}

@@ -53,6 +53,7 @@ In the `apps` folder, you will find the following applications:
 - [Segment](./apps/segment/) - connect Saleor with Twilio Segment.
 - [SMTP](./apps/smtp) - email communication with customers.
 - [Stripe](./apps/stripe/) - connect Saleor with Stripe
+- [NP Atobarai](./apps/np-atobarai/) - connect Saleor with NP Atobarai (Japanese: NP 後払い)
 
 #### Example apps
 
