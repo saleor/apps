@@ -1,3 +1,5 @@
+import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -11,6 +13,51 @@ import { generateGoogleXmlFeed } from "./generate-google-xml-feed";
 import { GoogleFeedSettingsFetcher } from "./get-google-feed-settings";
 
 export const feedRouter = router({
+  // TODO use this, connect to Saleor's S3
+  getSignedS3url: protectedClientProcedure
+    .input(
+      z.object({
+        channelSlug: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const settingsFetcher = GoogleFeedSettingsFetcher.createFromAuthData({
+        saleorApiUrl: ctx.saleorApiUrl,
+        token: ctx.appToken,
+      });
+
+      const settings = await settingsFetcher.fetch(input.channelSlug);
+
+      if (!settings.s3BucketConfiguration) {
+        throw new TRPCError({
+          message: "S3 bucket is not configured",
+          code: "BAD_REQUEST",
+        });
+      }
+
+      const s3Client = createS3ClientFromConfiguration(settings.s3BucketConfiguration);
+
+      const fileName = getFileName({
+        saleorApiUrl: ctx.saleorApiUrl,
+        channel: input.channelSlug,
+      });
+
+      const command = new PutObjectCommand({
+        Bucket: settings.s3BucketConfiguration.bucketName,
+        Key: fileName,
+      });
+
+      const url = await getSignedUrl(s3Client, command, {
+        expiresIn: 60, // one minute
+      });
+
+      return {
+        uploadUrl: url,
+      };
+    }),
+  /**
+   * @deprecated: use this on the fronend, use Saleor S3
+   */
   generateAndUploadFeed: protectedClientProcedure
     .input(
       z.object({
@@ -60,13 +107,15 @@ export const feedRouter = router({
         fileName,
       });
 
-      // https://docs.aws.amazon.com/AmazonS3/latest/API/s3_example_s3_Scenario_PresignedUrl_section.html
-      const downloadUrl = getDownloadUrl({
-        s3BucketConfiguration: settings.s3BucketConfiguration,
-        saleorApiUrl: ctx.saleorApiUrl,
-        channel: input.channelSlug,
+      const command = new GetObjectCommand({
+        Bucket: settings.s3BucketConfiguration.bucketName,
+        Key: fileName,
       });
 
-      return { downloadUrl };
+      const url = await getSignedUrl(s3Client, command, {
+        expiresIn: 60, // one minute
+      });
+
+      return { downloadUrl: url };
     }),
 });
