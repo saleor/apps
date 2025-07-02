@@ -5,6 +5,7 @@ import { createInstrumentedGraphqlClient } from "../../../../../../lib/create-in
 import { createS3ClientFromConfiguration } from "../../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
 import { uploadFile } from "../../../../../../modules/file-storage/s3/upload-file";
 import {
+  getChunkDownloadUrl,
   getChunkFileName,
   getDownloadUrl,
 } from "../../../../../../modules/file-storage/s3/urls-and-names";
@@ -70,10 +71,11 @@ const handler: NextApiHandler = async (req, res) => {
     fileName,
   });
 
-  const downloadUrl = getDownloadUrl({
+  const downloadUrl = getChunkDownloadUrl({
     s3BucketConfiguration: channelSettings.s3BucketConfiguration,
     saleorApiUrl: authData.saleorApiUrl,
     channel,
+    cursor,
   });
 
   return res.status(200).send({ downloadUrl });

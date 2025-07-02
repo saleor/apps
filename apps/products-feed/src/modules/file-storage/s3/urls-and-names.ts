@@ -16,6 +16,17 @@ export const getDownloadUrl = ({
   }.amazonaws.com/${getFileName({ saleorApiUrl, channel })}`;
 };
 
+export const getChunkDownloadUrl = ({
+  s3BucketConfiguration,
+  saleorApiUrl,
+  channel,
+  cursor,
+}: GetDownloadUrlArgs & { cursor: string }) => {
+  return `https://${s3BucketConfiguration.bucketName}.s3.${
+    s3BucketConfiguration.region
+  }.amazonaws.com/${getChunkFileName({ saleorApiUrl, channel, cursor })}`;
+};
+
 interface GetFileNameArgs {
   saleorApiUrl: string;
   channel: string;

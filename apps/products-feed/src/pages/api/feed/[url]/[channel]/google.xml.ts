@@ -241,17 +241,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }),
     );
 
-    logger.debug("Fetched download urls", { xmlUrlResponses });
-
     const chunks = await Promise.all(
-      xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.body)),
+      xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.text())),
     );
 
-    /*
-     * todo 1. const results =  await Promise.all(fetch(...))
-     * todo 2. const chunks = results.map(fetchXml(chunk))
-     * todo 3. root = chunks.merge()
-     */
+    const mergedChunks = chunks.join("\n");
+
+    // todo build root xml
 
     productVariants = await fetchProductData({ client, channel, imageSize });
 
