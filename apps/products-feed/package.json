@@ -20,6 +20,7 @@
     "@aws-sdk/client-dynamodb": "3.651.1",
     "@aws-sdk/client-s3": "^3.332.0",
     "@aws-sdk/lib-dynamodb": "3.651.1",
+    "@aws-sdk/s3-request-presigner": "3.332.0",
     "@aws-sdk/util-dynamodb": "3.651.1",
     "@hookform/resolvers": "^3.3.1",
     "@opentelemetry/api": "catalog:",
