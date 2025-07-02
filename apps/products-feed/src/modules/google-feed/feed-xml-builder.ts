@@ -14,6 +14,10 @@ export class FeedXmlBuilder {
     preserveOrder: true,
   });
 
+  buildItemsChunk(items: Array<{ item: GoogleProxyItem[] }>) {
+    return this.builder.build(items)
+  }
+
   /**
    * TODO:
    * - inject products as XML instead js objects to reduce memory
