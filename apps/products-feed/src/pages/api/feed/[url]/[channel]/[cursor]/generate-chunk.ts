@@ -20,7 +20,7 @@ type ConfiguredChannelSettings = Awaited<
 const xmlBuilder = new FeedXmlBuilder();
 
 const handler: NextApiHandler = async (req, res) => {
-  const secret = req.headers["Authorization-Bearer"];
+  const secret = req.headers["authorization"];
 
   if (secret !== process.env.REQUEST_SECRET) {
     return res.status(401).send("Unauthorized");
