@@ -39,7 +39,7 @@ const fetchCursorRecursive = async (params: {
 
   return fetchCursorRecursive({
     client: params.client,
-    cursors: [...params.cursors, innerResult.data?.productVariants?.pageInfo.startCursor],
+    cursors: [...params.cursors, innerResult.data?.productVariants?.pageInfo.startCursor as string],
     hasNext: innerResult.data?.productVariants?.pageInfo.hasNextPage as boolean,
     channel: params.channel,
     after: innerResult.data?.productVariants?.pageInfo.endCursor as string,
