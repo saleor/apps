@@ -1,1 +1,1 @@
-export const ATOBARAI_SETTLEMENT_TYPE = "02";
+export const ATOBARAI_SETTLEMENT_TYPE = "02"; // NP Atobarai

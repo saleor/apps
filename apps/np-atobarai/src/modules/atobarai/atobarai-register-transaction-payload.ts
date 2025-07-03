@@ -11,10 +11,13 @@ const schema = z
   .object({
     transactions: z.array(
       z.object({
-        shop_transaction_id: z.string(),
-        shop_order_date: z.string(),
+        // TODO: check if saleorTransactionId is more than 40 characters
+        shop_transaction_id: z.string().max(40),
+        shop_order_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
+          message: "Date must be in YYYY-MM-DD format",
+        }),
         settlement_type: z.literal(ATOBARAI_SETTLEMENT_TYPE),
-        billed_amount: z.number(),
+        billed_amount: z.number().max(6),
         customer: AtobaraiCustomer.schema,
         dest_customer: AtobaraiDeliveryDestination.schema,
         goods: AtobaraiGoods.schema,
