@@ -18,6 +18,34 @@ const VARIANTS_PER_PAGE = 100;
 export type ProductVariant = Omit<BasicProductDataFragment, "product"> &
   ProductAttributesFragment & { product: RelatedProductsFragment };
 
+const fetchCursorRecursive = async (params: {
+  cursors: [];
+  hasNext: boolean;
+  startCursor: string;
+  client: Client;
+  channel: string;
+}) => {
+  if (!params.hasNext) {
+    return params.cursors;
+  }
+
+  const innerResult = await params.client
+    .query(FetchProductCursorsDocument, {
+      channel: params.channel,
+      first: VARIANTS_PER_PAGE,
+      after: params.startCursor,
+    })
+    .toPromise();
+
+  return fetchCursorRecursive({
+    client: params.client,
+    cursors: [...params.cursors, innerResult.data?.productVariants?.pageInfo.startCursor],
+    hasNext: innerResult.data.productVariants.pageInfo.hasNextPage,
+    channel: params.channel,
+    startCursor: innerResult.data.productVariants.pageInfo.endCursor,
+  });
+};
+
 export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
   const logger = createLogger("getCursors");
 
@@ -28,48 +56,50 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
     .query(FetchProductCursorsDocument, { channel: channel, first: VARIANTS_PER_PAGE })
     .toPromise();
 
-  let hasNextPage = firstResult.hasNext;
+  let hasNextPage = firstResult.data?.productVariants?.pageInfo.hasNextPage;
 
   console.log("cursor 1 fetched");
 
-  const cursors: Array<string> = [];
+  const startCursors: Array<string> = [];
+  let lastEndCursor = firstResult.data?.productVariants?.pageInfo.endCursor as string;
 
-  if (firstResult.data?.productVariants?.pageInfo.endCursor) {
+  if (firstResult.data?.productVariants?.pageInfo.startCursor) {
     console.log("start cursor set");
-    cursors.push(firstResult.data.productVariants.pageInfo.endCursor);
+    startCursors.push(firstResult.data.productVariants.pageInfo.startCursor);
   }
 
   while (hasNextPage) {
-    console.log("cursor exists, loop");
-    console.log("fetching next");
     const innerResult = await client
       .query(FetchProductCursorsDocument, {
         channel: channel,
         first: VARIANTS_PER_PAGE,
-        after: cursors[cursors.length - 1],
+        after: lastEndCursor,
       })
       .toPromise();
 
     hasNextPage = innerResult.data?.productVariants?.pageInfo.hasNextPage as boolean;
 
-    if (innerResult.data?.productVariants?.pageInfo.endCursor) {
-      cursors.push(innerResult.data.productVariants.pageInfo.endCursor);
+    if (innerResult.data?.productVariants?.pageInfo.startCursor) {
+      startCursors.push(innerResult.data.productVariants.pageInfo.startCursor);
     }
+
+    lastEndCursor = innerResult.data?.productVariants?.pageInfo.endCursor as string;
+    console.log("last end cursor: ", lastEndCursor);
 
     console.log("result");
     console.log(innerResult.data?.productVariants?.pageInfo);
 
-    console.log("Cursor count: ", cursors.length);
+    console.log("Cursor count: ", startCursors.length);
   }
 
   logger.debug("Product cursors fetched successfully", {
-    first: cursors[0],
-    totalLength: cursors.length,
+    first: startCursors[0],
+    totalLength: startCursors.length,
   });
 
   console.log("cursors fetched");
 
-  return [firstResult.data?.productVariants?.pageInfo.startCursor, ...cursors];
+  return startCursors;
 };
 
 export const fetchVariants = async ({
