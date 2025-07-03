@@ -24,38 +24,40 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
   console.log("fetching cursors");
   logger.debug(`Fetching product cursors for channel ${channel}`);
 
-  let result = await client
+  const firstResult = await client
     .query(FetchProductCursorsDocument, { channel: channel, first: VARIANTS_PER_PAGE })
     .toPromise();
+
+  let hasNextPage = firstResult.hasNext;
 
   console.log("cursor 1 fetched");
 
   const cursors: Array<string> = [];
 
-  if (result.data?.productVariants?.pageInfo.startCursor) {
+  if (firstResult.data?.productVariants?.pageInfo.endCursor) {
     console.log("start cursor set");
-    cursors.push(result.data.productVariants.pageInfo.startCursor);
+    cursors.push(firstResult.data.productVariants.pageInfo.endCursor);
   }
 
-  while (result.data?.productVariants?.pageInfo.hasNextPage) {
+  while (hasNextPage) {
     console.log("cursor exists, loop");
-    const endCursor = result.data?.productVariants?.pageInfo.endCursor;
-
-    if (endCursor) {
-      cursors.push(endCursor);
-    }
-
     console.log("fetching next");
-    result = await client
+    const innerResult = await client
       .query(FetchProductCursorsDocument, {
         channel: channel,
         first: VARIANTS_PER_PAGE,
-        after: result.data.productVariants.pageInfo.endCursor,
+        after: cursors[cursors.length - 1],
       })
       .toPromise();
 
+    hasNextPage = innerResult.data?.productVariants?.pageInfo.hasNextPage as boolean;
+
+    if (innerResult.data?.productVariants?.pageInfo.endCursor) {
+      cursors.push(innerResult.data.productVariants.pageInfo.endCursor);
+    }
+
     console.log("result");
-    console.log(result.data?.productVariants?.pageInfo);
+    console.log(innerResult.data?.productVariants?.pageInfo);
 
     console.log("Cursor count: ", cursors.length);
   }
@@ -67,7 +69,7 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
 
   console.log("cursors fetched");
 
-  return cursors;
+  return [firstResult.data?.productVariants?.pageInfo.startCursor, ...cursors];
 };
 
 export const fetchVariants = async ({
