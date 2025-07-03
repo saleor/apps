@@ -2,6 +2,7 @@ import { AuthData } from "@saleor/app-sdk/APL";
 import { NextApiHandler } from "next";
 
 import { createInstrumentedGraphqlClient } from "../../../../../../lib/create-instrumented-graphql-client";
+import { createLogger } from "../../../../../../logger";
 import { createS3ClientFromConfiguration } from "../../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
 import { uploadFile } from "../../../../../../modules/file-storage/s3/upload-file";
 import {
@@ -18,6 +19,7 @@ type ConfiguredChannelSettings = Awaited<
 >;
 
 const xmlBuilder = new FeedXmlBuilder();
+const logger = createLogger("generate-chunk");
 
 const handler: NextApiHandler = async (req, res) => {
   const secret = req.headers["authorization"];
@@ -34,6 +36,14 @@ const handler: NextApiHandler = async (req, res) => {
   };
   const { cursor, channel, url } = params as { cursor: string; channel: string; url: string };
 
+  const decodedCursor = decodeURIComponent(cursor);
+
+  logger.info("Generate chunk of products", {
+    cursor: decodedCursor,
+    channel,
+    saleorApiUrl: authData.saleorApiUrl,
+  });
+
   const client = createInstrumentedGraphqlClient({
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
@@ -43,7 +53,7 @@ const handler: NextApiHandler = async (req, res) => {
     client,
     channel: channel,
     imageSize: channelSettings.imageSize,
-    after: cursor,
+    after: decodedCursor,
   });
 
   const productProxies = productVariants.map((v) =>
@@ -65,7 +75,7 @@ const handler: NextApiHandler = async (req, res) => {
   const fileName = getChunkFileName({
     saleorApiUrl: authData.saleorApiUrl,
     channel,
-    cursor,
+    cursor: decodedCursor,
   });
 
   await uploadFile({
@@ -79,7 +89,7 @@ const handler: NextApiHandler = async (req, res) => {
     s3BucketConfiguration: channelSettings.s3BucketConfiguration,
     saleorApiUrl: authData.saleorApiUrl,
     channel,
-    cursor,
+    cursor: decodedCursor,
   });
 
   return res.status(200).send({ downloadUrl });
