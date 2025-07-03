@@ -21,25 +21,31 @@ export type ProductVariant = Omit<BasicProductDataFragment, "product"> &
 export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
   const logger = createLogger("getCursors");
 
+  console.log("fetching cursors");
   logger.debug(`Fetching product cursors for channel ${channel}`);
 
   let result = await client
     .query(FetchProductCursorsDocument, { channel: channel, first: VARIANTS_PER_PAGE })
     .toPromise();
 
+  console.log("cursor 1 fetched");
+
   const cursors: Array<string> = [];
 
   if (result.data?.productVariants?.pageInfo.startCursor) {
+    console.log("start cursor set");
     cursors.push(result.data.productVariants.pageInfo.startCursor);
   }
 
   while (result.data?.productVariants?.pageInfo.hasNextPage) {
+    console.log("cursor exists, loop");
     const endCursor = result.data?.productVariants?.pageInfo.endCursor;
 
     if (endCursor) {
       cursors.push(endCursor);
     }
 
+    console.log("fetching next");
     result = await client
       .query(FetchProductCursorsDocument, {
         channel: channel,
@@ -47,12 +53,19 @@ export const getCursors = async ({ client, channel }: { client: Client; channel:
         after: result.data.productVariants.pageInfo.endCursor,
       })
       .toPromise();
+
+    console.log("result");
+    console.log(result.data?.productVariants?.pageInfo);
+
+    console.log("Cursor count: ", cursors.length);
   }
 
   logger.debug("Product cursors fetched successfully", {
     first: cursors[0],
     totalLength: cursors.length,
   });
+
+  console.log("cursors fetched");
 
   return cursors;
 };
