@@ -85,6 +85,7 @@ const handler: NextApiHandler = async (req, res) => {
     fileName,
   });
 
+  // TODO This is private and created by the same user, but maybe we should also use signed url
   const downloadUrl = getChunkDownloadUrl({
     s3BucketConfiguration: channelSettings.s3BucketConfiguration,
     saleorApiUrl: authData.saleorApiUrl,
