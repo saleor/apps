@@ -1,10 +1,15 @@
-query FetchProductAttributesData($first:Int!, $after: String, $channel: String!){
-  productVariants(first:$first, after: $after, channel: $channel){
-    pageInfo{
+query FetchProductAttributesData($first: Int!, $after: String, $channel: String!) {
+  productVariants(
+    first: $first
+    after: $after
+    channel: $channel
+    sortBy: { field: LAST_MODIFIED_AT, direction: ASC }
+  ) {
+    pageInfo {
       hasNextPage
       endCursor
     }
-    edges{
+    edges {
       node {
         ...ProductAttributes
       }
