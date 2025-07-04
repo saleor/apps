@@ -4,9 +4,8 @@ import { Client } from "urql";
 
 import {
   BasicProductDataFragment,
-  FetchBasicProductDataDocument,
-  FetchProductAttributesDataDocument,
   FetchProductCursorsDocument,
+  FetchProductVariantsDataDocument,
   FetchRelatedProductsDataDocument,
   ProductAttributesFragment,
   RelatedProductsFragment,
@@ -89,43 +88,19 @@ export const fetchVariants = async ({
 
   logger.debug(`Fetching variants for channel ${channel} with cursor ${after}`);
 
-  const basicProductDataPromise = client
-    .query(FetchBasicProductDataDocument, {
+  const productVariantsData = await client
+    .query(FetchProductVariantsDataDocument, {
       channel: channel,
       first: VARIANTS_PER_PAGE,
       after,
     })
     .toPromise();
 
-  const productAttributesDataPromise = client
-    .query(FetchProductAttributesDataDocument, {
-      channel: channel,
-      first: VARIANTS_PER_PAGE,
-      after,
-    })
-    .toPromise();
-
-  const [basicProductData, productAttributesData] = await Promise.all([
-    basicProductDataPromise,
-    productAttributesDataPromise,
-  ]);
-
-  if (basicProductData.error) {
+  if (productVariantsData.error) {
     logger.error(
-      `Error during the GraphqlAPI call (basicProductData): ${basicProductData.error.message}`,
+      `Error during the GraphqlAPI call (productVariantsData): ${productVariantsData.error.message}`,
       {
-        error: basicProductData.error,
-      },
-    );
-
-    return [];
-  }
-
-  if (productAttributesData.error) {
-    logger.error(
-      `Error during the GraphqlAPI call (productAttributesData): ${productAttributesData.error.message}`,
-      {
-        error: productAttributesData.error,
+        error: productVariantsData.error,
       },
     );
 
@@ -133,7 +108,7 @@ export const fetchVariants = async ({
   }
 
   const allProductIds =
-    basicProductData.data?.productVariants?.edges.map((e) => e.node.product.id) || [];
+    productVariantsData.data?.productVariants?.edges.map((e) => e.node.product.id) || [];
 
   const productIds = Array.from(new Set(allProductIds));
 
@@ -155,26 +130,16 @@ export const fetchVariants = async ({
     return [];
   }
 
-  const variantEdges = basicProductData.data?.productVariants?.edges || [];
+  const variantEdges = productVariantsData.data?.productVariants?.edges || [];
 
   try {
     const productVariants = variantEdges
       .map((e) => {
-        const attributesEdge = productAttributesData.data?.productVariants?.edges.find(
-          (attr) => attr.node.id === e.node.id,
-        );
-
         const relatedProductEdge = relatedProductsData.data?.products?.edges.find(
           (product) => product.node.id === e.node.product.id,
         );
 
-        const attributes = attributesEdge?.node.attributes;
         const product = relatedProductEdge?.node;
-
-        if (!attributes) {
-          // TODO: migrate to modern errors
-          throw new Error("Attributes not found for variant");
-        }
 
         if (!product) {
           // TODO: migrate to modern errors
@@ -183,7 +148,6 @@ export const fetchVariants = async ({
 
         return {
           ...e.node,
-          attributes,
           product,
         };
       })
