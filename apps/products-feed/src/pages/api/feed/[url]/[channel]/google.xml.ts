@@ -16,7 +16,7 @@ import { RootConfig } from "../../../../../modules/app-configuration/app-config"
 import { createS3ClientFromConfiguration } from "../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
 import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
-import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
+import { getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
 import { FeedXmlBuilder } from "../../../../../modules/google-feed/feed-xml-builder";
 import { getCursors } from "../../../../../modules/google-feed/fetch-product-data";
 import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
@@ -178,15 +178,16 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const secondsSinceLastModification = (Date.now() - feedLastModificationDate.getTime()) / 1000;
 
       if (secondsSinceLastModification < FEED_CACHE_MAX_AGE) {
-        const downloadUrl = getDownloadUrl({
-          s3BucketConfiguration: bucketConfiguration,
-          saleorApiUrl: authData.saleorApiUrl,
-          channel,
+        const command = new GetObjectCommand({
+          Bucket: bucketConfiguration!.bucketName,
+          Key: fileName,
         });
 
-        logger.info("Feed has been generated recently, returning the last version", {
-          downloadUrl,
+        const downloadUrl = await getSignedUrl(s3Client, command, {
+          expiresIn: 30,
         });
+
+        logger.info("Feed has been generated recently, returning the last version");
 
         return res.redirect(downloadUrl);
       }
