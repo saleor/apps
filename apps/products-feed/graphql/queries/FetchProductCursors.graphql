@@ -1,6 +1,11 @@
-query FetchProductCursors($first:Int!, $after: String, $channel: String!){
-  productVariants(first:$first, after: $after, channel: $channel){
-    pageInfo{
+query FetchProductCursors($first: Int!, $after: String, $channel: String!) {
+  productVariants(
+    first: $first
+    after: $after
+    channel: $channel
+    sortBy: { direction: ASC, field: LAST_MODIFIED_AT }
+  ) {
+    pageInfo {
       hasNextPage
       startCursor
       endCursor

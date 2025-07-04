@@ -4,70 +4,76 @@ import { Client } from "urql";
 
 import {
   BasicProductDataFragment,
-  FetchBasicProductDataDocument,
-  FetchProductAttributesDataDocument,
   FetchProductCursorsDocument,
+  FetchProductVariantsDataDocument,
   FetchRelatedProductsDataDocument,
   ProductAttributesFragment,
   RelatedProductsFragment,
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
-import { ProductProcessingLimit } from "./product-processing-limit";
 
 const VARIANTS_PER_PAGE = 100;
 
 export type ProductVariant = Omit<BasicProductDataFragment, "product"> &
   ProductAttributesFragment & { product: RelatedProductsFragment };
 
-export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
+const fetchCursorRecursive = async (params: {
+  cursors: string[];
+  hasNext: boolean;
+  after: string;
+  client: Pick<Client, "query">;
+  channel: string;
+}) => {
+  if (!params.hasNext) {
+    return params.cursors;
+  }
+
+  const innerResult = await params.client
+    .query(FetchProductCursorsDocument, {
+      channel: params.channel,
+      first: VARIANTS_PER_PAGE,
+      after: params.after,
+    })
+    .toPromise();
+
+  return fetchCursorRecursive({
+    client: params.client,
+    cursors: [...params.cursors, innerResult.data?.productVariants?.pageInfo.startCursor as string],
+    hasNext: innerResult.data?.productVariants?.pageInfo.hasNextPage as boolean,
+    channel: params.channel,
+    after: innerResult.data?.productVariants?.pageInfo.endCursor as string,
+  });
+};
+
+export const getCursors = async ({
+  client,
+  channel,
+}: {
+  client: Pick<Client, "query">;
+  channel: string;
+}) => {
   const logger = createLogger("getCursors");
 
   logger.debug(`Fetching product cursors for channel ${channel}`);
 
-  const processingLimit = new ProductProcessingLimit();
-
-  let result = await client
+  const firstResult = await client
     .query(FetchProductCursorsDocument, { channel: channel, first: VARIANTS_PER_PAGE })
     .toPromise();
 
-  const cursors: Array<string> = [];
+  const hasNextPage = firstResult.data?.productVariants?.pageInfo.hasNextPage as boolean;
 
-  processingLimit.drain();
-
-  while (result.data?.productVariants?.pageInfo.hasNextPage) {
-    const endCursor = result.data?.productVariants?.pageInfo.endCursor;
-
-    if (endCursor) {
-      cursors.push(endCursor);
-      processingLimit.drain();
-    }
-
-    result = await client
-      .query(FetchProductCursorsDocument, {
-        channel: channel,
-        first: VARIANTS_PER_PAGE,
-        after: result.data.productVariants.pageInfo.endCursor,
-      })
-      .toPromise();
-  }
-
-  // TODO: Return cursors (stop fetching more) when the limit is exceeded
-  logger.info("Processing limit status", {
-    isExceeded: processingLimit.isExceeded(),
-    maxPagesAllowance: processingLimit.getMaxPages(),
-    takenPages: processingLimit.getProcessedPages(),
-    variantsPerPage: VARIANTS_PER_PAGE,
+  const recursiveCursors = await fetchCursorRecursive({
+    client,
+    channel,
+    after: firstResult.data?.productVariants?.pageInfo.endCursor as string,
+    hasNext: hasNextPage,
+    cursors: [firstResult.data?.productVariants?.pageInfo.startCursor as string],
   });
 
-  logger.debug("Product cursors fetched successfully", {
-    first: cursors[0],
-    totalLength: cursors.length,
-  });
-
-  return cursors;
+  return recursiveCursors;
 };
 
-const fetchVariants = async ({
+export const fetchVariants = async ({
   client,
   after,
   channel,
@@ -82,43 +88,19 @@ const fetchVariants = async ({
 
   logger.debug(`Fetching variants for channel ${channel} with cursor ${after}`);
 
-  const basicProductDataPromise = client
-    .query(FetchBasicProductDataDocument, {
+  const productVariantsData = await client
+    .query(FetchProductVariantsDataDocument, {
       channel: channel,
       first: VARIANTS_PER_PAGE,
       after,
     })
     .toPromise();
 
-  const productAttributesDataPromise = client
-    .query(FetchProductAttributesDataDocument, {
-      channel: channel,
-      first: VARIANTS_PER_PAGE,
-      after,
-    })
-    .toPromise();
-
-  const [basicProductData, productAttributesData] = await Promise.all([
-    basicProductDataPromise,
-    productAttributesDataPromise,
-  ]);
-
-  if (basicProductData.error) {
+  if (productVariantsData.error) {
     logger.error(
-      `Error during the GraphqlAPI call (basicProductData): ${basicProductData.error.message}`,
+      `Error during the GraphqlAPI call (productVariantsData): ${productVariantsData.error.message}`,
       {
-        error: basicProductData.error,
-      },
-    );
-
-    return [];
-  }
-
-  if (productAttributesData.error) {
-    logger.error(
-      `Error during the GraphqlAPI call (productAttributesData): ${productAttributesData.error.message}`,
-      {
-        error: productAttributesData.error,
+        error: productVariantsData.error,
       },
     );
 
@@ -126,7 +108,7 @@ const fetchVariants = async ({
   }
 
   const allProductIds =
-    basicProductData.data?.productVariants?.edges.map((e) => e.node.product.id) || [];
+    productVariantsData.data?.productVariants?.edges.map((e) => e.node.product.id) || [];
 
   const productIds = Array.from(new Set(allProductIds));
 
@@ -148,26 +130,16 @@ const fetchVariants = async ({
     return [];
   }
 
-  const variantEdges = basicProductData.data?.productVariants?.edges || [];
+  const variantEdges = productVariantsData.data?.productVariants?.edges || [];
 
   try {
     const productVariants = variantEdges
       .map((e) => {
-        const attributesEdge = productAttributesData.data?.productVariants?.edges.find(
-          (attr) => attr.node.id === e.node.id,
-        );
-
         const relatedProductEdge = relatedProductsData.data?.products?.edges.find(
           (product) => product.node.id === e.node.product.id,
         );
 
-        const attributes = attributesEdge?.node.attributes;
         const product = relatedProductEdge?.node;
-
-        if (!attributes) {
-          // TODO: migrate to modern errors
-          throw new Error("Attributes not found for variant");
-        }
 
         if (!product) {
           // TODO: migrate to modern errors
@@ -176,7 +148,6 @@ const fetchVariants = async ({
 
         return {
           ...e.node,
-          attributes,
           product,
         };
       })
@@ -195,43 +166,4 @@ const fetchVariants = async ({
 
     return [];
   }
-};
-
-interface FetchProductDataArgs {
-  client: Client;
-  channel: string;
-  cursors?: Array<string>;
-  imageSize?: number;
-}
-
-export const fetchProductData = async ({
-  client,
-  channel,
-  cursors,
-  imageSize,
-}: FetchProductDataArgs) => {
-  const logger = createLogger("fetchProductData", {
-    route: "Google Product Feed",
-  });
-
-  logger.debug(`Fetching product data for channel ${channel}`);
-
-  const cachedCursors = cursors || (await getCursors({ client, channel }));
-
-  const pageCursors = [undefined, ...cachedCursors];
-
-  logger.debug(`Query generated ${pageCursors.length} cursors`);
-
-  const promises = pageCursors.map((cursor) =>
-    fetchVariants({ client, after: cursor, channel, imageSize }),
-  );
-
-  const results = (await Promise.all(promises)).flat();
-
-  logger.debug("Product data fetched successfully", {
-    first: results[0],
-    totalLength: results.length,
-  });
-
-  return results;
 };

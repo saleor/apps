@@ -1,4 +1,7 @@
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { SpanStatusCode } from "@opentelemetry/api";
+import { getBaseUrl } from "@saleor/app-sdk/headers";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -14,15 +17,12 @@ import { createS3ClientFromConfiguration } from "../../../../../modules/file-sto
 import { getFileDetails } from "../../../../../modules/file-storage/s3/get-file-details";
 import { uploadFile } from "../../../../../modules/file-storage/s3/upload-file";
 import { getDownloadUrl, getFileName } from "../../../../../modules/file-storage/s3/urls-and-names";
-import {
-  fetchProductData,
-  ProductVariant,
-} from "../../../../../modules/google-feed/fetch-product-data";
+import { FeedXmlBuilder } from "../../../../../modules/google-feed/feed-xml-builder";
+import { getCursors } from "../../../../../modules/google-feed/fetch-product-data";
 import { fetchShopData } from "../../../../../modules/google-feed/fetch-shop-data";
-import { generateGoogleXmlFeed } from "../../../../../modules/google-feed/generate-google-xml-feed";
 import { GoogleFeedSettingsFetcher } from "../../../../../modules/google-feed/get-google-feed-settings";
+import { shopDetailsToProxy } from "../../../../../modules/google-feed/shop-details-to-proxy";
 import { apl } from "../../../../../saleor-app";
-
 // By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
 const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
   ? parseInt(process.env.FEED_CACHE_MAX_AGE, 10)
@@ -37,9 +37,6 @@ const validateRequestParams = (req: NextApiRequest) => {
   queryShape.parse(req.query);
 };
 
-/**
- * TODO Refactor and test
- */
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
   const channel = req.query.channel as string;
@@ -96,15 +93,19 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   let storefrontUrl: string;
-  let productStorefrontUrl: string;
   let bucketConfiguration: RootConfig["s3"] | undefined;
-  let attributeMapping: RootConfig["attributeMapping"] | undefined;
-  let titleTemplate: RootConfig["titleTemplate"] | undefined;
-  let imageSize: RootConfig["imageSize"] | undefined;
+
+  let channelSettings: any;
 
   try {
     const settingsFetcher = GoogleFeedSettingsFetcher.createFromAuthData(authData);
     const settings = await settingsFetcher.fetch(channel);
+
+    channelSettings = settings;
+
+    if (!settings.s3BucketConfiguration) {
+      return res.status(400).send("App not configured");
+    }
 
     logger.info("Settings has been fetched", {
       storefrontUrl: settings.storefrontUrl,
@@ -116,11 +117,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     storefrontUrl = settings.storefrontUrl;
-    productStorefrontUrl = settings.productStorefrontUrl;
     bucketConfiguration = settings.s3BucketConfiguration;
-    attributeMapping = settings.attributeMapping;
-    titleTemplate = settings.titleTemplate;
-    imageSize = settings.imageSize;
   } catch (error) {
     logger.warn("The application has not been configured", { error: error });
 
@@ -200,54 +197,55 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   logger.debug("Generating a new feed");
 
-  let productVariants: ProductVariant[] = [];
+  const cursors = await getCursors({ client, channel });
 
-  try {
-    productVariants = await fetchProductData({ client, channel, imageSize });
+  const baseUrl = getBaseUrl(req.headers);
 
-    const totalAttributes = productVariants
-      .map((e) => e.product.attributes.length)
-      .reduce((a, b) => a + b, 0);
+  const xmlUrlResponses = await Promise.all(
+    cursors.map((cursor) => {
+      const urlToFetch = new URL(
+        `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
+          channel,
+        )}/${encodeURIComponent(cursor)}/generate-chunk`,
+        baseUrl,
+      );
 
-    logger.info("Product data fetched successfully", {
-      productVariantsLength: productVariants.length,
-      totalAttributes,
-    });
-  } catch (error) {
-    logger.error("Error during the product data fetch", { error: error });
+      return fetch(urlToFetch, {
+        body: JSON.stringify({
+          authData,
+          channelSettings: channelSettings,
+        }),
+        headers: {
+          ContentType: "application/json",
+          authorization: process.env.REQUEST_SECRET as string,
+        },
+        method: "POST",
+      }).then((r) => r.json());
+    }),
+  );
 
-    return res.status(400).end();
-  }
+  const chunks = await Promise.all(
+    xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.text())),
+  );
 
-  logger.debug("Product data fetched. Generating the output");
+  const mergedChunks = chunks.join("\n");
 
-  const xmlContent = generateGoogleXmlFeed({
-    shopDescription,
-    shopName,
+  const xmlBuilder = new FeedXmlBuilder();
+
+  const channelData = shopDetailsToProxy({
+    title: shopName,
+    description: shopDescription,
     storefrontUrl,
-    productStorefrontUrl,
-    productVariants,
-    attributeMapping,
-    titleTemplate,
   });
 
-  logger.info("Generated XML size", {
-    size: xmlContent.length,
+  const rootXml = xmlBuilder.buildRootXml({
+    channelData,
   });
 
-  if (!bucketConfiguration) {
-    logger.info("Bucket configuration not found, returning feed directly");
-
-    res.setHeader("Content-Type", "text/xml");
-    res.setHeader("Cache-Control", `s-maxage=${FEED_CACHE_MAX_AGE}`);
-    res.write(xmlContent);
-    res.end();
-
-    return;
-  }
+  const rootXmlWithProducts = xmlBuilder.injectProductsString(rootXml, mergedChunks);
 
   logger.info("Bucket configuration found, uploading the feed to S3");
-  const s3Client = createS3ClientFromConfiguration(bucketConfiguration);
+  const s3Client = createS3ClientFromConfiguration(channelSettings.s3BucketConfiguration);
   const fileName = getFileName({
     saleorApiUrl: authData.saleorApiUrl,
     channel,
@@ -261,19 +259,20 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       await uploadFile({
         s3Client,
         bucketName: bucketConfiguration!.bucketName,
-        buffer: Buffer.from(xmlContent),
+        buffer: Buffer.from(rootXmlWithProducts),
         fileName,
       });
 
-      const downloadUrl = getDownloadUrl({
-        s3BucketConfiguration: bucketConfiguration!,
-        saleorApiUrl: authData.saleorApiUrl,
-        channel,
+      const command = new GetObjectCommand({
+        Bucket: bucketConfiguration!.bucketName,
+        Key: fileName,
       });
 
-      logger.info("Feed uploaded to S3, redirecting the download URL", {
-        downloadUrl,
+      const downloadUrl = await getSignedUrl(s3Client, command, {
+        expiresIn: 30,
       });
+
+      logger.info("Feed uploaded to S3, redirecting the download URL");
 
       return res.redirect(downloadUrl);
     } catch (error) {
