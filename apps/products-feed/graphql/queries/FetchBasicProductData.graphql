@@ -1,4 +1,4 @@
-query FetchBasicProductData($first: Int!, $after: String, $channel: String!) {
+query FetchProductVariantsData($first: Int!, $after: String, $channel: String!) {
   productVariants(
     first: $first
     after: $after
@@ -12,6 +12,7 @@ query FetchBasicProductData($first: Int!, $after: String, $channel: String!) {
     edges {
       node {
         ...BasicProductData
+        ...ProductAttributes
       }
     }
   }

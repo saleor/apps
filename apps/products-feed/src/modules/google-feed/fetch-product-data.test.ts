@@ -8,6 +8,7 @@ describe("getCursors", () => {
     const mockCursorResponse = vi.fn();
 
     const mockClient: Pick<Client, "query"> = {
+      // @ts-expect-error - For testing I dont pass generic values
       query() {
         return {
           toPromise: mockCursorResponse,
