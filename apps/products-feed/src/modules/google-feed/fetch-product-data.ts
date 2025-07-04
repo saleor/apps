@@ -22,7 +22,7 @@ const fetchCursorRecursive = async (params: {
   cursors: string[];
   hasNext: boolean;
   after: string;
-  client: Client;
+  client: Pick<Client, "query">;
   channel: string;
 }) => {
   if (!params.hasNext) {
@@ -46,7 +46,13 @@ const fetchCursorRecursive = async (params: {
   });
 };
 
-export const getCursors = async ({ client, channel }: { client: Client; channel: string }) => {
+export const getCursors = async ({
+  client,
+  channel,
+}: {
+  client: Pick<Client, "query">;
+  channel: string;
+}) => {
   const logger = createLogger("getCursors");
 
   logger.debug(`Fetching product cursors for channel ${channel}`);
