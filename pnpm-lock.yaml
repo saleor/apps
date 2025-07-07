@@ -1108,6 +1108,9 @@ importers:
       typescript:
         specifier: 5.8.2
         version: 5.8.2
+      vite-tsconfig-paths:
+        specifier: 5.1.4
+        version: 5.1.4(typescript@5.8.2)(vite@6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
 
   apps/search:
     dependencies:

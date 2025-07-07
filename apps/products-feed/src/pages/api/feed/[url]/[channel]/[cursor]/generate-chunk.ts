@@ -1,18 +1,16 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { NextApiHandler } from "next";
 
-import { createInstrumentedGraphqlClient } from "../../../../../../lib/create-instrumented-graphql-client";
-import { createLogger } from "../../../../../../logger";
-import { createS3ClientFromConfiguration } from "../../../../../../modules/file-storage/s3/create-s3-client-from-configuration";
-import { uploadFile } from "../../../../../../modules/file-storage/s3/upload-file";
-import {
-  getChunkDownloadUrl,
-  getChunkFileName,
-} from "../../../../../../modules/file-storage/s3/urls-and-names";
-import { FeedXmlBuilder } from "../../../../../../modules/google-feed/feed-xml-builder";
-import { fetchVariants } from "../../../../../../modules/google-feed/fetch-product-data";
-import { GoogleFeedSettingsFetcher } from "../../../../../../modules/google-feed/get-google-feed-settings";
-import { productVariantToProxy } from "../../../../../../modules/google-feed/product-variant-to-proxy";
+import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
+import { createLogger } from "@/logger";
+import { chunkFeedUrlParams } from "@/modules/feed-dto";
+import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
+import { uploadFile } from "@/modules/file-storage/s3/upload-file";
+import { getChunkDownloadUrl, getChunkFileName } from "@/modules/file-storage/s3/urls-and-names";
+import { FeedXmlBuilder } from "@/modules/google-feed/feed-xml-builder";
+import { fetchVariants } from "@/modules/google-feed/fetch-product-data";
+import { GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
+import { productVariantToProxy } from "@/modules/google-feed/product-variant-to-proxy";
 
 type ConfiguredChannelSettings = Awaited<
   ReturnType<typeof GoogleFeedSettingsFetcher.prototype.fetch>
@@ -30,17 +28,19 @@ const handler: NextApiHandler = async (req, res) => {
 
   const params = req.query;
   const parsedBody = JSON.parse(req.body);
+
+  // TODO: Validate with ZOD
   const { authData, channelSettings } = parsedBody as {
     authData: AuthData;
     channelSettings: ConfiguredChannelSettings;
   };
-  const { cursor, channel, url } = params as { cursor: string; channel: string; url: string };
+  const { cursor, channel } = chunkFeedUrlParams.parse(params);
 
   const decodedCursor = decodeURIComponent(cursor);
 
   logger.info("Generate chunk of products", {
     cursor: decodedCursor,
-    channel,
+    channel: channel,
     saleorApiUrl: authData.saleorApiUrl,
   });
 

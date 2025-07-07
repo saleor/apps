@@ -82,7 +82,8 @@
     "eslint": "catalog:",
     "graphql-config": "5.0.3",
     "tsx": "4.19.3",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "vite-tsconfig-paths": "5.1.4"
   },
   "saleor": {
     "schemaVersion": "3.10"

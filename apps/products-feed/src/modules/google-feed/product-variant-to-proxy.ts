@@ -1,5 +1,6 @@
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared/editor-js-plaintext-renderer";
 
+import { RootConfig } from "../app-configuration/app-config";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
 import { transformTemplateFormat } from "../handlebarsTemplates/transform-template-format";
 import { getMappedAttributes } from "./attribute-mapping";
@@ -18,7 +19,7 @@ export const productVariantToProxy = ({
   variant: ProductVariant;
   titleTemplate: string;
   productStorefrontUrl: string;
-  attributeMapping: any; //todo
+  attributeMapping: RootConfig["attributeMapping"];
 }) => {
   const attributes = getMappedAttributes({
     attributeMapping: attributeMapping,
