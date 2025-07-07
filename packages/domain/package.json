@@ -3,7 +3,10 @@
   "version": "1.12.3",
   "type": "module",
   "exports": {
-    "./*": "./public/*"
+    "./saleor-api-url": {
+      "import": "./public/saleor-api-url.ts",
+      "types": "./public/saleor-api-url.ts"
+    }
   },
   "scripts": {
     "check-types": "tsc",

@@ -740,6 +740,9 @@ importers:
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
+      '@saleor/apps-domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
       '@saleor/apps-logger':
         specifier: workspace:*
         version: link:../../packages/logger
