@@ -1,0 +1,32 @@
+{
+  "name": "@saleor/apps-domain",
+  "version": "1.12.3",
+  "type": "module",
+  "exports": {
+    "./*": "./public/*"
+  },
+  "scripts": {
+    "check-types": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
+  },
+  "dependencies": {
+    "eslint": "catalog:"
+  },
+  "devDependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@vitest/coverage-v8": "3.1.1",
+    "typescript": "5.8.2",
+    "vite": "6.2.4",
+    "vitest": "3.1.1",
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "@saleor/app-sdk": "catalog:",
+    "zod": "catalog:"
+  }
+}
