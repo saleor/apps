@@ -93,7 +93,7 @@ const handler: NextApiHandler = async (req, res) => {
     cursor: decodedCursor,
   });
 
-  return res.status(200).send({ downloadUrl });
+  return res.status(200).send({ downloadUrl, fileName });
 };
 
 export default handler;

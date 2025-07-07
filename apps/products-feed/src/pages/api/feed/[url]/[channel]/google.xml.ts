@@ -8,6 +8,8 @@ import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 
+import { FileRemover } from "@/modules/file-storage/s3/file-remover";
+
 import { appRootTracer } from "../../../../../lib/app-root-tracer";
 import { createInstrumentedGraphqlClient } from "../../../../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../../../../logger";
@@ -229,6 +231,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.text())),
   );
 
+  const chunkFileNames = await Promise.all(
+    xmlUrlResponses.map((resp) => fetch(resp.fileName).then((r) => r.text())),
+  );
+
   const mergedChunks = chunks.join("\n");
 
   const xmlBuilder = new FeedXmlBuilder();
@@ -274,6 +280,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       logger.info("Feed uploaded to S3, redirecting the download URL");
+
+      const fileRemover = new FileRemover(s3Client);
+
+      await fileRemover.removeFilesBulk(chunkFileNames, bucketConfiguration!.bucketName);
 
       return res.redirect(downloadUrl);
     } catch (error) {
