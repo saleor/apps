@@ -20,6 +20,8 @@
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@vitest/coverage-v8": "3.1.1",
+    "modern-errors": "7.0.1",
+    "modern-errors-serialize": "6.1.0",
     "typescript": "5.8.2",
     "vite": "6.2.4",
     "vitest": "3.1.1",
@@ -27,6 +29,8 @@
   },
   "peerDependencies": {
     "@saleor/app-sdk": "catalog:",
+    "modern-errors": "7.0.1",
+    "modern-errors-serialize": "6.1.0",
     "zod": "catalog:"
   }
 }
