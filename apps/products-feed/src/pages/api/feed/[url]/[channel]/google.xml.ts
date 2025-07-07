@@ -231,9 +231,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.text())),
   );
 
-  const chunkFileNames = await Promise.all(
-    xmlUrlResponses.map((resp) => fetch(resp.fileName).then((r) => r.text())),
-  );
+  const chunkFileNames = await Promise.all(xmlUrlResponses.map((res) => res.fileName));
 
   const mergedChunks = chunks.join("\n");
 
