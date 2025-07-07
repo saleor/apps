@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-domain",
-  "version": "1.12.3",
+  "version": "0.0.0",
   "type": "module",
   "exports": {
     "./saleor-api-url": {
