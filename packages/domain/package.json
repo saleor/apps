@@ -1,16 +1,13 @@
 {
-  "name": "@saleor/apps-logger",
-  "version": "1.6.0",
+  "name": "@saleor/apps-domain",
+  "version": "0.0.0",
   "type": "module",
   "exports": {
-    ".": {
-      "default": "./index.ts"
-    },
-    "./node": {
-      "default": "./node.ts"
+    "./saleor-api-url": {
+      "import": "./src/saleor-api-url.ts",
+      "types": "./src/saleor-api-url.ts"
     }
   },
-  "main": "index.ts",
   "scripts": {
     "check-types": "tsc",
     "lint": "eslint .",
@@ -19,28 +16,24 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "@saleor/apps-otel": "workspace:*",
-    "modern-errors": "catalog:",
-    "modern-errors-serialize": "catalog:",
-    "tslog": "4.9.2"
+    "eslint": "catalog:"
   },
   "devDependencies": {
-    "@opentelemetry/api": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@sentry/nextjs": "catalog:",
     "@vitest/coverage-v8": "3.1.1",
-    "eslint": "catalog:",
-    "next": "catalog:",
+    "modern-errors": "catalog:",
+    "modern-errors-serialize": "catalog:",
     "typescript": "5.8.2",
     "vite": "6.2.4",
-    "vitest": "3.1.1"
+    "vitest": "3.1.1",
+    "zod": "catalog:"
   },
   "peerDependencies": {
-    "@opentelemetry/api": "catalog:",
     "@saleor/app-sdk": "catalog:",
-    "@sentry/nextjs": "catalog:",
-    "next": "catalog:"
+    "modern-errors": "catalog:",
+    "modern-errors-serialize": "catalog:",
+    "zod": "catalog:"
   }
 }

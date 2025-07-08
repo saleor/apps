@@ -1,14 +1,10 @@
-import { fromThrowable } from "neverthrow";
 import { z } from "zod";
 
-import { BaseError } from "@/lib/errors";
+import { BaseError } from "./base-error";
 
-/**
- * @deprecated use @saleor/domain
- */
 export const SaleorApiUrlValidationError = BaseError.subclass("SaleorApiUrlValidationError", {
   props: {
-    _internalName: "SaleorApiUrl.ValidationError" as const,
+    _brand: "SaleorApiUrl.ValidationError" as const,
   },
 });
 
@@ -21,15 +17,14 @@ const saleorApiUrlSchema = z
   })
   .brand("SaleorApiUrl");
 
-/**
- * @deprecated use @saleor/domain
- */
-export const createSaleorApiUrl = (raw: string) =>
-  fromThrowable(saleorApiUrlSchema.parse, (error) => SaleorApiUrlValidationError.normalize(error))(
-    raw,
-  );
+export const createSaleorApiUrl = (raw: string) => {
+  try {
+    return saleorApiUrlSchema.parse(raw);
+  } catch (e) {
+    throw new SaleorApiUrlValidationError("SaleorApiUrl is invalid", {
+      cause: e,
+    });
+  }
+};
 
-/**
- * @deprecated use @saleor/domain
- */
 export type SaleorApiUrl = z.infer<typeof saleorApiUrlSchema>;
