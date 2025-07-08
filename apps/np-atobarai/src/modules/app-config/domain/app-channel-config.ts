@@ -1,4 +1,5 @@
-import { ok, Result } from "neverthrow";
+import { err, ok, Result } from "neverthrow";
+import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
 
@@ -13,6 +14,19 @@ type RawProps = {
   readonly spCode: string;
   readonly terminalId: string;
 };
+
+// todo export subset of schema for public validation in frontend
+const schema = z.object({
+  fillMissingAddress: z.boolean(),
+  id: z.string(),
+  merchantCode: z.string(),
+  name: z.string(),
+  shippingCompanyCode: z.string(),
+  skuAsName: z.boolean(),
+  spCode: z.string(),
+  terminalId: z.string(),
+  useSandbox: z.boolean(),
+});
 
 export class AppChannelConfig implements RawProps {
   readonly name: string;
@@ -43,11 +57,20 @@ export class AppChannelConfig implements RawProps {
     this.skuAsName = props.skuAsName;
   }
 
-  static validate(
+  private static validate(
     props: RawProps,
   ): Result<null, InstanceType<typeof AppChannelConfig.ValidationError>> {
-    // todo validate
-    return ok(null);
+    try {
+      schema.parse(props);
+
+      return ok(null);
+    } catch (e) {
+      return err(
+        new AppChannelConfig.ValidationError("Failed to build config", {
+          cause: e,
+        }),
+      );
+    }
   }
 
   static create(

@@ -1,9 +1,10 @@
+import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { Entity, schema, string } from "dynamodb-toolbox";
 
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 
 class AccessPattern {
-  static getPK({ saleorApiUrl, appId }: { saleorApiUrl: string /*todo*/; appId: string }) {
+  static getPK({ saleorApiUrl, appId }: { saleorApiUrl: SaleorApiUrl; appId: string }) {
     return DynamoMainTable.getPrimaryKeyScopedToInstallation({ saleorApiUrl, appId });
   }
 

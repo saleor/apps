@@ -1,3 +1,4 @@
+import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
@@ -6,7 +7,7 @@ import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
 import { AppChannelConfig } from "../domain/app-channel-config";
 
 export type BaseAccessPattern = {
-  saleorApiUrl: string; // todo VO
+  saleorApiUrl: SaleorApiUrl;
   appId: string;
 };
 
@@ -49,7 +50,7 @@ export const AppConfigRepoError = {
 export interface AppConfigRepo {
   saveChannelConfig: (args: {
     config: AppChannelConfig;
-    saleorApiUrl: string; //todo
+    saleorApiUrl: SaleorApiUrl;
     appId: string;
   }) => Promise<Result<null | void, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>>;
   getChannelConfig: (
