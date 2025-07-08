@@ -1,5 +1,7 @@
 import { DeleteItemCommand, GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
+import { EntityRepository } from "dynamodb-toolbox/entity/actions/repository";
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
+import { TableRepository } from "dynamodb-toolbox/table/actions/repository";
 import { err, ok, Result } from "neverthrow";
 
 import { Encryptor } from "@/lib/encryptor";
@@ -16,21 +18,17 @@ import {
   GetChannelConfigAccessPattern,
 } from "@/modules/app-config/repositories/app-config-repo";
 import {
+  DynamoDbAppConfig,
+  DynamoDbAppConfigEntity,
+} from "@/modules/app-config/repositories/dynamodb/app-config-db-model";
+import {
   DynamoDbChannelConfigMapping,
   DynamoDbChannelConfigMappingEntity,
 } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
-import {
-  DynamoDbStripeConfig,
-  DynamoDbStripeConfigEntity,
-} from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
-import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
-import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
 type ConstructorParams = {
   entities: {
-    stripeConfig: DynamoDbStripeConfigEntity;
+    appConfig: DynamoDbAppConfigEntity;
     channelConfigMapping: DynamoDbChannelConfigMappingEntity;
   };
   encryptor: Encryptor;
@@ -40,21 +38,21 @@ type ConstructorParams = {
 export class DynamodbAppConfigRepo implements AppConfigRepo {
   private logger = createLogger("DynamodbAppConfigRepo");
 
-  stripeConfigEntity: DynamoDbStripeConfigEntity;
+  channelConfigEntity: DynamoDbAppConfigEntity;
   channelConfigMappingEntity: DynamoDbChannelConfigMappingEntity;
   encryptor: Encryptor;
 
   constructor(
     config: ConstructorParams = {
       entities: {
-        stripeConfig: DynamoDbStripeConfig.entity,
+        appConfig: DynamoDbAppConfig.entity,
         channelConfigMapping: DynamoDbChannelConfigMapping.entity,
       },
       encryptor: new Encryptor(),
     },
   ) {
     this.channelConfigMappingEntity = config.entities.channelConfigMapping;
-    this.stripeConfigEntity = config.entities.stripeConfig;
+    this.channelConfigEntity = config.entities.appConfig;
     this.encryptor = config.encryptor;
   }
 
@@ -65,9 +63,14 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
   async getRootConfig(
     access: BaseAccessPattern,
   ): Promise<Result<AppRootConfig, InstanceType<typeof BaseError>>> {
-    const allConfigsQuery = this.stripeConfigEntity.table
+    const channelConfigToolboxRepo = this.channelConfigEntity.build(EntityRepository);
+    const channelConfigMappingToolboxRepo = this.channelConfigMappingEntity.build(EntityRepository);
+
+    const allConfigs = channelConfigToolboxRepo.batchGet();
+
+    const allConfigsQuery = this.channelConfigEntity.table
       .build(QueryCommand)
-      .entities(this.stripeConfigEntity)
+      .entities(this.channelConfigEntity)
       .query({
         range: {
           beginsWith: DynamoDbStripeConfig.accessPattern.getSKforAllItems(),
@@ -145,7 +148,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
   }
 
   private fetchStripeConfigByItsId(access: ConfigByConfigIdAccessPattern) {
-    const query = this.stripeConfigEntity.build(GetItemCommand).key({
+    const query = this.channelConfigEntity.build(GetItemCommand).key({
       PK: DynamoDbStripeConfig.accessPattern.getPK(access),
       SK: DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({
         configId: access.configId,
@@ -272,7 +275,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
     appId: string;
   }): Promise<Result<void | null, InstanceType<typeof AppConfigRepoError.FailureSavingConfig>>> {
     try {
-      const command = this.stripeConfigEntity.build(PutItemCommand).item({
+      const command = this.channelConfigEntity.build(PutItemCommand).item({
         configId: config.id,
         stripePk: config.publishableKey,
         stripeRk: this.encryptor.encrypt(config.restrictedKey),
@@ -348,7 +351,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
     },
   ): Promise<Result<null, InstanceType<typeof AppConfigRepoError.FailureRemovingConfig>>> {
     try {
-      const operation = this.stripeConfigEntity.build(DeleteItemCommand).key({
+      const operation = this.channelConfigEntity.build(DeleteItemCommand).key({
         PK: DynamoDbStripeConfig.accessPattern.getPK(access),
         SK: DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({
           configId: data.configId,
