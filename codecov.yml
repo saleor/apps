@@ -28,7 +28,8 @@ coverage:
         flags: [shared]
       packages-webhook-utils:
         flags: [webhook-utils]
-
+      packages-domain:
+        flags: [domain]
 ignore:
   - "**/scripts/**"
   - "**/e2e/**"
@@ -71,3 +72,6 @@ flags:
   webhook-utils:
     paths:
       - packages/webhook-utils/
+  domain:
+    paths:
+      - packages/domain/

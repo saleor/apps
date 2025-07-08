@@ -143,3 +143,11 @@ jobs:
           flags: webhook-utils
           files: packages/webhook-utils/coverage/coverage-final.json,packages/webhook-utils/coverage/clover.xml
           disable_search: true
+      - name: Upload coverage for domain
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: domain
+          files: packages/domain/coverage/coverage-final.json,packages/domain/coverage/clover.xml
+          disable_search: true
