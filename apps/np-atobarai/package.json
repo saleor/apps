@@ -27,6 +27,7 @@
     }
   },
   "dependencies": {
+    "@aws-sdk/lib-dynamodb": "3.651.1",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/api-logs": "catalog:",
     "@opentelemetry/instrumentation": "catalog:",
@@ -52,6 +53,8 @@
     "@vercel/otel": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
+    "dynamodb-toolbox": "1.8.2",
+    "neverthrow": "6.2.1",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
