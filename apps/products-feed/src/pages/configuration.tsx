@@ -143,7 +143,7 @@ const ConfigurationPage: NextPage = () => {
             </ul>
             <Paragraph size={3}>For example following pattern:</Paragraph>
             <Paragraph size={3}>
-              <code>{"https://my-shop.com/p/{{ variant.product.slug}/{{ variant.id }}"}</code>
+              <code>{"https://my-shop.com/p/{{ variant.product.slug}}/{{ variant.id }}"}</code>
             </Paragraph>
             <Paragraph size={3}>Will produce:</Paragraph>
             <Paragraph size={3}>
