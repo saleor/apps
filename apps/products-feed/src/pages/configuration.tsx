@@ -82,13 +82,17 @@ const ConfigurationPage: NextPage = () => {
             <Paragraph size={4}>
               Required permissions:
               <ul>
-                {["s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:GetObjectAttributes"].map(
-                  (perm) => (
-                    <li key={perm}>
-                      - <code>{perm}</code>
-                    </li>
-                  ),
-                )}
+                {[
+                  "s3:GetObject",
+                  "s3:PutObject",
+                  "s3:DeleteObject",
+                  "s3:GetObjectAttributes",
+                  "s3:ListBucket",
+                ].map((perm) => (
+                  <li key={perm}>
+                    - <code>{perm}</code>
+                  </li>
+                ))}
               </ul>
             </Paragraph>
           </Box>
