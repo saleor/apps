@@ -10,8 +10,8 @@ export const BaseError = ModernError.subclass("BaseError", {
     /**
      * Add _internalName to force nominal typing
      */
-    _internalName: "change_me",
+    _brand: "change_me",
   } satisfies {
-    _internalName: string;
+    _brand: string;
   },
 });

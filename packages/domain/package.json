@@ -4,8 +4,8 @@
   "type": "module",
   "exports": {
     "./saleor-api-url": {
-      "import": "./public/saleor-api-url.ts",
-      "types": "./public/saleor-api-url.ts"
+      "import": "./src/saleor-api-url.ts",
+      "types": "./src/saleor-api-url.ts"
     }
   },
   "scripts": {

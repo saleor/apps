@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { BaseError } from "../src/base-error";
+import { BaseError } from "./base-error";
 
 export const SaleorApiUrlValidationError = BaseError.subclass("SaleorApiUrlValidationError", {
   props: {
-    _internalName: "SaleorApiUrl.ValidationError" as const,
+    _brand: "SaleorApiUrl.ValidationError" as const,
   },
 });
 
