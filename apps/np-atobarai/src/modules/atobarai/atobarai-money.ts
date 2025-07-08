@@ -1,9 +1,12 @@
-export class AtobaraiMoney {
-  public readonly amount: number;
-  public readonly currency: string;
+import { z } from "zod";
 
-  constructor(amount: number, currency: string) {
-    this.amount = amount;
-    this.currency = currency;
-  }
-}
+const schema = z
+  .object({
+    amount: z.number().int().positive(),
+    currency: z.literal("JPY"),
+  })
+  .brand("AtobaraiMoney");
+
+export const createAtobaraiMoney = (raw: { amount: number; currency: string }) => schema.parse(raw);
+
+export type AtobaraiMoney = z.infer<typeof schema>;

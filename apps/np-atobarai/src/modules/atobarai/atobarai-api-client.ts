@@ -10,31 +10,46 @@ import { AtobaraiTransaction } from "./atobarai-transaction";
 import {
   AtobaraiApiClientRegisterTransactionError,
   AtobaraiApiErrors,
+  AtobaraiEnviroment,
   IAtobaraiApiClient,
 } from "./types";
 
 export class AtobaraiApiClient implements IAtobaraiApiClient {
   private atobaraiTerminalId: AtobaraiTerminalId;
   private atobaraiMerchantCode: AtobaraiMerchantCode;
-  private atobaraiSPCode: AtobaraiSpCode;
-  private atobaraiEnviroment: "sandbox" | "production";
+  private atobaraiSpCode: AtobaraiSpCode;
+  private atobaraiEnviroment: AtobaraiEnviroment;
 
   private constructor(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
-    atobaraiSPCode: AtobaraiSpCode;
-    atobaraiEnviroment: "sandbox" | "production";
+    atobaraiSpCode: AtobaraiSpCode;
+    atobaraiEnviroment: AtobaraiEnviroment;
   }) {
     this.atobaraiTerminalId = args.atobaraiTerminalId;
     this.atobaraiMerchantCode = args.atobaraiMerchantCode;
-    this.atobaraiSPCode = args.atobaraiSPCode;
+    this.atobaraiSpCode = args.atobaraiSpCode;
     this.atobaraiEnviroment = args.atobaraiEnviroment;
+  }
+
+  static create(args: {
+    atobaraiTerminalId: AtobaraiTerminalId;
+    atobaraiMerchantCode: AtobaraiMerchantCode;
+    atobaraiSpCode: AtobaraiSpCode;
+    atobaraiEnviroment: AtobaraiEnviroment;
+  }): IAtobaraiApiClient {
+    return new AtobaraiApiClient({
+      atobaraiTerminalId: args.atobaraiTerminalId,
+      atobaraiMerchantCode: args.atobaraiMerchantCode,
+      atobaraiSpCode: args.atobaraiSpCode,
+      atobaraiEnviroment: args.atobaraiEnviroment,
+    });
   }
 
   private getHeaders(): HeadersInit {
     return {
       "X-NP-Terminal-Id": this.atobaraiTerminalId,
-      Authorization: `Basic ${btoa(`${this.atobaraiMerchantCode}:${this.atobaraiSPCode}`)}`,
+      Authorization: `Basic ${btoa(`${this.atobaraiMerchantCode}:${this.atobaraiSpCode}`)}`,
     };
   }
 
