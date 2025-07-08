@@ -725,6 +725,9 @@ importers:
 
   apps/np-atobarai:
     dependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 3.651.1
+        version: 3.651.1
       '@aws-sdk/lib-dynamodb':
         specifier: 3.651.1
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
@@ -14425,7 +14428,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.11.0)
       globby: 11.1.0
       graphql: 16.11.0
-      tslib: 2.6.2
+      tslib: 2.8.1
       unixify: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -14436,7 +14439,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       globby: 11.1.0
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
       unixify: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -14594,7 +14597,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.11.0)
       globby: 11.1.0
       graphql: 16.11.0
-      tslib: 2.6.2
+      tslib: 2.8.1
       unixify: 1.0.0
 
   '@graphql-tools/graphql-file-loader@8.0.0(graphql@16.7.1)':
@@ -14603,7 +14606,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       globby: 11.1.0
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
       unixify: 1.0.0
 
   '@graphql-tools/graphql-tag-pluck@8.3.0(graphql@16.11.0)':
@@ -14677,7 +14680,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.11.0)
       globby: 11.1.0
       graphql: 16.11.0
-      tslib: 2.6.2
+      tslib: 2.8.1
       unixify: 1.0.0
 
   '@graphql-tools/json-file-loader@8.0.0(graphql@16.7.1)':
@@ -14685,7 +14688,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       globby: 11.1.0
       graphql: 16.7.1
-      tslib: 2.6.2
+      tslib: 2.8.1
       unixify: 1.0.0
 
   '@graphql-tools/load@8.0.1(graphql@16.11.0)':
@@ -14694,7 +14697,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.11.0)
       graphql: 16.11.0
       p-limit: 3.1.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/load@8.0.1(graphql@16.7.1)':
     dependencies:
@@ -14702,7 +14705,7 @@ snapshots:
       '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
       graphql: 16.7.1
       p-limit: 3.1.0
-      tslib: 2.6.2
+      tslib: 2.8.1
 
   '@graphql-tools/merge@9.0.2(graphql@16.11.0)':
     dependencies:
@@ -14803,7 +14806,7 @@ snapshots:
       '@whatwg-node/fetch': 0.9.16
       graphql: 16.11.0
       isomorphic-ws: 5.0.0(ws@8.16.0)
-      tslib: 2.6.2
+      tslib: 2.8.1
       value-or-promise: 1.0.12
       ws: 8.16.0
     transitivePeerDependencies:
@@ -14825,7 +14828,7 @@ snapshots:
       '@whatwg-node/fetch': 0.9.16
       graphql: 16.7.1
       isomorphic-ws: 5.0.0(ws@8.16.0)
-      tslib: 2.6.2
+      tslib: 2.8.1
       value-or-promise: 1.0.12
       ws: 8.16.0
     transitivePeerDependencies:
