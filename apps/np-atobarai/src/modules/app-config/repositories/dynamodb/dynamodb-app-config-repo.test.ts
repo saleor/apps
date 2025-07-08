@@ -47,7 +47,7 @@ describe("DynamodbAppConfigRepo", () => {
 
     repo = new DynamodbAppConfigRepo({
       entities: {
-        stripeConfig: stripeConfigEntity,
+        appConfig: stripeConfigEntity,
         channelConfigMapping: channelMappingEntity,
       },
       encryptor: mockEncryptor,
