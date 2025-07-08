@@ -29,6 +29,7 @@ export const env = createEnv({
     SECRET_KEY: z.string(),
     VERCEL_ENV: z.string().optional(),
     VERCEL_GIT_COMMIT_SHA: z.string().optional(),
+    DYNAMODB_MAIN_TABLE_NAME: z.string(),
     APP_NAME: z.string().optional().default("NP Atobarai"),
   },
   shared: {
@@ -55,6 +56,7 @@ export const env = createEnv({
     VERCEL_ENV: process.env.VERCEL_ENV,
     VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
     APP_NAME: process.env.APP_NAME,
+    DYNAMODB_MAIN_TABLE_NAME: process.env.DYNAMODB_MAIN_TABLE_NAME,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
   onValidationError(issues) {
