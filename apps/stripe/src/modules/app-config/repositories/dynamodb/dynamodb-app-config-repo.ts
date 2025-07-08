@@ -1,8 +1,8 @@
+import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { DeleteItemCommand, GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
 import { err, ok, Result } from "neverthrow";
 
-import { Encryptor } from "@/lib/encryptor";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";

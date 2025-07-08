@@ -1,3 +1,4 @@
+import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -6,7 +7,6 @@ import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/cons
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as initializeSessionHandlers from "@/app/api/webhooks/saleor/transaction-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
-import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
 import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
 import { DynamoAPLRepository } from "@/modules/apl/dynamo-apl-repository";

@@ -1,3 +1,4 @@
+import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { testApiHandler } from "next-test-api-route-handler";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -9,7 +10,6 @@ import {
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as stripeWebhookHandlers from "@/app/api/webhooks/stripe/route";
 import { WebhookParams } from "@/app/api/webhooks/stripe/webhook-params";
-import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
 import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
 import { DynamoAPLRepository } from "@/modules/apl/dynamo-apl-repository";

@@ -1,3 +1,4 @@
+import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -8,7 +9,6 @@ import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restr
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as paymentGatewayInitializeSessionHandlers from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
-import { Encryptor } from "@/lib/encryptor";
 import { RandomId } from "@/lib/random-id";
 import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
 import { DynamoAPLRepository } from "@/modules/apl/dynamo-apl-repository";
