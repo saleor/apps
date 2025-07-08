@@ -5,8 +5,9 @@ import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graph
 import { createLogger } from "@/logger";
 import { chunkFeedUrlParams } from "@/modules/feed-dto";
 import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
+import { getChunkFileName } from "@/modules/file-storage/s3/file-names";
+import { SignedUrls } from "@/modules/file-storage/s3/signed-urls";
 import { uploadFile } from "@/modules/file-storage/s3/upload-file";
-import { getChunkDownloadUrl, getChunkFileName } from "@/modules/file-storage/s3/urls-and-names";
 import { FeedXmlBuilder } from "@/modules/google-feed/feed-xml-builder";
 import { fetchVariants } from "@/modules/google-feed/fetch-product-data";
 import { GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
@@ -85,12 +86,10 @@ const handler: NextApiHandler = async (req, res) => {
     fileName,
   });
 
-  // TODO This is private and created by the same user, but maybe we should also use signed url
-  const downloadUrl = getChunkDownloadUrl({
-    s3BucketConfiguration: channelSettings.s3BucketConfiguration,
-    saleorApiUrl: authData.saleorApiUrl,
-    channel,
-    cursor: decodedCursor,
+  const downloadUrl = await new SignedUrls(s3Client).generateSignedGetObjectUrl({
+    expiresSeconds: 30,
+    fileName,
+    bucket: channelSettings.s3BucketConfiguration.bucketName,
   });
 
   return res.status(200).send({ downloadUrl, fileName });
