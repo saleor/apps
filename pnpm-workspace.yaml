@@ -37,3 +37,6 @@ catalog:
   "@trpc/next": 10.43.1
   "@trpc/server": 10.43.1
   "@trpc/react-query": 10.43.1
+  "modern-errors": 7.0.1
+  "modern-errors-serialize": 6.1.0
+  "neverthrow": 6.2.1
