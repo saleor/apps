@@ -1,5 +1,12 @@
 # saleor-app-segment
 
+## 2.1.11
+
+### Patch Changes
+
+- Updated dependencies [00070dc3]
+  - @saleor/apps-shared@1.13.0
+
 ## 2.1.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.13.0
+
+### Minor Changes
+
+- 00070dc3: Add Encryptor from Stripe
+
 ## 1.12.3
 
 ### Patch Changes
