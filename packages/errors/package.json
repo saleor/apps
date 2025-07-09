@@ -18,7 +18,9 @@
     "@saleor/typescript-config-apps": "workspace:*",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "vite": "6.2.4",
+    "vitest": "3.1.1"
   },
   "peerDependencies": {
     "modern-errors": "catalog:",
