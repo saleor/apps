@@ -1,5 +1,15 @@
 # saleor-app-payment-stripe
 
+## 2.0.5
+
+### Patch Changes
+
+- 00070dc3: Move Encryptor to @saleor/apps-shared
+- c9d8b68c: Move generated types from JSON schema to `generated/app-webhooks-types` folder.
+- Updated dependencies [00070dc3]
+  - @saleor/apps-shared@1.13.0
+  - @saleor/apps-trpc@4.0.3
+
 ## 2.0.4
 
 ### Patch Changes
