@@ -1,8 +1,8 @@
 {
-  "name": "@saleor/apl-dynamodb",
+  "name": "@saleor/apl-dynamo",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "check-types": "tsc",
     "lint": "eslint .",

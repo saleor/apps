@@ -26,7 +26,7 @@ describe("DynamoAPL", () => {
       },
     });
 
-    repository.setEntry({
+    await repository.setEntry({
       authData: mockedAuthData,
     });
 
@@ -131,11 +131,11 @@ describe("DynamoAPL", () => {
       },
     });
 
-    repository.setEntry({
+    await repository.setEntry({
       authData: mockedAuthData,
     });
 
-    apl.set({
+    await apl.set({
       saleorApiUrl: mockedAuthData.saleorApiUrl,
       token: mockedAuthData.token,
       appId: mockedAuthData.appId,
@@ -163,7 +163,7 @@ describe("DynamoAPL", () => {
       },
     });
 
-    repository.setEntry({
+    await repository.setEntry({
       authData: mockedAuthData,
     });
 
@@ -210,11 +210,11 @@ describe("DynamoAPL", () => {
       },
     });
 
-    repository.setEntry({
+    await repository.setEntry({
       authData: mockedAuthData,
     });
 
-    repository.setEntry({
+    await repository.setEntry({
       authData: secondEntry,
     });
 

@@ -1,8 +1,11 @@
 import { SpanStatusCode, Tracer } from "@opentelemetry/api";
 import { APL, AplConfiguredResult, AplReadyResult, AuthData } from "@saleor/app-sdk/APL";
+import { Logger } from "@saleor/apps-logger";
 import { BaseError } from "@saleor/errors";
 
+import { createAplEntity, UsedTable } from "./apl-db-model";
 import { APLRepository } from "./apl-repository";
+import { DynamoAPLRepository } from "./dynamo-apl-repository";
 
 type Envs = {
   APL_TABLE_NAME: string;
@@ -24,10 +27,21 @@ export class DynamoAPL implements APL {
 
   private env: Envs;
 
-  constructor(deps: { repository: APLRepository; tracer: Tracer; env: Envs }) {
-    this.repository = deps.repository;
+  static create(deps: { tracer: Tracer; env: Envs; logger: Logger; table: UsedTable }) {
+    return new DynamoAPL({
+      repository: new DynamoAPLRepository({
+        entity: createAplEntity(deps.table),
+        logger: deps.logger,
+      }),
+      tracer: deps.tracer,
+      env: deps.env,
+    });
+  }
+
+  constructor(deps: { tracer: Tracer; env: Envs; repository: APLRepository }) {
     this.tracer = deps.tracer;
     this.env = deps.env;
+    this.repository = deps.repository;
   }
 
   async get(saleorApiUrl: string): Promise<AuthData | undefined> {
