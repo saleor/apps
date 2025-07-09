@@ -52,7 +52,7 @@
     "@vercel/otel": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
-    "neverthrow": "6.2.1",
+    "neverthrow": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
