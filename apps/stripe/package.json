@@ -61,7 +61,7 @@
     "@vercel/otel": "catalog:",
     "currency-codes": "2.2.0",
     "currency.js": "2.0.4",
-    "dynamodb-toolbox": "1.8.2",
+    "dynamodb-toolbox": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
     "neverthrow": "catalog:",

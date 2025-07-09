@@ -1,5 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { DeleteItemCommand, GetItemCommand, PutItemCommand, ScanCommand } from "dynamodb-toolbox";
+import { Parser } from "dynamodb-toolbox/schema/actions/parse";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
@@ -53,6 +54,8 @@ export class DynamoAPLRepository implements APLRepository {
 
       return ok(null);
     }
+
+    const parsed = this.aplEntity.build(Parser).parse(getEntryResult.value.Item);
 
     const { appId, jwks, token, saleorApiUrl } = getEntryResult.value.Item;
 

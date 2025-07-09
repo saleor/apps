@@ -70,7 +70,7 @@ export class LogsTable extends Table<
   }
 }
 
-export const baseLogSchema = schema({
+export const baseLogSchema = item({
   PK: string().key(),
   // SK: sort key is added by adequate entity schema
   ulid: string()

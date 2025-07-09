@@ -40,3 +40,4 @@ catalog:
   "modern-errors": 7.0.1
   "modern-errors-serialize": 6.1.0
   "neverthrow": 6.2.1
+  "dynamodb-toolbox": 2.6.4
