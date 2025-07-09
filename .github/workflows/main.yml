@@ -119,6 +119,14 @@ jobs:
           flags: stripe
           files: apps/stripe/coverage/coverage-final.json,apps/stripe/coverage/clover.xml
           disable_search: true
+      - name: Upload coverage for np-atobarai
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: np-atobarai
+          files: apps/np-atobarai/coverage/coverage-final.json,apps/np-atobarai/coverage/clover.xml
+          disable_search: true
       - name: Upload coverage for logger
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:

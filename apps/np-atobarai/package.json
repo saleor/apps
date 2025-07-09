@@ -23,7 +23,7 @@
   },
   "config": {
     "saleor": {
-      "schemaVersion": "3.21"
+      "schemaVersion": "3.20"
     }
   },
   "dependencies": {
@@ -52,6 +52,7 @@
     "@vercel/otel": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
+    "neverthrow": "6.2.1",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
