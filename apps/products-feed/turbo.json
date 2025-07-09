@@ -14,7 +14,8 @@
         "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "REQUEST_SECRET"
       ]
     }
   }
