@@ -71,6 +71,7 @@ export default {
     "Dockerfiles",
     "Devcontainers",
     "whsec",
+    "Encryptor",
   ],
   language: "en-US",
   useGitignore: true,

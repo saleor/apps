@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Encryptor } from "@/lib/encryptor";
+import { Encryptor } from "./encryptor";
 
 describe("Encryptor", () => {
   it("Encrypts and decrypts a string", () => {
