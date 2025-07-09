@@ -37,15 +37,19 @@ export const checkBucketAccess = async ({ s3Client, bucketName }: checkBucketAcc
     Key: file,
   });
 
-  try {
-    await s3Client.send(putCommand);
+  await s3Client.send(putCommand).catch((e) => {
+    throw new Error("Failed to check access, verify PutObject permission", { cause: e });
+  });
 
-    await s3Client.send(getAttributes);
+  await s3Client.send(getAttributes).catch((e) => {
+    throw new Error("Failed to check access, verify GetObjectAttributes permission", { cause: e });
+  });
 
-    await s3Client.send(getCommand);
+  await s3Client.send(getCommand).catch((e) => {
+    throw new Error("Failed to check access, verify GetObject permission", { cause: e });
+  });
 
-    await s3Client.send(deleteCommand);
-  } catch (e) {
-    throw new Error("Can not verify bucket access");
-  }
+  await s3Client.send(deleteCommand).catch((e) => {
+    throw new Error("Failed to check access, verify DeleteObject permission", { cause: e });
+  });
 };

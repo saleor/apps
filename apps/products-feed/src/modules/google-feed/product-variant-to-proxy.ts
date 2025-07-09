@@ -38,7 +38,9 @@ export const productVariantToProxy = ({
       },
       template: titleTemplate,
     });
-  } catch {}
+  } catch (e) {
+    throw new Error("Failed to render variant template", { cause: e });
+  }
 
   let link = undefined;
 
@@ -56,20 +58,22 @@ export const productVariantToProxy = ({
       },
       template: transformTemplateFormat({ template: productStorefrontUrl }),
     });
-  } catch {}
+  } catch (e) {
+    throw new Error("Failed to render variant template", { cause: e });
+  }
 
   const weight = getWeightAttributeValue({
     isShippingRequired: variant.product.productType.isShippingRequired,
-    weight: variant.weight || undefined,
+    weight: variant.weight ?? undefined,
   });
 
   return productToProxy({
     link,
-    title: title || "",
+    title: title,
     id: variant.product.id,
     slug: variant.product.slug,
     variantId: variant.id,
-    sku: variant.sku || undefined,
+    sku: variant.sku ?? undefined,
     description: EditorJsPlaintextRenderer({ stringData: variant.product.description ?? "" }),
     availability:
       variant.quantityAvailable && variant.quantityAvailable > 0 ? "in_stock" : "out_of_stock",

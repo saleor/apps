@@ -3,6 +3,7 @@ query FetchProductCursors($first: Int!, $after: String, $channel: String!) {
     first: $first
     after: $after
     channel: $channel
+    # Sort is critical here, to ensure cursors work properly. Don't change it
     sortBy: { direction: ASC, field: LAST_MODIFIED_AT }
   ) {
     pageInfo {
