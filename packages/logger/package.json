@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@saleor/apps-otel": "workspace:*",
+    "@saleor/errors": "workspace:*",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
     "tslog": "4.9.2"

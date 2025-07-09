@@ -1,10 +1,15 @@
+import { SpanStatusCode, Tracer } from "@opentelemetry/api";
 import { APL, AplConfiguredResult, AplReadyResult, AuthData } from "@saleor/app-sdk/APL";
+import { BaseError } from "@saleor/errors";
 
-import { env } from "@/lib/env";
-import { BaseError, ValueError } from "@/lib/errors";
-import { appInternalTracer } from "@/lib/tracing";
-import { APLRepository } from "@/modules/apl/apl-repository";
-import { createSaleorApiUrl, SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { APLRepository } from "./apl-repository";
+
+type Envs = {
+  APL_TABLE_NAME: string;
+  AWS_REGION: string;
+  AWS_ACCESS_KEY_ID: string;
+  AWS_SECRET_ACCESS_KEY: string;
+};
 
 export class DynamoAPL implements APL {
   static GetAuthDataError = BaseError.subclass("GetAuthDataError");
@@ -15,109 +20,103 @@ export class DynamoAPL implements APL {
 
   private repository: APLRepository;
 
-  private tracer = appInternalTracer;
+  private tracer: Tracer;
 
-  constructor(deps: { repository: APLRepository }) {
+  private env: Envs;
+
+  constructor(deps: { repository: APLRepository; tracer: Tracer; env: Envs }) {
     this.repository = deps.repository;
+    this.tracer = deps.tracer;
+    this.env = deps.env;
   }
 
-  async get(saleorApiUrl: SaleorApiUrl | string): Promise<AuthData | undefined> {
-    const saleorApiUrlParsed = createSaleorApiUrl(saleorApiUrl);
-
-    if (saleorApiUrlParsed.isErr()) {
-      // Throw, this is programming error, we don't want to recover from here.
-      throw new ValueError("Value Error: Provided saleorApiUrl is invalid.");
-    }
-
+  async get(saleorApiUrl: string): Promise<AuthData | undefined> {
     return this.tracer.startActiveSpan("DynamoAPL.get", async (span) => {
-      const getEntryResult = await this.repository.getEntry({
-        saleorApiUrl: saleorApiUrlParsed.value,
-      });
+      try {
+        const getEntryResult = await this.repository.getEntry({
+          saleorApiUrl,
+        });
 
-      if (getEntryResult.isErr()) {
-        span.end();
+        span
+          .setStatus({
+            code: SpanStatusCode.OK,
+          })
+          .end();
+
+        return getEntryResult ?? undefined;
+      } catch (e) {
+        span.setStatus({ code: SpanStatusCode.ERROR }).end();
+
         throw new DynamoAPL.GetAuthDataError("Failed to get APL entry", {
-          cause: getEntryResult.error,
+          cause: e,
         });
       }
-
-      if (!getEntryResult.value) {
-        span.end();
-
-        return undefined;
-      }
-
-      span.end();
-
-      return getEntryResult.value;
     });
   }
 
   async set(authData: AuthData): Promise<void> {
     return this.tracer.startActiveSpan("DynamoAPL.set", async (span) => {
-      const setEntryResult = await this.repository.setEntry({
-        authData,
-      });
+      try {
+        await this.repository.setEntry({
+          authData,
+        });
 
-      if (setEntryResult.isErr()) {
-        span.end();
+        span
+          .setStatus({
+            code: SpanStatusCode.OK,
+          })
+          .end();
+      } catch (e) {
+        span.setStatus({ code: SpanStatusCode.ERROR }).end();
+
         throw new DynamoAPL.SetAuthDataError("Failed to set APL entry", {
-          cause: setEntryResult.error,
+          cause: e,
         });
       }
-
-      span.end();
-
-      return undefined;
     });
   }
 
   async delete(saleorApiUrl: string): Promise<void> {
-    const saleorApiUrlParsed = createSaleorApiUrl(saleorApiUrl);
-
-    if (saleorApiUrlParsed.isErr()) {
-      // Throw, this is programming error, we don't want to recover from here.
-      throw new ValueError("Value Error: Provided saleorApiUrl is invalid.");
-    }
-
     return this.tracer.startActiveSpan("DynamoAPL.delete", async (span) => {
-      const deleteEntryResult = await this.repository.deleteEntry({
-        saleorApiUrl: saleorApiUrlParsed.value,
-      });
+      try {
+        await this.repository.deleteEntry({
+          saleorApiUrl,
+        });
 
-      if (deleteEntryResult.isErr()) {
-        span.end();
-        throw new DynamoAPL.DeleteAuthDataError("Failed to delete APL entry", {
-          cause: deleteEntryResult.error,
+        span
+          .setStatus({
+            code: SpanStatusCode.OK,
+          })
+          .end();
+      } catch (e) {
+        span.setStatus({ code: SpanStatusCode.ERROR }).end();
+
+        throw new DynamoAPL.DeleteAuthDataError("Failed to set APL entry", {
+          cause: e,
         });
       }
-
-      span.end();
-
-      return undefined;
     });
   }
 
   async getAll(): Promise<AuthData[]> {
     return this.tracer.startActiveSpan("DynamoAPL.getAll", async (span) => {
-      const getAllEntriesResult = await this.repository.getAllEntries();
+      try {
+        const getAllEntriesResult = await this.repository.getAllEntries();
 
-      if (getAllEntriesResult.isErr()) {
-        span.end();
-        throw new DynamoAPL.GetAllAuthDataError("Failed to get all APL entries", {
-          cause: getAllEntriesResult.error,
+        span
+          .setStatus({
+            code: SpanStatusCode.OK,
+          })
+          .end();
+
+        return getAllEntriesResult ?? [];
+      } catch (e) {
+        span.setStatus({ code: SpanStatusCode.ERROR }).end();
+
+        throw new DynamoAPL.GetAllAuthDataError("Failed to set APL entry", {
+          cause: e,
         });
       }
-
-      if (!getAllEntriesResult.value) {
-        span.end();
-
-        return [];
-      }
-
-      span.end();
-
-      return getAllEntriesResult.value;
     });
   }
 
@@ -149,13 +148,13 @@ export class DynamoAPL implements APL {
 
   private envVariablesRequiredByDynamoDBExist() {
     const variables = [
-      "DYNAMODB_MAIN_TABLE_NAME",
+      "APL_TABLE_NAME",
       "AWS_REGION",
       "AWS_ACCESS_KEY_ID",
       "AWS_SECRET_ACCESS_KEY",
     ] as const;
 
     // Dont check for existence, in localhost keys are empty, so just check if envs are set
-    return variables.every((variable) => typeof env[variable] === "string");
+    return variables.every((variable) => typeof this.env[variable] === "string");
   }
 }

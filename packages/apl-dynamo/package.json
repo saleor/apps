@@ -11,7 +11,9 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "@saleor/apps-logger": "workspace:*"
+    "@opentelemetry/api": "catalog:",
+    "@saleor/apps-logger": "workspace:*",
+    "@saleor/errors": "workspace:*"
   },
   "devDependencies": {
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",

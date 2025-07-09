@@ -1,14 +1,12 @@
+import { trace } from "@opentelemetry/api";
 import { AuthData } from "@saleor/app-sdk/APL";
-import { err } from "neverthrow";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
-import { MemoryAPLRepository } from "@/__tests__/mocks/memory-apl-repository";
-import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
-import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { BaseError } from "@/lib/errors";
-
 import { DynamoAPL } from "./dynamodb-apl";
+import { MemoryAPLRepository } from "./memory-apl-repository";
+import { mockedAuthData } from "./mocks/mocked-auth-data";
+
+const mockTracer = trace.getTracer("test");
 
 describe("DynamoAPL", () => {
   afterEach(() => {
@@ -17,105 +15,179 @@ describe("DynamoAPL", () => {
 
   it("should get auth data if it exists", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
-
-    repository.setEntry({
-      authData: mockAuthData,
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
     });
 
-    const result = await apl.get(mockedSaleorApiUrl);
+    repository.setEntry({
+      authData: mockedAuthData,
+    });
 
-    expect(result).toStrictEqual(mockAuthData);
+    const result = await apl.get(mockedAuthData.saleorApiUrl);
+
+    expect(result).toStrictEqual(mockedAuthData);
   });
 
   it("should return undefined if auth data does not exist", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
-    const result = await apl.get(mockedSaleorApiUrl);
+    const result = await apl.get(mockedAuthData.saleorApiUrl);
 
     expect(result).toBeUndefined();
   });
 
   it("should throw an error if getting auth data fails", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
     vi.spyOn(repository, "getEntry").mockReturnValue(
-      Promise.resolve(err(new BaseError("Error getting data"))),
+      Promise.reject(new Error("Error getting data")),
     );
 
-    await expect(apl.get(mockedSaleorApiUrl)).rejects.toThrowError(DynamoAPL.GetAuthDataError);
+    await expect(apl.get(mockedAuthData.saleorApiUrl)).rejects.toThrowError(
+      DynamoAPL.GetAuthDataError,
+    );
   });
 
   it("should set auth data", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
-    const result = await apl.set(mockAuthData);
+    const result = await apl.set(mockedAuthData);
 
     expect(result).toBeUndefined();
 
     const getEntryResult = await repository.getEntry({
-      saleorApiUrl: mockedSaleorApiUrl,
+      saleorApiUrl: mockedAuthData.saleorApiUrl,
     });
 
-    expect(getEntryResult._unsafeUnwrap()).toStrictEqual(mockAuthData);
+    expect(getEntryResult).toStrictEqual(mockedAuthData);
   });
 
   it("should throw an error if setting auth data fails", async () => {
     const repository = new MemoryAPLRepository();
 
-    vi.spyOn(repository, "setEntry").mockResolvedValue(err(new BaseError("Error setting data")));
+    vi.spyOn(repository, "setEntry").mockRejectedValue(new Error("Error setting data"));
 
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
-    await expect(apl.set(mockAuthData)).rejects.toThrowError(DynamoAPL.SetAuthDataError);
+    await expect(apl.set(mockedAuthData)).rejects.toThrowError(DynamoAPL.SetAuthDataError);
   });
 
   it("should update existing auth data", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
     repository.setEntry({
-      authData: mockAuthData,
+      authData: mockedAuthData,
     });
 
     apl.set({
-      saleorApiUrl: mockAuthData.saleorApiUrl,
-      token: mockedAppToken,
-      appId: mockedSaleorAppId,
+      saleorApiUrl: mockedAuthData.saleorApiUrl,
+      token: mockedAuthData.token,
+      appId: mockedAuthData.appId,
     });
 
-    const getEntryResult = await apl.get(mockAuthData.saleorApiUrl);
+    const getEntryResult = await apl.get(mockedAuthData.saleorApiUrl);
 
     expect(getEntryResult).toStrictEqual({
-      saleorApiUrl: mockAuthData.saleorApiUrl,
-      token: mockedAppToken,
-      appId: mockedSaleorAppId,
+      saleorApiUrl: mockedAuthData.saleorApiUrl,
+      token: mockedAuthData.token,
+      appId: mockedAuthData.appId,
     });
   });
 
   it("should delete auth data", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
-
-    repository.setEntry({
-      authData: mockAuthData,
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
     });
 
-    await apl.delete(mockAuthData.saleorApiUrl);
+    repository.setEntry({
+      authData: mockedAuthData,
+    });
 
-    const getEntryResult = await apl.get(mockAuthData.saleorApiUrl);
+    await apl.delete(mockedAuthData.saleorApiUrl);
+
+    const getEntryResult = await apl.get(mockedAuthData.saleorApiUrl);
 
     expect(getEntryResult).toBeUndefined();
   });
 
   it("should throw an error if deleting auth data fails", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
-    await expect(apl.delete(mockedSaleorApiUrl)).rejects.toThrowError(
+    await expect(apl.delete(mockedAuthData.saleorApiUrl)).rejects.toThrowError(
       DynamoAPL.DeleteAuthDataError,
     );
   });
@@ -124,13 +196,22 @@ describe("DynamoAPL", () => {
     const repository = new MemoryAPLRepository();
     const secondEntry: AuthData = {
       saleorApiUrl: "https://foo-bar.cloud/graphql/",
-      token: mockedAppToken,
-      appId: mockedSaleorAppId,
+      token: mockedAuthData.token,
+      appId: mockedAuthData.appId,
     };
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
     repository.setEntry({
-      authData: mockAuthData,
+      authData: mockedAuthData,
     });
 
     repository.setEntry({
@@ -139,23 +220,39 @@ describe("DynamoAPL", () => {
 
     const result = await apl.getAll();
 
-    expect(result).toStrictEqual([mockAuthData, secondEntry]);
+    expect(result).toStrictEqual([mockedAuthData, secondEntry]);
   });
 
   it("should throw an error if getting all auth data fails", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
-    vi.spyOn(repository, "getAllEntries").mockResolvedValue(
-      err(new BaseError("Error getting data")),
-    );
+    vi.spyOn(repository, "getAllEntries").mockRejectedValueOnce(new Error("Error getting data"));
 
     await expect(apl.getAll()).rejects.toThrowError(DynamoAPL.GetAllAuthDataError);
   });
 
   it("should return ready:true when APL related env variables are set", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
     const result = await apl.isReady();
 
@@ -163,23 +260,18 @@ describe("DynamoAPL", () => {
   });
 
   it("should return ready:false when APL related env variables are not set", async () => {
-    vi.spyOn(await import("@/lib/env"), "env", "get").mockReturnValue({
-      // @ts-expect-error - testing missing env variables
-      DYNAMODB_MAIN_TABLE_NAME: undefined,
-      AWS_REGION: "region",
-      AWS_ACCESS_KEY_ID: "access_key_id",
-      AWS_SECRET_ACCESS_KEY: "secret_access_key",
-      APL: "dynamodb",
-      APP_LOG_LEVEL: "info",
-      MANIFEST_APP_ID: "",
-      OTEL_ENABLED: false,
-      PORT: 0,
-      SECRET_KEY: "",
-      NODE_ENV: "test",
-      ENV: "local",
-    });
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "access_key_id",
+        AWS_REGION: "region",
+        AWS_SECRET_ACCESS_KEY: "secret_access_key",
+        // @ts-expect-error - testing missing env variables
+        APL_TABLE_NAME: undefined,
+      },
+    });
 
     const result = await apl.isReady();
 
@@ -191,7 +283,16 @@ describe("DynamoAPL", () => {
 
   it("should return configured:true when APL related env variables are set", async () => {
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        APL_TABLE_NAME: "",
+      },
+    });
 
     const result = await apl.isConfigured();
 
@@ -199,21 +300,18 @@ describe("DynamoAPL", () => {
   });
 
   it("should return configured:false when APL related env variables are not set", async () => {
-    vi.spyOn(await import("@/lib/env"), "env", "get").mockReturnValue({
-      // @ts-expect-error - testing missing env variables
-      DYNAMODB_MAIN_TABLE_NAME: undefined,
-      APL: "dynamodb",
-      APP_LOG_LEVEL: "info",
-      MANIFEST_APP_ID: "",
-      OTEL_ENABLED: false,
-      PORT: 0,
-      SECRET_KEY: "",
-      NODE_ENV: "test",
-      ENV: "local",
-    });
-
     const repository = new MemoryAPLRepository();
-    const apl = new DynamoAPL({ repository });
+    const apl = new DynamoAPL({
+      repository,
+      tracer: mockTracer,
+      env: {
+        AWS_ACCESS_KEY_ID: "",
+        AWS_REGION: "",
+        AWS_SECRET_ACCESS_KEY: "",
+        // @ts-expect-error - testing missing env variables
+        APL_TABLE_NAME: undefined,
+      },
+    });
 
     const result = await apl.isConfigured();
 

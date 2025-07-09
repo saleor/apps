@@ -5,7 +5,6 @@ import {
   PutCommand,
   ScanCommand,
 } from "@aws-sdk/lib-dynamodb";
-import { AuthData } from "@saleor/app-sdk/APL";
 import { rootLogger } from "@saleor/apps-logger";
 import { mockClient } from "aws-sdk-client-mock";
 import { SavedItem, Table } from "dynamodb-toolbox";
@@ -13,6 +12,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { createAplEntity, DynamoDbAplEntity, PartitionKey, SortKey } from "./apl-db-model";
 import { DynamoAPLRepository } from "./dynamo-apl-repository";
+import { mockedAuthData } from "./mocks/mocked-auth-data";
 
 class TestTable extends Table<PartitionKey, SortKey> {
   private constructor(args: ConstructorParameters<typeof Table<PartitionKey, SortKey>>[number]) {
@@ -46,12 +46,6 @@ describe("DynamoAPLRepository", () => {
     documentClient: mockDocumentClient,
     tableName: "test-table",
   });
-
-  const mockedAuthData: AuthData = {
-    appId: "app-id-1",
-    saleorApiUrl: "http://localhost:8080/graphql/",
-    token: "mock-app-token",
-  };
 
   let repository = new DynamoAPLRepository({
     entity: createAplEntity(table),
