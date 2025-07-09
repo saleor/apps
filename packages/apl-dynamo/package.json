@@ -1,0 +1,32 @@
+{
+  "name": "@saleor/apl-dynamodb",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "check-types": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@saleor/apps-logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@vitest/coverage-v8": "3.1.1",
+    "dynamodb-toolbox": "catalog:",
+    "eslint": "catalog:",
+    "next": "catalog:",
+    "typescript": "5.8.2",
+    "vite": "6.2.4",
+    "vitest": "3.1.1"
+  },
+  "peerDependencies": {
+    "dynamodb-toolbox": "catalog:",
+    "next": "catalog:"
+  }
+}
