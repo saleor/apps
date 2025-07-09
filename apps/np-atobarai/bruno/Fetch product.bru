@@ -1,0 +1,41 @@
+meta {
+  name: Fetch product
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{saleorApiUrl}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  query FetchProduct($channelSlug: String!) {
+    products(
+      where: { isAvailable: true, isPublished: true, isVisibleInListing: true }
+      channel: $channelSlug
+      first: 1
+    ) {
+      edges {
+        node {
+          name
+          defaultVariant {
+            id
+          }
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "channelSlug": "{{channelSlug}}"
+  }
+}
+
+vars:post-response {
+  productVariantId: res.body.data.products.edges[0].node.defaultVariant.id
+}
