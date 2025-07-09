@@ -3,6 +3,7 @@ import { DeleteItemCommand, GetItemCommand, Parser, PutItemCommand } from "dynam
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
 import { err, ok, Result } from "neverthrow";
 
+import { env } from "@/lib/env";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
@@ -49,7 +50,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
         stripeConfig: DynamoDbStripeConfig.entity,
         channelConfigMapping: DynamoDbChannelConfigMapping.entity,
       },
-      encryptor: new Encryptor(),
+      encryptor: new Encryptor(env.SECRET_KEY),
     },
   ) {
     this.channelConfigMappingEntity = config.entities.channelConfigMapping;

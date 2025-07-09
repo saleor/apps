@@ -30,7 +30,7 @@ const repo = new DynamodbAppConfigRepo({
     channelConfigMapping: DynamoDbChannelConfigMapping.entity,
     stripeConfig: DynamoDbStripeConfig.entity,
   },
-  encryptor: new Encryptor(),
+  encryptor: new Encryptor(env.SECRET_KEY),
 });
 
 const apl = new DynamoAPL({

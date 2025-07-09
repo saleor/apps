@@ -45,7 +45,7 @@ const configRepo = new DynamodbAppConfigRepo({
     channelConfigMapping: DynamoDbChannelConfigMapping.entity,
     stripeConfig: DynamoDbStripeConfig.entity,
   },
-  encryptor: new Encryptor(),
+  encryptor: new Encryptor(env.SECRET_KEY),
 });
 
 const transactionRecorderRepo = new DynamoDBTransactionRecorderRepo({
