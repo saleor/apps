@@ -79,6 +79,22 @@ const ConfigurationPage: NextPage = () => {
                 here
               </TextLink>
             </Paragraph>
+            <Paragraph size={4}>
+              Required permissions:
+              <ul>
+                {[
+                  "s3:GetObject",
+                  "s3:PutObject",
+                  "s3:DeleteObject",
+                  "s3:GetObjectAttributes",
+                  "s3:ListBucket",
+                ].map((perm) => (
+                  <li key={perm}>
+                    - <code>{perm}</code>
+                  </li>
+                ))}
+              </ul>
+            </Paragraph>
           </Box>
         }
       />
@@ -131,7 +147,7 @@ const ConfigurationPage: NextPage = () => {
             </ul>
             <Paragraph size={3}>For example following pattern:</Paragraph>
             <Paragraph size={3}>
-              <code>{"https://my-shop.com/p/{{ variant.product.slug}/{{ variant.id }}"}</code>
+              <code>{"https://my-shop.com/p/{{ variant.product.slug}}/{{ variant.id }}"}</code>
             </Paragraph>
             <Paragraph size={3}>Will produce:</Paragraph>
             <Paragraph size={3}>

@@ -53,11 +53,14 @@ export const appConfigurationRouter = router({
           s3Client,
         });
         logger.info("Verification succeeded");
-      } catch {
-        logger.warn("Validation failed");
+      } catch (e) {
+        logger.warn("Validation failed", {
+          error: e,
+        });
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Could not access the S3 bucket using the provided credentials",
+          message:
+            "Could not access the S3 bucket using the provided credentials. Check permissions",
         });
       }
     }),
@@ -86,7 +89,8 @@ export const appConfigurationRouter = router({
         logger.warn("Bucket access check failed", { error: e });
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Could not access the S3 bucket using the provided credentials",
+          message:
+            "Could not access the S3 bucket using the provided credentials. Check permissions",
         });
       }
 
