@@ -5,15 +5,24 @@ import { captureException } from "@sentry/nextjs";
 import { PaymentGatewayInitializeSession } from "@/generated/app-webhooks-types/payment-gateway-initialize-session";
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
+import { AppConfigRepo } from "@/modules/app-config/types";
 
 import { withRecipientVerification } from "../with-recipient-vetification";
+import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "./webhook-definition";
+
+const useCase = new PaymentGatewayInitializeSessionUseCase({
+  // TODO: Replace with actual implementation of AppConfigRepo
+  appConfigRepo: {} as AppConfigRepo,
+});
 
 const logger = createLogger("PaymentGatewayInitializeSession route");
 
 const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, _ctx) => {
     try {
+      logger.info("Received webhook request");
+
       const response = {
         data: {},
       } satisfies PaymentGatewayInitializeSession;

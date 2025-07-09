@@ -4,7 +4,7 @@ import { z } from "zod";
 import { BaseError } from "@/lib/errors";
 
 /**
- * @deprecated use @saleor/domain
+ * @deprecated use `@saleor/apps-domain` shared package
  */
 export const SaleorApiUrlValidationError = BaseError.subclass("SaleorApiUrlValidationError", {
   props: {
@@ -22,7 +22,7 @@ const saleorApiUrlSchema = z
   .brand("SaleorApiUrl");
 
 /**
- * @deprecated use @saleor/domain
+ * @deprecated use `@saleor/apps-domain` shared package
  */
 export const createSaleorApiUrl = (raw: string) =>
   fromThrowable(saleorApiUrlSchema.parse, (error) => SaleorApiUrlValidationError.normalize(error))(
@@ -30,6 +30,6 @@ export const createSaleorApiUrl = (raw: string) =>
   );
 
 /**
- * @deprecated use @saleor/domain
+ * @deprecated use `@saleor/apps-domain` shared package
  */
 export type SaleorApiUrl = z.infer<typeof saleorApiUrlSchema>;

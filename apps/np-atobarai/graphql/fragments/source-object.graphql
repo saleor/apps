@@ -5,12 +5,32 @@ fragment SourceObject on OrderOrCheckout {
     channel {
       ...Channel
     }
+    billingAddress {
+      country {
+        code
+      }
+    }
+    shippingAddress {
+      country {
+        code
+      }
+    }
   }
   ... on Order {
     __typename
     id
     channel {
       ...Channel
+    }
+    billingAddress {
+      country {
+        code
+      }
+    }
+    shippingAddress {
+      country {
+        code
+      }
     }
   }
 }
