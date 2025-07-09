@@ -800,6 +800,9 @@ importers:
       modern-errors-serialize:
         specifier: 'catalog:'
         version: 6.1.0(modern-errors@7.0.1)
+      neverthrow:
+        specifier: 6.2.1
+        version: 6.2.1
       next:
         specifier: 'catalog:'
         version: 15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
