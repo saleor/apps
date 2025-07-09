@@ -22,7 +22,7 @@ export class AplAccessPattern {
   }
 }
 
-const AplEntrySchema = item({
+export const AplEntrySchema = item({
   PK: string().key(),
   SK: string().key(),
   token: string(),

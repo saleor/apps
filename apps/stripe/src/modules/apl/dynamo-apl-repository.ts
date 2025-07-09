@@ -5,7 +5,7 @@ import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { AplAccessPattern, DynamoDbAplEntity } from "@/modules/apl/apl-db-model";
+import { AplAccessPattern, AplEntrySchema, DynamoDbAplEntity } from "@/modules/apl/apl-db-model";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import { APLRepository } from "./apl-repository";
@@ -54,10 +54,9 @@ export class DynamoAPLRepository implements APLRepository {
 
       return ok(null);
     }
-
-    const parsed = this.aplEntity.build(Parser).parse(getEntryResult.value.Item);
-
-    const { appId, jwks, token, saleorApiUrl } = getEntryResult.value.Item;
+    const { saleorApiUrl, jwks, token, appId } = AplEntrySchema.build(Parser).parse(
+      getEntryResult.value.Item,
+    );
 
     return ok({
       saleorApiUrl,

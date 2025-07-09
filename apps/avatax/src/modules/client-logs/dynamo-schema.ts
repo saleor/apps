@@ -1,5 +1,5 @@
 import { type DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { Entity, number, schema, string, Table } from "dynamodb-toolbox";
+import { Entity, item, number, schema, string, Table } from "dynamodb-toolbox";
 import { ulid } from "ulid";
 
 import { env } from "@/env";
