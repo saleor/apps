@@ -4,7 +4,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    globalSetup: "./test-globals.ts",
     sequence: {
       /**
        * Shuffle tests to avoid side effects, where test_2 relies on something that test_1 did.

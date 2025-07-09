@@ -4,9 +4,9 @@ import { item } from "dynamodb-toolbox/schema/item";
 /**
  * Define minimum Table definition. Apps should at least extend these values.
  */
-type PartitionKey = { name: "PK"; type: "string" };
-type SortKey = { name: "SK"; type: "string" };
-type UsedTable = Table<PartitionKey, SortKey>;
+export type PartitionKey = { name: "PK"; type: "string" };
+export type SortKey = { name: "SK"; type: "string" };
+export type UsedTable = Table<PartitionKey, SortKey>;
 
 export class AplAccessPattern {
   getPK({ saleorApiUrl }: { saleorApiUrl: string }) {
@@ -53,5 +53,4 @@ export const createAplEntity = (table: UsedTable) => {
   });
 };
 
-export const dynamoDbAplEntity = (table: UsedTable) => createAplEntity(table);
-export type DynamoDbAplEntity = ReturnType<typeof dynamoDbAplEntity>;
+export type DynamoDbAplEntity = ReturnType<typeof createAplEntity>;
