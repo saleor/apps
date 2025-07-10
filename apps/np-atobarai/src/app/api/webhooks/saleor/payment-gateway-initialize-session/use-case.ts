@@ -18,10 +18,10 @@ type UseCaseExecuteResult = Promise<
 >;
 
 export class PaymentGatewayInitializeSessionUseCase {
-  private appConfigRepo: AppConfigRepo;
+  private appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private logger = createLogger("PaymentGatewayInitializeSessionUseCase");
 
-  constructor(deps: { appConfigRepo: AppConfigRepo }) {
+  constructor(deps: { appConfigRepo: Pick<AppConfigRepo, "getChannelConfig"> }) {
     this.appConfigRepo = deps.appConfigRepo;
   }
 
@@ -32,7 +32,7 @@ export class PaymentGatewayInitializeSessionUseCase {
   }): UseCaseExecuteResult {
     const { appId, saleorApiUrl, event } = params;
 
-    const atobaraiConfigForThisChannel = await this.appConfigRepo.getAtobaraiConfig({
+    const atobaraiConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
       channelId: event.sourceObject.channel.id,
       appId,
       saleorApiUrl,

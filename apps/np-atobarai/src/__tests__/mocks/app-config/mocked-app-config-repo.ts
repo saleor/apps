@@ -3,5 +3,9 @@ import { vi } from "vitest";
 import { AppConfigRepo } from "@/modules/app-config/types";
 
 export const mockedAppConfigRepo = {
-  getAtobaraiConfig: vi.fn(),
+  getChannelConfig: vi.fn(),
+  getRootConfig: vi.fn(),
+  removeConfig: vi.fn(),
+  saveChannelConfig: vi.fn(),
+  updateMapping: vi.fn(),
 } satisfies AppConfigRepo;

@@ -9,7 +9,10 @@ import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
-import { AtobaraiConfig } from "@/modules/app-config/types";
+import { AppChannelConfig } from "@/modules/app-config/app-config";
+import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
+import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
@@ -19,8 +22,22 @@ import { paymentGatewayInitializeSessionWebhookDefinition } from "./webhook-defi
 const useCase = new PaymentGatewayInitializeSessionUseCase({
   // TODO: Replace with actual implementation of AppConfigRepo
   appConfigRepo: {
-    getAtobaraiConfig: () => {
-      return Promise.resolve(ok(new AtobaraiConfig()));
+    getChannelConfig: () => {
+      return Promise.resolve(
+        ok(
+          AppChannelConfig.create({
+            fillMissingAddress: true,
+            name: "Config 1",
+            id: "111",
+            merchantCode: createAtobaraiMerchantCode("merchant-code-1"),
+            shippingCompanyCode: "5000",
+            skuAsName: true,
+            spCode: createAtobaraiSpCode("sp1"),
+            useSandbox: true,
+            terminalId: createAtobaraiTerminalId("id"),
+          })._unsafeUnwrap(),
+        ),
+      );
     },
   },
 });
