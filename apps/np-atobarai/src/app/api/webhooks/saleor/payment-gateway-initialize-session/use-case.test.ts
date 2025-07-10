@@ -1,7 +1,7 @@
 import { err, ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
-import { mockedAppConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
+import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
@@ -13,8 +13,8 @@ import { PaymentGatewayInitializeSessionUseCaseResponses } from "./use-case-resp
 
 describe("PaymentGatewayInitializeSessionUseCase", () => {
   it("Returns Success response if config is found and country / currency validation passes", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
-      ok(mockedAppConfig),
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
     );
 
     const uc = new PaymentGatewayInitializeSessionUseCase({
@@ -43,8 +43,8 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
   });
 
   it("Returns Failure response with error in data when source object has unsupported currency", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
-      ok(mockedAppConfig),
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
     );
 
     const eventWithUnsupportedCurrency = {
@@ -89,8 +89,8 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
   });
 
   it("Returns Failure response with error in data when source object has unsupported shipping address country", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
-      ok(mockedAppConfig),
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
     );
 
     const eventWithUnsupportedCountry = {
@@ -137,7 +137,7 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
   });
 
   it("Returns AppIsNotConfiguredResponse if config not found for specified channel", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() => ok(null));
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() => ok(null));
 
     const uc = new PaymentGatewayInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
@@ -155,7 +155,7 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
   });
 
   it("Returns AppIsNotConfiguredResponse if there is an error fetching config", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
       err(new Error("Failed to fetch config")),
     );
 

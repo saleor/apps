@@ -18,10 +18,10 @@ type UseCaseExecuteResult = Promise<
 >;
 
 export class PaymentGatewayInitializeSessionUseCase {
-  private appConfigRepo: AppConfigRepo;
+  private appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private logger = createLogger("PaymentGatewayInitializeSessionUseCase");
 
-  constructor(deps: { appConfigRepo: AppConfigRepo }) {
+  constructor(deps: { appConfigRepo: Pick<AppConfigRepo, "getChannelConfig"> }) {
     this.appConfigRepo = deps.appConfigRepo;
   }
 
