@@ -10,6 +10,9 @@ import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { AtobaraiConfig } from "@/modules/app-config/types";
+import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
+import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
@@ -20,7 +23,16 @@ const useCase = new PaymentGatewayInitializeSessionUseCase({
   // TODO: Replace with actual implementation of AppConfigRepo
   appConfigRepo: {
     getAtobaraiConfig: () => {
-      return Promise.resolve(ok(new AtobaraiConfig()));
+      return Promise.resolve(
+        ok(
+          new AtobaraiConfig({
+            atobaraiEnviroment: "sandbox",
+            atobaraiMerchantCode: createAtobaraiMerchantCode("test-merchant-code"),
+            atobaraiSpCode: createAtobaraiSpCode("test-sp-code"),
+            atobaraiTerminalId: createAtobaraiTerminalId("test-terminal-id"),
+          }),
+        ),
+      );
     },
   },
 });

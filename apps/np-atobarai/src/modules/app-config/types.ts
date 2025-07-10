@@ -1,8 +1,28 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { Result } from "neverthrow";
 
+import { AtobaraiMerchantCode } from "../atobarai/atobarai-merchant-code";
+import { AtobaraiSpCode } from "../atobarai/atobarai-sp-code";
+import { AtobaraiTerminalId } from "../atobarai/atobarai-terminal-id";
+import { AtobaraiEnviroment } from "../atobarai/types";
+
 export class AtobaraiConfig {
-  // TODO: Define the properties of the AtobaraiConfig
+  public atobaraiTerminalId: AtobaraiTerminalId;
+  public atobaraiMerchantCode: AtobaraiMerchantCode;
+  public atobaraiSpCode: AtobaraiSpCode;
+  public atobaraiEnviroment: AtobaraiEnviroment;
+
+  constructor(params: {
+    atobaraiTerminalId: AtobaraiTerminalId;
+    atobaraiMerchantCode: AtobaraiMerchantCode;
+    atobaraiSpCode: AtobaraiSpCode;
+    atobaraiEnviroment: AtobaraiEnviroment;
+  }) {
+    this.atobaraiTerminalId = params.atobaraiTerminalId;
+    this.atobaraiMerchantCode = params.atobaraiMerchantCode;
+    this.atobaraiSpCode = params.atobaraiSpCode;
+    this.atobaraiEnviroment = params.atobaraiEnviroment;
+  }
 }
 
 export type BaseAccessPattern = {

@@ -12,11 +12,33 @@ export const mockedPaymentGatewayInitializeSessionEvent = {
       currencyCode: "JPY",
     },
     id: "checkout-id",
-    shippingAddress: {
+    billingAddress: {
+      firstName: "John",
+      lastName: "Doe",
+      phone: "+81 03-1234-5678",
       country: {
         code: "JP",
       },
+      postalCode: "102-0083",
+      countryArea: "東京都",
+      streetAddress1: "千代田区",
+      streetAddress2: "麹町４－２－６",
+      companyName: "",
     },
+    shippingAddress: {
+      firstName: "John",
+      lastName: "Doe",
+      phone: "+81 03-1234-5678",
+      country: {
+        code: "JP",
+      },
+      postalCode: "102-0083",
+      countryArea: "東京都",
+      streetAddress1: "千代田区",
+      streetAddress2: "麹町４－２－６",
+      companyName: "",
+    },
+    email: "ok@np-atobarai.saleor.io",
   },
   recipient: {
     id: mockedSaleorAppId,

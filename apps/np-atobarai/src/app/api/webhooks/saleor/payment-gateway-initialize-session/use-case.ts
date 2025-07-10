@@ -11,7 +11,13 @@ import {
   PaymentGatewayInitializeSessionUseCaseResponses,
   PaymentGatewayInitializeSessionUseCaseResponsesType,
 } from "./use-case-response";
-import { UnsupportedCountryError, UnsupportedCurrencyError } from "./validation-errors";
+import {
+  MissingBillingAddressError,
+  MissingBillingPhoneNumberError,
+  MissingEmailError,
+  UnsupportedCountryError,
+  UnsupportedCurrencyError,
+} from "./validation-errors";
 
 type UseCaseExecuteResult = Promise<
   Result<PaymentGatewayInitializeSessionUseCaseResponsesType, AppIsNotConfiguredResponse>
@@ -86,6 +92,47 @@ export class PaymentGatewayInitializeSessionUseCase {
               publicMessage: `Shipping address country not supported: got ${event.sourceObject.shippingAddress?.country.code} - needs JP`,
             },
           }),
+        ),
+      );
+    }
+
+    if (!event.sourceObject.billingAddress) {
+      this.logger.warn("Missing billing address in event", {
+        event,
+      });
+
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Failure(
+          new MissingBillingAddressError("Billing address is required"),
+        ),
+      );
+    }
+
+    if (!event.sourceObject.billingAddress.phone) {
+      this.logger.warn("Missing billing phone number in event", {
+        event,
+      });
+
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Failure(
+          new MissingBillingPhoneNumberError("Billing phone number is required"),
+        ),
+      );
+    }
+
+    const email =
+      event.sourceObject.__typename === "Checkout"
+        ? event.sourceObject.email
+        : event.sourceObject.userEmail;
+
+    if (!email) {
+      this.logger.warn("Missing email in event", {
+        event,
+      });
+
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Failure(
+          new MissingEmailError("Email is required"),
         ),
       );
     }
