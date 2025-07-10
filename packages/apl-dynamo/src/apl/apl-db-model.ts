@@ -1,15 +1,19 @@
-import { Entity, string } from "dynamodb-toolbox";
+import { Entity, string, Table } from "dynamodb-toolbox";
 import { item } from "dynamodb-toolbox/schema/item";
 
-import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
+/**
+ * Define minimum Table definition. Apps should at least extend these values.
+ */
+export type PartitionKey = { name: "PK"; type: "string" };
+export type SortKey = { name: "SK"; type: "string" };
+export type UsedTable = Table<PartitionKey, SortKey>;
 
 export class AplAccessPattern {
-  static getPK({ saleorApiUrl }: { saleorApiUrl: string }) {
-    /*
-     * Main table holds access to PK.
-     * In case of APL we only know saleorApiUrl, so we can't scope it per app ID
+  getPK({ saleorApiUrl }: { saleorApiUrl: string }) {
+    /**
+     * These PKs will be scoped tenant, so even after reinstalling they will be accessible
      */
-    return DynamoMainTable.getPrimaryKeyScopedToSaleorApiUrl({ saleorApiUrl });
+    return `${saleorApiUrl}` as const;
   }
   /*
    * APL is singleton, PK will scope to specific installation,
@@ -17,7 +21,7 @@ export class AplAccessPattern {
    * PK: <saleorApiUrl>#<appId>
    * SK: APL
    */
-  static getSK() {
+  getSK() {
     return `APL` as const;
   }
 }
@@ -31,7 +35,7 @@ export const AplEntrySchema = item({
   jwks: string().optional(),
 });
 
-export const createAplEntity = (table: DynamoMainTable) => {
+export const createAplEntity = (table: UsedTable) => {
   return new Entity({
     table,
     name: "APL",
@@ -49,5 +53,4 @@ export const createAplEntity = (table: DynamoMainTable) => {
   });
 };
 
-export const dynamoDbAplEntity = createAplEntity(dynamoMainTable);
-export type DynamoDbAplEntity = typeof dynamoDbAplEntity;
+export type DynamoDbAplEntity = ReturnType<typeof createAplEntity>;

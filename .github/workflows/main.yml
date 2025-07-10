@@ -63,6 +63,7 @@ jobs:
         run: pnpm install
       - name: Run tests
         run: pnpm test:ci
+        # TODO: Add new step with matrix run to avoid duplicated entries
       - name: Upload coverage for avatax
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
@@ -158,4 +159,20 @@ jobs:
           slug: saleor/apps
           flags: domain
           files: packages/domain/coverage/coverage-final.json,packages/domain/coverage/clover.xml
+          disable_search: true
+      - name: Upload coverage for errors
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: errors
+          files: packages/errors/coverage/coverage-final.json,packages/errors/coverage/clover.xml
+          disable_search: true
+      - name: Upload coverage for apl-dynamo
+        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: saleor/apps
+          flags: apl-dynamo
+          files: packages/apl-dynamo/coverage/coverage-final.json,packages/apl-dynamo/coverage/clover.xml
           disable_search: true

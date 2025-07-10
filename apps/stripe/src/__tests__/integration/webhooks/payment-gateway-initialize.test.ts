@@ -1,3 +1,4 @@
+import { DynamoAPL } from "@saleor/apl-dynamo";
 import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -9,14 +10,14 @@ import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restr
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as paymentGatewayInitializeSessionHandlers from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
+import { createLogger } from "@/lib/logger";
 import { RandomId } from "@/lib/random-id";
-import { dynamoDbAplEntity } from "@/modules/apl/apl-db-model";
-import { DynamoAPLRepository } from "@/modules/apl/dynamo-apl-repository";
-import { DynamoAPL } from "@/modules/apl/dynamodb-apl";
+import { appInternalTracer } from "@/lib/tracing";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
 import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
 import { DynamoDbStripeConfig } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
+import { dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import { env } from "../env";
@@ -33,10 +34,16 @@ const repo = new DynamodbAppConfigRepo({
   encryptor: new Encryptor(env.SECRET_KEY),
 });
 
-const apl = new DynamoAPL({
-  repository: new DynamoAPLRepository({
-    entity: dynamoDbAplEntity,
-  }),
+const apl = DynamoAPL.create({
+  logger: createLogger("Test logger"),
+  table: dynamoMainTable,
+  tracer: appInternalTracer,
+  env: {
+    AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
+    APL_TABLE_NAME: env.DYNAMODB_MAIN_TABLE_NAME,
+    AWS_REGION: env.AWS_REGION,
+    AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
+  },
 });
 
 describe("PaymentGatewayInitialize webhook: integration", async () => {
