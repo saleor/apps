@@ -30,6 +30,10 @@ coverage:
         flags: [webhook-utils]
       packages-domain:
         flags: [domain]
+      packages-errors:
+        flags: [errors]
+      packages-apl-dynamo:
+        flags: [apl-dynamo]
 ignore:
   - "**/scripts/**"
   - "**/e2e/**"
@@ -75,3 +79,9 @@ flags:
   domain:
     paths:
       - packages/domain/
+  errors:
+      paths:
+        - packages/errors/
+  apl-dynamo:
+      paths:
+        - packages/apl-dynamo/
