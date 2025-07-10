@@ -5,7 +5,7 @@ import { captureException } from "@sentry/nextjs";
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 
-import { withRecipientVerification } from "../with-recipient-vetification";
+import { withRecipientVerification } from "../with-recipient-verification";
 import { fulfillmentTrackingNumberUpdatedWebhookDefinition } from "./webhook-definition";
 
 const logger = createLogger("FulfillmentTrackingNumberUpdated route");

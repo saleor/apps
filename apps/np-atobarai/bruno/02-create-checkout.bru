@@ -1,0 +1,98 @@
+meta {
+  name: Create checkout
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{saleorApiUrl}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CreateCheckout(
+    $channelSlug: String!
+    $variantId: ID!
+    $email: String!
+  ) {
+    checkoutCreate(
+      input: {
+        channel: $channelSlug
+        lines: [{ quantity: 10, variantId: $variantId }]
+        email: $email
+        shippingAddress: {
+          firstName: "John"
+          lastName: "Doe"
+          phone: "+81 03-1234-5678"
+          country: JP
+          city: ""
+          cityArea: ""
+          postalCode: "102-0083"
+          countryArea: "東京都"
+          streetAddress1: "千代田区"
+          streetAddress2: "麹町４－２－６"
+        }
+        billingAddress: {
+          firstName: "John"
+          lastName: "Doe"
+          phone: "+81 03-1234-5678"
+          country: JP
+          postalCode: "102-0083"
+          countryArea: "東京都"
+          streetAddress1: "千代田区"
+          streetAddress2: "麹町４－２－６"
+        }
+        languageCode: EN_US
+      }
+    ) {
+      errors {
+        field
+        message
+        code
+        variants
+        lines
+        addressType
+      }
+      checkout {
+        id
+        lines {
+          variant {
+            name
+            product {
+              name
+            }
+          }
+        }
+        totalPrice {
+          gross {
+            currency
+            amount
+          }
+        }
+        shippingMethods {
+          id
+          name
+          price {
+            currency
+            amount
+          }
+        }
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "variantId": "{{productVariantId}}",
+    "channelSlug": "{{channelSlug}}",
+    "email": "ok@saleor-np-atobarai-app.io"
+  }
+}
+
+vars:post-response {
+  checkoutId: res.body.data.checkoutCreate.checkout.id
+  shippingMethodId: res.body.data.checkoutCreate.checkout.shippingMethods[0].id
+}

@@ -6,7 +6,7 @@ import { TransactionInitializeSession } from "@/generated/app-webhooks-types/tra
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 
-import { withRecipientVerification } from "../with-recipient-vetification";
+import { withRecipientVerification } from "../with-recipient-verification";
 import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
 
 const logger = createLogger("TransactionInitializeSession route");
