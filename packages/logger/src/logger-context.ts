@@ -1,11 +1,10 @@
 import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { SALEOR_API_URL_HEADER, SALEOR_EVENT_HEADER } from "@saleor/app-sdk/headers";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { BaseError } from "@saleor/errors";
 import { AsyncLocalStorage } from "async_hooks";
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { NextRequest } from "next/server";
-
-import { BaseError } from "./errors";
 
 export class LoggerContext {
   private als = new AsyncLocalStorage<Record<string, unknown>>();

@@ -5,7 +5,6 @@ export default defineConfig({
   plugins: [],
   test: {
     environment: "jsdom",
-    setupFiles: "./src/setup-tests.ts",
     css: false,
     sequence: {
       /**

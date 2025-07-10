@@ -1,9 +1,10 @@
 import { trace } from "@opentelemetry/api";
+import { BaseError } from "@saleor/errors";
 // don't change to named import - there is a problem with `tsx` script runner (and this file is loaded in webhook migration scripts)
 import * as Sentry from "@sentry/nextjs";
 import { ILogObj, Logger } from "tslog";
 
-import { BaseError, UnknownError } from "./errors";
+import { UnknownError } from "./errors";
 import { LoggerContext } from "./logger-context";
 
 const VercelMaximumLogSizeExceededError = BaseError.subclass("VercelMaximumLogSizeExceededError");
