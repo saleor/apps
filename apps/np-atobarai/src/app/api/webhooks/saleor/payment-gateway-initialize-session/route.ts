@@ -1,38 +1,73 @@
+import { createSaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
+import { ok } from "neverthrow";
 
-import { PaymentGatewayInitializeSession } from "@/generated/app-webhooks-types/payment-gateway-initialize-session";
+import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/types";
+import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
+import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
+import { AtobaraiConfig } from "@/modules/app-config/types";
 
+import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-vetification";
 import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "./webhook-definition";
 
 const useCase = new PaymentGatewayInitializeSessionUseCase({
   // TODO: Replace with actual implementation of AppConfigRepo
-  appConfigRepo: {} as AppConfigRepo,
+  appConfigRepo: {
+    getAtobaraiConfig: () => {
+      return Promise.resolve(ok(new AtobaraiConfig()));
+    },
+  },
 });
 
 const logger = createLogger("PaymentGatewayInitializeSession route");
 
 const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(
-  withRecipientVerification(async (_req, _ctx) => {
+  withRecipientVerification(async (_req, ctx) => {
     try {
+      setObservabilitySourceObjectId(ctx.payload.sourceObject);
+
       logger.info("Received webhook request");
 
-      const response = {
-        data: {},
-      } satisfies PaymentGatewayInitializeSession;
+      const saleorApiUrl = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
-      return Response.json(response, { status: 200 });
+      setObservabilitySaleorApiUrl(saleorApiUrl, ctx.payload.version);
+
+      const result = await useCase.execute({
+        event: ctx.payload,
+        appId: ctx.authData.appId,
+        saleorApiUrl,
+      });
+
+      return result.match(
+        (result) => {
+          logger.info("Successfully processed webhook request", {
+            httpsStatusCode: result.statusCode,
+          });
+
+          return result.getResponse();
+        },
+        (err) => {
+          logger.warn("Failed to process webhook request", {
+            httpsStatusCode: err.statusCode,
+            reason: err.message,
+          });
+
+          return err.getResponse();
+        },
+      );
     } catch (error) {
       captureException(error);
       logger.error("Unhandled error", { error: error });
 
-      return Response.json({ message: "Internal Server Error" }, { status: 500 });
+      const response = new UnhandledErrorResponse(BaseError.normalize(error));
+
+      return response.getResponse();
     }
   }),
 );

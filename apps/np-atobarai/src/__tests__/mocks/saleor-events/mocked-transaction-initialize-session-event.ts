@@ -10,6 +10,7 @@ export const mockedTransactionInitializeSessionEvent = {
     channel: {
       slug: "default-channel",
       id: mockedSaleorChannelId,
+      currencyCode: "JPY",
     },
     id: "checkout-id",
   },

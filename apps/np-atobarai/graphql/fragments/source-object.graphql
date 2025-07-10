@@ -5,11 +5,6 @@ fragment SourceObject on OrderOrCheckout {
     channel {
       ...Channel
     }
-    billingAddress {
-      country {
-        code
-      }
-    }
     shippingAddress {
       country {
         code
@@ -21,11 +16,6 @@ fragment SourceObject on OrderOrCheckout {
     id
     channel {
       ...Channel
-    }
-    billingAddress {
-      country {
-        code
-      }
     }
     shippingAddress {
       country {

@@ -1,7 +1,7 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { Result } from "neverthrow";
 
-class AtobaraiConfig {
+export class AtobaraiConfig {
   // TODO: Define the properties of the AtobaraiConfig
 }
 

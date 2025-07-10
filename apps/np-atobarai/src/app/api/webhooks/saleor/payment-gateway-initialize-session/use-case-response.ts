@@ -1,7 +1,7 @@
 import { PaymentGatewayInitializeSession } from "@/generated/app-webhooks-types/payment-gateway-initialize-session";
-import { BaseError } from "@/lib/errors";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
+import { PaymentGatewayInitializeSessionValidationError } from "./validation-errors";
 
 class Success extends SuccessWebhookResponse {
   constructor() {
@@ -15,49 +15,10 @@ class Success extends SuccessWebhookResponse {
   }
 }
 
-export const MissingBillingAddressError = BaseError.subclass("MissingBillingAddressError", {
-  props: {
-    _brand: "MissingBillingAddressError" as const,
-    publicCode: "MissingBillingAddressError" as const,
-    publicMessage: "Billing address is required for this payment method.",
-  },
-});
-
-export const MissingShippingAddressError = BaseError.subclass("MissingShippingAddressError", {
-  props: {
-    _brand: "MissingShippingAddressError" as const,
-    publicCode: "MissingShippingAddressError" as const,
-    publicMessage: "Shipping address is required for this payment method.",
-  },
-});
-
-export const UnsupportedCountryError = BaseError.subclass("UnsupportedCountryError", {
-  props: {
-    _brand: "UnsupportedCountryError" as const,
-    publicCode: "UnsupportedCountryError" as const,
-    publicMessage: "",
-  },
-});
-
-export const UnsupportedCurrencyError = BaseError.subclass("UnsupportedCurrencyError", {
-  props: {
-    _brand: "UnsupportedCurrencyError" as const,
-    publicCode: "UnsupportedCurrencyError" as const,
-    publicMessage: "",
-  },
-});
-
-type ValidationError = InstanceType<
-  | typeof MissingBillingAddressError
-  | typeof MissingShippingAddressError
-  | typeof UnsupportedCountryError
-  | typeof UnsupportedCurrencyError
->;
-
 class Failure extends SuccessWebhookResponse {
-  readonly error: ValidationError;
+  readonly error: PaymentGatewayInitializeSessionValidationError;
 
-  constructor(error: ValidationError) {
+  constructor(error: PaymentGatewayInitializeSessionValidationError) {
     super();
     this.error = error;
   }
@@ -84,5 +45,6 @@ export const PaymentGatewayInitializeSessionUseCaseResponses = {
 };
 
 export type PaymentGatewayInitializeSessionUseCaseResponsesType = InstanceType<
-  typeof PaymentGatewayInitializeSessionUseCaseResponses.Success
+  | typeof PaymentGatewayInitializeSessionUseCaseResponses.Success
+  | typeof PaymentGatewayInitializeSessionUseCaseResponses.Failure
 >;
