@@ -1,12 +1,15 @@
+import { DynamoAPL } from "@saleor/apl-dynamo";
 import { APL } from "@saleor/app-sdk/APL";
 import { FileAPL } from "@saleor/app-sdk/APL/file";
 import { SaleorCloudAPL } from "@saleor/app-sdk/APL/saleor-cloud";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
+import { appRootTracer } from "@/lib/app-root-tracer";
+import { createLogger } from "@/logger";
+import { segmentMainTable } from "@/modules/db/segment-main-table";
+
 import { env } from "./env";
 import { BaseError } from "./errors";
-import { DynamoAPL } from "./lib/dynamodb-apl";
-import { DynamoAPLRepositoryFactory } from "./modules/db/dynamo-apl-repository-factory";
 
 export let apl: APL;
 
@@ -14,9 +17,17 @@ const MisconfiguredSaleorCloudAPLError = BaseError.subclass("MisconfiguredSaleor
 
 switch (env.APL) {
   case "dynamodb": {
-    const repository = DynamoAPLRepositoryFactory.create();
-
-    apl = new DynamoAPL({ repository });
+    apl = DynamoAPL.create({
+      table: segmentMainTable,
+      tracer: appRootTracer,
+      logger: createLogger("DynamoAPL"),
+      env: {
+        AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
+        AWS_REGION: env.AWS_REGION,
+        APL_TABLE_NAME: env.DYNAMODB_MAIN_TABLE_NAME,
+        AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
     break;
   }
 

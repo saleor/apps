@@ -9,6 +9,9 @@ export const env = createEnv({
     INTEGRATION_STRIPE_PK: z.string().min(1),
     AWS_ENDPOINT_URL: z.string().url(),
     SECRET_KEY: z.string(),
+    AWS_REGION: z.string(),
+    AWS_ACCESS_KEY_ID: z.string(),
+    AWS_SECRET_ACCESS_KEY: z.string(),
   },
   runtimeEnv: {
     DYNAMODB_MAIN_TABLE_NAME: process.env.DYNAMODB_MAIN_TABLE_NAME,
@@ -17,5 +20,8 @@ export const env = createEnv({
     INTEGRATION_STRIPE_PK: process.env.INTEGRATION_STRIPE_PK,
     AWS_ENDPOINT_URL: process.env.AWS_ENDPOINT_URL,
     SECRET_KEY: process.env.SECRET_KEY,
+    AWS_REGION: process.env.AWS_REGION,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_ACCESS_KEY_ID,
   },
 });

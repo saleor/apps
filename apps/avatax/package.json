@@ -24,9 +24,9 @@
     "test:ci": "vitest run --coverage --project units --sequence.shuffle"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "3.651.1",
-    "@aws-sdk/lib-dynamodb": "3.651.1",
-    "@aws-sdk/util-dynamodb": "3.651.1",
+    "@aws-sdk/client-dynamodb": "catalog:",
+    "@aws-sdk/lib-dynamodb": "catalog:",
+    "@aws-sdk/util-dynamodb": "catalog:",
     "@hookform/resolvers": "^3.3.1",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/api-logs": "catalog:",
@@ -94,7 +94,7 @@
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@vitejs/plugin-react": "4.3.4",
-    "@vitest/coverage-v8": "3.1.1",
+    "@vitest/coverage-v8": "catalog:",
     "aws-sdk-client-mock": "4.0.1",
     "eslint": "catalog:",
     "eslint-plugin-n": "17.16.2",
