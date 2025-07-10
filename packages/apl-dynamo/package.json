@@ -16,6 +16,9 @@
     "@saleor/errors": "workspace:*"
   },
   "devDependencies": {
+    "@aws-sdk/client-dynamodb": "catalog:",
+    "@aws-sdk/lib-dynamodb": "catalog:",
+    "@aws-sdk/util-dynamodb": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
@@ -29,6 +32,9 @@
     "vitest": "3.1.1"
   },
   "peerDependencies": {
+    "@aws-sdk/client-dynamodb": "catalog:",
+    "@aws-sdk/lib-dynamodb": "catalog:",
+    "@aws-sdk/util-dynamodb": "catalog:",
     "dynamodb-toolbox": "catalog:",
     "next": "catalog:"
   }

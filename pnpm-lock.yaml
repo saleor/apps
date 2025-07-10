@@ -6,6 +6,15 @@ settings:
 
 catalogs:
   default:
+    '@aws-sdk/client-dynamodb':
+      specifier: 3.651.1
+      version: 3.651.1
+    '@aws-sdk/lib-dynamodb':
+      specifier: 3.651.1
+      version: 3.651.1
+    '@aws-sdk/util-dynamodb':
+      specifier: 3.651.1
+      version: 3.651.1
     '@opentelemetry/api':
       specifier: 1.9.0
       version: 1.9.0
@@ -141,13 +150,13 @@ importers:
   apps/avatax:
     dependencies:
       '@aws-sdk/client-dynamodb':
-        specifier: 3.651.1
+        specifier: 'catalog:'
         version: 3.651.1
       '@aws-sdk/lib-dynamodb':
-        specifier: 3.651.1
+        specifier: 'catalog:'
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@aws-sdk/util-dynamodb':
-        specifier: 3.651.1
+        specifier: 'catalog:'
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
         specifier: ^3.3.1
@@ -1311,13 +1320,13 @@ importers:
   apps/segment:
     dependencies:
       '@aws-sdk/client-dynamodb':
-        specifier: 3.651.1
+        specifier: 'catalog:'
         version: 3.651.1
       '@aws-sdk/lib-dynamodb':
-        specifier: 3.651.1
+        specifier: 'catalog:'
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@aws-sdk/util-dynamodb':
-        specifier: 3.651.1
+        specifier: 'catalog:'
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
         specifier: ^3.3.1
@@ -1745,13 +1754,13 @@ importers:
   apps/stripe:
     dependencies:
       '@aws-sdk/client-dynamodb':
-        specifier: 3.651.1
+        specifier: 'catalog:'
         version: 3.651.1
       '@aws-sdk/lib-dynamodb':
-        specifier: 3.651.1
+        specifier: 'catalog:'
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@aws-sdk/util-dynamodb':
-        specifier: 3.651.1
+        specifier: 'catalog:'
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
         specifier: ^3.3.1
@@ -1989,6 +1998,15 @@ importers:
         specifier: workspace:*
         version: link:../errors
     devDependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1
+      '@aws-sdk/lib-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
+      '@aws-sdk/util-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
