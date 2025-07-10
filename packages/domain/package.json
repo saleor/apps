@@ -23,7 +23,7 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@vitest/coverage-v8": "3.1.1",
+    "@vitest/coverage-v8": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
     "typescript": "5.8.2",
