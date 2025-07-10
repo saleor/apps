@@ -17,6 +17,7 @@ import {
   MissingEmailError,
   UnsupportedCountryError,
   UnsupportedCurrencyError,
+  WrongPhoneNumberFormatError,
 } from "./validation-errors";
 
 type UseCaseExecuteResult = Promise<
@@ -133,6 +134,18 @@ export class PaymentGatewayInitializeSessionUseCase {
       return ok(
         new PaymentGatewayInitializeSessionUseCaseResponses.Failure(
           new MissingEmailError("Email is required"),
+        ),
+      );
+    }
+
+    if (!event.sourceObject.billingAddress.phone.startsWith("+81")) {
+      this.logger.warn("Wrong phone number format in event", {
+        event,
+      });
+
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Failure(
+          new WrongPhoneNumberFormatError("Wrong phone number format"),
         ),
       );
     }

@@ -40,10 +40,19 @@ export const MissingEmailError = BaseError.subclass("MissingEmailError", {
   },
 });
 
+export const WrongPhoneNumberFormatError = BaseError.subclass("WrongPhoneNumberFormatError", {
+  props: {
+    _brand: "WrongPhoneNumberFormatError" as const,
+    publicCode: "WrongPhoneNumberFormatError" as const,
+    publicMessage: "Phone number format is incorrect - it should start with +81",
+  },
+});
+
 export type PaymentGatewayInitializeSessionValidationError = InstanceType<
   | typeof UnsupportedCountryError
   | typeof UnsupportedCurrencyError
   | typeof MissingBillingAddressError
   | typeof MissingBillingPhoneNumberError
   | typeof MissingEmailError
+  | typeof WrongPhoneNumberFormatError
 >;

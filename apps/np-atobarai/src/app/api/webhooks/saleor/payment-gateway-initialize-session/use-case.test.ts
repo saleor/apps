@@ -136,6 +136,175 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
     `);
   });
 
+  it("Returns Failure response with error in data when source object has no billing address", async () => {
+    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
+      ok(mockedAppConfig),
+    );
+    const eventWithNoBillingAddress = {
+      ...mockedPaymentGatewayInitializeSessionEvent,
+      sourceObject: {
+        ...mockedPaymentGatewayInitializeSessionEvent.sourceObject,
+        billingAddress: null, // No billing address
+      },
+    };
+
+    const uc = new PaymentGatewayInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+    });
+
+    const responsePayload = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithNoBillingAddress,
+    });
+
+    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
+      PaymentGatewayInitializeSessionUseCaseResponses.Failure,
+    );
+
+    const jsonResponse = await responsePayload._unsafeUnwrap().getResponse().json();
+
+    expect(jsonResponse).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "errors": [
+            {
+              "code": "MissingBillingAddressError",
+              "message": "Billing address is required",
+            },
+          ],
+        },
+      }
+    `);
+  });
+
+  it("Returns Failure response with error in data when source object has no billing phone number", async () => {
+    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
+      ok(mockedAppConfig),
+    );
+
+    const eventWithNoBillingPhoneNumber = {
+      ...mockedPaymentGatewayInitializeSessionEvent,
+      sourceObject: {
+        ...mockedPaymentGatewayInitializeSessionEvent.sourceObject,
+        billingAddress: {
+          ...mockedPaymentGatewayInitializeSessionEvent.sourceObject.billingAddress,
+          phone: null, // No billing phone number
+        },
+      },
+    };
+
+    const uc = new PaymentGatewayInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+    });
+
+    const responsePayload = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithNoBillingPhoneNumber,
+    });
+
+    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
+      PaymentGatewayInitializeSessionUseCaseResponses.Failure,
+    );
+
+    const jsonResponse = await responsePayload._unsafeUnwrap().getResponse().json();
+
+    expect(jsonResponse).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "errors": [
+            {
+              "code": "MissingBillingPhoneNumberError",
+              "message": "Billing phone number is required",
+            },
+          ],
+        },
+      }
+    `);
+  });
+
+  it("Returns Failure response with error in data when source object has wrong phone number format", async () => {
+    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
+      ok(mockedAppConfig),
+    );
+    const eventWithWrongPhoneNumberFormat = {
+      ...mockedPaymentGatewayInitializeSessionEvent,
+      sourceObject: {
+        ...mockedPaymentGatewayInitializeSessionEvent.sourceObject,
+        billingAddress: {
+          ...mockedPaymentGatewayInitializeSessionEvent.sourceObject.billingAddress,
+          phone: "1234567890", // Wrong format, should start with +81
+        },
+      },
+    };
+    const uc = new PaymentGatewayInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+    });
+    const responsePayload = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithWrongPhoneNumberFormat,
+    });
+
+    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
+      PaymentGatewayInitializeSessionUseCaseResponses.Failure,
+    );
+    const jsonResponse = await responsePayload._unsafeUnwrap().getResponse().json();
+
+    expect(jsonResponse).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "errors": [
+            {
+              "code": "WrongPhoneNumberFormatError",
+              "message": "Phone number format is incorrect - it should start with +81",
+            },
+          ],
+        },
+      }
+    `);
+  });
+
+  it("Returns Failure response with error in data when source object has no email", async () => {
+    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
+      ok(mockedAppConfig),
+    );
+    const eventWithNoEmail = {
+      ...mockedPaymentGatewayInitializeSessionEvent,
+      sourceObject: {
+        ...mockedPaymentGatewayInitializeSessionEvent.sourceObject,
+        email: null, // No email
+      },
+    };
+    const uc = new PaymentGatewayInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+    });
+    const responsePayload = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithNoEmail,
+    });
+
+    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
+      PaymentGatewayInitializeSessionUseCaseResponses.Failure,
+    );
+    const jsonResponse = await responsePayload._unsafeUnwrap().getResponse().json();
+
+    expect(jsonResponse).toMatchInlineSnapshot(`
+      {
+        "data": {
+          "errors": [
+            {
+              "code": "MissingEmailError",
+              "message": "Email is required",
+            },
+          ],
+        },
+      }
+    `);
+  });
+
   it("Returns AppIsNotConfiguredResponse if config not found for specified channel", async () => {
     vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() => ok(null));
 

@@ -24,7 +24,7 @@ export const mockedTransactionInitializeSessionEvent = {
       countryArea: "東京都",
       streetAddress1: "千代田区",
       streetAddress2: "麹町４－２－６",
-      companyName: "",
+      companyName: "My company",
     },
     shippingAddress: {
       firstName: "John",
@@ -37,7 +37,7 @@ export const mockedTransactionInitializeSessionEvent = {
       countryArea: "東京都",
       streetAddress1: "千代田区",
       streetAddress2: "麹町４－２－６",
-      companyName: "",
+      companyName: "My company",
     },
     email: "ok@np-atobarai.saleor.io",
   },

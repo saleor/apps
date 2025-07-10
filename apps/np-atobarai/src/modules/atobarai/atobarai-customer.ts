@@ -9,16 +9,16 @@ import { BaseError } from "@/lib/errors";
 export class AtobaraiCustomer {
   static schema = z.object({
     customer_name: z.string(),
-    company_name: z.string(),
+    company_name: z.string().optional(),
     zip_code: z.string(),
     address: z.string(),
     tel: z.string(),
     email: z.string().email(),
   });
 
-  static MissingDataError = BaseError.subclass("AtobaraiCustomerMissingDataError", {
+  static MissingDataError = BaseError.subclass("AtobaraiCustomer.MissingDataError", {
     props: {
-      _brand: "AtobaraiCustomerMissingDataError" as const,
+      _brand: "AtobaraiCustomer.MissingDataError" as const,
     },
   });
 
