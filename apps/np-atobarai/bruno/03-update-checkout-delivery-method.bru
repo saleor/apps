@@ -1,0 +1,74 @@
+meta {
+  name: Update checkout delivery method
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: {{saleorApiUrl}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation checkoutDeliveryMethodUpdate(
+    $checkoutId: ID!
+    $deliveryMethodId: ID!
+  ) {
+    checkoutDeliveryMethodUpdate(
+      id: $checkoutId
+      deliveryMethodId: $deliveryMethodId
+    ) {
+      checkout {
+        id
+        metadata {
+          key
+          value
+        }
+        lines {
+          totalPrice {
+            gross {
+              ...Money
+            }
+          }
+        }
+        shippingPrice {
+          gross {
+            ...Money
+          }
+        }
+        totalPrice {
+          gross {
+            ...Money
+          }
+        }
+      }
+      errors {
+        ...CheckoutErrorFragment
+      }
+    }
+  }
+  
+  fragment CheckoutErrorFragment on CheckoutError {
+    message
+    field
+    code
+  }
+  
+  fragment Money on Money {
+    currency
+    amount
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "checkoutId": "{{checkoutId}}",
+    "deliveryMethodId": "{{shippingMethodId}}"
+  }
+}
+
+vars:post-response {
+  totalPrice: res.body.data.checkoutDeliveryMethodUpdate.checkout.totalPrice.gross.amount
+}

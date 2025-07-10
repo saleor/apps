@@ -51,3 +51,11 @@ pnpm dev
 > To install app in Saleor Cloud, you need to expose your local server to the internet (tunnel). You can use Saleor CLI to do that. See this [guide](https://docs.saleor.io/developer/extending/apps/developing-with-tunnels) for more details.
 
 6. Install app on the Saleor dashboard.
+
+### Bruno
+
+[Bruno](https://docs.usebruno.com/) is an open source tool for exploring and testing APIs. It's similar to Postman or Insomnia.
+
+This app has a collection of requests to Saleor that allows to pay for checkout with NP Atobarai app.
+
+To get started create `.env` file based on `.env.example` inside `apps/np-atobarai/bruno` folder.
