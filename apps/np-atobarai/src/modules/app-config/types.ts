@@ -26,6 +26,5 @@ export const AppConfigRepoError = BaseError.subclass("AppConfigRepoError");
 export interface AppConfigRepo {
   getAtobaraiConfig: (
     access: GetAtobaraiConfigAccessPattern,
-    // TODO: Define strict errors
   ) => Promise<Result<AppChannelConfig | null, InstanceType<typeof AppConfigRepoError>>>;
 }
