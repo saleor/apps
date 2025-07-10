@@ -6,7 +6,7 @@ import { TransactionRefundRequested } from "@/generated/app-webhooks-types/trans
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 
-import { withRecipientVerification } from "../with-recipient-vetification";
+import { withRecipientVerification } from "../with-recipient-verification";
 import { transactionRefundRequestedWebhookDefinition } from "./webhook-definition";
 
 const logger = createLogger("TransactionRefundRequested route");

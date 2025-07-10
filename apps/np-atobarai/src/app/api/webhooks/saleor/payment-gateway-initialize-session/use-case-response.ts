@@ -4,10 +4,6 @@ import { SuccessWebhookResponse } from "../saleor-webhook-responses";
 import { PaymentGatewayInitializeSessionValidationError } from "./validation-errors";
 
 class Success extends SuccessWebhookResponse {
-  constructor() {
-    super();
-  }
-
   getResponse() {
     const typeSafeResponse: PaymentGatewayInitializeSession = { data: {} };
 

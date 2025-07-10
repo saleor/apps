@@ -12,7 +12,7 @@ import { setObservabilitySourceObjectId } from "@/lib/observability-source-objec
 import { AtobaraiConfig } from "@/modules/app-config/types";
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
-import { withRecipientVerification } from "../with-recipient-vetification";
+import { withRecipientVerification } from "../with-recipient-verification";
 import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "./webhook-definition";
 
