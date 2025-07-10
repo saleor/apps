@@ -1,5 +1,12 @@
 # saleor-app-smtp
 
+## 1.3.11
+
+### Patch Changes
+
+- Updated dependencies [00070dc3]
+  - @saleor/apps-shared@1.13.0
+
 ## 1.3.10
 
 ### Patch Changes
