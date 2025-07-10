@@ -1,15 +1,17 @@
 import crypto from "node:crypto";
 
-import { env } from "./env";
+export interface IEncryptor {
+  encrypt(text: string): string;
+  decrypt(text: string): string;
+}
 
-// todo move to shared package
-export class Encryptor {
+export class Encryptor implements IEncryptor {
   /**
    * 16 or 32 bytes of hex string
    */
   private secret: string;
 
-  constructor(secret = env.SECRET_KEY) {
+  constructor(secret: string) {
     this.secret = secret;
   }
 

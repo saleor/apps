@@ -1,12 +1,19 @@
-query FetchBasicProductData($first:Int!, $after: String, $channel: String!){
-  productVariants(first:$first, after: $after, channel: $channel){
-    pageInfo{
+query FetchProductVariantsData($first: Int!, $after: String, $channel: String!) {
+  productVariants(
+    first: $first
+    after: $after
+    channel: $channel
+    # Sort is critical here, to ensure cursors work properly. Don't change it
+    sortBy: { field: LAST_MODIFIED_AT, direction: ASC }
+  ) {
+    pageInfo {
       hasNextPage
       endCursor
     }
-    edges{
+    edges {
       node {
         ...BasicProductData
+        ...ProductAttributes
       }
     }
   }

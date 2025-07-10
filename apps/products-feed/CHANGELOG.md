@@ -1,5 +1,16 @@
 # saleor-app-products-feed
 
+## 2.0.0
+
+### Major Changes
+
+- 57fa563e: Added possibility to scan entire Saleor catalog, without limits. Removed possibility to use the app without configured S3 bucket "in memory"
+
+### Patch Changes
+
+- Updated dependencies [00070dc3]
+  - @saleor/apps-shared@1.13.0
+
 ## 1.23.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-shared",
-  "version": "1.12.3",
+  "version": "1.13.0",
   "type": "module",
   "exports": {
     "./compose": "./src/compose.ts",
@@ -15,7 +15,8 @@
     "./race": "./src/race.ts",
     "./saleor-version-compatibility-validator": "./src/saleor-version-compatibility-validator.ts",
     "./theme-synchronizer": "./src/theme-synchronizer.tsx",
-    "./use-dashboard-notification": "./src/use-dashboard-notification.ts"
+    "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
+    "./encryptor": "./src/encryptor.ts"
   },
   "scripts": {
     "check-types": "tsc",

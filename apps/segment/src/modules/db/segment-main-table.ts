@@ -1,5 +1,5 @@
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { Entity, schema, string, Table } from "dynamodb-toolbox";
+import { Entity, item, string, Table } from "dynamodb-toolbox";
 
 import { env } from "@/env";
 import { createDynamoDBClient, createDynamoDBDocumentClient } from "@/lib/dynamodb-client";
@@ -51,7 +51,7 @@ export class SegmentMainTable extends Table<PartitionKey, SortKey> {
 }
 
 const SegmentConfigTableSchema = {
-  apl: schema({
+  apl: item({
     PK: string().key(),
     SK: string().key(),
     domain: string().optional(),
@@ -60,7 +60,7 @@ const SegmentConfigTableSchema = {
     appId: string(),
     jwks: string().optional(),
   }),
-  config: schema({
+  config: item({
     PK: string().key(),
     SK: string().key(),
     encryptedSegmentWriteKey: string(),
