@@ -131,7 +131,7 @@ describe("AtobaraiCustomer", () => {
       });
       const result = customer.getCustomerAddress();
 
-      expect(result.email).toMatchInlineSnapshot(`"ok@np-atobarai.saleor.io"`);
+      expect(result.email).toMatchInlineSnapshot(`"transaction-initialize-session@email.com"`);
     });
 
     it("should use Order userEmail when sourceObject is Order", () => {
@@ -151,12 +151,12 @@ describe("AtobaraiCustomer", () => {
         {},
         `
         {
-          "address": "東京都千代田区麹町４－２－６",
-          "company_name": "My company",
-          "customer_name": "John Doe",
-          "email": "ok@np-atobarai.saleor.io",
-          "tel": "0 03-1234-5678",
-          "zip_code": "102-0083",
+          "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
+          "company_name": "BillingCompanyName",
+          "customer_name": "BillingFirstName BillingLastName",
+          "email": "transaction-initialize-session@email.com",
+          "tel": "0billingPhone",
+          "zip_code": "BillingPostalCode",
         }
       `,
       );
@@ -168,7 +168,7 @@ describe("AtobaraiCustomer", () => {
       });
       const result = customer.getCustomerAddress();
 
-      expect(result.customer_name).toMatchInlineSnapshot(`"John Doe"`);
+      expect(result.customer_name).toMatchInlineSnapshot(`"BillingFirstName BillingLastName"`);
     });
 
     it("should convert billing address into Atobarai required address", () => {
@@ -177,7 +177,9 @@ describe("AtobaraiCustomer", () => {
       });
       const result = customer.getCustomerAddress();
 
-      expect(result.address).toMatchInlineSnapshot(`"東京都千代田区麹町４－２－６"`);
+      expect(result.address).toMatchInlineSnapshot(
+        `"BillingCountryAreaBillingStreetAddress1BillingStreetAddress2"`,
+      );
     });
 
     it("should convert Japanese phone number to one that starts with 0 (required by Atobarai)", () => {
@@ -186,7 +188,7 @@ describe("AtobaraiCustomer", () => {
       });
       const result = customer.getCustomerAddress();
 
-      expect(result.tel).toMatchInlineSnapshot(`"0 03-1234-5678"`);
+      expect(result.tel).toMatchInlineSnapshot(`"0billingPhone"`);
     });
   });
 });

@@ -29,12 +29,12 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
           {
             "billed_amount": 1000,
             "customer": {
-              "address": "東京都千代田区麹町４－２－６",
-              "company_name": "My company",
-              "customer_name": "John Doe",
-              "email": "ok@np-atobarai.saleor.io",
-              "tel": "0 03-1234-5678",
-              "zip_code": "102-0083",
+              "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
+              "company_name": "BillingCompanyName",
+              "customer_name": "BillingFirstName BillingLastName",
+              "email": "transaction-initialize-session@email.com",
+              "tel": "0billingPhone",
+              "zip_code": "BillingPostalCode",
             },
             "dest_customer": {},
             "goods": [],
