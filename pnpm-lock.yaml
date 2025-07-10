@@ -69,6 +69,9 @@ catalogs:
     '@vercel/otel':
       specifier: 1.10.1
       version: 1.10.1
+    dynamodb-toolbox:
+      specifier: 2.6.4
+      version: 2.6.4
     eslint:
       specifier: 9.23.0
       version: 9.23.0
@@ -234,8 +237,8 @@ importers:
         specifier: 16.3.1
         version: 16.3.1
       dynamodb-toolbox:
-        specifier: 1.8.2
-        version: 1.8.2(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
+        specifier: 'catalog:'
+        version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -1401,8 +1404,8 @@ importers:
         specifier: 16.3.1
         version: 16.3.1
       dynamodb-toolbox:
-        specifier: 1.8.2
-        version: 1.8.2(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
+        specifier: 'catalog:'
+        version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       graphql:
         specifier: 16.7.1
         version: 16.7.1
@@ -1823,8 +1826,8 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       dynamodb-toolbox:
-        specifier: 1.8.2
-        version: 1.8.2(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
+        specifier: 'catalog:'
+        version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       modern-errors:
         specifier: 'catalog:'
         version: 7.0.1
@@ -7416,8 +7419,8 @@ packages:
   duplexer@0.1.2:
     resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
 
-  dynamodb-toolbox@1.8.2:
-    resolution: {integrity: sha512-nLSnjV4WLCbsplhYMqNwmlXhuy5bm4WOpKUkEtDAy0jy/g2Hbad14sJ6wgYgNqYuGu8iXnz/jR0nRN2+WeDGzQ==}
+  dynamodb-toolbox@2.6.4:
+    resolution: {integrity: sha512-QElE94dH3FzOwosLSxMC0Ib8YCZq16xT2Z4jelF6msgtqcY53aUADxdJia6wHBCDc6Sp8N90Ml6g7tdwdkCXXQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@aws-sdk/client-dynamodb': ^3.0.0
@@ -8319,6 +8322,9 @@ packages:
 
   hosted-git-info@2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
+
+  hotscript@1.0.13:
+    resolution: {integrity: sha512-C++tTF1GqkGYecL+2S1wJTfoH6APGAsbb7PAWQ3iVIwgG/EFseAfEVOKFgAFq4yK3+6j1EjUD4UQ9dRJHX/sSQ==}
 
   html-encoding-sniffer@3.0.0:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
@@ -18666,10 +18672,11 @@ snapshots:
 
   duplexer@0.1.2: {}
 
-  dynamodb-toolbox@1.8.2(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1)):
+  dynamodb-toolbox@2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1)):
     dependencies:
       '@aws-sdk/client-dynamodb': 3.651.1
       '@aws-sdk/lib-dynamodb': 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
+      hotscript: 1.0.13
 
   eastasianwidth@0.2.0: {}
 
@@ -19808,6 +19815,8 @@ snapshots:
       react-is: 16.13.1
 
   hosted-git-info@2.8.9: {}
+
+  hotscript@1.0.13: {}
 
   html-encoding-sniffer@3.0.0:
     dependencies:

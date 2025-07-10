@@ -97,7 +97,7 @@ describe("DynamoDBTransactionRecorderRepo", () => {
             modifiedAt: "2023-01-01T00:00:00.000Z",
             saleorApiUrl: mockedSaleorApiUrl,
             appId: mockedSaleorAppId,
-            _et: "TRANSACTION",
+            _et: "RecordedTransaction",
           },
           $metadata: {
             httpStatusCode: 200,

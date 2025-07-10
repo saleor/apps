@@ -1,4 +1,4 @@
-import { type FormattedItem, type ParsedValue, Parser } from "dynamodb-toolbox";
+import { type FormattedItem, FormattedValue, Parser } from "dynamodb-toolbox";
 import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/error";
@@ -43,7 +43,7 @@ export class LogsTransformer {
     clientLogRequest: ClientLogStoreRequest;
     saleorApiUrl: string;
     appId: string;
-  }): ParsedValue<typeof ClientLogDynamoSchema.logByDate> {
+  }): FormattedValue<typeof ClientLogDynamoSchema.logByDate> {
     const data = this.fromClientLogRequestToDynamoEntityValues(inputData);
 
     return ClientLogDynamoSchema.logByDate.build(Parser).parse(data);
@@ -53,7 +53,7 @@ export class LogsTransformer {
     clientLogRequest: ClientLogStoreRequest;
     saleorApiUrl: string;
     appId: string;
-  }): ParsedValue<typeof ClientLogDynamoSchema.logByCheckoutOrOrderId> {
+  }): FormattedValue<typeof ClientLogDynamoSchema.logByCheckoutOrOrderId> {
     const data = this.fromClientLogRequestToDynamoEntityValues(inputData);
 
     return ClientLogDynamoSchema.logByCheckoutOrOrderId.build(Parser).parse(data);

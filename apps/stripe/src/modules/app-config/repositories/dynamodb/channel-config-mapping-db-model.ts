@@ -1,4 +1,4 @@
-import { Entity, schema, string } from "dynamodb-toolbox";
+import { Entity, item, string } from "dynamodb-toolbox";
 
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -17,7 +17,7 @@ class DynamoDbChannelConfigMappingAccessPattern {
   }
 }
 
-const DynamoDbChannelConfigMappingEntrySchema = schema({
+const DynamoDbChannelConfigMappingEntrySchema = item({
   PK: string().key(),
   SK: string().key(),
   channelId: string(),
