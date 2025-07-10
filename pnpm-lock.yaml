@@ -740,6 +740,12 @@ importers:
 
   apps/np-atobarai:
     dependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1
+      '@aws-sdk/lib-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
@@ -812,6 +818,9 @@ importers:
       '@vercel/otel':
         specifier: 'catalog:'
         version: 1.10.1(@opentelemetry/api-logs@0.57.2)(@opentelemetry/api@1.9.0)(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/resources@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-logs@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))
+      dynamodb-toolbox:
+        specifier: 'catalog:'
+        version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       modern-errors:
         specifier: 'catalog:'
         version: 7.0.1
