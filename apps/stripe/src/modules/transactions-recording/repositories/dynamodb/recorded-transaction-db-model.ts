@@ -1,4 +1,5 @@
-import { Entity, schema, string } from "dynamodb-toolbox";
+import { Entity, string } from "dynamodb-toolbox";
+import { item } from "dynamodb-toolbox/schema/item";
 
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -14,7 +15,7 @@ class AccessPattern {
   }
 }
 
-const Schema = schema({
+const Schema = item({
   PK: string().key(),
   SK: string().key(),
   paymentIntentId: string(),

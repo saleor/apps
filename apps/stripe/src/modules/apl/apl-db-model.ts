@@ -1,4 +1,5 @@
-import { Entity, schema, string } from "dynamodb-toolbox";
+import { Entity, string } from "dynamodb-toolbox";
+import { item } from "dynamodb-toolbox/schema/item";
 
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 
@@ -21,7 +22,7 @@ export class AplAccessPattern {
   }
 }
 
-const AplEntrySchema = schema({
+export const AplEntrySchema = item({
   PK: string().key(),
   SK: string().key(),
   token: string(),

@@ -1,10 +1,11 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { DeleteItemCommand, GetItemCommand, PutItemCommand, ScanCommand } from "dynamodb-toolbox";
+import { Parser } from "dynamodb-toolbox/schema/actions/parse";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { AplAccessPattern, DynamoDbAplEntity } from "@/modules/apl/apl-db-model";
+import { AplAccessPattern, AplEntrySchema, DynamoDbAplEntity } from "@/modules/apl/apl-db-model";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import { APLRepository } from "./apl-repository";
@@ -53,8 +54,9 @@ export class DynamoAPLRepository implements APLRepository {
 
       return ok(null);
     }
-
-    const { appId, jwks, token, saleorApiUrl } = getEntryResult.value.Item;
+    const { saleorApiUrl, jwks, token, appId } = AplEntrySchema.build(Parser).parse(
+      getEntryResult.value.Item,
+    );
 
     return ok({
       saleorApiUrl,

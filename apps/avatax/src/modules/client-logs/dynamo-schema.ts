@@ -1,5 +1,5 @@
 import { type DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { Entity, number, schema, string, Table } from "dynamodb-toolbox";
+import { Entity, item, number, schema, string, Table } from "dynamodb-toolbox";
 import { ulid } from "ulid";
 
 import { env } from "@/env";
@@ -70,7 +70,7 @@ export class LogsTable extends Table<
   }
 }
 
-export const baseLogSchema = schema({
+export const baseLogSchema = item({
   PK: string().key(),
   // SK: sort key is added by adequate entity schema
   ulid: string()
