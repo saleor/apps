@@ -138,7 +138,7 @@ describe("createAtobaraiCustomer", () => {
     );
   });
 
-  it("shoudn't be assignable without createAtobaraiCustomer", () => {
+  it("shouldn't be assignable without createAtobaraiCustomer", () => {
     // @ts-expect-error - if this fails - it means the type is not branded
     const testValue: AtobaraiCustomer = { customer_name: "Test Customer" };
 

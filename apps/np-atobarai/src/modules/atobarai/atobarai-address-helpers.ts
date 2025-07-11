@@ -1,4 +1,4 @@
-import { AddressFragment, TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { AddressFragment, SourceObjectFragment } from "@/generated/graphql";
 
 export const formatCustomerName = (address: AddressFragment): string => {
   return `${address.firstName} ${address.lastName}`;
@@ -14,7 +14,7 @@ export const formatPhone = (phone: string): string => {
 };
 
 export const getEmailFromSourceObject = (
-  sourceObject: TransactionInitializeSessionEventFragment["sourceObject"],
+  sourceObject: SourceObjectFragment,
 ): string | null | undefined => {
   switch (sourceObject.__typename) {
     case "Checkout":
