@@ -24,7 +24,7 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@types/node": "22.13.10",
+    "@types/node": "catalog:",
     "eslint": "catalog:",
     "next": "catalog:",
     "typescript": "catalog:",

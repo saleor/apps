@@ -15,6 +15,27 @@ catalogs:
     '@aws-sdk/util-dynamodb':
       specifier: 3.651.1
       version: 3.651.1
+    '@graphql-codegen/cli':
+      specifier: 5.0.2
+      version: 5.0.2
+    '@graphql-codegen/introspection':
+      specifier: 4.0.3
+      version: 4.0.3
+    '@graphql-codegen/typed-document-node':
+      specifier: 5.0.5
+      version: 5.0.5
+    '@graphql-codegen/typescript':
+      specifier: 4.0.5
+      version: 4.0.5
+    '@graphql-codegen/typescript-operations':
+      specifier: 4.1.3
+      version: 4.1.3
+    '@graphql-codegen/typescript-urql':
+      specifier: 4.0.0
+      version: 4.0.0
+    '@graphql-typed-document-node/core':
+      specifier: 3.2.0
+      version: 3.2.0
     '@hookform/resolvers':
       specifier: 3.3.1
       version: 3.3.1
@@ -84,6 +105,9 @@ catalogs:
     '@trpc/server':
       specifier: 10.43.1
       version: 10.43.1
+    '@types/node':
+      specifier: 22.13.10
+      version: 22.13.10
     '@vercel/otel':
       specifier: 1.10.1
       version: 1.10.1
@@ -361,34 +385,34 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/import-types-preset':
         specifier: ^3.0.0
         version: 3.0.0(graphql@16.7.1)
       '@graphql-codegen/introspection':
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
         specifier: 4.0.2
         version: 4.0.2(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-document-nodes':
         specifier: 4.0.5
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
-        specifier: 4.0.0
+        specifier: 'catalog:'
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@next/bundle-analyzer':
         specifier: 15.2.4
@@ -587,25 +611,25 @@ importers:
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/introspection':
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
-        specifier: 4.0.0
+        specifier: 'catalog:'
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -735,28 +759,28 @@ importers:
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/introspection':
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
         specifier: 4.0.2
         version: 4.0.2(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
-        specifier: 4.0.0
+        specifier: 'catalog:'
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -765,7 +789,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/node':
-        specifier: 22.13.10
+        specifier: 'catalog:'
         version: 22.13.10
       '@types/react':
         specifier: 18.2.5
@@ -919,25 +943,25 @@ importers:
         version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/introspection':
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
-        specifier: 4.0.0
+        specifier: 'catalog:'
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -961,7 +985,7 @@ importers:
         specifier: 0.6.1
         version: 0.6.1
       '@types/node':
-        specifier: 22.13.10
+        specifier: 'catalog:'
         version: 22.13.10
       '@types/react':
         specifier: 18.2.5
@@ -1145,28 +1169,28 @@ importers:
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/introspection':
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
         specifier: 4.0.2
         version: 4.0.2(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
-        specifier: 4.0.0
+        specifier: 'catalog:'
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -1326,28 +1350,28 @@ importers:
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/introspection':
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
         specifier: 4.0.2
         version: 4.0.2(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
-        specifier: 4.0.0
+        specifier: 'catalog:'
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -1543,25 +1567,25 @@ importers:
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/introspection':
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
-        specifier: 4.0.0
+        specifier: 'catalog:'
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -1763,28 +1787,28 @@ importers:
         version: 3.21.4
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/introspection':
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/schema-ast':
         specifier: 4.0.2
         version: 4.0.2(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
-        specifier: 4.0.0
+        specifier: 'catalog:'
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -1962,25 +1986,25 @@ importers:
         version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/introspection':
-        specifier: 4.0.3
+        specifier: 'catalog:'
         version: 4.0.3(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-codegen/typescript-urql':
-        specifier: 4.0.0
+        specifier: 'catalog:'
         version: 4.0.0(graphql-tag@2.12.6(graphql@16.7.1))(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@playwright/test':
         specifier: 1.52.0
@@ -2007,7 +2031,7 @@ importers:
         specifier: 0.6.1
         version: 0.6.1
       '@types/node':
-        specifier: 22.13.10
+        specifier: 'catalog:'
         version: 22.13.10
       '@types/react':
         specifier: 18.2.5
@@ -2336,7 +2360,7 @@ importers:
         specifier: workspace:*
         version: link:../typescript-config
       '@types/node':
-        specifier: 22.13.10
+        specifier: 'catalog:'
         version: 22.13.10
       eslint:
         specifier: 'catalog:'
@@ -2393,7 +2417,7 @@ importers:
         specifier: workspace:*
         version: link:../typescript-config
       '@types/node':
-        specifier: 22.13.10
+        specifier: 'catalog:'
         version: 22.13.10
       eslint:
         specifier: 'catalog:'
@@ -2500,7 +2524,7 @@ importers:
         specifier: 'catalog:'
         version: 10.43.1
       '@types/node':
-        specifier: 22.13.10
+        specifier: 'catalog:'
         version: 22.13.10
       next:
         specifier: 'catalog:'
@@ -2569,22 +2593,22 @@ importers:
         version: 7.5.1
     devDependencies:
       '@graphql-codegen/cli':
-        specifier: 5.0.2
+        specifier: 'catalog:'
         version: 5.0.2(@types/node@22.13.10)(enquirer@2.4.1)(graphql@16.7.1)(typescript@5.8.2)
       '@graphql-codegen/schema-ast':
         specifier: 4.0.2
         version: 4.0.2(graphql@16.7.1)
       '@graphql-codegen/typed-document-node':
-        specifier: 5.0.5
+        specifier: 'catalog:'
         version: 5.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript':
-        specifier: 4.0.5
+        specifier: 'catalog:'
         version: 4.0.5(graphql@16.7.1)
       '@graphql-codegen/typescript-operations':
-        specifier: 4.1.3
+        specifier: 'catalog:'
         version: 4.1.3(graphql@16.7.1)
       '@graphql-typed-document-node/core':
-        specifier: 3.2.0
+        specifier: 'catalog:'
         version: 3.2.0(graphql@16.7.1)
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
