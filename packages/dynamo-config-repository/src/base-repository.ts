@@ -1,0 +1,223 @@
+import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import {
+  Entity,
+  EntityParser,
+  FormattedValue,
+  GetItemCommand,
+  item,
+  Parser,
+  Schema,
+  string,
+  Table,
+} from "dynamodb-toolbox";
+import { err, ok, Result } from "neverthrow";
+
+type BaseAccessPattern = {
+  saleorApiUrl: SaleorApiUrl;
+  appId: string;
+};
+
+type ConfigByChannelIdAccessPattern = BaseAccessPattern & {
+  channelId: string;
+};
+
+type ConfigByConfigIdAccessPattern = BaseAccessPattern & {
+  configId: string;
+};
+
+type GetChannelConfigAccessPattern = ConfigByChannelIdAccessPattern | ConfigByConfigIdAccessPattern;
+
+class GenericRootConfig<ChannelConfig> {
+  readonly chanelConfigMapping: Record<string, string>;
+  readonly configsById: Record<string, ChannelConfig>;
+
+  constructor({
+    chanelConfigMapping,
+    configsById,
+  }: {
+    chanelConfigMapping: Record<string, string>;
+    configsById: Record<string, ChannelConfig>;
+  }) {
+    this.chanelConfigMapping = chanelConfigMapping;
+    this.configsById = configsById;
+  }
+
+  getAllConfigsAsList() {
+    return Object.values(this.configsById);
+  }
+
+  getChannelsBoundToGivenConfig(configId: string) {
+    const keyValues = Object.entries(this.chanelConfigMapping);
+    const filtered = keyValues.filter(([_, value]) => value === configId);
+
+    return filtered.map(([channelId]) => channelId);
+  }
+
+  getConfigByChannelId(channelId: string) {
+    return this.configsById[this.chanelConfigMapping[channelId]];
+  }
+
+  getConfigById(configId: string) {
+    return this.configsById[configId];
+  }
+}
+
+interface GenericRepo<ChannelConfig> {
+  saveChannelConfig: (args: {
+    config: ChannelConfig;
+    saleorApiUrl: SaleorApiUrl;
+    appId: string;
+  }) => Promise<Result<null | void, Error>>;
+  getChannelConfig: (
+    access: GetChannelConfigAccessPattern,
+  ) => Promise<Result<ChannelConfig | null, Error>>;
+  getRootConfig: (
+    access: BaseAccessPattern,
+  ) => Promise<Result<GenericRootConfig<ChannelConfig>, Error>>;
+  removeConfig: (
+    access: BaseAccessPattern,
+    data: {
+      configId: string;
+    },
+  ) => Promise<Result<null, Error>>;
+  updateMapping: (
+    access: BaseAccessPattern,
+    data: {
+      configId: string | null;
+      channelId: string;
+    },
+  ) => Promise<Result<void | null, Error>>;
+}
+
+type Settings<ChannelConfig, TEntity extends Entity = Entity, TSchema extends Schema = Schema> = {
+  table: Table;
+  configItem: {
+    toolboxEntity: TEntity;
+    entitySchema: TSchema;
+  };
+  mapping: {
+    singleDynamoItemToDomainEntity: (entity: FormattedValue<TSchema>) => ChannelConfig;
+    singleDomainEntityToDynamoItem: (config: ChannelConfig) => unknown; // todo
+  };
+};
+
+const mappingSchema = item({
+  PK: string().key(),
+  SK: string().key(),
+  channelId: string(),
+  configId: string().optional(),
+});
+
+const createMappingEntity = (table: Table, entityName = "DynamoConfigRepoMapping") =>
+  new Entity({
+    table,
+    name: entityName,
+    timestamps: {
+      created: {
+        name: "createdAt",
+        savedAs: "createdAt",
+      },
+      modified: {
+        name: "modifiedAt",
+        savedAs: "modifiedAt",
+      },
+    },
+    schema: mappingSchema,
+    // ????
+    computeKey: () => ({}),
+  });
+
+export class DynamoConfigRepository<ChannelConfig> implements GenericRepo<ChannelConfig> {
+  private settings: Settings<ChannelConfig>;
+  private mappingEntity: ReturnType<typeof createMappingEntity>;
+
+  constructor(settings: Settings<ChannelConfig>) {
+    this.settings = settings;
+    this.mappingEntity = createMappingEntity(settings.table, "DynamoConfigRepoMapping");
+  }
+
+  private getPK({ saleorApiUrl, appId }: { saleorApiUrl: SaleorApiUrl; appId: string }) {
+    return `${saleorApiUrl}#${appId}` as const;
+  }
+
+  private getSKforSpecificItem({ configId }: { configId: string }) {
+    return `CONFIG_ID#${configId}` as const;
+  }
+
+  private getSKforAllItems() {
+    return `CONFIG_ID#` as const;
+  }
+
+  private getSKforSpecificChannel({ channelId }: { channelId: string }) {
+    return `CHANNEL_ID#${channelId}` as const;
+  }
+
+  async getChannelConfig(
+    access: GetChannelConfigAccessPattern,
+  ): Promise<Result<ChannelConfig | null, Error>> {
+    const channelId = "channelId" in access ? access.channelId : undefined;
+    /**
+     * We eventually need config id, so it's mutable. It's either provided or will be resolved later and written here
+     */
+    let configId = "configId" in access ? access.configId : undefined;
+
+    if (!configId && channelId) {
+      const configIdResult = await this.fetchConfigIdFromChannelId({
+        appId: access.appId,
+        saleorApiUrl: access.saleorApiUrl,
+        channelId,
+      });
+
+      if (!configIdResult.Item) {
+        return ok(null);
+      }
+
+      const parsed = mappingSchema.build(Parser).parse(configIdResult.Item);
+
+      configId = parsed.configId;
+    }
+
+    if (configId) {
+      // todo error handling
+      const result = await this.fetchConfigByItsId({
+        appId: access.appId,
+        saleorApiUrl: access.saleorApiUrl,
+        configId,
+      });
+
+      if (!result.Item) {
+        return ok(null);
+      }
+
+      const parsed = this.settings.configItem.toolboxEntity.build(EntityParser).parse(result.Item);
+
+      return ok(this.settings.mapping.singleDynamoItemToDomainEntity(parsed));
+    }
+
+    return err(
+      new Error("Invalid access pattern provided. Either channelId or configId must be provided."),
+    );
+  }
+
+  private fetchConfigIdFromChannelId(access: ConfigByChannelIdAccessPattern) {
+    const query = this.mappingEntity.build(GetItemCommand).key({
+      PK: this.getPK(access),
+      SK: this.getSKforSpecificChannel({
+        channelId: access.channelId,
+      }),
+    });
+
+    return query.send();
+  }
+
+  private fetchConfigByItsId(access: ConfigByConfigIdAccessPattern) {
+    const query = this.settings.configItem.toolboxEntity.build(GetItemCommand).key({
+      PK: this.getPK(access),
+      SK: this.getSKforSpecificItem({
+        configId: access.configId,
+      }),
+    });
+
+    return query.send();
+  }
+}
