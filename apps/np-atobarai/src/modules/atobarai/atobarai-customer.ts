@@ -1,7 +1,7 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
-import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { SourceObjectFragment } from "@/generated/graphql";
 
 import {
   formatAddress,
@@ -33,9 +33,7 @@ export const AtobaraiCustomerMissingDataError = BaseError.subclass(
 /**
  * Creates Atobarai customer from Saleor sourceObject billingAddress and email.
  */
-export const createAtobaraiCustomer = (
-  event: Pick<TransactionInitializeSessionEventFragment, "sourceObject">,
-) => {
+export const createAtobaraiCustomer = (event: { sourceObject: SourceObjectFragment }) => {
   const billingAddress = event.sourceObject.billingAddress;
 
   if (!billingAddress) {

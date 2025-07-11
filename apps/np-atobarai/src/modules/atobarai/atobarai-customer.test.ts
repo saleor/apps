@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { mockedSaleorChannelId } from "@/__tests__/mocks/saleor/mocked-saleor-channel-id";
 import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-initialize-session-event";
-import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { SourceObjectFragment } from "@/generated/graphql";
 
 import { AtobaraiCustomer, createAtobaraiCustomer } from "./atobarai-customer";
 
@@ -10,7 +10,7 @@ describe("createAtobaraiCustomer", () => {
   const mockedCheckoutSourceObject = {
     ...mockedTransactionInitializeSessionEvent.sourceObject,
     __typename: "Checkout",
-  } satisfies TransactionInitializeSessionEventFragment["sourceObject"];
+  } satisfies SourceObjectFragment;
 
   const mockedOrderSourceObject = {
     __typename: "Order",
@@ -23,7 +23,13 @@ describe("createAtobaraiCustomer", () => {
     },
     billingAddress: mockedTransactionInitializeSessionEvent.sourceObject.billingAddress,
     shippingAddress: null,
-  } satisfies TransactionInitializeSessionEventFragment["sourceObject"];
+    shippingPrice: {
+      gross: {
+        amount: 137,
+      },
+    },
+    lines: [],
+  } satisfies SourceObjectFragment;
 
   it("should create AtobaraiCustomer from TransactionInitializeSessionEvent for Saleor checkout", () => {
     const customer = createAtobaraiCustomer({
@@ -31,15 +37,15 @@ describe("createAtobaraiCustomer", () => {
     });
 
     expect(customer).toMatchInlineSnapshot(`
-        {
-          "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
-          "company_name": "BillingCompanyName",
-          "customer_name": "BillingFirstName BillingLastName",
-          "email": "transaction-initialize-session@email.com",
-          "tel": "0billingPhone",
-          "zip_code": "BillingPostalCode",
-        }
-      `);
+      {
+        "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
+        "company_name": "BillingCompanyName",
+        "customer_name": "BillingFirstName BillingLastName",
+        "email": "source-object@email.com",
+        "tel": "0billingPhone",
+        "zip_code": "BillingPostalCode",
+      }
+    `);
   });
 
   it("should create AtobaraiCustomer from TransactionInitializeSessionEvent for Saleor order", () => {

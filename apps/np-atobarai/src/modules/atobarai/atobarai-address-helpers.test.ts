@@ -20,6 +20,12 @@ describe("getEmailFromSourceObject", () => {
         slug: "default-channel",
         currencyCode: "JPY",
       },
+      lines: [],
+      shippingPrice: {
+        gross: {
+          amount: 0,
+        },
+      },
     } satisfies SourceObjectFragment;
     const email = getEmailFromSourceObject(mockedCheckoutSourceObject);
 
@@ -35,6 +41,12 @@ describe("getEmailFromSourceObject", () => {
         id: "channel-id",
         slug: "default-channel",
         currencyCode: "JPY",
+      },
+      lines: [],
+      shippingPrice: {
+        gross: {
+          amount: 0,
+        },
       },
     } satisfies SourceObjectFragment;
     const email = getEmailFromSourceObject(mockedOrderSourceObject);

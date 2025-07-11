@@ -32,7 +32,7 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
               "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
               "company_name": "BillingCompanyName",
               "customer_name": "BillingFirstName BillingLastName",
-              "email": "transaction-initialize-session@email.com",
+              "email": "source-object@email.com",
               "tel": "0billingPhone",
               "zip_code": "BillingPostalCode",
             },
@@ -43,7 +43,23 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
               "tel": "0shippingPhone",
               "zip_code": "ShippingPostalCode",
             },
-            "goods": [],
+            "goods": [
+              {
+                "goods_name": "product-sku",
+                "goods_price": 6170,
+                "goods_quantity": 5,
+              },
+              {
+                "goods_name": "Voucher",
+                "goods_price": 78,
+                "goods_quantity": 1,
+              },
+              {
+                "goods_name": "Shipping",
+                "goods_price": 137,
+                "goods_quantity": 1,
+              },
+            ],
             "settlement_type": "02",
             "shop_order_date": "2025-07-08",
             "shop_transaction_id": "mocked-saleor-transaction-token-uuid",

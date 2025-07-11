@@ -1,7 +1,7 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
-import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { SourceObjectFragment } from "@/generated/graphql";
 
 import { formatAddress, formatCustomerName, formatPhone } from "./atobarai-address-helpers";
 
@@ -27,9 +27,9 @@ export const AtobaraiDeliveryDestinationMissingDataError = BaseError.subclass(
 /**
  * Creates Atobarai delivery destination from Saleor sourceObject shippingAddress and email.
  */
-export const createAtobaraiDeliveryDestination = (
-  event: Pick<TransactionInitializeSessionEventFragment, "sourceObject">,
-): z.infer<typeof AtobaraiDeliveryDestinationSchema> => {
+export const createAtobaraiDeliveryDestination = (event: {
+  sourceObject: SourceObjectFragment;
+}): z.infer<typeof AtobaraiDeliveryDestinationSchema> => {
   const shippingAddress = event.sourceObject.shippingAddress;
 
   if (!shippingAddress) {

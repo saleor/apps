@@ -4,10 +4,11 @@ import { err, ok, Result } from "neverthrow";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
+import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AppConfigRepo } from "@/modules/app-config/types";
 import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
 import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
-import { AtobaraiGoods } from "@/modules/atobarai/atobarai-goods";
+import { createAtobaraiGoods } from "@/modules/atobarai/atobarai-goods";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import {
   AtobaraiRegisterTransactionPayload,
@@ -73,6 +74,7 @@ export class TransactionInitializeSessionUseCase {
 
   private prepareRegisterTransactionPayload(
     event: TransactionInitializeSessionEventFragment,
+    config: AppChannelConfig,
   ): AtobaraiRegisterTransactionPayload {
     return createAtobaraiRegisterTransactionPayload({
       saleorTransactionToken: createSaleorTransactionToken(event.transaction.token),
@@ -82,7 +84,7 @@ export class TransactionInitializeSessionUseCase {
       }),
       atobaraiCustomer: createAtobaraiCustomer(event),
       atobaraiDeliveryDestination: createAtobaraiDeliveryDestination(event),
-      atobaraiGoods: new AtobaraiGoods(),
+      atobaraiGoods: createAtobaraiGoods(event, config),
       atobaraiShopOrderDate: createAtobaraiShopOrderDate(event.issuedAt!), // checked if exists in execute method
     });
   }
@@ -120,7 +122,7 @@ export class TransactionInitializeSessionUseCase {
     });
 
     const registerTransactionResult = await apiClient.registerTransaction(
-      this.prepareRegisterTransactionPayload(event),
+      this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value),
     );
 
     if (registerTransactionResult.isErr()) {

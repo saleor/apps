@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { mockedSaleorChannelId } from "@/__tests__/mocks/saleor/mocked-saleor-channel-id";
 import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-initialize-session-event";
-import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { SourceObjectFragment } from "@/generated/graphql";
 
 import { createAtobaraiDeliveryDestination } from "./atobarai-delivery-destination";
 
@@ -10,7 +10,7 @@ describe("createAtobaraiDeliveryDestination", () => {
   const mockedCheckoutSourceObject = {
     ...mockedTransactionInitializeSessionEvent.sourceObject,
     __typename: "Checkout",
-  } satisfies TransactionInitializeSessionEventFragment["sourceObject"];
+  } satisfies SourceObjectFragment;
 
   const mockedOrderSourceObject = {
     __typename: "Order",
@@ -23,7 +23,13 @@ describe("createAtobaraiDeliveryDestination", () => {
     },
     shippingAddress: mockedTransactionInitializeSessionEvent.sourceObject.shippingAddress,
     billingAddress: null,
-  } satisfies TransactionInitializeSessionEventFragment["sourceObject"];
+    shippingPrice: {
+      gross: {
+        amount: 137,
+      },
+    },
+    lines: [],
+  } satisfies SourceObjectFragment;
 
   it("should create AtobaraiDeliveryDestination from TransactionInitializeSessionEvent for Saleor checkout", () => {
     const deliveryDestination = createAtobaraiDeliveryDestination({

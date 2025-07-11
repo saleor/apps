@@ -6,7 +6,7 @@ import {
   AtobaraiDeliveryDestination,
   AtobaraiDeliveryDestinationSchema,
 } from "./atobarai-delivery-destination";
-import { AtobaraiGoods } from "./atobarai-goods";
+import { AtobaraiGoods, AtobaraiGoodsSchema } from "./atobarai-goods";
 import { AtobaraiMoney } from "./atobarai-money";
 import { ATOBARAI_SETTLEMENT_TYPE } from "./atobarai-settelment-type";
 import { AtobaraiShopOrderDate } from "./atobarai-shop-order-date";
@@ -23,7 +23,7 @@ const schema = z
         billed_amount: z.number().positive(),
         customer: AtobaraiCustomerSchema,
         dest_customer: AtobaraiDeliveryDestinationSchema,
-        goods: AtobaraiGoods.schema,
+        goods: AtobaraiGoodsSchema,
       }),
     ),
   })
@@ -46,7 +46,7 @@ export const createAtobaraiRegisterTransactionPayload = (args: {
         billed_amount: args.atobaraiMoney.amount,
         customer: args.atobaraiCustomer,
         dest_customer: args.atobaraiDeliveryDestination,
-        goods: args.atobaraiGoods.getGoods(),
+        goods: args.atobaraiGoods,
       },
     ],
   });
