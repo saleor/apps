@@ -11,7 +11,7 @@ type PartitionKey = { name: "PK"; type: "string" };
 type SortKey = { name: "SK"; type: "string" };
 
 /**
- * This table is used to store all relevant data for the Segment application meaning: APL, configuration, etc.
+ * This table is used to store all relevant data for the NP-Atobarai application meaning: APL, configuration, etc.
  */
 export class DynamoMainTable extends Table<PartitionKey, SortKey> {
   private constructor(args: ConstructorParameters<typeof Table<PartitionKey, SortKey>>[number]) {
