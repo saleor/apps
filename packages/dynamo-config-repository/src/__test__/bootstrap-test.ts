@@ -39,5 +39,5 @@ export const bootstrapTest = () => {
     },
   });
 
-  return { table, toolboxEntity };
+  return { table, toolboxEntity, toolboxSchema };
 };

@@ -127,11 +127,16 @@ const createMappingEntity = (table: Table, entityName = "DynamoConfigRepoMapping
     computeKey: () => ({}),
   });
 
-export class DynamoConfigRepository<ChannelConfig> implements GenericRepo<ChannelConfig> {
-  private settings: Settings<ChannelConfig>;
+export class DynamoConfigRepository<
+  ChannelConfig,
+  TEntity extends Entity = Entity,
+  TSchema extends Schema = Schema,
+> implements GenericRepo<ChannelConfig>
+{
+  private settings: Settings<ChannelConfig, TEntity, TSchema>;
   private mappingEntity: ReturnType<typeof createMappingEntity>;
 
-  constructor(settings: Settings<ChannelConfig>) {
+  constructor(settings: Settings<ChannelConfig, TEntity, TSchema>) {
     this.settings = settings;
     this.mappingEntity = createMappingEntity(settings.table, "DynamoConfigRepoMapping");
   }
@@ -189,7 +194,9 @@ export class DynamoConfigRepository<ChannelConfig> implements GenericRepo<Channe
         return ok(null);
       }
 
-      const parsed = this.settings.configItem.toolboxEntity.build(EntityParser).parse(result.Item);
+      const parsed = this.settings.configItem.toolboxEntity
+        .build(EntityParser)
+        .parse(result.Item) as FormattedValue<TSchema>;
 
       return ok(this.settings.mapping.singleDynamoItemToDomainEntity(parsed));
     }
@@ -212,7 +219,10 @@ export class DynamoConfigRepository<ChannelConfig> implements GenericRepo<Channe
 
   private fetchConfigByItsId(access: ConfigByConfigIdAccessPattern) {
     const query = this.settings.configItem.toolboxEntity.build(GetItemCommand).key({
-      PK: this.getPK(access),
+      PK: this.getPK({
+        saleorApiUrl: access.saleorApiUrl,
+        appId: access.appId,
+      }),
       SK: this.getSKforSpecificItem({
         configId: access.configId,
       }),
@@ -220,4 +230,12 @@ export class DynamoConfigRepository<ChannelConfig> implements GenericRepo<Channe
 
     return query.send();
   }
+}
+
+export function createDynamoConfigRepository<
+  ChannelConfig,
+  TEntity extends Entity,
+  TSchema extends Schema,
+>(settings: Settings<ChannelConfig, TEntity, TSchema>) {
+  return new DynamoConfigRepository(settings);
 }

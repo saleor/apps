@@ -1,28 +1,37 @@
 import { describe, expect, it } from "vitest";
 
 import { bootstrapTest } from "./__test__/bootstrap-test";
-import { DynamoConfigRepository } from "./base-repository";
+import { createDynamoConfigRepository } from "./base-repository";
 
 describe("DynamoConfigRepository", () => {
   it("Should create", () => {
-    const { table, toolboxEntity } = bootstrapTest();
+    const { table, toolboxEntity, toolboxSchema } = bootstrapTest();
 
     class AppChannelConfig {
       id: string;
       token: string;
       name: string;
 
-      constructor(id: string, token: string) {
+      constructor(id: string, name: string, token: string) {
         this.id = id;
         this.token = token;
-        this.name = token;
+        this.name = name;
       }
     }
 
-    const repo = new DynamoConfigRepository<AppChannelConfig>({
+    const repo = createDynamoConfigRepository({
       table: table,
       configItem: {
         toolboxEntity,
+        entitySchema: toolboxSchema,
+      },
+      mapping: {
+        singleDynamoItemToDomainEntity(entity) {
+          return new AppChannelConfig(entity.configId, entity.configName, entity.token);
+        },
+        singleDomainEntityToDynamoItem(channelConfig) {
+          return {};
+        },
       },
     });
 
