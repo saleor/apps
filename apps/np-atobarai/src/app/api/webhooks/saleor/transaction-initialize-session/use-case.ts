@@ -44,7 +44,7 @@ export class TransactionInitializeSessionUseCase {
   }) {
     const { channelId, appId, saleorApiUrl } = params;
 
-    const atobaraiConfigForThisChannel = await this.appConfigRepo.getAtobaraiConfig({
+    const atobaraiConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
       channelId,
       appId,
       saleorApiUrl,
@@ -117,10 +117,10 @@ export class TransactionInitializeSessionUseCase {
     }
 
     const apiClient = this.atobaraiApiClientFactory.create({
-      atobaraiTerminalId: atobaraiConfigResult.value.atobaraiTerminalId,
-      atobaraiMerchantCode: atobaraiConfigResult.value.atobaraiMerchantCode,
-      atobaraiSpCode: atobaraiConfigResult.value.atobaraiSpCode,
-      atobaraiEnviroment: atobaraiConfigResult.value.atobaraiEnviroment,
+      atobaraiTerminalId: atobaraiConfigResult.value.terminalId,
+      atobaraiMerchantCode: atobaraiConfigResult.value.merchantCode,
+      atobaraiSpCode: atobaraiConfigResult.value.spCode,
+      atobaraiEnviroment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
     const registerTransactionResult = await apiClient.registerTransaction(

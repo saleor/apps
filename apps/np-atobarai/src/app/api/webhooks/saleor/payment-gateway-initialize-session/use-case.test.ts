@@ -137,8 +137,8 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
   });
 
   it("Returns Failure response with error in data when source object has no billing address", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
-      ok(mockedAppConfig),
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
     );
     const eventWithNoBillingAddress = {
       ...mockedPaymentGatewayInitializeSessionEvent,
@@ -179,8 +179,8 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
   });
 
   it("Returns Failure response with error in data when source object has no billing phone number", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
-      ok(mockedAppConfig),
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
     );
 
     const eventWithNoBillingPhoneNumber = {
@@ -225,8 +225,8 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
   });
 
   it("Returns Failure response with error in data when source object has wrong phone number format", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
-      ok(mockedAppConfig),
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
     );
     const eventWithWrongPhoneNumberFormat = {
       ...mockedPaymentGatewayInitializeSessionEvent,
@@ -267,8 +267,8 @@ describe("PaymentGatewayInitializeSessionUseCase", () => {
   });
 
   it("Returns Failure response with error in data when source object has no email", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getAtobaraiConfig").mockImplementationOnce(() =>
-      ok(mockedAppConfig),
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
     );
     const eventWithNoEmail = {
       ...mockedPaymentGatewayInitializeSessionEvent,
