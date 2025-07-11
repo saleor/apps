@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { Input, Select } from "@saleor/react-hook-form-macaw";
+import { Combobox, Input } from "@saleor/react-hook-form-macaw";
 import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
@@ -45,7 +45,7 @@ export const S3ConfigurationForm = (props: Props) => {
 
       <Input size={"small"} name={"bucketName"} control={control} label="Bucket name" />
 
-      <Select
+      <Combobox
         control={control}
         label="Region"
         name={"region"}
