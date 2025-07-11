@@ -12,11 +12,33 @@ export const mockedPaymentGatewayInitializeSessionEvent = {
       currencyCode: "JPY",
     },
     id: "checkout-id",
-    shippingAddress: {
+    billingAddress: {
+      firstName: "BillingFirstName",
+      lastName: "BillingLastName",
+      phone: "+81billingPhone",
       country: {
         code: "JP",
       },
+      postalCode: "BillingPostalCode",
+      countryArea: "BillingCountryArea",
+      streetAddress1: "BillingStreetAddress1",
+      streetAddress2: "BillingStreetAddress2",
+      companyName: "BillingCompanyName",
     },
+    shippingAddress: {
+      firstName: "ShippingFirstName",
+      lastName: "ShippingLastName",
+      phone: "+81shippingPhone",
+      country: {
+        code: "JP",
+      },
+      postalCode: "ShippingPostalCode",
+      countryArea: "ShippingCountryArea",
+      streetAddress1: "ShippingStreetAddress1",
+      streetAddress2: "ShippingStreetAddress2",
+      companyName: "ShippingCompanyName",
+    },
+    email: "payment-gateway-initialize-session@email.com",
   },
   recipient: {
     id: mockedSaleorAppId,

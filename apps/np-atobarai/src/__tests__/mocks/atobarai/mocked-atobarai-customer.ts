@@ -1,3 +1,7 @@
 import { AtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
 
-export const mockedAtobaraiCustomer = new AtobaraiCustomer();
+import { mockedTransactionInitializeSessionEvent } from "../saleor-events/mocked-transaction-initialize-session-event";
+
+export const mockedAtobaraiCustomer = AtobaraiCustomer.createFromEvent(
+  mockedTransactionInitializeSessionEvent,
+);

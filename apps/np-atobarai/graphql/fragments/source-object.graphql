@@ -5,10 +5,12 @@ fragment SourceObject on OrderOrCheckout {
     channel {
       ...Channel
     }
+    email
+    billingAddress {
+      ...Address
+    }
     shippingAddress {
-      country {
-        code
-      }
+      ...Address
     }
   }
   ... on Order {
@@ -17,10 +19,12 @@ fragment SourceObject on OrderOrCheckout {
     channel {
       ...Channel
     }
+    userEmail
+    billingAddress {
+      ...Address
+    }
     shippingAddress {
-      country {
-        code
-      }
+      ...Address
     }
   }
 }
