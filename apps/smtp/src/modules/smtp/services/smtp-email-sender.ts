@@ -96,34 +96,17 @@ export class SmtpEmailSender implements ISMTPEmailSender {
         throw new Error("Unknown encryption type");
     }
 
-    try {
-      const response = await racePromise({
-        promise: transporter.sendMail({
-          ...mailData,
-        }),
-        error: new SmtpEmailSender.SmtpEmailSenderTimeoutError("Sending email timeout"),
-        timeout: this.TIMEOUT,
-      });
+    // We don't wrap this in a try-catch because it will be handled in usecase via neverthrow
+    const response = await racePromise({
+      promise: transporter.sendMail({
+        ...mailData,
+      }),
+      error: new SmtpEmailSender.SmtpEmailSenderTimeoutError("Sending email timeout"),
+      timeout: this.TIMEOUT,
+    });
 
-      this.logger.debug("An email has been sent", { response });
+    this.logger.debug("An email has been sent", { response });
 
-      return { response };
-    } catch (error) {
-      this.logger.error("Error during sending the email");
-
-      if (error instanceof SmtpEmailSender.SmtpEmailSenderTimeoutError) {
-        this.logger.error("Sending email timeout", { error });
-
-        throw error;
-      }
-
-      if (error instanceof Error) {
-        this.logger.error(error.message, { error });
-
-        throw error;
-      }
-
-      throw new Error("SMTP error");
-    }
+    return { response };
   }
 }
