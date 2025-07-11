@@ -17,7 +17,8 @@
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
         "SENTRY_PROJECT",
-        "APP_NAME"
+        "APP_NAME",
+        "DYNAMODB_MAIN_TABLE_NAME"
       ]
     }
   }
