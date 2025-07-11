@@ -1,6 +1,5 @@
+import { BaseError } from "@saleor/errors";
 import { z } from "zod";
-
-import { BaseError } from "./base-error";
 
 export const SaleorApiUrlValidationError = BaseError.subclass("SaleorApiUrlValidationError", {
   props: {

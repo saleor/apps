@@ -1,12 +1,16 @@
-import { AtobaraiConfig } from "@/modules/app-config/types";
+import { AppChannelConfig } from "@/modules/app-config/app-config";
+import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
+import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
-import { mockedAtobaraiMerchantCode } from "../atobarai/mocked-atobarai-merchant-code";
-import { mockedAtobaraiSpCode } from "../atobarai/mocked-atobarai-sp-code";
-import { mockedAtobaraiTerminalId } from "../atobarai/mocked-atobarai-terminal-id";
-
-export const mockedAppConfig = new AtobaraiConfig({
-  atobaraiEnviroment: "sandbox",
-  atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-  atobaraiSpCode: mockedAtobaraiSpCode,
-  atobaraiTerminalId: mockedAtobaraiTerminalId,
-});
+export const mockedAppChannelConfig = AppChannelConfig.create({
+  fillMissingAddress: true,
+  name: "Config 1",
+  id: "111",
+  merchantCode: createAtobaraiMerchantCode("merchant-code-1"),
+  shippingCompanyCode: "5000",
+  skuAsName: true,
+  spCode: createAtobaraiSpCode("sp1"),
+  useSandbox: true,
+  terminalId: createAtobaraiTerminalId("id"),
+})._unsafeUnwrap();

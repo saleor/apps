@@ -1,29 +1,8 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { Result } from "neverthrow";
 
-import { AtobaraiMerchantCode } from "../atobarai/atobarai-merchant-code";
-import { AtobaraiSpCode } from "../atobarai/atobarai-sp-code";
-import { AtobaraiTerminalId } from "../atobarai/atobarai-terminal-id";
-import { AtobaraiEnviroment } from "../atobarai/types";
-
-export class AtobaraiConfig {
-  public atobaraiTerminalId: AtobaraiTerminalId;
-  public atobaraiMerchantCode: AtobaraiMerchantCode;
-  public atobaraiSpCode: AtobaraiSpCode;
-  public atobaraiEnviroment: AtobaraiEnviroment;
-
-  constructor(params: {
-    atobaraiTerminalId: AtobaraiTerminalId;
-    atobaraiMerchantCode: AtobaraiMerchantCode;
-    atobaraiSpCode: AtobaraiSpCode;
-    atobaraiEnviroment: AtobaraiEnviroment;
-  }) {
-    this.atobaraiTerminalId = params.atobaraiTerminalId;
-    this.atobaraiMerchantCode = params.atobaraiMerchantCode;
-    this.atobaraiSpCode = params.atobaraiSpCode;
-    this.atobaraiEnviroment = params.atobaraiEnviroment;
-  }
-}
+import { BaseError } from "@/lib/errors";
+import { AppChannelConfig, AppRootConfig } from "@/modules/app-config/app-config";
 
 export type BaseAccessPattern = {
   saleorApiUrl: SaleorApiUrl;
@@ -38,13 +17,35 @@ export type AtobaraiConfigByConfigIdAccessPattern = BaseAccessPattern & {
   configId: string;
 };
 
-export type GetAtobaraiConfigAccessPattern =
+export type GetChannelConfigAccessPattern =
   | AtobaraiConfigByChannelIdAccessPattern
   | AtobaraiConfigByConfigIdAccessPattern;
 
+export const AppConfigRepoError = BaseError.subclass("AppConfigRepoError");
+
 export interface AppConfigRepo {
-  getAtobaraiConfig: (
-    access: GetAtobaraiConfigAccessPattern,
-    // TODO: Define strict errors
-  ) => Promise<Result<AtobaraiConfig | null, Error>>;
+  saveChannelConfig: (args: {
+    config: AppChannelConfig;
+    saleorApiUrl: SaleorApiUrl;
+    appId: string;
+  }) => Promise<Result<null | void, InstanceType<typeof AppConfigRepoError>>>;
+  getChannelConfig: (
+    access: GetChannelConfigAccessPattern,
+  ) => Promise<Result<AppChannelConfig | null, InstanceType<typeof AppConfigRepoError>>>;
+  getRootConfig: (
+    access: BaseAccessPattern,
+  ) => Promise<Result<AppRootConfig, InstanceType<typeof AppConfigRepoError>>>;
+  removeConfig: (
+    access: BaseAccessPattern,
+    data: {
+      configId: string;
+    },
+  ) => Promise<Result<null, InstanceType<typeof AppConfigRepoError>>>;
+  updateMapping: (
+    access: BaseAccessPattern,
+    data: {
+      configId: string | null;
+      channelId: string;
+    },
+  ) => Promise<Result<void | null, InstanceType<typeof AppConfigRepoError>>>;
 }
