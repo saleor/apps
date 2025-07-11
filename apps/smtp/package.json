@@ -17,7 +17,7 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.3.1",
+    "@hookform/resolvers": "catalog:",
     "@monaco-editor/react": "^4.4.6",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/api-logs": "catalog:",
@@ -44,8 +44,8 @@
     "@vercel/otel": "catalog:",
     "@vitejs/plugin-react": "4.3.4",
     "dotenv": "16.3.1",
-    "graphql": "16.7.1",
-    "graphql-tag": "2.12.6",
+    "graphql": "catalog:",
+    "graphql-tag": "catalog:",
     "handlebars": "^4.7.7",
     "handlebars-helpers": "0.10.0",
     "html-to-text": "^9.0.3",
@@ -58,12 +58,12 @@
     "nodemailer": "^6.9.1",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hook-form": "^7.43.9",
+    "react-hook-form": "catalog:",
     "react-is": "^18.2.0",
     "urql": "catalog:",
-    "usehooks-ts": "^2.9.1",
-    "vite": "6.2.4",
-    "vitest": "3.1.1",
+    "usehooks-ts": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -87,7 +87,7 @@
     "eslint": "catalog:",
     "graphql-config": "5.0.3",
     "null-loader": "4.0.1",
-    "tsx": "4.19.3",
+    "tsx": "catalog:",
     "typescript": "5.8.2"
   },
   "saleor": {

@@ -48,7 +48,7 @@
     "@saleor/macaw-ui": "catalog:",
     "@sentry/cli": "catalog:",
     "@sentry/nextjs": "catalog:",
-    "@t3-oss/env-nextjs": "0.11.1",
+    "@t3-oss/env-nextjs": "catalog:",
     "@trpc/client": "catalog:",
     "@trpc/next": "catalog:",
     "@trpc/react-query": "catalog:",
@@ -62,9 +62,9 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "urql": "catalog:",
-    "usehooks-ts": "^2.9.1",
+    "usehooks-ts": "catalog:",
     "zod": "catalog:",
-    "zod-validation-error": "3.4.0"
+    "zod-validation-error": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
@@ -87,15 +87,15 @@
     "@vitejs/plugin-react": "4.3.4",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
-    "eslint-plugin-n": "17.16.2",
-    "graphql": "16.7.1",
-    "graphql-tag": "2.12.6",
-    "json-schema-to-typescript": "15.0.4",
-    "next-test-api-route-handler": "4.0.16",
-    "tsx": "4.19.3",
-    "typescript": "5.8.2",
-    "vite": "6.2.4",
-    "vite-tsconfig-paths": "5.1.4",
-    "vitest": "3.1.1"
+    "eslint-plugin-n": "catalog:",
+    "graphql": "catalog:",
+    "graphql-tag": "catalog:",
+    "json-schema-to-typescript": "catalog:",
+    "next-test-api-route-handler": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "catalog:"
   }
 }

@@ -18,7 +18,7 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.3.1",
+    "@hookform/resolvers": "catalog:",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/api-logs": "catalog:",
     "@opentelemetry/instrumentation": "catalog:",
@@ -47,13 +47,13 @@
     "clsx": "^1.2.1",
     "debug": "^4.3.4",
     "dotenv": "16.3.1",
-    "graphql": "16.7.1",
-    "graphql-tag": "2.12.6",
+    "graphql": "catalog:",
+    "graphql-tag": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.43.9",
+    "react-hook-form": "catalog:",
     "urql": "catalog:",
     "zod": "catalog:"
   },
@@ -77,10 +77,10 @@
     "eslint": "catalog:",
     "graphql-config": "5.0.3",
     "node-mocks-http": "^1.12.2",
-    "tsx": "4.19.3",
-    "typescript": "5.8.2",
-    "vite": "6.2.4",
-    "vitest": "3.1.1"
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "saleor": {
     "schemaVersion": "3.7"

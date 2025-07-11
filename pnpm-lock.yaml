@@ -15,6 +15,9 @@ catalogs:
     '@aws-sdk/util-dynamodb':
       specifier: 3.651.1
       version: 3.651.1
+    '@hookform/resolvers':
+      specifier: 3.3.1
+      version: 3.3.1
     '@opentelemetry/api':
       specifier: 1.9.0
       version: 1.9.0
@@ -63,6 +66,9 @@ catalogs:
     '@sentry/nextjs':
       specifier: 9.8.0
       version: 9.8.0
+    '@t3-oss/env-nextjs':
+      specifier: 0.11.1
+      version: 0.11.1
     '@trpc/client':
       specifier: 10.43.1
       version: 10.43.1
@@ -87,6 +93,18 @@ catalogs:
     eslint:
       specifier: 9.23.0
       version: 9.23.0
+    eslint-plugin-n:
+      specifier: 17.16.2
+      version: 17.16.2
+    graphql:
+      specifier: 16.7.1
+      version: 16.7.1
+    graphql-tag:
+      specifier: 2.12.6
+      version: 2.12.6
+    json-schema-to-typescript:
+      specifier: 15.0.4
+      version: 15.0.4
     modern-errors:
       specifier: 7.0.1
       version: 7.0.1
@@ -99,18 +117,45 @@ catalogs:
     next:
       specifier: 15.2.4
       version: 15.2.4
+    next-test-api-route-handler:
+      specifier: 4.0.16
+      version: 4.0.16
     react:
       specifier: 18.2.0
       version: 18.2.0
     react-dom:
       specifier: 18.2.0
       version: 18.2.0
+    react-hook-form:
+      specifier: 7.43.9
+      version: 7.43.9
+    tsx:
+      specifier: 4.19.3
+      version: 4.19.3
+    typescript:
+      specifier: 5.8.2
+      version: 5.8.2
     urql:
       specifier: 4.0.4
       version: 4.0.4
+    usehooks-ts:
+      specifier: 2.9.1
+      version: 2.9.1
+    vite:
+      specifier: 6.2.4
+      version: 6.2.4
+    vite-tsconfig-paths:
+      specifier: 5.1.4
+      version: 5.1.4
+    vitest:
+      specifier: 3.1.1
+      version: 3.1.1
     zod:
       specifier: 3.21.4
       version: 3.21.4
+    zod-validation-error:
+      specifier: 3.4.0
+      version: 3.4.0
 
 importers:
 
@@ -162,8 +207,8 @@ importers:
         specifier: 'catalog:'
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
-        specifier: ^3.3.1
-        version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
+        specifier: 'catalog:'
+        version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
@@ -222,7 +267,7 @@ importers:
         specifier: 'catalog:'
         version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@t3-oss/env-nextjs':
-        specifier: 0.11.1
+        specifier: 'catalog:'
         version: 0.11.1(typescript@5.8.2)(zod@3.21.4)
       '@trpc/client':
         specifier: 'catalog:'
@@ -252,10 +297,10 @@ importers:
         specifier: 'catalog:'
         version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       jotai:
         specifier: ^2.4.2
@@ -282,8 +327,8 @@ importers:
         specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-hook-form:
-        specifier: ^7.43.9
-        version: 7.44.3(react@18.2.0)
+        specifier: 'catalog:'
+        version: 7.43.9(react@18.2.0)
       ulid:
         specifier: 2.3.0
         version: 2.3.0
@@ -291,7 +336,7 @@ importers:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
-        specifier: ^2.9.1
+        specifier: 'catalog:'
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       zod:
         specifier: 'catalog:'
@@ -367,7 +412,7 @@ importers:
         specifier: 'catalog:'
         version: 9.23.0(jiti@2.4.2)
       eslint-plugin-n:
-        specifier: 17.16.2
+        specifier: 'catalog:'
         version: 17.16.2(eslint@9.23.0(jiti@2.4.2))
       graphql-config:
         specifier: 5.0.3
@@ -379,16 +424,16 @@ importers:
         specifier: ^1.1.6
         version: 1.1.6
       tsx:
-        specifier: 4.19.3
+        specifier: 'catalog:'
         version: 4.19.3
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   apps/cms:
@@ -397,8 +442,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       '@hookform/resolvers':
-        specifier: ^3.3.1
-        version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
+        specifier: 'catalog:'
+        version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
@@ -478,10 +523,10 @@ importers:
         specifier: 16.3.1
         version: 16.3.1
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       jsdom:
         specifier: ^20.0.3
@@ -505,8 +550,8 @@ importers:
         specifier: 4.0.10
         version: 4.0.10(react@18.2.0)
       react-hook-form:
-        specifier: ^7.43.9
-        version: 7.44.3(react@18.2.0)
+        specifier: 'catalog:'
+        version: 7.43.9(react@18.2.0)
       strapi-sdk-js:
         specifier: 2.3.4
         version: 2.3.4
@@ -514,13 +559,13 @@ importers:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
-        specifier: ^2.9.1
+        specifier: 'catalog:'
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       zod:
         specifier: 'catalog:'
@@ -575,7 +620,7 @@ importers:
         specifier: ^1.12.2
         version: 1.12.2
       tsx:
-        specifier: 4.19.3
+        specifier: 'catalog:'
         version: 4.19.3
       typescript:
         specifier: 5.8.2
@@ -638,10 +683,10 @@ importers:
         specifier: 16.3.1
         version: 16.3.1
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 'catalog:'
@@ -662,13 +707,13 @@ importers:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
-        specifier: ^2.9.1
+        specifier: 'catalog:'
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       zod:
         specifier: 'catalog:'
@@ -732,7 +777,7 @@ importers:
         specifier: ^3.1.3
         version: 3.1.3(prettier@3.5.3)
       tsx:
-        specifier: 4.19.3
+        specifier: 'catalog:'
         version: 4.19.3
       typescript:
         specifier: 5.8.2
@@ -804,7 +849,7 @@ importers:
         specifier: 'catalog:'
         version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@t3-oss/env-nextjs':
-        specifier: 0.11.1
+        specifier: 'catalog:'
         version: 0.11.1(typescript@5.8.2)(zod@3.21.4)
       '@trpc/client':
         specifier: 'catalog:'
@@ -846,13 +891,13 @@ importers:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
-        specifier: ^2.9.1
+        specifier: 'catalog:'
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       zod:
         specifier: 'catalog:'
         version: 3.21.4
       zod-validation-error:
-        specifier: 3.4.0
+        specifier: 'catalog:'
         version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
@@ -916,34 +961,34 @@ importers:
         specifier: 'catalog:'
         version: 9.23.0(jiti@2.4.2)
       eslint-plugin-n:
-        specifier: 17.16.2
+        specifier: 'catalog:'
         version: 17.16.2(eslint@9.23.0(jiti@2.4.2))
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       json-schema-to-typescript:
-        specifier: 15.0.4
+        specifier: 'catalog:'
         version: 15.0.4
       next-test-api-route-handler:
-        specifier: 4.0.16
+        specifier: 'catalog:'
         version: 4.0.16(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       tsx:
-        specifier: 4.19.3
+        specifier: 'catalog:'
         version: 4.19.3
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vite-tsconfig-paths:
-        specifier: 5.1.4
+        specifier: 'catalog:'
         version: 5.1.4(typescript@5.8.2)(vite@6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   apps/products-feed:
@@ -955,8 +1000,8 @@ importers:
         specifier: 3.332.0
         version: 3.332.0
       '@hookform/resolvers':
-        specifier: ^3.3.1
-        version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
+        specifier: 'catalog:'
+        version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
@@ -1036,10 +1081,10 @@ importers:
         specifier: ^4.0.15
         version: 4.0.15
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       handlebars:
         specifier: ^4.7.7
@@ -1060,8 +1105,8 @@ importers:
         specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-hook-form:
-        specifier: ^7.43.9
-        version: 7.44.3(react@18.2.0)
+        specifier: 'catalog:'
+        version: 7.43.9(react@18.2.0)
       react-is:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1069,13 +1114,13 @@ importers:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
-        specifier: ^2.9.1
+        specifier: 'catalog:'
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       zod:
         specifier: 'catalog:'
@@ -1136,10 +1181,10 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.8.2)
       tsx:
-        specifier: 4.19.3
+        specifier: 'catalog:'
         version: 4.19.3
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite-tsconfig-paths:
         specifier: 5.1.4
@@ -1148,8 +1193,8 @@ importers:
   apps/search:
     dependencies:
       '@hookform/resolvers':
-        specifier: ^3.3.1
-        version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
+        specifier: 'catalog:'
+        version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
@@ -1235,10 +1280,10 @@ importers:
         specifier: 16.3.1
         version: 16.3.1
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       next:
         specifier: 'catalog:'
@@ -1253,8 +1298,8 @@ importers:
         specifier: ^6.1.0
         version: 6.1.0(react@18.2.0)
       react-hook-form:
-        specifier: ^7.43.9
-        version: 7.44.3(react@18.2.0)
+        specifier: 'catalog:'
+        version: 7.43.9(react@18.2.0)
       urql:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
@@ -1320,16 +1365,16 @@ importers:
         specifier: ^1.12.2
         version: 1.12.2
       tsx:
-        specifier: 4.19.3
+        specifier: 'catalog:'
         version: 4.19.3
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   apps/segment:
@@ -1344,8 +1389,8 @@ importers:
         specifier: 'catalog:'
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
-        specifier: ^3.3.1
-        version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
+        specifier: 'catalog:'
+        version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
@@ -1407,7 +1452,7 @@ importers:
         specifier: 'catalog:'
         version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@t3-oss/env-nextjs':
-        specifier: 0.11.1
+        specifier: 'catalog:'
         version: 0.11.1(typescript@5.8.2)(zod@3.21.4)
       '@trpc/client':
         specifier: 'catalog:'
@@ -1437,10 +1482,10 @@ importers:
         specifier: 'catalog:'
         version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       modern-errors:
         specifier: 'catalog:'
@@ -1464,13 +1509,13 @@ importers:
         specifier: 4.0.10
         version: 4.0.10(react@18.2.0)
       react-hook-form:
-        specifier: ^7.43.9
-        version: 7.44.3(react@18.2.0)
+        specifier: 'catalog:'
+        version: 7.43.9(react@18.2.0)
       urql:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
-        specifier: ^2.9.1
+        specifier: 'catalog:'
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       uuid:
         specifier: 11.0.4
@@ -1528,7 +1573,7 @@ importers:
         specifier: 'catalog:'
         version: 9.23.0(jiti@2.4.2)
       eslint-plugin-n:
-        specifier: 17.16.2
+        specifier: 'catalog:'
         version: 17.16.2(eslint@9.23.0(jiti@2.4.2))
       graphql-config:
         specifier: 5.0.3
@@ -1540,23 +1585,23 @@ importers:
         specifier: ^1.12.2
         version: 1.12.2
       tsx:
-        specifier: 4.19.3
+        specifier: 'catalog:'
         version: 4.19.3
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   apps/smtp:
     dependencies:
       '@hookform/resolvers':
-        specifier: ^3.3.1
-        version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
+        specifier: 'catalog:'
+        version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
       '@monaco-editor/react':
         specifier: ^4.4.6
         version: 4.4.6(monaco-editor@0.47.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1636,10 +1681,10 @@ importers:
         specifier: 16.3.1
         version: 16.3.1
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       handlebars:
         specifier: ^4.7.7
@@ -1678,8 +1723,8 @@ importers:
         specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-hook-form:
-        specifier: ^7.43.9
-        version: 7.44.3(react@18.2.0)
+        specifier: 'catalog:'
+        version: 7.43.9(react@18.2.0)
       react-is:
         specifier: ^18.2.0
         version: 18.2.0
@@ -1687,13 +1732,13 @@ importers:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
-        specifier: ^2.9.1
+        specifier: 'catalog:'
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       zod:
         specifier: 'catalog:'
@@ -1760,7 +1805,7 @@ importers:
         specifier: 4.0.1
         version: 4.0.1(webpack@5.82.1)
       tsx:
-        specifier: 4.19.3
+        specifier: 'catalog:'
         version: 4.19.3
       typescript:
         specifier: 5.8.2
@@ -1778,8 +1823,8 @@ importers:
         specifier: 'catalog:'
         version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
-        specifier: ^3.3.1
-        version: 3.3.1(react-hook-form@7.44.3(react@18.2.0))
+        specifier: 'catalog:'
+        version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
@@ -1835,7 +1880,7 @@ importers:
         specifier: 'catalog:'
         version: 9.8.0(@opentelemetry/context-async-hooks@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.57.2(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.1(@opentelemetry/api@1.9.0))(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.82.1)
       '@t3-oss/env-nextjs':
-        specifier: 0.11.1
+        specifier: 'catalog:'
         version: 0.11.1(typescript@5.8.2)(zod@3.21.4)
       '@trpc/client':
         specifier: 'catalog:'
@@ -1880,8 +1925,8 @@ importers:
         specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-hook-form:
-        specifier: ^7.43.9
-        version: 7.44.3(react@18.2.0)
+        specifier: 'catalog:'
+        version: 7.43.9(react@18.2.0)
       stripe:
         specifier: 18.1.0
         version: 18.1.0(@types/node@22.13.10)
@@ -1889,13 +1934,13 @@ importers:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       usehooks-ts:
-        specifier: ^2.9.1
+        specifier: 'catalog:'
         version: 2.9.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       zod:
         specifier: 'catalog:'
         version: 3.21.4
       zod-validation-error:
-        specifier: 3.4.0
+        specifier: 'catalog:'
         version: 3.4.0(zod@3.21.4)
     devDependencies:
       '@graphql-codegen/cli':
@@ -1965,40 +2010,40 @@ importers:
         specifier: 'catalog:'
         version: 9.23.0(jiti@2.4.2)
       eslint-plugin-n:
-        specifier: 17.16.2
+        specifier: 'catalog:'
         version: 17.16.2(eslint@9.23.0(jiti@2.4.2))
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-config:
         specifier: 5.0.3
         version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.8.2)
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       json-schema-to-typescript:
-        specifier: 15.0.4
+        specifier: 'catalog:'
         version: 15.0.4
       msw:
         specifier: 2.10.2
         version: 2.10.2(@types/node@22.13.10)(typescript@5.8.2)
       next-test-api-route-handler:
-        specifier: 4.0.16
+        specifier: 'catalog:'
         version: 4.0.16(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       tsx:
-        specifier: 4.19.3
+        specifier: 'catalog:'
         version: 4.19.3
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vite-tsconfig-paths:
-        specifier: 5.1.4
+        specifier: 'catalog:'
         version: 5.1.4(typescript@5.8.2)(vite@6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   packages/apl-dynamo:
@@ -2047,13 +2092,13 @@ importers:
         specifier: 'catalog:'
         version: 15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   packages/domain:
@@ -2084,13 +2129,13 @@ importers:
         specifier: 'catalog:'
         version: 6.1.0(modern-errors@7.0.1)
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       zod:
         specifier: 'catalog:'
@@ -2118,13 +2163,13 @@ importers:
         specifier: 'catalog:'
         version: 6.1.0(modern-errors@7.0.1)
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   packages/eslint-config:
@@ -2224,13 +2269,13 @@ importers:
         specifier: 'catalog:'
         version: 15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   packages/otel:
@@ -2282,7 +2327,7 @@ importers:
         specifier: 'catalog:'
         version: 15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       urql:
         specifier: 'catalog:'
@@ -2315,8 +2360,8 @@ importers:
         specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       react-hook-form:
-        specifier: ^7.43.9
-        version: 7.44.3(react@18.2.0)
+        specifier: 'catalog:'
+        version: 7.43.9(react@18.2.0)
       typescript:
         specifier: 5.8.2
         version: 5.8.2
@@ -2388,13 +2433,13 @@ importers:
         specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       zod:
         specifier: 'catalog:'
@@ -2487,10 +2532,10 @@ importers:
   packages/webhook-utils:
     dependencies:
       graphql:
-        specifier: 16.7.1
+        specifier: 'catalog:'
         version: 16.7.1
       graphql-tag:
-        specifier: 2.12.6
+        specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
       modern-errors:
         specifier: 'catalog:'
@@ -2545,16 +2590,16 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.8.2)
       typescript:
-        specifier: 5.8.2
+        specifier: 'catalog:'
         version: 5.8.2
       urql:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
       vite:
-        specifier: 6.2.4
+        specifier: 'catalog:'
         version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 3.1.1
+        specifier: 'catalog:'
         version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
 packages:
@@ -10194,8 +10239,8 @@ packages:
     peerDependencies:
       react: '>=16.3.0'
 
-  react-hook-form@7.44.3:
-    resolution: {integrity: sha512-/tHId6p2ViAka1wECMw8FEPn/oz/w226zehHrJyQ1oIzCBNMIJCaj6ZkQcv+MjDxYh9MWR7RQic7Qqwe4a5nkw==}
+  react-hook-form@7.43.9:
+    resolution: {integrity: sha512-AUDN3Pz2NSeoxQ7Hs6OhQhDr6gtF9YRuutGDwPQqhSUAHJSgGl2VeY3qN19MG0SucpjgDiuMJ4iC5T5uB+eaNQ==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
@@ -15071,9 +15116,9 @@ snapshots:
     dependencies:
       graphql: 16.7.1
 
-  '@hookform/resolvers@3.3.1(react-hook-form@7.44.3(react@18.2.0))':
+  '@hookform/resolvers@3.3.1(react-hook-form@7.43.9(react@18.2.0))':
     dependencies:
-      react-hook-form: 7.44.3(react@18.2.0)
+      react-hook-form: 7.43.9(react@18.2.0)
 
   '@humanfs/core@0.19.1': {}
 
@@ -21958,7 +22003,7 @@ snapshots:
       react-fast-compare: 3.2.2
       react-side-effect: 2.1.2(react@18.2.0)
 
-  react-hook-form@7.44.3(react@18.2.0):
+  react-hook-form@7.43.9(react@18.2.0):
     dependencies:
       react: 18.2.0
 

@@ -13,8 +13,8 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "graphql": "16.7.1",
-    "graphql-tag": "2.12.6",
+    "graphql": "catalog:",
+    "graphql-tag": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
     "semver": "7.5.1"
@@ -33,10 +33,10 @@
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "graphql-config": "5.0.3",
-    "typescript": "5.8.2",
+    "typescript": "catalog:",
     "urql": "catalog:",
-    "vite": "6.2.4",
-    "vitest": "3.1.1"
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "next": "catalog:",
