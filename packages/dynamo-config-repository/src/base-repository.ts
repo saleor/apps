@@ -1,7 +1,7 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import {
   Entity,
-  EntityParser,
+  EntityFormatter,
   FormattedValue,
   GetItemCommand,
   item,
@@ -134,7 +134,7 @@ export class DynamoConfigRepository<
 > implements GenericRepo<ChannelConfig>
 {
   private settings: Settings<ChannelConfig, TEntity, TSchema>;
-  private mappingEntity: ReturnType<typeof createMappingEntity>;
+  mappingEntity: ReturnType<typeof createMappingEntity>;
 
   constructor(settings: Settings<ChannelConfig, TEntity, TSchema>) {
     this.settings = settings;
@@ -195,10 +195,12 @@ export class DynamoConfigRepository<
       }
 
       const parsed = this.settings.configItem.toolboxEntity
-        .build(EntityParser)
-        .parse(result.Item) as FormattedValue<TSchema>;
+        .build(EntityFormatter)
+        .format(result.Item);
 
-      return ok(this.settings.mapping.singleDynamoItemToDomainEntity(parsed));
+      return ok(
+        this.settings.mapping.singleDynamoItemToDomainEntity(parsed as FormattedValue<TSchema>),
+      );
     }
 
     return err(
