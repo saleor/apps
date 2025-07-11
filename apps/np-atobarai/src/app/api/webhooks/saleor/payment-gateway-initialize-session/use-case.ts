@@ -1,8 +1,8 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
 
 import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
-import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/types";
 

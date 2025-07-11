@@ -1,3 +1,7 @@
-import { AtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-shipping-address";
+import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
 
-export const mockedAtobaraiDeliveryDestination = new AtobaraiDeliveryDestination();
+import { mockedTransactionInitializeSessionEvent } from "../saleor-events/mocked-transaction-initialize-session-event";
+
+export const mockedAtobaraiDeliveryDestination = createAtobaraiDeliveryDestination(
+  mockedTransactionInitializeSessionEvent,
+);

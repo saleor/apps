@@ -1,8 +1,7 @@
+import { BaseError } from "@saleor/errors";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
-
-import { BaseError } from "@/lib/errors";
 
 // https://env.t3.gg/docs/recipes#booleans
 const booleanSchema = z

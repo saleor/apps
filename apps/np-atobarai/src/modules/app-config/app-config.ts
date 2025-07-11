@@ -1,7 +1,7 @@
+import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
-import { BaseError } from "@/lib/errors";
 import { AtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
 import { AtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { AtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";

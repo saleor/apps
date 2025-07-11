@@ -1,18 +1,19 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
-import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AppConfigRepo } from "@/modules/app-config/types";
-import { AtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
-import { AtobaraiGoods } from "@/modules/atobarai/atobarai-goods";
+import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
+import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
+import { createAtobaraiGoods } from "@/modules/atobarai/atobarai-goods";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import {
   AtobaraiRegisterTransactionPayload,
   createAtobaraiRegisterTransactionPayload,
 } from "@/modules/atobarai/atobarai-register-transaction-payload";
-import { AtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-shipping-address";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 import { createSaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
@@ -73,20 +74,17 @@ export class TransactionInitializeSessionUseCase {
 
   private prepareRegisterTransactionPayload(
     event: TransactionInitializeSessionEventFragment,
+    config: AppChannelConfig,
   ): AtobaraiRegisterTransactionPayload {
-    const saleorTransactionToken = createSaleorTransactionToken(event.transaction.token);
-    const atobaraiMoney = createAtobaraiMoney({
-      amount: event.action.amount,
-      currency: event.action.currency,
-    });
-    const atobaraiCustomer = AtobaraiCustomer.createFromEvent(event);
-
     return createAtobaraiRegisterTransactionPayload({
-      saleorTransactionToken,
-      atobaraiMoney,
-      atobaraiCustomer,
-      atobaraiDeliveryDestination: new AtobaraiDeliveryDestination(),
-      atobaraiGoods: new AtobaraiGoods(),
+      saleorTransactionToken: createSaleorTransactionToken(event.transaction.token),
+      atobaraiMoney: createAtobaraiMoney({
+        amount: event.action.amount,
+        currency: event.action.currency,
+      }),
+      atobaraiCustomer: createAtobaraiCustomer(event),
+      atobaraiDeliveryDestination: createAtobaraiDeliveryDestination(event),
+      atobaraiGoods: createAtobaraiGoods(event, config),
       atobaraiShopOrderDate: createAtobaraiShopOrderDate(event.issuedAt!), // checked if exists in execute method
     });
   }
@@ -124,7 +122,7 @@ export class TransactionInitializeSessionUseCase {
     });
 
     const registerTransactionResult = await apiClient.registerTransaction(
-      this.prepareRegisterTransactionPayload(event),
+      this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value),
     );
 
     if (registerTransactionResult.isErr()) {

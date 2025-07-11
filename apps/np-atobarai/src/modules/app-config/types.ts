@@ -1,7 +1,7 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { BaseError } from "@saleor/errors";
 import { Result } from "neverthrow";
 
-import { BaseError } from "@/lib/errors";
 import { AppChannelConfig, AppRootConfig } from "@/modules/app-config/app-config";
 
 export type BaseAccessPattern = {
