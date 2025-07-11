@@ -59,7 +59,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "NP Atobarai Payment Gateway Initialize",
-                "query": "subscription PaymentGatewayInitializeSession { event { ...PaymentGatewayInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } shippingAddress { country { code } } } ... on Order { __typename id channel { ...Channel } shippingAddress { country { code } } }}fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession { ...EventMetadata sourceObject { ...SourceObject }}",
+                "query": "subscription PaymentGatewayInitializeSession { event { ...PaymentGatewayInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment Address on Address { firstName lastName companyName postalCode countryArea streetAddress1 streetAddress2 phone country { code }}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } email billingAddress { ...Address } shippingAddress { ...Address } } ... on Order { __typename id channel { ...Channel } userEmail billingAddress { ...Address } shippingAddress { ...Address } }}fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession { ...EventMetadata sourceObject { ...SourceObject }}",
                 "syncEvents": [
                   "PAYMENT_GATEWAY_INITIALIZE_SESSION",
                 ],
@@ -68,7 +68,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "NP Atobarai Transaction Initialize Session",
-                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } shippingAddress { country { code } } } ... on Order { __typename id channel { ...Channel } shippingAddress { country { code } } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency actionType } data transaction { token } sourceObject { ...SourceObject } idempotencyKey}",
+                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment Address on Address { firstName lastName companyName postalCode countryArea streetAddress1 streetAddress2 phone country { code }}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } email billingAddress { ...Address } shippingAddress { ...Address } } ... on Order { __typename id channel { ...Channel } userEmail billingAddress { ...Address } shippingAddress { ...Address } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency } data transaction { token } sourceObject { ...SourceObject } idempotencyKey}",
                 "syncEvents": [
                   "TRANSACTION_INITIALIZE_SESSION",
                 ],

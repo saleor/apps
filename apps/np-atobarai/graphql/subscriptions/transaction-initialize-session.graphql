@@ -3,7 +3,6 @@ fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
   action {
     amount
     currency
-    actionType
   }
   data
   transaction {

@@ -28,7 +28,14 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
         "transactions": [
           {
             "billed_amount": 1000,
-            "customer": {},
+            "customer": {
+              "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
+              "company_name": "BillingCompanyName",
+              "customer_name": "BillingFirstName BillingLastName",
+              "email": "transaction-initialize-session@email.com",
+              "tel": "0billingPhone",
+              "zip_code": "BillingPostalCode",
+            },
             "dest_customer": {},
             "goods": [],
             "settlement_type": "02",
