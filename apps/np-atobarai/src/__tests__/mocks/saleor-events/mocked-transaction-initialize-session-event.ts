@@ -13,7 +13,6 @@ export const mockedTransactionInitializeSessionEvent = {
     amount: 6307,
     currency: "JPY",
   },
-  idempotencyKey: "key",
   transaction: {
     token: mockedSaleorTransactionToken,
   },
