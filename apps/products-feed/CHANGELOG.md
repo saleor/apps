@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 2.0.1
+
+### Patch Changes
+
+- @saleor/apps-logger@1.6.1
+
 ## 2.0.0
 
 ### Major Changes

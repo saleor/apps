@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 1.3.12
+
+### Patch Changes
+
+- @saleor/apps-logger@1.6.1
+
 ## 1.3.11
 
 ### Patch Changes
