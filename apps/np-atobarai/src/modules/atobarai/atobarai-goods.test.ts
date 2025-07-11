@@ -132,7 +132,7 @@ describe("createAtobaraiGoods", () => {
       expect(goods).toMatchInlineSnapshot(`
         [
           {
-            "goods_name": "Order Product",
+            "goods_name": "ORDER-SKU-1",
             "goods_price": 3000,
             "goods_quantity": 3,
           },
@@ -163,7 +163,7 @@ describe("createAtobaraiGoods", () => {
       expect(goods).toMatchInlineSnapshot(`
         [
           {
-            "goods_name": "Product Name",
+            "goods_name": "product-sku",
             "goods_price": 6170,
             "goods_quantity": 5,
           },
