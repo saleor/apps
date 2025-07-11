@@ -1,11 +1,14 @@
 import { z } from "zod";
 
 import { SaleorTransactionToken } from "../saleor/saleor-transaction-token";
-import { AtobaraiCustomer } from "./atobarai-customer";
+import { AtobaraiCustomer, AtobaraiCustomerSchema } from "./atobarai-customer";
+import {
+  AtobaraiDeliveryDestination,
+  AtobaraiDeliveryDestinationSchema,
+} from "./atobarai-delivery-destination";
 import { AtobaraiGoods } from "./atobarai-goods";
 import { AtobaraiMoney } from "./atobarai-money";
 import { ATOBARAI_SETTLEMENT_TYPE } from "./atobarai-settelment-type";
-import { AtobaraiDeliveryDestination } from "./atobarai-shipping-address";
 import { AtobaraiShopOrderDate } from "./atobarai-shop-order-date";
 
 const schema = z
@@ -18,8 +21,8 @@ const schema = z
         }),
         settlement_type: z.literal(ATOBARAI_SETTLEMENT_TYPE),
         billed_amount: z.number().positive(),
-        customer: AtobaraiCustomer.schema,
-        dest_customer: AtobaraiDeliveryDestination.schema,
+        customer: AtobaraiCustomerSchema,
+        dest_customer: AtobaraiDeliveryDestinationSchema,
         goods: AtobaraiGoods.schema,
       }),
     ),
@@ -41,8 +44,8 @@ export const createAtobaraiRegisterTransactionPayload = (args: {
         shop_order_date: args.atobaraiShopOrderDate,
         settlement_type: ATOBARAI_SETTLEMENT_TYPE,
         billed_amount: args.atobaraiMoney.amount,
-        customer: args.atobaraiCustomer.getCustomerAddress(),
-        dest_customer: args.atobaraiDeliveryDestination.getDeliveryDestination(),
+        customer: args.atobaraiCustomer,
+        dest_customer: args.atobaraiDeliveryDestination,
         goods: args.atobaraiGoods.getGoods(),
       },
     ],
