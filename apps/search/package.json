@@ -46,7 +46,7 @@
     "algoliasearch": "4.23.3",
     "clsx": "^1.2.1",
     "debug": "^4.3.4",
-    "dotenv": "16.3.1",
+    "dotenv": "catalog:",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
     "next": "catalog:",
