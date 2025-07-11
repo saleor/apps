@@ -1,5 +1,12 @@
 # saleor-app-avatax
 
+## 1.17.2
+
+### Patch Changes
+
+- fe605010: Update DynamoDB Toolbox to > v2, no function changes introduced
+  - @saleor/apps-logger@1.6.1
+
 ## 1.17.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.23.13
+
+### Patch Changes
+
+- @saleor/apps-logger@1.6.1
+
 ## 1.23.12
 
 ### Patch Changes
