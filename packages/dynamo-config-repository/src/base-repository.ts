@@ -1,5 +1,4 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
-import { BaseError } from "@saleor/errors";
 import {
   DeleteItemCommand,
   Entity,
@@ -25,9 +24,8 @@ import {
   ConfigByConfigIdAccessPattern,
   GenericRepo,
   GetChannelConfigAccessPattern,
+  RepoError,
 } from "./types";
-
-const RepoError = BaseError.subclass("DynamoConfigRepositoryError");
 
 type Settings<
   ChannelConfig extends BaseConfig,

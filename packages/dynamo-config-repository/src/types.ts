@@ -1,4 +1,8 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { BaseError } from "@saleor/errors";
+import { Result } from "neverthrow";
+
+import { GenericRootConfig } from "./generic-root-config";
 
 export type BaseAccessPattern = {
   saleorApiUrl: SaleorApiUrl;
@@ -20,6 +24,8 @@ export type GetChannelConfigAccessPattern =
 export interface BaseConfig {
   id: string;
 }
+
+export const RepoError = BaseError.subclass("DynamoConfigRepositoryError");
 
 export interface GenericRepo<ChannelConfig extends BaseConfig> {
   saveChannelConfig: (args: {
