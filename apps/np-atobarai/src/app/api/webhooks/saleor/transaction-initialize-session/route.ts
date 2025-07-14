@@ -1,10 +1,10 @@
 import { createSaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
+import { BaseError } from "@saleor/errors";
 import { captureException } from "@sentry/nextjs";
 import { ok } from "neverthrow";
 
-import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
