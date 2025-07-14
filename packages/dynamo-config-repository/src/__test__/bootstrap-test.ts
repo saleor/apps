@@ -58,6 +58,7 @@ export const bootstrapTest = () => {
     configItem: {
       toolboxEntity,
       entitySchema: toolboxSchema,
+      idAttr: "configId",
     },
     mapping: {
       singleDynamoItemToDomainEntity(entity) {
