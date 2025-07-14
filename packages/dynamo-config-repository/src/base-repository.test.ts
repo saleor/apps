@@ -126,7 +126,11 @@ describe("DynamoConfigRepository", () => {
           return new AppChannelConfig(entity.configId, entity.configName, entity.token);
         },
         singleDomainEntityToDynamoItem(channelConfig) {
-          return {};
+          return {
+            configId: channelConfig.id,
+            token: channelConfig.token,
+            configName: channelConfig.name,
+          };
         },
       },
     });

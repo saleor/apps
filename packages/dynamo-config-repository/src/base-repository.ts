@@ -1,11 +1,14 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { BaseError } from "@saleor/errors";
 import {
   Entity,
   EntityFormatter,
   FormattedValue,
   GetItemCommand,
+  InputValue,
   item,
   Parser,
+  PutItemCommand,
   Schema,
   string,
   Table,
@@ -62,7 +65,13 @@ class GenericRootConfig<ChannelConfig> {
   }
 }
 
-interface GenericRepo<ChannelConfig> {
+export interface BaseConfig {
+  id: string;
+}
+
+const RepoError = BaseError.subclass("DynamoConfigRepositoryError");
+
+interface GenericRepo<ChannelConfig extends BaseConfig> {
   saveChannelConfig: (args: {
     config: ChannelConfig;
     saleorApiUrl: SaleorApiUrl;
@@ -89,7 +98,11 @@ interface GenericRepo<ChannelConfig> {
   ) => Promise<Result<void | null, Error>>;
 }
 
-type Settings<ChannelConfig, TEntity extends Entity = Entity, TSchema extends Schema = Schema> = {
+type Settings<
+  ChannelConfig extends BaseConfig,
+  TEntity extends Entity = Entity,
+  TSchema extends Schema = Schema,
+> = {
   table: Table;
   configItem: {
     toolboxEntity: TEntity;
@@ -97,7 +110,9 @@ type Settings<ChannelConfig, TEntity extends Entity = Entity, TSchema extends Sc
   };
   mapping: {
     singleDynamoItemToDomainEntity: (entity: FormattedValue<TSchema>) => ChannelConfig;
-    singleDomainEntityToDynamoItem: (config: ChannelConfig) => unknown; // todo
+    singleDomainEntityToDynamoItem: (
+      config: ChannelConfig,
+    ) => Omit<InputValue<TSchema>, "PK" | "SK">; // todo
   };
 };
 
@@ -128,7 +143,7 @@ const createMappingEntity = (table: Table, entityName = "DynamoConfigRepoMapping
   });
 
 export class DynamoConfigRepository<
-  ChannelConfig,
+  ChannelConfig extends BaseConfig,
   TEntity extends Entity = Entity,
   TSchema extends Schema = Schema,
 > implements GenericRepo<ChannelConfig>
@@ -142,7 +157,7 @@ export class DynamoConfigRepository<
   }
 
   private getPK({ saleorApiUrl, appId }: { saleorApiUrl: SaleorApiUrl; appId: string }) {
-    return `${saleorApiUrl}#${appId}` as const;
+    return `${saleorApiUrl}#${appId}` as string;
   }
 
   private getSKforSpecificItem({ configId }: { configId: string }) {
@@ -155,6 +170,32 @@ export class DynamoConfigRepository<
 
   private getSKforSpecificChannel({ channelId }: { channelId: string }) {
     return `CHANNEL_ID#${channelId}` as const;
+  }
+
+  private fetchConfigIdFromChannelId(access: ConfigByChannelIdAccessPattern) {
+    const query = this.mappingEntity.build(GetItemCommand).key({
+      PK: this.getPK(access),
+      SK: this.getSKforSpecificChannel({
+        channelId: access.channelId,
+      }),
+    });
+
+    return query.send();
+  }
+
+  private fetchConfigByItsId(access: ConfigByConfigIdAccessPattern) {
+    // @ts-expect-error - Toolbox is infering types based on specific keys, which we don't have access here
+    const query = this.settings.configItem.toolboxEntity.build(GetItemCommand).key({
+      PK: this.getPK({
+        saleorApiUrl: access.saleorApiUrl,
+        appId: access.appId,
+      }),
+      SK: this.getSKforSpecificItem({
+        configId: access.configId,
+      }),
+    });
+
+    return query.send();
   }
 
   async getChannelConfig(
@@ -208,34 +249,51 @@ export class DynamoConfigRepository<
     );
   }
 
-  private fetchConfigIdFromChannelId(access: ConfigByChannelIdAccessPattern) {
-    const query = this.mappingEntity.build(GetItemCommand).key({
-      PK: this.getPK(access),
-      SK: this.getSKforSpecificChannel({
-        channelId: access.channelId,
-      }),
-    });
+  async saveChannelConfig(args: {
+    appId: string;
+    config: ChannelConfig;
+    saleorApiUrl: SaleorApiUrl;
+  }): Promise<Result<void | null, Error>> {
+    const mappedItem = this.settings.mapping.singleDomainEntityToDynamoItem(args.config);
 
-    return query.send();
-  }
-
-  private fetchConfigByItsId(access: ConfigByConfigIdAccessPattern) {
-    const query = this.settings.configItem.toolboxEntity.build(GetItemCommand).key({
+    // @ts-expect-error - We can't infer types here
+    const command = this.settings.configItem.toolboxEntity.build(PutItemCommand).item({
       PK: this.getPK({
-        saleorApiUrl: access.saleorApiUrl,
-        appId: access.appId,
+        saleorApiUrl: args.saleorApiUrl,
+        appId: args.appId,
       }),
       SK: this.getSKforSpecificItem({
-        configId: access.configId,
+        configId: args.config.id,
       }),
+      ...mappedItem,
     });
 
-    return query.send();
+    try {
+      const result = await command.send();
+
+      if (result.$metadata.httpStatusCode !== 200) {
+        return err(
+          new RepoError("Failed to save config", {
+            props: {
+              metadata: result.$metadata,
+            },
+          }),
+        );
+      }
+
+      return ok(null);
+    } catch (e) {
+      return err(
+        new RepoError("Failed to save config", {
+          cause: e,
+        }),
+      );
+    }
   }
 }
 
 export function createDynamoConfigRepository<
-  ChannelConfig,
+  ChannelConfig extends BaseConfig,
   TEntity extends Entity,
   TSchema extends Schema,
 >(settings: Settings<ChannelConfig, TEntity, TSchema>) {
