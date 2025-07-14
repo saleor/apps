@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "saleor-app-payment-np-atobarai",
+  "name": "saleor-app-payment-np-atobaraia",
   "version": "0.0.2",
   "private": true,
   "type": "module",
@@ -27,7 +27,6 @@
     }
   },
   "dependencies": {
-    "@saleor/dynamo-config-repository": "workspace:*",
     "@aws-sdk/client-dynamodb": "catalog:",
     "@aws-sdk/lib-dynamodb": "catalog:",
     "@opentelemetry/api": "catalog:",
@@ -45,6 +44,7 @@
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-trpc": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
+    "@saleor/dynamo-config-repository": "workspace:*",
     "@saleor/errors": "workspace:",
     "@saleor/macaw-ui": "catalog:",
     "@sentry/cli": "catalog:",
