@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "saleor-app-payment-np-atobaraia",
+  "name": "saleor-app-payment-np-atobarai",
   "version": "0.0.2",
   "private": true,
   "type": "module",
