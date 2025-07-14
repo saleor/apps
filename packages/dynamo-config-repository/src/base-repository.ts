@@ -1,6 +1,7 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
 import {
+  DeleteItemCommand,
   Entity,
   EntityFormatter,
   FormattedValue,
@@ -9,6 +10,7 @@ import {
   item,
   Parser,
   PutItemCommand,
+  QueryCommand,
   Schema,
   string,
   Table,
@@ -76,26 +78,26 @@ interface GenericRepo<ChannelConfig extends BaseConfig> {
     config: ChannelConfig;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
-  }) => Promise<Result<null | void, Error>>;
+  }) => Promise<Result<null | void, InstanceType<typeof RepoError>>>;
   getChannelConfig: (
     access: GetChannelConfigAccessPattern,
-  ) => Promise<Result<ChannelConfig | null, Error>>;
+  ) => Promise<Result<ChannelConfig | null, InstanceType<typeof RepoError>>>;
   getRootConfig: (
     access: BaseAccessPattern,
-  ) => Promise<Result<GenericRootConfig<ChannelConfig>, Error>>;
+  ) => Promise<Result<GenericRootConfig<ChannelConfig>, InstanceType<typeof RepoError>>>;
   removeConfig: (
     access: BaseAccessPattern,
     data: {
       configId: string;
     },
-  ) => Promise<Result<null, Error>>;
+  ) => Promise<Result<null, InstanceType<typeof RepoError>>>;
   updateMapping: (
     access: BaseAccessPattern,
     data: {
       configId: string | null;
       channelId: string;
     },
-  ) => Promise<Result<void | null, Error>>;
+  ) => Promise<Result<void | null, InstanceType<typeof RepoError>>>;
 }
 
 type Settings<
@@ -200,7 +202,7 @@ export class DynamoConfigRepository<
 
   async getChannelConfig(
     access: GetChannelConfigAccessPattern,
-  ): Promise<Result<ChannelConfig | null, Error>> {
+  ): Promise<Result<ChannelConfig | null, InstanceType<typeof RepoError>>> {
     const channelId = "channelId" in access ? access.channelId : undefined;
     /**
      * We eventually need config id, so it's mutable. It's either provided or will be resolved later and written here
@@ -253,7 +255,7 @@ export class DynamoConfigRepository<
     appId: string;
     config: ChannelConfig;
     saleorApiUrl: SaleorApiUrl;
-  }): Promise<Result<void | null, Error>> {
+  }): Promise<Result<void | null, InstanceType<typeof RepoError>>> {
     const mappedItem = this.settings.mapping.singleDomainEntityToDynamoItem(args.config);
 
     // @ts-expect-error - We can't infer types here
@@ -287,6 +289,121 @@ export class DynamoConfigRepository<
         new RepoError("Failed to save config", {
           cause: e,
         }),
+      );
+    }
+  }
+
+  async removeConfig(
+    access: BaseAccessPattern,
+    data: { configId: string },
+  ): Promise<Result<null, InstanceType<typeof RepoError>>> {
+    try {
+      // @ts-expect-error - Toolbox inference doesn't work here
+      const operation = this.settings.configItem.toolboxEntity.build(DeleteItemCommand).key({
+        PK: this.getPK({
+          saleorApiUrl: access.saleorApiUrl,
+          appId: access.appId,
+        }),
+        SK: this.getSKforSpecificItem({
+          configId: data.configId,
+        }),
+      });
+
+      const result = await operation.send();
+
+      if (result.$metadata.httpStatusCode !== 200) {
+        return err(
+          new RepoError("Failed to remove config from DynamoDB", {
+            props: {
+              dynamoHttpResponseStatusCode: result.$metadata.httpStatusCode,
+            },
+          }),
+        );
+      }
+
+      return ok(null);
+    } catch (e) {
+      return err(
+        new RepoError("Failed to remove config from DynamoDB", {
+          cause: e,
+        }),
+      );
+    }
+  }
+
+  async getRootConfig(
+    access: BaseAccessPattern,
+  ): Promise<Result<GenericRootConfig<ChannelConfig>, InstanceType<typeof RepoError>>> {
+    const allConfigsQuery = this.settings.table
+      .build(QueryCommand)
+      .entities(this.settings.configItem.toolboxEntity, this.mappingEntity)
+      .query({
+        range: {
+          beginsWith: this.getSKforAllItems(),
+        },
+        partition: this.getPK({
+          appId: access.appId,
+          saleorApiUrl: access.saleorApiUrl,
+        }),
+      })
+      .options({ maxPages: Infinity });
+
+    try {
+      const result = await allConfigsQuery.send();
+
+      console.log(result);
+
+      const mappedConfigs = result.Items.filter((item) => item); // todo
+      const mappedMappings = result.Items.filter((item) => item); //todo
+
+      const rootConfig = new GenericRootConfig<ChannelConfig>({
+        configsById: mappedConfigs.reduce((acc, item) => {
+          acc[item.id] = item;
+
+          return acc;
+        }, {}),
+        chanelConfigMapping: mappedMappings.reduce((acc, item) => {
+          acc[item.channelId] = item.configId;
+
+          return acc;
+        }, {}),
+      });
+
+      return ok(rootConfig);
+    } catch (e) {
+      return err(
+        new RepoError("Error fetching RootConfig from DynamoDB", {
+          cause: e,
+        }),
+      );
+    }
+  }
+
+  async updateMapping(
+    access: BaseAccessPattern,
+    data: {
+      configId: string | null;
+      channelId: string;
+    },
+  ): Promise<Result<void | null, InstanceType<typeof RepoError>>> {
+    const command = this.mappingEntity.build(PutItemCommand).item({
+      configId: data.configId ?? undefined,
+      channelId: data.channelId,
+      PK: this.getPK(access),
+      SK: this.getSKforSpecificChannel({
+        channelId: data.channelId,
+      }),
+    });
+
+    try {
+      const result = await command.send();
+
+      return ok(null);
+    } catch (e) {
+      return err(
+        new new RepoError("Failed to update mapping in DynamoDB", {
+          cause: e,
+        })(),
       );
     }
   }
