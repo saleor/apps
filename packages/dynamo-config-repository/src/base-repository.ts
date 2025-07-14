@@ -4,7 +4,6 @@ import {
   DeleteItemCommand,
   Entity,
   EntityParser,
-  FormattedValue,
   GetItemCommand,
   InputValue,
   item,
@@ -18,59 +17,8 @@ import {
 } from "dynamodb-toolbox";
 import { err, ok, Result } from "neverthrow";
 
-type BaseAccessPattern = {
-  saleorApiUrl: SaleorApiUrl;
-  appId: string;
-};
-
-type ConfigByChannelIdAccessPattern = BaseAccessPattern & {
-  channelId: string;
-};
-
-type ConfigByConfigIdAccessPattern = BaseAccessPattern & {
-  configId: string;
-};
-
-type GetChannelConfigAccessPattern = ConfigByChannelIdAccessPattern | ConfigByConfigIdAccessPattern;
-
-class GenericRootConfig<ChannelConfig> {
-  readonly chanelConfigMapping: Record<string, string>;
-  readonly configsById: Record<string, ChannelConfig>;
-
-  constructor({
-    chanelConfigMapping,
-    configsById,
-  }: {
-    chanelConfigMapping: Record<string, string>;
-    configsById: Record<string, ChannelConfig>;
-  }) {
-    this.chanelConfigMapping = chanelConfigMapping;
-    this.configsById = configsById;
-  }
-
-  getAllConfigsAsList() {
-    return Object.values(this.configsById);
-  }
-
-  getChannelsBoundToGivenConfig(configId: string) {
-    const keyValues = Object.entries(this.chanelConfigMapping);
-    const filtered = keyValues.filter(([_, value]) => value === configId);
-
-    return filtered.map(([channelId]) => channelId);
-  }
-
-  getConfigByChannelId(channelId: string) {
-    return this.configsById[this.chanelConfigMapping[channelId]];
-  }
-
-  getConfigById(configId: string) {
-    return this.configsById[configId];
-  }
-}
-
-export interface BaseConfig {
-  id: string;
-}
+import { GenericRootConfig } from "./generic-root-config";
+import { BaseAccessPattern, BaseConfig, GetChannelConfigAccessPattern } from "./types";
 
 const RepoError = BaseError.subclass("DynamoConfigRepositoryError");
 
@@ -128,6 +76,7 @@ const mappingSchema = item({
 });
 
 const createMappingEntity = (table: Table, entityName = "DynamoConfigRepoMapping") =>
+  // @ts-expect-error - Toolbox requires computeKey, but I don't know why. It should not
   new Entity({
     table,
     name: entityName,
@@ -350,30 +299,35 @@ export class DynamoConfigRepository<
     try {
       const result = await allConfigsQuery.send();
 
-      console.log(result);
-      console.log(this.mappingEntity);
-
-      const mappedConfigs = result.Items.filter(
+      const mappedConfigs = (result.Items ?? []).filter(
+        // @ts-expect-error - "entity" field exists by showEntityAttr: true, but it's not properly inferred
         (item) => item.entity === this.settings.configItem.toolboxEntity.entityName,
       );
-      const mappedMappings = result.Items.filter(
+      const mappedMappings = (result.Items ?? []).filter(
+        // @ts-expect-error - "entity" field exists by showEntityAttr: true, but it's not properly inferred
         (item) => item.entity === this.mappingEntity.entityName,
       );
 
-      console.log(mappedConfigs);
-      console.log(mappedMappings);
-
       const rootConfig = new GenericRootConfig<ChannelConfig>({
-        configsById: mappedConfigs.reduce((acc, item) => {
-          acc[item[this.settings.configItem.idAttr]] = item;
+        configsById: mappedConfigs.reduce(
+          (acc, item) => {
+            acc[item[this.settings.configItem.idAttr]] =
+              this.settings.mapping.singleDynamoItemToDomainEntity(item as ValidValue<TSchema>);
 
-          return acc;
-        }, {}),
-        chanelConfigMapping: mappedMappings.reduce((acc, item) => {
-          acc[item.channelId] = item[this.settings.configItem.idAttr];
+            return acc;
+          },
+          {} as Record<string, ChannelConfig>,
+        ),
+        chanelConfigMapping: mappedMappings.reduce(
+          (acc, item: ValidValue<typeof mappingSchema>) => {
+            if (item.configId) {
+              acc[item.channelId] = item.configId;
+            }
 
-          return acc;
-        }, {}),
+            return acc;
+          },
+          {} as Record<string, string>,
+        ),
       });
 
       return ok(rootConfig);
@@ -404,6 +358,16 @@ export class DynamoConfigRepository<
 
     try {
       const result = await command.send();
+
+      if (result.$metadata.httpStatusCode !== 200) {
+        return err(
+          new RepoError("Failed to save config", {
+            props: {
+              metadata: result.$metadata,
+            },
+          }),
+        );
+      }
 
       return ok(null);
     } catch (e) {
