@@ -3,7 +3,7 @@ import { BaseError } from "@saleor/errors";
 import {
   DeleteItemCommand,
   Entity,
-  EntityFormatter,
+  EntityParser,
   FormattedValue,
   GetItemCommand,
   InputValue,
@@ -14,6 +14,7 @@ import {
   Schema,
   string,
   Table,
+  ValidValue,
 } from "dynamodb-toolbox";
 import { err, ok, Result } from "neverthrow";
 
@@ -109,9 +110,10 @@ type Settings<
   configItem: {
     toolboxEntity: TEntity;
     entitySchema: TSchema;
+    idAttr: string;
   };
   mapping: {
-    singleDynamoItemToDomainEntity: (entity: FormattedValue<TSchema>) => ChannelConfig;
+    singleDynamoItemToDomainEntity: (entity: ValidValue<TSchema>) => ChannelConfig;
     singleDomainEntityToDynamoItem: (
       config: ChannelConfig,
     ) => Omit<InputValue<TSchema>, "PK" | "SK">; // todo
@@ -140,8 +142,6 @@ const createMappingEntity = (table: Table, entityName = "DynamoConfigRepoMapping
       },
     },
     schema: mappingSchema,
-    // ????
-    computeKey: () => ({}),
   });
 
 export class DynamoConfigRepository<
@@ -237,17 +237,19 @@ export class DynamoConfigRepository<
         return ok(null);
       }
 
-      const parsed = this.settings.configItem.toolboxEntity
-        .build(EntityFormatter)
-        .format(result.Item);
+      const parsed = this.settings.configItem.toolboxEntity.build(EntityParser).parse(result.Item);
 
       return ok(
-        this.settings.mapping.singleDynamoItemToDomainEntity(parsed as FormattedValue<TSchema>),
+        this.settings.mapping.singleDynamoItemToDomainEntity(
+          parsed.parsedItem as ValidValue<TSchema>,
+        ),
       );
     }
 
     return err(
-      new Error("Invalid access pattern provided. Either channelId or configId must be provided."),
+      new RepoError(
+        "Invalid access pattern provided. Either channelId or configId must be provided.",
+      ),
     );
   }
 
@@ -338,32 +340,37 @@ export class DynamoConfigRepository<
       .build(QueryCommand)
       .entities(this.settings.configItem.toolboxEntity, this.mappingEntity)
       .query({
-        range: {
-          beginsWith: this.getSKforAllItems(),
-        },
         partition: this.getPK({
           appId: access.appId,
           saleorApiUrl: access.saleorApiUrl,
         }),
       })
-      .options({ maxPages: Infinity });
+      .options({ maxPages: Infinity, showEntityAttr: true });
 
     try {
       const result = await allConfigsQuery.send();
 
       console.log(result);
+      console.log(this.mappingEntity);
 
-      const mappedConfigs = result.Items.filter((item) => item); // todo
-      const mappedMappings = result.Items.filter((item) => item); //todo
+      const mappedConfigs = result.Items.filter(
+        (item) => item.entity === this.settings.configItem.toolboxEntity.entityName,
+      );
+      const mappedMappings = result.Items.filter(
+        (item) => item.entity === this.mappingEntity.entityName,
+      );
+
+      console.log(mappedConfigs);
+      console.log(mappedMappings);
 
       const rootConfig = new GenericRootConfig<ChannelConfig>({
         configsById: mappedConfigs.reduce((acc, item) => {
-          acc[item.id] = item;
+          acc[item[this.settings.configItem.idAttr]] = item;
 
           return acc;
         }, {}),
         chanelConfigMapping: mappedMappings.reduce((acc, item) => {
-          acc[item.channelId] = item.configId;
+          acc[item.channelId] = item[this.settings.configItem.idAttr];
 
           return acc;
         }, {}),
@@ -401,9 +408,9 @@ export class DynamoConfigRepository<
       return ok(null);
     } catch (e) {
       return err(
-        new new RepoError("Failed to update mapping in DynamoDB", {
+        new RepoError("Failed to update mapping in DynamoDB", {
           cause: e,
-        })(),
+        }),
       );
     }
   }

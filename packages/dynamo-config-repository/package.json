@@ -1,5 +1,5 @@
 {
-  "name": "@saleor/apl-dynamo",
+  "name": "@saleor/dynamo-config-repository",
   "version": "1.0.0",
   "type": "module",
   "main": "src/index.ts",

@@ -27,6 +27,7 @@
     }
   },
   "dependencies": {
+    "@saleor/dynamo-config-repository": "workspace:*",
     "@aws-sdk/client-dynamodb": "catalog:",
     "@aws-sdk/lib-dynamodb": "catalog:",
     "@opentelemetry/api": "catalog:",
