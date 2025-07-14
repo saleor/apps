@@ -18,36 +18,16 @@ import {
 import { err, ok, Result } from "neverthrow";
 
 import { GenericRootConfig } from "./generic-root-config";
-import { BaseAccessPattern, BaseConfig, GetChannelConfigAccessPattern } from "./types";
+import {
+  BaseAccessPattern,
+  BaseConfig,
+  ConfigByChannelIdAccessPattern,
+  ConfigByConfigIdAccessPattern,
+  GenericRepo,
+  GetChannelConfigAccessPattern,
+} from "./types";
 
 const RepoError = BaseError.subclass("DynamoConfigRepositoryError");
-
-interface GenericRepo<ChannelConfig extends BaseConfig> {
-  saveChannelConfig: (args: {
-    config: ChannelConfig;
-    saleorApiUrl: SaleorApiUrl;
-    appId: string;
-  }) => Promise<Result<null | void, InstanceType<typeof RepoError>>>;
-  getChannelConfig: (
-    access: GetChannelConfigAccessPattern,
-  ) => Promise<Result<ChannelConfig | null, InstanceType<typeof RepoError>>>;
-  getRootConfig: (
-    access: BaseAccessPattern,
-  ) => Promise<Result<GenericRootConfig<ChannelConfig>, InstanceType<typeof RepoError>>>;
-  removeConfig: (
-    access: BaseAccessPattern,
-    data: {
-      configId: string;
-    },
-  ) => Promise<Result<null, InstanceType<typeof RepoError>>>;
-  updateMapping: (
-    access: BaseAccessPattern,
-    data: {
-      configId: string | null;
-      channelId: string;
-    },
-  ) => Promise<Result<void | null, InstanceType<typeof RepoError>>>;
-}
 
 type Settings<
   ChannelConfig extends BaseConfig,
@@ -113,10 +93,6 @@ export class DynamoConfigRepository<
 
   private getSKforSpecificItem({ configId }: { configId: string }) {
     return `CONFIG_ID#${configId}` as const;
-  }
-
-  private getSKforAllItems() {
-    return `CONFIG_ID#` as const;
   }
 
   private getSKforSpecificChannel({ channelId }: { channelId: string }) {

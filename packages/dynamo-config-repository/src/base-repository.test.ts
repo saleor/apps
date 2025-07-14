@@ -150,6 +150,7 @@ describe("DynamoConfigRepository", () => {
         configItem: {
           toolboxEntity,
           entitySchema: toolboxSchema,
+          idAttr: "id",
         },
         mapping: {
           singleDynamoItemToDomainEntity(entity) {

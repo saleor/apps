@@ -20,3 +20,30 @@ export type GetChannelConfigAccessPattern =
 export interface BaseConfig {
   id: string;
 }
+
+export interface GenericRepo<ChannelConfig extends BaseConfig> {
+  saveChannelConfig: (args: {
+    config: ChannelConfig;
+    saleorApiUrl: SaleorApiUrl;
+    appId: string;
+  }) => Promise<Result<null | void, InstanceType<typeof RepoError>>>;
+  getChannelConfig: (
+    access: GetChannelConfigAccessPattern,
+  ) => Promise<Result<ChannelConfig | null, InstanceType<typeof RepoError>>>;
+  getRootConfig: (
+    access: BaseAccessPattern,
+  ) => Promise<Result<GenericRootConfig<ChannelConfig>, InstanceType<typeof RepoError>>>;
+  removeConfig: (
+    access: BaseAccessPattern,
+    data: {
+      configId: string;
+    },
+  ) => Promise<Result<null, InstanceType<typeof RepoError>>>;
+  updateMapping: (
+    access: BaseAccessPattern,
+    data: {
+      configId: string | null;
+      channelId: string;
+    },
+  ) => Promise<Result<void | null, InstanceType<typeof RepoError>>>;
+}
