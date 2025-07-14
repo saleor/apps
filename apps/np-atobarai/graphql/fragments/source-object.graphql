@@ -12,6 +12,29 @@ fragment SourceObject on OrderOrCheckout {
     shippingAddress {
       ...Address
     }
+    discount {
+      amount
+    }
+    shippingPrice {
+      gross {
+        amount
+      }
+    }
+    lines {
+      __typename
+      quantity
+      totalPrice {
+        gross {
+          amount
+        }
+      }
+      checkoutVariant: variant {
+        sku
+        product {
+          name
+        }
+      }
+    }
   }
   ... on Order {
     __typename
@@ -25,6 +48,29 @@ fragment SourceObject on OrderOrCheckout {
     }
     shippingAddress {
       ...Address
+    }
+    discount {
+      amount
+    }
+    shippingPrice {
+      gross {
+        amount
+      }
+    }
+    lines {
+      __typename
+      quantity
+      totalPrice {
+        gross {
+          amount
+        }
+      }
+      orderVariant: variant {
+        sku
+        product {
+          name
+        }
+      }
     }
   }
 }

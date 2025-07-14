@@ -17,7 +17,7 @@
     "eslint": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hook-form": "^7.43.9",
+    "react-hook-form": "catalog:",
     "typescript": "5.8.2"
   },
   "peerDependencies": {

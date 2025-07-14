@@ -1,87 +1,67 @@
+import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
-import { AddressFragment, TransactionInitializeSessionEventFragment } from "@/generated/graphql";
-import { BaseError } from "@/lib/errors";
+import { SourceObjectFragment } from "@/generated/graphql";
 
-/**
- * Converts a Saleor billing address from Checkout / Order to an Atobarai customer format.
- */
-export class AtobaraiCustomer {
-  static schema = z.object({
+import {
+  formatAddress,
+  formatCustomerName,
+  formatPhone,
+  getEmailFromSourceObject,
+} from "./atobarai-address-helpers";
+
+export const AtobaraiCustomerSchema = z
+  .object({
     customer_name: z.string(),
     company_name: z.string().optional(),
     zip_code: z.string(),
     address: z.string(),
     tel: z.string(),
     email: z.string().email(),
-  });
+  })
+  .brand("AtobaraiCustomer");
 
-  static MissingDataError = BaseError.subclass("AtobaraiCustomer.MissingDataError", {
+export const AtobaraiCustomerMissingDataError = BaseError.subclass(
+  "AtobaraiCustomerMissingDataError",
+  {
     props: {
-      _brand: "AtobaraiCustomer.MissingDataError" as const,
+      _brand: "AtobaraiCustomerMissingDataError" as const,
     },
+  },
+);
+
+/**
+ * Creates Atobarai customer from Saleor sourceObject billingAddress and email.
+ */
+export const createAtobaraiCustomer = (event: { sourceObject: SourceObjectFragment }) => {
+  const billingAddress = event.sourceObject.billingAddress;
+
+  if (!billingAddress) {
+    throw new AtobaraiCustomerMissingDataError(
+      "Billing address is required to create AtobaraiCustomer",
+    );
+  }
+
+  if (!billingAddress.phone) {
+    throw new AtobaraiCustomerMissingDataError(
+      "Phone number is required to create AtobaraiCustomer",
+    );
+  }
+
+  const email = getEmailFromSourceObject(event.sourceObject);
+
+  if (!email) {
+    throw new AtobaraiCustomerMissingDataError("Email is required to create AtobaraiCustomer");
+  }
+
+  return AtobaraiCustomerSchema.parse({
+    customer_name: formatCustomerName(billingAddress),
+    company_name: billingAddress.companyName,
+    zip_code: billingAddress.postalCode,
+    address: formatAddress(billingAddress),
+    tel: formatPhone(billingAddress.phone),
+    email: email,
   });
+};
 
-  private billingAddress: AddressFragment;
-  private email: string;
-  private phone: string;
-
-  private constructor(params: { billingAddress: AddressFragment; email: string; phone: string }) {
-    this.billingAddress = params.billingAddress;
-    this.email = params.email;
-    this.phone = params.phone;
-  }
-
-  static createFromEvent(event: Pick<TransactionInitializeSessionEventFragment, "sourceObject">) {
-    if (!event.sourceObject.billingAddress) {
-      throw new AtobaraiCustomer.MissingDataError(
-        "Billing address is required to create AtobaraiCustomer",
-      );
-    }
-
-    const email =
-      event.sourceObject.__typename === "Checkout"
-        ? event.sourceObject.email
-        : event.sourceObject.userEmail;
-
-    if (!email) {
-      throw new AtobaraiCustomer.MissingDataError("Email is required to create AtobaraiCustomer");
-    }
-
-    if (!event.sourceObject.billingAddress.phone) {
-      throw new AtobaraiCustomer.MissingDataError(
-        "Phone number is required to create AtobaraiCustomer",
-      );
-    }
-
-    return new AtobaraiCustomer({
-      billingAddress: event.sourceObject.billingAddress,
-      email,
-      phone: event.sourceObject.billingAddress.phone,
-    });
-  }
-
-  private getCustomerName(): string {
-    return `${this.billingAddress.firstName} ${this.billingAddress.lastName}`;
-  }
-
-  private getAddress(): string {
-    // TODO: add support for fill_missing_address
-    return `${this.billingAddress.countryArea}${this.billingAddress.streetAddress1}${this.billingAddress.streetAddress2}`;
-  }
-
-  private getPhone(): string {
-    return this.phone.replace("+81", "0");
-  }
-
-  getCustomerAddress(): z.infer<typeof AtobaraiCustomer.schema> {
-    return {
-      customer_name: this.getCustomerName(),
-      company_name: this.billingAddress.companyName,
-      zip_code: this.billingAddress.postalCode,
-      address: this.getAddress(),
-      tel: this.getPhone(),
-      email: this.email,
-    };
-  }
-}
+export type AtobaraiCustomer = z.infer<typeof AtobaraiCustomerSchema>;
