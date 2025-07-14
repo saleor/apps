@@ -1,12 +1,13 @@
+import { BaseError } from "@saleor/errors";
+
 import {
-  CreditCheckResult,
   FailedReasonForCreditCheck,
   PendingReasonForCreditCheck,
 } from "./atobarai-register-transaction-response";
 
 interface IAtobaraiTransaction {
   getPspReference(): string;
-  getPublicTranslatedMessage(): string;
+  // TODO: consider adding getPublicTranslatedMessage method - this can be used to display Japanese messages in the storefront
 }
 
 export class PassedAtobaraiTransaction implements IAtobaraiTransaction {
@@ -14,10 +15,6 @@ export class PassedAtobaraiTransaction implements IAtobaraiTransaction {
 
   constructor(npTransactionId: string) {
     this.npTransactionId = npTransactionId;
-  }
-
-  getPublicTranslatedMessage(): string {
-    return "審査が完了いたしました。NP後払いをご利用いただけます";
   }
 
   getPspReference(): string {
@@ -34,12 +31,12 @@ export class PendingAtobaraiTransaction implements IAtobaraiTransaction {
     this.authoriHold = authoriHold;
   }
 
-  getPublicTranslatedMessage(): string {
-    return "ご注文ありがとうございました。店舗からの連絡をお待ち下さい";
-  }
-
   getPspReference(): string {
     return this.npTransactionId;
+  }
+
+  getAuthoriHold(): PendingReasonForCreditCheck[] {
+    return this.authoriHold;
   }
 }
 
@@ -51,25 +48,13 @@ export class FailedAtobaraiTransaction implements IAtobaraiTransaction {
     this.npTransactionId = npTransactionId;
     this.authoriNg = authoriNg;
   }
-  getAuthoriResult(): "20" {
-    return CreditCheckResult.Failed;
-  }
-
-  getPublicTranslatedMessage(): string {
-    switch (this.authoriNg) {
-      case "NG001":
-        return "ご利用上限金額を超えているため、NP後払いをご利用いただけません。別の決済手段をご利用ください。詳細の確認をご希望の場合は、NPサポートデスクまでお問い合わせください。";
-      case "NG002":
-        return "情報不備がある可能性がございましたため、現時点ではNP後払いはご利用できません。別の決済手段をご利用ください。詳細の確認をご希望の場合は、お手数ですがNPサポートデスクまでお問い合わせください。";
-      case "NG999":
-        return "今回のご注文ではNP後払いをご利用いただけません。別の決済手段をご利用ください。詳細の確認をご希望の場合は、NPサポートデスクまでお問い合わせください。";
-      default:
-        return "";
-    }
-  }
 
   getPspReference(): string {
     return this.npTransactionId;
+  }
+
+  getAuthoriNg(): FailedReasonForCreditCheck {
+    return this.authoriNg;
   }
 }
 
@@ -78,10 +63,6 @@ export class BeforeReviewTransaction implements IAtobaraiTransaction {
 
   constructor(npTransactionId: string) {
     this.npTransactionId = npTransactionId;
-  }
-
-  getPublicTranslatedMessage(): string {
-    return "";
   }
 
   getPspReference(): string {
@@ -97,4 +78,14 @@ export type AtobaraiTransaction =
 
 export type AtobaraiSuccessTransaction = PassedAtobaraiTransaction | PendingAtobaraiTransaction;
 
-export type AtobaraiFailureTransaction = FailedAtobaraiTransaction | BeforeReviewTransaction;
+export const AtobaraiFailureTransactionErrorPublicCode = "AtobaraiFailureTransactionError";
+
+export const AtobaraiFailureTransactionError = BaseError.subclass(
+  "AtobaraiFailureTransactionError",
+  {
+    props: {
+      publicCode: AtobaraiFailureTransactionErrorPublicCode,
+      publicMessage: "Atobarai credit check failed",
+    },
+  },
+);

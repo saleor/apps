@@ -6,7 +6,8 @@ import {
   TransactionSessionSuccess,
 } from "@/generated/app-webhooks-types/transaction-initialize-session";
 import {
-  AtobaraiFailureTransaction,
+  AtobaraiFailureTransactionError,
+  AtobaraiFailureTransactionErrorPublicCode,
   AtobaraiSuccessTransaction,
 } from "@/modules/atobarai/atobarai-transaction";
 import {
@@ -25,12 +26,6 @@ class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
   readonly atobaraiTransaction: AtobaraiSuccessTransaction;
 
-  private static ResponseDataSchema = z.object({
-    transactionRegister: z.object({
-      translatedMessage: z.string(),
-    }),
-  });
-
   constructor(args: {
     transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
     atobaraiTransaction: AtobaraiSuccessTransaction;
@@ -42,11 +37,6 @@ class Success extends SuccessWebhookResponse {
 
   getResponse(): Response {
     const typeSafeResponse: TransactionSessionSuccess | TransactionSessionActionRequired = {
-      data: Success.ResponseDataSchema.parse({
-        transactionRegister: {
-          translatedMessage: this.atobaraiTransaction.getPublicTranslatedMessage(),
-        },
-      }),
       result: this.transactionResult.result,
       actions: this.transactionResult.actions,
       message: this.transactionResult.message,
@@ -61,46 +51,35 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
-  readonly error?: AtobaraiApiErrors;
-  readonly atobaraiTransaction?: AtobaraiFailureTransaction;
+  readonly error: AtobaraiApiErrors | InstanceType<typeof AtobaraiFailureTransactionError>;
 
   private static ResponseDataSchema = z.object({
-    transactionRegister: z.object({
-      translatedMessage: z.string().optional(),
-      errors: z
-        .array(
-          z.object({
-            code: z.literal(AtobaraiApiClientRegisterTransactionErrorPublicCode),
-            message: z.string(),
-          }),
-        )
-        .optional(),
-    }),
+    errors: z.array(
+      z.object({
+        code: z.union([
+          z.literal(AtobaraiApiClientRegisterTransactionErrorPublicCode),
+          z.literal(AtobaraiFailureTransactionErrorPublicCode),
+        ]),
+        message: z.string(),
+      }),
+    ),
   });
 
-  constructor(args: {
-    transactionResult: ChargeFailureResult;
-    error?: AtobaraiApiErrors;
-    atobaraiTransaction?: AtobaraiFailureTransaction;
-  }) {
+  constructor(args: { transactionResult: ChargeFailureResult; error: AtobaraiApiErrors }) {
     super();
     this.transactionResult = args.transactionResult;
     this.error = args.error;
-    this.atobaraiTransaction = args.atobaraiTransaction;
   }
 
   getResponse(): Response {
     const typeSafeResponse: TransactionSessionFailure = {
       data: Failure.ResponseDataSchema.parse({
-        transactionRegister: {
-          translatedMessage: this.atobaraiTransaction?.getPublicTranslatedMessage(),
-          errors: [
-            {
-              code: this.error?.publicCode,
-              message: this.error?.publicMessage,
-            },
-          ],
-        },
+        errors: [
+          {
+            code: this.error.publicCode,
+            message: this.error.publicMessage,
+          },
+        ],
       }),
       result: this.transactionResult.result,
       actions: this.transactionResult.actions,
