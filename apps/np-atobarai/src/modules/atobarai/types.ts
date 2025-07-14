@@ -26,11 +26,16 @@ export interface IAtobaraiApiClient {
   ) => Promise<Result<AtobaraiTransaction, AtobaraiApiErrors>>;
 }
 
+export const AtobaraiApiClientRegisterTransactionErrorPublicCode =
+  "AtobaraiRegisterTransactionError" as const;
+
 export const AtobaraiApiClientRegisterTransactionError = BaseError.subclass(
   "AtobaraiApiClientRegisterTransactionError",
   {
     props: {
-      __brand: "AtobaraiApiClientRegisterTransactionError",
+      _brand: "AtobaraiApiClientRegisterTransactionError",
+      publicCode: AtobaraiApiClientRegisterTransactionErrorPublicCode,
+      publicMessage: "Failed to register transaction with Atobarai",
     },
   },
 );

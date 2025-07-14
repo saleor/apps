@@ -1,11 +1,13 @@
 import { AddressFragment, SourceObjectFragment } from "@/generated/graphql";
 
 export const formatCustomerName = (address: AddressFragment): string => {
-  return `${address.firstName} ${address.lastName}`;
+  return `${address.lastName} ${address.firstName}`;
 };
 
 export const formatAddress = (address: AddressFragment): string => {
-  // TODO: add support for fill_missing_address
+  /*
+   * TODO: add support for fill_missing_address
+   */
   return `${address.countryArea}${address.streetAddress1}${address.streetAddress2}`;
 };
 

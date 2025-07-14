@@ -4,7 +4,7 @@ const transformTo_YYYY_MM_DD = (stringDate: string) => stringDate.split("T")[0];
 
 const schema = z
   .string()
-  .datetime()
+  .datetime({ offset: true })
   .transform(transformTo_YYYY_MM_DD)
   .brand("AtobaraiShopOrderDate");
 

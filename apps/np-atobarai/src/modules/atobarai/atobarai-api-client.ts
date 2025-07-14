@@ -1,11 +1,24 @@
 import { BaseError } from "@saleor/errors";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
+import { assertUnreachable } from "@/lib/assert-unreachable";
+
 import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
+import {
+  createAtobaraiRegisterTransactionErrorResponse,
+  createAtobaraiRegisterTransactionSuccessResponse,
+  CreditCheckResult,
+} from "./atobarai-register-transaction-response";
 import { AtobaraiSpCode } from "./atobarai-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
-import { AtobaraiTransaction } from "./atobarai-transaction";
+import {
+  AtobaraiTransaction,
+  BeforeReviewTransaction,
+  FailedAtobaraiTransaction,
+  PassedAtobaraiTransaction,
+  PendingAtobaraiTransaction,
+} from "./atobarai-transaction";
 import {
   AtobaraiApiClientRegisterTransactionError,
   AtobaraiApiErrors,
@@ -49,13 +62,14 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
     return {
       "X-NP-Terminal-Id": this.atobaraiTerminalId,
       Authorization: `Basic ${btoa(`${this.atobaraiMerchantCode}:${this.atobaraiSpCode}`)}`,
+      "Content-Type": "application/json",
     };
   }
 
   private getBaseUrl() {
     return this.atobaraiEnviroment === "sandbox"
-      ? "https://ctcp.np-payment-gateway.com/v1"
-      : "https://cp.np-payment-gateway.com/v1";
+      ? "https://ctcp.np-payment-gateway.com/v1/"
+      : "https://cp.np-payment-gateway.com/v1/";
   }
 
   async registerTransaction(
@@ -80,6 +94,52 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
       );
     }
 
-    return ok(new AtobaraiTransaction());
+    if (!result.value.ok) {
+      const response = await result.value.json();
+
+      const { errors } = createAtobaraiRegisterTransactionErrorResponse(response);
+
+      const normalizedErrors = errors.map((error) =>
+        error.codes.map((code) => BaseError.normalize(code)).flat(),
+      );
+
+      return err(
+        new AtobaraiApiClientRegisterTransactionError("Atobarai API returned an error", {
+          errors: [normalizedErrors],
+        }),
+      );
+    }
+
+    const response = await result.value.json();
+
+    const successResponse = createAtobaraiRegisterTransactionSuccessResponse(response);
+
+    if (successResponse.results.length > 2) {
+      return err(
+        new AtobaraiApiClientRegisterTransactionError(
+          "Atobarai API returned more than 2 results in the response",
+        ),
+      );
+    }
+
+    const transaction = successResponse.results[0];
+
+    switch (transaction.authori_result) {
+      case CreditCheckResult.Passed:
+        return ok(new PassedAtobaraiTransaction(transaction.np_transaction_id));
+      case CreditCheckResult.Pending:
+        return ok(
+          new PendingAtobaraiTransaction(transaction.np_transaction_id, transaction.authori_hold),
+        );
+      case CreditCheckResult.Failed:
+        return ok(
+          new FailedAtobaraiTransaction(transaction.np_transaction_id, transaction.authori_ng),
+        );
+      case CreditCheckResult.BeforeReview:
+        return ok(new BeforeReviewTransaction(transaction.np_transaction_id));
+      default:
+        // @ts-expect-error - TypeScript doesn't know about the exhaustive check here
+        assertUnreachable(transaction.authori_result);
+    }
   }
 }

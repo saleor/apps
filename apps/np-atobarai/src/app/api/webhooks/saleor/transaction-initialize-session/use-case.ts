@@ -15,23 +15,37 @@ import {
   createAtobaraiRegisterTransactionPayload,
 } from "@/modules/atobarai/atobarai-register-transaction-payload";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
+import {
+  BeforeReviewTransaction,
+  FailedAtobaraiTransaction,
+  PassedAtobaraiTransaction,
+  PendingAtobaraiTransaction,
+} from "@/modules/atobarai/atobarai-transaction";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 import { createSaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
+import {
+  ChargeActionRequiredResult,
+  ChargeFailureResult,
+  ChargeSuccessResult,
+} from "@/modules/transaction-result/charge-result";
 
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
+import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
-  // TODO: add here Response
-  Result<unknown, AppIsNotConfiguredResponse | MalformedRequestResponse>
+  Result<
+    TransactionInitializeSessionUseCaseResponse,
+    AppIsNotConfiguredResponse | MalformedRequestResponse
+  >
 >;
 
 export class TransactionInitializeSessionUseCase {
-  private appConfigRepo: AppConfigRepo;
+  private appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private logger = createLogger("TransactionInitializeSessionUseCase");
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
 
   constructor(deps: {
-    appConfigRepo: AppConfigRepo;
+    appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
@@ -121,17 +135,53 @@ export class TransactionInitializeSessionUseCase {
       atobaraiEnviroment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
-    const registerTransactionResult = await apiClient.registerTransaction(
-      this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value),
-    );
+    const payload = this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value);
+
+    const registerTransactionResult = await apiClient.registerTransaction(payload);
 
     if (registerTransactionResult.isErr()) {
       this.logger.error("Failed to register transaction with Atobarai", {
         error: registerTransactionResult.error,
       });
+
+      return ok(
+        new TransactionInitializeSessionUseCaseResponse.Failure({
+          transactionResult: new ChargeFailureResult(),
+          error: registerTransactionResult.error,
+        }),
+      );
     }
 
-    // TODO: handle errors and return response
-    return ok(undefined);
+    if (registerTransactionResult.value instanceof PendingAtobaraiTransaction) {
+      return ok(
+        new TransactionInitializeSessionUseCaseResponse.Success({
+          transactionResult: new ChargeActionRequiredResult(),
+          atobaraiTransaction: registerTransactionResult.value,
+        }),
+      );
+    }
+
+    if (
+      registerTransactionResult.value instanceof FailedAtobaraiTransaction ||
+      registerTransactionResult.value instanceof BeforeReviewTransaction
+    ) {
+      return ok(
+        new TransactionInitializeSessionUseCaseResponse.Failure({
+          transactionResult: new ChargeFailureResult(),
+          atobaraiTransaction: registerTransactionResult.value,
+        }),
+      );
+    }
+
+    if (registerTransactionResult.value instanceof PassedAtobaraiTransaction) {
+      return ok(
+        new TransactionInitializeSessionUseCaseResponse.Success({
+          transactionResult: new ChargeSuccessResult(),
+          atobaraiTransaction: registerTransactionResult.value,
+        }),
+      );
+    }
+
+    throw new BaseError("Unexpected transaction type returned from Atobarai API");
   }
 }

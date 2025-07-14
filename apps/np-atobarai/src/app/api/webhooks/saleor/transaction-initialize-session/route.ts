@@ -10,18 +10,20 @@ import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
+import { AtobaraiApiClientFactory } from "@/modules/atobarai/atobarai-api-client-factory";
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
 import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
-import { PaymentGatewayInitializeSessionUseCase } from "../payment-gateway-initialize-session/use-case";
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
+import { TransactionInitializeSessionUseCase } from "./use-case";
 import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
 
 const logger = createLogger("TransactionInitializeSession route");
 
-const useCase = new PaymentGatewayInitializeSessionUseCase({
+const useCase = new TransactionInitializeSessionUseCase({
+  atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
   // TODO: Replace with actual implementation of AppConfigRepo
   appConfigRepo: {
     getChannelConfig: () => {
@@ -31,12 +33,12 @@ const useCase = new PaymentGatewayInitializeSessionUseCase({
             fillMissingAddress: true,
             name: "Config 1",
             id: "111",
-            merchantCode: createAtobaraiMerchantCode("merchant-code-1"),
+            merchantCode: createAtobaraiMerchantCode(process.env.MERCHANT_CODE!),
             shippingCompanyCode: "5000",
-            skuAsName: true,
-            spCode: createAtobaraiSpCode("sp1"),
+            skuAsName: false,
+            spCode: createAtobaraiSpCode(process.env.SP_CODE!),
             useSandbox: true,
-            terminalId: createAtobaraiTerminalId("id"),
+            terminalId: createAtobaraiTerminalId(process.env.TERMINAL_ID!),
           })._unsafeUnwrap(),
         ),
       );
