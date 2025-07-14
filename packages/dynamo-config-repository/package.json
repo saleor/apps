@@ -17,6 +17,7 @@
     "neverthrow": "catalog:"
   },
   "devDependencies": {
+    "@aws-sdk/client-dynamodb": "catalog:",
     "@aws-sdk/lib-dynamodb": "catalog:",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-domain": "workspace:*",
