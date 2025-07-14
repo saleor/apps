@@ -2,7 +2,8 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { Entity, item, string, Table } from "dynamodb-toolbox";
 
-import { BaseConfig, createDynamoConfigRepository } from "../base-repository";
+import { createDynamoConfigRepository } from "../base-repository";
+import { BaseConfig } from "../types";
 
 class AppChannelConfig implements BaseConfig {
   id: string;
