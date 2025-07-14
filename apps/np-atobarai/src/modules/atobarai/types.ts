@@ -1,6 +1,5 @@
+import { BaseError } from "@saleor/errors";
 import { Result } from "neverthrow";
-
-import { BaseError } from "@/lib/errors";
 
 import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";

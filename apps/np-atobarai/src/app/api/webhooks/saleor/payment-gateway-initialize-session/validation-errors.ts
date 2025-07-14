@@ -1,4 +1,4 @@
-import { BaseError } from "@/lib/errors";
+import { BaseError } from "@saleor/errors";
 
 export const UnsupportedCountryError = BaseError.subclass("UnsupportedCountryError", {
   props: {
