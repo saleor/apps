@@ -172,7 +172,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 }
 
                 default:
-
                 case CalculateTaxesUseCase.UnhandledError: {
                   captureException(error);
                   span.setStatus({
