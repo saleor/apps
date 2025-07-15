@@ -6,7 +6,12 @@ import { mockedAtobaraiSpCode } from "@/__tests__/mocks/atobarai/mocked-atobarai
 import { mockedAtobaraiTerminalId } from "@/__tests__/mocks/atobarai/mocked-atobarai-terminal-id";
 
 import { AtobaraiApiClient } from "./atobarai-api-client";
-import { PassedAtobaraiTransaction } from "./atobarai-transaction";
+import {
+  BeforeReviewTransaction,
+  FailedAtobaraiTransaction,
+  PassedAtobaraiTransaction,
+  PendingAtobaraiTransaction,
+} from "./atobarai-transaction";
 import { AtobaraiApiClientRegisterTransactionError } from "./types";
 
 const authorizationHeader = `Basic ${btoa(
@@ -53,7 +58,7 @@ describe("AtobaraiApiClient", () => {
         atobaraiEnviroment: "sandbox",
       });
 
-      const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
+      await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
 
       expect(fetchSpy).toHaveBeenCalledWith(
         new URL("transactions", "https://ctcp.np-payment-gateway.com/v1/"),
@@ -67,8 +72,6 @@ describe("AtobaraiApiClient", () => {
           body: JSON.stringify(mockedAtobaraiRegisterTransactionPayload),
         },
       );
-
-      expect(result._unsafeUnwrap()).toBeInstanceOf(PassedAtobaraiTransaction);
     });
 
     it("should make a POST request to the correct production URL", async () => {
@@ -92,7 +95,7 @@ describe("AtobaraiApiClient", () => {
         atobaraiEnviroment: "production",
       });
 
-      const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
+      await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
 
       expect(fetchSpy).toHaveBeenCalledWith(
         new URL("transactions", "https://cp.np-payment-gateway.com/v1/"),
@@ -106,8 +109,6 @@ describe("AtobaraiApiClient", () => {
           body: JSON.stringify(mockedAtobaraiRegisterTransactionPayload),
         },
       );
-
-      expect(result._unsafeUnwrap()).toBeInstanceOf(PassedAtobaraiTransaction);
     });
 
     it("should return error result when fetch throws an error", async () => {
@@ -130,6 +131,172 @@ describe("AtobaraiApiClient", () => {
           [AtobaraiApiClientRegisterTransactionError: Network error
           Failed to register transaction]
         `);
+    });
+
+    it("should return error result when response is not ok", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json(
+        {
+          errors: [
+            {
+              codes: ["invalid_request"],
+              id: "12345",
+            },
+          ],
+        },
+        { status: 400 },
+      );
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiEnviroment: "sandbox",
+      });
+
+      const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiApiClientRegisterTransactionError);
+    });
+
+    it("should return error result when response contains more than 2 results", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            authori_result: "00",
+            np_transaction_id: "1234567890",
+          },
+          {
+            authori_result: "00",
+            np_transaction_id: "0987654321",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiEnviroment: "sandbox",
+      });
+
+      const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiApiClientRegisterTransactionError);
+    });
+
+    it("should return PassedAtobaraiTransaction when NP Atobarai responds with authori_result 00", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            authori_result: "00",
+            np_transaction_id: "1234567890",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiEnviroment: "sandbox",
+      });
+
+      const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
+
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap()).toBeInstanceOf(PassedAtobaraiTransaction);
+    });
+
+    it("should return PendingAtobaraiTransaction when NP Atobarai responds with authori_result 10", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            authori_result: "10",
+            np_transaction_id: "1234567890",
+            authori_hold: ["RE009", "RE014"],
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiEnviroment: "sandbox",
+      });
+
+      const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
+
+      expect(result._unsafeUnwrap()).toBeInstanceOf(PendingAtobaraiTransaction);
+    });
+
+    it("should return FailedAtobaraiTransaction when NP Atobarai responds with authori_result 20", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            authori_result: "20",
+            np_transaction_id: "1234567890",
+            authori_ng: "NG999",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiEnviroment: "sandbox",
+      });
+
+      const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
+
+      expect(result._unsafeUnwrap()).toBeInstanceOf(FailedAtobaraiTransaction);
+    });
+
+    it("should return BeforeReviewTransaction when NP Atobarai responds with authori_result 40", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            authori_result: "40",
+            np_transaction_id: "1234567890",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiEnviroment: "sandbox",
+      });
+
+      const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
+
+      expect(result._unsafeUnwrap()).toBeInstanceOf(BeforeReviewTransaction);
     });
   });
 });
