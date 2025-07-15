@@ -1,3 +1,4 @@
+import { BaseConfig } from "@saleor/dynamo-config-repository";
 import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
@@ -32,7 +33,7 @@ const schema = z.object({
   useSandbox: z.boolean(),
 });
 
-export class AppChannelConfig implements RawProps {
+export class AppChannelConfig implements RawProps, BaseConfig {
   readonly name: string;
   readonly id: string;
   readonly shippingCompanyCode: string;
@@ -81,29 +82,5 @@ export class AppChannelConfig implements RawProps {
     args: RawProps,
   ): Result<AppChannelConfig, InstanceType<typeof AppChannelConfig.ValidationError>> {
     return this.validate(args).map(() => new AppChannelConfig(args));
-  }
-}
-
-export class AppRootConfig {
-  readonly chanelConfigMapping: Record<string, string>;
-  readonly configsById: Record<string, AppChannelConfig>;
-
-  constructor(
-    chanelConfigMapping: Record<string, string>,
-    configsById: Record<string, AppChannelConfig>,
-  ) {
-    this.chanelConfigMapping = chanelConfigMapping;
-    this.configsById = configsById;
-  }
-
-  getAllConfigsAsList() {
-    return Object.values(this.configsById);
-  }
-
-  getChannelsBoundToGivenConfig(configId: string) {
-    const keyValues = Object.entries(this.chanelConfigMapping);
-    const filtered = keyValues.filter(([_, value]) => value === configId);
-
-    return filtered.map(([channelId]) => channelId);
   }
 }

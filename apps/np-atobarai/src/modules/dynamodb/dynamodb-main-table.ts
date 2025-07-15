@@ -35,32 +35,6 @@ export class DynamoMainTable extends Table<PartitionKey, SortKey> {
       },
     });
   }
-
-  /**
-   * These PKs will be scoped per installation, so reinstalling the app will not access this data.
-   * Use Case: Logs, config, transactions.
-   */
-  static getPrimaryKeyScopedToInstallation({
-    saleorApiUrl,
-    appId,
-  }: {
-    saleorApiUrl: string;
-    appId: string;
-  }): `${string}#${string}` {
-    return `${saleorApiUrl}#${appId}` as const;
-  }
-
-  /**
-   * These PKs will be scoped tenant, so even after reinstalling they will be accessible
-   * Use case: APL
-   */
-  static getPrimaryKeyScopedToSaleorApiUrl({
-    saleorApiUrl,
-  }: {
-    saleorApiUrl: string;
-  }): `${string}` {
-    return `${saleorApiUrl}` as const;
-  }
 }
 
 const client = createDynamoDBClient();
