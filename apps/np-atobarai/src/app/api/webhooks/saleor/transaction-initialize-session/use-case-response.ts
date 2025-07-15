@@ -6,8 +6,7 @@ import {
   TransactionSessionSuccess,
 } from "@/generated/app-webhooks-types/transaction-initialize-session";
 import {
-  AtobaraiFailureTransactionError,
-  AtobaraiFailureTransactionErrorPublicCode,
+  AtobaraiErrorTransaction,
   AtobaraiSuccessTransaction,
 } from "@/modules/atobarai/atobarai-transaction";
 import {
@@ -51,39 +50,69 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
-  readonly error: AtobaraiApiErrors | InstanceType<typeof AtobaraiFailureTransactionError>;
+  readonly error?: AtobaraiApiErrors;
+  readonly atobaraiTransaction?: AtobaraiErrorTransaction;
 
   private static ResponseDataSchema = z.object({
     errors: z.array(
       z.object({
         code: z.union([
           z.literal(AtobaraiApiClientRegisterTransactionErrorPublicCode),
-          z.literal(AtobaraiFailureTransactionErrorPublicCode),
+          z.literal("AtobaraiFailureTransactionError"),
         ]),
         message: z.string(),
       }),
     ),
   });
 
-  constructor(args: {
-    transactionResult: ChargeFailureResult;
-    error: AtobaraiApiErrors | InstanceType<typeof AtobaraiFailureTransactionError>;
-  }) {
+  constructor(
+    args:
+      | {
+          transactionResult: ChargeFailureResult;
+          error: AtobaraiApiErrors;
+          atobaraiTransaction?: never;
+        }
+      | {
+          transactionResult: ChargeFailureResult;
+          error?: never;
+          atobaraiTransaction: AtobaraiErrorTransaction;
+        },
+  ) {
     super();
     this.transactionResult = args.transactionResult;
-    this.error = args.error;
+    if ("error" in args) {
+      this.error = args.error;
+    }
+    if ("atobaraiTransaction" in args) {
+      this.atobaraiTransaction = args.atobaraiTransaction;
+    }
   }
 
-  getResponse(): Response {
-    const typeSafeResponse: TransactionSessionFailure = {
-      data: Failure.ResponseDataSchema.parse({
+  getError(): z.infer<typeof Failure.ResponseDataSchema> {
+    if (this.error) {
+      return {
         errors: [
           {
             code: this.error.publicCode,
             message: this.error.publicMessage,
           },
         ],
-      }),
+      };
+    }
+
+    return {
+      errors: [
+        {
+          code: "AtobaraiFailureTransactionError",
+          message: "Atobarai credit check failed",
+        },
+      ],
+    };
+  }
+
+  getResponse(): Response {
+    const typeSafeResponse: TransactionSessionFailure = {
+      data: Failure.ResponseDataSchema.parse(this.getError()),
       result: this.transactionResult.result,
       actions: this.transactionResult.actions,
       message: this.transactionResult.message,

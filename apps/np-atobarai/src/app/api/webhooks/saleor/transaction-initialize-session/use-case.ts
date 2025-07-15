@@ -16,7 +16,6 @@ import {
 } from "@/modules/atobarai/atobarai-register-transaction-payload";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import {
-  AtobaraiFailureTransactionError,
   BeforeReviewTransaction,
   FailedAtobaraiTransaction,
   PassedAtobaraiTransaction,
@@ -169,7 +168,7 @@ export class TransactionInitializeSessionUseCase {
       return ok(
         new TransactionInitializeSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
-          error: new AtobaraiFailureTransactionError("Atobarai credit check failed"),
+          atobaraiTransaction: registerTransactionResult.value,
         }),
       );
     }

@@ -8,7 +8,6 @@ import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transact
 import {
   createAtobaraiRegisterTransactionErrorResponse,
   createAtobaraiRegisterTransactionSuccessResponse,
-  CreditCheckResult,
 } from "./atobarai-register-transaction-response";
 import { AtobaraiSpCode } from "./atobarai-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
@@ -114,7 +113,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const successResponse = createAtobaraiRegisterTransactionSuccessResponse(response);
 
-    if (successResponse.results.length > 2) {
+    if (successResponse.results.length > 1) {
       return err(
         new AtobaraiApiClientRegisterTransactionError(
           "Atobarai API returned more than 2 results in the response",
@@ -125,18 +124,14 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
     const transaction = successResponse.results[0];
 
     switch (transaction.authori_result) {
-      case CreditCheckResult.Passed:
+      case PassedAtobaraiTransaction.checkResult:
         return ok(PassedAtobaraiTransaction.createFromAtobaraiTransactionResponse(transaction));
-      case CreditCheckResult.Pending:
-        return ok(
-          new PendingAtobaraiTransaction(transaction.np_transaction_id, transaction.authori_hold),
-        );
-      case CreditCheckResult.Failed:
-        return ok(
-          new FailedAtobaraiTransaction(transaction.np_transaction_id, transaction.authori_ng),
-        );
-      case CreditCheckResult.BeforeReview:
-        return ok(new BeforeReviewTransaction(transaction.np_transaction_id));
+      case PendingAtobaraiTransaction.checkResult:
+        return ok(PendingAtobaraiTransaction.createFromAtobaraiTransactionResponse(transaction));
+      case FailedAtobaraiTransaction.checkResult:
+        return ok(FailedAtobaraiTransaction.createFromAtobaraiTransactionResponse(transaction));
+      case BeforeReviewTransaction.checkResult:
+        return ok(BeforeReviewTransaction.createFromAtobaraiTransactionResponse(transaction));
       default:
         // @ts-expect-error - TypeScript doesn't know about the exhaustive check here
         assertUnreachable(transaction.authori_result);

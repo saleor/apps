@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  AtobaraiFailureTransactionError,
+  FailedAtobaraiTransaction,
   PassedAtobaraiTransaction,
   PendingAtobaraiTransaction,
 } from "@/modules/atobarai/atobarai-transaction";
@@ -18,7 +18,11 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
   describe("Success", () => {
     describe("with ChargeSuccessResult", () => {
       it("getResponse() returns valid Response with status 200 and success result with PSP reference", async () => {
-        const mockedAtobaraiTransaction = new PassedAtobaraiTransaction("np_transaction_123");
+        const mockedAtobaraiTransaction =
+          PassedAtobaraiTransaction.createFromAtobaraiTransactionResponse({
+            np_transaction_id: "np_transaction_123",
+            authori_result: "00",
+          });
         const response = new TransactionInitializeSessionUseCaseResponse.Success({
           transactionResult: new ChargeSuccessResult(),
           atobaraiTransaction: mockedAtobaraiTransaction,
@@ -42,7 +46,12 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
 
     describe("with ChargeActionRequiredResult", () => {
       it("getResponse() returns valid Response with status 200 and action required result with PSP reference", async () => {
-        const mockedAtobaraiTransaction = new PendingAtobaraiTransaction("np_transaction_456", []);
+        const mockedAtobaraiTransaction =
+          PendingAtobaraiTransaction.createFromAtobaraiTransactionResponse({
+            np_transaction_id: "np_transaction_456",
+            authori_result: "10",
+            authori_hold: [],
+          });
         const response = new TransactionInitializeSessionUseCaseResponse.Success({
           transactionResult: new ChargeActionRequiredResult(),
           atobaraiTransaction: mockedAtobaraiTransaction,
@@ -95,10 +104,15 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
 
     describe("with ChargeFailureResult and AtobaraiFailureTransactionError", () => {
       it("getResponse() returns valid Response with status 200 and failure result with transaction error details", async () => {
-        const error = new AtobaraiFailureTransactionError("Credit check failed");
+        const transaction = FailedAtobaraiTransaction.createFromAtobaraiTransactionResponse({
+          np_transaction_id: "np_transaction_789",
+          authori_result: "20",
+          authori_ng: FailedAtobaraiTransaction.creditCheckReasons.Other,
+        });
+
         const response = new TransactionInitializeSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
-          error,
+          atobaraiTransaction: transaction,
         });
 
         const fetchResponse = response.getResponse();
