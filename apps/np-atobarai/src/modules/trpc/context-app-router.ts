@@ -3,6 +3,8 @@ import { inferAsyncReturnType } from "@trpc/server";
 import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { Client } from "urql";
 
+import { appConfigRepo } from "@/modules/app-config/repo/app-config-repo";
+
 export const createTrpcContextAppRouter = async ({ req }: FetchCreateContextFnOptions) => {
   return {
     token: req.headers.get(SALEOR_AUTHORIZATION_BEARER_HEADER) as string | undefined,
@@ -10,6 +12,7 @@ export const createTrpcContextAppRouter = async ({ req }: FetchCreateContextFnOp
     appId: undefined as undefined | string,
     apiClient: null as Client | null,
     appUrl: req.headers.get("origin"),
+    configRepo: appConfigRepo,
   };
 };
 

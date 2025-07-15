@@ -38,7 +38,7 @@ export const ConfigsList = ({ configs, ...props }: Props) => {
     <Layout.AppSectionCard
       footer={
         <Box display="flex" justifyContent="flex-end">
-          <Button onClick={() => router.push("/config/new")}>Add Stripe configuration</Button>
+          <Button onClick={() => router.push("/config/new")}>Add configuration</Button>
         </Box>
       }
     >

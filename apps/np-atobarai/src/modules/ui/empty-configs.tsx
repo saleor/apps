@@ -9,7 +9,7 @@ export const EmptyConfigs = () => {
     <Layout.AppSectionCard
       footer={
         <Box display="flex" justifyContent="flex-end">
-          <Button onClick={() => router.push("/config/new")}>Add Stripe configuration</Button>
+          <Button onClick={() => router.push("/config/new")}>Add configuration</Button>
         </Box>
       }
     >
@@ -17,7 +17,7 @@ export const EmptyConfigs = () => {
         No configurations found
       </Text>
       <Text size={3} color="default2">
-        Create your first Stripe configuration to get started.
+        Create your first configuration to get started.
       </Text>
     </Layout.AppSectionCard>
   );
