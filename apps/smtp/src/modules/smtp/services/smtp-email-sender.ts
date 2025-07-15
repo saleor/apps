@@ -96,7 +96,7 @@ export class SmtpEmailSender implements ISMTPEmailSender {
         throw new Error("Unknown encryption type");
     }
 
-    // We don't wrap this in a try-catch because it will be handled in usecase via neverthrow
+    // We don't wrap this in a try-catch because it will be handled in use-case via neverthrow
     const response = await racePromise({
       promise: transporter.sendMail({
         ...mailData,
