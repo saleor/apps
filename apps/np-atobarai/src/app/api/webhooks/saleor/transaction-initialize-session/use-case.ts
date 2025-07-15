@@ -14,13 +14,12 @@ import {
   AtobaraiRegisterTransactionPayload,
   createAtobaraiRegisterTransactionPayload,
 } from "@/modules/atobarai/atobarai-register-transaction-payload";
-import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import {
-  BeforeReviewTransaction,
-  FailedAtobaraiTransaction,
-  PassedAtobaraiTransaction,
-  PendingAtobaraiTransaction,
-} from "@/modules/atobarai/atobarai-transaction";
+  AtobaraiRegisterTransactionSuccessResponse,
+  CreditCheckResult,
+} from "@/modules/atobarai/atobarai-register-transaction-success-response";
+import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
+import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 import { createSaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
 import {
@@ -30,6 +29,10 @@ import {
 } from "@/modules/transaction-result/charge-result";
 
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
+import {
+  AtobaraiFailureTransactionError,
+  AtobaraiMultipleFailureTransactionError,
+} from "./use-case-errors";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
@@ -103,6 +106,54 @@ export class TransactionInitializeSessionUseCase {
     });
   }
 
+  private handleMultipleTransactionResults(
+    transactionResult: AtobaraiRegisterTransactionSuccessResponse,
+  ) {
+    this.logger.warn("Multiple transaction results found", {
+      transactionResult,
+    });
+
+    return ok(
+      new TransactionInitializeSessionUseCaseResponse.Failure({
+        transactionResult: new ChargeFailureResult(),
+        error: new AtobaraiMultipleFailureTransactionError("Multiple transaction results found"),
+      }),
+    );
+  }
+
+  private mapAtobaraiResponseToUseCaseResponse(
+    transaction: AtobaraiRegisterTransactionSuccessResponse["results"][number],
+  ) {
+    const atobaraiTransactionId = createAtobaraiTransactionId(transaction.np_transaction_id);
+
+    switch (transaction.authori_result) {
+      case CreditCheckResult.Success:
+        return ok(
+          new TransactionInitializeSessionUseCaseResponse.Success({
+            transactionResult: new ChargeSuccessResult(),
+            atobaraiTransactionId,
+          }),
+        );
+      case CreditCheckResult.Pending:
+        return ok(
+          new TransactionInitializeSessionUseCaseResponse.Success({
+            transactionResult: new ChargeActionRequiredResult(),
+            atobaraiTransactionId,
+          }),
+        );
+      case CreditCheckResult.Failed:
+      case CreditCheckResult.BeforeReview:
+        return ok(
+          new TransactionInitializeSessionUseCaseResponse.Failure({
+            transactionResult: new ChargeFailureResult(),
+            error: new AtobaraiFailureTransactionError(
+              `Atobarai transaction failed with result: ${transaction.authori_result}`,
+            ),
+          }),
+        );
+    }
+  }
+
   async execute(params: {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
@@ -135,9 +186,9 @@ export class TransactionInitializeSessionUseCase {
       atobaraiEnviroment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
-    const payload = this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value);
-
-    const registerTransactionResult = await apiClient.registerTransaction(payload);
+    const registerTransactionResult = await apiClient.registerTransaction(
+      this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value),
+    );
 
     if (registerTransactionResult.isErr()) {
       this.logger.error("Failed to register transaction with Atobarai", {
@@ -152,36 +203,12 @@ export class TransactionInitializeSessionUseCase {
       );
     }
 
-    if (registerTransactionResult.value instanceof PendingAtobaraiTransaction) {
-      return ok(
-        new TransactionInitializeSessionUseCaseResponse.Success({
-          transactionResult: new ChargeActionRequiredResult(),
-          atobaraiTransaction: registerTransactionResult.value,
-        }),
-      );
+    const transactionResult = registerTransactionResult.value;
+
+    if (transactionResult.results.length > 1) {
+      return this.handleMultipleTransactionResults(registerTransactionResult.value);
     }
 
-    if (
-      registerTransactionResult.value instanceof FailedAtobaraiTransaction ||
-      registerTransactionResult.value instanceof BeforeReviewTransaction
-    ) {
-      return ok(
-        new TransactionInitializeSessionUseCaseResponse.Failure({
-          transactionResult: new ChargeFailureResult(),
-          atobaraiTransaction: registerTransactionResult.value,
-        }),
-      );
-    }
-
-    if (registerTransactionResult.value instanceof PassedAtobaraiTransaction) {
-      return ok(
-        new TransactionInitializeSessionUseCaseResponse.Success({
-          transactionResult: new ChargeSuccessResult(),
-          atobaraiTransaction: registerTransactionResult.value,
-        }),
-      );
-    }
-
-    throw new BaseError("Unexpected transaction type returned from Atobarai API");
+    return this.mapAtobaraiResponseToUseCaseResponse(transactionResult.results[0]);
   }
 }

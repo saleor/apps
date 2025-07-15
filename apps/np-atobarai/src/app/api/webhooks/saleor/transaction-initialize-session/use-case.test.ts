@@ -7,12 +7,7 @@ import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-con
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-initialize-session-event";
-import {
-  BeforeReviewTransaction,
-  FailedAtobaraiTransaction,
-  PassedAtobaraiTransaction,
-  PendingAtobaraiTransaction,
-} from "@/modules/atobarai/atobarai-transaction";
+import { createAtobaraiRegisterTransactionSuccessResponse } from "@/modules/atobarai/atobarai-register-transaction-success-response";
 import {
   AtobaraiApiClientRegisterTransactionError,
   IAtobaraiApiClient,
@@ -39,10 +34,14 @@ describe("TransactionInitializeSessionUseCase", () => {
     create: vi.fn().mockReturnValue(apiClient),
   });
 
-  it("Returns Success response with ChargeSuccessResult when Atobarai returns PassedAtobaraiTransaction", async () => {
-    const mockPassedTransaction = PassedAtobaraiTransaction.createFromAtobaraiTransactionResponse({
-      np_transaction_id: "test-transaction-id",
-      authori_result: "00",
+  it("should return Success response with ChargeSuccessResult when Atobarai returns CreditCheckResult.Success", async () => {
+    const mockPassedTransaction = createAtobaraiRegisterTransactionSuccessResponse({
+      results: [
+        {
+          np_transaction_id: "test-transaction-id",
+          authori_result: "00",
+        },
+      ],
     });
 
     const mockedApiClient = createMockedApiClient();
@@ -73,14 +72,16 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeSuccessResult);
   });
 
-  it("Returns Success response with ChargeActionRequiredResult when Atobarai returns PendingAtobaraiTransaction", async () => {
-    const mockPendingTransaction = PendingAtobaraiTransaction.createFromAtobaraiTransactionResponse(
-      {
-        np_transaction_id: "test-pending-transaction-id",
-        authori_result: "10",
-        authori_hold: ["RE009"],
-      },
-    );
+  it("should return Success response with ChargeActionRequiredResult when Atobarai returns CreditCheckResult.Pending", async () => {
+    const mockPendingTransaction = createAtobaraiRegisterTransactionSuccessResponse({
+      results: [
+        {
+          np_transaction_id: "test-pending-transaction-id",
+          authori_result: "10",
+          authori_hold: ["RE009"],
+        },
+      ],
+    });
 
     const mockedApiClient = createMockedApiClient();
 
@@ -112,11 +113,15 @@ describe("TransactionInitializeSessionUseCase", () => {
     );
   });
 
-  it("Returns Failure response with ChargeFailureResult when Atobarai returns FailedAtobaraiTransaction", async () => {
-    const mockFailedTransaction = FailedAtobaraiTransaction.createFromAtobaraiTransactionResponse({
-      np_transaction_id: "test-failed-transaction-id",
-      authori_result: "20",
-      authori_ng: "NG001",
+  it("should return Failure response with ChargeFailureResult when Atobarai returns CreditCheckResult.Failed", async () => {
+    const mockFailedTransaction = createAtobaraiRegisterTransactionSuccessResponse({
+      results: [
+        {
+          np_transaction_id: "test-failed-transaction-id",
+          authori_result: "20",
+          authori_ng: "RE001",
+        },
+      ],
     });
 
     const mockedApiClient = createMockedApiClient();
@@ -147,12 +152,10 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
   });
 
-  it("Returns Failure response with ChargeFailureResult when Atobarai returns BeforeReviewTransaction", async () => {
-    const mockBeforeReviewTransaction =
-      BeforeReviewTransaction.createFromAtobaraiTransactionResponse({
-        np_transaction_id: "test-before-review-transaction-id",
-        authori_result: "40",
-      });
+  it("should return Failure response with ChargeFailureResult when Atobarai returns CreditCheckResult.BeforeReview", async () => {
+    const mockBeforeReviewTransaction = createAtobaraiRegisterTransactionSuccessResponse({
+      results: [{ np_transaction_id: "test-before-review-transaction-id", authori_result: "40" }],
+    });
 
     const mockedApiClient = createMockedApiClient();
 
@@ -184,7 +187,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
   });
 
-  it("Returns Failure response when Atobarai API returns an error", async () => {
+  it("should return Failure response when Atobarai API returns an error", async () => {
     const mockApiError = new AtobaraiApiClientRegisterTransactionError("API Error");
 
     const mockedApiClient = createMockedApiClient();
@@ -213,7 +216,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     );
   });
 
-  it("Returns MalformedRequestResponse when event is missing issuedAt", async () => {
+  it("should return MalformedRequestResponse when event is missing issuedAt", async () => {
     const eventWithoutIssuedAt = {
       ...mockedTransactionInitializeSessionEvent,
       issuedAt: null,
@@ -240,7 +243,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
   });
 
-  it("Returns AppIsNotConfiguredResponse if config not found for specified channel", async () => {
+  it("should return AppIsNotConfiguredResponse if config not found for specified channel", async () => {
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() => ok(null));
 
     const mockedApiClient = createMockedApiClient();
@@ -260,7 +263,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
   });
 
-  it("Returns AppIsNotConfiguredResponse if there is an error fetching config", async () => {
+  it("should return AppIsNotConfiguredResponse if there is an error fetching config", async () => {
     const configError = new BaseError("Failed to fetch config");
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
@@ -282,5 +285,53 @@ describe("TransactionInitializeSessionUseCase", () => {
     });
 
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
+  });
+
+  it("should return ChargeFailureResult when Atobarai return multiple transaction results", async () => {
+    const mockMultipleTransactions = createAtobaraiRegisterTransactionSuccessResponse({
+      results: [
+        {
+          np_transaction_id: "np_123456",
+          authori_result: "00",
+        },
+        {
+          np_transaction_id: "np_789012",
+          authori_result: "20",
+          authori_ng: "RE001",
+        },
+        {
+          np_transaction_id: "np_345678",
+          authori_result: "20",
+          authori_ng: "RE002",
+        },
+      ],
+    });
+
+    const mockedApiClient = createMockedApiClient();
+
+    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(ok(mockMultipleTransactions));
+
+    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
+    );
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory: mockedApiClientFactory,
+    });
+
+    const responsePayload = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: mockedTransactionInitializeSessionEvent,
+    });
+
+    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
+      TransactionInitializeSessionUseCaseResponse.Failure,
+    );
+
+    expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
   });
 });

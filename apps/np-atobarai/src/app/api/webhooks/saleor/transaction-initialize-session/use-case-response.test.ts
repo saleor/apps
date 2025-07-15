@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  FailedAtobaraiTransaction,
-  PassedAtobaraiTransaction,
-  PendingAtobaraiTransaction,
-} from "@/modules/atobarai/atobarai-transaction";
+import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { AtobaraiApiClientRegisterTransactionError } from "@/modules/atobarai/types";
 import {
   ChargeActionRequiredResult,
@@ -12,20 +8,19 @@ import {
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
 
+import {
+  AtobaraiFailureTransactionError,
+  AtobaraiMultipleFailureTransactionError,
+} from "./use-case-errors";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
 describe("TransactionInitializeSessionUseCaseResponse", () => {
   describe("Success", () => {
     describe("with ChargeSuccessResult", () => {
       it("getResponse() returns valid Response with status 200 and success result with PSP reference", async () => {
-        const mockedAtobaraiTransaction =
-          PassedAtobaraiTransaction.createFromAtobaraiTransactionResponse({
-            np_transaction_id: "np_transaction_123",
-            authori_result: "00",
-          });
         const response = new TransactionInitializeSessionUseCaseResponse.Success({
           transactionResult: new ChargeSuccessResult(),
-          atobaraiTransaction: mockedAtobaraiTransaction,
+          atobaraiTransactionId: mockedAtobaraiTransactionId,
         });
 
         const fetchResponse = response.getResponse();
@@ -46,15 +41,9 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
 
     describe("with ChargeActionRequiredResult", () => {
       it("getResponse() returns valid Response with status 200 and action required result with PSP reference", async () => {
-        const mockedAtobaraiTransaction =
-          PendingAtobaraiTransaction.createFromAtobaraiTransactionResponse({
-            np_transaction_id: "np_transaction_456",
-            authori_result: "10",
-            authori_hold: [],
-          });
         const response = new TransactionInitializeSessionUseCaseResponse.Success({
           transactionResult: new ChargeActionRequiredResult(),
-          atobaraiTransaction: mockedAtobaraiTransaction,
+          atobaraiTransactionId: mockedAtobaraiTransactionId,
         });
 
         const fetchResponse = response.getResponse();
@@ -64,7 +53,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
           {
             "actions": [],
             "message": "NP Atobarai transaction requires further action",
-            "pspReference": "np_transaction_456",
+            "pspReference": "np_transaction_123",
             "result": "CHARGE_ACTION_REQUIRED",
           }
         `);
@@ -104,15 +93,9 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
 
     describe("with ChargeFailureResult and AtobaraiFailureTransactionError", () => {
       it("getResponse() returns valid Response with status 200 and failure result with transaction error details", async () => {
-        const transaction = FailedAtobaraiTransaction.createFromAtobaraiTransactionResponse({
-          np_transaction_id: "np_transaction_789",
-          authori_result: "20",
-          authori_ng: FailedAtobaraiTransaction.creditCheckReasons.Other,
-        });
-
         const response = new TransactionInitializeSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
-          atobaraiTransaction: transaction,
+          error: new AtobaraiFailureTransactionError("Pending status"),
         });
 
         const fetchResponse = response.getResponse();
@@ -125,7 +108,35 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
               "errors": [
                 {
                   "code": "AtobaraiFailureTransactionError",
-                  "message": "Atobarai credit check failed",
+                  "message": "Atobarai returned failed transaction",
+                },
+              ],
+            },
+            "message": "Failed to register a NP Atobarai transaction",
+            "result": "CHARGE_FAILURE",
+          }
+        `);
+      });
+    });
+
+    describe("with ChargeFailureResult and AtobaraiMultipleFailureTransactionError", () => {
+      it("getResponse() returns valid Response with status 200 and multiple failure result with transaction error details", async () => {
+        const response = new TransactionInitializeSessionUseCaseResponse.Failure({
+          transactionResult: new ChargeFailureResult(),
+          error: new AtobaraiMultipleFailureTransactionError("Multiple failed transactions"),
+        });
+
+        const fetchResponse = response.getResponse();
+
+        expect(fetchResponse.status).toBe(200);
+        expect(await fetchResponse.json()).toMatchInlineSnapshot(`
+          {
+            "actions": [],
+            "data": {
+              "errors": [
+                {
+                  "code": "AtobaraiMultipleFailureTransactionError",
+                  "message": "Atobarai returned multiple transactions",
                 },
               ],
             },

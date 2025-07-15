@@ -1,92 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  AtobaraiRegisterTransactionErrorResponse,
   AtobaraiRegisterTransactionSuccessResponse,
-  createAtobaraiRegisterTransactionErrorResponse,
   createAtobaraiRegisterTransactionSuccessResponse,
-} from "./atobarai-register-transaction-response";
-
-describe("createAtobaraiRegisterTransactionErrorResponse", () => {
-  it("should successfully parse a valid error response", () => {
-    const rawResponse = {
-      errors: [
-        {
-          codes: ["ERR001", "ERR002"],
-          id: "transaction_123",
-        },
-        {
-          codes: ["ERR003"],
-          id: "transaction_456",
-        },
-      ],
-    };
-
-    const result = createAtobaraiRegisterTransactionErrorResponse(rawResponse);
-
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "errors": [
-          {
-            "codes": [
-              "ERR001",
-              "ERR002",
-            ],
-            "id": "transaction_123",
-          },
-          {
-            "codes": [
-              "ERR003",
-            ],
-            "id": "transaction_456",
-          },
-        ],
-      }
-    `);
-  });
-
-  it("should parse error response with empty errors array", () => {
-    const rawResponse = {
-      errors: [],
-    };
-
-    const result = createAtobaraiRegisterTransactionErrorResponse(rawResponse);
-
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "errors": [],
-      }
-    `);
-  });
-
-  it("should throw ZodError when response is missing errors field", () => {
-    const rawResponse = {
-      results: [],
-    };
-
-    expect(() => createAtobaraiRegisterTransactionErrorResponse(rawResponse))
-      .toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
-        {
-          "code": "invalid_type",
-          "expected": "array",
-          "received": "undefined",
-          "path": [
-            "errors"
-          ],
-          "message": "Required"
-        }
-      ]]
-    `);
-  });
-
-  it("shouldn't be assignable without createAtobaraiRegisterTransactionErrorResponse", () => {
-    // @ts-expect-error - if this fails - it means the type is not branded
-    const testValue: AtobaraiRegisterTransactionErrorResponse = { errors: [] };
-
-    expect(testValue).toStrictEqual({ errors: [] });
-  });
-});
+} from "./atobarai-register-transaction-success-response";
 
 describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
   it("should successfully parse a PassedAtobaraiTransaction response", () => {
@@ -148,7 +65,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
         {
           np_transaction_id: "np_345678",
           authori_result: "20",
-          authori_ng: "NG001",
+          authori_ng: "RE001",
         },
       ],
     };
@@ -159,7 +76,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
       {
         "results": [
           {
-            "authori_ng": "NG001",
+            "authori_ng": "RE001",
             "authori_result": "20",
             "np_transaction_id": "np_345678",
           },
@@ -207,7 +124,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
         {
           np_transaction_id: "np_345678",
           authori_result: "20",
-          authori_ng: "NG002",
+          authori_ng: "RE001",
         },
       ],
     };
@@ -229,7 +146,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
             "np_transaction_id": "np_789012",
           },
           {
-            "authori_ng": "NG002",
+            "authori_ng": "RE001",
             "authori_result": "20",
             "np_transaction_id": "np_345678",
           },

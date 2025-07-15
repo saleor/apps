@@ -5,10 +5,7 @@ import {
   TransactionSessionFailure,
   TransactionSessionSuccess,
 } from "@/generated/app-webhooks-types/transaction-initialize-session";
-import {
-  AtobaraiErrorTransaction,
-  AtobaraiSuccessTransaction,
-} from "@/modules/atobarai/atobarai-transaction";
+import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import {
   AtobaraiApiClientRegisterTransactionErrorPublicCode,
   AtobaraiApiErrors,
@@ -20,18 +17,23 @@ import {
 } from "@/modules/transaction-result/charge-result";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
+import {
+  AtobaraiFailureTransactionErrorPublicCode,
+  AtobaraiMultipleFailureTransactionErrorPublicCode,
+  TransactionInitializeSessionUseCaseErrors,
+} from "./use-case-errors";
 
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
-  readonly atobaraiTransaction: AtobaraiSuccessTransaction;
+  readonly atobaraiTransactionId: AtobaraiTransactionId;
 
   constructor(args: {
     transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
-    atobaraiTransaction: AtobaraiSuccessTransaction;
+    atobaraiTransactionId: AtobaraiTransactionId;
   }) {
     super();
     this.transactionResult = args.transactionResult;
-    this.atobaraiTransaction = args.atobaraiTransaction;
+    this.atobaraiTransactionId = args.atobaraiTransactionId;
   }
 
   getResponse(): Response {
@@ -39,7 +41,7 @@ class Success extends SuccessWebhookResponse {
       result: this.transactionResult.result,
       actions: this.transactionResult.actions,
       message: this.transactionResult.message,
-      pspReference: this.atobaraiTransaction.getPspReference(),
+      pspReference: this.atobaraiTransactionId,
     };
 
     return Response.json(typeSafeResponse, {
@@ -50,69 +52,37 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
-  readonly error?: AtobaraiApiErrors;
-  readonly atobaraiTransaction?: AtobaraiErrorTransaction;
+  readonly error: AtobaraiApiErrors | TransactionInitializeSessionUseCaseErrors;
 
   private static ResponseDataSchema = z.object({
     errors: z.array(
       z.object({
         code: z.union([
           z.literal(AtobaraiApiClientRegisterTransactionErrorPublicCode),
-          z.literal("AtobaraiFailureTransactionError"),
+          z.literal(AtobaraiFailureTransactionErrorPublicCode),
+          z.literal(AtobaraiMultipleFailureTransactionErrorPublicCode),
         ]),
         message: z.string(),
       }),
     ),
   });
 
-  constructor(
-    args:
-      | {
-          transactionResult: ChargeFailureResult;
-          error: AtobaraiApiErrors;
-          atobaraiTransaction?: never;
-        }
-      | {
-          transactionResult: ChargeFailureResult;
-          error?: never;
-          atobaraiTransaction: AtobaraiErrorTransaction;
-        },
-  ) {
+  constructor(args: { transactionResult: ChargeFailureResult; error: AtobaraiApiErrors }) {
     super();
     this.transactionResult = args.transactionResult;
-    if ("error" in args) {
-      this.error = args.error;
-    }
-    if ("atobaraiTransaction" in args) {
-      this.atobaraiTransaction = args.atobaraiTransaction;
-    }
+    this.error = args.error;
   }
 
-  getError(): z.infer<typeof Failure.ResponseDataSchema> {
-    if (this.error) {
-      return {
+  getResponse(): Response {
+    const typeSafeResponse: TransactionSessionFailure = {
+      data: Failure.ResponseDataSchema.parse({
         errors: [
           {
             code: this.error.publicCode,
             message: this.error.publicMessage,
           },
         ],
-      };
-    }
-
-    return {
-      errors: [
-        {
-          code: "AtobaraiFailureTransactionError",
-          message: "Atobarai credit check failed",
-        },
-      ],
-    };
-  }
-
-  getResponse(): Response {
-    const typeSafeResponse: TransactionSessionFailure = {
-      data: Failure.ResponseDataSchema.parse(this.getError()),
+      }),
       result: this.transactionResult.result,
       actions: this.transactionResult.actions,
       message: this.transactionResult.message,
