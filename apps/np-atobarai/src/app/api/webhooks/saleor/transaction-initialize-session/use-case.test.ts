@@ -7,7 +7,12 @@ import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-con
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-initialize-session-event";
-import { createAtobaraiRegisterTransactionSuccessResponse } from "@/modules/atobarai/atobarai-register-transaction-success-response";
+import {
+  createAtobaraiRegisterTransactionSuccessResponse,
+  CreditCheckResult,
+  FailedReason,
+  PendingReason,
+} from "@/modules/atobarai/atobarai-register-transaction-success-response";
 import {
   AtobaraiApiClientRegisterTransactionError,
   IAtobaraiApiClient,
@@ -39,7 +44,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       results: [
         {
           np_transaction_id: "test-transaction-id",
-          authori_result: "00",
+          authori_result: CreditCheckResult.Success,
         },
       ],
     });
@@ -77,8 +82,8 @@ describe("TransactionInitializeSessionUseCase", () => {
       results: [
         {
           np_transaction_id: "test-pending-transaction-id",
-          authori_result: "10",
-          authori_hold: ["RE009"],
+          authori_result: CreditCheckResult.Pending,
+          authori_hold: [PendingReason.LackOfAddressInformation],
         },
       ],
     });
@@ -118,8 +123,8 @@ describe("TransactionInitializeSessionUseCase", () => {
       results: [
         {
           np_transaction_id: "test-failed-transaction-id",
-          authori_result: "20",
-          authori_ng: "RE001",
+          authori_result: CreditCheckResult.Failed,
+          authori_ng: FailedReason.ExcessOfTheAmount,
         },
       ],
     });
@@ -154,7 +159,12 @@ describe("TransactionInitializeSessionUseCase", () => {
 
   it("should return Failure response with ChargeFailureResult when Atobarai returns CreditCheckResult.BeforeReview", async () => {
     const mockBeforeReviewTransaction = createAtobaraiRegisterTransactionSuccessResponse({
-      results: [{ np_transaction_id: "test-before-review-transaction-id", authori_result: "40" }],
+      results: [
+        {
+          np_transaction_id: "test-before-review-transaction-id",
+          authori_result: CreditCheckResult.BeforeReview,
+        },
+      ],
     });
 
     const mockedApiClient = createMockedApiClient();

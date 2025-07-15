@@ -90,13 +90,9 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
       const { errors } = createAtobaraiRegisterTransactionErrorResponse(response);
 
-      const normalizedErrors = errors.map((error) =>
-        error.codes.map((code) => BaseError.normalize(code)).flat(),
-      );
-
       return err(
         new AtobaraiApiClientRegisterTransactionError("Atobarai API returned an error", {
-          errors: [normalizedErrors],
+          errors: [errors.flatMap((error) => error.codes.map((code) => new BaseError(code)))],
         }),
       );
     }

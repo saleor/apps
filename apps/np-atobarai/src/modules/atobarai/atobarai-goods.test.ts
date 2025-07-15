@@ -144,6 +144,52 @@ describe("createAtobaraiGoods", () => {
         ]
       `);
     });
+
+    it("should create AtobaraiGood from checokut with product name when skuAsName is true and product has no SKU", () => {
+      const sourceObject: SourceObjectFragment = {
+        ...mockedSourceObject,
+        lines: [
+          {
+            __typename: "CheckoutLine",
+            quantity: 2,
+            unitPrice: {
+              gross: {
+                amount: 1500,
+              },
+            },
+            checkoutVariant: {
+              product: {
+                name: "Product Without SKU",
+              },
+              sku: null,
+            },
+          },
+        ],
+        discount: null,
+        shippingPrice: {
+          gross: {
+            amount: 300,
+          },
+        },
+      };
+
+      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithSkuAsName);
+
+      expect(goods).toMatchInlineSnapshot(`
+        [
+          {
+            "goods_name": "Product Without SKU",
+            "goods_price": 1500,
+            "quantity": 2,
+          },
+          {
+            "goods_name": "Shipping",
+            "goods_price": 300,
+            "quantity": 1,
+          },
+        ]
+      `);
+    });
   });
 
   describe("with discount", () => {

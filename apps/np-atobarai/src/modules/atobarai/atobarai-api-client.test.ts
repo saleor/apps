@@ -154,6 +154,9 @@ describe("AtobaraiApiClient", () => {
       const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
 
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiApiClientRegisterTransactionError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[AtobaraiApiClientRegisterTransactionError: Atobarai API returned an error]`,
+      );
     });
 
     it("should return AtobaraiRegisterTransactionSuccessResponse when NP Atobarai responds success", async () => {

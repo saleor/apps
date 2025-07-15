@@ -3,15 +3,18 @@ import { describe, expect, it } from "vitest";
 import {
   AtobaraiRegisterTransactionSuccessResponse,
   createAtobaraiRegisterTransactionSuccessResponse,
+  CreditCheckResult,
+  FailedReason,
+  PendingReason,
 } from "./atobarai-register-transaction-success-response";
 
 describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
-  it("should successfully parse a PassedAtobaraiTransaction response", () => {
+  it("should successfully parse a CreditCheckResult.Success response", () => {
     const rawResponse = {
       results: [
         {
           np_transaction_id: "np_123456",
-          authori_result: "00",
+          authori_result: CreditCheckResult.Success,
         },
       ],
     };
@@ -30,13 +33,16 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
     `);
   });
 
-  it("should successfully parse a PendingAtobaraiTransaction response", () => {
+  it("should successfully parse a CreditCheckResult.Pending response", () => {
     const rawResponse = {
       results: [
         {
           np_transaction_id: "np_789012",
-          authori_result: "10",
-          authori_hold: ["RE009", "RE014"],
+          authori_result: CreditCheckResult.Pending,
+          authori_hold: [
+            PendingReason.LackOfAddressInformation,
+            PendingReason.AddressConfirmationOfWork,
+          ],
         },
       ],
     };
@@ -59,13 +65,13 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
     `);
   });
 
-  it("should successfully parse a FailedAtobaraiTransaction response", () => {
+  it("should successfully parse a CreditCheckResult.Failed response", () => {
     const rawResponse = {
       results: [
         {
           np_transaction_id: "np_345678",
-          authori_result: "20",
-          authori_ng: "RE001",
+          authori_result: CreditCheckResult.Failed,
+          authori_ng: FailedReason.ExcessOfTheAmount,
         },
       ],
     };
@@ -85,12 +91,12 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
     `);
   });
 
-  it("should successfully parse a BeforeReviewTransaction response", () => {
+  it("should successfully parse a CreditCheckResult.BeforeReview response", () => {
     const rawResponse = {
       results: [
         {
           np_transaction_id: "np_901234",
-          authori_result: "40",
+          authori_result: CreditCheckResult.BeforeReview,
         },
       ],
     };

@@ -7,7 +7,7 @@ export const CreditCheckResult = {
   BeforeReview: "40",
 } as const;
 
-const PendingReason = {
+export const PendingReason = {
   LackOfAddressInformation: "RE009",
   AddressConfirmationOfWork: "RE014",
   InsufficientDeliveryDestinationInformation: "RE015",
@@ -17,7 +17,7 @@ const PendingReason = {
   Other: "RE026",
 } as const;
 
-const FailedReason = {
+export const FailedReason = {
   ExcessOfTheAmount: "RE001",
   InsufficientInformation: "RE002",
   Other: "RE003",
