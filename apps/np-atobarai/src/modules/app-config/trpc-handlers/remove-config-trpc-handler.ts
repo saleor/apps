@@ -1,10 +1,11 @@
-import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { createSaleorApiUrl, SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
 import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { Result } from "neverthrow";
 import { z } from "zod";
 
+import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class RemoveConfigTrpcHandler {
@@ -51,16 +52,6 @@ export class RemoveConfigTrpcHandler {
       .mutation(async ({ input, ctx }) => {
         const saleorApiUrl = createSaleorApiUrl(ctx.saleorApiUrl);
 
-        /**
-         * TODO: Extract such logic to be shared between handlers
-         */
-        if (saleorApiUrl.isErr()) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Malformed request",
-          });
-        }
-
         if (!ctx.appUrl) {
           captureException(new BaseError("Missing appUrl in TRPC request"));
 
@@ -73,10 +64,10 @@ export class RemoveConfigTrpcHandler {
         const rootConfig = await this.getRootConfigOrThrow({
           configRepo: ctx.configRepo,
           appId: ctx.appId,
-          saleorApiUrl: saleorApiUrl.value,
+          saleorApiUrl: saleorApiUrl,
         });
 
-        const configToRemove = rootConfig.stripeConfigsById[input.configId];
+        const configToRemove = rootConfig.getConfigById(input.configId);
         const channelsToUnbind = rootConfig.getChannelsBoundToGivenConfig(input.configId);
 
         if (!configToRemove) {
@@ -84,18 +75,6 @@ export class RemoveConfigTrpcHandler {
             code: "NOT_FOUND",
             message: "Config not found, please refresh the page and try again.",
           });
-        }
-
-        const webhookRemovingResult = await this.webhookManager.removeWebhook({
-          webhookId: configToRemove.webhookId,
-          restrictedKey: configToRemove.restrictedKey,
-        });
-
-        if (webhookRemovingResult.isErr()) {
-          /**
-           * Ignore - it's possible webhook was removed in Stripe, or in previous call. We can't transactional remove both webhook and our config,
-           * so we must accept that inconsistency and document it
-           */
         }
 
         /**
@@ -107,7 +86,7 @@ export class RemoveConfigTrpcHandler {
             channelsToUnbind.map((id) =>
               ctx.configRepo.updateMapping(
                 {
-                  saleorApiUrl: saleorApiUrl.value,
+                  saleorApiUrl: saleorApiUrl,
                   appId: ctx.appId,
                 },
                 {
@@ -128,7 +107,7 @@ export class RemoveConfigTrpcHandler {
 
         const removalResult = await ctx.configRepo.removeConfig(
           {
-            saleorApiUrl: saleorApiUrl.value,
+            saleorApiUrl: saleorApiUrl,
             appId: ctx.appId,
           },
           {

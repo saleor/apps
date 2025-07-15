@@ -2,6 +2,8 @@ import { createSaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 
+import { AppChannelConfig, AppChannelConfigFields } from "@/modules/app-config/app-config";
+import { AtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class GetConfigsListTrpcHandler {
@@ -9,27 +11,11 @@ export class GetConfigsListTrpcHandler {
 
   constructor() {}
 
-  private getFrontendConfigWithWebhookStatus = async (
-    config: StripeConfig,
-  ): Promise<StripeFrontendConfig> => {
-    const webhookResult = await this.webhookManager.getWebhook({
-      webhookId: config.webhookId,
-      restrictedKey: config.restrictedKey,
-    });
-
-    const frontendConfig = StripeFrontendConfig.createFromStripeConfig(config);
-
-    if (webhookResult.isErr()) {
-      frontendConfig.webhookStatus = "missing";
-    }
-
-    if (webhookResult.isOk()) {
-      const isActive = webhookResult.value.status === "enabled";
-
-      frontendConfig.webhookStatus = isActive ? "active" : "disabled";
-    }
-
-    return frontendConfig;
+  private getFrontendConfig = async (config: AppChannelConfig): Promise<AppChannelConfigFields> => {
+    return {
+      ...config,
+      spCode: "***" as AtobaraiSpCode,
+    };
   };
 
   getTrpcProcedure() {
@@ -37,7 +23,7 @@ export class GetConfigsListTrpcHandler {
       const saleorApiUrl = createSaleorApiUrl(ctx.saleorApiUrl);
 
       const config = await ctx.configRepo.getRootConfig({
-        saleorApiUrl: saleorApiUrl.value,
+        saleorApiUrl: saleorApiUrl,
         appId: ctx.appId,
       });
 
@@ -49,7 +35,7 @@ export class GetConfigsListTrpcHandler {
       }
 
       const configsList = config.value.getAllConfigsAsList();
-      const mappedPromises = configsList.map(this.getFrontendConfigWithWebhookStatus);
+      const mappedPromises = configsList.map(this.getFrontendConfig);
       const results = await Promise.all(mappedPromises).catch((e) => {
         captureException(e);
 

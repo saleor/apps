@@ -16,10 +16,10 @@ type Props = {
 export const ConfigsList = ({ configs, ...props }: Props) => {
   const router = useRouter();
   const { notifyError, notifySuccess } = useDashboardNotification();
-  const configsList = trpcClient.appConfig.getStripeConfigsList.useQuery();
+  const configsList = trpcClient.appConfig.getConfigsList.useQuery();
   const mappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { mutate, isLoading } = trpcClient.appConfig.removeStripeConfig.useMutation({
+  const { mutate, isLoading } = trpcClient.appConfig.removeConfig.useMutation({
     onSuccess() {
       notifySuccess("Configuration deleted");
     },

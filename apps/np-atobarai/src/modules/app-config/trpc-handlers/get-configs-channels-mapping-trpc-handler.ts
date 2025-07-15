@@ -1,26 +1,19 @@
+import { createSaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { TRPCError } from "@trpc/server";
+
+import { AppChannelConfigFields } from "@/modules/app-config/app-config";
+import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class GetConfigsChannelsMappingTrpcHandler {
   baseProcedure = protectedClientProcedure;
 
   getTrpcProcedure() {
     return this.baseProcedure.query(
-      async ({ ctx }): Promise<Record<string, StripeFrontendConfigSerializedFields>> => {
+      async ({ ctx }): Promise<Record<string, AppChannelConfigFields>> => {
         const saleorApiUrl = createSaleorApiUrl(ctx.saleorApiUrl);
 
-        /**
-         * TODO: Extract such logic to be shared between handlers
-         * TODO CTX should have already created SaleorApiUrl instance, not Result
-         */
-        if (saleorApiUrl.isErr()) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "Malformed request",
-          });
-        }
-
         const config = await ctx.configRepo.getRootConfig({
-          saleorApiUrl: saleorApiUrl.value,
+          saleorApiUrl: saleorApiUrl,
           appId: ctx.appId,
         });
 
@@ -32,19 +25,20 @@ export class GetConfigsChannelsMappingTrpcHandler {
         }
 
         const mapping = config.value.chanelConfigMapping;
-        const allConfigs = config.value.stripeConfigsById;
+        const allConfigs = config.value.configsById;
 
         return Object.entries(mapping).reduce(
           (acc, [channelID, configId]) => {
             const config = allConfigs[configId];
 
             if (config) {
-              acc[channelID] = StripeFrontendConfig.createFromStripeConfig(config);
+              // todo map to encrypt
+              acc[channelID] = config;
             }
 
             return acc;
           },
-          {} as Record<string, StripeFrontendConfigSerializedFields>,
+          {} as Record<string, AppChannelConfigFields>,
         );
       },
     );
