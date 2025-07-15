@@ -1,3 +1,4 @@
+import { BaseError } from "@saleor/errors";
 import { err, ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
@@ -7,7 +8,6 @@ import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
-import { BaseError } from "@/lib/errors";
 import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
 import { GetConfigsChannelsMappingTrpcHandler } from "@/modules/app-config/trpc-handlers/get-configs-channels-mapping-trpc-handler";
 import { router } from "@/modules/trpc/trpc-server";

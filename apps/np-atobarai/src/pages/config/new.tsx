@@ -1,4 +1,4 @@
-import { Layout, TextLink } from "@saleor/apps-ui";
+import { Layout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
@@ -23,37 +23,17 @@ const NewConfiguration: NextPage = () => {
             href: "/config",
           },
           {
-            label: "New Stripe Configuration",
+            label: "New Configuration",
           },
         ]}
       />
 
       <Layout.AppSection
         marginBottom={14}
-        heading="Stripe configuration"
+        heading="Configuration"
         sideContent={
           <Box display="flex" flexDirection="column" gap={4}>
-            <Text>
-              Consult Stripe{" "}
-              <TextLink href="https://docs.stripe.com/keys" newTab>
-                documentation
-              </TextLink>{" "}
-              to learn more about Publishable and Restricted keys.
-            </Text>
-
-            <Box>
-              <Text>
-                Check required Restricted key scopes in Saleor app
-                <TextLink
-                  href="https://docs.saleor.io/developer/app-store/apps/stripe/configuration"
-                  newTab
-                >
-                  {" "}
-                  configuration documentation
-                </TextLink>
-                .
-              </Text>
-            </Box>
+            <Text>todo</Text>
           </Box>
         }
       >
