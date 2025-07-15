@@ -65,7 +65,10 @@ class Failure extends SuccessWebhookResponse {
     ),
   });
 
-  constructor(args: { transactionResult: ChargeFailureResult; error: AtobaraiApiErrors }) {
+  constructor(args: {
+    transactionResult: ChargeFailureResult;
+    error: AtobaraiApiErrors | InstanceType<typeof AtobaraiFailureTransactionError>;
+  }) {
     super();
     this.transactionResult = args.transactionResult;
     this.error = args.error;

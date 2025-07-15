@@ -126,7 +126,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     switch (transaction.authori_result) {
       case CreditCheckResult.Passed:
-        return ok(new PassedAtobaraiTransaction(transaction.np_transaction_id));
+        return ok(PassedAtobaraiTransaction.createFromAtobaraiTransactionResponse(transaction));
       case CreditCheckResult.Pending:
         return ok(
           new PendingAtobaraiTransaction(transaction.np_transaction_id, transaction.authori_hold),

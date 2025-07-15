@@ -45,44 +45,46 @@ export const PendingReasonForCreditCheck = {
 export type PendingReasonForCreditCheck =
   (typeof PendingReasonForCreditCheck)[keyof typeof PendingReasonForCreditCheck];
 
-const successSchema = z.object({
-  results: z.array(
-    z.discriminatedUnion("authori_result", [
-      z.object({
-        np_transaction_id: z.string(),
-        authori_result: z.literal(CreditCheckResult.Passed),
-      }),
-      z.object({
-        np_transaction_id: z.string(),
-        authori_result: z.literal(CreditCheckResult.Pending),
-        authori_hold: z.array(
-          z.enum([
-            PendingReasonForCreditCheck.LackOfAddressInformation,
-            PendingReasonForCreditCheck.AddressConfirmationOfWork,
-            PendingReasonForCreditCheck.InsufficientDeliveryDestinationInformation,
-            PendingReasonForCreditCheck.AddressConfirmationOfWorkDeliveryDestination,
-            PendingReasonForCreditCheck.PhoneNumberError,
-            PendingReasonForCreditCheck.PhoneNumberErrorAtDeliveryDestination,
-            PendingReasonForCreditCheck.Other,
+const successSchema = z
+  .object({
+    results: z.array(
+      z.discriminatedUnion("authori_result", [
+        z.object({
+          np_transaction_id: z.string(),
+          authori_result: z.literal(CreditCheckResult.Passed),
+        }),
+        z.object({
+          np_transaction_id: z.string(),
+          authori_result: z.literal(CreditCheckResult.Pending),
+          authori_hold: z.array(
+            z.enum([
+              PendingReasonForCreditCheck.LackOfAddressInformation,
+              PendingReasonForCreditCheck.AddressConfirmationOfWork,
+              PendingReasonForCreditCheck.InsufficientDeliveryDestinationInformation,
+              PendingReasonForCreditCheck.AddressConfirmationOfWorkDeliveryDestination,
+              PendingReasonForCreditCheck.PhoneNumberError,
+              PendingReasonForCreditCheck.PhoneNumberErrorAtDeliveryDestination,
+              PendingReasonForCreditCheck.Other,
+            ]),
+          ),
+        }),
+        z.object({
+          np_transaction_id: z.string(),
+          authori_result: z.literal(CreditCheckResult.Failed),
+          authori_ng: z.enum([
+            FailedReasonForCreditCheck.ExcessOfTheAmount,
+            FailedReasonForCreditCheck.InsufficientInformation,
+            FailedReasonForCreditCheck.Other,
           ]),
-        ),
-      }),
-      z.object({
-        np_transaction_id: z.string(),
-        authori_result: z.literal(CreditCheckResult.Failed),
-        authori_ng: z.enum([
-          FailedReasonForCreditCheck.ExcessOfTheAmount,
-          FailedReasonForCreditCheck.InsufficientInformation,
-          FailedReasonForCreditCheck.Other,
-        ]),
-      }),
-      z.object({
-        np_transaction_id: z.string(),
-        authori_result: z.literal(CreditCheckResult.BeforeReview),
-      }),
-    ]),
-  ),
-});
+        }),
+        z.object({
+          np_transaction_id: z.string(),
+          authori_result: z.literal(CreditCheckResult.BeforeReview),
+        }),
+      ]),
+    ),
+  })
+  .brand("AtobaraiRegisterTransactionSuccessResponse");
 
 export const createAtobaraiRegisterTransactionSuccessResponse = (rawResponse: unknown) =>
   successSchema.parse(rawResponse);

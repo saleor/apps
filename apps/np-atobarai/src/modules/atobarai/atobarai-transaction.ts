@@ -1,6 +1,7 @@
 import { BaseError } from "@saleor/errors";
 
 import {
+  AtobaraiRegisterTransactionSuccessResponse,
   FailedReasonForCreditCheck,
   PendingReasonForCreditCheck,
 } from "./atobarai-register-transaction-response";
@@ -13,8 +14,14 @@ interface IAtobaraiTransaction {
 export class PassedAtobaraiTransaction implements IAtobaraiTransaction {
   private npTransactionId: string;
 
-  constructor(npTransactionId: string) {
+  private constructor(npTransactionId: string) {
     this.npTransactionId = npTransactionId;
+  }
+
+  static createFromAtobaraiTransactionResponse(
+    response: AtobaraiRegisterTransactionSuccessResponse["results"][number],
+  ): PassedAtobaraiTransaction {
+    return new PassedAtobaraiTransaction(response.np_transaction_id);
   }
 
   getPspReference(): string {
