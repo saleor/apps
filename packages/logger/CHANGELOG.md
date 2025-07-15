@@ -1,5 +1,12 @@
 # @saleor/apps-logger
 
+## 1.6.1
+
+### Patch Changes
+
+- Updated dependencies [b07a2e12]
+  - @saleor/errors@1.0.0
+
 ## 1.6.0
 
 ### Minor Changes

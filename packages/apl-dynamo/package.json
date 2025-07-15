@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apl-dynamo",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -27,9 +27,9 @@
     "dynamodb-toolbox": "catalog:",
     "eslint": "catalog:",
     "next": "catalog:",
-    "typescript": "5.8.2",
-    "vite": "6.2.4",
-    "vitest": "3.1.1"
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",

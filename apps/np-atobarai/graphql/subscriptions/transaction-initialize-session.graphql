@@ -3,7 +3,6 @@ fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
   action {
     amount
     currency
-    actionType
   }
   data
   transaction {
@@ -12,7 +11,6 @@ fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
   sourceObject {
     ...SourceObject
   }
-  idempotencyKey
 }
 
 subscription TransactionInitializeSession {

@@ -5,9 +5,34 @@ fragment SourceObject on OrderOrCheckout {
     channel {
       ...Channel
     }
+    email
+    billingAddress {
+      ...Address
+    }
     shippingAddress {
-      country {
-        code
+      ...Address
+    }
+    discount {
+      amount
+    }
+    shippingPrice {
+      gross {
+        amount
+      }
+    }
+    lines {
+      __typename
+      quantity
+      totalPrice {
+        gross {
+          amount
+        }
+      }
+      checkoutVariant: variant {
+        sku
+        product {
+          name
+        }
       }
     }
   }
@@ -17,9 +42,34 @@ fragment SourceObject on OrderOrCheckout {
     channel {
       ...Channel
     }
+    userEmail
+    billingAddress {
+      ...Address
+    }
     shippingAddress {
-      country {
-        code
+      ...Address
+    }
+    discount {
+      amount
+    }
+    shippingPrice {
+      gross {
+        amount
+      }
+    }
+    lines {
+      __typename
+      quantity
+      totalPrice {
+        gross {
+          amount
+        }
+      }
+      orderVariant: variant {
+        sku
+        product {
+          name
+        }
       }
     }
   }

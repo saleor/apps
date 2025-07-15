@@ -1,8 +1,8 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
 
 import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
-import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/types";
 
@@ -11,7 +11,14 @@ import {
   PaymentGatewayInitializeSessionUseCaseResponses,
   PaymentGatewayInitializeSessionUseCaseResponsesType,
 } from "./use-case-response";
-import { UnsupportedCountryError, UnsupportedCurrencyError } from "./validation-errors";
+import {
+  MissingBillingAddressError,
+  MissingBillingPhoneNumberError,
+  MissingEmailError,
+  UnsupportedCountryError,
+  UnsupportedCurrencyError,
+  WrongPhoneNumberFormatError,
+} from "./validation-errors";
 
 type UseCaseExecuteResult = Promise<
   Result<PaymentGatewayInitializeSessionUseCaseResponsesType, AppIsNotConfiguredResponse>
@@ -86,6 +93,59 @@ export class PaymentGatewayInitializeSessionUseCase {
               publicMessage: `Shipping address country not supported: got ${event.sourceObject.shippingAddress?.country.code} - needs JP`,
             },
           }),
+        ),
+      );
+    }
+
+    if (!event.sourceObject.billingAddress) {
+      this.logger.warn("Missing billing address in event", {
+        event,
+      });
+
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Failure(
+          new MissingBillingAddressError("Billing address is required"),
+        ),
+      );
+    }
+
+    if (!event.sourceObject.billingAddress.phone) {
+      this.logger.warn("Missing billing phone number in event", {
+        event,
+      });
+
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Failure(
+          new MissingBillingPhoneNumberError("Billing phone number is required"),
+        ),
+      );
+    }
+
+    const email =
+      event.sourceObject.__typename === "Checkout"
+        ? event.sourceObject.email
+        : event.sourceObject.userEmail;
+
+    if (!email) {
+      this.logger.warn("Missing email in event", {
+        event,
+      });
+
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Failure(
+          new MissingEmailError("Email is required"),
+        ),
+      );
+    }
+
+    if (!event.sourceObject.billingAddress.phone.startsWith("+81")) {
+      this.logger.warn("Wrong phone number format in event", {
+        event,
+      });
+
+      return ok(
+        new PaymentGatewayInitializeSessionUseCaseResponses.Failure(
+          new WrongPhoneNumberFormatError("Wrong phone number format"),
         ),
       );
     }

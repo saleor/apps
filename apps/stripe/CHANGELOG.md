@@ -1,5 +1,15 @@
 # saleor-app-payment-stripe
 
+## 2.0.6
+
+### Patch Changes
+
+- fe605010: Update DynamoDB Toolbox to > v2, no function changes introduced
+- b07a2e12: Extract DynamoDB APL to shared package
+- Updated dependencies [b07a2e12]
+  - @saleor/apl-dynamo@2.0.0
+  - @saleor/apps-logger@1.6.1
+
 ## 2.0.5
 
 ### Patch Changes

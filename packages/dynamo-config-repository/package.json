@@ -1,0 +1,37 @@
+{
+  "name": "@saleor/dynamo-config-repository",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "check-types": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "catalog:",
+    "@saleor/apps-logger": "workspace:*",
+    "@saleor/errors": "workspace:*",
+    "neverthrow": "catalog:"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-dynamodb": "catalog:",
+    "@aws-sdk/lib-dynamodb": "catalog:",
+    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
+    "@saleor/apps-domain": "workspace:*",
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "dynamodb-toolbox": "catalog:",
+    "eslint": "catalog:",
+    "next": "catalog:",
+    "typescript": "5.8.2",
+    "vite": "6.2.4",
+    "vitest": "3.1.1"
+  },
+  "peerDependencies": {
+    "dynamodb-toolbox": "catalog:"
+  }
+}

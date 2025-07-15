@@ -1,28 +1,18 @@
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 
 import { mockedSaleorAppId } from "../saleor/mocked-saleor-app-id";
-import { mockedSaleorChannelId } from "../saleor/mocked-saleor-channel-id";
 import { mockedSaleorTransactionToken } from "../saleor/mocked-saleor-transaction-token";
+import { mockedSourceObject } from "./mocked-source-object";
 
 export const mockedTransactionInitializeSessionEvent = {
-  sourceObject: {
-    __typename: "Checkout",
-    channel: {
-      slug: "default-channel",
-      id: mockedSaleorChannelId,
-      currencyCode: "JPY",
-    },
-    id: "checkout-id",
-  },
+  sourceObject: mockedSourceObject,
   recipient: {
     id: mockedSaleorAppId,
   },
   action: {
-    actionType: "CHARGE",
-    amount: 123.3,
+    amount: 6307,
     currency: "JPY",
   },
-  idempotencyKey: "123",
   transaction: {
     token: mockedSaleorTransactionToken,
   },

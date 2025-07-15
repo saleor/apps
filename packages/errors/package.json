@@ -1,6 +1,6 @@
 {
   "name": "@saleor/errors",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
@@ -19,9 +19,9 @@
     "@vitest/coverage-v8": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
-    "typescript": "5.8.2",
-    "vite": "6.2.4",
-    "vitest": "3.1.1"
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "modern-errors": "catalog:",
