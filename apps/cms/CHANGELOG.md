@@ -1,5 +1,11 @@
 # saleor-app-cms
 
+## 2.12.2
+
+### Patch Changes
+
+- @saleor/apps-logger@1.6.1
+
 ## 2.12.1
 
 ### Patch Changes

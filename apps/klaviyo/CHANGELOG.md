@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.13.12
+
+### Patch Changes
+
+- @saleor/apps-logger@1.6.1
+
 ## 1.13.11
 
 ### Patch Changes

@@ -76,14 +76,7 @@ export class AvataxClient {
             model: { createTransactionModel: model },
           }),
           (error) => {
-            const parsedError = this.errorParser.parse(error);
-
-            /**
-             * TODO: Refactor errors so we are able to print error only for unhandled cases, otherwise use warnings etc
-             */
-            this.logger.error("Error calculating taxes", { error: parsedError });
-
-            return parsedError;
+            return this.errorParser.parse(error);
           },
         )
           .map((response) => {
