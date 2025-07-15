@@ -7,7 +7,7 @@ import { AtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code"
 import { AtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { AtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
-type RawProps = {
+export type AppChannelConfigFields = {
   readonly name: string;
   readonly id: string;
   // todo make value object / enum
@@ -33,7 +33,7 @@ const schema = z.object({
   useSandbox: z.boolean(),
 });
 
-export class AppChannelConfig implements RawProps, BaseConfig {
+export class AppChannelConfig implements AppChannelConfigFields, BaseConfig {
   readonly name: string;
   readonly id: string;
   readonly shippingCompanyCode: string;
@@ -50,7 +50,7 @@ export class AppChannelConfig implements RawProps, BaseConfig {
     },
   });
 
-  private constructor(props: RawProps) {
+  private constructor(props: AppChannelConfigFields) {
     this.name = props.name;
     this.id = props.id;
     this.fillMissingAddress = props.fillMissingAddress;
@@ -63,7 +63,7 @@ export class AppChannelConfig implements RawProps, BaseConfig {
   }
 
   private static validate(
-    props: RawProps,
+    props: AppChannelConfigFields,
   ): Result<null, InstanceType<typeof AppChannelConfig.ValidationError>> {
     try {
       schema.parse(props);
@@ -79,7 +79,7 @@ export class AppChannelConfig implements RawProps, BaseConfig {
   }
 
   static create(
-    args: RawProps,
+    args: AppChannelConfigFields,
   ): Result<AppChannelConfig, InstanceType<typeof AppChannelConfig.ValidationError>> {
     return this.validate(args).map(() => new AppChannelConfig(args));
   }

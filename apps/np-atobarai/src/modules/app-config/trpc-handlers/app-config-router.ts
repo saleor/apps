@@ -7,16 +7,13 @@ import { UpdateMappingTrpcHandler } from "@/modules/app-config/trpc-handlers/upd
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 import { router } from "@/modules/trpc/trpc-server";
 
-/**
- * TODO Figure out end-to-end router testing (must somehow check valid jwt token)
- */
 export const appConfigRouter = router({
-  saveNewStripeConfig: new NewConfigTrpcHandler().getTrpcProcedure(),
-  getStripeConfigsList: new GetConfigsListTrpcHandler().getTrpcProcedure(),
+  saveNewConfig: new NewConfigTrpcHandler().getTrpcProcedure(),
+  getConfigsList: new GetConfigsListTrpcHandler().getTrpcProcedure(),
   fetchChannels: new GetSaleorChannelsTrpcHandler({
     channelsFetcherFactory: (client) => new ChannelsFetcher(client),
   }).getTrpcProcedure(),
   channelsConfigsMapping: new GetConfigsChannelsMappingTrpcHandler().getTrpcProcedure(),
   updateMapping: new UpdateMappingTrpcHandler().getTrpcProcedure(),
-  removeStripeConfig: new RemoveConfigTrpcHandler().getTrpcProcedure(),
+  removeConfig: new RemoveConfigTrpcHandler().getTrpcProcedure(),
 });

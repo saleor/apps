@@ -7,7 +7,7 @@ import { ConfigsList } from "@/modules/ui/configs-list";
 import { EmptyConfigs } from "@/modules/ui/empty-configs";
 
 export const ChannelConfigSection = () => {
-  const { data, error, refetch } = trpcClient.appConfig.getStripeConfigsList.useQuery();
+  const { data, error, refetch } = trpcClient.appConfig.getConfigsList.useQuery();
 
   useEffect(() => {
     refetch();

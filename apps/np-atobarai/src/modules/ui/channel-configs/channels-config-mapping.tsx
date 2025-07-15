@@ -3,11 +3,12 @@ import { Box, Select, Text } from "@saleor/macaw-ui";
 import React from "react";
 
 import { ChannelFragment } from "@/generated/graphql";
+import { AppChannelConfigFields } from "@/modules/app-config/app-config";
 
 type Props = {
   channels: ChannelFragment[];
-  configs: StripeFrontendConfigSerializedFields[];
-  mapping: Record<string, StripeFrontendConfigSerializedFields>;
+  configs: AppChannelConfigFields[];
+  mapping: Record<string, AppChannelConfigFields>;
   onMappingChange(data: { channelId: string; configId: string }): void;
   isLoading: boolean;
 };

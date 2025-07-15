@@ -63,10 +63,12 @@ describe("ChannelFetcher", () => {
       {
         slug: "default-channel",
         id: "1",
+        currencyCode: "JPY",
       },
       {
         slug: "another-channel",
         id: "2",
+        currencyCode: "JPY",
       },
     ];
 

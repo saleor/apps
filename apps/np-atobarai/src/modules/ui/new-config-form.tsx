@@ -6,12 +6,12 @@ import { Input } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
+import { newConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
 type FormShape = {
-  restrictedKey: string;
   name: string;
-  publishableKey: string;
+  // todo
 };
 
 const RequiredInputLabel = (props: { labelText: string }) => {
@@ -31,7 +31,7 @@ export const NewConfigForm = () => {
   const router = useRouter();
   const { notifyError, notifySuccess } = useDashboardNotification();
 
-  const { mutate } = trpcClient.appConfig.saveNewStripeConfig.useMutation({
+  const { mutate } = trpcClient.appConfig.saveNewConfig.useMutation({
     onSuccess() {
       notifySuccess("Configuration saved");
 
@@ -48,18 +48,15 @@ export const NewConfigForm = () => {
     formState: { errors, isLoading },
   } = useForm<FormShape>({
     defaultValues: {
-      restrictedKey: "",
       name: "",
-      publishableKey: "",
     },
-    resolver: zodResolver(newStripeConfigInputSchema),
+    resolver: zodResolver(newConfigInputSchema),
   });
 
   const onSubmit = (values: FormShape) => {
     mutate({
       name: values.name,
-      publishableKey: values.publishableKey,
-      restrictedKey: values.restrictedKey,
+      // todo
     });
   };
 
@@ -91,25 +88,6 @@ export const NewConfigForm = () => {
               "Friendly name of your configuration. For example 'Live' or 'UK Live'."
             }
             error={!!errors.name}
-          />
-          <Input
-            label={<RequiredInputLabel labelText="Publishable key" />}
-            name="publishableKey"
-            control={control}
-            helperText={
-              errors.publishableKey?.message ?? "Publishable key generated in Stripe dashboard."
-            }
-            error={!!errors.publishableKey}
-          />
-          <Input
-            label={<RequiredInputLabel labelText="Restricted key" />}
-            name="restrictedKey"
-            control={control}
-            type="password"
-            helperText={
-              errors.restrictedKey?.message ?? "Restricted key generated in Stripe dashboard."
-            }
-            error={!!errors.restrictedKey}
           />
         </Box>
       </Box>

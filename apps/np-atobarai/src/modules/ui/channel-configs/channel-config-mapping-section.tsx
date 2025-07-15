@@ -8,7 +8,7 @@ import { ChannelsConfigMapping } from "@/modules/ui/channel-configs/channels-con
 
 export const ChannelConfigMappingSection = () => {
   const allChannels = trpcClient.appConfig.fetchChannels.useQuery();
-  const allConfigs = trpcClient.appConfig.getStripeConfigsList.useQuery();
+  const allConfigs = trpcClient.appConfig.getConfigsList.useQuery();
   const allMappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
   const allResults = [allChannels, allConfigs, allMappings];
 

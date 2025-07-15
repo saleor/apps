@@ -4,16 +4,14 @@ import { Box, Button, Chip, Modal, Text, TrashBinIcon } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
+import { AppChannelConfig, AppChannelConfigFields } from "@/modules/app-config/app-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
 import { DeleteConfigurationModalContent } from "./delete-configuration-modal-content";
 
 type Props = {
-  configs: Array<StripeFrontendConfigSerializedFields>;
+  configs: Array<AppChannelConfigFields>;
 };
-
-const webhookDisabled = <Text color="warning1">Webhook disabled, app will not work properly</Text>;
-const webhookMissing = <Text color="critical1">Webhook missing, create config again</Text>;
 
 export const ConfigsList = ({ configs, ...props }: Props) => {
   const router = useRouter();
@@ -44,33 +42,12 @@ export const ConfigsList = ({ configs, ...props }: Props) => {
     >
       <Box {...props}>
         {configs.map((config) => {
-          const configInstance = StripeFrontendConfig.createFromSerializedFields(config);
-          const envValue = configInstance.getStripeEnvValue();
+          const configInstanceResult = AppChannelConfig.create(config);
+          const configInstance = configInstanceResult.unwrapOr(null);
 
-          const testEnvChip = (
-            <Chip
-              marginLeft="auto"
-              __backgroundColor="#CC4B00"
-              borderColor="transparent"
-              size="large"
-            >
-              <Text __color={"#FFF"} size={1} whiteSpace="nowrap">
-                Stripe test mode
-              </Text>
-            </Chip>
-          );
-          const liveEnvChip = (
-            <Chip marginLeft={"auto"} size="large" whiteSpace="nowrap">
-              <Text size={1}>Stripe live mode</Text>
-            </Chip>
-          );
-
-          const webhookStatusInfo =
-            configInstance.webhookStatus === "disabled"
-              ? webhookDisabled
-              : configInstance.webhookStatus === "missing"
-              ? webhookMissing
-              : null;
+          if (!configInstance) {
+            return <div>Error</div>;
+          }
 
           return (
             <Modal open={isModalOpen} onChange={setIsModalOpen}>
@@ -90,7 +67,6 @@ export const ConfigsList = ({ configs, ...props }: Props) => {
                   <Text marginRight={4} display="block">
                     {configInstance.name}
                   </Text>
-                  {envValue === "TEST" ? testEnvChip : liveEnvChip}
                   <Modal.Trigger>
                     <Button
                       disabled={isLoading}
@@ -101,7 +77,6 @@ export const ConfigsList = ({ configs, ...props }: Props) => {
                     />
                   </Modal.Trigger>
                 </Box>
-                {webhookStatusInfo}
               </Box>
             </Modal>
           );
