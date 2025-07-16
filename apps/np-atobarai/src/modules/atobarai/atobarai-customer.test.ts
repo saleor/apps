@@ -40,7 +40,7 @@ describe("createAtobaraiCustomer", () => {
       {
         "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
         "company_name": "BillingCompanyName",
-        "customer_name": "BillingFirstName BillingLastName",
+        "customer_name": "BillingLastName BillingFirstName",
         "email": "source-object@email.com",
         "tel": "0billingPhone",
         "zip_code": "BillingPostalCode",
@@ -54,15 +54,15 @@ describe("createAtobaraiCustomer", () => {
     });
 
     expect(customer).toMatchInlineSnapshot(`
-        {
-          "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
-          "company_name": "BillingCompanyName",
-          "customer_name": "BillingFirstName BillingLastName",
-          "email": "user-order-email@example.com",
-          "tel": "0billingPhone",
-          "zip_code": "BillingPostalCode",
-        }
-      `);
+      {
+        "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
+        "company_name": "BillingCompanyName",
+        "customer_name": "BillingLastName BillingFirstName",
+        "email": "user-order-email@example.com",
+        "tel": "0billingPhone",
+        "zip_code": "BillingPostalCode",
+      }
+    `);
   });
 
   it("should throw MissingDataError when billing address is missing", () => {

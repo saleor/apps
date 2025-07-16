@@ -10,7 +10,7 @@ export const AtobaraiGoodsSchema = z
     z.object({
       goods_name: z.string(),
       goods_price: z.number(),
-      goods_quantity: z.number(),
+      quantity: z.number(),
     }),
   )
   .brand("AtobaraiGoods");
@@ -33,6 +33,18 @@ export const createAtobaraiGoods = (
   return AtobaraiGoodsSchema.parse([...productLines, voucherLine, shippingLine].filter(Boolean));
 };
 
+const getProductGoodsName = (args: {
+  useSkuAsName: boolean;
+  productName: string;
+  sku: string | null | undefined;
+}): string => {
+  if (args.useSkuAsName) {
+    return args.sku || args.productName;
+  }
+
+  return args.productName;
+};
+
 const getProductLines = (lines: SourceObjectFragment["lines"], useSkuAsName: boolean) => {
   return lines.map((line) => {
     const variant = line.__typename === "CheckoutLine" ? line.checkoutVariant : line.orderVariant;
@@ -44,9 +56,13 @@ const getProductLines = (lines: SourceObjectFragment["lines"], useSkuAsName: boo
     }
 
     return {
-      goods_name: useSkuAsName ? variant.sku : variant.product.name,
-      goods_price: line.totalPrice.gross.amount,
-      goods_quantity: line.quantity,
+      goods_name: getProductGoodsName({
+        useSkuAsName,
+        productName: variant.product.name,
+        sku: variant.sku,
+      }),
+      goods_price: line.unitPrice.gross.amount,
+      quantity: line.quantity,
     };
   });
 };
@@ -61,7 +77,7 @@ const getVoucherLine = (sourceObject: SourceObjectFragment) => {
   return {
     goods_name: "Voucher",
     goods_price: voucherAmount,
-    goods_quantity: 1,
+    quantity: 1,
   };
 };
 
@@ -75,6 +91,6 @@ const getShippingLine = (sourceObject: SourceObjectFragment) => {
   return {
     goods_name: "Shipping",
     goods_price: shippingPrice,
-    goods_quantity: 1,
+    quantity: 1,
   };
 };

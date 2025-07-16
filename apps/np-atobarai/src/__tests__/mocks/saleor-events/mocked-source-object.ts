@@ -41,9 +41,9 @@ export const mockedSourceObject = {
     {
       __typename: "CheckoutLine",
       quantity: 5,
-      totalPrice: {
+      unitPrice: {
         gross: {
-          amount: 6170,
+          amount: 1_234,
         },
       },
       checkoutVariant: {

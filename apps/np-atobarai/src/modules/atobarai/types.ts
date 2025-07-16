@@ -3,9 +3,9 @@ import { Result } from "neverthrow";
 
 import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
+import { AtobaraiRegisterTransactionSuccessResponse } from "./atobarai-register-transaction-success-response";
 import { AtobaraiSpCode } from "./atobarai-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
-import { AtobaraiTransaction } from "./atobarai-transaction";
 
 export type AtobaraiApiErrors = InstanceType<typeof AtobaraiApiClientRegisterTransactionError>;
 
@@ -23,14 +23,19 @@ export interface IAtobaraiApiClientFactory {
 export interface IAtobaraiApiClient {
   registerTransaction: (
     payload: AtobaraiRegisterTransactionPayload,
-  ) => Promise<Result<AtobaraiTransaction, AtobaraiApiErrors>>;
+  ) => Promise<Result<AtobaraiRegisterTransactionSuccessResponse, AtobaraiApiErrors>>;
 }
+
+export const AtobaraiApiClientRegisterTransactionErrorPublicCode =
+  "AtobaraiRegisterTransactionError" as const;
 
 export const AtobaraiApiClientRegisterTransactionError = BaseError.subclass(
   "AtobaraiApiClientRegisterTransactionError",
   {
     props: {
-      __brand: "AtobaraiApiClientRegisterTransactionError",
+      _brand: "AtobaraiApiClientRegisterTransactionError",
+      publicCode: AtobaraiApiClientRegisterTransactionErrorPublicCode,
+      publicMessage: "Failed to register transaction with Atobarai",
     },
   },
 );
