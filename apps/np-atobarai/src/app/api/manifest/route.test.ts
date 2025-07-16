@@ -31,8 +31,7 @@ describe("Manifest handler", async () => {
         expect(body).toMatchInlineSnapshot(
           {
             version: expect.any(String),
-          },
-          `
+          }, `
           {
             "about": "App that allows merchants using the Saleor e-commerce platform to accept online payments from customers using NP Atobarai as their payment processor.",
             "appUrl": "https://localhost:3000",
@@ -59,7 +58,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "NP Atobarai Payment Gateway Initialize",
-                "query": "subscription PaymentGatewayInitializeSession { event { ...PaymentGatewayInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment Address on Address { firstName lastName companyName postalCode countryArea streetAddress1 streetAddress2 phone country { code }}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } email billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity totalPrice { gross { amount } } checkoutVariant: variant { sku product { name } } } } ... on Order { __typename id channel { ...Channel } userEmail billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity totalPrice { gross { amount } } orderVariant: variant { sku product { name } } } }}fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession { ...EventMetadata sourceObject { ...SourceObject }}",
+                "query": "subscription PaymentGatewayInitializeSession { event { ...PaymentGatewayInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment Address on Address { firstName lastName companyName postalCode countryArea streetAddress1 streetAddress2 phone country { code }}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } email billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } checkoutVariant: variant { sku product { name } } } } ... on Order { __typename id channel { ...Channel } userEmail billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } orderVariant: variant { sku product { name } } } }}fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession { ...EventMetadata sourceObject { ...SourceObject }}",
                 "syncEvents": [
                   "PAYMENT_GATEWAY_INITIALIZE_SESSION",
                 ],
@@ -68,7 +67,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "NP Atobarai Transaction Initialize Session",
-                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment Address on Address { firstName lastName companyName postalCode countryArea streetAddress1 streetAddress2 phone country { code }}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } email billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity totalPrice { gross { amount } } checkoutVariant: variant { sku product { name } } } } ... on Order { __typename id channel { ...Channel } userEmail billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity totalPrice { gross { amount } } orderVariant: variant { sku product { name } } } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency } data transaction { token } sourceObject { ...SourceObject }}",
+                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment Address on Address { firstName lastName companyName postalCode countryArea streetAddress1 streetAddress2 phone country { code }}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } email billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } checkoutVariant: variant { sku product { name } } } } ... on Order { __typename id channel { ...Channel } userEmail billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } orderVariant: variant { sku product { name } } } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency } data transaction { token } sourceObject { ...SourceObject }}",
                 "syncEvents": [
                   "TRANSACTION_INITIALIZE_SESSION",
                 ],
@@ -94,8 +93,7 @@ describe("Manifest handler", async () => {
               },
             ],
           }
-        `,
-        );
+        `);
       },
     });
   });

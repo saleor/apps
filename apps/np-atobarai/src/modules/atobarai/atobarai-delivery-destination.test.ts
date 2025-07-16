@@ -40,7 +40,7 @@ describe("createAtobaraiDeliveryDestination", () => {
       {
         "address": "ShippingCountryAreaShippingStreetAddress1ShippingStreetAddress2",
         "company_name": "ShippingCompanyName",
-        "customer_name": "ShippingFirstName ShippingLastName",
+        "customer_name": "ShippingLastName ShippingFirstName",
         "tel": "0shippingPhone",
         "zip_code": "ShippingPostalCode",
       }
@@ -56,7 +56,7 @@ describe("createAtobaraiDeliveryDestination", () => {
       {
         "address": "ShippingCountryAreaShippingStreetAddress1ShippingStreetAddress2",
         "company_name": "ShippingCompanyName",
-        "customer_name": "ShippingFirstName ShippingLastName",
+        "customer_name": "ShippingLastName ShippingFirstName",
         "tel": "0shippingPhone",
         "zip_code": "ShippingPostalCode",
       }
