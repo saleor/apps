@@ -7,9 +7,7 @@ import { AtobaraiRegisterTransactionSuccessResponse } from "./atobarai-register-
 import { AtobaraiSpCode } from "./atobarai-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 
-export type AtobaraiApiErrors = InstanceType<
-  typeof AtobaraiApiClientRegisterTransactionError | typeof AtobaraiApiClientValidationError
->;
+export type AtobaraiApiErrors = InstanceType<typeof AtobaraiApiClientRegisterTransactionError>;
 
 export type AtobaraiEnvironment = "sandbox" | "production";
 
