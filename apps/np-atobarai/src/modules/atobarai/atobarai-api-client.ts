@@ -2,10 +2,14 @@ import { BaseError } from "@saleor/errors";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
+import { createAtobaraiRegisterTransactionErrorResponse } from "./atobarai-register-transaction-error-response";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
+import {
+  AtobaraiRegisterTransactionSuccessResponse,
+  createAtobaraiRegisterTransactionSuccessResponse,
+} from "./atobarai-register-transaction-success-response";
 import { AtobaraiSpCode } from "./atobarai-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
-import { AtobaraiTransaction } from "./atobarai-transaction";
 import {
   AtobaraiApiClientRegisterTransactionError,
   AtobaraiApiClientValidationError,
@@ -62,7 +66,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
   async registerTransaction(
     payload: AtobaraiRegisterTransactionPayload,
-  ): Promise<Result<AtobaraiTransaction, AtobaraiApiErrors>> {
+  ): Promise<Result<AtobaraiRegisterTransactionSuccessResponse, AtobaraiApiErrors>> {
     const requestUrl = new URL("transactions", this.getBaseUrl());
 
     const result = await ResultAsync.fromPromise(
@@ -82,7 +86,21 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
       );
     }
 
-    return ok(new AtobaraiTransaction());
+    if (!result.value.ok) {
+      const response = await result.value.json();
+
+      const { errors } = createAtobaraiRegisterTransactionErrorResponse(response);
+
+      return err(
+        new AtobaraiApiClientRegisterTransactionError("Atobarai API returned an error", {
+          errors: [errors.flatMap((error) => error.codes.map((code) => new BaseError(code)))],
+        }),
+      );
+    }
+
+    const response = await result.value.json();
+
+    return ok(createAtobaraiRegisterTransactionSuccessResponse(response));
   }
 
   async verifyCredentials(): Promise<

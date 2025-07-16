@@ -1,7 +1,7 @@
 import { AddressFragment, SourceObjectFragment } from "@/generated/graphql";
 
 export const formatCustomerName = (address: AddressFragment): string => {
-  return `${address.firstName} ${address.lastName}`;
+  return `${address.lastName} ${address.firstName}`;
 };
 
 export const formatAddress = (address: AddressFragment): string => {
