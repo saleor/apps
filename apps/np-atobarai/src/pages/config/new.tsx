@@ -48,8 +48,8 @@ const NewConfiguration: NextPage = () => {
               locality information based on a database of japanese postal codes. Since city and
               cityArea are not valid fields for Japanese addresses, this information has to be part
               of streetAddress1/streetAddress2. We recommend testing both options with your
-              storefront implementation and pick the one that doesn't result in duplicate address
-              information.
+              storefront implementation and pick the one that doesn&#39;t result in duplicate
+              address information.
             </Text>
 
             <Text>

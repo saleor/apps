@@ -57,7 +57,7 @@ describe("UpdateMappingTrpcHandler", () => {
         channelId: mockedSaleorChannelId,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[TRPCError: Failed to create Stripe configuration. Data can't be saved.]`,
+      `[TRPCError: Failed to create configuration. Data can't be saved.]`,
     );
   });
 

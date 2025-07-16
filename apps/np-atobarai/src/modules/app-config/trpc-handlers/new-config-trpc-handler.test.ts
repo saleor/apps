@@ -76,7 +76,7 @@ describe("NewConfigTrpcHandler", () => {
         useSandbox: true,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[TRPCError: Failed to create Stripe configuration. Data can't be saved.]`,
+      `[TRPCError: Failed to create configuration. Data can't be saved.]`,
     );
   });
 
@@ -162,8 +162,8 @@ describe("NewConfigTrpcHandler", () => {
     );
   });
 
-  describe("Stripe Auth", () => {
-    it("Calls auth service and returns error if Stripe RK is invalid", () => {
+  describe("Auth", () => {
+    it("Calls auth service and returns error if credentials are not valid", () => {
       const { caller, mockAtobaraiApiClient } = getTestCaller();
 
       mockAtobaraiApiClient.verifyCredentials.mockImplementationOnce(() =>

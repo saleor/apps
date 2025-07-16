@@ -39,7 +39,7 @@ const getTestCaller = () => {
   };
 };
 
-describe("GetStripeConfigsChannelsMappingTrpcHandler", () => {
+describe("GetConfigsChannelsMappingTrpcHandler", () => {
   it("Returns error 500 if repository is down", async () => {
     const { caller, mockedAppConfigRepo } = getTestCaller();
 

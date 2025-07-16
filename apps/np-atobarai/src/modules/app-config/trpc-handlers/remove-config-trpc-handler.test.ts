@@ -57,7 +57,7 @@ const getMockedRootConfig = () =>
     },
   });
 
-describe("RemoveStripeConfigTrpcHandler", () => {
+describe("RemoveConfigTrpcHandler", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
@@ -124,7 +124,7 @@ describe("RemoveStripeConfigTrpcHandler", () => {
     );
   });
 
-  it("Returns internal server error if config failed to update: stripe config unit", async () => {
+  it("Returns internal server error if config failed to update: config unit", async () => {
     const { caller, mockedAppConfigRepo } = getTestCaller();
 
     vi.spyOn(mockedAppConfigRepo, "removeConfig").mockImplementationOnce(async () =>
@@ -134,7 +134,7 @@ describe("RemoveStripeConfigTrpcHandler", () => {
     await expect(
       caller.testProcedure({ configId: mockedConfigurationId }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[TRPCError: Failed to remove Stripe configuration. Please try again.]`,
+      `[TRPCError: Failed to remove configuration. Please try again.]`,
     );
   });
 });

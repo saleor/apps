@@ -44,7 +44,7 @@ export class UpdateMappingTrpcHandler {
           // TODO Handle exact errors
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to create Stripe configuration. Data can't be saved.",
+            message: "Failed to create configuration. Data can't be saved.",
           });
         }
       });

@@ -1,6 +1,6 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
-import { Box, Button, Chip, Modal, Text, TrashBinIcon } from "@saleor/macaw-ui";
+import { Box, Button, Modal, Text, TrashBinIcon } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { useState } from "react";
 

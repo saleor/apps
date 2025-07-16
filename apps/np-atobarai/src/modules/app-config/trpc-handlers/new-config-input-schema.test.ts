@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { newConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
 
-describe("newStripeConfigInputSchema", () => {
+describe("newConfigInputSchema", () => {
   it("Properly parses valid input", () => {
     expect(
       newConfigInputSchema.parse({

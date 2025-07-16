@@ -24,8 +24,8 @@ const IndexPage: NextPage = () => {
     <div>
       <h1>Saleor App Payment NP-Atobarai</h1>
       <p>
-        This is Saleor App that allows to accept online payments from customers using Stripe as
-        their payment processor.
+        This is Saleor App that allows to accept online payments from customers using as their
+        payment processor.
       </p>
       <p>Install the app in your Saleor instance and open it in Dashboard.</p>
     </div>

@@ -42,7 +42,7 @@ const getTestCaller = () => {
   };
 };
 
-describe("GetStripeConfigTrpcHandler", () => {
+describe("GetConfigTrpcHandler", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });

@@ -19,16 +19,15 @@ const ConfigPage: NextPage = () => {
       <AppHeader />
       <Layout.AppSection
         marginBottom={14}
-        heading="Stripe configurations"
+        heading="Configurations"
         sideContent={
           <Box display="flex" flexDirection="column" gap={4}>
             <Text>
-              App allows to create and use multiple Stripe configurations e.g one for test mode and
-              the other for live mode.
+              App allows to create and use multiple configurations e.g one for test mode and the
+              other for live mode.
             </Text>
             <Text>
-              You can set up multiple Stripe configurations and assign them to each channel
-              individually.
+              You can set up multiple configurations and assign them to each channel individually.
             </Text>
           </Box>
         }
@@ -39,8 +38,8 @@ const ConfigPage: NextPage = () => {
         heading="Channels configurations"
         sideContent={
           <Box display="flex" flexDirection="column" gap={4}>
-            <Text>Assign created Stripe configurations to Saleor channel.</Text>
-            <Text>You can configure multiple channels to use the same Stripe configuration.</Text>
+            <Text>Assign created configurations to Saleor channel.</Text>
+            <Text>You can configure multiple channels to use the same configuration.</Text>
           </Box>
         }
       >

@@ -56,7 +56,7 @@ export class NewConfigTrpcHandler {
         );
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Failed to create Stripe configuration: ${configToSaveResult.error.message}`,
+          message: `Failed to create configuration: ${configToSaveResult.error.message}`,
         });
       }
 
@@ -91,7 +91,7 @@ export class NewConfigTrpcHandler {
         // TODO Handle exact errors
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create Stripe configuration. Data can't be saved.",
+          message: "Failed to create configuration. Data can't be saved.",
         });
       }
     });

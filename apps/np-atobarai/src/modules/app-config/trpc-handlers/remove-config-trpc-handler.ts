@@ -28,7 +28,7 @@ export class RemoveConfigTrpcHandler {
     if (rootConfig.isErr()) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to remove Stripe configuration. Please try again.",
+        message: "Failed to remove configuration. Please try again.",
       });
     }
 
@@ -120,7 +120,7 @@ export class RemoveConfigTrpcHandler {
 
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to remove Stripe configuration. Please try again.",
+            message: "Failed to remove configuration. Please try again.",
           });
         }
       });
