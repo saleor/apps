@@ -1,6 +1,5 @@
 import { Box, Button, CloseIcon, Modal, Text } from "@saleor/macaw-ui";
 
-// TODO: consider moving this to shared
 export const DeleteConfigurationModalContent = (props: { onDeleteClick: () => void }) => {
   return (
     <Modal.Content>
