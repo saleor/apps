@@ -13,11 +13,12 @@ export function racePromise<T>({
   let timer: NodeJS.Timeout | null = null;
 
   return Promise.race([
-    new Promise<never>((res, rej) => {
+    new Promise<never>((_res, rej) => {
       timer = setTimeout(() => {
         rej(error);
       }, timeout);
     }),
+
     promise.finally(() => {
       if (timer) {
         clearTimeout(timer);

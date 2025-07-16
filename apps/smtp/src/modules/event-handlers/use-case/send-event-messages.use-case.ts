@@ -24,7 +24,7 @@ export class SendEventMessagesUseCase {
   /**
    * Errors related to broken configuration
    */
-  static ClientError = BaseError.subclass("SendEventMessagesUseCaseServerError");
+  static ClientError = BaseError.subclass("SendEventMessagesUseCaseClientError");
 
   static MissingAvailableConfigurationError = this.ClientError.subclass(
     "MissingAvailableConfigurationError",
@@ -38,7 +38,7 @@ export class SendEventMessagesUseCase {
    * Errors that externally can be translated to no-op operations due to design of the app.
    * In some cases app should just ignore the event, e.g. when it's disabled.
    */
-  static NoOpError = BaseError.subclass("SendEventMessagesUseCaseServerError");
+  static NoOpError = BaseError.subclass("SendEventMessagesUseCaseNoOpError");
 
   static EventConfigNotActiveError = this.NoOpError.subclass("EventConfigNotActiveError");
 
@@ -165,7 +165,7 @@ export class SendEventMessagesUseCase {
         this.logger.debug("Error sending email with SMTP", { error: err });
 
         return new SendEventMessagesUseCase.ServerError("Failed to send email via SMTP", {
-          errors: [err],
+          cause: err,
         });
       },
     );
