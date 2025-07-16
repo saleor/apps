@@ -50,6 +50,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
     return {
       "X-NP-Terminal-Id": this.atobaraiTerminalId,
       Authorization: `Basic ${btoa(`${this.atobaraiMerchantCode}:${this.atobaraiSpCode}`)}`,
+      "Content-Type": "application/json",
     };
   }
 
@@ -94,20 +95,25 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
         method: "POST",
         headers: {
           ...this.getHeaders(),
-          "content-type": "application/json",
-          "accept-type": "application/json",
         },
+        body: JSON.stringify({ transactions: [] }),
       }),
       (error) => AtobaraiApiClientValidationError.normalize(error),
     );
-
-    console.log(result);
 
     if (result.isErr()) {
       return err(AtobaraiApiClientValidationError.normalize(result.error));
     }
 
-    if (result.value.status !== 200) {
+    /**
+     * For VALID credentials we receive 400 status, because credentials are fine, but we don't send valid payload.
+     *
+     * For invalid credentials we receive either 401 or 403, so this is what we assume is invalid credentials.
+     */
+    const is401 = result.value.status === 401;
+    const is403 = result.value.status === 401;
+
+    if (is401 || is403) {
       return err(
         new AtobaraiApiClientValidationError("Invalid credentials", {
           cause: new Error(`Received status code ${result.value.status}`),
