@@ -1,10 +1,11 @@
+import { mockedAuthData } from "@saleor/apl-dynamo/src/apl/mocks/mocked-auth-data";
 import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
-import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
+import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
+import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { ChannelFragment } from "@/generated/graphql";
 import { GetSaleorChannelsTrpcHandler } from "@/modules/app-config/trpc-handlers/get-saleor-channels-trpc-handler";
@@ -33,7 +34,7 @@ const getTestCaller = () => {
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
-      token: mockedAppToken,
+      token: mockedAuthData.token,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
       appUrl: "https://localhost:3000",
@@ -68,10 +69,12 @@ describe("GetStripeConfigTrpcHandler", () => {
         {
           slug: "slug-1",
           id: "id-1",
+          currencyCode: "JPY",
         },
         {
           slug: "slug-2",
           id: "id-2",
+          currencyCode: "JPY",
         },
       ];
 
@@ -84,10 +87,12 @@ describe("GetStripeConfigTrpcHandler", () => {
       {
         slug: "slug-1",
         id: "id-1",
+        currencyCode: "JPY",
       },
       {
         slug: "slug-2",
         id: "id-2",
+        currencyCode: "JPY",
       },
     ]);
   });

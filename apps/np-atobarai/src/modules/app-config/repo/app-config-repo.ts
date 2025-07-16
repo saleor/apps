@@ -60,4 +60,4 @@ export const appConfigRepo = createDynamoConfigRepository<
   },
 });
 
-export type AppConfigRepo = typeof appConfigRepo;
+export type AppConfigRepo = Omit<typeof appConfigRepo, "mappingEntity">;

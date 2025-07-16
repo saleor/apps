@@ -1,7 +1,6 @@
-import { GenericRepo } from "@saleor/dynamo-config-repository";
 import { vi } from "vitest";
 
-import { AppChannelConfig } from "@/modules/app-config/app-config";
+import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 
 export const mockedAppConfigRepo = {
   getChannelConfig: vi.fn(),
@@ -9,4 +8,4 @@ export const mockedAppConfigRepo = {
   removeConfig: vi.fn(),
   saveChannelConfig: vi.fn(),
   updateMapping: vi.fn(),
-} satisfies GenericRepo<AppChannelConfig>;
+} satisfies AppConfigRepo;

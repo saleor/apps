@@ -1,14 +1,15 @@
+import { mockedAuthData } from "@saleor/apl-dynamo/src/apl/mocks/mocked-auth-data";
+import { GenericRootConfig } from "@saleor/dynamo-config-repository";
 import { BaseError } from "@saleor/errors";
 import { err, ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
-import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
+import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
-import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
-import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
+import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
+import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
-import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
 import { GetConfigsChannelsMappingTrpcHandler } from "@/modules/app-config/trpc-handlers/get-configs-channels-mapping-trpc-handler";
 import { router } from "@/modules/trpc/trpc-server";
 
@@ -30,7 +31,7 @@ const getTestCaller = () => {
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
-      token: mockedAppToken,
+      token: mockedAuthData.token,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
       appUrl: "https://localhost:3000",
@@ -56,26 +57,30 @@ describe("GetStripeConfigsChannelsMappingTrpcHandler", () => {
 
     vi.spyOn(mockedAppConfigRepo, "getRootConfig").mockImplementationOnce(async () =>
       ok(
-        new AppRootConfig(
-          {
+        new GenericRootConfig({
+          chanelConfigMapping: {
             "c-id1": "id-1",
           },
-          {
-            "id-1": mockedStripeConfig,
+          configsById: {
+            "id-1": mockedAppChannelConfig,
           },
-        ),
+        }),
       ),
     );
 
     // Missing webhook status is expected - we dont have to show this field in the UI
     return expect(caller.testProcedure()).resolves.toMatchInlineSnapshot(`
       {
-        "c-id1": StripeFrontendConfig {
-          "id": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
-          "name": "config-name",
-          "publishableKey": "pk_live_1",
-          "restrictedKey": "...GGGG",
-          "webhookStatus": undefined,
+        "c-id1": AppChannelConfig {
+          "fillMissingAddress": true,
+          "id": "111",
+          "merchantCode": "merchant-code-1",
+          "name": "Config 1",
+          "shippingCompanyCode": "5000",
+          "skuAsName": true,
+          "spCode": "sp1",
+          "terminalId": "id",
+          "useSandbox": true,
         },
       }
     `);

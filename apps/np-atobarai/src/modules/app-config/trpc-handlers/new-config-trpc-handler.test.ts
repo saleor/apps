@@ -1,29 +1,19 @@
 import { err, ok } from "neverthrow";
-import Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
-import { mockedStripePublishableKey } from "@/__tests__/mocks/mocked-stripe-publishable-key";
-import { mockedStripeRestrictedKey } from "@/__tests__/mocks/mocked-stripe-restricted-key";
-import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
-import { BaseError } from "@/lib/errors";
 import { NewConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-config-trpc-handler";
-import { StripeClient } from "@/modules/stripe/stripe-client";
-import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { router } from "@/modules/trpc/trpc-server";
-
-const webhookCreator = new StripeWebhookManager();
 
 /**
  * TODO: Probably create some test abstraction to bootstrap trpc handler for testing
  */
 const getTestCaller = () => {
   const instance = new NewConfigTrpcHandler({
-    webhookManager: webhookCreator,
+    atobaraiClientFactory: () => {
+      return {};
+    },
   });
 
   // @ts-expect-error - context doesnt match but its applied in test
