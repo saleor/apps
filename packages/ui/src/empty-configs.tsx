@@ -1,17 +1,20 @@
-import { Layout } from "@saleor/apps-ui";
-import { Box, Button, Text } from "@saleor/macaw-ui";
-import { useRouter } from "next/router";
+import { Box, BoxProps, Button, Text } from "@saleor/macaw-ui";
 
-export const EmptyConfigs = () => {
-  const router = useRouter();
+import { Layout } from "./layout";
 
+export type EmptyConfigsProps = BoxProps & {
+  onConfigurationAdd(): void;
+};
+
+export const EmptyConfigs = ({ onConfigurationAdd, ...props }: EmptyConfigsProps) => {
   return (
     <Layout.AppSectionCard
       footer={
         <Box display="flex" justifyContent="flex-end">
-          <Button onClick={() => router.push("/config/new")}>Add configuration</Button>
+          <Button onClick={onConfigurationAdd}>Add configuration</Button>
         </Box>
       }
+      {...props}
     >
       <Text as="h2" size={5} marginBottom={4}>
         No configurations found
