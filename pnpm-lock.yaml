@@ -93,6 +93,9 @@ catalogs:
     '@tanstack/react-query':
       specifier: 4.29.19
       version: 4.29.19
+    '@testing-library/react':
+      specifier: 16.2.0
+      version: 16.2.0
     '@trpc/client':
       specifier: 10.43.1
       version: 10.43.1
@@ -427,7 +430,7 @@ importers:
         specifier: 10.4.0
         version: 10.4.0
       '@testing-library/react':
-        specifier: 16.2.0
+        specifier: 'catalog:'
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@total-typescript/ts-reset':
         specifier: 0.6.1
@@ -991,7 +994,7 @@ importers:
         specifier: 10.4.0
         version: 10.4.0
       '@testing-library/react':
-        specifier: 16.2.0
+        specifier: 'catalog:'
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@total-typescript/ts-reset':
         specifier: 0.6.1
@@ -1214,7 +1217,7 @@ importers:
         specifier: 10.4.0
         version: 10.4.0
       '@testing-library/react':
-        specifier: 16.2.0
+        specifier: 'catalog:'
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/handlebars-helpers':
         specifier: ^0.5.6
@@ -1395,7 +1398,7 @@ importers:
         specifier: 10.4.0
         version: 10.4.0
       '@testing-library/react':
-        specifier: 16.2.0
+        specifier: 'catalog:'
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/react':
         specifier: 18.2.5
@@ -2037,7 +2040,7 @@ importers:
         specifier: 10.4.0
         version: 10.4.0
       '@testing-library/react':
-        specifier: 16.2.0
+        specifier: 'catalog:'
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@total-typescript/ts-reset':
         specifier: 0.6.1
@@ -2520,6 +2523,9 @@ importers:
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -2616,12 +2622,18 @@ importers:
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
       '@types/react-dom':
         specifier: 18.2.5
         version: 18.2.5
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 3.1.1(vitest@3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
       eslint:
         specifier: 'catalog:'
         version: 9.23.0(jiti@2.4.2)
@@ -2637,6 +2649,12 @@ importers:
       typescript:
         specifier: 5.8.2
         version: 5.8.2
+      vite:
+        specifier: 'catalog:'
+        version: 6.2.4(@types/node@22.13.10)(jiti@2.4.2)(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
+      vitest:
+        specifier: 'catalog:'
+        version: 3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0)
 
   packages/webhook-utils:
     dependencies:

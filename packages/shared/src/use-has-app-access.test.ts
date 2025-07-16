@@ -2,8 +2,6 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import { REQUIRED_CLIENT_PERMISSIONS } from "@/lib/required-client-permissions";
-
 import { useHasAppAccess } from "./use-has-app-access";
 
 vi.mock("@saleor/app-sdk/app-bridge", () => ({
@@ -17,7 +15,7 @@ describe("useHasAppAccess", () => {
       appBridge: undefined,
     }));
 
-    const { result } = renderHook(() => useHasAppAccess());
+    const { result } = renderHook(() => useHasAppAccess(["MANAGE_CHANNELS"]));
 
     expect(result.current.haveAccessToApp).toBe(false);
   });
@@ -39,7 +37,7 @@ describe("useHasAppAccess", () => {
       appBridge: undefined,
     }));
 
-    const { result } = renderHook(() => useHasAppAccess());
+    const { result } = renderHook(() => useHasAppAccess(["MANAGE_CHANNELS"]));
 
     expect(result.current.haveAccessToApp).toBe(false);
   });
@@ -48,7 +46,7 @@ describe("useHasAppAccess", () => {
     vi.mocked(useAppBridge).mockImplementationOnce(() => ({
       appBridgeState: {
         user: {
-          permissions: REQUIRED_CLIENT_PERMISSIONS,
+          permissions: ["MANAGE_CHANNELS", "MANAGE_CHECKOUTS"],
           email: "",
         },
         id: "",
@@ -61,7 +59,7 @@ describe("useHasAppAccess", () => {
       appBridge: undefined,
     }));
 
-    const { result } = renderHook(() => useHasAppAccess());
+    const { result } = renderHook(() => useHasAppAccess(["MANAGE_CHANNELS", "MANAGE_CHECKOUTS"]));
 
     expect(result.current.haveAccessToApp).toBe(true);
   });
@@ -70,7 +68,7 @@ describe("useHasAppAccess", () => {
     vi.mocked(useAppBridge).mockImplementationOnce(() => ({
       appBridgeState: {
         user: {
-          permissions: [...REQUIRED_CLIENT_PERMISSIONS, "HANDLE_CHECKOUTS"],
+          permissions: ["MANAGE_CHANNELS", "MANAGE_CHECKOUTS", "HANDLE_CHECKOUTS"],
           email: "",
         },
         id: "",
@@ -83,7 +81,7 @@ describe("useHasAppAccess", () => {
       appBridge: undefined,
     }));
 
-    const { result } = renderHook(() => useHasAppAccess());
+    const { result } = renderHook(() => useHasAppAccess(["MANAGE_CHANNELS", "MANAGE_CHECKOUTS"]));
 
     expect(result.current.haveAccessToApp).toBe(true);
   });

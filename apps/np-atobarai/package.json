@@ -83,7 +83,7 @@
     "@saleor/typescript-config-apps": "workspace:*",
     "@saleor/webhook-utils": "workspace:*",
     "@testing-library/dom": "10.4.0",
-    "@testing-library/react": "16.2.0",
+    "@testing-library/react": "catalog:",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/node": "catalog:",
     "@types/react": "18.2.5",

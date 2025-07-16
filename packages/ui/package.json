@@ -13,13 +13,17 @@
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/typescript-config-apps": "workspace:*",
+    "@testing-library/react": "catalog:",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
+    "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "@saleor/macaw-ui": "catalog:",

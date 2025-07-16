@@ -16,7 +16,8 @@
     "./saleor-version-compatibility-validator": "./src/saleor-version-compatibility-validator.ts",
     "./theme-synchronizer": "./src/theme-synchronizer.tsx",
     "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
-    "./encryptor": "./src/encryptor.ts"
+    "./encryptor": "./src/encryptor.ts",
+    "./use-has-app-access": "./src/use-has-app-access.ts"
   },
   "scripts": {
     "check-types": "tsc",
@@ -35,6 +36,7 @@
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/typescript-config-apps": "workspace:*",
+    "@testing-library/react": "catalog:",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
     "@types/semver": "7.5.0",
