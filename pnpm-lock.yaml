@@ -938,6 +938,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: 'catalog:'
+        version: 7.43.9(react@18.2.0)
       urql:
         specifier: 'catalog:'
         version: 4.0.4(graphql@16.7.1)(react@18.2.0)
