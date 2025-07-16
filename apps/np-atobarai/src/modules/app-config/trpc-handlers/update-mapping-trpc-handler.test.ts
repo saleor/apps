@@ -1,17 +1,15 @@
+import { mockedAuthData } from "@saleor/apl-dynamo/src/apl/mocks/mocked-auth-data";
+import { BaseError } from "@saleor/errors";
 import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import {
-  mockedAppToken,
-  mockedConfigurationId,
-  mockedSaleorAppId,
-  mockedSaleorChannelId,
-} from "@/__tests__/mocks/constants";
+import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
+import { mockedConfigurationId } from "@/__tests__/mocks/app-config/mocked-config-id";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
-import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
+import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
+import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
+import { mockedSaleorChannelId } from "@/__tests__/mocks/saleor/mocked-saleor-channel-id";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
-import { BaseError } from "@/lib/errors";
 import { UpdateMappingTrpcHandler } from "@/modules/app-config/trpc-handlers/update-mapping-trpc-handler";
 import { router } from "@/modules/trpc/trpc-server";
 
@@ -33,7 +31,7 @@ const getTestCaller = () => {
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
-      token: mockedAppToken,
+      token: mockedAuthData.token,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
       appUrl: "https://localhost:3000",
@@ -76,12 +74,12 @@ describe("UpdateMappingTrpcHandler", () => {
     expect(vi.mocked(mockedAppConfigRepo.updateMapping).mock.calls[0]).toMatchInlineSnapshot(`
       [
         {
-          "appId": "saleor-app-id",
-          "saleorApiUrl": "https://foo.bar.saleor.cloud/graphql/",
+          "appId": "mocked-saleor-app-id",
+          "saleorApiUrl": "https://mocked.saleor.api/graphql/",
         },
         {
-          "channelId": "Q2hhbm5lbDox",
-          "configId": "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
+          "channelId": "mocked-saleor-channel-id",
+          "configId": "0036a39f-b66c-41a6-9e39-cc34b86093f0",
         },
       ]
     `);

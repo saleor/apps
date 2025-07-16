@@ -1,37 +1,25 @@
+import { mockedAuthData } from "@saleor/apl-dynamo/src/apl/mocks/mocked-auth-data";
+import { GenericRootConfig } from "@saleor/dynamo-config-repository";
+import { BaseError } from "@saleor/errors";
 import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import {
-  mockedAppToken,
-  mockedConfigurationId,
-  mockedSaleorAppId,
-  mockedSaleorChannelId,
-} from "@/__tests__/mocks/constants";
+import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
+import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
+import { mockedConfigurationId } from "@/__tests__/mocks/app-config/mocked-config-id";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
-import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
-import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
+import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
+import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
+import { mockedSaleorChannelId } from "@/__tests__/mocks/saleor/mocked-saleor-channel-id";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
-import { BaseError } from "@/lib/errors";
-import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
 import { RemoveConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/remove-config-trpc-handler";
-import {
-  StripeWebhookManager,
-  StripeWebhookManagerErrors,
-} from "@/modules/stripe/stripe-webhook-manager";
 import { router } from "@/modules/trpc/trpc-server";
 
 /**
  * TODO: Probably create some test abstraction to bootstrap trpc handler for testing
  */
 const getTestCaller = () => {
-  const webhookManager = new StripeWebhookManager();
-
-  vi.spyOn(webhookManager, "removeWebhook").mockImplementation(async () => ok(null));
-
-  const instance = new RemoveConfigTrpcHandler({
-    webhookManager,
-  });
+  const instance = new RemoveConfigTrpcHandler();
 
   // @ts-expect-error - context doesnt match but its applied in test
   instance.baseProcedure = TEST_Procedure;
@@ -48,11 +36,10 @@ const getTestCaller = () => {
 
   return {
     mockedAppConfigRepo,
-    webhookManager,
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
-      token: mockedAppToken,
+      token: mockedAuthData.token,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
       appUrl: "https://localhost:3000",
@@ -61,14 +48,14 @@ const getTestCaller = () => {
 };
 
 const getMockedRootConfig = () =>
-  new AppRootConfig(
-    {
+  new GenericRootConfig({
+    configsById: {
+      [mockedConfigurationId]: mockedAppChannelConfig,
+    },
+    chanelConfigMapping: {
       [mockedSaleorChannelId]: mockedConfigurationId,
     },
-    {
-      [mockedConfigurationId]: mockedStripeConfig,
-    },
-  );
+  });
 
 describe("RemoveStripeConfigTrpcHandler", () => {
   beforeEach(() => {
@@ -81,7 +68,10 @@ describe("RemoveStripeConfigTrpcHandler", () => {
     vi.spyOn(mockedAppConfigRepo, "getRootConfig").mockImplementationOnce(async () =>
       ok(
         // Set empty config to simulate config is gone
-        new AppRootConfig({}, {}),
+        new GenericRootConfig({
+          chanelConfigMapping: {},
+          configsById: {},
+        }),
       ),
     );
 
@@ -94,19 +84,6 @@ describe("RemoveStripeConfigTrpcHandler", () => {
     );
   });
 
-  it("Calls webhook manager to remove webhook", async () => {
-    const { caller, webhookManager } = getTestCaller();
-
-    vi.mocked(webhookManager.removeWebhook).mockImplementationOnce(async () => ok(null));
-
-    await expect(caller.testProcedure({ configId: mockedConfigurationId })).resolves.not.toThrow();
-
-    expect(webhookManager.removeWebhook).toHaveBeenCalledWith({
-      webhookId: mockedStripeConfig.webhookId,
-      restrictedKey: mockedStripeConfig.restrictedKey,
-    });
-  });
-
   it("Calls all required services when everything is smooth", async () => {
     const { caller, mockedAppConfigRepo } = getTestCaller();
 
@@ -114,55 +91,21 @@ describe("RemoveStripeConfigTrpcHandler", () => {
 
     expect(mockedAppConfigRepo.updateMapping).toHaveBeenCalledWith(
       {
-        appId: "saleor-app-id",
-        saleorApiUrl: "https://foo.bar.saleor.cloud/graphql/",
+        appId: "mocked-saleor-app-id",
+        saleorApiUrl: "https://mocked.saleor.api/graphql/",
       },
       {
-        channelId: "Q2hhbm5lbDox",
+        channelId: "mocked-saleor-channel-id",
         configId: null,
       },
     );
     expect(mockedAppConfigRepo.removeConfig).toHaveBeenCalledWith(
       {
-        appId: "saleor-app-id",
-        saleorApiUrl: "https://foo.bar.saleor.cloud/graphql/",
+        appId: "mocked-saleor-app-id",
+        saleorApiUrl: "https://mocked.saleor.api/graphql/",
       },
       {
-        configId: "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
-      },
-    );
-  });
-
-  /**
-   * Removing webhook may fail, e.g. webhook may be missing or it was removed previously.
-   * We should not block this operation, use should be able to retry
-   */
-  it("Continue to remove config even if removing webhook fails", async () => {
-    const { caller, webhookManager, mockedAppConfigRepo } = getTestCaller();
-
-    vi.mocked(webhookManager.removeWebhook).mockImplementationOnce(async () =>
-      err(new StripeWebhookManagerErrors.CantCreateWebhookError("Test error")),
-    );
-
-    await expect(caller.testProcedure({ configId: mockedConfigurationId })).resolves.not.toThrow();
-
-    expect(mockedAppConfigRepo.updateMapping).toHaveBeenCalledWith(
-      {
-        appId: "saleor-app-id",
-        saleorApiUrl: "https://foo.bar.saleor.cloud/graphql/",
-      },
-      {
-        channelId: "Q2hhbm5lbDox",
-        configId: null,
-      },
-    );
-    expect(mockedAppConfigRepo.removeConfig).toHaveBeenCalledWith(
-      {
-        appId: "saleor-app-id",
-        saleorApiUrl: "https://foo.bar.saleor.cloud/graphql/",
-      },
-      {
-        configId: "81f323bd-91e2-4838-ab6e-5affd81ffc3b",
+        configId: "0036a39f-b66c-41a6-9e39-cc34b86093f0",
       },
     );
   });

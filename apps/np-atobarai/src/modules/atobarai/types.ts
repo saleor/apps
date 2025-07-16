@@ -11,14 +11,14 @@ export type AtobaraiApiErrors = InstanceType<
   typeof AtobaraiApiClientRegisterTransactionError | typeof AtobaraiApiClientValidationError
 >;
 
-export type AtobaraiEnviroment = "sandbox" | "production";
+export type AtobaraiEnvironment = "sandbox" | "production";
 
 export interface IAtobaraiApiClientFactory {
   create(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
     atobaraiSpCode: AtobaraiSpCode;
-    atobaraiEnviroment: AtobaraiEnviroment;
+    atobaraiEnvironment: AtobaraiEnvironment;
   }): IAtobaraiApiClient;
 }
 

@@ -148,7 +148,7 @@ describe("AtobaraiApiClient", () => {
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
         atobaraiSpCode: mockedAtobaraiSpCode,
-        atobaraiEnviroment: "sandbox",
+        atobaraiEnvironment: "sandbox",
       });
 
       const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);
@@ -177,7 +177,7 @@ describe("AtobaraiApiClient", () => {
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
         atobaraiSpCode: mockedAtobaraiSpCode,
-        atobaraiEnviroment: "sandbox",
+        atobaraiEnvironment: "sandbox",
       });
 
       const result = await client.registerTransaction(mockedAtobaraiRegisterTransactionPayload);

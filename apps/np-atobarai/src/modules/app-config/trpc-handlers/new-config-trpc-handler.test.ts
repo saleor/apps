@@ -1,18 +1,31 @@
+import { mockedAuthData } from "@saleor/apl-dynamo/src/apl/mocks/mocked-auth-data";
+import { BaseError } from "@saleor/errors";
 import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
+import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
+import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { NewConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-config-trpc-handler";
+import { AtobaraiApiClientValidationError, IAtobaraiApiClient } from "@/modules/atobarai/types";
 import { router } from "@/modules/trpc/trpc-server";
 
 /**
  * TODO: Probably create some test abstraction to bootstrap trpc handler for testing
  */
 const getTestCaller = () => {
+  const mockAtobaraiApiClient = {
+    verifyCredentials: vi.fn(),
+    registerTransaction: vi.fn(),
+  } satisfies IAtobaraiApiClient;
+
   const instance = new NewConfigTrpcHandler({
-    atobaraiClientFactory: () => {
-      return {};
+    atobaraiClientFactory: {
+      create() {
+        return mockAtobaraiApiClient;
+      },
     },
   });
 
@@ -24,12 +37,12 @@ const getTestCaller = () => {
   });
 
   return {
+    mockAtobaraiApiClient,
     mockedAppConfigRepo,
-    webhookCreator,
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
-      token: mockedAppToken,
+      token: mockedAuthData.token,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
       appUrl: "https://localhost:3000",
@@ -37,40 +50,30 @@ const getTestCaller = () => {
   };
 };
 
-describe("NewStripeConfigTrpcHandler", () => {
-  const stripe = new Stripe("key");
-
+describe("NewConfigTrpcHandler", () => {
   beforeEach(() => {
     vi.resetAllMocks();
-
-    vi.spyOn(stripe.paymentIntents, "list").mockImplementation(() => {
-      return Promise.resolve({}) as Stripe.ApiListPromise<Stripe.PaymentIntent>;
-    });
-    vi.spyOn(StripeClient, "createFromRestrictedKey").mockImplementation(() => {
-      return {
-        nativeClient: stripe,
-      };
-    });
-    vi.spyOn(webhookCreator, "createWebhook").mockImplementation(async () =>
-      ok({
-        id: "whid_1234",
-        secret: mockStripeWebhookSecret,
-      }),
-    );
   });
 
   it("Returns error 500 if repository fails to save config", async () => {
-    const { caller, mockedAppConfigRepo } = getTestCaller();
+    const { caller, mockedAppConfigRepo, mockAtobaraiApiClient } = getTestCaller();
 
-    vi.spyOn(mockedAppConfigRepo, "saveStripeConfig").mockImplementationOnce(async () =>
+    mockAtobaraiApiClient.verifyCredentials.mockImplementationOnce(async () => ok(null));
+
+    vi.spyOn(mockedAppConfigRepo, "saveChannelConfig").mockImplementationOnce(async () =>
       err(new BaseError("TEST")),
     );
 
     return expect(() =>
       caller.testProcedure({
         name: "Test config",
-        publishableKey: mockedStripePublishableKey,
-        restrictedKey: mockedStripeRestrictedKey,
+        skuAsName: true,
+        shippingCompanyCode: "55555",
+        fillMissingAddress: true,
+        merchantCode: "aaa",
+        spCode: "bbb",
+        terminalId: "ccc",
+        useSandbox: true,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `[TRPCError: Failed to create Stripe configuration. Data can't be saved.]`,
@@ -78,16 +81,22 @@ describe("NewStripeConfigTrpcHandler", () => {
   });
 
   it("Returns 404 if config is in invalid shape (model can't be created)", () => {
-    const { caller, mockedAppConfigRepo } = getTestCaller();
+    const { caller, mockedAppConfigRepo, mockAtobaraiApiClient } = getTestCaller();
 
-    vi.spyOn(mockedAppConfigRepo, "saveStripeConfig").mockImplementationOnce(async () => ok(null));
+    mockAtobaraiApiClient.verifyCredentials.mockImplementationOnce(async () => ok(null));
+    vi.spyOn(mockedAppConfigRepo, "saveChannelConfig").mockImplementationOnce(async () => ok(null));
 
     // todo expect pretty zod error with zod-validation-error
     return expect(
       caller.testProcedure({
-        name: "", //empty name should throw
-        publishableKey: mockedStripePublishableKey,
-        restrictedKey: mockedStripeRestrictedKey,
+        name: "",
+        skuAsName: true,
+        shippingCompanyCode: "55555",
+        fillMissingAddress: true,
+        merchantCode: "aaa",
+        spCode: "bbb",
+        terminalId: "ccc",
+        useSandbox: true,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       [TRPCError: [
@@ -107,19 +116,25 @@ describe("NewStripeConfigTrpcHandler", () => {
   });
 
   it("Doesn't throw if everything set properly. Config repo is called to save data", async () => {
-    const { caller, mockedAppConfigRepo } = getTestCaller();
+    const { caller, mockedAppConfigRepo, mockAtobaraiApiClient } = getTestCaller();
 
-    vi.spyOn(mockedAppConfigRepo, "saveStripeConfig").mockImplementationOnce(async () => ok(null));
+    mockAtobaraiApiClient.verifyCredentials.mockImplementationOnce(async () => ok(null));
+    vi.spyOn(mockedAppConfigRepo, "saveChannelConfig").mockImplementationOnce(async () => ok(null));
 
     await expect(
       caller.testProcedure({
-        name: "Test config",
-        publishableKey: mockedStripePublishableKey,
-        restrictedKey: mockedStripeRestrictedKey,
+        name: "test",
+        skuAsName: true,
+        shippingCompanyCode: "55555",
+        fillMissingAddress: true,
+        merchantCode: "aaa",
+        spCode: "bbb",
+        terminalId: "ccc",
+        useSandbox: true,
       }),
     ).resolves.not.toThrow();
 
-    const mockCallArg = vi.mocked(mockedAppConfigRepo.saveStripeConfig).mock.calls[0][0];
+    const mockCallArg = vi.mocked(mockedAppConfigRepo.saveChannelConfig).mock.calls[0][0];
 
     expect(mockCallArg).toMatchInlineSnapshot(
       {
@@ -129,16 +144,19 @@ describe("NewStripeConfigTrpcHandler", () => {
       },
       `
       {
-        "appId": "saleor-app-id",
+        "appId": "mocked-saleor-app-id",
         "config": {
+          "fillMissingAddress": true,
           "id": Any<String>,
-          "name": "Test config",
-          "publishableKey": "pk_live_1",
-          "restrictedKey": "rk_live_AAAAABBBBCCCCCEEEEEEEFFFFFGGGGG",
-          "webhookId": "whid_1234",
-          "webhookSecret": "whsec_XYZ",
+          "merchantCode": "aaa",
+          "name": "test",
+          "shippingCompanyCode": "55555",
+          "skuAsName": true,
+          "spCode": "bbb",
+          "terminalId": "ccc",
+          "useSandbox": true,
         },
-        "saleorApiUrl": "https://foo.bar.saleor.cloud/graphql/",
+        "saleorApiUrl": "https://mocked.saleor.api/graphql/",
       }
     `,
     );
@@ -146,24 +164,28 @@ describe("NewStripeConfigTrpcHandler", () => {
 
   describe("Stripe Auth", () => {
     it("Calls auth service and returns error if Stripe RK is invalid", () => {
-      // @ts-expect-error - mocking stripe client
-      vi.spyOn(stripe.paymentIntents, "list").mockImplementationOnce(async () => {
-        throw new Error("Invalid key");
-      });
+      const { caller, mockAtobaraiApiClient } = getTestCaller();
 
-      const { caller } = getTestCaller();
+      mockAtobaraiApiClient.verifyCredentials.mockImplementationOnce(() =>
+        err(new AtobaraiApiClientValidationError("Failed to verify credentials")),
+      );
 
       return expect(() =>
         caller.testProcedure({
-          name: "Test config",
-          publishableKey: mockedStripePublishableKey,
-          restrictedKey: mockedStripeRestrictedKey,
+          name: "test",
+          skuAsName: true,
+          shippingCompanyCode: "55555",
+          fillMissingAddress: true,
+          merchantCode: "aaa",
+          spCode: "bbb",
+          terminalId: "ccc",
+          useSandbox: true,
         }),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
-        `[TRPCError: Failed to create Stripe configuration. Restricted key is invalid]`,
+        `[TRPCError: Provided Atobarai credentials are invalid. Please check your SP Code, Merchant Code, and Terminal ID.]`,
       );
 
-      expect(stripe.paymentIntents.list).toHaveBeenCalledOnce();
+      expect(mockAtobaraiApiClient.verifyCredentials).toHaveBeenCalledOnce();
     });
   });
 });
