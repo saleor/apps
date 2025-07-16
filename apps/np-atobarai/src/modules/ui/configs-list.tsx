@@ -50,7 +50,7 @@ export const ConfigsList = ({ configs, ...props }: Props) => {
           }
 
           return (
-            <Modal open={isModalOpen} onChange={setIsModalOpen}>
+            <Modal open={isModalOpen} onChange={setIsModalOpen} key={config.id}>
               <DeleteConfigurationModalContent
                 onDeleteClick={() => {
                   mutate({ configId: configInstance.id });
