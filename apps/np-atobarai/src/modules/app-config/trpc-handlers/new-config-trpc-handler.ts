@@ -6,6 +6,9 @@ import { TRPCError } from "@trpc/server";
 import { RandomId } from "@/lib/random-id";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { newConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
+import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
+import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class NewConfigTrpcHandler {
@@ -32,7 +35,13 @@ export class NewConfigTrpcHandler {
       const configToSave = AppChannelConfig.create({
         name: input.name,
         id: configId,
-        // todo
+        spCode: createAtobaraiSpCode(input.spCode),
+        shippingCompanyCode: input.shippingCompanyCode,
+        skuAsName: input.skuAsName,
+        terminalId: createAtobaraiTerminalId(input.terminalId),
+        useSandbox: input.useSandbox,
+        merchantCode: createAtobaraiMerchantCode(input.merchantCode),
+        fillMissingAddress: input.fillMissingAddress,
       });
 
       if (configToSave.isErr()) {

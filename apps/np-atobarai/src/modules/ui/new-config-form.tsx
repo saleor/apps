@@ -2,17 +2,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { Input } from "@saleor/react-hook-form-macaw";
+import { Input, Toggle, ToggleProps } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
-import { newConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
+import {
+  NewConfigInput,
+  newConfigInputSchema,
+} from "@/modules/app-config/trpc-handlers/new-config-input-schema";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
-type FormShape = {
-  name: string;
-  // todo
-};
+type FormShape = NewConfigInput;
 
 const RequiredInputLabel = (props: { labelText: string }) => {
   return (
@@ -22,6 +22,17 @@ const RequiredInputLabel = (props: { labelText: string }) => {
       </Text>{" "}
       <Text size={2} color="critical2">
         *
+      </Text>
+    </Box>
+  );
+};
+
+const DecoratedToggle = ({ label, ...toggleProps }: ToggleProps<FormShape> & { label: string }) => {
+  return (
+    <Box as="label" display="flex" gap={2} cursor="pointer">
+      <Toggle type="button" {...toggleProps} />
+      <Text size={2} color="default2">
+        {label}
       </Text>
     </Box>
   );
@@ -49,6 +60,13 @@ export const NewConfigForm = () => {
   } = useForm<FormShape>({
     defaultValues: {
       name: "",
+      merchantCode: "",
+      fillMissingAddress: false,
+      shippingCompanyCode: "",
+      skuAsName: false,
+      spCode: "",
+      terminalId: "",
+      useSandbox: true,
     },
     resolver: zodResolver(newConfigInputSchema),
   });
@@ -56,7 +74,13 @@ export const NewConfigForm = () => {
   const onSubmit = (values: FormShape) => {
     mutate({
       name: values.name,
-      // todo
+      fillMissingAddress: values.fillMissingAddress,
+      merchantCode: values.merchantCode,
+      shippingCompanyCode: values.shippingCompanyCode,
+      skuAsName: values.skuAsName,
+      spCode: values.spCode,
+      terminalId: values.terminalId,
+      useSandbox: values.useSandbox,
     });
   };
 
@@ -71,13 +95,13 @@ export const NewConfigForm = () => {
           >
             Go back
           </Button>
-          <Button form="new_stripe_config_form" type="submit">
+          <Button form="new_config_form" type="submit">
             {isLoading ? "Saving..." : "Save"}
           </Button>
         </Box>
       }
     >
-      <Box id="new_stripe_config_form" as="form" onSubmit={handleSubmit(onSubmit)}>
+      <Box id="new_config_form" as="form" onSubmit={handleSubmit(onSubmit)}>
         <Box display="flex" flexDirection="column" gap={6}>
           <Input
             label={<RequiredInputLabel labelText="Configuration name" />}
@@ -85,10 +109,51 @@ export const NewConfigForm = () => {
             control={control}
             helperText={
               errors.name?.message ??
-              "Friendly name of your configuration. For example 'Live' or 'UK Live'."
+              "Friendly name of your configuration. For example 'JP PROD' or 'JP TEST'."
             }
             error={!!errors.name}
           />
+
+          <Input
+            label={<RequiredInputLabel labelText="Merchant code" />}
+            name="merchantCode"
+            control={control}
+            helperText={errors.name?.message}
+            error={!!errors.name}
+          />
+
+          <Input
+            label={<RequiredInputLabel labelText="Shipping company code" />}
+            name="shippingCompanyCode"
+            control={control}
+            helperText={errors.name?.message}
+            error={!!errors.name}
+          />
+
+          <Input
+            label={<RequiredInputLabel labelText="SP Code" />}
+            name="spCode"
+            control={control}
+            helperText={errors.name?.message}
+            error={!!errors.name}
+            type="password"
+          />
+
+          <Input
+            label={<RequiredInputLabel labelText="Terminal ID" />}
+            name="terminalId"
+            control={control}
+            helperText={errors.name?.message}
+            error={!!errors.name}
+          />
+
+          <DecoratedToggle
+            control={control}
+            name="fillMissingAddress"
+            label="Fill missing address fields"
+          />
+          <DecoratedToggle control={control} name="skuAsName" label="Fill SKU as name" />
+          <DecoratedToggle control={control} name="useSandbox" label="Use sandbox mode" />
         </Box>
       </Box>
     </Layout.AppSectionCard>
