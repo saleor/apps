@@ -1,16 +1,17 @@
-import { Layout } from "@saleor/apps-ui";
+import { EmptyConfigs, Layout } from "@saleor/apps-ui";
 import { Skeleton, Text } from "@saleor/macaw-ui";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
-import { EmptyConfigs } from "@/modules/ui/stripe-configs/empty-configs";
 import { StripeConfigsList } from "@/modules/ui/stripe-configs/stripe-configs-list";
 
 export const ChannelConfigSection = () => {
   const { data, error, refetch } = trpcClient.appConfig.getStripeConfigsList.useQuery();
+  const router = useRouter();
 
   useEffect(() => {
-    refetch();
+    void refetch();
   }, []);
 
   if (error) {
@@ -18,7 +19,7 @@ export const ChannelConfigSection = () => {
   }
 
   if (data && data.length === 0) {
-    return <EmptyConfigs />;
+    return <EmptyConfigs onConfigurationAdd={() => router.push("/config/new")} />;
   }
 
   if (data && data.length > 0) {
