@@ -8,13 +8,13 @@ type Props = {
   configs: Array<{
     name: string;
     id: string;
+    deleteButtonSlotLeft?(): ReactNode;
+    deleteButtonSlotRight?(): ReactNode;
   }>;
   onNewConfigAdd(): void;
   newConfigText?: string;
   onConfigDelete(configId: string): void;
   isLoading?: boolean;
-  deleteButtonSlotLeft?(configId: string): ReactNode;
-  deleteButtonSlotRight?(configId: string): ReactNode;
 };
 
 export const ConfigsList = ({
@@ -23,8 +23,6 @@ export const ConfigsList = ({
   newConfigText = "Add new configuration",
   onConfigDelete,
   isLoading = false,
-  deleteButtonSlotRight,
-  deleteButtonSlotLeft,
   ...props
 }: Props) => {
   const [configIdContext, setConfigIdContext] = useState<string | null>(null);
@@ -66,7 +64,7 @@ export const ConfigsList = ({
                 <Text marginRight={"auto"} display="block">
                   {config.name}
                 </Text>
-                {deleteButtonSlotLeft && deleteButtonSlotLeft(config.id)}
+                {config.deleteButtonSlotLeft && config.deleteButtonSlotLeft()}
                 <Button
                   disabled={isLoading}
                   marginLeft={4}
@@ -76,8 +74,8 @@ export const ConfigsList = ({
                   onClick={() => setConfigIdContext(config.id)}
                 />
               </Box>
-              {deleteButtonSlotRight && (
-                <Box marginLeft={4}>{deleteButtonSlotRight(config.id)}</Box>
+              {config.deleteButtonSlotRight && (
+                <Box marginLeft={4}>{config.deleteButtonSlotRight()}</Box>
               )}
             </Box>
           );

@@ -1,5 +1,6 @@
 export * from "./src/breadcrumbs";
 export * from "./src/buttons-box";
+export * from "./src/configs-list";
 export * from "./src/delete-configuration-modal-content";
 export * from "./src/empty-configs";
 export * from "./src/layout";
