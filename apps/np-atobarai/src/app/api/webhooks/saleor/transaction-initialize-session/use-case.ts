@@ -118,7 +118,7 @@ export class TransactionInitializeSessionUseCase {
       atobaraiTerminalId: atobaraiConfigResult.value.terminalId,
       atobaraiMerchantCode: atobaraiConfigResult.value.merchantCode,
       atobaraiSpCode: atobaraiConfigResult.value.spCode,
-      atobaraiEnviroment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
+      atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
     const registerTransactionResult = await apiClient.registerTransaction(

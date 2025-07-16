@@ -7,16 +7,18 @@ import { AtobaraiSpCode } from "./atobarai-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 import { AtobaraiTransaction } from "./atobarai-transaction";
 
-export type AtobaraiApiErrors = InstanceType<typeof AtobaraiApiClientRegisterTransactionError>;
+export type AtobaraiApiErrors = InstanceType<
+  typeof AtobaraiApiClientRegisterTransactionError | typeof AtobaraiApiClientValidationError
+>;
 
-export type AtobaraiEnviroment = "sandbox" | "production";
+export type AtobaraiEnvironment = "sandbox" | "production";
 
 export interface IAtobaraiApiClientFactory {
   create(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
     atobaraiSpCode: AtobaraiSpCode;
-    atobaraiEnviroment: AtobaraiEnviroment;
+    atobaraiEnvironment: AtobaraiEnvironment;
   }): IAtobaraiApiClient;
 }
 
@@ -24,6 +26,10 @@ export interface IAtobaraiApiClient {
   registerTransaction: (
     payload: AtobaraiRegisterTransactionPayload,
   ) => Promise<Result<AtobaraiTransaction, AtobaraiApiErrors>>;
+
+  verifyCredentials: () => Promise<
+    Result<null, InstanceType<typeof AtobaraiApiClientValidationError>>
+  >;
 }
 
 export const AtobaraiApiClientRegisterTransactionError = BaseError.subclass(
@@ -31,6 +37,15 @@ export const AtobaraiApiClientRegisterTransactionError = BaseError.subclass(
   {
     props: {
       __brand: "AtobaraiApiClientRegisterTransactionError",
+    },
+  },
+);
+
+export const AtobaraiApiClientValidationError = BaseError.subclass(
+  "AtobaraiApiClientValidationError",
+  {
+    props: {
+      __brand: "AtobaraiApiClientValidationError",
     },
   },
 );

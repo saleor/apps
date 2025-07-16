@@ -9,10 +9,17 @@ import { newConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-con
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
 import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
+import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class NewConfigTrpcHandler {
   baseProcedure = protectedClientProcedure;
+
+  private atobaraiClientFactory: IAtobaraiApiClientFactory;
+
+  constructor(deps: { atobaraiClientFactory: IAtobaraiApiClientFactory }) {
+    this.atobaraiClientFactory = deps.atobaraiClientFactory;
+  }
 
   getTrpcProcedure() {
     return this.baseProcedure.input(newConfigInputSchema).mutation(async ({ input, ctx }) => {
@@ -29,10 +36,7 @@ export class NewConfigTrpcHandler {
 
       const configId = new RandomId().generate();
 
-      /**
-       * Create model just to validate
-       */
-      const configToSave = AppChannelConfig.create({
+      const configToSaveResult = AppChannelConfig.create({
         name: input.name,
         id: configId,
         spCode: createAtobaraiSpCode(input.spCode),
@@ -44,7 +48,7 @@ export class NewConfigTrpcHandler {
         fillMissingAddress: input.fillMissingAddress,
       });
 
-      if (configToSave.isErr()) {
+      if (configToSaveResult.isErr()) {
         captureException(
           new BaseError(
             "Handler validation triggered outside of input validation. This means input validation is leaky.",
@@ -52,12 +56,31 @@ export class NewConfigTrpcHandler {
         );
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: `Failed to create Stripe configuration: ${configToSave.error.message}`,
+          message: `Failed to create Stripe configuration: ${configToSaveResult.error.message}`,
+        });
+      }
+
+      const configToSave = configToSaveResult.value;
+
+      const atobaraiApiClient = this.atobaraiClientFactory.create({
+        atobaraiTerminalId: configToSave.terminalId,
+        atobaraiEnvironment: configToSave.useSandbox ? "sandbox" : "production",
+        atobaraiSpCode: configToSave.spCode,
+        atobaraiMerchantCode: configToSave.merchantCode,
+      });
+
+      const validationResult = await atobaraiApiClient.verifyCredentials();
+
+      if (validationResult.isErr()) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message:
+            "Provided Atobarai credentials are invalid. Please check your SP Code, Merchant Code, and Terminal ID.",
         });
       }
 
       const saveResult = await ctx.configRepo.saveChannelConfig({
-        config: configToSave.value,
+        config: configToSave,
         saleorApiUrl: saleorApiUrl,
         appId: ctx.appId,
       });

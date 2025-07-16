@@ -8,8 +8,9 @@ import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 import { AtobaraiTransaction } from "./atobarai-transaction";
 import {
   AtobaraiApiClientRegisterTransactionError,
+  AtobaraiApiClientValidationError,
   AtobaraiApiErrors,
-  AtobaraiEnviroment,
+  AtobaraiEnvironment,
   IAtobaraiApiClient,
 } from "./types";
 
@@ -17,31 +18,31 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
   private atobaraiTerminalId: AtobaraiTerminalId;
   private atobaraiMerchantCode: AtobaraiMerchantCode;
   private atobaraiSpCode: AtobaraiSpCode;
-  private atobaraiEnviroment: AtobaraiEnviroment;
+  private atobaraiEnvironment: AtobaraiEnvironment;
 
   private constructor(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
     atobaraiSpCode: AtobaraiSpCode;
-    atobaraiEnviroment: AtobaraiEnviroment;
+    atobaraiEnvironment: AtobaraiEnvironment;
   }) {
     this.atobaraiTerminalId = args.atobaraiTerminalId;
     this.atobaraiMerchantCode = args.atobaraiMerchantCode;
     this.atobaraiSpCode = args.atobaraiSpCode;
-    this.atobaraiEnviroment = args.atobaraiEnviroment;
+    this.atobaraiEnvironment = args.atobaraiEnvironment;
   }
 
   static create(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
     atobaraiSpCode: AtobaraiSpCode;
-    atobaraiEnviroment: AtobaraiEnviroment;
+    atobaraiEnvironment: AtobaraiEnvironment;
   }): IAtobaraiApiClient {
     return new AtobaraiApiClient({
       atobaraiTerminalId: args.atobaraiTerminalId,
       atobaraiMerchantCode: args.atobaraiMerchantCode,
       atobaraiSpCode: args.atobaraiSpCode,
-      atobaraiEnviroment: args.atobaraiEnviroment,
+      atobaraiEnvironment: args.atobaraiEnvironment,
     });
   }
 
@@ -53,9 +54,9 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
   }
 
   private getBaseUrl() {
-    return this.atobaraiEnviroment === "sandbox"
-      ? "https://ctcp.np-payment-gateway.com/v1"
-      : "https://cp.np-payment-gateway.com/v1";
+    return this.atobaraiEnvironment === "sandbox"
+      ? "https://ctcp.np-payment-gateway.com/v1/"
+      : "https://cp.np-payment-gateway.com/v1/";
   }
 
   async registerTransaction(
@@ -81,5 +82,39 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
     }
 
     return ok(new AtobaraiTransaction());
+  }
+
+  async verifyCredentials(): Promise<
+    Result<null, InstanceType<typeof AtobaraiApiClientValidationError>>
+  > {
+    const requestUrl = new URL("authorizations/find", this.getBaseUrl());
+
+    const result = await ResultAsync.fromPromise(
+      fetch(requestUrl, {
+        method: "POST",
+        headers: {
+          ...this.getHeaders(),
+          "content-type": "application/json",
+          "accept-type": "application/json",
+        },
+      }),
+      (error) => AtobaraiApiClientValidationError.normalize(error),
+    );
+
+    console.log(result);
+
+    if (result.isErr()) {
+      return err(AtobaraiApiClientValidationError.normalize(result.error));
+    }
+
+    if (result.value.status !== 200) {
+      return err(
+        new AtobaraiApiClientValidationError("Invalid credentials", {
+          cause: new Error(`Received status code ${result.value.status}`),
+        }),
+      );
+    }
+
+    return ok(null);
   }
 }
