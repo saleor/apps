@@ -48,3 +48,7 @@ body:graphql:vars {
     "paymentGatewayId": "{{paymentGatewayId}}"
   }
 }
+
+vars:post-response {
+  transactionId: res.body.data.transactionInitialize.transaction.id
+}

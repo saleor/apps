@@ -1,0 +1,20 @@
+fragment TransactionProcessSessionEvent on TransactionProcessSession {
+  ...EventMetadata
+  action {
+    amount
+    currency
+  }
+  transaction {
+    token
+    pspReference
+  }
+  sourceObject {
+    ...SourceObject
+  }
+}
+
+subscription TransactionProcessSession {
+  event {
+    ...TransactionProcessSessionEvent
+  }
+}

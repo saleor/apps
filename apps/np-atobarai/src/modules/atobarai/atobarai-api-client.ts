@@ -1,19 +1,22 @@
 import { BaseError } from "@saleor/errors";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
+import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
+import { createAtobaraiErrorResponse } from "./atobarai-error-response";
 import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
-import { createAtobaraiRegisterTransactionErrorResponse } from "./atobarai-register-transaction-error-response";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
-import {
-  AtobaraiRegisterTransactionSuccessResponse,
-  createAtobaraiRegisterTransactionSuccessResponse,
-} from "./atobarai-register-transaction-success-response";
 import { AtobaraiSpCode } from "./atobarai-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 import {
+  AtobaraiTransactionSuccessResponse,
+  createAtobaraiTransactionSuccessResponse,
+} from "./atobarai-transaction-success-response";
+import {
+  AtobaraiApiChangeTransactionErrors,
+  AtobaraiApiClientChangeTransactionError,
   AtobaraiApiClientRegisterTransactionError,
   AtobaraiApiClientValidationError,
-  AtobaraiApiErrors,
+  AtobaraiApiRegisterTransactionErrors,
   AtobaraiEnvironment,
   IAtobaraiApiClient,
 } from "./types";
@@ -64,9 +67,17 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
       : "https://cp.np-payment-gateway.com/v1/";
   }
 
+  private convertErrorResponseToNormalizedErrors(
+    response: unknown,
+  ): InstanceType<typeof BaseError>[] {
+    const { errors } = createAtobaraiErrorResponse(response);
+
+    return errors.flatMap((error) => error.codes.map((code) => new BaseError(code)));
+  }
+
   async registerTransaction(
     payload: AtobaraiRegisterTransactionPayload,
-  ): Promise<Result<AtobaraiRegisterTransactionSuccessResponse, AtobaraiApiErrors>> {
+  ): Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiRegisterTransactionErrors>> {
     const requestUrl = new URL("transactions", this.getBaseUrl());
 
     const result = await ResultAsync.fromPromise(
@@ -89,18 +100,57 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
     if (!result.value.ok) {
       const response = await result.value.json();
 
-      const { errors } = createAtobaraiRegisterTransactionErrorResponse(response);
+      const errors = this.convertErrorResponseToNormalizedErrors(response);
 
       return err(
         new AtobaraiApiClientRegisterTransactionError("Atobarai API returned an error", {
-          errors: [errors.flatMap((error) => error.codes.map((code) => new BaseError(code)))],
+          errors,
         }),
       );
     }
 
     const response = await result.value.json();
 
-    return ok(createAtobaraiRegisterTransactionSuccessResponse(response));
+    return ok(createAtobaraiTransactionSuccessResponse(response));
+  }
+
+  async changeTransaction(
+    payload: AtobaraiChangeTransactionPayload,
+  ): Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiChangeTransactionErrors>> {
+    const requestUrl = new URL("transactions/update", this.getBaseUrl());
+
+    const result = await ResultAsync.fromPromise(
+      fetch(requestUrl, {
+        method: "PATCH",
+        headers: this.getHeaders(),
+        body: JSON.stringify(payload),
+      }),
+      (error) => BaseError.normalize(error),
+    );
+
+    if (result.isErr()) {
+      return err(
+        new AtobaraiApiClientChangeTransactionError("Failed to change transaction", {
+          cause: result.error,
+        }),
+      );
+    }
+
+    if (!result.value.ok) {
+      const response = await result.value.json();
+
+      const errors = this.convertErrorResponseToNormalizedErrors(response);
+
+      return err(
+        new AtobaraiApiClientChangeTransactionError("Atobarai API returned an error", {
+          errors,
+        }),
+      );
+    }
+
+    const response = await result.value.json();
+
+    return ok(createAtobaraiTransactionSuccessResponse(response));
   }
 
   async verifyCredentials(): Promise<

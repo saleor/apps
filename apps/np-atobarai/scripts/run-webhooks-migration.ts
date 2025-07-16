@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/nextjs";
 import { fulfillmentTrackingNumberUpdatedWebhookDefinition } from "@/app/api/webhooks/saleor/fulfillment-tracking-number-updated/webhook-definition";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionInitializeSessionWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-initialize-session/webhook-definition";
+import { transactionProcessSessionWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-process-session/webhook-definition";
 import { transactionRefundRequestedWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-refund-requested/webhook-definition";
 import { env } from "@/lib/env";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
@@ -91,6 +92,10 @@ const runMigrations = async () => {
             },
             {
               ...transactionInitializeSessionWebhookDefinition.getWebhookManifest(baseUrl),
+              isActive: enabled,
+            },
+            {
+              ...transactionProcessSessionWebhookDefinition.getWebhookManifest(baseUrl),
               isActive: enabled,
             },
             {

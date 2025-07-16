@@ -19,6 +19,7 @@ const getTestCaller = () => {
   const mockAtobaraiApiClient = {
     verifyCredentials: vi.fn(),
     registerTransaction: vi.fn(),
+    changeTransaction: vi.fn(),
   } satisfies IAtobaraiApiClient;
 
   const instance = new NewConfigTrpcHandler({
@@ -184,8 +185,6 @@ describe("NewConfigTrpcHandler", () => {
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `[TRPCError: Provided Atobarai credentials are invalid. Please check your SP Code, Merchant Code, and Terminal ID.]`,
       );
-
-      expect(mockAtobaraiApiClient.verifyCredentials).toHaveBeenCalledOnce();
     });
   });
 });

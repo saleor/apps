@@ -17,12 +17,12 @@ import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-i
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
-import { TransactionInitializeSessionUseCase } from "./use-case";
-import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
+import { TransactionProcessSessionUseCase } from "./use-case";
+import { transactionProcessSessionWebhookDefinition } from "./webhook-definition";
 
-const logger = createLogger("TransactionInitializeSession route");
+const logger = createLogger("TransactionProcessSession route");
 
-const useCase = new TransactionInitializeSessionUseCase({
+const useCase = new TransactionProcessSessionUseCase({
   atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
   // TODO: Replace with actual implementation of AppConfigRepo
   appConfigRepo: {
@@ -46,7 +46,7 @@ const useCase = new TransactionInitializeSessionUseCase({
   },
 });
 
-const handler = transactionInitializeSessionWebhookDefinition.createHandler(
+const handler = transactionProcessSessionWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, ctx) => {
     try {
       setObservabilitySourceObjectId(ctx.payload.sourceObject);

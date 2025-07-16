@@ -10,6 +10,7 @@ import packageJson from "@/package.json";
 import { fulfillmentTrackingNumberUpdatedWebhookDefinition } from "../webhooks/saleor/fulfillment-tracking-number-updated/webhook-definition";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "../webhooks/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionInitializeSessionWebhookDefinition } from "../webhooks/saleor/transaction-initialize-session/webhook-definition";
+import { transactionProcessSessionWebhookDefinition } from "../webhooks/saleor/transaction-process-session/webhook-definition";
 import { transactionRefundRequestedWebhookDefinition } from "../webhooks/saleor/transaction-refund-requested/webhook-definition";
 
 const handler = createManifestHandler({
@@ -36,13 +37,14 @@ const handler = createManifestHandler({
        */
       name: env.APP_NAME,
       permissions: ["HANDLE_PAYMENTS", "MANAGE_ORDERS"],
-      requiredSaleorVersion: ">=3.21 <4",
+      requiredSaleorVersion: ">=3.20 <4",
       supportUrl: "https://saleor.io/discord",
       tokenTargetUrl: `${apiBaseUrl}/api/register`,
       version: packageJson.version,
       webhooks: [
         paymentGatewayInitializeSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionInitializeSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
+        transactionProcessSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionRefundRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
         fulfillmentTrackingNumberUpdatedWebhookDefinition.getWebhookManifest(apiBaseUrl),
       ],
