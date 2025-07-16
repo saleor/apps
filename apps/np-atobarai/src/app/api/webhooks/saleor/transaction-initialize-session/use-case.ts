@@ -5,7 +5,7 @@ import { err, ok, Result } from "neverthrow";
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
-import { AppConfigRepo } from "@/modules/app-config/types";
+import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
 import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
 import { createAtobaraiGoods } from "@/modules/atobarai/atobarai-goods";
@@ -183,7 +183,7 @@ export class TransactionInitializeSessionUseCase {
       atobaraiTerminalId: atobaraiConfigResult.value.terminalId,
       atobaraiMerchantCode: atobaraiConfigResult.value.merchantCode,
       atobaraiSpCode: atobaraiConfigResult.value.spCode,
-      atobaraiEnviroment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
+      atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
     const registerTransactionResult = await apiClient.registerTransaction(

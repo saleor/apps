@@ -2,6 +2,9 @@ import { Layout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
+import { AppHeader } from "@/modules/ui/app-header";
+import { ChannelConfigSection } from "@/modules/ui/channel-config-section";
+import { ChannelConfigMappingSection } from "@/modules/ui/channel-configs/channel-config-mapping-section";
 import { useHasAppAccess } from "@/modules/ui/use-has-app-access";
 
 const ConfigPage: NextPage = () => {
@@ -13,36 +16,34 @@ const ConfigPage: NextPage = () => {
 
   return (
     <Box>
+      <AppHeader />
       <Layout.AppSection
         marginBottom={14}
-        heading="NP Atobarai configurations"
+        heading="Configurations"
         sideContent={
           <Box display="flex" flexDirection="column" gap={4}>
             <Text>
-              App allows to create and use multiple NP Atobarai configurations e.g one for test mode
-              and the other for live mode.
+              App allows to create and use multiple configurations e.g one for test mode and the
+              other for live mode.
             </Text>
             <Text>
-              You can set up multiple NP Atobarai configurations and assign them to each channel
-              individually.
+              You can set up multiple configurations and assign them to each channel individually.
             </Text>
           </Box>
         }
       >
-        {/* TODO: add components here */}
+        <ChannelConfigSection />
       </Layout.AppSection>
       <Layout.AppSection
         heading="Channels configurations"
         sideContent={
           <Box display="flex" flexDirection="column" gap={4}>
-            <Text>Assign created NP Atobarai configurations to Saleor channel.</Text>
-            <Text>
-              You can configure multiple channels to use the same NP Atobarai configuration.
-            </Text>
+            <Text>Assign created configurations to Saleor channel.</Text>
+            <Text>You can configure multiple channels to use the same configuration.</Text>
           </Box>
         }
       >
-        {/* TODO: add components here */}
+        <ChannelConfigMappingSection />
       </Layout.AppSection>
     </Box>
   );

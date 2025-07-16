@@ -31,7 +31,8 @@ describe("Manifest handler", async () => {
         expect(body).toMatchInlineSnapshot(
           {
             version: expect.any(String),
-          }, `
+          },
+          `
           {
             "about": "App that allows merchants using the Saleor e-commerce platform to accept online payments from customers using NP Atobarai as their payment processor.",
             "appUrl": "https://localhost:3000",
@@ -93,7 +94,8 @@ describe("Manifest handler", async () => {
               },
             ],
           }
-        `);
+        `,
+        );
       },
     });
   });

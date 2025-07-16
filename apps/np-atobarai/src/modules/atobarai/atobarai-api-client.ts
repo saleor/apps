@@ -12,8 +12,9 @@ import { AtobaraiSpCode } from "./atobarai-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 import {
   AtobaraiApiClientRegisterTransactionError,
+  AtobaraiApiClientValidationError,
   AtobaraiApiErrors,
-  AtobaraiEnviroment,
+  AtobaraiEnvironment,
   IAtobaraiApiClient,
 } from "./types";
 
@@ -21,31 +22,31 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
   private atobaraiTerminalId: AtobaraiTerminalId;
   private atobaraiMerchantCode: AtobaraiMerchantCode;
   private atobaraiSpCode: AtobaraiSpCode;
-  private atobaraiEnviroment: AtobaraiEnviroment;
+  private atobaraiEnvironment: AtobaraiEnvironment;
 
   private constructor(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
     atobaraiSpCode: AtobaraiSpCode;
-    atobaraiEnviroment: AtobaraiEnviroment;
+    atobaraiEnvironment: AtobaraiEnvironment;
   }) {
     this.atobaraiTerminalId = args.atobaraiTerminalId;
     this.atobaraiMerchantCode = args.atobaraiMerchantCode;
     this.atobaraiSpCode = args.atobaraiSpCode;
-    this.atobaraiEnviroment = args.atobaraiEnviroment;
+    this.atobaraiEnvironment = args.atobaraiEnvironment;
   }
 
   static create(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
     atobaraiSpCode: AtobaraiSpCode;
-    atobaraiEnviroment: AtobaraiEnviroment;
+    atobaraiEnvironment: AtobaraiEnvironment;
   }): IAtobaraiApiClient {
     return new AtobaraiApiClient({
       atobaraiTerminalId: args.atobaraiTerminalId,
       atobaraiMerchantCode: args.atobaraiMerchantCode,
       atobaraiSpCode: args.atobaraiSpCode,
-      atobaraiEnviroment: args.atobaraiEnviroment,
+      atobaraiEnvironment: args.atobaraiEnvironment,
     });
   }
 
@@ -58,7 +59,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
   }
 
   private getBaseUrl() {
-    return this.atobaraiEnviroment === "sandbox"
+    return this.atobaraiEnvironment === "sandbox"
       ? "https://ctcp.np-payment-gateway.com/v1/"
       : "https://cp.np-payment-gateway.com/v1/";
   }
@@ -100,5 +101,44 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
     const response = await result.value.json();
 
     return ok(createAtobaraiRegisterTransactionSuccessResponse(response));
+  }
+
+  async verifyCredentials(): Promise<
+    Result<null, InstanceType<typeof AtobaraiApiClientValidationError>>
+  > {
+    const requestUrl = new URL("authorizations/find", this.getBaseUrl());
+
+    const result = await ResultAsync.fromPromise(
+      fetch(requestUrl, {
+        method: "POST",
+        headers: {
+          ...this.getHeaders(),
+        },
+        body: JSON.stringify({ transactions: [] }),
+      }),
+      (error) => AtobaraiApiClientValidationError.normalize(error),
+    );
+
+    if (result.isErr()) {
+      return err(AtobaraiApiClientValidationError.normalize(result.error));
+    }
+
+    /**
+     * For VALID credentials we receive 400 status, because credentials are fine, but we don't send valid payload.
+     *
+     * For invalid credentials we receive either 401 or 403, so this is what we assume is invalid credentials.
+     */
+    const is401 = result.value.status === 401;
+    const is403 = result.value.status === 401;
+
+    if (is401 || is403) {
+      return err(
+        new AtobaraiApiClientValidationError("Invalid credentials", {
+          cause: new Error(`Received status code ${result.value.status}`),
+        }),
+      );
+    }
+
+    return ok(null);
   }
 }

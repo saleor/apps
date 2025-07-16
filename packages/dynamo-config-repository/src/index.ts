@@ -1,3 +1,3 @@
 export * from "./base-repository";
 export * from "./generic-root-config";
-export type { BaseConfig } from "./types";
+export type { BaseConfig, GenericRepo } from "./types";
