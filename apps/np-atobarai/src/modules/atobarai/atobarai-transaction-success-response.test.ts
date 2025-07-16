@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  AtobaraiRegisterTransactionSuccessResponse,
-  createAtobaraiRegisterTransactionSuccessResponse,
+  AtobaraiTransactionSuccessResponse,
+  createAtobaraiTransactionSuccessResponse,
   CreditCheckResult,
   FailedReason,
   PendingReason,
-} from "./atobarai-register-transaction-success-response";
+} from "./atobarai-transaction-success-response";
 
-describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
+describe("createAtobaraiTransactionSuccessResponse", () => {
   it("should successfully parse a CreditCheckResult.Success response", () => {
     const rawResponse = {
       results: [
@@ -19,7 +19,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
       ],
     };
 
-    const result = createAtobaraiRegisterTransactionSuccessResponse(rawResponse);
+    const result = createAtobaraiTransactionSuccessResponse(rawResponse);
 
     expect(result).toMatchInlineSnapshot(`
       {
@@ -47,7 +47,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
       ],
     };
 
-    const result = createAtobaraiRegisterTransactionSuccessResponse(rawResponse);
+    const result = createAtobaraiTransactionSuccessResponse(rawResponse);
 
     expect(result).toMatchInlineSnapshot(`
       {
@@ -76,7 +76,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
       ],
     };
 
-    const result = createAtobaraiRegisterTransactionSuccessResponse(rawResponse);
+    const result = createAtobaraiTransactionSuccessResponse(rawResponse);
 
     expect(result).toMatchInlineSnapshot(`
       {
@@ -101,7 +101,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
       ],
     };
 
-    const result = createAtobaraiRegisterTransactionSuccessResponse(rawResponse);
+    const result = createAtobaraiTransactionSuccessResponse(rawResponse);
 
     expect(result).toMatchInlineSnapshot(`
       {
@@ -135,7 +135,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
       ],
     };
 
-    const result = createAtobaraiRegisterTransactionSuccessResponse(rawResponse);
+    const result = createAtobaraiTransactionSuccessResponse(rawResponse);
 
     expect(result).toMatchInlineSnapshot(`
       {
@@ -171,7 +171,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
       ],
     };
 
-    expect(() => createAtobaraiRegisterTransactionSuccessResponse(rawResponse))
+    expect(() => createAtobaraiTransactionSuccessResponse(rawResponse))
       .toThrowErrorMatchingInlineSnapshot(`
       [ZodError: [
         {
@@ -203,7 +203,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
       ],
     };
 
-    expect(() => createAtobaraiRegisterTransactionSuccessResponse(rawResponse))
+    expect(() => createAtobaraiTransactionSuccessResponse(rawResponse))
       .toThrowErrorMatchingInlineSnapshot(`
       [ZodError: [
         {
@@ -223,7 +223,7 @@ describe("createAtobaraiRegisterTransactionSuccessResponse", () => {
 
   it("shouldn't be assignable without createAtobaraiRegisterTransactionSuccessResponse", () => {
     // @ts-expect-error - if this fails - it means the type is not branded
-    const testValue: AtobaraiRegisterTransactionSuccessResponse = { results: [] };
+    const testValue: AtobaraiTransactionSuccessResponse = { results: [] };
 
     expect(testValue).toStrictEqual({ results: [] });
   });

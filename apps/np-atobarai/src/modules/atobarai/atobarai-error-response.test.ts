@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  AtobaraiRegisterTransactionErrorResponse,
-  createAtobaraiRegisterTransactionErrorResponse,
-} from "./atobarai-register-transaction-error-response";
+import { AtobaraiErrorResponse, createAtobaraiErrorResponse } from "./atobarai-error-response";
 
 describe("createAtobaraiRegisterTransactionErrorResponse", () => {
   it("should successfully parse a valid error response", () => {
@@ -20,7 +17,7 @@ describe("createAtobaraiRegisterTransactionErrorResponse", () => {
       ],
     };
 
-    const result = createAtobaraiRegisterTransactionErrorResponse(rawResponse);
+    const result = createAtobaraiErrorResponse(rawResponse);
 
     expect(result).toMatchInlineSnapshot(`
       {
@@ -48,7 +45,7 @@ describe("createAtobaraiRegisterTransactionErrorResponse", () => {
       errors: [],
     };
 
-    const result = createAtobaraiRegisterTransactionErrorResponse(rawResponse);
+    const result = createAtobaraiErrorResponse(rawResponse);
 
     expect(result).toMatchInlineSnapshot(`
       {
@@ -62,8 +59,7 @@ describe("createAtobaraiRegisterTransactionErrorResponse", () => {
       results: [],
     };
 
-    expect(() => createAtobaraiRegisterTransactionErrorResponse(rawResponse))
-      .toThrowErrorMatchingInlineSnapshot(`
+    expect(() => createAtobaraiErrorResponse(rawResponse)).toThrowErrorMatchingInlineSnapshot(`
       [ZodError: [
         {
           "code": "invalid_type",
@@ -80,7 +76,7 @@ describe("createAtobaraiRegisterTransactionErrorResponse", () => {
 
   it("shouldn't be assignable without createAtobaraiRegisterTransactionErrorResponse", () => {
     // @ts-expect-error - if this fails - it means the type is not branded
-    const testValue: AtobaraiRegisterTransactionErrorResponse = { errors: [] };
+    const testValue: AtobaraiErrorResponse = { errors: [] };
 
     expect(testValue).toStrictEqual({ errors: [] });
   });

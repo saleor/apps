@@ -1,0 +1,39 @@
+meta {
+  name: Process payment transaction
+  type: graphql
+  seq: 6
+}
+
+post {
+  url: {{saleorApiUrl}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation TransactionProcess($transactionId: ID!) {
+    transactionProcess(id: $transactionId) {
+      transaction {
+        id
+      }
+      transactionEvent {
+        pspReference
+        message
+        type
+      }
+      data
+      errors {
+        field
+        message
+        code
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "transactionId": "{{transactionId}}"
+  }
+}

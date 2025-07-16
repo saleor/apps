@@ -51,7 +51,7 @@ describe("Manifest handler", async () => {
               "HANDLE_PAYMENTS",
               "MANAGE_ORDERS",
             ],
-            "requiredSaleorVersion": ">=3.21 <4",
+            "requiredSaleorVersion": ">=3.20 <4",
             "supportUrl": "https://saleor.io/discord",
             "tokenTargetUrl": "https://localhost:3000/api/register",
             "version": Any<String>,
@@ -68,11 +68,20 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "NP Atobarai Transaction Initialize Session",
-                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment Address on Address { firstName lastName companyName postalCode countryArea streetAddress1 streetAddress2 phone country { code }}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } email billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } checkoutVariant: variant { sku product { name } } } } ... on Order { __typename id channel { ...Channel } userEmail billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } orderVariant: variant { sku product { name } } } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency } data transaction { token } sourceObject { ...SourceObject }}",
+                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment Address on Address { firstName lastName companyName postalCode countryArea streetAddress1 streetAddress2 phone country { code }}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } email billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } checkoutVariant: variant { sku product { name } } } } ... on Order { __typename id channel { ...Channel } userEmail billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } orderVariant: variant { sku product { name } } } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency } transaction { token } sourceObject { ...SourceObject }}",
                 "syncEvents": [
                   "TRANSACTION_INITIALIZE_SESSION",
                 ],
                 "targetUrl": "https://localhost:3000/api/webhooks/saleor/transaction-initialize-session",
+              },
+              {
+                "isActive": true,
+                "name": "NP Atobarai Transaction Process Session",
+                "query": "subscription TransactionProcessSession { event { ...TransactionProcessSessionEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment Address on Address { firstName lastName companyName postalCode countryArea streetAddress1 streetAddress2 phone country { code }}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } email billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } checkoutVariant: variant { sku product { name } } } } ... on Order { __typename id channel { ...Channel } userEmail billingAddress { ...Address } shippingAddress { ...Address } discount { amount } shippingPrice { gross { amount } } lines { __typename quantity unitPrice { gross { amount } } orderVariant: variant { sku product { name } } } }}fragment TransactionProcessSessionEvent on TransactionProcessSession { ...EventMetadata action { amount currency } transaction { token pspReference } sourceObject { ...SourceObject }}",
+                "syncEvents": [
+                  "TRANSACTION_PROCESS_SESSION",
+                ],
+                "targetUrl": "https://localhost:3000/api/webhooks/saleor/transaction-process-session",
               },
               {
                 "isActive": true,

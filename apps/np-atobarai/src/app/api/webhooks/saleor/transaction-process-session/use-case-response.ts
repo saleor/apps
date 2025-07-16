@@ -4,12 +4,12 @@ import {
   TransactionSessionActionRequired,
   TransactionSessionFailure,
   TransactionSessionSuccess,
-} from "@/generated/app-webhooks-types/transaction-initialize-session";
+} from "@/generated/app-webhooks-types/transaction-process-session";
 import { assertUnreachable } from "@/lib/assert-unreachable";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import {
-  AtobaraiApiClientRegisterTransactionErrorPublicCode,
-  AtobaraiApiRegisterTransactionErrors,
+  AtobaraiApiChangeTransactionErrors,
+  AtobaraiApiClientChangeTransactionErrorPublicCode,
 } from "@/modules/atobarai/types";
 import {
   ChargeActionRequiredResult,
@@ -39,7 +39,7 @@ class Success extends SuccessWebhookResponse {
 
   private getMessage(): string {
     if (this.transactionResult instanceof ChargeSuccessResult) {
-      return "Successfully registered NP Atobarai transaction";
+      return "Successfully changed NP Atobarai transaction";
     } else if (this.transactionResult instanceof ChargeActionRequiredResult) {
       return "NP Atobarai transaction requires further action";
     }
@@ -62,15 +62,15 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
-  readonly error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors;
+  readonly error: AtobaraiApiChangeTransactionErrors | UseCaseErrors;
 
   private static ResponseDataSchema = z.object({
     errors: z.array(
       z.object({
         code: z.union([
-          z.literal(AtobaraiApiClientRegisterTransactionErrorPublicCode),
           z.literal(AtobaraiFailureTransactionErrorPublicCode),
           z.literal(AtobaraiMultipleFailureTransactionErrorPublicCode),
+          z.literal(AtobaraiApiClientChangeTransactionErrorPublicCode),
         ]),
         message: z.string(),
       }),
@@ -79,7 +79,7 @@ class Failure extends SuccessWebhookResponse {
 
   constructor(args: {
     transactionResult: ChargeFailureResult;
-    error: AtobaraiApiRegisterTransactionErrors;
+    error: AtobaraiApiChangeTransactionErrors | UseCaseErrors;
   }) {
     super();
     this.transactionResult = args.transactionResult;
@@ -98,7 +98,7 @@ class Failure extends SuccessWebhookResponse {
       }),
       result: this.transactionResult.result,
       actions: this.transactionResult.actions,
-      message: "Failed to register NP Atobarai transaction",
+      message: "Failed to change NP Atobarai transaction",
     };
 
     return Response.json(typeSafeResponse, {
@@ -107,12 +107,12 @@ class Failure extends SuccessWebhookResponse {
   }
 }
 
-export const TransactionInitializeSessionUseCaseResponse = {
+export const TransactionProcessSessionUseCaseResponse = {
   Success,
   Failure,
 };
 
-export type TransactionInitializeSessionUseCaseResponse = InstanceType<
-  | typeof TransactionInitializeSessionUseCaseResponse.Success
-  | typeof TransactionInitializeSessionUseCaseResponse.Failure
+export type TransactionProcessSessionUseCaseResponse = InstanceType<
+  | typeof TransactionProcessSessionUseCaseResponse.Success
+  | typeof TransactionProcessSessionUseCaseResponse.Failure
 >;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
-import { AtobaraiApiClientRegisterTransactionError } from "@/modules/atobarai/types";
+import { AtobaraiApiClientChangeTransactionError } from "@/modules/atobarai/types";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,
@@ -12,13 +12,13 @@ import {
   AtobaraiFailureTransactionError,
   AtobaraiMultipleFailureTransactionError,
 } from "../use-case-errors";
-import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
+import { TransactionProcessSessionUseCaseResponse } from "./use-case-response";
 
-describe("TransactionInitializeSessionUseCaseResponse", () => {
+describe("TransactionProcessSessionUseCaseResponse", () => {
   describe("Success", () => {
     describe("with ChargeSuccessResult", () => {
       it("getResponse() returns valid Response with status 200 and success result with PSP reference", async () => {
-        const response = new TransactionInitializeSessionUseCaseResponse.Success({
+        const response = new TransactionProcessSessionUseCaseResponse.Success({
           transactionResult: new ChargeSuccessResult(),
           atobaraiTransactionId: mockedAtobaraiTransactionId,
         });
@@ -31,7 +31,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
             "actions": [
               "REFUND",
             ],
-            "message": "Successfully registered NP Atobarai transaction",
+            "message": "Successfully changed NP Atobarai transaction",
             "pspReference": "np_transaction_123",
             "result": "CHARGE_SUCCESS",
           }
@@ -41,7 +41,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
 
     describe("with ChargeActionRequiredResult", () => {
       it("getResponse() returns valid Response with status 200 and action required result with PSP reference", async () => {
-        const response = new TransactionInitializeSessionUseCaseResponse.Success({
+        const response = new TransactionProcessSessionUseCaseResponse.Success({
           transactionResult: new ChargeActionRequiredResult(),
           atobaraiTransactionId: mockedAtobaraiTransactionId,
         });
@@ -62,12 +62,11 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
   });
 
   describe("Failure", () => {
-    describe("with ChargeFailureResult and AtobaraiApiClientRegisterTransactionError", () => {
+    describe("with ChargeFailureResult and AtobaraiApiClientChangeTransactionError", () => {
       it("getResponse() returns valid Response with status 200 and failure result with error details", async () => {
-        const error = new AtobaraiApiClientRegisterTransactionError("API error occurred");
-        const response = new TransactionInitializeSessionUseCaseResponse.Failure({
+        const response = new TransactionProcessSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
-          error,
+          error: new AtobaraiApiClientChangeTransactionError("API error occurred"),
         });
 
         const fetchResponse = response.getResponse();
@@ -79,12 +78,12 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
             "data": {
               "errors": [
                 {
-                  "code": "AtobaraiRegisterTransactionError",
-                  "message": "Failed to register transaction with Atobarai",
+                  "code": "AtobaraiChangeTransactionError",
+                  "message": "Failed to change transaction with Atobarai",
                 },
               ],
             },
-            "message": "Failed to register NP Atobarai transaction",
+            "message": "Failed to change NP Atobarai transaction",
             "result": "CHARGE_FAILURE",
           }
         `);
@@ -93,7 +92,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
 
     describe("with ChargeFailureResult and AtobaraiFailureTransactionError", () => {
       it("getResponse() returns valid Response with status 200 and failure result with transaction error details", async () => {
-        const response = new TransactionInitializeSessionUseCaseResponse.Failure({
+        const response = new TransactionProcessSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
           error: new AtobaraiFailureTransactionError("Pending status"),
         });
@@ -112,7 +111,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
                 },
               ],
             },
-            "message": "Failed to register NP Atobarai transaction",
+            "message": "Failed to change NP Atobarai transaction",
             "result": "CHARGE_FAILURE",
           }
         `);
@@ -121,7 +120,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
 
     describe("with ChargeFailureResult and AtobaraiMultipleFailureTransactionError", () => {
       it("getResponse() returns valid Response with status 200 and multiple failure result with transaction error details", async () => {
-        const response = new TransactionInitializeSessionUseCaseResponse.Failure({
+        const response = new TransactionProcessSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
           error: new AtobaraiMultipleFailureTransactionError("Multiple failed transactions"),
         });
@@ -140,7 +139,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
                 },
               ],
             },
-            "message": "Failed to register NP Atobarai transaction",
+            "message": "Failed to change NP Atobarai transaction",
             "result": "CHARGE_FAILURE",
           }
         `);

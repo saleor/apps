@@ -19,6 +19,7 @@ const schemaFileNames = [
   "PaymentGatewayInitializeSession",
   "TransactionInitializeSession",
   "TransactionRefundRequested",
+  "TransactionProcessSession",
 ];
 
 const path = `https://raw.githubusercontent.com/saleor/saleor/${jsonSchemaVersion}/saleor/json_schemas/`;

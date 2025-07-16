@@ -8,9 +8,9 @@ export const BaseError = ModernError.subclass("BaseError", {
   },
   props: {
     /**
-     * Add _internalName to force nominal typing
+     * Add _brand to force nominal typing.
      */
-    _brand: "change_me",
+    _brand: "change_me" as const,
   } satisfies {
     _brand: string;
   },

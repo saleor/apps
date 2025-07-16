@@ -6,7 +6,7 @@ import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
-import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-initialize-session-event";
+import { mockedTransactionProcessSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-process-session-event";
 import {
   createAtobaraiTransactionSuccessResponse,
   CreditCheckResult,
@@ -14,7 +14,7 @@ import {
   PendingReason,
 } from "@/modules/atobarai/atobarai-transaction-success-response";
 import {
-  AtobaraiApiClientRegisterTransactionError,
+  AtobaraiApiClientChangeTransactionError,
   IAtobaraiApiClient,
   IAtobaraiApiClientFactory,
 } from "@/modules/atobarai/types";
@@ -25,10 +25,10 @@ import {
 } from "@/modules/transaction-result/charge-result";
 
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
-import { TransactionInitializeSessionUseCase } from "./use-case";
-import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
+import { TransactionProcessSessionUseCase } from "./use-case";
+import { TransactionProcessSessionUseCaseResponse } from "./use-case-response";
 
-describe("TransactionInitializeSessionUseCase", () => {
+describe("TransactionProcessSessionUseCase", () => {
   const createMockedApiClient = (): IAtobaraiApiClient => ({
     registerTransaction: vi.fn(),
     changeTransaction: vi.fn(),
@@ -53,7 +53,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const mockedApiClient = createMockedApiClient();
 
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(ok(mockPassedTransaction));
+    vi.mocked(mockedApiClient.changeTransaction).mockResolvedValue(ok(mockPassedTransaction));
 
     const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
 
@@ -61,7 +61,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
+    const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory: mockedApiClientFactory,
     });
@@ -69,11 +69,11 @@ describe("TransactionInitializeSessionUseCase", () => {
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: mockedTransactionInitializeSessionEvent,
+      event: mockedTransactionProcessSessionEvent,
     });
 
     expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionInitializeSessionUseCaseResponse.Success,
+      TransactionProcessSessionUseCaseResponse.Success,
     );
 
     expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeSuccessResult);
@@ -92,7 +92,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const mockedApiClient = createMockedApiClient();
 
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(ok(mockPendingTransaction));
+    vi.mocked(mockedApiClient.changeTransaction).mockResolvedValue(ok(mockPendingTransaction));
 
     const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
 
@@ -100,7 +100,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
+    const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory: mockedApiClientFactory,
     });
@@ -108,11 +108,11 @@ describe("TransactionInitializeSessionUseCase", () => {
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: mockedTransactionInitializeSessionEvent,
+      event: mockedTransactionProcessSessionEvent,
     });
 
     expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionInitializeSessionUseCaseResponse.Success,
+      TransactionProcessSessionUseCaseResponse.Success,
     );
 
     expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(
@@ -133,7 +133,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const mockedApiClient = createMockedApiClient();
 
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(ok(mockFailedTransaction));
+    vi.mocked(mockedApiClient.changeTransaction).mockResolvedValue(ok(mockFailedTransaction));
 
     const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
 
@@ -141,7 +141,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
+    const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory: mockedApiClientFactory,
     });
@@ -149,11 +149,11 @@ describe("TransactionInitializeSessionUseCase", () => {
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: mockedTransactionInitializeSessionEvent,
+      event: mockedTransactionProcessSessionEvent,
     });
 
     expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionInitializeSessionUseCaseResponse.Failure,
+      TransactionProcessSessionUseCaseResponse.Failure,
     );
 
     expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
@@ -171,9 +171,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const mockedApiClient = createMockedApiClient();
 
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(
-      ok(mockBeforeReviewTransaction),
-    );
+    vi.mocked(mockedApiClient.changeTransaction).mockResolvedValue(ok(mockBeforeReviewTransaction));
 
     const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
 
@@ -181,7 +179,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
+    const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory: mockedApiClientFactory,
     });
@@ -189,22 +187,22 @@ describe("TransactionInitializeSessionUseCase", () => {
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: mockedTransactionInitializeSessionEvent,
+      event: mockedTransactionProcessSessionEvent,
     });
 
     expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionInitializeSessionUseCaseResponse.Failure,
+      TransactionProcessSessionUseCaseResponse.Failure,
     );
 
     expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
   });
 
   it("should return Failure response when Atobarai API returns an error", async () => {
-    const mockApiError = new AtobaraiApiClientRegisterTransactionError("API Error");
+    const mockApiError = new AtobaraiApiClientChangeTransactionError("API Error");
 
     const mockedApiClient = createMockedApiClient();
 
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(err(mockApiError));
+    vi.mocked(mockedApiClient.changeTransaction).mockResolvedValue(err(mockApiError));
 
     const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
 
@@ -212,7 +210,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
+    const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory: mockedApiClientFactory,
     });
@@ -220,17 +218,17 @@ describe("TransactionInitializeSessionUseCase", () => {
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: mockedTransactionInitializeSessionEvent,
+      event: mockedTransactionProcessSessionEvent,
     });
 
     expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionInitializeSessionUseCaseResponse.Failure,
+      TransactionProcessSessionUseCaseResponse.Failure,
     );
   });
 
   it("should return MalformedRequestResponse when event is missing issuedAt", async () => {
     const eventWithoutIssuedAt = {
-      ...mockedTransactionInitializeSessionEvent,
+      ...mockedTransactionProcessSessionEvent,
       issuedAt: null,
     };
 
@@ -241,7 +239,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
+    const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory: mockedApiClientFactory,
     });
@@ -261,7 +259,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const mockedApiClient = createMockedApiClient();
     const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
 
-    const uc = new TransactionInitializeSessionUseCase({
+    const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory: mockedApiClientFactory,
     });
@@ -269,7 +267,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: mockedTransactionInitializeSessionEvent,
+      event: mockedTransactionProcessSessionEvent,
     });
 
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
@@ -285,7 +283,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const mockedApiClient = createMockedApiClient();
     const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
 
-    const uc = new TransactionInitializeSessionUseCase({
+    const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory: mockedApiClientFactory,
     });
@@ -293,7 +291,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: mockedTransactionInitializeSessionEvent,
+      event: mockedTransactionProcessSessionEvent,
     });
 
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
@@ -321,7 +319,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const mockedApiClient = createMockedApiClient();
 
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(ok(mockMultipleTransactions));
+    vi.mocked(mockedApiClient.changeTransaction).mockResolvedValue(ok(mockMultipleTransactions));
 
     const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
 
@@ -329,7 +327,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
+    const uc = new TransactionProcessSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory: mockedApiClientFactory,
     });
@@ -337,11 +335,11 @@ describe("TransactionInitializeSessionUseCase", () => {
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
-      event: mockedTransactionInitializeSessionEvent,
+      event: mockedTransactionProcessSessionEvent,
     });
 
     expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionInitializeSessionUseCaseResponse.Failure,
+      TransactionProcessSessionUseCaseResponse.Failure,
     );
 
     expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);

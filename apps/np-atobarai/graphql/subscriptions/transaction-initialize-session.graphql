@@ -4,7 +4,6 @@ fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
     amount
     currency
   }
-  data
   transaction {
     token
   }

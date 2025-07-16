@@ -62,9 +62,12 @@ const schema = z
       ]),
     ),
   })
-  .brand("AtobaraiRegisterTransactionSuccessResponse");
+  .brand("AtobaraiTransactionSuccessResponse");
 
-export const createAtobaraiRegisterTransactionSuccessResponse = (rawResponse: unknown) =>
+export const createAtobaraiTransactionSuccessResponse = (rawResponse: unknown) =>
   schema.parse(rawResponse);
 
-export type AtobaraiRegisterTransactionSuccessResponse = z.infer<typeof schema>;
+/**
+ * Success response used for registering and updating transactions in Atobarai.
+ */
+export type AtobaraiTransactionSuccessResponse = z.infer<typeof schema>;
