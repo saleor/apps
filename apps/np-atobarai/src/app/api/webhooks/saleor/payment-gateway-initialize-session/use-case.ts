@@ -4,7 +4,7 @@ import { err, ok, Result } from "neverthrow";
 
 import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
-import { AppConfigRepo } from "@/modules/app-config/types";
+import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 
 import { AppIsNotConfiguredResponse } from "../saleor-webhook-responses";
 import {

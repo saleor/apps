@@ -31,6 +31,7 @@ import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response
 describe("TransactionInitializeSessionUseCase", () => {
   const createMockedApiClient = (): IAtobaraiApiClient => ({
     registerTransaction: vi.fn(),
+    verifyCredentials: vi.fn(),
   });
 
   const createMockedApiClientFactory = (

@@ -30,7 +30,7 @@ export class GenericRootConfig<ChannelConfig extends BaseConfig> {
     return this.configsById[this.chanelConfigMapping[channelId]];
   }
 
-  getConfigById(configId: string) {
-    return this.configsById[configId];
+  getConfigById(configId: string): ChannelConfig | null {
+    return this.configsById[configId] ?? null;
   }
 }

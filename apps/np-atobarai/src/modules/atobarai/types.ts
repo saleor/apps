@@ -9,14 +9,14 @@ import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 
 export type AtobaraiApiErrors = InstanceType<typeof AtobaraiApiClientRegisterTransactionError>;
 
-export type AtobaraiEnviroment = "sandbox" | "production";
+export type AtobaraiEnvironment = "sandbox" | "production";
 
 export interface IAtobaraiApiClientFactory {
   create(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
     atobaraiSpCode: AtobaraiSpCode;
-    atobaraiEnviroment: AtobaraiEnviroment;
+    atobaraiEnvironment: AtobaraiEnvironment;
   }): IAtobaraiApiClient;
 }
 
@@ -24,6 +24,9 @@ export interface IAtobaraiApiClient {
   registerTransaction: (
     payload: AtobaraiRegisterTransactionPayload,
   ) => Promise<Result<AtobaraiRegisterTransactionSuccessResponse, AtobaraiApiErrors>>;
+  verifyCredentials: () => Promise<
+    Result<null, InstanceType<typeof AtobaraiApiClientValidationError>>
+  >;
 }
 
 export const AtobaraiApiClientRegisterTransactionErrorPublicCode =
@@ -36,6 +39,17 @@ export const AtobaraiApiClientRegisterTransactionError = BaseError.subclass(
       _brand: "AtobaraiApiClientRegisterTransactionError",
       publicCode: AtobaraiApiClientRegisterTransactionErrorPublicCode,
       publicMessage: "Failed to register transaction with Atobarai",
+    },
+  },
+);
+
+export const AtobaraiApiClientValidationError = BaseError.subclass(
+  "AtobaraiApiClientValidationError",
+  {
+    props: {
+      _brand: "AtobaraiApiClientValidationError",
+      publicCode: AtobaraiApiClientRegisterTransactionErrorPublicCode,
+      publicMessage: "Failed to authenticate with Atobarai",
     },
   },
 );

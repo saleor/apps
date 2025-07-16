@@ -1,3 +1,4 @@
+import { BaseConfig } from "@saleor/dynamo-config-repository";
 import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
@@ -6,7 +7,7 @@ import { AtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code"
 import { AtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { AtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
-type RawProps = {
+export type AppChannelConfigFields = {
   readonly name: string;
   readonly id: string;
   // todo make value object / enum
@@ -32,7 +33,7 @@ const schema = z.object({
   useSandbox: z.boolean(),
 });
 
-export class AppChannelConfig implements RawProps {
+export class AppChannelConfig implements AppChannelConfigFields, BaseConfig {
   readonly name: string;
   readonly id: string;
   readonly shippingCompanyCode: string;
@@ -49,7 +50,7 @@ export class AppChannelConfig implements RawProps {
     },
   });
 
-  private constructor(props: RawProps) {
+  private constructor(props: AppChannelConfigFields) {
     this.name = props.name;
     this.id = props.id;
     this.fillMissingAddress = props.fillMissingAddress;
@@ -62,7 +63,7 @@ export class AppChannelConfig implements RawProps {
   }
 
   private static validate(
-    props: RawProps,
+    props: AppChannelConfigFields,
   ): Result<null, InstanceType<typeof AppChannelConfig.ValidationError>> {
     try {
       schema.parse(props);
@@ -78,32 +79,8 @@ export class AppChannelConfig implements RawProps {
   }
 
   static create(
-    args: RawProps,
+    args: AppChannelConfigFields,
   ): Result<AppChannelConfig, InstanceType<typeof AppChannelConfig.ValidationError>> {
     return this.validate(args).map(() => new AppChannelConfig(args));
-  }
-}
-
-export class AppRootConfig {
-  readonly chanelConfigMapping: Record<string, string>;
-  readonly configsById: Record<string, AppChannelConfig>;
-
-  constructor(
-    chanelConfigMapping: Record<string, string>,
-    configsById: Record<string, AppChannelConfig>,
-  ) {
-    this.chanelConfigMapping = chanelConfigMapping;
-    this.configsById = configsById;
-  }
-
-  getAllConfigsAsList() {
-    return Object.values(this.configsById);
-  }
-
-  getChannelsBoundToGivenConfig(configId: string) {
-    const keyValues = Object.entries(this.chanelConfigMapping);
-    const filtered = keyValues.filter(([_, value]) => value === configId);
-
-    return filtered.map(([channelId]) => channelId);
   }
 }
