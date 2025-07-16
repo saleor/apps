@@ -49,13 +49,13 @@ describe("createAtobaraiGoods", () => {
         [
           {
             "goods_name": "Product Name",
-            "goods_price": 6170,
-            "goods_quantity": 5,
+            "goods_price": 1234,
+            "quantity": 5,
           },
           {
             "goods_name": "Shipping",
             "goods_price": 500,
-            "goods_quantity": 1,
+            "quantity": 1,
           },
         ]
       `);
@@ -78,13 +78,13 @@ describe("createAtobaraiGoods", () => {
         [
           {
             "goods_name": "product-sku",
-            "goods_price": 6170,
-            "goods_quantity": 5,
+            "goods_price": 1234,
+            "quantity": 5,
           },
           {
             "goods_name": "Shipping",
             "goods_price": 500,
-            "goods_quantity": 1,
+            "quantity": 1,
           },
         ]
       `);
@@ -106,9 +106,9 @@ describe("createAtobaraiGoods", () => {
           {
             __typename: "OrderLine",
             quantity: 3,
-            totalPrice: {
+            unitPrice: {
               gross: {
-                amount: 3000,
+                amount: 1_000,
               },
             },
             orderVariant: {
@@ -133,13 +133,59 @@ describe("createAtobaraiGoods", () => {
         [
           {
             "goods_name": "ORDER-SKU-1",
-            "goods_price": 3000,
-            "goods_quantity": 3,
+            "goods_price": 1000,
+            "quantity": 3,
           },
           {
             "goods_name": "Shipping",
             "goods_price": 800,
-            "goods_quantity": 1,
+            "quantity": 1,
+          },
+        ]
+      `);
+    });
+
+    it("should create AtobaraiGood from checokut with product name when skuAsName is true and product has no SKU", () => {
+      const sourceObject: SourceObjectFragment = {
+        ...mockedSourceObject,
+        lines: [
+          {
+            __typename: "CheckoutLine",
+            quantity: 2,
+            unitPrice: {
+              gross: {
+                amount: 1500,
+              },
+            },
+            checkoutVariant: {
+              product: {
+                name: "Product Without SKU",
+              },
+              sku: null,
+            },
+          },
+        ],
+        discount: null,
+        shippingPrice: {
+          gross: {
+            amount: 300,
+          },
+        },
+      };
+
+      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithSkuAsName);
+
+      expect(goods).toMatchInlineSnapshot(`
+        [
+          {
+            "goods_name": "Product Without SKU",
+            "goods_price": 1500,
+            "quantity": 2,
+          },
+          {
+            "goods_name": "Shipping",
+            "goods_price": 300,
+            "quantity": 1,
           },
         ]
       `);
@@ -164,18 +210,18 @@ describe("createAtobaraiGoods", () => {
         [
           {
             "goods_name": "product-sku",
-            "goods_price": 6170,
-            "goods_quantity": 5,
+            "goods_price": 1234,
+            "quantity": 5,
           },
           {
             "goods_name": "Voucher",
             "goods_price": 78,
-            "goods_quantity": 1,
+            "quantity": 1,
           },
           {
             "goods_name": "Shipping",
             "goods_price": 500,
-            "goods_quantity": 1,
+            "quantity": 1,
           },
         ]
       `);
@@ -198,13 +244,13 @@ describe("createAtobaraiGoods", () => {
         [
           {
             "goods_name": "Product Name",
-            "goods_price": 6170,
-            "goods_quantity": 5,
+            "goods_price": 1234,
+            "quantity": 5,
           },
           {
             "goods_name": "Shipping",
             "goods_price": 500,
-            "goods_quantity": 1,
+            "quantity": 1,
           },
         ]
       `);
@@ -225,13 +271,13 @@ describe("createAtobaraiGoods", () => {
         [
           {
             "goods_name": "Product Name",
-            "goods_price": 6170,
-            "goods_quantity": 5,
+            "goods_price": 1234,
+            "quantity": 5,
           },
           {
             "goods_name": "Shipping",
             "goods_price": 137,
-            "goods_quantity": 1,
+            "quantity": 1,
           },
         ]
       `);
@@ -263,8 +309,8 @@ describe("createAtobaraiGoods", () => {
         [
           {
             "goods_name": "Product Name",
-            "goods_price": 6170,
-            "goods_quantity": 5,
+            "goods_price": 1234,
+            "quantity": 5,
           },
         ]
       `);
@@ -280,9 +326,9 @@ describe("createAtobaraiGoods", () => {
           {
             __typename: "CheckoutLine",
             quantity: 2,
-            totalPrice: {
+            unitPrice: {
               gross: {
-                amount: 2000,
+                amount: 2_000,
               },
             },
             checkoutVariant: {
@@ -295,9 +341,9 @@ describe("createAtobaraiGoods", () => {
           {
             __typename: "CheckoutLine",
             quantity: 1,
-            totalPrice: {
+            unitPrice: {
               gross: {
-                amount: 3000,
+                amount: 3_000,
               },
             },
             checkoutVariant: {
@@ -325,22 +371,22 @@ describe("createAtobaraiGoods", () => {
           {
             "goods_name": "Complete Product 1",
             "goods_price": 2000,
-            "goods_quantity": 2,
+            "quantity": 2,
           },
           {
             "goods_name": "Complete Product 2",
             "goods_price": 3000,
-            "goods_quantity": 1,
+            "quantity": 1,
           },
           {
             "goods_name": "Voucher",
             "goods_price": 200,
-            "goods_quantity": 1,
+            "quantity": 1,
           },
           {
             "goods_name": "Shipping",
             "goods_price": 600,
-            "goods_quantity": 1,
+            "quantity": 1,
           },
         ]
       `);
@@ -428,9 +474,7 @@ describe("createAtobaraiGoods", () => {
   describe("type safety", () => {
     it("shouldn't be assignable without createAtobaraiGoods", () => {
       // @ts-expect-error - if this fails - it means the type is not branded
-      const testValue: AtobaraiGoods = [
-        { goods_name: "Test", goods_price: 100, goods_quantity: 1 },
-      ];
+      const testValue: AtobaraiGoods = [{ goods_name: "Test", goods_price: 100, quantity: 1 }];
 
       expect(testValue).toBeDefined();
     });

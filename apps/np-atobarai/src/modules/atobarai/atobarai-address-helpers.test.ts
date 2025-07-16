@@ -73,7 +73,7 @@ describe("formatCustomerName", () => {
   it("should use firstName and lastName from address to create customer name with space", () => {
     const name = formatCustomerName(addressFragment);
 
-    expect(name).toMatchInlineSnapshot(`"FirstName LastName"`);
+    expect(name).toMatchInlineSnapshot(`"LastName FirstName"`);
   });
 });
 

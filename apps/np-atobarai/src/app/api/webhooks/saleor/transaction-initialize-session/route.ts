@@ -10,18 +10,20 @@ import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
+import { AtobaraiApiClientFactory } from "@/modules/atobarai/atobarai-api-client-factory";
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
 import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
-import { PaymentGatewayInitializeSessionUseCase } from "../payment-gateway-initialize-session/use-case";
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
+import { TransactionInitializeSessionUseCase } from "./use-case";
 import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
 
 const logger = createLogger("TransactionInitializeSession route");
 
-const useCase = new PaymentGatewayInitializeSessionUseCase({
+const useCase = new TransactionInitializeSessionUseCase({
+  atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
   // TODO: Replace with actual implementation of AppConfigRepo
   appConfigRepo: {
     getChannelConfig: () => {
@@ -34,7 +36,7 @@ const useCase = new PaymentGatewayInitializeSessionUseCase({
             merchantCode: createAtobaraiMerchantCode("merchant-code-1"),
             shippingCompanyCode: "5000",
             skuAsName: true,
-            spCode: createAtobaraiSpCode("sp1"),
+            spCode: createAtobaraiSpCode("sp-code-1"),
             useSandbox: true,
             terminalId: createAtobaraiTerminalId("id"),
           })._unsafeUnwrap(),
