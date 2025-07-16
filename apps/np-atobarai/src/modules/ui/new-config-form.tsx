@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { Input, Toggle, ToggleProps } from "@saleor/react-hook-form-macaw";
+import { Combobox, Input, Toggle, ToggleProps } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
@@ -10,6 +10,7 @@ import {
   NewConfigInput,
   newConfigInputSchema,
 } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
+import { SHIPPING_COMPANY_CODES } from "@/modules/atobarai/shipping-company-codes";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
 type FormShape = NewConfigInput;
@@ -37,6 +38,13 @@ const DecoratedToggle = ({ label, ...toggleProps }: ToggleProps<FormShape> & { l
     </Box>
   );
 };
+
+const formattedCodes = SHIPPING_COMPANY_CODES.map(([code, companyName]) => {
+  return {
+    value: code as string,
+    label: `${companyName} (${code})` as string,
+  };
+});
 
 export const NewConfigForm = () => {
   const router = useRouter();
@@ -122,12 +130,13 @@ export const NewConfigForm = () => {
             error={!!errors.name}
           />
 
-          <Input
+          <Combobox
             label={<RequiredInputLabel labelText="Shipping company code" />}
             name="shippingCompanyCode"
             control={control}
             helperText={errors.name?.message}
             error={!!errors.name}
+            options={formattedCodes}
           />
 
           <Input

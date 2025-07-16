@@ -1,6 +1,3 @@
-/*
- * todo use in select
- */
 export const SHIPPING_COMPANY_CODES = [
   ["50000", "Sagawa Express"],
   ["59010", "Yamato Transport"],
@@ -20,4 +17,4 @@ export const SHIPPING_COMPANY_CODES = [
   ["59100", "Tonami Transport"],
   ["59160", "JAD Courier Service"],
   ["55555", "Contracted Shipping Company"],
-];
+] as const;
