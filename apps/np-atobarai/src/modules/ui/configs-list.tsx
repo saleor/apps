@@ -1,13 +1,11 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Layout } from "@saleor/apps-ui";
+import { DeleteConfigurationModalContent, Layout } from "@saleor/apps-ui";
 import { Box, Button, Modal, Text, TrashBinIcon } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { AppChannelConfig, AppChannelConfigFields } from "@/modules/app-config/app-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
-
-import { DeleteConfigurationModalContent } from "./delete-configuration-modal-content";
 
 type Props = {
   configs: Array<AppChannelConfigFields>;
@@ -18,7 +16,7 @@ export const ConfigsList = ({ configs, ...props }: Props) => {
   const { notifyError, notifySuccess } = useDashboardNotification();
   const configsList = trpcClient.appConfig.getConfigsList.useQuery();
   const mappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [configIdContext, setConfigIdContext] = useState<string | null>(null);
   const { mutate, isLoading } = trpcClient.appConfig.removeConfig.useMutation({
     onSuccess() {
       notifySuccess("Configuration deleted");
@@ -32,6 +30,9 @@ export const ConfigsList = ({ configs, ...props }: Props) => {
     },
   });
 
+  const modalOpen = Boolean(configIdContext);
+  const closeModal = () => setConfigIdContext(null);
+
   return (
     <Layout.AppSectionCard
       footer={
@@ -41,6 +42,19 @@ export const ConfigsList = ({ configs, ...props }: Props) => {
       }
     >
       <Box {...props}>
+        <Modal open={modalOpen} onChange={closeModal}>
+          <DeleteConfigurationModalContent
+            onDeleteClick={() => {
+              if (!configIdContext) {
+                throw new Error("Invariant, modal should be open only when configIdContext is set");
+              }
+
+              mutate({ configId: configIdContext });
+              closeModal();
+            }}
+          />
+        </Modal>
+
         {configs.map((config) => {
           const configInstanceResult = AppChannelConfig.create(config);
           const configInstance = configInstanceResult.unwrapOr(null);
@@ -50,35 +64,26 @@ export const ConfigsList = ({ configs, ...props }: Props) => {
           }
 
           return (
-            <Modal open={isModalOpen} onChange={setIsModalOpen} key={config.id}>
-              <DeleteConfigurationModalContent
-                onDeleteClick={() => {
-                  mutate({ configId: configInstance.id });
-                  setIsModalOpen(false);
-                }}
-              />
-              <Box paddingY={4} key={configInstance.id}>
-                <Box
-                  display={"flex"}
-                  justifyContent="space-between"
-                  width={"100%"}
-                  alignItems={"center"}
-                >
-                  <Text marginRight={4} display="block">
-                    {configInstance.name}
-                  </Text>
-                  <Modal.Trigger>
-                    <Button
-                      disabled={isLoading}
-                      marginLeft={4}
-                      display="block"
-                      icon={<TrashBinIcon />}
-                      variant="secondary"
-                    />
-                  </Modal.Trigger>
-                </Box>
+            <Box paddingY={4} key={configInstance.id}>
+              <Box
+                display={"flex"}
+                justifyContent="space-between"
+                width={"100%"}
+                alignItems={"center"}
+              >
+                <Text marginRight={4} display="block">
+                  {configInstance.name}
+                </Text>
+                <Button
+                  disabled={isLoading}
+                  marginLeft={4}
+                  display="block"
+                  icon={<TrashBinIcon />}
+                  variant="secondary"
+                  onClick={() => setConfigIdContext(configInstance.id)}
+                />
               </Box>
-            </Modal>
+            </Box>
           );
         })}
       </Box>
