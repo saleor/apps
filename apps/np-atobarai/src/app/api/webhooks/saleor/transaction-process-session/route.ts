@@ -32,12 +32,12 @@ const useCase = new TransactionProcessSessionUseCase({
           AppChannelConfig.create({
             name: "Config 1",
             id: "111",
-            merchantCode: createAtobaraiMerchantCode("***REMOVED***"),
+            merchantCode: createAtobaraiMerchantCode("merchant-code-1"),
             shippingCompanyCode: "5000",
             skuAsName: false,
-            spCode: createAtobaraiSpCode("***REMOVED***"),
+            spCode: createAtobaraiSpCode("sp1"),
             useSandbox: true,
-            terminalId: createAtobaraiTerminalId("***REMOVED***"),
+            terminalId: createAtobaraiTerminalId("id"),
           })._unsafeUnwrap(),
         ),
       );
