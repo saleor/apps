@@ -122,14 +122,6 @@ export const NewConfigForm = () => {
             error={!!errors.name}
           />
 
-          <Input
-            label={<RequiredInputLabel labelText="Merchant code" />}
-            name="merchantCode"
-            control={control}
-            helperText={errors.name?.message}
-            error={!!errors.name}
-          />
-
           <Combobox
             label={<RequiredInputLabel labelText="Shipping company code" />}
             name="shippingCompanyCode"
@@ -137,6 +129,14 @@ export const NewConfigForm = () => {
             helperText={errors.name?.message}
             error={!!errors.name}
             options={formattedCodes}
+          />
+
+          <Input
+            label={<RequiredInputLabel labelText="Merchant code" />}
+            name="merchantCode"
+            control={control}
+            helperText={errors.name?.message}
+            error={!!errors.name}
           />
 
           <Input

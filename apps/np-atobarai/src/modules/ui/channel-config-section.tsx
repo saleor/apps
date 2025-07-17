@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
-import { ConfigsList } from "@/modules/ui/configs-list";
+import { AtobaraiConfigsList } from "@/modules/ui/atobarai-configs-list";
 
 export const ChannelConfigSection = () => {
   const { data, error, refetch } = trpcClient.appConfig.getConfigsList.useQuery();
@@ -23,7 +23,7 @@ export const ChannelConfigSection = () => {
   }
 
   if (data && data.length > 0) {
-    return <ConfigsList configs={data} />;
+    return <AtobaraiConfigsList configs={data} />;
   }
 
   return (
