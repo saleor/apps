@@ -69,7 +69,6 @@ export const NewConfigForm = () => {
     defaultValues: {
       name: "",
       merchantCode: "",
-      fillMissingAddress: false,
       shippingCompanyCode: "",
       skuAsName: false,
       spCode: "",
@@ -82,7 +81,6 @@ export const NewConfigForm = () => {
   const onSubmit = (values: FormShape) => {
     mutate({
       name: values.name,
-      fillMissingAddress: values.fillMissingAddress,
       merchantCode: values.merchantCode,
       shippingCompanyCode: values.shippingCompanyCode,
       skuAsName: values.skuAsName,
@@ -156,11 +154,6 @@ export const NewConfigForm = () => {
             error={!!errors.name}
           />
 
-          <DecoratedToggle
-            control={control}
-            name="fillMissingAddress"
-            label="Fill missing address fields"
-          />
           <DecoratedToggle control={control} name="skuAsName" label="Fill SKU as name" />
           <DecoratedToggle control={control} name="useSandbox" label="Use sandbox mode" />
         </Box>

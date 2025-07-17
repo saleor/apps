@@ -9,7 +9,6 @@ export const appConfigSchema = item({
   configName: string(),
   shippingCompanyCode: string(),
   useSandbox: boolean(),
-  fillMissingAddress: boolean(),
   skuAsName: boolean(),
   merchantCode: string(),
   spCode: string(),
