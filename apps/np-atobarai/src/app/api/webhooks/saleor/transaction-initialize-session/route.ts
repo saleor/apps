@@ -12,7 +12,7 @@ import { setObservabilitySourceObjectId } from "@/lib/observability-source-objec
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AtobaraiApiClientFactory } from "@/modules/atobarai/atobarai-api-client-factory";
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
-import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { createAtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
@@ -35,7 +35,7 @@ const useCase = new TransactionInitializeSessionUseCase({
             merchantCode: createAtobaraiMerchantCode("merchant-code-1"),
             shippingCompanyCode: "5000",
             skuAsName: false,
-            spCode: createAtobaraiSpCode("sp1"),
+            secretSpCode: createAtobaraiSecretSpCode("sp1"),
             useSandbox: true,
             terminalId: createAtobaraiTerminalId("id"),
           })._unsafeUnwrap(),

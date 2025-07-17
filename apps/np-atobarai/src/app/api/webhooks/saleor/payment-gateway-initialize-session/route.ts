@@ -11,7 +11,7 @@ import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
-import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { createAtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
@@ -31,7 +31,7 @@ const useCase = new PaymentGatewayInitializeSessionUseCase({
             merchantCode: createAtobaraiMerchantCode("merchant-code-1"),
             shippingCompanyCode: "5000",
             skuAsName: true,
-            spCode: createAtobaraiSpCode("sp1"),
+            secretSpCode: createAtobaraiSecretSpCode("sp1"),
             useSandbox: true,
             terminalId: createAtobaraiTerminalId("id"),
           })._unsafeUnwrap(),

@@ -7,7 +7,7 @@ import { RandomId } from "@/lib/random-id";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { newConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
-import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { createAtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
@@ -39,7 +39,7 @@ export class NewConfigTrpcHandler {
       const configToSaveResult = AppChannelConfig.create({
         name: input.name,
         id: configId,
-        spCode: createAtobaraiSpCode(input.spCode),
+        secretSpCode: createAtobaraiSecretSpCode(input.secretSpCode),
         shippingCompanyCode: input.shippingCompanyCode,
         skuAsName: input.skuAsName,
         terminalId: createAtobaraiTerminalId(input.terminalId),
@@ -64,7 +64,7 @@ export class NewConfigTrpcHandler {
       const atobaraiApiClient = this.atobaraiClientFactory.create({
         atobaraiTerminalId: configToSave.terminalId,
         atobaraiEnvironment: configToSave.useSandbox ? "sandbox" : "production",
-        atobaraiSpCode: configToSave.spCode,
+        atobaraiSecretSpCode: configToSave.secretSpCode,
         atobaraiMerchantCode: configToSave.merchantCode,
       });
 

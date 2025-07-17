@@ -71,7 +71,7 @@ export const NewConfigForm = () => {
       merchantCode: "",
       shippingCompanyCode: "",
       skuAsName: false,
-      spCode: "",
+      secretSpCode: "",
       terminalId: "",
       useSandbox: true,
     },
@@ -84,7 +84,7 @@ export const NewConfigForm = () => {
       merchantCode: values.merchantCode,
       shippingCompanyCode: values.shippingCompanyCode,
       skuAsName: values.skuAsName,
-      spCode: values.spCode,
+      secretSpCode: values.secretSpCode,
       terminalId: values.terminalId,
       useSandbox: values.useSandbox,
     });
@@ -139,7 +139,7 @@ export const NewConfigForm = () => {
 
           <Input
             label={<RequiredInputLabel labelText="SP Code" />}
-            name="spCode"
+            name="secretSpCode"
             control={control}
             helperText={errors.name?.message}
             error={!!errors.name}

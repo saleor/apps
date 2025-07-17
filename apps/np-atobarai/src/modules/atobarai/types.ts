@@ -4,7 +4,7 @@ import { Result } from "neverthrow";
 import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
 import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
-import { AtobaraiSpCode } from "./atobarai-sp-code";
+import { AtobaraiSecretSpCode } from "./atobarai-secret-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 import { AtobaraiTransactionSuccessResponse } from "./atobarai-transaction-success-response";
 
@@ -22,7 +22,7 @@ export interface IAtobaraiApiClientFactory {
   create(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
-    atobaraiSpCode: AtobaraiSpCode;
+    atobaraiSecretSpCode: AtobaraiSecretSpCode;
     atobaraiEnvironment: AtobaraiEnvironment;
   }): IAtobaraiApiClient;
 }
