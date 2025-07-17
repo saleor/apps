@@ -10,19 +10,15 @@ import { AtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 export type AppChannelConfigFields = {
   readonly name: string;
   readonly id: string;
-  // todo make value object / enum
   readonly shippingCompanyCode: string;
   readonly useSandbox: boolean;
-  readonly fillMissingAddress: boolean;
   readonly skuAsName: boolean;
   readonly merchantCode: AtobaraiMerchantCode;
   readonly spCode: AtobaraiSpCode;
   readonly terminalId: AtobaraiTerminalId;
 };
 
-// todo export subset of schema for public validation in frontend
 const schema = z.object({
-  fillMissingAddress: z.boolean(),
   id: z.string(),
   merchantCode: z.string(),
   name: z.string(),
@@ -38,7 +34,6 @@ export class AppChannelConfig implements AppChannelConfigFields, BaseConfig {
   readonly id: string;
   readonly shippingCompanyCode: string;
   readonly useSandbox: boolean;
-  readonly fillMissingAddress: boolean;
   readonly skuAsName: boolean;
   readonly merchantCode: AtobaraiMerchantCode;
   readonly spCode: AtobaraiSpCode;
@@ -53,7 +48,6 @@ export class AppChannelConfig implements AppChannelConfigFields, BaseConfig {
   private constructor(props: AppChannelConfigFields) {
     this.name = props.name;
     this.id = props.id;
-    this.fillMissingAddress = props.fillMissingAddress;
     this.useSandbox = props.useSandbox;
     this.terminalId = props.terminalId;
     this.merchantCode = props.merchantCode;

@@ -72,7 +72,6 @@ describe("GetConfigsChannelsMappingTrpcHandler", () => {
     return expect(caller.testProcedure()).resolves.toMatchInlineSnapshot(`
       {
         "c-id1": AppChannelConfig {
-          "fillMissingAddress": true,
           "id": "111",
           "merchantCode": "merchant-code-1",
           "name": "Config 1",
