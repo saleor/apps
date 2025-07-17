@@ -79,7 +79,7 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
 
       expect(result.isOk()).toBe(true);
 
-      expect(mockedAppConfigRepo.getStripeConfig).toHaveBeenCalledExactlyOnceWith(
+      expect(mockedAppConfigRepo.getChannelConfig).toHaveBeenCalledExactlyOnceWith(
         expect.objectContaining({
           appId: webhookParams.appId,
         }),
@@ -87,7 +87,7 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
     });
 
     it("Will return 500 to Stripe if legacy config matching legacy event not found", async () => {
-      vi.mocked(mockedAppConfigRepo.getStripeConfig).mockImplementationOnce(async () => ok(null));
+      vi.mocked(mockedAppConfigRepo.getChannelConfig).mockImplementationOnce(async () => ok(null));
 
       const result = await instance.execute({
         rawBody: rawEventBody,
@@ -104,11 +104,11 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
         }
       `);
 
-      expect(mockedAppConfigRepo.getStripeConfig).toHaveBeenCalledOnce();
+      expect(mockedAppConfigRepo.getChannelConfig).toHaveBeenCalledOnce();
     });
 
     it("Will return 500 to Stripe if can't access DB to fetch config", async () => {
-      vi.mocked(mockedAppConfigRepo.getStripeConfig).mockImplementationOnce(async () =>
+      vi.mocked(mockedAppConfigRepo.getChannelConfig).mockImplementationOnce(async () =>
         err(new BaseError("test err")),
       );
 
@@ -127,7 +127,7 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
         }
       `);
 
-      expect(mockedAppConfigRepo.getStripeConfig).toHaveBeenCalledOnce();
+      expect(mockedAppConfigRepo.getChannelConfig).toHaveBeenCalledOnce();
     });
 
     it("Will return 500 to Stripe if can't remove webhook for some reason", async () => {
@@ -150,7 +150,7 @@ describe("StripeWebhookUseCase - Legacy event cases", () => {
         }
       `);
 
-      expect(mockedAppConfigRepo.getStripeConfig).toHaveBeenCalledOnce();
+      expect(mockedAppConfigRepo.getChannelConfig).toHaveBeenCalledOnce();
     });
   });
 });

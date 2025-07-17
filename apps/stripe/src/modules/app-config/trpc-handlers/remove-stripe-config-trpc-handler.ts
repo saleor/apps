@@ -4,12 +4,11 @@ import { Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl, SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
-// todo test
 export class RemoveStripeConfigTrpcHandler {
   baseProcedure = protectedClientProcedure;
 
@@ -85,7 +84,7 @@ export class RemoveStripeConfigTrpcHandler {
           saleorApiUrl: saleorApiUrl.value,
         });
 
-        const configToRemove = rootConfig.stripeConfigsById[input.configId];
+        const configToRemove = rootConfig.configsById[input.configId];
         const channelsToUnbind = rootConfig.getChannelsBoundToGivenConfig(input.configId);
 
         if (!configToRemove) {
