@@ -21,7 +21,6 @@ export const appConfigRepo = createDynamoConfigRepository<
     singleDynamoItemToDomainEntity(item) {
       const result = AppChannelConfig.create({
         id: item.configId,
-        fillMissingAddress: item.fillMissingAddress,
         merchantCode: createAtobaraiMerchantCode(item.merchantCode),
         name: item.configName,
         shippingCompanyCode: item.shippingCompanyCode,
@@ -43,7 +42,6 @@ export const appConfigRepo = createDynamoConfigRepository<
       return {
         configId: entity.id,
         configName: entity.name,
-        fillMissingAddress: entity.fillMissingAddress,
         merchantCode: entity.merchantCode,
         shippingCompanyCode: entity.shippingCompanyCode,
         skuAsName: entity.skuAsName,

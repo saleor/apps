@@ -4,7 +4,6 @@ import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
 export const mockedAppChannelConfig = AppChannelConfig.create({
-  fillMissingAddress: true,
   name: "Config 1",
   id: "111",
   merchantCode: createAtobaraiMerchantCode("merchant-code-1"),

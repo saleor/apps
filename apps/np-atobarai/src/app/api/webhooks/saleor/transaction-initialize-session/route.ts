@@ -30,7 +30,6 @@ const useCase = new TransactionInitializeSessionUseCase({
       return Promise.resolve(
         ok(
           AppChannelConfig.create({
-            fillMissingAddress: true,
             name: "Config 1",
             id: "111",
             merchantCode: createAtobaraiMerchantCode("***REMOVED***"),

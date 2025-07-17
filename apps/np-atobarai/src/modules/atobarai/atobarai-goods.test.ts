@@ -11,7 +11,6 @@ import { AtobaraiGoods, createAtobaraiGoods } from "./atobarai-goods";
 
 describe("createAtobaraiGoods", () => {
   const commonAppConfigProps = {
-    fillMissingAddress: true,
     name: "Config 1",
     id: "111",
     merchantCode: mockedAtobaraiMerchantCode,

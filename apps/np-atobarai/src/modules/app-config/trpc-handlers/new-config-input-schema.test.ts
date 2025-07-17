@@ -7,7 +7,6 @@ describe("newConfigInputSchema", () => {
     expect(
       newConfigInputSchema.parse({
         name: "test",
-        fillMissingAddress: true,
         merchantCode: "test-merchant",
         shippingCompanyCode: "50000",
         skuAsName: true,
@@ -17,7 +16,6 @@ describe("newConfigInputSchema", () => {
       }),
     ).toStrictEqual({
       name: "test",
-      fillMissingAddress: true,
       merchantCode: "test-merchant",
       shippingCompanyCode: "50000",
       skuAsName: true,
@@ -31,7 +29,6 @@ describe("newConfigInputSchema", () => {
     expect(() =>
       newConfigInputSchema.parse({
         name: "",
-        fillMissingAddress: true,
         merchantCode: "test-merchant",
         shippingCompanyCode: "aaaaaaaaaa",
         skuAsName: true,

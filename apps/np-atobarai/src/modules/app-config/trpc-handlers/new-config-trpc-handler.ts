@@ -45,7 +45,6 @@ export class NewConfigTrpcHandler {
         terminalId: createAtobaraiTerminalId(input.terminalId),
         useSandbox: input.useSandbox,
         merchantCode: createAtobaraiMerchantCode(input.merchantCode),
-        fillMissingAddress: input.fillMissingAddress,
       });
 
       if (configToSaveResult.isErr()) {

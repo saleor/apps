@@ -12,7 +12,6 @@ describe("AppChannelConfig", () => {
     id: "channel-1",
     shippingCompanyCode: "SAGAWA",
     useSandbox: true,
-    fillMissingAddress: false,
     skuAsName: false,
     merchantCode: createAtobaraiMerchantCode("M123"),
     spCode: createAtobaraiSpCode("SP456"),
