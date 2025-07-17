@@ -27,11 +27,6 @@
 </div>
 
 <br/>
-<div align="center">
-  
-[![Discord Badge](https://dcbadge.vercel.app/api/server/unUfh24R6d)](https://saleor.io/discord)
-
-</div>
 
 ## Overview
 
