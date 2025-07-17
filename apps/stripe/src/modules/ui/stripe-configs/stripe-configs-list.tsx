@@ -24,7 +24,7 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
   const { notifyError, notifySuccess } = useDashboardNotification();
   const configsList = trpcClient.appConfig.getStripeConfigsList.useQuery();
   const mappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [configIdContext, setConfigIdContext] = useState<string | null>(null);
   const { mutate, isLoading } = trpcClient.appConfig.removeStripeConfig.useMutation({
     onSuccess() {
       notifySuccess("Configuration deleted");
@@ -38,6 +38,9 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
     },
   });
 
+  const modalOpen = Boolean(configIdContext);
+  const closeModal = () => setConfigIdContext(null);
+
   return (
     <Layout.AppSectionCard
       footer={
@@ -47,6 +50,19 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
       }
     >
       <Box {...props}>
+        <Modal open={modalOpen} onChange={closeModal}>
+          <DeleteConfigurationModalContent
+            onDeleteClick={() => {
+              if (!configIdContext) {
+                throw new Error("Invariant, modal should be open only when configIdContext is set");
+              }
+
+              mutate({ configId: configIdContext });
+              closeModal();
+            }}
+          />
+        </Modal>
+
         {configs.map((config) => {
           const configInstance = StripeFrontendConfig.createFromSerializedFields(config);
           const envValue = configInstance.getStripeEnvValue();
@@ -77,37 +93,28 @@ export const StripeConfigsList = ({ configs, ...props }: Props) => {
               : null;
 
           return (
-            <Modal open={isModalOpen} onChange={setIsModalOpen}>
-              <DeleteConfigurationModalContent
-                onDeleteClick={() => {
-                  mutate({ configId: configInstance.id });
-                  setIsModalOpen(false);
-                }}
-              />
-              <Box paddingY={4} key={configInstance.id}>
-                <Box
-                  display={"flex"}
-                  justifyContent="space-between"
-                  width={"100%"}
-                  alignItems={"center"}
-                >
-                  <Text marginRight={4} display="block">
-                    {configInstance.name}
-                  </Text>
-                  {envValue === "TEST" ? testEnvChip : liveEnvChip}
-                  <Modal.Trigger>
-                    <Button
-                      disabled={isLoading}
-                      marginLeft={4}
-                      display="block"
-                      icon={<TrashBinIcon />}
-                      variant="secondary"
-                    />
-                  </Modal.Trigger>
-                </Box>
-                {webhookStatusInfo}
+            <Box paddingY={4} key={configInstance.id}>
+              <Box
+                display={"flex"}
+                justifyContent="space-between"
+                width={"100%"}
+                alignItems={"center"}
+              >
+                <Text marginRight={4} display="block">
+                  {configInstance.name}
+                </Text>
+                {envValue === "TEST" ? testEnvChip : liveEnvChip}
+                <Button
+                  disabled={isLoading}
+                  marginLeft={4}
+                  display="block"
+                  icon={<TrashBinIcon />}
+                  variant="secondary"
+                  onClick={() => setConfigIdContext(configInstance.id)}
+                />
               </Box>
-            </Modal>
+              {webhookStatusInfo}
+            </Box>
           );
         })}
       </Box>
