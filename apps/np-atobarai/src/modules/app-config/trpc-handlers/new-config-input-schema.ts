@@ -5,7 +5,7 @@ export const newConfigInputSchema = z.object({
   merchantCode: z.string().min(1),
   shippingCompanyCode: z.string().length(5),
   skuAsName: z.boolean(),
-  spCode: z.string().min(1),
+  secretSpCode: z.string().min(1),
   terminalId: z.string().min(1),
   useSandbox: z.boolean(),
 });

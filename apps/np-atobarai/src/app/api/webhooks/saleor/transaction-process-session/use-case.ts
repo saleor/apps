@@ -181,7 +181,7 @@ export class TransactionProcessSessionUseCase {
     const apiClient = this.atobaraiApiClientFactory.create({
       atobaraiTerminalId: atobaraiConfigResult.value.terminalId,
       atobaraiMerchantCode: atobaraiConfigResult.value.merchantCode,
-      atobaraiSpCode: atobaraiConfigResult.value.spCode,
+      atobaraiSecretSpCode: atobaraiConfigResult.value.secretSpCode,
       atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 

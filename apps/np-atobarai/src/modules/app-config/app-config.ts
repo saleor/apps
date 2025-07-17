@@ -4,7 +4,7 @@ import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
 import { AtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
-import { AtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { AtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
 import { AtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
 export type AppChannelConfigFields = {
@@ -14,7 +14,7 @@ export type AppChannelConfigFields = {
   readonly useSandbox: boolean;
   readonly skuAsName: boolean;
   readonly merchantCode: AtobaraiMerchantCode;
-  readonly spCode: AtobaraiSpCode;
+  readonly secretSpCode: AtobaraiSecretSpCode;
   readonly terminalId: AtobaraiTerminalId;
 };
 
@@ -24,7 +24,7 @@ const schema = z.object({
   name: z.string(),
   shippingCompanyCode: z.string(),
   skuAsName: z.boolean(),
-  spCode: z.string(),
+  secretSpCode: z.string(),
   terminalId: z.string(),
   useSandbox: z.boolean(),
 });
@@ -36,7 +36,7 @@ export class AppChannelConfig implements AppChannelConfigFields, BaseConfig {
   readonly useSandbox: boolean;
   readonly skuAsName: boolean;
   readonly merchantCode: AtobaraiMerchantCode;
-  readonly spCode: AtobaraiSpCode;
+  readonly secretSpCode: AtobaraiSecretSpCode;
   readonly terminalId: AtobaraiTerminalId;
 
   static ValidationError = BaseError.subclass("ValidationError", {
@@ -51,7 +51,7 @@ export class AppChannelConfig implements AppChannelConfigFields, BaseConfig {
     this.useSandbox = props.useSandbox;
     this.terminalId = props.terminalId;
     this.merchantCode = props.merchantCode;
-    this.spCode = props.spCode;
+    this.secretSpCode = props.secretSpCode;
     this.shippingCompanyCode = props.shippingCompanyCode;
     this.skuAsName = props.skuAsName;
   }

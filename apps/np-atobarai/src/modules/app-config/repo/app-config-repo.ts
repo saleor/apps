@@ -5,7 +5,7 @@ import { env } from "@/lib/env";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { appConfigEntity, appConfigSchema } from "@/modules/app-config/repo/dynamodb/entity";
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
-import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { createAtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 import { dynamoMainTable } from "@/modules/dynamodb/dynamodb-main-table";
 
@@ -25,7 +25,7 @@ export const appConfigRepo = createDynamoConfigRepository<
         name: item.configName,
         shippingCompanyCode: item.shippingCompanyCode,
         skuAsName: item.skuAsName,
-        spCode: createAtobaraiSpCode(encryptor.decrypt(item.spCode)),
+        secretSpCode: createAtobaraiSecretSpCode(encryptor.decrypt(item.spCode)),
         terminalId: createAtobaraiTerminalId(item.terminalId),
         useSandbox: item.useSandbox,
       });
@@ -45,7 +45,7 @@ export const appConfigRepo = createDynamoConfigRepository<
         merchantCode: entity.merchantCode,
         shippingCompanyCode: entity.shippingCompanyCode,
         skuAsName: entity.skuAsName,
-        spCode: encryptor.encrypt(entity.spCode),
+        spCode: encryptor.encrypt(entity.secretSpCode),
         terminalId: entity.terminalId,
         useSandbox: entity.useSandbox,
       };
