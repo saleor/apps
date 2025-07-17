@@ -1,5 +1,17 @@
 # @saleor/apps-ui
 
+## 1.3.0
+
+### Minor Changes
+
+- cd9c6866: Add EmptyConfigs component which renders placeholder for missing configurations and button to add a new one
+- 1e8d8a7a: Add DeleteConfigurationModalContent that shares common UI for rendering content of modal that deletes configuration
+
+### Patch Changes
+
+- cd9c6866: Used shared EmptyConfigs component form @saleor/apps-ui
+- f2f1a673: Added ConfigsList component that abstracts common list rendering
+
 ## 1.2.12
 
 ### Patch Changes

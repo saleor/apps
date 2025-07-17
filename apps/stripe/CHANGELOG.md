@@ -1,5 +1,18 @@
 # saleor-app-payment-stripe
 
+## 2.0.7
+
+### Patch Changes
+
+- cd9c6866: Used shared EmptyConfigs component form @saleor/apps-ui
+- 1e8d8a7a: Fixed issue with multiple modal rendering. Used shared modal content
+- f2f1a673: Use ConfigsList from shared package
+- Updated dependencies [cd9c6866]
+- Updated dependencies [f2f1a673]
+- Updated dependencies [cd9c6866]
+- Updated dependencies [1e8d8a7a]
+  - @saleor/apps-ui@1.3.0
+
 ## 2.0.6
 
 ### Patch Changes
