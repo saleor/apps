@@ -6,10 +6,12 @@ import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graph
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/atobarai-fulfillment-report-payload";
+import { AtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/atobarai-fulfillment-report-success-response";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
+import { AtobaraiMultipleFailureTransactionError } from "../use-case-errors";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
@@ -32,13 +34,61 @@ export class FulfillmentTrackingNumberUpdatedUseCase {
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
   }
 
-  async execute(params: {
+  private async getAtobaraiConfig(params: {
+    channelId: string;
     appId: string;
     saleorApiUrl: SaleorApiUrl;
-    event: FulfillmentTrackingNumberUpdatedEventFragment;
-  }): UseCaseExecuteResult {
-    const { appId, saleorApiUrl, event } = params;
+  }) {
+    const { channelId, appId, saleorApiUrl } = params;
 
+    const atobaraiConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
+      channelId,
+      appId,
+      saleorApiUrl,
+    });
+
+    if (atobaraiConfigForThisChannel.isErr()) {
+      this.logger.error("Failed to get configuration", {
+        error: atobaraiConfigForThisChannel.error,
+      });
+
+      return err(new AppIsNotConfiguredResponse(atobaraiConfigForThisChannel.error));
+    }
+
+    if (!atobaraiConfigForThisChannel.value) {
+      this.logger.warn("No configuration found for channel", {
+        channelId,
+      });
+
+      return err(
+        new AppIsNotConfiguredResponse(new BaseError("Configuration not found for channel")),
+      );
+    }
+
+    return ok(atobaraiConfigForThisChannel.value);
+  }
+
+  private handleMultipleTransactionResults(
+    transactionResult: AtobaraiFulfillmentReportSuccessResponse,
+  ) {
+    this.logger.warn("Multiple transaction results found", {
+      transactionResult,
+    });
+
+    return ok(
+      new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
+        new AtobaraiMultipleFailureTransactionError("Multiple transaction results found"),
+      ),
+    );
+  }
+
+  private parseEvent({
+    event,
+    appId,
+  }: {
+    event: FulfillmentTrackingNumberUpdatedEventFragment;
+    appId: string;
+  }) {
     if (!event.fulfillment?.trackingNumber) {
       this.logger.warn("Fulfillment tracking number is missing", {
         event: {
@@ -104,73 +154,72 @@ export class FulfillmentTrackingNumberUpdatedUseCase {
       );
     }
 
-    const atobaraiConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
+    return ok({
+      orderId: event.order.id,
       channelId: event.order.channel.id,
+      pspReference: transaction.pspReference,
+      trackingNumber: event.fulfillment.trackingNumber,
+    });
+  }
+
+  async execute(params: {
+    appId: string;
+    saleorApiUrl: SaleorApiUrl;
+    event: FulfillmentTrackingNumberUpdatedEventFragment;
+  }): UseCaseExecuteResult {
+    const { appId, saleorApiUrl, event } = params;
+
+    const parsingResult = this.parseEvent({ event, appId });
+
+    if (parsingResult.isErr()) {
+      return err(parsingResult.error);
+    }
+
+    const { orderId, channelId, pspReference, trackingNumber } = parsingResult.value;
+
+    const atobaraiConfigResult = await this.getAtobaraiConfig({
+      channelId,
       appId,
       saleorApiUrl,
     });
 
-    if (atobaraiConfigForThisChannel.isErr()) {
-      this.logger.error("Failed to get configuration", {
-        error: atobaraiConfigForThisChannel.error,
-      });
-
-      return err(new AppIsNotConfiguredResponse(atobaraiConfigForThisChannel.error));
-    }
-
-    if (!atobaraiConfigForThisChannel.value) {
-      this.logger.warn("No configuration found for channel", {
-        channelId: event.order.channel.id,
-      });
-
-      return err(
-        new AppIsNotConfiguredResponse(new BaseError("Configuration not found for channel")),
-      );
+    if (atobaraiConfigResult.isErr()) {
+      return err(atobaraiConfigResult.error);
     }
 
     const apiClient = this.atobaraiApiClientFactory.create({
-      atobaraiTerminalId: atobaraiConfigForThisChannel.value.terminalId,
-      atobaraiMerchantCode: atobaraiConfigForThisChannel.value.merchantCode,
-      atobaraiSpCode: atobaraiConfigForThisChannel.value.spCode,
-      atobaraiEnvironment: atobaraiConfigForThisChannel.value.useSandbox ? "sandbox" : "production",
+      atobaraiTerminalId: atobaraiConfigResult.value.terminalId,
+      atobaraiMerchantCode: atobaraiConfigResult.value.merchantCode,
+      atobaraiSpCode: atobaraiConfigResult.value.spCode,
+      atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
     const reportFulfillmentResult = await apiClient.reportFulfillment(
       createAtobaraiFulfillmentReportPayload({
-        trackingNumber: event.fulfillment.trackingNumber,
-        atobaraiTransactionId: createAtobaraiTransactionId(transaction.pspReference),
-        // TODO: convert to value object
-        shippingCompanyCode: atobaraiConfigForThisChannel.value.shippingCompanyCode,
+        trackingNumber,
+        atobaraiTransactionId: createAtobaraiTransactionId(pspReference),
+        shippingCompanyCode: atobaraiConfigResult.value.shippingCompanyCode,
       }),
     );
 
     if (reportFulfillmentResult.isErr()) {
       this.logger.error("Failed to report fulfillment", {
         error: reportFulfillmentResult.error,
-        orderId: event.order.id,
-        trackingNumber: event.fulfillment.trackingNumber,
+        orderId,
+        trackingNumber,
       });
 
-      // TODO: change response
-      return err(
-        new MalformedRequestResponse(
-          new BaseError("Failed to report fulfillment", { cause: reportFulfillmentResult.error }),
-        ),
+      return ok(
+        new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(reportFulfillmentResult.error),
       );
     }
 
-    const transactionResult = reportFulfillmentResult.value;
+    const fulfillmentResult = reportFulfillmentResult.value;
 
-    if (transactionResult.results.length > 1) {
-      return err(
-        new MalformedRequestResponse(
-          new BaseError("Multiple transaction results found", {
-            cause: new Error("Multiple transaction results found"),
-          }),
-        ),
-      );
+    if (fulfillmentResult.results.length > 1) {
+      return this.handleMultipleTransactionResults(fulfillmentResult);
     }
 
-    return ok(new FulfillmentTrackingNumberUpdatedUseCaseResponse());
+    return ok(new FulfillmentTrackingNumberUpdatedUseCaseResponse.Success());
   }
 }

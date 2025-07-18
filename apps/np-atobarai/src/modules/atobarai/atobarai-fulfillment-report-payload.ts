@@ -1,17 +1,22 @@
 import { z } from "zod";
 
-import { AtobaraiShippingCompanyCode } from "./atobarai-shipping-company-code";
-import { AtobaraiTransactionId } from "./atobarai-transaction-id";
+import {
+  AtobaraiShippingCompanyCode,
+  AtobaraiShippingCompanyCodeSchema,
+} from "./atobarai-shipping-company-code";
+import { AtobaraiTransactionId, AtobaraiTransactionIdSchema } from "./atobarai-transaction-id";
 
-const schema = z.object({
-  transactions: z.array(
-    z.object({
-      np_transaction_id: z.string().length(11),
-      pd_company_code: z.string().length(5),
-      slip_no: z.string().max(20),
-    }),
-  ),
-});
+const schema = z
+  .object({
+    transactions: z.array(
+      z.object({
+        np_transaction_id: AtobaraiTransactionIdSchema,
+        pd_company_code: AtobaraiShippingCompanyCodeSchema,
+        slip_no: z.string().min(1).max(20),
+      }),
+    ),
+  })
+  .brand("AtobaraiFulfillmentReportPayload");
 
 export const createAtobaraiFulfillmentReportPayload = (args: {
   trackingNumber: string;

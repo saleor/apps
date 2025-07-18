@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
+import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedTransactionProcessSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-process-session-event";
@@ -46,7 +47,7 @@ describe("TransactionProcessSessionUseCase", () => {
     const mockPassedTransaction = createAtobaraiTransactionSuccessResponse({
       results: [
         {
-          np_transaction_id: "test-transaction-id",
+          np_transaction_id: mockedAtobaraiTransactionId,
           authori_result: CreditCheckResult.Success,
         },
       ],
@@ -84,7 +85,7 @@ describe("TransactionProcessSessionUseCase", () => {
     const mockPendingTransaction = createAtobaraiTransactionSuccessResponse({
       results: [
         {
-          np_transaction_id: "test-pending-transaction-id",
+          np_transaction_id: mockedAtobaraiTransactionId,
           authori_result: CreditCheckResult.Pending,
           authori_hold: [PendingReason.LackOfAddressInformation],
         },
@@ -125,7 +126,7 @@ describe("TransactionProcessSessionUseCase", () => {
     const mockFailedTransaction = createAtobaraiTransactionSuccessResponse({
       results: [
         {
-          np_transaction_id: "test-failed-transaction-id",
+          np_transaction_id: mockedAtobaraiTransactionId,
           authori_result: CreditCheckResult.Failed,
           authori_ng: FailedReason.ExcessOfTheAmount,
         },
@@ -164,7 +165,7 @@ describe("TransactionProcessSessionUseCase", () => {
     const mockBeforeReviewTransaction = createAtobaraiTransactionSuccessResponse({
       results: [
         {
-          np_transaction_id: "test-before-review-transaction-id",
+          np_transaction_id: mockedAtobaraiTransactionId,
           authori_result: CreditCheckResult.BeforeReview,
         },
       ],
@@ -302,16 +303,16 @@ describe("TransactionProcessSessionUseCase", () => {
     const mockMultipleTransactions = createAtobaraiTransactionSuccessResponse({
       results: [
         {
-          np_transaction_id: "np_123456",
+          np_transaction_id: "np_trans_21",
           authori_result: "00",
         },
         {
-          np_transaction_id: "np_789012",
+          np_transaction_id: "np_trans_37",
           authori_result: "20",
           authori_ng: "RE001",
         },
         {
-          np_transaction_id: "np_345678",
+          np_transaction_id: "np_trans_42",
           authori_result: "20",
           authori_ng: "RE002",
         },

@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-const schema = z.string().brand("AtobaraiTransactionId");
+export const AtobaraiTransactionIdSchema = z.string().length(11).brand("AtobaraiTransactionId");
 
-export type AtobaraiTransactionId = z.infer<typeof schema>;
+export type AtobaraiTransactionId = z.infer<typeof AtobaraiTransactionIdSchema>;
 
 export const createAtobaraiTransactionId = (rawTransactionId: unknown): AtobaraiTransactionId =>
-  schema.parse(rawTransactionId);
+  AtobaraiTransactionIdSchema.parse(rawTransactionId);
