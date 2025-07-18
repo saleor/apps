@@ -8,7 +8,7 @@ import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
   ITransactionEventReporter,
@@ -146,7 +146,7 @@ export class StripeWebhookUseCase {
    * Now we can use that to fetch old config from DB and remove the webhook.
    */
   private async processLegacyWebhook(webhookParams: WebhookParams) {
-    const legacyConfig = await this.appConfigRepo.getStripeConfig({
+    const legacyConfig = await this.appConfigRepo.getChannelConfig({
       configId: webhookParams.configurationId,
       // Use app ID from webhook, not AuthData, so we have it frozen in time
       appId: webhookParams.appId,
@@ -238,7 +238,7 @@ export class StripeWebhookUseCase {
 
     const transactionEventReporter = this.transactionEventReporterFactory(authData);
 
-    const config = await this.appConfigRepo.getStripeConfig({
+    const config = await this.appConfigRepo.getChannelConfig({
       configId: webhookParams.configurationId,
       appId: authData.appId,
       saleorApiUrl: webhookParams.saleorApiUrl,

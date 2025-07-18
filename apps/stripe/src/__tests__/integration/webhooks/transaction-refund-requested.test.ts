@@ -15,8 +15,6 @@ import { createLogger } from "@/lib/logger";
 import { RandomId } from "@/lib/random-id";
 import { appInternalTracer } from "@/lib/tracing";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
-import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
-import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
 import { DynamoDbStripeConfig } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
 import { dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
