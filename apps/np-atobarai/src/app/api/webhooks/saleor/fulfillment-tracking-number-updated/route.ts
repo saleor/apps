@@ -11,8 +11,10 @@ import { fulfillmentTrackingNumberUpdatedWebhookDefinition } from "./webhook-def
 const logger = createLogger("FulfillmentTrackingNumberUpdated route");
 
 const handler = fulfillmentTrackingNumberUpdatedWebhookDefinition.createHandler(
-  withRecipientVerification(async (_req, _ctx) => {
+  withRecipientVerification(async (_req, ctx) => {
     try {
+      console.log("DD", JSON.stringify(ctx.payload, null, 2));
+
       return Response.json({ message: "This webhook is not implemented yet" }, { status: 200 });
     } catch (error) {
       captureException(error);

@@ -3,6 +3,11 @@ import { err, ok, Result, ResultAsync } from "neverthrow";
 
 import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
 import { createAtobaraiErrorResponse } from "./atobarai-error-response";
+import { AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
+import {
+  AtobaraiFulfillmentReportSuccessResponse,
+  createAtobaraiFulfillmentReportSuccessResponse,
+} from "./atobarai-fulfillment-report-success-response";
 import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
 import { AtobaraiSpCode } from "./atobarai-sp-code";
@@ -14,6 +19,7 @@ import {
 import {
   AtobaraiApiChangeTransactionErrors,
   AtobaraiApiClientChangeTransactionError,
+  AtobaraiApiClientFulfillmentReportError,
   AtobaraiApiClientRegisterTransactionError,
   AtobaraiApiClientValidationError,
   AtobaraiApiRegisterTransactionErrors,
@@ -190,5 +196,46 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
     }
 
     return ok(null);
+  }
+
+  async reportFulfillment(
+    payload: AtobaraiFulfillmentReportPayload,
+  ): Promise<
+    Result<AtobaraiFulfillmentReportSuccessResponse, AtobaraiApiClientFulfillmentReportError>
+  > {
+    const requestUrl = new URL("shipments", this.getBaseUrl());
+
+    const result = await ResultAsync.fromPromise(
+      fetch(requestUrl, {
+        method: "POST",
+        headers: this.getHeaders(),
+        body: JSON.stringify(payload),
+      }),
+      (error) => BaseError.normalize(error),
+    );
+
+    if (result.isErr()) {
+      return err(
+        new AtobaraiApiClientFulfillmentReportError("Failed to report fulfillment", {
+          cause: result.error,
+        }),
+      );
+    }
+
+    if (!result.value.ok) {
+      const response = await result.value.json();
+
+      const errors = this.convertErrorResponseToNormalizedErrors(response);
+
+      return err(
+        new AtobaraiApiClientFulfillmentReportError("Atobarai API returned an error", {
+          errors,
+        }),
+      );
+    }
+
+    const response = await result.value.json();
+
+    return ok(createAtobaraiFulfillmentReportSuccessResponse(response));
   }
 }

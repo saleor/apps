@@ -1,0 +1,43 @@
+meta {
+  name: Complete checkout
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: {{saleorApiUrl}}
+  body: graphql
+  auth: inherit
+}
+
+body:graphql {
+  mutation CompleteCheckout($checkoutId: ID!) {
+    checkoutComplete(id: $checkoutId) {
+      order {
+        id
+        lines {
+          id
+          quantity
+        }
+      }
+      errors {
+        field
+        message
+        code
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "checkoutId": "{{checkoutId}}"
+  }
+}
+
+vars:post-response {
+  orderId: res.body.data.checkoutComplete.order.id
+  orderLineQuantity: res.body.data.checkoutComplete.order.lines[0].quantity
+  orderLineId: res.body.data.checkoutComplete.order.lines[0].id
+}

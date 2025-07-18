@@ -2,6 +2,8 @@ import { BaseError } from "@saleor/errors";
 import { Result } from "neverthrow";
 
 import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
+import { AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
+import { AtobaraiFulfillmentReportSuccessResponse } from "./atobarai-fulfillment-report-success-response";
 import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
 import { AtobaraiSpCode } from "./atobarai-sp-code";
@@ -14,6 +16,10 @@ export type AtobaraiApiRegisterTransactionErrors = InstanceType<
 
 export type AtobaraiApiChangeTransactionErrors = InstanceType<
   typeof AtobaraiApiClientChangeTransactionError
+>;
+
+export type AtobaraiApiClientFulfillmentReportError = InstanceType<
+  typeof AtobaraiApiClientFulfillmentReportError
 >;
 
 export type AtobaraiEnvironment = "sandbox" | "production";
@@ -36,6 +42,11 @@ export interface IAtobaraiApiClient {
   ) => Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiChangeTransactionErrors>>;
   verifyCredentials: () => Promise<
     Result<null, InstanceType<typeof AtobaraiApiClientValidationError>>
+  >;
+  reportFulfillment: (
+    payload: AtobaraiFulfillmentReportPayload,
+  ) => Promise<
+    Result<AtobaraiFulfillmentReportSuccessResponse, AtobaraiApiClientFulfillmentReportError>
   >;
 }
 
@@ -74,6 +85,20 @@ export const AtobaraiApiClientValidationError = BaseError.subclass(
       _brand: "AtobaraiApiClientValidationError",
       publicCode: AtobaraiApiClientRegisterTransactionErrorPublicCode,
       publicMessage: "Failed to authenticate with Atobarai",
+    },
+  },
+);
+
+export const AtobaraiApiClientFulfillmentReportErrorPublicCode =
+  "AtobaraiFulfillmentReportError" as const;
+
+export const AtobaraiApiClientFulfillmentReportError = BaseError.subclass(
+  "AtobaraiApiClientFulfillmentReportError",
+  {
+    props: {
+      _brand: "AtobaraiApiClientFulfillmentReportError" as const,
+      publicCode: AtobaraiApiClientFulfillmentReportErrorPublicCode,
+      publicMessage: "Failed to report fulfillment with Atobarai",
     },
   },
 );

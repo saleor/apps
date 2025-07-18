@@ -18,6 +18,7 @@ export class GetConfigsChannelsMappingTrpcHandler {
         });
 
         if (config.isErr()) {
+          console.error("Failed to fetch app config", config.error);
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "App failed to fetch config, please contact Saleor",
