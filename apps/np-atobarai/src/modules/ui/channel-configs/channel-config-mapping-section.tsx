@@ -57,7 +57,7 @@ export const ChannelConfigMappingSection = () => {
           No channels found.
         </Text>
         <Text size={3} color="default2">
-          You must have at least one channel in your Saleor store.
+          You must have at least one channel with JPY currency in your Saleor store.
         </Text>
       </Layout.AppSectionCard>
     );
