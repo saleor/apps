@@ -1,5 +1,15 @@
 # saleor-app-products-feed
 
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [7a834f53]
+- Updated dependencies [b1c0139a]
+- Updated dependencies [7a834f53]
+- Updated dependencies [674b4fa0]
+  - @saleor/apps-ui@1.3.0
+
 ## 2.0.1
 
 ### Patch Changes

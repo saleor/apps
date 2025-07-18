@@ -1,5 +1,17 @@
 # saleor-app-payment-np-atobarai
 
+## 0.0.4
+
+### Patch Changes
+
+- 7a834f53: Used shared EmptyConfigs component form @saleor/apps-ui
+- b1c0139a: Use ConfigsList from shared package
+- Updated dependencies [7a834f53]
+- Updated dependencies [b1c0139a]
+- Updated dependencies [7a834f53]
+- Updated dependencies [674b4fa0]
+  - @saleor/apps-ui@1.3.0
+
 ## 0.0.3
 
 ### Patch Changes
