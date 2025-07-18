@@ -4,13 +4,14 @@ import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant
 import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
+import { createAtobaraiShippingCompanyCode } from "../atobarai/atobarai-shipping-company-code";
 import { AppChannelConfig } from "./app-config";
 
 describe("AppChannelConfig", () => {
   const validProps = {
     name: "Test Channel",
     id: "channel-1",
-    shippingCompanyCode: "SAGAWA",
+    shippingCompanyCode: createAtobaraiShippingCompanyCode("50000"),
     useSandbox: true,
     skuAsName: false,
     merchantCode: createAtobaraiMerchantCode("M123"),

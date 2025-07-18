@@ -7,10 +7,12 @@ import { AtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code"
 import { AtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { AtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
+import { AtobaraiShippingCompanyCode } from "../atobarai/atobarai-shipping-company-code";
+
 export type AppChannelConfigFields = {
   readonly name: string;
   readonly id: string;
-  readonly shippingCompanyCode: string;
+  readonly shippingCompanyCode: AtobaraiShippingCompanyCode;
   readonly useSandbox: boolean;
   readonly skuAsName: boolean;
   readonly merchantCode: AtobaraiMerchantCode;
@@ -32,7 +34,7 @@ const schema = z.object({
 export class AppChannelConfig implements AppChannelConfigFields, BaseConfig {
   readonly name: string;
   readonly id: string;
-  readonly shippingCompanyCode: string;
+  readonly shippingCompanyCode: AtobaraiShippingCompanyCode;
   readonly useSandbox: boolean;
   readonly skuAsName: boolean;
   readonly merchantCode: AtobaraiMerchantCode;

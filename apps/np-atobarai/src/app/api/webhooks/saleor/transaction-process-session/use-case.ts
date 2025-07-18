@@ -160,6 +160,7 @@ export class TransactionProcessSessionUseCase {
   }): UseCaseExecuteResult {
     const { appId, saleorApiUrl, event } = params;
 
+    // TODO: add validation for config
     const atobaraiConfigResult = await this.getAtobaraiConfig({
       channelId: event.sourceObject.channel.id,
       appId,

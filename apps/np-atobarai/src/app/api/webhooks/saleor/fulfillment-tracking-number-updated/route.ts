@@ -1,26 +1,71 @@
+import { createSaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
+import { BaseError } from "@saleor/errors";
 import { captureException } from "@sentry/nextjs";
 
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
+import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
+import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
+import { appConfigRepo } from "@/modules/app-config/repo/app-config-repo";
+import { AtobaraiApiClientFactory } from "@/modules/atobarai/atobarai-api-client-factory";
 
+import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
+import { FulfillmentTrackingNumberUpdatedUseCase } from "./use-case";
 import { fulfillmentTrackingNumberUpdatedWebhookDefinition } from "./webhook-definition";
 
 const logger = createLogger("FulfillmentTrackingNumberUpdated route");
 
+const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
+  appConfigRepo: appConfigRepo,
+  atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
+});
+
 const handler = fulfillmentTrackingNumberUpdatedWebhookDefinition.createHandler(
   withRecipientVerification(async (_req, ctx) => {
     try {
-      console.log("DD", JSON.stringify(ctx.payload, null, 2));
+      if (ctx.payload.order?.id) {
+        setObservabilitySourceObjectId({ __typename: "Order", id: ctx.payload.order.id });
+      }
 
-      return Response.json({ message: "This webhook is not implemented yet" }, { status: 200 });
+      logger.info("Received webhook request");
+
+      const saleorApiUrl = createSaleorApiUrl(ctx.authData.saleorApiUrl);
+
+      setObservabilitySaleorApiUrl(saleorApiUrl, ctx.payload.version);
+
+      const result = await useCase.execute({
+        event: ctx.payload,
+        appId: ctx.authData.appId,
+        saleorApiUrl,
+      });
+
+      return result.match(
+        (result) => {
+          logger.info("Successfully processed webhook request", {
+            httpsStatusCode: result.statusCode,
+          });
+
+          return result.getResponse();
+        },
+        (err) => {
+          logger.warn("Failed to process webhook request", {
+            httpsStatusCode: err.statusCode,
+            reason: err.message,
+          });
+
+          return err.getResponse();
+        },
+      );
     } catch (error) {
       captureException(error);
       logger.error("Unhandled error", { error: error });
 
-      return Response.json({ message: "Internal Server Error" }, { status: 500 });
+      const response = new UnhandledErrorResponse(BaseError.normalize(error));
+
+      return response.getResponse();
     }
   }),
 );

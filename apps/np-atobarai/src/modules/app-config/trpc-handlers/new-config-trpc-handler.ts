@@ -7,6 +7,7 @@ import { RandomId } from "@/lib/random-id";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { newConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
+import { createAtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
@@ -40,7 +41,7 @@ export class NewConfigTrpcHandler {
         name: input.name,
         id: configId,
         spCode: createAtobaraiSpCode(input.spCode),
-        shippingCompanyCode: input.shippingCompanyCode,
+        shippingCompanyCode: createAtobaraiShippingCompanyCode(input.shippingCompanyCode),
         skuAsName: input.skuAsName,
         terminalId: createAtobaraiTerminalId(input.terminalId),
         useSandbox: input.useSandbox,

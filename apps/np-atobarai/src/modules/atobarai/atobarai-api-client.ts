@@ -28,6 +28,13 @@ import {
 } from "./types";
 
 export class AtobaraiApiClient implements IAtobaraiApiClient {
+  static AtobaraiApiError = BaseError.subclass("AtobaraiApiError", {
+    props: {
+      _brand: "AtobaraiApiError" as const,
+      code: "",
+    },
+  });
+
   private atobaraiTerminalId: AtobaraiTerminalId;
   private atobaraiMerchantCode: AtobaraiMerchantCode;
   private atobaraiSpCode: AtobaraiSpCode;
@@ -75,10 +82,15 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
   private convertErrorResponseToNormalizedErrors(
     response: unknown,
-  ): InstanceType<typeof BaseError>[] {
+  ): InstanceType<typeof AtobaraiApiClient.AtobaraiApiError>[] {
     const { errors } = createAtobaraiErrorResponse(response);
 
-    return errors.flatMap((error) => error.codes.map((code) => new BaseError(code)));
+    return errors.flatMap((error) =>
+      error.codes.map(
+        (code) =>
+          new AtobaraiApiClient.AtobaraiApiError("API returned an error", { props: { code } }),
+      ),
+    );
   }
 
   async registerTransaction(

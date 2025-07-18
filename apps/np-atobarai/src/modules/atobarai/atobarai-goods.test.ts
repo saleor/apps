@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedAtobaraiMerchantCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-merchant-code";
+import { mockedAtobaraiShippingCompanyCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-shipping-compnay-code";
 import { mockedAtobaraiSpCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-sp-code";
 import { mockedAtobaraiTerminalId } from "@/__tests__/mocks/atobarai/mocked-atobarai-terminal-id";
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
@@ -14,7 +15,7 @@ describe("createAtobaraiGoods", () => {
     name: "Config 1",
     id: "111",
     merchantCode: mockedAtobaraiMerchantCode,
-    shippingCompanyCode: "5000",
+    shippingCompanyCode: mockedAtobaraiShippingCompanyCode,
     spCode: mockedAtobaraiSpCode,
     useSandbox: true,
     terminalId: mockedAtobaraiTerminalId,

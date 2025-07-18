@@ -33,6 +33,7 @@ describe("TransactionProcessSessionUseCase", () => {
     registerTransaction: vi.fn(),
     changeTransaction: vi.fn(),
     verifyCredentials: vi.fn(),
+    reportFulfillment: vi.fn(),
   });
 
   const createMockedApiClientFactory = (
