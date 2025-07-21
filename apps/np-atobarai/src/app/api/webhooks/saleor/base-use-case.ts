@@ -8,12 +8,8 @@ import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { AppIsNotConfiguredResponse } from "./saleor-webhook-responses";
 
 export abstract class BaseUseCase {
-  private appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
+  protected abstract appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   protected abstract logger: Pick<Logger, "error" | "warn">;
-
-  constructor(appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">) {
-    this.appConfigRepo = appConfigRepo;
-  }
 
   async getAtobaraiConfigForChannel({
     channelId,

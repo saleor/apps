@@ -13,13 +13,15 @@ import { AppIsNotConfiguredResponse } from "./saleor-webhook-responses";
 
 // Concrete implementation for testing
 class TestUseCase extends BaseUseCase {
-  public logger: Pick<Logger, "error" | "warn"> = {
+  protected logger: Pick<Logger, "error" | "warn"> = {
     error: vi.fn(),
     warn: vi.fn(),
   };
+  protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
 
   constructor(appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">) {
-    super(appConfigRepo);
+    super();
+    this.appConfigRepo = appConfigRepo;
   }
 }
 

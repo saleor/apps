@@ -26,9 +26,11 @@ type UseCaseExecuteResult = Promise<
 
 export class PaymentGatewayInitializeSessionUseCase extends BaseUseCase {
   protected logger = createLogger("PaymentGatewayInitializeSessionUseCase");
+  protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
 
   constructor(deps: { appConfigRepo: Pick<AppConfigRepo, "getChannelConfig"> }) {
-    super(deps.appConfigRepo);
+    super();
+    this.appConfigRepo = deps.appConfigRepo;
   }
 
   async execute(params: {

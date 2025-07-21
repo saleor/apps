@@ -44,6 +44,7 @@ type UseCaseExecuteResult = Promise<
 >;
 
 export class TransactionInitializeSessionUseCase extends BaseUseCase {
+  protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   protected logger = createLogger("TransactionInitializeSessionUseCase");
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
 
@@ -51,8 +52,9 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   }) {
-    super(deps.appConfigRepo);
+    super();
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
+    this.appConfigRepo = deps.appConfigRepo;
   }
 
   private prepareRegisterTransactionPayload(
