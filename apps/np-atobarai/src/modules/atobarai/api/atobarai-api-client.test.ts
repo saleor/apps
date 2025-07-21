@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { mockedAtobaraiChangeTransactionPayload } from "@/__tests__/mocks/atobarai/mocked-atobarai-change-transaction-payload";
+import { mockedAtobaraiChangeTransactionPayload } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-change-transaction-payload";
+import { mockedAtobaraiRegisterTransactionPayload } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-register-transaction-payload";
+import { mockedAtobaraiFulfillmentReportPayload } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-report-fulfilment-payload";
 import { mockedAtobaraiMerchantCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-merchant-code";
-import { mockedAtobaraiRegisterTransactionPayload } from "@/__tests__/mocks/atobarai/mocked-atobarai-register-transaction-payload";
-import { mockedAtobaraiFulfillmentReportPayload } from "@/__tests__/mocks/atobarai/mocked-atobarai-report-fulfilment-payload";
 import { mockedAtobaraiSecretSpCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-secret-sp-code";
 import { mockedAtobaraiTerminalId } from "@/__tests__/mocks/atobarai/mocked-atobarai-terminal-id";
 
