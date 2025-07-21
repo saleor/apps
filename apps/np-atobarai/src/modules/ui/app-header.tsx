@@ -9,7 +9,10 @@ export const AppHeader = ({ ...props }: BoxProps) => {
       </Text>
       <Text>
         Configure the app by providing your NP-Atobarai details. Read the{" "}
-        <TextLink href="todo" newTab>
+        <TextLink
+          href="https://docs.saleor.io/developer/app-store/apps/np-atobarai/overview"
+          newTab
+        >
           documentation
         </TextLink>{" "}
         to learn more.
