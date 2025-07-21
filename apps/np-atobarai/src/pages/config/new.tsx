@@ -44,15 +44,6 @@ const NewConfiguration: NextPage = () => {
             </Text>
 
             <Text>
-              <strong>Fill missing address</strong>: when enabled, the system will append required
-              locality information based on a database of japanese postal codes. Since city and
-              cityArea are not valid fields for Japanese addresses, this information has to be part
-              of streetAddress1/streetAddress2. We recommend testing both options with your
-              storefront implementation and pick the one that doesn&#39;t result in duplicate
-              address information.
-            </Text>
-
-            <Text>
               <strong>Shipping company code</strong>: this field indicates which shipping carrier
               should appear in the fulfillment reports.
             </Text>
