@@ -6,11 +6,11 @@ import {
   TransactionSessionSuccess,
 } from "@/generated/app-webhooks-types/transaction-initialize-session";
 import { assertUnreachable } from "@/lib/assert-unreachable";
-import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import {
   AtobaraiApiClientRegisterTransactionErrorPublicCode,
   AtobaraiApiRegisterTransactionErrors,
-} from "@/modules/atobarai/types";
+} from "@/modules/atobarai/api/types";
+import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,

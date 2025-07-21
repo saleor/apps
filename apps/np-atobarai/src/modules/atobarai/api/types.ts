@@ -1,13 +1,13 @@
 import { BaseError } from "@saleor/errors";
 import { Result } from "neverthrow";
 
+import { AtobaraiMerchantCode } from "../atobarai-merchant-code";
+import { AtobaraiSecretSpCode } from "../atobarai-secret-sp-code";
+import { AtobaraiTerminalId } from "../atobarai-terminal-id";
 import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
 import { AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
 import { AtobaraiFulfillmentReportSuccessResponse } from "./atobarai-fulfillment-report-success-response";
-import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
-import { AtobaraiSecretSpCode } from "./atobarai-secret-sp-code";
-import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 import { AtobaraiTransactionSuccessResponse } from "./atobarai-transaction-success-response";
 
 export type AtobaraiApiRegisterTransactionErrors = InstanceType<

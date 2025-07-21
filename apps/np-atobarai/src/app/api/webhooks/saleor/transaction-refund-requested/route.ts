@@ -12,12 +12,16 @@ import { transactionRefundRequestedWebhookDefinition } from "./webhook-definitio
 const logger = createLogger("TransactionRefundRequested route");
 
 const handler = transactionRefundRequestedWebhookDefinition.createHandler(
-  withRecipientVerification(async (_req, _ctx) => {
+  withRecipientVerification(async (_req, ctx) => {
     try {
       const response = {
         result: "REFUND_SUCCESS",
         pspReference: "CHANGE_ME",
       } satisfies TransactionRefundRequested;
+
+      logger.info("Transaction refund requested webhook received", {
+        payload: ctx.payload,
+      });
 
       return Response.json(response, { status: 200 });
     } catch (error) {

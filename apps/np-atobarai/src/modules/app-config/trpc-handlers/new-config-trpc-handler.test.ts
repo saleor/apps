@@ -9,7 +9,7 @@ import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-u
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { NewConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-config-trpc-handler";
-import { AtobaraiApiClientValidationError, IAtobaraiApiClient } from "@/modules/atobarai/types";
+import { AtobaraiApiClientValidationError, IAtobaraiApiClient } from "@/modules/atobarai/api/types";
 import { router } from "@/modules/trpc/trpc-server";
 
 /**

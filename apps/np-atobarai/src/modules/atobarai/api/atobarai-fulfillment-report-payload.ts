@@ -3,8 +3,8 @@ import { z } from "zod";
 import {
   AtobaraiShippingCompanyCode,
   AtobaraiShippingCompanyCodeSchema,
-} from "./atobarai-shipping-company-code";
-import { AtobaraiTransactionId, AtobaraiTransactionIdSchema } from "./atobarai-transaction-id";
+} from "../atobarai-shipping-company-code";
+import { AtobaraiTransactionId, AtobaraiTransactionIdSchema } from "../atobarai-transaction-id";
 
 const schema = z
   .object({

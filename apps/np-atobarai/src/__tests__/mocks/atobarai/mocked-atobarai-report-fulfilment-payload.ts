@@ -1,4 +1,4 @@
-import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/atobarai-fulfillment-report-payload";
+import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
 
 import { mockedAtobaraiShippingCompanyCode } from "./mocked-atobarai-shipping-compnay-code";
 import { mockedAtobaraiTransactionId } from "./mocked-atobarai-transaction-id";

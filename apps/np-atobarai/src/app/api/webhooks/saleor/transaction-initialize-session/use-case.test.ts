@@ -13,12 +13,12 @@ import {
   CreditCheckResult,
   FailedReason,
   PendingReason,
-} from "@/modules/atobarai/atobarai-transaction-success-response";
+} from "@/modules/atobarai/api/atobarai-transaction-success-response";
 import {
   AtobaraiApiClientRegisterTransactionError,
   IAtobaraiApiClient,
   IAtobaraiApiClientFactory,
-} from "@/modules/atobarai/types";
+} from "@/modules/atobarai/api/types";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,

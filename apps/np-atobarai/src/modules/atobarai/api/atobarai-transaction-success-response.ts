@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { AtobaraiTransactionIdSchema } from "./atobarai-transaction-id";
+import { AtobaraiTransactionIdSchema } from "../atobarai-transaction-id";
 
 export const CreditCheckResult = {
   Success: "00",

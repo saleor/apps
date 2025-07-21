@@ -1,4 +1,4 @@
-import { createAtobaraiRegisterTransactionPayload } from "@/modules/atobarai/atobarai-register-transaction-payload";
+import { createAtobaraiRegisterTransactionPayload } from "@/modules/atobarai/api/atobarai-register-transaction-payload";
 
 import { mockedSaleorTransactionToken } from "../saleor/mocked-saleor-transaction-token";
 import { mockedAtobaraiCustomer } from "./mocked-atobarai-customer";

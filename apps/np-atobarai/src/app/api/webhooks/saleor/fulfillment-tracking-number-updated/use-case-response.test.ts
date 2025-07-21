@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AtobaraiApiClientFulfillmentReportError } from "@/modules/atobarai/types";
+import { AtobaraiApiClientFulfillmentReportError } from "@/modules/atobarai/api/types";
 
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 

@@ -1,4 +1,4 @@
-import { createAtobaraiChangeTransactionPayload } from "@/modules/atobarai/atobarai-change-transaction-payload";
+import { createAtobaraiChangeTransactionPayload } from "@/modules/atobarai/api/atobarai-change-transaction-payload";
 
 import { mockedSaleorTransactionToken } from "../saleor/mocked-saleor-transaction-token";
 import { mockedAtobaraiCustomer } from "./mocked-atobarai-customer";

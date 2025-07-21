@@ -5,10 +5,10 @@ import { err, ok, Result } from "neverthrow";
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
-import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/atobarai-fulfillment-report-payload";
-import { AtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/atobarai-fulfillment-report-success-response";
+import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
+import { AtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
+import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
-import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 
 import { BaseUseCase } from "../base-use-case";
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";

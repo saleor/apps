@@ -1,4 +1,4 @@
-import { AtobaraiApiClientFulfillmentReportError } from "@/modules/atobarai/types";
+import { AtobaraiApiClientFulfillmentReportError } from "@/modules/atobarai/api/types";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
 import { AtobaraiMultipleFailureTransactionError } from "../use-case-errors";
