@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
-import { createAtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { createAtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
 import { createAtobaraiShippingCompanyCode } from "../atobarai/atobarai-shipping-company-code";
@@ -15,7 +15,7 @@ describe("AppChannelConfig", () => {
     useSandbox: true,
     skuAsName: false,
     merchantCode: createAtobaraiMerchantCode("M123"),
-    spCode: createAtobaraiSpCode("SP456"),
+    secretSpCode: createAtobaraiSecretSpCode("SP456"),
     terminalId: createAtobaraiTerminalId("T789"),
   };
 

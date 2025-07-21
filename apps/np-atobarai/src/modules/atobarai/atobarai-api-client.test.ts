@@ -4,7 +4,7 @@ import { mockedAtobaraiChangeTransactionPayload } from "@/__tests__/mocks/atobar
 import { mockedAtobaraiMerchantCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-merchant-code";
 import { mockedAtobaraiRegisterTransactionPayload } from "@/__tests__/mocks/atobarai/mocked-atobarai-register-transaction-payload";
 import { mockedAtobaraiFulfillmentReportPayload } from "@/__tests__/mocks/atobarai/mocked-atobarai-report-fulfilment-payload";
-import { mockedAtobaraiSpCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-sp-code";
+import { mockedAtobaraiSecretSpCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-secret-sp-code";
 import { mockedAtobaraiTerminalId } from "@/__tests__/mocks/atobarai/mocked-atobarai-terminal-id";
 
 import { AtobaraiApiClient } from "./atobarai-api-client";
@@ -15,7 +15,7 @@ import {
 } from "./types";
 
 const authorizationHeader = `Basic ${btoa(
-  `${mockedAtobaraiMerchantCode}:${mockedAtobaraiSpCode}`,
+  `${mockedAtobaraiMerchantCode}:${mockedAtobaraiSecretSpCode}`,
 )}`;
 
 describe("AtobaraiApiClient", () => {
@@ -28,7 +28,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -54,7 +54,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -91,7 +91,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "production",
       });
 
@@ -119,7 +119,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -153,7 +153,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -182,7 +182,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -219,7 +219,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -256,7 +256,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "production",
       });
 
@@ -284,7 +284,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -317,7 +317,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -346,7 +346,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -382,7 +382,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -418,7 +418,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "production",
       });
 
@@ -446,7 +446,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -479,7 +479,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 
@@ -507,7 +507,7 @@ describe("AtobaraiApiClient", () => {
       const client = AtobaraiApiClient.create({
         atobaraiTerminalId: mockedAtobaraiTerminalId,
         atobaraiMerchantCode: mockedAtobaraiMerchantCode,
-        atobaraiSpCode: mockedAtobaraiSpCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
         atobaraiEnvironment: "sandbox",
       });
 

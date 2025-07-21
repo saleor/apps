@@ -17,7 +17,7 @@ export class GetSaleorChannelsTrpcHandler {
     return this.baseProcedure.query(async ({ ctx }) => {
       const channelsFetcher = this.channelsFetcherFactory(ctx.apiClient);
 
-      const channelsResult = await channelsFetcher.fetchChannels();
+      const channelsResult = await channelsFetcher.fetchChannels("JPY");
 
       if (channelsResult.isErr()) {
         throw new TRPCError({

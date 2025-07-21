@@ -3,7 +3,7 @@ import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 
 import { AppChannelConfig, AppChannelConfigFields } from "@/modules/app-config/app-config";
-import { AtobaraiSpCode } from "@/modules/atobarai/atobarai-sp-code";
+import { AtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class GetConfigsListTrpcHandler {
@@ -14,7 +14,7 @@ export class GetConfigsListTrpcHandler {
   private getFrontendConfig = async (config: AppChannelConfig): Promise<AppChannelConfigFields> => {
     return {
       ...config,
-      spCode: "***" as AtobaraiSpCode,
+      secretSpCode: "***" as AtobaraiSecretSpCode,
     };
   };
 

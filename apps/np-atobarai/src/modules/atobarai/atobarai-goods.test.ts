@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedAtobaraiMerchantCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-merchant-code";
+import { mockedAtobaraiSecretSpCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-secret-sp-code";
 import { mockedAtobaraiShippingCompanyCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-shipping-compnay-code";
-import { mockedAtobaraiSpCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-sp-code";
 import { mockedAtobaraiTerminalId } from "@/__tests__/mocks/atobarai/mocked-atobarai-terminal-id";
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
 import { SourceObjectFragment } from "@/generated/graphql";
@@ -16,7 +16,7 @@ describe("createAtobaraiGoods", () => {
     id: "111",
     merchantCode: mockedAtobaraiMerchantCode,
     shippingCompanyCode: mockedAtobaraiShippingCompanyCode,
-    spCode: mockedAtobaraiSpCode,
+    secretSpCode: mockedAtobaraiSecretSpCode,
     useSandbox: true,
     terminalId: mockedAtobaraiTerminalId,
   };

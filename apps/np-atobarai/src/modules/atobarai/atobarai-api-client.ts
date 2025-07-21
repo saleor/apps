@@ -10,7 +10,7 @@ import {
 } from "./atobarai-fulfillment-report-success-response";
 import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
-import { AtobaraiSpCode } from "./atobarai-sp-code";
+import { AtobaraiSecretSpCode } from "./atobarai-secret-sp-code";
 import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 import {
   AtobaraiTransactionSuccessResponse,
@@ -37,31 +37,31 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
   private atobaraiTerminalId: AtobaraiTerminalId;
   private atobaraiMerchantCode: AtobaraiMerchantCode;
-  private atobaraiSpCode: AtobaraiSpCode;
+  private atobaraiSecretSpCode: AtobaraiSecretSpCode;
   private atobaraiEnvironment: AtobaraiEnvironment;
 
   private constructor(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
-    atobaraiSpCode: AtobaraiSpCode;
+    atobaraiSecretSpCode: AtobaraiSecretSpCode;
     atobaraiEnvironment: AtobaraiEnvironment;
   }) {
     this.atobaraiTerminalId = args.atobaraiTerminalId;
     this.atobaraiMerchantCode = args.atobaraiMerchantCode;
-    this.atobaraiSpCode = args.atobaraiSpCode;
+    this.atobaraiSecretSpCode = args.atobaraiSecretSpCode;
     this.atobaraiEnvironment = args.atobaraiEnvironment;
   }
 
   static create(args: {
     atobaraiTerminalId: AtobaraiTerminalId;
     atobaraiMerchantCode: AtobaraiMerchantCode;
-    atobaraiSpCode: AtobaraiSpCode;
+    atobaraiSecretSpCode: AtobaraiSecretSpCode;
     atobaraiEnvironment: AtobaraiEnvironment;
   }): IAtobaraiApiClient {
     return new AtobaraiApiClient({
       atobaraiTerminalId: args.atobaraiTerminalId,
       atobaraiMerchantCode: args.atobaraiMerchantCode,
-      atobaraiSpCode: args.atobaraiSpCode,
+      atobaraiSecretSpCode: args.atobaraiSecretSpCode,
       atobaraiEnvironment: args.atobaraiEnvironment,
     });
   }
@@ -69,7 +69,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
   private getHeaders(): HeadersInit {
     return {
       "X-NP-Terminal-Id": this.atobaraiTerminalId,
-      Authorization: `Basic ${btoa(`${this.atobaraiMerchantCode}:${this.atobaraiSpCode}`)}`,
+      Authorization: `Basic ${btoa(`${this.atobaraiMerchantCode}:${this.atobaraiSecretSpCode}`)}`,
       "Content-Type": "application/json",
     };
   }
