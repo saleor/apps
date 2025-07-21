@@ -3,17 +3,13 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { BaseError } from "@saleor/errors";
 import { captureException } from "@sentry/nextjs";
-import { ok } from "neverthrow";
 
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
-import { AppChannelConfig } from "@/modules/app-config/app-config";
+import { appConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { AtobaraiApiClientFactory } from "@/modules/atobarai/atobarai-api-client-factory";
-import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
-import { createAtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
-import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
@@ -24,25 +20,7 @@ const logger = createLogger("TransactionInitializeSession route");
 
 const useCase = new TransactionInitializeSessionUseCase({
   atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
-  // TODO: Replace with actual implementation of AppConfigRepo
-  appConfigRepo: {
-    getChannelConfig: () => {
-      return Promise.resolve(
-        ok(
-          AppChannelConfig.create({
-            name: "Config 1",
-            id: "111",
-            merchantCode: createAtobaraiMerchantCode("merchant-code-1"),
-            shippingCompanyCode: "5000",
-            skuAsName: false,
-            secretSpCode: createAtobaraiSecretSpCode("sp1"),
-            useSandbox: true,
-            terminalId: createAtobaraiTerminalId("id"),
-          })._unsafeUnwrap(),
-        ),
-      );
-    },
-  },
+  appConfigRepo: appConfigRepo,
 });
 
 const handler = transactionInitializeSessionWebhookDefinition.createHandler(
