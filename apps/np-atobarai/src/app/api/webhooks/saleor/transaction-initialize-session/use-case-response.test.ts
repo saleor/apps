@@ -32,7 +32,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
               "REFUND",
             ],
             "message": "Successfully registered NP Atobarai transaction",
-            "pspReference": "np_transaction_123",
+            "pspReference": "np_trans_id",
             "result": "CHARGE_SUCCESS",
           }
         `);
@@ -53,7 +53,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
           {
             "actions": [],
             "message": "NP Atobarai transaction requires further action",
-            "pspReference": "np_transaction_123",
+            "pspReference": "np_trans_id",
             "result": "CHARGE_ACTION_REQUIRED",
           }
         `);

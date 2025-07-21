@@ -11,6 +11,7 @@ const schema = z
   })
   .brand("AtobaraiRegisterTransactionErrorResponse");
 
-export const createAtobaraiErrorResponse = (rawResponse: unknown) => schema.parse(rawResponse);
+export const createAtobaraiErrorResponse = (rawResponse: unknown | AtobaraiErrorResponse) =>
+  schema.parse(rawResponse);
 
 export type AtobaraiErrorResponse = z.infer<typeof schema>;

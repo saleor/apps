@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
+
 import {
   AtobaraiTransactionSuccessResponse,
   createAtobaraiTransactionSuccessResponse,
@@ -13,7 +15,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
     const rawResponse = {
       results: [
         {
-          np_transaction_id: "np_123456",
+          np_transaction_id: mockedAtobaraiTransactionId,
           authori_result: CreditCheckResult.Success,
         },
       ],
@@ -26,7 +28,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
         "results": [
           {
             "authori_result": "00",
-            "np_transaction_id": "np_123456",
+            "np_transaction_id": "np_trans_id",
           },
         ],
       }
@@ -37,7 +39,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
     const rawResponse = {
       results: [
         {
-          np_transaction_id: "np_789012",
+          np_transaction_id: mockedAtobaraiTransactionId,
           authori_result: CreditCheckResult.Pending,
           authori_hold: [
             PendingReason.LackOfAddressInformation,
@@ -58,7 +60,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
               "RE014",
             ],
             "authori_result": "10",
-            "np_transaction_id": "np_789012",
+            "np_transaction_id": "np_trans_id",
           },
         ],
       }
@@ -69,7 +71,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
     const rawResponse = {
       results: [
         {
-          np_transaction_id: "np_345678",
+          np_transaction_id: mockedAtobaraiTransactionId,
           authori_result: CreditCheckResult.Failed,
           authori_ng: FailedReason.ExcessOfTheAmount,
         },
@@ -84,7 +86,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
           {
             "authori_ng": "RE001",
             "authori_result": "20",
-            "np_transaction_id": "np_345678",
+            "np_transaction_id": "np_trans_id",
           },
         ],
       }
@@ -95,7 +97,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
     const rawResponse = {
       results: [
         {
-          np_transaction_id: "np_901234",
+          np_transaction_id: mockedAtobaraiTransactionId,
           authori_result: CreditCheckResult.BeforeReview,
         },
       ],
@@ -108,7 +110,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
         "results": [
           {
             "authori_result": "40",
-            "np_transaction_id": "np_901234",
+            "np_transaction_id": "np_trans_id",
           },
         ],
       }
@@ -119,16 +121,16 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
     const rawResponse = {
       results: [
         {
-          np_transaction_id: "np_123456",
+          np_transaction_id: "np_trans_42",
           authori_result: "00",
         },
         {
-          np_transaction_id: "np_789012",
+          np_transaction_id: "np_trans_21",
           authori_result: "10",
           authori_hold: ["RE009"],
         },
         {
-          np_transaction_id: "np_345678",
+          np_transaction_id: "np_trans_37",
           authori_result: "20",
           authori_ng: "RE001",
         },
@@ -142,19 +144,19 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
         "results": [
           {
             "authori_result": "00",
-            "np_transaction_id": "np_123456",
+            "np_transaction_id": "np_trans_42",
           },
           {
             "authori_hold": [
               "RE009",
             ],
             "authori_result": "10",
-            "np_transaction_id": "np_789012",
+            "np_transaction_id": "np_trans_21",
           },
           {
             "authori_ng": "RE001",
             "authori_result": "20",
-            "np_transaction_id": "np_345678",
+            "np_transaction_id": "np_trans_37",
           },
         ],
       }
@@ -165,7 +167,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
     const rawResponse = {
       results: [
         {
-          np_transaction_id: "np_123456",
+          np_transaction_id: mockedAtobaraiTransactionId,
           authori_result: "99", // Invalid result code
         },
       ],

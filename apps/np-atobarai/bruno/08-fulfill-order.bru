@@ -1,0 +1,56 @@
+meta {
+  name: Fulfill order
+  type: graphql
+  seq: 8
+}
+
+post {
+  url: {{saleorApiUrl}}
+  body: graphql
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{saleorApiToken}}
+}
+
+body:graphql {
+  mutation FulfillOrder(
+    $orderId: ID!
+    $orderLineQuantity: Int!
+    $warehouseId: ID!
+    $orderLineId: ID!
+  ) {
+    orderFulfill(
+      input: {
+        trackingNumber: "np-atobarai-track-no"
+        lines: [
+          {
+            orderLineId: $orderLineId
+            stocks: { quantity: $orderLineQuantity, warehouse: $warehouseId }
+          }
+        ]
+      }
+      order: $orderId
+    ) {
+      fulfillments {
+        id
+      }
+      errors {
+        code
+        message
+        field
+      }
+    }
+  }
+  
+}
+
+body:graphql:vars {
+  {
+    "orderId": "{{orderId}}",
+    "orderLineQuantity": "{{orderLineQuantity}}",
+    "warehouseId": "{{warehouseId}}",
+    "orderLineId": "{{orderLineId}}"
+  }
+}

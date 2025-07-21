@@ -10,8 +10,9 @@ import {
   NewConfigInput,
   newConfigInputSchema,
 } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
-import { SHIPPING_COMPANY_CODES } from "@/modules/atobarai/shipping-company-codes";
 import { trpcClient } from "@/modules/trpc/trpc-client";
+
+import { SHIPPING_COMPANY_CODES } from "../atobarai/atobarai-shipping-company-code";
 
 type FormShape = NewConfigInput;
 

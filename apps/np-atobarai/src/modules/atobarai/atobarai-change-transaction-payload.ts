@@ -10,13 +10,13 @@ import { AtobaraiGoods, AtobaraiGoodsSchema } from "./atobarai-goods";
 import { AtobaraiMoney } from "./atobarai-money";
 import { ATOBARAI_SETTLEMENT_TYPE } from "./atobarai-settelment-type";
 import { AtobaraiShopOrderDate } from "./atobarai-shop-order-date";
-import { AtobaraiTransactionId } from "./atobarai-transaction-id";
+import { AtobaraiTransactionId, AtobaraiTransactionIdSchema } from "./atobarai-transaction-id";
 
 const schema = z
   .object({
     transactions: z.array(
       z.object({
-        np_transaction_id: z.string(),
+        np_transaction_id: AtobaraiTransactionIdSchema,
         shop_transaction_id: z.string().max(40),
         shop_order_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
           message: "Date must be in YYYY-MM-DD format",

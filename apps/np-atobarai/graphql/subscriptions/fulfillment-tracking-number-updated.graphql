@@ -3,6 +3,24 @@ fragment FulfillmentTrackingNumberUpdatedEvent on FulfillmentTrackingNumberUpdat
   fulfillment {
     trackingNumber
   }
+  order {
+    id
+    channel {
+      ...Channel
+    }
+    transactions {
+      pspReference
+      createdBy {
+        ... on App {
+          __typename
+          id
+        }
+        ... on User {
+          __typename
+        }
+      }
+    }
+  }
 }
 
 subscription FulfillmentTrackingNumberUpdated {

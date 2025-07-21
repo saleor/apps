@@ -20,6 +20,7 @@ const getTestCaller = () => {
     verifyCredentials: vi.fn(),
     registerTransaction: vi.fn(),
     changeTransaction: vi.fn(),
+    reportFulfillment: vi.fn(),
   } satisfies IAtobaraiApiClient;
 
   const instance = new NewConfigTrpcHandler({

@@ -3,12 +3,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { mockedAtobaraiChangeTransactionPayload } from "@/__tests__/mocks/atobarai/mocked-atobarai-change-transaction-payload";
 import { mockedAtobaraiMerchantCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-merchant-code";
 import { mockedAtobaraiRegisterTransactionPayload } from "@/__tests__/mocks/atobarai/mocked-atobarai-register-transaction-payload";
+import { mockedAtobaraiFulfillmentReportPayload } from "@/__tests__/mocks/atobarai/mocked-atobarai-report-fulfilment-payload";
 import { mockedAtobaraiSecretSpCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-secret-sp-code";
 import { mockedAtobaraiTerminalId } from "@/__tests__/mocks/atobarai/mocked-atobarai-terminal-id";
 
 import { AtobaraiApiClient } from "./atobarai-api-client";
 import {
   AtobaraiApiClientChangeTransactionError,
+  AtobaraiApiClientFulfillmentReportError,
   AtobaraiApiClientRegisterTransactionError,
 } from "./types";
 
@@ -42,7 +44,7 @@ describe("AtobaraiApiClient", () => {
         results: [
           {
             authori_result: "00",
-            np_transaction_id: "1234567890",
+            np_transaction_id: "np_trans_32",
           },
         ],
       });
@@ -79,7 +81,7 @@ describe("AtobaraiApiClient", () => {
         results: [
           {
             authori_result: "00",
-            np_transaction_id: "1234567890",
+            np_transaction_id: "np_trans_32",
           },
         ],
       });
@@ -170,7 +172,7 @@ describe("AtobaraiApiClient", () => {
         results: [
           {
             authori_result: "00",
-            np_transaction_id: "1234567890",
+            np_transaction_id: "np_trans_32",
           },
         ],
       });
@@ -191,7 +193,7 @@ describe("AtobaraiApiClient", () => {
           "results": [
             {
               "authori_result": "00",
-              "np_transaction_id": "1234567890",
+              "np_transaction_id": "np_trans_32",
             },
           ],
         }
@@ -207,7 +209,7 @@ describe("AtobaraiApiClient", () => {
         results: [
           {
             authori_result: "00",
-            np_transaction_id: "1234567890",
+            np_transaction_id: "np_trans_32",
           },
         ],
       });
@@ -244,7 +246,7 @@ describe("AtobaraiApiClient", () => {
         results: [
           {
             authori_result: "00",
-            np_transaction_id: "1234567890",
+            np_transaction_id: "np_trans_32",
           },
         ],
       });
@@ -334,7 +336,7 @@ describe("AtobaraiApiClient", () => {
         results: [
           {
             authori_result: "00",
-            np_transaction_id: "1234567890",
+            np_transaction_id: "np_trans_32",
           },
         ],
       });
@@ -355,7 +357,167 @@ describe("AtobaraiApiClient", () => {
           "results": [
             {
               "authori_result": "00",
-              "np_transaction_id": "1234567890",
+              "np_transaction_id": "np_trans_32",
+            },
+          ],
+        }
+      `);
+    });
+  });
+
+  describe("reportFulfillment", () => {
+    it("should make a POST request to the correct sandbox URL with proper headers and body", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            np_transaction_id: "np_trans_32",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
+        atobaraiEnvironment: "sandbox",
+      });
+
+      await client.reportFulfillment(mockedAtobaraiFulfillmentReportPayload);
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        new URL("shipments", "https://ctcp.np-payment-gateway.com/v1/"),
+        {
+          method: "POST",
+          headers: {
+            "X-NP-Terminal-Id": mockedAtobaraiTerminalId,
+            Authorization: authorizationHeader,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(mockedAtobaraiFulfillmentReportPayload),
+        },
+      );
+    });
+
+    it("should make a POST request to the correct production URL", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            np_transaction_id: "np_trans_32",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
+        atobaraiEnvironment: "production",
+      });
+
+      await client.reportFulfillment(mockedAtobaraiFulfillmentReportPayload);
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        new URL("shipments", "https://cp.np-payment-gateway.com/v1/"),
+        {
+          method: "POST",
+          headers: {
+            "X-NP-Terminal-Id": mockedAtobaraiTerminalId,
+            Authorization: authorizationHeader,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(mockedAtobaraiFulfillmentReportPayload),
+        },
+      );
+    });
+
+    it("should return AtobaraiApiClientFulfillmentReportError when fetch throws an error", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      fetchSpy.mockRejectedValue(new Error("Network error"));
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
+        atobaraiEnvironment: "sandbox",
+      });
+
+      const result = await client.reportFulfillment(mockedAtobaraiFulfillmentReportPayload);
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiApiClientFulfillmentReportError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+          [AtobaraiApiClientFulfillmentReportError: Network error
+          Failed to report fulfillment]
+        `);
+    });
+
+    it("should return AtobaraiApiClientFulfillmentReportError when response is not ok", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json(
+        {
+          errors: [
+            {
+              codes: ["invalid_request"],
+              id: "12345",
+            },
+          ],
+        },
+        { status: 400 },
+      );
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
+        atobaraiEnvironment: "sandbox",
+      });
+
+      const result = await client.reportFulfillment(mockedAtobaraiFulfillmentReportPayload);
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiApiClientFulfillmentReportError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[AtobaraiApiClientFulfillmentReportError: Atobarai API returned an error]`,
+      );
+    });
+
+    it("should return AtobaraiFulfillmentReportSuccessResponse when NP Atobarai responds with success", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            np_transaction_id: "np_trans_32",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const client = AtobaraiApiClient.create({
+        atobaraiTerminalId: mockedAtobaraiTerminalId,
+        atobaraiMerchantCode: mockedAtobaraiMerchantCode,
+        atobaraiSecretSpCode: mockedAtobaraiSecretSpCode,
+        atobaraiEnvironment: "sandbox",
+      });
+
+      const result = await client.reportFulfillment(mockedAtobaraiFulfillmentReportPayload);
+
+      expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+        {
+          "results": [
+            {
+              "np_transaction_id": "np_trans_32",
             },
           ],
         }

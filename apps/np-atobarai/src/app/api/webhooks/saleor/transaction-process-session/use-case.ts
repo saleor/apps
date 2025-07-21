@@ -160,6 +160,14 @@ export class TransactionProcessSessionUseCase {
   }): UseCaseExecuteResult {
     const { appId, saleorApiUrl, event } = params;
 
+    if (!event.issuedAt) {
+      this.logger.warn("Missing issuedAt in event", {
+        event,
+      });
+
+      return err(new MalformedRequestResponse(new BaseError("Missing issuedAt in event")));
+    }
+
     const atobaraiConfigResult = await this.getAtobaraiConfig({
       channelId: event.sourceObject.channel.id,
       appId,
@@ -168,14 +176,6 @@ export class TransactionProcessSessionUseCase {
 
     if (atobaraiConfigResult.isErr()) {
       return err(atobaraiConfigResult.error);
-    }
-
-    if (!event.issuedAt) {
-      this.logger.warn("Missing issuedAt in event", {
-        event,
-      });
-
-      return err(new MalformedRequestResponse(new BaseError("Missing issuedAt in event")));
     }
 
     const apiClient = this.atobaraiApiClientFactory.create({

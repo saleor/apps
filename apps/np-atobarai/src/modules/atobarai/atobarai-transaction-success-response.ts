@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { AtobaraiTransactionIdSchema } from "./atobarai-transaction-id";
+
 export const CreditCheckResult = {
   Success: "00",
   Pending: "10",
@@ -28,11 +30,11 @@ const schema = z
     results: z.array(
       z.discriminatedUnion("authori_result", [
         z.object({
-          np_transaction_id: z.string(),
+          np_transaction_id: AtobaraiTransactionIdSchema,
           authori_result: z.literal(CreditCheckResult.Success),
         }),
         z.object({
-          np_transaction_id: z.string(),
+          np_transaction_id: AtobaraiTransactionIdSchema,
           authori_result: z.literal(CreditCheckResult.Pending),
           authori_hold: z.array(
             z.enum([
@@ -47,7 +49,7 @@ const schema = z
           ),
         }),
         z.object({
-          np_transaction_id: z.string(),
+          np_transaction_id: AtobaraiTransactionIdSchema,
           authori_result: z.literal(CreditCheckResult.Failed),
           authori_ng: z.enum([
             FailedReason.ExcessOfTheAmount,
@@ -56,7 +58,7 @@ const schema = z
           ]),
         }),
         z.object({
-          np_transaction_id: z.string(),
+          np_transaction_id: AtobaraiTransactionIdSchema,
           authori_result: z.literal(CreditCheckResult.BeforeReview),
         }),
       ]),
@@ -64,8 +66,9 @@ const schema = z
   })
   .brand("AtobaraiTransactionSuccessResponse");
 
-export const createAtobaraiTransactionSuccessResponse = (rawResponse: unknown) =>
-  schema.parse(rawResponse);
+export const createAtobaraiTransactionSuccessResponse = (
+  rawResponse: unknown | AtobaraiTransactionSuccessResponse,
+) => schema.parse(rawResponse);
 
 /**
  * Success response used for registering and updating transactions in Atobarai.
