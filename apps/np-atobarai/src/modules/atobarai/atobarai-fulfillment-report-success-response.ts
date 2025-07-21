@@ -12,6 +12,8 @@ const schema = z
   })
   .brand("AtobaraiFulfillmentReportSuccessResponse");
 
-export const createAtobaraiFulfillmentReportSuccessResponse = (raw: unknown) => schema.parse(raw);
+export const createAtobaraiFulfillmentReportSuccessResponse = (
+  raw: unknown | AtobaraiFulfillmentReportSuccessResponse,
+) => schema.parse(raw);
 
 export type AtobaraiFulfillmentReportSuccessResponse = z.infer<typeof schema>;

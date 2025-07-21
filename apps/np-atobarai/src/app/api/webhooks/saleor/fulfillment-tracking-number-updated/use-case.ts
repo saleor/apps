@@ -112,6 +112,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase {
     }
 
     if (event.order.transactions.length > 1) {
+      // App support only single transaction per order / checkout. This is a limitation of how we send goods to Atobarai. If there are multiple transactions, we would need to report goods prices minus prices from other transactions.
       this.logger.warn("Multiple transactions found for the order", {
         event: { orderId: event.order.id },
       });

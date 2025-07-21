@@ -66,8 +66,9 @@ const schema = z
   })
   .brand("AtobaraiTransactionSuccessResponse");
 
-export const createAtobaraiTransactionSuccessResponse = (rawResponse: unknown) =>
-  schema.parse(rawResponse);
+export const createAtobaraiTransactionSuccessResponse = (
+  rawResponse: unknown | AtobaraiTransactionSuccessResponse,
+) => schema.parse(rawResponse);
 
 /**
  * Success response used for registering and updating transactions in Atobarai.

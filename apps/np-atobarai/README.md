@@ -62,7 +62,7 @@ To get started create `.env` file based on `.env.example` inside `apps/np-atobar
 
 # DynamoDB
 
-DynamoDB is used to store Client-side logs. To develop this feature locally use development containers or use [docker-compose](../../.devcontainer/np-atobarai/docker-compose.yml) from `.devcontainer`:
+DynamoDB is used to store app's configuration. To develop this feature locally use development containers or use [docker-compose](../../.devcontainer/np-atobarai/docker-compose.yml) from `.devcontainer`:
 
 1. Run `docker compose up dynamodb` for local DynamoDB instance
 2. Run `pnpm run setup-dynamodb` to describe DynamoDB table
