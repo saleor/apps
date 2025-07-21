@@ -28,11 +28,11 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
     try {
       setObservabilitySourceObjectId(ctx.payload.sourceObject);
 
-      logger.info("Received webhook request");
-
       const saleorApiUrl = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
       setObservabilitySaleorApiUrl(saleorApiUrl, ctx.payload.version);
+
+      logger.info("Received webhook request");
 
       const result = await useCase.execute({
         event: ctx.payload,

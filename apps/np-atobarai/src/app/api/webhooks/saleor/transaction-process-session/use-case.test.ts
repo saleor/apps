@@ -5,9 +5,9 @@ import { describe, expect, it, vi } from "vitest";
 import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
+import { mockedTransactionProcessSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-process-session-event";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
-import { mockedTransactionProcessSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-process-session-event";
 import {
   createAtobaraiTransactionSuccessResponse,
   CreditCheckResult,
@@ -35,6 +35,7 @@ describe("TransactionProcessSessionUseCase", () => {
     changeTransaction: vi.fn(),
     verifyCredentials: vi.fn(),
     reportFulfillment: vi.fn(),
+    cancelTransaction: vi.fn(),
   });
 
   const createMockedApiClientFactory = (

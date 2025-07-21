@@ -2,7 +2,6 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
   ...EventMetadata
   action {
     amount
-    currency
   }
   transaction {
     pspReference

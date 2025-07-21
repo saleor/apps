@@ -30,11 +30,11 @@ const handler = fulfillmentTrackingNumberUpdatedWebhookDefinition.createHandler(
         setObservabilitySourceObjectId({ __typename: "Order", id: ctx.payload.order.id });
       }
 
-      logger.info("Received webhook request");
-
       const saleorApiUrl = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
       setObservabilitySaleorApiUrl(saleorApiUrl, ctx.payload.version);
+
+      logger.info("Received webhook request");
 
       const result = await useCase.execute({
         event: ctx.payload,
