@@ -28,6 +28,7 @@ import {
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
 
+import { BaseUseCase } from "../base-use-case";
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
 import {
   AtobaraiFailureTransactionError,
@@ -42,51 +43,16 @@ type UseCaseExecuteResult = Promise<
   >
 >;
 
-export class TransactionProcessSessionUseCase {
-  private appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
-  private logger = createLogger("TransactionProcessSessionUseCase");
+export class TransactionProcessSessionUseCase extends BaseUseCase {
+  protected logger = createLogger("TransactionProcessSessionUseCase");
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   }) {
-    this.appConfigRepo = deps.appConfigRepo;
+    super(deps.appConfigRepo);
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
-  }
-
-  private async getAtobaraiConfig(params: {
-    channelId: string;
-    appId: string;
-    saleorApiUrl: SaleorApiUrl;
-  }) {
-    const { channelId, appId, saleorApiUrl } = params;
-
-    const atobaraiConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
-      channelId,
-      appId,
-      saleorApiUrl,
-    });
-
-    if (atobaraiConfigForThisChannel.isErr()) {
-      this.logger.error("Failed to get configuration", {
-        error: atobaraiConfigForThisChannel.error,
-      });
-
-      return err(new AppIsNotConfiguredResponse(atobaraiConfigForThisChannel.error));
-    }
-
-    if (!atobaraiConfigForThisChannel.value) {
-      this.logger.warn("No configuration found for channel", {
-        channelId,
-      });
-
-      return err(
-        new AppIsNotConfiguredResponse(new BaseError("Configuration not found for channel")),
-      );
-    }
-
-    return ok(atobaraiConfigForThisChannel.value);
   }
 
   private prepareChangeTransactionPayload(
@@ -168,7 +134,7 @@ export class TransactionProcessSessionUseCase {
       return err(new MalformedRequestResponse(new BaseError("Missing issuedAt in event")));
     }
 
-    const atobaraiConfigResult = await this.getAtobaraiConfig({
+    const atobaraiConfigResult = await this.getAtobaraiConfigForChannel({
       channelId: event.sourceObject.channel.id,
       appId,
       saleorApiUrl,
