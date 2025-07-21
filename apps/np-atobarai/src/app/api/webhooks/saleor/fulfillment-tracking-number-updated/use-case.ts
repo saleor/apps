@@ -10,6 +10,7 @@ import { AtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/ato
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 
+import { BaseUseCase } from "../base-use-case";
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
 import { AtobaraiMultipleFailureTransactionError } from "../use-case-errors";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
@@ -21,51 +22,18 @@ type UseCaseExecuteResult = Promise<
   >
 >;
 
-export class FulfillmentTrackingNumberUpdatedUseCase {
-  private appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
-  private logger = createLogger("FulfillmentTrackingNumberUpdatedUseCase");
+export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
+  protected logger = createLogger("FulfillmentTrackingNumberUpdatedUseCase");
+  protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   }) {
+    super();
     this.appConfigRepo = deps.appConfigRepo;
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
-  }
-
-  private async getAtobaraiConfig(params: {
-    channelId: string;
-    appId: string;
-    saleorApiUrl: SaleorApiUrl;
-  }) {
-    const { channelId, appId, saleorApiUrl } = params;
-
-    const atobaraiConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
-      channelId,
-      appId,
-      saleorApiUrl,
-    });
-
-    if (atobaraiConfigForThisChannel.isErr()) {
-      this.logger.error("Failed to get configuration", {
-        error: atobaraiConfigForThisChannel.error,
-      });
-
-      return err(new AppIsNotConfiguredResponse(atobaraiConfigForThisChannel.error));
-    }
-
-    if (!atobaraiConfigForThisChannel.value) {
-      this.logger.warn("No configuration found for channel", {
-        channelId,
-      });
-
-      return err(
-        new AppIsNotConfiguredResponse(new BaseError("Configuration not found for channel")),
-      );
-    }
-
-    return ok(atobaraiConfigForThisChannel.value);
   }
 
   private handleMultipleTransactionResults(
@@ -178,7 +146,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase {
 
     const { orderId, channelId, pspReference, trackingNumber } = parsingResult.value;
 
-    const atobaraiConfigResult = await this.getAtobaraiConfig({
+    const atobaraiConfigResult = await this.getAtobaraiConfigForChannel({
       channelId,
       appId,
       saleorApiUrl,
