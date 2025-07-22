@@ -4,14 +4,20 @@ import { err, ok, Result } from "neverthrow";
 
 import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
+import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { createAtobaraiCancelTransactionPayload } from "@/modules/atobarai/api/atobarai-cancel-transaction-payload";
 import { AtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
+import { createAtobaraiReregisterTransactionPayload } from "@/modules/atobarai/api/atobarai-reregister-transaction-payload";
 import { IAtobaraiApiClient, IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
+import { createAtobaraiGoodsFromRefund } from "@/modules/atobarai/atobarai-goods";
+import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
+import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import {
   AtobaraiTransactionId,
   createAtobaraiTransactionId,
 } from "@/modules/atobarai/atobarai-transaction-id";
+import { createSaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
 import {
   RefundFailureResult,
   RefundSuccessResult,
@@ -151,6 +157,85 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
     );
   }
 
+  private async handlePartialRefund({
+    atobaraiTransactionId,
+    apiClient,
+    transaction,
+    grantedRefund,
+    atobaraiConfig,
+    issuedAt,
+    refundAmount,
+  }: {
+    atobaraiTransactionId: AtobaraiTransactionId;
+    apiClient: IAtobaraiApiClient;
+    transaction: NonNullable<TransactionRefundRequestedEventFragment["transaction"]>;
+    grantedRefund: NonNullable<TransactionRefundRequestedEventFragment["grantedRefund"]>;
+    atobaraiConfig: NonNullable<AppChannelConfig>;
+    issuedAt: string;
+    refundAmount: number;
+  }) {
+    const cancelResult = await this.cancelAtobaraiTransaction({
+      atobaraiTransactionId,
+      apiClient,
+    });
+
+    if (cancelResult.isErr()) {
+      return ok(
+        new TransactionRefundRequestedUseCaseResponse.Failure({
+          transactionResult: new RefundFailureResult(),
+        }),
+      );
+    }
+
+    this.logger.info("Atobarai transaction cancelled successfully", {
+      cancelResult,
+    });
+
+    const saleorTransactionToken = createSaleorTransactionToken(transaction.token ?? "");
+
+    const goods = createAtobaraiGoodsFromRefund(transaction, grantedRefund, atobaraiConfig);
+
+    this.logger.info("Preparing to re-register Atobarai transaction", {
+      atobaraiTransactionId,
+      saleorTransactionToken,
+      goods,
+      issuedAt,
+      refundAmount,
+    });
+
+    const reregisterPayload = createAtobaraiReregisterTransactionPayload({
+      transactionId: atobaraiTransactionId,
+      saleorTransactionToken,
+      goods,
+      shopOrderDate: createAtobaraiShopOrderDate(issuedAt),
+      atobaraiMoney: createAtobaraiMoney({
+        amount: refundAmount,
+        currency: "JPY",
+      }),
+    });
+
+    const reregisterResult = await apiClient.reregisterTransaction(reregisterPayload);
+
+    if (reregisterResult.isErr()) {
+      this.logger.error("Failed to re-register Atobarai transaction", {
+        error: reregisterResult.error,
+      });
+
+      return ok(
+        new TransactionRefundRequestedUseCaseResponse.Failure({
+          transactionResult: new RefundFailureResult(),
+        }),
+      );
+    }
+
+    return ok(
+      new TransactionRefundRequestedUseCaseResponse.Success({
+        transactionResult: new RefundSuccessResult(),
+        atobaraiTransactionId,
+      }),
+    );
+  }
+
   async execute(params: {
     appId: string;
     event: TransactionRefundRequestedEventFragment;
@@ -198,7 +283,17 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
       });
     }
 
-    // TODO: Handle partial refunds if needed
+    if (actionAmount < totalAmount && event.grantedRefund && event.transaction) {
+      return this.handlePartialRefund({
+        atobaraiTransactionId,
+        apiClient,
+        transaction: event.transaction,
+        grantedRefund: event.grantedRefund,
+        atobaraiConfig: atobaraiConfigResult.value,
+        issuedAt: event.issuedAt ?? "",
+        refundAmount: totalAmount - actionAmount,
+      });
+    }
 
     return ok(
       new TransactionRefundRequestedUseCaseResponse.Failure({

@@ -3,7 +3,17 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
   action {
     amount
   }
+  grantedRefund {
+    shippingCostsIncluded
+    lines {
+      quantity
+      orderLine {
+        id
+      }
+    }
+  }
   transaction {
+    token
     pspReference
     checkout {
       id
@@ -24,6 +34,29 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
       total {
         gross {
           amount
+        }
+      }
+      shippingPrice {
+        gross {
+          amount
+        }
+      }
+      discount {
+        amount
+      }
+      lines {
+        id
+        quantity
+        unitPrice {
+          gross {
+            amount
+          }
+        }
+        variant {
+          sku
+          product {
+            name
+          }
         }
       }
     }

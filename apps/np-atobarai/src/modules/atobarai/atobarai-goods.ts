@@ -1,7 +1,7 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
-import { SourceObjectFragment } from "@/generated/graphql";
+import { SourceObjectFragment, TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 
 import { AppChannelConfig } from "../app-config/app-config";
 
@@ -33,6 +33,49 @@ export const createAtobaraiGoods = (
   return AtobaraiGoodsSchema.parse([...productLines, voucherLine, shippingLine].filter(Boolean));
 };
 
+/**
+ * Creates Atobarai goods from a transaction and a granted refund.
+ * It calculates the new set of goods by subtracting the refunded lines from the original transaction lines.
+ */
+export const createAtobaraiGoodsFromRefund = (
+  transaction: NonNullable<TransactionRefundRequestedEventFragment["transaction"]>,
+  grantedRefund: NonNullable<TransactionRefundRequestedEventFragment["grantedRefund"]>,
+  appConfig: AppChannelConfig,
+): AtobaraiGoods => {
+  if (!transaction.order) {
+    throw new BaseError("Transaction order data is missing, cannot create Atobarai goods.");
+  }
+
+  const refundedLinesMap = new Map(
+    grantedRefund.lines?.map((line) => [line.orderLine.id, line.quantity]),
+  );
+
+  const newOrderLines = transaction.order.lines
+    .map((line) => {
+      const refundedQuantity = refundedLinesMap.get(line.id);
+
+      if (typeof refundedQuantity !== "number") {
+        return line;
+      }
+
+      return {
+        ...line,
+        quantity: line.quantity - refundedQuantity,
+      };
+    })
+    .filter((line) => line.quantity > 0);
+
+  const productLines = getProductLinesFromOrder(newOrderLines, appConfig.skuAsName);
+
+  const voucherLine = getVoucherLine(transaction.order);
+
+  const shippingLine = grantedRefund.shippingCostsIncluded
+    ? null
+    : getShippingLine(transaction.order);
+
+  return AtobaraiGoodsSchema.parse([...productLines, voucherLine, shippingLine].filter(Boolean));
+};
+
 const getProductGoodsName = (args: {
   useSkuAsName: boolean;
   productName: string;
@@ -43,6 +86,29 @@ const getProductGoodsName = (args: {
   }
 
   return args.productName;
+};
+
+const getProductLinesFromOrder = (
+  lines: NonNullable<
+    NonNullable<TransactionRefundRequestedEventFragment["transaction"]>["order"]
+  >["lines"],
+  useSkuAsName: boolean,
+) => {
+  return lines.map((line) => {
+    if (!line.variant) {
+      throw new BaseError("Order line does not have a variant. Cannot convert to AtobaraiGoods.");
+    }
+
+    return {
+      goods_name: getProductGoodsName({
+        useSkuAsName,
+        productName: line.variant.product.name,
+        sku: line.variant.sku,
+      }),
+      goods_price: line.unitPrice.gross.amount,
+      quantity: line.quantity,
+    };
+  });
 };
 
 const getProductLines = (lines: SourceObjectFragment["lines"], useSkuAsName: boolean) => {
@@ -67,7 +133,7 @@ const getProductLines = (lines: SourceObjectFragment["lines"], useSkuAsName: boo
   });
 };
 
-const getVoucherLine = (sourceObject: SourceObjectFragment) => {
+const getVoucherLine = (sourceObject: Partial<Pick<SourceObjectFragment, "discount">>) => {
   const voucherAmount = sourceObject.discount?.amount;
 
   if (!voucherAmount) {
@@ -81,7 +147,7 @@ const getVoucherLine = (sourceObject: SourceObjectFragment) => {
   };
 };
 
-const getShippingLine = (sourceObject: SourceObjectFragment) => {
+const getShippingLine = (sourceObject: Partial<Pick<SourceObjectFragment, "shippingPrice">>) => {
   const shippingPrice = sourceObject.shippingPrice?.gross.amount;
 
   if (!shippingPrice) {

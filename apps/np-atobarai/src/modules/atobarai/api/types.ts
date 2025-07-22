@@ -10,6 +10,7 @@ import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-
 import { AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
 import { AtobaraiFulfillmentReportSuccessResponse } from "./atobarai-fulfillment-report-success-response";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
+import { AtobaraiReregisterTransactionPayload } from "./atobarai-reregister-transaction-payload";
 import { AtobaraiTransactionSuccessResponse } from "./atobarai-transaction-success-response";
 
 export type AtobaraiApiRegisterTransactionErrors = InstanceType<
@@ -26,6 +27,10 @@ export type AtobaraiApiClientFulfillmentReportError = InstanceType<
 
 export type AtobaraiApiClientCancelTransactionError = InstanceType<
   typeof AtobaraiApiClientCancelTransactionError
+>;
+
+export type AtobaraiApiClientReregisterTransactionError = InstanceType<
+  typeof AtobaraiApiClientReregisterTransactionError
 >;
 
 export type AtobaraiEnvironment = "sandbox" | "production";
@@ -58,6 +63,10 @@ export interface IAtobaraiApiClient {
     payload: AtobaraiCancelTransactionPayload,
   ) => Promise<
     Result<AtobaraiCancelTransactionSuccessResponse, AtobaraiApiClientCancelTransactionError>
+  >;
+  reregisterTransaction: (payload: AtobaraiReregisterTransactionPayload) => Promise<
+    // TODO: Add success response
+    Result<null, AtobaraiApiClientReregisterTransactionError>
   >;
 }
 
@@ -124,6 +133,20 @@ export const AtobaraiApiClientCancelTransactionError = BaseError.subclass(
       _brand: "AtobaraiApiClientCancelTransactionError" as const,
       publicCode: AtobaraiApiClientCancelTransactionErrorPublicCode,
       publicMessage: "Failed to cancel transaction with Atobarai",
+    },
+  },
+);
+
+export const AtobaraiApiClientReregisterTransactionErrorPublicCode =
+  "AtobaraiReregisterTransactionError" as const;
+
+export const AtobaraiApiClientReregisterTransactionError = BaseError.subclass(
+  "AtobaraiApiClientReregisterTransactionError",
+  {
+    props: {
+      _brand: "AtobaraiApiClientReregisterTransactionError" as const,
+      publicCode: AtobaraiApiClientReregisterTransactionErrorPublicCode,
+      publicMessage: "Failed to reregister transaction with Atobarai",
     },
   },
 );

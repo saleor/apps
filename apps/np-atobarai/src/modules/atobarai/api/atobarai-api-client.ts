@@ -17,6 +17,7 @@ import {
   createAtobaraiFulfillmentReportSuccessResponse,
 } from "./atobarai-fulfillment-report-success-response";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
+import { AtobaraiReregisterTransactionPayload } from "./atobarai-reregister-transaction-payload";
 import {
   AtobaraiTransactionSuccessResponse,
   createAtobaraiTransactionSuccessResponse,
@@ -27,6 +28,7 @@ import {
   AtobaraiApiClientChangeTransactionError,
   AtobaraiApiClientFulfillmentReportError,
   AtobaraiApiClientRegisterTransactionError,
+  AtobaraiApiClientReregisterTransactionError,
   AtobaraiApiClientValidationError,
   AtobaraiApiRegisterTransactionErrors,
   AtobaraiEnvironment,
@@ -296,5 +298,44 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
     const response = await result.value.json();
 
     return ok(createAtobaraiCancelTransactionSuccessResponse(response));
+  }
+
+  async reregisterTransaction(
+    payload: AtobaraiReregisterTransactionPayload,
+  ): Promise<Result<null, AtobaraiApiClientReregisterTransactionError>> {
+    const requestUrl = new URL("transactions/reregister", this.getBaseUrl());
+
+    const result = await ResultAsync.fromPromise(
+      fetch(requestUrl, {
+        method: "POST",
+        headers: this.getHeaders(),
+        body: JSON.stringify(payload),
+      }),
+      (error) => BaseError.normalize(error),
+    );
+
+    if (result.isErr()) {
+      return err(
+        new AtobaraiApiClientReregisterTransactionError("Failed to reregister transaction", {
+          cause: result.error,
+        }),
+      );
+    }
+
+    if (!result.value.ok) {
+      const response = await result.value.json();
+
+      const errors = this.convertErrorResponseToNormalizedErrors(response);
+
+      return err(
+        new AtobaraiApiClientReregisterTransactionError("Atobarai API returned an error", {
+          errors,
+        }),
+      );
+    }
+
+    await result.value.json();
+
+    return ok(null);
   }
 }
