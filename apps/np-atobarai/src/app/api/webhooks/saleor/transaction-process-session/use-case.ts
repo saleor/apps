@@ -9,18 +9,18 @@ import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import {
   AtobaraiChangeTransactionPayload,
   createAtobaraiChangeTransactionPayload,
-} from "@/modules/atobarai/atobarai-change-transaction-payload";
+} from "@/modules/atobarai/api/atobarai-change-transaction-payload";
+import {
+  AtobaraiTransactionSuccessResponse,
+  CreditCheckResult,
+} from "@/modules/atobarai/api/atobarai-transaction-success-response";
+import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
 import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
 import { createAtobaraiGoods } from "@/modules/atobarai/atobarai-goods";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
-import {
-  AtobaraiTransactionSuccessResponse,
-  CreditCheckResult,
-} from "@/modules/atobarai/atobarai-transaction-success-response";
-import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 import { createSaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
 import {
   ChargeActionRequiredResult,

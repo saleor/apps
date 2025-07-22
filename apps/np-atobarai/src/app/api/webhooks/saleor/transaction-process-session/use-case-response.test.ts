@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
-import { AtobaraiApiClientChangeTransactionError } from "@/modules/atobarai/types";
+import { AtobaraiApiClientChangeTransactionError } from "@/modules/atobarai/api/types";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,

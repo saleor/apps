@@ -31,8 +31,7 @@ describe("Manifest handler", async () => {
         expect(body).toMatchInlineSnapshot(
           {
             version: expect.any(String),
-          },
-          `
+          }, `
           {
             "about": "App that allows merchants using the Saleor e-commerce platform to accept online payments from customers using NP Atobarai as their payment processor.",
             "appUrl": "https://localhost:3000",
@@ -86,7 +85,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "NP Atobarai Transaction Refund Requested",
-                "query": "subscription TransactionRefundRequested { event { ...TransactionRefundRequestedEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment TransactionRefundRequestedEvent on TransactionRefundRequested { ...EventMetadata action { amount currency } transaction { pspReference checkout { id channel { ...Channel } } order { id channel { ...Channel } } }}",
+                "query": "subscription TransactionRefundRequested { event { ...TransactionRefundRequestedEvent }}fragment EventMetadata on Event { version issuedAt recipient { id }}fragment Channel on Channel { id slug currencyCode}fragment TransactionRefundRequestedEvent on TransactionRefundRequested { ...EventMetadata action { amount } transaction { pspReference checkout { id channel { ...Channel } totalPrice { gross { amount } } } order { id channel { ...Channel } total { gross { amount } } } }}",
                 "syncEvents": [
                   "TRANSACTION_REFUND_REQUESTED",
                 ],
@@ -103,8 +102,7 @@ describe("Manifest handler", async () => {
               },
             ],
           }
-        `,
-        );
+        `);
       },
     });
   });

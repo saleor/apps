@@ -1,13 +1,15 @@
 import { BaseError } from "@saleor/errors";
 import { Result } from "neverthrow";
 
+import { AtobaraiMerchantCode } from "../atobarai-merchant-code";
+import { AtobaraiSecretSpCode } from "../atobarai-secret-sp-code";
+import { AtobaraiTerminalId } from "../atobarai-terminal-id";
+import { AtobaraiCancelTransactionPayload } from "./atobarai-cancel-transaction-payload";
+import { AtobaraiCancelTransactionSuccessResponse } from "./atobarai-cancel-transaction-success-response";
 import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
 import { AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
 import { AtobaraiFulfillmentReportSuccessResponse } from "./atobarai-fulfillment-report-success-response";
-import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
-import { AtobaraiSecretSpCode } from "./atobarai-secret-sp-code";
-import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 import { AtobaraiTransactionSuccessResponse } from "./atobarai-transaction-success-response";
 
 export type AtobaraiApiRegisterTransactionErrors = InstanceType<
@@ -20,6 +22,10 @@ export type AtobaraiApiChangeTransactionErrors = InstanceType<
 
 export type AtobaraiApiClientFulfillmentReportError = InstanceType<
   typeof AtobaraiApiClientFulfillmentReportError
+>;
+
+export type AtobaraiApiClientCancelTransactionError = InstanceType<
+  typeof AtobaraiApiClientCancelTransactionError
 >;
 
 export type AtobaraiEnvironment = "sandbox" | "production";
@@ -47,6 +53,11 @@ export interface IAtobaraiApiClient {
     payload: AtobaraiFulfillmentReportPayload,
   ) => Promise<
     Result<AtobaraiFulfillmentReportSuccessResponse, AtobaraiApiClientFulfillmentReportError>
+  >;
+  cancelTransaction: (
+    payload: AtobaraiCancelTransactionPayload,
+  ) => Promise<
+    Result<AtobaraiCancelTransactionSuccessResponse, AtobaraiApiClientCancelTransactionError>
   >;
 }
 
@@ -99,6 +110,20 @@ export const AtobaraiApiClientFulfillmentReportError = BaseError.subclass(
       _brand: "AtobaraiApiClientFulfillmentReportError" as const,
       publicCode: AtobaraiApiClientFulfillmentReportErrorPublicCode,
       publicMessage: "Failed to report fulfillment with Atobarai",
+    },
+  },
+);
+
+export const AtobaraiApiClientCancelTransactionErrorPublicCode =
+  "AtobaraiCancelTransactionError" as const;
+
+export const AtobaraiApiClientCancelTransactionError = BaseError.subclass(
+  "AtobaraiApiClientCancelTransactionError",
+  {
+    props: {
+      _brand: "AtobaraiApiClientCancelTransactionError" as const,
+      publicCode: AtobaraiApiClientCancelTransactionErrorPublicCode,
+      publicMessage: "Failed to cancel transaction with Atobarai",
     },
   },
 );

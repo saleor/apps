@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
+import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
@@ -13,12 +14,11 @@ import {
   CreditCheckResult,
   FailedReason,
   PendingReason,
-} from "@/modules/atobarai/atobarai-transaction-success-response";
+} from "@/modules/atobarai/api/atobarai-transaction-success-response";
 import {
   AtobaraiApiClientRegisterTransactionError,
-  IAtobaraiApiClient,
   IAtobaraiApiClientFactory,
-} from "@/modules/atobarai/types";
+} from "@/modules/atobarai/api/types";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,
@@ -30,18 +30,9 @@ import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
 describe("TransactionInitializeSessionUseCase", () => {
-  const createMockedApiClient = (): IAtobaraiApiClient => ({
-    registerTransaction: vi.fn(),
-    changeTransaction: vi.fn(),
-    verifyCredentials: vi.fn(),
-    reportFulfillment: vi.fn(),
-  });
-
-  const createMockedApiClientFactory = (
-    apiClient: IAtobaraiApiClient,
-  ): IAtobaraiApiClientFactory => ({
-    create: vi.fn().mockReturnValue(apiClient),
-  });
+  const atobaraiApiClientFactory = {
+    create: () => mockedAtobaraiApiClient,
+  } satisfies IAtobaraiApiClientFactory;
 
   it("should return Success response with ChargeSuccessResult when Atobarai returns CreditCheckResult.Success", async () => {
     const mockPassedTransaction = createAtobaraiTransactionSuccessResponse({
@@ -53,11 +44,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       ],
     });
 
-    const mockedApiClient = createMockedApiClient();
-
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(ok(mockPassedTransaction));
-
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
+    vi.spyOn(mockedAtobaraiApiClient, "registerTransaction").mockResolvedValue(
+      ok(mockPassedTransaction),
+    );
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
       ok(mockedAppChannelConfig),
@@ -65,7 +54,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const responsePayload = await uc.execute({
@@ -92,11 +81,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       ],
     });
 
-    const mockedApiClient = createMockedApiClient();
-
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(ok(mockPendingTransaction));
-
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
+    vi.spyOn(mockedAtobaraiApiClient, "registerTransaction").mockResolvedValue(
+      ok(mockPendingTransaction),
+    );
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
       ok(mockedAppChannelConfig),
@@ -104,7 +91,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const responsePayload = await uc.execute({
@@ -133,11 +120,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       ],
     });
 
-    const mockedApiClient = createMockedApiClient();
-
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(ok(mockFailedTransaction));
-
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
+    vi.spyOn(mockedAtobaraiApiClient, "registerTransaction").mockResolvedValue(
+      ok(mockFailedTransaction),
+    );
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
       ok(mockedAppChannelConfig),
@@ -145,7 +130,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const responsePayload = await uc.execute({
@@ -171,13 +156,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       ],
     });
 
-    const mockedApiClient = createMockedApiClient();
-
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(
+    vi.spyOn(mockedAtobaraiApiClient, "registerTransaction").mockResolvedValue(
       ok(mockBeforeReviewTransaction),
     );
-
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
       ok(mockedAppChannelConfig),
@@ -185,7 +166,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const responsePayload = await uc.execute({
@@ -204,11 +185,7 @@ describe("TransactionInitializeSessionUseCase", () => {
   it("should return Failure response when Atobarai API returns an error", async () => {
     const mockApiError = new AtobaraiApiClientRegisterTransactionError("API Error");
 
-    const mockedApiClient = createMockedApiClient();
-
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(err(mockApiError));
-
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
+    vi.spyOn(mockedAtobaraiApiClient, "registerTransaction").mockResolvedValue(err(mockApiError));
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
       ok(mockedAppChannelConfig),
@@ -216,7 +193,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const responsePayload = await uc.execute({
@@ -236,16 +213,13 @@ describe("TransactionInitializeSessionUseCase", () => {
       issuedAt: null,
     };
 
-    const mockedApiClient = createMockedApiClient();
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
-
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
       ok(mockedAppChannelConfig),
     );
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const responsePayload = await uc.execute({
@@ -260,12 +234,9 @@ describe("TransactionInitializeSessionUseCase", () => {
   it("should return AppIsNotConfiguredResponse if config not found for specified channel", async () => {
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() => ok(null));
 
-    const mockedApiClient = createMockedApiClient();
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
-
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const responsePayload = await uc.execute({
@@ -284,12 +255,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       err(configError),
     );
 
-    const mockedApiClient = createMockedApiClient();
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
-
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const responsePayload = await uc.execute({
@@ -321,11 +289,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       ],
     });
 
-    const mockedApiClient = createMockedApiClient();
-
-    vi.mocked(mockedApiClient.registerTransaction).mockResolvedValue(ok(mockMultipleTransactions));
-
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
+    vi.spyOn(mockedAtobaraiApiClient, "registerTransaction").mockResolvedValue(
+      ok(mockMultipleTransactions),
+    );
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
       ok(mockedAppChannelConfig),
@@ -333,7 +299,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const responsePayload = await uc.execute({
