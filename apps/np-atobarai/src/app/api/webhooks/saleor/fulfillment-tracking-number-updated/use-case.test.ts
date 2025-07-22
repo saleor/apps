@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
+import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
@@ -11,7 +12,6 @@ import { mockedFulfillmentTrackingNumberUpdatedEvent } from "@/__tests__/mocks/s
 import { createAtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import {
   AtobaraiApiClientFulfillmentReportError,
-  IAtobaraiApiClient,
   IAtobaraiApiClientFactory,
 } from "@/modules/atobarai/api/types";
 
@@ -20,18 +20,9 @@ import { FulfillmentTrackingNumberUpdatedUseCase } from "./use-case";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
 describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
-  const createMockedApiClient = (): IAtobaraiApiClient => ({
-    registerTransaction: vi.fn(),
-    changeTransaction: vi.fn(),
-    verifyCredentials: vi.fn(),
-    reportFulfillment: vi.fn(),
-  });
-
-  const createMockedApiClientFactory = (
-    apiClient: IAtobaraiApiClient,
-  ): IAtobaraiApiClientFactory => ({
-    create: vi.fn().mockReturnValue(apiClient),
-  });
+  const atobaraiApiClientFactory = {
+    create: () => mockedAtobaraiApiClient,
+  } satisfies IAtobaraiApiClientFactory;
 
   it("should return Success response when fulfillment is reported successfully", async () => {
     const mockFulfillmentResponse = createAtobaraiFulfillmentReportSuccessResponse({
@@ -42,17 +33,15 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       ],
     });
 
-    const mockedApiClient = createMockedApiClient();
-
-    vi.mocked(mockedApiClient.reportFulfillment).mockResolvedValue(ok(mockFulfillmentResponse));
-
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
+    vi.spyOn(mockedAtobaraiApiClient, "reportFulfillment").mockResolvedValue(
+      ok(mockFulfillmentResponse),
+    );
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
 
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const result = await useCase.execute({
@@ -69,17 +58,13 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
   it("should return Failure response when Atobarai API returns error", async () => {
     const apiError = new AtobaraiApiClientFulfillmentReportError("API error");
 
-    const mockedApiClient = createMockedApiClient();
-
-    vi.mocked(mockedApiClient.reportFulfillment).mockResolvedValue(err(apiError));
-
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
+    vi.spyOn(mockedAtobaraiApiClient, "reportFulfillment").mockResolvedValue(err(apiError));
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
 
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const result = await useCase.execute({
@@ -101,17 +86,15 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       ],
     });
 
-    const mockedApiClient = createMockedApiClient();
-
-    vi.mocked(mockedApiClient.reportFulfillment).mockResolvedValue(ok(mockFulfillmentResponse));
-
-    const mockedApiClientFactory = createMockedApiClientFactory(mockedApiClient);
+    vi.spyOn(mockedAtobaraiApiClient, "reportFulfillment").mockResolvedValue(
+      ok(mockFulfillmentResponse),
+    );
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
 
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: mockedApiClientFactory,
+      atobaraiApiClientFactory,
     });
 
     const result = await useCase.execute({
@@ -130,7 +113,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
 
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: createMockedApiClientFactory(createMockedApiClient()),
+      atobaraiApiClientFactory,
     });
 
     const result = await useCase.execute({
@@ -149,7 +132,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
 
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: createMockedApiClientFactory(createMockedApiClient()),
+      atobaraiApiClientFactory,
     });
 
     const result = await useCase.execute({
@@ -164,7 +147,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
   it("should return MalformedRequestResponse when fulfillment is missing", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: createMockedApiClientFactory(createMockedApiClient()),
+      atobaraiApiClientFactory,
     });
     const event = {
       ...mockedFulfillmentTrackingNumberUpdatedEvent,
@@ -183,7 +166,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
   it("should return MalformedRequestResponse when tracking number is missing", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: createMockedApiClientFactory(createMockedApiClient()),
+      atobaraiApiClientFactory,
     });
 
     const event = {
@@ -205,7 +188,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
   it("should return MalformedRequestResponse when order transactions are missing", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: createMockedApiClientFactory(createMockedApiClient()),
+      atobaraiApiClientFactory,
     });
 
     const event = {
@@ -228,7 +211,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
   it("should return MalformedRequestResponse when multiple transactions are found", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: createMockedApiClientFactory(createMockedApiClient()),
+      atobaraiApiClientFactory,
     });
 
     const event = {
@@ -266,7 +249,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
   it("should return MalformedRequestResponse when transaction was not created by an app", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: createMockedApiClientFactory(createMockedApiClient()),
+      atobaraiApiClientFactory,
     });
 
     const event = {
@@ -296,7 +279,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
   it("should return MalformedRequestResponse when transaction was created by different app", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory: createMockedApiClientFactory(createMockedApiClient()),
+      atobaraiApiClientFactory,
     });
 
     const event = {

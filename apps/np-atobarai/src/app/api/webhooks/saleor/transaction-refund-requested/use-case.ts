@@ -123,6 +123,34 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
     return ok(null);
   }
 
+  private async handleFullRefund({
+    atobaraiTransactionId,
+    apiClient,
+  }: {
+    atobaraiTransactionId: AtobaraiTransactionId;
+    apiClient: IAtobaraiApiClient;
+  }) {
+    const cancelResult = await this.cancelAtobaraiTransaction({
+      atobaraiTransactionId,
+      apiClient,
+    });
+
+    if (cancelResult.isErr()) {
+      return ok(
+        new TransactionRefundRequestedUseCaseResponse.Failure({
+          transactionResult: new RefundFailureResult(),
+        }),
+      );
+    }
+
+    return ok(
+      new TransactionRefundRequestedUseCaseResponse.Success({
+        transactionResult: new RefundSuccessResult(),
+        atobaraiTransactionId,
+      }),
+    );
+  }
+
   async execute(params: {
     appId: string;
     event: TransactionRefundRequestedEventFragment;
@@ -136,7 +164,7 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
       return err(parsingResult.error);
     }
 
-    const { channelId, pspReference } = parsingResult.value;
+    const { actionAmount, channelId, pspReference, totalAmount } = parsingResult.value;
 
     const atobaraiConfigResult = await this.getAtobaraiConfigForChannel({
       channelId,
@@ -163,25 +191,18 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
 
     const atobaraiTransactionId = createAtobaraiTransactionId(pspReference);
 
-    const cancelResult = await this.cancelAtobaraiTransaction({
-      atobaraiTransactionId,
-      apiClient,
-    });
-
-    if (cancelResult.isErr()) {
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
+    if (actionAmount === totalAmount) {
+      return this.handleFullRefund({
+        atobaraiTransactionId,
+        apiClient,
+      });
     }
 
     // TODO: Handle partial refunds if needed
 
     return ok(
-      new TransactionRefundRequestedUseCaseResponse.Success({
-        transactionResult: new RefundSuccessResult(),
-        atobaraiTransactionId,
+      new TransactionRefundRequestedUseCaseResponse.Failure({
+        transactionResult: new RefundFailureResult(),
       }),
     );
   }

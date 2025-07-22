@@ -266,7 +266,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const result = await ResultAsync.fromPromise(
       fetch(requestUrl, {
-        method: "POST",
+        method: "PATCH",
         headers: this.getHeaders(),
         body: JSON.stringify(payload),
       }),

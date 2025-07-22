@@ -462,7 +462,7 @@ describe("AtobaraiApiClient", () => {
       );
 
       expect(fetchSpy).toHaveBeenCalledWith(new URL("transactions/cancel", sandboxUrl), {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "X-NP-Terminal-Id": mockedAtobaraiTerminalId,
           Authorization: authorizationHeader,
@@ -499,7 +499,7 @@ describe("AtobaraiApiClient", () => {
       );
 
       expect(fetchSpy).toHaveBeenCalledWith(new URL("transactions/cancel", productionUrl), {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "X-NP-Terminal-Id": mockedAtobaraiTerminalId,
           Authorization: authorizationHeader,

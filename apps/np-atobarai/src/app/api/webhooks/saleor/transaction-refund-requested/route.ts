@@ -9,6 +9,7 @@ import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepo } from "@/modules/app-config/repo/app-config-repo";
+import { AtobaraiApiClientFactory } from "@/modules/atobarai/api/atobarai-api-client-factory";
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
@@ -19,6 +20,7 @@ const logger = createLogger("TransactionRefundRequested route");
 
 const useCase = new TransactionRefundRequestedUseCase({
   appConfigRepo: appConfigRepo,
+  atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
 });
 
 const handler = transactionRefundRequestedWebhookDefinition.createHandler(

@@ -4,29 +4,23 @@ import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
+import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
 import { NewConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-config-trpc-handler";
-import { AtobaraiApiClientValidationError, IAtobaraiApiClient } from "@/modules/atobarai/api/types";
+import { AtobaraiApiClientValidationError } from "@/modules/atobarai/api/types";
 import { router } from "@/modules/trpc/trpc-server";
 
 /**
  * TODO: Probably create some test abstraction to bootstrap trpc handler for testing
  */
 const getTestCaller = () => {
-  const mockAtobaraiApiClient = {
-    verifyCredentials: vi.fn(),
-    registerTransaction: vi.fn(),
-    changeTransaction: vi.fn(),
-    reportFulfillment: vi.fn(),
-  } satisfies IAtobaraiApiClient;
-
   const instance = new NewConfigTrpcHandler({
     atobaraiClientFactory: {
       create() {
-        return mockAtobaraiApiClient;
+        return mockedAtobaraiApiClient;
       },
     },
   });
@@ -39,7 +33,7 @@ const getTestCaller = () => {
   });
 
   return {
-    mockAtobaraiApiClient,
+    mockedAtobaraiApiClient,
     mockedAppConfigRepo,
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
@@ -58,9 +52,9 @@ describe("NewConfigTrpcHandler", () => {
   });
 
   it("Returns error 500 if repository fails to save config", async () => {
-    const { caller, mockedAppConfigRepo, mockAtobaraiApiClient } = getTestCaller();
+    const { caller, mockedAppConfigRepo, mockedAtobaraiApiClient } = getTestCaller();
 
-    mockAtobaraiApiClient.verifyCredentials.mockImplementationOnce(async () => ok(null));
+    mockedAtobaraiApiClient.verifyCredentials.mockImplementationOnce(async () => ok(null));
 
     vi.spyOn(mockedAppConfigRepo, "saveChannelConfig").mockImplementationOnce(async () =>
       err(new BaseError("TEST")),
@@ -82,9 +76,9 @@ describe("NewConfigTrpcHandler", () => {
   });
 
   it("Returns 404 if config is in invalid shape (model can't be created)", () => {
-    const { caller, mockedAppConfigRepo, mockAtobaraiApiClient } = getTestCaller();
+    const { caller, mockedAppConfigRepo, mockedAtobaraiApiClient } = getTestCaller();
 
-    mockAtobaraiApiClient.verifyCredentials.mockImplementationOnce(async () => ok(null));
+    mockedAtobaraiApiClient.verifyCredentials.mockImplementationOnce(async () => ok(null));
     vi.spyOn(mockedAppConfigRepo, "saveChannelConfig").mockImplementationOnce(async () => ok(null));
 
     // todo expect pretty zod error with zod-validation-error
@@ -116,9 +110,9 @@ describe("NewConfigTrpcHandler", () => {
   });
 
   it("Doesn't throw if everything set properly. Config repo is called to save data", async () => {
-    const { caller, mockedAppConfigRepo, mockAtobaraiApiClient } = getTestCaller();
+    const { caller, mockedAppConfigRepo, mockedAtobaraiApiClient } = getTestCaller();
 
-    mockAtobaraiApiClient.verifyCredentials.mockImplementationOnce(async () => ok(null));
+    mockedAtobaraiApiClient.verifyCredentials.mockImplementationOnce(async () => ok(null));
     vi.spyOn(mockedAppConfigRepo, "saveChannelConfig").mockImplementationOnce(async () => ok(null));
 
     await expect(
@@ -162,9 +156,9 @@ describe("NewConfigTrpcHandler", () => {
 
   describe("Auth", () => {
     it("Calls auth service and returns error if credentials are not valid", () => {
-      const { caller, mockAtobaraiApiClient } = getTestCaller();
+      const { caller, mockedAtobaraiApiClient } = getTestCaller();
 
-      mockAtobaraiApiClient.verifyCredentials.mockImplementationOnce(() =>
+      mockedAtobaraiApiClient.verifyCredentials.mockImplementationOnce(() =>
         err(new AtobaraiApiClientValidationError("Failed to verify credentials")),
       );
 
