@@ -184,9 +184,9 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
     });
 
     /*
-     * 1. Cancel the transaction in NP Atobarai
-     * 2. If there is partial refund (actionAmount is not equal to totalAmount and there is orderGrantedRefund), send re-register request to NP Atobarai
-     * 3. Return success or failure result based on the both 1 and 2 points
+     * 1. Cancel the transaction in NP Atobarai (if the refund is full)
+     * 2. If there is partial refund (actionAmount is not equal to totalAmount and there is orderGrantedRefund), cancel the transaction and send re-register request to NP Atobarai
+     * 3. If refund is partial and there is orderGrantedRefund, return failure result
      */
 
     const atobaraiTransactionId = createAtobaraiTransactionId(pspReference);

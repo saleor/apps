@@ -89,7 +89,7 @@ describe("TransactionRefundRequestedUseCase", () => {
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
   });
 
-  it("should successfully cancel transaction in NP Atobarai when full amount refund is requested and retrun RefundSuccessResult", async () => {
+  it("should successfully cancel transaction in NP Atobarai when full amount refund is requested and return RefundSuccessResult", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
     };
