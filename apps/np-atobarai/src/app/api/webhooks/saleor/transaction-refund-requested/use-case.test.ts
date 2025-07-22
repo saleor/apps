@@ -5,9 +5,9 @@ import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
-import { mockedRefundRequestedEvent } from "@/__tests__/mocks/saleor-events/mocked-refund-requested-event";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
+import { mockedRefundRequestedEvent } from "@/__tests__/mocks/saleor-events/mocked-refund-requested-event";
 import { createAtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
 import {
   AtobaraiApiClientCancelTransactionError,
@@ -117,6 +117,7 @@ describe("TransactionRefundRequestedUseCase", () => {
 
     const result = await useCase.execute({
       appId: mockedSaleorAppId,
+
       event,
       saleorApiUrl: mockedSaleorApiUrl,
     });
@@ -155,6 +156,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
     });
+
     const result = await useCase.execute({
       appId: mockedSaleorAppId,
       event,
@@ -172,6 +174,47 @@ describe("TransactionRefundRequestedUseCase", () => {
         },
       ],
     });
+  });
+
+  it("should return RefundFailureResult when cancel transaction returns multiple results", async () => {
+    const event = {
+      ...mockedRefundRequestedEvent,
+    };
+
+    const mockCancelResponse = createAtobaraiCancelTransactionSuccessResponse({
+      results: [
+        {
+          np_transaction_id: mockedAtobaraiTransactionId,
+        },
+        {
+          np_transaction_id: "np_trans_21",
+        },
+      ],
+    });
+
+    vi.spyOn(mockedAtobaraiApiClient, "cancelTransaction").mockResolvedValue(
+      ok(mockCancelResponse),
+    );
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
+    );
+
+    const useCase = new TransactionRefundRequestedUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+    });
+
+    const result = await useCase.execute({
+      appId: mockedSaleorAppId,
+      event,
+      saleorApiUrl: mockedSaleorApiUrl,
+    });
+
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionRefundRequestedUseCaseResponse.Failure,
+    );
+    expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundFailureResult);
   });
 
   it.todo("partial refunds");

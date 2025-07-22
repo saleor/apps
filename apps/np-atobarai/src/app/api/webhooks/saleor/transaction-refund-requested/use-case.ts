@@ -6,8 +6,12 @@ import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { createAtobaraiCancelTransactionPayload } from "@/modules/atobarai/api/atobarai-cancel-transaction-payload";
+import { AtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
 import { IAtobaraiApiClient, IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
-import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import {
+  AtobaraiTransactionId,
+  createAtobaraiTransactionId,
+} from "@/modules/atobarai/atobarai-transaction-id";
 import {
   RefundFailureResult,
   RefundSuccessResult,
@@ -15,6 +19,7 @@ import {
 
 import { BaseUseCase } from "../base-use-case";
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
+import { AtobaraiMultipleFailureTransactionError } from "../use-case-errors";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
@@ -78,19 +83,25 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
     });
   }
 
-  private async handleFullAmountRefund({
-    pspReference,
+  private handleMultipleTransactionResults(
+    transactionResult: AtobaraiCancelTransactionSuccessResponse,
+  ) {
+    this.logger.warn("Multiple transaction results found", {
+      transactionResult,
+    });
+
+    return err(
+      new AtobaraiMultipleFailureTransactionError("Atobarai returned multiple transactions"),
+    );
+  }
+
+  private async cancelAtobaraiTransaction({
+    atobaraiTransactionId,
     apiClient,
   }: {
-    pspReference: string;
+    atobaraiTransactionId: AtobaraiTransactionId;
     apiClient: IAtobaraiApiClient;
   }) {
-    this.logger.info(
-      "Handling full amount refund - sending cancel transaction request to Atobarai",
-      { pspReference },
-    );
-    const atobaraiTransactionId = createAtobaraiTransactionId(pspReference);
-
     const cancelResult = await apiClient.cancelTransaction(
       createAtobaraiCancelTransactionPayload({
         atobaraiTransactionId,
@@ -102,25 +113,14 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
         error: cancelResult.error,
       });
 
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
+      return err(cancelResult.error);
     }
 
-    return ok(
-      new TransactionRefundRequestedUseCaseResponse.Success({
-        transactionResult: new RefundSuccessResult(),
-        atobaraiTransactionId,
-      }),
-    );
-  }
+    if (cancelResult.value.results.length > 1) {
+      return this.handleMultipleTransactionResults(cancelResult.value);
+    }
 
-  private handlePartialRefund() {
-    this.logger.info("Handling partial refund");
-
-    return err(new AppIsNotConfiguredResponse(new BaseError("Partial refunds not supported yet")));
+    return ok(null);
   }
 
   async execute(params: {
@@ -136,7 +136,7 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
       return err(parsingResult.error);
     }
 
-    const { actionAmount, channelId, pspReference, totalAmount } = parsingResult.value;
+    const { channelId, pspReference } = parsingResult.value;
 
     const atobaraiConfigResult = await this.getAtobaraiConfigForChannel({
       channelId,
@@ -155,13 +155,34 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
       atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
-    if (actionAmount === totalAmount) {
-      return this.handleFullAmountRefund({
-        pspReference,
-        apiClient,
-      });
-    } else {
-      return this.handlePartialRefund();
+    /*
+     * 1. Cancel the transaction in NP Atobarai
+     * 2. If there is partial refund (actionAmount is not equal to totalAmount and there is orderGrantedRefund), send re-register request to NP Atobarai
+     * 3. Return success or failure result based on the both 1 and 2 points
+     */
+
+    const atobaraiTransactionId = createAtobaraiTransactionId(pspReference);
+
+    const cancelResult = await this.cancelAtobaraiTransaction({
+      atobaraiTransactionId,
+      apiClient,
+    });
+
+    if (cancelResult.isErr()) {
+      return ok(
+        new TransactionRefundRequestedUseCaseResponse.Failure({
+          transactionResult: new RefundFailureResult(),
+        }),
+      );
     }
+
+    // TODO: Handle partial refunds if needed
+
+    return ok(
+      new TransactionRefundRequestedUseCaseResponse.Success({
+        transactionResult: new RefundSuccessResult(),
+        atobaraiTransactionId,
+      }),
+    );
   }
 }
