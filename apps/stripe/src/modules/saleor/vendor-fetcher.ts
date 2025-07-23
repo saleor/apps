@@ -10,7 +10,7 @@ export interface Vendor {
   title: string;
   slug: string;
   stripeAccountId?: string;
-  metadata: Array<{ key: string; value: string }>;
+  metadata: ReadonlyArray<{ readonly key: string; readonly value: string }>;
 }
 
 export class VendorFetcher {
