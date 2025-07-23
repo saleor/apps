@@ -4,29 +4,28 @@ import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
 import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
   MalformedRequestResponse,
   UnhandledErrorResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
+import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";
 import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { VendorResolver } from "@/modules/saleor/vendor-resolver";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
 
 import { withRecipientVerification } from "../with-recipient-verification";
 import { TransactionInitializeSessionUseCase } from "./use-case";
+import { TransactionInitializeSessionUseCaseResponsesType } from "./use-case-response";
 import { transactionInitializeSessionWebhookDefinition } from "./webhook-definition";
-
-const useCase = new TransactionInitializeSessionUseCase({
-  appConfigRepo: appConfigRepoImpl,
-  stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
-  transactionRecorder: transactionRecorder,
-});
 
 const logger = createLogger("TRANSACTION_INITIALIZE_SESSION route");
 
@@ -56,6 +55,17 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
 
       setObservabilitySaleorApiUrl(saleorApiUrlResult.value, ctx.payload.version);
 
+      // Create GraphQL client and VendorResolver dynamically
+      const graphqlClient = createInstrumentedGraphqlClient(ctx.authData);
+      const vendorResolver = new VendorResolver(graphqlClient);
+
+      const useCase = new TransactionInitializeSessionUseCase({
+        appConfigRepo: appConfigRepoImpl,
+        stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
+        transactionRecorder: transactionRecorder,
+        vendorResolver: vendorResolver,
+      });
+
       const result = await useCase.execute({
         appId: ctx.authData.appId,
         saleorApiUrl: saleorApiUrlResult.value,
@@ -63,7 +73,7 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
       });
 
       return result.match(
-        (result) => {
+        (result: TransactionInitializeSessionUseCaseResponsesType) => {
           logger.info("Successfully processed webhook request", {
             httpsStatusCode: result.statusCode,
             resolvedEvent: result.transactionResult.result,
@@ -72,7 +82,7 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
 
           return result.getResponse();
         },
-        (err) => {
+        (err: MalformedRequestResponse | AppIsNotConfiguredResponse | BrokenAppResponse) => {
           logger.warn("Failed to process webhook request", {
             httpsStatusCode: err.statusCode,
             reason: err.message,
