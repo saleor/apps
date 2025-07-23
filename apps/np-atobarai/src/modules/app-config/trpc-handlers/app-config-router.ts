@@ -4,7 +4,7 @@ import { GetSaleorChannelsTrpcHandler } from "@/modules/app-config/trpc-handlers
 import { NewConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/new-config-trpc-handler";
 import { RemoveConfigTrpcHandler } from "@/modules/app-config/trpc-handlers/remove-config-trpc-handler";
 import { UpdateMappingTrpcHandler } from "@/modules/app-config/trpc-handlers/update-mapping-trpc-handler";
-import { AtobaraiApiClientFactory } from "@/modules/atobarai/atobarai-api-client-factory";
+import { AtobaraiApiClientFactory } from "@/modules/atobarai/api/atobarai-api-client-factory";
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 import { router } from "@/modules/trpc/trpc-server";
 

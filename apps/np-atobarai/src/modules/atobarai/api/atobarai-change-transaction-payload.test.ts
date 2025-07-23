@@ -62,7 +62,7 @@ describe("createAtobaraiChangeTransactionPayload", () => {
                 "quantity": 1,
               },
             ],
-            "np_transaction_id": "np_transaction_123",
+            "np_transaction_id": "np_trans_id",
             "settlement_type": "02",
             "shop_order_date": "2025-07-08",
             "shop_transaction_id": "mocked-saleor-transaction-token-uuid",

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
-import { AtobaraiApiClientChangeTransactionError } from "@/modules/atobarai/types";
+import { AtobaraiApiClientChangeTransactionError } from "@/modules/atobarai/api/types";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,
@@ -32,7 +32,7 @@ describe("TransactionProcessSessionUseCaseResponse", () => {
               "REFUND",
             ],
             "message": "Successfully changed NP Atobarai transaction",
-            "pspReference": "np_transaction_123",
+            "pspReference": "np_trans_id",
             "result": "CHARGE_SUCCESS",
           }
         `);
@@ -53,7 +53,7 @@ describe("TransactionProcessSessionUseCaseResponse", () => {
           {
             "actions": [],
             "message": "NP Atobarai transaction requires further action",
-            "pspReference": "np_transaction_123",
+            "pspReference": "np_trans_id",
             "result": "CHARGE_ACTION_REQUIRED",
           }
         `);

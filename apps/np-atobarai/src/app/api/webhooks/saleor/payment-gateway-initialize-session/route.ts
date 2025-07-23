@@ -3,16 +3,12 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { BaseError } from "@saleor/errors";
 import { captureException } from "@sentry/nextjs";
-import { ok } from "neverthrow";
 
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
-import { AppChannelConfig } from "@/modules/app-config/app-config";
-import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
-import { createAtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
-import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
+import { appConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
@@ -20,25 +16,7 @@ import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "./webhook-definition";
 
 const useCase = new PaymentGatewayInitializeSessionUseCase({
-  // TODO: Replace with actual implementation of AppConfigRepo
-  appConfigRepo: {
-    getChannelConfig: () => {
-      return Promise.resolve(
-        ok(
-          AppChannelConfig.create({
-            name: "Config 1",
-            id: "111",
-            merchantCode: createAtobaraiMerchantCode("merchant-code-1"),
-            shippingCompanyCode: "5000",
-            skuAsName: true,
-            secretSpCode: createAtobaraiSecretSpCode("sp1"),
-            useSandbox: true,
-            terminalId: createAtobaraiTerminalId("id"),
-          })._unsafeUnwrap(),
-        ),
-      );
-    },
-  },
+  appConfigRepo: appConfigRepo,
 });
 
 const logger = createLogger("PaymentGatewayInitializeSession route");
@@ -48,11 +26,11 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(
     try {
       setObservabilitySourceObjectId(ctx.payload.sourceObject);
 
-      logger.info("Received webhook request");
-
       const saleorApiUrl = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
       setObservabilitySaleorApiUrl(saleorApiUrl, ctx.payload.version);
+
+      logger.info("Received webhook request");
 
       const result = await useCase.execute({
         event: ctx.payload,

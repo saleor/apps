@@ -1,19 +1,31 @@
 import { BaseError } from "@saleor/errors";
 import { err, ok, Result, ResultAsync } from "neverthrow";
 
+import { AtobaraiMerchantCode } from "../atobarai-merchant-code";
+import { AtobaraiSecretSpCode } from "../atobarai-secret-sp-code";
+import { AtobaraiTerminalId } from "../atobarai-terminal-id";
+import { AtobaraiCancelTransactionPayload } from "./atobarai-cancel-transaction-payload";
+import {
+  AtobaraiCancelTransactionSuccessResponse,
+  createAtobaraiCancelTransactionSuccessResponse,
+} from "./atobarai-cancel-transaction-success-response";
 import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
 import { createAtobaraiErrorResponse } from "./atobarai-error-response";
-import { AtobaraiMerchantCode } from "./atobarai-merchant-code";
+import { AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
+import {
+  AtobaraiFulfillmentReportSuccessResponse,
+  createAtobaraiFulfillmentReportSuccessResponse,
+} from "./atobarai-fulfillment-report-success-response";
 import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
-import { AtobaraiSecretSpCode } from "./atobarai-secret-sp-code";
-import { AtobaraiTerminalId } from "./atobarai-terminal-id";
 import {
   AtobaraiTransactionSuccessResponse,
   createAtobaraiTransactionSuccessResponse,
 } from "./atobarai-transaction-success-response";
 import {
   AtobaraiApiChangeTransactionErrors,
+  AtobaraiApiClientCancelTransactionError,
   AtobaraiApiClientChangeTransactionError,
+  AtobaraiApiClientFulfillmentReportError,
   AtobaraiApiClientRegisterTransactionError,
   AtobaraiApiClientValidationError,
   AtobaraiApiRegisterTransactionErrors,
@@ -22,6 +34,13 @@ import {
 } from "./types";
 
 export class AtobaraiApiClient implements IAtobaraiApiClient {
+  static AtobaraiApiError = BaseError.subclass("AtobaraiApiError", {
+    props: {
+      _brand: "AtobaraiApiError" as const,
+      code: "",
+    },
+  });
+
   private atobaraiTerminalId: AtobaraiTerminalId;
   private atobaraiMerchantCode: AtobaraiMerchantCode;
   private atobaraiSecretSpCode: AtobaraiSecretSpCode;
@@ -69,10 +88,15 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
   private convertErrorResponseToNormalizedErrors(
     response: unknown,
-  ): InstanceType<typeof BaseError>[] {
+  ): InstanceType<typeof AtobaraiApiClient.AtobaraiApiError>[] {
     const { errors } = createAtobaraiErrorResponse(response);
 
-    return errors.flatMap((error) => error.codes.map((code) => new BaseError(code)));
+    return errors.flatMap((error) =>
+      error.codes.map(
+        (code) =>
+          new AtobaraiApiClient.AtobaraiApiError("API returned an error", { props: { code } }),
+      ),
+    );
   }
 
   async registerTransaction(
@@ -190,5 +214,87 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
     }
 
     return ok(null);
+  }
+
+  async reportFulfillment(
+    payload: AtobaraiFulfillmentReportPayload,
+  ): Promise<
+    Result<AtobaraiFulfillmentReportSuccessResponse, AtobaraiApiClientFulfillmentReportError>
+  > {
+    const requestUrl = new URL("shipments", this.getBaseUrl());
+
+    const result = await ResultAsync.fromPromise(
+      fetch(requestUrl, {
+        method: "POST",
+        headers: this.getHeaders(),
+        body: JSON.stringify(payload),
+      }),
+      (error) => BaseError.normalize(error),
+    );
+
+    if (result.isErr()) {
+      return err(
+        new AtobaraiApiClientFulfillmentReportError("Failed to report fulfillment", {
+          cause: result.error,
+        }),
+      );
+    }
+
+    if (!result.value.ok) {
+      const response = await result.value.json();
+
+      const errors = this.convertErrorResponseToNormalizedErrors(response);
+
+      return err(
+        new AtobaraiApiClientFulfillmentReportError("Atobarai API returned an error", {
+          errors,
+        }),
+      );
+    }
+
+    const response = await result.value.json();
+
+    return ok(createAtobaraiFulfillmentReportSuccessResponse(response));
+  }
+
+  async cancelTransaction(
+    payload: AtobaraiCancelTransactionPayload,
+  ): Promise<
+    Result<AtobaraiCancelTransactionSuccessResponse, AtobaraiApiClientCancelTransactionError>
+  > {
+    const requestUrl = new URL("transactions/cancel", this.getBaseUrl());
+
+    const result = await ResultAsync.fromPromise(
+      fetch(requestUrl, {
+        method: "PATCH",
+        headers: this.getHeaders(),
+        body: JSON.stringify(payload),
+      }),
+      (error) => BaseError.normalize(error),
+    );
+
+    if (result.isErr()) {
+      return err(
+        new AtobaraiApiClientCancelTransactionError("Failed to cancel transaction", {
+          cause: result.error,
+        }),
+      );
+    }
+
+    if (!result.value.ok) {
+      const response = await result.value.json();
+
+      const errors = this.convertErrorResponseToNormalizedErrors(response);
+
+      return err(
+        new AtobaraiApiClientCancelTransactionError("Atobarai API returned an error", {
+          errors,
+        }),
+      );
+    }
+
+    const response = await result.value.json();
+
+    return ok(createAtobaraiCancelTransactionSuccessResponse(response));
   }
 }

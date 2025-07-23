@@ -1,11 +1,11 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
-import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
 
 import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 
+import { BaseUseCase } from "../base-use-case";
 import { AppIsNotConfiguredResponse } from "../saleor-webhook-responses";
 import {
   PaymentGatewayInitializeSessionUseCaseResponses,
@@ -24,11 +24,12 @@ type UseCaseExecuteResult = Promise<
   Result<PaymentGatewayInitializeSessionUseCaseResponsesType, AppIsNotConfiguredResponse>
 >;
 
-export class PaymentGatewayInitializeSessionUseCase {
-  private appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
-  private logger = createLogger("PaymentGatewayInitializeSessionUseCase");
+export class PaymentGatewayInitializeSessionUseCase extends BaseUseCase {
+  protected logger = createLogger("PaymentGatewayInitializeSessionUseCase");
+  protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
 
   constructor(deps: { appConfigRepo: Pick<AppConfigRepo, "getChannelConfig"> }) {
+    super();
     this.appConfigRepo = deps.appConfigRepo;
   }
 
@@ -39,28 +40,14 @@ export class PaymentGatewayInitializeSessionUseCase {
   }): UseCaseExecuteResult {
     const { appId, saleorApiUrl, event } = params;
 
-    const atobaraiConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
+    const atobaraiConfigResult = await this.getAtobaraiConfigForChannel({
       channelId: event.sourceObject.channel.id,
       appId,
       saleorApiUrl,
     });
 
-    if (atobaraiConfigForThisChannel.isErr()) {
-      this.logger.error("Failed to get configuration", {
-        error: atobaraiConfigForThisChannel.error,
-      });
-
-      return err(new AppIsNotConfiguredResponse(atobaraiConfigForThisChannel.error));
-    }
-
-    if (!atobaraiConfigForThisChannel.value) {
-      this.logger.warn("No configuration found for channel", {
-        channelId: event.sourceObject.channel.id,
-      });
-
-      return err(
-        new AppIsNotConfiguredResponse(new BaseError("Configuration not found for channel")),
-      );
+    if (atobaraiConfigResult.isErr()) {
+      return err(atobaraiConfigResult.error);
     }
 
     if (event.sourceObject.channel.currencyCode !== "JPY") {

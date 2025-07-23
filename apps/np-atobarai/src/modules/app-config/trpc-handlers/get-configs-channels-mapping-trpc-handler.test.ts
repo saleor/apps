@@ -76,7 +76,7 @@ describe("GetConfigsChannelsMappingTrpcHandler", () => {
           "merchantCode": "merchant-code-1",
           "name": "Config 1",
           "secretSpCode": "sp1",
-          "shippingCompanyCode": "5000",
+          "shippingCompanyCode": "50000",
           "skuAsName": true,
           "terminalId": "id",
           "useSandbox": true,

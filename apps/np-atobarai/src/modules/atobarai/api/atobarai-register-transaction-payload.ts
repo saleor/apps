@@ -1,15 +1,16 @@
 import { z } from "zod";
 
-import { SaleorTransactionToken } from "../saleor/saleor-transaction-token";
-import { AtobaraiCustomer, AtobaraiCustomerSchema } from "./atobarai-customer";
+import { SaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
+
+import { AtobaraiCustomer, AtobaraiCustomerSchema } from "../atobarai-customer";
 import {
   AtobaraiDeliveryDestination,
   AtobaraiDeliveryDestinationSchema,
-} from "./atobarai-delivery-destination";
-import { AtobaraiGoods, AtobaraiGoodsSchema } from "./atobarai-goods";
-import { AtobaraiMoney } from "./atobarai-money";
-import { ATOBARAI_SETTLEMENT_TYPE } from "./atobarai-settelment-type";
-import { AtobaraiShopOrderDate } from "./atobarai-shop-order-date";
+} from "../atobarai-delivery-destination";
+import { AtobaraiGoods, AtobaraiGoodsSchema } from "../atobarai-goods";
+import { AtobaraiMoney } from "../atobarai-money";
+import { ATOBARAI_SETTLEMENT_TYPE } from "../atobarai-settelment-type";
+import { AtobaraiShopOrderDate } from "../atobarai-shop-order-date";
 
 const schema = z
   .object({

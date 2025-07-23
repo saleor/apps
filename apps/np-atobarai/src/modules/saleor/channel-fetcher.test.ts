@@ -89,4 +89,38 @@ describe("ChannelFetcher", () => {
 
     expect(result._unsafeUnwrap()).toStrictEqual(channels);
   });
+
+  it("Returns channels fragments returned from graphql and optionally filter by currency", async () => {
+    const instance = new ChannelsFetcher(mockedGraphqlClient);
+
+    const channels: ChannelFragment[] = [
+      {
+        slug: "default-channel",
+        id: "1",
+        currencyCode: "USD",
+      },
+      {
+        slug: "another-channel",
+        id: "2",
+        currencyCode: "JPY",
+      },
+    ];
+
+    // @ts-expect-error - patching only subset
+    vi.mocked(mockedGraphqlClient.query).mockImplementationOnce(() => {
+      return {
+        async toPromise() {
+          return {
+            data: {
+              channels: channels,
+            },
+          };
+        },
+      };
+    });
+
+    const result = await instance.fetchChannels("JPY");
+
+    expect(result._unsafeUnwrap()).toStrictEqual([channels[1]]);
+  });
 });

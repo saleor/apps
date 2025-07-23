@@ -59,3 +59,25 @@ pnpm dev
 This app has a collection of requests to Saleor that allows to pay for checkout with NP Atobarai app.
 
 To get started create `.env` file based on `.env.example` inside `apps/np-atobarai/bruno` folder.
+
+# DynamoDB
+
+DynamoDB is used to store app's configuration. To develop this feature locally use development containers or use [docker-compose](../../.devcontainer/np-atobarai/docker-compose.yml) from `.devcontainer`:
+
+1. Run `docker compose up dynamodb` for local DynamoDB instance
+2. Run `pnpm run setup-dynamodb` to describe DynamoDB table
+
+Ensure following env variables are set:
+
+```dotenv
+TABLE_NAME=np-atobarai-main-table # must match scripts/setup-dynamodb.ts
+AWS_REGION=localhost
+AWS_ENDPOINT_URL=http://localhost:8000
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+```
+
+Alternatively, you can connect to AWS-based DynamoDB:
+
+1. Create table in your AWS, based on parameters in [`scripts/setup-dynamodb.ts`](./scripts/setup-dynamodb.ts)
+2. Set AWS-specific [env variables](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-environment.html)

@@ -6,10 +6,11 @@ import { TRPCError } from "@trpc/server";
 import { RandomId } from "@/lib/random-id";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { newConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
+import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
 import { createAtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
+import { createAtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
-import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class NewConfigTrpcHandler {
@@ -39,8 +40,8 @@ export class NewConfigTrpcHandler {
       const configToSaveResult = AppChannelConfig.create({
         name: input.name,
         id: configId,
+        shippingCompanyCode: createAtobaraiShippingCompanyCode(input.shippingCompanyCode),
         secretSpCode: createAtobaraiSecretSpCode(input.secretSpCode),
-        shippingCompanyCode: input.shippingCompanyCode,
         skuAsName: input.skuAsName,
         terminalId: createAtobaraiTerminalId(input.terminalId),
         useSandbox: input.useSandbox,

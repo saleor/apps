@@ -9,18 +9,18 @@ import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import {
   AtobaraiChangeTransactionPayload,
   createAtobaraiChangeTransactionPayload,
-} from "@/modules/atobarai/atobarai-change-transaction-payload";
+} from "@/modules/atobarai/api/atobarai-change-transaction-payload";
+import {
+  AtobaraiTransactionSuccessResponse,
+  CreditCheckResult,
+} from "@/modules/atobarai/api/atobarai-transaction-success-response";
+import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
 import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
 import { createAtobaraiGoods } from "@/modules/atobarai/atobarai-goods";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
-import {
-  AtobaraiTransactionSuccessResponse,
-  CreditCheckResult,
-} from "@/modules/atobarai/atobarai-transaction-success-response";
-import { IAtobaraiApiClientFactory } from "@/modules/atobarai/types";
 import { createSaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
 import {
   ChargeActionRequiredResult,
@@ -28,6 +28,7 @@ import {
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
 
+import { BaseUseCase } from "../base-use-case";
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
 import {
   AtobaraiFailureTransactionError,
@@ -42,51 +43,18 @@ type UseCaseExecuteResult = Promise<
   >
 >;
 
-export class TransactionProcessSessionUseCase {
-  private appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
-  private logger = createLogger("TransactionProcessSessionUseCase");
+export class TransactionProcessSessionUseCase extends BaseUseCase {
+  protected logger = createLogger("TransactionProcessSessionUseCase");
+  protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   }) {
-    this.appConfigRepo = deps.appConfigRepo;
+    super();
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
-  }
-
-  private async getAtobaraiConfig(params: {
-    channelId: string;
-    appId: string;
-    saleorApiUrl: SaleorApiUrl;
-  }) {
-    const { channelId, appId, saleorApiUrl } = params;
-
-    const atobaraiConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
-      channelId,
-      appId,
-      saleorApiUrl,
-    });
-
-    if (atobaraiConfigForThisChannel.isErr()) {
-      this.logger.error("Failed to get configuration", {
-        error: atobaraiConfigForThisChannel.error,
-      });
-
-      return err(new AppIsNotConfiguredResponse(atobaraiConfigForThisChannel.error));
-    }
-
-    if (!atobaraiConfigForThisChannel.value) {
-      this.logger.warn("No configuration found for channel", {
-        channelId,
-      });
-
-      return err(
-        new AppIsNotConfiguredResponse(new BaseError("Configuration not found for channel")),
-      );
-    }
-
-    return ok(atobaraiConfigForThisChannel.value);
+    this.appConfigRepo = deps.appConfigRepo;
   }
 
   private prepareChangeTransactionPayload(
@@ -160,7 +128,15 @@ export class TransactionProcessSessionUseCase {
   }): UseCaseExecuteResult {
     const { appId, saleorApiUrl, event } = params;
 
-    const atobaraiConfigResult = await this.getAtobaraiConfig({
+    if (!event.issuedAt) {
+      this.logger.warn("Missing issuedAt in event", {
+        event,
+      });
+
+      return err(new MalformedRequestResponse(new BaseError("Missing issuedAt in event")));
+    }
+
+    const atobaraiConfigResult = await this.getAtobaraiConfigForChannel({
       channelId: event.sourceObject.channel.id,
       appId,
       saleorApiUrl,
@@ -168,14 +144,6 @@ export class TransactionProcessSessionUseCase {
 
     if (atobaraiConfigResult.isErr()) {
       return err(atobaraiConfigResult.error);
-    }
-
-    if (!event.issuedAt) {
-      this.logger.warn("Missing issuedAt in event", {
-        event,
-      });
-
-      return err(new MalformedRequestResponse(new BaseError("Missing issuedAt in event")));
     }
 
     const apiClient = this.atobaraiApiClientFactory.create({

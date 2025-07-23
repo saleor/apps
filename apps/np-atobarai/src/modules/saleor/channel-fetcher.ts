@@ -20,9 +20,9 @@ export class ChannelsFetcher {
     this.client = client;
   }
 
-  async fetchChannels(): Promise<
-    Result<ChannelFragment[], InstanceType<typeof ChannelsFetcher.FetchError>>
-  > {
+  async fetchChannels(
+    filterCurrency?: string,
+  ): Promise<Result<ChannelFragment[], InstanceType<typeof ChannelsFetcher.FetchError>>> {
     const channelsResponse = await this.client.query(FetchChannelsDocument, {}).toPromise();
 
     if (channelsResponse.error) {
@@ -34,7 +34,15 @@ export class ChannelsFetcher {
     }
 
     if (channelsResponse.data?.channels) {
-      return ok(channelsResponse.data.channels.map((c) => c));
+      return ok(
+        channelsResponse.data.channels.filter((c) => {
+          if (filterCurrency) {
+            return c.currencyCode === filterCurrency;
+          }
+
+          return true;
+        }),
+      );
     }
 
     return err(new ChannelsFetcher.FetchError("Failed to fetch channels - channels data missing"));

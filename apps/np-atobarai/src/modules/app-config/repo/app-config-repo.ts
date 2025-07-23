@@ -6,6 +6,7 @@ import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { appConfigEntity, appConfigSchema } from "@/modules/app-config/repo/dynamodb/entity";
 import { createAtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
 import { createAtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
+import { createAtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { createAtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 import { dynamoMainTable } from "@/modules/dynamodb/dynamodb-main-table";
 
@@ -23,7 +24,7 @@ export const appConfigRepo = createDynamoConfigRepository<
         id: item.configId,
         merchantCode: createAtobaraiMerchantCode(item.merchantCode),
         name: item.configName,
-        shippingCompanyCode: item.shippingCompanyCode,
+        shippingCompanyCode: createAtobaraiShippingCompanyCode(item.shippingCompanyCode),
         skuAsName: item.skuAsName,
         secretSpCode: createAtobaraiSecretSpCode(encryptor.decrypt(item.spCode)),
         terminalId: createAtobaraiTerminalId(item.terminalId),

@@ -2,7 +2,6 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
   ...EventMetadata
   action {
     amount
-    currency
   }
   transaction {
     pspReference
@@ -11,11 +10,21 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
       channel {
         ...Channel
       }
+      totalPrice {
+        gross {
+          amount
+        }
+      }
     }
     order {
       id
       channel {
         ...Channel
+      }
+      total {
+        gross {
+          amount
+        }
       }
     }
   }
