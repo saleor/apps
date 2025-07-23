@@ -12,7 +12,7 @@ export class AppTransaction {
     this.saleorTrackingNumber = args.saleorTrackingNumber;
   }
 
-  hasFullfillmentReported(): boolean {
+  hasFulfillmentReported(): boolean {
     return this.saleorTrackingNumber !== null;
   }
 }

@@ -41,7 +41,6 @@ describe("App Transaction Entity", () => {
         }),
         atobaraiTransactionId: mockedAtobaraiTransactionId,
         saleorTrackingNumber: "123456789",
-        hasFullfillmentReported: true,
       });
 
       expect(result).toMatchInlineSnapshot(`
