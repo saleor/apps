@@ -4,6 +4,7 @@ fragment TransactionChargeRequestedEvent on TransactionChargeRequested {
     amount
   }
   transaction {
+    id
     pspReference
     checkout {
       id

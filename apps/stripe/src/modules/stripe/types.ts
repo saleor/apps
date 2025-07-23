@@ -21,6 +21,7 @@ export interface IStripeRefundsApi {
   createRefund(args: {
     paymentIntentId: StripePaymentIntentId;
     stripeMoney: StripeMoney;
+    metadata?: AllowedStripeIntentMetadata;
   }): Promise<Result<Stripe.Refund, unknown>>;
 }
 
