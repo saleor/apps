@@ -85,7 +85,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Transaction Charge Requested",
-                "query": "subscription TransactionChargeRequested { event { ...TransactionChargeRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionChargeRequestedEvent on TransactionChargeRequested { ...EventMetadata action { amount } transaction { pspReference checkout { id channel { ...Channel } } order { id channel { ...Channel } } }}",
+                "query": "subscription TransactionChargeRequested { event { ...TransactionChargeRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionChargeRequestedEvent on TransactionChargeRequested { ...EventMetadata action { amount } transaction { id pspReference checkout { id channel { ...Channel } } order { id channel { ...Channel } } }}",
                 "syncEvents": [
                   "TRANSACTION_CHARGE_REQUESTED",
                 ],
@@ -94,7 +94,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Transaction Cancelation Requested",
-                "query": "subscription TransactionCancelationRequested { event { ...TransactionCancelationRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionCancelationRequestedEvent on TransactionCancelationRequested { ...EventMetadata transaction { pspReference checkout { id channel { ...Channel } } order { id channel { ...Channel } } }}",
+                "query": "subscription TransactionCancelationRequested { event { ...TransactionCancelationRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionCancelationRequestedEvent on TransactionCancelationRequested { ...EventMetadata transaction { id pspReference checkout { id channel { ...Channel } } order { id channel { ...Channel } } }}",
                 "syncEvents": [
                   "TRANSACTION_CANCELATION_REQUESTED",
                 ],
@@ -103,7 +103,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Transaction Refund Requested",
-                "query": "subscription TransactionRefundRequested { event { ...TransactionRefundRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionRefundRequestedEvent on TransactionRefundRequested { ...EventMetadata action { amount currency } transaction { pspReference checkout { id channel { ...Channel } } order { id channel { ...Channel } } }}",
+                "query": "subscription TransactionRefundRequested { event { ...TransactionRefundRequestedEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment TransactionRefundRequestedEvent on TransactionRefundRequested { ...EventMetadata action { amount currency } transaction { id pspReference checkout { id channel { ...Channel } } order { id channel { ...Channel } } }}",
                 "syncEvents": [
                   "TRANSACTION_REFUND_REQUESTED",
                 ],
