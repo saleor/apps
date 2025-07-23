@@ -32,17 +32,17 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
   protected logger = createLogger("FulfillmentTrackingNumberUpdatedUseCase");
   protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
-  private appTransactionRepo: TransactionRecordRepo;
+  private transactionRecordRepo: TransactionRecordRepo;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
-    appTransactionRepo: TransactionRecordRepo;
+    transactionRecordRepo: TransactionRecordRepo;
   }) {
     super();
     this.appConfigRepo = deps.appConfigRepo;
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
-    this.appTransactionRepo = deps.appTransactionRepo;
+    this.transactionRecordRepo = deps.transactionRecordRepo;
   }
 
   private handleMultipleTransactionResults(
@@ -207,7 +207,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       saleorTrackingNumber: trackingNumber,
     });
 
-    const updateTransactionResult = await this.appTransactionRepo.updateTransaction(
+    const updateTransactionResult = await this.transactionRecordRepo.updateTransaction(
       {
         saleorApiUrl,
         appId,

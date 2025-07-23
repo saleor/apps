@@ -348,9 +348,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
-    const mockedAppTransactionRepo = new MockedTransactionRecordRepo();
+    const mockedTransactionRecordRepo = new MockedTransactionRecordRepo();
 
-    vi.spyOn(mockedAppTransactionRepo, "createTransaction").mockImplementationOnce(async () =>
+    vi.spyOn(mockedTransactionRecordRepo, "createTransaction").mockImplementationOnce(async () =>
       err(
         new TransactionRecordRepoError.FailedWritingTransactionError(
           "Failed to create transaction",
@@ -361,7 +361,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: mockedAppTransactionRepo,
+      appTransactionRepo: mockedTransactionRecordRepo,
     });
 
     const responsePayload = await uc.execute({

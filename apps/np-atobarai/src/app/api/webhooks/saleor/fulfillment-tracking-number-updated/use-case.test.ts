@@ -48,7 +48,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const result = await useCase.execute({
@@ -72,7 +72,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const result = await useCase.execute({
@@ -103,7 +103,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const result = await useCase.execute({
@@ -123,7 +123,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const result = await useCase.execute({
@@ -143,7 +143,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const result = await useCase.execute({
@@ -159,7 +159,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
     const event = {
       ...mockedFulfillmentTrackingNumberUpdatedEvent,
@@ -179,7 +179,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const event = {
@@ -202,7 +202,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const event = {
@@ -226,7 +226,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const event = {
@@ -265,7 +265,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const event = {
@@ -296,7 +296,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const event = {
@@ -324,10 +324,10 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
   });
 
-  it("should return BrokenAppResponse when AppTransactionRepo fails to create transaction", async () => {
-    const mockedAppTransactionRepo = new MockedTransactionRecordRepo();
+  it("should return BrokenAppResponse when transactionRecordRepo fails to create transaction", async () => {
+    const mockedTransactionRecordRepo = new MockedTransactionRecordRepo();
 
-    vi.spyOn(mockedAppTransactionRepo, "updateTransaction").mockImplementationOnce(async () =>
+    vi.spyOn(mockedTransactionRecordRepo, "updateTransaction").mockImplementationOnce(async () =>
       err(
         new TransactionRecordRepoError.FailedUpdatingTransactionError(
           "Failed to update transaction",
@@ -352,7 +352,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: mockedAppTransactionRepo,
+      transactionRecordRepo: mockedTransactionRecordRepo,
     });
 
     const result = await useCase.execute({
