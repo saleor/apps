@@ -1105,3 +1105,67 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
     );
   });
 });
+
+describe("StripeWebhookUseCase - handling events without metadata created by Saleor", () => {
+  beforeEach(() => {
+    mockApl.get.mockImplementation(async () => mockAuthData);
+    mockTransactionRecorder.reset();
+
+    instance = new StripeWebhookUseCase({
+      apl: mockApl,
+      appConfigRepo: mockedAppConfigRepo,
+      webhookEventVerifyFactory: () => eventVerify,
+      transactionEventReporterFactory() {
+        return mockEventReporter;
+      },
+      transactionRecorder: mockTransactionRecorder,
+      webhookManager: new StripeWebhookManager(),
+    });
+  });
+
+  it("Returns 400 to Stripe if metadata is missing for payment_intent.succeeded event", async () => {
+    const event = getMockedPaymentIntentSucceededEvent();
+
+    event.data.object.metadata = {};
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+      ObjectCreatedOutsideOfSaleorResponse {
+        "message": "Metadata is missing",
+        "statusCode": 400,
+      }
+    `);
+
+    expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+  });
+
+  it("Returns 400 to Stripe if metadata is missing for charge.refund.updated event", async () => {
+    const event = getMockedChargeRefundUpdatedEvent();
+
+    event.data.object.metadata = {};
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+      ObjectCreatedOutsideOfSaleorResponse {
+        "message": "Metadata is missing",
+        "statusCode": 400,
+      }
+    `);
+
+    expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+  });
+});
