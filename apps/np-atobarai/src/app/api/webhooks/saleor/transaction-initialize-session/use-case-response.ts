@@ -79,7 +79,7 @@ class Failure extends SuccessWebhookResponse {
 
   constructor(args: {
     transactionResult: ChargeFailureResult;
-    error: AtobaraiApiRegisterTransactionErrors;
+    error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors;
   }) {
     super();
     this.transactionResult = args.transactionResult;

@@ -27,9 +27,15 @@ import {
   ChargeFailureResult,
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
+import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
+import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
 import { BaseUseCase } from "../base-use-case";
-import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+  MalformedRequestResponse,
+} from "../saleor-webhook-responses";
 import {
   AtobaraiFailureTransactionError,
   AtobaraiMultipleFailureTransactionError,
@@ -39,7 +45,7 @@ import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response
 type UseCaseExecuteResult = Promise<
   Result<
     TransactionInitializeSessionUseCaseResponse,
-    AppIsNotConfiguredResponse | MalformedRequestResponse
+    AppIsNotConfiguredResponse | MalformedRequestResponse | BrokenAppResponse
   >
 >;
 
@@ -47,14 +53,17 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
   protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   protected logger = createLogger("TransactionInitializeSessionUseCase");
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
+  private appTransactionRepo: TransactionRecordRepo;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
+    appTransactionRepo: TransactionRecordRepo;
   }) {
     super();
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
     this.appConfigRepo = deps.appConfigRepo;
+    this.appTransactionRepo = deps.appTransactionRepo;
   }
 
   private prepareRegisterTransactionPayload(
@@ -87,10 +96,37 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
     );
   }
 
-  private mapAtobaraiResponseToUseCaseResponse(
-    transaction: AtobaraiTransactionSuccessResponse["results"][number],
-  ) {
+  private async mapAtobaraiResponseToUseCaseResponse({
+    transaction,
+    saleorApiUrl,
+    appId,
+  }: {
+    transaction: AtobaraiTransactionSuccessResponse["results"][number];
+    saleorApiUrl: SaleorApiUrl;
+    appId: string;
+  }) {
     const atobaraiTransactionId = createAtobaraiTransactionId(transaction.np_transaction_id);
+
+    const appTransaction = new TransactionRecord({
+      atobaraiTransactionId,
+      saleorTrackingNumber: null,
+    });
+
+    const createTransactionResult = await this.appTransactionRepo.createTransaction(
+      {
+        saleorApiUrl,
+        appId,
+      },
+      appTransaction,
+    );
+
+    if (createTransactionResult.isErr()) {
+      this.logger.error("Failed to create transaction in app transaction repo", {
+        error: createTransactionResult.error,
+      });
+
+      return err(new BrokenAppResponse(createTransactionResult.error));
+    }
 
     switch (transaction.authori_result) {
       case CreditCheckResult.Success:
@@ -175,6 +211,10 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
       return this.handleMultipleTransactionResults(registerTransactionResult.value);
     }
 
-    return this.mapAtobaraiResponseToUseCaseResponse(transactionResult.results[0]);
+    return this.mapAtobaraiResponseToUseCaseResponse({
+      transaction: transactionResult.results[0],
+      saleorApiUrl,
+      appId,
+    });
   }
 }
