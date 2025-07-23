@@ -81,3 +81,23 @@ pnpm run test:e2e
 ```
 
 Tests are using Stripe staging app that is already installed on Saleor environments.
+
+## Supported Payment Methods
+
+The Stripe app supports the following payment methods:
+
+- **Card payments** - Credit and debit cards
+- **PayPal** - PayPal digital wallet
+- **Klarna** - Buy now, pay later
+- **Apple Pay** - Apple's digital wallet
+- **Google Pay** - Google's digital wallet
+- **iDEAL** - Direct bank transfers (Netherlands)
+
+### iDEAL Configuration
+
+iDEAL payments are supported for merchants in the Netherlands. To enable iDEAL:
+
+1. Ensure your Stripe account is configured for iDEAL payments
+2. iDEAL payments support both immediate charges and authorizations
+3. Customers will be redirected to their bank for authentication
+4. The capture method is controlled at the PaymentIntent level, not in payment method options

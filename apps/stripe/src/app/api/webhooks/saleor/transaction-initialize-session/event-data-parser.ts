@@ -5,6 +5,7 @@ import { BaseError } from "@/lib/errors";
 import { ApplePayPaymentMethod } from "@/modules/stripe/payment-methods/apple-pay";
 import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-pay";
+import { IdealPaymentMethod } from "@/modules/stripe/payment-methods/ideal";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
 import { PayPalPaymentMethod } from "@/modules/stripe/payment-methods/paypal";
 
@@ -16,6 +17,7 @@ const TransactionInitializeEventDataSchema = z
       GooglePayPaymentMethod.TransactionInitializeSchema,
       ApplePayPaymentMethod.TransactionInitializeSchema,
       PayPalPaymentMethod.TransactionInitializeSchema,
+      IdealPaymentMethod.TransactionInitializeSchema,
     ]),
   })
   .strict()

@@ -24,6 +24,22 @@ describe("parseTransactionInitializeSessionEventData", () => {
     });
   });
 
+  it("should parse valid iDEAL data coming from storefront", () => {
+    const storefrontData = {
+      paymentIntent: {
+        paymentMethod: "ideal",
+      },
+    };
+
+    const result = parseTransactionInitializeSessionEventData(storefrontData);
+
+    expect(result._unsafeUnwrap()).toStrictEqual({
+      paymentIntent: {
+        paymentMethod: "ideal",
+      },
+    });
+  });
+
   it("should return UnsupportedPaymentMethodError if storefront sends unsupported payment method", () => {
     const storefrontData = {
       paymentIntent: {
