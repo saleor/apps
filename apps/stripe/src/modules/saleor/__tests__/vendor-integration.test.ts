@@ -1,154 +1,243 @@
-import { describe, expect, it } from "vitest";
+import { Client } from "urql";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import { VendorFetcher } from "../vendor-fetcher";
+import { VendorResolver } from "../vendor-resolver";
+
+// Mock the generated GraphQL types
+const mockFetchVendorByIdDocument = {};
+const mockFetchVendorsDocument = {};
+
+vi.mock("../../../generated/graphql", () => ({
+  FetchVendorByIdDocument: mockFetchVendorByIdDocument,
+  FetchVendorsDocument: mockFetchVendorsDocument,
+}));
 
 describe("Vendor Integration Tests", () => {
-  describe("Vendor Resolution Logic", () => {
-    it("should extract vendor_id from order metadata", () => {
-      const orderMetadata = [
-        { key: "vendor_id", value: "vendor-123" },
-        { key: "other_field", value: "other_value" },
-      ];
+  let mockClient: Pick<Client, "query">;
+  let vendorResolver: VendorResolver;
+  let _vendorFetcher: VendorFetcher;
 
-      const vendorId = orderMetadata.find((m) => m.key === "vendor_id")?.value || null;
-
-      expect(vendorId).toBe("vendor-123");
-    });
-
-    it("should return null when vendor_id is not found", () => {
-      const orderMetadata = [{ key: "other_field", value: "other_value" }];
-
-      const vendorId = orderMetadata.find((m) => m.key === "vendor_id")?.value || null;
-
-      expect(vendorId).toBeNull();
-    });
-
-    it("should extract stripe_account_id from vendor metadata", () => {
-      const vendorMetadata = [
-        { key: "stripe_account_id", value: "acct_123456789" },
-        { key: "vendor_code", value: "VENDOR001" },
-      ];
-
-      const stripeAccountId = vendorMetadata.find((m) => m.key === "stripe_account_id")?.value;
-
-      expect(stripeAccountId).toBe("acct_123456789");
-    });
-
-    it("should return undefined when stripe_account_id is not found", () => {
-      const vendorMetadata = [{ key: "vendor_code", value: "VENDOR001" }];
-
-      const stripeAccountId = vendorMetadata.find((m) => m.key === "stripe_account_id")?.value;
-
-      expect(stripeAccountId).toBeUndefined();
-    });
+  beforeEach(() => {
+    mockClient = {
+      query: vi.fn(),
+    };
+    vendorResolver = new VendorResolver(mockClient);
+    _vendorFetcher = new VendorFetcher(mockClient);
   });
 
-  describe("Vendor Data Structure", () => {
-    it("should have correct vendor interface structure", () => {
-      const mockVendor = {
-        id: "vendor-123",
-        title: "Test Vendor",
-        slug: "test-vendor",
-        stripeAccountId: "acct_123456789",
-        metadata: [
-          { key: "stripe_account_id", value: "acct_123456789" },
-          { key: "vendor_code", value: "VENDOR001" },
-        ],
-      };
-
-      expect(mockVendor).toHaveProperty("id");
-      expect(mockVendor).toHaveProperty("title");
-      expect(mockVendor).toHaveProperty("slug");
-      expect(mockVendor).toHaveProperty("stripeAccountId");
-      expect(mockVendor).toHaveProperty("metadata");
-      expect(Array.isArray(mockVendor.metadata)).toBe(true);
-    });
-
-    it("should have correct vendor resolution result structure", () => {
-      const mockResolutionResult = {
-        vendor: {
-          id: "vendor-123",
-          title: "Test Vendor",
-          slug: "test-vendor",
-          stripeAccountId: "acct_123456789",
-          metadata: [],
+  describe("End-to-End Vendor Resolution", () => {
+    it("should resolve vendor payment through complete flow", async () => {
+      // Mock successful vendor fetch
+      const mockVendorData = {
+        data: {
+          page: {
+            id: "vendor-123",
+            title: "Test Vendor",
+            slug: "test-vendor",
+            metadata: [
+              { key: "stripe_account_id", value: "acct_123456789" },
+              { key: "vendor_code", value: "VENDOR001" },
+            ],
+          },
         },
-        stripeAccountId: "acct_123456789",
-        resolutionMethod: "vendor-specific" as const,
       };
 
-      expect(mockResolutionResult).toHaveProperty("vendor");
-      expect(mockResolutionResult).toHaveProperty("stripeAccountId");
-      expect(mockResolutionResult).toHaveProperty("resolutionMethod");
-      expect(["vendor-specific", "channel-based", "default"]).toContain(
-        mockResolutionResult.resolutionMethod,
-      );
+      mockClient.query = vi.fn().mockReturnValue({
+        toPromise: vi.fn().mockResolvedValue({
+          data: mockVendorData.data,
+          error: null,
+        }),
+      });
+
+      const result = await vendorResolver.resolveVendorForPayment({
+        orderMetadata: [
+          { key: "vendor_id", value: "vendor-123" },
+          { key: "order_id", value: "order-456" },
+        ],
+        channelId: "channel-123",
+        defaultStripeConfigId: "config-123",
+      });
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const resolution = result.value;
+
+        expect(resolution).toStrictEqual({
+          vendor: {
+            id: "vendor-123",
+            title: "Test Vendor",
+            slug: "test-vendor",
+            stripeAccountId: "acct_123456789",
+            metadata: [
+              { key: "stripe_account_id", value: "acct_123456789" },
+              { key: "vendor_code", value: "VENDOR001" },
+            ],
+          },
+          stripeAccountId: "acct_123456789",
+          resolutionMethod: "vendor-specific",
+        });
+      }
+
+      // Verify the GraphQL query was called
+      expect(mockClient.query).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle vendor fetch failure gracefully", async () => {
+      const mockError = new Error("Network error");
+
+      mockClient.query = vi.fn().mockReturnValue({
+        toPromise: vi.fn().mockResolvedValue({
+          data: null,
+          error: mockError,
+        }),
+      });
+
+      const result = await vendorResolver.resolveVendorForPayment({
+        orderMetadata: [{ key: "vendor_id", value: "vendor-123" }],
+        channelId: "channel-123",
+      });
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value).toBeNull();
+      }
+    });
+
+    it("should handle vendor without stripe configuration", async () => {
+      const mockVendorData = {
+        data: {
+          page: {
+            id: "vendor-123",
+            title: "Test Vendor",
+            slug: "test-vendor",
+            metadata: [
+              { key: "vendor_code", value: "VENDOR001" },
+              // No stripe_account_id
+            ],
+          },
+        },
+      };
+
+      mockClient.query = vi.fn().mockReturnValue({
+        toPromise: vi.fn().mockResolvedValue({
+          data: mockVendorData.data,
+          error: null,
+        }),
+      });
+
+      const result = await vendorResolver.resolveVendorForPayment({
+        orderMetadata: [{ key: "vendor_id", value: "vendor-123" }],
+        channelId: "channel-123",
+      });
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value).toBeNull();
+      }
     });
   });
 
-  describe("Vendor Resolution Priority", () => {
-    it("should prioritize vendor-specific over channel-based", () => {
-      const resolutionMethods = ["vendor-specific", "channel-based", "default"];
-      const vendorSpecificIndex = resolutionMethods.indexOf("vendor-specific");
-      const channelBasedIndex = resolutionMethods.indexOf("channel-based");
+  describe("Vendor Listing Integration", () => {
+    it("should fetch and list all vendors for a page type", async () => {
+      const mockVendorsData = {
+        data: {
+          pages: {
+            edges: [
+              {
+                node: {
+                  id: "vendor-1",
+                  title: "Vendor 1",
+                  slug: "vendor-1",
+                  metadata: [{ key: "stripe_account_id", value: "acct_111" }],
+                },
+              },
+              {
+                node: {
+                  id: "vendor-2",
+                  title: "Vendor 2",
+                  slug: "vendor-2",
+                  metadata: [{ key: "stripe_account_id", value: "acct_222" }],
+                },
+              },
+            ],
+          },
+        },
+      };
 
-      expect(vendorSpecificIndex).toBeLessThan(channelBasedIndex);
+      mockClient.query = vi.fn().mockReturnValue({
+        toPromise: vi.fn().mockResolvedValue({
+          data: mockVendorsData.data,
+          error: null,
+        }),
+      });
+
+      const result = await vendorResolver.getAvailableVendors("page-type-123");
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const vendors = result.value;
+
+        expect(vendors).toHaveLength(2);
+        expect(vendors[0].id).toBe("vendor-1");
+        expect(vendors[0].stripeAccountId).toBe("acct_111");
+        expect(vendors[1].id).toBe("vendor-2");
+        expect(vendors[1].stripeAccountId).toBe("acct_222");
+      }
+
+      expect(mockClient.query).toHaveBeenCalledTimes(1);
     });
 
-    it("should prioritize channel-based over default", () => {
-      const resolutionMethods = ["vendor-specific", "channel-based", "default"];
-      const channelBasedIndex = resolutionMethods.indexOf("channel-based");
-      const defaultIndex = resolutionMethods.indexOf("default");
+    it("should handle empty vendor list", async () => {
+      mockClient.query = vi.fn().mockReturnValue({
+        toPromise: vi.fn().mockResolvedValue({
+          data: { pages: { edges: [] } },
+          error: null,
+        }),
+      });
 
-      expect(channelBasedIndex).toBeLessThan(defaultIndex);
+      const result = await vendorResolver.getAvailableVendors("page-type-123");
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value).toStrictEqual([]);
+      }
     });
   });
 
-  describe("Error Handling", () => {
-    it("should handle missing vendor gracefully", () => {
-      const orderMetadata = [{ key: "vendor_id", value: "non-existent-vendor" }];
+  describe("Error Handling Integration", () => {
+    it("should propagate GraphQL errors correctly", async () => {
+      const mockError = new Error("GraphQL error");
 
-      // Simulate vendor not found scenario
-      const vendorId = orderMetadata.find((m) => m.key === "vendor_id")?.value;
-      const vendor = null; // Simulate vendor not found
-      const stripeAccountId = vendor ? "some-account" : undefined;
+      mockClient.query = vi.fn().mockReturnValue({
+        toPromise: vi.fn().mockResolvedValue({
+          data: null,
+          error: mockError,
+        }),
+      });
 
-      expect(vendorId).toBe("non-existent-vendor");
-      expect(vendor).toBeNull();
-      expect(stripeAccountId).toBeUndefined();
+      const result = await vendorResolver.getAvailableVendors("page-type-123");
+
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        expect(result.error.message).toContain("Failed to fetch vendors");
+      }
     });
 
-    it("should handle vendor without stripe account gracefully", () => {
-      const vendorMetadata = [
-        { key: "vendor_code", value: "VENDOR001" },
-        // Missing stripe_account_id
-      ];
+    it("should handle missing data gracefully", async () => {
+      mockClient.query = vi.fn().mockReturnValue({
+        toPromise: vi.fn().mockResolvedValue({
+          data: { pages: null },
+          error: null,
+        }),
+      });
 
-      const stripeAccountId = vendorMetadata.find((m) => m.key === "stripe_account_id")?.value;
+      const result = await vendorResolver.getAvailableVendors("page-type-123");
 
-      expect(stripeAccountId).toBeUndefined();
-    });
-  });
-
-  describe("GraphQL Query Structure", () => {
-    it("should have correct fetch vendor by ID query structure", () => {
-      const expectedQueryStructure = {
-        query: "FetchVendorByIdDocument",
-        variables: { vendorId: "vendor-123" },
-      };
-
-      expect(expectedQueryStructure).toHaveProperty("query");
-      expect(expectedQueryStructure).toHaveProperty("variables");
-      expect(expectedQueryStructure.variables).toHaveProperty("vendorId");
-    });
-
-    it("should have correct fetch vendors query structure", () => {
-      const expectedQueryStructure = {
-        query: "FetchVendorsDocument",
-        variables: { pageTypeId: "page-type-123" },
-      };
-
-      expect(expectedQueryStructure).toHaveProperty("query");
-      expect(expectedQueryStructure).toHaveProperty("variables");
-      expect(expectedQueryStructure.variables).toHaveProperty("pageTypeId");
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        expect(result.error.message).toContain("vendors data missing");
+      }
     });
   });
 });

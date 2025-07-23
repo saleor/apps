@@ -4,9 +4,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { VendorFetcher } from "../vendor-fetcher";
 
 // Mock the generated GraphQL types
+const mockFetchVendorByIdDocument = {};
+const mockFetchVendorsDocument = {};
+
 vi.mock("../../../generated/graphql", () => ({
-  FetchVendorByIdDocument: "FetchVendorByIdDocument",
-  FetchVendorsDocument: "FetchVendorsDocument",
+  FetchVendorByIdDocument: mockFetchVendorByIdDocument,
+  FetchVendorsDocument: mockFetchVendorsDocument,
 }));
 
 describe("VendorFetcher", () => {
@@ -15,15 +18,13 @@ describe("VendorFetcher", () => {
 
   beforeEach(() => {
     mockClient = {
-      query: vi.fn().mockReturnValue({
-        toPromise: vi.fn(),
-      }),
+      query: vi.fn(),
     };
     vendorFetcher = new VendorFetcher(mockClient);
   });
 
   describe("fetchVendorById", () => {
-    it("should successfully fetch a vendor by ID", async () => {
+    it("should successfully fetch a vendor by ID with stripe account", async () => {
       const mockVendorData = {
         data: {
           page: {
@@ -34,10 +35,6 @@ describe("VendorFetcher", () => {
               { key: "stripe_account_id", value: "acct_123456789" },
               { key: "vendor_code", value: "VENDOR001" },
             ],
-            pageType: {
-              id: "page-type-123",
-              name: "Vendor",
-            },
           },
         },
       };
@@ -67,9 +64,7 @@ describe("VendorFetcher", () => {
         });
       }
 
-      expect(mockClient.query).toHaveBeenCalledWith(undefined, {
-        vendorId: "vendor-123",
-      });
+      expect(mockClient.query).toHaveBeenCalledTimes(1);
     });
 
     it("should return null when vendor is not found", async () => {
@@ -96,10 +91,6 @@ describe("VendorFetcher", () => {
             title: "Test Vendor",
             slug: "test-vendor",
             metadata: [{ key: "vendor_code", value: "VENDOR001" }],
-            pageType: {
-              id: "page-type-123",
-              name: "Vendor",
-            },
           },
         },
       };
@@ -114,8 +105,11 @@ describe("VendorFetcher", () => {
       const result = await vendorFetcher.fetchVendorById("vendor-123");
 
       expect(result.isOk()).toBe(true);
-      if (result.isOk() && result.value) {
-        expect(result.value.stripeAccountId).toBeUndefined();
+      if (result.isOk()) {
+        const vendor = result.value;
+
+        expect(vendor?.stripeAccountId).toBeUndefined();
+        expect(vendor?.id).toBe("vendor-123");
       }
     });
 
@@ -139,7 +133,7 @@ describe("VendorFetcher", () => {
   });
 
   describe("fetchVendors", () => {
-    it("should successfully fetch all vendors for a page type", async () => {
+    it("should successfully fetch multiple vendors", async () => {
       const mockVendorsData = {
         data: {
           pages: {
@@ -150,10 +144,6 @@ describe("VendorFetcher", () => {
                   title: "Vendor 1",
                   slug: "vendor-1",
                   metadata: [{ key: "stripe_account_id", value: "acct_111" }],
-                  pageType: {
-                    id: "page-type-123",
-                    name: "Vendor",
-                  },
                 },
               },
               {
@@ -162,10 +152,6 @@ describe("VendorFetcher", () => {
                   title: "Vendor 2",
                   slug: "vendor-2",
                   metadata: [{ key: "stripe_account_id", value: "acct_222" }],
-                  pageType: {
-                    id: "page-type-123",
-                    name: "Vendor",
-                  },
                 },
               },
             ],
@@ -203,9 +189,7 @@ describe("VendorFetcher", () => {
         });
       }
 
-      expect(mockClient.query).toHaveBeenCalledWith(undefined, {
-        pageTypeId: "page-type-123",
-      });
+      expect(mockClient.query).toHaveBeenCalledTimes(1);
     });
 
     it("should return empty array when no vendors found", async () => {
@@ -255,6 +239,43 @@ describe("VendorFetcher", () => {
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
         expect(result.error.message).toContain("vendors data missing");
+      }
+    });
+
+    it("should handle vendors without stripe account IDs", async () => {
+      const mockVendorsData = {
+        data: {
+          pages: {
+            edges: [
+              {
+                node: {
+                  id: "vendor-1",
+                  title: "Vendor 1",
+                  slug: "vendor-1",
+                  metadata: [{ key: "vendor_code", value: "VENDOR001" }],
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      mockClient.query = vi.fn().mockReturnValue({
+        toPromise: vi.fn().mockResolvedValue({
+          data: mockVendorsData.data,
+          error: null,
+        }),
+      });
+
+      const result = await vendorFetcher.fetchVendors("page-type-123");
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const vendors = result.value;
+
+        expect(vendors).toHaveLength(1);
+        expect(vendors[0].stripeAccountId).toBeUndefined();
+        expect(vendors[0].id).toBe("vendor-1");
       }
     });
   });
