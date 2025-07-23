@@ -25,11 +25,15 @@ export const mockedRefundRequestedEvent = {
           amount: 0,
         },
       },
+      discount: null,
       channel: {
         slug: "default-channel",
         id: mockedSaleorChannelId,
         currencyCode: "JPY",
       },
     },
+    checkout: null,
   },
+  grantedRefund: null,
+  issuedAt: "2023-01-01T00:00:00Z",
 } satisfies TransactionRefundRequestedEventFragment;

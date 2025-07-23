@@ -14,15 +14,19 @@ import { transactionRecordRepo } from "@/modules/transactions-recording/transact
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
+import { RefundEventParser } from "./refund-event-parser";
+import { RefundOrchestrator } from "./refund-orchestrator";
 import { TransactionRefundRequestedUseCase } from "./use-case";
 import { transactionRefundRequestedWebhookDefinition } from "./webhook-definition";
 
 const logger = createLogger("TransactionRefundRequested route");
 
 const useCase = new TransactionRefundRequestedUseCase({
-  appConfigRepo: appConfigRepo,
+  appConfigRepo,
   atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
-  transactionRecordRepo: transactionRecordRepo,
+  transactionRecordRepo,
+  eventParser: new RefundEventParser(),
+  refundOrchestrator: new RefundOrchestrator(),
 });
 
 const handler = transactionRefundRequestedWebhookDefinition.createHandler(

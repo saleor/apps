@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
 import { mockedAtobaraiMerchantCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-merchant-code";
 import { mockedAtobaraiSecretSpCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-secret-sp-code";
 import { mockedAtobaraiShippingCompanyCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-shipping-compnay-code";
@@ -8,7 +9,14 @@ import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-sourc
 import { SourceObjectFragment } from "@/generated/graphql";
 
 import { AppChannelConfig } from "../app-config/app-config";
-import { AtobaraiGoods, createAtobaraiGoods } from "./atobarai-goods";
+import {
+  AtobaraiGoods,
+  createAtobaraiGoods,
+  getDiscountLine,
+  getProductLines,
+  getShippingLine,
+  getVoucherLine,
+} from "./atobarai-goods";
 
 describe("createAtobaraiGoods", () => {
   const commonAppConfigProps = {
@@ -21,58 +29,19 @@ describe("createAtobaraiGoods", () => {
     terminalId: mockedAtobaraiTerminalId,
   };
 
-  const mockedAppChannelConfigWithSkuAsName = AppChannelConfig.create({
-    ...commonAppConfigProps,
-    skuAsName: true,
-  })._unsafeUnwrap();
-
   const mockedAppChannelConfigWithoutSkuAsName = AppChannelConfig.create({
     ...commonAppConfigProps,
     skuAsName: false,
   })._unsafeUnwrap();
 
-  describe("with product lines only", () => {
-    it("should create AtobaraiGoods from checkout with product name when skuAsName is false", () => {
+  describe("createAtobaraiGoods", () => {
+    it("should create AtobaraiGoods from checkout with product line and shipping when checkout.discount is null", () => {
       const sourceObject: SourceObjectFragment = {
         ...mockedSourceObject,
         discount: null,
-        shippingPrice: {
-          gross: {
-            amount: 500,
-          },
-        },
       };
 
-      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithoutSkuAsName);
-
-      expect(goods).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Product Name",
-            "goods_price": 1234,
-            "quantity": 5,
-          },
-          {
-            "goods_name": "Shipping",
-            "goods_price": 500,
-            "quantity": 1,
-          },
-        ]
-      `);
-    });
-
-    it("should create AtobaraiGoods from checkout with SKU when skuAsName is true", () => {
-      const sourceObject: SourceObjectFragment = {
-        ...mockedSourceObject,
-        discount: null,
-        shippingPrice: {
-          gross: {
-            amount: 500,
-          },
-        },
-      };
-
-      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithSkuAsName);
+      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfig);
 
       expect(goods).toMatchInlineSnapshot(`
         [
@@ -83,135 +52,18 @@ describe("createAtobaraiGoods", () => {
           },
           {
             "goods_name": "Shipping",
-            "goods_price": 500,
+            "goods_price": 137,
             "quantity": 1,
           },
         ]
       `);
     });
 
-    it("should create AtobaraiGoods from order with order variant", () => {
-      const sourceObject: SourceObjectFragment = {
-        __typename: "Order",
-        id: "order-id",
-        userEmail: "order-user@example.com",
-        channel: {
-          id: "channel-id",
-          slug: "default-channel",
-          currencyCode: "JPY",
-        },
-        shippingAddress: mockedSourceObject.shippingAddress,
-        total: {
-          gross: {
-            amount: 1234,
-          },
-        },
-        billingAddress: null,
-        lines: [
-          {
-            id: "line-id-1",
-            __typename: "OrderLine",
-            quantity: 3,
-            unitPrice: {
-              gross: {
-                amount: 1_000,
-              },
-            },
-            orderVariant: {
-              product: {
-                name: "Order Product",
-              },
-              sku: "ORDER-SKU-1",
-            },
-          },
-        ],
-        discount: null,
-        shippingPrice: {
-          gross: {
-            amount: 800,
-          },
-        },
-      };
-
-      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithSkuAsName);
-
-      expect(goods).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "ORDER-SKU-1",
-            "goods_price": 1000,
-            "quantity": 3,
-          },
-          {
-            "goods_name": "Shipping",
-            "goods_price": 800,
-            "quantity": 1,
-          },
-        ]
-      `);
-    });
-
-    it("should create AtobaraiGood from checokut with product name when skuAsName is true and product has no SKU", () => {
-      const sourceObject: SourceObjectFragment = {
-        ...mockedSourceObject,
-        lines: [
-          {
-            id: "line-id-1",
-            __typename: "CheckoutLine",
-            quantity: 2,
-            unitPrice: {
-              gross: {
-                amount: 1500,
-              },
-            },
-            checkoutVariant: {
-              product: {
-                name: "Product Without SKU",
-              },
-              sku: null,
-            },
-          },
-        ],
-        discount: null,
-        shippingPrice: {
-          gross: {
-            amount: 300,
-          },
-        },
-      };
-
-      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithSkuAsName);
-
-      expect(goods).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Product Without SKU",
-            "goods_price": 1500,
-            "quantity": 2,
-          },
-          {
-            "goods_name": "Shipping",
-            "goods_price": 300,
-            "quantity": 1,
-          },
-        ]
-      `);
-    });
-  });
-
-  describe("with discount", () => {
-    it("should include voucher line when discount is present", () => {
-      const sourceObject: SourceObjectFragment = {
-        ...mockedSourceObject,
-        // Use the existing discount from mockedSourceObject
-        shippingPrice: {
-          gross: {
-            amount: 500,
-          },
-        },
-      };
-
-      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithSkuAsName);
+    it("should create AtobaraiGoods from checkout with product line and with voucher if checkout.discount is present", () => {
+      const goods = createAtobaraiGoods(
+        { sourceObject: mockedSourceObject },
+        mockedAppChannelConfig,
+      );
 
       expect(goods).toMatchInlineSnapshot(`
         [
@@ -227,62 +79,6 @@ describe("createAtobaraiGoods", () => {
           },
           {
             "goods_name": "Shipping",
-            "goods_price": 500,
-            "quantity": 1,
-          },
-        ]
-      `);
-    });
-
-    it("should not include voucher line when discount is not present", () => {
-      const sourceObject: SourceObjectFragment = {
-        ...mockedSourceObject,
-        discount: null,
-        shippingPrice: {
-          gross: {
-            amount: 500,
-          },
-        },
-      };
-
-      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithoutSkuAsName);
-
-      expect(goods).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Product Name",
-            "goods_price": 1234,
-            "quantity": 5,
-          },
-          {
-            "goods_name": "Shipping",
-            "goods_price": 500,
-            "quantity": 1,
-          },
-        ]
-      `);
-    });
-  });
-
-  describe("with shipping", () => {
-    it("should include shipping line when shipping price is present", () => {
-      const sourceObject: SourceObjectFragment = {
-        ...mockedSourceObject,
-        discount: null,
-        // Use default shipping price from mockedSourceObject
-      };
-
-      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithoutSkuAsName);
-
-      expect(goods).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Product Name",
-            "goods_price": 1234,
-            "quantity": 5,
-          },
-          {
-            "goods_name": "Shipping",
             "goods_price": 137,
             "quantity": 1,
           },
@@ -290,110 +86,6 @@ describe("createAtobaraiGoods", () => {
       `);
     });
 
-    it("should not include shipping line when shipping price is 0", () => {
-      const sourceObject: SourceObjectFragment = {
-        ...mockedSourceObject,
-        discount: null,
-        shippingPrice: {
-          gross: {
-            amount: 0,
-          },
-        },
-      };
-
-      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithoutSkuAsName);
-
-      expect(goods).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Product Name",
-            "goods_price": 1234,
-            "quantity": 5,
-          },
-        ]
-      `);
-    });
-  });
-
-  describe("with complete scenario", () => {
-    it("should create complete AtobaraiGoods with products, voucher, and shipping", () => {
-      const sourceObject: SourceObjectFragment = {
-        ...mockedSourceObject,
-        // Use existing discount and shipping from mockedSourceObject
-        lines: [
-          {
-            id: "line-id-1",
-            __typename: "CheckoutLine",
-            quantity: 2,
-            unitPrice: {
-              gross: {
-                amount: 2_000,
-              },
-            },
-            checkoutVariant: {
-              product: {
-                name: "Complete Product 1",
-              },
-              sku: "COMP-SKU-1",
-            },
-          },
-          {
-            id: "line-id-2",
-            __typename: "CheckoutLine",
-            quantity: 1,
-            unitPrice: {
-              gross: {
-                amount: 3_000,
-              },
-            },
-            checkoutVariant: {
-              product: {
-                name: "Complete Product 2",
-              },
-              sku: "COMP-SKU-2",
-            },
-          },
-        ],
-        discount: {
-          amount: 200,
-        },
-        shippingPrice: {
-          gross: {
-            amount: 600,
-          },
-        },
-      };
-
-      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithoutSkuAsName);
-
-      expect(goods).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Complete Product 1",
-            "goods_price": 2000,
-            "quantity": 2,
-          },
-          {
-            "goods_name": "Complete Product 2",
-            "goods_price": 3000,
-            "quantity": 1,
-          },
-          {
-            "goods_name": "Voucher",
-            "goods_price": 200,
-            "quantity": 1,
-          },
-          {
-            "goods_name": "Shipping",
-            "goods_price": 600,
-            "quantity": 1,
-          },
-        ]
-      `);
-    });
-  });
-
-  describe("error cases", () => {
     it("should throw BaseError when checkout line does not have a variant", () => {
       // Create a sourceObject with a line that has a null variant
       const sourceObjectWithNullVariant = {
@@ -469,14 +161,114 @@ describe("createAtobaraiGoods", () => {
         `[BaseError: Line OrderLine does not have a variant. Cannot convert to AtobaraiGoods.]`,
       );
     });
-  });
 
-  describe("type safety", () => {
     it("shouldn't be assignable without createAtobaraiGoods", () => {
       // @ts-expect-error - if this fails - it means the type is not branded
       const testValue: AtobaraiGoods = [{ goods_name: "Test", goods_price: 100, quantity: 1 }];
 
       expect(testValue).toBeDefined();
+    });
+  });
+
+  describe("getProductLines", () => {
+    it("should return product lines with product name when skuAsName is false", () => {
+      const lines = getProductLines({
+        lines: mockedSourceObject.lines,
+        useSkuAsName: false,
+      });
+
+      expect(lines).toMatchInlineSnapshot(`
+        [
+          {
+            "goods_name": "Product Name",
+            "goods_price": 1234,
+            "quantity": 5,
+          },
+        ]
+      `);
+    });
+
+    it("should return product lines with SKU when skuAsName is true", () => {
+      const lines = getProductLines({
+        lines: mockedSourceObject.lines,
+        useSkuAsName: true,
+      });
+
+      expect(lines).toMatchInlineSnapshot(`
+        [
+          {
+            "goods_name": "product-sku",
+            "goods_price": 1234,
+            "quantity": 5,
+          },
+        ]
+      `);
+    });
+  });
+
+  describe("getVoucherLine", () => {
+    it("should return voucher line when voucher amount greater than 0", () => {
+      const voucherLine = getVoucherLine(2344);
+
+      expect(voucherLine).toMatchInlineSnapshot(`
+        {
+          "goods_name": "Voucher",
+          "goods_price": 2344,
+          "quantity": 1,
+        }
+      `);
+    });
+
+    it("should return null when voucher amount is 0", () => {
+      const voucherLine = getVoucherLine(0);
+
+      expect(voucherLine).toBeNull();
+    });
+
+    it("should return null when voucher amount is not present", () => {
+      const voucherLine = getVoucherLine(undefined);
+
+      expect(voucherLine).toBeNull();
+    });
+  });
+
+  describe("getShippingLine", () => {
+    it("should return shipping line when shipping amount is greater than 0", () => {
+      const shippingLine = getShippingLine(500);
+
+      expect(shippingLine).toMatchInlineSnapshot(`
+        {
+          "goods_name": "Shipping",
+          "goods_price": 500,
+          "quantity": 1,
+        }
+      `);
+    });
+
+    it("should return null when shipping amount is 0", () => {
+      const shippingLine = getShippingLine(0);
+
+      expect(shippingLine).toBeNull();
+    });
+  });
+
+  describe("getDiscountLine", () => {
+    it("should return discount line when discount amount is greater than 0", () => {
+      const discountLine = getDiscountLine(2344);
+
+      expect(discountLine).toMatchInlineSnapshot(`
+        {
+          "goods_name": "Discount",
+          "goods_price": -2344,
+          "quantity": 1,
+        }
+      `);
+    });
+
+    it("should return null when discount amount is 0", () => {
+      const discountLine = getDiscountLine(0);
+
+      expect(discountLine).toBeNull();
     });
   });
 });
