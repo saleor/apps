@@ -101,9 +101,15 @@ describe("createAtobaraiGoods", () => {
           currencyCode: "JPY",
         },
         shippingAddress: mockedSourceObject.shippingAddress,
+        total: {
+          gross: {
+            amount: 1234,
+          },
+        },
         billingAddress: null,
         lines: [
           {
+            id: "line-id-1",
             __typename: "OrderLine",
             quantity: 3,
             unitPrice: {
@@ -150,6 +156,7 @@ describe("createAtobaraiGoods", () => {
         ...mockedSourceObject,
         lines: [
           {
+            id: "line-id-1",
             __typename: "CheckoutLine",
             quantity: 2,
             unitPrice: {
@@ -283,7 +290,7 @@ describe("createAtobaraiGoods", () => {
       `);
     });
 
-    it("should not include shipping line when shipping price is not present", () => {
+    it("should not include shipping line when shipping price is 0", () => {
       const sourceObject: SourceObjectFragment = {
         ...mockedSourceObject,
         discount: null,
@@ -294,16 +301,7 @@ describe("createAtobaraiGoods", () => {
         },
       };
 
-      // Override shippingPrice with null using type assertion
-      const sourceObjectWithoutShipping = {
-        ...sourceObject,
-        shippingPrice: null,
-      } as unknown as SourceObjectFragment;
-
-      const goods = createAtobaraiGoods(
-        { sourceObject: sourceObjectWithoutShipping },
-        mockedAppChannelConfigWithoutSkuAsName,
-      );
+      const goods = createAtobaraiGoods({ sourceObject }, mockedAppChannelConfigWithoutSkuAsName);
 
       expect(goods).toMatchInlineSnapshot(`
         [
@@ -324,6 +322,7 @@ describe("createAtobaraiGoods", () => {
         // Use existing discount and shipping from mockedSourceObject
         lines: [
           {
+            id: "line-id-1",
             __typename: "CheckoutLine",
             quantity: 2,
             unitPrice: {
@@ -339,6 +338,7 @@ describe("createAtobaraiGoods", () => {
             },
           },
           {
+            id: "line-id-2",
             __typename: "CheckoutLine",
             quantity: 1,
             unitPrice: {

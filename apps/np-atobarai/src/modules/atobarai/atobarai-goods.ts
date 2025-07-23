@@ -26,9 +26,12 @@ export const createAtobaraiGoods = (
   },
   appConfig: AppChannelConfig,
 ): AtobaraiGoods => {
-  const productLines = getProductLines(event.sourceObject.lines, appConfig.skuAsName);
-  const voucherLine = getVoucherLine(event.sourceObject);
-  const shippingLine = getShippingLine(event.sourceObject);
+  const productLines = getProductLines({
+    lines: event.sourceObject.lines,
+    useSkuAsName: appConfig.skuAsName,
+  });
+  const voucherLine = getVoucherLine(event.sourceObject.discount?.amount);
+  const shippingLine = getShippingLine(event.sourceObject.shippingPrice.gross.amount);
 
   return AtobaraiGoodsSchema.parse([...productLines, voucherLine, shippingLine].filter(Boolean));
 };
@@ -45,7 +48,13 @@ const getProductGoodsName = (args: {
   return args.productName;
 };
 
-const getProductLines = (lines: SourceObjectFragment["lines"], useSkuAsName: boolean) => {
+export const getProductLines = ({
+  lines,
+  useSkuAsName,
+}: {
+  lines: SourceObjectFragment["lines"];
+  useSkuAsName: boolean;
+}) => {
   return lines.map((line) => {
     const variant = line.__typename === "CheckoutLine" ? line.checkoutVariant : line.orderVariant;
 
@@ -67,10 +76,8 @@ const getProductLines = (lines: SourceObjectFragment["lines"], useSkuAsName: boo
   });
 };
 
-const getVoucherLine = (sourceObject: SourceObjectFragment) => {
-  const voucherAmount = sourceObject.discount?.amount;
-
-  if (!voucherAmount) {
+export const getVoucherLine = (voucherAmount: number | undefined) => {
+  if (!voucherAmount || voucherAmount === 0) {
     return null;
   }
 
@@ -81,16 +88,26 @@ const getVoucherLine = (sourceObject: SourceObjectFragment) => {
   };
 };
 
-const getShippingLine = (sourceObject: SourceObjectFragment) => {
-  const shippingPrice = sourceObject.shippingPrice?.gross.amount;
-
-  if (!shippingPrice) {
+export const getShippingLine = (shippingPrice: number) => {
+  if (shippingPrice === 0) {
     return null;
   }
 
   return {
     goods_name: "Shipping",
     goods_price: shippingPrice,
+    quantity: 1,
+  };
+};
+
+export const getDiscountLine = (discountAmount: number) => {
+  if (discountAmount === 0) {
+    return null;
+  }
+
+  return {
+    goods_name: "Discount",
+    goods_price: -discountAmount,
     quantity: 1,
   };
 };

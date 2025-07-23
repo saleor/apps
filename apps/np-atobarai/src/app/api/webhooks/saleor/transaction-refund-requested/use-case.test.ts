@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
+import { MockedTransactionRecordRepo } from "@/__tests__/mocks/app-transaction/mocked-transaction-record-repo";
 import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
@@ -17,6 +18,7 @@ import {
   RefundFailureResult,
   RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
+import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
 import { MalformedRequestResponse } from "../saleor-webhook-responses";
 import { TransactionRefundRequestedUseCase } from "./use-case";
@@ -30,12 +32,13 @@ describe("TransactionRefundRequestedUseCase", () => {
   it("should return MalformedRequestResponse when action amount is missing", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
-      action: { amount: null },
+      action: { amount: null, currency: "JPY" },
     };
 
     const useCase = new TransactionRefundRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const result = await useCase.execute({
@@ -56,6 +59,7 @@ describe("TransactionRefundRequestedUseCase", () => {
     const useCase = new TransactionRefundRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const result = await useCase.execute({
@@ -72,12 +76,14 @@ describe("TransactionRefundRequestedUseCase", () => {
       ...mockedRefundRequestedEvent,
       transaction: {
         pspReference: mockedAtobaraiTransactionId,
+        token: "saleor-transaction-token",
       },
     };
 
     const useCase = new TransactionRefundRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const result = await useCase.execute({
@@ -89,10 +95,23 @@ describe("TransactionRefundRequestedUseCase", () => {
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
   });
 
-  it("should successfully cancel transaction in NP Atobarai when full amount refund is requested and return RefundSuccessResult", async () => {
+  it("should successfully cancel transaction in NP Atobarai when full amount refund is requested and order is not yet fulfilled and return RefundSuccessResult", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
     };
+
+    const transactionRecordRepo = new MockedTransactionRecordRepo();
+
+    transactionRecordRepo.createTransaction(
+      {
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      },
+      new TransactionRecord({
+        atobaraiTransactionId: mockedAtobaraiTransactionId,
+        saleorTrackingNumber: null,
+      }),
+    );
 
     const mockCancelResponse = createAtobaraiCancelTransactionSuccessResponse({
       results: [
@@ -113,6 +132,7 @@ describe("TransactionRefundRequestedUseCase", () => {
     const useCase = new TransactionRefundRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
+      transactionRecordRepo,
     });
 
     const result = await useCase.execute({
@@ -152,9 +172,23 @@ describe("TransactionRefundRequestedUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
+    const transactionRecordRepo = new MockedTransactionRecordRepo();
+
+    transactionRecordRepo.createTransaction(
+      {
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      },
+      new TransactionRecord({
+        atobaraiTransactionId: mockedAtobaraiTransactionId,
+        saleorTrackingNumber: null,
+      }),
+    );
+
     const useCase = new TransactionRefundRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
+      transactionRecordRepo,
     });
 
     const result = await useCase.execute({
@@ -200,9 +234,23 @@ describe("TransactionRefundRequestedUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
+    const transactionRecordRepo = new MockedTransactionRecordRepo();
+
+    transactionRecordRepo.createTransaction(
+      {
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+      },
+      new TransactionRecord({
+        atobaraiTransactionId: mockedAtobaraiTransactionId,
+        saleorTrackingNumber: null,
+      }),
+    );
+
     const useCase = new TransactionRefundRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
+      transactionRecordRepo,
     });
 
     const result = await useCase.execute({
