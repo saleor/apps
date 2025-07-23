@@ -5,12 +5,12 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 
-import { appTransactionSchema, getPK, getSKForSpecificItem } from "./entity";
+import { TransactionRecordConfig } from "./entity";
 
-describe("App Transaction Entity", () => {
-  describe("getPK", () => {
+describe("TransactionRecordConfig", () => {
+  describe("accessPattern.getPK", () => {
     it("should return primary key scoped to installation", () => {
-      const result = getPK({
+      const result = TransactionRecordConfig.accessPattern.getPK({
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
       });
@@ -19,9 +19,9 @@ describe("App Transaction Entity", () => {
     });
   });
 
-  describe("getSKForSpecificItem", () => {
+  describe("accessPattern.getSKForSpecificItem", () => {
     it("should return sort key for specific transaction ID", () => {
-      const result = getSKForSpecificItem({
+      const result = TransactionRecordConfig.accessPattern.getSKForSpecificItem({
         atobaraiTransactionId: mockedAtobaraiTransactionId,
       });
 
@@ -29,14 +29,14 @@ describe("App Transaction Entity", () => {
     });
   });
 
-  describe("schema", () => {
+  describe("entitySchema", () => {
     it("Properly parses data and doesn't throw", () => {
-      const result = appTransactionSchema.build(Parser).parse({
-        PK: getPK({
+      const result = TransactionRecordConfig.entitySchema.build(Parser).parse({
+        PK: TransactionRecordConfig.accessPattern.getPK({
           saleorApiUrl: mockedSaleorApiUrl,
           appId: mockedSaleorAppId,
         }),
-        SK: getSKForSpecificItem({
+        SK: TransactionRecordConfig.accessPattern.getSKForSpecificItem({
           atobaraiTransactionId: mockedAtobaraiTransactionId,
         }),
         atobaraiTransactionId: mockedAtobaraiTransactionId,

@@ -1,44 +1,44 @@
 import { err, ok, Result } from "neverthrow";
 
-import { AppTransaction } from "@/modules/app-transaction/app-transaction";
-import {
-  AppTransactionError,
-  AppTransactionRepoAccess,
-  IAppTransactionRepo,
-} from "@/modules/app-transaction/types";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
+import {
+  TransactionRecordRepo,
+  TransactionRecordRepoAccess,
+  TransactionRecordRepoError,
+} from "@/modules/transactions-recording/types";
 
-export class MockedAppTransactionRepo implements IAppTransactionRepo {
-  public transactions: Record<string, AppTransaction> = {};
+export class MockedAppTransactionRepo implements TransactionRecordRepo {
+  public transactions: Record<string, TransactionRecord> = {};
 
   async createTransaction(
-    _accessPattern: AppTransactionRepoAccess,
-    transaction: AppTransaction,
-  ): Promise<Result<null, AppTransactionError>> {
+    _accessPattern: TransactionRecordRepoAccess,
+    transaction: TransactionRecord,
+  ): Promise<Result<null, TransactionRecordRepoError>> {
     this.transactions[transaction.atobaraiTransactionId] = transaction;
 
     return ok(null);
   }
 
   async updateTransaction(
-    _accessPattern: AppTransactionRepoAccess,
-    transaction: AppTransaction,
-  ): Promise<Result<null, AppTransactionError>> {
+    _accessPattern: TransactionRecordRepoAccess,
+    transaction: TransactionRecord,
+  ): Promise<Result<null, TransactionRecordRepoError>> {
     this.transactions[transaction.atobaraiTransactionId] = transaction;
 
     return ok(null);
   }
 
   async getTransactionByAtobaraiTransactionId(
-    _accessPattern: AppTransactionRepoAccess,
+    _accessPattern: TransactionRecordRepoAccess,
     id: AtobaraiTransactionId,
-  ): Promise<Result<AppTransaction, AppTransactionError>> {
+  ): Promise<Result<TransactionRecord, TransactionRecordRepoError>> {
     const transaction = this.transactions[id];
 
     if (transaction) {
       return ok(transaction);
     } else {
-      return err(new AppTransactionError.TransactionMissingError("Transaction not found"));
+      return err(new TransactionRecordRepoError.TransactionMissingError("Transaction not found"));
     }
   }
 

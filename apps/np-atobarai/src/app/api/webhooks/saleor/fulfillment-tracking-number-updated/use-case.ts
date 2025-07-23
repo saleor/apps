@@ -5,12 +5,12 @@ import { err, ok, Result } from "neverthrow";
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
-import { AppTransaction } from "@/modules/app-transaction/app-transaction";
-import { IAppTransactionRepo } from "@/modules/app-transaction/types";
 import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
 import { AtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
+import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
 import { BaseUseCase } from "../base-use-case";
 import {
@@ -32,12 +32,12 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
   protected logger = createLogger("FulfillmentTrackingNumberUpdatedUseCase");
   protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
-  private appTransactionRepo: IAppTransactionRepo;
+  private appTransactionRepo: TransactionRecordRepo;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
-    appTransactionRepo: IAppTransactionRepo;
+    appTransactionRepo: TransactionRecordRepo;
   }) {
     super();
     this.appConfigRepo = deps.appConfigRepo;
@@ -202,7 +202,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       fulfillmentResult.results[0].np_transaction_id,
     );
 
-    const appTransaction = new AppTransaction({
+    const appTransaction = new TransactionRecord({
       atobaraiTransactionId,
       saleorTrackingNumber: trackingNumber,
     });

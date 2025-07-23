@@ -10,7 +10,6 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-initialize-session-event";
-import { AppTransactionError } from "@/modules/app-transaction/types";
 import {
   createAtobaraiTransactionSuccessResponse,
   CreditCheckResult,
@@ -26,6 +25,7 @@ import {
   ChargeFailureResult,
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
+import { TransactionRecordRepoError } from "@/modules/transactions-recording/types";
 
 import {
   AppIsNotConfiguredResponse,
@@ -351,7 +351,11 @@ describe("TransactionInitializeSessionUseCase", () => {
     const mockedAppTransactionRepo = new MockedAppTransactionRepo();
 
     vi.spyOn(mockedAppTransactionRepo, "createTransaction").mockImplementationOnce(async () =>
-      err(new AppTransactionError.FailedWritingTransactionError("Failed to create transaction")),
+      err(
+        new TransactionRecordRepoError.FailedWritingTransactionError(
+          "Failed to create transaction",
+        ),
+      ),
     );
 
     const uc = new TransactionInitializeSessionUseCase({

@@ -13,13 +13,13 @@ import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-u
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 
 import { DynamoMainTable } from "../dynamodb/dynamodb-main-table";
-import { AppTransaction } from "./app-transaction";
-import { createEntity, getPK, getSKForSpecificItem } from "./dynamodb/entity";
-import { DynamoDBAppTransactionRepo } from "./dynamodb-app-transaction-repo";
-import { AppTransactionError } from "./types";
+import { TransactionRecordConfig } from "./dynamodb/entity";
+import { DynamoDBTransactionRecordRepo } from "./dynamodb-transaction-record-repo";
+import { TransactionRecord } from "./transaction-record";
+import { TransactionRecordRepoError } from "./types";
 
 describe("DynamoDBAppTransactionRepo", () => {
-  let repo: DynamoDBAppTransactionRepo;
+  let repo: DynamoDBTransactionRecordRepo;
 
   const mockDocumentClient = mockClient(DynamoDBDocumentClient);
 
@@ -32,9 +32,9 @@ describe("DynamoDBAppTransactionRepo", () => {
       tableName: "np-atobarai-test-table",
     });
 
-    const entity = createEntity(table);
+    const entity = TransactionRecordConfig.createEntity(table);
 
-    repo = new DynamoDBAppTransactionRepo({
+    repo = new DynamoDBTransactionRecordRepo({
       entity,
     });
   });
@@ -74,7 +74,7 @@ describe("DynamoDBAppTransactionRepo", () => {
       );
 
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(
-        AppTransactionError.FailedWritingTransactionError,
+        TransactionRecordRepoError.FailedWritingTransactionError,
       );
     });
   });
@@ -114,7 +114,7 @@ describe("DynamoDBAppTransactionRepo", () => {
       );
 
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(
-        AppTransactionError.FailedUpdatingTransactionError,
+        TransactionRecordRepoError.FailedUpdatingTransactionError,
       );
     });
   });
@@ -124,22 +124,22 @@ describe("DynamoDBAppTransactionRepo", () => {
       mockDocumentClient
         .on(GetCommand, {
           Key: {
-            PK: getPK({
+            PK: TransactionRecordConfig.accessPattern.getPK({
               saleorApiUrl: mockedSaleorApiUrl,
               appId: mockedSaleorAppId,
             }),
-            SK: getSKForSpecificItem({
+            SK: TransactionRecordConfig.accessPattern.getSKForSpecificItem({
               atobaraiTransactionId: mockedAtobaraiTransactionId,
             }),
           },
         })
         .resolvesOnce({
           Item: {
-            PK: getPK({
+            PK: TransactionRecordConfig.accessPattern.getPK({
               saleorApiUrl: mockedSaleorApiUrl,
               appId: mockedSaleorAppId,
             }),
-            SK: getSKForSpecificItem({
+            SK: TransactionRecordConfig.accessPattern.getSKForSpecificItem({
               atobaraiTransactionId: mockedAtobaraiTransactionId,
             }),
             atobaraiTransactionId: mockedAtobaraiTransactionId,
@@ -161,9 +161,9 @@ describe("DynamoDBAppTransactionRepo", () => {
         mockedAtobaraiTransactionId,
       );
 
-      expect(result._unsafeUnwrap()).toBeInstanceOf(AppTransaction);
+      expect(result._unsafeUnwrap()).toBeInstanceOf(TransactionRecord);
       expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
-        AppTransaction {
+        TransactionRecord {
           "atobaraiTransactionId": "np_trans_id",
           "saleorTrackingNumber": null,
         }
@@ -174,11 +174,11 @@ describe("DynamoDBAppTransactionRepo", () => {
       mockDocumentClient
         .on(GetCommand, {
           Key: {
-            PK: getPK({
+            PK: TransactionRecordConfig.accessPattern.getPK({
               saleorApiUrl: mockedSaleorApiUrl,
               appId: mockedSaleorAppId,
             }),
-            SK: getSKForSpecificItem({
+            SK: TransactionRecordConfig.accessPattern.getSKForSpecificItem({
               atobaraiTransactionId: mockedAtobaraiTransactionId,
             }),
           },
@@ -196,7 +196,9 @@ describe("DynamoDBAppTransactionRepo", () => {
         mockedAtobaraiTransactionId,
       );
 
-      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppTransactionError.TransactionMissingError);
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+        TransactionRecordRepoError.TransactionMissingError,
+      );
     });
 
     it("returns FailedGettingTransactionError if call to DynamoDB ended with non-200 status", async () => {
@@ -215,7 +217,7 @@ describe("DynamoDBAppTransactionRepo", () => {
       );
 
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(
-        AppTransactionError.FailedFetchingTransactionError,
+        TransactionRecordRepoError.FailedFetchingTransactionError,
       );
     });
   });

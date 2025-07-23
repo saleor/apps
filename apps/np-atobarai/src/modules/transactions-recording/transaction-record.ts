@@ -1,6 +1,6 @@
 import { AtobaraiTransactionId } from "../atobarai/atobarai-transaction-id";
 
-export class AppTransaction {
+export class TransactionRecord {
   readonly atobaraiTransactionId: AtobaraiTransactionId;
   readonly saleorTrackingNumber: string | null;
 

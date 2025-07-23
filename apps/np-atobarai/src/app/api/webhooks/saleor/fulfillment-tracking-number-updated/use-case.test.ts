@@ -10,12 +10,12 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedFulfillmentTrackingNumberUpdatedEvent } from "@/__tests__/mocks/saleor-events/mocked-fulfillment-tracking-number-updated-event";
-import { AppTransactionError } from "@/modules/app-transaction/types";
 import { createAtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import {
   AtobaraiApiClientFulfillmentReportError,
   IAtobaraiApiClientFactory,
 } from "@/modules/atobarai/api/types";
+import { TransactionRecordRepoError } from "@/modules/transactions-recording/types";
 
 import {
   AppIsNotConfiguredResponse,
@@ -328,7 +328,11 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const mockedAppTransactionRepo = new MockedAppTransactionRepo();
 
     vi.spyOn(mockedAppTransactionRepo, "updateTransaction").mockImplementationOnce(async () =>
-      err(new AppTransactionError.FailedUpdatingTransactionError("Failed to update transaction")),
+      err(
+        new TransactionRecordRepoError.FailedUpdatingTransactionError(
+          "Failed to update transaction",
+        ),
+      ),
     );
 
     vi.spyOn(mockedAtobaraiApiClient, "reportFulfillment").mockResolvedValue(

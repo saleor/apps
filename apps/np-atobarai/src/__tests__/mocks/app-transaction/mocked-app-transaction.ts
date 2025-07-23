@@ -1,5 +1,5 @@
-import { AppTransaction } from "@/modules/app-transaction/app-transaction";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
 import { mockedAtobaraiTransactionId } from "../atobarai/mocked-atobarai-transaction-id";
 
@@ -15,7 +15,7 @@ export const getMockedAppTransaction = (params?: Params) => {
     ...(params ?? {}),
   } satisfies Params;
 
-  return new AppTransaction({
+  return new TransactionRecord({
     atobaraiTransactionId: finalParams.atobaraiTransactionId,
     saleorTrackingNumber: finalParams.saleorTrackingNumber,
   });

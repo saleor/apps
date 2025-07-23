@@ -6,8 +6,6 @@ import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
-import { AppTransaction } from "@/modules/app-transaction/app-transaction";
-import { IAppTransactionRepo } from "@/modules/app-transaction/types";
 import {
   AtobaraiRegisterTransactionPayload,
   createAtobaraiRegisterTransactionPayload,
@@ -29,6 +27,8 @@ import {
   ChargeFailureResult,
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
+import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
+import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
 import { BaseUseCase } from "../base-use-case";
 import {
@@ -53,12 +53,12 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
   protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   protected logger = createLogger("TransactionInitializeSessionUseCase");
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
-  private appTransactionRepo: IAppTransactionRepo;
+  private appTransactionRepo: TransactionRecordRepo;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
-    appTransactionRepo: IAppTransactionRepo;
+    appTransactionRepo: TransactionRecordRepo;
   }) {
     super();
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
@@ -107,7 +107,7 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
   }) {
     const atobaraiTransactionId = createAtobaraiTransactionId(transaction.np_transaction_id);
 
-    const appTransaction = new AppTransaction({
+    const appTransaction = new TransactionRecord({
       atobaraiTransactionId,
       saleorTrackingNumber: null,
     });

@@ -8,42 +8,41 @@ import {
   AtobaraiTransactionId,
   createAtobaraiTransactionId,
 } from "../atobarai/atobarai-transaction-id";
-import { AppTransaction } from "./app-transaction";
+import { TransactionRecordConfig, TransactionRecordEntity } from "./dynamodb/entity";
+import { TransactionRecord } from "./transaction-record";
 import {
-  appTransactionEntity,
-  DynamoDbAppTransactionEntity,
-  getPK,
-  getSKForSpecificItem,
-} from "./dynamodb/entity";
-import { AppTransactionError, AppTransactionRepoAccess, IAppTransactionRepo } from "./types";
+  TransactionRecordRepo,
+  TransactionRecordRepoAccess,
+  TransactionRecordRepoError,
+} from "./types";
 
-export class DynamoDBAppTransactionRepo implements IAppTransactionRepo {
-  private entity: DynamoDbAppTransactionEntity;
+export class DynamoDBTransactionRecordRepo implements TransactionRecordRepo {
+  private entity: TransactionRecordEntity;
   private logger = createLogger("DynamoDBAppTransactionRepo");
 
   constructor(
     params = {
-      entity: appTransactionEntity,
+      entity: TransactionRecordConfig.entity,
     },
   ) {
     this.entity = params.entity;
   }
 
   async createTransaction(
-    accessPattern: AppTransactionRepoAccess,
-    transaction: AppTransaction,
-  ): Promise<Result<null, AppTransactionError>> {
+    accessPattern: TransactionRecordRepoAccess,
+    transaction: TransactionRecord,
+  ): Promise<Result<null, TransactionRecordRepoError>> {
     try {
       this.logger.debug("Trying to write Transaction to DynamoDB", { transaction });
 
       const operation = this.entity
         .build(PutItemCommand)
         .item({
-          PK: getPK({
+          PK: TransactionRecordConfig.accessPattern.getPK({
             saleorApiUrl: accessPattern.saleorApiUrl,
             appId: accessPattern.appId,
           }),
-          SK: getSKForSpecificItem({
+          SK: TransactionRecordConfig.accessPattern.getSKForSpecificItem({
             atobaraiTransactionId: transaction.atobaraiTransactionId,
           }),
           atobaraiTransactionId: transaction.atobaraiTransactionId,
@@ -75,7 +74,7 @@ export class DynamoDBAppTransactionRepo implements IAppTransactionRepo {
       });
 
       return err(
-        new AppTransactionError.FailedWritingTransactionError(
+        new TransactionRecordRepoError.FailedWritingTransactionError(
           "Failed to write transaction to DynamoDB",
           {
             cause: error,
@@ -86,18 +85,18 @@ export class DynamoDBAppTransactionRepo implements IAppTransactionRepo {
   }
 
   async updateTransaction(
-    accessPattern: AppTransactionRepoAccess,
-    transaction: AppTransaction,
-  ): Promise<Result<null, AppTransactionError>> {
+    accessPattern: TransactionRecordRepoAccess,
+    transaction: TransactionRecord,
+  ): Promise<Result<null, TransactionRecordRepoError>> {
     try {
       this.logger.debug("Trying to update Transaction to DynamoDB", { transaction });
 
       const operation = this.entity.build(UpdateItemCommand).item({
-        PK: getPK({
+        PK: TransactionRecordConfig.accessPattern.getPK({
           saleorApiUrl: accessPattern.saleorApiUrl,
           appId: accessPattern.appId,
         }),
-        SK: getSKForSpecificItem({
+        SK: TransactionRecordConfig.accessPattern.getSKForSpecificItem({
           atobaraiTransactionId: transaction.atobaraiTransactionId,
         }),
         saleorTrackingNumber: transaction.saleorTrackingNumber,
@@ -122,7 +121,7 @@ export class DynamoDBAppTransactionRepo implements IAppTransactionRepo {
       });
 
       return err(
-        new AppTransactionError.FailedUpdatingTransactionError(
+        new TransactionRecordRepoError.FailedUpdatingTransactionError(
           "Failed to update transaction to DynamoDB",
           {
             cause: error,
@@ -133,18 +132,18 @@ export class DynamoDBAppTransactionRepo implements IAppTransactionRepo {
   }
 
   async getTransactionByAtobaraiTransactionId(
-    accessPattern: AppTransactionRepoAccess,
+    accessPattern: TransactionRecordRepoAccess,
     id: AtobaraiTransactionId,
-  ): Promise<Result<AppTransaction, AppTransactionError>> {
+  ): Promise<Result<TransactionRecord, TransactionRecordRepoError>> {
     try {
       this.logger.debug("Trying to get Transaction from DynamoDB", { id });
 
       const operation = this.entity.build(GetItemCommand).key({
-        PK: getPK({
+        PK: TransactionRecordConfig.accessPattern.getPK({
           saleorApiUrl: accessPattern.saleorApiUrl,
           appId: accessPattern.appId,
         }),
-        SK: getSKForSpecificItem({
+        SK: TransactionRecordConfig.accessPattern.getSKForSpecificItem({
           atobaraiTransactionId: id,
         }),
       });
@@ -153,7 +152,7 @@ export class DynamoDBAppTransactionRepo implements IAppTransactionRepo {
 
       if (result.$metadata.httpStatusCode !== 200) {
         return err(
-          new AppTransactionError.FailedFetchingTransactionError(
+          new TransactionRecordRepoError.FailedFetchingTransactionError(
             `Failed to read data from DynamoDB. HTTP status code: ${result.$metadata.httpStatusCode}`,
             {
               cause: result,
@@ -166,23 +165,26 @@ export class DynamoDBAppTransactionRepo implements IAppTransactionRepo {
         const { atobaraiTransactionId, saleorTrackingNumber } = result.Item;
 
         return ok(
-          new AppTransaction({
+          new TransactionRecord({
             atobaraiTransactionId: createAtobaraiTransactionId(atobaraiTransactionId),
             saleorTrackingNumber: saleorTrackingNumber,
           }),
         );
       } else {
         return err(
-          new AppTransactionError.TransactionMissingError("Transaction not found in Database", {
-            props: {
-              paymentIntentId: id,
+          new TransactionRecordRepoError.TransactionMissingError(
+            "Transaction not found in Database",
+            {
+              props: {
+                paymentIntentId: id,
+              },
             },
-          }),
+          ),
         );
       }
     } catch (error) {
       return err(
-        new AppTransactionError.FailedFetchingTransactionError(
+        new TransactionRecordRepoError.FailedFetchingTransactionError(
           "Failed to fetch transaction from DynamoDB",
           {
             cause: error,
