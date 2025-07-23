@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import { env } from "@/lib/env";
 import { apl } from "@/lib/saleor-app";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -19,7 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const testData = {
       saleorApiUrl: "debug-saleor-url",
       token: "debug-token",
-      domain: "debug.saleor.test",
       appId: "debug-app-id",
     };
 
@@ -35,6 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       writeResult,
       readResult,
       testData,
+      aplType: env.APL,
     });
   } catch (error) {
     // Step 5: Catch and log errors with full stack trace
@@ -48,6 +49,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         message: error instanceof Error ? error.message : "Unknown error",
         stack: error instanceof Error ? error.stack : undefined,
       },
+      aplType: env.APL,
+      recommendation:
+        env.APL === "file"
+          ? "Consider switching to 'dynamodb' APL for serverless environments"
+          : undefined,
     });
   }
 }

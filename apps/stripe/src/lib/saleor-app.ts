@@ -28,7 +28,10 @@ switch (env.APL) {
   }
 
   default: {
-    apl = new FileAPL();
+    // Use /tmp directory for serverless environments where filesystem is read-only
+    const fileName = env.NODE_ENV === "production" ? "/tmp/.auth-data.json" : undefined;
+
+    apl = new FileAPL({ fileName });
     break;
   }
 }
