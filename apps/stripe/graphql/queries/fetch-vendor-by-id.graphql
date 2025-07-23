@@ -1,0 +1,15 @@
+query FetchVendorById($vendorId: ID!) {
+  page(id: $vendorId) {
+    id
+    title
+    slug
+    metadata {
+      key
+      value
+    }
+    pageType {
+      id
+      name
+    }
+  }
+}

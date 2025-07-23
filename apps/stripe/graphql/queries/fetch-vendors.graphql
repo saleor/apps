@@ -1,0 +1,19 @@
+query FetchVendors($pageTypeId: ID!) {
+  pages(filter: { pageTypes: [$pageTypeId] }, first: 100) {
+    edges {
+      node {
+        id
+        title
+        slug
+        metadata {
+          key
+          value
+        }
+        pageType {
+          id
+          name
+        }
+      }
+    }
+  }
+}
