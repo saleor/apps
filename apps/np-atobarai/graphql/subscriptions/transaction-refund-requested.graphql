@@ -27,6 +27,9 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
       }
     }
     order {
+      fulfillments {
+        trackingNumber
+      }
       id
       channel {
         ...Channel
@@ -40,6 +43,13 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
         gross {
           amount
         }
+      }
+      userEmail
+      billingAddress {
+        ...Address
+      }
+      shippingAddress {
+        ...Address
       }
       discount {
         amount

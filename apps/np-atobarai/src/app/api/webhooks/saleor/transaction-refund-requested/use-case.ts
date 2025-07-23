@@ -8,8 +8,11 @@ import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { createAtobaraiCancelTransactionPayload } from "@/modules/atobarai/api/atobarai-cancel-transaction-payload";
 import { AtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
-import { createAtobaraiReregisterTransactionPayload } from "@/modules/atobarai/api/atobarai-reregister-transaction-payload";
+import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
+import { createAtobaraiRegisterTransactionPayload } from "@/modules/atobarai/api/atobarai-register-transaction-payload";
 import { IAtobaraiApiClient, IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
+import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
+import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
 import { createAtobaraiGoodsFromRefund } from "@/modules/atobarai/atobarai-goods";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
@@ -193,32 +196,37 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
 
     const saleorTransactionToken = createSaleorTransactionToken(transaction.token ?? "");
 
-    const goods = createAtobaraiGoodsFromRefund(transaction, grantedRefund, atobaraiConfig);
+    const atobaraiGoods = createAtobaraiGoodsFromRefund(transaction, grantedRefund, atobaraiConfig);
 
     this.logger.info("Preparing to re-register Atobarai transaction", {
       atobaraiTransactionId,
       saleorTransactionToken,
-      goods,
+      atobaraiGoods,
       issuedAt,
       refundAmount,
     });
 
-    const reregisterPayload = createAtobaraiReregisterTransactionPayload({
-      transactionId: atobaraiTransactionId,
+    const registerPayload = createAtobaraiRegisterTransactionPayload({
       saleorTransactionToken,
-      goods,
-      shopOrderDate: createAtobaraiShopOrderDate(issuedAt),
+      atobaraiGoods,
+      atobaraiCustomer: createAtobaraiCustomer({
+        sourceObject: { ...transaction.order, __typename: "Order" },
+      }),
+      atobaraiDeliveryDestination: createAtobaraiDeliveryDestination({
+        sourceObject: { ...transaction.order, __typename: "Order" },
+      }),
+      atobaraiShopOrderDate: createAtobaraiShopOrderDate(issuedAt),
       atobaraiMoney: createAtobaraiMoney({
         amount: refundAmount,
         currency: "JPY",
       }),
     });
 
-    const reregisterResult = await apiClient.reregisterTransaction(reregisterPayload);
+    const registerResult = await apiClient.registerTransaction(registerPayload);
 
-    if (reregisterResult.isErr()) {
-      this.logger.error("Failed to re-register Atobarai transaction", {
-        error: reregisterResult.error,
+    if (registerResult.isErr()) {
+      this.logger.error("Failed to register Atobarai transaction", {
+        error: registerResult.error,
       });
 
       return ok(
@@ -228,10 +236,39 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
       );
     }
 
+    // todo: handle multiple results
+
+    const newTransactionId = createAtobaraiTransactionId(
+      registerResult.value.results[0].np_transaction_id,
+    );
+
+    if (transaction.order?.fulfillments?.length !== 0) {
+      const reportFulfillmentPayload = createAtobaraiFulfillmentReportPayload({
+        atobaraiTransactionId: newTransactionId,
+        shippingCompanyCode: atobaraiConfig.shippingCompanyCode,
+        // TODO: handle multiple fulfillments and tracking numbers
+        trackingNumber: transaction.order?.fulfillments?.[0]?.trackingNumber ?? "",
+      });
+
+      const fulfillmentReportResult = await apiClient.reportFulfillment(reportFulfillmentPayload);
+
+      if (fulfillmentReportResult.isErr()) {
+        this.logger.error("Failed to report fulfillment for Atobarai transaction", {
+          error: fulfillmentReportResult.error,
+        });
+
+        return ok(
+          new TransactionRefundRequestedUseCaseResponse.Failure({
+            transactionResult: new RefundFailureResult(),
+          }),
+        );
+      }
+    }
+
     return ok(
       new TransactionRefundRequestedUseCaseResponse.Success({
         transactionResult: new RefundSuccessResult(),
-        atobaraiTransactionId,
+        atobaraiTransactionId: newTransactionId,
       }),
     );
   }
