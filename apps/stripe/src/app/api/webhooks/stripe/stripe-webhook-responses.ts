@@ -47,8 +47,18 @@ export class StripeWebhookSeverErrorResponse extends RetryableErrorWebhookRespon
   }
 }
 
-export class StripeWebhookTransactionMissingReponse extends NonRetryableErrorWebhookResponse {
+export class StripeWebhookTransactionMissingResponse extends NonRetryableErrorWebhookResponse {
   readonly message = "Transaction is missing";
+
+  getResponse() {
+    return new Response(this.message, {
+      status: this.statusCode,
+    });
+  }
+}
+
+export class ObjectCreatedOutsideOfSaleorResponse extends NonRetryableErrorWebhookResponse {
+  readonly message = "Metadata is missing";
 
   getResponse() {
     return new Response(this.message, {
@@ -63,4 +73,5 @@ export type PossibleStripeWebhookErrorResponses =
   | StripeWebhookMalformedRequestResponse
   | StripeWebhookAppIsNotConfiguredResponse
   | StripeWebhookSeverErrorResponse
-  | StripeWebhookTransactionMissingReponse;
+  | StripeWebhookTransactionMissingResponse
+  | ObjectCreatedOutsideOfSaleorResponse;

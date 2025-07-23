@@ -21,11 +21,14 @@ export interface IStripeRefundsApi {
   createRefund(args: {
     paymentIntentId: StripePaymentIntentId;
     stripeMoney: StripeMoney;
-    metadata?: AllowedStripeIntentMetadata;
+    metadata?: AllowedStripeObjectMetadata;
   }): Promise<Result<Stripe.Refund, unknown>>;
 }
 
-export type AllowedStripeIntentMetadata = {
+/**
+ * Fixed metadata keys that are allowed on Stripe objects - intent and refund.
+ */
+export type AllowedStripeObjectMetadata = {
   saleor_transaction_id?: SaleorTransationId;
   saleor_source_id?: string;
   saleor_source_type?: "Checkout" | "Order";
@@ -42,7 +45,7 @@ export interface CreatePaymentIntentArgs {
     | "return_url"
   >;
   idempotencyKey: string;
-  metadata?: AllowedStripeIntentMetadata;
+  metadata?: AllowedStripeObjectMetadata;
 }
 
 export interface IStripePaymentIntentsApi {
