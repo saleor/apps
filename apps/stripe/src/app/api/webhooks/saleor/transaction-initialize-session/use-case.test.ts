@@ -1,6 +1,6 @@
 import { err, ok } from "neverthrow";
 import Stripe from "stripe";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
@@ -13,6 +13,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
+import { VendorResolver } from "@/modules/saleor/vendor-resolver";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
@@ -33,6 +34,23 @@ describe("TransactionInitializeSessionUseCase", () => {
   const stripePaymentIntentsApiFactory = {
     create: () => mockedStripePaymentIntentsApi,
   } satisfies IStripePaymentIntentsApiFactory;
+
+  const mockedVendorResolver = {
+    resolveVendorForPayment: vi.fn().mockResolvedValue(ok(null)),
+  } as unknown as VendorResolver;
+
+  const createUseCase = () =>
+    new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory,
+      transactionRecorder: new MockedTransactionRecorder(),
+      vendorResolver: mockedVendorResolver,
+    });
+
+  beforeEach(() => {
+    // Reset the mock to return null (no vendor) for most tests
+    vi.mocked(mockedVendorResolver.resolveVendorForPayment).mockResolvedValue(ok(null));
+  });
 
   it.each([
     {
@@ -60,11 +78,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           } as Stripe.PaymentIntent),
         );
 
-      const uc = new TransactionInitializeSessionUseCase({
-        appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory,
-        transactionRecorder: new MockedTransactionRecorder(),
-      });
+      const uc = createUseCase();
 
       await uc.execute({
         saleorApiUrl: mockedSaleorApiUrl,
@@ -75,6 +89,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       expect(spy).toHaveBeenCalledWith({
         stripeMoney: expect.any(StripeMoney),
         idempotencyKey: saleorEvent.idempotencyKey,
+        stripeAccount: undefined, // No vendor account for channel-based payments
         intentParams: {
           automatic_payment_methods: {
             enabled: true,
@@ -96,6 +111,67 @@ describe("TransactionInitializeSessionUseCase", () => {
       expect(spy.mock.calls[0][0].stripeMoney.currency).toBe("usd");
     },
   );
+
+  it("Passes vendor stripe account ID when vendor is resolved", async () => {
+    const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType: "CHARGE" });
+    const vendorStripeAccountId = "acct_vendor123";
+
+    // Mock vendor resolution to return a vendor with Stripe account
+    mockedVendorResolver.resolveVendorForPayment = vi.fn().mockResolvedValue(
+      ok({
+        vendor: {
+          id: "vendor-123",
+          title: "Test Vendor",
+          slug: "test-vendor",
+          stripeAccountId: vendorStripeAccountId,
+          metadata: [],
+        },
+        stripeAccountId: vendorStripeAccountId,
+        resolutionMethod: "vendor-specific",
+      }),
+    );
+
+    const spy = vi
+      .spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent")
+      .mockImplementationOnce(async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          client_secret: "secret-value",
+          id: "pi_test",
+          status: "requires_payment_method",
+        } as Stripe.PaymentIntent),
+      );
+
+    const uc = createUseCase();
+
+    await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+    });
+
+    expect(spy).toHaveBeenCalledWith({
+      stripeMoney: expect.any(StripeMoney),
+      idempotencyKey: saleorEvent.idempotencyKey,
+      stripeAccount: vendorStripeAccountId, // Vendor account should be passed
+      intentParams: {
+        automatic_payment_methods: {
+          enabled: true,
+        },
+        payment_method_options: {
+          card: {
+            capture_method: undefined,
+          },
+        },
+      },
+      metadata: {
+        saleor_source_id: saleorEvent.sourceObject.id,
+        saleor_source_type: saleorEvent.sourceObject.__typename,
+        saleor_transaction_id: saleorEvent.transaction.id,
+      },
+    });
+  });
 
   it.each([
     {
@@ -123,11 +199,7 @@ describe("TransactionInitializeSessionUseCase", () => {
             status: "requires_payment_method",
           } as Stripe.PaymentIntent),
       );
-      const uc = new TransactionInitializeSessionUseCase({
-        appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory,
-        transactionRecorder: new MockedTransactionRecorder(),
-      });
+      const uc = createUseCase();
 
       const responsePayload = await uc.execute({
         saleorApiUrl: mockedSaleorApiUrl,
@@ -145,11 +217,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       .spyOn(mockedAppConfigRepo, "getStripeConfig")
       .mockImplementationOnce(async () => ok(null));
 
-    const uc = new TransactionInitializeSessionUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory,
-      transactionRecorder: new MockedTransactionRecorder(),
-    });
+    const uc = createUseCase();
 
     const responsePayload = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
@@ -182,11 +250,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         async () => err(new StripeAPIError("Error from Stripe API")),
       );
 
-      const uc = new TransactionInitializeSessionUseCase({
-        appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory,
-        transactionRecorder: new MockedTransactionRecorder(),
-      });
+      const uc = createUseCase();
 
       const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType });
 
@@ -224,11 +288,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         },
       };
 
-      const uc = new TransactionInitializeSessionUseCase({
-        appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory,
-        transactionRecorder: new MockedTransactionRecorder(),
-      });
+      const uc = createUseCase();
 
       const responsePayload = await uc.execute({
         saleorApiUrl: mockedSaleorApiUrl,
@@ -265,11 +325,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         },
       };
 
-      const uc = new TransactionInitializeSessionUseCase({
-        appConfigRepo: mockedAppConfigRepo,
-        stripePaymentIntentsApiFactory,
-        transactionRecorder: new MockedTransactionRecorder(),
-      });
+      const uc = createUseCase();
 
       const responsePayload = await uc.execute({
         saleorApiUrl: mockedSaleorApiUrl,
@@ -292,11 +348,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       },
     };
 
-    const uc = new TransactionInitializeSessionUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory,
-      transactionRecorder: new MockedTransactionRecorder(),
-    });
+    const uc = createUseCase();
 
     const result = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
@@ -319,11 +371,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         } as Stripe.PaymentIntent),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory,
-      transactionRecorder: new MockedTransactionRecorder(),
-    });
+    const uc = createUseCase();
 
     const result = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
@@ -347,11 +395,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         } as Stripe.PaymentIntent),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory,
-      transactionRecorder: new MockedTransactionRecorder(),
-    });
+    const uc = createUseCase();
 
     const result = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
@@ -375,11 +419,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         } as Stripe.PaymentIntent),
     );
 
-    const uc = new TransactionInitializeSessionUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      stripePaymentIntentsApiFactory,
-      transactionRecorder: new MockedTransactionRecorder(),
-    });
+    const uc = createUseCase();
 
     const result = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
@@ -412,6 +452,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
       transactionRecorder,
+      vendorResolver: mockedVendorResolver,
     });
 
     const result = await uc.execute({
@@ -452,6 +493,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appConfigRepo: mockedAppConfigRepo,
         stripePaymentIntentsApiFactory,
         transactionRecorder,
+        vendorResolver: mockedVendorResolver,
       });
 
       await uc.execute({

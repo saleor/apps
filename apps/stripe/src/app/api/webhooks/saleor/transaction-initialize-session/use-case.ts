@@ -23,6 +23,7 @@ import {
   SaleorTransationFlow,
 } from "@/modules/saleor/saleor-transaction-flow";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
+import { VendorResolver } from "@/modules/saleor/vendor-resolver";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import {
   createStripeClientSecret,
@@ -71,15 +72,18 @@ export class TransactionInitializeSessionUseCase {
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
   private transactionRecorder: TransactionRecorderRepo;
+  private vendorResolver: VendorResolver;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
     transactionRecorder: TransactionRecorderRepo;
+    vendorResolver: VendorResolver;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
     this.transactionRecorder = deps.transactionRecorder;
+    this.vendorResolver = deps.vendorResolver;
   }
 
   private prepareStripeCreatePaymentIntentParams(args: {
@@ -87,6 +91,7 @@ export class TransactionInitializeSessionUseCase {
     eventData: TransactionInitializeSessionEventData;
     selectedPaymentMethodOptions: Stripe.PaymentIntentCreateParams.PaymentMethodOptions;
     idempotencyKey: string;
+    stripeAccountId?: string;
   }): Result<CreatePaymentIntentArgs, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
       amount: args.event.action.amount,
@@ -100,6 +105,7 @@ export class TransactionInitializeSessionUseCase {
         },
         stripeMoney,
         idempotencyKey: args.idempotencyKey,
+        stripeAccount: args.stripeAccountId,
         intentParams: {
           /*
            * Enable all payment methods configured in the Stripe Dashboard.
@@ -181,6 +187,34 @@ export class TransactionInitializeSessionUseCase {
       );
     }
 
+    // Add vendor resolution logic
+    let stripeAccountId: string | undefined;
+    let resolutionMethod: string = "channel-based";
+
+    // Extract order metadata for vendor resolution
+    const orderMetadata =
+      event.sourceObject.__typename === "Order" ? [...event.sourceObject.metadata] : [];
+
+    // Try vendor-specific resolution first
+    const vendorResolutionResult = await this.vendorResolver.resolveVendorForPayment({
+      orderMetadata,
+      channelId: event.sourceObject.channel.id,
+    });
+
+    if (vendorResolutionResult.isOk() && vendorResolutionResult.value) {
+      const vendorResult = vendorResolutionResult.value;
+
+      stripeAccountId = vendorResult.stripeAccountId;
+      resolutionMethod = vendorResult.resolutionMethod;
+
+      this.logger.info("Using vendor-specific Stripe configuration", {
+        vendorId: vendorResult.vendor.id,
+        vendorName: vendorResult.vendor.title,
+        stripeAccountId: vendorResult.stripeAccountId,
+        resolutionMethod,
+      });
+    }
+
     const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
       channelId: event.sourceObject.channel.id,
       appId,
@@ -238,6 +272,7 @@ export class TransactionInitializeSessionUseCase {
       selectedPaymentMethodOptions:
         selectedPaymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow),
       idempotencyKey: event.idempotencyKey,
+      stripeAccountId,
     });
 
     if (stripePaymentIntentParamsResult.isErr()) {

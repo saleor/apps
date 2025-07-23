@@ -55,6 +55,42 @@ describe("StripePaymentIntentsApi", () => {
         { idempotencyKey: "IK" },
       );
     });
+
+    it("Passes stripeAccount when provided", async () => {
+      const clientWrapper = StripeClient.createFromRestrictedKey(mockedStripeRestrictedKey);
+      const instance = StripePaymentIntentsApi.createFromClient(clientWrapper);
+
+      vi.spyOn(clientWrapper.nativeClient.paymentIntents, "create").mockResolvedValue(
+        // @ts-expect-error - in this test we dont care about the response
+        {},
+      );
+
+      await instance.createPaymentIntent({
+        idempotencyKey: "IK",
+        stripeMoney: StripeMoney.createFromSaleorAmount({
+          amount: 12.34,
+          currency: "USD",
+        })._unsafeUnwrap(),
+        stripeAccount: "acct_vendor123",
+        intentParams: {
+          automatic_payment_methods: { enabled: true },
+        },
+      });
+
+      expect(clientWrapper.nativeClient.paymentIntents.create).toHaveBeenCalledExactlyOnceWith(
+        {
+          amount: 1234,
+          automatic_payment_methods: {
+            enabled: true,
+          },
+          currency: "usd",
+        },
+        {
+          idempotencyKey: "IK",
+          stripeAccount: "acct_vendor123",
+        },
+      );
+    });
   });
 
   describe("createFromKey", () => {

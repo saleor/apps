@@ -36,6 +36,7 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
         },
         {
           idempotencyKey: args.idempotencyKey,
+          stripeAccount: args.stripeAccount, // Pass vendor-specific account ID
         },
       ),
       (error) => error,

@@ -42,6 +42,7 @@ export interface CreatePaymentIntentArgs {
   >;
   idempotencyKey: string;
   metadata?: AllowedStripeIntentMetadata;
+  stripeAccount?: string; // Add support for vendor-specific Stripe accounts
 }
 
 export interface IStripePaymentIntentsApi {
