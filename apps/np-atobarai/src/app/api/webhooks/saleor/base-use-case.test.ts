@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
+import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 
 import { BaseUseCase } from "./base-use-case";
@@ -29,7 +30,7 @@ describe("BaseUseCase", () => {
   describe("getAtobaraiConfigForChannel", () => {
     const testParams = {
       channelId: "test-channel-id",
-      appId: "test-app-id",
+      appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
     };
 

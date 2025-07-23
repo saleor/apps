@@ -9,6 +9,7 @@ import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepo } from "@/modules/app-config/repo/app-config-repo";
+import { appTransactionRepo } from "@/modules/app-transaction/app-transaction-repo";
 import { AtobaraiApiClientFactory } from "@/modules/atobarai/api/atobarai-api-client-factory";
 
 import { UnhandledErrorResponse } from "../saleor-webhook-responses";
@@ -21,6 +22,7 @@ const logger = createLogger("TransactionInitializeSession route");
 const useCase = new TransactionInitializeSessionUseCase({
   atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
   appConfigRepo: appConfigRepo,
+  appTransactionRepo: appTransactionRepo,
 });
 
 const handler = transactionInitializeSessionWebhookDefinition.createHandler(

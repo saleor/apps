@@ -5,20 +5,26 @@ import { err, ok, Result } from "neverthrow";
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
+import { AppTransaction } from "@/modules/app-transaction/app-transaction";
+import { IAppTransactionRepo } from "@/modules/app-transaction/types";
 import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
 import { AtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 
 import { BaseUseCase } from "../base-use-case";
-import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
+import {
+  AppIsNotConfiguredResponse,
+  BrokenAppResponse,
+  MalformedRequestResponse,
+} from "../saleor-webhook-responses";
 import { AtobaraiMultipleFailureTransactionError } from "../use-case-errors";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
   Result<
     FulfillmentTrackingNumberUpdatedUseCaseResponse,
-    AppIsNotConfiguredResponse | MalformedRequestResponse
+    AppIsNotConfiguredResponse | MalformedRequestResponse | BrokenAppResponse
   >
 >;
 
@@ -26,14 +32,17 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
   protected logger = createLogger("FulfillmentTrackingNumberUpdatedUseCase");
   protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
+  private appTransactionRepo: IAppTransactionRepo;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
+    appTransactionRepo: IAppTransactionRepo;
   }) {
     super();
     this.appConfigRepo = deps.appConfigRepo;
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
+    this.appTransactionRepo = deps.appTransactionRepo;
   }
 
   private handleMultipleTransactionResults(
@@ -187,6 +196,31 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
 
     if (fulfillmentResult.results.length > 1) {
       return this.handleMultipleTransactionResults(fulfillmentResult);
+    }
+
+    const atobaraiTransactionId = createAtobaraiTransactionId(
+      fulfillmentResult.results[0].np_transaction_id,
+    );
+
+    const appTransaction = new AppTransaction({
+      atobaraiTransactionId,
+      saleorTrackingNumber: trackingNumber,
+    });
+
+    const updateTransactionResult = await this.appTransactionRepo.updateTransaction(
+      {
+        saleorApiUrl,
+        appId,
+      },
+      appTransaction,
+    );
+
+    if (updateTransactionResult.isErr()) {
+      this.logger.error("Failed to update transaction in app transaction repo", {
+        error: updateTransactionResult.error,
+      });
+
+      return err(new BrokenAppResponse(updateTransactionResult.error));
     }
 
     return ok(new FulfillmentTrackingNumberUpdatedUseCaseResponse.Success());
