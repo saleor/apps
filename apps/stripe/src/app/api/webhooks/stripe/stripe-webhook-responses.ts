@@ -58,7 +58,7 @@ export class StripeWebhookTransactionMissingResponse extends NonRetryableErrorWe
 }
 
 export class ObjectCreatedOutsideOfSaleorResponse extends NonRetryableErrorWebhookResponse {
-  readonly message = "Metadata is missing";
+  readonly message = "Object created outside of Saleor is not processable";
 
   getResponse() {
     return new Response(this.message, {

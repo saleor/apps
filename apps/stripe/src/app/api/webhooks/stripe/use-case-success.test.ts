@@ -1138,7 +1138,7 @@ describe("StripeWebhookUseCase - handling events without metadata created by Sal
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
       ObjectCreatedOutsideOfSaleorResponse {
-        "message": "Metadata is missing",
+        "message": "Object created outside of Saleor is not processable",
         "statusCode": 400,
       }
     `);
@@ -1161,7 +1161,7 @@ describe("StripeWebhookUseCase - handling events without metadata created by Sal
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
       ObjectCreatedOutsideOfSaleorResponse {
-        "message": "Metadata is missing",
+        "message": "Object created outside of Saleor is not processable",
         "statusCode": 400,
       }
     `);

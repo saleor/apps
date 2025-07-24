@@ -328,16 +328,19 @@ export class StripeWebhookUseCase {
     });
 
     if (processingResult.isErr()) {
+      /**
+       * This is technically not an error, so we catch it here without the error log.
+       */
+      if (processingResult.error instanceof ObjectMetadataMissingError) {
+        return err(new ObjectCreatedOutsideOfSaleorResponse());
+      }
+
       this.logger.error("Failed to process event", {
         error: processingResult.error,
       });
 
       if (processingResult.error instanceof TransactionRecorderError.TransactionMissingError) {
         return err(new StripeWebhookTransactionMissingResponse());
-      }
-
-      if (processingResult.error instanceof ObjectMetadataMissingError) {
-        return err(new ObjectCreatedOutsideOfSaleorResponse());
       }
 
       return err(new StripeWebhookSeverErrorResponse());
