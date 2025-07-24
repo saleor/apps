@@ -7,7 +7,7 @@ import {
 import { mockClient } from "aws-sdk-client-mock";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { getMockedAppTransaction } from "@/__tests__/mocks/app-transaction/mocked-app-transaction";
+import { getMockedTransactionRecord } from "@/__tests__/mocks/app-transaction/mocked-transaction-record";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
@@ -52,7 +52,7 @@ describe("DynamoDBAppTransactionRepo", () => {
           saleorApiUrl: mockedSaleorApiUrl,
           appId: mockedSaleorAppId,
         },
-        getMockedAppTransaction(),
+        getMockedTransactionRecord(),
       );
 
       expect(result._unsafeUnwrap()).toBeNull();
@@ -70,7 +70,7 @@ describe("DynamoDBAppTransactionRepo", () => {
           saleorApiUrl: mockedSaleorApiUrl,
           appId: mockedSaleorAppId,
         },
-        getMockedAppTransaction(),
+        getMockedTransactionRecord(),
       );
 
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(
@@ -92,7 +92,7 @@ describe("DynamoDBAppTransactionRepo", () => {
           saleorApiUrl: mockedSaleorApiUrl,
           appId: mockedSaleorAppId,
         },
-        getMockedAppTransaction(),
+        getMockedTransactionRecord(),
       );
 
       expect(result._unsafeUnwrap()).toBeNull();
@@ -110,7 +110,7 @@ describe("DynamoDBAppTransactionRepo", () => {
           saleorApiUrl: mockedSaleorApiUrl,
           appId: mockedSaleorAppId,
         },
-        getMockedAppTransaction(),
+        getMockedTransactionRecord(),
       );
 
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(

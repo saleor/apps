@@ -29,6 +29,11 @@ describe("createAtobaraiCustomer", () => {
       },
     },
     lines: [],
+    total: {
+      gross: {
+        amount: 1234,
+      },
+    },
   } satisfies SourceObjectFragment;
 
   it("should create AtobaraiCustomer from TransactionInitializeSessionEvent for Saleor checkout", () => {

@@ -37,8 +37,14 @@ export const mockedSourceObject = {
     companyName: "ShippingCompanyName",
   },
   email: "source-object@email.com",
+  totalPrice: {
+    gross: {
+      amount: 1_234,
+    },
+  },
   lines: [
     {
+      id: "line-id-1",
       __typename: "CheckoutLine",
       quantity: 5,
       unitPrice: {

@@ -20,8 +20,14 @@ fragment SourceObject on OrderOrCheckout {
         amount
       }
     }
+    totalPrice {
+      gross {
+        amount
+      }
+    }
     lines {
       __typename
+      id
       quantity
       unitPrice {
         gross {
@@ -57,8 +63,14 @@ fragment SourceObject on OrderOrCheckout {
         amount
       }
     }
+    total {
+      gross {
+        amount
+      }
+    }
     lines {
       __typename
+      id
       quantity
       unitPrice {
         gross {

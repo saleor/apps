@@ -2,30 +2,19 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
   ...EventMetadata
   action {
     amount
+    currency
+  }
+  grantedRefund {
+    ...OrderGrantedRefund
   }
   transaction {
+    token
     pspReference
     checkout {
-      id
-      channel {
-        ...Channel
-      }
-      totalPrice {
-        gross {
-          amount
-        }
-      }
+      ...SourceObject
     }
     order {
-      id
-      channel {
-        ...Channel
-      }
-      total {
-        gross {
-          amount
-        }
-      }
+      ...SourceObject
     }
   }
 }

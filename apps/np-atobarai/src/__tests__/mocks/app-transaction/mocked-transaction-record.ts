@@ -8,7 +8,7 @@ type Params = {
   saleorTrackingNumber?: string;
 };
 
-export const getMockedAppTransaction = (params?: Params) => {
+export const getMockedTransactionRecord = (params?: Params) => {
   const finalParams = {
     atobaraiTransactionId: mockedAtobaraiTransactionId,
     saleorTrackingNumber: "1234567890",

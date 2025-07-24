@@ -8,7 +8,7 @@ import {
   TransactionRecordRepoError,
 } from "@/modules/transactions-recording/types";
 
-export class MockedAppTransactionRepo implements TransactionRecordRepo {
+export class MockedTransactionRecordRepo implements TransactionRecordRepo {
   public transactions: Record<string, TransactionRecord> = {};
 
   async createTransaction(

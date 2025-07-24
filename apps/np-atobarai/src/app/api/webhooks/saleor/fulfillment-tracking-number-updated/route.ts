@@ -22,7 +22,7 @@ const logger = createLogger("FulfillmentTrackingNumberUpdated route");
 const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
   appConfigRepo: appConfigRepo,
   atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
-  appTransactionRepo: transactionRecordRepo,
+  transactionRecordRepo: transactionRecordRepo,
 });
 
 const handler = fulfillmentTrackingNumberUpdatedWebhookDefinition.createHandler(

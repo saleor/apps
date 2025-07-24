@@ -29,6 +29,11 @@ describe("createAtobaraiDeliveryDestination", () => {
       },
     },
     lines: [],
+    total: {
+      gross: {
+        amount: 1234,
+      },
+    },
   } satisfies SourceObjectFragment;
 
   it("should create AtobaraiDeliveryDestination from TransactionInitializeSessionEvent for Saleor checkout", () => {

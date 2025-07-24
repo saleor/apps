@@ -17,7 +17,7 @@ import {
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
 import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
-import { createAtobaraiGoods } from "@/modules/atobarai/atobarai-goods";
+import { NoRefundGoodsBuilder } from "@/modules/atobarai/atobarai-goods/no-refund-goods-builder";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
@@ -54,6 +54,7 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
   protected logger = createLogger("TransactionInitializeSessionUseCase");
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   private appTransactionRepo: TransactionRecordRepo;
+  private goodsBuilder = new NoRefundGoodsBuilder();
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
@@ -78,7 +79,10 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
       }),
       atobaraiCustomer: createAtobaraiCustomer(event),
       atobaraiDeliveryDestination: createAtobaraiDeliveryDestination(event),
-      atobaraiGoods: createAtobaraiGoods(event, config),
+      atobaraiGoods: this.goodsBuilder.build({
+        sourceObject: event.sourceObject,
+        useSkuAsName: config.skuAsName,
+      }),
       atobaraiShopOrderDate: createAtobaraiShopOrderDate(event.issuedAt!), // checked if exists in execute method
     });
   }

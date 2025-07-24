@@ -7,7 +7,7 @@ import {
   AtobaraiDeliveryDestination,
   AtobaraiDeliveryDestinationSchema,
 } from "../atobarai-delivery-destination";
-import { AtobaraiGoods, AtobaraiGoodsSchema } from "../atobarai-goods";
+import { AtobaraiGoods, AtobaraiGoodsSchema } from "../atobarai-goods/atobarai-goods";
 import { AtobaraiMoney } from "../atobarai-money";
 import { ATOBARAI_SETTLEMENT_TYPE } from "../atobarai-settelment-type";
 import { AtobaraiShopOrderDate } from "../atobarai-shop-order-date";
