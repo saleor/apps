@@ -4,15 +4,15 @@ import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-sourc
 import { OrderGrantedRefundFragment, SourceObjectFragment } from "@/generated/graphql";
 
 import {
-  NoFullfillmentPartialRefundWithLineItemsGoodsBuilder,
-  NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder,
+  PartialRefundWithLineItemsGoodsBuilder,
+  PartialRefundWithoutLineItemsGoodsBuilder,
 } from "./no-fullfillment-refund-goods-builders";
 
 describe("NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder", () => {
-  let builder: NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder;
+  let builder: PartialRefundWithoutLineItemsGoodsBuilder;
 
   beforeEach(() => {
-    builder = new NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder();
+    builder = new PartialRefundWithoutLineItemsGoodsBuilder();
   });
 
   it("should exclude discount line when amountAdjusted is 0", () => {
@@ -107,10 +107,10 @@ describe("NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder", () => {
 });
 
 describe("NoFullfillmentPartialRefundWithLineItemsGoodsBuilder", () => {
-  let builder: NoFullfillmentPartialRefundWithLineItemsGoodsBuilder;
+  let builder: PartialRefundWithLineItemsGoodsBuilder;
 
   beforeEach(() => {
-    builder = new NoFullfillmentPartialRefundWithLineItemsGoodsBuilder();
+    builder = new PartialRefundWithLineItemsGoodsBuilder();
   });
 
   const mockSourceObject: SourceObjectFragment = {

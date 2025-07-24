@@ -3,7 +3,7 @@ import { OrderGrantedRefundFragment, SourceObjectFragment } from "@/generated/gr
 import { AtobaraiGoods, AtobaraiGoodsSchema } from "./atobarai-goods";
 import { AtobaraiLineCalculation } from "./atobarai-line-calculation";
 
-export class NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder {
+export class PartialRefundWithoutLineItemsGoodsBuilder {
   private readonly lineCalculation = new AtobaraiLineCalculation();
 
   build({
@@ -31,7 +31,7 @@ export class NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder {
   }
 }
 
-export class NoFullfillmentPartialRefundWithLineItemsGoodsBuilder {
+export class PartialRefundWithLineItemsGoodsBuilder {
   private readonly lineCalculation = new AtobaraiLineCalculation();
 
   build({

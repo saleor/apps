@@ -99,6 +99,7 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
       atobaraiTransactionId,
       apiClient,
       hasFulfillmentReported: transactionRecord.hasFulfillmentReported(),
+      saleorTrackingNumber: transactionRecord.saleorTrackingNumber,
     });
 
     if (refundResult.isErr()) {
