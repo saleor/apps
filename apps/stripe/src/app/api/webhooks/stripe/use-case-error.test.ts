@@ -147,7 +147,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookTransactionMissingReponse {
+      StripeWebhookTransactionMissingResponse {
         "message": "Transaction is missing",
         "statusCode": 400,
       }
@@ -157,8 +157,18 @@ describe("StripeWebhookUseCase - Error cases", () => {
   it("Returns error if event is not supported by StripePaymentIntentHandler", async () => {
     const event = {
       type: "payment_intent.created",
-      data: { object: { object: "payment_intent", id: mockedStripePaymentIntentId.toString() } },
-    } as Stripe.PaymentIntentCreatedEvent;
+      data: {
+        object: {
+          object: "payment_intent",
+          id: mockedStripePaymentIntentId.toString(),
+          metadata: {
+            saleor_transaction_id: mockedSaleorTransactionId as string,
+            saleor_source_id: "checkout-id-123",
+            saleor_source_type: "Checkout",
+          },
+        },
+      },
+    } as unknown as Stripe.PaymentIntentCreatedEvent;
 
     const stripePiId = mockedStripePaymentIntentId;
 
@@ -204,9 +214,14 @@ describe("StripeWebhookUseCase - Error cases", () => {
           object: "refund",
           id: "re_id",
           payment_intent: mockedStripePaymentIntentId.toString(),
+          metadata: {
+            saleor_transaction_id: mockedSaleorTransactionId as string,
+            saleor_source_id: "checkout-id-123",
+            saleor_source_type: "Checkout",
+          },
         },
       },
-    } as Stripe.RefundCreatedEvent;
+    } as unknown as Stripe.RefundCreatedEvent;
 
     const stripePiId = mockedStripePaymentIntentId;
 

@@ -14,6 +14,7 @@ import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
 import {
   getChannelIdFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
@@ -130,6 +131,13 @@ export class TransactionRefundRequestedUseCase {
     const createRefundResult = await stripeRefundsApi.createRefund({
       paymentIntentId: stripePaymentIntentId,
       stripeMoney: stripeMoneyResult.value,
+      metadata: {
+        saleor_source_id: transaction.checkout?.id
+          ? transaction.checkout.id
+          : transaction.order?.id,
+        saleor_source_type: transaction.checkout ? "Checkout" : "Order",
+        saleor_transaction_id: createSaleorTransactionId(transaction.id),
+      },
     });
 
     if (createRefundResult.isErr()) {

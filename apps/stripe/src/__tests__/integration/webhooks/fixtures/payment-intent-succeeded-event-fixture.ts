@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 
+import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 export const paymentIntentSucceededEventFixture = (
@@ -41,7 +42,11 @@ export const paymentIntentSucceededEventFixture = (
         description: null,
         last_payment_error: null,
         latest_charge: null,
-        metadata: {},
+        metadata: {
+          saleor_transaction_id: mockedSaleorTransactionId,
+          saleor_source_id: "checkout-id-123",
+          saleor_source_type: "Checkout",
+        },
         next_action: null,
         on_behalf_of: null,
         payment_method: null,

@@ -5,6 +5,7 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
     currency
   }
   transaction {
+    id
     pspReference
     checkout {
       id
