@@ -32,7 +32,7 @@ const DynamoDbStripeConfigSchema = item({
 const createStripeConfigEntity = (table: DynamoMainTable) => {
   return new Entity({
     table,
-    name: "StripeConfig",
+    name: "StripeConfigV2",
     schema: DynamoDbStripeConfigSchema,
     timestamps: {
       created: {
