@@ -9,6 +9,10 @@ import {
 import { IAtobaraiApiClient } from "@/modules/atobarai/api/types";
 import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
 import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
+import {
+  NoFullfillmentPartialRefundWithLineItemsGoodsBuilder,
+  NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder,
+} from "@/modules/atobarai/atobarai-goods//no-fullfillment-refund-goods-builders";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
@@ -19,7 +23,6 @@ import {
 } from "@/modules/transaction-result/refund-result";
 
 import { MalformedRequestResponse } from "../saleor-webhook-responses";
-import { AtobaraiGoodsBuilder } from "./atobarai-goods-builder";
 import { RefundContext, RefundStrategy } from "./refund-strategy";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
@@ -72,19 +75,29 @@ export class NoFulfillmentFullRefundStrategy implements RefundStrategy {
 
 export class NoFulfillmentPartialRefundWithLineItemsStrategy implements RefundStrategy {
   private readonly logger = createLogger("NoFulfillmentPartialRefundWithLineItemsStrategy");
-  private readonly goodsBuilder = new AtobaraiGoodsBuilder();
+  private readonly goodsBuilder = new NoFullfillmentPartialRefundWithLineItemsGoodsBuilder();
 
   async execute(
     context: RefundContext,
   ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
     const { parsedEvent, appConfig, atobaraiTransactionId, apiClient } = context;
 
+    if (!parsedEvent.grantedRefund) {
+      this.logger.error("No granted refund found in the event");
+
+      return ok(
+        new TransactionRefundRequestedUseCaseResponse.Failure({
+          transactionResult: new RefundFailureResult(),
+        }),
+      );
+    }
+
     const amountAdjusted = parsedEvent.sourceObjectTotalAmount - parsedEvent.refundedAmount;
 
-    const atobaraiGoods = this.goodsBuilder.buildForNoFullfilmentPartialRefundWithLineItems({
+    const atobaraiGoods = this.goodsBuilder.build({
       sourceObject: parsedEvent.sourceObject,
       useSkuAsName: appConfig.skuAsName,
-      grantedRefund: parsedEvent.grantedRefund!,
+      grantedRefund: parsedEvent.grantedRefund,
     });
 
     const payload = createAtobaraiChangeTransactionPayload({
@@ -102,10 +115,10 @@ export class NoFulfillmentPartialRefundWithLineItemsStrategy implements RefundSt
       atobaraiShopOrderDate: createAtobaraiShopOrderDate(parsedEvent.issuedAt),
     });
 
-    return this.executeChangeTransaction(payload, apiClient, atobaraiTransactionId);
+    return this.changeTransaction(payload, apiClient, atobaraiTransactionId);
   }
 
-  private async executeChangeTransaction(
+  private async changeTransaction(
     payload: AtobaraiChangeTransactionPayload,
     apiClient: IAtobaraiApiClient,
     atobaraiTransactionId: AtobaraiTransactionId,
@@ -143,26 +156,26 @@ export class NoFulfillmentPartialRefundWithLineItemsStrategy implements RefundSt
 
 export class NoFulfillmentPartialRefundWithoutLineItemsStrategy implements RefundStrategy {
   private readonly logger = createLogger("NoFulfillmentPartialRefundWithoutLineItemsStrategy");
-  private readonly goodsBuilder = new AtobaraiGoodsBuilder();
+  private readonly goodsBuilder = new NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder();
 
   async execute(
     context: RefundContext,
   ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
     const { parsedEvent, appConfig, atobaraiTransactionId, apiClient } = context;
 
-    const amountAdjusted = parsedEvent.sourceObjectTotalAmount - parsedEvent.refundedAmount;
+    const amountAfterRefund = parsedEvent.sourceObjectTotalAmount - parsedEvent.refundedAmount;
 
-    const atobaraiGoods = this.goodsBuilder.buildForNoFulfillmentPartialRefundWithoutLineItems({
+    const atobaraiGoods = this.goodsBuilder.build({
       sourceObject: parsedEvent.sourceObject,
       useSkuAsName: appConfig.skuAsName,
-      amountAdjusted,
+      amountAfterRefund,
     });
 
     const payload = createAtobaraiChangeTransactionPayload({
       atobaraiTransactionId,
       saleorTransactionToken: createSaleorTransactionToken(parsedEvent.transactionToken),
       atobaraiMoney: createAtobaraiMoney({
-        amount: amountAdjusted,
+        amount: amountAfterRefund,
         currency: parsedEvent.currency,
       }),
       atobaraiCustomer: createAtobaraiCustomer({ sourceObject: parsedEvent.sourceObject }),
@@ -173,10 +186,10 @@ export class NoFulfillmentPartialRefundWithoutLineItemsStrategy implements Refun
       atobaraiShopOrderDate: createAtobaraiShopOrderDate(parsedEvent.issuedAt),
     });
 
-    return this.executeChangeTransaction(payload, apiClient, atobaraiTransactionId);
+    return this.changeTransaction(payload, apiClient, atobaraiTransactionId);
   }
 
-  private async executeChangeTransaction(
+  private async changeTransaction(
     payload: AtobaraiChangeTransactionPayload,
     apiClient: IAtobaraiApiClient,
     atobaraiTransactionId: AtobaraiTransactionId,

@@ -1,9 +1,11 @@
-import { createAtobaraiGoods } from "@/modules/atobarai/atobarai-goods";
+import { NoRefundGoodsBuilder } from "@/modules/atobarai/atobarai-goods/no-refund-goods-builder";
 
 import { mockedAppChannelConfig } from "../app-config/mocked-app-config";
-import { mockedTransactionInitializeSessionEvent } from "../saleor-events/mocked-transaction-initialize-session-event";
+import { mockedSourceObject } from "../saleor-events/mocked-source-object";
 
-export const mockedAtobaraiGoods = createAtobaraiGoods(
-  mockedTransactionInitializeSessionEvent,
-  mockedAppChannelConfig,
-);
+const builder = new NoRefundGoodsBuilder();
+
+export const mockedAtobaraiGoods = builder.build({
+  sourceObject: mockedSourceObject,
+  useSkuAsName: mockedAppChannelConfig.skuAsName,
+});
