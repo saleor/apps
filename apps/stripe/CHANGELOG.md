@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.1.0
+
+### Minor Changes
+
+- 30813d53: Events from Stripe that doesn't contain metadata are now gracefully ignored. App will not try to proceed such event, which eventually ended with TransactionNotFound error. Instead it's early returned, not DB is called and proper status is returned to Stripe.
+
 ## 2.0.7
 
 ### Patch Changes
