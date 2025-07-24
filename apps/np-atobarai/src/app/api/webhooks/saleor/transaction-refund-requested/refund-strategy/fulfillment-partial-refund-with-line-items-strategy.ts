@@ -13,7 +13,7 @@ import {
 import { IAtobaraiApiClient } from "@/modules/atobarai/api/types";
 import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
 import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
-import { PartialRefundWithLineItemsGoodsBuilder } from "@/modules/atobarai/atobarai-goods//no-fullfillment-refund-goods-builders";
+import { PartialRefundWithLineItemsGoodsBuilder } from "@/modules/atobarai/atobarai-goods/refund-goods-builders";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import {

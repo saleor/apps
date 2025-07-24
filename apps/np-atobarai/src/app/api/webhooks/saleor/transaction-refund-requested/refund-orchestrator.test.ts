@@ -6,6 +6,8 @@ import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-a
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
 import { createAtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
+import { createAtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
+import { createAtobaraiTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-transaction-success-response";
 import {
   RefundFailureResult,
   RefundSuccessResult,
@@ -43,16 +45,163 @@ describe("RefundOrchestrator", () => {
     };
 
     describe("when fulfillment has been reported", () => {
-      it("should return failure result", async () => {
+      it("should execute fulfillmentFullRefundStrategy for full refund", async () => {
+        const fullRefundEvent = {
+          ...mockParsedEvent,
+          refundedAmount: 2000, // Same as total
+          sourceObjectTotalAmount: 2000,
+          grantedRefund: null,
+        };
+
+        const cancelSpy = vi
+          .spyOn(mockedAtobaraiApiClient, "cancelTransaction")
+          .mockResolvedValueOnce(
+            ok(
+              createAtobaraiCancelTransactionSuccessResponse({
+                results: [{ np_transaction_id: mockedAtobaraiTransactionId }],
+              }),
+            ),
+          );
+
         const result = await orchestrator.processRefund({
           ...baseParams,
+          parsedEvent: fullRefundEvent,
           hasFulfillmentReported: true,
+          saleorTrackingNumber: "TRACK123",
+        });
+
+        expect(cancelSpy).toHaveBeenCalledWith({
+          transactions: [
+            expect.objectContaining({
+              np_transaction_id: mockedAtobaraiTransactionId,
+            }),
+          ],
+        });
+
+        expect(result._unsafeUnwrap()).toBeInstanceOf(
+          TransactionRefundRequestedUseCaseResponse.Success,
+        );
+        expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundSuccessResult);
+      });
+
+      it("should execute fulfillmentPartialRefundWithoutLineItemsStrategy for partial refund without line items", async () => {
+        const refundedAmount = 1000;
+        const sourceObjectTotalAmount = 2000;
+        const partialRefundEvent = {
+          ...mockParsedEvent,
+          refundedAmount,
+          sourceObjectTotalAmount,
+          grantedRefund: null,
+        };
+
+        const cancelSpy = vi
+          .spyOn(mockedAtobaraiApiClient, "cancelTransaction")
+          .mockResolvedValueOnce(
+            ok(
+              createAtobaraiCancelTransactionSuccessResponse({
+                results: [{ np_transaction_id: mockedAtobaraiTransactionId }],
+              }),
+            ),
+          );
+
+        const registerSpy = vi
+          .spyOn(mockedAtobaraiApiClient, "registerTransaction")
+          .mockResolvedValueOnce(
+            ok(
+              createAtobaraiTransactionSuccessResponse({
+                results: [{ np_transaction_id: "new_trans_1", authori_result: "00" }],
+              }),
+            ),
+          );
+
+        const fulfillmentSpy = vi
+          .spyOn(mockedAtobaraiApiClient, "reportFulfillment")
+          .mockResolvedValueOnce(
+            ok(
+              createAtobaraiFulfillmentReportSuccessResponse({
+                results: [{ np_transaction_id: "new_trans_1" }],
+              }),
+            ),
+          );
+
+        const result = await orchestrator.processRefund({
+          ...baseParams,
+          parsedEvent: partialRefundEvent,
+          hasFulfillmentReported: true,
+          saleorTrackingNumber: "TRACK123",
+        });
+
+        expect(cancelSpy).toHaveBeenCalledTimes(1);
+        expect(registerSpy).toHaveBeenCalledWith({
+          transactions: [
+            expect.objectContaining({
+              billed_amount: sourceObjectTotalAmount - refundedAmount,
+            }),
+          ],
+        });
+        expect(fulfillmentSpy).toHaveBeenCalledWith({
+          transactions: [
+            expect.objectContaining({
+              np_transaction_id: "new_trans_1",
+              slip_no: "TRACK123",
+              pd_company_code: mockedAppChannelConfig.shippingCompanyCode,
+            }),
+          ],
+        });
+
+        expect(result._unsafeUnwrap()).toBeInstanceOf(
+          TransactionRefundRequestedUseCaseResponse.Success,
+        );
+        expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundSuccessResult);
+      });
+
+      it("should return failure for partial refund with line items (not supported with fulfillment)", async () => {
+        const partialRefundWithLineItemsEvent = {
+          ...mockParsedEvent,
+          refundedAmount: 1000,
+          sourceObjectTotalAmount: 2000,
+          grantedRefund: {
+            lines: [
+              {
+                orderLine: {
+                  id: mockedSourceObject.lines[0].id,
+                },
+                quantity: 1,
+              },
+            ],
+            shippingCostsIncluded: false,
+          },
+        };
+
+        const result = await orchestrator.processRefund({
+          ...baseParams,
+          parsedEvent: partialRefundWithLineItemsEvent,
+          hasFulfillmentReported: true,
+          saleorTrackingNumber: "TRACK123",
         });
 
         expect(result._unsafeUnwrap()).toBeInstanceOf(
           TransactionRefundRequestedUseCaseResponse.Failure,
         );
         expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundFailureResult);
+      });
+
+      it("should throw error when tracking number is missing", async () => {
+        const fullRefundEvent = {
+          ...mockParsedEvent,
+          refundedAmount: 2000,
+          sourceObjectTotalAmount: 2000,
+          grantedRefund: null,
+        };
+
+        await expect(
+          orchestrator.processRefund({
+            ...baseParams,
+            parsedEvent: fullRefundEvent,
+            hasFulfillmentReported: true,
+            saleorTrackingNumber: null,
+          }),
+        ).rejects.toThrow("Tracking number is required for fulfillment.");
       });
     });
 
@@ -84,6 +233,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: partialRefundEvent,
+          saleorTrackingNumber: null,
           hasFulfillmentReported: false,
         });
 
@@ -120,6 +270,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: partialRefundEvent,
+          saleorTrackingNumber: null,
           hasFulfillmentReported: false,
         });
 
@@ -152,6 +303,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: fullRefundEvent,
+          saleorTrackingNumber: null,
           hasFulfillmentReported: false,
         });
 
@@ -203,6 +355,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: partialRefundWithLineItemsEvent,
+          saleorTrackingNumber: null,
           hasFulfillmentReported: false,
         });
 

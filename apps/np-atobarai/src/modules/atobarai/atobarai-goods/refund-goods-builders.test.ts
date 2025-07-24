@@ -6,9 +6,9 @@ import { OrderGrantedRefundFragment, SourceObjectFragment } from "@/generated/gr
 import {
   PartialRefundWithLineItemsGoodsBuilder,
   PartialRefundWithoutLineItemsGoodsBuilder,
-} from "./no-fullfillment-refund-goods-builders";
+} from "./refund-goods-builders";
 
-describe("NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder", () => {
+describe("PartialRefundWithoutLineItemsGoodsBuilder", () => {
   let builder: PartialRefundWithoutLineItemsGoodsBuilder;
 
   beforeEach(() => {
@@ -106,7 +106,7 @@ describe("NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder", () => {
   });
 });
 
-describe("NoFullfillmentPartialRefundWithLineItemsGoodsBuilder", () => {
+describe("PartialRefundWithLineItemsGoodsBuilder", () => {
   let builder: PartialRefundWithLineItemsGoodsBuilder;
 
   beforeEach(() => {

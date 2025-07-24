@@ -9,11 +9,11 @@ import { createAtobaraiCancelTransactionSuccessResponse } from "@/modules/atobar
 import { AtobaraiApiClientCancelTransactionError } from "@/modules/atobarai/api/types";
 
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
-import { NoFulfillmentFullRefundStrategy } from "./no-fulfillment-full-refund-strategy";
+import { FulfillmentFullRefundStrategy } from "./fulfillment-full-refund-strategy";
 import { NonFulfillmentRefundContext } from "./types";
 
-describe("NoFulfillmentFullRefundStrategy", () => {
-  let strategy: NoFulfillmentFullRefundStrategy;
+describe("FulfillmentFullRefundStrategy", () => {
+  let strategy: FulfillmentFullRefundStrategy;
 
   const baseContext: NonFulfillmentRefundContext = {
     parsedEvent: {
@@ -34,7 +34,7 @@ describe("NoFulfillmentFullRefundStrategy", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    strategy = new NoFulfillmentFullRefundStrategy();
+    strategy = new FulfillmentFullRefundStrategy();
   });
 
   it("should execute full refund successfully", async () => {

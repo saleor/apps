@@ -30,7 +30,6 @@ describe("NoFulfillmentPartialRefundWithoutLineItemsStrategy", () => {
     appConfig: mockedAppChannelConfig,
     atobaraiTransactionId: mockedAtobaraiTransactionId,
     apiClient: mockedAtobaraiApiClient,
-    hasFulfillmentReported: false,
   };
 
   beforeEach(() => {
