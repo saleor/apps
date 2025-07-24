@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { mockedSaleorAppId, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripeRefundId } from "@/__tests__/mocks/mocked-stripe-refund-id";
 import { mockedStripeRefundsApi } from "@/__tests__/mocks/mocked-stripe-refunds-api";
@@ -54,6 +54,11 @@ describe("TransactionRefundRequestedUseCase", () => {
     expect(spy).toHaveBeenCalledWith({
       paymentIntentId: mockedStripePaymentIntentId,
       stripeMoney: expect.any(StripeMoney),
+      metadata: {
+        saleor_source_id: "mock-channel-1",
+        saleor_source_type: "Checkout",
+        saleor_transaction_id: "mocked-transaction-id",
+      },
     });
   });
 
@@ -80,6 +85,11 @@ describe("TransactionRefundRequestedUseCase", () => {
     expect(spy).toHaveBeenCalledWith({
       paymentIntentId: mockedStripePaymentIntentId,
       stripeMoney: expect.any(StripeMoney),
+      metadata: {
+        saleor_source_id: "mock-channel-1",
+        saleor_source_type: "Checkout",
+        saleor_transaction_id: "mocked-transaction-id",
+      },
     });
   });
 
@@ -175,6 +185,7 @@ describe("TransactionRefundRequestedUseCase", () => {
         checkout: null,
         order: null,
         pspReference: mockedStripePaymentIntentId,
+        id: mockedSaleorTransactionId,
       },
     };
 

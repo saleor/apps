@@ -1,6 +1,7 @@
 fragment TransactionCancelationRequestedEvent on TransactionCancelationRequested {
   ...EventMetadata
   transaction {
+    id
     pspReference
     checkout {
       id

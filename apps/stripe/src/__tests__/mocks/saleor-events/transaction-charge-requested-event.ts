@@ -1,6 +1,6 @@
 import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
 
-import { mockedSaleorChannelId } from "../constants";
+import { mockedSaleorChannelId, mockedSaleorTransactionId } from "../constants";
 import { mockedStripePaymentIntentId } from "../mocked-stripe-payment-intent-id";
 
 export const getMockedTransactionChargeRequestedEvent =
@@ -9,6 +9,7 @@ export const getMockedTransactionChargeRequestedEvent =
       amount: 100,
     },
     transaction: {
+      id: mockedSaleorTransactionId,
       pspReference: mockedStripePaymentIntentId,
       checkout: {
         id: "mock-channel-1",

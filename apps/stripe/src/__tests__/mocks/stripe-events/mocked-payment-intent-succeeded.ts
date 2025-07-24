@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 
+import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 
 export const getMockedPaymentIntentSucceededEvent = (): Stripe.PaymentIntentSucceededEvent => {
@@ -39,7 +40,11 @@ export const getMockedPaymentIntentSucceededEvent = (): Stripe.PaymentIntentSucc
         description: null,
         last_payment_error: null,
         latest_charge: null,
-        metadata: {},
+        metadata: {
+          saleor_transaction_id: mockedSaleorTransactionId,
+          saleor_source_id: "checkout-id-123",
+          saleor_source_type: "Checkout",
+        },
         next_action: null,
         on_behalf_of: null,
         payment_method: null,

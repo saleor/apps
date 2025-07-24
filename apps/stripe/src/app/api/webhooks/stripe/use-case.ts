@@ -18,7 +18,7 @@ import { StripeClient } from "@/modules/stripe/stripe-client";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
-import { IStripeEventVerify } from "@/modules/stripe/types";
+import { AllowedStripeObjectMetadata, IStripeEventVerify } from "@/modules/stripe/types";
 import {
   TransactionRecorderError,
   TransactionRecorderRepo,
@@ -27,13 +27,14 @@ import {
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
 import {
+  ObjectCreatedOutsideOfSaleorResponse,
   PossibleStripeWebhookErrorResponses,
   PossibleStripeWebhookSuccessResponses,
   StripeWebhookAppIsNotConfiguredResponse,
   StripeWebhookMalformedRequestResponse,
   StripeWebhookSeverErrorResponse,
   StripeWebhookSuccessResponse,
-  StripeWebhookTransactionMissingReponse,
+  StripeWebhookTransactionMissingResponse,
 } from "./stripe-webhook-responses";
 import { WebhookParams } from "./webhook-params";
 
@@ -43,6 +44,8 @@ type R = Promise<
 
 type StripeVerifyEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
 type SaleorTransactionEventReporterFactory = (authData: AuthData) => ITransactionEventReporter;
+
+const ObjectMetadataMissingError = BaseError.subclass("ObjectMetadataMissingError");
 
 export class StripeWebhookUseCase {
   private appConfigRepo: AppConfigRepo;
@@ -104,6 +107,21 @@ export class StripeWebhookUseCase {
       case "payment_intent": {
         loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, event.data.object.id);
 
+        const meta = event.data.object.metadata as AllowedStripeObjectMetadata;
+
+        if (!meta?.saleor_transaction_id) {
+          return err(
+            new ObjectMetadataMissingError(
+              "Missing metadata on object, it was not created by Saleor",
+              {
+                props: {
+                  meta,
+                },
+              },
+            ),
+          );
+        }
+
         const handler = new StripePaymentIntentHandler();
 
         return handler.processPaymentIntentEvent({
@@ -117,6 +135,21 @@ export class StripeWebhookUseCase {
 
       case "refund": {
         loggerContext.set("stripeRefundId", event.data.object.id);
+
+        const meta = event.data.object.metadata as AllowedStripeObjectMetadata;
+
+        if (!meta?.saleor_transaction_id) {
+          return err(
+            new ObjectMetadataMissingError(
+              "Missing metadata on object, it was not created by Saleor",
+              {
+                props: {
+                  meta,
+                },
+              },
+            ),
+          );
+        }
 
         const handler = new StripeRefundHandler();
 
@@ -295,12 +328,19 @@ export class StripeWebhookUseCase {
     });
 
     if (processingResult.isErr()) {
+      /**
+       * This is technically not an error, so we catch it here without the error log.
+       */
+      if (processingResult.error instanceof ObjectMetadataMissingError) {
+        return err(new ObjectCreatedOutsideOfSaleorResponse());
+      }
+
       this.logger.error("Failed to process event", {
         error: processingResult.error,
       });
 
       if (processingResult.error instanceof TransactionRecorderError.TransactionMissingError) {
-        return err(new StripeWebhookTransactionMissingReponse());
+        return err(new StripeWebhookTransactionMissingResponse());
       }
 
       return err(new StripeWebhookSeverErrorResponse());
