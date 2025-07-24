@@ -21,8 +21,6 @@ import {
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
 import { MalformedRequestResponse } from "../saleor-webhook-responses";
-import { RefundEventParser } from "./refund-event-parser";
-import { RefundOrchestrator } from "./refund-orchestrator";
 import { TransactionRefundRequestedUseCase } from "./use-case";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
@@ -41,8 +39,6 @@ describe("TransactionRefundRequestedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
-      eventParser: new RefundEventParser(),
-      refundOrchestrator: new RefundOrchestrator(),
     });
 
     const result = await useCase.execute({
@@ -64,8 +60,6 @@ describe("TransactionRefundRequestedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
-      eventParser: new RefundEventParser(),
-      refundOrchestrator: new RefundOrchestrator(),
     });
 
     const result = await useCase.execute({
@@ -90,8 +84,6 @@ describe("TransactionRefundRequestedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
-      eventParser: new RefundEventParser(),
-      refundOrchestrator: new RefundOrchestrator(),
     });
 
     const result = await useCase.execute({
@@ -141,8 +133,6 @@ describe("TransactionRefundRequestedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo,
-      eventParser: new RefundEventParser(),
-      refundOrchestrator: new RefundOrchestrator(),
     });
 
     const result = await useCase.execute({
@@ -199,8 +189,6 @@ describe("TransactionRefundRequestedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo,
-      eventParser: new RefundEventParser(),
-      refundOrchestrator: new RefundOrchestrator(),
     });
 
     const result = await useCase.execute({
@@ -263,8 +251,6 @@ describe("TransactionRefundRequestedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo,
-      eventParser: new RefundEventParser(),
-      refundOrchestrator: new RefundOrchestrator(),
     });
 
     const result = await useCase.execute({
@@ -390,8 +376,6 @@ describe("TransactionRefundRequestedUseCase", () => {
           appConfigRepo: mockedAppConfigRepo,
           atobaraiApiClientFactory,
           transactionRecordRepo,
-          eventParser: new RefundEventParser(),
-          refundOrchestrator: new RefundOrchestrator(),
         });
 
         const result = await useCase.execute({
@@ -578,8 +562,6 @@ describe("TransactionRefundRequestedUseCase", () => {
           appConfigRepo: mockedAppConfigRepo,
           atobaraiApiClientFactory,
           transactionRecordRepo,
-          eventParser: new RefundEventParser(),
-          refundOrchestrator: new RefundOrchestrator(),
         });
 
         const result = await useCase.execute({
@@ -761,8 +743,6 @@ describe("TransactionRefundRequestedUseCase", () => {
           appConfigRepo: mockedAppConfigRepo,
           atobaraiApiClientFactory,
           transactionRecordRepo,
-          eventParser: new RefundEventParser(),
-          refundOrchestrator: new RefundOrchestrator(),
         });
 
         const result = await useCase.execute({
@@ -927,8 +907,6 @@ describe("TransactionRefundRequestedUseCase", () => {
           appConfigRepo: mockedAppConfigRepo,
           atobaraiApiClientFactory,
           transactionRecordRepo,
-          eventParser: new RefundEventParser(),
-          refundOrchestrator: new RefundOrchestrator(),
         });
 
         const result = await useCase.execute({

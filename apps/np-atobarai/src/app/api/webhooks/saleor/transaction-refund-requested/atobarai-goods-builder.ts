@@ -7,6 +7,7 @@ import {
   getVoucherLine,
 } from "@/modules/atobarai/atobarai-goods";
 
+// TODO: interafce + one per strategy
 export class AtobaraiGoodsBuilder {
   buildForNoFulfillmentPartialRefundWithoutLineItems({
     sourceObject,

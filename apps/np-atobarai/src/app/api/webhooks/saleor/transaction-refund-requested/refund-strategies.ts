@@ -26,14 +26,6 @@ import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 export class NoFulfillmentFullRefundStrategy implements RefundStrategy {
   private readonly logger = createLogger("NoFulfillmentFullRefundStrategy");
 
-  canHandle(context: RefundContext): boolean {
-    const { parsedEvent, hasFulfillmentReported } = context;
-
-    return (
-      !hasFulfillmentReported && parsedEvent.refundedAmount === parsedEvent.sourceObjectTotalAmount
-    );
-  }
-
   async execute(
     context: RefundContext,
   ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
@@ -81,16 +73,6 @@ export class NoFulfillmentFullRefundStrategy implements RefundStrategy {
 export class NoFulfillmentPartialRefundWithLineItemsStrategy implements RefundStrategy {
   private readonly logger = createLogger("NoFulfillmentPartialRefundWithLineItemsStrategy");
   private readonly goodsBuilder = new AtobaraiGoodsBuilder();
-
-  canHandle(context: RefundContext): boolean {
-    const { parsedEvent, hasFulfillmentReported } = context;
-
-    return (
-      !hasFulfillmentReported &&
-      parsedEvent.refundedAmount < parsedEvent.sourceObjectTotalAmount &&
-      parsedEvent.grantedRefund !== null
-    );
-  }
 
   async execute(
     context: RefundContext,
@@ -162,16 +144,6 @@ export class NoFulfillmentPartialRefundWithLineItemsStrategy implements RefundSt
 export class NoFulfillmentPartialRefundWithoutLineItemsStrategy implements RefundStrategy {
   private readonly logger = createLogger("NoFulfillmentPartialRefundWithoutLineItemsStrategy");
   private readonly goodsBuilder = new AtobaraiGoodsBuilder();
-
-  canHandle(context: RefundContext): boolean {
-    const { parsedEvent, hasFulfillmentReported } = context;
-
-    return (
-      !hasFulfillmentReported &&
-      parsedEvent.refundedAmount < parsedEvent.sourceObjectTotalAmount &&
-      !parsedEvent.grantedRefund
-    );
-  }
 
   async execute(
     context: RefundContext,

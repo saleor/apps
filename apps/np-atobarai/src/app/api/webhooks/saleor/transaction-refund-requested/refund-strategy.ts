@@ -17,7 +17,6 @@ export interface RefundContext {
 }
 
 export interface RefundStrategy {
-  canHandle(context: RefundContext): boolean;
   execute(
     context: RefundContext,
   ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>>;

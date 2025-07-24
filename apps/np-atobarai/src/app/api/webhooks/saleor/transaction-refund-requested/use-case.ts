@@ -31,22 +31,18 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
 
   private readonly atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   private readonly transactionRecordRepo: TransactionRecordRepo;
-  private readonly eventParser: RefundEventParser;
-  private readonly refundOrchestrator: RefundOrchestrator;
+  private readonly eventParser = new RefundEventParser();
+  private readonly refundOrchestrator = new RefundOrchestrator();
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
     transactionRecordRepo: TransactionRecordRepo;
-    eventParser: RefundEventParser;
-    refundOrchestrator: RefundOrchestrator;
   }) {
     super();
     this.appConfigRepo = deps.appConfigRepo;
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
     this.transactionRecordRepo = deps.transactionRecordRepo;
-    this.eventParser = deps.eventParser;
-    this.refundOrchestrator = deps.refundOrchestrator;
   }
 
   async execute(params: {

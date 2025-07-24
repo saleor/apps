@@ -1,6 +1,6 @@
+import { BaseError } from "@saleor/errors";
 import { ok, Result } from "neverthrow";
 
-import { createLogger } from "@/lib/logger";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { IAtobaraiApiClient } from "@/modules/atobarai/api/types";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
@@ -13,16 +13,54 @@ import {
   NoFulfillmentPartialRefundWithLineItemsStrategy,
   NoFulfillmentPartialRefundWithoutLineItemsStrategy,
 } from "./refund-strategies";
-import { RefundContext, RefundStrategy } from "./refund-strategy";
+import { RefundContext } from "./refund-strategy";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
 export class RefundOrchestrator {
-  private readonly logger = createLogger("RefundOrchestrator");
-  private readonly strategies: RefundStrategy[] = [
-    new NoFulfillmentFullRefundStrategy(),
-    new NoFulfillmentPartialRefundWithLineItemsStrategy(),
-    new NoFulfillmentPartialRefundWithoutLineItemsStrategy(),
-  ];
+  private readonly noFulfillmentFullRefundStrategy = new NoFulfillmentFullRefundStrategy();
+  private readonly noFulfillmentPartialRefundWithLineItemsStrategy =
+    new NoFulfillmentPartialRefundWithLineItemsStrategy();
+  private readonly noFulfillmentPartialRefundWithoutLineItemsStrategy =
+    new NoFulfillmentPartialRefundWithoutLineItemsStrategy();
+
+  private prepareContext({
+    parsedEvent,
+    appConfig,
+    atobaraiTransactionId,
+    apiClient,
+    hasFulfillmentReported,
+  }: {
+    parsedEvent: ParsedRefundEvent;
+    appConfig: AppChannelConfig;
+    atobaraiTransactionId: AtobaraiTransactionId;
+    apiClient: IAtobaraiApiClient;
+    hasFulfillmentReported: boolean;
+  }): RefundContext {
+    return {
+      parsedEvent,
+      appConfig,
+      atobaraiTransactionId,
+      apiClient,
+      hasFulfillmentReported,
+    };
+  }
+
+  private isFullRefundStrategy(parsedEvent: ParsedRefundEvent): boolean {
+    return parsedEvent.refundedAmount === parsedEvent.sourceObjectTotalAmount;
+  }
+
+  private isPartialRefundWithLineItemsStrategy(parsedEvent: ParsedRefundEvent): boolean {
+    return (
+      parsedEvent.refundedAmount < parsedEvent.sourceObjectTotalAmount &&
+      parsedEvent.grantedRefund !== null
+    );
+  }
+
+  private isPartialRefundWithoutLineItemsStrategy(parsedEvent: ParsedRefundEvent): boolean {
+    return (
+      parsedEvent.refundedAmount < parsedEvent.sourceObjectTotalAmount && !parsedEvent.grantedRefund
+    );
+  }
 
   async processRefund({
     parsedEvent,
@@ -37,47 +75,40 @@ export class RefundOrchestrator {
     apiClient: IAtobaraiApiClient;
     hasFulfillmentReported: boolean;
   }): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
-    if (hasFulfillmentReported) {
-      // TODO: Implement fulfillment reported case
-      this.logger.warn("Fulfillment reported case not yet implemented");
-
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    const context: RefundContext = {
+    const context = this.prepareContext({
       parsedEvent,
       appConfig,
       atobaraiTransactionId,
       apiClient,
       hasFulfillmentReported,
-    };
+    });
 
-    const strategy = this.strategies.find((s) => s.canHandle(context));
-
-    if (!strategy) {
-      this.logger.warn("No strategy found for refund type", {
-        refundedAmount: parsedEvent.refundedAmount,
-        sourceObjectTotalAmount: parsedEvent.sourceObjectTotalAmount,
-        hasGrantedRefund: !!parsedEvent.grantedRefund,
-      });
+    if (hasFulfillmentReported) {
+      /*
+       * TODO: Implement fulfillment reported case
+       */
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
           transactionResult: new RefundFailureResult(),
         }),
       );
+    } else {
+      if (this.isFullRefundStrategy(parsedEvent)) {
+        return this.noFulfillmentFullRefundStrategy.execute(context);
+      }
+
+      if (this.isPartialRefundWithoutLineItemsStrategy(parsedEvent)) {
+        return this.noFulfillmentPartialRefundWithoutLineItemsStrategy.execute(context);
+      }
+
+      if (this.isPartialRefundWithLineItemsStrategy(parsedEvent)) {
+        return this.noFulfillmentPartialRefundWithLineItemsStrategy.execute(context);
+      }
     }
 
-    this.logger.info("Processing refund with strategy", {
-      strategy: strategy.constructor.name,
-      refundedAmount: parsedEvent.refundedAmount,
-      sourceObjectTotalAmount: parsedEvent.sourceObjectTotalAmount,
-    });
-
-    return strategy.execute(context);
+    throw new BaseError(
+      `Leaky abstraction: No refund strategy found for event ${parsedEvent.pspReference}`,
+    );
   }
 }

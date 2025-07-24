@@ -48,6 +48,8 @@ const getProductGoodsName = (args: {
   return args.productName;
 };
 
+// TODO: use AtobaraiLIneCalcualtion as class here instead of functions
+
 export const getProductLines = ({
   lines,
   useSkuAsName,

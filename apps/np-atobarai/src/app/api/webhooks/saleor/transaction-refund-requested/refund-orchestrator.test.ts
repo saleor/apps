@@ -57,7 +57,7 @@ describe("RefundOrchestrator", () => {
     });
 
     describe("when fulfillment has not been reported", () => {
-      it("should find and execute the matching strategy for partial refund without line items if there is no grantedRefund", async () => {
+      it("should execute noFulfillmentPartialRefundWithoutLineItemsStrategy for partial refund without line items if there is no grantedRefund", async () => {
         const refundedAmount = 1000;
         const sourceObjectTotalAmount = 2137;
 
@@ -68,16 +68,18 @@ describe("RefundOrchestrator", () => {
           grantedRefund: null,
         };
 
-        const spy = vi.spyOn(mockedAtobaraiApiClient, "changeTransaction").mockResolvedValueOnce(
-          ok({
-            results: [
-              {
-                np_transaction_id: mockedAtobaraiTransactionId,
-                authori_result: "00",
-              },
-            ],
-          }),
-        );
+        const changeTransactionSpy = vi
+          .spyOn(mockedAtobaraiApiClient, "changeTransaction")
+          .mockResolvedValueOnce(
+            ok({
+              results: [
+                {
+                  np_transaction_id: mockedAtobaraiTransactionId,
+                  authori_result: "00",
+                },
+              ],
+            }),
+          );
 
         const result = await orchestrator.processRefund({
           ...baseParams,
@@ -85,7 +87,7 @@ describe("RefundOrchestrator", () => {
           hasFulfillmentReported: false,
         });
 
-        expect(spy).toHaveBeenCalledWith({
+        expect(changeTransactionSpy).toHaveBeenCalledWith({
           transactions: [
             expect.objectContaining({
               billed_amount: sourceObjectTotalAmount - refundedAmount,
@@ -127,7 +129,7 @@ describe("RefundOrchestrator", () => {
         expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundFailureResult);
       });
 
-      it("should execute full refund strategy successfully", async () => {
+      it("should execute noFulfillmentFullRefundStrategy for full refund", async () => {
         const fullRefundEvent = {
           ...mockParsedEvent,
           refundedAmount: 2000, // Same as total
@@ -167,7 +169,7 @@ describe("RefundOrchestrator", () => {
         expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundSuccessResult);
       });
 
-      it("should execute partial refund with line items strategy successfully", async () => {
+      it("should execute noFulfillmentPartialRefundWithLineItemsStrategy for partial refund with line items", async () => {
         const refundedAmount = 1_445;
         const sourceObjectTotalAmount = 24_031;
         const partialRefundWithLineItemsEvent = {
