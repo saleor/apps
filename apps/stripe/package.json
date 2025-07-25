@@ -47,6 +47,7 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
+    "@saleor/apps-domain": "workspace:*",
     "@saleor/apps-shared": "workspace:*",
     "@saleor/apps-trpc": "workspace:*",
     "@saleor/apps-ui": "workspace:*",
