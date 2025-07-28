@@ -2,6 +2,7 @@ fragment FulfillmentTrackingNumberUpdatedEvent on FulfillmentTrackingNumberUpdat
   ...EventMetadata
   fulfillment {
     trackingNumber
+    atobaraiPDCompanyCode: privateMetafield(key: "np-atobarai.pd-company-code")
   }
   order {
     id
