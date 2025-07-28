@@ -4,5 +4,5 @@ export const AtobaraiTransactionIdSchema = z.string().length(11).brand("Atobarai
 
 export type AtobaraiTransactionId = z.infer<typeof AtobaraiTransactionIdSchema>;
 
-export const createAtobaraiTransactionId = (rawTransactionId: unknown): AtobaraiTransactionId =>
+export const createAtobaraiTransactionId = (rawTransactionId: string): AtobaraiTransactionId =>
   AtobaraiTransactionIdSchema.parse(rawTransactionId);

@@ -1,0 +1,9 @@
+fragment OrderGrantedRefund on OrderGrantedRefund {
+  shippingCostsIncluded
+  lines {
+    quantity
+    orderLine {
+      id
+    }
+  }
+}
