@@ -99,6 +99,17 @@ If you are looking for an issue to tackle, take a look at issues labeled [`Good 
 
 If nothing grabs your attention, check [our roadmap](https://saleor.io/roadmap) or [start a Discord discussion](https://saleor.io/discord) about a feature you'd like to see. Make sure to read our [Contribution Guidelines](http://docs.saleor.io/developer/community/contributing) before opening a PR or issue.
 
+## Forking 
+
+You can fork this repository to modify and self-host one of the apps. Keep in mind that this is a monorepo, which adds two additional steps to the process:
+- When forking, all the apps are being forked, even if you need one.
+- There are shared dependencies between apps, stored in `packages/` folder. Even if you need only one app, you still need at least some packages.
+
+You can try two techniques to fork the repository:
+1. You can fork everything and keep everything. When you back-merge changes, not used apps will be updated without any issues. You need to ensure you run scripts from the context of the app you are interested in, e.g. `cd apps/avatax && pnpm dev`. Your tooling should be configured to ignore other apps for better performance.
+2. You can fork everything and remove the apps you don't need. It will reduce the number of files in your fork, but you may need to modify some scripts to ensure they work properly (e.g., if some root scripts expect multiple apps, it may fail).
+
+
 ## Deployment
 
 Apps are written in Next.js and are hosted on Vercel by Saleor. Everyone should be able to host the app on Vercel if the app is configured properly. Apps share common code, but some of the functionalities are app-specific. For example, Avatax and Segment apps require DynamoDB to run. Check each app's "env" files to verify what must be provided to deploy.
