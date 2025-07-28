@@ -1,9 +1,9 @@
-import { NoRefundGoodsBuilder } from "@/modules/atobarai/atobarai-goods/no-refund-goods-builder";
+import { TransactionGoodBuilder } from "@/modules/atobarai/atobarai-goods/transaction-goods-builder";
 
 import { mockedAppChannelConfig } from "../app-config/mocked-app-config";
 import { mockedSourceObject } from "../saleor-events/mocked-source-object";
 
-const builder = new NoRefundGoodsBuilder();
+const builder = new TransactionGoodBuilder();
 
 export const mockedAtobaraiGoods = builder.build({
   sourceObject: mockedSourceObject,

@@ -4,9 +4,9 @@ import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-sourc
 import { SourceObjectFragment } from "@/generated/graphql";
 
 import { AtobaraiGoods } from "./atobarai-goods";
-import { NoRefundGoodsBuilder } from "./no-refund-goods-builder";
+import { TransactionGoodBuilder } from "./transaction-goods-builder";
 
-describe("NoRefundGoodsBuilder", () => {
+describe("TransactionGoodBuilder", () => {
   describe("build", () => {
     it("should build AtobaraiGoods from checkout with product line and shipping when checkout.discount is null", () => {
       const sourceObject: SourceObjectFragment = {
@@ -14,7 +14,7 @@ describe("NoRefundGoodsBuilder", () => {
         discount: null,
       };
 
-      const builder = new NoRefundGoodsBuilder();
+      const builder = new TransactionGoodBuilder();
 
       const goods = builder.build({ sourceObject, useSkuAsName: false });
 
@@ -35,7 +35,7 @@ describe("NoRefundGoodsBuilder", () => {
     });
 
     it("should build AtobaraiGoods from checkout with product line and with voucher if checkout.discount is present", () => {
-      const builder = new NoRefundGoodsBuilder();
+      const builder = new TransactionGoodBuilder();
 
       const goods = builder.build({
         sourceObject: mockedSourceObject,
@@ -86,7 +86,7 @@ describe("NoRefundGoodsBuilder", () => {
         },
       } as unknown as SourceObjectFragment;
 
-      const builder = new NoRefundGoodsBuilder();
+      const builder = new TransactionGoodBuilder();
 
       expect(() =>
         builder.build({ sourceObject: sourceObjectWithNullVariant, useSkuAsName: false }),
@@ -127,7 +127,7 @@ describe("NoRefundGoodsBuilder", () => {
         },
       } as unknown as SourceObjectFragment;
 
-      const builder = new NoRefundGoodsBuilder();
+      const builder = new TransactionGoodBuilder();
 
       expect(() =>
         builder.build({ sourceObject: sourceObjectWithNullVariant, useSkuAsName: false }),

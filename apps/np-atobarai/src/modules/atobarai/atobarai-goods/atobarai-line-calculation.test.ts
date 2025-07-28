@@ -95,12 +95,12 @@ describe("AtobaraiLineCalculation", () => {
     });
   });
 
-  describe("calculateDiscountLine", () => {
-    it("should return discount line when discount amount is greater than 0", () => {
+  describe("calculateRefundAligment", () => {
+    it("should return refund alignment line when refund amount is greater than 0", () => {
       const lineCalculation = new AtobaraiLineCalculation();
-      const discountLine = lineCalculation.calculateDiscountLine(2344);
+      const refundLine = lineCalculation.calculateRefundAligment(2344);
 
-      expect(discountLine).toMatchInlineSnapshot(`
+      expect(refundLine).toMatchInlineSnapshot(`
         {
           "goods_name": "Discount",
           "goods_price": -2344,
@@ -109,11 +109,11 @@ describe("AtobaraiLineCalculation", () => {
       `);
     });
 
-    it("should return null when discount amount is 0", () => {
+    it("should return null when refund amount is 0", () => {
       const lineCalculation = new AtobaraiLineCalculation();
-      const discountLine = lineCalculation.calculateDiscountLine(0);
+      const refundLine = lineCalculation.calculateRefundAligment(0);
 
-      expect(discountLine).toBeNull();
+      expect(refundLine).toBeNull();
     });
   });
 });

@@ -3,7 +3,7 @@ import { SourceObjectFragment } from "@/generated/graphql";
 import { AtobaraiGoods, AtobaraiGoodsSchema } from "./atobarai-goods";
 import { AtobaraiLineCalculation } from "./atobarai-line-calculation";
 
-export class NoRefundGoodsBuilder {
+export class TransactionGoodBuilder {
   private readonly lineCalculation = new AtobaraiLineCalculation();
 
   build({

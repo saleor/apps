@@ -50,6 +50,7 @@ export class AtobaraiLineCalculation {
 
     return {
       goods_name: "Voucher",
+      // TODO: check if voucherAmount should be negative https://linear.app/saleor/issue/ENG-548
       goods_price: voucherAmount,
       quantity: 1,
     };
@@ -67,14 +68,14 @@ export class AtobaraiLineCalculation {
     };
   };
 
-  calculateDiscountLine = (discountAmount: number) => {
-    if (discountAmount === 0) {
+  calculateRefundAligment = (refundAmount: number) => {
+    if (refundAmount === 0) {
       return null;
     }
 
     return {
-      goods_name: "Discount",
-      goods_price: -discountAmount,
+      goods_name: "Discount", // App uses the same name as Saleor plugin to keep backwards compatibility
+      goods_price: -refundAmount,
       quantity: 1,
     };
   };

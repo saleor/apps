@@ -23,7 +23,7 @@ export class NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder {
     const shippingLine = this.lineCalculation.calculateShippingLine(
       sourceObject.shippingPrice.gross.amount,
     );
-    const discountLine = this.lineCalculation.calculateDiscountLine(amountAfterRefund);
+    const discountLine = this.lineCalculation.calculateRefundAligment(amountAfterRefund);
 
     return AtobaraiGoodsSchema.parse(
       [...productLines, voucherLine, shippingLine, discountLine].filter(Boolean),
@@ -71,12 +71,12 @@ export class NoFullfillmentPartialRefundWithLineItemsGoodsBuilder {
       sourceObject.shippingPrice.gross.amount,
     );
 
-    const discountLine = grantedRefund.shippingCostsIncluded
-      ? this.lineCalculation.calculateDiscountLine(sourceObject.shippingPrice.gross.amount)
+    const refundAligmentLine = grantedRefund.shippingCostsIncluded
+      ? this.lineCalculation.calculateRefundAligment(sourceObject.shippingPrice.gross.amount)
       : null;
 
     return AtobaraiGoodsSchema.parse(
-      [...productLines, voucherLine, shippingLine, discountLine].filter(Boolean),
+      [...productLines, voucherLine, shippingLine, refundAligmentLine].filter(Boolean),
     );
   }
 }
