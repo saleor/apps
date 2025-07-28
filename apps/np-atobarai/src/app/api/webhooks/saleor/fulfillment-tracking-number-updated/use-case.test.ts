@@ -363,4 +363,54 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
+
+  it("should use private metadata for Atobarai PD company code if available", async () => {
+    const atobaraiPDCompanyCode = "59020";
+
+    const eventWithPDCompanyCode = {
+      ...mockedFulfillmentTrackingNumberUpdatedEvent,
+      fulfillment: {
+        ...mockedFulfillmentTrackingNumberUpdatedEvent.fulfillment,
+        atobaraiPDCompanyCode,
+      },
+    };
+
+    const spy = vi.spyOn(mockedAtobaraiApiClient, "reportFulfillment").mockResolvedValue(
+      ok(
+        createAtobaraiFulfillmentReportSuccessResponse({
+          results: [
+            {
+              np_transaction_id: mockedAtobaraiTransactionId,
+            },
+          ],
+        }),
+      ),
+    );
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
+
+    const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
+    });
+
+    const result = await useCase.execute({
+      appId: mockedSaleorAppId,
+      saleorApiUrl: mockedSaleorApiUrl,
+      event: eventWithPDCompanyCode,
+    });
+
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      FulfillmentTrackingNumberUpdatedUseCaseResponse.Success,
+    );
+
+    expect(spy).toHaveBeenCalledWith({
+      transactions: [
+        expect.objectContaining({
+          pd_company_code: atobaraiPDCompanyCode,
+        }),
+      ],
+    });
+  });
 });

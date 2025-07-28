@@ -4,10 +4,15 @@ import { err, ok, Result } from "neverthrow";
 
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
+import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
 import { AtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
+import {
+  AtobaraiShippingCompanyCode,
+  createAtobaraiShippingCompanyCode,
+} from "@/modules/atobarai/atobarai-shipping-company-code";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
@@ -140,6 +145,21 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     });
   }
 
+  private resolveAtobaraiPDCompanyCode(
+    event: FulfillmentTrackingNumberUpdatedEventFragment,
+    atobaraiConfig: AppChannelConfig,
+  ): AtobaraiShippingCompanyCode {
+    if (event.fulfillment?.atobaraiPDCompanyCode) {
+      this.logger.info("Using Atobarai PD company code from private metadata", {
+        atobaraiPDCompanyCode: event.fulfillment.atobaraiPDCompanyCode,
+      });
+
+      return createAtobaraiShippingCompanyCode(event.fulfillment.atobaraiPDCompanyCode);
+    }
+
+    return atobaraiConfig.shippingCompanyCode;
+  }
+
   async execute(params: {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
@@ -176,7 +196,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       createAtobaraiFulfillmentReportPayload({
         trackingNumber,
         atobaraiTransactionId: createAtobaraiTransactionId(pspReference),
-        shippingCompanyCode: atobaraiConfigResult.value.shippingCompanyCode,
+        shippingCompanyCode: this.resolveAtobaraiPDCompanyCode(event, atobaraiConfigResult.value),
       }),
     );
 
