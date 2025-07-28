@@ -30,7 +30,6 @@
     "@opentelemetry/sdk-logs": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
-    "@saleor/apl-dynamo": "workspace:*",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
