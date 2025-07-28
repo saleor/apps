@@ -148,13 +148,18 @@ describe("TransactionRefundRequestedUseCase", () => {
 
     expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundSuccessResult);
 
-    expect(spy).toHaveBeenCalledWith({
-      transactions: [
-        {
-          np_transaction_id: mockedAtobaraiTransactionId,
-        },
-      ],
-    });
+    expect(spy).toHaveBeenCalledWith(
+      {
+        transactions: [
+          {
+            np_transaction_id: mockedAtobaraiTransactionId,
+          },
+        ],
+      },
+      {
+        checkForMultipleResults: true,
+      },
+    );
   });
 
   it("should return RefundFailureResult when cancel transaction fails", async () => {
@@ -201,13 +206,18 @@ describe("TransactionRefundRequestedUseCase", () => {
       TransactionRefundRequestedUseCaseResponse.Failure,
     );
     expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundFailureResult);
-    expect(spy).toHaveBeenCalledWith({
-      transactions: [
-        {
-          np_transaction_id: mockedAtobaraiTransactionId,
-        },
-      ],
-    });
+    expect(spy).toHaveBeenCalledWith(
+      {
+        transactions: [
+          {
+            np_transaction_id: mockedAtobaraiTransactionId,
+          },
+        ],
+      },
+      {
+        checkForMultipleResults: true,
+      },
+    );
   });
 
   it("should return RefundFailureResult when cancel transaction returns multiple results", async () => {

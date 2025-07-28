@@ -74,13 +74,18 @@ describe("Refund Strategies", () => {
 
       expect(value).toBeInstanceOf(TransactionRefundRequestedUseCaseResponse.Success);
       expect(mockedAtobaraiApiClient.cancelTransaction).toHaveBeenCalledTimes(1);
-      expect(mockedAtobaraiApiClient.cancelTransaction).toHaveBeenCalledWith({
-        transactions: [
-          {
-            np_transaction_id: mockedAtobaraiTransactionId,
-          },
-        ],
-      });
+      expect(mockedAtobaraiApiClient.cancelTransaction).toHaveBeenCalledWith(
+        {
+          transactions: [
+            {
+              np_transaction_id: mockedAtobaraiTransactionId,
+            },
+          ],
+        },
+        {
+          checkForMultipleResults: true,
+        },
+      );
     });
 
     it("should handle API client error gracefully", async () => {

@@ -1,17 +1,17 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
-import { AtobaraiApiClientChangeTransactionError } from "@/modules/atobarai/api/types";
+import {
+  AtobaraiApiClientChangeTransactionError,
+  AtobaraiMultipleResultsError,
+} from "@/modules/atobarai/api/types";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
 
-import {
-  AtobaraiFailureTransactionError,
-  AtobaraiMultipleFailureTransactionError,
-} from "../use-case-errors";
+import { AtobaraiFailureTransactionError } from "../use-case-errors";
 import { TransactionProcessSessionUseCaseResponse } from "./use-case-response";
 
 describe("TransactionProcessSessionUseCaseResponse", () => {
@@ -118,11 +118,11 @@ describe("TransactionProcessSessionUseCaseResponse", () => {
       });
     });
 
-    describe("with ChargeFailureResult and AtobaraiMultipleFailureTransactionError", () => {
+    describe("with ChargeFailureResult and AtobaraiMultipleResultsError", () => {
       it("getResponse() returns valid Response with status 200 and multiple failure result with transaction error details", async () => {
         const response = new TransactionProcessSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
-          error: new AtobaraiMultipleFailureTransactionError("Multiple failed transactions"),
+          error: new AtobaraiMultipleResultsError("Multiple failed transactions"),
         });
 
         const fetchResponse = response.getResponse();
@@ -134,7 +134,7 @@ describe("TransactionProcessSessionUseCaseResponse", () => {
             "data": {
               "errors": [
                 {
-                  "code": "AtobaraiMultipleFailureTransactionError",
+                  "code": "AtobaraiMultipleResultsError",
                   "message": "Atobarai returned multiple transactions",
                 },
               ],

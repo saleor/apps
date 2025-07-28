@@ -30,10 +30,7 @@ import {
 
 import { BaseUseCase } from "../base-use-case";
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
-import {
-  AtobaraiFailureTransactionError,
-  AtobaraiMultipleFailureTransactionError,
-} from "../use-case-errors";
+import { AtobaraiFailureTransactionError } from "../use-case-errors";
 import { TransactionProcessSessionUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
@@ -77,19 +74,6 @@ export class TransactionProcessSessionUseCase extends BaseUseCase {
       }),
       atobaraiShopOrderDate: createAtobaraiShopOrderDate(event.issuedAt!), // checked if exists in execute method
     });
-  }
-
-  private handleMultipleTransactionResults(transactionResult: AtobaraiTransactionSuccessResponse) {
-    this.logger.warn("Multiple transaction results found", {
-      transactionResult,
-    });
-
-    return ok(
-      new TransactionProcessSessionUseCaseResponse.Failure({
-        transactionResult: new ChargeFailureResult(),
-        error: new AtobaraiMultipleFailureTransactionError("Multiple transaction results found"),
-      }),
-    );
   }
 
   private mapAtobaraiResponseToUseCaseResponse(
@@ -159,6 +143,9 @@ export class TransactionProcessSessionUseCase extends BaseUseCase {
 
     const changeTransactionResult = await apiClient.changeTransaction(
       this.prepareChangeTransactionPayload(event, atobaraiConfigResult.value),
+      {
+        checkForMultipleResults: true,
+      },
     );
 
     if (changeTransactionResult.isErr()) {
@@ -175,10 +162,6 @@ export class TransactionProcessSessionUseCase extends BaseUseCase {
     }
 
     const transactionResult = changeTransactionResult.value;
-
-    if (transactionResult.results.length > 1) {
-      return this.handleMultipleTransactionResults(changeTransactionResult.value);
-    }
 
     return this.mapAtobaraiResponseToUseCaseResponse(transactionResult.results[0]);
   }

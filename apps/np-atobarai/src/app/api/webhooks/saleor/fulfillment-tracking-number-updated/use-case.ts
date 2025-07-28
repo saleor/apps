@@ -7,7 +7,6 @@ import { createLogger } from "@/lib/logger";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
-import { AtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import {
   AtobaraiShippingCompanyCode,
@@ -23,7 +22,6 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "../saleor-webhook-responses";
-import { AtobaraiMultipleFailureTransactionError } from "../use-case-errors";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
@@ -48,20 +46,6 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     this.appConfigRepo = deps.appConfigRepo;
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
     this.transactionRecordRepo = deps.transactionRecordRepo;
-  }
-
-  private handleMultipleTransactionResults(
-    transactionResult: AtobaraiFulfillmentReportSuccessResponse,
-  ) {
-    this.logger.warn("Multiple transaction results found", {
-      transactionResult,
-    });
-
-    return ok(
-      new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
-        new AtobaraiMultipleFailureTransactionError("Multiple transaction results found"),
-      ),
-    );
   }
 
   private parseEvent({
@@ -198,6 +182,9 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         atobaraiTransactionId: createAtobaraiTransactionId(pspReference),
         shippingCompanyCode: this.resolveAtobaraiPDCompanyCode(event, atobaraiConfigResult.value),
       }),
+      {
+        checkForMultipleResults: true,
+      },
     );
 
     if (reportFulfillmentResult.isErr()) {
@@ -213,10 +200,6 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     }
 
     const fulfillmentResult = reportFulfillmentResult.value;
-
-    if (fulfillmentResult.results.length > 1) {
-      return this.handleMultipleTransactionResults(fulfillmentResult);
-    }
 
     const atobaraiTransactionId = createAtobaraiTransactionId(
       fulfillmentResult.results[0].np_transaction_id,

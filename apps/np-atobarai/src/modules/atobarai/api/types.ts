@@ -13,19 +13,19 @@ import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transact
 import { AtobaraiTransactionSuccessResponse } from "./atobarai-transaction-success-response";
 
 export type AtobaraiApiRegisterTransactionErrors = InstanceType<
-  typeof AtobaraiApiClientRegisterTransactionError
+  typeof AtobaraiApiClientRegisterTransactionError | typeof AtobaraiMultipleResultsError
 >;
 
 export type AtobaraiApiChangeTransactionErrors = InstanceType<
-  typeof AtobaraiApiClientChangeTransactionError
+  typeof AtobaraiApiClientChangeTransactionError | typeof AtobaraiMultipleResultsError
 >;
 
 export type AtobaraiApiClientFulfillmentReportError = InstanceType<
-  typeof AtobaraiApiClientFulfillmentReportError
+  typeof AtobaraiApiClientFulfillmentReportError | typeof AtobaraiMultipleResultsError
 >;
 
 export type AtobaraiApiClientCancelTransactionError = InstanceType<
-  typeof AtobaraiApiClientCancelTransactionError
+  typeof AtobaraiApiClientCancelTransactionError | typeof AtobaraiMultipleResultsError
 >;
 
 export type AtobaraiEnvironment = "sandbox" | "production";
@@ -42,20 +42,32 @@ export interface IAtobaraiApiClientFactory {
 export interface IAtobaraiApiClient {
   registerTransaction: (
     payload: AtobaraiRegisterTransactionPayload,
+    options?: {
+      checkForMultipleResults?: boolean;
+    },
   ) => Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiRegisterTransactionErrors>>;
   changeTransaction: (
     payload: AtobaraiChangeTransactionPayload,
+    options?: {
+      checkForMultipleResults?: boolean;
+    },
   ) => Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiChangeTransactionErrors>>;
   verifyCredentials: () => Promise<
     Result<null, InstanceType<typeof AtobaraiApiClientValidationError>>
   >;
   reportFulfillment: (
     payload: AtobaraiFulfillmentReportPayload,
+    options?: {
+      checkForMultipleResults?: boolean;
+    },
   ) => Promise<
     Result<AtobaraiFulfillmentReportSuccessResponse, AtobaraiApiClientFulfillmentReportError>
   >;
   cancelTransaction: (
     payload: AtobaraiCancelTransactionPayload,
+    options?: {
+      checkForMultipleResults?: boolean;
+    },
   ) => Promise<
     Result<AtobaraiCancelTransactionSuccessResponse, AtobaraiApiClientCancelTransactionError>
   >;
@@ -127,3 +139,13 @@ export const AtobaraiApiClientCancelTransactionError = BaseError.subclass(
     },
   },
 );
+
+export const AtobaraiMultipleResultsErrorPublicCode = "AtobaraiMultipleResultsError" as const;
+
+export const AtobaraiMultipleResultsError = BaseError.subclass("AtobaraiMultipleResultsError", {
+  props: {
+    _brand: "AtobaraiMultipleResultsError" as const,
+    publicCode: AtobaraiMultipleResultsErrorPublicCode,
+    publicMessage: "Atobarai returned multiple transactions",
+  },
+});

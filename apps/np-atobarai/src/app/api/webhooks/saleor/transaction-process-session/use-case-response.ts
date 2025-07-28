@@ -9,6 +9,7 @@ import { assertUnreachable } from "@/lib/assert-unreachable";
 import {
   AtobaraiApiChangeTransactionErrors,
   AtobaraiApiClientChangeTransactionErrorPublicCode,
+  AtobaraiMultipleResultsErrorPublicCode,
 } from "@/modules/atobarai/api/types";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import {
@@ -18,11 +19,7 @@ import {
 } from "@/modules/transaction-result/charge-result";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
-import {
-  AtobaraiFailureTransactionErrorPublicCode,
-  AtobaraiMultipleFailureTransactionErrorPublicCode,
-  UseCaseErrors,
-} from "../use-case-errors";
+import { AtobaraiFailureTransactionErrorPublicCode, UseCaseErrors } from "../use-case-errors";
 
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
@@ -69,7 +66,7 @@ class Failure extends SuccessWebhookResponse {
       z.object({
         code: z.union([
           z.literal(AtobaraiFailureTransactionErrorPublicCode),
-          z.literal(AtobaraiMultipleFailureTransactionErrorPublicCode),
+          z.literal(AtobaraiMultipleResultsErrorPublicCode),
           z.literal(AtobaraiApiClientChangeTransactionErrorPublicCode),
         ]),
         message: z.string(),

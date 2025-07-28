@@ -36,10 +36,7 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "../saleor-webhook-responses";
-import {
-  AtobaraiFailureTransactionError,
-  AtobaraiMultipleFailureTransactionError,
-} from "../use-case-errors";
+import { AtobaraiFailureTransactionError } from "../use-case-errors";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
@@ -85,19 +82,6 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
       }),
       atobaraiShopOrderDate: createAtobaraiShopOrderDate(event.issuedAt!), // checked if exists in execute method
     });
-  }
-
-  private handleMultipleTransactionResults(transactionResult: AtobaraiTransactionSuccessResponse) {
-    this.logger.warn("Multiple transaction results found", {
-      transactionResult,
-    });
-
-    return ok(
-      new TransactionInitializeSessionUseCaseResponse.Failure({
-        transactionResult: new ChargeFailureResult(),
-        error: new AtobaraiMultipleFailureTransactionError("Multiple transaction results found"),
-      }),
-    );
   }
 
   private async mapAtobaraiResponseToUseCaseResponse({
@@ -194,6 +178,9 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
 
     const registerTransactionResult = await apiClient.registerTransaction(
       this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value),
+      {
+        checkForMultipleResults: true,
+      },
     );
 
     if (registerTransactionResult.isErr()) {
@@ -210,10 +197,6 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
     }
 
     const transactionResult = registerTransactionResult.value;
-
-    if (transactionResult.results.length > 1) {
-      return this.handleMultipleTransactionResults(registerTransactionResult.value);
-    }
 
     return this.mapAtobaraiResponseToUseCaseResponse({
       transaction: transactionResult.results[0],
