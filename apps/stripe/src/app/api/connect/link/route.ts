@@ -9,6 +9,7 @@ import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-
 const body = z.object({
   account: z.string(),
   configId: z.string(),
+  saleorApiUrl:z.string()
 });
 
 const useCase = new StripeConnectLinkUseCase({
@@ -26,6 +27,8 @@ const useCase = new StripeConnectLinkUseCase({
  */
 export const POST = async function (req: NextRequest): Promise<NextResponse> {
   const bodyJson = await req.json();
+
+
   const parsedBody = body.safeParse(bodyJson);
   const baseUrl = getBaseUrl(req.headers); //todo
 
@@ -38,14 +41,14 @@ export const POST = async function (req: NextRequest): Promise<NextResponse> {
 
   const stripeAccountToConnect = parsedBody.data.account;
 
-  const authData = await saleorApp.apl.get(req.headers.get(SALEOR_API_URL_HEADER) as string);
+  const authData = await saleorApp.apl.get(parsedBody.data.saleorApiUrl);
 
   if (!authData) {
     throw new Error("No auth data found in request headers");
   }
 
   const result = await useCase.execute({
-    stripeAccountToConnect: stripeAccountToConnect,
+    stripeAccountToConnect: "acct_1RplY1AJeYdOey7Y",
     configId: parsedBody.data.configId,
     appBaseUrl: baseUrl,
     authData: authData,
@@ -53,6 +56,11 @@ export const POST = async function (req: NextRequest): Promise<NextResponse> {
 
   if (result.isOk()) {
     // this is redirect so it must happen on the frontend.
-    return NextResponse.redirect(result.value);
+    return NextResponse.json({redirectUrl: result.value});
+  }else {
+    return NextResponse.json(
+      { error: `Error connecting to Stripe` },
+      { status: 500 },
+    );
   }
 };
