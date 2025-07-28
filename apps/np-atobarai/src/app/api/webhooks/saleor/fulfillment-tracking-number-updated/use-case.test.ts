@@ -86,37 +86,6 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     );
   });
 
-  it("should return Failure response when multiple transaction results are returned", async () => {
-    const mockFulfillmentResponse = createAtobaraiFulfillmentReportSuccessResponse({
-      results: [
-        { np_transaction_id: mockedAtobaraiTransactionId },
-        { np_transaction_id: "np-trans-42" },
-      ],
-    });
-
-    vi.spyOn(mockedAtobaraiApiClient, "reportFulfillment").mockResolvedValue(
-      ok(mockFulfillmentResponse),
-    );
-
-    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
-
-    const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory,
-      transactionRecordRepo: new MockedTransactionRecordRepo(),
-    });
-
-    const result = await useCase.execute({
-      appId: mockedSaleorAppId,
-      saleorApiUrl: mockedSaleorApiUrl,
-      event: mockedFulfillmentTrackingNumberUpdatedEvent,
-    });
-
-    expect(result._unsafeUnwrap()).toBeInstanceOf(
-      FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure,
-    );
-  });
-
   it("should return AppIsNotConfiguredResponse when app config is not found", async () => {
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(null));
 
@@ -405,12 +374,17 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       FulfillmentTrackingNumberUpdatedUseCaseResponse.Success,
     );
 
-    expect(spy).toHaveBeenCalledWith({
-      transactions: [
-        expect.objectContaining({
-          pd_company_code: atobaraiPDCompanyCode,
-        }),
-      ],
-    });
+    expect(spy).toHaveBeenCalledWith(
+      {
+        transactions: [
+          expect.objectContaining({
+            pd_company_code: atobaraiPDCompanyCode,
+          }),
+        ],
+      },
+      {
+        checkForMultipleResults: true,
+      },
+    );
   });
 });

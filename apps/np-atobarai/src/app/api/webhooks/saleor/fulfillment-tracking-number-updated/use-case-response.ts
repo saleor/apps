@@ -1,7 +1,6 @@
 import { AtobaraiApiClientFulfillmentReportError } from "@/modules/atobarai/api/types";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
-import { AtobaraiMultipleFailureTransactionError } from "../use-case-errors";
 
 class Success extends SuccessWebhookResponse {
   getResponse(): Response {
@@ -12,9 +11,7 @@ class Success extends SuccessWebhookResponse {
   }
 }
 
-type UseCaseErrors =
-  | AtobaraiApiClientFulfillmentReportError
-  | InstanceType<typeof AtobaraiMultipleFailureTransactionError>;
+type UseCaseErrors = AtobaraiApiClientFulfillmentReportError;
 
 class Failure extends SuccessWebhookResponse {
   public error: UseCaseErrors;

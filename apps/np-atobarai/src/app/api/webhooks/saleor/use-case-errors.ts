@@ -13,20 +13,4 @@ export const AtobaraiFailureTransactionError = BaseError.subclass(
   },
 );
 
-export const AtobaraiMultipleFailureTransactionErrorPublicCode =
-  "AtobaraiMultipleFailureTransactionError" as const;
-
-export const AtobaraiMultipleFailureTransactionError = BaseError.subclass(
-  "AtobaraiMultipleFailureTransactionError",
-  {
-    props: {
-      _brand: "AtobaraiMultipleFailureTransactionError" as const,
-      publicCode: AtobaraiMultipleFailureTransactionErrorPublicCode,
-      publicMessage: "Atobarai returned multiple transactions",
-    },
-  },
-);
-
-export type UseCaseErrors = InstanceType<
-  typeof AtobaraiFailureTransactionError | typeof AtobaraiMultipleFailureTransactionError
->;
+export type UseCaseErrors = InstanceType<typeof AtobaraiFailureTransactionError>;

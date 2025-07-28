@@ -283,53 +283,6 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
   });
 
-  it("should return ChargeFailureResult when Atobarai return multiple transaction results", async () => {
-    const mockMultipleTransactions = createAtobaraiTransactionSuccessResponse({
-      results: [
-        {
-          np_transaction_id: "np_trans_21",
-          authori_result: "00",
-        },
-        {
-          np_transaction_id: "np_trans_37",
-          authori_result: "20",
-          authori_ng: "RE001",
-        },
-        {
-          np_transaction_id: "np_trans_42",
-          authori_result: "20",
-          authori_ng: "RE002",
-        },
-      ],
-    });
-
-    vi.spyOn(mockedAtobaraiApiClient, "registerTransaction").mockResolvedValue(
-      ok(mockMultipleTransactions),
-    );
-
-    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
-      ok(mockedAppChannelConfig),
-    );
-
-    const uc = new TransactionInitializeSessionUseCase({
-      appConfigRepo: mockedAppConfigRepo,
-      atobaraiApiClientFactory,
-      appTransactionRepo: new MockedTransactionRecordRepo(),
-    });
-
-    const responsePayload = await uc.execute({
-      saleorApiUrl: mockedSaleorApiUrl,
-      appId: mockedSaleorAppId,
-      event: mockedTransactionInitializeSessionEvent,
-    });
-
-    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionInitializeSessionUseCaseResponse.Failure,
-    );
-
-    expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
-  });
-
   it("should return BrokenAppResponse when AppTransactionRepo fails to create transaction", async () => {
     vi.spyOn(mockedAtobaraiApiClient, "registerTransaction").mockResolvedValue(
       ok(

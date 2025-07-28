@@ -38,7 +38,9 @@ export class NoFulfillmentFullRefundStrategy implements RefundStrategy {
       atobaraiTransactionId,
     });
 
-    const cancelResult = await apiClient.cancelTransaction(payload);
+    const cancelResult = await apiClient.cancelTransaction(payload, {
+      checkForMultipleResults: true,
+    });
 
     if (cancelResult.isErr()) {
       this.logger.error("Failed to cancel Atobarai transaction", {

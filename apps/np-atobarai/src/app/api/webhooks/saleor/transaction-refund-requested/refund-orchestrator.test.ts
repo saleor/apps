@@ -155,13 +155,18 @@ describe("RefundOrchestrator", () => {
           hasFulfillmentReported: false,
         });
 
-        expect(spy).toHaveBeenCalledWith({
-          transactions: [
-            expect.objectContaining({
-              np_transaction_id: mockedAtobaraiTransactionId,
-            }),
-          ],
-        });
+        expect(spy).toHaveBeenCalledWith(
+          {
+            transactions: [
+              expect.objectContaining({
+                np_transaction_id: mockedAtobaraiTransactionId,
+              }),
+            ],
+          },
+          {
+            checkForMultipleResults: true,
+          },
+        );
 
         expect(result._unsafeUnwrap()).toBeInstanceOf(
           TransactionRefundRequestedUseCaseResponse.Success,

@@ -16,6 +16,7 @@ import {
   AtobaraiApiClientChangeTransactionError,
   AtobaraiApiClientFulfillmentReportError,
   AtobaraiApiClientRegisterTransactionError,
+  AtobaraiMultipleResultsError,
   IAtobaraiApiClient,
 } from "./types";
 
@@ -183,6 +184,43 @@ describe("AtobaraiApiClient", () => {
         }
       `);
     });
+
+    it("should return AtobaraiMultipleResultsError when multiple results are found and checkForMultipleResults is set to true", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            np_transaction_id: "np_trans_21",
+            authori_result: "00",
+          },
+          {
+            np_transaction_id: "np_trans_37",
+            authori_result: "20",
+            authori_ng: "RE001",
+          },
+          {
+            np_transaction_id: "np_trans_42",
+            authori_result: "20",
+            authori_ng: "RE002",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const result = await sandboxClient.registerTransaction(
+        mockedAtobaraiRegisterTransactionPayload,
+        {
+          checkForMultipleResults: true,
+        },
+      );
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiMultipleResultsError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[AtobaraiMultipleResultsError: Multiple results found]`,
+      );
+    });
   });
 
   describe("changeTransaction", () => {
@@ -313,6 +351,34 @@ describe("AtobaraiApiClient", () => {
         }
       `);
     });
+
+    it("should return AtobaraiMultipleResultsError when multiple results are found and checkForMultipleResults is set to true", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            authori_result: "00",
+            np_transaction_id: "np_trans_32",
+          },
+          {
+            authori_result: "00",
+            np_transaction_id: "np_trans_33",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const result = await sandboxClient.changeTransaction(mockedAtobaraiChangeTransactionPayload, {
+        checkForMultipleResults: true,
+      });
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiMultipleResultsError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+          [AtobaraiMultipleResultsError: Multiple results found]
+        `);
+    });
   });
 
   describe("reportFulfillment", () => {
@@ -439,6 +505,34 @@ describe("AtobaraiApiClient", () => {
         }
       `);
     });
+
+    it("should return AtobaraiMultipleResultsError when multiple results are found and checkForMultipleResults is set to true", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            authori_result: "00",
+            np_transaction_id: "np_trans_32",
+          },
+          {
+            authori_result: "00",
+            np_transaction_id: "np_trans_33",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const result = await sandboxClient.reportFulfillment(mockedAtobaraiFulfillmentReportPayload, {
+        checkForMultipleResults: true,
+      });
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiMultipleResultsError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+          [AtobaraiMultipleResultsError: Multiple results found]
+        `);
+    });
   });
 
   describe("cancelTransaction", () => {
@@ -553,6 +647,37 @@ describe("AtobaraiApiClient", () => {
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiApiClientCancelTransactionError);
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
         `[AtobaraiApiClientCancelTransactionError: Atobarai API returned an error]`,
+      );
+    });
+
+    it("should return AtobaraiMultipleResultsError when multiple results are found and checkForMultipleResults is set to true", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json({
+        results: [
+          {
+            authori_result: "00",
+            np_transaction_id: "np_trans_32",
+          },
+          {
+            authori_result: "00",
+            np_transaction_id: "np_trans_33",
+          },
+        ],
+      });
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const result = await sandboxClient.cancelTransaction(
+        createAtobaraiCancelTransactionPayload({
+          atobaraiTransactionId: mockedAtobaraiTransactionId,
+        }),
+        { checkForMultipleResults: true },
+      );
+
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiMultipleResultsError);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[AtobaraiMultipleResultsError: Multiple results found]`,
       );
     });
   });

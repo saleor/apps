@@ -30,6 +30,7 @@ import {
   AtobaraiApiClientValidationError,
   AtobaraiApiRegisterTransactionErrors,
   AtobaraiEnvironment,
+  AtobaraiMultipleResultsError,
   IAtobaraiApiClient,
 } from "./types";
 
@@ -101,6 +102,9 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
   async registerTransaction(
     payload: AtobaraiRegisterTransactionPayload,
+    options?: {
+      checkForMultipleResults?: boolean;
+    },
   ): Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiRegisterTransactionErrors>> {
     const requestUrl = new URL("transactions", this.getBaseUrl());
 
@@ -135,11 +139,22 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const response = await result.value.json();
 
-    return ok(createAtobaraiTransactionSuccessResponse(response));
+    const parsedResponse = createAtobaraiTransactionSuccessResponse(response);
+
+    if (options?.checkForMultipleResults) {
+      if (parsedResponse.results.length > 1) {
+        return err(new AtobaraiMultipleResultsError("Multiple results found"));
+      }
+    }
+
+    return ok(parsedResponse);
   }
 
   async changeTransaction(
     payload: AtobaraiChangeTransactionPayload,
+    options?: {
+      checkForMultipleResults?: boolean;
+    },
   ): Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiChangeTransactionErrors>> {
     const requestUrl = new URL("transactions/update", this.getBaseUrl());
 
@@ -174,7 +189,15 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const response = await result.value.json();
 
-    return ok(createAtobaraiTransactionSuccessResponse(response));
+    const parsedResponse = createAtobaraiTransactionSuccessResponse(response);
+
+    if (options?.checkForMultipleResults) {
+      if (parsedResponse.results.length > 1) {
+        return err(new AtobaraiMultipleResultsError("Multiple results found"));
+      }
+    }
+
+    return ok(parsedResponse);
   }
 
   async verifyCredentials(): Promise<
@@ -218,6 +241,9 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
   async reportFulfillment(
     payload: AtobaraiFulfillmentReportPayload,
+    options?: {
+      checkForMultipleResults?: boolean;
+    },
   ): Promise<
     Result<AtobaraiFulfillmentReportSuccessResponse, AtobaraiApiClientFulfillmentReportError>
   > {
@@ -254,11 +280,22 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const response = await result.value.json();
 
-    return ok(createAtobaraiFulfillmentReportSuccessResponse(response));
+    const parsedResponse = createAtobaraiFulfillmentReportSuccessResponse(response);
+
+    if (options?.checkForMultipleResults) {
+      if (parsedResponse.results.length > 1) {
+        return err(new AtobaraiMultipleResultsError("Multiple results found"));
+      }
+    }
+
+    return ok(parsedResponse);
   }
 
   async cancelTransaction(
     payload: AtobaraiCancelTransactionPayload,
+    options?: {
+      checkForMultipleResults?: boolean;
+    },
   ): Promise<
     Result<AtobaraiCancelTransactionSuccessResponse, AtobaraiApiClientCancelTransactionError>
   > {
@@ -295,6 +332,14 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const response = await result.value.json();
 
-    return ok(createAtobaraiCancelTransactionSuccessResponse(response));
+    const parsedResponse = createAtobaraiCancelTransactionSuccessResponse(response);
+
+    if (options?.checkForMultipleResults) {
+      if (parsedResponse.results.length > 1) {
+        return err(new AtobaraiMultipleResultsError("Multiple results found"));
+      }
+    }
+
+    return ok(parsedResponse);
   }
 }
