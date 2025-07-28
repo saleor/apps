@@ -392,7 +392,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
     });
 
     const result = await useCase.execute({
