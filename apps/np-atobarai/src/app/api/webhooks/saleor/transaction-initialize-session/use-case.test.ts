@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
-import { MockedAppTransactionRepo } from "@/__tests__/mocks/app-transaction/mocked-app-transaction-repo";
+import { MockedTransactionRecordRepo } from "@/__tests__/mocks/app-transaction/mocked-transaction-record-repo";
 import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
@@ -61,7 +61,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      appTransactionRepo: new MockedTransactionRecordRepo(),
     });
 
     const responsePayload = await uc.execute({
@@ -99,7 +99,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      appTransactionRepo: new MockedTransactionRecordRepo(),
     });
 
     const responsePayload = await uc.execute({
@@ -139,7 +139,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      appTransactionRepo: new MockedTransactionRecordRepo(),
     });
 
     const responsePayload = await uc.execute({
@@ -176,7 +176,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      appTransactionRepo: new MockedTransactionRecordRepo(),
     });
 
     const responsePayload = await uc.execute({
@@ -204,7 +204,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      appTransactionRepo: new MockedTransactionRecordRepo(),
     });
 
     const responsePayload = await uc.execute({
@@ -231,7 +231,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      appTransactionRepo: new MockedTransactionRecordRepo(),
     });
 
     const responsePayload = await uc.execute({
@@ -249,7 +249,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      appTransactionRepo: new MockedTransactionRecordRepo(),
     });
 
     const responsePayload = await uc.execute({
@@ -271,7 +271,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      appTransactionRepo: new MockedTransactionRecordRepo(),
     });
 
     const responsePayload = await uc.execute({
@@ -314,7 +314,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: new MockedAppTransactionRepo(),
+      appTransactionRepo: new MockedTransactionRecordRepo(),
     });
 
     const responsePayload = await uc.execute({
@@ -348,9 +348,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       ok(mockedAppChannelConfig),
     );
 
-    const mockedAppTransactionRepo = new MockedAppTransactionRepo();
+    const mockedTransactionRecordRepo = new MockedTransactionRecordRepo();
 
-    vi.spyOn(mockedAppTransactionRepo, "createTransaction").mockImplementationOnce(async () =>
+    vi.spyOn(mockedTransactionRecordRepo, "createTransaction").mockImplementationOnce(async () =>
       err(
         new TransactionRecordRepoError.FailedWritingTransactionError(
           "Failed to create transaction",
@@ -361,7 +361,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
-      appTransactionRepo: mockedAppTransactionRepo,
+      appTransactionRepo: mockedTransactionRecordRepo,
     });
 
     const responsePayload = await uc.execute({
