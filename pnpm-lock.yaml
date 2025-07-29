@@ -76,8 +76,8 @@ catalogs:
       specifier: 1.30.0
       version: 1.30.0
     '@saleor/app-sdk':
-      specifier: 0.0.0-pr-20250728123253
-      version: 0.0.0-pr-20250728123253
+      specifier: 1.2.0
+      version: 1.2.0
     '@saleor/macaw-ui':
       specifier: 1.1.10
       version: 1.1.10
@@ -211,7 +211,7 @@ importers:
         version: 8.17.5
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 0.0.0-pr-20250728123253(graphql@16.11.0)(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.2.0(graphql@16.11.0)(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       cspell:
         specifier: 8.17.5
         version: 8.17.5
@@ -5648,8 +5648,8 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@saleor/app-sdk@0.0.0-pr-20250728123253':
-    resolution: {integrity: sha512-7QMGHp2BNYuzB3nA9s+qGiLlk7XZSYLcDcwZw4736O+GA43P9+deulGaARG5Pkf1/ZcWWAqYuCesmGoBs+FujQ==}
+  '@saleor/app-sdk@1.2.0':
+    resolution: {integrity: sha512-rg6dDaCiyMxjZ+mKR3IxAx7AT7knNGvm54l35KxTlg0ufe+05dyHRLjUpt29ZapSjGOv4ccxoNuHw5feAVtFhg==}
     peerDependencies:
       '@aws-sdk/client-dynamodb': ^3.848.0
       '@aws-sdk/lib-dynamodb': ^3.850.0
@@ -16310,7 +16310,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@saleor/app-sdk@0.0.0-pr-20250728123253(graphql@16.11.0)(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/app-sdk@1.2.0(graphql@16.11.0)(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.30.0
