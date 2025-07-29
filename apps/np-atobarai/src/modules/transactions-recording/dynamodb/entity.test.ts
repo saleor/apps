@@ -41,6 +41,7 @@ describe("TransactionRecordConfig", () => {
         }),
         atobaraiTransactionId: mockedAtobaraiTransactionId,
         saleorTrackingNumber: "123456789",
+        saleorMetadataShippingCompanyCode: "59080",
       });
 
       expect(result).toMatchInlineSnapshot(`
@@ -48,6 +49,7 @@ describe("TransactionRecordConfig", () => {
           "PK": "https://mocked.saleor.api/graphql/#mocked-saleor-app-id",
           "SK": "TRANSACTION#np_trans_id",
           "atobaraiTransactionId": "np_trans_id",
+          "saleorMetadataShippingCompanyCode": "59080",
           "saleorTrackingNumber": "123456789",
         }
       `);

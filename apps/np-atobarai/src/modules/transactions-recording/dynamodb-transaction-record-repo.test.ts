@@ -144,6 +144,7 @@ describe("DynamoDBAppTransactionRepo", () => {
             }),
             atobaraiTransactionId: mockedAtobaraiTransactionId,
             saleorTrackingNumber: null,
+            saleorMetadataShippingCompanyCode: null,
             createdAt: "2023-01-01T00:00:00.000Z",
             modifiedAt: "2023-01-01T00:00:00.000Z",
             _et: "AppTransaction",
@@ -165,6 +166,7 @@ describe("DynamoDBAppTransactionRepo", () => {
       expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
         TransactionRecord {
           "atobaraiTransactionId": "np_trans_id",
+          "fulfillmentMetadataShippingCompanyCode": null,
           "saleorTrackingNumber": null,
         }
       `);

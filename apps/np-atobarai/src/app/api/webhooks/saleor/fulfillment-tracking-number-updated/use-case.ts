@@ -4,7 +4,6 @@ import { err, ok, Result } from "neverthrow";
 
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
-import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
@@ -129,10 +128,9 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     });
   }
 
-  private resolveAtobaraiPDCompanyCode(
+  private resolveAtobaraiPDCompanyCodeFromMetadata(
     event: FulfillmentTrackingNumberUpdatedEventFragment,
-    atobaraiConfig: AppChannelConfig,
-  ): AtobaraiShippingCompanyCode {
+  ): AtobaraiShippingCompanyCode | null {
     if (event.fulfillment?.atobaraiPDCompanyCode) {
       this.logger.info("Using Atobarai PD company code from private metadata", {
         atobaraiPDCompanyCode: event.fulfillment.atobaraiPDCompanyCode,
@@ -141,7 +139,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       return createAtobaraiShippingCompanyCode(event.fulfillment.atobaraiPDCompanyCode);
     }
 
-    return atobaraiConfig.shippingCompanyCode;
+    return null;
   }
 
   async execute(params: {
@@ -176,14 +174,17 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
+    const metadataShippingCompanyCode = this.resolveAtobaraiPDCompanyCodeFromMetadata(event);
+
     const reportFulfillmentResult = await apiClient.reportFulfillment(
       createAtobaraiFulfillmentReportPayload({
         trackingNumber,
         atobaraiTransactionId: createAtobaraiTransactionId(pspReference),
-        shippingCompanyCode: this.resolveAtobaraiPDCompanyCode(event, atobaraiConfigResult.value),
+        shippingCompanyCode:
+          metadataShippingCompanyCode || atobaraiConfigResult.value.shippingCompanyCode,
       }),
       {
-        checkForMultipleResults: true,
+        rejectMultipleResults: true,
       },
     );
 
@@ -208,6 +209,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     const appTransaction = new TransactionRecord({
       atobaraiTransactionId,
       saleorTrackingNumber: trackingNumber,
+      fulfillmentMetadataShippingCompanyCode: metadataShippingCompanyCode,
     });
 
     const updateTransactionResult = await this.transactionRecordRepo.updateTransaction(

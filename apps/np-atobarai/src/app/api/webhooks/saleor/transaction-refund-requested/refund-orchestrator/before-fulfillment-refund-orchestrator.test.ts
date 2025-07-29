@@ -2,6 +2,7 @@ import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
+import { getMockedTransactionRecord } from "@/__tests__/mocks/app-transaction/mocked-transaction-record";
 import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
@@ -11,12 +12,12 @@ import {
   RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 
-import { ParsedRefundEvent } from "./refund-event-parser";
-import { RefundOrchestrator } from "./refund-orchestrator";
-import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
+import { ParsedRefundEvent } from "../refund-event-parser";
+import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
+import { BeforeFulfillmentRefundOrchestrator } from "./before-fulfillment-refund-orchestrator";
 
-describe("RefundOrchestrator", () => {
-  let orchestrator: RefundOrchestrator;
+describe("BeforeFulfillmentRefundOrchestrator", () => {
+  let orchestrator: BeforeFulfillmentRefundOrchestrator;
 
   const mockParsedEvent = {
     refundedAmount: 1000,
@@ -31,7 +32,7 @@ describe("RefundOrchestrator", () => {
   } satisfies ParsedRefundEvent;
 
   beforeEach(() => {
-    orchestrator = new RefundOrchestrator();
+    orchestrator = new BeforeFulfillmentRefundOrchestrator();
   });
 
   describe("processRefund", () => {
@@ -42,18 +43,9 @@ describe("RefundOrchestrator", () => {
       apiClient: mockedAtobaraiApiClient,
     };
 
-    describe("when fulfillment has been reported", () => {
-      it("should return failure result", async () => {
-        const result = await orchestrator.processRefund({
-          ...baseParams,
-          hasFulfillmentReported: true,
-        });
-
-        expect(result._unsafeUnwrap()).toBeInstanceOf(
-          TransactionRefundRequestedUseCaseResponse.Failure,
-        );
-        expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundFailureResult);
-      });
+    const transactionRecordBeforeFulfillment = getMockedTransactionRecord({
+      saleorTrackingNumber: null,
+      fulfillmentMetadataShippingCompanyCode: null,
     });
 
     describe("when fulfillment has not been reported", () => {
@@ -84,21 +76,26 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: partialRefundEvent,
-          hasFulfillmentReported: false,
+          transactionRecord: transactionRecordBeforeFulfillment,
         });
 
-        expect(changeTransactionSpy).toHaveBeenCalledWith({
-          transactions: [
-            expect.objectContaining({
-              billed_amount: sourceObjectTotalAmount - refundedAmount,
-              goods: expect.arrayContaining([
-                expect.objectContaining({
-                  goods_price: -(sourceObjectTotalAmount - refundedAmount), // negative amount send to Atobarai
-                }),
-              ]),
-            }),
-          ],
-        });
+        expect(changeTransactionSpy).toHaveBeenCalledWith(
+          {
+            transactions: [
+              expect.objectContaining({
+                billed_amount: sourceObjectTotalAmount - refundedAmount,
+                goods: expect.arrayContaining([
+                  expect.objectContaining({
+                    goods_price: -(sourceObjectTotalAmount - refundedAmount), // negative amount send to Atobarai
+                  }),
+                ]),
+              }),
+            ],
+          },
+          {
+            rejectMultipleResults: true,
+          },
+        );
 
         expect(result._unsafeUnwrap()).toBeInstanceOf(
           TransactionRefundRequestedUseCaseResponse.Success,
@@ -120,7 +117,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: partialRefundEvent,
-          hasFulfillmentReported: false,
+          transactionRecord: transactionRecordBeforeFulfillment,
         });
 
         expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -152,7 +149,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: fullRefundEvent,
-          hasFulfillmentReported: false,
+          transactionRecord: transactionRecordBeforeFulfillment,
         });
 
         expect(spy).toHaveBeenCalledWith(
@@ -164,7 +161,7 @@ describe("RefundOrchestrator", () => {
             ],
           },
           {
-            checkForMultipleResults: true,
+            rejectMultipleResults: true,
           },
         );
 
@@ -208,35 +205,40 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: partialRefundWithLineItemsEvent,
-          hasFulfillmentReported: false,
+          transactionRecord: transactionRecordBeforeFulfillment,
         });
 
-        expect(spy).toHaveBeenCalledWith({
-          transactions: [
-            expect.objectContaining({
-              billed_amount: sourceObjectTotalAmount - refundedAmount,
-              goods: [
-                {
-                  goods_name: "product-sku",
-                  goods_price: mockedSourceObject.lines[0].unitPrice.gross.amount,
-                  quantity:
-                    mockedSourceObject.lines[0].quantity -
-                    partialRefundWithLineItemsEvent.grantedRefund.lines[0].quantity,
-                },
-                {
-                  goods_name: "Voucher",
-                  goods_price: mockedSourceObject.discount?.amount,
-                  quantity: 1,
-                },
-                {
-                  goods_name: "Shipping",
-                  goods_price: mockedSourceObject.shippingPrice.gross.amount,
-                  quantity: 1,
-                },
-              ],
-            }),
-          ],
-        });
+        expect(spy).toHaveBeenCalledWith(
+          {
+            transactions: [
+              expect.objectContaining({
+                billed_amount: sourceObjectTotalAmount - refundedAmount,
+                goods: [
+                  {
+                    goods_name: "product-sku",
+                    goods_price: mockedSourceObject.lines[0].unitPrice.gross.amount,
+                    quantity:
+                      mockedSourceObject.lines[0].quantity -
+                      partialRefundWithLineItemsEvent.grantedRefund.lines[0].quantity,
+                  },
+                  {
+                    goods_name: "Voucher",
+                    goods_price: mockedSourceObject.discount?.amount,
+                    quantity: 1,
+                  },
+                  {
+                    goods_name: "Shipping",
+                    goods_price: mockedSourceObject.shippingPrice.gross.amount,
+                    quantity: 1,
+                  },
+                ],
+              }),
+            ],
+          },
+          {
+            rejectMultipleResults: true,
+          },
+        );
 
         expect(result._unsafeUnwrap()).toBeInstanceOf(
           TransactionRefundRequestedUseCaseResponse.Success,

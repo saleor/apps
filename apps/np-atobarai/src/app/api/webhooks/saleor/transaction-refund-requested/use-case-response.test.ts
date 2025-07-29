@@ -33,7 +33,9 @@ describe("TransactionRefundRequestedUseCaseResponse", () => {
   describe("Failure", () => {
     it("getResponse() returns valid Response with status 200 and refund failure result", async () => {
       const response = new TransactionRefundRequestedUseCaseResponse.Failure({
-        transactionResult: new RefundFailureResult(),
+        transactionResult: new RefundFailureResult({
+          reason: "cancelFailure",
+        }),
       });
 
       const fetchResponse = response.getResponse();
@@ -44,7 +46,7 @@ describe("TransactionRefundRequestedUseCaseResponse", () => {
           "actions": [
             "REFUND",
           ],
-          "message": "Failed to process NP Atobarai transaction refund",
+          "message": "Failed to process NP Atobarai transaction refund: canceling transaction failed",
           "result": "REFUND_FAILURE",
         }
       `);

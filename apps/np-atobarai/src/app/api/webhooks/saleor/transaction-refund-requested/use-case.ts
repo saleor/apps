@@ -6,6 +6,7 @@ import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
 import { BaseUseCase } from "../base-use-case";
@@ -15,7 +16,8 @@ import {
   MalformedRequestResponse,
 } from "../saleor-webhook-responses";
 import { RefundEventParser } from "./refund-event-parser";
-import { RefundOrchestrator } from "./refund-orchestrator";
+import { AfterFulfillmentRefundOrchestrator } from "./refund-orchestrator/after-fulfillment-refund-orchestrator";
+import { BeforeFulfillmentRefundOrchestrator } from "./refund-orchestrator/before-fulfillment-refund-orchestrator";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
@@ -32,7 +34,8 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
   private readonly atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   private readonly transactionRecordRepo: TransactionRecordRepo;
   private readonly eventParser = new RefundEventParser();
-  private readonly refundOrchestrator = new RefundOrchestrator();
+  private readonly beforeFulfillmentRefundOrchestrator = new BeforeFulfillmentRefundOrchestrator();
+  private readonly afterFulfillmentRefundOrchestrator = new AfterFulfillmentRefundOrchestrator();
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
@@ -43,6 +46,16 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
     this.appConfigRepo = deps.appConfigRepo;
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
     this.transactionRecordRepo = deps.transactionRecordRepo;
+  }
+
+  private selectRefundOrchestrator(
+    transactionRecord: TransactionRecord,
+  ): BeforeFulfillmentRefundOrchestrator | AfterFulfillmentRefundOrchestrator {
+    if (transactionRecord.hasFulfillmentReported()) {
+      return this.afterFulfillmentRefundOrchestrator;
+    }
+
+    return this.beforeFulfillmentRefundOrchestrator;
   }
 
   async execute(params: {
@@ -93,12 +106,14 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
       atobaraiEnvironment: appConfig.useSandbox ? "sandbox" : "production",
     });
 
-    const refundResult = await this.refundOrchestrator.processRefund({
+    const orchestrator = this.selectRefundOrchestrator(transactionRecord);
+
+    const refundResult = await orchestrator.processRefund({
       parsedEvent,
       appConfig,
       atobaraiTransactionId,
       apiClient,
-      hasFulfillmentReported: transactionRecord.hasFulfillmentReported(),
+      transactionRecord,
     });
 
     if (refundResult.isErr()) {
