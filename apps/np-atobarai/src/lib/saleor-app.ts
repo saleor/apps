@@ -1,10 +1,8 @@
-import { DynamoAPL } from "@saleor/apl-dynamo";
 import { APL } from "@saleor/app-sdk/APL";
+import { DynamoAPL } from "@saleor/app-sdk/APL/dynamodb";
 import { FileAPL } from "@saleor/app-sdk/APL/file";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
-import { createLogger } from "@/lib/logger";
-import { appInternalTracer } from "@/lib/tracing";
 import { dynamoMainTable } from "@/modules/dynamodb/dynamodb-main-table";
 
 import { env } from "./env";
@@ -14,8 +12,6 @@ switch (env.APL) {
   case "dynamodb": {
     apl = DynamoAPL.create({
       table: dynamoMainTable,
-      tracer: appInternalTracer,
-      logger: createLogger("DynamoAPL"),
       env: {
         APL_TABLE_NAME: env.DYNAMODB_MAIN_TABLE_NAME,
         AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
