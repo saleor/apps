@@ -2,7 +2,7 @@ import { AtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shippin
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
-import { mockedAtobaraiShippingCompanyCode } from "../atobarai/mocked-atobarai-shipping-compnay-code";
+import { mockedAtobaraiShippingCompanyCode } from "../atobarai/mocked-atobarai-shipping-company-code";
 import { mockedAtobaraiTransactionId } from "../atobarai/mocked-atobarai-transaction-id";
 
 type Params = {
