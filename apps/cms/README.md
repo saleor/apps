@@ -29,21 +29,21 @@
 - [pnpm](https://pnpm.io/)
 - [ngrok](https://ngrok.com/)
 - Saleor Cloud account (free!) or local instance
-- An account of one of the cms providers listed above
+- An account with one of the CMS providers listed above
 
 #### Running app locally in development containers
 
 > [!IMPORTANT]
-> You can use devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` manually
+> You can use the devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` manually
 
-The easiest way of running Saleor for local development is to use [development containers](https://containers.dev/).
-If you have Visual Studio Code follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open existing folder in container.
+The easiest way to run Saleor for local development is to use [development containers](https://containers.dev/).
+If you have Visual Studio Code, follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open an existing folder in a container.
 
-Development container only creates container, you still need to start the server.
+The development container only creates a container; you still need to start the server.
 
-Development container will have port opened:
+The development container will have a port opened:
 
-1. `3000` - were app dev server will listen to requests
+1. `3000` - where the app dev server will listen for requests
 
 #### Running app in development mode
 
