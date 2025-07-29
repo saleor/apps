@@ -1,5 +1,7 @@
+import { AuthData } from "@saleor/app-sdk/APL";
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
+import { captureException } from "@sentry/nextjs";
 import { err, ok, Result } from "neverthrow";
 
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
@@ -12,6 +14,7 @@ import {
   createAtobaraiShippingCompanyCode,
 } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { IOrderNoteService } from "@/modules/saleor/order-note-service";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
@@ -30,21 +33,29 @@ type UseCaseExecuteResult = Promise<
   >
 >;
 
+type SaleorOrderNoteServiceFactory = (authData: {
+  saleorApiUrl: SaleorApiUrl;
+  token?: string;
+}) => IOrderNoteService;
+
 export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
   protected logger = createLogger("FulfillmentTrackingNumberUpdatedUseCase");
   protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   private transactionRecordRepo: TransactionRecordRepo;
+  private orderNoteServiceFactory: SaleorOrderNoteServiceFactory;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
     transactionRecordRepo: TransactionRecordRepo;
+    orderNoteServiceFactory: SaleorOrderNoteServiceFactory;
   }) {
     super();
     this.appConfigRepo = deps.appConfigRepo;
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
     this.transactionRecordRepo = deps.transactionRecordRepo;
+    this.orderNoteServiceFactory = deps.orderNoteServiceFactory;
   }
 
   private parseEvent({
@@ -142,12 +153,37 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     return null;
   }
 
+  private async addOrderNote({
+    orderId,
+    message,
+    orderNoteService,
+  }: {
+    orderId: string;
+    message: string;
+    orderNoteService: IOrderNoteService;
+  }) {
+    const result = await orderNoteService.addNote({
+      orderId,
+      message,
+    });
+
+    if (result.isErr()) {
+      this.logger.error("Failed to add order note", {
+        error: result.error,
+        orderId,
+      });
+
+      captureException(result.error);
+    }
+  }
+
   async execute(params: {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: FulfillmentTrackingNumberUpdatedEventFragment;
+    authDataToken: AuthData["token"];
   }): UseCaseExecuteResult {
-    const { appId, saleorApiUrl, event } = params;
+    const { appId, saleorApiUrl, event, authDataToken } = params;
 
     const parsingResult = this.parseEvent({ event, appId });
 
@@ -163,7 +199,18 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       saleorApiUrl,
     });
 
+    const orderNoteService = this.orderNoteServiceFactory({
+      saleorApiUrl: saleorApiUrl,
+      token: authDataToken,
+    });
+
     if (atobaraiConfigResult.isErr()) {
+      await this.addOrderNote({
+        orderId,
+        message: "Failed to report fulfillment: App is not configured",
+        orderNoteService,
+      });
+
       return err(atobaraiConfigResult.error);
     }
 
@@ -193,6 +240,12 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         error: reportFulfillmentResult.error,
         orderId,
         trackingNumber,
+      });
+
+      await this.addOrderNote({
+        orderId,
+        message: `Failed to report fulfillment: NP Atobarai API returned an error`,
+        orderNoteService,
       });
 
       return ok(
@@ -225,8 +278,20 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         error: updateTransactionResult.error,
       });
 
+      await this.addOrderNote({
+        orderId,
+        message: "Failed to report fulfillment: Internal app error",
+        orderNoteService,
+      });
+
       return err(new BrokenAppResponse(updateTransactionResult.error));
     }
+
+    await this.addOrderNote({
+      orderId,
+      message: "Successfully reported fulfillment",
+      orderNoteService,
+    });
 
     return ok(new FulfillmentTrackingNumberUpdatedUseCaseResponse.Success());
   }
