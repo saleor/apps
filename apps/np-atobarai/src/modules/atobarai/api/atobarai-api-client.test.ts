@@ -185,7 +185,7 @@ describe("AtobaraiApiClient", () => {
       `);
     });
 
-    it("should return AtobaraiMultipleResultsError when multiple results are found and checkForMultipleResults is set to true", async () => {
+    it("should return AtobaraiMultipleResultsError when multiple results are found and rejectMultipleResults is set to true", async () => {
       const fetchSpy = vi.spyOn(globalThis, "fetch");
 
       const mockResponse = Response.json({
@@ -212,7 +212,7 @@ describe("AtobaraiApiClient", () => {
       const result = await sandboxClient.registerTransaction(
         mockedAtobaraiRegisterTransactionPayload,
         {
-          checkForMultipleResults: true,
+          rejectMultipleResults: true,
         },
       );
 
@@ -352,7 +352,7 @@ describe("AtobaraiApiClient", () => {
       `);
     });
 
-    it("should return AtobaraiMultipleResultsError when multiple results are found and checkForMultipleResults is set to true", async () => {
+    it("should return AtobaraiMultipleResultsError when multiple results are found and rejectMultipleResults is set to true", async () => {
       const fetchSpy = vi.spyOn(globalThis, "fetch");
 
       const mockResponse = Response.json({
@@ -371,7 +371,7 @@ describe("AtobaraiApiClient", () => {
       fetchSpy.mockResolvedValue(mockResponse);
 
       const result = await sandboxClient.changeTransaction(mockedAtobaraiChangeTransactionPayload, {
-        checkForMultipleResults: true,
+        rejectMultipleResults: true,
       });
 
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiMultipleResultsError);
@@ -506,7 +506,7 @@ describe("AtobaraiApiClient", () => {
       `);
     });
 
-    it("should return AtobaraiMultipleResultsError when multiple results are found and checkForMultipleResults is set to true", async () => {
+    it("should return AtobaraiMultipleResultsError when multiple results are found and rejectMultipleResults is set to true", async () => {
       const fetchSpy = vi.spyOn(globalThis, "fetch");
 
       const mockResponse = Response.json({
@@ -525,7 +525,7 @@ describe("AtobaraiApiClient", () => {
       fetchSpy.mockResolvedValue(mockResponse);
 
       const result = await sandboxClient.reportFulfillment(mockedAtobaraiFulfillmentReportPayload, {
-        checkForMultipleResults: true,
+        rejectMultipleResults: true,
       });
 
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiMultipleResultsError);
@@ -650,7 +650,7 @@ describe("AtobaraiApiClient", () => {
       );
     });
 
-    it("should return AtobaraiMultipleResultsError when multiple results are found and checkForMultipleResults is set to true", async () => {
+    it("should return AtobaraiMultipleResultsError when multiple results are found and rejectMultipleResults is set to true", async () => {
       const fetchSpy = vi.spyOn(globalThis, "fetch");
 
       const mockResponse = Response.json({
@@ -672,7 +672,7 @@ describe("AtobaraiApiClient", () => {
         createAtobaraiCancelTransactionPayload({
           atobaraiTransactionId: mockedAtobaraiTransactionId,
         }),
-        { checkForMultipleResults: true },
+        { rejectMultipleResults: true },
       );
 
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(AtobaraiMultipleResultsError);

@@ -184,7 +184,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
           metadataShippingCompanyCode || atobaraiConfigResult.value.shippingCompanyCode,
       }),
       {
-        checkForMultipleResults: true,
+        rejectMultipleResults: true,
       },
     );
 

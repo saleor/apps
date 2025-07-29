@@ -144,7 +144,7 @@ export class TransactionProcessSessionUseCase extends BaseUseCase {
     const changeTransactionResult = await apiClient.changeTransaction(
       this.prepareChangeTransactionPayload(event, atobaraiConfigResult.value),
       {
-        checkForMultipleResults: true,
+        rejectMultipleResults: true,
       },
     );
 

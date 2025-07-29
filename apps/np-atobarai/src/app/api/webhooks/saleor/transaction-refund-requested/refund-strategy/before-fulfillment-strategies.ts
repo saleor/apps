@@ -24,9 +24,9 @@ import {
 
 import { MalformedRequestResponse } from "../../saleor-webhook-responses";
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
-import { BeforeFulfillmentRefundContext, RefundStrategy } from "./types";
+import { BeforeFulfillmentRefundContext, BeforeFulfillmentRefundStrategy } from "./types";
 
-export class BeforeFulfillmentFullRefundStrategy implements RefundStrategy {
+export class BeforeFulfillmentFullRefundStrategy implements BeforeFulfillmentRefundStrategy {
   private readonly logger = createLogger("BeforeFulfillmentFullRefundStrategy");
 
   async execute(
@@ -39,7 +39,7 @@ export class BeforeFulfillmentFullRefundStrategy implements RefundStrategy {
     });
 
     const cancelResult = await apiClient.cancelTransaction(payload, {
-      checkForMultipleResults: true,
+      rejectMultipleResults: true,
     });
 
     if (cancelResult.isErr()) {
@@ -49,19 +49,9 @@ export class BeforeFulfillmentFullRefundStrategy implements RefundStrategy {
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    if (cancelResult.value.results.length > 1) {
-      this.logger.warn("Multiple results returned from Atobarai cancel transaction", {
-        results: cancelResult.value.results,
-      });
-
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "cancelFailure",
+          }),
         }),
       );
     }
@@ -75,7 +65,9 @@ export class BeforeFulfillmentFullRefundStrategy implements RefundStrategy {
   }
 }
 
-export class BeforeFulfillmentPartialRefundWithLineItemsStrategy implements RefundStrategy {
+export class BeforeFulfillmentPartialRefundWithLineItemsStrategy
+  implements BeforeFulfillmentRefundStrategy
+{
   private readonly logger = createLogger("BeforeFulfillmentPartialRefundWithLineItemsStrategy");
   private readonly goodsBuilder = new PartialRefundWithLineItemsGoodsBuilder();
 
@@ -89,7 +81,9 @@ export class BeforeFulfillmentPartialRefundWithLineItemsStrategy implements Refu
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "missingData",
+          }),
         }),
       );
     }
@@ -125,24 +119,18 @@ export class BeforeFulfillmentPartialRefundWithLineItemsStrategy implements Refu
     apiClient: IAtobaraiApiClient,
     atobaraiTransactionId: AtobaraiTransactionId,
   ) {
-    const changeTransactionResult = await apiClient.changeTransaction(payload);
+    const changeTransactionResult = await apiClient.changeTransaction(payload, {
+      rejectMultipleResults: true,
+    });
 
     if (changeTransactionResult.isErr()) {
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    if (changeTransactionResult.value.results.length > 1) {
-      this.logger.warn("Multiple results returned from Atobarai change transaction", {
-        results: changeTransactionResult.value.results,
+      this.logger.error("Failed to change Atobarai transaction", {
+        error: changeTransactionResult.error,
       });
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({ reason: "changeTransaction" }),
         }),
       );
     }
@@ -156,7 +144,9 @@ export class BeforeFulfillmentPartialRefundWithLineItemsStrategy implements Refu
   }
 }
 
-export class BeforeFulfillmentPartialRefundWithoutLineItemsStrategy implements RefundStrategy {
+export class BeforeFulfillmentPartialRefundWithoutLineItemsStrategy
+  implements BeforeFulfillmentRefundStrategy
+{
   private readonly logger = createLogger("BeforeFulfillmentPartialRefundWithoutLineItemsStrategy");
   private readonly goodsBuilder = new PartialRefundWithoutLineItemsGoodsBuilder();
 
@@ -196,24 +186,20 @@ export class BeforeFulfillmentPartialRefundWithoutLineItemsStrategy implements R
     apiClient: IAtobaraiApiClient,
     atobaraiTransactionId: AtobaraiTransactionId,
   ) {
-    const changeTransactionResult = await apiClient.changeTransaction(payload);
+    const changeTransactionResult = await apiClient.changeTransaction(payload, {
+      rejectMultipleResults: true,
+    });
 
     if (changeTransactionResult.isErr()) {
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    if (changeTransactionResult.value.results.length > 1) {
-      this.logger.warn("Multiple results returned from Atobarai change transaction", {
-        results: changeTransactionResult.value.results,
+      this.logger.error("Failed to change Atobarai transaction", {
+        error: changeTransactionResult.error,
       });
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "changeTransaction",
+          }),
         }),
       );
     }

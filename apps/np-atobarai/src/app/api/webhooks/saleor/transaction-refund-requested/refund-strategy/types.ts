@@ -25,8 +25,14 @@ export interface AfterFulfillmentRefundContext {
   shippingCompanyCode: AtobaraiShippingCompanyCode;
 }
 
-export interface RefundStrategy {
+export interface BeforeFulfillmentRefundStrategy {
   execute(
-    context: BeforeFulfillmentRefundContext | AfterFulfillmentRefundContext,
+    context: BeforeFulfillmentRefundContext,
+  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>>;
+}
+
+export interface AfterFulfillmentRefundStrategy {
+  execute(
+    context: AfterFulfillmentRefundContext,
   ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>>;
 }

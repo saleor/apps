@@ -103,7 +103,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
   async registerTransaction(
     payload: AtobaraiRegisterTransactionPayload,
     options?: {
-      checkForMultipleResults?: boolean;
+      rejectMultipleResults?: boolean;
     },
   ): Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiRegisterTransactionErrors>> {
     const requestUrl = new URL("transactions", this.getBaseUrl());
@@ -141,7 +141,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const parsedResponse = createAtobaraiTransactionSuccessResponse(response);
 
-    if (options?.checkForMultipleResults) {
+    if (options?.rejectMultipleResults) {
       if (parsedResponse.results.length > 1) {
         return err(new AtobaraiMultipleResultsError("Multiple results found"));
       }
@@ -153,7 +153,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
   async changeTransaction(
     payload: AtobaraiChangeTransactionPayload,
     options?: {
-      checkForMultipleResults?: boolean;
+      rejectMultipleResults?: boolean;
     },
   ): Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiChangeTransactionErrors>> {
     const requestUrl = new URL("transactions/update", this.getBaseUrl());
@@ -191,7 +191,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const parsedResponse = createAtobaraiTransactionSuccessResponse(response);
 
-    if (options?.checkForMultipleResults) {
+    if (options?.rejectMultipleResults) {
       if (parsedResponse.results.length > 1) {
         return err(new AtobaraiMultipleResultsError("Multiple results found"));
       }
@@ -242,7 +242,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
   async reportFulfillment(
     payload: AtobaraiFulfillmentReportPayload,
     options?: {
-      checkForMultipleResults?: boolean;
+      rejectMultipleResults?: boolean;
     },
   ): Promise<
     Result<AtobaraiFulfillmentReportSuccessResponse, AtobaraiApiClientFulfillmentReportError>
@@ -282,7 +282,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const parsedResponse = createAtobaraiFulfillmentReportSuccessResponse(response);
 
-    if (options?.checkForMultipleResults) {
+    if (options?.rejectMultipleResults) {
       if (parsedResponse.results.length > 1) {
         return err(new AtobaraiMultipleResultsError("Multiple results found"));
       }
@@ -294,7 +294,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
   async cancelTransaction(
     payload: AtobaraiCancelTransactionPayload,
     options?: {
-      checkForMultipleResults?: boolean;
+      rejectMultipleResults?: boolean;
     },
   ): Promise<
     Result<AtobaraiCancelTransactionSuccessResponse, AtobaraiApiClientCancelTransactionError>
@@ -334,7 +334,7 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
 
     const parsedResponse = createAtobaraiCancelTransactionSuccessResponse(response);
 
-    if (options?.checkForMultipleResults) {
+    if (options?.rejectMultipleResults) {
       if (parsedResponse.results.length > 1) {
         return err(new AtobaraiMultipleResultsError("Multiple results found"));
       }

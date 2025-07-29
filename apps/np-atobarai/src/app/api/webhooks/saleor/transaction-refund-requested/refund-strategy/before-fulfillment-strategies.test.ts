@@ -21,390 +21,283 @@ import {
 } from "./before-fulfillment-strategies";
 import { BeforeFulfillmentRefundContext } from "./types";
 
-describe("Before Fulfillment Refund Strategies", () => {
-  const baseContext = {
-    parsedEvent: {
-      refundedAmount: 100,
-      sourceObjectTotalAmount: 200,
-      channelId: "channel-1",
-      pspReference: "psp-ref",
-      transactionToken: "token",
-      issuedAt: "2023-01-01T00:00:00Z",
-      sourceObject: mockedSourceObject,
-      grantedRefund: null,
-      currency: "JPY",
-    },
-    appConfig: mockedAppChannelConfig,
-    atobaraiTransactionId: mockedAtobaraiTransactionId,
-    apiClient: mockedAtobaraiApiClient,
-  } satisfies BeforeFulfillmentRefundContext;
+const baseContext = {
+  parsedEvent: {
+    refundedAmount: 100,
+    sourceObjectTotalAmount: 200,
+    channelId: "channel-1",
+    pspReference: "psp-ref",
+    transactionToken: "token",
+    issuedAt: "2023-01-01T00:00:00Z",
+    sourceObject: mockedSourceObject,
+    grantedRefund: null,
+    currency: "JPY",
+  },
+  appConfig: mockedAppChannelConfig,
+  atobaraiTransactionId: mockedAtobaraiTransactionId,
+  apiClient: mockedAtobaraiApiClient,
+} satisfies BeforeFulfillmentRefundContext;
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+describe("BeforeFulfillmentFullRefundStrategy", () => {
+  let strategy: BeforeFulfillmentFullRefundStrategy;
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    strategy = new BeforeFulfillmentFullRefundStrategy();
   });
 
-  describe("BeforeFulfillmentFullRefundStrategy", () => {
-    let strategy: BeforeFulfillmentFullRefundStrategy;
+  it("should execute full refund successfully", async () => {
+    const context: BeforeFulfillmentRefundContext = {
+      ...baseContext,
+      parsedEvent: {
+        ...baseContext.parsedEvent,
+        refundedAmount: 200,
+        sourceObjectTotalAmount: 200,
+      },
+    };
 
-    beforeEach(() => {
-      strategy = new BeforeFulfillmentFullRefundStrategy();
+    const mockResponse = createAtobaraiCancelTransactionSuccessResponse({
+      results: [{ np_transaction_id: mockedAtobaraiTransactionId }],
     });
 
-    it("should execute full refund successfully", async () => {
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 200,
-          sourceObjectTotalAmount: 200,
-        },
-      };
+    mockedAtobaraiApiClient.cancelTransaction.mockResolvedValue(ok(mockResponse));
 
-      const mockResponse = createAtobaraiCancelTransactionSuccessResponse({
-        results: [{ np_transaction_id: mockedAtobaraiTransactionId }],
-      });
+    const result = await strategy.execute(context);
 
-      mockedAtobaraiApiClient.cancelTransaction.mockResolvedValue(ok(mockResponse));
+    const value = result._unsafeUnwrap();
 
-      const result = await strategy.execute(context);
+    expect(value).toBeInstanceOf(TransactionRefundRequestedUseCaseResponse.Success);
+    expect(mockedAtobaraiApiClient.cancelTransaction).toHaveBeenCalledTimes(1);
+    expect(mockedAtobaraiApiClient.cancelTransaction).toHaveBeenCalledWith(
+      {
+        transactions: [
+          {
+            np_transaction_id: mockedAtobaraiTransactionId,
+          },
+        ],
+      },
+      {
+        rejectMultipleResults: true,
+      },
+    );
+  });
 
-      expect(result.isOk()).toBe(true);
-      const value = result._unsafeUnwrap();
+  it("should handle API client error gracefully", async () => {
+    const context: BeforeFulfillmentRefundContext = {
+      ...baseContext,
+      parsedEvent: {
+        ...baseContext.parsedEvent,
+        refundedAmount: 200,
+        sourceObjectTotalAmount: 200,
+      },
+    };
 
-      expect(value).toBeInstanceOf(TransactionRefundRequestedUseCaseResponse.Success);
-      expect(mockedAtobaraiApiClient.cancelTransaction).toHaveBeenCalledTimes(1);
-      expect(mockedAtobaraiApiClient.cancelTransaction).toHaveBeenCalledWith(
+    const apiError = new AtobaraiApiClientCancelTransactionError("API Error");
+
+    mockedAtobaraiApiClient.cancelTransaction.mockResolvedValue(err(apiError));
+
+    const result = await strategy.execute(context);
+
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionRefundRequestedUseCaseResponse.Failure,
+    );
+  });
+});
+
+describe("BeforeFulfillmentPartialRefundWithLineItemsStrategy", () => {
+  let strategy: BeforeFulfillmentPartialRefundWithLineItemsStrategy;
+
+  beforeEach(() => {
+    strategy = new BeforeFulfillmentPartialRefundWithLineItemsStrategy();
+  });
+
+  it("should execute partial refund with line items successfully", async () => {
+    const grantedRefund: OrderGrantedRefundFragment = {
+      lines: [
         {
-          transactions: [
-            {
-              np_transaction_id: mockedAtobaraiTransactionId,
-            },
-          ],
+          orderLine: {
+            id: "line-1",
+          },
+          quantity: 1,
         },
+      ],
+      shippingCostsIncluded: false,
+    };
+
+    const context: BeforeFulfillmentRefundContext = {
+      ...baseContext,
+      parsedEvent: {
+        ...baseContext.parsedEvent,
+        refundedAmount: 100,
+        sourceObjectTotalAmount: 200,
+        grantedRefund,
+      },
+    };
+
+    const mockResponse = createAtobaraiTransactionSuccessResponse({
+      results: [
         {
-          checkForMultipleResults: true,
+          np_transaction_id: mockedAtobaraiTransactionId,
+          authori_result: "00",
         },
-      );
+      ],
     });
 
-    it("should handle API client error gracefully", async () => {
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 200,
-          sourceObjectTotalAmount: 200,
-        },
-      };
+    mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(ok(mockResponse));
 
-      const apiError = new AtobaraiApiClientCancelTransactionError("API Error");
+    const result = await strategy.execute(context);
 
-      mockedAtobaraiApiClient.cancelTransaction.mockResolvedValue(err(apiError));
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionRefundRequestedUseCaseResponse.Success,
+    );
+    expect(mockedAtobaraiApiClient.changeTransaction).toHaveBeenCalledTimes(1);
 
-      const result = await strategy.execute(context);
+    // Verify the payload contains adjusted amount (total - refunded)
+    const callArgs = mockedAtobaraiApiClient.changeTransaction.mock.calls[0][0];
+    const expectedAmount =
+      context.parsedEvent.sourceObjectTotalAmount - context.parsedEvent.refundedAmount;
 
-      expect(result._unsafeUnwrap()).toBeInstanceOf(
-        TransactionRefundRequestedUseCaseResponse.Failure,
-      );
-    });
-
-    it("should handle multiple results as failure", async () => {
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 200,
-          sourceObjectTotalAmount: 200,
-        },
-      };
-
-      const mockResponse = createAtobaraiCancelTransactionSuccessResponse({
-        results: [
-          { np_transaction_id: mockedAtobaraiTransactionId },
-          { np_transaction_id: mockedAtobaraiTransactionId },
-        ],
-      });
-
-      mockedAtobaraiApiClient.cancelTransaction.mockResolvedValue(ok(mockResponse));
-
-      const result = await strategy.execute(context);
-
-      expect(result._unsafeUnwrap()).toBeInstanceOf(
-        TransactionRefundRequestedUseCaseResponse.Failure,
-      );
-    });
+    expect(callArgs.transactions[0].billed_amount).toBe(expectedAmount);
   });
 
-  describe("BeforeFulfillmentPartialRefundWithLineItemsStrategy", () => {
-    let strategy: BeforeFulfillmentPartialRefundWithLineItemsStrategy;
-
-    beforeEach(() => {
-      strategy = new BeforeFulfillmentPartialRefundWithLineItemsStrategy();
-    });
-
-    it("should execute partial refund with line items successfully", async () => {
-      const grantedRefund: OrderGrantedRefundFragment = {
-        lines: [
-          {
-            orderLine: {
-              id: "line-1",
-            },
-            quantity: 1,
+  it("should handle API client error gracefully", async () => {
+    const grantedRefund: OrderGrantedRefundFragment = {
+      lines: [
+        {
+          orderLine: {
+            id: "line-1",
           },
-        ],
-        shippingCostsIncluded: false,
-      };
-
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 100,
-          sourceObjectTotalAmount: 200,
-          grantedRefund,
+          quantity: 1,
         },
-      };
+      ],
+      shippingCostsIncluded: false,
+    };
 
-      const mockResponse = createAtobaraiTransactionSuccessResponse({
-        results: [
-          {
-            np_transaction_id: mockedAtobaraiTransactionId,
-            authori_result: "00",
-          },
-        ],
-      });
+    const context: BeforeFulfillmentRefundContext = {
+      ...baseContext,
+      parsedEvent: {
+        ...baseContext.parsedEvent,
+        refundedAmount: 100,
+        sourceObjectTotalAmount: 200,
+        grantedRefund,
+      },
+    };
 
-      mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(ok(mockResponse));
+    const apiError = new AtobaraiApiClientChangeTransactionError("API Error");
 
-      const result = await strategy.execute(context);
+    mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(err(apiError));
 
-      expect(result._unsafeUnwrap()).toBeInstanceOf(
-        TransactionRefundRequestedUseCaseResponse.Success,
-      );
-      expect(mockedAtobaraiApiClient.changeTransaction).toHaveBeenCalledTimes(1);
+    const result = await strategy.execute(context);
 
-      // Verify the payload contains adjusted amount (total - refunded)
-      const callArgs = mockedAtobaraiApiClient.changeTransaction.mock.calls[0][0];
-      const expectedAmount =
-        context.parsedEvent.sourceObjectTotalAmount - context.parsedEvent.refundedAmount;
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionRefundRequestedUseCaseResponse.Failure,
+    );
+  });
+});
 
-      expect(callArgs.transactions[0].billed_amount).toBe(expectedAmount);
-    });
+describe("BeforeFulfillmentPartialRefundWithoutLineItemsStrategy", () => {
+  let strategy: BeforeFulfillmentPartialRefundWithoutLineItemsStrategy;
 
-    it("should handle API client error gracefully", async () => {
-      const grantedRefund: OrderGrantedRefundFragment = {
-        lines: [
-          {
-            orderLine: {
-              id: "line-1",
-            },
-            quantity: 1,
-          },
-        ],
-        shippingCostsIncluded: false,
-      };
-
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 100,
-          sourceObjectTotalAmount: 200,
-          grantedRefund,
-        },
-      };
-
-      const apiError = new AtobaraiApiClientChangeTransactionError("API Error");
-
-      mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(err(apiError));
-
-      const result = await strategy.execute(context);
-
-      expect(result._unsafeUnwrap()).toBeInstanceOf(
-        TransactionRefundRequestedUseCaseResponse.Failure,
-      );
-    });
-
-    it("should handle multiple results as failure", async () => {
-      const grantedRefund: OrderGrantedRefundFragment = {
-        lines: [
-          {
-            orderLine: {
-              id: "line-1",
-            },
-            quantity: 1,
-          },
-        ],
-        shippingCostsIncluded: false,
-      };
-
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 100,
-          sourceObjectTotalAmount: 200,
-          grantedRefund,
-        },
-      };
-
-      const mockResponse = createAtobaraiTransactionSuccessResponse({
-        results: [
-          {
-            np_transaction_id: mockedAtobaraiTransactionId,
-            authori_result: "00",
-          },
-          {
-            np_transaction_id: mockedAtobaraiTransactionId,
-            authori_result: "00",
-          },
-        ],
-      });
-
-      mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(ok(mockResponse));
-
-      const result = await strategy.execute(context);
-
-      expect(result._unsafeUnwrap()).toBeInstanceOf(
-        TransactionRefundRequestedUseCaseResponse.Failure,
-      );
-    });
+  beforeEach(() => {
+    strategy = new BeforeFulfillmentPartialRefundWithoutLineItemsStrategy();
   });
 
-  describe("BeforeFulfillmentPartialRefundWithoutLineItemsStrategy", () => {
-    let strategy: BeforeFulfillmentPartialRefundWithoutLineItemsStrategy;
+  it("should execute partial refund without line items successfully", async () => {
+    const context: BeforeFulfillmentRefundContext = {
+      ...baseContext,
+      parsedEvent: {
+        ...baseContext.parsedEvent,
+        refundedAmount: 100,
+        sourceObjectTotalAmount: 200,
+        grantedRefund: null,
+      },
+    };
 
-    beforeEach(() => {
-      strategy = new BeforeFulfillmentPartialRefundWithoutLineItemsStrategy();
-    });
-
-    it("should execute partial refund without line items successfully", async () => {
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 100,
-          sourceObjectTotalAmount: 200,
-          grantedRefund: null,
+    const mockResponse = createAtobaraiTransactionSuccessResponse({
+      results: [
+        {
+          np_transaction_id: mockedAtobaraiTransactionId,
+          authori_result: "00",
         },
-      };
-
-      const mockResponse = createAtobaraiTransactionSuccessResponse({
-        results: [
-          {
-            np_transaction_id: mockedAtobaraiTransactionId,
-            authori_result: "00",
-          },
-        ],
-      });
-
-      mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(ok(mockResponse));
-
-      const result = await strategy.execute(context);
-
-      expect(result._unsafeUnwrap()).toBeInstanceOf(
-        TransactionRefundRequestedUseCaseResponse.Success,
-      );
-      expect(mockedAtobaraiApiClient.changeTransaction).toHaveBeenCalledTimes(1);
-
-      // Verify the payload contains adjusted amount (total - refunded)
-      const callArgs = mockedAtobaraiApiClient.changeTransaction.mock.calls[0][0];
-      const expectedAmount =
-        context.parsedEvent.sourceObjectTotalAmount - context.parsedEvent.refundedAmount;
-
-      expect(callArgs.transactions[0].billed_amount).toBe(expectedAmount);
+      ],
     });
 
-    it("should handle API client error gracefully", async () => {
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 100,
-          sourceObjectTotalAmount: 200,
-          grantedRefund: null,
+    mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(ok(mockResponse));
+
+    const result = await strategy.execute(context);
+
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionRefundRequestedUseCaseResponse.Success,
+    );
+    expect(mockedAtobaraiApiClient.changeTransaction).toHaveBeenCalledTimes(1);
+
+    // Verify the payload contains adjusted amount (total - refunded)
+    const callArgs = mockedAtobaraiApiClient.changeTransaction.mock.calls[0][0];
+    const expectedAmount =
+      context.parsedEvent.sourceObjectTotalAmount - context.parsedEvent.refundedAmount;
+
+    expect(callArgs.transactions[0].billed_amount).toBe(expectedAmount);
+  });
+
+  it("should handle API client error gracefully", async () => {
+    const context: BeforeFulfillmentRefundContext = {
+      ...baseContext,
+      parsedEvent: {
+        ...baseContext.parsedEvent,
+        refundedAmount: 100,
+        sourceObjectTotalAmount: 200,
+        grantedRefund: null,
+      },
+    };
+
+    const apiError = new AtobaraiApiClientChangeTransactionError("API Error");
+
+    mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(err(apiError));
+
+    const result = await strategy.execute(context);
+
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionRefundRequestedUseCaseResponse.Failure,
+    );
+  });
+
+  it("should calculate adjusted amount correctly for different refund amounts", async () => {
+    const context: BeforeFulfillmentRefundContext = {
+      ...baseContext,
+      parsedEvent: {
+        ...baseContext.parsedEvent,
+        refundedAmount: 50,
+        sourceObjectTotalAmount: 150,
+        currency: "JPY", // Only JPY is supported
+        grantedRefund: null,
+      },
+    };
+
+    const mockResponse = createAtobaraiTransactionSuccessResponse({
+      results: [
+        {
+          np_transaction_id: mockedAtobaraiTransactionId,
+          authori_result: "00",
         },
-      };
-
-      const apiError = new AtobaraiApiClientChangeTransactionError("API Error");
-
-      mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(err(apiError));
-
-      const result = await strategy.execute(context);
-
-      expect(result._unsafeUnwrap()).toBeInstanceOf(
-        TransactionRefundRequestedUseCaseResponse.Failure,
-      );
+      ],
     });
 
-    it("should handle multiple results as failure", async () => {
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 100,
-          sourceObjectTotalAmount: 200,
-          grantedRefund: null,
-        },
-      };
+    mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(ok(mockResponse));
 
-      const mockResponse = createAtobaraiTransactionSuccessResponse({
-        results: [
-          {
-            np_transaction_id: mockedAtobaraiTransactionId,
-            authori_result: "00",
-          },
-          {
-            np_transaction_id: mockedAtobaraiTransactionId,
-            authori_result: "00",
-          },
-        ],
-      });
+    const result = await strategy.execute(context);
 
-      mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(ok(mockResponse));
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionRefundRequestedUseCaseResponse.Success,
+    );
 
-      const result = await strategy.execute(context);
+    // Verify the payload contains adjusted amount
+    const callArgs = mockedAtobaraiApiClient.changeTransaction.mock.calls[0][0];
+    const expectedAmount =
+      context.parsedEvent.sourceObjectTotalAmount - context.parsedEvent.refundedAmount;
 
-      expect(result._unsafeUnwrap()).toBeInstanceOf(
-        TransactionRefundRequestedUseCaseResponse.Failure,
-      );
-    });
-
-    it("should calculate adjusted amount correctly for different refund amounts", async () => {
-      const context: BeforeFulfillmentRefundContext = {
-        ...baseContext,
-        parsedEvent: {
-          ...baseContext.parsedEvent,
-          refundedAmount: 50,
-          sourceObjectTotalAmount: 150,
-          currency: "JPY", // Only JPY is supported
-          grantedRefund: null,
-        },
-      };
-
-      const mockResponse = createAtobaraiTransactionSuccessResponse({
-        results: [
-          {
-            np_transaction_id: mockedAtobaraiTransactionId,
-            authori_result: "00",
-          },
-        ],
-      });
-
-      mockedAtobaraiApiClient.changeTransaction.mockResolvedValue(ok(mockResponse));
-
-      const result = await strategy.execute(context);
-
-      expect(result._unsafeUnwrap()).toBeInstanceOf(
-        TransactionRefundRequestedUseCaseResponse.Success,
-      );
-
-      // Verify the payload contains adjusted amount
-      const callArgs = mockedAtobaraiApiClient.changeTransaction.mock.calls[0][0];
-      const expectedAmount =
-        context.parsedEvent.sourceObjectTotalAmount - context.parsedEvent.refundedAmount;
-
-      expect(callArgs.transactions[0].billed_amount).toBe(expectedAmount);
-    });
+    expect(callArgs.transactions[0].billed_amount).toBe(expectedAmount);
   });
 });

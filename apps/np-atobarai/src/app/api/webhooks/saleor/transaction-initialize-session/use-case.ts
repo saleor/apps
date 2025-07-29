@@ -180,7 +180,7 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
     const registerTransactionResult = await apiClient.registerTransaction(
       this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value),
       {
-        checkForMultipleResults: true,
+        rejectMultipleResults: true,
       },
     );
 

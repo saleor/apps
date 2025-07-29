@@ -1,11 +1,9 @@
+import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
 
 import { createLogger } from "@/lib/logger";
 import { createAtobaraiCancelTransactionPayload } from "@/modules/atobarai/api/atobarai-cancel-transaction-payload";
-import {
-  AtobaraiFulfillmentReportPayload,
-  createAtobaraiFulfillmentReportPayload,
-} from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
+import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
 import {
   AtobaraiRegisterTransactionPayload,
   createAtobaraiRegisterTransactionPayload,
@@ -20,10 +18,7 @@ import {
 } from "@/modules/atobarai/atobarai-goods/refund-goods-builders";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
-import {
-  AtobaraiTransactionId,
-  createAtobaraiTransactionId,
-} from "@/modules/atobarai/atobarai-transaction-id";
+import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { createSaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
 import {
   RefundFailureResult,
@@ -32,9 +27,12 @@ import {
 
 import { MalformedRequestResponse } from "../../saleor-webhook-responses";
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
-import { AfterFulfillmentRefundContext, RefundStrategy } from "./types";
+import { AfterFulfillmentRefundContext, AfterFulfillmentRefundStrategy } from "./types";
 
-export class AfterFulfillmentFullRefundStrategy implements RefundStrategy {
+/**
+ * Handles case when there full refund (whole amount) after fulfillment has been sent.
+ */
+export class AfterFulfillmentFullRefundStrategy implements AfterFulfillmentRefundStrategy {
   private readonly logger = createLogger("AfterFulfillmentFullRefundStrategy");
 
   async execute(
@@ -47,7 +45,7 @@ export class AfterFulfillmentFullRefundStrategy implements RefundStrategy {
     });
 
     const cancelResult = await apiClient.cancelTransaction(payload, {
-      checkForMultipleResults: true,
+      rejectMultipleResults: true,
     });
 
     if (cancelResult.isErr()) {
@@ -57,7 +55,9 @@ export class AfterFulfillmentFullRefundStrategy implements RefundStrategy {
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "cancelFailure",
+          }),
         }),
       );
     }
@@ -71,7 +71,15 @@ export class AfterFulfillmentFullRefundStrategy implements RefundStrategy {
   }
 }
 
-export class AfterFulfillmentPartialRefundWithLineItemsStrategy implements RefundStrategy {
+/**
+ * Handles case when there is a granted refund with line items after fulfillment has been sent.
+ *
+ * @remarks
+ * Calls to NP Atobarai API are not atomic so if one of the steps (cancel, register, fulfillment) fails, we return a failure response and staff user will need to either create new order in Saleor or manually fix the issue in Atobarai.
+ */
+export class AfterFulfillmentPartialRefundWithLineItemsStrategy
+  implements AfterFulfillmentRefundStrategy
+{
   private readonly logger = createLogger("AfterFulfillmentPartialRefundWithLineItemsStrategy");
   private readonly goodsBuilder = new PartialRefundWithLineItemsGoodsBuilder();
 
@@ -87,12 +95,33 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy implements Refun
       shippingCompanyCode,
     } = context;
 
-    const cancelTransactionResult = await this.cancelTransaction(atobaraiTransactionId, apiClient);
+    if (!parsedEvent.grantedRefund) {
+      this.logger.error("No granted refund found in the event");
 
-    if (cancelTransactionResult.isErr()) {
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "missingData",
+          }),
+        }),
+      );
+    }
+
+    const cancelTransactionResult = await apiClient.cancelTransaction(
+      createAtobaraiCancelTransactionPayload({ atobaraiTransactionId }),
+      {
+        rejectMultipleResults: true,
+      },
+    );
+
+    if (cancelTransactionResult.isErr()) {
+      this.logger.error("Failed to cancel Atobarai transaction", {
+        error: cancelTransactionResult.error,
+      });
+
+      return ok(
+        new TransactionRefundRequestedUseCaseResponse.Failure({
+          transactionResult: new RefundFailureResult({ reason: "cancelFailure" }),
         }),
       );
     }
@@ -102,7 +131,7 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy implements Refun
     const atobaraiGoods = this.goodsBuilder.build({
       sourceObject: parsedEvent.sourceObject,
       useSkuAsName: appConfig.skuAsName,
-      grantedRefund: parsedEvent.grantedRefund!,
+      grantedRefund: parsedEvent.grantedRefund,
     });
 
     const payload = createAtobaraiRegisterTransactionPayload({
@@ -122,25 +151,35 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy implements Refun
     const registerTransactionResult = await this.registerTransaction(payload, apiClient);
 
     if (registerTransactionResult.isErr()) {
+      this.logger.error("Failed to register Atobarai transaction", {
+        error: registerTransactionResult.error,
+      });
+
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({ reason: "registerFailure" }),
         }),
       );
     }
 
-    const fullfillmentPayload = createAtobaraiFulfillmentReportPayload({
+    const fulfillmentPayload = createAtobaraiFulfillmentReportPayload({
       atobaraiTransactionId: registerTransactionResult.value,
       trackingNumber,
       shippingCompanyCode,
     });
 
-    const fulfillmentResult = await this.reportFullfillment(fullfillmentPayload, apiClient);
+    const fulfillmentResult = await apiClient.reportFulfillment(fulfillmentPayload, {
+      rejectMultipleResults: true,
+    });
 
     if (fulfillmentResult.isErr()) {
+      this.logger.error("Failed to report Atobarai fulfillment", {
+        error: fulfillmentResult.error,
+      });
+
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({ reason: "fulfillmentFailure" }),
         }),
       );
     }
@@ -153,42 +192,16 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy implements Refun
     );
   }
 
-  private async cancelTransaction(
-    atobaraiTransactionId: AtobaraiTransactionId,
-    apiClient: IAtobaraiApiClient,
-  ) {
-    const cancelTransactionResult = await apiClient.cancelTransaction(
-      createAtobaraiCancelTransactionPayload({ atobaraiTransactionId }),
-      {
-        checkForMultipleResults: true,
-      },
-    );
-
-    if (cancelTransactionResult.isErr()) {
-      return err(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    return ok(null);
-  }
-
   private async registerTransaction(
     payload: AtobaraiRegisterTransactionPayload,
     apiClient: IAtobaraiApiClient,
   ) {
     const registerTransactionResult = await apiClient.registerTransaction(payload, {
-      checkForMultipleResults: true,
+      rejectMultipleResults: true,
     });
 
     if (registerTransactionResult.isErr()) {
-      return err(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
+      return err(registerTransactionResult.error);
     }
 
     const transaction = registerTransactionResult.value.results[0];
@@ -197,34 +210,19 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy implements Refun
       return ok(createAtobaraiTransactionId(transaction.np_transaction_id));
     }
 
-    return err(
-      new TransactionRefundRequestedUseCaseResponse.Failure({
-        transactionResult: new RefundFailureResult(),
-      }),
-    );
-  }
-
-  private async reportFullfillment(
-    payload: AtobaraiFulfillmentReportPayload,
-    apiClient: IAtobaraiApiClient,
-  ) {
-    const reportFullfillmentResult = await apiClient.reportFulfillment(payload, {
-      checkForMultipleResults: true,
-    });
-
-    if (reportFullfillmentResult.isErr()) {
-      return err(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    return ok(null);
+    return err(new BaseError("Register transaction result is not successful"));
   }
 }
 
-export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy implements RefundStrategy {
+/**
+ * Handles case when there is a no granted refund with line items after fulfillment has been sent.
+ *
+ * @remarks
+ * Calls to NP Atobarai API are not atomic so if one of the steps (cancel, register, fulfillment) fails, we return a failure response and staff user will need to either create new order in Saleor or manually fix the issue in Atobarai.
+ */
+export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy
+  implements AfterFulfillmentRefundStrategy
+{
   private readonly logger = createLogger("AfterFulfillmentPartialRefundWithoutLineItemsStrategy");
   private readonly goodsBuilder = new PartialRefundWithoutLineItemsGoodsBuilder();
 
@@ -240,12 +238,23 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy implements Re
       shippingCompanyCode,
     } = context;
 
-    const cancelTransactionResult = await this.cancelTransaction(atobaraiTransactionId, apiClient);
+    const cancelTransactionResult = await apiClient.cancelTransaction(
+      createAtobaraiCancelTransactionPayload({ atobaraiTransactionId }),
+      {
+        rejectMultipleResults: true,
+      },
+    );
 
     if (cancelTransactionResult.isErr()) {
+      this.logger.error("Failed to cancel Atobarai transaction", {
+        error: cancelTransactionResult.error,
+      });
+
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "cancelFailure",
+          }),
         }),
       );
     }
@@ -275,25 +284,39 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy implements Re
     const registerTransactionResult = await this.registerTransaction(payload, apiClient);
 
     if (registerTransactionResult.isErr()) {
+      this.logger.error("Failed to register Atobarai transaction", {
+        error: registerTransactionResult.error,
+      });
+
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "registerFailure",
+          }),
         }),
       );
     }
 
-    const fullfillmentPayload = createAtobaraiFulfillmentReportPayload({
+    const fulfillmentPayload = createAtobaraiFulfillmentReportPayload({
       atobaraiTransactionId: registerTransactionResult.value,
       trackingNumber,
       shippingCompanyCode,
     });
 
-    const fulfillmentResult = await this.reportFullfillment(fullfillmentPayload, apiClient);
+    const fulfillmentResult = await apiClient.reportFulfillment(fulfillmentPayload, {
+      rejectMultipleResults: true,
+    });
 
     if (fulfillmentResult.isErr()) {
+      this.logger.error("Failed to report Atobarai fulfillment", {
+        error: fulfillmentResult.error,
+      });
+
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "fulfillmentFailure",
+          }),
         }),
       );
     }
@@ -306,42 +329,16 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy implements Re
     );
   }
 
-  private async cancelTransaction(
-    atobaraiTransactionId: AtobaraiTransactionId,
-    apiClient: IAtobaraiApiClient,
-  ) {
-    const cancelTransactionResult = await apiClient.cancelTransaction(
-      createAtobaraiCancelTransactionPayload({ atobaraiTransactionId }),
-      {
-        checkForMultipleResults: true,
-      },
-    );
-
-    if (cancelTransactionResult.isErr()) {
-      return err(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    return ok(null);
-  }
-
   private async registerTransaction(
     payload: AtobaraiRegisterTransactionPayload,
     apiClient: IAtobaraiApiClient,
   ) {
     const registerTransactionResult = await apiClient.registerTransaction(payload, {
-      checkForMultipleResults: true,
+      rejectMultipleResults: true,
     });
 
     if (registerTransactionResult.isErr()) {
-      return err(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
+      return err(registerTransactionResult.error);
     }
     const transaction = registerTransactionResult.value.results[0];
 
@@ -349,29 +346,6 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy implements Re
       return ok(createAtobaraiTransactionId(transaction.np_transaction_id));
     }
 
-    return err(
-      new TransactionRefundRequestedUseCaseResponse.Failure({
-        transactionResult: new RefundFailureResult(),
-      }),
-    );
-  }
-
-  private async reportFullfillment(
-    payload: AtobaraiFulfillmentReportPayload,
-    apiClient: IAtobaraiApiClient,
-  ) {
-    const reportFullfillmentResult = await apiClient.reportFulfillment(payload, {
-      checkForMultipleResults: true,
-    });
-
-    if (reportFullfillmentResult.isErr()) {
-      return err(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    return ok(null);
+    return err(new BaseError("Register transaction result is not successful"));
   }
 }
