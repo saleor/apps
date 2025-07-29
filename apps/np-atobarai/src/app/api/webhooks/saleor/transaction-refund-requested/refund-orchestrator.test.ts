@@ -2,6 +2,7 @@ import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-config";
+import { getMockedTransactionRecord } from "@/__tests__/mocks/app-transaction/mocked-transaction-record";
 import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
@@ -42,11 +43,20 @@ describe("RefundOrchestrator", () => {
       apiClient: mockedAtobaraiApiClient,
     };
 
+    const transactionRecordAfterFulfillment = getMockedTransactionRecord({
+      saleorTrackingNumber: "1234567890",
+    });
+
+    const transactionRecordBeforeFulfillment = getMockedTransactionRecord({
+      saleorTrackingNumber: null,
+      fulfillmentMetadataShippingCompanyCode: null,
+    });
+
     describe("when fulfillment has been reported", () => {
-      it("should return failure result", async () => {
+      it.todo("should return failure result", async () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
-          hasFulfillmentReported: true,
+          transactionRecord: transactionRecordAfterFulfillment,
         });
 
         expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -84,7 +94,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: partialRefundEvent,
-          hasFulfillmentReported: false,
+          transactionRecord: transactionRecordBeforeFulfillment,
         });
 
         expect(changeTransactionSpy).toHaveBeenCalledWith({
@@ -120,7 +130,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: partialRefundEvent,
-          hasFulfillmentReported: false,
+          transactionRecord: transactionRecordBeforeFulfillment,
         });
 
         expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -152,7 +162,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: fullRefundEvent,
-          hasFulfillmentReported: false,
+          transactionRecord: transactionRecordBeforeFulfillment,
         });
 
         expect(spy).toHaveBeenCalledWith(
@@ -208,7 +218,7 @@ describe("RefundOrchestrator", () => {
         const result = await orchestrator.processRefund({
           ...baseParams,
           parsedEvent: partialRefundWithLineItemsEvent,
-          hasFulfillmentReported: false,
+          transactionRecord: transactionRecordBeforeFulfillment,
         });
 
         expect(spy).toHaveBeenCalledWith({

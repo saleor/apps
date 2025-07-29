@@ -98,6 +98,7 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
     const appTransaction = new TransactionRecord({
       atobaraiTransactionId,
       saleorTrackingNumber: null,
+      fulfillmentMetadataShippingCompanyCode: null,
     });
 
     const createTransactionResult = await this.appTransactionRepo.createTransaction(

@@ -9,6 +9,7 @@ describe("AppTransaction", () => {
     const transaction = new TransactionRecord({
       atobaraiTransactionId: mockedAtobaraiTransactionId,
       saleorTrackingNumber: "saleor_tracking_number",
+      fulfillmentMetadataShippingCompanyCode: null,
     });
 
     expect(transaction.hasFulfillmentReported()).toBe(true);
@@ -18,6 +19,7 @@ describe("AppTransaction", () => {
     const transaction = new TransactionRecord({
       atobaraiTransactionId: mockedAtobaraiTransactionId,
       saleorTrackingNumber: null,
+      fulfillmentMetadataShippingCompanyCode: null,
     });
 
     expect(transaction.hasFulfillmentReported()).toBe(false);

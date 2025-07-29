@@ -13,16 +13,16 @@ import {
   AtobaraiApiClientChangeTransactionError,
 } from "@/modules/atobarai/api/types";
 
+import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
 import {
-  NoFulfillmentFullRefundStrategy,
-  NoFulfillmentPartialRefundWithLineItemsStrategy,
-  NoFulfillmentPartialRefundWithoutLineItemsStrategy,
-} from "./refund-strategies";
-import { RefundContext } from "./refund-strategy";
-import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
+  BeforeFulfillmentFullRefundStrategy,
+  BeforeFulfillmentPartialRefundWithLineItemsStrategy,
+  BeforeFulfillmentPartialRefundWithoutLineItemsStrategy,
+} from "./before-fulfillment-strategies";
+import { BeforeFulfillmentRefundContext } from "./types";
 
-describe("Refund Strategies", () => {
-  const baseContext: RefundContext = {
+describe("Before Fulfillment Refund Strategies", () => {
+  const baseContext = {
     parsedEvent: {
       refundedAmount: 100,
       sourceObjectTotalAmount: 200,
@@ -37,22 +37,21 @@ describe("Refund Strategies", () => {
     appConfig: mockedAppChannelConfig,
     atobaraiTransactionId: mockedAtobaraiTransactionId,
     apiClient: mockedAtobaraiApiClient,
-    hasFulfillmentReported: false,
-  };
+  } satisfies BeforeFulfillmentRefundContext;
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe("NoFulfillmentFullRefundStrategy", () => {
-    let strategy: NoFulfillmentFullRefundStrategy;
+  describe("BeforeFulfillmentFullRefundStrategy", () => {
+    let strategy: BeforeFulfillmentFullRefundStrategy;
 
     beforeEach(() => {
-      strategy = new NoFulfillmentFullRefundStrategy();
+      strategy = new BeforeFulfillmentFullRefundStrategy();
     });
 
     it("should execute full refund successfully", async () => {
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,
@@ -89,7 +88,7 @@ describe("Refund Strategies", () => {
     });
 
     it("should handle API client error gracefully", async () => {
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,
@@ -110,7 +109,7 @@ describe("Refund Strategies", () => {
     });
 
     it("should handle multiple results as failure", async () => {
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,
@@ -136,11 +135,11 @@ describe("Refund Strategies", () => {
     });
   });
 
-  describe("NoFulfillmentPartialRefundWithLineItemsStrategy", () => {
-    let strategy: NoFulfillmentPartialRefundWithLineItemsStrategy;
+  describe("BeforeFulfillmentPartialRefundWithLineItemsStrategy", () => {
+    let strategy: BeforeFulfillmentPartialRefundWithLineItemsStrategy;
 
     beforeEach(() => {
-      strategy = new NoFulfillmentPartialRefundWithLineItemsStrategy();
+      strategy = new BeforeFulfillmentPartialRefundWithLineItemsStrategy();
     });
 
     it("should execute partial refund with line items successfully", async () => {
@@ -156,7 +155,7 @@ describe("Refund Strategies", () => {
         shippingCostsIncluded: false,
       };
 
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,
@@ -205,7 +204,7 @@ describe("Refund Strategies", () => {
         shippingCostsIncluded: false,
       };
 
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,
@@ -239,7 +238,7 @@ describe("Refund Strategies", () => {
         shippingCostsIncluded: false,
       };
 
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,
@@ -272,15 +271,15 @@ describe("Refund Strategies", () => {
     });
   });
 
-  describe("NoFulfillmentPartialRefundWithoutLineItemsStrategy", () => {
-    let strategy: NoFulfillmentPartialRefundWithoutLineItemsStrategy;
+  describe("BeforeFulfillmentPartialRefundWithoutLineItemsStrategy", () => {
+    let strategy: BeforeFulfillmentPartialRefundWithoutLineItemsStrategy;
 
     beforeEach(() => {
-      strategy = new NoFulfillmentPartialRefundWithoutLineItemsStrategy();
+      strategy = new BeforeFulfillmentPartialRefundWithoutLineItemsStrategy();
     });
 
     it("should execute partial refund without line items successfully", async () => {
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,
@@ -317,7 +316,7 @@ describe("Refund Strategies", () => {
     });
 
     it("should handle API client error gracefully", async () => {
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,
@@ -339,7 +338,7 @@ describe("Refund Strategies", () => {
     });
 
     it("should handle multiple results as failure", async () => {
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,
@@ -372,7 +371,7 @@ describe("Refund Strategies", () => {
     });
 
     it("should calculate adjusted amount correctly for different refund amounts", async () => {
-      const context: RefundContext = {
+      const context: BeforeFulfillmentRefundContext = {
         ...baseContext,
         parsedEvent: {
           ...baseContext.parsedEvent,

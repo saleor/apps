@@ -98,7 +98,7 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
       appConfig,
       atobaraiTransactionId,
       apiClient,
-      hasFulfillmentReported: transactionRecord.hasFulfillmentReported(),
+      transactionRecord,
     });
 
     if (refundResult.isErr()) {

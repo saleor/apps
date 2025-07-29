@@ -110,6 +110,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       new TransactionRecord({
         atobaraiTransactionId: mockedAtobaraiTransactionId,
         saleorTrackingNumber: null,
+        fulfillmentMetadataShippingCompanyCode: null,
       }),
     );
 
@@ -187,6 +188,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       new TransactionRecord({
         atobaraiTransactionId: mockedAtobaraiTransactionId,
         saleorTrackingNumber: null,
+        fulfillmentMetadataShippingCompanyCode: null,
       }),
     );
 
@@ -254,6 +256,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       new TransactionRecord({
         atobaraiTransactionId: mockedAtobaraiTransactionId,
         saleorTrackingNumber: null,
+        fulfillmentMetadataShippingCompanyCode: null,
       }),
     );
 
@@ -379,6 +382,7 @@ describe("TransactionRefundRequestedUseCase", () => {
           new TransactionRecord({
             atobaraiTransactionId: mockedAtobaraiTransactionId,
             saleorTrackingNumber: null,
+            fulfillmentMetadataShippingCompanyCode: null,
           }),
         );
 
@@ -565,6 +569,7 @@ describe("TransactionRefundRequestedUseCase", () => {
           new TransactionRecord({
             atobaraiTransactionId: mockedAtobaraiTransactionId,
             saleorTrackingNumber: null,
+            fulfillmentMetadataShippingCompanyCode: null,
           }),
         );
 
@@ -746,6 +751,7 @@ describe("TransactionRefundRequestedUseCase", () => {
           new TransactionRecord({
             atobaraiTransactionId: mockedAtobaraiTransactionId,
             saleorTrackingNumber: null,
+            fulfillmentMetadataShippingCompanyCode: null,
           }),
         );
 
@@ -910,6 +916,7 @@ describe("TransactionRefundRequestedUseCase", () => {
           new TransactionRecord({
             atobaraiTransactionId: mockedAtobaraiTransactionId,
             saleorTrackingNumber: null,
+            fulfillmentMetadataShippingCompanyCode: null,
           }),
         );
 

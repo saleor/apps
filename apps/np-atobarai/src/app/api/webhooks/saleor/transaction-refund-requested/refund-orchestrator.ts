@@ -1,47 +1,84 @@
 import { BaseError } from "@saleor/errors";
-import { ok, Result } from "neverthrow";
+import { Result } from "neverthrow";
 
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { IAtobaraiApiClient } from "@/modules/atobarai/api/types";
+import { AtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
-import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
+import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
 import { MalformedRequestResponse } from "../saleor-webhook-responses";
 import { ParsedRefundEvent } from "./refund-event-parser";
 import {
-  NoFulfillmentFullRefundStrategy,
-  NoFulfillmentPartialRefundWithLineItemsStrategy,
-  NoFulfillmentPartialRefundWithoutLineItemsStrategy,
-} from "./refund-strategies";
-import { RefundContext } from "./refund-strategy";
+  AfterFulfillmentFullRefundStrategy,
+  AfterFulfillmentPartialRefundWithLineItemsStrategy,
+  AfterFulfillmentPartialRefundWithoutLineItemsStrategy,
+} from "./refund-strategy/after-fulfillment-strategies";
+import {
+  BeforeFulfillmentFullRefundStrategy,
+  BeforeFulfillmentPartialRefundWithLineItemsStrategy,
+  BeforeFulfillmentPartialRefundWithoutLineItemsStrategy,
+} from "./refund-strategy/before-fulfillment-strategies";
+import {
+  AfterFulfillmentRefundContext,
+  BeforeFulfillmentRefundContext,
+} from "./refund-strategy/types";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
 export class RefundOrchestrator {
-  private readonly noFulfillmentFullRefundStrategy = new NoFulfillmentFullRefundStrategy();
-  private readonly noFulfillmentPartialRefundWithLineItemsStrategy =
-    new NoFulfillmentPartialRefundWithLineItemsStrategy();
-  private readonly noFulfillmentPartialRefundWithoutLineItemsStrategy =
-    new NoFulfillmentPartialRefundWithoutLineItemsStrategy();
+  private readonly beforeFullfillmentStrategies = {
+    full: new BeforeFulfillmentFullRefundStrategy(),
+    partialWithLineItems: new BeforeFulfillmentPartialRefundWithLineItemsStrategy(),
+    partialWithoutLineItems: new BeforeFulfillmentPartialRefundWithoutLineItemsStrategy(),
+  };
 
-  private prepareContext({
+  private readonly afterFullfillmentStrategies = {
+    full: new AfterFulfillmentFullRefundStrategy(),
+    partialWithLineItems: new AfterFulfillmentPartialRefundWithLineItemsStrategy(),
+    partialWithoutLineItems: new AfterFulfillmentPartialRefundWithoutLineItemsStrategy(),
+  };
+
+  private prepareBeforeFulfillmentContext({
     parsedEvent,
     appConfig,
     atobaraiTransactionId,
     apiClient,
-    hasFulfillmentReported,
   }: {
     parsedEvent: ParsedRefundEvent;
     appConfig: AppChannelConfig;
     atobaraiTransactionId: AtobaraiTransactionId;
     apiClient: IAtobaraiApiClient;
-    hasFulfillmentReported: boolean;
-  }): RefundContext {
+  }): BeforeFulfillmentRefundContext {
     return {
       parsedEvent,
       appConfig,
       atobaraiTransactionId,
       apiClient,
-      hasFulfillmentReported,
+    };
+  }
+
+  private prepareAfterFulfillmentContext({
+    parsedEvent,
+    appConfig,
+    atobaraiTransactionId,
+    apiClient,
+    trackingNumber,
+    shippingCompanyCode,
+  }: {
+    parsedEvent: ParsedRefundEvent;
+    appConfig: AppChannelConfig;
+    atobaraiTransactionId: AtobaraiTransactionId;
+    apiClient: IAtobaraiApiClient;
+    trackingNumber: string;
+    shippingCompanyCode: AtobaraiShippingCompanyCode;
+  }): AfterFulfillmentRefundContext {
+    return {
+      parsedEvent,
+      appConfig,
+      atobaraiTransactionId,
+      apiClient,
+      trackingNumber,
+      shippingCompanyCode,
     };
   }
 
@@ -62,53 +99,85 @@ export class RefundOrchestrator {
     );
   }
 
+  private selectBeforeFulfillmentStrategy(parsedEvent: ParsedRefundEvent) {
+    if (this.isFullRefundStrategy(parsedEvent)) {
+      return this.beforeFullfillmentStrategies.full;
+    }
+
+    if (this.isPartialRefundWithLineItemsStrategy(parsedEvent)) {
+      return this.beforeFullfillmentStrategies.partialWithLineItems;
+    }
+
+    if (this.isPartialRefundWithoutLineItemsStrategy(parsedEvent)) {
+      return this.beforeFullfillmentStrategies.partialWithoutLineItems;
+    }
+
+    throw new BaseError(
+      `Leaky abstraction: No before fulfillment refund strategy found for event ${parsedEvent.pspReference}`,
+    );
+  }
+
+  private selectAfterFulfillmentStrategy(parsedEvent: ParsedRefundEvent) {
+    if (this.isFullRefundStrategy(parsedEvent)) {
+      return this.afterFullfillmentStrategies.full;
+    }
+    if (this.isPartialRefundWithLineItemsStrategy(parsedEvent)) {
+      return this.afterFullfillmentStrategies.partialWithLineItems;
+    }
+    if (this.isPartialRefundWithoutLineItemsStrategy(parsedEvent)) {
+      return this.afterFullfillmentStrategies.partialWithoutLineItems;
+    }
+    throw new BaseError(
+      `Leaky abstraction: No after fulfillment refund strategy found for event ${parsedEvent.pspReference}`,
+    );
+  }
+
   async processRefund({
     parsedEvent,
     appConfig,
     atobaraiTransactionId,
     apiClient,
-    hasFulfillmentReported,
+    transactionRecord,
   }: {
     parsedEvent: ParsedRefundEvent;
     appConfig: AppChannelConfig;
     atobaraiTransactionId: AtobaraiTransactionId;
     apiClient: IAtobaraiApiClient;
-    hasFulfillmentReported: boolean;
+    transactionRecord: TransactionRecord;
   }): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
-    const context = this.prepareContext({
-      parsedEvent,
-      appConfig,
-      atobaraiTransactionId,
-      apiClient,
-      hasFulfillmentReported,
-    });
+    if (transactionRecord.hasFulfillmentReported()) {
+      const trackingNumber = transactionRecord.saleorTrackingNumber;
 
-    if (hasFulfillmentReported) {
-      /*
-       * TODO: Implement fulfillment reported case
-       */
+      if (!trackingNumber) {
+        throw new BaseError(
+          `Tracking number is required for after fulfillment refund, but not provided for transaction ${atobaraiTransactionId}`,
+        );
+      }
 
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
+      const context = this.prepareAfterFulfillmentContext({
+        parsedEvent,
+        appConfig,
+        atobaraiTransactionId,
+        apiClient,
+        trackingNumber,
+        shippingCompanyCode:
+          transactionRecord.fulfillmentMetadataShippingCompanyCode || appConfig.shippingCompanyCode,
+      });
+
+      const strategy = this.selectAfterFulfillmentStrategy(parsedEvent);
+
+      return strategy.execute(context);
     } else {
-      if (this.isFullRefundStrategy(parsedEvent)) {
-        return this.noFulfillmentFullRefundStrategy.execute(context);
-      }
+      const context = this.prepareBeforeFulfillmentContext({
+        parsedEvent,
+        appConfig,
+        atobaraiTransactionId,
+        apiClient,
+      });
 
-      if (this.isPartialRefundWithoutLineItemsStrategy(parsedEvent)) {
-        return this.noFulfillmentPartialRefundWithoutLineItemsStrategy.execute(context);
-      }
+      const strategy = this.selectBeforeFulfillmentStrategy(parsedEvent);
 
-      if (this.isPartialRefundWithLineItemsStrategy(parsedEvent)) {
-        return this.noFulfillmentPartialRefundWithLineItemsStrategy.execute(context);
-      }
+      return strategy.execute(context);
     }
-
-    throw new BaseError(
-      `Leaky abstraction: No refund strategy found for event ${parsedEvent.pspReference}`,
-    );
   }
 }
