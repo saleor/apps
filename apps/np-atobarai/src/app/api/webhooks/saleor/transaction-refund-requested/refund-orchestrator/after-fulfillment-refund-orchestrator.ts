@@ -60,9 +60,12 @@ export class AfterFulfillmentRefundOrchestrator extends BaseRefundOrchestrator {
     if (this.isPartialRefundWithoutLineItemsStrategy(parsedEvent)) {
       return this.strategies.partialWithoutLineItems;
     }
-    throw new BaseError(
-      `Leaky abstraction: No fulfillment refund strategy found for event ${parsedEvent.pspReference}`,
-    );
+
+    throw new BaseError("No matching refund strategy found for the given event conditions", {
+      props: {
+        pspReference: parsedEvent.pspReference,
+      },
+    });
   }
 
   async processRefund({

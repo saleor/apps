@@ -210,7 +210,13 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy
       return ok(createAtobaraiTransactionId(transaction.np_transaction_id));
     }
 
-    return err(new BaseError("Register transaction result is not successful"));
+    return err(
+      new BaseError("Register transaction result is not successful", {
+        props: {
+          authori_result: transaction.authori_result,
+        },
+      }),
+    );
   }
 }
 
@@ -346,6 +352,12 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy
       return ok(createAtobaraiTransactionId(transaction.np_transaction_id));
     }
 
-    return err(new BaseError("Register transaction result is not successful"));
+    return err(
+      new BaseError("Register transaction result is not successful", {
+        props: {
+          authori_result: transaction.authori_result,
+        },
+      }),
+    );
   }
 }
