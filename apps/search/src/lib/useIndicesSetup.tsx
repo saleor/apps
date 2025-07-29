@@ -10,7 +10,7 @@ export const useIndicesSetupMutation = () => {
   const mutationFn = useCallback(() => {
     return fetch("/api/setup-indices", { method: "POST" }).then((resp) => {
       if (resp.ok) {
-        notifySuccess("Settings has been updated");
+        notifySuccess("Settings have been updated");
       } else {
         notifyError("Settings update failed");
       }
