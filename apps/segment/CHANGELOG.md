@@ -1,5 +1,11 @@
 # saleor-app-segment
 
+## 2.1.14
+
+### Patch Changes
+
+- 4c6ab870: Used DynamoAPL from app-sdk instead local package.
+
 ## 2.1.13
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.18.0
+
+### Minor Changes
+
+- 04066f00: Added DynamoDB APL instantiation
+
 ## 1.17.3
 
 ### Patch Changes
