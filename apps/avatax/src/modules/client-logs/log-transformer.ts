@@ -9,7 +9,7 @@ import {
   type LogByCheckoutOrOrderIdEntity,
   type LogByDateEntity,
   LogsTable,
-} from "./dynamo-schema";
+} from "./dynamo-logs-table";
 import { type Json } from "./json-schema";
 
 export class LogsTransformer {

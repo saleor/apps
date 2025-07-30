@@ -3,20 +3,17 @@ import { z } from "zod";
 
 import { env } from "@/env";
 import { type ClientLogValue } from "@/modules/client-logs/client-log";
-import {
-  createLogsDocumentClient,
-  createLogsDynamoClient,
-} from "@/modules/client-logs/dynamo-client";
 import { LastEvaluatedKey, LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
+import { createDocumentClient, createDynamoClient } from "@/modules/dynamodb/dynamo-client";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 import { router } from "@/modules/trpc/trpc-server";
 
-import { ClientLogDynamoEntityFactory, LogsTable } from "./dynamo-schema";
+import { ClientLogDynamoEntityFactory, LogsTable } from "./dynamo-logs-table";
 
 const procedureWithLogsRepository = protectedClientProcedure.use(({ ctx, next }) => {
   try {
     const logsTable = LogsTable.create({
-      documentClient: createLogsDocumentClient(createLogsDynamoClient()),
+      documentClient: createDocumentClient(createDynamoClient()),
       tableName: env.DYNAMODB_LOGS_TABLE_NAME,
     });
     const logByDateEntity = ClientLogDynamoEntityFactory.createLogByDate(logsTable);
