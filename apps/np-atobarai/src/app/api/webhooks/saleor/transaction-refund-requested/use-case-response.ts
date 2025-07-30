@@ -27,7 +27,7 @@ class Success extends SuccessWebhookResponse {
     const typeSafeResponse: TransactionRefundRequestedSyncSuccess = {
       result: this.transactionResult.result,
       actions: this.transactionResult.actions,
-      message: "Successfully processed NP Atobarai transaction refund",
+      message: this.transactionResult.message,
       pspReference: this.atobaraiTransactionId,
     };
 
@@ -49,7 +49,7 @@ class Failure extends SuccessWebhookResponse {
     const typeSafeResponse: TransactionRefundRequestedSyncFailure = {
       result: this.transactionResult.result,
       actions: this.transactionResult.actions,
-      message: "Failed to process NP Atobarai transaction refund",
+      message: this.transactionResult.message,
     };
 
     return Response.json(typeSafeResponse, {

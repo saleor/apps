@@ -4,6 +4,7 @@ import { err, ok, Result } from "neverthrow";
 
 import { createLogger } from "@/lib/logger";
 
+import { createAtobaraiShippingCompanyCode } from "../atobarai/atobarai-shipping-company-code";
 import {
   AtobaraiTransactionId,
   createAtobaraiTransactionId,
@@ -47,6 +48,7 @@ export class DynamoDBTransactionRecordRepo implements TransactionRecordRepo {
           }),
           atobaraiTransactionId: transaction.atobaraiTransactionId,
           saleorTrackingNumber: transaction.saleorTrackingNumber,
+          saleorMetadataShippingCompanyCode: transaction.fulfillmentMetadataShippingCompanyCode,
         })
         .options({
           condition: {
@@ -162,12 +164,16 @@ export class DynamoDBTransactionRecordRepo implements TransactionRecordRepo {
       }
 
       if (result.Item) {
-        const { atobaraiTransactionId, saleorTrackingNumber } = result.Item;
+        const { atobaraiTransactionId, saleorTrackingNumber, saleorMetadataShippingCompanyCode } =
+          result.Item;
 
         return ok(
           new TransactionRecord({
             atobaraiTransactionId: createAtobaraiTransactionId(atobaraiTransactionId),
             saleorTrackingNumber: saleorTrackingNumber,
+            fulfillmentMetadataShippingCompanyCode: saleorMetadataShippingCompanyCode
+              ? createAtobaraiShippingCompanyCode(saleorMetadataShippingCompanyCode)
+              : null,
           }),
         );
       } else {

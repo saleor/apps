@@ -1,4 +1,4 @@
-import { DynamoAPL } from "@saleor/apl-dynamo";
+import { DynamoAPL } from "@saleor/app-sdk/APL/dynamodb";
 import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -11,9 +11,7 @@ import {
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as transactionRefundRequested from "@/app/api/webhooks/saleor/transaction-refund-requested/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
-import { createLogger } from "@/lib/logger";
 import { RandomId } from "@/lib/random-id";
-import { appInternalTracer } from "@/lib/tracing";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
 import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
@@ -51,9 +49,7 @@ const transactionRecorderRepo = new DynamoDBTransactionRecorderRepo({
 });
 
 const apl = DynamoAPL.create({
-  logger: createLogger("Test logger"),
   table: dynamoMainTable,
-  tracer: appInternalTracer,
   env: {
     AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
     APL_TABLE_NAME: env.DYNAMODB_MAIN_TABLE_NAME,

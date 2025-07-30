@@ -9,6 +9,7 @@ const schema = item({
   SK: string().key(),
   atobaraiTransactionId: string(),
   saleorTrackingNumber: anyOf(string(), nul()),
+  saleorMetadataShippingCompanyCode: anyOf(string(), nul()),
 });
 
 const createEntity = (table: DynamoMainTable) => {

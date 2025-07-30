@@ -1,4 +1,3 @@
-import { mockedAuthData } from "@saleor/apl-dynamo/src/apl/mocks/mocked-auth-data";
 import { GenericRootConfig } from "@saleor/dynamo-config-repository";
 import { BaseError } from "@saleor/errors";
 import { err, ok } from "neverthrow";
@@ -8,6 +7,7 @@ import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedConfigurationId } from "@/__tests__/mocks/app-config/mocked-config-id";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
+import { mockAuthData } from "@/__tests__/mocks/saleor/mocked-auth-data";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedSaleorChannelId } from "@/__tests__/mocks/saleor/mocked-saleor-channel-id";
@@ -39,7 +39,7 @@ const getTestCaller = () => {
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
-      token: mockedAuthData.token,
+      token: mockAuthData.token,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
       appUrl: "https://localhost:3000",

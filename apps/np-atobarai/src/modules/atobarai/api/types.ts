@@ -43,13 +43,13 @@ export interface IAtobaraiApiClient {
   registerTransaction: (
     payload: AtobaraiRegisterTransactionPayload,
     options?: {
-      checkForMultipleResults?: boolean;
+      rejectMultipleResults?: boolean;
     },
   ) => Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiRegisterTransactionErrors>>;
   changeTransaction: (
     payload: AtobaraiChangeTransactionPayload,
     options?: {
-      checkForMultipleResults?: boolean;
+      rejectMultipleResults?: boolean;
     },
   ) => Promise<Result<AtobaraiTransactionSuccessResponse, AtobaraiApiChangeTransactionErrors>>;
   verifyCredentials: () => Promise<
@@ -58,7 +58,7 @@ export interface IAtobaraiApiClient {
   reportFulfillment: (
     payload: AtobaraiFulfillmentReportPayload,
     options?: {
-      checkForMultipleResults?: boolean;
+      rejectMultipleResults?: boolean;
     },
   ) => Promise<
     Result<AtobaraiFulfillmentReportSuccessResponse, AtobaraiApiClientFulfillmentReportError>
@@ -66,7 +66,7 @@ export interface IAtobaraiApiClient {
   cancelTransaction: (
     payload: AtobaraiCancelTransactionPayload,
     options?: {
-      checkForMultipleResults?: boolean;
+      rejectMultipleResults?: boolean;
     },
   ) => Promise<
     Result<AtobaraiCancelTransactionSuccessResponse, AtobaraiApiClientCancelTransactionError>

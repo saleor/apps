@@ -10,9 +10,9 @@ import { IAtobaraiApiClient } from "@/modules/atobarai/api/types";
 import { createAtobaraiCustomer } from "@/modules/atobarai/atobarai-customer";
 import { createAtobaraiDeliveryDestination } from "@/modules/atobarai/atobarai-delivery-destination";
 import {
-  NoFullfillmentPartialRefundWithLineItemsGoodsBuilder,
-  NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder,
-} from "@/modules/atobarai/atobarai-goods//no-fullfillment-refund-goods-builders";
+  PartialRefundWithLineItemsGoodsBuilder,
+  PartialRefundWithoutLineItemsGoodsBuilder,
+} from "@/modules/atobarai/atobarai-goods/refund-goods-builders";
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
@@ -22,15 +22,15 @@ import {
   RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 
-import { MalformedRequestResponse } from "../saleor-webhook-responses";
-import { RefundContext, RefundStrategy } from "./refund-strategy";
-import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
+import { MalformedRequestResponse } from "../../saleor-webhook-responses";
+import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
+import { BeforeFulfillmentRefundContext, BeforeFulfillmentRefundStrategy } from "./types";
 
-export class NoFulfillmentFullRefundStrategy implements RefundStrategy {
-  private readonly logger = createLogger("NoFulfillmentFullRefundStrategy");
+export class BeforeFulfillmentFullRefundStrategy implements BeforeFulfillmentRefundStrategy {
+  private readonly logger = createLogger("BeforeFulfillmentFullRefundStrategy");
 
   async execute(
-    context: RefundContext,
+    context: BeforeFulfillmentRefundContext,
   ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
     const { atobaraiTransactionId, apiClient } = context;
 
@@ -39,7 +39,7 @@ export class NoFulfillmentFullRefundStrategy implements RefundStrategy {
     });
 
     const cancelResult = await apiClient.cancelTransaction(payload, {
-      checkForMultipleResults: true,
+      rejectMultipleResults: true,
     });
 
     if (cancelResult.isErr()) {
@@ -49,19 +49,9 @@ export class NoFulfillmentFullRefundStrategy implements RefundStrategy {
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    if (cancelResult.value.results.length > 1) {
-      this.logger.warn("Multiple results returned from Atobarai cancel transaction", {
-        results: cancelResult.value.results,
-      });
-
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "cancelFailure",
+          }),
         }),
       );
     }
@@ -75,12 +65,14 @@ export class NoFulfillmentFullRefundStrategy implements RefundStrategy {
   }
 }
 
-export class NoFulfillmentPartialRefundWithLineItemsStrategy implements RefundStrategy {
-  private readonly logger = createLogger("NoFulfillmentPartialRefundWithLineItemsStrategy");
-  private readonly goodsBuilder = new NoFullfillmentPartialRefundWithLineItemsGoodsBuilder();
+export class BeforeFulfillmentPartialRefundWithLineItemsStrategy
+  implements BeforeFulfillmentRefundStrategy
+{
+  private readonly logger = createLogger("BeforeFulfillmentPartialRefundWithLineItemsStrategy");
+  private readonly goodsBuilder = new PartialRefundWithLineItemsGoodsBuilder();
 
   async execute(
-    context: RefundContext,
+    context: BeforeFulfillmentRefundContext,
   ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
     const { parsedEvent, appConfig, atobaraiTransactionId, apiClient } = context;
 
@@ -89,7 +81,9 @@ export class NoFulfillmentPartialRefundWithLineItemsStrategy implements RefundSt
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "missingData",
+          }),
         }),
       );
     }
@@ -125,24 +119,18 @@ export class NoFulfillmentPartialRefundWithLineItemsStrategy implements RefundSt
     apiClient: IAtobaraiApiClient,
     atobaraiTransactionId: AtobaraiTransactionId,
   ) {
-    const changeTransactionResult = await apiClient.changeTransaction(payload);
+    const changeTransactionResult = await apiClient.changeTransaction(payload, {
+      rejectMultipleResults: true,
+    });
 
     if (changeTransactionResult.isErr()) {
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    if (changeTransactionResult.value.results.length > 1) {
-      this.logger.warn("Multiple results returned from Atobarai change transaction", {
-        results: changeTransactionResult.value.results,
+      this.logger.error("Failed to change Atobarai transaction", {
+        error: changeTransactionResult.error,
       });
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({ reason: "changeTransaction" }),
         }),
       );
     }
@@ -156,12 +144,14 @@ export class NoFulfillmentPartialRefundWithLineItemsStrategy implements RefundSt
   }
 }
 
-export class NoFulfillmentPartialRefundWithoutLineItemsStrategy implements RefundStrategy {
-  private readonly logger = createLogger("NoFulfillmentPartialRefundWithoutLineItemsStrategy");
-  private readonly goodsBuilder = new NoFullfillmentPartialRefundWithoutLineItemsGoodsBuilder();
+export class BeforeFulfillmentPartialRefundWithoutLineItemsStrategy
+  implements BeforeFulfillmentRefundStrategy
+{
+  private readonly logger = createLogger("BeforeFulfillmentPartialRefundWithoutLineItemsStrategy");
+  private readonly goodsBuilder = new PartialRefundWithoutLineItemsGoodsBuilder();
 
   async execute(
-    context: RefundContext,
+    context: BeforeFulfillmentRefundContext,
   ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
     const { parsedEvent, appConfig, atobaraiTransactionId, apiClient } = context;
 
@@ -196,24 +186,20 @@ export class NoFulfillmentPartialRefundWithoutLineItemsStrategy implements Refun
     apiClient: IAtobaraiApiClient,
     atobaraiTransactionId: AtobaraiTransactionId,
   ) {
-    const changeTransactionResult = await apiClient.changeTransaction(payload);
+    const changeTransactionResult = await apiClient.changeTransaction(payload, {
+      rejectMultipleResults: true,
+    });
 
     if (changeTransactionResult.isErr()) {
-      return ok(
-        new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
-        }),
-      );
-    }
-
-    if (changeTransactionResult.value.results.length > 1) {
-      this.logger.warn("Multiple results returned from Atobarai change transaction", {
-        results: changeTransactionResult.value.results,
+      this.logger.error("Failed to change Atobarai transaction", {
+        error: changeTransactionResult.error,
       });
 
       return ok(
         new TransactionRefundRequestedUseCaseResponse.Failure({
-          transactionResult: new RefundFailureResult(),
+          transactionResult: new RefundFailureResult({
+            reason: "changeTransaction",
+          }),
         }),
       );
     }

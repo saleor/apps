@@ -1,4 +1,3 @@
-import { mockedAuthData } from "@saleor/apl-dynamo/src/apl/mocks/mocked-auth-data";
 import { BaseError } from "@saleor/errors";
 import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-config-repo";
 import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
+import { mockAuthData } from "@/__tests__/mocks/saleor/mocked-auth-data";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
@@ -38,7 +38,7 @@ const getTestCaller = () => {
     caller: testRouter.createCaller({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
-      token: mockedAuthData.token,
+      token: mockAuthData.token,
       configRepo: mockedAppConfigRepo,
       apiClient: mockedGraphqlClient,
       appUrl: "https://localhost:3000",

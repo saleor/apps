@@ -383,7 +383,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
         ],
       },
       {
-        checkForMultipleResults: true,
+        rejectMultipleResults: true,
       },
     );
   });
