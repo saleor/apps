@@ -4,14 +4,14 @@ import "./data/functions";
 import { request, settings, stash } from "pactum";
 import { beforeAll } from "vitest";
 
-import { env } from "../src/env";
+import { envE2e } from "./env-e2e";
 
 beforeAll(() => {
-  const saleorApiUrl = env.TEST_SALEOR_API_URL;
+  const saleorApiUrl = envE2e.TEST_SALEOR_API_URL;
 
   const staffCredentials = {
-    email: env.E2E_USER_NAME,
-    password: env.E2E_USER_PASSWORD,
+    email: envE2e.E2E_USER_NAME,
+    password: envE2e.E2E_USER_PASSWORD,
   };
 
   if (!saleorApiUrl) {
@@ -28,7 +28,7 @@ beforeAll(() => {
     throw new Error("Cannot run tests TEST_SALEOR_API_URL is invalid");
   }
 
-  if (!env.E2E_SALEOR_VERSION) {
+  if (!envE2e.E2E_SALEOR_VERSION) {
     throw new Error("Cannot run tests E2E_SALEOR_VERSION is not set");
   }
 

@@ -1,7 +1,7 @@
-import { env } from "../../src/env";
+import { envE2e } from "../env-e2e";
 
 export const isTestRunAgainstSaleor320AndLower = () => {
-  const saleorVersion = env.E2E_SALEOR_VERSION;
+  const saleorVersion = envE2e.E2E_SALEOR_VERSION;
 
   if (!saleorVersion) {
     throw new Error("SALEOR_VERSION environment variable is not set");

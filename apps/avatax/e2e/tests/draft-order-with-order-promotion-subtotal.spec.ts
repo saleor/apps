@@ -1,7 +1,7 @@
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
 
-import { env } from "../../src/env";
+import { envE2e } from "../env-e2e";
 import {
   CreateDraftOrder,
   CreateOrderLines,
@@ -17,8 +17,8 @@ import { getCompleteMoney, getMoney } from "../utils/money";
 describe("App should calculate taxes on draft order when order promotion is applied TC: AVATAX_32", () => {
   const testCase = e2e("Draft order with order promotion, [pricesEnteredWithTax: False]");
   const staffCredentials = {
-    email: env.E2E_USER_NAME,
-    password: env.E2E_USER_PASSWORD,
+    email: envE2e.E2E_USER_NAME,
+    password: envE2e.E2E_USER_PASSWORD,
   };
 
   const CURRENCY = "USD";
