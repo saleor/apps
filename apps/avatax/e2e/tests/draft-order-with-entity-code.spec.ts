@@ -1,7 +1,7 @@
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
 
-import { env } from "../../src/env";
+import { envE2e } from "../env-e2e";
 import {
   CreateDraftOrder,
   DraftOrderComplete,
@@ -15,8 +15,8 @@ import { getCompleteMoney } from "../utils/money";
 describe("App should exempt taxes on draft order with metadata avataxEntityCode TC: AVATAX_36", () => {
   const testCase = e2e("draft order with avataxEntityCode [pricesEnteredWithTax: True]");
   const staffCredentials = {
-    email: env.E2E_USER_NAME as string,
-    password: env.E2E_USER_PASSWORD as string,
+    email: envE2e.E2E_USER_NAME as string,
+    password: envE2e.E2E_USER_PASSWORD as string,
   };
 
   const metadata = [

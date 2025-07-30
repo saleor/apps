@@ -79,11 +79,6 @@ jobs:
           TEST_SALEOR_API_URL: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/TEST_SALEOR_API_URL"
           E2E_USER_NAME: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_NAME"
           E2E_USER_PASSWORD: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/E2E_USER_PASSWORD"
-          SECRET_KEY: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/SECRET_KEY"
-          DYNAMODB_LOGS_TABLE_NAME: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/DYNAMODB_LOGS_TABLE_NAME"
-          AWS_REGION: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_REGION"
-          AWS_ACCESS_KEY_ID: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_ACCESS_KEY_ID"
-          AWS_SECRET_ACCESS_KEY: "op://Continuous Integration/saleor-app-avatax-e2e-${{ env.SALEOR_VERSION }}/AWS_SECRET_ACCESS_KEY"
       - name: Run AvaTax e2e tests
         env:
           E2E_SALEOR_VERSION: ${{ matrix.saleor }}
