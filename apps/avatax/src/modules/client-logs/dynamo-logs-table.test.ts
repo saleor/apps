@@ -4,7 +4,7 @@ import { EntityParser } from "dynamodb-toolbox";
 import { ulid } from "ulid";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ClientLogDynamoEntityFactory, LogsTable } from "@/modules/client-logs/dynamo-schema";
+import { ClientLogDynamoEntityFactory, LogsTable } from "@/modules/client-logs/dynamo-logs-table";
 
 vi.mock("ulid");
 
@@ -74,7 +74,7 @@ describe("DynamoDB Toolbox Entity Tests", () => {
   describe("LogByDateEntity", () => {
     it("should create an entity with default fields and calculate SK", async () => {
       // We need to make dynamic import, because we mock ulid
-      const { LogsTable, ClientLogDynamoEntityFactory } = await import("./dynamo-schema");
+      const { LogsTable, ClientLogDynamoEntityFactory } = await import("./dynamo-logs-table");
       const logsTable = LogsTable.create({
         // @ts-expect-error mocking DynamoDBDocumentClient
         documentClient: mockDocumentClient,

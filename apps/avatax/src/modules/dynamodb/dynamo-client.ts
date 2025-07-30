@@ -1,12 +1,12 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-export const createLogsDynamoClient = () => {
+export const createDynamoClient = () => {
   const client = new DynamoDBClient();
 
   return client;
 };
 
-export const createLogsDocumentClient = (client: DynamoDBClient) => {
+export const createDocumentClient = (client: DynamoDBClient) => {
   return DynamoDBDocumentClient.from(client);
 };
