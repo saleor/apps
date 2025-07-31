@@ -17,8 +17,11 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "catalog:",
     "@aws-sdk/client-s3": "^3.332.0",
+    "@aws-sdk/lib-dynamodb": "catalog:",
     "@aws-sdk/s3-request-presigner": "3.332.0",
+    "@aws-sdk/util-dynamodb": "catalog:",
     "@hookform/resolvers": "catalog:",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/api-logs": "catalog:",
@@ -45,6 +48,7 @@
     "@vercel/otel": "catalog:",
     "@vitejs/plugin-react": "4.3.4",
     "dotenv": "catalog:",
+    "dynamodb-toolbox": "catalog:",
     "fast-xml-parser": "^4.0.15",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",

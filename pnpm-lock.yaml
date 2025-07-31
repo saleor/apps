@@ -480,6 +480,15 @@ importers:
 
   apps/cms:
     dependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1
+      '@aws-sdk/lib-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
+      '@aws-sdk/util-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@datocms/cma-client-browser':
         specifier: 2.0.0
         version: 2.0.0
@@ -564,6 +573,9 @@ importers:
       dotenv:
         specifier: 'catalog:'
         version: 16.3.1
+      dynamodb-toolbox:
+        specifier: 'catalog:'
+        version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       graphql:
         specifier: 'catalog:'
         version: 16.7.1
@@ -670,6 +682,15 @@ importers:
 
   apps/klaviyo:
     dependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1
+      '@aws-sdk/lib-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
+      '@aws-sdk/util-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@opentelemetry/api':
         specifier: 'catalog:'
         version: 1.9.0
@@ -724,6 +745,9 @@ importers:
       dotenv:
         specifier: 'catalog:'
         version: 16.3.1
+      dynamodb-toolbox:
+        specifier: 'catalog:'
+        version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       graphql:
         specifier: 'catalog:'
         version: 16.7.1
@@ -1050,12 +1074,21 @@ importers:
 
   apps/products-feed:
     dependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1
       '@aws-sdk/client-s3':
         specifier: ^3.332.0
         version: 3.332.0
+      '@aws-sdk/lib-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@aws-sdk/s3-request-presigner':
         specifier: 3.332.0
         version: 3.332.0
+      '@aws-sdk/util-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
         specifier: 'catalog:'
         version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
@@ -1134,6 +1167,9 @@ importers:
       dotenv:
         specifier: 'catalog:'
         version: 16.3.1
+      dynamodb-toolbox:
+        specifier: 'catalog:'
+        version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       fast-xml-parser:
         specifier: ^4.0.15
         version: 4.0.15
@@ -1249,6 +1285,15 @@ importers:
 
   apps/search:
     dependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1
+      '@aws-sdk/lib-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
+      '@aws-sdk/util-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
         specifier: 'catalog:'
         version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
@@ -1336,6 +1381,9 @@ importers:
       dotenv:
         specifier: 'catalog:'
         version: 16.3.1
+      dynamodb-toolbox:
+        specifier: 'catalog:'
+        version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       graphql:
         specifier: 'catalog:'
         version: 16.7.1
@@ -1653,6 +1701,15 @@ importers:
 
   apps/smtp:
     dependencies:
+      '@aws-sdk/client-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1
+      '@aws-sdk/lib-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
+      '@aws-sdk/util-dynamodb':
+        specifier: 'catalog:'
+        version: 3.651.1(@aws-sdk/client-dynamodb@3.651.1)
       '@hookform/resolvers':
         specifier: 'catalog:'
         version: 3.3.1(react-hook-form@7.43.9(react@18.2.0))
@@ -1734,6 +1791,9 @@ importers:
       dotenv:
         specifier: 'catalog:'
         version: 16.3.1
+      dynamodb-toolbox:
+        specifier: 'catalog:'
+        version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
       graphql:
         specifier: 'catalog:'
         version: 16.7.1
