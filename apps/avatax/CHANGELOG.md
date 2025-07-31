@@ -1,5 +1,17 @@
 # saleor-app-avatax
 
+## 1.18.1
+
+### Patch Changes
+
+- 51b4d859: Installed DynamoDB APL (controlled via env variable).
+
+## 1.18.0
+
+### Minor Changes
+
+- 04066f00: Added DynamoDB APL instantiation
+
 ## 1.17.3
 
 ### Patch Changes

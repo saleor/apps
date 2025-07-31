@@ -2,7 +2,7 @@ import { isTestRunAgainstSaleor320AndLower } from "e2e/utils/saleor-version-comp
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
 
-import { env } from "../../src/env";
+import { envE2e } from "../env-e2e";
 import {
   CreateDraftOrder,
   CreateOrderLines,
@@ -19,8 +19,8 @@ describe("App should calculate taxes on draft order with products on catalog pro
     "Draft order with products on catalog promotion [pricesEnteredWithTax: True]",
   );
   const staffCredentials = {
-    email: env.E2E_USER_NAME,
-    password: env.E2E_USER_PASSWORD,
+    email: envE2e.E2E_USER_NAME,
+    password: envE2e.E2E_USER_PASSWORD,
   };
 
   const CURRENCY = "USD";

@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 1.3.15
+
+### Patch Changes
+
+- 51b4d859: Installed DynamoDB APL (controlled via env variable).
+
 ## 1.3.14
 
 ### Patch Changes

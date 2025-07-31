@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.23.15
+
+### Patch Changes
+
+- 51b4d859: Installed DynamoDB APL (controlled via env variable).
+
 ## 1.23.14
 
 ### Patch Changes
