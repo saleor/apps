@@ -4,6 +4,7 @@ import { CommonErrorProps, CriticalError, ExpectedError } from "../../error";
 export const TaxIncompletePayloadErrors = {
   MissingAddressError: ExpectedError.subclass("MissingAddressError"),
   MissingLinesError: ExpectedError.subclass("MissingLinesError"),
+  InvalidZipForStateError: ExpectedError.subclass("InvalidZipForStateError"),
 };
 
 // Error thrown when expected data is not present in the payload.
