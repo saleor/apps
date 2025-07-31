@@ -58,8 +58,8 @@ export class CalculateTaxesUseCase {
     return payloadVerificationResult.mapErr((innerError) => {
       switch (innerError["constructor"]) {
         case TaxIncompletePayloadErrors.MissingLinesError:
-
-        case TaxIncompletePayloadErrors.MissingAddressError: {
+        case TaxIncompletePayloadErrors.MissingAddressError:
+        case TaxIncompletePayloadErrors.InvalidZipForStateError: {
           return new CalculateTaxesUseCase.ExpectedIncompletePayloadError(
             "Payload is incomplete and taxes cant be calculated. This is expected",
             {

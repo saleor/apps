@@ -10,6 +10,7 @@ import {
   AvataxInvalidCredentialsError,
   AvataxStringLengthError,
   AvataxTransactionAlreadyCancelledError,
+  TaxIncompletePayloadErrors,
 } from "../taxes/tax-error";
 import { assertUnreachableWithoutThrow } from "../utils/assert-unreachable";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
@@ -27,6 +28,7 @@ export class AvataxErrorsParser {
       "EntityNotFoundError",
       "TransactionAlreadyCancelled",
       "PermissionRequired",
+      "InvalidZipForStateError",
     ]),
     details: z.array(
       z.object({
@@ -93,6 +95,14 @@ export class AvataxErrorsParser {
 
       case "PermissionRequired": {
         return new AvataxForbiddenAccessError(parsedError.data.code, {
+          props: {
+            description: parsedError.data.details[0].description,
+          },
+        });
+      }
+
+      case "InvalidZipForStateError": {
+        return new TaxIncompletePayloadErrors.InvalidZipForStateError(parsedError.data.code, {
           props: {
             description: parsedError.data.details[0].description,
           },
