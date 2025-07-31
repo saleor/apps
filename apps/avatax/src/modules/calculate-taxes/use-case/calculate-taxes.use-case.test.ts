@@ -7,6 +7,7 @@ import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calcul
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
 import { ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
+import { TaxIncompletePayloadErrors } from "@/modules/taxes/tax-error";
 
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
@@ -291,6 +292,56 @@ describe("CalculateTaxesUseCase", () => {
       log: expect.objectContaining({
         message: "Error during tax calculation",
       }),
+    });
+  });
+
+  describe("User error handling", () => {
+    it("Returns error when AvaTax API throws InvalidZipForStateError", async () => {
+      mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+      const invalidZipError = new TaxIncompletePayloadErrors.InvalidZipForStateError(
+        "InvalidZipForStateError",
+        {
+          props: {
+            description: "The ZIP code provided is invalid for the state specified",
+          },
+        },
+      );
+
+      // Mock AvaTax API to throw InvalidZipForStateError
+      mockedAvataxClient.createTransaction.mockRejectedValueOnce(invalidZipError);
+
+      const result = await instance.calculateTaxes(getBasePayload(), getMockAuthData());
+
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        expect(result.error).toBeInstanceOf(CalculateTaxesUseCase.FailedCalculatingTaxesError);
+        expect(result.error.message).toBe("Failed to calculate taxes");
+        expect(result.error.errors).toContain(invalidZipError);
+      }
+    });
+
+    it("Does not log exceptions caused by user as error or warning level", async () => {
+      mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+      const invalidZipError = new TaxIncompletePayloadErrors.InvalidZipForStateError(
+        "InvalidZipForStateError",
+        {
+          props: {
+            description: "The ZIP code provided is invalid for the state specified",
+          },
+        },
+      );
+
+      mockedAvataxClient.createTransaction.mockRejectedValueOnce(invalidZipError);
+
+      const loggerErrorSpy = vi.spyOn(instance["logger"], "error");
+      const loggerWarnSpy = vi.spyOn(instance["logger"], "warn");
+
+      await instance.calculateTaxes(getBasePayload(), getMockAuthData());
+
+      expect(loggerErrorSpy).not.toHaveBeenCalled();
+      expect(loggerWarnSpy).not.toHaveBeenCalled();
     });
   });
 });
