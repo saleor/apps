@@ -7,6 +7,7 @@ import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calcul
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
 import { ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
+import { AvataxSystemError, AvataxUserInputError } from "@/modules/taxes/tax-error";
 
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
@@ -291,6 +292,86 @@ describe("CalculateTaxesUseCase", () => {
       log: expect.objectContaining({
         message: "Error during tax calculation",
       }),
+    });
+  });
+
+  describe("User error handling", () => {
+    it("Returns HTTP 400 when AvaTax API throws error caused by user", async () => {
+      mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+      // Create AvataxUserInputError for InvalidZipForStateError
+      const userInputError = new AvataxUserInputError("GetTaxError", {
+        props: {
+          faultSubCode: "InvalidZipForStateError",
+          description:
+            "The provided address contains a postal code and state combination that is not valid.",
+          message: "Tax calculation cannot be determined. Zip is not valid for the state.",
+        },
+      });
+
+      // Mock AvaTax API to throw user input error
+      mockedAvataxClient.createTransaction.mockRejectedValueOnce(userInputError);
+
+      const result = await instance.calculateTaxes(getBasePayload(), getMockAuthData());
+
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        // Should be mapped to ExpectedIncompletePayloadError (HTTP 400) not FailedCalculatingTaxesError (HTTP 500)
+        expect(result.error).toBeInstanceOf(CalculateTaxesUseCase.ExpectedIncompletePayloadError);
+        expect(result.error.message).toBe(
+          "Payload is incomplete and taxes cant be calculated. This is expected",
+        );
+        expect(result.error.errors).toContain(userInputError);
+      }
+    });
+
+    it("Returns HTTP 500 when AvaTax API throws other errors", async () => {
+      mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+      // Create AvataxSystemError for unknown system fault
+      const systemError = new AvataxSystemError("GetTaxError", {
+        props: {
+          faultSubCode: "UnknownSystemError",
+          description: "Some system error that is not user-caused",
+          message: "System error that should return HTTP 500",
+        },
+      });
+
+      // Mock AvaTax API to throw system error
+      mockedAvataxClient.createTransaction.mockRejectedValueOnce(systemError);
+
+      const result = await instance.calculateTaxes(getBasePayload(), getMockAuthData());
+
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        // Should remain as FailedCalculatingTaxesError (HTTP 500)
+        expect(result.error).toBeInstanceOf(CalculateTaxesUseCase.FailedCalculatingTaxesError);
+        expect(result.error.errors).toHaveLength(1);
+      }
+    });
+
+    it("Does not log exceptions caused by user input errors as error or warning level", async () => {
+      mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+      // Create AvataxUserInputError for InvalidZipForStateError
+      const userInputError = new AvataxUserInputError("GetTaxError", {
+        props: {
+          faultSubCode: "InvalidZipForStateError",
+          description:
+            "The provided address contains a postal code and state combination that is not valid.",
+          message: "Tax calculation cannot be determined. Zip is not valid for the state.",
+        },
+      });
+
+      mockedAvataxClient.createTransaction.mockRejectedValueOnce(userInputError);
+
+      const loggerErrorSpy = vi.spyOn(instance["logger"], "error");
+      const loggerWarnSpy = vi.spyOn(instance["logger"], "warn");
+
+      await instance.calculateTaxes(getBasePayload(), getMockAuthData());
+
+      expect(loggerErrorSpy).not.toHaveBeenCalled();
+      expect(loggerWarnSpy).not.toHaveBeenCalled();
     });
   });
 });

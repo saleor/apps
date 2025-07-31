@@ -5,14 +5,36 @@ import { BaseError } from "../../error";
 import {
   AvataxEntityNotFoundError,
   AvataxForbiddenAccessError,
-  AvataxGetTaxError,
   AvataxInvalidAddressError,
   AvataxInvalidCredentialsError,
   AvataxStringLengthError,
+  AvataxSystemError,
   AvataxTransactionAlreadyCancelledError,
+  AvataxUserInputError,
 } from "../taxes/tax-error";
 import { assertUnreachableWithoutThrow } from "../utils/assert-unreachable";
 import { normalizeAvaTaxError } from "./avatax-error-normalizer";
+
+// AvaTax fault codes that indicate user input errors (should return HTTP 400)
+const USER_INPUT_FAULT_CODES = new Set([
+  "InvalidZipForStateError",
+  "InvalidAddress",
+  "MissingAddress",
+  "InvalidPostalCode",
+  "InvalidParameterValue",
+  "MissingLine",
+  "InvalidAddressTextCase",
+  "AddressLocationNotFound",
+  "NotEnoughAddressesInfo",
+  "CompanyNotFound",
+  "InvalidDocumentType",
+  "DocumentNotFound",
+  "MissingRequiredFields",
+  "InvalidParameterDataType",
+  "RequiredElementMissing",
+  "InvalidDateRange",
+  "DuplicateEntry",
+]);
 
 export class AvataxErrorsParser {
   static UnhandledErrorShapeError = BaseError.subclass("UnhandledErrorShapeError");
@@ -60,7 +82,31 @@ export class AvataxErrorsParser {
       }
 
       case "GetTaxError": {
-        return AvataxGetTaxError.normalize(parsedError);
+        // Parse faultSubCode from details to determine if this is a user input error or system error
+        const firstDetail = parsedError.data.details[0];
+        const faultSubCode = firstDetail?.faultSubCode;
+        const description = firstDetail?.description || "";
+        const message = firstDetail?.message || "";
+
+        if (faultSubCode && USER_INPUT_FAULT_CODES.has(faultSubCode)) {
+          // User input error - return HTTP 400
+          return new AvataxUserInputError(parsedError.data.code, {
+            props: {
+              faultSubCode,
+              description,
+              message,
+            },
+          });
+        } else {
+          // System/app error - return HTTP 500
+          return new AvataxSystemError(parsedError.data.code, {
+            props: {
+              faultSubCode: faultSubCode || "Unknown",
+              description,
+              message,
+            },
+          });
+        }
       }
 
       case "AuthenticationException": {

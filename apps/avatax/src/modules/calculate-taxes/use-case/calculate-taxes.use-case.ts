@@ -24,7 +24,7 @@ import {
   AvataxCalculateTaxesAdapter,
   AvataxCalculateTaxesResponse,
 } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
-import { TaxIncompletePayloadErrors } from "../../taxes/tax-error";
+import { AvataxUserInputError, TaxIncompletePayloadErrors } from "../../taxes/tax-error";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
 
@@ -58,7 +58,6 @@ export class CalculateTaxesUseCase {
     return payloadVerificationResult.mapErr((innerError) => {
       switch (innerError["constructor"]) {
         case TaxIncompletePayloadErrors.MissingLinesError:
-
         case TaxIncompletePayloadErrors.MissingAddressError: {
           return new CalculateTaxesUseCase.ExpectedIncompletePayloadError(
             "Payload is incomplete and taxes cant be calculated. This is expected",
@@ -224,19 +223,36 @@ export class CalculateTaxesUseCase {
           errors: [err],
         });
       },
-    ).map((results) => {
-      this.logger.info("Taxes calculated - returning response do Saleor");
+    )
+      .mapErr((error) => {
+        const underlyingError = error.errors?.[0];
 
-      CalculateTaxesLogRequest.createSuccessLog({
-        sourceId: payload.taxBase.sourceObject.id,
-        channelId: payload.taxBase.channel.id,
-        sourceType: "checkout",
-        calculatedTaxesResult: results,
+        // Check if this is a user input error (should return HTTP 400)
+        if (underlyingError instanceof AvataxUserInputError) {
+          return new CalculateTaxesUseCase.ExpectedIncompletePayloadError(
+            "Payload is incomplete and taxes cant be calculated. This is expected",
+            {
+              errors: [underlyingError],
+            },
+          );
+        }
+
+        // Keep other errors as-is (including system errors which should return HTTP 500)
+        return error;
       })
-        .mapErr(captureException)
-        .map(logWriter.writeLog);
+      .map((results) => {
+        this.logger.info("Taxes calculated - returning response do Saleor");
 
-      return results;
-    });
+        CalculateTaxesLogRequest.createSuccessLog({
+          sourceId: payload.taxBase.sourceObject.id,
+          channelId: payload.taxBase.channel.id,
+          sourceType: "checkout",
+          calculatedTaxesResult: results,
+        })
+          .mapErr(captureException)
+          .map(logWriter.writeLog);
+
+        return results;
+      });
   }
 }
