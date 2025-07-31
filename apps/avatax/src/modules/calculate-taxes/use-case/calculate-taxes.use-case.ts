@@ -219,40 +219,34 @@ export class CalculateTaxesUseCase {
           .mapErr(captureException)
           .map(logWriter.writeLog);
 
-        return new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {
-          errors: [err],
-        });
-      },
-    )
-      .mapErr((error) => {
-        const underlyingError = error.errors?.[0];
-
         // Check if this is a user input error (should return HTTP 400)
-        if (underlyingError instanceof AvataxUserInputError) {
+        if (err instanceof AvataxUserInputError) {
           return new CalculateTaxesUseCase.ExpectedIncompletePayloadError(
             "Payload is incomplete and taxes cant be calculated. This is expected",
             {
-              errors: [underlyingError],
+              errors: [err],
             },
           );
         }
 
-        // Keep other errors as-is (including system errors which should return HTTP 500)
-        return error;
+        // System errors and all other errors should return HTTP 500
+        return new CalculateTaxesUseCase.FailedCalculatingTaxesError("Failed to calculate taxes", {
+          errors: [err],
+        });
+      },
+    ).map((results) => {
+      this.logger.info("Taxes calculated - returning response do Saleor");
+
+      CalculateTaxesLogRequest.createSuccessLog({
+        sourceId: payload.taxBase.sourceObject.id,
+        channelId: payload.taxBase.channel.id,
+        sourceType: "checkout",
+        calculatedTaxesResult: results,
       })
-      .map((results) => {
-        this.logger.info("Taxes calculated - returning response do Saleor");
+        .mapErr(captureException)
+        .map(logWriter.writeLog);
 
-        CalculateTaxesLogRequest.createSuccessLog({
-          sourceId: payload.taxBase.sourceObject.id,
-          channelId: payload.taxBase.channel.id,
-          sourceType: "checkout",
-          calculatedTaxesResult: results,
-        })
-          .mapErr(captureException)
-          .map(logWriter.writeLog);
-
-        return results;
-      });
+      return results;
+    });
   }
 }
