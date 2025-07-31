@@ -1,18 +1,11 @@
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { Table } from "dynamodb-toolbox";
 
-import { env } from "@/lib/env";
-import {
-  createDynamoDBClient,
-  createDynamoDBDocumentClient,
-} from "@/modules/dynamodb/dynamodb-client";
+import { createDynamoDBClient, createDynamoDBDocumentClient } from "./dynamodb-client";
 
 type PartitionKey = { name: "PK"; type: "string" };
 type SortKey = { name: "SK"; type: "string" };
 
-/**
- * This table is used to store all relevant data for the Segment application meaning: APL, configuration, etc.
- */
 export class DynamoMainTable extends Table<PartitionKey, SortKey> {
   private constructor(args: ConstructorParameters<typeof Table<PartitionKey, SortKey>>[number]) {
     super(args);
@@ -68,5 +61,5 @@ const documentClient = createDynamoDBDocumentClient(client);
 
 export const dynamoMainTable = DynamoMainTable.create({
   documentClient: documentClient,
-  tableName: env.DYNAMODB_MAIN_TABLE_NAME,
+  tableName: process.env.DYNAMODB_MAIN_TABLE_NAME as string,
 });
