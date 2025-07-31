@@ -32,6 +32,7 @@ switch (env.APL) {
     break;
   }
 
+  // todo: deprecate in sdk, remove in apps, clean envs
   case "saleor-cloud": {
     if (!env.REST_APL_ENDPOINT || !env.REST_APL_TOKEN) {
       throw new Error("Rest APL is not configured - missing env variables. Check saleor-app.ts");
