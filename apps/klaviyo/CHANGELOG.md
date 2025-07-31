@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.13.14
+
+### Patch Changes
+
+- 51b4d859: Installed DynamoDB APL (controlled via env variable).
+
 ## 1.13.13
 
 ### Patch Changes
