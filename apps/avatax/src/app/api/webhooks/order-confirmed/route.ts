@@ -23,6 +23,7 @@ import { OrderConfirmedLogRequest } from "@/modules/client-logs/order-confirmed-
 import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
 import {
   AvataxEntityNotFoundError,
+  AvataxGetTaxError,
   AvataxStringLengthError,
   TaxBadPayloadError,
 } from "@/modules/taxes/tax-error";
@@ -353,6 +354,28 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
               return Response.json(
                 {
                   message: `AvaTax service returned validation error: ${error?.description}`,
+                },
+                { status: 400 },
+              );
+            }
+
+            case error instanceof AvataxGetTaxError: {
+              OrderConfirmedLogRequest.createErrorLog({
+                sourceId: payload.order?.id,
+                channelId: payload.order?.channel.id,
+                errorReason: `Failed to get tax from AvaTax API: ${error.message}`,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
+
+              span.setStatus({
+                code: SpanStatusCode.ERROR,
+                message: "Failed to commit AvaTax transaction: error from AvaTax API",
+              });
+
+              return Response.json(
+                {
+                  message: `AvaTax service returned get tax error: ${error.message}`,
                 },
                 { status: 400 },
               );
