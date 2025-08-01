@@ -15,6 +15,7 @@ import {
   AtobaraiApiClientFulfillmentReportError,
   IAtobaraiApiClientFactory,
 } from "@/modules/atobarai/api/types";
+import { IOrderNoteService } from "@/modules/saleor/order-note-service";
 import { TransactionRecordRepoError } from "@/modules/transactions-recording/types";
 
 import {
@@ -29,6 +30,10 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
   const atobaraiApiClientFactory = {
     create: () => mockedAtobaraiApiClient,
   } satisfies IAtobaraiApiClientFactory;
+
+  const mockedOrderNoteService = {
+    addOrderNote: vi.fn().mockResolvedValue(ok({ noteId: "note-123" })),
+  } satisfies IOrderNoteService;
 
   it("should return Success response when fulfillment is reported successfully", async () => {
     const mockFulfillmentResponse = createAtobaraiFulfillmentReportSuccessResponse({
@@ -45,21 +50,34 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
 
+    const addOrderNoteSpy = vi
+      .spyOn(mockedOrderNoteService, "addOrderNote")
+      .mockResolvedValue(ok({ noteId: "note-123" }));
+
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const result = await useCase.execute({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
       FulfillmentTrackingNumberUpdatedUseCaseResponse.Success,
     );
+
+    expect(addOrderNoteSpy).toHaveBeenCalledWith({
+      orderId: mockedFulfillmentTrackingNumberUpdatedEvent.order.id,
+      message: `Successfully reported fulfillment for tracking number ${mockedFulfillmentTrackingNumberUpdatedEvent.fulfillment.trackingNumber}`,
+    });
   });
 
   it("should return Failure response when Atobarai API returns error", async () => {
@@ -69,21 +87,34 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
 
+    const addOrderNoteSpy = vi
+      .spyOn(mockedOrderNoteService, "addOrderNote")
+      .mockResolvedValue(ok({ noteId: "note-123" }));
+
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const result = await useCase.execute({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
       FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure,
     );
+
+    expect(addOrderNoteSpy).toHaveBeenCalledWith({
+      orderId: mockedFulfillmentTrackingNumberUpdatedEvent.order.id,
+      message: `Failed to report fulfillment for tracking number ${mockedFulfillmentTrackingNumberUpdatedEvent.fulfillment.trackingNumber}`,
+    });
   });
 
   it("should return AppIsNotConfiguredResponse when app config is not found", async () => {
@@ -93,12 +124,16 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const result = await useCase.execute({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
@@ -113,12 +148,16 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const result = await useCase.execute({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
@@ -129,6 +168,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
     const event = {
       ...mockedFulfillmentTrackingNumberUpdatedEvent,
@@ -139,6 +181,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -149,6 +192,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const event = {
@@ -162,6 +208,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -172,6 +219,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const event = {
@@ -186,6 +236,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -196,6 +247,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const event = {
@@ -225,6 +279,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -235,6 +290,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const event = {
@@ -256,6 +314,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -266,6 +325,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const event = {
@@ -288,6 +350,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -317,17 +380,22 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     );
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
+    vi.spyOn(mockedOrderNoteService, "addOrderNote").mockResolvedValue(ok({ noteId: "note-123" }));
 
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: mockedTransactionRecordRepo,
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const result = await useCase.execute({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -357,17 +425,22 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     );
 
     vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
+    vi.spyOn(mockedOrderNoteService, "addOrderNote").mockResolvedValue(ok({ noteId: "note-123" }));
 
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
       transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
     });
 
     const result = await useCase.execute({
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: eventWithPDCompanyCode,
+      token: "mocked-app-token",
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
