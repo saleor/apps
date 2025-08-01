@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 0.0.6
+
+### Patch Changes
+
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+
 ## 0.0.5
 
 ### Patch Changes

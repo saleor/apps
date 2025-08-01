@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.13.15
+
+### Patch Changes
+
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+
 ## 1.13.14
 
 ### Patch Changes

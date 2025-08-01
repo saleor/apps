@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 1.3.16
+
+### Patch Changes
+
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+
 ## 1.3.15
 
 ### Patch Changes

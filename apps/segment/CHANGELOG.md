@@ -1,5 +1,11 @@
 # saleor-app-segment
 
+## 2.1.15
+
+### Patch Changes
+
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+
 ## 2.1.14
 
 ### Patch Changes
