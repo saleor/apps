@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.18.3
+
+### Patch Changes
+
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+
 ## 1.18.2
 
 ### Patch Changes
