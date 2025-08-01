@@ -72,7 +72,7 @@ describe("NewStripeConfigTrpcHandler", () => {
   it("Returns error 500 if repository fails to save config", async () => {
     const { caller, mockedAppConfigRepo } = getTestCaller();
 
-    vi.spyOn(mockedAppConfigRepo, "saveStripeConfig").mockImplementationOnce(async () =>
+    vi.spyOn(mockedAppConfigRepo, "saveChannelConfig").mockImplementationOnce(async () =>
       err(new BaseError("TEST")),
     );
 
@@ -90,7 +90,7 @@ describe("NewStripeConfigTrpcHandler", () => {
   it("Returns 404 if config is in invalid shape (model can't be created)", () => {
     const { caller, mockedAppConfigRepo } = getTestCaller();
 
-    vi.spyOn(mockedAppConfigRepo, "saveStripeConfig").mockImplementationOnce(async () => ok(null));
+    vi.spyOn(mockedAppConfigRepo, "saveChannelConfig").mockImplementationOnce(async () => ok(null));
 
     // todo expect pretty zod error with zod-validation-error
     return expect(
@@ -119,7 +119,7 @@ describe("NewStripeConfigTrpcHandler", () => {
   it("Doesn't throw if everything set properly. Config repo is called to save data", async () => {
     const { caller, mockedAppConfigRepo } = getTestCaller();
 
-    vi.spyOn(mockedAppConfigRepo, "saveStripeConfig").mockImplementationOnce(async () => ok(null));
+    vi.spyOn(mockedAppConfigRepo, "saveChannelConfig").mockImplementationOnce(async () => ok(null));
 
     await expect(
       caller.testProcedure({
@@ -129,7 +129,7 @@ describe("NewStripeConfigTrpcHandler", () => {
       }),
     ).resolves.not.toThrow();
 
-    const mockCallArg = vi.mocked(mockedAppConfigRepo.saveStripeConfig).mock.calls[0][0];
+    const mockCallArg = vi.mocked(mockedAppConfigRepo.saveChannelConfig).mock.calls[0][0];
 
     expect(mockCallArg).toMatchInlineSnapshot(
       {
