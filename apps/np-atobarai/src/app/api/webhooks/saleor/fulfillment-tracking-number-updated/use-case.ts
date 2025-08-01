@@ -12,6 +12,7 @@ import {
   createAtobaraiShippingCompanyCode,
 } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { IOrderNoteService } from "@/modules/saleor/order-note-service";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
@@ -30,21 +31,29 @@ type UseCaseExecuteResult = Promise<
   >
 >;
 
+export type SaleorOrderNoteServiceFactory = (authData: {
+  saleorApiUrl: SaleorApiUrl;
+  token: string;
+}) => IOrderNoteService;
+
 export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
   protected logger = createLogger("FulfillmentTrackingNumberUpdatedUseCase");
   protected appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
   private atobaraiApiClientFactory: IAtobaraiApiClientFactory;
   private transactionRecordRepo: TransactionRecordRepo;
+  private orderNoteServiceFactory: SaleorOrderNoteServiceFactory;
 
   constructor(deps: {
     appConfigRepo: Pick<AppConfigRepo, "getChannelConfig">;
     atobaraiApiClientFactory: IAtobaraiApiClientFactory;
     transactionRecordRepo: TransactionRecordRepo;
+    orderNoteServiceFactory: SaleorOrderNoteServiceFactory;
   }) {
     super();
     this.appConfigRepo = deps.appConfigRepo;
     this.atobaraiApiClientFactory = deps.atobaraiApiClientFactory;
     this.transactionRecordRepo = deps.transactionRecordRepo;
+    this.orderNoteServiceFactory = deps.orderNoteServiceFactory;
   }
 
   private parseEvent({
@@ -146,8 +155,9 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: FulfillmentTrackingNumberUpdatedEventFragment;
+    token: string;
   }): UseCaseExecuteResult {
-    const { appId, saleorApiUrl, event } = params;
+    const { appId, saleorApiUrl, event, token } = params;
 
     const parsingResult = this.parseEvent({ event, appId });
 
@@ -195,10 +205,24 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         trackingNumber,
       });
 
+      await this.addOrderNote({
+        saleorApiUrl,
+        orderId,
+        token,
+        message: `Failed to report fulfillment for tracking number ${trackingNumber}`,
+      });
+
       return ok(
         new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(reportFulfillmentResult.error),
       );
     }
+
+    await this.addOrderNote({
+      saleorApiUrl,
+      orderId,
+      token,
+      message: `Successfully reported fulfillment for tracking number ${trackingNumber}`,
+    });
 
     const fulfillmentResult = reportFulfillmentResult.value;
 
@@ -229,5 +253,35 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     }
 
     return ok(new FulfillmentTrackingNumberUpdatedUseCaseResponse.Success());
+  }
+
+  private async addOrderNote({
+    saleorApiUrl,
+    orderId,
+    message,
+    token,
+  }: {
+    saleorApiUrl: SaleorApiUrl;
+    orderId: string;
+    message: string;
+    token: string;
+  }): Promise<void> {
+    const orderNoteService = this.orderNoteServiceFactory({
+      saleorApiUrl,
+      token,
+    });
+
+    const result = await orderNoteService.addOrderNote({
+      orderId,
+      message,
+    });
+
+    if (result.isErr()) {
+      this.logger.warn("Failed to add order note", {
+        orderId,
+        message,
+        error: result.error,
+      });
+    }
   }
 }
