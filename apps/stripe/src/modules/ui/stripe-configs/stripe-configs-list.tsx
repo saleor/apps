@@ -1,6 +1,6 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { ConfigsList } from "@saleor/apps-ui";
-import { Chip, Text } from "@saleor/macaw-ui";
+import { Box, Button, Chip, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
 import {
@@ -11,6 +11,7 @@ import { trpcClient } from "@/modules/trpc/trpc-client";
 
 type Props = {
   configs: Array<StripeFrontendConfigSerializedFields>;
+  onConnect(configId: string): void;
 };
 
 const webhookDisabled = <Text color="warning1">Webhook disabled, app will not work properly</Text>;
@@ -29,7 +30,7 @@ const liveEnvChip = (
   </Chip>
 );
 
-export const StripeConfigsList = ({ configs }: Props) => {
+export const StripeConfigsList = ({ configs, onConnect }: Props) => {
   const router = useRouter();
   const { notifyError, notifySuccess } = useDashboardNotification();
   const configsList = trpcClient.appConfig.getStripeConfigsList.useQuery();
@@ -70,7 +71,16 @@ export const StripeConfigsList = ({ configs }: Props) => {
           id: configInstance.id,
           name: configInstance.name,
           deleteButtonSlotLeft() {
-            return envValue === "TEST" ? testEnvChip : liveEnvChip;
+            const chip = envValue === "TEST" ? testEnvChip : liveEnvChip;
+
+            return (
+              <Box display="flex" alignItems="center" gap={2}>
+                <Button onClick={() => onConnect(config.id)} size={"small"} variant="secondary">
+                  Connect
+                </Button>
+                {chip}
+              </Box>
+            );
           },
           deleteButtonSlotRight() {
             return webhookStatusInfo;
