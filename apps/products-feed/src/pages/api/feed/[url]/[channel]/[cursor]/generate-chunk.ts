@@ -1,8 +1,10 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { NextApiHandler } from "next";
 
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
+import { loggerContext } from "@/logger-context";
 import { chunkFeedUrlParams } from "@/modules/feed-dto";
 import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
 import { getChunkFileName } from "@/modules/file-storage/s3/file-names";
@@ -95,4 +97,4 @@ const handler: NextApiHandler = async (req, res) => {
   return res.status(200).send({ downloadUrl, fileName });
 };
 
-export default handler;
+export default wrapWithLoggerContext(handler, loggerContext);
