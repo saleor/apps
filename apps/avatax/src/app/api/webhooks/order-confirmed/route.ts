@@ -23,9 +23,9 @@ import { OrderConfirmedLogRequest } from "@/modules/client-logs/order-confirmed-
 import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
 import {
   AvataxEntityNotFoundError,
+  AvataxGetTaxSystemError,
+  AvataxGetTaxWrongInputError,
   AvataxStringLengthError,
-  AvataxSystemError,
-  AvataxUserInputError,
   TaxBadPayloadError,
 } from "@/modules/taxes/tax-error";
 import { orderConfirmedAsyncWebhook } from "@/modules/webhooks/definitions/order-confirmed";
@@ -360,7 +360,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
               );
             }
 
-            case error instanceof AvataxUserInputError: {
+            case error instanceof AvataxGetTaxWrongInputError: {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,
                 channelId: payload.order?.channel.id,
@@ -386,7 +386,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
               );
             }
 
-            case error instanceof AvataxSystemError: {
+            case error instanceof AvataxGetTaxSystemError: {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,
                 channelId: payload.order?.channel.id,

@@ -24,7 +24,7 @@ import {
   AvataxCalculateTaxesAdapter,
   AvataxCalculateTaxesResponse,
 } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
-import { AvataxUserInputError, TaxIncompletePayloadErrors } from "../../taxes/tax-error";
+import { AvataxGetTaxWrongInputError, TaxIncompletePayloadErrors } from "../../taxes/tax-error";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
 
@@ -220,7 +220,7 @@ export class CalculateTaxesUseCase {
           .map(logWriter.writeLog);
 
         // Check if this is a user input error (should return HTTP 400)
-        if (err instanceof AvataxUserInputError) {
+        if (err instanceof AvataxGetTaxWrongInputError) {
           return new CalculateTaxesUseCase.ExpectedIncompletePayloadError(
             "Payload is incomplete and taxes cant be calculated. This is expected",
             {

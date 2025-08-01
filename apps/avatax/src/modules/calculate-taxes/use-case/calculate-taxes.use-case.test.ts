@@ -7,7 +7,7 @@ import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calcul
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
 import { ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
-import { AvataxSystemError, AvataxUserInputError } from "@/modules/taxes/tax-error";
+import { AvataxGetTaxSystemError, AvataxGetTaxWrongInputError } from "@/modules/taxes/tax-error";
 
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
@@ -300,7 +300,7 @@ describe("CalculateTaxesUseCase", () => {
       mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
       // Create AvataxUserInputError for InvalidZipForStateError
-      const userInputError = new AvataxUserInputError("GetTaxError", {
+      const userInputError = new AvataxGetTaxWrongInputError("GetTaxError", {
         props: {
           faultSubCode: "InvalidZipForStateError",
           description:
@@ -329,7 +329,7 @@ describe("CalculateTaxesUseCase", () => {
       mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
       // Create AvataxSystemError for unknown system fault
-      const systemError = new AvataxSystemError("GetTaxError", {
+      const systemError = new AvataxGetTaxSystemError("GetTaxError", {
         props: {
           faultSubCode: "UnknownSystemError",
           description: "Some system error that is not user-caused",
@@ -354,7 +354,7 @@ describe("CalculateTaxesUseCase", () => {
       mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
       // Create AvataxUserInputError for InvalidZipForStateError
-      const userInputError = new AvataxUserInputError("GetTaxError", {
+      const userInputError = new AvataxGetTaxWrongInputError("GetTaxError", {
         props: {
           faultSubCode: "InvalidZipForStateError",
           description:
