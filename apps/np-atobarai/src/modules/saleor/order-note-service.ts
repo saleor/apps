@@ -116,7 +116,7 @@ export class OrderNoteService implements IOrderNoteService {
       });
     } catch (e) {
       return err(
-        new GraphqlError("Error adding order note", {
+        new UnhandledError("Error adding order note", {
           cause: e,
         }),
       );

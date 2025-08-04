@@ -1,8 +1,9 @@
-import { createSaleorApiUrl, SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { createSaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { BaseError } from "@saleor/errors";
 import { captureException } from "@sentry/nextjs";
+import { Client } from "urql";
 
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";
@@ -25,12 +26,9 @@ const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
   appConfigRepo: appConfigRepo,
   atobaraiApiClientFactory: new AtobaraiApiClientFactory(),
   transactionRecordRepo: transactionRecordRepo,
-  orderNoteServiceFactory({ saleorApiUrl, token }: { saleorApiUrl: SaleorApiUrl; token: string }) {
+  orderNoteServiceFactory(graphqlClient: Client) {
     return new OrderNoteService({
-      graphqlClient: createInstrumentedGraphqlClient({
-        saleorApiUrl,
-        token,
-      }),
+      graphqlClient,
     });
   },
 });
@@ -52,7 +50,10 @@ const handler = fulfillmentTrackingNumberUpdatedWebhookDefinition.createHandler(
         event: ctx.payload,
         appId: ctx.authData.appId,
         saleorApiUrl,
-        token: ctx.authData.token,
+        graphqlClient: createInstrumentedGraphqlClient({
+          saleorApiUrl,
+          token: ctx.authData.token,
+        }),
       });
 
       return result.match(

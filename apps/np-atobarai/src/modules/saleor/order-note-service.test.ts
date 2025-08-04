@@ -97,4 +97,57 @@ describe("OrderNoteService", () => {
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(OrderNoteServiceErrors.UnhandledError);
   });
+
+  it("should handle REQUIRED errors", async () => {
+    // @ts-expect-error - patching only subset
+    vi.spyOn(mockedGraphqlClient, "mutation").mockImplementationOnce(async () => ({
+      data: {
+        orderNoteAdd: {
+          errors: [{ code: "REQUIRED", message: "Message is required" }],
+        },
+      },
+    }));
+
+    const result = await instance.addOrderNote({
+      orderId: "order-123",
+      message: "",
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(OrderNoteServiceErrors.UnhandledError);
+  });
+
+  it("should handle first error if there are more than one", async () => {
+    // @ts-expect-error - patching only subset
+    vi.spyOn(mockedGraphqlClient, "mutation").mockImplementationOnce(async () => ({
+      data: {
+        orderNoteAdd: {
+          errors: [
+            { code: "GRAPHQL_ERROR", message: "First error" },
+            { code: "REQUIRED", message: "Second error" },
+          ],
+        },
+      },
+    }));
+
+    const result = await instance.addOrderNote({
+      orderId: "order-123",
+      message: "Test message",
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(OrderNoteServiceErrors.GraphqlError);
+  });
+
+  it("should catch error if mutation logic fails and return UnhandledError", async () => {
+    // @ts-expect-error - patching only subset
+    vi.spyOn(mockedGraphqlClient, "mutation").mockImplementationOnce(async () => {
+      throw new Error("Mutation logic failed");
+    });
+
+    const result = await instance.addOrderNote({
+      orderId: "order-123",
+      message: "Test message",
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(OrderNoteServiceErrors.UnhandledError);
+  });
 });

@@ -1,6 +1,7 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
+import { Client } from "urql";
 
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
@@ -31,10 +32,7 @@ type UseCaseExecuteResult = Promise<
   >
 >;
 
-export type SaleorOrderNoteServiceFactory = (authData: {
-  saleorApiUrl: SaleorApiUrl;
-  token: string;
-}) => IOrderNoteService;
+export type SaleorOrderNoteServiceFactory = (graphqlClient: Client) => IOrderNoteService;
 
 export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
   protected logger = createLogger("FulfillmentTrackingNumberUpdatedUseCase");
@@ -155,9 +153,9 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: FulfillmentTrackingNumberUpdatedEventFragment;
-    token: string;
+    graphqlClient: Client;
   }): UseCaseExecuteResult {
-    const { appId, saleorApiUrl, event, token } = params;
+    const { appId, saleorApiUrl, event, graphqlClient } = params;
 
     const parsingResult = this.parseEvent({ event, appId });
 
@@ -206,9 +204,8 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       });
 
       await this.addOrderNote({
-        saleorApiUrl,
         orderId,
-        token,
+        graphqlClient,
         message: `Failed to report fulfillment for tracking number ${trackingNumber}`,
       });
 
@@ -218,9 +215,8 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     }
 
     await this.addOrderNote({
-      saleorApiUrl,
       orderId,
-      token,
+      graphqlClient,
       message: `Successfully reported fulfillment for tracking number ${trackingNumber}`,
     });
 
@@ -256,20 +252,15 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
   }
 
   private async addOrderNote({
-    saleorApiUrl,
     orderId,
     message,
-    token,
+    graphqlClient,
   }: {
-    saleorApiUrl: SaleorApiUrl;
     orderId: string;
     message: string;
-    token: string;
+    graphqlClient: Client;
   }): Promise<void> {
-    const orderNoteService = this.orderNoteServiceFactory({
-      saleorApiUrl,
-      token,
-    });
+    const orderNoteService = this.orderNoteServiceFactory(graphqlClient);
 
     const result = await orderNoteService.addOrderNote({
       orderId,

@@ -7,6 +7,7 @@ import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config/mocked-app-con
 import { MockedTransactionRecordRepo } from "@/__tests__/mocks/app-transaction/mocked-transaction-record-repo";
 import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
+import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedFulfillmentTrackingNumberUpdatedEvent } from "@/__tests__/mocks/saleor-events/mocked-fulfillment-tracking-number-updated-event";
@@ -67,7 +68,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -104,7 +105,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -133,7 +134,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
@@ -157,7 +158,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
@@ -181,7 +182,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -208,7 +209,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -236,7 +237,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -279,7 +280,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -314,7 +315,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -350,7 +351,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -395,7 +396,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: mockedFulfillmentTrackingNumberUpdatedEvent,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -440,7 +441,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       appId: mockedSaleorAppId,
       saleorApiUrl: mockedSaleorApiUrl,
       event: eventWithPDCompanyCode,
-      token: "mocked-app-token",
+      graphqlClient: mockedGraphqlClient,
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
