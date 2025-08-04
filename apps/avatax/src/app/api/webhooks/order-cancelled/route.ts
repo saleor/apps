@@ -2,7 +2,9 @@ import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
+import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { captureException, setTag } from "@sentry/nextjs";
+import { after } from "next/server";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
@@ -21,6 +23,7 @@ import {
   OrderCancelNoAvataxIdError,
   OrderCancelPayloadOrderError,
 } from "@/modules/saleor/order-cancelled/errors";
+import { OrderNoteReporter } from "@/modules/saleor/order-note-reporter";
 import { AvataxTransactionAlreadyCancelledError } from "@/modules/taxes/tax-error";
 import { orderCancelledAsyncWebhook } from "@/modules/webhooks/definitions/order-cancelled";
 
@@ -40,6 +43,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
       const { payload } = ctx;
 
       const logWriter = logsWriterFactory.createWriter(ctx.authData);
+      const client = createGraphQLClient({
+        saleorApiUrl: ctx.authData.saleorApiUrl,
+        token: ctx.authData.token,
+      });
 
       metadataCache.setMetadata(payload.recipient?.privateMetadata ?? []);
 
@@ -241,6 +248,17 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
         await avaTaxOrderCancelledAdapter.send({
           payload: { avataxId: cancelledOrderInstance.getAvataxId() },
           config: providerConfig.value.avataxConfig.config,
+        });
+
+        after(() => {
+          if (!payload.order?.id) {
+            return;
+          }
+
+          new OrderNoteReporter(client).reportOrderNote(
+            payload.order.id,
+            "Order cancelled in AvaTax",
+          );
         });
       } catch (e) {
         span.recordException(e as Error); // todo: remove casting when error handling is refactored
