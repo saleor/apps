@@ -30,7 +30,7 @@ import { transactionInitializeSessionWebhookDefinition } from "./webhook-definit
 const logger = createLogger("TRANSACTION_INITIALIZE_SESSION route");
 
 const handler = transactionInitializeSessionWebhookDefinition.createHandler(
-  withRecipientVerification(async (_req, ctx) => {
+  withRecipientVerification(async (req, ctx) => {
     try {
       setObservabilitySourceObjectId(ctx.payload.sourceObject);
 
@@ -59,6 +59,11 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
       const graphqlClient = createInstrumentedGraphqlClient(ctx.authData);
       const vendorResolver = new VendorResolver(graphqlClient);
 
+      // Extract app URL from request headers
+      const protocol = req.headers.get("x-forwarded-proto") || "https";
+      const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+      const appUrl = host ? `${protocol}://${host}` : undefined;
+
       const useCase = new TransactionInitializeSessionUseCase({
         appConfigRepo: appConfigRepoImpl,
         stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
@@ -70,6 +75,7 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
         appId: ctx.authData.appId,
         saleorApiUrl: saleorApiUrlResult.value,
         event: ctx.payload,
+        appUrl,
       });
 
       return result.match(

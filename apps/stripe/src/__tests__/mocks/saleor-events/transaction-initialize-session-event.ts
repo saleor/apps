@@ -4,7 +4,8 @@ import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { mockedSaleorChannelId, mockedSaleorTransactionId } from "../constants";
 
 export const getMockedTransactionInitializeSessionEvent = (args?: {
-  actionType: "CHARGE" | "AUTHORIZATION";
+  actionType?: "CHARGE" | "AUTHORIZATION";
+  data?: string;
 }): TransactionInitializeSessionEventFragment => ({
   action: {
     amount: 100,
@@ -14,11 +15,13 @@ export const getMockedTransactionInitializeSessionEvent = (args?: {
   transaction: {
     id: mockedSaleorTransactionId,
   },
-  data: parseTransactionInitializeSessionEventData({
-    paymentIntent: {
-      paymentMethod: "card",
-    },
-  })._unsafeUnwrap(),
+  data:
+    args?.data ??
+    parseTransactionInitializeSessionEventData({
+      paymentIntent: {
+        paymentMethod: "card",
+      },
+    })._unsafeUnwrap(),
   sourceObject: {
     id: "mock-channel-1",
     __typename: "Checkout",

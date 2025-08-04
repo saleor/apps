@@ -40,6 +40,7 @@ import {
   createStripePaymentIntentStatus,
   StripePaymentIntentStatus,
 } from "@/modules/stripe/stripe-payment-intent-status";
+import { StripeReturnUrlBuilder } from "@/modules/stripe/stripe-return-url-builder";
 import { CreatePaymentIntentArgs, IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   AuthorizationActionRequiredResult,
@@ -92,6 +93,9 @@ export class TransactionInitializeSessionUseCase {
     selectedPaymentMethodOptions: Stripe.PaymentIntentCreateParams.PaymentMethodOptions;
     idempotencyKey: string;
     stripeAccountId?: string;
+    appUrl?: string;
+    appId?: string;
+    saleorApiUrl?: string;
   }): Result<CreatePaymentIntentArgs, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
       amount: args.event.action.amount,
@@ -117,6 +121,20 @@ export class TransactionInitializeSessionUseCase {
           payment_method_options: {
             ...args.selectedPaymentMethodOptions,
           },
+          // Add return URL for redirect-based payment methods like iDEAL
+          ...(args.appUrl &&
+            args.appId &&
+            args.saleorApiUrl && {
+              return_url: StripeReturnUrlBuilder.buildReturnUrl(args.appUrl, {
+                orderId:
+                  args.event.sourceObject.__typename === "Order"
+                    ? args.event.sourceObject.id
+                    : undefined,
+                appId: args.appId,
+                saleorApiUrl: args.saleorApiUrl,
+                channelId: args.event.sourceObject.channel.id,
+              }),
+            }),
         },
       };
     });
@@ -168,6 +186,7 @@ export class TransactionInitializeSessionUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
+    appUrl?: string;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event } = args;
 
@@ -273,6 +292,9 @@ export class TransactionInitializeSessionUseCase {
         selectedPaymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow),
       idempotencyKey: event.idempotencyKey,
       stripeAccountId,
+      appUrl: args.appUrl,
+      appId: args.appId,
+      saleorApiUrl: args.saleorApiUrl,
     });
 
     if (stripePaymentIntentParamsResult.isErr()) {
