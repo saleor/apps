@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import { mockedStripeConfig } from "@/__tests__/mocks/mock-stripe-config";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -48,8 +49,24 @@ describe("TransactionInitializeSessionUseCase", () => {
     });
 
   beforeEach(() => {
+    vi.clearAllMocks();
+
     // Reset the mock to return null (no vendor) for most tests
     vi.mocked(mockedVendorResolver.resolveVendorForPayment).mockResolvedValue(ok(null));
+
+    // Mock app config to return a valid stripe config
+    vi.mocked(mockedAppConfigRepo.getStripeConfig).mockResolvedValue(ok(mockedStripeConfig));
+
+    // Set up default createPaymentIntent mock
+    vi.mocked(mockedStripePaymentIntentsApi.createPaymentIntent).mockResolvedValue(
+      ok({
+        id: "pi_test",
+        amount: 100,
+        currency: "usd",
+        client_secret: "secret-value",
+        status: "requires_payment_method",
+      } as Stripe.PaymentIntent),
+    );
   });
 
   it.each([
@@ -519,174 +536,9 @@ describe("TransactionInitializeSessionUseCase", () => {
   );
 
   describe("return_url functionality", () => {
-    it("should include return_url in payment intent when app URL is provided", async () => {
+    it("should include returnUrl in response when app URL is provided", async () => {
       const saleorEvent = getMockedTransactionInitializeSessionEvent();
       const appUrl = "https://app.example.com";
-
-      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
-        async (args) => {
-          // Verify return_url is included
-          expect(args.intentParams.return_url).toBeDefined();
-          expect(args.intentParams.return_url).toContain("/api/stripe/return");
-          expect(args.intentParams.return_url).toContain("app_id=" + mockedSaleorAppId);
-          expect(args.intentParams.return_url).toContain("saleor_api_url=");
-          expect(args.intentParams.return_url).toContain(
-            "channel_id=" + saleorEvent.sourceObject.channel.id,
-          );
-
-          return ok({
-            id: "pi_test_123",
-            amount: 100,
-            currency: "usd",
-            client_secret: "secret-value",
-            status: "requires_payment_method",
-          } as Stripe.PaymentIntent);
-        },
-      );
-
-      const useCase = createUseCase();
-      const result = await useCase.execute({
-        appId: mockedSaleorAppId,
-        saleorApiUrl: mockedSaleorApiUrl,
-        event: saleorEvent,
-        appUrl,
-      });
-
-      expect(result.isOk()).toBe(true);
-      expect(mockedStripePaymentIntentsApi.createPaymentIntent).toHaveBeenCalled();
-    });
-
-    it("should include order ID in return_url for Order source objects", async () => {
-      const orderId = "order_123";
-      const saleorEvent = getMockedTransactionInitializeSessionEvent();
-
-      // Override the source object to be an Order instead of Checkout
-      saleorEvent.sourceObject = {
-        ...saleorEvent.sourceObject,
-        id: orderId,
-        __typename: "Order",
-        metadata: [],
-      };
-      const appUrl = "https://app.example.com";
-
-      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
-        async (args) => {
-          expect(args.intentParams.return_url).toContain("order_id=" + orderId);
-
-          return ok({
-            id: "pi_test_123",
-            amount: 100,
-            currency: "usd",
-            client_secret: "secret-value",
-            status: "requires_payment_method",
-          } as Stripe.PaymentIntent);
-        },
-      );
-
-      const useCase = createUseCase();
-
-      await useCase.execute({
-        appId: mockedSaleorAppId,
-        saleorApiUrl: mockedSaleorApiUrl,
-        event: saleorEvent,
-        appUrl,
-      });
-
-      expect(mockedStripePaymentIntentsApi.createPaymentIntent).toHaveBeenCalled();
-    });
-
-    it("should not include return_url when app URL is not provided", async () => {
-      const saleorEvent = getMockedTransactionInitializeSessionEvent();
-
-      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
-        async (args) => {
-          // Verify return_url is NOT included
-          expect(args.intentParams.return_url).toBeUndefined();
-
-          return ok({
-            id: "pi_test_123",
-            amount: 100,
-            currency: "usd",
-            client_secret: "secret-value",
-            status: "requires_payment_method",
-          } as Stripe.PaymentIntent);
-        },
-      );
-
-      const useCase = createUseCase();
-      const result = await useCase.execute({
-        appId: mockedSaleorAppId,
-        saleorApiUrl: mockedSaleorApiUrl,
-        event: saleorEvent,
-        // No appUrl provided
-      });
-
-      expect(result.isOk()).toBe(true);
-      expect(mockedStripePaymentIntentsApi.createPaymentIntent).toHaveBeenCalled();
-    });
-
-    it("should properly encode return_url parameters", async () => {
-      const saleorEvent = getMockedTransactionInitializeSessionEvent();
-      const appUrl = "https://app.example.com";
-      const expectedSaleorApiUrl = encodeURIComponent(mockedSaleorApiUrl);
-
-      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
-        async (args) => {
-          const returnUrl = args.intentParams.return_url!;
-
-          expect(returnUrl).toContain(`saleor_api_url=${expectedSaleorApiUrl}`);
-
-          // Parse URL to verify it's valid
-          const url = new URL(returnUrl);
-
-          expect(url.pathname).toBe("/api/stripe/return");
-          expect(url.searchParams.get("app_id")).toBe(mockedSaleorAppId);
-          expect(url.searchParams.get("saleor_api_url")).toBe(mockedSaleorApiUrl);
-          expect(url.searchParams.get("channel_id")).toBe(saleorEvent.sourceObject.channel.id);
-
-          return ok({
-            id: "pi_test_123",
-            amount: 100,
-            currency: "usd",
-            client_secret: "secret-value",
-            status: "requires_payment_method",
-          } as Stripe.PaymentIntent);
-        },
-      );
-
-      const useCase = createUseCase();
-
-      await useCase.execute({
-        appId: mockedSaleorAppId,
-        saleorApiUrl: mockedSaleorApiUrl,
-        event: saleorEvent,
-        appUrl,
-      });
-
-      expect(mockedStripePaymentIntentsApi.createPaymentIntent).toHaveBeenCalled();
-    });
-
-    it("should include return_url for iDEAL payment method", async () => {
-      const saleorEvent = getMockedTransactionInitializeSessionEvent({
-        data: JSON.stringify({ paymentMethod: "ideal" }),
-      });
-      const appUrl = "https://app.example.com";
-
-      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
-        async (args) => {
-          // Verify return_url is included for iDEAL
-          expect(args.intentParams.return_url).toBeDefined();
-          expect(args.intentParams.return_url).toContain("/api/stripe/return");
-
-          return ok({
-            id: "pi_test_123",
-            amount: 100,
-            currency: "eur", // iDEAL typically uses EUR
-            client_secret: "secret-value",
-            status: "requires_action", // iDEAL requires action
-          } as Stripe.PaymentIntent);
-        },
-      );
 
       const useCase = createUseCase();
       const result = await useCase.execute({
@@ -700,6 +552,145 @@ describe("TransactionInitializeSessionUseCase", () => {
       const response = result._unsafeUnwrap();
 
       expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponses.Success);
+      const successResponse = response as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Success
+      >;
+
+      expect(successResponse.returnUrl).toBeDefined();
+      expect(successResponse.returnUrl).toContain("/api/stripe/return");
+      expect(successResponse.returnUrl).toContain("app_id=" + mockedSaleorAppId);
+      expect(successResponse.returnUrl).toContain("saleor_api_url=");
+      expect(successResponse.returnUrl).toContain(
+        "channel_id=" + saleorEvent.sourceObject.channel.id,
+      );
+    });
+
+    it("should include order ID in returnUrl for Order source objects", async () => {
+      const orderId = "order_123";
+      const saleorEvent = getMockedTransactionInitializeSessionEvent();
+
+      // Override the source object to be an Order instead of Checkout
+      const orderEvent = {
+        ...saleorEvent,
+        sourceObject: {
+          ...saleorEvent.sourceObject,
+          id: orderId,
+          __typename: "Order" as const,
+          metadata: [],
+        },
+      };
+      const appUrl = "https://app.example.com";
+
+      const useCase = createUseCase();
+      const result = await useCase.execute({
+        appId: mockedSaleorAppId,
+        saleorApiUrl: mockedSaleorApiUrl,
+        event: orderEvent,
+        appUrl,
+      });
+
+      expect(result.isOk()).toBe(true);
+      const response = result._unsafeUnwrap();
+
+      expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponses.Success);
+      const successResponse = response as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Success
+      >;
+
+      expect(successResponse.returnUrl).toBeDefined();
+      expect(successResponse.returnUrl).toContain("order_id=" + orderId);
+    });
+
+    it("should not include returnUrl when app URL is not provided", async () => {
+      const saleorEvent = getMockedTransactionInitializeSessionEvent();
+
+      const useCase = createUseCase();
+      const result = await useCase.execute({
+        appId: mockedSaleorAppId,
+        saleorApiUrl: mockedSaleorApiUrl,
+        event: saleorEvent,
+        // No appUrl provided - explicitly undefined
+        appUrl: undefined,
+      });
+
+      expect(result.isOk()).toBe(true);
+      const response = result._unsafeUnwrap();
+
+      expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponses.Success);
+      const successResponse = response as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Success
+      >;
+
+      expect(successResponse.returnUrl).toBeUndefined();
+    });
+
+    it("should properly encode returnUrl parameters", async () => {
+      const saleorEvent = getMockedTransactionInitializeSessionEvent();
+      const appUrl = "https://app.example.com";
+      const expectedSaleorApiUrl = encodeURIComponent(mockedSaleorApiUrl);
+
+      const useCase = createUseCase();
+      const result = await useCase.execute({
+        appId: mockedSaleorAppId,
+        saleorApiUrl: mockedSaleorApiUrl,
+        event: saleorEvent,
+        appUrl,
+      });
+
+      expect(result.isOk()).toBe(true);
+      const response = result._unsafeUnwrap();
+
+      expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponses.Success);
+      const successResponse = response as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Success
+      >;
+
+      expect(successResponse.returnUrl).toBeDefined();
+
+      const returnUrl = successResponse.returnUrl!;
+
+      expect(returnUrl).toContain(`saleor_api_url=${expectedSaleorApiUrl}`);
+
+      // Parse URL to verify it's valid
+      const url = new URL(returnUrl);
+
+      expect(url.pathname).toBe("/api/stripe/return");
+      expect(url.searchParams.get("app_id")).toBe(mockedSaleorAppId);
+      expect(url.searchParams.get("saleor_api_url")).toBe(mockedSaleorApiUrl);
+      expect(url.searchParams.get("channel_id")).toBe(saleorEvent.sourceObject.channel.id);
+    });
+
+    it("should include returnUrl for iDEAL payment method", async () => {
+      // Create event with ideal payment method - data should be a JSON string
+      const idealData = JSON.stringify({
+        paymentIntent: {
+          paymentMethod: "ideal",
+        },
+      });
+
+      const saleorEvent = getMockedTransactionInitializeSessionEvent({
+        data: idealData,
+      });
+      const appUrl = "https://app.example.com";
+
+      const useCase = createUseCase();
+      const result = await useCase.execute({
+        appId: mockedSaleorAppId,
+        saleorApiUrl: mockedSaleorApiUrl,
+        event: saleorEvent,
+        appUrl,
+      });
+
+      expect(result.isOk()).toBe(true);
+      const response = result._unsafeUnwrap();
+
+      expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponses.Success);
+      const successResponse = response as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Success
+      >;
+
+      expect(successResponse.returnUrl).toBeDefined();
+      expect(successResponse.returnUrl).toContain("/api/stripe/return");
     });
   });
 });

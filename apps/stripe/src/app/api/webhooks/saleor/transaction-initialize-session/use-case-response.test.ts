@@ -52,6 +52,43 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
         }
       `);
     });
+
+    it("getResponse() returns valid Response with returnUrl when provided", async () => {
+      const response = new TransactionInitializeSessionUseCaseResponses.Success({
+        transactionResult: new ChargeActionRequiredResult(
+          createStripePaymentIntentStatus("requires_payment_method"),
+        ),
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorMoney: getMockedSaleorMoney(10000),
+        stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
+        returnUrl:
+          "https://app.com/api/stripe/return?app_id=123&saleor_api_url=https%3A%2F%2Fapi.saleor.io%2Fgraphql%2F&channel_id=channel-123",
+      });
+      const fetchReponse = response.getResponse();
+
+      expect(fetchReponse.status).toBe(200);
+      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [
+            "CANCEL",
+          ],
+          "amount": 100,
+          "data": {
+            "paymentIntent": {
+              "returnUrl": "https://app.com/api/stripe/return?app_id=123&saleor_api_url=https%3A%2F%2Fapi.saleor.io%2Fgraphql%2F&channel_id=channel-123",
+              "stripeClientSecret": "stripe-client-secret",
+            },
+          },
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+          "message": "Payment intent requires payment method",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "result": "CHARGE_ACTION_REQUIRED",
+        }
+      `);
+    });
   });
 
   describe("Success with AuthorizationActionRequired as result", () => {
@@ -79,6 +116,43 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
           "amount": 100,
           "data": {
             "paymentIntent": {
+              "stripeClientSecret": "stripe-client-secret",
+            },
+          },
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+          "message": "Payment intent requires payment method",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "result": "AUTHORIZATION_ACTION_REQUIRED",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with returnUrl when provided", async () => {
+      const response = new TransactionInitializeSessionUseCaseResponses.Success({
+        transactionResult: new AuthorizationActionRequiredResult(
+          createStripePaymentIntentStatus("requires_payment_method"),
+        ),
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorMoney: getMockedSaleorMoney(10000),
+        stripeClientSecret: createStripeClientSecret("stripe-client-secret")._unsafeUnwrap(),
+        appContext: {
+          stripeEnv: "LIVE",
+        },
+        returnUrl:
+          "https://app.com/api/stripe/return?app_id=123&saleor_api_url=https%3A%2F%2Fapi.saleor.io%2Fgraphql%2F&channel_id=channel-123",
+      });
+      const fetchReponse = response.getResponse();
+
+      expect(fetchReponse.status).toBe(200);
+      expect(await fetchReponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [
+            "CANCEL",
+          ],
+          "amount": 100,
+          "data": {
+            "paymentIntent": {
+              "returnUrl": "https://app.com/api/stripe/return?app_id=123&saleor_api_url=https%3A%2F%2Fapi.saleor.io%2Fgraphql%2F&channel_id=channel-123",
               "stripeClientSecret": "stripe-client-secret",
             },
           },

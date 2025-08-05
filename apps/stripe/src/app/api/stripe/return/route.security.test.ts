@@ -7,6 +7,7 @@ import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
+import { TransactionRecorderError } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { GET } from "./route";
 
@@ -56,7 +57,7 @@ describe("Stripe return endpoint - Security Tests", () => {
 
       // Transaction recorder won't find the transaction with wrong app_id
       vi.mocked(transactionRecorder.getTransactionByStripePaymentIntentId).mockResolvedValueOnce(
-        err(new Error("Transaction not found")),
+        err(new TransactionRecorderError.TransactionMissingError("Transaction not found")),
       );
 
       const response = await GET(request);
@@ -80,7 +81,7 @@ describe("Stripe return endpoint - Security Tests", () => {
 
       // Transaction won't be found with wrong saleor URL
       vi.mocked(transactionRecorder.getTransactionByStripePaymentIntentId).mockResolvedValueOnce(
-        err(new Error("Transaction not found")),
+        err(new TransactionRecorderError.TransactionMissingError("Transaction not found")),
       );
 
       const response = await GET(request);
@@ -191,7 +192,7 @@ describe("Stripe return endpoint - Security Tests", () => {
       const request = new NextRequest(url);
 
       vi.mocked(transactionRecorder.getTransactionByStripePaymentIntentId).mockResolvedValueOnce(
-        err(new Error("Invalid payment intent ID")),
+        err(new TransactionRecorderError.TransactionMissingError("Invalid payment intent ID")),
       );
 
       const response = await GET(request);
@@ -302,7 +303,7 @@ describe("Stripe return endpoint - Security Tests", () => {
 
       // Transaction not found for this app
       vi.mocked(transactionRecorder.getTransactionByStripePaymentIntentId).mockResolvedValueOnce(
-        err(new Error("Transaction not found")),
+        err(new TransactionRecorderError.TransactionMissingError("Transaction not found")),
       );
 
       const response = await GET(request);

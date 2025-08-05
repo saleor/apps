@@ -121,20 +121,6 @@ export class TransactionInitializeSessionUseCase {
           payment_method_options: {
             ...args.selectedPaymentMethodOptions,
           },
-          // Add return URL for redirect-based payment methods like iDEAL
-          ...(args.appUrl &&
-            args.appId &&
-            args.saleorApiUrl && {
-              return_url: StripeReturnUrlBuilder.buildReturnUrl(args.appUrl, {
-                orderId:
-                  args.event.sourceObject.__typename === "Order"
-                    ? args.event.sourceObject.id
-                    : undefined,
-                appId: args.appId,
-                saleorApiUrl: args.saleorApiUrl,
-                channelId: args.event.sourceObject.channel.id,
-              }),
-            }),
         },
       };
     });
@@ -381,6 +367,16 @@ export class TransactionInitializeSessionUseCase {
       stripeStatus,
     });
 
+    // Build return URL if app URL is provided
+    const returnUrl = args.appUrl
+      ? StripeReturnUrlBuilder.buildReturnUrl(args.appUrl, {
+          orderId: event.sourceObject.__typename === "Order" ? event.sourceObject.id : undefined,
+          appId: args.appId,
+          saleorApiUrl: args.saleorApiUrl,
+          channelId: event.sourceObject.channel.id,
+        })
+      : undefined;
+
     return ok(
       new TransactionInitializeSessionUseCaseResponses.Success({
         saleorMoney,
@@ -388,6 +384,7 @@ export class TransactionInitializeSessionUseCase {
         transactionResult,
         stripeClientSecret,
         appContext: appContextContainer.getContextValue(),
+        returnUrl,
       }),
     );
   }

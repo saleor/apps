@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { transactionInitializeSessionFixture } from "@/__tests__/integration/webhooks/fixtures/transaction-initialize-session-fixture";
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
+import { parseTransactionInitializeSessionEventData } from "@/app/api/webhooks/saleor/transaction-initialize-session/event-data-parser";
 import * as initializeSessionHandlers from "@/app/api/webhooks/saleor/transaction-initialize-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
 import { createLogger } from "@/lib/logger";
@@ -104,6 +105,7 @@ describe("TransactionInitializeSession webhook: integration", async () => {
           data: {
             paymentIntent: {
               stripeClientSecret: expect.stringContaining("pi_"),
+              returnUrl: expect.stringContaining("/api/stripe/return"),
             },
           },
           actions: ["CANCEL"],
@@ -114,6 +116,132 @@ describe("TransactionInitializeSession webhook: integration", async () => {
           externalUrl: expect.stringContaining("https://dashboard.stripe.com/test/payments/pi_"),
         });
 
+        expect(response.status).toStrictEqual(200);
+      },
+    });
+  });
+
+  it("Returns response with returnUrl for redirect-based payment methods", async () => {
+    await testApiHandler({
+      appHandler: initializeSessionHandlers,
+      async test({ fetch }) {
+        const idealData = parseTransactionInitializeSessionEventData({
+          paymentIntent: {
+            paymentMethod: "ideal",
+          },
+        })._unsafeUnwrap();
+        const idealFixture = {
+          ...transactionInitializeSessionFixture(),
+          data: idealData,
+        };
+
+        const response = await fetch({
+          method: "POST",
+          body: JSON.stringify(idealFixture),
+          headers: new Headers({
+            "saleor-api-url": realSaleorApiUrl,
+            "saleor-event": "transaction_initialize_session",
+            "saleor-signature": "mock-signature",
+            "x-forwarded-proto": "https",
+            "x-forwarded-host": "test-app.com",
+          }),
+        });
+
+        const body = await response.json();
+
+        expect(body).toStrictEqual({
+          data: {
+            paymentIntent: {
+              stripeClientSecret: expect.stringContaining("pi_"),
+              returnUrl: expect.stringMatching(
+                /^https:\/\/test-app\.com\/api\/stripe\/return\?app_id=.+&saleor_api_url=.+&channel_id=.+$/,
+              ),
+            },
+          },
+          actions: ["CANCEL"],
+          result: "CHARGE_ACTION_REQUIRED",
+          amount: 123.3,
+          pspReference: expect.stringContaining("pi_"),
+          message: "Payment intent requires payment method",
+          externalUrl: expect.stringContaining("https://dashboard.stripe.com/test/payments/pi_"),
+        });
+
+        expect(response.status).toStrictEqual(200);
+      },
+    });
+  });
+
+  it("Returns response with returnUrl including orderId for Order source", async () => {
+    await testApiHandler({
+      appHandler: initializeSessionHandlers,
+      async test({ fetch }) {
+        const idealData = parseTransactionInitializeSessionEventData({
+          paymentIntent: {
+            paymentMethod: "ideal",
+          },
+        })._unsafeUnwrap();
+        const idealFixture = {
+          ...transactionInitializeSessionFixture(),
+          data: idealData,
+          sourceObject: {
+            __typename: "Order" as const,
+            channel: {
+              slug: "default-channel",
+              id: mockedSaleorChannelId,
+            },
+            id: "order-123",
+            metadata: [],
+          },
+        };
+
+        const response = await fetch({
+          method: "POST",
+          body: JSON.stringify(idealFixture),
+          headers: new Headers({
+            "saleor-api-url": realSaleorApiUrl,
+            "saleor-event": "transaction_initialize_session",
+            "saleor-signature": "mock-signature",
+            "x-forwarded-proto": "https",
+            "x-forwarded-host": "test-app.com",
+          }),
+        });
+
+        const body = await response.json();
+
+        expect(body.data.paymentIntent.returnUrl).toMatch(/order_id=order-123/);
+        expect(response.status).toStrictEqual(200);
+      },
+    });
+  });
+
+  it("Does not include returnUrl when app URL is not available", async () => {
+    await testApiHandler({
+      appHandler: initializeSessionHandlers,
+      async test({ fetch }) {
+        const idealData = parseTransactionInitializeSessionEventData({
+          paymentIntent: {
+            paymentMethod: "ideal",
+          },
+        })._unsafeUnwrap();
+        const idealFixture = {
+          ...transactionInitializeSessionFixture(),
+          data: idealData,
+        };
+
+        const response = await fetch({
+          method: "POST",
+          body: JSON.stringify(idealFixture),
+          headers: new Headers({
+            "saleor-api-url": realSaleorApiUrl,
+            "saleor-event": "transaction_initialize_session",
+            "saleor-signature": "mock-signature",
+            // No x-forwarded headers
+          }),
+        });
+
+        const body = await response.json();
+
+        expect(body.data.paymentIntent).not.toHaveProperty("returnUrl");
         expect(response.status).toStrictEqual(200);
       },
     });
