@@ -1,5 +1,15 @@
 # saleor-app-klaviyo
 
+## 1.13.15
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+- Updated dependencies [16b87f53]
+  - @saleor/apps-shared@1.13.1
+  - @saleor/apps-ui@1.3.1
+
 ## 1.13.14
 
 ### Patch Changes

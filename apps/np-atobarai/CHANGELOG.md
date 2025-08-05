@@ -1,5 +1,17 @@
 # saleor-app-payment-np-atobarai
 
+## 0.0.6
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+- Updated dependencies [16b87f53]
+  - @saleor/react-hook-form-macaw@0.2.15
+  - @saleor/apps-shared@1.13.1
+  - @saleor/apps-ui@1.3.1
+  - @saleor/apps-trpc@4.0.3
+
 ## 0.0.5
 
 ### Patch Changes
