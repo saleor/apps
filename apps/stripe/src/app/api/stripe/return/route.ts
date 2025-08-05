@@ -134,6 +134,7 @@ export async function GET(request: NextRequest) {
     let redirectUrl = new URL(request.url);
 
     redirectUrl.searchParams.set("payment_intent", stripePaymentIntentId);
+    redirectUrl.searchParams.set("name", "testing-if-this-works");
 
     if (paymentIntent.status === "succeeded" || paymentIntent.status === "processing") {
       // Payment successful - redirect to order confirmation
