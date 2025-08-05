@@ -1,5 +1,17 @@
 # saleor-app-avatax
 
+## 1.18.2
+
+### Patch Changes
+
+- c7f719c7: Handle AvaTaxGetTaxError for order confirmed. After this change such error will be considered handled (as this is connected to wrong input provided by user).
+
+## 1.18.1
+
+### Patch Changes
+
+- 51b4d859: Installed DynamoDB APL (controlled via env variable).
+
 ## 1.18.0
 
 ### Minor Changes

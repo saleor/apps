@@ -12,12 +12,6 @@ switch (env.APL) {
   case "dynamodb": {
     apl = DynamoAPL.create({
       table: dynamoMainTable,
-      env: {
-        APL_TABLE_NAME: env.DYNAMODB_MAIN_TABLE_NAME,
-        AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
-        AWS_REGION: env.AWS_REGION,
-        AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
-      },
     });
 
     break;

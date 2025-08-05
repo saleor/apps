@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 2.0.3
+
+### Patch Changes
+
+- 51b4d859: Installed DynamoDB APL (controlled via env variable).
+
 ## 2.0.2
 
 ### Patch Changes
