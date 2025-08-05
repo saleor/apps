@@ -1,3 +1,4 @@
+// import { createSaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -12,7 +13,7 @@ const logger = createLogger("StripeReturnRoute");
 
 const ReturnParamsSchema = z.object({
   payment_intent: z.string(),
-  payment_intent_client_secret: z.string(),
+  // payment_intent_client_secret: z.string(),
   redirect_status: z.enum(["succeeded", "processing", "requires_payment_method"]).optional(),
   source_redirect_slug: z.string().optional(),
   app_id: z.string(),
@@ -130,12 +131,13 @@ export async function GET(request: NextRequest) {
     const orderIdParam = order_id || paymentIntent.metadata?.saleor_source_id;
 
     // Determine the redirect URL based on payment status
-    let redirectUrl: URL;
+    let redirectUrl = new URL(request.url);
+
+    redirectUrl.searchParams.set("payment_intent", stripePaymentIntentId);
 
     if (paymentIntent.status === "succeeded" || paymentIntent.status === "processing") {
       // Payment successful - redirect to order confirmation
       if (checkoutUrlParam) {
-        redirectUrl = new URL(checkoutUrlParam);
         redirectUrl.searchParams.set("payment_status", "success");
       } else if (orderIdParam) {
         // Fallback to order page
@@ -151,7 +153,6 @@ export async function GET(request: NextRequest) {
     ) {
       // Payment failed - redirect back to checkout
       if (checkoutUrlParam) {
-        redirectUrl = new URL(checkoutUrlParam);
         redirectUrl.searchParams.set("payment_status", "failed");
         redirectUrl.searchParams.set("error", "payment_failed");
       } else {
