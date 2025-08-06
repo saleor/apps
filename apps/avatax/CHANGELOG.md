@@ -1,5 +1,20 @@
 # saleor-app-avatax
 
+## 1.19.0
+
+### Minor Changes
+
+- 5e19ceff: App will now add Note to Order when a transaction is committed or cancelled in AvaTax. This leads to better visibility of the order, e.g., on the Dashboard page
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+- Updated dependencies [16b87f53]
+  - @saleor/react-hook-form-macaw@0.2.15
+  - @saleor/apps-shared@1.13.1
+  - @saleor/apps-ui@1.3.1
+
 ## 1.18.2
 
 ### Patch Changes

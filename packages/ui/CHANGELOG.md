@@ -1,5 +1,11 @@
 # @saleor/apps-ui
 
+## 1.3.1
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+
 ## 1.3.0
 
 ### Minor Changes
