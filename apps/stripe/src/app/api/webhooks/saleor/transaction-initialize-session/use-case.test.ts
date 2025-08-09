@@ -142,7 +142,7 @@ describe("TransactionInitializeSessionUseCase", () => {
 
   it("Returns 'MissingConfigErrorResponse' if config not found for specified channel", async () => {
     const spy = vi
-      .spyOn(mockedAppConfigRepo, "getStripeConfig")
+      .spyOn(mockedAppConfigRepo, "getChannelConfig")
       .mockImplementationOnce(async () => ok(null));
 
     const uc = new TransactionInitializeSessionUseCase({
