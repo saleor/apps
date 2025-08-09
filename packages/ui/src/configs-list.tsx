@@ -69,6 +69,7 @@ export const ConfigsList = ({
                   disabled={isLoading}
                   marginLeft={4}
                   display="block"
+                  size="small"
                   icon={<TrashBinIcon />}
                   variant="secondary"
                   onClick={() => setConfigIdContext(config.id)}
