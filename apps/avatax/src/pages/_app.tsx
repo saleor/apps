@@ -1,8 +1,10 @@
+/* eslint-disable react-naming-convention/filename */
 import "@saleor/macaw-ui/style";
 import "../styles/globals.css";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
+import { IframeProtectedWrapper } from "@saleor/apps-shared/iframe-protected-wrapper";
 import { NoSSRWrapper } from "@saleor/apps-shared/no-ssr-wrapper";
 import { ThemeSynchronizer } from "@saleor/apps-shared/theme-synchronizer";
 import { ThemeProvider } from "@saleor/macaw-ui";
@@ -25,17 +27,32 @@ function NextApp({ Component, pageProps }: AppProps) {
 
   return (
     <NoSSRWrapper>
-      <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-        <GraphQLProvider>
+      <IframeProtectedWrapper
+        allowedPathNames={["/"]}
+        fallback={
           <ThemeProvider>
-            <ThemeSynchronizer />
-            <RoutePropagator />
             <AppLayout>
-              <Component {...pageProps} />
+              <div>
+                <h1>Saleor AvaTax App</h1>
+                <p>This app can only be used within the Saleor Dashboard.</p>
+                <p>Please install and open this app through your Saleor Dashboard.</p>
+              </div>
             </AppLayout>
           </ThemeProvider>
-        </GraphQLProvider>
-      </AppBridgeProvider>
+        }
+      >
+        <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
+          <GraphQLProvider>
+            <ThemeProvider>
+              <ThemeSynchronizer />
+              <RoutePropagator />
+              <AppLayout>
+                <Component {...pageProps} />
+              </AppLayout>
+            </ThemeProvider>
+          </GraphQLProvider>
+        </AppBridgeProvider>
+      </IframeProtectedWrapper>
     </NoSSRWrapper>
   );
 }
