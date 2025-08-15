@@ -12,6 +12,14 @@ export interface Vendor {
   slug: string;
   stripeAccountId?: string;
   metadata: ReadonlyArray<{ readonly key: string; readonly value: string }>;
+  attributes?: ReadonlyArray<{
+    readonly attribute: { readonly slug?: string | null };
+    readonly values: ReadonlyArray<{
+      readonly slug?: string | null;
+      readonly value?: string | null;
+      readonly name?: string | null;
+    }>;
+  }>;
 }
 
 export class VendorFetcher {
@@ -59,7 +67,35 @@ export class VendorFetcher {
     }
 
     const vendor = vendorResponse.data.page;
-    const stripeAccountId = vendor.metadata.find((m) => m.key === "stripe_account_id")?.value;
+
+    // First try to get stripe_account_id from attributes (preferred)
+    let stripeAccountId: string | undefined;
+    const stripeAccountAttribute = vendor.attributes?.find(
+      (attr) => attr.attribute.slug === "stripe_account_id",
+    );
+
+    if (stripeAccountAttribute && stripeAccountAttribute.values.length > 0) {
+      // Get the first value (attributes can have multiple values, but we expect only one for stripe_account_id)
+      const value = stripeAccountAttribute.values[0].value || stripeAccountAttribute.values[0].slug;
+
+      if (value) {
+        stripeAccountId = value;
+        this.logger.info("Found Stripe account ID in attributes", {
+          attributeSlug: stripeAccountAttribute.attribute.slug,
+          stripeAccountId,
+        });
+      }
+    }
+
+    // Fallback to metadata if not found in attributes
+    if (!stripeAccountId) {
+      stripeAccountId = vendor.metadata.find((m) => m.key === "stripe_account_id")?.value;
+      if (stripeAccountId) {
+        this.logger.info("Found Stripe account ID in metadata (fallback)", {
+          stripeAccountId,
+        });
+      }
+    }
 
     this.logger.info("✅ Vendor page fetched from Saleor", {
       vendorId: vendor.id,
@@ -67,8 +103,15 @@ export class VendorFetcher {
       vendorSlug: vendor.slug,
       metadataCount: vendor.metadata.length,
       metadataKeys: vendor.metadata.map((m) => m.key),
+      attributeCount: vendor.attributes?.length || 0,
+      attributeSlugs: vendor.attributes?.map((a) => a.attribute.slug).filter(Boolean) || [],
       hasStripeAccountId: !!stripeAccountId,
       stripeAccountId: stripeAccountId || "not_configured",
+      stripeAccountSource: stripeAccountAttribute
+        ? "attribute"
+        : stripeAccountId
+        ? "metadata"
+        : "none",
     });
 
     return ok({
@@ -77,6 +120,7 @@ export class VendorFetcher {
       slug: vendor.slug,
       stripeAccountId,
       metadata: vendor.metadata,
+      attributes: vendor.attributes,
     });
   }
 

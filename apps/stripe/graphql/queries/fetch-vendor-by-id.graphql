@@ -7,6 +7,16 @@ query FetchVendorById($vendorId: ID!) {
       key
       value
     }
+    attributes {
+      attribute {
+        slug
+      }
+      values {
+        slug
+        value
+        name
+      }
+    }
     pageType {
       id
       name
