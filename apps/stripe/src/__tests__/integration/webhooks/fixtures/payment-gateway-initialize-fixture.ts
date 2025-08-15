@@ -10,6 +10,7 @@ export const paymentGatewayInitializeFixture = (): PaymentGatewayInitializeSessi
         id: mockedSaleorChannelId,
       },
       id: "checkout-id",
+      metadata: [],
     },
     recipient: {
       id: mockedSaleorAppId,

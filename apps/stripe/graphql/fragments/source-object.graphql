@@ -5,6 +5,10 @@ fragment SourceObject on OrderOrCheckout {
     channel {
       ...Channel
     }
+    metadata {
+      key
+      value
+    }
   }
   ... on Order {
     __typename

@@ -196,23 +196,23 @@ export class TransactionInitializeSessionUseCase {
     let stripeAccountId: string | undefined;
     let resolutionMethod: string = "channel-based";
 
-    // Extract order metadata for vendor resolution
-    const orderMetadata =
-      event.sourceObject.__typename === "Order" ? [...event.sourceObject.metadata] : [];
+    // Extract metadata for vendor resolution (both Order and Checkout have metadata)
+    const sourceMetadata = event.sourceObject.metadata ? [...event.sourceObject.metadata] : [];
 
     this.logger.info("🔍 Starting vendor resolution for payment", {
       sourceType: event.sourceObject.__typename,
       sourceId: event.sourceObject.id,
       channelId: event.sourceObject.channel.id,
       transactionId: event.transaction.id,
-      hasOrderMetadata: orderMetadata.length > 0,
-      orderMetadataKeys: orderMetadata.map((m) => m.key),
+      hasMetadata: sourceMetadata.length > 0,
+      metadataKeys: sourceMetadata.map((m) => m.key),
     });
 
     // Log the actual metadata values for debugging
-    if (orderMetadata.length > 0) {
-      this.logger.info("📋 Order metadata contents", {
-        metadata: orderMetadata.reduce(
+    if (sourceMetadata.length > 0) {
+      this.logger.info("📋 Source metadata contents", {
+        sourceType: event.sourceObject.__typename,
+        metadata: sourceMetadata.reduce(
           (acc, m) => {
             acc[m.key] = m.value;
 
@@ -220,13 +220,13 @@ export class TransactionInitializeSessionUseCase {
           },
           {} as Record<string, string>,
         ),
-        hasVendorId: orderMetadata.some((m) => m.key === "vendor_id"),
+        hasVendorId: sourceMetadata.some((m) => m.key === "vendor_id"),
       });
     }
 
     // Try vendor-specific resolution first
     const vendorResolutionResult = await this.vendorResolver.resolveVendorForPayment({
-      orderMetadata,
+      orderMetadata: sourceMetadata,
       channelId: event.sourceObject.channel.id,
     });
 
@@ -255,6 +255,7 @@ export class TransactionInitializeSessionUseCase {
         transactionId: event.transaction.id,
         channelId: event.sourceObject.channel.id,
         sourceType: event.sourceObject.__typename,
+        metadataCount: sourceMetadata.length,
       });
     }
 

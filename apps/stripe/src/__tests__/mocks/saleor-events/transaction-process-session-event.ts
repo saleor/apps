@@ -20,5 +20,6 @@ export const getMockedTransactionProcessSessionEvent = (args?: {
       id: mockedSaleorChannelId,
       slug: "channel-slug",
     },
+    metadata: [],
   },
 });

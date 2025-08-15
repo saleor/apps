@@ -18,7 +18,10 @@ vi.mock("../vendor-fetcher");
 describe("VendorResolver", () => {
   let mockClient: Pick<Client, "query">;
   let vendorResolver: VendorResolver;
-  let mockVendorFetcher: Pick<VendorFetcher, "fetchVendorById" | "fetchVendors">;
+  let mockVendorFetcher: {
+    fetchVendorById: ReturnType<typeof vi.fn>;
+    fetchVendors: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     mockClient = {
@@ -27,12 +30,13 @@ describe("VendorResolver", () => {
 
     // Mock the VendorFetcher constructor
     mockVendorFetcher = {
-      client: mockClient,
       fetchVendorById: vi.fn(),
       fetchVendors: vi.fn(),
     };
 
-    vi.mocked(VendorFetcher).mockImplementation(() => mockVendorFetcher as VendorFetcher);
+    vi.mocked(VendorFetcher).mockImplementation(
+      () => mockVendorFetcher as unknown as VendorFetcher,
+    );
 
     vendorResolver = new VendorResolver(mockClient);
   });

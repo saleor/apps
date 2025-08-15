@@ -16,6 +16,7 @@ export const transactionInitializeSessionFixture =
           id: mockedSaleorChannelId,
         },
         id: "checkout-id",
+        metadata: [],
       },
       recipient: {
         id: mockedSaleorAppId,
