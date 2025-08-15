@@ -68,6 +68,20 @@ export class VendorFetcher {
 
     const vendor = vendorResponse.data.page;
 
+    this.logger.debug("📄 Raw vendor data from Saleor", {
+      vendorId: vendor.id,
+      hasAttributes: !!vendor.attributes,
+      attributesLength: vendor.attributes?.length || 0,
+      attributes: vendor.attributes?.map((a) => ({
+        slug: a.attribute.slug,
+        values: a.values.map((v) => ({
+          slug: v.slug,
+          value: v.value,
+          name: v.name,
+        })),
+      })),
+    });
+
     // First try to get stripe_account_id from attributes (preferred)
     let stripeAccountId: string | undefined;
     const stripeAccountAttribute = vendor.attributes?.find(
@@ -75,14 +89,19 @@ export class VendorFetcher {
     );
 
     if (stripeAccountAttribute && stripeAccountAttribute.values.length > 0) {
-      // Get the first value (attributes can have multiple values, but we expect only one for stripe_account_id)
-      const value = stripeAccountAttribute.values[0].value || stripeAccountAttribute.values[0].slug;
+      /*
+       * Get the first value (attributes can have multiple values, but we expect only one for stripe_account_id)
+       * The Stripe account ID can be in value, name, or slug field depending on the attribute type
+       */
+      const attributeValue = stripeAccountAttribute.values[0];
+      const value = attributeValue.value || attributeValue.name || attributeValue.slug;
 
       if (value) {
         stripeAccountId = value;
         this.logger.info("Found Stripe account ID in attributes", {
           attributeSlug: stripeAccountAttribute.attribute.slug,
           stripeAccountId,
+          fieldSource: attributeValue.value ? "value" : attributeValue.name ? "name" : "slug",
         });
       }
     }
