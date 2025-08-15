@@ -2,6 +2,7 @@ import { err, ok, Result } from "neverthrow";
 import { Client } from "urql";
 
 import { BaseError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 
 import { FetchVendorByIdDocument, FetchVendorsDocument } from "../../../generated/graphql";
 
@@ -21,6 +22,7 @@ export class VendorFetcher {
   });
 
   readonly client: Pick<Client, "query">;
+  private logger = createLogger("VendorFetcher");
 
   constructor(client: Pick<Client, "query">) {
     this.client = client;
@@ -29,11 +31,20 @@ export class VendorFetcher {
   async fetchVendorById(
     vendorId: string,
   ): Promise<Result<Vendor | null, InstanceType<typeof VendorFetcher.FetchError>>> {
+    this.logger.debug("🔍 Querying Saleor GraphQL for vendor", { vendorId });
+
     const vendorResponse = await this.client
       .query(FetchVendorByIdDocument, { vendorId })
       .toPromise();
 
     if (vendorResponse.error) {
+      this.logger.error("❌ GraphQL query failed", {
+        vendorId,
+        error: vendorResponse.error.message,
+        graphQLErrors: vendorResponse.error.graphQLErrors,
+        networkError: vendorResponse.error.networkError,
+      });
+
       return err(
         new VendorFetcher.FetchError("Failed to fetch vendor", {
           cause: vendorResponse.error,
@@ -42,11 +53,23 @@ export class VendorFetcher {
     }
 
     if (!vendorResponse.data?.page) {
+      this.logger.warn("⚠️ No page found for vendor ID", { vendorId });
+
       return ok(null);
     }
 
     const vendor = vendorResponse.data.page;
     const stripeAccountId = vendor.metadata.find((m) => m.key === "stripe_account_id")?.value;
+
+    this.logger.info("✅ Vendor page fetched from Saleor", {
+      vendorId: vendor.id,
+      vendorTitle: vendor.title,
+      vendorSlug: vendor.slug,
+      metadataCount: vendor.metadata.length,
+      metadataKeys: vendor.metadata.map((m) => m.key),
+      hasStripeAccountId: !!stripeAccountId,
+      stripeAccountId: stripeAccountId || "not_configured",
+    });
 
     return ok({
       id: vendor.id,

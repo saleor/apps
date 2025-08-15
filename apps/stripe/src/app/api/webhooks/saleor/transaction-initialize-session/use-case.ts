@@ -200,10 +200,40 @@ export class TransactionInitializeSessionUseCase {
     const orderMetadata =
       event.sourceObject.__typename === "Order" ? [...event.sourceObject.metadata] : [];
 
+    this.logger.info("🔍 Starting vendor resolution for payment", {
+      sourceType: event.sourceObject.__typename,
+      sourceId: event.sourceObject.id,
+      channelId: event.sourceObject.channel.id,
+      transactionId: event.transaction.id,
+      hasOrderMetadata: orderMetadata.length > 0,
+      orderMetadataKeys: orderMetadata.map((m) => m.key),
+    });
+
+    // Log the actual metadata values for debugging
+    if (orderMetadata.length > 0) {
+      this.logger.info("📋 Order metadata contents", {
+        metadata: orderMetadata.reduce(
+          (acc, m) => {
+            acc[m.key] = m.value;
+
+            return acc;
+          },
+          {} as Record<string, string>,
+        ),
+        hasVendorId: orderMetadata.some((m) => m.key === "vendor_id"),
+      });
+    }
+
     // Try vendor-specific resolution first
     const vendorResolutionResult = await this.vendorResolver.resolveVendorForPayment({
       orderMetadata,
       channelId: event.sourceObject.channel.id,
+    });
+
+    this.logger.info("🔄 Vendor resolution completed", {
+      success: vendorResolutionResult.isOk(),
+      hasVendorData: vendorResolutionResult.isOk() && !!vendorResolutionResult.value,
+      error: vendorResolutionResult.isErr() ? vendorResolutionResult.error.message : null,
     });
 
     if (vendorResolutionResult.isOk() && vendorResolutionResult.value) {
@@ -212,11 +242,19 @@ export class TransactionInitializeSessionUseCase {
       stripeAccountId = vendorResult.stripeAccountId;
       resolutionMethod = vendorResult.resolutionMethod;
 
-      this.logger.info("Using vendor-specific Stripe configuration", {
+      this.logger.info("✅ Using vendor-specific Stripe configuration", {
         vendorId: vendorResult.vendor.id,
         vendorName: vendorResult.vendor.title,
         stripeAccountId: vendorResult.stripeAccountId,
         resolutionMethod,
+        transactionId: event.transaction.id,
+        orderId: event.sourceObject.__typename === "Order" ? event.sourceObject.id : null,
+      });
+    } else {
+      this.logger.info("ℹ️ No vendor-specific configuration found, using channel defaults", {
+        transactionId: event.transaction.id,
+        channelId: event.sourceObject.channel.id,
+        sourceType: event.sourceObject.__typename,
       });
     }
 
@@ -294,6 +332,15 @@ export class TransactionInitializeSessionUseCase {
       );
     }
 
+    this.logger.info("💳 Creating Stripe payment intent", {
+      hasStripeAccount: !!stripePaymentIntentParamsResult.value.stripeAccount,
+      stripeAccountId: stripePaymentIntentParamsResult.value.stripeAccount || "default_account",
+      amount: stripePaymentIntentParamsResult.value.stripeMoney.amount,
+      currency: stripePaymentIntentParamsResult.value.stripeMoney.currency,
+      transactionId: event.transaction.id,
+      orderId: event.sourceObject.__typename === "Order" ? event.sourceObject.id : null,
+    });
+
     const createPaymentIntentResult = await stripePaymentIntentsApi.createPaymentIntent(
       stripePaymentIntentParamsResult.value,
     );
@@ -315,6 +362,15 @@ export class TransactionInitializeSessionUseCase {
     const stripePaymentIntent = createPaymentIntentResult.value;
 
     loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, stripePaymentIntent.id);
+
+    this.logger.info("✅ Stripe payment intent created successfully", {
+      paymentIntentId: stripePaymentIntent.id,
+      status: stripePaymentIntent.status,
+      amount: stripePaymentIntent.amount,
+      currency: stripePaymentIntent.currency,
+      stripeAccountUsed: stripePaymentIntentParamsResult.value.stripeAccount || "default_account",
+      transactionId: event.transaction.id,
+    });
 
     this.logger.debug("Stripe created payment intent", { stripeResponse: stripePaymentIntent });
 

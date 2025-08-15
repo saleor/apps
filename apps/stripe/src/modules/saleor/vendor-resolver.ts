@@ -2,6 +2,7 @@ import { ok, Result } from "neverthrow";
 import { Client } from "urql";
 
 import { BaseError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 
 import { Vendor, VendorFetcher } from "./vendor-fetcher";
 
@@ -19,6 +20,7 @@ export class VendorResolver {
   });
 
   private vendorFetcher: VendorFetcher;
+  private logger = createLogger("VendorResolver");
 
   constructor(client: Pick<Client, "query">) {
     this.vendorFetcher = new VendorFetcher(client);
@@ -31,8 +33,16 @@ export class VendorResolver {
     orderMetadata: Array<{ key: string; value: string }>,
   ): string | null {
     const vendorMetadata = orderMetadata.find((m) => m.key === "vendor_id");
+    const vendorId = vendorMetadata?.value || null;
 
-    return vendorMetadata?.value || null;
+    this.logger.debug("🔎 Extracting vendor ID from order metadata", {
+      totalMetadataFields: orderMetadata.length,
+      metadataKeys: orderMetadata.map((m) => m.key),
+      vendorIdFound: !!vendorId,
+      vendorId,
+    });
+
+    return vendorId;
   }
 
   /**
@@ -56,19 +66,49 @@ export class VendorResolver {
     const vendorId = this.extractVendorIdFromOrder(orderMetadata);
 
     if (vendorId) {
+      this.logger.info("🏪 Fetching vendor data from Saleor", { vendorId });
+
       const vendorResult = await this.vendorFetcher.fetchVendorById(vendorId);
 
-      if (vendorResult.isOk() && vendorResult.value) {
+      if (vendorResult.isErr()) {
+        this.logger.error("❌ Failed to fetch vendor data", {
+          vendorId,
+          error: vendorResult.error.message,
+        });
+      } else if (vendorResult.value) {
         const vendor = vendorResult.value;
 
+        this.logger.info("📦 Vendor data fetched successfully", {
+          vendorId: vendor.id,
+          vendorTitle: vendor.title,
+          hasStripeAccountId: !!vendor.stripeAccountId,
+          stripeAccountId: vendor.stripeAccountId,
+        });
+
         if (vendor.stripeAccountId) {
+          this.logger.info("💳 Vendor has Stripe account configured", {
+            vendorId: vendor.id,
+            stripeAccountId: vendor.stripeAccountId,
+          });
+
           return ok({
             vendor,
             stripeAccountId: vendor.stripeAccountId,
             resolutionMethod: "vendor-specific",
           });
+        } else {
+          this.logger.warn("⚠️ Vendor found but no Stripe account ID configured", {
+            vendorId: vendor.id,
+            vendorTitle: vendor.title,
+          });
         }
+      } else {
+        this.logger.warn("⚠️ Vendor not found in Saleor", { vendorId });
       }
+    } else {
+      this.logger.debug("ℹ️ No vendor_id in order metadata", {
+        availableMetadataKeys: orderMetadata.map((m) => m.key),
+      });
     }
 
     /*
