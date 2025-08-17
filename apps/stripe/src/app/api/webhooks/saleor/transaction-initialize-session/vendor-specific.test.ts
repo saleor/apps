@@ -91,7 +91,10 @@ describe("Vendor-specific Stripe account functionality", () => {
       );
 
       // Verify the response includes the vendor's Stripe account ID
-      const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+      const successResponse = result._unsafeUnwrap() as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Success
+      >;
+
       expect(successResponse.stripeAccount).toBe(vendorStripeAccountId);
 
       // Verify Stripe API was called with vendor's account and metadata
@@ -168,7 +171,10 @@ describe("Vendor-specific Stripe account functionality", () => {
       expect(result._unsafeUnwrap()).toBeInstanceOf(
         TransactionInitializeSessionUseCaseResponses.Success,
       );
-      const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+      const successResponse = result._unsafeUnwrap() as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Success
+      >;
+
       expect(successResponse.stripeAccount).toBe(vendorStripeAccountId);
 
       // Verify transaction was recorded with vendor's account
@@ -225,7 +231,10 @@ describe("Vendor-specific Stripe account functionality", () => {
       );
 
       // Verify the response does NOT include a Stripe account ID (main account used)
-      const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+      const successResponse = result._unsafeUnwrap() as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Success
+      >;
+
       expect(successResponse.stripeAccount).toBeUndefined();
 
       // Verify Stripe API was called WITHOUT vendor account but WITH metadata
@@ -283,7 +292,10 @@ describe("Vendor-specific Stripe account functionality", () => {
       expect(result._unsafeUnwrap()).toBeInstanceOf(
         TransactionInitializeSessionUseCaseResponses.Success,
       );
-      const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+      const successResponse = result._unsafeUnwrap() as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Success
+      >;
+
       expect(successResponse.stripeAccount).toBeUndefined();
 
       // Verify vendor resolver was called

@@ -173,7 +173,10 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(result._unsafeUnwrap()).toBeInstanceOf(
       TransactionInitializeSessionUseCaseResponses.Success,
     );
-    const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+    const successResponse = result._unsafeUnwrap() as InstanceType<
+      typeof TransactionInitializeSessionUseCaseResponses.Success
+    >;
+
     expect(successResponse.stripeAccount).toBe(vendorStripeAccountId);
 
     expect(spy).toHaveBeenCalledWith({
@@ -228,7 +231,10 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(result._unsafeUnwrap()).toBeInstanceOf(
       TransactionInitializeSessionUseCaseResponses.Success,
     );
-    const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+    const successResponse = result._unsafeUnwrap() as InstanceType<
+      typeof TransactionInitializeSessionUseCaseResponses.Success
+    >;
+
     expect(successResponse.stripeAccount).toBeUndefined();
 
     // Verify Stripe API was called without vendor account
