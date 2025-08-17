@@ -6,6 +6,7 @@ import { mockedSaleorChannelId, mockedSaleorTransactionId } from "../constants";
 export const getMockedTransactionInitializeSessionEvent = (args?: {
   actionType?: "CHARGE" | "AUTHORIZATION";
   data?: string;
+  sourceObject?: TransactionInitializeSessionEventFragment["sourceObject"];
 }): TransactionInitializeSessionEventFragment => ({
   action: {
     amount: 100,
@@ -22,7 +23,7 @@ export const getMockedTransactionInitializeSessionEvent = (args?: {
         paymentMethod: "card",
       },
     })._unsafeUnwrap(),
-  sourceObject: {
+  sourceObject: args?.sourceObject ?? {
     id: "mock-channel-1",
     __typename: "Checkout",
     channel: {

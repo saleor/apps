@@ -1,17 +1,20 @@
 import { err, ok } from "neverthrow";
 import Stripe from "stripe";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { 
-  mockedTransactionRecorderRepo,
-  mockedTransactionRecorderRepoWithVendorAccount 
-} from "@/__tests__/mocks/transaction-recorder-repo";
 import { getMockedTransactionProcessSessionEvent } from "@/__tests__/mocks/saleor-events/transaction-process-session-event";
+import {
+  mockedTransactionRecorderRepo,
+  mockedTransactionRecorderRepoWithVendorAccount,
+} from "@/__tests__/mocks/transaction-recorder-repo";
+import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
+import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
+import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
@@ -30,17 +33,20 @@ describe("Transaction Process Session with vendor-specific accounts", () => {
   describe("When transaction was created with vendor account", () => {
     it("should retrieve payment intent from vendor's Stripe account", async () => {
       const vendorStripeAccountId = "acct_vendor789";
-      
+
       // Mock transaction recorder to return transaction with vendor account
-      const getTransactionSpy = vi
-        .spyOn(mockedTransactionRecorderRepoWithVendorAccount, "getTransactionByStripePaymentIntentId")
+      const _getTransactionSpy = vi
+        .spyOn(
+          mockedTransactionRecorderRepoWithVendorAccount,
+          "getTransactionByStripePaymentIntentId",
+        )
         .mockResolvedValue(
           ok(
             new RecordedTransaction({
-              saleorTransactionId: "mocked-saleor-transaction-id" as any,
+              saleorTransactionId: createSaleorTransactionId("mocked-saleor-transaction-id"),
               stripePaymentIntentId: mockedStripePaymentIntentId,
-              saleorTransactionFlow: "CHARGE",
-              resolvedTransactionFlow: "CHARGE",
+              saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+              resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
               selectedPaymentMethod: "card",
               stripeAccountId: vendorStripeAccountId,
             }),
@@ -78,7 +84,7 @@ describe("Transaction Process Session with vendor-specific accounts", () => {
       );
 
       // Verify transaction was fetched
-      expect(getTransactionSpy).toHaveBeenCalledWith(
+      expect(_getTransactionSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           appId: mockedSaleorAppId,
           saleorApiUrl: mockedSaleorApiUrl,
@@ -97,15 +103,15 @@ describe("Transaction Process Session with vendor-specific accounts", () => {
   describe("When transaction was created with main account", () => {
     it("should retrieve payment intent from main Stripe account", async () => {
       // Mock transaction recorder to return transaction WITHOUT vendor account
-      const getTransactionSpy = vi
+      const _getTransactionSpy = vi
         .spyOn(mockedTransactionRecorderRepo, "getTransactionByStripePaymentIntentId")
         .mockResolvedValue(
           ok(
             new RecordedTransaction({
-              saleorTransactionId: "mocked-saleor-transaction-id" as any,
+              saleorTransactionId: createSaleorTransactionId("mocked-saleor-transaction-id"),
               stripePaymentIntentId: mockedStripePaymentIntentId,
-              saleorTransactionFlow: "CHARGE",
-              resolvedTransactionFlow: "CHARGE",
+              saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+              resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
               selectedPaymentMethod: "card",
               stripeAccountId: undefined, // No vendor account
             }),
@@ -152,31 +158,32 @@ describe("Transaction Process Session with vendor-specific accounts", () => {
   describe("Error handling", () => {
     it("should handle payment intent not found on vendor account", async () => {
       const vendorStripeAccountId = "acct_vendor_wrong";
-      
+
       // Mock transaction with wrong vendor account
-      vi.spyOn(mockedTransactionRecorderRepo, "getTransactionByStripePaymentIntentId")
-        .mockResolvedValue(
-          ok(
-            new RecordedTransaction({
-              saleorTransactionId: "mocked-saleor-transaction-id" as any,
-              stripePaymentIntentId: mockedStripePaymentIntentId,
-              saleorTransactionFlow: "CHARGE",
-              resolvedTransactionFlow: "CHARGE",
-              selectedPaymentMethod: "card",
-              stripeAccountId: vendorStripeAccountId,
-            }),
-          ),
-        );
+      vi.spyOn(
+        mockedTransactionRecorderRepo,
+        "getTransactionByStripePaymentIntentId",
+      ).mockResolvedValue(
+        ok(
+          new RecordedTransaction({
+            saleorTransactionId: createSaleorTransactionId("mocked-saleor-transaction-id"),
+            stripePaymentIntentId: mockedStripePaymentIntentId,
+            saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+            resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+            selectedPaymentMethod: "card",
+            stripeAccountId: vendorStripeAccountId,
+          }),
+        ),
+      );
 
       // Mock Stripe API to return error
-      vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent")
-        .mockImplementationOnce(async () =>
-          err({
-            type: "StripeInvalidRequestError",
-            code: "resource_missing",
-            message: "No such payment_intent",
-          } as any),
-        );
+      vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(async () =>
+        err({
+          type: "StripeInvalidRequestError",
+          code: "resource_missing",
+          message: "No such payment_intent",
+        } as Stripe.errors.StripeInvalidRequestError),
+      );
 
       const uc = new TransactionProcessSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,

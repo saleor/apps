@@ -1,14 +1,14 @@
 import { err, ok } from "neverthrow";
 import Stripe from "stripe";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
-import { mockedTransactionRecorderRepo } from "@/__tests__/mocks/transaction-recorder-repo";
 import { getMockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/transaction-initialize-session-event";
+import { mockedTransactionRecorderRepo } from "@/__tests__/mocks/transaction-recorder-repo";
 import { VendorResolver } from "@/modules/saleor/vendor-resolver";
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
@@ -24,18 +24,18 @@ describe("Vendor-specific Stripe account functionality", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Create a mock vendor resolver
     mockVendorResolver = {
       resolveVendorForPayment: vi.fn(),
       getAvailableVendors: vi.fn(),
-    } as any;
+    } as unknown as VendorResolver;
   });
 
   describe("When vendor has Stripe account configured", () => {
     it("should pass vendor's Stripe account ID to payment intent creation", async () => {
       const vendorStripeAccountId = "acct_vendor123";
-      
+
       // Mock vendor resolver to return vendor with Stripe account
       vi.mocked(mockVendorResolver.resolveVendorForPayment).mockResolvedValue(
         ok({
@@ -100,7 +100,7 @@ describe("Vendor-specific Stripe account functionality", () => {
 
     it("should record transaction with vendor's Stripe account ID", async () => {
       const vendorStripeAccountId = "acct_vendor456";
-      
+
       // Mock vendor resolver
       vi.mocked(mockVendorResolver.resolveVendorForPayment).mockResolvedValue(
         ok({
@@ -116,10 +116,22 @@ describe("Vendor-specific Stripe account functionality", () => {
         }),
       );
 
+      // Mock Stripe API to return success
+      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+        async () =>
+          ok({
+            id: mockedStripePaymentIntentId.toString(),
+            amount: 100,
+            currency: "usd",
+            status: "requires_payment_method",
+            client_secret: "test_secret",
+          } as Stripe.PaymentIntent),
+      );
+
       // Mock transaction recorder to track the call
       const recordTransactionSpy = vi
         .spyOn(mockedTransactionRecorderRepo, "recordTransaction")
-        .mockResolvedValue(ok(undefined));
+        .mockResolvedValue(ok(null));
 
       const uc = new TransactionInitializeSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
@@ -205,6 +217,9 @@ describe("Vendor-specific Stripe account functionality", () => {
     });
 
     it("should use main account when no vendor_id in metadata", async () => {
+      // Mock vendor resolver to return null (no vendor)
+      vi.mocked(mockVendorResolver.resolveVendorForPayment).mockResolvedValue(ok(null));
+
       const createPaymentIntentSpy = vi
         .spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent")
         .mockImplementationOnce(async () =>
@@ -257,9 +272,21 @@ describe("Vendor-specific Stripe account functionality", () => {
       // Mock vendor resolver to return vendor without Stripe account
       vi.mocked(mockVendorResolver.resolveVendorForPayment).mockResolvedValue(ok(null));
 
+      // Mock Stripe API to return success
+      vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+        async () =>
+          ok({
+            id: mockedStripePaymentIntentId.toString(),
+            amount: 100,
+            currency: "usd",
+            status: "requires_payment_method",
+            client_secret: "test_secret",
+          } as Stripe.PaymentIntent),
+      );
+
       const recordTransactionSpy = vi
         .spyOn(mockedTransactionRecorderRepo, "recordTransaction")
-        .mockResolvedValue(ok(undefined));
+        .mockResolvedValue(ok(null));
 
       const uc = new TransactionInitializeSessionUseCase({
         appConfigRepo: mockedAppConfigRepo,
@@ -293,7 +320,7 @@ describe("Vendor-specific Stripe account functionality", () => {
         err({
           name: "ResolutionError",
           message: "Failed to fetch vendor",
-        } as any),
+        } as unknown as InstanceType<typeof VendorResolver.ResolutionError>),
       );
 
       const createPaymentIntentSpy = vi
