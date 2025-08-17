@@ -397,6 +397,7 @@ export class TransactionInitializeSessionUseCase {
       saleorTransactionFlow: saleorTransactionFlow,
       resolvedTransactionFlow: resolvedTransactionFlow,
       selectedPaymentMethod: selectedPaymentMethod.type,
+      stripeAccountId,
     });
 
     const recordResult = await this.transactionRecorder.recordTransaction(

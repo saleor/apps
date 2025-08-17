@@ -16,6 +16,7 @@ import { setObservabilitySourceObjectId } from "@/lib/observability-source-objec
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
+import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
 
 import { withRecipientVerification } from "../with-recipient-verification";
 import { TransactionCancelationRequestedUseCase } from "./use-case";
@@ -24,6 +25,7 @@ import { transactionCancelationRequestedWebhookDefinition } from "./webhook-defi
 const useCase = new TransactionCancelationRequestedUseCase({
   appConfigRepo: appConfigRepoImpl,
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
+  transactionRecorder: transactionRecorder,
 });
 
 const logger = createLogger("TRANSACTION_CANCELATION_REQUESTED route");

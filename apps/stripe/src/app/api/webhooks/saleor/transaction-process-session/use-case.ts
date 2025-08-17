@@ -109,16 +109,9 @@ export class TransactionProcessSessionUseCase {
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
 
-    const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({
-      key: restrictedKey,
-    });
-
     const paymentIntentIdResult = createStripePaymentIntentId(event.transaction.pspReference);
 
-    const getPaymentIntentResult = await stripePaymentIntentsApi.getPaymentIntent({
-      id: paymentIntentIdResult,
-    });
-
+    // First get the recorded transaction to check if it has a vendor-specific Stripe account
     const recordedTransactionResult =
       await this.transactionRecorder.getTransactionByStripePaymentIntentId(
         {
@@ -140,6 +133,25 @@ export class TransactionProcessSessionUseCase {
         ),
       );
     }
+
+    // Check if the transaction was created with a vendor-specific Stripe account
+    const stripeAccountId = recordedTransactionResult.value.stripeAccountId;
+
+    if (stripeAccountId) {
+      this.logger.info("Using vendor-specific Stripe account for payment intent retrieval", {
+        stripeAccountId,
+        paymentIntentId: paymentIntentIdResult,
+      });
+    }
+
+    const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({
+      key: restrictedKey,
+    });
+
+    const getPaymentIntentResult = await stripePaymentIntentsApi.getPaymentIntent({
+      id: paymentIntentIdResult,
+      stripeAccount: stripeAccountId,
+    });
 
     if (getPaymentIntentResult.isErr()) {
       const error = mapStripeErrorToApiError(getPaymentIntentResult.error);

@@ -23,6 +23,7 @@ import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-int
 import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
+import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import {
   TransactionChargeRequestedUseCaseResponses,
@@ -38,13 +39,16 @@ export class TransactionChargeRequestedUseCase {
   private logger = createLogger("TransactionChargeRequestedUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
+  private transactionRecorder: TransactionRecorderRepo;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
+    transactionRecorder: TransactionRecorderRepo;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
+    this.transactionRecorder = deps.transactionRecorder;
   }
 
   async execute(args: {
@@ -97,18 +101,47 @@ export class TransactionChargeRequestedUseCase {
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
 
+    const paymentIntentIdResult = createStripePaymentIntentId(transaction.pspReference);
+
+    // Get the recorded transaction to check for vendor-specific Stripe account
+    const recordedTransactionResult =
+      await this.transactionRecorder.getTransactionByStripePaymentIntentId(
+        {
+          appId: args.appId,
+          saleorApiUrl: args.saleorApiUrl,
+        },
+        paymentIntentIdResult,
+      );
+
+    let stripeAccountId: string | undefined;
+
+    if (recordedTransactionResult.isOk()) {
+      stripeAccountId = recordedTransactionResult.value.stripeAccountId;
+      if (stripeAccountId) {
+        this.logger.info("Using vendor-specific Stripe account for capture", {
+          stripeAccountId,
+          paymentIntentId: paymentIntentIdResult,
+        });
+      }
+    } else {
+      this.logger.warn("Could not retrieve recorded transaction", {
+        error: recordedTransactionResult.error,
+        paymentIntentId: paymentIntentIdResult,
+      });
+    }
+
     const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({
       key: restrictedKey,
     });
 
     this.logger.debug("Capturing Stripe payment intent with id", {
       id: transaction.pspReference,
+      stripeAccountId: stripeAccountId || "default",
     });
-
-    const paymentIntentIdResult = createStripePaymentIntentId(transaction.pspReference);
 
     const capturePaymentIntentResult = await stripePaymentIntentsApi.capturePaymentIntent({
       id: paymentIntentIdResult,
+      stripeAccount: stripeAccountId,
     });
 
     if (capturePaymentIntentResult.isErr()) {

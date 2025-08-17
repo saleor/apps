@@ -51,12 +51,15 @@ export interface IStripePaymentIntentsApi {
   ): Promise<Result<Stripe.PaymentIntent, unknown>>;
   getPaymentIntent(args: {
     id: StripePaymentIntentId;
+    stripeAccount?: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
   capturePaymentIntent(args: {
     id: StripePaymentIntentId;
+    stripeAccount?: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
   cancelPaymentIntent(args: {
     id: StripePaymentIntentId;
+    stripeAccount?: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>>;
 }
 

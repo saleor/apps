@@ -45,27 +45,41 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
 
   async getPaymentIntent(args: {
     id: StripePaymentIntentId;
+    stripeAccount?: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.retrieve(args.id),
+      this.stripeApiWrapper.paymentIntents.retrieve(
+        args.id,
+        args.stripeAccount ? { stripeAccount: args.stripeAccount } : undefined,
+      ),
       (error) => error,
     );
   }
 
   async capturePaymentIntent(args: {
     id: StripePaymentIntentId;
+    stripeAccount?: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.capture(args.id),
+      this.stripeApiWrapper.paymentIntents.capture(
+        args.id,
+        undefined,
+        args.stripeAccount ? { stripeAccount: args.stripeAccount } : undefined,
+      ),
       (error) => error,
     );
   }
 
   async cancelPaymentIntent(args: {
     id: StripePaymentIntentId;
+    stripeAccount?: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.cancel(args.id),
+      this.stripeApiWrapper.paymentIntents.cancel(
+        args.id,
+        undefined,
+        args.stripeAccount ? { stripeAccount: args.stripeAccount } : undefined,
+      ),
       (error) => error,
     );
   }

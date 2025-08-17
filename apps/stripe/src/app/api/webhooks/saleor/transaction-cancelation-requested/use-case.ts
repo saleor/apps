@@ -26,6 +26,7 @@ import {
   CancelFailureResult,
   CancelSuccessResult,
 } from "@/modules/transaction-result/cancel-result";
+import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import {
   TransactionCancelationRequestedUseCaseResponses,
@@ -41,13 +42,16 @@ export class TransactionCancelationRequestedUseCase {
   private logger = createLogger("TransactionCancelationRequestedUseCase");
   private appConfigRepo: AppConfigRepo;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
+  private transactionRecorder: TransactionRecorderRepo;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
+    transactionRecorder: TransactionRecorderRepo;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
+    this.transactionRecorder = deps.transactionRecorder;
   }
 
   async execute(args: {
@@ -100,18 +104,47 @@ export class TransactionCancelationRequestedUseCase {
 
     const restrictedKey = stripeConfigForThisChannel.value.restrictedKey;
 
+    const stripePaymentIntentId = createStripePaymentIntentId(transaction.pspReference);
+
+    // Get the recorded transaction to check for vendor-specific Stripe account
+    const recordedTransactionResult =
+      await this.transactionRecorder.getTransactionByStripePaymentIntentId(
+        {
+          appId: args.appId,
+          saleorApiUrl: args.saleorApiUrl,
+        },
+        stripePaymentIntentId,
+      );
+
+    let stripeAccountId: string | undefined;
+
+    if (recordedTransactionResult.isOk()) {
+      stripeAccountId = recordedTransactionResult.value.stripeAccountId;
+      if (stripeAccountId) {
+        this.logger.info("Using vendor-specific Stripe account for cancel", {
+          stripeAccountId,
+          paymentIntentId: stripePaymentIntentId,
+        });
+      }
+    } else {
+      this.logger.warn("Could not retrieve recorded transaction", {
+        error: recordedTransactionResult.error,
+        paymentIntentId: stripePaymentIntentId,
+      });
+    }
+
     const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({
       key: restrictedKey,
     });
 
     this.logger.debug("Canceling Stripe payment intent with id", {
       id: transaction.pspReference,
+      stripeAccountId: stripeAccountId || "default",
     });
-
-    const stripePaymentIntentId = createStripePaymentIntentId(transaction.pspReference);
 
     const cancelPaymentIntentResult = await stripePaymentIntentsApi.cancelPaymentIntent({
       id: stripePaymentIntentId,
+      stripeAccount: stripeAccountId,
     });
 
     if (cancelPaymentIntentResult.isErr()) {

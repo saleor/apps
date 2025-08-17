@@ -17,6 +17,7 @@ export class RecordedTransaction {
   readonly saleorTransactionFlow: SaleorTransationFlow;
   readonly resolvedTransactionFlow: ResolvedTransactionFlow;
   readonly selectedPaymentMethod: PaymentMethod["type"];
+  readonly stripeAccountId?: string;
 
   constructor(args: {
     saleorTransactionId: SaleorTransationId;
@@ -24,11 +25,13 @@ export class RecordedTransaction {
     saleorTransactionFlow: SaleorTransationFlow;
     resolvedTransactionFlow: ResolvedTransactionFlow;
     selectedPaymentMethod: PaymentMethod["type"];
+    stripeAccountId?: string;
   }) {
     this.saleorTransactionId = args.saleorTransactionId;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.saleorTransactionFlow = args.saleorTransactionFlow;
     this.resolvedTransactionFlow = args.resolvedTransactionFlow;
     this.selectedPaymentMethod = args.selectedPaymentMethod;
+    this.stripeAccountId = args.stripeAccountId;
   }
 }
