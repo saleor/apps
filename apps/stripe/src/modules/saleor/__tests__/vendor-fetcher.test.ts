@@ -61,6 +61,7 @@ describe("VendorFetcher", () => {
             { key: "stripe_account_id", value: "acct_123456789" },
             { key: "vendor_code", value: "VENDOR001" },
           ],
+          attributes: undefined,
         });
       }
 
@@ -179,6 +180,7 @@ describe("VendorFetcher", () => {
           slug: "vendor-1",
           stripeAccountId: "acct_111",
           metadata: [{ key: "stripe_account_id", value: "acct_111" }],
+          attributes: undefined,
         });
         expect(vendors[1]).toStrictEqual({
           id: "vendor-2",
@@ -186,6 +188,7 @@ describe("VendorFetcher", () => {
           slug: "vendor-2",
           stripeAccountId: "acct_222",
           metadata: [{ key: "stripe_account_id", value: "acct_222" }],
+          attributes: undefined,
         });
       }
 

@@ -58,7 +58,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Payment Gateway Initialize",
-                "query": "subscription PaymentGatewayInitializeSession { event { ...PaymentGatewayInitializeSessionEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } } ... on Order { __typename id channel { ...Channel } metadata { key value } }}fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession { ...EventMetadata sourceObject { ...SourceObject }}",
+                "query": "subscription PaymentGatewayInitializeSession { event { ...PaymentGatewayInitializeSessionEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } metadata { key value } } ... on Order { __typename id channel { ...Channel } metadata { key value } }}fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession { ...EventMetadata sourceObject { ...SourceObject }}",
                 "syncEvents": [
                   "PAYMENT_GATEWAY_INITIALIZE_SESSION",
                 ],
@@ -67,7 +67,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Transaction Initialize Session",
-                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } } ... on Order { __typename id channel { ...Channel } metadata { key value } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency actionType } data transaction { id } sourceObject { ...SourceObject } idempotencyKey}",
+                "query": "subscription TransactionInitializeSession { event { ...TransactionInitializeSessionEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } metadata { key value } } ... on Order { __typename id channel { ...Channel } metadata { key value } }}fragment TransactionInitializeSessionEvent on TransactionInitializeSession { ...EventMetadata action { amount currency actionType } data transaction { id } sourceObject { ...SourceObject } idempotencyKey}",
                 "syncEvents": [
                   "TRANSACTION_INITIALIZE_SESSION",
                 ],
@@ -76,7 +76,7 @@ describe("Manifest handler", async () => {
               {
                 "isActive": true,
                 "name": "Stripe Transaction Process Session",
-                "query": "subscription TransactionProcessSession { event { ...TransactionProcessSessionEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } } ... on Order { __typename id channel { ...Channel } metadata { key value } }}fragment TransactionProcessSessionEvent on TransactionProcessSession { ...EventMetadata transaction { pspReference } action { amount actionType } sourceObject { ...SourceObject }}",
+                "query": "subscription TransactionProcessSession { event { ...TransactionProcessSessionEvent }}fragment EventMetadata on Event { version recipient { id }}fragment Channel on Channel { id slug}fragment SourceObject on OrderOrCheckout { ... on Checkout { __typename id channel { ...Channel } metadata { key value } } ... on Order { __typename id channel { ...Channel } metadata { key value } }}fragment TransactionProcessSessionEvent on TransactionProcessSession { ...EventMetadata transaction { pspReference } action { amount actionType } sourceObject { ...SourceObject }}",
                 "syncEvents": [
                   "TRANSACTION_PROCESS_SESSION",
                 ],

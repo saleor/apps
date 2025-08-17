@@ -28,6 +28,7 @@ import {
 } from "@/modules/transaction-result/failure-result";
 import { TransactionRecorderError } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
+import { parseTransactionInitializeSessionEventData } from "./event-data-parser";
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
@@ -661,12 +662,12 @@ describe("TransactionInitializeSessionUseCase", () => {
     });
 
     it("should include returnUrl for iDEAL payment method", async () => {
-      // Create event with ideal payment method - data should be a JSON string
-      const idealData = JSON.stringify({
+      // Create event with ideal payment method - data should be the parsed object
+      const idealData = parseTransactionInitializeSessionEventData({
         paymentIntent: {
           paymentMethod: "ideal",
         },
-      });
+      })._unsafeUnwrap();
 
       const saleorEvent = getMockedTransactionInitializeSessionEvent({
         data: idealData,

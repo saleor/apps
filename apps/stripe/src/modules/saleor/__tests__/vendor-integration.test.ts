@@ -73,6 +73,7 @@ describe("Vendor Integration Tests", () => {
               { key: "stripe_account_id", value: "acct_123456789" },
               { key: "vendor_code", value: "VENDOR001" },
             ],
+            attributes: undefined,
           },
           stripeAccountId: "acct_123456789",
           resolutionMethod: "vendor-specific",
