@@ -28,6 +28,7 @@ import {
 } from "@/modules/transaction-result/failure-result";
 import { TransactionRecorderError } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
+import { parseTransactionInitializeSessionEventData } from "./event-data-parser";
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
 
@@ -162,16 +163,79 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     const uc = createUseCase();
 
-    await uc.execute({
+    const result = await uc.execute({
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: saleorEvent,
     });
 
+    // Verify the response includes the vendor's Stripe account ID
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionInitializeSessionUseCaseResponses.Success,
+    );
+    const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+    expect(successResponse.stripeAccount).toBe(vendorStripeAccountId);
+
     expect(spy).toHaveBeenCalledWith({
       stripeMoney: expect.any(StripeMoney),
       idempotencyKey: saleorEvent.idempotencyKey,
       stripeAccount: vendorStripeAccountId, // Vendor account should be passed
+      intentParams: {
+        automatic_payment_methods: {
+          enabled: true,
+        },
+        payment_method_options: {
+          card: {
+            capture_method: undefined,
+          },
+        },
+      },
+      metadata: {
+        saleor_source_id: saleorEvent.sourceObject.id,
+        saleor_source_type: saleorEvent.sourceObject.__typename,
+        saleor_transaction_id: saleorEvent.transaction.id,
+      },
+    });
+  });
+
+  it("Does not include vendor stripe account ID when no vendor is resolved", async () => {
+    const saleorEvent = getMockedTransactionInitializeSessionEvent({ actionType: "CHARGE" });
+
+    // Mock vendor resolution to return null (no vendor)
+    mockedVendorResolver.resolveVendorForPayment = vi.fn().mockResolvedValue(ok(null));
+
+    const spy = vi
+      .spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent")
+      .mockImplementationOnce(async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          client_secret: "secret-value",
+          id: "pi_test",
+          status: "requires_payment_method",
+        } as Stripe.PaymentIntent),
+      );
+
+    const uc = createUseCase();
+
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+    });
+
+    // Verify the response does NOT include a Stripe account ID (main account used)
+    expect(result._unsafeUnwrap()).toBeInstanceOf(
+      TransactionInitializeSessionUseCaseResponses.Success,
+    );
+    const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+    expect(successResponse.stripeAccount).toBeUndefined();
+
+    // Verify Stripe API was called without vendor account
+    expect(spy).toHaveBeenCalledWith({
+      stripeMoney: expect.any(StripeMoney),
+      idempotencyKey: saleorEvent.idempotencyKey,
+      stripeAccount: undefined, // No vendor account should be passed
       intentParams: {
         automatic_payment_methods: {
           enabled: true,
@@ -661,15 +725,15 @@ describe("TransactionInitializeSessionUseCase", () => {
     });
 
     it("should include returnUrl for iDEAL payment method", async () => {
-      // Create event with ideal payment method - data should be the raw string
-      const idealDataString = JSON.stringify({
+      // Create event with ideal payment method - data should be the parsed object
+      const idealData = parseTransactionInitializeSessionEventData({
         paymentIntent: {
           paymentMethod: "ideal",
         },
-      });
+      })._unsafeUnwrap();
 
       const saleorEvent = getMockedTransactionInitializeSessionEvent({
-        data: idealDataString,
+        data: idealData,
       });
       const appUrl = "https://app.example.com";
 

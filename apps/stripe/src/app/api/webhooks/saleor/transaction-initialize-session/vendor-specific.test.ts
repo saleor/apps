@@ -90,6 +90,10 @@ describe("Vendor-specific Stripe account functionality", () => {
         TransactionInitializeSessionUseCaseResponses.Success,
       );
 
+      // Verify the response includes the vendor's Stripe account ID
+      const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+      expect(successResponse.stripeAccount).toBe(vendorStripeAccountId);
+
       // Verify Stripe API was called with vendor's account and metadata
       expect(createPaymentIntentSpy).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -154,11 +158,18 @@ describe("Vendor-specific Stripe account functionality", () => {
         },
       });
 
-      await uc.execute({
+      const result = await uc.execute({
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event,
       });
+
+      // Verify the response includes the vendor's Stripe account ID
+      expect(result._unsafeUnwrap()).toBeInstanceOf(
+        TransactionInitializeSessionUseCaseResponses.Success,
+      );
+      const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+      expect(successResponse.stripeAccount).toBe(vendorStripeAccountId);
 
       // Verify transaction was recorded with vendor's account
       expect(recordTransactionSpy).toHaveBeenCalledWith(
@@ -213,6 +224,10 @@ describe("Vendor-specific Stripe account functionality", () => {
         TransactionInitializeSessionUseCaseResponses.Success,
       );
 
+      // Verify the response does NOT include a Stripe account ID (main account used)
+      const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+      expect(successResponse.stripeAccount).toBeUndefined();
+
       // Verify Stripe API was called WITHOUT vendor account but WITH metadata
       expect(createPaymentIntentSpy).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -258,11 +273,18 @@ describe("Vendor-specific Stripe account functionality", () => {
         },
       });
 
-      await uc.execute({
+      const result = await uc.execute({
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event,
       });
+
+      // Verify the response does NOT include a Stripe account ID (main account used)
+      expect(result._unsafeUnwrap()).toBeInstanceOf(
+        TransactionInitializeSessionUseCaseResponses.Success,
+      );
+      const successResponse = result._unsafeUnwrap() as InstanceType<typeof TransactionInitializeSessionUseCaseResponses.Success>;
+      expect(successResponse.stripeAccount).toBeUndefined();
 
       // Verify vendor resolver was called
       expect(mockVendorResolver.resolveVendorForPayment).toHaveBeenCalledWith({

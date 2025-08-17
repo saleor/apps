@@ -443,6 +443,7 @@ export class TransactionInitializeSessionUseCase {
         stripeClientSecret,
         appContext: appContextContainer.getContextValue(),
         returnUrl,
+        stripeAccount: stripeAccountId,
       }),
     );
   }

@@ -44,11 +44,13 @@ class Success extends SuccessWebhookResponse {
   readonly saleorMoney: SaleorMoney;
   readonly stripePaymentIntentId: StripePaymentIntentId;
   readonly returnUrl?: string;
+  readonly stripeAccount?: string;
 
   private static ResponseDataSchema = createSuccessWebhookResponseDataSchema(
     z.object({
       stripeClientSecret: StripeClientSecretSchema,
       returnUrl: z.string().optional(),
+      stripeAccount: z.string().optional(),
     }),
   );
 
@@ -59,6 +61,7 @@ class Success extends SuccessWebhookResponse {
     stripePaymentIntentId: StripePaymentIntentId;
     appContext: AppContext;
     returnUrl?: string;
+    stripeAccount?: string;
   }) {
     super(args.appContext);
     this.transactionResult = args.transactionResult;
@@ -66,6 +69,7 @@ class Success extends SuccessWebhookResponse {
     this.saleorMoney = args.saleorMoney;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
     this.returnUrl = args.returnUrl;
+    this.stripeAccount = args.stripeAccount;
   }
 
   getResponse() {
@@ -78,6 +82,7 @@ class Success extends SuccessWebhookResponse {
         paymentIntent: {
           stripeClientSecret: this.stripeClientSecret,
           ...(this.returnUrl && { returnUrl: this.returnUrl }),
+          ...(this.stripeAccount && { stripeAccount: this.stripeAccount }),
         },
       }),
       actions: this.transactionResult.actions,
