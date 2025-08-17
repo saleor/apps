@@ -19,6 +19,7 @@ type Params = {
   selectedPaymentMethod?: PaymentMethod["type"];
   resolvedTransactionFlow?: ResolvedTransactionFlow;
   saleorTransactionFlow?: SaleorTransationFlow;
+  stripeAccountId?: string;
 };
 
 export const getMockedRecordedTransaction = (params?: Params): RecordedTransaction => {
@@ -37,5 +38,6 @@ export const getMockedRecordedTransaction = (params?: Params): RecordedTransacti
     saleorTransactionFlow: finalParams.saleorTransactionFlow,
     resolvedTransactionFlow: finalParams.resolvedTransactionFlow,
     selectedPaymentMethod: finalParams.selectedPaymentMethod,
+    stripeAccountId: finalParams.stripeAccountId,
   });
 };

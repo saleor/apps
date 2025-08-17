@@ -93,6 +93,7 @@ describe("DynamoDBTransactionRecorderRepo", () => {
             saleorTransactionFlow: "CHARGE",
             resolvedTransactionFlow: "CHARGE",
             selectedPaymentMethod: "card",
+            stripeAccountId: "acct_vendor123",
             createdAt: "2023-01-01T00:00:00.000Z",
             modifiedAt: "2023-01-01T00:00:00.000Z",
             saleorApiUrl: mockedSaleorApiUrl,
@@ -119,6 +120,7 @@ describe("DynamoDBTransactionRecorderRepo", () => {
           "saleorTransactionFlow": "CHARGE",
           "saleorTransactionId": "mocked-transaction-id",
           "selectedPaymentMethod": "card",
+          "stripeAccountId": "acct_vendor123",
           "stripePaymentIntentId": "pi_TEST_TEST_TEST",
         }
       `);
@@ -176,6 +178,96 @@ describe("DynamoDBTransactionRecorderRepo", () => {
       expect(result._unsafeUnwrapErr()).toBeInstanceOf(
         TransactionRecorderError.FailedFetchingTransactionError,
       );
+    });
+
+    it("Handles transactions without stripeAccountId for backward compatibility", async () => {
+      mockDocumentClient
+        .on(GetCommand, {
+          Key: {
+            PK: "https://foo.bar.saleor.cloud/graphql/#saleor-app-id",
+            SK: "TRANSACTION#pi_TEST_TEST_TEST",
+          },
+        })
+        .resolvesOnce({
+          Item: {
+            PK: "https://foo.bar.saleor.cloud/graphql/#saleor-app-id",
+            SK: "TRANSACTION#pi_TEST_TEST_TEST",
+            paymentIntentId: mockedStripePaymentIntentId,
+            saleorTransactionId: mockedSaleorTransactionId,
+            saleorTransactionFlow: "CHARGE",
+            resolvedTransactionFlow: "CHARGE",
+            selectedPaymentMethod: "card",
+            // No stripeAccountId field
+            createdAt: "2023-01-01T00:00:00.000Z",
+            modifiedAt: "2023-01-01T00:00:00.000Z",
+          },
+          $metadata: {
+            httpStatusCode: 200,
+          },
+        });
+
+      const result = await repo.getTransactionByStripePaymentIntentId(
+        {
+          appId: mockedSaleorAppId,
+          saleorApiUrl: mockedSaleorApiUrl,
+        },
+        mockedStripePaymentIntentId,
+      );
+
+      expect(result._unsafeUnwrap()).toBeInstanceOf(RecordedTransaction);
+      expect(result._unsafeUnwrap().stripeAccountId).toBeUndefined();
+    });
+
+    it("Saves and retrieves stripeAccountId correctly", async () => {
+      // First save a transaction with stripeAccountId
+      mockDocumentClient.on(PutCommand, {}).resolvesOnce({
+        $metadata: {
+          httpStatusCode: 200,
+        },
+      });
+
+      const transactionWithVendor = getMockedRecordedTransaction({
+        stripeAccountId: "acct_vendor456",
+      });
+
+      const saveResult = await repo.recordTransaction(
+        {
+          saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
+        },
+        transactionWithVendor,
+      );
+
+      expect(saveResult._unsafeUnwrap()).toBeNull();
+
+      // Then retrieve it and verify stripeAccountId is present
+      mockDocumentClient.on(GetCommand, {}).resolvesOnce({
+        Item: {
+          PK: "https://foo.bar.saleor.cloud/graphql/#saleor-app-id",
+          SK: "TRANSACTION#pi_TEST_TEST_TEST",
+          paymentIntentId: mockedStripePaymentIntentId,
+          saleorTransactionId: mockedSaleorTransactionId,
+          saleorTransactionFlow: "CHARGE",
+          resolvedTransactionFlow: "CHARGE",
+          selectedPaymentMethod: "card",
+          stripeAccountId: "acct_vendor456",
+          createdAt: "2023-01-01T00:00:00.000Z",
+          modifiedAt: "2023-01-01T00:00:00.000Z",
+        },
+        $metadata: {
+          httpStatusCode: 200,
+        },
+      });
+
+      const getResult = await repo.getTransactionByStripePaymentIntentId(
+        {
+          appId: mockedSaleorAppId,
+          saleorApiUrl: mockedSaleorApiUrl,
+        },
+        mockedStripePaymentIntentId,
+      );
+
+      expect(getResult._unsafeUnwrap().stripeAccountId).toBe("acct_vendor456");
     });
   });
 });

@@ -24,6 +24,7 @@ const Schema = item({
   saleorTransactionFlow: string(),
   resolvedTransactionFlow: string(),
   selectedPaymentMethod: string(),
+  stripeAccountId: string().optional(),
 });
 
 const createEntity = (table: DynamoMainTable) => {

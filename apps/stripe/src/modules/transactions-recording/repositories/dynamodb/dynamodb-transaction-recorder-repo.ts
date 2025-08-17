@@ -57,6 +57,7 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
           saleorTransactionId: transaction.saleorTransactionId,
           saleorTransactionFlow: transaction.saleorTransactionFlow,
           resolvedTransactionFlow: transaction.resolvedTransactionFlow,
+          stripeAccountId: transaction.stripeAccountId,
         })
         .options({
           condition: {
@@ -127,6 +128,7 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
           saleorTransactionFlow,
           paymentIntentId,
           resolvedTransactionFlow,
+          stripeAccountId,
         } = result.Item;
 
         return ok(
@@ -136,6 +138,7 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
             saleorTransactionId: createSaleorTransactionId(saleorTransactionId),
             stripePaymentIntentId: createStripePaymentIntentId(paymentIntentId),
             selectedPaymentMethod: selectedPaymentMethod as PaymentMethod["type"],
+            stripeAccountId: stripeAccountId as string | undefined,
           }),
         );
       } else {
