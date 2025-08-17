@@ -46,6 +46,11 @@ describe("StripePaymentIntentsApi", () => {
             enabled: true,
           },
           currency: "usd",
+          metadata: {
+            saleor_source_id: "checkout-id",
+            saleor_source_type: "Checkout",
+            saleor_transaction_id: mockedSaleorTransactionId,
+          },
           payment_method_options: {
             klarna: {
               capture_method: "manual",
@@ -72,6 +77,11 @@ describe("StripePaymentIntentsApi", () => {
           currency: "USD",
         })._unsafeUnwrap(),
         stripeAccount: "acct_vendor123",
+        metadata: {
+          saleor_source_id: "vendor-checkout-id",
+          saleor_source_type: "Checkout",
+          saleor_transaction_id: mockedSaleorTransactionId,
+        },
         intentParams: {
           automatic_payment_methods: { enabled: true },
         },
@@ -84,6 +94,11 @@ describe("StripePaymentIntentsApi", () => {
             enabled: true,
           },
           currency: "usd",
+          metadata: {
+            saleor_source_id: "vendor-checkout-id",
+            saleor_source_type: "Checkout",
+            saleor_transaction_id: mockedSaleorTransactionId,
+          },
         },
         {
           idempotencyKey: "IK",

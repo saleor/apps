@@ -33,6 +33,7 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
           ...args.intentParams,
           amount: args.stripeMoney.amount,
           currency: args.stripeMoney.currency,
+          metadata: args.metadata,
         },
         {
           idempotencyKey: args.idempotencyKey,

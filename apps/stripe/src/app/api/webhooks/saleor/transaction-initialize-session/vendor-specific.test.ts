@@ -90,10 +90,15 @@ describe("Vendor-specific Stripe account functionality", () => {
         TransactionInitializeSessionUseCaseResponses.Success,
       );
 
-      // Verify Stripe API was called with vendor's account
+      // Verify Stripe API was called with vendor's account and metadata
       expect(createPaymentIntentSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           stripeAccount: vendorStripeAccountId,
+          metadata: expect.objectContaining({
+            saleor_source_id: "checkout-id",
+            saleor_source_type: "Checkout",
+            saleor_transaction_id: expect.any(String),
+          }),
         }),
       );
     });
@@ -208,10 +213,15 @@ describe("Vendor-specific Stripe account functionality", () => {
         TransactionInitializeSessionUseCaseResponses.Success,
       );
 
-      // Verify Stripe API was called WITHOUT vendor account (undefined)
+      // Verify Stripe API was called WITHOUT vendor account but WITH metadata
       expect(createPaymentIntentSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           stripeAccount: undefined,
+          metadata: expect.objectContaining({
+            saleor_source_id: "checkout-id",
+            saleor_source_type: "Checkout",
+            saleor_transaction_id: expect.any(String),
+          }),
         }),
       );
     });
@@ -260,10 +270,15 @@ describe("Vendor-specific Stripe account functionality", () => {
         channelId: "channel-id",
       });
 
-      // Verify Stripe API was called without vendor account
+      // Verify Stripe API was called without vendor account but with metadata
       expect(createPaymentIntentSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           stripeAccount: undefined,
+          metadata: expect.objectContaining({
+            saleor_source_id: "checkout-id",
+            saleor_source_type: "Checkout",
+            saleor_transaction_id: expect.any(String),
+          }),
         }),
       );
     });
