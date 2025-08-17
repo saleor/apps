@@ -8,6 +8,7 @@ import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-pay
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedTransactionChargeRequestedEvent } from "@/__tests__/mocks/saleor-events/transaction-charge-requested-event";
+import { mockedTransactionRecorderRepo } from "@/__tests__/mocks/transaction-recorder-repo";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
@@ -40,6 +41,7 @@ describe("TransactionChargeRequestedUseCase", () => {
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
+      transactionRecorder: mockedTransactionRecorderRepo,
     });
 
     const result = await uc.execute({
@@ -67,6 +69,7 @@ describe("TransactionChargeRequestedUseCase", () => {
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
+      transactionRecorder: mockedTransactionRecorderRepo,
     });
 
     const result = await uc.execute({
@@ -93,6 +96,7 @@ describe("TransactionChargeRequestedUseCase", () => {
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
+      transactionRecorder: mockedTransactionRecorderRepo,
     });
 
     const responsePayload = await uc.execute({
@@ -119,6 +123,7 @@ describe("TransactionChargeRequestedUseCase", () => {
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
+      transactionRecorder: mockedTransactionRecorderRepo,
     });
 
     const response = await uc.execute({
@@ -136,6 +141,7 @@ describe("TransactionChargeRequestedUseCase", () => {
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
+      transactionRecorder: mockedTransactionRecorderRepo,
     });
 
     await expect(
@@ -162,6 +168,7 @@ describe("TransactionChargeRequestedUseCase", () => {
     const uc = new TransactionChargeRequestedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
+      transactionRecorder: mockedTransactionRecorderRepo,
     });
 
     await expect(
