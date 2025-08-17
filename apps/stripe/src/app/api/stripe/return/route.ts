@@ -131,14 +131,12 @@ export async function GET(request: NextRequest) {
     const orderIdParam = order_id || paymentIntent.metadata?.saleor_source_id;
 
     // Determine the redirect URL based on payment status
-    let redirectUrl = new URL(request.url);
-
-    redirectUrl.searchParams.set("payment_intent", stripePaymentIntentId);
-    redirectUrl.searchParams.set("name", "testing-if-this-works");
+    let redirectUrl: URL;
 
     if (paymentIntent.status === "succeeded" || paymentIntent.status === "processing") {
       // Payment successful - redirect to order confirmation
       if (checkoutUrlParam) {
+        redirectUrl = new URL(checkoutUrlParam);
         redirectUrl.searchParams.set("payment_status", "success");
       } else if (orderIdParam) {
         // Fallback to order page
@@ -154,6 +152,7 @@ export async function GET(request: NextRequest) {
     ) {
       // Payment failed - redirect back to checkout
       if (checkoutUrlParam) {
+        redirectUrl = new URL(checkoutUrlParam);
         redirectUrl.searchParams.set("payment_status", "failed");
         redirectUrl.searchParams.set("error", "payment_failed");
       } else {

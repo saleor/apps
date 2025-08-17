@@ -169,6 +169,7 @@ export class VendorFetcher {
           slug: vendor.slug,
           stripeAccountId,
           metadata: vendor.metadata,
+          attributes: vendor.attributes,
         };
       });
 
