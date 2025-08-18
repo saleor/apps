@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import Handlebars from "handlebars";
 import { z } from "zod";
 
 import { createLogger } from "../../../logger";
 import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
 import { protectedWithConfigurationServices } from "../../trpc/protected-client-procedure-with-services";
 import { router } from "../../trpc/trpc-server";
+import { HandlebarsTemplateCompiler } from "../services/handlebars-template-compiler";
 import { MjmlCompiler } from "../services/mjml-compiler";
 import {
   smtpConfigurationIdInputSchema,
@@ -152,41 +152,42 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "mjmlConfigurationRouter.renderTemplate called");
 
+      const handlebarsCompiler = new HandlebarsTemplateCompiler();
       let renderedSubject = "";
 
       const payload = JSON.parse(input.payload);
 
       if (input.subject) {
-        try {
-          const compiledSubjectTemplate = Handlebars.compile(input.subject);
+        const subjectResult = handlebarsCompiler.compile(input.subject, payload);
 
-          renderedSubject = compiledSubjectTemplate(payload);
-        } catch (e) {
-          logger.error("Error during compile subject template", { error: e });
+        if (subjectResult.isErr()) {
+          logger.warn("Error during compile subject template", { error: subjectResult.error });
 
           return {
             renderedSubject: "",
             renderedEmailBody: "",
           };
         }
+
+        renderedSubject = subjectResult.value.template;
       }
 
       let renderedEmail = "";
       let templatedEmail = "";
 
       if (input.template) {
-        try {
-          const compiledSubjectTemplate = Handlebars.compile(input.template);
+        const templateResult = handlebarsCompiler.compile(input.template, payload);
 
-          templatedEmail = compiledSubjectTemplate(payload);
-        } catch (e) {
-          logger.error("Error during compile template", { error: e });
+        if (templateResult.isErr()) {
+          logger.warn("Error during compile template", { error: templateResult.error });
 
           return {
             renderedSubject: "",
             renderedEmailBody: "",
           };
         }
+
+        templatedEmail = templateResult.value.template;
 
         const compilationResult = new MjmlCompiler().compile(templatedEmail);
 
