@@ -72,6 +72,7 @@ export default {
     "Devcontainers",
     "whsec",
     "Encryptor",
+    "claude"
   ],
   language: "en-US",
   useGitignore: true,
