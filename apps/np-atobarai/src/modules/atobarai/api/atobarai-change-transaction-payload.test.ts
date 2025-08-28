@@ -53,7 +53,7 @@ describe("createAtobaraiChangeTransactionPayload", () => {
               },
               {
                 "goods_name": "Voucher",
-                "goods_price": 78,
+                "goods_price": -78,
                 "quantity": 1,
               },
               {

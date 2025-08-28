@@ -39,6 +39,7 @@ export default {
     "tseslint",
     "contentful",
     "corepack",
+    "claude",
     "datocms",
     "devcontainer",
     "klarna",

@@ -9,11 +9,11 @@ export class PartialRefundWithoutLineItemsGoodsBuilder {
   build({
     sourceObject,
     useSkuAsName,
-    amountAfterRefund,
+    refundedAmount,
   }: {
     sourceObject: SourceObjectFragment;
     useSkuAsName: boolean;
-    amountAfterRefund: number;
+    refundedAmount: number;
   }): AtobaraiGoods {
     const productLines = this.lineCalculation.calculateProductLines({
       lines: sourceObject.lines,
@@ -23,7 +23,7 @@ export class PartialRefundWithoutLineItemsGoodsBuilder {
     const shippingLine = this.lineCalculation.calculateShippingLine(
       sourceObject.shippingPrice.gross.amount,
     );
-    const discountLine = this.lineCalculation.calculateRefundAligment(amountAfterRefund);
+    const discountLine = this.lineCalculation.calculateRefundAligment(refundedAmount);
 
     return AtobaraiGoodsSchema.parse(
       [...productLines, voucherLine, shippingLine, discountLine].filter(Boolean),

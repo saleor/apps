@@ -19,10 +19,12 @@ describe("PartialRefundWithoutLineItemsGoodsBuilder", () => {
     const result = builder.build({
       sourceObject: mockedSourceObject,
       useSkuAsName: false,
-      amountAfterRefund: 0,
+      refundedAmount: 0,
     });
 
     const [productLine] = mockedSourceObject.lines;
+
+    const voucherAmount = mockedSourceObject.discount?.amount ?? 0;
 
     expect(result).toStrictEqual([
       {
@@ -32,7 +34,7 @@ describe("PartialRefundWithoutLineItemsGoodsBuilder", () => {
       },
       {
         goods_name: "Voucher",
-        goods_price: mockedSourceObject.discount.amount,
+        goods_price: -voucherAmount,
         quantity: 1,
       },
       {
@@ -48,10 +50,12 @@ describe("PartialRefundWithoutLineItemsGoodsBuilder", () => {
     const result = builder.build({
       sourceObject: mockedSourceObject,
       useSkuAsName: false,
-      amountAfterRefund: refundToApply,
+      refundedAmount: refundToApply,
     });
 
     const [productLine] = mockedSourceObject.lines;
+
+    const voucherAmount = mockedSourceObject.discount?.amount ?? 0;
 
     expect(result).toStrictEqual([
       {
@@ -61,7 +65,7 @@ describe("PartialRefundWithoutLineItemsGoodsBuilder", () => {
       },
       {
         goods_name: "Voucher",
-        goods_price: mockedSourceObject.discount.amount,
+        goods_price: -voucherAmount,
         quantity: 1,
       },
       {
@@ -81,28 +85,28 @@ describe("PartialRefundWithoutLineItemsGoodsBuilder", () => {
     const result = builder.build({
       sourceObject: mockedSourceObject,
       useSkuAsName: false,
-      amountAfterRefund: 0,
+      refundedAmount: 0,
     });
 
     expect(result).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Product Name",
-            "goods_price": 1234,
-            "quantity": 5,
-          },
-          {
-            "goods_name": "Voucher",
-            "goods_price": 78,
-            "quantity": 1,
-          },
-          {
-            "goods_name": "Shipping",
-            "goods_price": 137,
-            "quantity": 1,
-          },
-        ]
-      `);
+      [
+        {
+          "goods_name": "Product Name",
+          "goods_price": 1234,
+          "quantity": 5,
+        },
+        {
+          "goods_name": "Voucher",
+          "goods_price": -78,
+          "quantity": 1,
+        },
+        {
+          "goods_name": "Shipping",
+          "goods_price": 137,
+          "quantity": 1,
+        },
+      ]
+    `);
   });
 });
 
@@ -213,6 +217,8 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
 
     const [productLine1, _refundedProductLine2, productLine3] = mockSourceObject.lines;
 
+    const voucherAmount = mockSourceObject.discount?.amount ?? 0;
+
     expect(result).toStrictEqual([
       {
         goods_name: "Test Product 1",
@@ -226,7 +232,7 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
       },
       {
         goods_name: "Voucher",
-        goods_price: mockSourceObject.discount?.amount,
+        goods_price: -voucherAmount,
         quantity: 1,
       },
       {
@@ -264,6 +270,8 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
 
     const [productLine1] = mockSourceObject.lines;
 
+    const voucherAmount = mockSourceObject.discount?.amount ?? 0;
+
     expect(result).toStrictEqual([
       {
         goods_name: "Test Product 1",
@@ -272,7 +280,7 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
       },
       {
         goods_name: "Voucher",
-        goods_price: mockSourceObject.discount?.amount,
+        goods_price: -voucherAmount,
         quantity: 1,
       },
       {
@@ -304,6 +312,8 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
 
     const [productLine1, productLine2, productLine3] = mockSourceObject.lines;
 
+    const voucherAmount = mockSourceObject.discount?.amount ?? 0;
+
     expect(result).toStrictEqual([
       {
         goods_name: "Test Product 1",
@@ -322,7 +332,7 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
       },
       {
         goods_name: "Voucher",
-        goods_price: mockSourceObject.discount?.amount,
+        goods_price: -voucherAmount,
         quantity: 1,
       },
       {
@@ -359,6 +369,8 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
 
     const [productLine1, productLine2, productLine3] = mockSourceObject.lines;
 
+    const voucherAmount = mockSourceObject.discount?.amount ?? 0;
+
     expect(result).toStrictEqual([
       {
         goods_name: "Test Product 1",
@@ -377,7 +389,7 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
       },
       {
         goods_name: "Voucher",
-        goods_price: mockSourceObject.discount?.amount,
+        goods_price: -voucherAmount,
         quantity: 1,
       },
       {
@@ -402,34 +414,34 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
 
     // All original lines should remain unchanged
     expect(result).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Test Product 1",
-            "goods_price": 1000,
-            "quantity": 3,
-          },
-          {
-            "goods_name": "Test Product 2",
-            "goods_price": 500,
-            "quantity": 2,
-          },
-          {
-            "goods_name": "Test Product 3",
-            "goods_price": 800,
-            "quantity": 1,
-          },
-          {
-            "goods_name": "Voucher",
-            "goods_price": 100,
-            "quantity": 1,
-          },
-          {
-            "goods_name": "Shipping",
-            "goods_price": 200,
-            "quantity": 1,
-          },
-        ]
-      `);
+      [
+        {
+          "goods_name": "Test Product 1",
+          "goods_price": 1000,
+          "quantity": 3,
+        },
+        {
+          "goods_name": "Test Product 2",
+          "goods_price": 500,
+          "quantity": 2,
+        },
+        {
+          "goods_name": "Test Product 3",
+          "goods_price": 800,
+          "quantity": 1,
+        },
+        {
+          "goods_name": "Voucher",
+          "goods_price": -100,
+          "quantity": 1,
+        },
+        {
+          "goods_name": "Shipping",
+          "goods_price": 200,
+          "quantity": 1,
+        },
+      ]
+    `);
   });
 
   it("should handle null granted refund lines", () => {
@@ -446,34 +458,34 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
 
     // All original lines should remain unchanged
     expect(result).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Test Product 1",
-            "goods_price": 1000,
-            "quantity": 3,
-          },
-          {
-            "goods_name": "Test Product 2",
-            "goods_price": 500,
-            "quantity": 2,
-          },
-          {
-            "goods_name": "Test Product 3",
-            "goods_price": 800,
-            "quantity": 1,
-          },
-          {
-            "goods_name": "Voucher",
-            "goods_price": 100,
-            "quantity": 1,
-          },
-          {
-            "goods_name": "Shipping",
-            "goods_price": 200,
-            "quantity": 1,
-          },
-        ]
-      `);
+      [
+        {
+          "goods_name": "Test Product 1",
+          "goods_price": 1000,
+          "quantity": 3,
+        },
+        {
+          "goods_name": "Test Product 2",
+          "goods_price": 500,
+          "quantity": 2,
+        },
+        {
+          "goods_name": "Test Product 3",
+          "goods_price": 800,
+          "quantity": 1,
+        },
+        {
+          "goods_name": "Voucher",
+          "goods_price": -100,
+          "quantity": 1,
+        },
+        {
+          "goods_name": "Shipping",
+          "goods_price": 200,
+          "quantity": 1,
+        },
+      ]
+    `);
   });
 
   it("should handle refund lines that don't match any order lines", () => {
@@ -497,33 +509,33 @@ describe("PartialRefundWithLineItemsGoodsBuilder", () => {
 
     // All original lines should remain unchanged since no matching refund lines
     expect(result).toMatchInlineSnapshot(`
-        [
-          {
-            "goods_name": "Test Product 1",
-            "goods_price": 1000,
-            "quantity": 3,
-          },
-          {
-            "goods_name": "Test Product 2",
-            "goods_price": 500,
-            "quantity": 2,
-          },
-          {
-            "goods_name": "Test Product 3",
-            "goods_price": 800,
-            "quantity": 1,
-          },
-          {
-            "goods_name": "Voucher",
-            "goods_price": 100,
-            "quantity": 1,
-          },
-          {
-            "goods_name": "Shipping",
-            "goods_price": 200,
-            "quantity": 1,
-          },
-        ]
-      `);
+      [
+        {
+          "goods_name": "Test Product 1",
+          "goods_price": 1000,
+          "quantity": 3,
+        },
+        {
+          "goods_name": "Test Product 2",
+          "goods_price": 500,
+          "quantity": 2,
+        },
+        {
+          "goods_name": "Test Product 3",
+          "goods_price": 800,
+          "quantity": 1,
+        },
+        {
+          "goods_name": "Voucher",
+          "goods_price": -100,
+          "quantity": 1,
+        },
+        {
+          "goods_name": "Shipping",
+          "goods_price": 200,
+          "quantity": 1,
+        },
+      ]
+    `);
   });
 });
