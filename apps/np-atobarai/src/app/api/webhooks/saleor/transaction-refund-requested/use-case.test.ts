@@ -372,7 +372,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                     },
                     {
                       goods_name: "Voucher",
-                      goods_price: 100,
+                      goods_price: -100,
                       quantity: 1,
                     },
                     {
@@ -560,7 +560,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                     },
                     {
                       goods_name: "Voucher",
-                      goods_price: 100,
+                      goods_price: -100,
                       quantity: 1,
                     },
                     {
@@ -760,7 +760,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                     },
                     {
                       goods_name: "Voucher",
-                      goods_price: 50,
+                      goods_price: -50,
                       quantity: 1,
                     },
                     {
