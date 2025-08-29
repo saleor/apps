@@ -8,6 +8,7 @@
     "./editor-js-plaintext-renderer": "./src/editor-js/editor-js-plaintext-renderer.ts",
     "./get-app-base-url": "./src/get-app-base-url.ts",
     "./graphql-provider": "./src/graphql-provider.tsx",
+    "./iframe-protected-wrapper": "./src/iframe-protected-wrapper.tsx",
     "./is-in-iframe": "./src/is-in-iframe.ts",
     "./metadata-manager": "./src/metadata-manager.ts",
     "./no-ssr-wrapper": "./src/no-ssr-wrapper.tsx",
