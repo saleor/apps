@@ -59,3 +59,22 @@ export const AvataxForbiddenAccessError = ExpectedError.subclass("AvataxForbidde
     description: "",
   },
 });
+
+// New error classes for proper GetTaxError faultSubCode handling
+export const AvataxGetTaxWrongInputError = ExpectedError.subclass("AvataxGetTaxWrongInputError", {
+  props: {
+    faultSubCode: "",
+    description: "",
+    message: "",
+  },
+});
+
+export const AvataxGetTaxSystemError = CriticalError.subclass("AvataxGetTaxSystemError", {
+  props: {
+    faultSubCode: "",
+    description: "",
+    message: "",
+    expected: false,
+    sentrySeverity: "error",
+  } as CommonErrorProps,
+});
