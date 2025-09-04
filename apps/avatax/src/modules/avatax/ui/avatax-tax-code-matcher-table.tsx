@@ -1,5 +1,5 @@
 import { TextLink } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui";
+import { Text } from "@saleor/macaw-ui";
 
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
@@ -8,12 +8,13 @@ import { TaxCodeSelect } from "./tax-code-select";
 
 export const AvataxTaxCodeMatcherTable = () => {
   const { data: taxClasses = [], isLoading } = trpcClient.taxClasses.getAll.useQuery();
+  const matchesResult = trpcClient.avataxMatches.getAll.useQuery();
 
-  if (isLoading) {
+  if (isLoading && matchesResult.isLoading) {
     return (
-      <Box>
-        <Text color="default2">Loading...</Text>
-      </Box>
+      <AppCard>
+        <Table.Skeleton />
+      </AppCard>
     );
   }
 
@@ -28,11 +29,22 @@ export const AvataxTaxCodeMatcherTable = () => {
         </Table.THead>
         <Table.TBody>
           {taxClasses.map((taxClass) => {
+            const match = matchesResult.data?.find(
+              (item) => item.data.saleorTaxClassId === taxClass.id,
+            );
+
             return (
               <Table.TR key={taxClass.id}>
                 <Table.TD>{taxClass.name}</Table.TD>
                 <Table.TD>
-                  <TaxCodeSelect taxClassId={taxClass.id} />
+                  <TaxCodeSelect
+                    taxClassId={taxClass.id}
+                    initialValue={
+                      match
+                        ? { label: match.data.avataxTaxCode, value: match.data.avataxTaxCode }
+                        : null
+                    }
+                  />
                 </Table.TD>
               </Table.TR>
             );
