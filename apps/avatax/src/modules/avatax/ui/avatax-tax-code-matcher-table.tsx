@@ -1,16 +1,12 @@
-import { TextLink } from "@saleor/apps-ui";
-import { Text } from "@saleor/macaw-ui";
-
-import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
 import { Table } from "../../ui/table";
-import { TaxCodeSelect } from "./tax-code-select";
+import { TaxCodeCombobox } from "./tax-code-combobox";
+import { useTaxClassesWithMatches } from "./use-tax-classes-with-matches";
 
 export const AvataxTaxCodeMatcherTable = () => {
-  const { data: taxClasses = [], isLoading } = trpcClient.taxClasses.getAll.useQuery();
-  const matchesResult = trpcClient.avataxMatches.getAll.useQuery();
+  const { taxClasses, isLoading, findOptionMatchForTaxClass } = useTaxClassesWithMatches();
 
-  if (isLoading && matchesResult.isLoading) {
+  if (isLoading) {
     return (
       <AppCard>
         <Table.Skeleton />
@@ -23,42 +19,24 @@ export const AvataxTaxCodeMatcherTable = () => {
       <Table.Container>
         <Table.THead>
           <Table.TR>
-            <Table.TH>Saleor tax class</Table.TH>
+            <Table.TH __width="30%">Saleor tax class</Table.TH>
             <Table.TH>AvaTax tax code</Table.TH>
           </Table.TR>
         </Table.THead>
         <Table.TBody>
           {taxClasses.map((taxClass) => {
-            const match = matchesResult.data?.find(
-              (item) => item.data.saleorTaxClassId === taxClass.id,
-            );
-
             return (
               <Table.TR key={taxClass.id}>
                 <Table.TD>{taxClass.name}</Table.TD>
                 <Table.TD>
-                  <TaxCodeSelect
+                  <TaxCodeCombobox
                     taxClassId={taxClass.id}
-                    initialValue={
-                      match
-                        ? { label: match.data.avataxTaxCode, value: match.data.avataxTaxCode }
-                        : null
-                    }
+                    initialValue={findOptionMatchForTaxClass(taxClass.id)}
                   />
                 </Table.TD>
               </Table.TR>
             );
           })}
-          <Table.TR>
-            <Table.TD>
-              <Text display="block" marginTop={8}>
-                See AvaTax tax code search to access valid Tax Codes{" "}
-                <TextLink href="https://taxcode.avatax.avalara.com/search?q=food" newTab>
-                  here
-                </TextLink>
-              </Text>
-            </Table.TD>
-          </Table.TR>
         </Table.TBody>
       </Table.Container>
     </AppCard>
