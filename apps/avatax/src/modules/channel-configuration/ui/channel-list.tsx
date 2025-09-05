@@ -1,5 +1,5 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Box, Button, Skeleton, Text } from "@saleor/macaw-ui";
 
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
@@ -25,15 +25,6 @@ const NoChannelConfigured = () => {
       <Button data-testid="configure-channel-button" onClick={redirectToTaxes}>
         Configure channels
       </Button>
-    </Box>
-  );
-};
-
-const Skeleton = () => {
-  // todo: replace with skeleton
-  return (
-    <Box height={"100%"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
-      <Text color="default2">Loading...</Text>
     </Box>
   );
 };
