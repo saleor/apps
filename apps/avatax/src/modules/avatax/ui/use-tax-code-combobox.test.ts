@@ -1,4 +1,3 @@
-import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Option } from "@saleor/macaw-ui";
 import { renderHook, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -7,7 +6,6 @@ import { trpcClient } from "@/modules/trpc/trpc-client";
 
 import { useTaxCodeCombobox } from "./use-tax-code-combobox";
 
-vi.mock("@saleor/apps-shared/use-dashboard-notification");
 vi.mock("@/modules/trpc/trpc-client", () => ({
   trpcClient: {
     providersConfiguration: {
@@ -28,7 +26,6 @@ vi.mock("@/modules/trpc/trpc-client", () => ({
   },
 }));
 
-const mockNotifyError = vi.fn();
 const mockGetAllProvidersQuery = vi.fn();
 const mockGetTaxCodesQuery = vi.fn();
 const mockUpsertMutation = vi.fn();
@@ -36,13 +33,6 @@ const mockUpsertMutation = vi.fn();
 describe("useTaxCodeCombobox", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-
-    vi.mocked(useDashboardNotification).mockReturnValue({
-      notifyError: mockNotifyError,
-      notifySuccess: vi.fn(),
-      notifyWarning: vi.fn(),
-      notifyInfo: vi.fn(),
-    });
 
     vi.mocked(trpcClient.providersConfiguration.getAll.useQuery).mockImplementation(
       mockGetAllProvidersQuery,
@@ -70,6 +60,15 @@ describe("useTaxCodeCombobox", () => {
       data: undefined,
       isLoading: false,
     });
+    mockGetTaxCodesQuery.mockReturnValue({
+      data: [],
+      isLoading: false,
+      error: null,
+    });
+    mockUpsertMutation.mockReturnValue({
+      mutate: vi.fn(),
+      isLoading: false,
+    });
 
     const { result, rerender } = renderHook(() => useTaxCodeCombobox(defaultProps));
 
@@ -79,13 +78,8 @@ describe("useTaxCodeCombobox", () => {
       value: null,
       onChange: expect.any(Function),
       onInputValueChange: expect.any(Function),
-      disabled: true,
+      errorMessage: null,
     });
-
-    expect(mockNotifyError).toHaveBeenCalledWith(
-      "Error",
-      "No AvaTax connection found. Add a connection first.",
-    );
 
     // When providers query is loading
     mockGetAllProvidersQuery.mockReturnValue({
@@ -144,11 +138,15 @@ describe("useTaxCodeCombobox", () => {
     });
 
     describe("when tax codes query fails", () => {
-      it("returns fallback state and shows error notification", () => {
+      it("returns error message when query fails", () => {
         mockGetTaxCodesQuery.mockReturnValue({
           data: [],
           isLoading: false,
           error: new Error("API Error"),
+        });
+        mockUpsertMutation.mockReturnValue({
+          mutate: vi.fn(),
+          isLoading: false,
         });
 
         const { result } = renderHook(() => useTaxCodeCombobox(defaultProps));
@@ -159,13 +157,8 @@ describe("useTaxCodeCombobox", () => {
           value: null,
           onChange: expect.any(Function),
           onInputValueChange: expect.any(Function),
-          disabled: true,
+          errorMessage: "API Error",
         });
-
-        expect(mockNotifyError).toHaveBeenCalledWith(
-          "Error",
-          "Unable to fetch AvaTax tax codes. Try again later.",
-        );
       });
     });
 
@@ -228,8 +221,8 @@ describe("useTaxCodeCombobox", () => {
           { label: "TX002 - Non-Taxable Services", value: "TX002" },
         ]);
 
-        // Should not be disabled when data is available
-        expect(result.current.disabled).toBe(false);
+        // Should not have error message when data is available
+        expect(result.current.errorMessage).toBe(null);
 
         // Should use null as default value
         expect(result.current.value).toBe(null);

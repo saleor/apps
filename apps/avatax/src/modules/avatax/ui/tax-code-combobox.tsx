@@ -9,10 +9,11 @@ export const TaxCodeCombobox = ({
   taxClassId: string;
   initialValue: Option | null;
 }) => {
-  const { options, loading, value, onChange, onInputValueChange, disabled } = useTaxCodeCombobox({
-    taxClassId,
-    initialValue,
-  });
+  const { options, loading, value, onChange, onInputValueChange, errorMessage } =
+    useTaxCodeCombobox({
+      taxClassId,
+      initialValue,
+    });
 
   return (
     <DynamicCombobox
@@ -21,7 +22,8 @@ export const TaxCodeCombobox = ({
       value={value}
       onChange={onChange}
       onInputValueChange={onInputValueChange}
-      disabled={disabled}
+      error={errorMessage ? true : false}
+      helperText={errorMessage ? errorMessage : undefined}
     />
   );
 };
