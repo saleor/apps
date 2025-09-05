@@ -1,6 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+import packageJson from "@/package.json";
+
 // https://env.t3.gg/docs/recipes#booleans
 const booleanSchema = z
   .string()
@@ -18,6 +20,8 @@ export const env = createEnv({
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
     AVATAX_CLIENT_TIMEOUT: z.coerce.number().optional().default(15000),
+    AVATAX_CLIENT_APP_NAME: z.string().optional().default("Saleor"),
+    AVATAX_CLIENT_APP_VERSION: z.string().optional().default(packageJson.version),
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_REGION: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
@@ -67,6 +71,8 @@ export const env = createEnv({
     APP_IFRAME_BASE_URL: process.env.APP_IFRAME_BASE_URL,
     APP_LOG_LEVEL: process.env.APP_LOG_LEVEL,
     AVATAX_CLIENT_TIMEOUT: process.env.AVATAX_CLIENT_TIMEOUT,
+    AVATAX_CLIENT_APP_NAME: process.env.AVATAX_CLIENT_APP_NAME,
+    AVATAX_CLIENT_APP_VERSION: process.env.AVATAX_CLIENT_APP_VERSION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_REGION: process.env.AWS_REGION,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
