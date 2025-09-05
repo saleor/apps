@@ -1,5 +1,12 @@
 # saleor-app-avatax
 
+## 1.19.1
+
+### Patch Changes
+
+- b23b47ad: Allow AvaTax app name and app version to be dynamically set up via env variables.
+- af002a41: Update AvaTax UI. This includes: removing providers mentions where possible, changing form labels of AvaTax configuration, adding breadcrumbs to tax code matcher view.
+
 ## 1.19.0
 
 ### Minor Changes
