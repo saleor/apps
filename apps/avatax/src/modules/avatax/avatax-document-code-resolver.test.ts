@@ -8,31 +8,40 @@ const resolver = new AvataxDocumentCodeResolver();
 describe("AvataxDocumentCodeResolver", () => {
   it("returns document code when provided in metadata", () => {
     const order = {
-      id: "id",
+      number: "42",
       avataxDocumentCode: "123",
     } as unknown as OrderConfirmedSubscriptionFragment;
 
     expect(
-      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id }),
+      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderNumber: order.number }),
     ).toBe("123");
   });
-  it("returns order id when document code is not provided in metadata", () => {
+
+  it("returns order number when document code is not provided in metadata", () => {
     const order = {
-      id: "id",
+      number: "number",
     } as unknown as OrderConfirmedSubscriptionFragment;
 
     expect(
-      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderId: order.id }),
-    ).toBe("id");
+      resolver.resolve({ avataxDocumentCode: order.avataxDocumentCode, orderNumber: order.number }),
+    ).toBe("number");
   });
+
   it("returns sliced document code when avataxDocumentCode too long", () => {
     expect(
-      resolver.resolve({ avataxDocumentCode: "123456789012345678901234567890", orderId: "id" }),
-    ).toBe("12345678901234567890");
+      resolver.resolve({
+        avataxDocumentCode: "long-document-code-above-20-characters-1234567890",
+        orderNumber: "long-document-code-above-20-characters-",
+      }),
+    ).toBe("long-document-code-a");
   });
-  it("returns sliced document code when orderId too long", () => {
+
+  it("returns sliced document code when orderNumber too long", () => {
     expect(
-      resolver.resolve({ avataxDocumentCode: null, orderId: "123456789012345678901234567890" }),
-    ).toBe("12345678901234567890");
+      resolver.resolve({
+        avataxDocumentCode: null,
+        orderNumber: "long-order-number-above-20-characters-1234567890",
+      }),
+    ).toBe("long-order-number-ab");
   });
 });
