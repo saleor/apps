@@ -44,13 +44,6 @@ const Description = () => {
             </TextLink>
             . You can search for tax codes and enter them in this page.
           </Text>
-          <Text as="p">
-            See AvaTax tax code search to access valid Tax Codes{" "}
-            <TextLink href="https://taxcode.avatax.avalara.com/search?q=food" newTab>
-              here
-            </TextLink>
-            .
-          </Text>
         </>
       }
     />

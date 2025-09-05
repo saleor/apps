@@ -22,7 +22,7 @@ export const TaxCodeCombobox = ({
       value={value}
       onChange={onChange}
       onInputValueChange={onInputValueChange}
-      error={errorMessage ? true : false}
+      error={!!errorMessage}
       helperText={errorMessage ? errorMessage : undefined}
     />
   );
