@@ -20,7 +20,7 @@ export const env = createEnv({
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
     AVATAX_CLIENT_TIMEOUT: z.coerce.number().optional().default(15000),
-    AVATAX_CLIENT_APP_NAME: z.string().optional().default("Saleor"),
+    AVATAX_CLIENT_APP_NAME: z.string().optional().default(packageJson.name),
     AVATAX_CLIENT_APP_VERSION: z.string().optional().default(packageJson.version),
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_REGION: z.string(),
