@@ -50,8 +50,7 @@ export class AtobaraiLineCalculation {
 
     return {
       goods_name: "Voucher",
-      // TODO: check if voucherAmount should be negative https://linear.app/saleor/issue/ENG-548
-      goods_price: voucherAmount,
+      goods_price: -voucherAmount,
       quantity: 1,
     };
   };

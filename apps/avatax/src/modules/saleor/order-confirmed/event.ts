@@ -27,6 +27,7 @@ export class SaleorOrderConfirmedEvent {
       }),
       status: z.string(),
       id: z.string(),
+      number: z.string(),
       shippingPrice: z.object({
         gross: z.object({
           amount: z.number(),
@@ -79,6 +80,8 @@ export class SaleorOrderConfirmedEvent {
   getChannelSlug = () => this.rawPayload.order.channel.slug;
 
   getOrderId = () => this.rawPayload.order.id;
+
+  getOrderNumber = () => this.rawPayload.order.number;
 
   isFulfilled = () => this.rawPayload.order.status === "FULFILLED";
 

@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.1.3
+
+### Patch Changes
+
+- 45be18b8: Pass metadata to Stripe when creating PaymentIntents to fix webhook validation errors.
+
 ## 2.1.2
 
 ### Patch Changes

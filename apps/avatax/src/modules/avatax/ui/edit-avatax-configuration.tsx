@@ -1,5 +1,5 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Box, Button, Skeleton, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
 import { z } from "zod";
@@ -125,11 +125,10 @@ export const EditAvataxConfiguration = () => {
     };
   }, [validateCredentialsHandler, validateCredentialsMutation]);
 
-  if (isGetLoading) {
-    // todo: replace with skeleton once its available in Macaw
+  if (isGetLoading || isDeleteLoading) {
     return (
       <Box>
-        <Text color="default2">Loading...</Text>
+        <Skeleton />
       </Box>
     );
   }
@@ -150,7 +149,7 @@ export const EditAvataxConfiguration = () => {
       defaultValues={data.config}
       leftButton={
         <Button onClick={deleteHandler} variant="error" data-testid="delete-avatax-button">
-          Delete provider
+          Delete configuration
         </Button>
       }
     />

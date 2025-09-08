@@ -52,7 +52,7 @@ describe("AtobaraiLineCalculation", () => {
       expect(voucherLine).toMatchInlineSnapshot(`
         {
           "goods_name": "Voucher",
-          "goods_price": 2344,
+          "goods_price": -2344,
           "quantity": 1,
         }
       `);
