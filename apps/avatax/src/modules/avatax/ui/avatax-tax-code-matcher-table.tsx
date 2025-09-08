@@ -1,5 +1,5 @@
 import { TextLink } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui";
+import { Skeleton, Text } from "@saleor/macaw-ui";
 
 import { trpcClient } from "../../trpc/trpc-client";
 import { AppCard } from "../../ui/app-card";
@@ -11,9 +11,9 @@ export const AvataxTaxCodeMatcherTable = () => {
 
   if (isLoading) {
     return (
-      <Box>
-        <Text color="default2">Loading...</Text>
-      </Box>
+      <AppCard>
+        <Skeleton />
+      </AppCard>
     );
   }
 

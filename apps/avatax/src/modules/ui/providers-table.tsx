@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 
 import { ProviderConnection } from "../provider-connections/provider-connections";
 import { trpcClient } from "../trpc/trpc-client";
-import { ProviderLabel } from "./provider-label";
 import { Table } from "./table";
 
 export const ProvidersTable = () => {
@@ -19,16 +18,13 @@ export const ProvidersTable = () => {
       <Table.THead color={"default2"}>
         <Table.TR>
           <Table.TH>Name</Table.TH>
-          <Table.TH>Provider</Table.TH>
         </Table.TR>
       </Table.THead>
       <Table.TBody>
         {data?.map((item) => (
           <Table.TR key={item.id}>
             <Table.TD>{item.config.name}</Table.TD>
-            <Table.TD>
-              <ProviderLabel name={item.provider} />
-            </Table.TD>
+
             <Table.TD>
               <Box display={"flex"} justifyContent={"flex-end"} gap={2}>
                 <Button
