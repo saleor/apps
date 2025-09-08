@@ -26,6 +26,13 @@ vi.mock("@/modules/trpc/trpc-client", () => ({
   },
 }));
 
+vi.mock("@saleor/apps-shared/use-dashboard-notification", () => ({
+  useDashboardNotification: vi.fn(() => ({
+    notifySuccess: vi.fn(),
+    notifyError: vi.fn(),
+  })),
+}));
+
 const mockGetAllProvidersQuery = vi.fn();
 const mockGetTaxCodesQuery = vi.fn();
 const mockUpsertMutation = vi.fn();
@@ -235,6 +242,19 @@ describe("useTaxCodeCombobox", () => {
 
         expect(result.current.value).toStrictEqual(initialValue);
       });
+
+      it("should format initial value with description when tax codes are loaded", () => {
+        // Initially pass an unformatted initial value (just the code)
+        const initialValue: Option = { label: "TX001", value: "TX001" };
+
+        const { result } = renderHook(() => useTaxCodeCombobox({ ...defaultProps, initialValue }));
+
+        // Should immediately format the value with description since tax codes are available
+        expect(result.current.value).toStrictEqual({
+          label: "TX001 - Taxable Goods",
+          value: "TX001",
+        });
+      });
     });
 
     describe("onChange handler", () => {
@@ -263,7 +283,7 @@ describe("useTaxCodeCombobox", () => {
 
         await waitFor(() => {
           expect(result.current.value).toStrictEqual({
-            label: "TX001",
+            label: "TX001 - Taxable Goods",
             value: "TX001",
           });
         });
