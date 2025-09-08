@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Box, Button, Skeleton, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
 import { trpcClient } from "../../trpc/trpc-client";
@@ -17,19 +17,13 @@ const AddProvider = () => {
       height={"100%"}
       justifyContent={"center"}
     >
-      <Text>No providers configured yet</Text>
-      <Button data-testid="no-providers-list-add-button" onClick={() => router.push("/providers")}>
-        Add first provider
+      <Text>No configurations created yet</Text>
+      <Button
+        data-testid="no-providers-list-add-button"
+        onClick={() => router.push("/providers/avatax")}
+      >
+        Add first configuration
       </Button>
-    </Box>
-  );
-};
-
-const Skeleton = () => {
-  // todo: replace with skeleton
-  return (
-    <Box height={"100%"} display={"flex"} alignItems={"center"} justifyContent={"center"}>
-      <Text color="default2">Loading...</Text>
     </Box>
   );
 };

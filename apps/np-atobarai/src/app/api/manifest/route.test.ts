@@ -46,7 +46,7 @@ describe("Manifest handler", async () => {
             "extensions": [],
             "homepageUrl": "https://github.com/saleor/apps",
             "id": "saleor.app.payment.np-atobarai",
-            "name": "NP Atobarai",
+            "name": "NP Atobarai (NP後払い)",
             "permissions": [
               "HANDLE_PAYMENTS",
               "MANAGE_ORDERS",
