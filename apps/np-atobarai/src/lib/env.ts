@@ -28,7 +28,7 @@ export const env = createEnv({
     SECRET_KEY: z.string(),
     VERCEL_ENV: z.string().optional(),
     VERCEL_GIT_COMMIT_SHA: z.string().optional(),
-    APP_NAME: z.string().optional().default("NP Atobarai"),
+    APP_NAME: z.string().optional().default("NP Atobarai (NP後払い)"),
     DYNAMODB_MAIN_TABLE_NAME: z.string().optional().default("atobarai-main-table"),
     AWS_REGION: z.string(),
     AWS_ACCESS_KEY_ID: z.string(),

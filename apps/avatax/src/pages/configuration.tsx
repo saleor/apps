@@ -1,4 +1,5 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { TextLink } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
@@ -14,7 +15,11 @@ const Header = () => {
   return (
     <Box display="flex" justifyContent="space-between">
       <Section.Header>
-        Configure the app by connecting to AvaTax. You can connect to multiple accounts.
+        Configure the app by connecting to AvaTax. Read the{" "}
+        <TextLink href="https://docs.saleor.io/developer/app-store/apps/avatax/overview" newTab>
+          documentation
+        </TextLink>{" "}
+        to learn more.
       </Section.Header>
       <Button onClick={() => push("/logs")}>Open Logs</Button>
     </Box>

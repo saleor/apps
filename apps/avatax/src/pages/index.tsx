@@ -1,5 +1,6 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { isInIframe } from "@saleor/apps-shared/is-in-iframe";
+import { Box, Text, ThemeProvider } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -21,11 +22,15 @@ const IndexPage: NextPage = () => {
   }
 
   return (
-    <div>
-      <h1>Saleor AvaTax App</h1>
-      <p>This is Saleor App that allows to use external service to handle taxes.</p>
-      <p>Install the app in your Saleor instance and open it in Dashboard.</p>
-    </div>
+    <ThemeProvider>
+      <Box display="flex" flexDirection="column" padding={4}>
+        <Text as="h1" fontWeight="bold" fontSize={8} marginBottom={6}>
+          Saleor AvaTax App
+        </Text>
+        <Text>This is Saleor App that allows to use external service to handle taxes.</Text>
+        <Text>Install the app in your Saleor instance and open it in Dashboard.</Text>
+      </Box>
+    </ThemeProvider>
   );
 };
 
