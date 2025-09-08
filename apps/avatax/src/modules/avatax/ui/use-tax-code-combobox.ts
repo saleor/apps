@@ -1,6 +1,6 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Option } from "@saleor/macaw-ui";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
@@ -12,6 +12,8 @@ type UseTaxCodeComboboxReturn = {
   onInputValueChange: (inputValue: string) => void;
   errorMessage: string | null;
 };
+
+const generateLabel = (taxCode: string, description: string) => `${taxCode} - ${description}`;
 
 export const useTaxCodeCombobox = ({
   taxClassId,
@@ -56,34 +58,36 @@ export const useTaxCodeCombobox = ({
     });
 
   const options = taxCodes.map((taxCode) => ({
-    label: `${taxCode.code} - ${taxCode.description}`,
+    label: generateLabel(taxCode.code, taxCode.description),
     value: taxCode.code,
   }));
 
   // Format initial value with description when tax codes are loaded
   useEffect(() => {
-    if (initialValue && taxCodes.length > 0) {
+    if (initialValue && taxCodes.length > 0 && value === initialValue) {
       const matchingTaxCode = taxCodes.find((taxCode) => taxCode.code === initialValue.value);
 
       if (matchingTaxCode && initialValue.label === initialValue.value) {
-        // Only update if the label is just the code (not already formatted)
         setValue({
-          label: `${matchingTaxCode.code} - ${matchingTaxCode.description}`,
+          label: generateLabel(matchingTaxCode.code, matchingTaxCode.description),
           value: matchingTaxCode.code,
         });
       }
     }
-  }, [initialValue, taxCodes]);
+  }, [initialValue, taxCodes, value]);
 
-  const handleChange = (newValue: Option | null) => {
-    if (newValue) {
-      setValue(newValue);
-      upsertTaxCode({
-        saleorTaxClassId: taxClassId,
-        avataxTaxCode: newValue.value,
-      });
-    }
-  };
+  const handleChange = useCallback(
+    (newValue: Option | null) => {
+      if (newValue) {
+        setValue(newValue);
+        upsertTaxCode({
+          saleorTaxClassId: taxClassId,
+          avataxTaxCode: newValue.value,
+        });
+      }
+    },
+    [taxClassId, upsertTaxCode, setValue],
+  );
 
   const handleInputValueChange = (inputValue: string) => {
     setFilter(inputValue);
