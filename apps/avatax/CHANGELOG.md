@@ -1,5 +1,28 @@
 # saleor-app-avatax
 
+## 1.20.0
+
+### Minor Changes
+
+- 7e590663: Send Saleor order number instead of order id as AvaTax document code. Previously app was using first 20 characters of order id. This was causing a problem on AvaTax side as there weren't any way of connecting Saleor order (as order id was truncated to first 20 chars). After this change app will send order number (e.g 2137) instead. Thanks to that you will see it in AvaTax dashboard and you will be able to use this number for searching for order in Saleor.
+- 3583edfc: Improve tax code search functionality in AvaTax matcher
+
+  - Enhanced tax code combobox to display full format (`code - description`) for both selected values and initial values loaded from database
+  - Updated tax code filtering to search both tax code and description fields instead of code only
+  - Implemented client-side filtering for more flexible and responsive search experience
+  - Fixed initial value formatting to show complete tax code information when data is available
+
+  Users can now search for tax codes by typing either the tax code (e.g., "TX001") or the description (e.g., "Taxable").
+
+### Patch Changes
+
+- adb38165: Added InvalidZipForStateError to expected errors. It will no longer be treated as exception in logs and Sentry. This error is thrown when user enters incorrect Zip code for their state.
+- 055aabc9: Changed tRPC logs to add `[TRPC Error]` prefix, to distinguish these errors from others. Changed tRPC error codes to better reflect HTTP status codes (e.g. unauthorized, instead of internal server error).
+- b23b47ad: Allow AvaTax app name and app version to be dynamically set up via env variables.
+- 0a1c07ef: When users open app outside of Saleor Dashboard's iframe we will now display an error message with explanation. Previously we rendered app's UI, which caused frontend to make requests to the app without any required data (tokens, saleorApiUrl, etc.) which resulted in error logs.
+- af002a41: Update AvaTax UI. This includes: removing providers mentions where possible, changing form labels of AvaTax configuration, adding breadcrumbs to tax code matcher view.
+- 4135836e: Replaced `TaxCodeSelect` with `TaxCodeCombobox` component for AvaTax tax code matcher section.
+
 ## 1.19.0
 
 ### Minor Changes
