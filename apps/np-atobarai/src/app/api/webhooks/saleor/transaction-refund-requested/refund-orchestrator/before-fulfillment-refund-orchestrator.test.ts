@@ -86,7 +86,7 @@ describe("BeforeFulfillmentRefundOrchestrator", () => {
                 billed_amount: sourceObjectTotalAmount - refundedAmount,
                 goods: expect.arrayContaining([
                   expect.objectContaining({
-                    goods_price: -(sourceObjectTotalAmount - refundedAmount), // negative amount send to Atobarai
+                    goods_price: -refundedAmount, // negative amount send to Atobarai
                   }),
                 ]),
               }),
@@ -223,7 +223,7 @@ describe("BeforeFulfillmentRefundOrchestrator", () => {
                   },
                   {
                     goods_name: "Voucher",
-                    goods_price: mockedSourceObject.discount?.amount,
+                    goods_price: -mockedSourceObject.discount?.amount,
                     quantity: 1,
                   },
                   {

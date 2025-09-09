@@ -10,7 +10,7 @@ export type TransactionInitializeSession =
   | TransactionSessionFailure
   | TransactionSessionActionRequired;
 /**
- * Psp reference received from payment provider.
+ * PSP reference received from payment provider.
  */
 export type Pspreference = string;
 /**
@@ -87,7 +87,7 @@ export type Expmonth = number | null;
  */
 export type Expyear = number | null;
 /**
- * Psp reference received from payment provider.
+ * PSP reference received from payment provider.
  */
 export type Pspreference1 = string;
 /**
@@ -128,7 +128,7 @@ export type JsonValue1 =
  */
 export type Paymentmethoddetails1 = (OtherPaymentMethodDetails | CardPaymentMethodDetails) | null;
 /**
- * Psp reference received from payment provider.
+ * PSP reference received from payment provider.
  */
 export type Pspreference2 = string;
 /**

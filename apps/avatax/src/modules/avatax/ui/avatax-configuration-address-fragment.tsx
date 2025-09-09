@@ -157,7 +157,7 @@ export const AvataxConfigurationAddressFragment = (
             control={control}
             disabled={disabled}
             name="address.zip"
-            label="Zip"
+            label="Zip Code"
             helperText={formState.errors.address?.zip?.message}
           />
           {suggestions?.zip && <FieldSuggestion suggestion={suggestions.zip} />}

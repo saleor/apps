@@ -1,5 +1,17 @@
 # saleor-app-products-feed
 
+## 2.0.4
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+- 980e52c4: Fixed logger context for generate-chunk path. Now logs from this path will have valid attributes
+- Updated dependencies [16b87f53]
+  - @saleor/react-hook-form-macaw@0.2.15
+  - @saleor/apps-shared@1.13.1
+  - @saleor/apps-ui@1.3.1
+
 ## 2.0.3
 
 ### Patch Changes

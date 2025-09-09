@@ -39,6 +39,7 @@ export default {
     "tseslint",
     "contentful",
     "corepack",
+    "claude",
     "datocms",
     "devcontainer",
     "klarna",
@@ -72,6 +73,7 @@ export default {
     "Devcontainers",
     "whsec",
     "Encryptor",
+    "claude"
   ],
   language: "en-US",
   useGitignore: true,

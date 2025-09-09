@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.15
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+
 ## 0.2.14
 
 ### Patch Changes
