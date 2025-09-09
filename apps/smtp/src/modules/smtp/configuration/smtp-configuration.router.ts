@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import Handlebars from "handlebars";
+import { fromThrowable } from "neverthrow";
 import { z } from "zod";
 
 import { createLogger } from "../../../logger";
@@ -154,7 +155,18 @@ export const smtpConfigurationRouter = router({
 
       let renderedSubject = "";
 
-      const payload = JSON.parse(input.payload);
+      const safeParse = fromThrowable(JSON.parse);
+
+      const payloadResult = safeParse(input.payload);
+
+      if (payloadResult.isErr()) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid payload JSON",
+        });
+      }
+
+      const payload = payloadResult.value;
 
       if (input.subject) {
         try {

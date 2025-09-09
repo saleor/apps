@@ -113,7 +113,7 @@ const handler: NextJsWebhookHandler<InvoiceSentWebhookPayloadFragment> = async (
             const errorInstance = err[0];
 
             if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
-              logger.error("Failed to send email(s) [server error]", { error: err });
+              logger.warn("Failed to send email(s) [server error]", { error: err });
 
               return res.status(500).json({ message: "Failed to send email" });
             } else if (errorInstance instanceof SendEventMessagesUseCase.ClientError) {
