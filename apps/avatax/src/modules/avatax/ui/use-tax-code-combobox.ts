@@ -1,5 +1,6 @@
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Option } from "@saleor/macaw-ui";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
@@ -12,6 +13,8 @@ type UseTaxCodeComboboxReturn = {
   errorMessage: string | null;
 };
 
+const generateLabel = (taxCode: string, description: string) => `${taxCode} - ${description}`;
+
 export const useTaxCodeCombobox = ({
   taxClassId,
   initialValue,
@@ -21,6 +24,7 @@ export const useTaxCodeCombobox = ({
 }): UseTaxCodeComboboxReturn => {
   const [filter, setFilter] = useState("");
   const [value, setValue] = useState<Option | null>(initialValue);
+  const { notifySuccess, notifyError } = useDashboardNotification();
 
   const { data: taxProviders, isLoading: isTaxProvidersLoading } =
     trpcClient.providersConfiguration.getAll.useQuery();
@@ -48,22 +52,42 @@ export const useTaxCodeCombobox = ({
   );
 
   const { mutate: upsertTaxCode, isLoading: isUpsertingLoading } =
-    trpcClient.avataxMatches.upsert.useMutation();
+    trpcClient.avataxMatches.upsert.useMutation({
+      onSuccess: () => notifySuccess("Success", "Updated AvaTax tax code match"),
+      onError: (error) => notifyError("Error", error.message),
+    });
 
   const options = taxCodes.map((taxCode) => ({
-    label: `${taxCode.code} - ${taxCode.description}`,
+    label: generateLabel(taxCode.code, taxCode.description),
     value: taxCode.code,
   }));
 
-  const handleChange = (newValue: Option | null) => {
-    if (newValue) {
-      setValue({ label: newValue.value, value: newValue.value });
-      upsertTaxCode({
-        saleorTaxClassId: taxClassId,
-        avataxTaxCode: newValue.value,
-      });
+  // Format initial value with description when tax codes are loaded
+  useEffect(() => {
+    if (initialValue && taxCodes.length > 0 && value === initialValue) {
+      const matchingTaxCode = taxCodes.find((taxCode) => taxCode.code === initialValue.value);
+
+      if (matchingTaxCode && initialValue.label === initialValue.value) {
+        setValue({
+          label: generateLabel(matchingTaxCode.code, matchingTaxCode.description),
+          value: matchingTaxCode.code,
+        });
+      }
     }
-  };
+  }, [initialValue, taxCodes, value]);
+
+  const handleChange = useCallback(
+    (newValue: Option | null) => {
+      if (newValue) {
+        setValue(newValue);
+        upsertTaxCode({
+          saleorTaxClassId: taxClassId,
+          avataxTaxCode: newValue.value,
+        });
+      }
+    },
+    [taxClassId, upsertTaxCode, setValue],
+  );
 
   const handleInputValueChange = (inputValue: string) => {
     setFilter(inputValue);

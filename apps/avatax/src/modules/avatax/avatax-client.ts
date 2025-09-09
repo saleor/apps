@@ -192,7 +192,6 @@ export class AvataxClient {
     return fromPromise(
       this.client.listTaxCodes({
         ...(filter ? { filter: `taxCode contains "${filter}"` } : {}),
-        top: 50,
       }),
       (error) => {
         const parsedError = this.errorParser.parse(error);
