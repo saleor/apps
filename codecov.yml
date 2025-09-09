@@ -34,6 +34,8 @@ coverage:
         flags: [errors]
       packages-apl-dynamo:
         flags: [apl-dynamo]
+      packages-dynamo-config-repository:
+        flags: [dynamo-config-repository]
 ignore:
   - "**/scripts/**"
   - "**/e2e/**"
@@ -80,8 +82,11 @@ flags:
     paths:
       - packages/domain/
   errors:
-      paths:
-        - packages/errors/
+    paths:
+      - packages/errors/
   apl-dynamo:
-      paths:
-        - packages/apl-dynamo/
+    paths:
+      - packages/apl-dynamo/
+  dynamo-config-repository:
+    paths:
+      - packages/dynamo-config-repository/
