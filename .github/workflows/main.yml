@@ -63,6 +63,14 @@ jobs:
         run: pnpm install
       - name: Run tests
         run: pnpm test:ci
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-files
+          path: |
+            apps/*/coverage/
+            packages/*/coverage/
+          retention-days: 1
 
   upload-coverage:
     runs-on: ubuntu-22.04
@@ -104,6 +112,10 @@ jobs:
             path: packages/dynamo-config-repository
     steps:
       - uses: actions/checkout@v4
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-files
       - name: Upload coverage for ${{ matrix.name }}
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
