@@ -6,7 +6,7 @@ import {
   AvataxEntityNotFoundError,
   AvataxForbiddenAccessError,
   AvataxGetTaxSystemError,
-  AvataxGetTaxWrongInputError,
+  AvataxGetTaxWrongUserInputError,
   AvataxInvalidAddressError,
   AvataxInvalidCredentialsError,
   AvataxStringLengthError,
@@ -60,45 +60,47 @@ export class AvataxErrorsParser {
     ...AvataxErrorsParser.systemFaultCodes,
   ]);
 
-  private static schema = z
-    .object({
-      // https://developer.avalara.com/avatax/errors/
-      code: z.enum([
-        "InvalidAddress",
-        "GetTaxError",
-        "AuthenticationException",
-        "StringLengthError",
-        "EntityNotFoundError",
-        "TransactionAlreadyCancelled",
-        "PermissionRequired",
-      ]),
+  private static baseDetailsSchema = z.object({
+    description: z.string().optional(),
+    helpLink: z.string().optional(),
+    message: z.string().optional(),
+    faultCode: z.string().optional(),
+  });
+
+  private static schema = z.discriminatedUnion("code", [
+    z.object({
+      code: z.literal("InvalidAddress"),
+      details: z.array(AvataxErrorsParser.baseDetailsSchema),
+    }),
+    z.object({
+      code: z.literal("GetTaxError"),
       details: z.array(
-        z.object({
-          faultSubCode: z.string().optional(),
-          description: z.string().optional(),
-          helpLink: z.string().optional(),
-          message: z.string().optional(),
+        AvataxErrorsParser.baseDetailsSchema.extend({
+          faultSubCode: AvataxErrorsParser.faultSubCodeSchema.optional(),
         }),
       ),
-    })
-    .superRefine((data, ctx) => {
-      // For GetTaxError, validate faultSubCode against known enum values
-      if (data.code === "GetTaxError") {
-        data.details.forEach((detail, index) => {
-          if (detail.faultSubCode) {
-            const result = AvataxErrorsParser.faultSubCodeSchema.safeParse(detail.faultSubCode);
-
-            if (!result.success) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: ["details", index, "faultSubCode"],
-                message: `Unknown faultSubCode for GetTaxError: ${detail.faultSubCode}`,
-              });
-            }
-          }
-        });
-      }
-    });
+    }),
+    z.object({
+      code: z.literal("AuthenticationException"),
+      details: z.array(AvataxErrorsParser.baseDetailsSchema),
+    }),
+    z.object({
+      code: z.literal("StringLengthError"),
+      details: z.array(AvataxErrorsParser.baseDetailsSchema),
+    }),
+    z.object({
+      code: z.literal("EntityNotFoundError"),
+      details: z.array(AvataxErrorsParser.baseDetailsSchema),
+    }),
+    z.object({
+      code: z.literal("TransactionAlreadyCancelled"),
+      details: z.array(AvataxErrorsParser.baseDetailsSchema),
+    }),
+    z.object({
+      code: z.literal("PermissionRequired"),
+      details: z.array(AvataxErrorsParser.baseDetailsSchema),
+    }),
+  ]);
 
   parse(err: unknown, injectedErrorCapture = captureException) {
     const parsedError = AvataxErrorsParser.schema.safeParse(err);
@@ -122,15 +124,13 @@ export class AvataxErrorsParser {
       }
 
       case "GetTaxError": {
-        // Parse faultSubCode from details to determine if this is a user input error or system error
         const firstDetail = parsedError.data.details[0];
         const faultSubCode = firstDetail?.faultSubCode;
-        const description = firstDetail?.description || "";
-        const message = firstDetail?.message || "";
+        const description = firstDetail?.description;
+        const message = firstDetail?.message;
 
         if (faultSubCode && AvataxErrorsParser.userInputFaultCodesSet.has(faultSubCode)) {
-          // User input error - return HTTP 400
-          return new AvataxGetTaxWrongInputError(parsedError.data.code, {
+          return new AvataxGetTaxWrongUserInputError(parsedError.data.code, {
             props: {
               faultSubCode,
               description,
@@ -138,10 +138,9 @@ export class AvataxErrorsParser {
             },
           });
         } else {
-          // System/app error - return HTTP 500
           return new AvataxGetTaxSystemError(parsedError.data.code, {
             props: {
-              faultSubCode: faultSubCode || "Unknown",
+              faultSubCode,
               description,
               message,
             },
@@ -186,7 +185,7 @@ export class AvataxErrorsParser {
       }
 
       default: {
-        assertUnreachableWithoutThrow(parsedError.data.code);
+        assertUnreachableWithoutThrow(parsedError.data);
 
         return normalizeAvaTaxError(err);
       }

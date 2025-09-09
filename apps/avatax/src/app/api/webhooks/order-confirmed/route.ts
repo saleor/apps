@@ -26,7 +26,7 @@ import { OrderNoteReporter } from "@/modules/saleor/order-note-reporter";
 import {
   AvataxEntityNotFoundError,
   AvataxGetTaxSystemError,
-  AvataxGetTaxWrongInputError,
+  AvataxGetTaxWrongUserInputError,
   AvataxStringLengthError,
   TaxBadPayloadError,
 } from "@/modules/taxes/tax-error";
@@ -376,13 +376,11 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
               );
             }
 
-            case error instanceof AvataxGetTaxWrongInputError: {
+            case error instanceof AvataxGetTaxWrongUserInputError: {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,
                 channelId: payload.order?.channel.id,
-                errorReason: `Failed to commit AvaTax transaction due to user input error (${
-                  (error as any).faultSubCode
-                }): ${(error as any).description}`,
+                errorReason: `Failed to commit AvaTax transaction due to user input error (${error.faultSubCode}): ${error.description}`,
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
@@ -394,9 +392,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
 
               return Response.json(
                 {
-                  message: `AvaTax service returned user input error (${
-                    (error as any).faultSubCode
-                  }): ${(error as any).description}`,
+                  message: `AvaTax service returned user input error (${error.faultSubCode}): ${error.description}`,
                 },
                 { status: 400 },
               );
@@ -406,9 +402,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,
                 channelId: payload.order?.channel.id,
-                errorReason: `Failed to commit AvaTax transaction due to system error (${
-                  (error as any).faultSubCode
-                }): ${(error as any).description}`,
+                errorReason: `Failed to commit AvaTax transaction due to system error (${error.faultSubCode}): ${error.description}`,
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
@@ -423,9 +417,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
 
               return Response.json(
                 {
-                  message: `AvaTax service returned system error (${
-                    (error as any).faultSubCode
-                  }): ${(error as any).description}`,
+                  message: `AvaTax service returned system error (${error.faultSubCode}): ${error.description}`,
                 },
                 { status: 500 },
               );

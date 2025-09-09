@@ -7,7 +7,10 @@ import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calcul
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
 import { ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
-import { AvataxGetTaxSystemError, AvataxGetTaxWrongInputError } from "@/modules/taxes/tax-error";
+import {
+  AvataxGetTaxSystemError,
+  AvataxGetTaxWrongUserInputError,
+} from "@/modules/taxes/tax-error";
 
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
@@ -225,6 +228,10 @@ describe("CalculateTaxesUseCase", () => {
   it("Returns XXX error if taxes calculation fails", async () => {
     mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
+    mockedAvataxClient.createTransaction.mockResolvedValueOnce(
+      Promise.resolve(err(new Error("Failed to create transaction"))),
+    );
+
     const payload = getBasePayload();
 
     const result = await instance.calculateTaxes(payload, getMockAuthData());
@@ -232,8 +239,11 @@ describe("CalculateTaxesUseCase", () => {
     const error = result._unsafeUnwrapErr();
 
     expect(error).toBeInstanceOf(CalculateTaxesUseCase.FailedCalculatingTaxesError);
-    // Expect any error to be attached. We dont yet specify errors so these tests will be added later
-    expect(error.errors![0]).toBeInstanceOf(Error);
+
+    expect(error).toMatchInlineSnapshot(`
+      [FailedCalculatingTaxesError: Failed to create transaction
+      Failed to calculate taxes]
+    `);
   });
 
   it("Calculates proper discount (extra field with sum of SUBTOTAL-type amounts) and properly reduces price of shipping line", async () => {
@@ -300,7 +310,7 @@ describe("CalculateTaxesUseCase", () => {
       mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
       // Create AvataxUserInputError for InvalidZipForStateError
-      const userInputError = new AvataxGetTaxWrongInputError("GetTaxError", {
+      const userInputError = new AvataxGetTaxWrongUserInputError("GetTaxError", {
         props: {
           faultSubCode: "InvalidZipForStateError",
           description:
@@ -314,15 +324,14 @@ describe("CalculateTaxesUseCase", () => {
 
       const result = await instance.calculateTaxes(getBasePayload(), getMockAuthData());
 
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        // Should be mapped to ExpectedIncompletePayloadError (HTTP 400) not FailedCalculatingTaxesError (HTTP 500)
-        expect(result.error).toBeInstanceOf(CalculateTaxesUseCase.ExpectedIncompletePayloadError);
-        expect(result.error.message).toBe(
-          "Payload is incomplete and taxes cant be calculated. This is expected",
-        );
-        expect(result.error.errors).toContain(userInputError);
-      }
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+        CalculateTaxesUseCase.ExpectedIncompletePayloadError,
+      );
+
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        [ExpectedIncompletePayloadError: AvataxGetTaxWrongInputError: GetTaxError
+        Payload is incomplete and taxes cant be calculated. This is expected]
+      `);
     });
 
     it("Returns HTTP 500 when AvaTax API throws other errors", async () => {
@@ -342,19 +351,21 @@ describe("CalculateTaxesUseCase", () => {
 
       const result = await instance.calculateTaxes(getBasePayload(), getMockAuthData());
 
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        // Should remain as FailedCalculatingTaxesError (HTTP 500)
-        expect(result.error).toBeInstanceOf(CalculateTaxesUseCase.FailedCalculatingTaxesError);
-        expect(result.error.errors).toHaveLength(1);
-      }
+      expect(result._unsafeUnwrapErr()).toBeInstanceOf(
+        CalculateTaxesUseCase.FailedCalculatingTaxesError,
+      );
+
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+        [FailedCalculatingTaxesError: AvataxGetTaxSystemError: GetTaxError
+        Failed to calculate taxes]
+      `);
     });
 
     it("Does not log exceptions caused by user input errors as error or warning level", async () => {
       mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
       // Create AvataxUserInputError for InvalidZipForStateError
-      const userInputError = new AvataxGetTaxWrongInputError("GetTaxError", {
+      const userInputError = new AvataxGetTaxWrongUserInputError("GetTaxError", {
         props: {
           faultSubCode: "InvalidZipForStateError",
           description:
