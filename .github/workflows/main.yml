@@ -63,116 +63,52 @@ jobs:
         run: pnpm install
       - name: Run tests
         run: pnpm test:ci
-        # TODO: Add new step with matrix run to avoid duplicated entries
-      - name: Upload coverage for avatax
+
+  upload-coverage:
+    runs-on: ubuntu-22.04
+    needs: test
+    strategy:
+      matrix:
+        include:
+          - name: avatax
+            path: apps/avatax
+          - name: cms
+            path: apps/cms
+          - name: products-feed
+            path: apps/products-feed
+          - name: search
+            path: apps/search
+          - name: segment
+            path: apps/segment
+          - name: smtp
+            path: apps/smtp
+          - name: stripe
+            path: apps/stripe
+          - name: np-atobarai
+            path: apps/np-atobarai
+          - name: klaviyo
+            path: apps/klaviyo
+          - name: logger
+            path: packages/logger
+          - name: shared
+            path: packages/shared
+          - name: webhook-utils
+            path: packages/webhook-utils
+          - name: domain
+            path: packages/domain
+          - name: errors
+            path: packages/errors
+          - name: apl-dynamo
+            path: packages/apl-dynamo
+          - name: dynamo-config-repository
+            path: packages/dynamo-config-repository
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload coverage for ${{ matrix.name }}
         uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: saleor/apps
-          flags: avatax
-          files: apps/avatax/coverage/coverage-final.json,apps/avatax/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for cms
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: cms
-          files: apps/cms/coverage/coverage-final.json,apps/cms/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for products-feed
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: products-feed
-          files: apps/products-feed/coverage/coverage-final.json,apps/products-feed/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for search
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: search
-          files: apps/search/coverage/coverage-final.json,apps/search/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for segment
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: segment
-          files: apps/segment/coverage/coverage-final.json,apps/segment/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for smtp
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: smtp
-          files: apps/smtp/coverage/coverage-final.json,apps/smtp/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for stripe
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: stripe
-          files: apps/stripe/coverage/coverage-final.json,apps/stripe/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for np-atobarai
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: np-atobarai
-          files: apps/np-atobarai/coverage/coverage-final.json,apps/np-atobarai/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for logger
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: logger
-          files: packages/logger/coverage/coverage-final.json,packages/logger/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for shared
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: shared
-          files: packages/shared/coverage/coverage-final.json,packages/shared/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for webhook-utils
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: webhook-utils
-          files: packages/webhook-utils/coverage/coverage-final.json,packages/webhook-utils/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for domain
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: domain
-          files: packages/domain/coverage/coverage-final.json,packages/domain/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for errors
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: errors
-          files: packages/errors/coverage/coverage-final.json,packages/errors/coverage/clover.xml
-          disable_search: true
-      - name: Upload coverage for apl-dynamo
-        uses: codecov/codecov-action@0da7aa657d958d32c117fc47e1f977e7524753c7 # v5.3.0
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: saleor/apps
-          flags: apl-dynamo
-          files: packages/apl-dynamo/coverage/coverage-final.json,packages/apl-dynamo/coverage/clover.xml
+          flags: ${{ matrix.name }}
+          files: ${{ matrix.path }}/coverage/coverage-final.json,${{ matrix.path }}/coverage/clover.xml
           disable_search: true

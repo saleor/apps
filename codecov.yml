@@ -22,6 +22,8 @@ coverage:
         flags: [stripe]
       app-payment-np-atobarai:
         flags: [np-atobarai]
+      app-klaviyo:
+        flags: [klaviyo]
       packages-logger:
         flags: [logger]
       packages-shared:
@@ -34,6 +36,8 @@ coverage:
         flags: [errors]
       packages-apl-dynamo:
         flags: [apl-dynamo]
+      packages-dynamo-config-repository:
+        flags: [dynamo-config-repository]
 ignore:
   - "**/scripts/**"
   - "**/e2e/**"
@@ -67,6 +71,9 @@ flags:
   np-atobarai:
     paths:
       - apps/np-atobarai/
+  klaviyo:
+    paths:
+      - apps/klaviyo/
   logger:
     paths:
       - packages/logger/
@@ -85,3 +92,6 @@ flags:
   apl-dynamo:
       paths:
         - packages/apl-dynamo/
+  dynamo-config-repository:
+    paths:
+      - packages/dynamo-config-repository/
