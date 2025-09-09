@@ -94,8 +94,6 @@ jobs:
             path: apps/stripe
           - name: np-atobarai
             path: apps/np-atobarai
-          - name: klaviyo
-            path: apps/klaviyo
           - name: logger
             path: packages/logger
           - name: shared
