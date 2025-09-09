@@ -30,7 +30,8 @@ import { CalculateTaxesLogRequest } from "@/modules/client-logs/calculate-taxes-
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 import {
   AvataxEntityNotFoundError,
-  AvataxGetTaxError,
+  AvataxGetTaxSystemError,
+  AvataxGetTaxWrongUserInputError,
   AvataxInvalidAddressError,
   AvataxStringLengthError,
 } from "@/modules/taxes/tax-error";
@@ -266,7 +267,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
       } catch (error) {
         span.recordException(error as Error); // todo: remove casting when error handling is refactored
 
-        if (error instanceof AvataxGetTaxError) {
+        if (error instanceof AvataxGetTaxWrongUserInputError) {
           logger.warn(
             "GetTaxError: App returns status 400 due to problem when user attempted to create a transaction through AvaTax",
             {
@@ -278,7 +279,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             sourceId: orderId,
             channelId: payload.taxBase.channel.id,
             sourceType: "order",
-            errorReason: "AvaTax API returned an error",
+            errorReason: `Failed to calculate taxes due to user input error (${error.faultSubCode}): ${error.description}`,
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
@@ -294,6 +295,29 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
                 "GetTaxError: A problem occurred when you attempted to create a transaction through AvaTax. Check your address or line items.",
             },
             { status: 400 },
+          );
+        }
+
+        if (error instanceof AvataxGetTaxSystemError) {
+          CalculateTaxesLogRequest.createErrorLog({
+            sourceId: orderId,
+            channelId: payload.taxBase.channel.id,
+            sourceType: "order",
+            errorReason: `Failed to calculate taxes due to system error (${error.faultSubCode}): ${error.description}`,
+          })
+            .mapErr(captureException)
+            .map(logWriter.writeLog);
+
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: "Failed to calculate taxes: error from AvaTax API",
+          });
+
+          return Response.json(
+            {
+              message: "GetTaxError: AvaTax service returned system error.",
+            },
+            { status: 500 },
           );
         }
 
