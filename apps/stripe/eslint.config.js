@@ -24,6 +24,7 @@ export default [
       "src/__tests__/integration/env.ts",
       "src/instrumentation.ts",
       "src/__tests__/**/*setup.*.ts",
+      "scripts/setup-dynamodb.ts",
     ],
     rules: {
       "n/no-process-env": "off",
