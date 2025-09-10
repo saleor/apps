@@ -9,12 +9,11 @@ import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import { RandomId } from "@/lib/random-id";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
-import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
-import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
 import { DynamoDbStripeConfig } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
 
 const testLogger = createLogger();
 
+// todo use new repo
 describe("ConfigRepo with DynamoDB integration test", () => {
   const repo = new DynamodbAppConfigRepo({
     entities: {
