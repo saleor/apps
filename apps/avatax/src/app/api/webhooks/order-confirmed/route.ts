@@ -25,7 +25,8 @@ import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
 import { OrderNoteReporter } from "@/modules/saleor/order-note-reporter";
 import {
   AvataxEntityNotFoundError,
-  AvataxGetTaxError,
+  AvataxGetTaxSystemError,
+  AvataxGetTaxWrongUserInputError,
   AvataxStringLengthError,
   TaxBadPayloadError,
 } from "@/modules/taxes/tax-error";
@@ -375,25 +376,50 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
               );
             }
 
-            case error instanceof AvataxGetTaxError: {
+            case error instanceof AvataxGetTaxWrongUserInputError: {
               OrderConfirmedLogRequest.createErrorLog({
                 sourceId: payload.order?.id,
                 channelId: payload.order?.channel.id,
-                errorReason: `Failed to get tax from AvaTax API: ${error.message}`,
+                errorReason: `Failed to commit AvaTax transaction due to user input error (${error.faultSubCode}): ${error.description}`,
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
 
               span.setStatus({
                 code: SpanStatusCode.ERROR,
-                message: "Failed to commit AvaTax transaction: error from AvaTax API",
+                message: "Failed to commit AvaTax transaction: user input error",
               });
 
               return Response.json(
                 {
-                  message: `AvaTax service returned get tax error: ${error.message}`,
+                  message: `AvaTax service returned user input error (${error.faultSubCode}): ${error.description}`,
                 },
                 { status: 400 },
+              );
+            }
+
+            case error instanceof AvataxGetTaxSystemError: {
+              OrderConfirmedLogRequest.createErrorLog({
+                sourceId: payload.order?.id,
+                channelId: payload.order?.channel.id,
+                errorReason: `Failed to commit AvaTax transaction due to system error (${error.faultSubCode}): ${error.description}`,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
+
+              span.setStatus({
+                code: SpanStatusCode.ERROR,
+                message: "Failed to commit AvaTax transaction: system error",
+              });
+
+              // System errors should be reported to Sentry and return HTTP 500
+              captureException(error);
+
+              return Response.json(
+                {
+                  message: `AvaTax service returned system error (${error.faultSubCode}): ${error.description}`,
+                },
+                { status: 500 },
               );
             }
           }

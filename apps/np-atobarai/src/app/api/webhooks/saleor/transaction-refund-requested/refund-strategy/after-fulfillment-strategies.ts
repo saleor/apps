@@ -270,7 +270,7 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy
     const atobaraiGoods = this.goodsBuilder.build({
       sourceObject: parsedEvent.sourceObject,
       useSkuAsName: appConfig.skuAsName,
-      amountAfterRefund,
+      refundedAmount: parsedEvent.refundedAmount,
     });
 
     const payload = createAtobaraiRegisterTransactionPayload({

@@ -10,7 +10,7 @@ export type TransactionCancelationRequested =
   | TransactionCancelationRequestedSyncFailure
   | TransactionCancelationRequestedAsync;
 /**
- * Psp reference received from payment provider.
+ * PSP reference received from payment provider.
  */
 export type Pspreference = string;
 /**
@@ -35,7 +35,7 @@ export type Actions = ("CHARGE" | "REFUND" | "CANCEL")[] | null;
  */
 export type Result = "CANCEL_SUCCESS";
 /**
- * Psp reference received from payment provider.
+ * PSP reference received from payment provider.
  */
 export type Pspreference1 = string;
 /**
@@ -60,7 +60,7 @@ export type Actions1 = ("CHARGE" | "REFUND" | "CANCEL")[] | null;
  */
 export type Result1 = "CANCEL_FAILURE";
 /**
- * Psp reference received from payment provider.
+ * PSP reference received from payment provider.
  */
 export type Pspreference2 = string;
 export type Actions2 = ("CHARGE" | "REFUND" | "CANCEL")[] | null;

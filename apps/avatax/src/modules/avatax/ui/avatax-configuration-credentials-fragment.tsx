@@ -61,7 +61,7 @@ export const AvataxConfigurationCredentialsFragment = (
             control={control}
             name="credentials.username"
             required
-            label="Username *"
+            label="Account Number *"
             helperText={formState.errors.credentials?.username?.message}
           />
           <HelperText>
@@ -75,7 +75,7 @@ export const AvataxConfigurationCredentialsFragment = (
             name="credentials.password"
             type="password"
             required
-            label="Password *"
+            label="License Key *"
             helperText={formState.errors.credentials?.password?.message}
           />
           <HelperText>

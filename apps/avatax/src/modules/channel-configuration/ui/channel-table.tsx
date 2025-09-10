@@ -55,7 +55,7 @@ export const ChannelTable = () => {
       <Table.THead color={"default2"}>
         <Table.TR>
           <Table.TH>Channel slug</Table.TH>
-          <Table.TH>Provider</Table.TH>
+          <Table.TH>Configuration</Table.TH>
         </Table.TR>
       </Table.THead>
       <Table.TBody>
