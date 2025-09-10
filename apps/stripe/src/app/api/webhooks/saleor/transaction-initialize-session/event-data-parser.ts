@@ -59,6 +59,7 @@ export const parseTransactionInitializeSessionEventData = (raw: unknown) => {
       // todo print payment method from the frontend
       new UnsupportedPaymentMethodError("Payment method is not supported", {
         cause: parsingResult.error,
+        props: { data: raw },
       }),
     );
   }

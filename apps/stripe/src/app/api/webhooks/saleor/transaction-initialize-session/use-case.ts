@@ -170,7 +170,7 @@ export class TransactionInitializeSessionUseCase {
     const eventDataResult = parseTransactionInitializeSessionEventData(event.data);
 
     if (eventDataResult.isErr()) {
-      this.logger.error("Failed to parse event data", { error: eventDataResult.error });
+      this.logger.warn("Failed to parse event data", { error: eventDataResult.error });
 
       return ok(
         new TransactionInitializeSessionUseCaseResponses.Failure({
