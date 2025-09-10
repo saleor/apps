@@ -164,6 +164,18 @@ export class SendEventMessagesUseCase {
       (err) => {
         this.logger.debug("Error sending email with SMTP", { error: err });
 
+        if (typeof err === "object" && err && "responseCode" in err) {
+          /**
+           * Wrong configuration, server config, ssl etc
+           * https://stackoverflow.com/questions/221416/smtp-error-554-message-does-not-conform-to-standards
+           */
+          if (err.responseCode === 554) {
+            return new SendEventMessagesUseCase.ClientError("Failed to send email via SMTP - 554", {
+              cause: err,
+            });
+          }
+        }
+
         return new SendEventMessagesUseCase.ServerError("Failed to send email via SMTP", {
           cause: err,
         });
