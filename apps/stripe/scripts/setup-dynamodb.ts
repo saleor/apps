@@ -8,7 +8,7 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-import { env } from "@/env";
+import { env } from "@/lib/env";
 
 const stripeMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
