@@ -10,7 +10,7 @@ import {
 
 import { env } from "@/lib/env";
 
-const npAtobaraiMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
+const stripeMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
 try {
   const {
@@ -90,7 +90,7 @@ try {
     console.log(`Table ${tableName} created successfully`);
   };
 
-  await createTableIfNotExists(npAtobaraiMainTableName);
+  await createTableIfNotExists(stripeMainTableName);
 
   console.log("DynamoDB setup completed successfully");
   process.exit(0);

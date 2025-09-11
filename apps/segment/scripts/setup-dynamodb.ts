@@ -8,9 +8,9 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-import { env } from "@/lib/env";
+import { env } from "@/env";
 
-const npAtobaraiMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
+const segmentMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
 try {
   const {
@@ -21,7 +21,7 @@ try {
       "endpoint-url": {
         type: "string",
         short: "e",
-        default: "http://localhost:8000",
+        default: "http://dynamodb:8000",
       },
     },
   });
@@ -90,7 +90,7 @@ try {
     console.log(`Table ${tableName} created successfully`);
   };
 
-  await createTableIfNotExists(npAtobaraiMainTableName);
+  await createTableIfNotExists(segmentMainTableName);
 
   console.log("DynamoDB setup completed successfully");
   process.exit(0);

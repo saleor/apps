@@ -8,9 +8,10 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-import { env } from "@/lib/env";
+import { env } from "@/env";
 
-const npAtobaraiMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
+const avataxLogsTableName = env.DYNAMODB_LOGS_TABLE_NAME;
+const avataxMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
 try {
   const {
@@ -90,7 +91,8 @@ try {
     console.log(`Table ${tableName} created successfully`);
   };
 
-  await createTableIfNotExists(npAtobaraiMainTableName);
+  await createTableIfNotExists(avataxLogsTableName);
+  await createTableIfNotExists(avataxMainTableName);
 
   console.log("DynamoDB setup completed successfully");
   process.exit(0);
