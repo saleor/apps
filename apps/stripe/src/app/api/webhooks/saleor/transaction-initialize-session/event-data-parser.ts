@@ -7,6 +7,8 @@ import { CardPaymentMethod } from "@/modules/stripe/payment-methods/card";
 import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-pay";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
 import { PayPalPaymentMethod } from "@/modules/stripe/payment-methods/paypal";
+import { SepaDebitPaymentMethod } from "@/modules/stripe/payment-methods/sepa-debit";
+import { USBankAccountPaymentMethod } from "@/modules/stripe/payment-methods/us-bank-account";
 
 const TransactionInitializeEventDataSchema = z
   .object({
@@ -16,6 +18,8 @@ const TransactionInitializeEventDataSchema = z
       GooglePayPaymentMethod.TransactionInitializeSchema,
       ApplePayPaymentMethod.TransactionInitializeSchema,
       PayPalPaymentMethod.TransactionInitializeSchema,
+      USBankAccountPaymentMethod.TransactionInitializeSchema,
+      SepaDebitPaymentMethod.TransactionInitializeSchema,
     ]),
   })
   .strict()

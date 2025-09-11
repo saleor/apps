@@ -16,6 +16,7 @@ export const resolveSaleorMoneyFromStripePaymentIntent = (paymentIntent: {
     case "canceled":
     case "requires_payment_method":
     case "requires_action":
+    case "processing":
       return SaleorMoney.createFromStripe({
         amount: paymentIntent.amount,
         currency: paymentIntent.currency,
