@@ -10,14 +10,14 @@ import { SaleorTransationFlow } from "@/modules/saleor/saleor-transaction-flow";
 import { PaymentMethod } from "./types";
 
 /**
- * https://stripe.com/docs/payments/us-bank-account
+ * https://stripe.com/docs/payments/sepa-debit
  */
-export class USBankAccountPaymentMethod implements PaymentMethod {
-  type = "us_bank_account" as const;
+export class SepaDebitPaymentMethod implements PaymentMethod {
+  type = "sepa_debit" as const;
 
   static TransactionInitializeSchema = z
     .object({
-      paymentMethod: z.literal("us_bank_account"),
+      paymentMethod: z.literal("sepa_debit"),
     })
     .strict();
 
@@ -25,8 +25,8 @@ export class USBankAccountPaymentMethod implements PaymentMethod {
     _saleorTransactionFlow: SaleorTransationFlow,
   ): ResolvedTransactionFlow {
     /*
-     *  ACH payments are always charged immediately (no authorization flow).
-     *  This is because ACH payments can take several days to complete,
+     *  SEPA Direct Debit payments are always charged immediately (no authorization flow).
+     *  This is because SEPA Direct Debit payments can take several days to complete,
      *  and the funds are not guaranteed until the payment clears.
      */
     return createResolvedTransactionFlow("CHARGE");
@@ -36,7 +36,7 @@ export class USBankAccountPaymentMethod implements PaymentMethod {
     _saleorTransactionFlow: SaleorTransationFlow,
   ): Stripe.PaymentIntentCreateParams.PaymentMethodOptions {
     return {
-      us_bank_account: {},
+      sepa_debit: {},
     };
   }
 }
