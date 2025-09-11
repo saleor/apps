@@ -8,10 +8,13 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-const npAtobaraiMainTableName = process.env.DYNAMODB_MAIN_TABLE_NAME;
+const avataxLogsTableName = process.env.DYNAMODB_LOGS_TABLE_NAME;
+const avataxMainTableName = process.env.DYNAMODB_MAIN_TABLE_NAME;
 
-if (!npAtobaraiMainTableName) {
-  console.error("Missing required environment variable: DYNAMODB_MAIN_TABLE_NAME");
+if (!avataxLogsTableName || !avataxMainTableName) {
+  console.error(
+    "Missing required environment variables: DYNAMODB_LOGS_TABLE_NAME, DYNAMODB_MAIN_TABLE_NAME",
+  );
   process.exit(1);
 }
 
@@ -93,7 +96,8 @@ try {
     console.log(`Table ${tableName} created successfully`);
   };
 
-  await createTableIfNotExists(npAtobaraiMainTableName);
+  await createTableIfNotExists(avataxLogsTableName);
+  await createTableIfNotExists(avataxMainTableName);
 
   console.log("DynamoDB setup completed successfully");
   process.exit(0);

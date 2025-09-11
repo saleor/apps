@@ -21,7 +21,7 @@
 ### Running app locally in development containers
 
 > [!IMPORTANT]
-> You can use the devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` and `./scripts/setup-dynamodb.sh` manually
+> You can use the devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` and `pnpm setup-dynamodb` manually
 
 The easiest way to run Saleor for local development is to use [development containers](https://containers.dev/).
 If you have Visual Studio Code, follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open an existing folder in a container.
@@ -97,7 +97,7 @@ After that a local DynamoDB instance will be spun-up at `http://localhost:8000`.
 To set up tables needed for the app run following command for each table used in app:
 
 ```shell
-./scripts/setup-dynamodb.sh
+pnpm setup-dynamodb
 ```
 
 After setting up database, you must configure following variables:

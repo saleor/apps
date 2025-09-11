@@ -8,9 +8,9 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-const npAtobaraiMainTableName = process.env.DYNAMODB_MAIN_TABLE_NAME;
+const segmentMainTableName = process.env.DYNAMODB_MAIN_TABLE_NAME;
 
-if (!npAtobaraiMainTableName) {
+if (!segmentMainTableName) {
   console.error("Missing required environment variable: DYNAMODB_MAIN_TABLE_NAME");
   process.exit(1);
 }
@@ -24,7 +24,7 @@ try {
       "endpoint-url": {
         type: "string",
         short: "e",
-        default: "http://localhost:8000",
+        default: "http://dynamodb:8000",
       },
     },
   });
@@ -93,7 +93,7 @@ try {
     console.log(`Table ${tableName} created successfully`);
   };
 
-  await createTableIfNotExists(npAtobaraiMainTableName);
+  await createTableIfNotExists(segmentMainTableName);
 
   console.log("DynamoDB setup completed successfully");
   process.exit(0);

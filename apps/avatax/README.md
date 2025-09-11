@@ -21,7 +21,7 @@
 ## Running app locally in development containers
 
 > [!IMPORTANT]
-> You can use the devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` and `./scripts/setup-dynamodb.sh` manually
+> You can use the devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` and `pnpm setup-dynamodb` manually
 
 The easiest way to run Saleor for local development is to use [development containers](https://containers.dev/).
 If you have Visual Studio Code, follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open an existing folder in a container.
@@ -49,21 +49,22 @@ pnpm run test
 
 ## DynamoDB
 
-DynamoDB is used to store client-side logs. To develop this feature locally, use development containers or use [docker-compose](../../.devcontainer/avatax/docker-compose.yml) from `.devcontainer`:
+DynamoDB is used to store client-side logs and auth data. To develop this feature locally, use development containers or use [docker-compose](../../.devcontainer/avatax/docker-compose.yml) from `.devcontainer`:
 
 1. Run `docker compose up` for local DynamoDB instance
-2. Run `./scripts/setup-dynamodb.sh` to create the DynamoDB table
+2. Run `pnpm run setup-dynamodb` to create the DynamoDB table
 
 Ensure the following env variables are set:
 
 ```dotenv
 DYNAMODB_LOGS_ITEM_TTL_IN_DAYS=30
-DYNAMODB_LOGS_TABLE_NAME=avatax-client-logs # must match scripts/setup-dynamodb.sh
+DYNAMODB_LOGS_TABLE_NAME=avatax-client-logs
+DYNAMODB_MAIN_TABLE_NAME=avatax-main-table
 ```
 
 Alternatively, you can connect to AWS-based DynamoDB:
 
-1. Create a table in your AWS, based on the parameters in [`scripts/setup-dynamodb.sh`](./scripts/setup-dynamodb.sh)
+1. Create a table in your AWS, based on the parameters in [`scripts/setup-dynamodb.ts`](./scripts/setup-dynamodb.ts)
 2. Set AWS-specific [env variables](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-environment.html)
 
 ## Testing
