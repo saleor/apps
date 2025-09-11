@@ -41,13 +41,7 @@ export default [
   },
   {
     name: "saleor-app-avatax/override-no-process-env",
-    files: [
-      "next.config.ts",
-      "src/env.ts",
-      "src/instrumentation.ts",
-      "e2e/env-e2e.ts",
-      "scripts/setup-dynamodb.ts",
-    ],
+    files: ["next.config.ts", "src/env.ts", "src/instrumentation.ts", "e2e/env-e2e.ts"],
     rules: {
       "n/no-process-env": "off",
     },

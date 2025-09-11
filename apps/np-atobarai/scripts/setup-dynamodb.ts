@@ -8,12 +8,9 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-const npAtobaraiMainTableName = process.env.DYNAMODB_MAIN_TABLE_NAME;
+import { env } from "@/env";
 
-if (!npAtobaraiMainTableName) {
-  console.error("Missing required environment variable: DYNAMODB_MAIN_TABLE_NAME");
-  process.exit(1);
-}
+const npAtobaraiMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
 try {
   const {

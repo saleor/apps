@@ -16,13 +16,7 @@ export default [
   },
   {
     name: "saleor-app-payment-np-atobarai/override-no-process-env",
-    files: [
-      "next.config.ts",
-      "src/lib/env.ts",
-      "src/__tests__/setup.ts",
-      "src/instrumentation.ts",
-      "scripts/setup-dynamodb.ts",
-    ],
+    files: ["next.config.ts", "src/lib/env.ts", "src/__tests__/setup.ts", "src/instrumentation.ts"],
     rules: {
       "n/no-process-env": "off",
     },

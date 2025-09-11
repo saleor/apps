@@ -8,15 +8,10 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-const avataxLogsTableName = process.env.DYNAMODB_LOGS_TABLE_NAME;
-const avataxMainTableName = process.env.DYNAMODB_MAIN_TABLE_NAME;
+import { env } from "@/env";
 
-if (!avataxLogsTableName || !avataxMainTableName) {
-  console.error(
-    "Missing required environment variables: DYNAMODB_LOGS_TABLE_NAME, DYNAMODB_MAIN_TABLE_NAME",
-  );
-  process.exit(1);
-}
+const avataxLogsTableName = env.DYNAMODB_LOGS_TABLE_NAME;
+const avataxMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
 try {
   const {

@@ -8,12 +8,9 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-const stripeMainTableName = process.env.DYNAMODB_MAIN_TABLE_NAME;
+import { env } from "@/env";
 
-if (!stripeMainTableName) {
-  console.error("Missing required environment variable: DYNAMODB_MAIN_TABLE_NAME");
-  process.exit(1);
-}
+const stripeMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
 try {
   const {

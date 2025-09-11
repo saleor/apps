@@ -8,12 +8,9 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-const segmentMainTableName = process.env.DYNAMODB_MAIN_TABLE_NAME;
+import { env } from "@/env";
 
-if (!segmentMainTableName) {
-  console.error("Missing required environment variable: DYNAMODB_MAIN_TABLE_NAME");
-  process.exit(1);
-}
+const segmentMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
 try {
   const {
