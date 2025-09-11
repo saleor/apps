@@ -34,8 +34,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Testing**:
 
-- `pnpm test` - Run unit tests for all projects
-- `pnpm test:ci` - Run tests with coverage for CI
+- `pnpm test:ci` - Run unit tests for all projects
 - `vitest --project units` - Run unit tests for specific app
 - `vitest --project e2e` - Run E2E tests for specific app
 - `pnpm e2e` - Run E2E tests (app-level)
