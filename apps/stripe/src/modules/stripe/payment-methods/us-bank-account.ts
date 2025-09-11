@@ -25,8 +25,8 @@ export class USBankAccountPaymentMethod implements PaymentMethod {
     _saleorTransactionFlow: SaleorTransationFlow,
   ): ResolvedTransactionFlow {
     /*
-     *  ACH payments are always charged immediately (no authorization flow).
-     *  This is because ACH payments can take several days to complete,
+     *  US Bank account payments (e.g ACH) are always charged immediately (no authorization flow).
+     *  This is because US Bank account payments (e.g ACH) can take several days to complete,
      *  and the funds are not guaranteed until the payment clears.
      */
     return createResolvedTransactionFlow("CHARGE");
