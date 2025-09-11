@@ -3,9 +3,10 @@ import "@saleor/macaw-ui/style";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
+import { IframeProtectedWrapper } from "@saleor/apps-shared/iframe-protected-wrapper";
 import { NoSSRWrapper } from "@saleor/apps-shared/no-ssr-wrapper";
 import { ThemeSynchronizer } from "@saleor/apps-shared/theme-synchronizer";
-import { Box, ThemeProvider } from "@saleor/macaw-ui";
+import { Box, Text, ThemeProvider } from "@saleor/macaw-ui";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProps } from "next/app";
 
@@ -29,19 +30,33 @@ const queryClient = new QueryClient({
 function NextApp({ Component, pageProps }: AppProps) {
   return (
     <NoSSRWrapper>
-      <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-        <GraphQLProvider>
+      <IframeProtectedWrapper
+        allowedPathNames={["/"]}
+        fallback={
           <ThemeProvider>
-            <ThemeSynchronizer />
-            <RoutePropagator />
-            <QueryClientProvider client={queryClient}>
-              <Box padding={10}>
-                <Component {...pageProps} />
-              </Box>
-            </QueryClientProvider>
+            <Box display="flex" flexDirection="column" padding={4}>
+              <Text as="h1" fontWeight="bold" fontSize={8} marginBottom={6}>
+                Saleor CMS App
+              </Text>
+              <Text>This app can only be used within the Saleor Dashboard.</Text>
+            </Box>
           </ThemeProvider>
-        </GraphQLProvider>
-      </AppBridgeProvider>
+        }
+      >
+        <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
+          <GraphQLProvider>
+            <ThemeProvider>
+              <ThemeSynchronizer />
+              <RoutePropagator />
+              <QueryClientProvider client={queryClient}>
+                <Box padding={10}>
+                  <Component {...pageProps} />
+                </Box>
+              </QueryClientProvider>
+            </ThemeProvider>
+          </GraphQLProvider>
+        </AppBridgeProvider>
+      </IframeProtectedWrapper>
     </NoSSRWrapper>
   );
 }
