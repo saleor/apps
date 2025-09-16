@@ -90,7 +90,7 @@ export interface NotifyPayloadAccountChangeEmailRequest {
   new_email: string;
   old_email: string;
   recipient_email: string;
-  reset_url: string;
+  redirect_url: string;
   site_name: string;
   token: string;
   user: User;
@@ -100,9 +100,10 @@ export interface NotifyPayloadAccountChangeEmailConfirmation {
   channel_slug: string;
   domain: string;
   logo_url: string;
+  new_email: string;
+  old_email: string;
   recipient_email: string;
   site_name: string;
-  token: string;
   user: User;
 }
 
