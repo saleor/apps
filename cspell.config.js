@@ -75,6 +75,7 @@ export default {
     "Encryptor",
     "claude",
     "SEPA",
+    "mailpit",
   ],
   language: "en-US",
   useGitignore: true,
