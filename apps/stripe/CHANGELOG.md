@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.2.1
+
+### Patch Changes
+
+- d19e88fc: Fix copy for restricted key validation. After this change error text will point to proper prefix (rk) instead of (pk).
+
 ## 2.2.0
 
 ### Minor Changes
