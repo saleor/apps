@@ -1,17 +1,30 @@
-import { BaseError } from "modern-errors";
+export class PayPalApiError extends Error {
+  public statusCode?: number;
+  public paypalErrorName?: string;
+  public paypalErrorMessage?: string;
+  public _brand = "PayPalApiError" as const;
 
-export const PayPalApiError = BaseError.subclass("PayPalApiError", {
-  props: {
-    _brand: "PayPalApiError" as const,
-    statusCode: undefined as number | undefined,
-    paypalErrorName: undefined as string | undefined,
-    paypalErrorMessage: undefined as string | undefined,
-  },
-});
+  constructor(
+    message: string,
+    options?: {
+      statusCode?: number;
+      paypalErrorName?: string;
+      paypalErrorMessage?: string;
+      cause?: unknown;
+    }
+  ) {
+    super(message);
+    this.name = "PayPalApiError";
+    this.statusCode = options?.statusCode;
+    this.paypalErrorName = options?.paypalErrorName;
+    this.paypalErrorMessage = options?.paypalErrorMessage;
+  }
+}
 
-export type PayPalApiErrorType = InstanceType<typeof PayPalApiError>;
+export type PayPalApiErrorPublicCode = "PAYPAL_API_ERROR" | "PAYPAL_AUTH_ERROR";
+export type PayPalCardErrorPublicCode = "CARD_DECLINED" | "INSUFFICIENT_FUNDS";
 
-export const mapPayPalErrorToApiError = (error: unknown): PayPalApiErrorType => {
+export const mapPayPalErrorToApiError = (error: unknown): PayPalApiError => {
   if (error instanceof PayPalApiError) {
     return error;
   }

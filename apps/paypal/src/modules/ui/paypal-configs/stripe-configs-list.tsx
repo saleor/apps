@@ -59,21 +59,11 @@ export const PayPalConfigsList = ({ configs }: Props) => {
         const configInstance = PayPalFrontendConfig.createFromSerializedFields(config);
         const envValue = configInstance.getPayPalEnvValue();
 
-        const webhookStatusInfo =
-          configInstance.webhookStatus === "disabled"
-            ? webhookDisabled
-            : configInstance.webhookStatus === "missing"
-            ? webhookMissing
-            : null;
-
         return {
           id: configInstance.id,
           name: configInstance.name,
           deleteButtonSlotLeft() {
             return envValue === "SANDBOX" ? testEnvChip : liveEnvChip;
-          },
-          deleteButtonSlotRight() {
-            return webhookStatusInfo;
           },
         };
       })}

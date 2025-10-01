@@ -1,5 +1,3 @@
-import { trace } from "@opentelemetry/api";
+import { env } from "./env";
 
-import pkg from "@/package.json";
-
-export const appInternalTracer = trace.getTracer("saleor-app-payment-paypal.core", pkg.version);
+export const isOtelEnabled = env.OTEL_ENABLED === true;

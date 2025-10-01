@@ -1,12 +1,12 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 
+import {
+  TransactionChargeRequestedDocument,
+  TransactionChargeRequestedEventFragment,
+} from "@/generated/graphql";
 import { saleorApp } from "@/lib/saleor-app";
 
 import { verifyWebhookSignature } from "../verify-signature";
-
-// Temporary placeholder - will be replaced by generated types
-type TransactionChargeRequestedEventFragment = any;
-const TransactionChargeRequestedDocument = "";
 
 export const transactionChargeRequestedWebhookDefinition =
   new SaleorSyncWebhook<TransactionChargeRequestedEventFragment>({

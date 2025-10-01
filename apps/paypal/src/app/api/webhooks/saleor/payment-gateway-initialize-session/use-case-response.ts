@@ -3,7 +3,7 @@ import { z } from "zod";
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { PaymentGatewayInitializeSession } from "@/generated/app-webhooks-types/payment-gateway-initialize-session";
 import { AppContext } from "@/lib/app-context";
-import { PayPalClientId } from "@/modules/paypal/paypal-publishable-key";
+import { PayPalClientId } from "@/modules/paypal/paypal-client-id";
 
 class Success extends SuccessWebhookResponse {
   readonly pk: PayPalClientId;

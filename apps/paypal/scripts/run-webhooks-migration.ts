@@ -6,8 +6,6 @@ import * as Sentry from "@sentry/nextjs";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "@/app/api/webhooks/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionCancelationRequestedWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-cancelation-requested/webhook-definition";
 import { transactionChargeRequestedWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-charge-requested/webhook-definition";
-import { transactionInitializeSessionWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-initialize-session/webhook-definition";
-import { transactionProcessSessionWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-process-session/webhook-definition";
 import { transactionRefundRequestedWebhookDefinition } from "@/app/api/webhooks/saleor/transaction-refund-requested/webhook-definition";
 import { env } from "@/lib/env";
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
@@ -54,10 +52,7 @@ const runMigrations = async () => {
 
       logger.info(`Migrating webhooks for ${saleorApiUrl}`);
 
-      const client = createInstrumentedGraphqlClient({
-        saleorApiUrl: saleorApiUrl,
-        token: token,
-      });
+      const client = createInstrumentedGraphqlClient(saleorApiUrl, token);
 
       const runner = new WebhookMigrationRunner({
         dryRun,
@@ -89,14 +84,6 @@ const runMigrations = async () => {
           const appWebhooks = [
             {
               ...paymentGatewayInitializeSessionWebhookDefinition.getWebhookManifest(baseUrl),
-              isActive: enabled,
-            },
-            {
-              ...transactionInitializeSessionWebhookDefinition.getWebhookManifest(baseUrl),
-              isActive: enabled,
-            },
-            {
-              ...transactionProcessSessionWebhookDefinition.getWebhookManifest(baseUrl),
               isActive: enabled,
             },
             {

@@ -8,14 +8,12 @@ import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 import { PayPalWebhookManager } from "@/modules/paypal/paypal-webhook-manager";
 import { router } from "@/modules/trpc/trpc-server";
 
-const webhookManager = new PayPalWebhookManager();
 
 /**
  * TODO Figure out end-to-end router testing (must somehow check valid jwt token)
  */
 export const appConfigRouter = router({
   saveNewPayPalConfig: new NewPayPalConfigTrpcHandler({
-    webhookManager,
   }).getTrpcProcedure(),
   getPayPalConfigsList: new GetPayPalConfigsListTrpcHandler().getTrpcProcedure(),
   fetchChannels: new GetSaleorChannelsTrpcHandler({
@@ -23,5 +21,4 @@ export const appConfigRouter = router({
   }).getTrpcProcedure(),
   channelsConfigsMapping: new GetPayPalConfigsChannelsMappingTrpcHandler().getTrpcProcedure(),
   updateMapping: new UpdateMappingTrpcHandler().getTrpcProcedure(),
-  removePayPalConfig: new RemovePayPalConfigTrpcHandler({ webhookManager }).getTrpcProcedure(),
 });

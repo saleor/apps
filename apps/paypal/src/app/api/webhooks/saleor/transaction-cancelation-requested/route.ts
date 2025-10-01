@@ -15,7 +15,7 @@ import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { PayPalOrdersApiFactory } from "@/modules/paypal/paypal-payment-intents-api-factory";
+import { PayPalOrdersApiFactory } from "@/modules/paypal/paypal-orders-api-factory";
 
 import { withRecipientVerification } from "../with-recipient-verification";
 import { TransactionCancelationRequestedUseCase } from "./use-case";

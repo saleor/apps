@@ -27,7 +27,7 @@ export class GetPayPalConfigsChannelsMappingTrpcHandler {
           });
         }
 
-        const config = await ctx.configRepo.getRootConfig({
+        const config = await ctx.configRepo.getAllPayPalConfigs({
           saleorApiUrl: saleorApiUrl.value,
           appId: ctx.appId,
         });

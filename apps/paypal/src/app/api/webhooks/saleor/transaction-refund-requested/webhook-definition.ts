@@ -1,9 +1,11 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
+
+import {
+  TransactionRefundRequestedDocument,
+  TransactionRefundRequestedEventFragment,
+} from "@/generated/graphql";
 import { saleorApp } from "@/lib/saleor-app";
 import { verifyWebhookSignature } from "../verify-signature";
-
-type TransactionRefundRequestedEventFragment = any;
-const TransactionRefundRequestedDocument = "";
 
 export const transactionRefundRequestedWebhookDefinition =
   new SaleorSyncWebhook<TransactionRefundRequestedEventFragment>({

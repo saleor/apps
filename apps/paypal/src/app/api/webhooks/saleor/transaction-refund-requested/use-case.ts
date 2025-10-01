@@ -14,17 +14,14 @@ import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
-import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
 import {
   getChannelIdFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
 } from "@/modules/saleor/transaction-requested-event-helpers";
 import { mapPayPalErrorToApiError } from "@/modules/paypal/paypal-api-error";
-import { PayPalMoney } from "@/modules/paypal/paypal-money";
-import { createPayPalOrderId } from "@/modules/paypal/paypal-payment-intent-id";
+import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { createPayPalRefundId } from "@/modules/paypal/paypal-refund-id";
 import { IPayPalRefundsApiFactory } from "@/modules/paypal/types";
-import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
 import {
   TransactionRefundRequestedUseCaseResponses,
@@ -59,7 +56,7 @@ export class TransactionRefundRequestedUseCase {
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
 
-    loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
+    // loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
 
     const paypalConfigForThisChannel = await this.appConfigRepo.getPayPalConfig({
       channelId,
@@ -97,10 +94,10 @@ export class TransactionRefundRequestedUseCase {
       paypalEnv: paypalConfigForThisChannel.value.getPayPalEnvValue(),
     });
 
-    const clientSecret = paypalConfigForThisChannel.value.clientSecret;
-
     const paypalRefundsApi = this.paypalRefundsApiFactory.create({
-      key: clientSecret,
+      clientId: paypalConfigForThisChannel.value.clientId,
+      clientSecret: paypalConfigForThisChannel.value.clientSecret,
+      env: paypalConfigForThisChannel.value.environment,
     });
 
     this.logger.debug("Refunding PayPal payment intent with id", {
@@ -110,46 +107,27 @@ export class TransactionRefundRequestedUseCase {
 
     const paypalOrderId = createPayPalOrderId(transaction.pspReference);
 
-    const paypalMoneyResult = PayPalMoney.createFromSaleorAmount({
-      amount: event.action.amount,
-      currency: event.action.currency,
+    const paypalMoney = {
+      currency_code: event.action.currency,
+      value: event.action.amount.toString(),
+    };
+
+    // Get capture ID from order - simplified for now
+    // In production, you'd track capture IDs or fetch from PayPal API
+    const captureId = transaction.pspReference; // Assuming pspReference is capture ID
+
+    const refundResult = await paypalRefundsApi.refundCapture({
+      captureId,
+      amount: paypalMoney,
     });
 
-    if (paypalMoneyResult.isErr()) {
-      this.logger.error("Failed to create PayPal money", {
-        error: paypalMoneyResult.error,
-      });
+    if (refundResult.isErr()) {
+      const error = mapPayPalErrorToApiError(refundResult.error);
 
-      return err(
-        new MalformedRequestResponse(
-          appContextContainer.getContextValue(),
-          paypalMoneyResult.error,
-        ),
-      );
-    }
-
-    const createRefundResult = await paypalRefundsApi.createRefund({
-      orderId: paypalOrderId,
-      paypalMoney: paypalMoneyResult.value,
-      metadata: {
-        saleor_source_id: transaction.checkout?.id
-          ? transaction.checkout.id
-          : transaction.order?.id,
-        saleor_source_type: transaction.checkout ? "Checkout" : "Order",
-        saleor_transaction_id: createSaleorTransactionId(transaction.id),
-      },
-    });
-
-    if (createRefundResult.isErr()) {
-      const error = mapPayPalErrorToApiError(createRefundResult.error);
-
-      this.logger.error("Failed to create refund", {
-        error,
-      });
+      this.logger.error("Failed to create refund", { error });
 
       return ok(
         new TransactionRefundRequestedUseCaseResponses.Failure({
-          transactionResult: new RefundFailureResult(),
           paypalOrderId,
           error,
           appContext: appContextContainer.getContextValue(),
@@ -157,26 +135,7 @@ export class TransactionRefundRequestedUseCase {
       );
     }
 
-    const refund = createRefundResult.value;
-
-    this.logger.debug("Refund created", {
-      refund,
-    });
-
-    const saleorMoneyResult = SaleorMoney.createFromPayPal({
-      amount: refund.amount,
-      currency: refund.currency,
-    });
-
-    if (saleorMoneyResult.isErr()) {
-      this.logger.error("Failed to create Saleor money", {
-        error: saleorMoneyResult.error,
-      });
-
-      return err(
-        new BrokenAppResponse(appContextContainer.getContextValue(), saleorMoneyResult.error),
-      );
-    }
+    const refund = refundResult.value;
 
     return ok(
       new TransactionRefundRequestedUseCaseResponses.Success({

@@ -1,3 +1,4 @@
+import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 
@@ -23,7 +24,7 @@ const useCase = new TransactionChargeRequestedUseCase({
 
 const logger = createLogger("TRANSACTION_CHARGE_REQUESTED route");
 
-const handler = transactionChargeRequestedWebhookDefinition.createHandler(async (_req, ctx) => {
+const handler = transactionChargeRequestedWebhookDefinition.createHandler(async (_req: any, ctx: any) => {
   try {
     logger.info("Received webhook request");
 
@@ -79,4 +80,5 @@ const handler = transactionChargeRequestedWebhookDefinition.createHandler(async 
 export const POST = compose(
   withLoggerContext,
   appContextContainer.wrapRequest,
+  withSpanAttributesAppRouter,
 )(handler);

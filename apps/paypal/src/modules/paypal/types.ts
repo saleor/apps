@@ -2,6 +2,7 @@ import { Result } from "neverthrow";
 
 import { PayPalClientId } from "./paypal-client-id";
 import { PayPalClientSecret } from "./paypal-client-secret";
+import { PayPalEnv } from "./paypal-env";
 import { PayPalMoney } from "./paypal-money";
 import { PayPalOrderId } from "./paypal-order-id";
 
@@ -54,12 +55,17 @@ export interface IPayPalRefundsApi {
 }
 
 export interface IPayPalOrdersApiFactory {
-  create(args: { clientId: PayPalClientId; clientSecret: PayPalClientSecret }): IPayPalOrdersApi;
+  create(args: {
+    clientId: PayPalClientId;
+    clientSecret: PayPalClientSecret;
+    env: PayPalEnv;
+  }): IPayPalOrdersApi;
 }
 
 export interface IPayPalRefundsApiFactory {
   create(args: {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
+    env: PayPalEnv;
   }): IPayPalRefundsApi;
 }

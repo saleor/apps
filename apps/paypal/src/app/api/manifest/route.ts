@@ -10,8 +10,6 @@ import packageJson from "@/package.json";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "../webhooks/saleor/payment-gateway-initialize-session/webhook-definition";
 import { transactionCancelationRequestedWebhookDefinition } from "../webhooks/saleor/transaction-cancelation-requested/webhook-definition";
 import { transactionChargeRequestedWebhookDefinition } from "../webhooks/saleor/transaction-charge-requested/webhook-definition";
-import { transactionInitializeSessionWebhookDefinition } from "../webhooks/saleor/transaction-initialize-session/webhook-definition";
-import { transactionProcessSessionWebhookDefinition } from "../webhooks/saleor/transaction-process-session/webhook-definition";
 import { transactionRefundRequestedWebhookDefinition } from "../webhooks/saleor/transaction-refund-requested/webhook-definition";
 
 const handler = createManifestHandler({
@@ -44,8 +42,6 @@ const handler = createManifestHandler({
       version: packageJson.version,
       webhooks: [
         paymentGatewayInitializeSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
-        transactionInitializeSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
-        transactionProcessSessionWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionChargeRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionCancelationRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),
         transactionRefundRequestedWebhookDefinition.getWebhookManifest(apiBaseUrl),

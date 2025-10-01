@@ -12,15 +12,14 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { resolveSaleorMoneyFromPayPalOrder } from "@/modules/saleor/resolve-saleor-money-from-paypal-payment-intent";
+import { resolveSaleorMoneyFromPayPalOrder } from "@/modules/saleor/resolve-saleor-money-from-paypal-order";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
   getChannelIdFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
 } from "@/modules/saleor/transaction-requested-event-helpers";
 import { mapPayPalErrorToApiError } from "@/modules/paypal/paypal-api-error";
-import { createPayPalOrderId } from "@/modules/paypal/paypal-payment-intent-id";
-import { createTimestampFromOrder } from "@/modules/paypal/paypal-timestamps";
+import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { IPayPalOrdersApiFactory } from "@/modules/paypal/types";
 import {
   CancelFailureResult,
@@ -60,7 +59,7 @@ export class TransactionCancelationRequestedUseCase {
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
 
-    loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
+    // loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
 
     const paypalConfigForThisChannel = await this.appConfigRepo.getPayPalConfig({
       channelId,
@@ -98,26 +97,27 @@ export class TransactionCancelationRequestedUseCase {
       paypalEnv: paypalConfigForThisChannel.value.getPayPalEnvValue(),
     });
 
-    const clientSecret = paypalConfigForThisChannel.value.clientSecret;
-
     const paypalOrdersApi = this.paypalOrdersApiFactory.create({
-      key: clientSecret,
+      clientId: paypalConfigForThisChannel.value.clientId,
+      clientSecret: paypalConfigForThisChannel.value.clientSecret,
+      env: paypalConfigForThisChannel.value.environment,
     });
 
-    this.logger.debug("Canceling PayPal payment intent with id", {
+    this.logger.debug("Getting PayPal order with id", {
       id: transaction.pspReference,
     });
 
     const paypalOrderId = createPayPalOrderId(transaction.pspReference);
 
-    const cancelOrderResult = await paypalOrdersApi.cancelOrder({
-      id: paypalOrderId,
+    // PayPal doesn't have a direct cancel endpoint, we get the order to verify it exists
+    const getOrderResult = await paypalOrdersApi.getOrder({
+      orderId: paypalOrderId,
     });
 
-    if (cancelOrderResult.isErr()) {
-      const error = mapPayPalErrorToApiError(cancelOrderResult.error);
+    if (getOrderResult.isErr()) {
+      const error = mapPayPalErrorToApiError(getOrderResult.error);
 
-      this.logger.error("Failed to capture payment intent", {
+      this.logger.error("Failed to get PayPal order", {
         error,
       });
 
@@ -132,7 +132,7 @@ export class TransactionCancelationRequestedUseCase {
     }
 
     const saleorMoneyResult = resolveSaleorMoneyFromPayPalOrder(
-      cancelOrderResult.value,
+      getOrderResult.value,
     );
 
     if (saleorMoneyResult.isErr()) {
@@ -150,7 +150,6 @@ export class TransactionCancelationRequestedUseCase {
         saleorMoney: saleorMoneyResult.value,
         paypalOrderId,
         transactionResult: new CancelSuccessResult(),
-        timestamp: createTimestampFromOrder(cancelOrderResult.value),
         appContext: appContextContainer.getContextValue(),
       }),
     );

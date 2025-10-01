@@ -7,9 +7,8 @@ import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { generateOrderPayPalDashboardUrl } from "@/modules/paypal/generate-paypal-dashboard-urls";
 import { PayPalApiError } from "@/modules/paypal/paypal-api-error";
-import { PayPalOrderId } from "@/modules/paypal/paypal-payment-intent-id";
+import { PayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { PayPalRefundId } from "@/modules/paypal/paypal-refund-id";
-import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
 class Success extends SuccessWebhookResponse {
   readonly paypalRefundId: PayPalRefundId;
@@ -34,22 +33,17 @@ class Success extends SuccessWebhookResponse {
 }
 
 class Failure extends SuccessWebhookResponse {
-  readonly transactionResult: RefundFailureResult;
   readonly error: PayPalApiError;
   readonly paypalOrderId: PayPalOrderId;
-  readonly message: string;
 
   constructor(args: {
-    transactionResult: RefundFailureResult;
     error: PayPalApiError;
     paypalOrderId: PayPalOrderId;
     appContext: AppContext;
   }) {
     super(args.appContext);
-    this.transactionResult = args.transactionResult;
     this.error = args.error;
     this.paypalOrderId = args.paypalOrderId;
-    this.message = this.error.merchantMessage;
   }
 
   getResponse(): Response {
@@ -58,10 +52,10 @@ class Failure extends SuccessWebhookResponse {
     }
 
     const typeSafeResponse: TransactionRefundRequestedSyncFailure = {
-      result: this.transactionResult.result,
+      result: "REFUND_FAILURE",
       pspReference: this.paypalOrderId,
-      message: this.messageFormatter.formatMessage(this.message, this.error),
-      actions: this.transactionResult.actions,
+      message: this.messageFormatter.formatMessage(this.error.message, this.error),
+      actions: [],
       externalUrl: generateOrderPayPalDashboardUrl(
         this.paypalOrderId,
         this.appContext.paypalEnv,

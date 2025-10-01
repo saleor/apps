@@ -1,6 +1,6 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 
-import { REQUIRED_CLIENT_PERMISSIONS } from "@/lib/required-client-permissions";
+import { requiredClientPermissions } from "@/lib/required-client-permissions";
 
 export const useHasAppAccess = (): {
   haveAccessToApp: boolean;
@@ -13,7 +13,7 @@ export const useHasAppAccess = (): {
     };
   }
 
-  const haveAccessToApp = REQUIRED_CLIENT_PERMISSIONS.every(
+  const haveAccessToApp = requiredClientPermissions.every(
     (permission) => appBridgeState.user?.permissions.includes(permission),
   );
 

@@ -39,7 +39,7 @@ export class UpdateMappingTrpcHandler {
           });
         }
 
-        const saveResult = await ctx.configRepo.updateMapping(
+        const saveResult = await ctx.configRepo.savePayPalConfig(
           {
             saleorApiUrl: saleorApiUrl.value,
             appId: ctx.appId,

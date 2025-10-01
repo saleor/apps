@@ -1,9 +1,10 @@
-import { z } from "zod";
+export type SaleorTransactionFlow = "AUTHORIZATION" | "CHARGE";
 
-const saleorTransactionFlowSchema = z
-  .enum(["AUTHORIZATION", "CHARGE"])
-  .brand("SaleorTransactionFlow");
-
-export const createSaleorTransactionFlow = (raw: string) => saleorTransactionFlowSchema.parse(raw);
-
-export type SaleorTransationFlow = z.infer<typeof saleorTransactionFlowSchema>;
+export const resolveSaleorTransactionFlow = (
+  transactionFlow: string | null | undefined,
+): SaleorTransactionFlow => {
+  if (transactionFlow === "AUTHORIZATION") {
+    return "AUTHORIZATION";
+  }
+  return "CHARGE";
+};

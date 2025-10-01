@@ -1,12 +1,11 @@
-import { ObservabilityAttributesNames } from "@saleor/apps-otel/src/observability-attributes";
-import { AsyncLocalStorage } from "async_hooks";
+import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import { LoggerContext, wrapWithLoggerContextAppRouter } from "@saleor/apps-logger/node";
 
-export const loggerContext = new AsyncLocalStorage<
-  Partial<Record<ObservabilityAttributesNames, unknown>>
->();
+/**
+ * Server-side only
+ */
+export const loggerContext = new LoggerContext();
 
-export const withLoggerContext = <T extends (...args: any[]) => any>(handler: T): T => {
-  return ((...args: Parameters<T>) => {
-    return loggerContext.run({}, () => handler(...args));
-  }) as T;
+export const withLoggerContext = (handler: NextAppRouterHandler) => {
+  return wrapWithLoggerContextAppRouter(handler, loggerContext);
 };

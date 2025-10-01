@@ -43,7 +43,7 @@ const handler = transactionRefundRequestedWebhookDefinition.createHandler(
 
       loggerContext.set(
         ObservabilityAttributes.TRANSACTION_AMOUNT,
-        ctx.payload.action.amount ?? null,
+        ctx.payload.action.amount || null,
       );
 
       logger.info("Received webhook request");

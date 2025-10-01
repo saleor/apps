@@ -11,3 +11,6 @@ export const createGraphQLClient = (saleorApiUrl: string, token: string) => {
     },
   });
 };
+
+// Alias for compatibility
+export const createInstrumentedGraphqlClient = createGraphQLClient;

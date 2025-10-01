@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
-import { PayPalConfigsList } from "@/modules/ui/paypal-configs/paypal-configs-list";
+import { PayPalConfigsList } from "@/modules/ui/paypal-configs/stripe-configs-list";
 
 export const ChannelConfigSection = () => {
   const { data, error, refetch } = trpcClient.appConfig.getPayPalConfigsList.useQuery();
