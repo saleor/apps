@@ -1,0 +1,29 @@
+fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
+  ...EventMetadata
+  action {
+    amount
+    currency
+  }
+  transaction {
+    id
+    pspReference
+    checkout {
+      id
+      channel {
+        ...Channel
+      }
+    }
+    order {
+      id
+      channel {
+        ...Channel
+      }
+    }
+  }
+}
+
+subscription TransactionRefundRequested {
+  event {
+    ...TransactionRefundRequestedEvent
+  }
+}

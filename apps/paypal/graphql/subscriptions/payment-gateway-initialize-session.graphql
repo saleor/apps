@@ -1,0 +1,12 @@
+fragment PaymentGatewayInitializeSessionEvent on PaymentGatewayInitializeSession {
+  ...EventMetadata
+  sourceObject {
+    ...SourceObject
+  }
+}
+
+subscription PaymentGatewayInitializeSession {
+  event {
+    ...PaymentGatewayInitializeSessionEvent
+  }
+}

@@ -1,0 +1,7 @@
+fragment EventMetadata on Event {
+  version
+  # App's ID to be verified against AuthData
+  recipient {
+    id
+  }
+}

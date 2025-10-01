@@ -1,0 +1,19 @@
+fragment TransactionProcessSessionEvent on TransactionProcessSession {
+  ...EventMetadata
+  transaction {
+    pspReference
+  }
+  action {
+    amount
+    actionType
+  }
+  sourceObject {
+    ...SourceObject
+  }
+}
+
+subscription TransactionProcessSession {
+  event {
+    ...TransactionProcessSessionEvent
+  }
+}
