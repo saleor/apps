@@ -55,14 +55,6 @@ export class UpdateMappingTrpcHandler {
           appId: ctx.appId,
         });
         
-        // Debug: Log all existing configs for troubleshooting
-        const allConfigsResult = await metadataManager.getAllConfigs();
-        if (allConfigsResult.isOk()) {
-          console.log("Available PayPal configs:", allConfigsResult.value.map(c => ({ id: c.id, name: c.name })));
-        }
-        console.log("Requested configId:", configId);
-        console.log("Target channelId:", channelId);
-        
         // Validate that config exists if configId is provided
         if (configId) {
           const configResult = await metadataManager.getConfigById(configId);
@@ -75,10 +67,9 @@ export class UpdateMappingTrpcHandler {
           }
           
           if (!configResult.value) {
-            console.log("Config not found, available configs:", allConfigsResult.isOk() ? allConfigsResult.value.length : "unknown");
             throw new TRPCError({
               code: "NOT_FOUND",
-              message: `PayPal configuration with ID ${configId} not found. Available configs: ${allConfigsResult.isOk() ? allConfigsResult.value.length : 0}`,
+              message: `PayPal configuration with ID ${configId} not found`,
             });
           }
         }

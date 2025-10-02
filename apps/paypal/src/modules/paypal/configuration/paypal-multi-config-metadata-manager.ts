@@ -89,24 +89,19 @@ export class PayPalMultiConfigMetadataManager {
 
   async saveConfig(config: PayPalConfig): Promise<Result<void, Error>> {
     try {
-      console.log("saveConfig: Starting to save config", { id: config.id, name: config.name });
-      
       const allConfigsResult = await this.getAllConfigs();
       if (allConfigsResult.isErr()) {
-        console.error("saveConfig: Failed to get all configs", allConfigsResult.error);
         return err(allConfigsResult.error);
       }
 
       const configs = allConfigsResult.value;
-      console.log("saveConfig: Current configs count:", configs.length);
-      
       const existingIndex = configs.findIndex(c => c.id === config.id);
 
       if (existingIndex >= 0) {
-        console.log("saveConfig: Updating existing config at index", existingIndex);
+        // Update existing config
         configs[existingIndex] = config;
       } else {
-        console.log("saveConfig: Adding new config");
+        // Add new config
         configs.push(config);
       }
 
@@ -118,16 +113,13 @@ export class PayPalMultiConfigMetadataManager {
         environment: c.environment,
       }));
 
-      console.log("saveConfig: Attempting to save to metadata with key:", this.configsMetadataKey);
       await this.settingsManager.set({
         key: this.configsMetadataKey,
         value: JSON.stringify(configsData),
       });
 
-      console.log("saveConfig: Successfully saved to metadata");
       return ok(undefined);
     } catch (error) {
-      console.error("saveConfig: Exception occurred:", error);
       return err(error instanceof Error ? error : new Error('Failed to save PayPal config'));
     }
   }

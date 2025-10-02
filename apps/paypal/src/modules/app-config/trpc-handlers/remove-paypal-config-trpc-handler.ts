@@ -45,7 +45,6 @@ export class RemovePayPalConfigTrpcHandler {
           });
         }
 
-        console.log("Successfully deleted PayPal config:", input.configId);
         return { success: true };
       });
   }
