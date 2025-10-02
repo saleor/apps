@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 
 import {
@@ -6,6 +7,7 @@ import {
 } from "@/modules/app-config/domain/paypal-config";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
+import { PayPalMultiConfigMetadataManager } from "@/modules/paypal/configuration/paypal-multi-config-metadata-manager";
 
 // todo test
 export class GetPayPalConfigsChannelsMappingTrpcHandler {
@@ -14,6 +16,13 @@ export class GetPayPalConfigsChannelsMappingTrpcHandler {
   getTrpcProcedure() {
     return this.baseProcedure.query(
       async ({ ctx }): Promise<Record<string, PayPalFrontendConfigSerializedFields>> => {
+        if (!ctx.saleorApiUrl || !ctx.appId || !ctx.appToken) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Missing required request parameters",
+          });
+        }
+
         const saleorApiUrl = createSaleorApiUrl(ctx.saleorApiUrl);
 
         /**
@@ -27,29 +36,41 @@ export class GetPayPalConfigsChannelsMappingTrpcHandler {
           });
         }
 
-        const config = await ctx.configRepo.getPayPalConfig({
+        const metadataManager = PayPalMultiConfigMetadataManager.createFromAuthData({
           saleorApiUrl: saleorApiUrl.value,
+          token: ctx.appToken,
           appId: ctx.appId,
-          token: ctx.token || "",
         });
 
-        if (config.isErr()) {
+        const rootConfigResult = await metadataManager.getRootConfig();
+        if (rootConfigResult.isErr()) {
+          captureException(rootConfigResult.error);
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
-            message: "App failed to fetch config, please contact Saleor",
+            message: "Failed to retrieve PayPal configurations",
           });
         }
 
-        // In the new metadata approach, there's one config for all channels
-        // Return empty mapping if no config exists
-        if (!config.value) {
-          return {} as Record<string, PayPalFrontendConfigSerializedFields>;
-        }
+        const rootConfig = rootConfigResult.value;
+        const channelConfigMapping = rootConfig.channelConfigMapping;
+        const paypalConfigsById = rootConfig.paypalConfigsById;
 
-        // For compatibility, we could return the same config for all channels
-        // but since there's no channel info available here, return empty mapping
-        // The UI will need to be updated to handle the single-config approach
-        return {} as Record<string, PayPalFrontendConfigSerializedFields>;
+        // Convert to frontend format
+        const result: Record<string, PayPalFrontendConfigSerializedFields> = {};
+        
+        Object.entries(channelConfigMapping).forEach(([channelId, configId]) => {
+          const paypalConfig = paypalConfigsById[configId];
+          if (paypalConfig) {
+            result[channelId] = {
+              id: paypalConfig.id,
+              name: paypalConfig.name,
+              clientId: paypalConfig.clientId,
+              environment: paypalConfig.environment,
+            };
+          }
+        });
+
+        return result;
       },
     );
   }

@@ -111,21 +111,21 @@ export const NewPayPalConfigForm = () => {
             error={!!errors.environment}
           />
           <Input
-            label={<RequiredInputLabel labelText="Publishable key" />}
+            label={<RequiredInputLabel labelText="Client ID key" />}
             name="clientId"
             control={control}
             helperText={
-              errors.clientId?.message ?? "Publishable key generated in PayPal dashboard."
+              errors.clientId?.message ?? "Client ID generated in PayPal dashboard."
             }
             error={!!errors.clientId}
           />
           <Input
-            label={<RequiredInputLabel labelText="Restricted key" />}
+            label={<RequiredInputLabel labelText="Client Secret" />}
             name="clientSecret"
             control={control}
             type="password"
             helperText={
-              errors.clientSecret?.message ?? "Restricted key generated in PayPal dashboard."
+              errors.clientSecret?.message ?? "Client Secret generated in PayPal dashboard."
             }
             error={!!errors.clientSecret}
           />

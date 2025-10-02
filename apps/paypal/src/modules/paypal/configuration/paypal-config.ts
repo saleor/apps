@@ -10,7 +10,7 @@ const paypalConfigSchema = z.object({
   name: z.string().min(1),
   clientId: z.string().min(1),
   clientSecret: z.string().min(1),
-  environment: z.enum(["sandbox", "live"]),
+  environment: z.enum(["SANDBOX", "LIVE"]),
 });
 
 export class PayPalConfig {

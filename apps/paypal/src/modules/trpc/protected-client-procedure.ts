@@ -49,6 +49,7 @@ const attachSharedServices = middleware(async ({ ctx, next }) => {
 
   return next({
     ctx: {
+      ...ctx,
       apiClient: gqlClient,
     },
   });
@@ -106,6 +107,7 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
 
   return next({
     ctx: {
+      ...ctx,
       saleorApiUrl: ctx.saleorApiUrl,
     },
   });

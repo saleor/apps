@@ -4,13 +4,19 @@ import { TRPCError } from "@trpc/server";
 import { PayPalFrontendConfig } from "@/modules/app-config/domain/paypal-config";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
+import { PayPalMultiConfigMetadataManager } from "@/modules/paypal/configuration/paypal-multi-config-metadata-manager";
 
 export class GetPayPalConfigsListTrpcHandler {
   baseProcedure = protectedClientProcedure;
 
   getTrpcProcedure() {
     return this.baseProcedure.query(async ({ ctx }) => {
-      const saleorApiUrl = createSaleorApiUrl(ctx.saleorApiUrl);
+        if (!ctx.saleorApiUrl || !ctx.appId || !ctx.appToken) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Missing required request parameters",
+          });
+        }      const saleorApiUrl = createSaleorApiUrl(ctx.saleorApiUrl);
 
       if (saleorApiUrl.isErr()) {
         throw new TRPCError({
@@ -19,34 +25,29 @@ export class GetPayPalConfigsListTrpcHandler {
         });
       }
 
-      const config = await ctx.configRepo.getPayPalConfig({
-        saleorApiUrl: saleorApiUrl.value,
-        appId: ctx.appId,
-        token: ctx.token || "",
-      });
+        const metadataManager = PayPalMultiConfigMetadataManager.createFromAuthData({
+          saleorApiUrl: saleorApiUrl.value,
+          token: ctx.appToken,
+          appId: ctx.appId,
+        });      const configsResult = await metadataManager.getAllConfigs();
 
-      if (config.isErr()) {
-        captureException(config.error);
+      if (configsResult.isErr()) {
+        captureException(configsResult.error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch configuration",
+          message: "Failed to fetch configurations",
         });
       }
 
-      // Return as array for compatibility with UI expecting multiple configs
-      if (!config.value) {
-        return [];
-      }
-
-      // Convert new PayPalConfig to format expected by PayPalFrontendConfig
-      const frontendConfig = PayPalFrontendConfig.createFromSerializedFields({
-        name: config.value.name,
-        id: config.value.id,
-        clientId: config.value.clientId,
-        environment: config.value.environment,
+      // Convert to frontend format
+      return configsResult.value.map(config => {
+        return PayPalFrontendConfig.createFromSerializedFields({
+          name: config.name,
+          id: config.id,
+          clientId: config.clientId,
+          environment: config.environment,
+        });
       });
-
-      return [frontendConfig];
     });
   }
 }
