@@ -35,7 +35,7 @@ export const ChannelConfigMappingSection = () => {
   if (errors && errors.length > 0) {
     // todo better ui
 
-    return <Text>Error fetching config: {errors[0].message}</Text>;
+    return <Text>Error fetching config: {errors[0]?.message || "Unknown error"}</Text>;
   }
 
   const channelsExist = allChannels.data && allChannels.data.length > 0;

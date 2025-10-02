@@ -7,7 +7,7 @@ import {
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import {
@@ -16,7 +16,7 @@ import {
 } from "./use-case-response";
 
 export class PaymentGatewayInitializeSessionUseCase {
-  private appConfigRepo: AppConfigRepo;
+  private paypalConfigRepo: PayPalConfigRepo;
   private logger = createLogger("PaymentGatewayInitializeSessionUseCase");
 
   static UseCaseError = BaseError.subclass("PaymentGatewayInitializeSessionUseCaseError", {
@@ -25,32 +25,27 @@ export class PaymentGatewayInitializeSessionUseCase {
     },
   });
 
-  constructor(deps: { appConfigRepo: AppConfigRepo }) {
-    this.appConfigRepo = deps.appConfigRepo;
+  constructor(deps: { paypalConfigRepo: PayPalConfigRepo }) {
+    this.paypalConfigRepo = deps.paypalConfigRepo;
   }
 
   async execute(params: {
     channelId: string;
-    appId: string;
-    saleorApiUrl: SaleorApiUrl;
+    authData: import("@saleor/app-sdk/APL").AuthData;
   }): Promise<
     Result<
       PaymentGatewayInitializeSessionUseCaseResponsesType,
       AppIsNotConfiguredResponse | BrokenAppResponse
     >
   > {
-    const { channelId, appId, saleorApiUrl } = params;
+    const { channelId, authData } = params;
 
-    const paypalConfigForThisChannel = await this.appConfigRepo.getPayPalConfig({
-      channelId,
-      appId,
-      saleorApiUrl,
-    });
+    const paypalConfigForThisChannel = await this.paypalConfigRepo.getPayPalConfig(authData);
 
     if (paypalConfigForThisChannel.isOk()) {
-      const pk = paypalConfigForThisChannel.value?.clientId;
+      const config = paypalConfigForThisChannel.value;
 
-      if (!pk) {
+      if (!config) {
         this.logger.warn("Config for channel not found", {
           channelId,
         });
@@ -64,12 +59,12 @@ export class PaymentGatewayInitializeSessionUseCase {
       }
 
       appContextContainer.set({
-        paypalEnv: paypalConfigForThisChannel.value.getPayPalEnvValue(),
+        paypalEnv: config.environment,
       });
 
       return ok(
         new PaymentGatewayInitializeSessionUseCaseResponses.Success({
-          pk,
+          pk: config.clientId,
           appContext: appContextContainer.getContextValue(),
         }),
       );

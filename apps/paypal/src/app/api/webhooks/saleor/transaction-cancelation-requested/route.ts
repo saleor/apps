@@ -13,7 +13,7 @@ import { createLogger } from "@/lib/logger";
 import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
-import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
+import { paypalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { PayPalOrdersApiFactory } from "@/modules/paypal/paypal-orders-api-factory";
 
@@ -22,7 +22,7 @@ import { TransactionCancelationRequestedUseCase } from "./use-case";
 import { transactionCancelationRequestedWebhookDefinition } from "./webhook-definition";
 
 const useCase = new TransactionCancelationRequestedUseCase({
-  appConfigRepo: appConfigRepoImpl,
+  paypalConfigRepo,
   paypalOrdersApiFactory: new PayPalOrdersApiFactory(),
 });
 
@@ -58,8 +58,7 @@ const handler = transactionCancelationRequestedWebhookDefinition.createHandler(
       setObservabilitySaleorApiUrl(saleorApiUrlResult.value, ctx.payload.version);
 
       const result = await useCase.execute({
-        appId: ctx.authData.appId,
-        saleorApiUrl: saleorApiUrlResult.value,
+        authData: ctx.authData,
         event: ctx.payload,
       });
 

@@ -27,9 +27,10 @@ export class GetPayPalConfigsChannelsMappingTrpcHandler {
           });
         }
 
-        const config = await ctx.configRepo.getAllPayPalConfigs({
+        const config = await ctx.configRepo.getPayPalConfig({
           saleorApiUrl: saleorApiUrl.value,
           appId: ctx.appId,
+          token: ctx.token || "",
         });
 
         if (config.isErr()) {
@@ -39,21 +40,16 @@ export class GetPayPalConfigsChannelsMappingTrpcHandler {
           });
         }
 
-        const mapping = config.value.chanelConfigMapping;
-        const allConfigs = config.value.paypalConfigsById;
+        // In the new metadata approach, there's one config for all channels
+        // Return empty mapping if no config exists
+        if (!config.value) {
+          return {} as Record<string, PayPalFrontendConfigSerializedFields>;
+        }
 
-        return Object.entries(mapping).reduce(
-          (acc, [channelID, configId]) => {
-            const config = allConfigs[configId];
-
-            if (config) {
-              acc[channelID] = PayPalFrontendConfig.createFromPayPalConfig(config);
-            }
-
-            return acc;
-          },
-          {} as Record<string, PayPalFrontendConfigSerializedFields>,
-        );
+        // For compatibility, we could return the same config for all channels
+        // but since there's no channel info available here, return empty mapping
+        // The UI will need to be updated to handle the single-config approach
+        return {} as Record<string, PayPalFrontendConfigSerializedFields>;
       },
     );
   }

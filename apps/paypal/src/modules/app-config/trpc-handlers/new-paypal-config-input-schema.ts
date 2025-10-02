@@ -5,8 +5,8 @@ import { PayPalClientSecret } from "@/modules/paypal/paypal-client-secret";
 
 export const newPayPalConfigInputSchema = z.object({
   name: z.string().min(1),
-  clientId: z.string().min(1) as unknown as z.Schema<PayPalClientId>,
-  clientSecret: z.string().min(1) as unknown as z.Schema<PayPalClientSecret>,
+  clientId: z.string().min(1),
+  clientSecret: z.string().min(1),
   environment: z.enum(["SANDBOX", "LIVE"]),
 });
 

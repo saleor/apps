@@ -19,20 +19,34 @@ export class GetPayPalConfigsListTrpcHandler {
         });
       }
 
-      const configs = await ctx.configRepo.getAllPayPalConfigs({
+      const config = await ctx.configRepo.getPayPalConfig({
         saleorApiUrl: saleorApiUrl.value,
         appId: ctx.appId,
+        token: ctx.token || "",
       });
 
-      if (configs.isErr()) {
-        captureException(configs.error);
+      if (config.isErr()) {
+        captureException(config.error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch configurations",
+          message: "Failed to fetch configuration",
         });
       }
 
-      return configs.value.map((config) => PayPalFrontendConfig.createFromPayPalConfig(config));
+      // Return as array for compatibility with UI expecting multiple configs
+      if (!config.value) {
+        return [];
+      }
+
+      // Convert new PayPalConfig to format expected by PayPalFrontendConfig
+      const frontendConfig = PayPalFrontendConfig.createFromSerializedFields({
+        name: config.value.name,
+        id: config.value.id,
+        clientId: config.value.clientId,
+        environment: config.value.environment,
+      });
+
+      return [frontendConfig];
     });
   }
 }

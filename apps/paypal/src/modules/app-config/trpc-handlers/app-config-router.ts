@@ -13,12 +13,12 @@ import { router } from "@/modules/trpc/trpc-server";
  * TODO Figure out end-to-end router testing (must somehow check valid jwt token)
  */
 export const appConfigRouter = router({
-  saveNewPayPalConfig: new NewPayPalConfigTrpcHandler({
-  }).getTrpcProcedure(),
+  saveNewPayPalConfig: new NewPayPalConfigTrpcHandler().getTrpcProcedure(),
   getPayPalConfigsList: new GetPayPalConfigsListTrpcHandler().getTrpcProcedure(),
   fetchChannels: new GetSaleorChannelsTrpcHandler({
     channelsFetcherFactory: (client) => new ChannelsFetcher(client),
   }).getTrpcProcedure(),
   channelsConfigsMapping: new GetPayPalConfigsChannelsMappingTrpcHandler().getTrpcProcedure(),
   updateMapping: new UpdateMappingTrpcHandler().getTrpcProcedure(),
+  removePayPalConfig: new RemovePayPalConfigTrpcHandler().getTrpcProcedure(),
 });

@@ -1,1 +1,3 @@
-export const requiredClientPermissions = ["HANDLE_PAYMENTS"] as const;
+import { Permission } from "@saleor/app-sdk/types";
+
+export const requiredClientPermissions: Permission[] = ["HANDLE_PAYMENTS"];

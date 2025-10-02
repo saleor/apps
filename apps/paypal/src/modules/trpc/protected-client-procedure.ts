@@ -42,10 +42,10 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
 });
 
 const attachSharedServices = middleware(async ({ ctx, next }) => {
-  const gqlClient = createInstrumentedGraphqlClient({
-    saleorApiUrl: ctx.saleorApiUrl!, // Will be defined, previous middleware will ensure it
-    token: ctx.token,
-  });
+  const gqlClient = createInstrumentedGraphqlClient(
+    ctx.saleorApiUrl!, // Will be defined, previous middleware will ensure it
+    ctx.token || "",
+  );
 
   return next({
     ctx: {
@@ -86,6 +86,8 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
   try {
     logger.debug("trying to verify JWT token from frontend", {
       token: ctx.token ? `${ctx.token[0]}...` : undefined,
+      appId: ctx.appId,
+      saleorApiUrl: ctx.saleorApiUrl,
     });
 
     await verifyJWT({
@@ -94,8 +96,8 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
       saleorApiUrl: ctx.saleorApiUrl,
       requiredPermissions: meta?.requiredClientPermissions,
     });
-  } catch {
-    logger.debug("JWT verification failed, throwing");
+  } catch (error) {
+    logger.debug("JWT verification failed", { error: error instanceof Error ? error.message : String(error) });
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "JWT verification failed",

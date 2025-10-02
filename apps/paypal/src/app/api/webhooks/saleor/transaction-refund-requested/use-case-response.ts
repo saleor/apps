@@ -56,10 +56,10 @@ class Failure extends SuccessWebhookResponse {
       pspReference: this.paypalOrderId,
       message: this.messageFormatter.formatMessage(this.error.message, this.error),
       actions: [],
-      externalUrl: generateOrderPayPalDashboardUrl(
-        this.paypalOrderId,
-        this.appContext.paypalEnv,
-      ),
+      externalUrl: generateOrderPayPalDashboardUrl({
+        orderId: this.paypalOrderId,
+        env: this.appContext.paypalEnv,
+      }),
     };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });

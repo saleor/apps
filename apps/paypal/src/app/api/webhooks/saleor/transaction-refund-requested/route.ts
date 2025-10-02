@@ -13,7 +13,7 @@ import { createLogger } from "@/lib/logger";
 import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
-import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
+import { paypalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { PayPalRefundsApiFactory } from "@/modules/paypal/paypal-refunds-api-factory";
 
@@ -22,7 +22,7 @@ import { TransactionRefundRequestedUseCase } from "./use-case";
 import { transactionRefundRequestedWebhookDefinition } from "./webhook-definition";
 
 const useCase = new TransactionRefundRequestedUseCase({
-  appConfigRepo: appConfigRepoImpl,
+  paypalConfigRepo,
   paypalRefundsApiFactory: new PayPalRefundsApiFactory(),
 });
 
@@ -43,7 +43,7 @@ const handler = transactionRefundRequestedWebhookDefinition.createHandler(
 
       loggerContext.set(
         ObservabilityAttributes.TRANSACTION_AMOUNT,
-        ctx.payload.action.amount || null,
+        (ctx.payload.action.amount as string | number) || null,
       );
 
       logger.info("Received webhook request");
@@ -63,8 +63,7 @@ const handler = transactionRefundRequestedWebhookDefinition.createHandler(
       setObservabilitySaleorApiUrl(saleorApiUrlResult.value, ctx.payload.version);
 
       const result = await useCase.execute({
-        appId: ctx.authData.appId,
-        saleorApiUrl: saleorApiUrlResult.value,
+        authData: ctx.authData,
         event: ctx.payload,
       });
 

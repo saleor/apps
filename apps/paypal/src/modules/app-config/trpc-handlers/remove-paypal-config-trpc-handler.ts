@@ -18,10 +18,11 @@ export class RemovePayPalConfigTrpcHandler {
           throw new TRPCError({ code: "BAD_REQUEST", message: "Malformed request" });
         }
 
-        const deleteResult = await ctx.configRepo.deletePayPalConfig(
-          { saleorApiUrl: saleorApiUrl.value, appId: ctx.appId },
-          { configId: input.configId },
-        );
+        const deleteResult = await ctx.configRepo.deletePayPalConfig({
+          saleorApiUrl: saleorApiUrl.value,
+          appId: ctx.appId,
+          token: ctx.token || "",
+        });
 
         if (deleteResult.isErr()) {
           captureException(deleteResult.error);

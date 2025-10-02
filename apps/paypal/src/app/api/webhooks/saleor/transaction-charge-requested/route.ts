@@ -10,7 +10,7 @@ import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
-import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
+import { paypalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { PayPalOrdersApiFactory } from "@/modules/paypal/paypal-orders-api-factory";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
@@ -18,7 +18,7 @@ import { TransactionChargeRequestedUseCase } from "./use-case";
 import { transactionChargeRequestedWebhookDefinition } from "./webhook-definition";
 
 const useCase = new TransactionChargeRequestedUseCase({
-  appConfigRepo: appConfigRepoImpl,
+  paypalConfigRepo,
   paypalOrdersApiFactory: new PayPalOrdersApiFactory(),
 });
 
@@ -41,8 +41,7 @@ const handler = transactionChargeRequestedWebhookDefinition.createHandler(async 
     }
 
     const result = await useCase.execute({
-      appId: ctx.authData.appId,
-      saleorApiUrl: saleorApiUrlResult.value,
+      authData: ctx.authData,
       event: ctx.payload,
     });
 

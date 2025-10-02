@@ -39,24 +39,12 @@ export class UpdateMappingTrpcHandler {
           });
         }
 
-        const saveResult = await ctx.configRepo.savePayPalConfig(
-          {
-            saleorApiUrl: saleorApiUrl.value,
-            appId: ctx.appId,
-          },
-          {
-            configId: input.configId,
-            channelId: input.channelId,
-          },
-        );
-
-        if (saveResult.isErr()) {
-          // TODO Handle exact errors
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to create PayPal configuration. Data can't be saved.",
-          });
-        }
+        // TODO: This handler needs to be rewritten for the new metadata approach
+        // which doesn't support per-channel configuration mappings
+        throw new TRPCError({
+          code: "NOT_IMPLEMENTED",
+          message: "Channel mapping is not supported in the current metadata approach",
+        });
       });
   }
 }

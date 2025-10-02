@@ -8,7 +8,7 @@ import {
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { mapPayPalErrorToApiError } from "@/modules/paypal/paypal-api-error";
 import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { IPayPalOrdersApiFactory } from "@/modules/paypal/types";
@@ -33,32 +33,27 @@ type UseCaseExecuteResult = Result<
 
 export class TransactionChargeRequestedUseCase {
   private logger = createLogger("TransactionChargeRequestedUseCase");
-  private appConfigRepo: AppConfigRepo;
+  private paypalConfigRepo: PayPalConfigRepo;
   private paypalOrdersApiFactory: IPayPalOrdersApiFactory;
 
   constructor(deps: {
-    appConfigRepo: AppConfigRepo;
+    paypalConfigRepo: PayPalConfigRepo;
     paypalOrdersApiFactory: IPayPalOrdersApiFactory;
   }) {
-    this.appConfigRepo = deps.appConfigRepo;
+    this.paypalConfigRepo = deps.paypalConfigRepo;
     this.paypalOrdersApiFactory = deps.paypalOrdersApiFactory;
   }
 
   async execute(args: {
-    appId: string;
-    saleorApiUrl: SaleorApiUrl;
+    authData: import("@saleor/app-sdk/APL").AuthData;
     event: any;
   }): Promise<UseCaseExecuteResult> {
-    const { appId, saleorApiUrl, event } = args;
+    const { authData, event } = args;
 
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
 
-    const paypalConfigForThisChannel = await this.appConfigRepo.getPayPalConfig({
-      channelId,
-      appId,
-      saleorApiUrl,
-    });
+    const paypalConfigForThisChannel = await this.paypalConfigRepo.getPayPalConfig(authData);
 
     if (paypalConfigForThisChannel.isErr()) {
       this.logger.error("Failed to get configuration", {
@@ -87,7 +82,7 @@ export class TransactionChargeRequestedUseCase {
     }
 
     appContextContainer.set({
-      paypalEnv: paypalConfigForThisChannel.value.getPayPalEnvValue(),
+      paypalEnv: paypalConfigForThisChannel.value.environment,
     });
 
     const paypalOrdersApi = this.paypalOrdersApiFactory.create({

@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import { BaseError } from "@/lib/errors";
 import { randomId } from "@/lib/random-id";
-import { PayPalConfig } from "@/modules/app-config/domain/paypal-config";
+import { PayPalConfig } from "@/modules/paypal/configuration/paypal-config";
 import { newPayPalConfigInputSchema } from "@/modules/app-config/trpc-handlers/new-paypal-config-input-schema";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
@@ -56,6 +56,7 @@ export class NewPayPalConfigTrpcHandler {
         {
           saleorApiUrl: saleorApiUrl.value,
           appId: ctx.appId,
+          token: ctx.token || "",
         },
         configValidation.value,
       );

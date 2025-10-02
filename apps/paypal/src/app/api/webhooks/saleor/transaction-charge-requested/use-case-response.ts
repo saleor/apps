@@ -1,7 +1,7 @@
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
-import { PayPalApiErrorType } from "@/modules/paypal/paypal-api-error";
+import { PayPalApiError } from "@/modules/paypal/paypal-api-error";
 import { PayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
@@ -43,11 +43,11 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
-  readonly error: PayPalApiErrorType;
+  readonly error: PayPalApiError;
   readonly paypalOrderId: PayPalOrderId;
 
   constructor(args: {
-    error: PayPalApiErrorType;
+    error: PayPalApiError;
     transactionResult: ChargeFailureResult;
     paypalOrderId: PayPalOrderId;
     appContext: AppContext;

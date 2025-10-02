@@ -11,7 +11,7 @@ import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
@@ -35,34 +35,29 @@ type UseCaseExecuteResult = Result<
 
 export class TransactionRefundRequestedUseCase {
   private logger = createLogger("TransactionRefundRequestedUseCase");
-  private appConfigRepo: AppConfigRepo;
+  private paypalConfigRepo: PayPalConfigRepo;
   private paypalRefundsApiFactory: IPayPalRefundsApiFactory;
 
   constructor(deps: {
-    appConfigRepo: AppConfigRepo;
+    paypalConfigRepo: PayPalConfigRepo;
     paypalRefundsApiFactory: IPayPalRefundsApiFactory;
   }) {
-    this.appConfigRepo = deps.appConfigRepo;
+    this.paypalConfigRepo = deps.paypalConfigRepo;
     this.paypalRefundsApiFactory = deps.paypalRefundsApiFactory;
   }
 
   async execute(args: {
-    appId: string;
-    saleorApiUrl: SaleorApiUrl;
+    authData: import("@saleor/app-sdk/APL").AuthData;
     event: TransactionRefundRequestedEventFragment;
   }): Promise<UseCaseExecuteResult> {
-    const { appId, saleorApiUrl, event } = args;
+    const { authData, event } = args;
 
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
 
     // loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
 
-    const paypalConfigForThisChannel = await this.appConfigRepo.getPayPalConfig({
-      channelId,
-      appId,
-      saleorApiUrl,
-    });
+    const paypalConfigForThisChannel = await this.paypalConfigRepo.getPayPalConfig(authData);
 
     if (paypalConfigForThisChannel.isErr()) {
       this.logger.error("Failed to get configuration", {
@@ -91,7 +86,7 @@ export class TransactionRefundRequestedUseCase {
     }
 
     appContextContainer.set({
-      paypalEnv: paypalConfigForThisChannel.value.getPayPalEnvValue(),
+      paypalEnv: paypalConfigForThisChannel.value.environment,
     });
 
     const paypalRefundsApi = this.paypalRefundsApiFactory.create({
@@ -109,7 +104,7 @@ export class TransactionRefundRequestedUseCase {
 
     const paypalMoney = {
       currency_code: event.action.currency,
-      value: event.action.amount.toString(),
+      value: (event.action.amount as string | number).toString(),
     };
 
     // Get capture ID from order - simplified for now

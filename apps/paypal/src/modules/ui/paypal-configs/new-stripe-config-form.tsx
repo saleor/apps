@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { Input } from "@saleor/react-hook-form-macaw";
+import { Input, Select } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
@@ -13,6 +13,7 @@ type FormShape = {
   clientSecret: string;
   name: string;
   clientId: string;
+  environment: "SANDBOX" | "LIVE";
 };
 
 const RequiredInputLabel = (props: { labelText: string }) => {
@@ -52,6 +53,7 @@ export const NewPayPalConfigForm = () => {
       clientSecret: "",
       name: "",
       clientId: "",
+      environment: "SANDBOX",
     },
     resolver: zodResolver(newPayPalConfigInputSchema),
   });
@@ -61,6 +63,7 @@ export const NewPayPalConfigForm = () => {
       name: values.name,
       clientId: values.clientId,
       clientSecret: values.clientSecret,
+      environment: values.environment,
     });
   };
 
@@ -92,6 +95,20 @@ export const NewPayPalConfigForm = () => {
               "Friendly name of your configuration. For example 'Live' or 'UK Live'."
             }
             error={!!errors.name}
+          />
+          <Select
+            label={<RequiredInputLabel labelText="Environment" />}
+            name="environment"
+            control={control}
+            options={[
+              { label: "Sandbox", value: "SANDBOX" },
+              { label: "Live", value: "LIVE" },
+            ]}
+            helperText={
+              errors.environment?.message ??
+              "Select PayPal environment. Use Sandbox for testing and Live for production."
+            }
+            error={!!errors.environment}
           />
           <Input
             label={<RequiredInputLabel labelText="Publishable key" />}

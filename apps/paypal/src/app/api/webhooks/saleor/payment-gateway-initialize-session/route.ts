@@ -12,7 +12,7 @@ import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
-import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
+import { paypalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import { withRecipientVerification } from "../with-recipient-verification";
@@ -20,7 +20,7 @@ import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
 import { paymentGatewayInitializeSessionWebhookDefinition } from "./webhook-definition";
 
 const useCase = new PaymentGatewayInitializeSessionUseCase({
-  appConfigRepo: appConfigRepoImpl,
+  paypalConfigRepo,
 });
 
 const logger = createLogger("PAYMENT_GATEWAY_INITIALIZE_SESSION route");
@@ -49,8 +49,7 @@ const handler = paymentGatewayInitializeSessionWebhookDefinition.createHandler(
 
       const result = await useCase.execute({
         channelId: ctx.payload.sourceObject.channel.id,
-        appId: ctx.authData.appId,
-        saleorApiUrl: saleorApiUrlResult.value,
+        authData: ctx.authData,
       });
 
       return result.match(
