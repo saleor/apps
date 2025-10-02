@@ -25,14 +25,29 @@ export interface CompiledEmail {
   subject: string;
 }
 
+export type ErrorContext = "SUBJECT" | "BODY_TEMPLATE" | "BODY_MJML";
+
+// Type-safe error properties interfaces
+interface CompilationFailedProps {
+  errorContext?: ErrorContext;
+}
+
+interface EmptyEmailSubjectProps {
+  subject?: string;
+}
+
 export interface IEmailCompiler {
   compile(args: CompileArgs): Result<CompiledEmail, InstanceType<typeof BaseError>>;
 }
 
 export class EmailCompiler implements IEmailCompiler {
   static EmailCompilerError = BaseError.subclass("EmailCompilerError");
-  static CompilationFailedError = this.EmailCompilerError.subclass("CompilationFailedError");
-  static EmptyEmailSubjectError = this.EmailCompilerError.subclass("EmptyEmailSubjectError");
+  static CompilationFailedError = this.EmailCompilerError.subclass("CompilationFailedError", {
+    props: {} as CompilationFailedProps,
+  });
+  static EmptyEmailSubjectError = this.EmailCompilerError.subclass("EmptyEmailSubjectError", {
+    props: {} as EmptyEmailSubjectProps,
+  });
   static EmptyEmailBodyError = this.EmailCompilerError.subclass("EmptyEmailBodyError");
 
   constructor(
@@ -46,15 +61,18 @@ export class EmailCompiler implements IEmailCompiler {
       .compile(subjectTemplate, payload)
       .orElse((error) =>
         err(
-          new EmailCompiler.CompilationFailedError("Failed to compile email subject template", {
+          new EmailCompiler.CompilationFailedError(error.message, {
             errors: [error],
+            props: {
+              errorContext: "SUBJECT" as ErrorContext,
+            },
           }),
         ),
       )
       .andThen((value) => {
         if (!value.template || !value.template?.length) {
           return err(
-            new EmailCompiler.EmptyEmailSubjectError("Mjml subject message is empty, skipping", {
+            new EmailCompiler.EmptyEmailSubjectError("Email subject is empty", {
               props: {
                 subject: value.template,
               },
@@ -73,14 +91,17 @@ export class EmailCompiler implements IEmailCompiler {
       .compile(bodyTemplate, payload)
       .orElse((error) => {
         return err(
-          new EmailCompiler.CompilationFailedError("Failed to compile email body template", {
+          new EmailCompiler.CompilationFailedError(error.message, {
             errors: [error],
+            props: {
+              errorContext: "BODY_TEMPLATE" as ErrorContext,
+            },
           }),
         );
       })
       .andThen((value) => {
         if (!value.template || !value.template?.length) {
-          return err(new EmailCompiler.EmptyEmailBodyError("MJML template body is empty"));
+          return err(new EmailCompiler.EmptyEmailBodyError("Email body template is empty"));
         }
 
         return ok(value);
@@ -90,8 +111,11 @@ export class EmailCompiler implements IEmailCompiler {
   private resolveBodyMjml = (emailTemplate: string) =>
     this.mjmlCompiler.compile(emailTemplate).orElse((error) => {
       return err(
-        new EmailCompiler.CompilationFailedError("Failed to compile MJML", {
+        new EmailCompiler.CompilationFailedError(error.message, {
           errors: [error],
+          props: {
+            errorContext: "BODY_MJML" as ErrorContext,
+          },
         }),
       );
     });
@@ -107,6 +131,35 @@ export class EmailCompiler implements IEmailCompiler {
       ),
     );
 
+  private resolveBodyTemplateAndMjml(bodyTemplate: string, payload: unknown) {
+    return this.resolveBodyTemplate(bodyTemplate, payload).andThen((value) => {
+      return this.resolveBodyMjml(value.template);
+    });
+  }
+
+  /**
+   * Validate templates without full compilation (no email recipients needed)
+   * Useful for validating user input before saving or previewing
+   */
+  validate(
+    subjectTemplate: string,
+    bodyTemplate: string,
+    payload: unknown,
+  ): Result<void, InstanceType<typeof EmailCompiler.EmailCompilerError>> {
+    const logger = createLogger("EmailCompiler");
+
+    logger.debug("Validating email templates");
+
+    const subjectValidationResult = this.resolveEmailSubject(subjectTemplate, payload);
+    const bodyValidationResult = this.resolveBodyTemplateAndMjml(bodyTemplate, payload);
+
+    return Result.combine([subjectValidationResult, bodyValidationResult]).andThen(() => {
+      logger.debug("Templates validated successfully");
+
+      return ok(undefined);
+    });
+  }
+
   compile({
     payload,
     recipientEmail,
@@ -121,11 +174,7 @@ export class EmailCompiler implements IEmailCompiler {
     });
 
     const subjectCompilationResult = this.resolveEmailSubject(subjectTemplate, payload);
-    const bodyCompilationInHtmlResult = this.resolveBodyTemplate(bodyTemplate, payload).andThen(
-      (value) => {
-        return this.resolveBodyMjml(value.template);
-      },
-    );
+    const bodyCompilationInHtmlResult = this.resolveBodyTemplateAndMjml(bodyTemplate, payload);
 
     return Result.combine([subjectCompilationResult, bodyCompilationInHtmlResult]).andThen(
       ([subjectCompiled, bodyCompiledHtml]) => {

@@ -5,7 +5,9 @@ import { createLogger } from "../../../logger";
 import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
 import { protectedWithConfigurationServices } from "../../trpc/protected-client-procedure-with-services";
 import { router } from "../../trpc/trpc-server";
+import { EmailCompiler } from "../services/email-compiler";
 import { HandlebarsTemplateCompiler } from "../services/handlebars-template-compiler";
+import { HtmlToTextCompiler } from "../services/html-to-text-compiler";
 import { MjmlCompiler } from "../services/mjml-compiler";
 import {
   smtpConfigurationIdInputSchema,
@@ -50,6 +52,12 @@ export const throwTrpcErrorFromConfigurationServiceError = (
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Feature you are trying to use is not supported in this version of Saleor.",
+        });
+
+      case SmtpConfigurationService.TemplateValidationError:
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: error.message,
         });
     }
   }
@@ -152,58 +160,55 @@ export const smtpConfigurationRouter = router({
 
       logger.debug(input, "mjmlConfigurationRouter.renderTemplate called");
 
-      const handlebarsCompiler = new HandlebarsTemplateCompiler();
-      let renderedSubject = "";
-
       const payload = JSON.parse(input.payload);
 
-      if (input.subject) {
-        const subjectResult = handlebarsCompiler.compile(input.subject, payload);
+      // Validate templates using EmailCompiler
+      const emailCompiler = new EmailCompiler(
+        new HandlebarsTemplateCompiler(),
+        new HtmlToTextCompiler(),
+        new MjmlCompiler(),
+      );
 
-        if (subjectResult.isErr()) {
-          logger.warn("Error during compile subject template", { error: subjectResult.error });
+      const validationResult = emailCompiler.validate(
+        input.subject || "",
+        input.template || "",
+        payload,
+      );
 
-          return {
-            renderedSubject: "",
-            renderedEmailBody: "",
-          };
-        }
+      if (validationResult.isErr()) {
+        logger.info("Invalid template provided by user", { error: validationResult.error });
 
-        renderedSubject = subjectResult.value.template;
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: validationResult.error.message,
+          cause: validationResult.error,
+        });
       }
 
+      // If validation passes, compile and render
+      let renderedSubject = "";
       let renderedEmail = "";
-      let templatedEmail = "";
+
+      if (input.subject) {
+        const handlebarsCompiler = new HandlebarsTemplateCompiler();
+        const subjectResult = handlebarsCompiler.compile(input.subject, payload);
+
+        if (subjectResult.isOk()) {
+          renderedSubject = subjectResult.value.template;
+        }
+      }
 
       if (input.template) {
+        const handlebarsCompiler = new HandlebarsTemplateCompiler();
         const templateResult = handlebarsCompiler.compile(input.template, payload);
 
-        if (templateResult.isErr()) {
-          logger.warn("Error during compile template", { error: templateResult.error });
+        if (templateResult.isOk()) {
+          const mjmlCompiler = new MjmlCompiler();
+          const compilationResult = mjmlCompiler.compile(templateResult.value.template);
 
-          return {
-            renderedSubject: "",
-            renderedEmailBody: "",
-          };
-        }
-
-        templatedEmail = templateResult.value.template;
-
-        const compilationResult = new MjmlCompiler().compile(templatedEmail);
-
-        if (compilationResult.isOk()) {
-          renderedEmail = compilationResult.value;
-        } else {
-          let cause = "Failed to render template";
-
-          try {
-            cause = compilationResult.error.errors![0]!.message;
-          } catch (e) {}
-
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: cause,
-          });
+          if (compilationResult.isOk()) {
+            renderedEmail = compilationResult.value;
+          }
         }
       }
 

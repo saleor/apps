@@ -43,8 +43,10 @@ export class HandlebarsTemplateCompiler implements ITemplateCompiler {
     } catch (error) {
       logger.error("Failed to compile template", { error: error });
 
+      const errorMessage = error instanceof Error ? error.message : "Failed to compile template";
+
       return err(
-        new HandlebarsTemplateCompiler.FailedCompileError("Failed to compile template", {
+        new HandlebarsTemplateCompiler.FailedCompileError(errorMessage, {
           errors: [error],
         }),
       );
