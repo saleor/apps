@@ -24,6 +24,12 @@ import {
 import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
 
+const emailCompiler = new EmailCompiler(
+  new HandlebarsTemplateCompiler(),
+  new HtmlToTextCompiler(),
+  new MjmlCompiler(),
+);
+
 export const throwTrpcErrorFromConfigurationServiceError = (
   error: typeof SmtpConfigurationService.SmtpConfigurationServiceError | unknown,
 ) => {
@@ -173,13 +179,6 @@ export const smtpConfigurationRouter = router({
       }
 
       const payload = payloadResult.value;
-
-      // Validate templates using EmailCompiler
-      const emailCompiler = new EmailCompiler(
-        new HandlebarsTemplateCompiler(),
-        new HtmlToTextCompiler(),
-        new MjmlCompiler(),
-      );
 
       const validationResult = emailCompiler.validate(
         input.subject || "",
