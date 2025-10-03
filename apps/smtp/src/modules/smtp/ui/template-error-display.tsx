@@ -18,6 +18,25 @@ interface ErrorHint {
 }
 
 function getErrorHint(errorMessage: string): ErrorHint | null {
+  // Invalid JSON in payload editor
+  if (errorMessage.includes("Invalid payload JSON")) {
+    return {
+      title: "Invalid JSON Syntax",
+      description:
+        "The test payload JSON is invalid. Check for missing commas, quotes, brackets, or trailing commas.",
+      links: [
+        {
+          label: "JSON Syntax Guide",
+          url: "https://www.json.org/json-en.html",
+        },
+        {
+          label: "JSON Validator",
+          url: "https://jsonlint.com/",
+        },
+      ],
+    };
+  }
+
   // Missing Handlebars helper
   if (errorMessage.includes("Missing helper")) {
     const helperMatch = errorMessage.match(/Missing helper:\s*["']?(\w+)["']?/);
