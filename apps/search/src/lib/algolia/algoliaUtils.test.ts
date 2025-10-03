@@ -128,6 +128,62 @@ describe("algoliaUtils", function () {
       expect(mappedEntity.attributes["booleanFalse"]).toBe(false);
     });
 
+    it("Maps multi-value attributes as array of strings", () => {
+      const mappedEntity = productAndVariantToAlgolia({
+        channel: "test",
+        enabledKeys: ["attributes"],
+        variant: {
+          id: "id",
+          attributes: [
+            {
+              attribute: {
+                name: "colors",
+              },
+              values: [
+                {
+                  name: "Red",
+                  inputType: "MULTISELECT",
+                  boolean: null,
+                },
+                {
+                  name: "Blue",
+                  inputType: "MULTISELECT",
+                  boolean: null,
+                },
+                {
+                  name: "Green",
+                  inputType: "MULTISELECT",
+                  boolean: null,
+                },
+              ],
+            },
+          ],
+          name: "product name",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "",
+            name: "",
+            description: undefined,
+            slug: "",
+            variants: undefined,
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+        },
+      });
+
+      // @ts-expect-error - record is not typed (attributes are dynamic keys)
+      expect(mappedEntity.attributes["colors"]).toStrictEqual(["Red", "Blue", "Green"]);
+      // @ts-expect-error - record is not typed (attributes are dynamic keys)
+      expect(Array.isArray(mappedEntity.attributes["colors"])).toBe(true);
+    });
+
     it("Filters out inactive variants from otherVariants", () => {
       const currentChannel = "channel-1";
       const mappedEntity = productAndVariantToAlgolia({
