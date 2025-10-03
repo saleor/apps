@@ -78,7 +78,7 @@ export class AvataxOrderConfirmedPayloadTransformer {
 
     const code = this.deps.avataxDocumentCodeResolver.resolve({
       avataxDocumentCode: confirmedOrderEvent.getAvaTaxDocumentCode(),
-      orderId: confirmedOrderEvent.getOrderId(),
+      orderNumber: confirmedOrderEvent.getOrderNumber(),
     });
 
     const customerCode = avataxCustomerCode.resolve({

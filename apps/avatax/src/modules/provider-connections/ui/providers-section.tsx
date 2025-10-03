@@ -7,7 +7,7 @@ import { ProvidersList } from "./providers-list";
 const Intro = () => {
   return (
     <Section.Description
-      title="Tax providers"
+      title="AvaTax configurations"
       data-testid="providers-intro"
       description={
         <>

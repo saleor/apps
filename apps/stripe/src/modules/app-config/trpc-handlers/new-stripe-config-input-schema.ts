@@ -49,7 +49,7 @@ export const newStripeConfigInputSchema = z
 
       if (!validPrefix) {
         ctx.addIssue({
-          message: "Invalid Restricted Key format. Must start with 'pk_test_' or 'pk_live_'.",
+          message: "Invalid Restricted Key format. Must start with 'rk_test_' or 'rk_live_'.",
           code: z.ZodIssueCode.custom,
           fatal: true,
         });

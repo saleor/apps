@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.0.0
+
+### Major Changes
+
+- a123d625: Production release of NP Atobarai App. To learn more about the app check [Saleor](https://docs.saleor.io/developer/app-store/apps/np-atobarai/overview) docs.
+
 ## 0.0.6
 
 ### Patch Changes

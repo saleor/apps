@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-avatax",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,6 +19,7 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts --dry-run",
+    "setup-dynamodb": "pnpm tsx --require dotenv/config ./scripts/setup-dynamodb.ts",
     "start": "next start",
     "test": "vitest --project units --sequence.shuffle",
     "test:ci": "vitest run --coverage --project units --sequence.shuffle"
@@ -104,6 +105,7 @@
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:"
   },
   "saleor": {
