@@ -27,7 +27,6 @@ export interface CompiledEmail {
 
 export type ErrorContext = "SUBJECT" | "BODY_TEMPLATE" | "BODY_MJML";
 
-// Type-safe error properties interfaces
 interface CompilationFailedProps {
   errorContext?: ErrorContext;
 }
