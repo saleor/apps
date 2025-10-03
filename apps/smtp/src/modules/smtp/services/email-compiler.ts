@@ -144,7 +144,11 @@ export class EmailCompiler implements IEmailCompiler {
     subjectTemplate: string,
     bodyTemplate: string,
     payload: unknown,
-  ): Result<void, InstanceType<typeof EmailCompiler.EmailCompilerError>> {
+  ): Result<
+    void,
+    | InstanceType<typeof EmailCompiler.EmailCompilerError>
+    | InstanceType<typeof EmailCompiler.CompilationFailedError>
+  > {
     const logger = createLogger("EmailCompiler");
 
     logger.debug("Validating email templates");

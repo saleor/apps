@@ -740,5 +740,162 @@ describe("SmtpConfigurationService", function () {
 
       expect(setConfigMock).toBeCalledTimes(0);
     });
+
+    it("Should throw TemplateValidationError with errorContext SUBJECT for invalid Handlebars in subject", async () => {
+      const configurator = new SmtpMetadataManager(
+        null as unknown as SettingsManager,
+        mockSaleorApiUrl,
+      );
+
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
+
+      const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
+        metadataManager: configurator,
+        initialData: { ...validConfig },
+      });
+
+      const result = await service.updateEventConfiguration({
+        configurationId: validConfig.configurations[0].id,
+        eventType: validConfig.configurations[0].events[0].eventType,
+        eventConfiguration: {
+          ...validConfig.configurations[0].events[0],
+          subject: "Invalid {{#if}}",
+        },
+      });
+
+      expect(result.isErr()).toBe(true);
+      const error = result._unsafeUnwrapErr() as InstanceType<
+        typeof SmtpConfigurationService.TemplateValidationError
+      >;
+
+      expect(error).toBeInstanceOf(SmtpConfigurationService.TemplateValidationError);
+      expect(error.errorContext).toBe("SUBJECT");
+      expect(setConfigMock).toBeCalledTimes(0);
+    });
+
+    it("Should throw TemplateValidationError with errorContext BODY_TEMPLATE for invalid Handlebars in body", async () => {
+      const configurator = new SmtpMetadataManager(
+        null as unknown as SettingsManager,
+        mockSaleorApiUrl,
+      );
+
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
+
+      const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
+        metadataManager: configurator,
+        initialData: { ...validConfig },
+      });
+
+      const invalidHandlebarsTemplate = `<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text>{{#if}}</mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>`;
+
+      const result = await service.updateEventConfiguration({
+        configurationId: validConfig.configurations[0].id,
+        eventType: validConfig.configurations[0].events[0].eventType,
+        eventConfiguration: {
+          ...validConfig.configurations[0].events[0],
+          template: invalidHandlebarsTemplate,
+        },
+      });
+
+      expect(result.isErr()).toBe(true);
+      const error = result._unsafeUnwrapErr() as InstanceType<
+        typeof SmtpConfigurationService.TemplateValidationError
+      >;
+
+      expect(error).toBeInstanceOf(SmtpConfigurationService.TemplateValidationError);
+      expect(error.errorContext).toBe("BODY_TEMPLATE");
+      expect(setConfigMock).toBeCalledTimes(0);
+    });
+
+    it("Should throw TemplateValidationError with errorContext BODY_MJML for invalid MJML", async () => {
+      const configurator = new SmtpMetadataManager(
+        null as unknown as SettingsManager,
+        mockSaleorApiUrl,
+      );
+
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
+
+      const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
+        metadataManager: configurator,
+        initialData: { ...validConfig },
+      });
+
+      const invalidMjmlTemplate = `<mjml>
+  <mj-body>
+    <mj-invalid-tag>Test</mj-invalid-tag>
+  </mj-body>
+</mjml>`;
+
+      const result = await service.updateEventConfiguration({
+        configurationId: validConfig.configurations[0].id,
+        eventType: validConfig.configurations[0].events[0].eventType,
+        eventConfiguration: {
+          ...validConfig.configurations[0].events[0],
+          template: invalidMjmlTemplate,
+        },
+      });
+
+      expect(result.isErr()).toBe(true);
+      const error = result._unsafeUnwrapErr() as InstanceType<
+        typeof SmtpConfigurationService.TemplateValidationError
+      >;
+
+      expect(error).toBeInstanceOf(SmtpConfigurationService.TemplateValidationError);
+      expect(error.errorContext).toBe("BODY_MJML");
+      expect(setConfigMock).toBeCalledTimes(0);
+    });
+
+    it("Should throw TemplateValidationError for empty subject", async () => {
+      const configurator = new SmtpMetadataManager(
+        null as unknown as SettingsManager,
+        mockSaleorApiUrl,
+      );
+
+      const setConfigMock = vi.spyOn(configurator, "setConfig").mockReturnValue(okAsync(undefined));
+
+      const service = new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({
+          client: {} as Client,
+          saleorVersion: "3.14.0",
+        }),
+        metadataManager: configurator,
+        initialData: { ...validConfig },
+      });
+
+      const result = await service.updateEventConfiguration({
+        configurationId: validConfig.configurations[0].id,
+        eventType: validConfig.configurations[0].events[0].eventType,
+        eventConfiguration: {
+          ...validConfig.configurations[0].events[0],
+          subject: "",
+        },
+      });
+
+      expect(result.isErr()).toBe(true);
+      const error = result._unsafeUnwrapErr();
+
+      expect(error).toBeInstanceOf(SmtpConfigurationService.TemplateValidationError);
+      expect(setConfigMock).toBeCalledTimes(0);
+    });
   });
 });
