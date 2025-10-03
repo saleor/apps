@@ -101,6 +101,8 @@ const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
    */
   if (isAttributeValueBooleanType(filteredValues)) {
     value = filteredValues[0].boolean;
+  } else if (filteredValues.length === 1 && filteredValues[0].name) {
+    value = filteredValues[0].name;
   } else {
     /**
      * Fallback to initial/previous behavior

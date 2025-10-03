@@ -128,6 +128,50 @@ describe("algoliaUtils", function () {
       expect(mappedEntity.attributes["booleanFalse"]).toBe(false);
     });
 
+    it("Maps single-value non-boolean attribute as string", () => {
+      const mappedEntity = productAndVariantToAlgolia({
+        channel: "test",
+        enabledKeys: ["attributes"],
+        variant: {
+          id: "id",
+          attributes: [
+            {
+              attribute: {
+                name: "size",
+              },
+              values: [
+                {
+                  name: "Large",
+                  inputType: "DROPDOWN",
+                  boolean: null,
+                },
+              ],
+            },
+          ],
+          name: "product name",
+          metadata: [],
+          product: {
+            __typename: undefined,
+            id: "",
+            name: "",
+            description: undefined,
+            slug: "",
+            variants: undefined,
+            category: undefined,
+            thumbnail: undefined,
+            media: undefined,
+            attributes: [],
+            channelListings: undefined,
+            collections: undefined,
+            metadata: [],
+          },
+        },
+      });
+
+      // @ts-expect-error - record is not typed (attributes are dynamic keys)
+      expect(mappedEntity.attributes["size"]).toBe("Large");
+    });
+
     it("Maps multi-value attributes as array of strings", () => {
       const mappedEntity = productAndVariantToAlgolia({
         channel: "test",
