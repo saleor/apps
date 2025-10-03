@@ -92,7 +92,7 @@ const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
    */
   const filteredValues = attr.values.filter((v) => !!v.name?.length);
 
-  let value: string | boolean;
+  let value: string | boolean | string[];
 
   /**
    * Strategy for boolean type only
@@ -101,18 +101,20 @@ const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
    */
   if (isAttributeValueBooleanType(filteredValues)) {
     value = filteredValues[0].boolean;
+  } else if (filteredValues.length === 1 && filteredValues[0].name) {
+    value = filteredValues[0].name;
   } else {
     /**
      * Fallback to initial/previous behavior
      * TODO: Its not correct to use "name" field always. E.g. for plaintext field more accurate is "plainText",
      *   for "date" field there are date and dateTime fields. "Name" can work on the frontend but doesn't fit for faceting
      */
-    value = filteredValues.map((v) => v.name).join(", ") || "";
+    value = filteredValues.map((v) => v.name).filter(isNotNil);
   }
 
   return {
     [attr.attribute.name]: value,
-  } as Record<string, string | boolean>;
+  } as Record<string, string | boolean | string[]>;
 };
 
 export function productAndVariantToAlgolia({
