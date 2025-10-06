@@ -3,10 +3,16 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "smtp",
   "workspaceFolder": "/app/apps/smtp",
-  "forwardPorts": [3000],
+  "forwardPorts": [3000, 1025, 8025],
   "portsAttributes": {
     "3000": {
       "label": "SMTP app"
+    },
+    "1025": {
+      "label": "Mailpit SMTP"
+    },
+    "8025": {
+      "label": "Mailpit Web UI"
     }
   },
   "postCreateCommand": "pnpm install --frozen-lockfile",

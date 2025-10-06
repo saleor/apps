@@ -59,9 +59,9 @@ export const avataxTaxCodesRouter = router({
       new AvataxClient(new AvataxSdkClientFactory().createClient(connection.config)),
     );
 
-    logger.debug("Returning tax codes");
+    logger.debug("Fetching all tax codes");
 
-    return taxCodesService.getAllFiltered({ filter: input.filter }).catch((error) => {
+    const allTaxCodes = await taxCodesService.getAllFiltered({ filter: null }).catch((error) => {
       logger.error("Failed to fetch tax codes from AvaTax", { error: error });
 
       if (error instanceof AvataxClientTaxCodeService.ForbiddenAccessError) {
@@ -78,5 +78,25 @@ export const avataxTaxCodesRouter = router({
         message: "Failed to fetch tax codes from AvaTax",
       });
     });
+
+    // Apply client-side filtering on both code and description
+    const filteredTaxCodes = input.filter
+      ? allTaxCodes.filter((taxCode) => {
+          const filterLower = input.filter!.toLowerCase();
+
+          return (
+            taxCode.code.toLowerCase().includes(filterLower) ||
+            taxCode.description.toLowerCase().includes(filterLower)
+          );
+        })
+      : allTaxCodes;
+
+    logger.debug("Returning filtered tax codes", {
+      totalCount: allTaxCodes.length,
+      filteredCount: filteredTaxCodes.length,
+      filter: input.filter,
+    });
+
+    return filteredTaxCodes;
   }),
 });

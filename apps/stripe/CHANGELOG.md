@@ -1,5 +1,28 @@
 # saleor-app-payment-stripe
 
+## 2.2.1
+
+### Patch Changes
+
+- d19e88fc: Fix copy for restricted key validation. After this change error text will point to proper prefix (rk) instead of (pk).
+
+## 2.2.0
+
+### Minor Changes
+
+- 46ed6766: Add support for [ACH Direct Debit](https://docs.stripe.com/payments/ach-direct-debit) and [SEPA Direct Debit](https://docs.stripe.com/payments/sepa-debit) payment methods.
+  Also fixed issue where app was using incorrect amount when handling processing event from Stripe (previously it was using `amount_received` and after this change it is using `amount` from Stripe event).
+
+### Patch Changes
+
+- 08c22078: Client error with invalid data provided from the storefront now is logged as warning (instead of error). Additionally, data with expected payment method is now printed in log.
+
+## 2.1.3
+
+### Patch Changes
+
+- 45be18b8: Pass metadata to Stripe when creating PaymentIntents to fix webhook validation errors.
+
 ## 2.1.2
 
 ### Patch Changes

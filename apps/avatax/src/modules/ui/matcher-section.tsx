@@ -1,4 +1,4 @@
-import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Box, Button, Skeleton, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
 import { trpcClient } from "../trpc/trpc-client";
@@ -18,18 +18,11 @@ const MatcherTable = () => {
   return (
     <AppCard __minHeight={"320px"} height="100%" data-testid="matcher-table">
       {isLoading ? (
-        <Box height="100%" display={"flex"} alignItems={"center"} justifyContent={"center"}>
-          <Text color="default2">Loading...</Text>
-        </Box>
+        <Skeleton />
       ) : (
         <>
           {isConfigured ? (
             <Table.Container>
-              <Table.THead>
-                <Table.TR>
-                  <Table.TH>Provider</Table.TH>
-                </Table.TR>
-              </Table.THead>
               <Table.TBody>
                 {isAvatax && (
                   <Table.TR>
@@ -69,10 +62,10 @@ const Intro = () => {
       title="Tax code matcher"
       description={
         <>
-          Tax Code Matcher allows you to map Saleor tax classes to provider tax codes to extend
+          Tax Code Matcher allows you to map Saleor tax classes to AvaTax tax codes to extend
           products base tax rate.
           <Text as="span" display="block" marginY={4} size={4}>
-            You need to have at least one provider configured to use this feature.
+            You need to have at least one configuration saved to use this feature.
           </Text>
         </>
       }

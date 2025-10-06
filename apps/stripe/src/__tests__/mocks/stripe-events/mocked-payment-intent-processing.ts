@@ -20,8 +20,8 @@ export const getMockedPaymentIntentProcessingEvent = (): Stripe.PaymentIntentPro
     data: {
       object: {
         id: mockedStripePaymentIntentId,
-        amount: 1000,
-        amount_received: 1013,
+        amount: 1013,
+        amount_received: 0,
         amount_capturable: 0,
         object: "payment_intent",
         currency: "jpy",

@@ -1,16 +1,35 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { TextLink } from "@saleor/apps-ui";
-import { Box, Text } from "@saleor/macaw-ui";
+import { Skeleton, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
+import { ReactNode } from "react";
+
+import { AppCard } from "@/modules/ui/app-card";
+import { AppPageLayout } from "@/modules/ui/app-page-layout";
 
 import { AvataxTaxCodeMatcherTable } from "../../../modules/avatax/ui/avatax-tax-code-matcher-table";
 import { trpcClient } from "../../../modules/trpc/trpc-client";
-import { AppColumns } from "../../../modules/ui/app-columns";
 import { AppDashboardLink } from "../../../modules/ui/app-dashboard-link";
 import { Section } from "../../../modules/ui/app-section";
 
-const Header = () => {
-  return <Section.Header>Match Saleor tax classes to AvaTax tax codes</Section.Header>;
+const Layout = ({ children }: { children: ReactNode }) => {
+  return (
+    <AppPageLayout
+      top={<Section.Header>Match Saleor tax classes to AvaTax tax codes</Section.Header>}
+      breadcrumbs={[
+        {
+          href: "/configuration",
+          label: "Configuration",
+        },
+        {
+          href: "/matcher",
+          label: "Matcher",
+        },
+      ]}
+    >
+      {children}
+    </AppPageLayout>
+  );
 };
 
 const Description = () => {
@@ -63,17 +82,20 @@ const AvataxMatcher = () => {
 
   if (isLoading) {
     return (
-      <Box>
-        <Text>Loading...</Text>
-      </Box>
+      <Layout>
+        <Description />
+        <AppCard>
+          <Skeleton />
+        </AppCard>
+      </Layout>
     );
   }
 
   return (
-    <AppColumns top={<Header />}>
+    <Layout>
       <Description />
       <AvataxTaxCodeMatcherTable />
-    </AppColumns>
+    </Layout>
   );
 };
 

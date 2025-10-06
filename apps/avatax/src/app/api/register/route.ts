@@ -35,6 +35,12 @@ const handler = createAppRegisterHandler({
       return true;
     },
   ],
+  onAplSetFailed: async (_req, context) => {
+    logger.error("Failed to set APL", {
+      saleorApiUrl: context.authData.saleorApiUrl,
+      error: context.error,
+    });
+  },
   onAuthAplSaved: async (_req, context) => {
     logger.info("AvaTax app configuration set up successfully", {
       saleorApiUrl: context.authData.saleorApiUrl,

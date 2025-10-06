@@ -1,5 +1,17 @@
 # saleor-app-smtp
 
+## 1.3.18
+
+### Patch Changes
+
+- f69a90d9: Fixed default payload for accountChangeEmailRequest and accountChangeEmailConfirm emails.
+
+## 1.3.17
+
+### Patch Changes
+
+- 2c1eb3da: Improved error handling: some expected errors will be now handled
+
 ## 1.3.16
 
 ### Patch Changes

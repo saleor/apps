@@ -282,6 +282,14 @@ describe("AfterFulfillmentRefundOrchestrator", () => {
           sourceObjectTotalAmount - refundedAmount,
         );
 
+        expect(registerCallArgs.transactions[0].goods).toStrictEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              goods_price: -refundedAmount,
+            }),
+          ]),
+        );
+
         expect(result._unsafeUnwrap()).toBeInstanceOf(
           TransactionRefundRequestedUseCaseResponse.Success,
         );
