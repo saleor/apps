@@ -29,7 +29,7 @@ function NextApp({ Component, pageProps }: AppProps) {
     <NoSSRWrapper>
       <ThemeProvider>
         <IframeProtectedWrapper
-          allowedPathNames={["/"]}
+          allowedPathNames={["/", "/order-details"]}
           fallback={
             <AppLayout>
               <Box display="flex" flexDirection="column" padding={4}>
