@@ -20,27 +20,25 @@ export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge()
 function NextApp({ Component, pageProps }: AppProps) {
   return (
     <NoSSRWrapper>
-      <IframeProtectedWrapper
-        allowedPathNames={["/"]}
-        fallback={
-          <ThemeProvider defaultTheme="defaultLight">
+      <ThemeProvider defaultTheme="defaultLight">
+        <IframeProtectedWrapper
+          allowedPathNames={["/"]}
+          fallback={
             <Box display="flex" flexDirection="column" padding={4}>
               <Text as="h1" fontWeight="bold" fontSize={8} marginBottom={6}>
                 Saleor SMTP App
               </Text>
               <Text>This app can only be used within the Saleor Dashboard.</Text>
             </Box>
-          </ThemeProvider>
-        }
-      >
-        <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-          <ThemeProvider defaultTheme="defaultLight">
+          }
+        >
+          <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
             <ThemeSynchronizer />
             <RoutePropagator />
             <Component {...pageProps} />
-          </ThemeProvider>
-        </AppBridgeProvider>
-      </IframeProtectedWrapper>
+          </AppBridgeProvider>
+        </IframeProtectedWrapper>
+      </ThemeProvider>
     </NoSSRWrapper>
   );
 }

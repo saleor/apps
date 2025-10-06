@@ -27,10 +27,10 @@ function NextApp({ Component, pageProps }: AppProps) {
 
   return (
     <NoSSRWrapper>
-      <IframeProtectedWrapper
-        allowedPathNames={["/"]}
-        fallback={
-          <ThemeProvider>
+      <ThemeProvider>
+        <IframeProtectedWrapper
+          allowedPathNames={["/"]}
+          fallback={
             <AppLayout>
               <Box display="flex" flexDirection="column" padding={4}>
                 <Text as="h1" fontWeight="bold" fontSize={8} marginBottom={6}>
@@ -40,21 +40,19 @@ function NextApp({ Component, pageProps }: AppProps) {
                 <Text>Please install and open this app through your Saleor Dashboard.</Text>
               </Box>
             </AppLayout>
-          </ThemeProvider>
-        }
-      >
-        <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-          <GraphQLProvider>
-            <ThemeProvider>
+          }
+        >
+          <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
+            <GraphQLProvider>
               <ThemeSynchronizer />
               <RoutePropagator />
               <AppLayout>
                 <Component {...pageProps} />
               </AppLayout>
-            </ThemeProvider>
-          </GraphQLProvider>
-        </AppBridgeProvider>
-      </IframeProtectedWrapper>
+            </GraphQLProvider>
+          </AppBridgeProvider>
+        </IframeProtectedWrapper>
+      </ThemeProvider>
     </NoSSRWrapper>
   );
 }

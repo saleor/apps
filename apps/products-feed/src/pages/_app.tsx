@@ -27,21 +27,19 @@ const queryClient = new QueryClient({
 function NextApp({ Component, pageProps }: AppProps) {
   return (
     <NoSSRWrapper>
-      <IframeProtectedWrapper
-        allowedPathNames={["/"]}
-        fallback={
-          <ThemeProvider>
+      <ThemeProvider>
+        <IframeProtectedWrapper
+          allowedPathNames={["/"]}
+          fallback={
             <Box display="flex" flexDirection="column" padding={4}>
               <Text as="h1" fontWeight="bold" fontSize={8} marginBottom={6}>
                 Saleor Products Feed App
               </Text>
               <Text>This app can only be used within the Saleor Dashboard.</Text>
             </Box>
-          </ThemeProvider>
-        }
-      >
-        <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-          <ThemeProvider>
+          }
+        >
+          <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
             <ThemeSynchronizer />
             <RoutePropagator />
             <QueryClientProvider client={queryClient}>
@@ -49,9 +47,9 @@ function NextApp({ Component, pageProps }: AppProps) {
                 <Component {...pageProps} />
               </Box>
             </QueryClientProvider>
-          </ThemeProvider>
-        </AppBridgeProvider>
-      </IframeProtectedWrapper>
+          </AppBridgeProvider>
+        </IframeProtectedWrapper>
+      </ThemeProvider>
     </NoSSRWrapper>
   );
 }
