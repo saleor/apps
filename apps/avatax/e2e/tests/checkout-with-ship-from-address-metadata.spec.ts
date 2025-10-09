@@ -12,7 +12,7 @@ import { getCompleteMoney } from "../utils/money";
 // Test for shipFrom address private metadata override functionality
 describe("App should use shipFrom address from private metadata TC: AVATAX_SHIP_FROM", () => {
   const testCase = e2e(
-    "Checkout with avataxShipFromAddress private metadata [pricesEnteredWithTax: False]",
+    "Checkout with avataxShipFromAddress private metadata - WA origin (no tax) vs CA default",
   );
 
   const shipFromAddressMetadata = [
@@ -20,25 +20,29 @@ describe("App should use shipFrom address from private metadata TC: AVATAX_SHIP_
       key: "avataxShipFromAddress",
       value: JSON.stringify({
         street: "123 Custom Ship Street",
-        city: "Custom Ship City",
-        state: "CA",
-        zip: "90210",
+        city: "Seattle",
+        state: "WA", // Washington has no state sales tax - should significantly reduce tax amounts
+        zip: "98101",
         country: "US",
       }),
     },
   ];
   const CURRENCY = "USD";
-  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 16.33;
+  /*
+   * Expected values when shipping FROM Washington (no state sales tax)
+   * pricesEnteredWithTax: False - so net prices stay same, no tax added
+   */
+  const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15; // No tax added to net price
   const TOTAL_NET_PRICE_BEFORE_SHIPPING = 15;
-  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.33;
+  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 0;
 
   const SHIPPING_NET_PRICE = 69.31;
-  const SHIPPING_TAX_PRICE = 6.0;
-  const SHIPPING_GROSS_PRICE = 75.31;
+  const SHIPPING_TAX_PRICE = 0; // No tax on shipping from WA
+  const SHIPPING_GROSS_PRICE = 69.31;
 
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 7.33;
-  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 91.64;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 0; // No tax when shipping from WA
+  const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
 
   it("should have created a checkout", async () => {
     await testCase
