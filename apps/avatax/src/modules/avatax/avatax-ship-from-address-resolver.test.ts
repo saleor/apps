@@ -24,7 +24,6 @@ describe("avataxShipFromAddressResolver", () => {
       const result = avataxShipFromAddressResolver.resolve({
         avataxShipFromAddress: metadataAddress,
         fallbackAddress,
-        source: "Checkout",
       });
 
       expect(result).toStrictEqual({
@@ -40,7 +39,6 @@ describe("avataxShipFromAddressResolver", () => {
       const result = avataxShipFromAddressResolver.resolve({
         avataxShipFromAddress: null,
         fallbackAddress,
-        source: "Order",
       });
 
       expect(result).toStrictEqual({
@@ -56,7 +54,6 @@ describe("avataxShipFromAddressResolver", () => {
       const result = avataxShipFromAddressResolver.resolve({
         avataxShipFromAddress: undefined,
         fallbackAddress,
-        source: "Checkout",
       });
 
       expect(result).toStrictEqual({
@@ -72,7 +69,6 @@ describe("avataxShipFromAddressResolver", () => {
       const result = avataxShipFromAddressResolver.resolve({
         avataxShipFromAddress: "",
         fallbackAddress,
-        source: "Order",
       });
 
       expect(result).toStrictEqual({
@@ -88,7 +84,6 @@ describe("avataxShipFromAddressResolver", () => {
       const result = avataxShipFromAddressResolver.resolve({
         avataxShipFromAddress: "invalid json",
         fallbackAddress,
-        source: "Checkout",
       });
 
       expect(result).toStrictEqual({
@@ -110,7 +105,6 @@ describe("avataxShipFromAddressResolver", () => {
       const result = avataxShipFromAddressResolver.resolve({
         avataxShipFromAddress: incompleteMetadata,
         fallbackAddress,
-        source: "Order",
       });
 
       expect(result).toStrictEqual({
@@ -134,7 +128,6 @@ describe("avataxShipFromAddressResolver", () => {
       const result = avataxShipFromAddressResolver.resolve({
         avataxShipFromAddress: metadataWithNumbers,
         fallbackAddress,
-        source: "Checkout",
       });
 
       expect(result).toStrictEqual({
@@ -150,7 +143,6 @@ describe("avataxShipFromAddressResolver", () => {
       const result = avataxShipFromAddressResolver.resolve({
         avataxShipFromAddress: JSON.stringify("not an object"),
         fallbackAddress,
-        source: "Order",
       });
 
       expect(result).toStrictEqual({
@@ -166,7 +158,6 @@ describe("avataxShipFromAddressResolver", () => {
       const result = avataxShipFromAddressResolver.resolve({
         avataxShipFromAddress: JSON.stringify([1, 2, 3]),
         fallbackAddress,
-        source: "Checkout",
       });
 
       expect(result).toStrictEqual({

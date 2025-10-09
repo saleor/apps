@@ -69,7 +69,6 @@ export class AvataxCalculateTaxesPayloadTransformer {
           shipFrom: avataxShipFromAddressResolver.resolve({
             avataxShipFromAddress: payload.taxBase.sourceObject.avataxShipFromAddress,
             fallbackAddress: avataxConfig.address,
-            source: payload.taxBase.sourceObject.__typename,
           }),
           shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
         },

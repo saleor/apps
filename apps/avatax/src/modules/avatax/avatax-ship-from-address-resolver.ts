@@ -59,15 +59,11 @@ export const avataxShipFromAddressResolver = {
   resolve({
     avataxShipFromAddress,
     fallbackAddress,
-    source,
   }: {
     avataxShipFromAddress: NullableString;
     fallbackAddress: AvataxConfig["address"];
-    source: "Order" | "Checkout";
   }): AvataxAddress {
     if (avataxShipFromAddress) {
-      logger.debug(`Attempting to use shipFrom address found in the ${source} metadata.`);
-
       const parsedAddress = parseShipFromAddressMetadata(avataxShipFromAddress);
 
       if (parsedAddress) {
