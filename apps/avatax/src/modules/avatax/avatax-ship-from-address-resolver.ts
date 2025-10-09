@@ -1,4 +1,5 @@
 import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
+import { z } from "zod";
 
 import { createLogger } from "../../logger";
 import { avataxAddressFactory } from "./address-factory";
@@ -8,46 +9,37 @@ const logger = createLogger("avataxShipFromAddress");
 
 type NullableString = string | null | undefined;
 
-interface ShipFromAddressInput {
-  street: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-}
+const shipFromAddressSchema = z.object({
+  street: z.string().min(1),
+  city: z.string().min(1),
+  state: z.string().min(1),
+  zip: z.string().min(1),
+  country: z.string().min(1),
+});
+
+type ShipFromAddressInput = z.infer<typeof shipFromAddressSchema>;
 
 function parseShipFromAddressMetadata(metadata: string): ShipFromAddressInput | null {
   try {
     const parsed: unknown = JSON.parse(metadata);
+    const result = shipFromAddressSchema.safeParse(parsed);
 
-    // Type guard and validation
-    if (
-      typeof parsed !== "object" ||
-      parsed === null ||
-      !("street" in parsed) ||
-      !("city" in parsed) ||
-      !("state" in parsed) ||
-      !("zip" in parsed) ||
-      !("country" in parsed)
-    ) {
-      logger.warn("Invalid shipFrom address metadata: missing required fields");
+    if (!result.success) {
+      logger.warn("Invalid shipFrom address metadata", {
+        errors: result.error.errors.map((err) => ({
+          path: err.path.join("."),
+          message: err.message,
+        })),
+      });
 
       return null;
     }
 
-    const typedParsed = parsed as Record<string, unknown>;
-
-    return {
-      street: String(typedParsed.street),
-      city: String(typedParsed.city),
-      state: String(typedParsed.state),
-      zip: String(typedParsed.zip),
-      country: String(typedParsed.country),
-    };
+    return result.data;
   } catch (error) {
     logger.warn("Failed to parse shipFrom address metadata", {
       errorMessage: error instanceof Error ? error.message : String(error),
-      metadataLength: metadata.length,
+      metadata,
     });
 
     return null;

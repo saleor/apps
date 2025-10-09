@@ -99,7 +99,7 @@ describe("avataxShipFromAddressResolver", () => {
       const incompleteMetadata = JSON.stringify({
         street: "Incomplete Street",
         city: "Incomplete City",
-        // missing state, zip, country
+        // missing zip, country
       });
 
       const result = avataxShipFromAddressResolver.resolve({
@@ -116,7 +116,7 @@ describe("avataxShipFromAddressResolver", () => {
       });
     });
 
-    it("should handle non-string values in metadata by converting them to strings", () => {
+    it("should handle non-string values in metadata by NOT converting them and using fallback address", () => {
       const metadataWithNumbers = JSON.stringify({
         street: 123,
         city: "Test City",
@@ -131,10 +131,10 @@ describe("avataxShipFromAddressResolver", () => {
       });
 
       expect(result).toStrictEqual({
-        line1: "123",
-        city: "Test City",
-        region: "TX",
-        postalCode: "12345",
+        line1: "Fallback Street 123",
+        city: "Fallback City",
+        region: "CA",
+        postalCode: "90210",
         country: "US",
       });
     });
