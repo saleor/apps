@@ -41,10 +41,12 @@ export class HandlebarsTemplateCompiler implements ITemplateCompiler {
         template: htmlTemplate,
       });
     } catch (error) {
-      logger.error("Failed to compile template", { error: error });
+      logger.warn("Failed to compile template - user configuration is invalid", { error: error });
+
+      const errorMessage = error instanceof Error ? error.message : "Failed to compile template";
 
       return err(
-        new HandlebarsTemplateCompiler.FailedCompileError("Failed to compile template", {
+        new HandlebarsTemplateCompiler.FailedCompileError(errorMessage, {
           errors: [error],
         }),
       );
