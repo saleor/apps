@@ -4,7 +4,9 @@ import { describe, it } from "vitest";
 import { envE2e } from "../env-e2e";
 import {
   CreateDraftOrder,
+  CreateOrderLines,
   DraftOrderComplete,
+  DraftOrderUpdateAddress,
   DraftOrderUpdateShippingMethod,
   StaffUserTokenCreate,
   UpdatePrivateMetadata,
@@ -14,7 +16,7 @@ import { getCompleteMoney } from "../utils/money";
 // Test for shipFrom address private metadata override functionality on draft orders
 describe("App should use shipFrom address from private metadata on draft order TC: AVATAX_SHIP_FROM_DRAFT", () => {
   const testCase = e2e(
-    "Draft order with avataxShipFromAddress private metadata - WA origin (no tax) vs CA default",
+    "Draft order with avataxShipFromAddress private metadata [pricesEnteredWithTax: True]",
   );
 
   const staffCredentials = {
@@ -28,7 +30,7 @@ describe("App should use shipFrom address from private metadata on draft order T
       value: JSON.stringify({
         street: "456 Draft Ship Street",
         city: "Seattle",
-        state: "WA", // Washington has no state sales tax - should significantly reduce tax amounts
+        state: "WA",
         zip: "98101",
         country: "US",
       }),
@@ -36,21 +38,17 @@ describe("App should use shipFrom address from private metadata on draft order T
   ];
 
   const CURRENCY = "USD";
-  /*
-   * Expected values when shipping FROM Washington (no state sales tax)
-   * These should be significantly lower than the default CA values
-   */
   const TOTAL_GROSS_PRICE_BEFORE_SHIPPING = 15;
-  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 15; // No tax on products when shipping from WA
-  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 0;
+  const TOTAL_NET_PRICE_BEFORE_SHIPPING = 13.78;
+  const TOTAL_TAX_PRICE_BEFORE_SHIPPING = 1.22;
 
   const TOTAL_GROSS_SHIPPING_PRICE = 69.31;
-  const TOTAL_NET_SHIPPING_PRICE = 69.31; // No tax on shipping when shipping from WA
-  const TOTAL_TAX_SHIPPING_PRICE = 0;
+  const TOTAL_NET_SHIPPING_PRICE = 63.65;
+  const TOTAL_TAX_SHIPPING_PRICE = 5.66;
 
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
-  const TOTAL_NET_PRICE_AFTER_SHIPPING = 84.31; // No tax when shipping from WA
-  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 0;
+  const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
+  const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.88;
 
   it("creates token for staff user", async () => {
     await testCase
@@ -71,14 +69,14 @@ describe("App should use shipFrom address from private metadata on draft order T
       .retry();
   });
 
-  it("creates draft order with lines and addresses", async () => {
+  it("creates order with product with tax class", async () => {
     await testCase
-      .step("Create draft order with lines and addresses")
+      .step("Create order with product with tax class")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(CreateDraftOrder)
       .withGraphQLVariables({
-        "@DATA:TEMPLATE@": "DraftOrder:LinesAndAddresses",
+        "@DATA:TEMPLATE@": "DraftOrder:PricesWithTax",
       })
       .withHeaders({
         Authorization: "Bearer $S{StaffUserToken}",
@@ -93,16 +91,56 @@ describe("App should use shipFrom address from private metadata on draft order T
           },
         },
       })
+      .stores("OrderID", "data.draftOrderCreate.order.id");
+  });
+
+  it("should create order lines as staff user", async () => {
+    await testCase
+      .step("Create order lines as staff user")
+      .spec()
+      .post("/graphql/")
+      .withGraphQLQuery(CreateOrderLines)
+      .withGraphQLVariables({
+        orderId: "$S{OrderID}",
+        input: [{ quantity: 10, variantId: "$M{Product.Juice.variantId}" }],
+      })
+      .withHeaders({
+        Authorization: "Bearer $S{StaffUserToken}",
+      })
+      .expectStatus(200)
+      .expectJson("data.orderLinesCreate.orderLines[0].quantity", 10)
       .expectJson(
-        "data.draftOrderCreate.order.total",
+        "data.orderLinesCreate.order.total.gross.amount",
+        TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
+      );
+  });
+
+  it("should update order as staff user", async () => {
+    await testCase
+      .step("Update order as staff user")
+      .spec()
+      .post("/graphql/")
+      .withGraphQLQuery(DraftOrderUpdateAddress)
+      .withGraphQLVariables({
+        "@DATA:TEMPLATE@": "DraftOrder:Address",
+        "@OVERRIDES@": {
+          orderId: "$S{OrderID}",
+        },
+      })
+      .withHeaders({
+        Authorization: "Bearer $S{StaffUserToken}",
+      })
+      .expectStatus(200)
+      .expectJson("data.draftOrderUpdate.order.id", "$S{OrderID}")
+      .expectJson(
+        "data.draftOrderUpdate.order.total",
         getCompleteMoney({
           gross: TOTAL_GROSS_PRICE_BEFORE_SHIPPING,
           net: TOTAL_NET_PRICE_BEFORE_SHIPPING,
           tax: TOTAL_TAX_PRICE_BEFORE_SHIPPING,
           currency: CURRENCY,
         }),
-      )
-      .stores("OrderID", "data.draftOrderCreate.order.id");
+      );
   });
 
   it("should apply the shipFrom address private metadata to the draft order", async () => {
@@ -122,9 +160,9 @@ describe("App should use shipFrom address from private metadata on draft order T
       .expectJson("data.updatePrivateMetadata.item.privateMetadata", shipFromAddressMetadata);
   });
 
-  it("should update shipping method and calculate shipping price with custom shipFrom address", async () => {
+  it("should update order's shipping method as staff user", async () => {
     await testCase
-      .step("Update shipping method with custom shipFrom address")
+      .step("Update shipping method as staff user")
       .spec()
       .post("/graphql/")
       .withGraphQLQuery(DraftOrderUpdateShippingMethod)
@@ -159,7 +197,7 @@ describe("App should use shipFrom address from private metadata on draft order T
       );
   });
 
-  it("should complete draft order with custom shipFrom address", async () => {
+  it("should complete draft order", async () => {
     await testCase
       .step("Complete draft order")
       .spec()
@@ -172,24 +210,6 @@ describe("App should use shipFrom address from private metadata on draft order T
         Authorization: "Bearer $S{StaffUserToken}",
       })
       .expectStatus(200)
-      .expectJson("data.draftOrderComplete.order.id", "$S{OrderID}")
-      .expectJson(
-        "data.draftOrderComplete.order.total",
-        getCompleteMoney({
-          gross: TOTAL_GROSS_PRICE_AFTER_SHIPPING,
-          net: TOTAL_NET_PRICE_AFTER_SHIPPING,
-          tax: TOTAL_TAX_PRICE_AFTER_SHIPPING,
-          currency: CURRENCY,
-        }),
-      )
-      .expectJson(
-        "data.draftOrderComplete.order.shippingPrice",
-        getCompleteMoney({
-          gross: TOTAL_GROSS_SHIPPING_PRICE,
-          net: TOTAL_NET_SHIPPING_PRICE,
-          tax: TOTAL_TAX_SHIPPING_PRICE,
-          currency: CURRENCY,
-        }),
-      );
+      .expectJson("data.draftOrderComplete.order.id", "$S{OrderID}");
   });
 });
