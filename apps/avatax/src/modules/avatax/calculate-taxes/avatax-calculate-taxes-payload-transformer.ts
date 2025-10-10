@@ -8,6 +8,7 @@ import { CreateTransactionArgs } from "../avatax-client";
 import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
 import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { avataxShipFromAddressResolver } from "../avatax-ship-from-address-resolver";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
 import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
@@ -65,7 +66,10 @@ export class AvataxCalculateTaxesPayloadTransformer {
         // * commit: If true, the transaction will be committed immediately after it is created. See: https://developer.avalara.com/communications/dev-guide_rest_v2/commit-uncommit
         commit: avataxConfig.isAutocommit,
         addresses: {
-          shipFrom: avataxAddressFactory.fromChannelAddress(avataxConfig.address),
+          shipFrom: avataxShipFromAddressResolver.resolve({
+            avataxShipFromAddress: payload.taxBase.sourceObject.avataxShipFromAddress,
+            fallbackAddress: avataxConfig.address,
+          }),
           shipTo: avataxAddressFactory.fromSaleorAddress(payload.taxBase.address!),
         },
         currencyCode: payload.taxBase.currency,

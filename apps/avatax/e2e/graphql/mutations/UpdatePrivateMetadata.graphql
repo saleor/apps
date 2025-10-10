@@ -1,0 +1,24 @@
+mutation UpdatePrivateMetadata($id: ID!, $input: [MetadataInput!]!) {
+  updatePrivateMetadata(id: $id, input: $input) {
+    errors {
+      field
+      message
+    }
+    item {
+      ... on Checkout {
+        id
+        privateMetadata {
+          key
+          value
+        }
+      }
+      ... on Order {
+        id
+        privateMetadata {
+          key
+          value
+        }
+      }
+    }
+  }
+}
