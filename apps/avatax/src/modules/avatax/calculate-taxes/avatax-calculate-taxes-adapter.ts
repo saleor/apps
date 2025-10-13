@@ -51,7 +51,6 @@ export class AvataxCalculateTaxesAdapter {
 
     this.logger.info("AvaTax createTransaction successfully responded", {
       taxCalculationSummary: transaction.summary,
-      addresses: transaction.addresses,
     });
 
     const transformedResponse = this.avataxCalculateTaxesResponseTransformer.transform(transaction);
