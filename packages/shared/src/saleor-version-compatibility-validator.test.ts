@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { SaleorVersionCompatibilityValidator } from "./saleor-version-compatibility-validator";
 
 describe("SaleorVersionCompatibilityValidator", () => {
-  it.each([
+  it.each<[string, [number, number]]>([
     [">=3.10 <4", [3, 12]],
     [">=3.10 <4", [3, 999]],
     [">=3.10", [4, 0]],
@@ -16,7 +16,7 @@ describe("SaleorVersionCompatibilityValidator", () => {
      */
     [">=3.10", [3, 10]],
     [">3.10", [3, 11]],
-  ] as const)(
+  ])(
     'Returns true for app requirement "%s" and saleor version [%i, %i]',
     (appVersionReq, saleorSchemaVersion) => {
       expect(
@@ -27,12 +27,12 @@ describe("SaleorVersionCompatibilityValidator", () => {
     },
   );
 
-  it.each([
+  it.each<[string, [number, number]]>([
     [">=3.10 <4", [4, 0]],
     [">3.10 <4", [3, 10]],
     [">3.10", [3, 10]],
     [">=3.10", [2, 0]],
-  ] as const)(
+  ])(
     'Returns false for app requirement "%s" and saleor version [%i, %i]',
     (appVersionReq, saleorSchemaVersion) => {
       expect(
