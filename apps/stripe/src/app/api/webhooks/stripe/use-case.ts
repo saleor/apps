@@ -18,7 +18,11 @@ import { StripeClient } from "@/modules/stripe/stripe-client";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
-import { AllowedStripeObjectMetadata, IStripeEventVerify } from "@/modules/stripe/types";
+import {
+  AllowedStripeObjectMetadata,
+  IStripeEventVerify,
+  IStripePaymentIntentsApiFactory,
+} from "@/modules/stripe/types";
 import {
   TransactionRecorderError,
   TransactionRecorderRepo,
@@ -55,6 +59,7 @@ export class StripeWebhookUseCase {
   private transactionRecorder: TransactionRecorderRepo;
   private transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
   private webhookManager: StripeWebhookManager;
+  private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
@@ -63,6 +68,7 @@ export class StripeWebhookUseCase {
     transactionRecorder: TransactionRecorderRepo;
     transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
     webhookManager: StripeWebhookManager;
+    stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.webhookEventVerifyFactory = deps.webhookEventVerifyFactory;
@@ -70,6 +76,7 @@ export class StripeWebhookUseCase {
     this.transactionRecorder = deps.transactionRecorder;
     this.transactionEventReporterFactory = deps.transactionEventReporterFactory;
     this.webhookManager = deps.webhookManager;
+    this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
   }
 
   private async removeStripeWebhook({
@@ -97,11 +104,13 @@ export class StripeWebhookUseCase {
     saleorApiUrl,
     appId,
     stripeEnv,
+    restrictedKey,
   }: {
     event: Stripe.Event;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
     stripeEnv: StripeEnv;
+    restrictedKey: StripeRestrictedKey;
   }) {
     switch (event.data.object.object) {
       case "payment_intent": {
@@ -124,12 +133,17 @@ export class StripeWebhookUseCase {
 
         const handler = new StripePaymentIntentHandler();
 
+        const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({
+          key: restrictedKey,
+        });
+
         return handler.processPaymentIntentEvent({
           event,
           stripeEnv,
           transactionRecorder: this.transactionRecorder,
           appId,
           saleorApiUrl,
+          stripePaymentIntentsApi,
         });
       }
 
@@ -325,6 +339,7 @@ export class StripeWebhookUseCase {
       saleorApiUrl: webhookParams.saleorApiUrl,
       appId: authData.appId,
       stripeEnv: config.value.getStripeEnvValue(),
+      restrictedKey: config.value.restrictedKey,
     });
 
     if (processingResult.isErr()) {
@@ -350,12 +365,6 @@ export class StripeWebhookUseCase {
       processingResult.value.resolveEventReportVariables(),
     );
 
-    this.logger.info("Transaction event reported", {
-      transactionId: processingResult.value.saleorTransactionId,
-      amount: processingResult.value.saleorMoney.amount,
-      result: processingResult.value.transactionResult,
-    });
-
     if (reportResult.isErr()) {
       if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
         this.logger.info("Transaction event already reported");
@@ -369,6 +378,12 @@ export class StripeWebhookUseCase {
 
       return err(new StripeWebhookSeverErrorResponse());
     }
+
+    this.logger.info("Transaction event reported", {
+      transactionId: processingResult.value.saleorTransactionId,
+      amount: processingResult.value.saleorMoney.amount,
+      result: processingResult.value.transactionResult,
+    });
 
     return ok(new StripeWebhookSuccessResponse());
   }

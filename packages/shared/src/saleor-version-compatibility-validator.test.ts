@@ -4,30 +4,42 @@ import { SaleorVersionCompatibilityValidator } from "./saleor-version-compatibil
 
 describe("SaleorVersionCompatibilityValidator", () => {
   it.each([
-    [">=3.10 <4", "3.12.0"],
-    [">=3.10 <4", "3.999.0"],
-    [">=3.10", "4.0.0"],
-    [">=3.10", "4.1.0"],
-    [">3.10", "3.11.0"],
+    [">=3.10 <4", [3, 12]],
+    [">=3.10 <4", [3, 999]],
+    [">=3.10", [4, 0]],
+    [">=3.10", [4, 1]],
+    [">3.10", [3, 11]],
     /**
-     * -a suffix is Saleor staging version indicator
+     * Note: -a suffix is Saleor staging version indicator.
+     * The validator uses semver with includePrerelease: true, so [3, 10] will match ">=3.10"
+     * even if it represents "3.10.0-a" internally.
      */
-    [">=3.10", "3.10.0-a"],
-    [">3.10", "3.11.0-a"],
-  ])('Passes for app requirement "%s" and saleor version "%s"', (appVersionReq, saleorVersion) => {
-    expect(() =>
-      new SaleorVersionCompatibilityValidator(appVersionReq).validateOrThrow(saleorVersion),
-    ).not.toThrow();
-  });
+    [">=3.10", [3, 10]],
+    [">3.10", [3, 11]],
+  ] as const)(
+    'Returns true for app requirement "%s" and saleor version [%i, %i]',
+    (appVersionReq, saleorSchemaVersion) => {
+      expect(
+        new SaleorVersionCompatibilityValidator(appVersionReq).isSaleorCompatible(
+          saleorSchemaVersion,
+        ),
+      ).toBe(true);
+    },
+  );
 
   it.each([
-    [">=3.10 <4", "4.0.0"],
-    [">3.10 <4", "3.10.0"],
-    [">3.10", "3.10.0"],
-    [">=3.10", "2.0.0"],
-  ])('Throws for app requirement "%s" and saleor version "%s"', (appVersionReq, saleorVersion) => {
-    expect(() =>
-      new SaleorVersionCompatibilityValidator(appVersionReq).validateOrThrow(saleorVersion),
-    ).toThrow();
-  });
+    [">=3.10 <4", [4, 0]],
+    [">3.10 <4", [3, 10]],
+    [">3.10", [3, 10]],
+    [">=3.10", [2, 0]],
+  ] as const)(
+    'Returns false for app requirement "%s" and saleor version [%i, %i]',
+    (appVersionReq, saleorSchemaVersion) => {
+      expect(
+        new SaleorVersionCompatibilityValidator(appVersionReq).isSaleorCompatible(
+          saleorSchemaVersion,
+        ),
+      ).toBe(false);
+    },
+  );
 });

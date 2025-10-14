@@ -1,4 +1,6 @@
-import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+
+import { mockedSaleorSchemaVersion, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import {
   createResolvedTransactionFlow,
@@ -19,6 +21,7 @@ type Params = {
   selectedPaymentMethod?: PaymentMethod["type"];
   resolvedTransactionFlow?: ResolvedTransactionFlow;
   saleorTransactionFlow?: SaleorTransationFlow;
+  saleorSchemaVersion?: SaleorSchemaVersion;
 };
 
 export const getMockedRecordedTransaction = (params?: Params): RecordedTransaction => {
@@ -28,6 +31,7 @@ export const getMockedRecordedTransaction = (params?: Params): RecordedTransacti
     saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
     resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
     selectedPaymentMethod: "card",
+    saleorSchemaVersion: mockedSaleorSchemaVersion,
     ...(params ?? {}),
   } satisfies Params;
 
@@ -37,5 +41,6 @@ export const getMockedRecordedTransaction = (params?: Params): RecordedTransacti
     saleorTransactionFlow: finalParams.saleorTransactionFlow,
     resolvedTransactionFlow: finalParams.resolvedTransactionFlow,
     selectedPaymentMethod: finalParams.selectedPaymentMethod,
+    saleorSchemaVersion: finalParams.saleorSchemaVersion,
   });
 };

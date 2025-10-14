@@ -8,7 +8,7 @@ schema {
 directive @doc(
   """Name of the grouping category"""
   category: String!
-) on ENUM | FIELD | FIELD_DEFINITION | INPUT_OBJECT | OBJECT
+) on ENUM | FIELD | FIELD_DEFINITION | INPUT_OBJECT | OBJECT | INTERFACE
 
 """Webhook events triggered by a specific location."""
 directive @webhookEventsInfo(
@@ -262,6 +262,11 @@ type Query {
   giftCardSettings: GiftCardSettings! @doc(category: "Gift cards")
 
   """
+  Refunds related settings. Returns `RefundSettings` configuration, global for the entire shop.
+  """
+  refundSettings: RefundSettings! @doc(category: "Shop")
+
+  """
   Look up a shipping zone by ID.
   
   Requires one of the following permissions: MANAGE_SHIPPING.
@@ -341,7 +346,7 @@ type Query {
     """Filtering options for categories."""
     filter: CategoryFilterInput
 
-    """Where filtering options."""
+    """Where filtering options for categories."""
     where: CategoryWhereInput
 
     """Sort categories."""
@@ -411,7 +416,7 @@ type Query {
     """Filtering options for collections."""
     filter: CollectionFilterInput
 
-    """Where filtering options."""
+    """Where filtering options for collections."""
     where: CollectionWhereInput
 
     """Sort collections."""
@@ -466,9 +471,9 @@ type Query {
   """
   products(
     """Filtering options for products."""
-    filter: ProductFilterInput
+    filter: ProductFilterInput @deprecated(reason: "Use `where` filter instead.")
 
-    """Where filtering options."""
+    """Where filtering options for products."""
     where: ProductWhereInput
 
     """Sort products."""
@@ -555,11 +560,18 @@ type Query {
     """Slug of a channel for which the data should be returned."""
     channel: String
 
-    """Filtering options for product variant."""
-    filter: ProductVariantFilterInput
+    """Filtering options for product variants."""
+    filter: ProductVariantFilterInput @deprecated(reason: "Use `where` filter instead.")
 
-    """Where filtering options."""
+    """Where filtering options for product variants."""
     where: ProductVariantWhereInput
+
+    """
+    Search product variants.
+    
+    Added in Saleor 3.22.
+    """
+    search: String
 
     """Sort products variants."""
     sortBy: ProductVariantSortingInput
@@ -677,6 +689,13 @@ type Query {
     Added in Saleor 3.21.
     """
     slugLanguageCode: LanguageCodeEnum
+
+    """
+    Slug of a channel for which the data should be returned.
+    
+    Added in Saleor 3.22.
+    """
+    channel: String
   ): Page @doc(category: "Pages")
 
   """List of the shop's pages."""
@@ -685,7 +704,28 @@ type Query {
     sortBy: PageSortingInput
 
     """Filtering options for pages."""
-    filter: PageFilterInput
+    filter: PageFilterInput @deprecated(reason: "+ Use `where` and `search` instead.")
+
+    """
+    Search pages. Overrides filter.search input.
+    
+    Added in Saleor 3.22.
+    """
+    search: String
+
+    """
+    Where filtering options for pages.
+    
+    Added in Saleor 3.22.
+    """
+    where: PageWhereInput
+
+    """
+    Slug of a channel for which the data should be returned.
+    
+    Added in Saleor 3.22.
+    """
+    channel: String
 
     """Return the elements in the list that come before the specified cursor."""
     before: String
@@ -781,10 +821,24 @@ type Query {
     sortBy: OrderSortingInput
 
     """Filtering options for orders."""
-    filter: OrderFilterInput
+    filter: OrderFilterInput @deprecated(reason: "Use `where` filter instead.")
+
+    """
+    Where filtering options for orders.
+    
+    Added in Saleor 3.22.
+    """
+    where: OrderWhereInput
 
     """Slug of a channel for which the data should be returned."""
     channel: String
+
+    """
+    Search orders.
+    
+    Added in Saleor 3.22.
+    """
+    search: String
 
     """Return the elements in the list that come before the specified cursor."""
     before: String
@@ -813,7 +867,21 @@ type Query {
     sortBy: OrderSortingInput
 
     """Filtering options for draft orders."""
-    filter: OrderDraftFilterInput
+    filter: OrderDraftFilterInput @deprecated(reason: "Use `where` filter instead.")
+
+    """
+    Where filtering options for draft orders.
+    
+    Added in Saleor 3.22.
+    """
+    where: DraftOrderWhereInput
+
+    """
+    Search orders.
+    
+    Added in Saleor 3.22.
+    """
+    search: String
 
     """Return the elements in the list that come before the specified cursor."""
     before: String
@@ -1163,7 +1231,7 @@ type Query {
   Requires one of the following permissions: MANAGE_DISCOUNTS.
   """
   promotions(
-    """Where filtering options."""
+    """Where filtering options for promotions."""
     where: PromotionWhereInput
 
     """Sort promotions."""
@@ -1315,9 +1383,9 @@ type Query {
   """List of the shop's attributes."""
   attributes(
     """Filtering options for attributes."""
-    filter: AttributeFilterInput
+    filter: AttributeFilterInput @deprecated(reason: "Use `where` filter instead.")
 
-    """Filtering options for attributes."""
+    """Where filtering options for attributes."""
     where: AttributeWhereInput
 
     """Search attributes."""
@@ -1472,10 +1540,24 @@ type Query {
   """
   customers(
     """Filtering options for customers."""
-    filter: CustomerFilterInput
+    filter: CustomerFilterInput @deprecated(reason: "Use `where` filter instead.")
+
+    """
+    Where filtering options for customers.
+    
+    Added in Saleor 3.22.
+    """
+    where: CustomerWhereInput
 
     """Sort customers."""
     sortBy: UserSortingInput
+
+    """
+    Search customers.
+    
+    Added in Saleor 3.22.
+    """
+    search: String
 
     """Return the elements in the list that come before the specified cursor."""
     before: String
@@ -1975,6 +2057,19 @@ enum WebhookEventTypeEnum @doc(category: "Webhooks") {
   A checkout is updated. It also triggers all updates related to the checkout.
   """
   CHECKOUT_UPDATED
+
+  """
+  A checkout was fully authorized (its `authorizeStatus` is `FULL`).
+  
+  This event is emitted only for checkouts whose payments are processed through the Transaction API.
+  """
+  CHECKOUT_FULLY_AUTHORIZED
+
+  """
+  A checkout was fully paid (its `chargeStatus` is `FULL` or `OVERCHARGED`). This event is not sent if payments are only authorized but not fully charged.
+  
+  This event is emitted only for checkouts whose payments are processed through the Transaction API.
+  """
   CHECKOUT_FULLY_PAID
 
   """A checkout metadata is updated."""
@@ -2537,6 +2632,19 @@ enum WebhookEventTypeAsyncEnum @doc(category: "Webhooks") {
   A checkout is updated. It also triggers all updates related to the checkout.
   """
   CHECKOUT_UPDATED
+
+  """
+  A checkout was fully authorized (its `authorizeStatus` is `FULL`).
+  
+  This event is emitted only for checkouts whose payments are processed through the Transaction API.
+  """
+  CHECKOUT_FULLY_AUTHORIZED
+
+  """
+  A checkout was fully paid (its `chargeStatus` is `FULL` or `OVERCHARGED`). This event is not sent if payments are only authorized but not fully charged.
+  
+  This event is emitted only for checkouts whose payments are processed through the Transaction API.
+  """
   CHECKOUT_FULLY_PAID
 
   """A checkout metadata is updated."""
@@ -2928,16 +3036,36 @@ type AppExtension implements Node @doc(category: "Apps") {
 
   """JWT token used to authenticate by third-party app extension."""
   accessToken: String
+
+  """
+  App extension options.
+  
+  Added in Saleor 3.22.
+  """
+  options: AppExtensionPossibleOptions
 }
 
 """All places where app extension can be mounted."""
 enum AppExtensionMountEnum @doc(category: "Apps") {
+  CATEGORY_OVERVIEW_CREATE
+  CATEGORY_OVERVIEW_MORE_ACTIONS
+  CATEGORY_DETAILS_MORE_ACTIONS
+  COLLECTION_OVERVIEW_CREATE
+  COLLECTION_OVERVIEW_MORE_ACTIONS
+  COLLECTION_DETAILS_MORE_ACTIONS
+  COLLECTION_DETAILS_WIDGETS
+  GIFT_CARD_OVERVIEW_CREATE
+  GIFT_CARD_OVERVIEW_MORE_ACTIONS
+  GIFT_CARD_DETAILS_MORE_ACTIONS
+  GIFT_CARD_DETAILS_WIDGETS
   CUSTOMER_OVERVIEW_CREATE
   CUSTOMER_OVERVIEW_MORE_ACTIONS
   CUSTOMER_DETAILS_MORE_ACTIONS
+  CUSTOMER_DETAILS_WIDGETS
   PRODUCT_OVERVIEW_CREATE
   PRODUCT_OVERVIEW_MORE_ACTIONS
   PRODUCT_DETAILS_MORE_ACTIONS
+  PRODUCT_DETAILS_WIDGETS
   NAVIGATION_CATALOG
   NAVIGATION_ORDERS
   NAVIGATION_CUSTOMERS
@@ -2947,6 +3075,27 @@ enum AppExtensionMountEnum @doc(category: "Apps") {
   ORDER_DETAILS_MORE_ACTIONS
   ORDER_OVERVIEW_CREATE
   ORDER_OVERVIEW_MORE_ACTIONS
+  ORDER_DETAILS_WIDGETS
+  DRAFT_ORDER_DETAILS_MORE_ACTIONS
+  DRAFT_ORDER_OVERVIEW_CREATE
+  DRAFT_ORDER_OVERVIEW_MORE_ACTIONS
+  DRAFT_ORDER_DETAILS_WIDGETS
+  DISCOUNT_DETAILS_MORE_ACTIONS
+  DISCOUNT_OVERVIEW_CREATE
+  DISCOUNT_OVERVIEW_MORE_ACTIONS
+  VOUCHER_DETAILS_MORE_ACTIONS
+  VOUCHER_OVERVIEW_CREATE
+  VOUCHER_OVERVIEW_MORE_ACTIONS
+  VOUCHER_DETAILS_WIDGETS
+  PAGE_DETAILS_MORE_ACTIONS
+  PAGE_OVERVIEW_CREATE
+  PAGE_OVERVIEW_MORE_ACTIONS
+  PAGE_TYPE_OVERVIEW_CREATE
+  PAGE_TYPE_OVERVIEW_MORE_ACTIONS
+  PAGE_TYPE_DETAILS_MORE_ACTIONS
+  MENU_OVERVIEW_CREATE
+  MENU_OVERVIEW_MORE_ACTIONS
+  MENU_DETAILS_MORE_ACTIONS
 }
 
 """
@@ -2958,6 +3107,39 @@ All available ways of opening an app extension.
 enum AppExtensionTargetEnum @doc(category: "Apps") {
   POPUP
   APP_PAGE
+  NEW_TAB
+  WIDGET
+}
+
+union AppExtensionPossibleOptions = AppExtensionOptionsWidget | AppExtensionOptionsNewTab
+
+"""Represents the options for an app extension."""
+type AppExtensionOptionsWidget @doc(category: "Apps") {
+  """Options for displaying a Widget"""
+  widgetTarget: WidgetTargetOptions
+}
+
+"""Represents the WIDGET target options for an app extension."""
+type WidgetTargetOptions @doc(category: "Apps") {
+  """HTTP method for Widget target (GET or POST)"""
+  method: HttpMethod!
+}
+
+enum HttpMethod {
+  POST
+  GET
+}
+
+"""Represents the options for an app extension."""
+type AppExtensionOptionsNewTab @doc(category: "Apps") {
+  """Options controlling behavior of the NEW_TAB extension target"""
+  newTabTarget: NewTabTargetOptions
+}
+
+"""Represents the NEW_TAB target options for an app extension."""
+type NewTabTargetOptions @doc(category: "Apps") {
+  """HTTP method for New Tab target (GET or POST)"""
+  method: HttpMethod!
 }
 
 """Represents the app's brand data."""
@@ -3274,6 +3456,7 @@ enum WebhookSampleEventTypeEnum @doc(category: "Webhooks") {
   PRODUCT_VARIANT_STOCK_UPDATED
   CHECKOUT_CREATED
   CHECKOUT_UPDATED
+  CHECKOUT_FULLY_AUTHORIZED
   CHECKOUT_FULLY_PAID
   CHECKOUT_METADATA_UPDATED
   NOTIFY_USER
@@ -3630,6 +3813,14 @@ type Money {
 
   """Amount of money."""
   amount: Float!
+
+  """
+  Amount of money represented as an integer in the smallest currency unit.
+  """
+  fractionalAmount: Int!
+
+  """Number of digits after the decimal point in the currency."""
+  fractionDigits: Int!
 }
 
 """
@@ -4876,6 +5067,7 @@ enum CountryCode {
   KZ
   KE
   KI
+  XK
   KW
   KG
   LA
@@ -5238,6 +5430,27 @@ type PaymentSettings {
   Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
   """
   defaultTransactionFlowStrategy: TransactionFlowStrategyEnum!
+
+  """
+  Determine if the funds for expired checkouts should be released automatically.
+  
+  Added in Saleor 3.20.
+  """
+  releaseFundsForExpiredCheckouts: Boolean
+
+  """
+  The time in hours after which funds for expired checkouts will be released.
+  
+  Added in Saleor 3.20.
+  """
+  checkoutTtlBeforeReleasingFunds: Hour
+
+  """
+  Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+  
+  Added in Saleor 3.20.
+  """
+  checkoutReleaseFundsCutOffDate: DateTime
 }
 
 """
@@ -5312,6 +5525,13 @@ type TaxConfiguration implements Node & ObjectWithMetadata @doc(category: "Taxes
   Added in Saleor 3.19.
   """
   taxAppId: String
+
+  """
+  Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines.
+  
+  Added in Saleor 3.21.
+  """
+  useWeightedTaxForShipping: Boolean
 }
 
 enum TaxCalculationStrategy @doc(category: "Taxes") {
@@ -5343,6 +5563,13 @@ type TaxConfigurationPerCountry @doc(category: "Taxes") {
   Added in Saleor 3.19.
   """
   taxAppId: String
+
+  """
+  Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines.
+  
+  Added in Saleor 3.21.
+  """
+  useWeightedTaxForShipping: Boolean
 }
 
 """Represents shipping method postal code rule."""
@@ -5383,7 +5610,7 @@ type ProductCountableEdge @doc(category: "Products") {
 }
 
 """Represents an individual item for sale in the storefront."""
-type Product implements Node & ObjectWithMetadata @doc(category: "Products") {
+type Product implements Node & ObjectWithMetadata & ObjectWithAttributes @doc(category: "Products") {
   """The ID of the product."""
   id: ID!
 
@@ -5416,6 +5643,26 @@ type Product implements Node & ObjectWithMetadata @doc(category: "Products") {
   Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
   """
   metafields(keys: [String!]): Metadata
+
+  """
+  Get a single attribute attached to product by attribute slug.
+  
+  Added in Saleor 3.22.
+  """
+  assignedAttribute(
+    """Slug of the attribute"""
+    slug: String!
+  ): AssignedAttribute
+
+  """
+  List of attributes assigned to this product.
+  
+  Added in Saleor 3.22.
+  """
+  assignedAttributes(
+    """Maximum number of attributes to return. Default is 100."""
+    limit: PositiveInt = 100
+  ): [AssignedAttribute!]!
 
   """SEO title of the product."""
   seoTitle: String
@@ -5508,10 +5755,10 @@ type Product implements Node & ObjectWithMetadata @doc(category: "Products") {
   attribute(
     """Slug of the attribute"""
     slug: String!
-  ): SelectedAttribute
+  ): SelectedAttribute @deprecated(reason: "Use the `assignedAttribute` field instead.")
 
   """List of attributes assigned to this product."""
-  attributes: [SelectedAttribute!]!
+  attributes: [SelectedAttribute!]! @deprecated(reason: "Use the `assignedAttributes` field instead.")
 
   """
   List of availability in channels for the product.
@@ -5553,9 +5800,9 @@ type Product implements Node & ObjectWithMetadata @doc(category: "Products") {
   """
   productVariants(
     """Filtering options for product variant."""
-    filter: ProductVariantFilterInput
+    filter: ProductVariantFilterInput @deprecated(reason: "Use `where` filter instead.")
 
-    """Where filtering options."""
+    """Where filtering options for product variants."""
     where: ProductVariantWhereInput
 
     """Sort products variants."""
@@ -5619,6 +5866,266 @@ type Product implements Node & ObjectWithMetadata @doc(category: "Products") {
   """External ID of this product."""
   externalReference: String
 }
+
+"""
+An object with attributes.
+
+Added in Saleor 3.22.
+"""
+interface ObjectWithAttributes @doc(category: "Attributes") {
+  """
+  Get a single attribute attached to the object by attribute slug.
+  
+  Added in Saleor 3.22.
+  """
+  assignedAttribute(
+    """Slug of the attribute"""
+    slug: String!
+  ): AssignedAttribute @doc(category: "Attributes")
+
+  """
+  List of attributes assigned to the object.
+  
+  Added in Saleor 3.22.
+  """
+  assignedAttributes(
+    """Maximum number of attributes to return. Default is 100."""
+    limit: PositiveInt = 100
+  ): [AssignedAttribute!]!
+}
+
+"""
+Represents an attribute assigned to an object.
+
+Added in Saleor 3.22.
+"""
+interface AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+}
+
+"""
+Custom attribute of a product. Attributes can be assigned to products and variants at the product type level.
+"""
+type Attribute implements Node & ObjectWithMetadata @doc(category: "Attributes") {
+  """The ID of the attribute."""
+  id: ID!
+
+  """List of private metadata items. Requires staff permissions to access."""
+  privateMetadata: [MetadataItem!]!
+
+  """
+  A single key from private metadata. Requires staff permissions to access.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  """
+  privateMetafield(key: String!): String
+
+  """
+  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
+  """
+  privateMetafields(keys: [String!]): Metadata
+
+  """List of public metadata items. Can be accessed without permissions."""
+  metadata: [MetadataItem!]!
+
+  """
+  A single key from public metadata.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  """
+  metafield(key: String!): String
+
+  """
+  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
+  """
+  metafields(keys: [String!]): Metadata
+
+  """The input type to use for entering attribute values in the dashboard."""
+  inputType: AttributeInputTypeEnum
+
+  """The entity type which can be used as a reference."""
+  entityType: AttributeEntityTypeEnum
+
+  """
+  The reference types (product or page type) that are used to narrow down the choices of reference objects.
+  
+  Added in Saleor 3.22.
+  """
+  referenceTypes(
+    """
+    Maximum number of objects to return. Value must be greater than 0. Default is 100.
+    """
+    limit: PositiveInt = 100
+  ): [ReferenceType!]
+
+  """Name of an attribute displayed in the interface."""
+  name: String
+
+  """Internal representation of an attribute name."""
+  slug: String
+
+  """The attribute type."""
+  type: AttributeTypeEnum
+
+  """The unit of attribute values."""
+  unit: MeasurementUnitsEnum
+
+  """
+  A list of predefined attribute choices available for selection. Available only for attributes with predefined choices.
+  """
+  choices(
+    """Sort attribute choices."""
+    sortBy: AttributeChoicesSortingInput
+
+    """Filtering options for attribute choices."""
+    filter: AttributeValueFilterInput @deprecated(reason: "Use `where` filter instead.")
+
+    """
+    Where filtering options for attribute choices.
+    
+    Added in Saleor 3.22.
+    """
+    where: AttributeValueWhereInput
+
+    """
+    Search attribute choices.
+    
+    Added in Saleor 3.22.
+    """
+    search: String
+
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    first: Int
+
+    """
+    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    last: Int
+  ): AttributeValueCountableConnection
+
+  """
+  Whether the attribute requires values to be passed or not. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+  """
+  valueRequired: Boolean!
+
+  """
+  Whether the attribute should be visible or not in storefront. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+  """
+  visibleInStorefront: Boolean!
+
+  """
+  Whether the attribute can be filtered in storefront. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+  """
+  filterableInStorefront: Boolean! @deprecated
+
+  """
+  Whether the attribute can be filtered in dashboard. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+  """
+  filterableInDashboard: Boolean!
+
+  """
+  Whether the attribute can be displayed in the admin product list. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+  """
+  availableInGrid: Boolean! @deprecated
+
+  """
+  The position of the attribute in the storefront navigation (0 by default). Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
+  """
+  storefrontSearchPosition: Int! @deprecated
+
+  """Returns translated attribute fields for the given language code."""
+  translation(
+    """A language code to return the translation for attribute."""
+    languageCode: LanguageCodeEnum!
+  ): AttributeTranslation
+
+  """Flag indicating that attribute has predefined choices."""
+  withChoices: Boolean!
+
+  """
+  A list of product types that use this attribute as a product attribute.
+  """
+  productTypes(
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    first: Int
+
+    """
+    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    last: Int
+  ): ProductTypeCountableConnection!
+
+  """
+  A list of product types that use this attribute as a product variant attribute.
+  """
+  productVariantTypes(
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    first: Int
+
+    """
+    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    last: Int
+  ): ProductTypeCountableConnection!
+
+  """External ID of this attribute."""
+  externalReference: String
+}
+
+enum AttributeInputTypeEnum @doc(category: "Attributes") {
+  DROPDOWN
+  MULTISELECT
+  FILE
+  REFERENCE
+  SINGLE_REFERENCE
+  NUMERIC
+  RICH_TEXT
+  PLAIN_TEXT
+  SWATCH
+  BOOLEAN
+  DATE
+  DATE_TIME
+}
+
+enum AttributeEntityTypeEnum @doc(category: "Attributes") {
+  PAGE
+  PRODUCT
+  PRODUCT_VARIANT
+  CATEGORY
+  COLLECTION
+}
+
+"""
+The reference types (product or page type) that are used to narrow down the choices of reference objects.
+ProductType applicable for reference attribute with `PRODUCT` or `PRODUCT_VARIANT` entity type.
+PageType applicable for reference attribute with `PAGE` entity type.
+"""
+union ReferenceType = ProductType | PageType
 
 """
 Represents a type of product. It defines what attributes are available to products of this type.
@@ -5733,8 +6240,14 @@ type ProductType implements Node & ObjectWithMetadata @doc(category: "Products")
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
   availableAttributes(
-    filter: AttributeFilterInput
+    """Filtering options for attributes of this product type."""
+    filter: AttributeFilterInput @deprecated(reason: "Use `where` filter instead.")
+
+    """Where filtering options for attributes of this product type."""
     where: AttributeWhereInput
+
+    """Search attributes."""
+    search: String
 
     """Return the elements in the list that come before the specified cursor."""
     before: String
@@ -5826,194 +6339,137 @@ type TaxClassCountryRate @doc(category: "Taxes") {
   taxClass: TaxClass
 }
 
+enum VariantAttributeScope @doc(category: "Products") {
+  ALL
+  VARIANT_SELECTION
+  NOT_VARIANT_SELECTION
+}
+
 """
-Custom attribute of a product. Attributes can be assigned to products and variants at the product type level.
+Represents assigned attribute to variant with variant selection attached.
 """
-type Attribute implements Node & ObjectWithMetadata @doc(category: "Attributes") {
-  """The ID of the attribute."""
-  id: ID!
-
-  """List of private metadata items. Requires staff permissions to access."""
-  privateMetadata: [MetadataItem!]!
+type AssignedVariantAttribute @doc(category: "Attributes") {
+  """Attribute assigned to variant."""
+  attribute: Attribute!
 
   """
-  A single key from private metadata. Requires staff permissions to access.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
+  Determines, whether assigned attribute is allowed for variant selection. Supported variant types for variant selection are: ['dropdown', 'boolean', 'swatch', 'numeric']
   """
-  privateMetafield(key: String!): String
+  variantSelection: Boolean!
+}
 
-  """
-  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-  """
-  privateMetafields(keys: [String!]): Metadata
+type AttributeCountableConnection @doc(category: "Attributes") {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [AttributeCountableEdge!]!
 
-  """List of public metadata items. Can be accessed without permissions."""
-  metadata: [MetadataItem!]!
+  """A total count of items in the collection."""
+  totalCount: Int
+}
 
-  """
-  A single key from public metadata.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  """
-  metafield(key: String!): String
+type AttributeCountableEdge @doc(category: "Attributes") {
+  """The item at the end of the edge."""
+  node: Attribute!
 
-  """
-  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-  """
-  metafields(keys: [String!]): Metadata
+  """A cursor for use in pagination."""
+  cursor: String!
+}
 
-  """The input type to use for entering attribute values in the dashboard."""
-  inputType: AttributeInputTypeEnum
-
-  """The entity type which can be used as a reference."""
-  entityType: AttributeEntityTypeEnum
-
-  """Name of an attribute displayed in the interface."""
-  name: String
-
-  """Internal representation of an attribute name."""
-  slug: String
-
-  """The attribute type."""
+input AttributeFilterInput @doc(category: "Attributes") {
+  valueRequired: Boolean
+  isVariantOnly: Boolean
+  visibleInStorefront: Boolean
+  filterableInStorefront: Boolean
+  filterableInDashboard: Boolean
+  availableInGrid: Boolean
+  metadata: [MetadataFilter!]
+  search: String
+  ids: [ID!]
   type: AttributeTypeEnum
+  inCollection: ID
+  inCategory: ID
+  slugs: [String!]
 
-  """The unit of attribute values."""
-  unit: MeasurementUnitsEnum
-
-  """List of attribute's values."""
-  choices(
-    """Sort attribute choices."""
-    sortBy: AttributeChoicesSortingInput
-
-    """Filtering options for attribute choices."""
-    filter: AttributeValueFilterInput
-
-    """Return the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Return the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
-    """
-    first: Int
-
-    """
-    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
-    """
-    last: Int
-  ): AttributeValueCountableConnection
-
-  """
-  Whether the attribute requires values to be passed or not. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-  """
-  valueRequired: Boolean!
-
-  """
-  Whether the attribute should be visible or not in storefront. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-  """
-  visibleInStorefront: Boolean!
-
-  """
-  Whether the attribute can be filtered in storefront. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-  """
-  filterableInStorefront: Boolean! @deprecated
-
-  """
-  Whether the attribute can be filtered in dashboard. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-  """
-  filterableInDashboard: Boolean!
-
-  """
-  Whether the attribute can be displayed in the admin product list. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-  """
-  availableInGrid: Boolean! @deprecated
-
-  """
-  The position of the attribute in the storefront navigation (0 by default). Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-  """
-  storefrontSearchPosition: Int! @deprecated
-
-  """Returns translated attribute fields for the given language code."""
-  translation(
-    """A language code to return the translation for attribute."""
-    languageCode: LanguageCodeEnum!
-  ): AttributeTranslation
-
-  """Flag indicating that attribute has predefined choices."""
-  withChoices: Boolean!
-
-  """
-  A list of product types that use this attribute as a product attribute.
-  """
-  productTypes(
-    """Return the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Return the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
-    """
-    first: Int
-
-    """
-    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
-    """
-    last: Int
-  ): ProductTypeCountableConnection!
-
-  """
-  A list of product types that use this attribute as a product variant attribute.
-  """
-  productVariantTypes(
-    """Return the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Return the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
-    """
-    first: Int
-
-    """
-    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
-    """
-    last: Int
-  ): ProductTypeCountableConnection!
-
-  """External ID of this attribute."""
-  externalReference: String
+  """Specifies the channel by which the data should be filtered."""
+  channel: String @deprecated(reason: "Use root-level channel argument instead.")
 }
 
-enum AttributeInputTypeEnum @doc(category: "Attributes") {
-  DROPDOWN
-  MULTISELECT
-  FILE
-  REFERENCE
-  NUMERIC
-  RICH_TEXT
-  PLAIN_TEXT
-  SWATCH
-  BOOLEAN
-  DATE
-  DATE_TIME
-}
+input MetadataFilter {
+  """Key of a metadata item."""
+  key: String!
 
-enum AttributeEntityTypeEnum @doc(category: "Attributes") {
-  PAGE
-  PRODUCT
-  PRODUCT_VARIANT
+  """Value of a metadata item."""
+  value: String
 }
 
 enum AttributeTypeEnum @doc(category: "Attributes") {
   PRODUCT_TYPE
   PAGE_TYPE
+}
+
+"""Where filtering options."""
+input AttributeWhereInput @doc(category: "Attributes") {
+  metadata: [MetadataFilter!]
+  ids: [ID!]
+  name: StringFilterInput
+  slug: StringFilterInput
+  withChoices: Boolean
+  inputType: AttributeInputTypeEnumFilterInput
+  entityType: AttributeEntityTypeEnumFilterInput
+  type: AttributeTypeEnumFilterInput
+  unit: MeasurementUnitsEnumFilterInput
+  inCollection: ID
+  inCategory: ID
+  valueRequired: Boolean
+  visibleInStorefront: Boolean
+  filterableInDashboard: Boolean
+
+  """List of conditions that must be met."""
+  AND: [AttributeWhereInput!]
+
+  """A list of conditions of which at least one must be met."""
+  OR: [AttributeWhereInput!]
+}
+
+"""Define the filtering options for string fields."""
+input StringFilterInput {
+  """The value equal to."""
+  eq: String
+
+  """The value included in."""
+  oneOf: [String!]
+}
+
+input AttributeInputTypeEnumFilterInput @doc(category: "Attributes") {
+  """The value equal to."""
+  eq: AttributeInputTypeEnum
+
+  """The value included in."""
+  oneOf: [AttributeInputTypeEnum!]
+}
+
+input AttributeEntityTypeEnumFilterInput @doc(category: "Attributes") {
+  """The value equal to."""
+  eq: AttributeEntityTypeEnum
+
+  """The value included in."""
+  oneOf: [AttributeEntityTypeEnum!]
+}
+
+input AttributeTypeEnumFilterInput @doc(category: "Attributes") {
+  """The value equal to."""
+  eq: AttributeTypeEnum
+
+  """The value included in."""
+  oneOf: [AttributeTypeEnum!]
+}
+
+input MeasurementUnitsEnumFilterInput @doc(category: "Attributes") {
+  """The value equal to."""
+  eq: MeasurementUnitsEnum
+
+  """The value included in."""
+  oneOf: [MeasurementUnitsEnum!]
 }
 
 enum MeasurementUnitsEnum {
@@ -6052,6 +6508,99 @@ enum MeasurementUnitsEnum {
   KG
   TONNE
 }
+
+"""
+Represents a type of page. It defines what attributes are available to pages of this type.
+"""
+type PageType implements Node & ObjectWithMetadata @doc(category: "Pages") {
+  """ID of the page type."""
+  id: ID!
+
+  """List of private metadata items. Requires staff permissions to access."""
+  privateMetadata: [MetadataItem!]!
+
+  """
+  A single key from private metadata. Requires staff permissions to access.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  """
+  privateMetafield(key: String!): String
+
+  """
+  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
+  """
+  privateMetafields(keys: [String!]): Metadata
+
+  """List of public metadata items. Can be accessed without permissions."""
+  metadata: [MetadataItem!]!
+
+  """
+  A single key from public metadata.
+  
+  Tip: Use GraphQL aliases to fetch multiple keys.
+  """
+  metafield(key: String!): String
+
+  """
+  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
+  """
+  metafields(keys: [String!]): Metadata
+
+  """Name of the page type."""
+  name: String!
+
+  """Slug of the page type."""
+  slug: String!
+
+  """Page attributes of that page type."""
+  attributes: [Attribute!]
+
+  """
+  Attributes that can be assigned to the page type.
+  
+  Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
+  """
+  availableAttributes(
+    """Filtering options for attributes."""
+    filter: AttributeFilterInput @deprecated(reason: "Use `where` filter instead.")
+
+    """Where filtering options for attributes."""
+    where: AttributeWhereInput
+
+    """Search attributes."""
+    search: String
+
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    first: Int
+
+    """
+    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    last: Int
+  ): AttributeCountableConnection
+
+  """
+  Whether page type has pages assigned.
+  
+  Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
+  """
+  hasPages: Boolean
+}
+
+"""
+Positive Integer scalar implementation.
+
+Should be used in places where value must be positive (greater than 0).
+"""
+scalar PositiveInt
 
 type AttributeValueCountableConnection @doc(category: "Attributes") {
   """Pagination data for this connection."""
@@ -6095,7 +6644,7 @@ type AttributeValue implements Node @doc(category: "Attributes") {
   """The input type to use for entering attribute values in the dashboard."""
   inputType: AttributeInputTypeEnum
 
-  """The ID of the attribute reference."""
+  """The ID of the referenced object."""
   reference: ID
 
   """Represents file URL and content type (if attribute value is a file)."""
@@ -6262,6 +6811,19 @@ input AttributeValueFilterInput @doc(category: "Attributes") {
   slugs: [String!]
 }
 
+"""Where filtering options for attribute values."""
+input AttributeValueWhereInput @doc(category: "Attributes") {
+  ids: [ID!]
+  name: StringFilterInput
+  slug: StringFilterInput
+
+  """List of conditions that must be met."""
+  AND: [AttributeValueWhereInput!]
+
+  """A list of conditions of which at least one must be met."""
+  OR: [AttributeValueWhereInput!]
+}
+
 type ProductTypeCountableConnection @doc(category: "Products") {
   """Pagination data for this connection."""
   pageInfo: PageInfo!
@@ -6277,134 +6839,6 @@ type ProductTypeCountableEdge @doc(category: "Products") {
 
   """A cursor for use in pagination."""
   cursor: String!
-}
-
-enum VariantAttributeScope @doc(category: "Products") {
-  ALL
-  VARIANT_SELECTION
-  NOT_VARIANT_SELECTION
-}
-
-"""
-Represents assigned attribute to variant with variant selection attached.
-"""
-type AssignedVariantAttribute @doc(category: "Attributes") {
-  """Attribute assigned to variant."""
-  attribute: Attribute!
-
-  """
-  Determines, whether assigned attribute is allowed for variant selection. Supported variant types for variant selection are: ['dropdown', 'boolean', 'swatch', 'numeric']
-  """
-  variantSelection: Boolean!
-}
-
-type AttributeCountableConnection @doc(category: "Attributes") {
-  """Pagination data for this connection."""
-  pageInfo: PageInfo!
-  edges: [AttributeCountableEdge!]!
-
-  """A total count of items in the collection."""
-  totalCount: Int
-}
-
-type AttributeCountableEdge @doc(category: "Attributes") {
-  """The item at the end of the edge."""
-  node: Attribute!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-input AttributeFilterInput @doc(category: "Attributes") {
-  valueRequired: Boolean
-  isVariantOnly: Boolean
-  visibleInStorefront: Boolean
-  filterableInStorefront: Boolean
-  filterableInDashboard: Boolean
-  availableInGrid: Boolean
-  metadata: [MetadataFilter!]
-  search: String
-  ids: [ID!]
-  type: AttributeTypeEnum
-  inCollection: ID
-  inCategory: ID
-  slugs: [String!]
-
-  """Specifies the channel by which the data should be filtered."""
-  channel: String @deprecated(reason: "Use root-level channel argument instead.")
-}
-
-input MetadataFilter {
-  """Key of a metadata item."""
-  key: String!
-
-  """Value of a metadata item."""
-  value: String
-}
-
-"""Where filtering options."""
-input AttributeWhereInput @doc(category: "Attributes") {
-  metadata: [MetadataFilter!]
-  ids: [ID!]
-  name: StringFilterInput
-  slug: StringFilterInput
-  withChoices: Boolean
-  inputType: AttributeInputTypeEnumFilterInput
-  entityType: AttributeEntityTypeEnumFilterInput
-  type: AttributeTypeEnumFilterInput
-  unit: MeasurementUnitsEnumFilterInput
-  inCollection: ID
-  inCategory: ID
-  valueRequired: Boolean
-  visibleInStorefront: Boolean
-  filterableInDashboard: Boolean
-
-  """List of conditions that must be met."""
-  AND: [AttributeWhereInput!]
-
-  """A list of conditions of which at least one must be met."""
-  OR: [AttributeWhereInput!]
-}
-
-"""Define the filtering options for string fields."""
-input StringFilterInput {
-  """The value equal to."""
-  eq: String
-
-  """The value included in."""
-  oneOf: [String!]
-}
-
-input AttributeInputTypeEnumFilterInput @doc(category: "Attributes") {
-  """The value equal to."""
-  eq: AttributeInputTypeEnum
-
-  """The value included in."""
-  oneOf: [AttributeInputTypeEnum!]
-}
-
-input AttributeEntityTypeEnumFilterInput @doc(category: "Attributes") {
-  """The value equal to."""
-  eq: AttributeEntityTypeEnum
-
-  """The value included in."""
-  oneOf: [AttributeEntityTypeEnum!]
-}
-
-input AttributeTypeEnumFilterInput @doc(category: "Attributes") {
-  """The value equal to."""
-  eq: AttributeTypeEnum
-
-  """The value included in."""
-  oneOf: [AttributeTypeEnum!]
-}
-
-input MeasurementUnitsEnumFilterInput @doc(category: "Attributes") {
-  """The value equal to."""
-  eq: MeasurementUnitsEnum
-
-  """The value included in."""
-  oneOf: [MeasurementUnitsEnum!]
 }
 
 """
@@ -6503,13 +6937,16 @@ type Category implements Node & ObjectWithMetadata @doc(category: "Products") {
   """
   products(
     """Filtering options for products."""
-    filter: ProductFilterInput
+    filter: ProductFilterInput @deprecated(reason: "Use `where` filter instead.")
 
-    """Filtering options for products."""
+    """Where filtering options for products."""
     where: ProductWhereInput
 
     """Sort products."""
     sortBy: ProductOrder
+
+    """Search products."""
+    search: String
 
     """Slug of a channel for which the data should be returned."""
     channel: String
@@ -6632,32 +7069,94 @@ input ProductFilterInput @doc(category: "Products") {
 
 input AttributeInput @doc(category: "Attributes") {
   """Internal representation of an attribute name."""
-  slug: String!
-
-  """Internal representation of a value (unique per attribute)."""
-  values: [String!]
-
-  """The range that the returned values should be in."""
-  valuesRange: IntRangeInput
-
-  """The date/time range that the returned values should be in."""
-  dateTime: DateTimeRangeInput
+  slug: String
 
   """
-  The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used.
+  Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised. Cannot be combined with deprecated fields of `AttributeInput`.
   """
-  date: DateRangeInput
+  value: AssignedAttributeValueInput
 
-  """The boolean value of the attribute."""
-  boolean: Boolean
+  """
+  Slugs identifying the attributeValues associated with the Attribute. When specified, it filters the results to include only records with one of the matching values. Requires `slug` to be provided.
+  """
+  values: [String!] @deprecated(reason: "Use `value` instead.")
+
+  """
+  The range that the returned values should be in. Requires `slug` to be provided.
+  """
+  valuesRange: IntRangeInput @deprecated(reason: "Use `value` instead.")
+
+  """
+  The date/time range that the returned values should be in. Requires `slug` to be provided.
+  """
+  dateTime: DateTimeRangeInput @deprecated(reason: "Use `value` instead.")
+
+  """
+  The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used. Requires `slug` to be provided.
+  """
+  date: DateRangeInput @deprecated(reason: "Use `value` instead.")
+
+  """The boolean value of the attribute. Requires `slug` to be provided."""
+  boolean: Boolean @deprecated(reason: "Use `value` instead.")
 }
 
-input IntRangeInput {
-  """Value greater than or equal to."""
-  gte: Int
+input AssignedAttributeValueInput {
+  """Filter by slug assigned to AttributeValue."""
+  slug: StringFilterInput
 
-  """Value less than or equal to."""
-  lte: Int
+  """Filter by name assigned to AttributeValue."""
+  name: StringFilterInput
+
+  """Filter by numeric value for attributes of numeric type."""
+  numeric: DecimalFilterInput
+
+  """Filter by date value for attributes of date type."""
+  date: DateRangeInput
+
+  """Filter by date time value for attributes of date time type."""
+  dateTime: DateTimeRangeInput
+
+  """Filter by boolean value for attributes of boolean type."""
+  boolean: Boolean
+
+  """Filter by reference attribute value."""
+  reference: AssignedAttributeReferenceInput
+}
+
+"""Define the filtering options for decimal fields."""
+input DecimalFilterInput {
+  """The value equal to."""
+  eq: Decimal
+
+  """The value included in."""
+  oneOf: [Decimal!]
+
+  """The value in range."""
+  range: DecimalRangeInput
+}
+
+"""
+Custom Decimal implementation.
+
+Returns Decimal as a float in the API,
+parses float to the Decimal on the way back.
+"""
+scalar Decimal
+
+input DecimalRangeInput {
+  """Decimal value greater than or equal to."""
+  gte: Decimal
+
+  """Decimal value less than or equal to."""
+  lte: Decimal
+}
+
+input DateRangeInput {
+  """Start date."""
+  gte: Date
+
+  """End date."""
+  lte: Date
 }
 
 input DateTimeRangeInput {
@@ -6668,12 +7167,55 @@ input DateTimeRangeInput {
   lte: DateTime
 }
 
-input DateRangeInput {
-  """Start date."""
-  gte: Date
+input AssignedAttributeReferenceInput {
+  """
+  Returns objects with a reference pointing to an object identified by the given ID.
+  """
+  referencedIds: ContainsFilterInput
 
-  """End date."""
-  lte: Date
+  """
+  Returns objects with a reference pointing to a page identified by the given slug.
+  """
+  pageSlugs: ContainsFilterInput
+
+  """
+  Returns objects with a reference pointing to a product identified by the given slug.
+  """
+  productSlugs: ContainsFilterInput
+
+  """
+  Returns objects with a reference pointing to a product variant identified by the given sku.
+  """
+  productVariantSkus: ContainsFilterInput
+
+  """
+  Returns objects with a reference pointing to a category identified by the given slug.
+  """
+  categorySlugs: ContainsFilterInput
+
+  """
+  Returns objects with a reference pointing to a collection identified by the given slug.
+  """
+  collectionSlugs: ContainsFilterInput
+}
+
+"""
+Define the filtering options for fields that can contain multiple values.
+"""
+input ContainsFilterInput {
+  """The field contains at least one of the specified values."""
+  containsAny: [String!]
+
+  """The field contains all of the specified values."""
+  containsAll: [String!]
+}
+
+input IntRangeInput {
+  """Value greater than or equal to."""
+  gte: Int
+
+  """Value less than or equal to."""
+  lte: Int
 }
 
 enum StockAvailability @doc(category: "Products") {
@@ -6771,34 +7313,6 @@ input GlobalIDFilterInput {
   oneOf: [ID!]
 }
 
-"""Define the filtering options for decimal fields."""
-input DecimalFilterInput {
-  """The value equal to."""
-  eq: Decimal
-
-  """The value included in."""
-  oneOf: [Decimal!]
-
-  """The value in range."""
-  range: DecimalRangeInput
-}
-
-"""
-Custom Decimal implementation.
-
-Returns Decimal as a float in the API,
-parses float to the Decimal on the way back.
-"""
-scalar Decimal
-
-input DecimalRangeInput {
-  """Decimal value greater than or equal to."""
-  gte: Decimal
-
-  """Decimal value less than or equal to."""
-  lte: Decimal
-}
-
 """Define the filtering options for date time fields."""
 input DateTimeFilterInput {
   """The value equal to."""
@@ -6852,10 +7366,10 @@ enum ProductOrderField @doc(category: "Products") {
   MINIMAL_PRICE
 
   """Sort products by update date."""
-  LAST_MODIFIED
+  LAST_MODIFIED @deprecated(reason: "Use `LAST_MODIFIED_AT` instead.")
 
   """Sort products by update date."""
-  DATE
+  DATE @deprecated(reason: "Use `LAST_MODIFIED_AT` instead.")
 
   """Sort products by type."""
   TYPE
@@ -6872,7 +7386,7 @@ enum ProductOrderField @doc(category: "Products") {
   
   This option requires a channel filter to work as the values can vary between channels.
   """
-  PUBLICATION_DATE
+  PUBLICATION_DATE @deprecated(reason: "Use `PUBLISHED_AT` instead.")
 
   """
   Sort products by publication date.
@@ -7006,7 +7520,7 @@ type CategoryTranslatableContent implements Node @doc(category: "Products") {
 }
 
 """Represents a version of a product such as different size or color."""
-type ProductVariant implements Node & ObjectWithMetadata @doc(category: "Products") {
+type ProductVariant implements Node & ObjectWithMetadata & ObjectWithAttributes @doc(category: "Products") {
   """The ID of the product variant."""
   id: ID!
 
@@ -7039,6 +7553,26 @@ type ProductVariant implements Node & ObjectWithMetadata @doc(category: "Product
   Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
   """
   metafields(keys: [String!]): Metadata
+
+  """
+  Get a single attribute attached to product by attribute slug.
+  
+  Added in Saleor 3.22.
+  """
+  assignedAttribute(
+    """Slug of the attribute"""
+    slug: String!
+  ): AssignedAttribute
+
+  """
+  List of attributes assigned to this variant.
+  
+  Added in Saleor 3.22.
+  """
+  assignedAttributes(
+    """Maximum number of attributes to return. Default is 100."""
+    limit: PositiveInt = 100
+  ): [AssignedAttribute!]!
 
   """The name of the product variant."""
   name: String!
@@ -7086,7 +7620,7 @@ type ProductVariant implements Node & ObjectWithMetadata @doc(category: "Product
   attributes(
     """Define scope of returned attributes."""
     variantSelection: VariantAttributeScope
-  ): [SelectedAttribute!]!
+  ): [SelectedAttribute!]! @deprecated(reason: "Use the `assignedAttributes` field instead.")
 
   """Gross margin percentage value."""
   margin: Int
@@ -7323,7 +7857,7 @@ input MetadataInput {
   value: String!
 }
 
-"""Represents a custom attribute."""
+"""Represents an assigned attribute to an object."""
 type SelectedAttribute @doc(category: "Attributes") {
   """Name of an attribute displayed in the interface."""
   attribute: Attribute!
@@ -7749,11 +8283,34 @@ input ProductVariantWhereInput @doc(category: "Products") {
   metadata: [MetadataFilter!]
   ids: [ID!]
 
+  """Filter by product SKU."""
+  sku: StringFilterInput
+
+  """Filter by when was the most recent update."""
+  updatedAt: DateTimeRangeInput
+
+  """
+  Filter by attributes associated with the variant.
+  
+  Added in Saleor 3.22.
+  """
+  attributes: [AssignedAttributeWhereInput!]
+
   """List of conditions that must be met."""
   AND: [ProductVariantWhereInput!]
 
   """A list of conditions of which at least one must be met."""
   OR: [ProductVariantWhereInput!]
+}
+
+input AssignedAttributeWhereInput {
+  """Filter by attribute slug."""
+  slug: String
+
+  """
+  Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised.
+  """
+  value: AssignedAttributeValueInput
 }
 
 input ProductVariantSortingInput @doc(category: "Products") {
@@ -7765,7 +8322,7 @@ input ProductVariantSortingInput @doc(category: "Products") {
 }
 
 enum ProductVariantSortField @doc(category: "Products") {
-  """Sort products variants by last modified at."""
+  """Sort product variants by last modification date."""
   LAST_MODIFIED_AT
 }
 
@@ -7851,10 +8408,13 @@ type Collection implements Node & ObjectWithMetadata @doc(category: "Products") 
   """List of products in this collection."""
   products(
     """Filtering options for products."""
-    filter: ProductFilterInput
+    filter: ProductFilterInput @deprecated(reason: "Use `where` filter instead.")
 
-    """Filtering options for products."""
+    """Where filtering options for products."""
     where: ProductWhereInput
+
+    """Search products."""
+    search: String
 
     """Sort products."""
     sortBy: ProductOrder
@@ -8282,7 +8842,7 @@ type PageTranslation implements Node @doc(category: "Pages") {
 """
 A static page that can be manually added by a shop operator through the dashboard.
 """
-type Page implements Node & ObjectWithMetadata @doc(category: "Pages") {
+type Page implements Node & ObjectWithMetadata & ObjectWithAttributes @doc(category: "Pages") {
   """ID of the page."""
   id: ID!
 
@@ -8315,6 +8875,26 @@ type Page implements Node & ObjectWithMetadata @doc(category: "Pages") {
   Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
   """
   metafields(keys: [String!]): Metadata
+
+  """
+  Get a single attribute attached to page by attribute slug.
+  
+  Added in Saleor 3.22.
+  """
+  assignedAttribute(
+    """Slug of the attribute"""
+    slug: String!
+  ): AssignedAttribute
+
+  """
+  List of attributes assigned to this page.
+  
+  Added in Saleor 3.22.
+  """
+  assignedAttributes(
+    """Maximum number of attributes to return. Default is 100."""
+    limit: PositiveInt = 100
+  ): [AssignedAttribute!]!
 
   """Title of the page for SEO."""
   seoTitle: String
@@ -8361,88 +8941,14 @@ type Page implements Node & ObjectWithMetadata @doc(category: "Pages") {
     languageCode: LanguageCodeEnum!
   ): PageTranslation
 
-  """List of attributes assigned to this product."""
-  attributes: [SelectedAttribute!]!
-}
+  """Get a single attribute attached to page by attribute slug."""
+  attribute(
+    """Slug of the attribute"""
+    slug: String!
+  ): SelectedAttribute @deprecated(reason: "Use `assignedAttribute` field instead.")
 
-"""
-Represents a type of page. It defines what attributes are available to pages of this type.
-"""
-type PageType implements Node & ObjectWithMetadata @doc(category: "Pages") {
-  """ID of the page type."""
-  id: ID!
-
-  """List of private metadata items. Requires staff permissions to access."""
-  privateMetadata: [MetadataItem!]!
-
-  """
-  A single key from private metadata. Requires staff permissions to access.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  """
-  privateMetafield(key: String!): String
-
-  """
-  Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-  """
-  privateMetafields(keys: [String!]): Metadata
-
-  """List of public metadata items. Can be accessed without permissions."""
-  metadata: [MetadataItem!]!
-
-  """
-  A single key from public metadata.
-  
-  Tip: Use GraphQL aliases to fetch multiple keys.
-  """
-  metafield(key: String!): String
-
-  """
-  Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-  """
-  metafields(keys: [String!]): Metadata
-
-  """Name of the page type."""
-  name: String!
-
-  """Slug of the page type."""
-  slug: String!
-
-  """Page attributes of that page type."""
-  attributes: [Attribute!]
-
-  """
-  Attributes that can be assigned to the page type.
-  
-  Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
-  """
-  availableAttributes(
-    filter: AttributeFilterInput
-    where: AttributeWhereInput
-
-    """Return the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Return the elements in the list that come after the specified cursor."""
-    after: String
-
-    """
-    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
-    """
-    first: Int
-
-    """
-    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
-    """
-    last: Int
-  ): AttributeCountableConnection
-
-  """
-  Whether page type has pages assigned.
-  
-  Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
-  """
-  hasPages: Boolean
+  """List of attributes assigned to this page."""
+  attributes: [SelectedAttribute!]! @deprecated(reason: "Use `assignedAttributes` field instead.")
 }
 
 """
@@ -10593,6 +11099,27 @@ type TransactionItem implements Node & ObjectWithMetadata @doc(category: "Paymen
   The url that will allow to redirect user to payment provider page with transaction details.
   """
   externalUrl: String!
+
+  """
+  The payment method used for this transaction.
+  
+  Added in Saleor 3.22.
+  """
+  paymentMethodDetails: PaymentMethodDetails
+
+  """
+  Reason of the refund.
+  
+  Added in Saleor 3.22.
+  """
+  reason: String
+
+  """
+  Reason `Page` (Model) for refund.
+  
+  Added in Saleor 3.22.
+  """
+  reasonReference: Page
 }
 
 """
@@ -11569,7 +12096,7 @@ type Transaction implements Node @doc(category: "Payments") {
   error: String
 
   """Response returned by payment gateway."""
-  gatewayResponse: JSONString!
+  gatewayResponse: JSONString! @deprecated(reason: "This field is a part of a legacy Payments API. Please use apps instead.")
 
   """Total amount of the transaction."""
   amount: Money
@@ -11909,8 +12436,19 @@ type OrderGrantedRefund @doc(category: "Orders") {
   """Refund amount."""
   amount: Money!
 
-  """Reason of the refund."""
+  """
+  Reason of the refund.
+  
+  Added in Saleor 3.22.
+  """
   reason: String
+
+  """
+  Reason Model (Page) reference for refund.
+  
+  Added in Saleor 3.22.
+  """
+  reasonReference: Page
 
   """
   User who performed the action. Requires of of the following permissions: MANAGE_USERS, MANAGE_STAFF, OWNER.
@@ -11994,6 +12532,13 @@ type TransactionEvent implements Node @doc(category: "Payments") {
   message: String!
 
   """
+  Reason model of the transaction refund.
+  
+  Added in Saleor 3.22.
+  """
+  reasonReference: Page
+
+  """
   The url that will allow to redirect user to payment provider page with transaction details.
   """
   externalUrl: String!
@@ -12060,6 +12605,16 @@ enum TransactionEventTypeEnum @doc(category: "Payments") {
 }
 
 union UserOrApp = User | App
+
+"""
+Represents a payment method used for a transaction.
+
+Added in Saleor 3.22.
+"""
+interface PaymentMethodDetails {
+  """Name of the payment method."""
+  name: String!
+}
 
 """
 Determine a current authorize status for checkout.
@@ -12371,6 +12926,16 @@ enum TimePeriodTypeEnum {
   YEAR
 }
 
+"""
+Refund related settings from site settings.
+
+Added in Saleor 3.22.
+"""
+type RefundSettings @doc(category: "Orders") {
+  """Model type used for refund reasons."""
+  reasonReferenceType: PageType
+}
+
 input ShippingZoneFilterInput @doc(category: "Shipping") {
   search: String
   channels: [ID!]
@@ -12494,10 +13059,10 @@ enum CollectionSortField @doc(category: "Products") {
   
   This option requires a channel filter to work as the values can vary between channels.
   """
-  PUBLICATION_DATE
+  PUBLICATION_DATE @deprecated(reason: "Use `PUBLISHED_AT` instead.")
 
   """
-  Sort collections by publication date.
+  Sort collections by published at.
   
   This option requires a channel filter to work as the values can vary between channels.
   """
@@ -12602,10 +13167,10 @@ enum PageSortField @doc(category: "Pages") {
   VISIBILITY
 
   """Sort pages by creation date."""
-  CREATION_DATE
+  CREATION_DATE @deprecated(reason: "Use `CREATED_AT` instead.")
 
   """Sort pages by publication date."""
-  PUBLICATION_DATE
+  PUBLICATION_DATE @deprecated(reason: "Use `PUBLISHED_AT` instead.")
 
   """Sort pages by publication date."""
   PUBLISHED_AT
@@ -12620,6 +13185,57 @@ input PageFilterInput @doc(category: "Pages") {
   pageTypes: [ID!]
   ids: [ID!]
   slugs: [String!]
+}
+
+input PageWhereInput @doc(category: "Pages") {
+  """Filter by metadata fields."""
+  metadata: MetadataFilterInput
+  ids: [ID!]
+
+  """Filter by page slug."""
+  slug: StringFilterInput
+
+  """Filter by page type."""
+  pageType: GlobalIDFilterInput
+
+  """Filter by attributes associated with the page."""
+  attributes: [AssignedAttributeWhereInput!]
+
+  """List of conditions that must be met."""
+  AND: [PageWhereInput!]
+
+  """A list of conditions of which at least one must be met."""
+  OR: [PageWhereInput!]
+}
+
+"""
+Allows filtering based on metadata key/value pairs.
+
+        Examples:
+        - `{key: "size"}`
+          Matches objects where the metadata key "size" exists, regardless of its value.
+        - `{key: "color", value: {oneOf: ["blue", "green"]}}`
+          Matches objects where the metadata key "color" is set to either "blue" or "green".
+        - `{key: "status", value: {eq: "active"}}`
+          Matches objects where the metadata key "status" is set to "active".
+"""
+input MetadataFilterInput {
+  """
+  Key to filter by. If not other fields provided - checking the existence of the key in metadata.
+  """
+  key: String!
+
+  """Value to filter by."""
+  value: MetadataValueFilterInput
+}
+
+"""Define the filtering options for metadata value fields."""
+input MetadataValueFilterInput {
+  """The value equal to."""
+  eq: String
+
+  """The value included in."""
+  oneOf: [String!]
 }
 
 type PageTypeCountableConnection @doc(category: "Pages") {
@@ -12694,23 +13310,30 @@ enum OrderSortField @doc(category: "Orders") {
   """
   RANK
 
-  """Sort orders by creation date."""
-  CREATION_DATE
+  """Sort orders by creation date"""
+  CREATION_DATE @deprecated(reason: "Use `CREATED_AT` instead.")
 
   """Sort orders by creation date."""
   CREATED_AT
 
-  """Sort orders by last modified at."""
+  """Sort orders by last modified date."""
   LAST_MODIFIED_AT
 
   """Sort orders by customer."""
   CUSTOMER
 
-  """Sort orders by payment."""
+  """Sort orders by payment status."""
   PAYMENT
 
   """Sort orders by fulfillment status."""
-  FULFILLMENT_STATUS
+  FULFILLMENT_STATUS @deprecated(reason: "Use `STATUS` instead.")
+
+  """
+  Sort orders by order status. 
+  
+  Added in Saleor 3.22.
+  """
+  STATUS
 }
 
 input OrderFilterInput @doc(category: "Orders") {
@@ -12744,12 +13367,377 @@ enum OrderStatusFilter @doc(category: "Orders") {
   CANCELED
 }
 
+input OrderWhereInput @doc(category: "Orders") {
+  """Filter by metadata fields."""
+  metadata: MetadataFilterInput
+  ids: [ID!]
+
+  """Filter by order number."""
+  number: IntFilterInput
+
+  """Filter by channel."""
+  channelId: GlobalIDFilterInput
+
+  """Filter order by created at date."""
+  createdAt: DateTimeRangeInput
+
+  """Filter order by updated at date."""
+  updatedAt: DateTimeRangeInput
+
+  """Filter by user."""
+  user: GlobalIDFilterInput
+
+  """Filter by user email."""
+  userEmail: StringFilterInput
+
+  """Filter by authorize status."""
+  authorizeStatus: OrderAuthorizeStatusEnumFilterInput
+
+  """Filter by charge status."""
+  chargeStatus: OrderChargeStatusEnumFilterInput
+
+  """Filter by order status."""
+  status: OrderStatusEnumFilterInput
+
+  """Filter by checkout token."""
+  checkoutToken: UUIDFilterInput
+
+  """Filter by checkout id."""
+  checkoutId: GlobalIDFilterInput
+
+  """
+  Filter by whether the order uses the click and collect delivery method.
+  """
+  isClickAndCollect: Boolean
+
+  """Filter based on whether a gift card was used in the order."""
+  isGiftCardUsed: Boolean
+
+  """Filter based on whether the order includes a gift card purchase."""
+  isGiftCardBought: Boolean
+
+  """Filter by voucher code used in the order."""
+  voucherCode: StringFilterInput
+
+  """Filter by whether the order has any invoices."""
+  hasInvoices: Boolean
+
+  """
+  Filter by invoice data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions.
+  """
+  invoices: [InvoiceFilterInput!]
+
+  """Filter by whether the order has any fulfillments."""
+  hasFulfillments: Boolean
+
+  """
+  Filter by fulfillment data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions.
+  """
+  fulfillments: [FulfillmentFilterInput!]
+
+  """
+  Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions.
+  """
+  lines: [LinesFilterInput!]
+
+  """Filter by number of lines in the order."""
+  linesCount: IntFilterInput
+
+  """
+  Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions.
+  """
+  transactions: [TransactionFilterInput!]
+
+  """Filter by total gross amount of the order."""
+  totalGross: PriceFilterInput
+
+  """Filter by total net amount of the order."""
+  totalNet: PriceFilterInput
+
+  """Filter by the product type of related order lines."""
+  productTypeId: GlobalIDFilterInput
+
+  """
+  Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions.
+  """
+  events: [OrderEventFilterInput!]
+
+  """Filter by billing address of the order."""
+  billingAddress: AddressFilterInput
+
+  """Filter by shipping address of the order."""
+  shippingAddress: AddressFilterInput
+
+  """List of conditions that must be met."""
+  AND: [OrderWhereInput!]
+
+  """A list of conditions of which at least one must be met."""
+  OR: [OrderWhereInput!]
+}
+
+"""Define the filtering options for integer fields."""
+input IntFilterInput {
+  """The value equal to."""
+  eq: Int
+
+  """The value included in."""
+  oneOf: [Int!]
+
+  """The value in range."""
+  range: IntRangeInput
+}
+
+"""Filter by authorize status."""
+input OrderAuthorizeStatusEnumFilterInput @doc(category: "Orders") {
+  """The value equal to."""
+  eq: OrderAuthorizeStatusEnum
+
+  """The value included in."""
+  oneOf: [OrderAuthorizeStatusEnum!]
+}
+
+"""Filter by charge status."""
+input OrderChargeStatusEnumFilterInput @doc(category: "Orders") {
+  """The value equal to."""
+  eq: OrderChargeStatusEnum
+
+  """The value included in."""
+  oneOf: [OrderChargeStatusEnum!]
+}
+
+"""Filter by order status."""
+input OrderStatusEnumFilterInput @doc(category: "Orders") {
+  """The value equal to."""
+  eq: OrderStatus
+
+  """The value included in."""
+  oneOf: [OrderStatus!]
+}
+
+"""Define the filtering options for string fields."""
+input UUIDFilterInput {
+  """The value equal to."""
+  eq: UUID
+
+  """The value included in."""
+  oneOf: [UUID!]
+}
+
+"""Filter input for invoices."""
+input InvoiceFilterInput @doc(category: "Orders") {
+  """Filter invoices by creation date."""
+  createdAt: DateTimeRangeInput
+}
+
+"""Filter input for order fulfillments data."""
+input FulfillmentFilterInput @doc(category: "Orders") {
+  """Filter by fulfillment status."""
+  status: FulfillmentStatusEnumFilterInput
+
+  """Filter by metadata fields."""
+  metadata: MetadataFilterInput
+
+  """Filter by fulfillment warehouse."""
+  warehouse: FulfillmentWarehouseFilterInput
+}
+
+"""Filter by fulfillment status."""
+input FulfillmentStatusEnumFilterInput @doc(category: "Orders") {
+  """The value equal to."""
+  eq: FulfillmentStatus
+
+  """The value included in."""
+  oneOf: [FulfillmentStatus!]
+}
+
+"""Filter input for fulfillment warehouses."""
+input FulfillmentWarehouseFilterInput @doc(category: "Orders") {
+  """Filter fulfillments by warehouse ID."""
+  id: GlobalIDFilterInput
+
+  """Filter fulfillments by warehouse slug."""
+  slug: StringFilterInput
+
+  """Filter fulfillments by warehouse external reference."""
+  externalReference: StringFilterInput
+}
+
+"""Filter input for order lines data."""
+input LinesFilterInput @doc(category: "Orders") {
+  """Filter by metadata fields of order lines."""
+  metadata: MetadataFilterInput
+}
+
+"""Filter input for transactions."""
+input TransactionFilterInput @doc(category: "Orders") {
+  """Filter by payment method details used to pay for the order."""
+  paymentMethodDetails: PaymentMethodDetailsFilterInput
+
+  """Filter by metadata fields of transactions."""
+  metadata: MetadataFilterInput
+}
+
+input PaymentMethodDetailsFilterInput {
+  """Filter by payment method type used to pay for the order."""
+  type: PaymentMethodTypeEnumFilterInput
+
+  """
+  Filter by card details used to pay for the order. Skips `type` filter if provided.
+  """
+  card: PaymentMethodDetailsCardFilterInput
+}
+
+input PaymentMethodTypeEnumFilterInput {
+  """The value equal to."""
+  eq: PaymentMethodTypeEnum
+
+  """The value included in."""
+  oneOf: [PaymentMethodTypeEnum!]
+}
+
+"""
+Represents possible payment method types.
+
+    The following types are possible:
+    CARD - represents a card payment method.
+    OTHER - represents any payment method that is not a card payment.
+"""
+enum PaymentMethodTypeEnum @doc(category: "Payments") {
+  CARD
+  OTHER
+}
+
+input PaymentMethodDetailsCardFilterInput {
+  """Filter by payment method brand used to pay for the order."""
+  brand: StringFilterInput
+}
+
+input PriceFilterInput {
+  """The currency of the price to filter by."""
+  currency: String
+
+  """The amount of the price to filter by."""
+  amount: DecimalFilterInput!
+}
+
+"""Filter input for order events data."""
+input OrderEventFilterInput @doc(category: "Orders") {
+  """Filter order events by date."""
+  date: DateTimeRangeInput
+
+  """Filter order events by type."""
+  type: OrderEventTypeEnumFilterInput
+}
+
+input OrderEventTypeEnumFilterInput {
+  """The value equal to."""
+  eq: OrderEventsEnum
+
+  """The value included in."""
+  oneOf: [OrderEventsEnum!]
+}
+
+"""Filtering options for addresses."""
+input AddressFilterInput @doc(category: "Users") {
+  phoneNumber: StringFilterInput
+  country: CountryCodeEnumFilterInput
+}
+
+"""Filter by country code."""
+input CountryCodeEnumFilterInput @doc(category: "Users") {
+  """The value equal to."""
+  eq: CountryCode
+
+  """The value included in."""
+  oneOf: [CountryCode!]
+
+  """The value not included in."""
+  notOneOf: [CountryCode!]
+}
+
 input OrderDraftFilterInput @doc(category: "Orders") {
   customer: String
   created: DateRangeInput
   search: String
   metadata: [MetadataFilter!]
   channels: [ID!]
+}
+
+input DraftOrderWhereInput @doc(category: "Orders") {
+  """Filter by metadata fields."""
+  metadata: MetadataFilterInput
+  ids: [ID!]
+
+  """Filter by order number."""
+  number: IntFilterInput
+
+  """Filter by channel."""
+  channelId: GlobalIDFilterInput
+
+  """Filter order by created at date."""
+  createdAt: DateTimeRangeInput
+
+  """Filter order by updated at date."""
+  updatedAt: DateTimeRangeInput
+
+  """Filter by user."""
+  user: GlobalIDFilterInput
+
+  """Filter by user email."""
+  userEmail: StringFilterInput
+
+  """Filter by authorize status."""
+  authorizeStatus: OrderAuthorizeStatusEnumFilterInput
+
+  """Filter by charge status."""
+  chargeStatus: OrderChargeStatusEnumFilterInput
+
+  """
+  Filter by whether the order uses the click and collect delivery method.
+  """
+  isClickAndCollect: Boolean
+
+  """Filter by voucher code used in the order."""
+  voucherCode: StringFilterInput
+
+  """
+  Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions.
+  """
+  lines: [LinesFilterInput!]
+
+  """Filter by number of lines in the order."""
+  linesCount: IntFilterInput
+
+  """
+  Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions.
+  """
+  transactions: [TransactionFilterInput!]
+
+  """Filter by total gross amount of the order."""
+  totalGross: PriceFilterInput
+
+  """Filter by total net amount of the order."""
+  totalNet: PriceFilterInput
+
+  """Filter by the product type of related order lines."""
+  productTypeId: GlobalIDFilterInput
+
+  """
+  Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions.
+  """
+  events: [OrderEventFilterInput!]
+
+  """Filter by billing address of the order."""
+  billingAddress: AddressFilterInput
+
+  """Filter by shipping address of the order."""
+  shippingAddress: AddressFilterInput
+
+  """List of conditions that must be met."""
+  AND: [DraftOrderWhereInput!]
+
+  """A list of conditions of which at least one must be met."""
+  OR: [DraftOrderWhereInput!]
 }
 
 type MenuCountableConnection @doc(category: "Menu") {
@@ -13051,10 +14039,10 @@ enum SaleSortField @doc(category: "Discounts") {
   """Sort sales by type."""
   TYPE
 
-  """Sort sales by created at."""
+  """Sort sales by creation date."""
   CREATED_AT
 
-  """Sort sales by last modified at."""
+  """Sort sales by last modification date."""
   LAST_MODIFIED_AT
 }
 
@@ -13104,7 +14092,7 @@ input VoucherSortingInput @doc(category: "Discounts") {
 
 enum VoucherSortField {
   """Sort vouchers by code."""
-  CODE
+  CODE @deprecated
 
   """
   Sort vouchers by name.
@@ -13555,7 +14543,7 @@ enum PromotionSortField @doc(category: "Discounts") {
   """Sort promotions by end date."""
   END_DATE
 
-  """Sort promotions by created at."""
+  """Sort promotions by creation date."""
   CREATED_AT
 }
 
@@ -13659,7 +14647,7 @@ input ExportFileSortingInput {
 enum ExportFileSortField {
   STATUS
   CREATED_AT
-  UPDATED_AT
+  UPDATED_AT @deprecated(reason: "Use `LAST_MODIFIED_AT` instead.")
   LAST_MODIFIED_AT
 }
 
@@ -13964,6 +14952,45 @@ input CustomerFilterInput @doc(category: "Users") {
   updatedAt: DateTimeRangeInput
 }
 
+input CustomerWhereInput @doc(category: "Users") {
+  """Filter by metadata fields."""
+  metadata: MetadataFilterInput
+  ids: [ID!]
+
+  """Filter by email address."""
+  email: StringFilterInput
+
+  """Filter by first name."""
+  firstName: StringFilterInput
+
+  """Filter by last name."""
+  lastName: StringFilterInput
+
+  """Filter by whether the user is active."""
+  isActive: Boolean
+
+  """Filter by date joined."""
+  dateJoined: DateTimeRangeInput
+
+  """Filter by last updated date."""
+  updatedAt: DateTimeRangeInput
+
+  """Filter by date when orders were placed."""
+  placedOrdersAt: DateTimeRangeInput
+
+  """Filter by addresses data associated with user."""
+  addresses: AddressFilterInput
+
+  """Filter by number of orders placed by the user."""
+  numberOfOrders: IntFilterInput
+
+  """List of conditions that must be met."""
+  AND: [CustomerWhereInput!]
+
+  """A list of conditions of which at least one must be met."""
+  OR: [CustomerWhereInput!]
+}
+
 input UserSortingInput @doc(category: "Users") {
   """Specifies the direction in which to sort users."""
   direction: OrderDirection!
@@ -14055,7 +15082,7 @@ type Mutation {
   ): WebhookCreate @doc(category: "Webhooks")
 
   """
-  Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated. 
+  Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated. 
   
   Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
   """
@@ -14114,7 +15141,7 @@ type Mutation {
   ): WebhookTrigger @doc(category: "Webhooks")
 
   """
-  Creates new warehouse. 
+  Creates a new warehouse. 
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -14176,7 +15203,7 @@ type Mutation {
   ): WarehouseShippingZoneUnassign @doc(category: "Products")
 
   """
-  Create a tax class. 
+  Creates a tax class. 
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -14186,7 +15213,7 @@ type Mutation {
   ): TaxClassCreate @doc(category: "Taxes")
 
   """
-  Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class. 
+  Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class. 
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -14196,7 +15223,7 @@ type Mutation {
   ): TaxClassDelete @doc(category: "Taxes")
 
   """
-  Update a tax class. 
+  Updates a tax class. 
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -14209,7 +15236,7 @@ type Mutation {
   ): TaxClassUpdate @doc(category: "Taxes")
 
   """
-  Update tax configuration for a channel. 
+  Updates tax configuration for a channel. 
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -14222,7 +15249,7 @@ type Mutation {
   ): TaxConfigurationUpdate @doc(category: "Taxes")
 
   """
-  Update tax class rates for a specific country. 
+  Updates tax class rates for a specific country. 
   
   Requires one of the following permissions: MANAGE_TAXES.
   """
@@ -14299,7 +15326,7 @@ type Mutation {
   ): StaffNotificationRecipientUpdate @doc(category: "Users")
 
   """
-  Delete staff notification recipient. 
+  Deletes staff notification recipient. 
   
   Requires one of the following permissions: MANAGE_SETTINGS.
   """
@@ -14380,6 +15407,27 @@ type Mutation {
     """Fields required to update gift card settings."""
     input: GiftCardSettingsUpdateInput!
   ): GiftCardSettingsUpdate @doc(category: "Gift cards")
+
+  """
+  Update refund settings across all channels.
+  
+  Added in Saleor 3.22. 
+  
+  Requires one of the following permissions: MANAGE_SETTINGS.
+  """
+  refundSettingsUpdate(
+    """Fields required to update refund settings."""
+    input: RefundSettingsUpdateInput!
+  ): RefundSettingsUpdate @doc(category: "Shop")
+
+  """
+  Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+  
+  Added in Saleor 3.22. 
+  
+  Requires one of the following permissions: MANAGE_SETTINGS.
+  """
+  refundReasonReferenceClear: RefundReasonReferenceTypeClear @doc(category: "Orders")
 
   """
   Manage shipping method's availability in channels. 
@@ -15012,7 +16060,7 @@ type Mutation {
   ): DigitalContentDelete @doc(category: "Products")
 
   """
-  Update digital content. 
+  Updates digital content. 
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -15077,7 +16125,7 @@ type Mutation {
   ): ProductVariantBulkCreate @doc(category: "Products")
 
   """
-  Update multiple product variants. 
+  Updates multiple product variants. 
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -15119,7 +16167,7 @@ type Mutation {
   ): ProductVariantStocksCreate @doc(category: "Products")
 
   """
-  Delete stocks from product variant. 
+  Deletes stocks from product variant. 
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -15135,7 +16183,7 @@ type Mutation {
   ): ProductVariantStocksDelete @doc(category: "Products")
 
   """
-  Update stocks for product variant. 
+  Updates stocks for product variant. 
   
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
@@ -15199,7 +16247,7 @@ type Mutation {
   ): ProductVariantTranslate @doc(category: "Products")
 
   """
-  Creates/updates translations for products variants. 
+  Creates/updates translations for product variants. 
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   
@@ -15211,7 +16259,7 @@ type Mutation {
     """Policies of error handling. DEFAULT: REJECT_EVERYTHING"""
     errorPolicy: ErrorPolicyEnum
 
-    """List of products variants translations."""
+    """List of product variant translations."""
     translations: [ProductVariantBulkTranslateInput!]!
   ): ProductVariantBulkTranslate @doc(category: "Products") @webhookEventsInfo(asyncEvents: [TRANSLATION_CREATED, TRANSLATION_UPDATED], syncEvents: [])
 
@@ -15340,7 +16388,7 @@ type Mutation {
   ): PaymentCheckBalance @doc(category: "Payments")
 
   """
-  Create transaction for checkout or order. 
+  Creates transaction for checkout or order. 
   
   Requires one of the following permissions: HANDLE_PAYMENTS.
   """
@@ -15390,6 +16438,20 @@ type Mutation {
 
     """The ID of the transaction. One of field id or token is required."""
     id: ID
+
+    """
+    Reason of the refund
+    
+    Added in Saleor 3.22.
+    """
+    refundReason: String
+
+    """
+    ID of a `Page` (Model) to reference in reason.
+    
+    Added in Saleor 3.22.
+    """
+    refundReasonReference: ID
 
     """The token of the transaction. One of field id or token is required."""
     token: UUID
@@ -15448,6 +16510,13 @@ type Mutation {
     The message related to the event. The maximum length is 512 characters; any text exceeding this limit will be truncated.
     """
     message: String
+
+    """
+    Details of the payment method used for the transaction.
+    
+    Added in Saleor 3.22.
+    """
+    paymentMethodDetails: PaymentMethodDetailsInput
 
     """PSP Reference of the event to report."""
     pspReference: String!
@@ -15703,7 +16772,7 @@ type Mutation {
   ): PageTranslate @doc(category: "Pages")
 
   """
-  Create a new page type. 
+  Creates a new page type. 
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -15713,7 +16782,7 @@ type Mutation {
   ): PageTypeCreate @doc(category: "Pages")
 
   """
-  Update page type. 
+  Updates page type. 
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -15726,7 +16795,7 @@ type Mutation {
   ): PageTypeUpdate @doc(category: "Pages")
 
   """
-  Delete a page type. 
+  Deletes a page type. 
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -15736,7 +16805,7 @@ type Mutation {
   ): PageTypeDelete @doc(category: "Pages")
 
   """
-  Delete page types. 
+  Deletes page types. 
   
   Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
   """
@@ -16035,7 +17104,7 @@ type Mutation {
   ): OrderGrantRefundUpdate @doc(category: "Orders")
 
   """
-  Create order lines for an order. 
+  Creates order lines for an order. 
   
   Requires one of the following permissions: MANAGE_ORDERS.
   """
@@ -16562,7 +17631,7 @@ type Mutation {
   ): GiftCardCreate @doc(category: "Gift cards") @webhookEventsInfo(asyncEvents: [GIFT_CARD_CREATED, NOTIFY_USER], syncEvents: [])
 
   """
-  Delete gift card. 
+  Deletes gift card. 
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   
@@ -16633,7 +17702,7 @@ type Mutation {
   ): GiftCardAddNote @doc(category: "Gift cards") @webhookEventsInfo(asyncEvents: [GIFT_CARD_UPDATED], syncEvents: [])
 
   """
-  Create gift cards. 
+  Creates gift cards. 
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   
@@ -16647,7 +17716,7 @@ type Mutation {
   ): GiftCardBulkCreate @doc(category: "Gift cards") @webhookEventsInfo(asyncEvents: [GIFT_CARD_CREATED, NOTIFY_USER], syncEvents: [])
 
   """
-  Delete gift cards. 
+  Deletes gift cards. 
   
   Requires one of the following permissions: MANAGE_GIFT_CARD.
   
@@ -17178,7 +18247,7 @@ type Mutation {
   ): CheckoutAddPromoCode @doc(category: "Checkout") @webhookEventsInfo(asyncEvents: [CHECKOUT_UPDATED], syncEvents: [])
 
   """
-  Update billing address in the existing checkout.
+  Updates billing address in the existing checkout.
   
   Triggers the following webhook events:
   - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -17264,7 +18333,7 @@ type Mutation {
     input: CheckoutCreateInput!
   ): CheckoutCreate @doc(category: "Checkout") @webhookEventsInfo(asyncEvents: [CHECKOUT_CREATED], syncEvents: [])
 
-  """Create new checkout from existing order."""
+  """Creates a new checkout from existing order."""
   checkoutCreateFromOrder(
     """ID of a order that will be used to create the checkout."""
     id: ID!
@@ -17453,7 +18522,7 @@ type Mutation {
     token: UUID @deprecated(reason: "Use `id` instead.")
   ): CheckoutRemovePromoCode @doc(category: "Checkout") @webhookEventsInfo(asyncEvents: [CHECKOUT_UPDATED], syncEvents: [])
 
-  """Create a new payment for given checkout."""
+  """Creates a new payment for given checkout."""
   checkoutPaymentCreate(
     """The ID of the checkout."""
     checkoutId: ID @deprecated(reason: "Use `id` instead.")
@@ -17469,7 +18538,7 @@ type Mutation {
   ): CheckoutPaymentCreate @doc(category: "Checkout")
 
   """
-  Update shipping address in the existing checkout.
+  Updates shipping address in the existing checkout.
   
   Triggers the following webhook events:
   - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -17538,7 +18607,7 @@ type Mutation {
   ): CheckoutDeliveryMethodUpdate @doc(category: "Checkout") @webhookEventsInfo(asyncEvents: [CHECKOUT_UPDATED], syncEvents: [SHIPPING_LIST_METHODS_FOR_CHECKOUT])
 
   """
-  Update language code in the existing checkout.
+  Updates language code in the existing checkout.
   
   Triggers the following webhook events:
   - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -17597,7 +18666,7 @@ type Mutation {
   ): OrderCreateFromCheckout @doc(category: "Orders") @webhookEventsInfo(asyncEvents: [ORDER_CREATED, NOTIFY_USER, NOTIFY_USER, ORDER_UPDATED, ORDER_PAID, ORDER_FULLY_PAID, ORDER_CONFIRMED], syncEvents: [SHIPPING_LIST_METHODS_FOR_CHECKOUT, CHECKOUT_FILTER_SHIPPING_METHODS, CHECKOUT_CALCULATE_TAXES])
 
   """
-  Creates new channel. 
+  Creates a new channel. 
   
   Requires one of the following permissions: MANAGE_CHANNELS.
   
@@ -17630,7 +18699,7 @@ type Mutation {
   ): ChannelUpdate @doc(category: "Channels") @webhookEventsInfo(asyncEvents: [CHANNEL_UPDATED, CHANNEL_METADATA_UPDATED], syncEvents: [])
 
   """
-  Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed. 
+  Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed. 
   
   Requires one of the following permissions: MANAGE_CHANNELS.
   
@@ -17871,7 +18940,7 @@ type Mutation {
   ): AttributeValueUpdate @doc(category: "Attributes") @webhookEventsInfo(asyncEvents: [ATTRIBUTE_VALUE_UPDATED, ATTRIBUTE_UPDATED], syncEvents: [])
 
   """
-  Creates/updates translations for attributes values. 
+  Creates/updates translations for attribute values. 
   
   Requires one of the following permissions: MANAGE_TRANSLATIONS.
   """
@@ -18007,7 +19076,7 @@ type Mutation {
   ): AppRetryInstall @doc(category: "Apps") @webhookEventsInfo(asyncEvents: [APP_INSTALLED], syncEvents: [])
 
   """
-  Delete failed installation. 
+  Deletes failed installation. 
   
   Requires one of the following permissions: MANAGE_APPS.
   """
@@ -18318,7 +19387,7 @@ type Mutation {
   ): AccountAddressUpdate @doc(category: "Users") @webhookEventsInfo(asyncEvents: [ADDRESS_UPDATED], syncEvents: [])
 
   """
-  Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+  Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
   
   Triggers the following webhook events:
   - ADDRESS_DELETED (async): An address was deleted.
@@ -18764,7 +19833,7 @@ input WebhookCreateInput @doc(category: "Webhooks") {
 }
 
 """
-Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated. 
+Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated. 
 
 Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
 """
@@ -18903,7 +19972,7 @@ enum WebhookTriggerErrorCode @doc(category: "Webhooks") {
 }
 
 """
-Creates new warehouse. 
+Creates a new warehouse. 
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -19026,7 +20095,7 @@ type WarehouseShippingZoneUnassign @doc(category: "Products") {
 }
 
 """
-Create a tax class. 
+Creates a tax class. 
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -19076,7 +20145,7 @@ input CountryRateInput @doc(category: "Taxes") {
 }
 
 """
-Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class. 
+Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class. 
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -19105,7 +20174,7 @@ enum TaxClassDeleteErrorCode @doc(category: "Taxes") {
 }
 
 """
-Update a tax class. 
+Updates a tax class. 
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -19163,7 +20232,7 @@ input CountryRateUpdateInput @doc(category: "Taxes") {
 }
 
 """
-Update tax configuration for a channel. 
+Updates tax configuration for a channel. 
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -19219,6 +20288,13 @@ input TaxConfigurationUpdateInput @doc(category: "Taxes") {
   removeCountriesConfiguration: [CountryCode!]
 
   """
+  Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines. Default value is `False`.Can be used only with `taxCalculationStrategy` set to `FLAT_RATES`.
+  
+  Added in Saleor 3.21.
+  """
+  useWeightedTaxForShipping: Boolean
+
+  """
   The tax app `App.identifier` that will be used to calculate the taxes for the given channel. Empty value for `TAX_APP` set as `taxCalculationStrategy` means that Saleor will iterate over all installed tax apps. If multiple tax apps exist with provided tax app id use the `App` with newest `created` date. It's possible to set plugin by using prefix `plugin:` with `PLUGIN_ID` e.g. with Avalara `plugin:mirumee.taxes.avalara`.Will become mandatory in 4.0 for `TAX_APP` `taxCalculationStrategy`.
   
   Added in Saleor 3.19.
@@ -19249,10 +20325,17 @@ input TaxConfigurationPerCountryInput @doc(category: "Taxes") {
   Added in Saleor 3.19.
   """
   taxAppId: String
+
+  """
+  Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines. Default value is `False`.Can be used only with `taxCalculationStrategy` set to `FLAT_RATES`.
+  
+  Added in Saleor 3.21.
+  """
+  useWeightedTaxForShipping: Boolean
 }
 
 """
-Update tax class rates for a specific country. 
+Updates tax class rates for a specific country. 
 
 Requires one of the following permissions: MANAGE_TAXES.
 """
@@ -19488,7 +20571,7 @@ type StaffNotificationRecipientUpdate @doc(category: "Users") {
 }
 
 """
-Delete staff notification recipient. 
+Deletes staff notification recipient. 
 
 Requires one of the following permissions: MANAGE_SETTINGS.
 """
@@ -19764,6 +20847,75 @@ input TimePeriodInputType {
 
   """The type of the period."""
   type: TimePeriodTypeEnum!
+}
+
+"""
+Update refund settings across all channels.
+
+Added in Saleor 3.22. 
+
+Requires one of the following permissions: MANAGE_SETTINGS.
+"""
+type RefundSettingsUpdate @doc(category: "Shop") {
+  """Refund settings."""
+  refundSettings: RefundSettings!
+  refundSettingsErrors: [RefundSettingsUpdateError!]! @deprecated(reason: "Use `errors` field instead.")
+  errors: [RefundSettingsUpdateError!]!
+}
+
+type RefundSettingsUpdateError @doc(category: "Shop") {
+  """
+  Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
+  """
+  field: String
+
+  """The error message."""
+  message: String
+
+  """Failed to update Refund Settings"""
+  code: RefundSettingsErrorCode!
+}
+
+enum RefundSettingsErrorCode @doc(category: "Shop") {
+  INVALID
+  REQUIRED
+  GRAPHQL_ERROR
+}
+
+input RefundSettingsUpdateInput @doc(category: "Shop") {
+  """
+  The ID of a model type, that will be used to reference refund reasons. All models with of this type will be accepted as refund reasons. 
+  
+  Added in Saleor 3.22.
+  """
+  refundReasonReferenceType: ID!
+}
+
+"""
+Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+
+Added in Saleor 3.22. 
+
+Requires one of the following permissions: MANAGE_SETTINGS.
+"""
+type RefundReasonReferenceTypeClear @doc(category: "Orders") {
+  """Refund settings."""
+  refundSettings: RefundSettings!
+  refundSettingsErrors: [RefundReasonReferenceTypeClearError!]! @deprecated(reason: "Use `errors` field instead.")
+  errors: [RefundReasonReferenceTypeClearError!]!
+}
+
+type RefundReasonReferenceTypeClearError @doc(category: "Shop") {
+  """
+  Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
+  """
+  field: String
+
+  """The error message."""
+  message: String
+
+  """Failed to clear refund reason reference type"""
+  code: RefundSettingsErrorCode!
 }
 
 """
@@ -20686,6 +21838,13 @@ input AttributeValueInput @doc(category: "Attributes") {
   """File content type."""
   contentType: String
 
+  """
+  ID of the referenced entity for single reference attribute.
+  
+  Added in Saleor 3.22.
+  """
+  reference: ID
+
   """List of entity IDs that will be used as references."""
   references: [ID!]
 
@@ -20990,6 +22149,13 @@ input BulkAttributeValueInput @doc(category: "Products") {
 
   """File content type."""
   contentType: String
+
+  """
+  ID of the referenced entity for single reference attribute.
+  
+  Added in Saleor 3.22.
+  """
+  reference: ID
 
   """List of entity IDs that will be used as references."""
   references: [ID!]
@@ -21558,7 +22724,7 @@ type DigitalContentDelete @doc(category: "Products") {
 }
 
 """
-Update digital content. 
+Updates digital content. 
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -21796,7 +22962,7 @@ type BulkProductError @doc(category: "Products") {
 }
 
 """
-Update multiple product variants. 
+Updates multiple product variants. 
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -21957,7 +23123,7 @@ type BulkStockError @doc(category: "Products") {
 }
 
 """
-Delete stocks from product variant. 
+Deletes stocks from product variant. 
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -21991,7 +23157,7 @@ enum StockErrorCode @doc(category: "Products") {
 }
 
 """
-Update stocks for product variant. 
+Updates stocks for product variant. 
 
 Requires one of the following permissions: MANAGE_PRODUCTS.
 """
@@ -22084,7 +23250,7 @@ input NameTranslationInput {
 }
 
 """
-Creates/updates translations for products variants. 
+Creates/updates translations for product variants. 
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 
@@ -22249,6 +23415,7 @@ enum PaymentErrorCode @doc(category: "Payments") {
   UNAVAILABLE_VARIANT_IN_CHANNEL
   NO_CHECKOUT_LINES
   CHECKOUT_COMPLETION_IN_PROGRESS
+  CHECKOUT_HAS_TRANSACTION
 }
 
 """
@@ -22341,7 +23508,7 @@ input MoneyInput {
 }
 
 """
-Create transaction for checkout or order. 
+Creates transaction for checkout or order. 
 
 Requires one of the following permissions: HANDLE_PAYMENTS.
 """
@@ -22415,6 +23582,63 @@ input TransactionCreateInput @doc(category: "Payments") {
   The url that will allow to redirect user to payment provider page with transaction event details.
   """
   externalUrl: String
+
+  """
+  Details of the payment method used for the transaction.
+  
+  Added in Saleor 3.22.
+  """
+  paymentMethodDetails: PaymentMethodDetailsInput
+}
+
+"""
+Details of the payment method used for the transaction. One of `card` or `other` is required.
+
+Added in Saleor 3.22.
+"""
+input PaymentMethodDetailsInput {
+  """Details of the card payment method used for the transaction."""
+  card: CardPaymentMethodDetailsInput
+
+  """Details of the non-card payment method used for this transaction."""
+  other: OtherPaymentMethodDetailsInput
+}
+
+input CardPaymentMethodDetailsInput {
+  """
+  Name of the payment method used for the transaction. Max length is 256 characters.
+  """
+  name: String!
+
+  """
+  Brand of the payment method used for the transaction. Max length is 40 characters.
+  """
+  brand: String
+
+  """
+  First digits of the card used for the transaction. Max length is 4 characters.
+  """
+  firstDigits: String
+
+  """
+  Last digits of the card used for the transaction. Max length is 4 characters.
+  """
+  lastDigits: String
+
+  """
+  Expiration month of the card used for the transaction. Value must be between 1 and 12.
+  """
+  expMonth: Int
+
+  """
+  Expiration year of the card used for the transaction. Value must be between 2000 and 9999.
+  """
+  expYear: Int
+}
+
+input OtherPaymentMethodDetailsInput {
+  """Name of the payment method used for the transaction."""
+  name: String!
 }
 
 input TransactionEventInput @doc(category: "Payments") {
@@ -22500,6 +23724,13 @@ input TransactionUpdateInput @doc(category: "Payments") {
   The url that will allow to redirect user to payment provider page with transaction event details.
   """
   externalUrl: String
+
+  """
+  Details of the payment method used for the transaction.
+  
+  Added in Saleor 3.22.
+  """
+  paymentMethodDetails: PaymentMethodDetailsInput
 }
 
 """
@@ -22527,6 +23758,7 @@ type TransactionRequestActionError @doc(category: "Payments") {
 
 enum TransactionRequestActionErrorCode @doc(category: "Payments") {
   INVALID
+  REQUIRED
   GRAPHQL_ERROR
   NOT_FOUND
   MISSING_TRANSACTION_ACTION_REQUEST_WEBHOOK
@@ -23126,7 +24358,7 @@ input PageTranslationInput {
 }
 
 """
-Create a new page type. 
+Creates a new page type. 
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -23148,7 +24380,7 @@ input PageTypeCreateInput @doc(category: "Pages") {
 }
 
 """
-Update page type. 
+Updates page type. 
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -23173,7 +24405,7 @@ input PageTypeUpdateInput @doc(category: "Pages") {
 }
 
 """
-Delete a page type. 
+Deletes a page type. 
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -23184,7 +24416,7 @@ type PageTypeDelete @doc(category: "Pages") {
 }
 
 """
-Delete page types. 
+Deletes page types. 
 
 Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
 """
@@ -23549,6 +24781,7 @@ Confirms an unconfirmed order by changing status to unfulfilled.
 Requires one of the following permissions: MANAGE_ORDERS.
 """
 type OrderConfirm @doc(category: "Orders") {
+  """Order which has been confirmed."""
   order: Order
   orderErrors: [OrderError!]! @deprecated(reason: "Use `errors` field instead.")
   errors: [OrderError!]!
@@ -23850,6 +25083,13 @@ input OrderGrantRefundCreateInput @doc(category: "Orders") {
   """Reason of the granted refund."""
   reason: String
 
+  """
+  ID of a `Page` (Model) to reference in reason.
+  
+  Added in Saleor 3.22.
+  """
+  reasonReference: ID
+
   """Lines to assign to granted refund."""
   lines: [OrderGrantRefundCreateLineInput!]
 
@@ -23950,6 +25190,13 @@ input OrderGrantRefundUpdateInput @doc(category: "Orders") {
   """Reason of the granted refund."""
   reason: String
 
+  """
+  ID of a `Page` (Model) to reference in reason.
+  
+  Added in Saleor 3.22.
+  """
+  reasonReference: ID
+
   """Lines to assign to granted refund."""
   addLines: [OrderGrantRefundUpdateLineAddInput!]
 
@@ -23981,7 +25228,7 @@ input OrderGrantRefundUpdateLineAddInput @doc(category: "Orders") {
 }
 
 """
-Create order lines for an order. 
+Creates order lines for an order. 
 
 Requires one of the following permissions: MANAGE_ORDERS.
 """
@@ -25270,7 +26517,7 @@ input PriceInput {
 }
 
 """
-Delete gift card. 
+Deletes gift card. 
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 
@@ -25398,7 +26645,7 @@ input GiftCardAddNoteInput @doc(category: "Gift cards") {
 }
 
 """
-Create gift cards. 
+Creates gift cards. 
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 
@@ -25433,7 +26680,7 @@ input GiftCardBulkCreateInput @doc(category: "Gift cards") {
 }
 
 """
-Delete gift cards. 
+Deletes gift cards. 
 
 Requires one of the following permissions: MANAGE_GIFT_CARD.
 
@@ -26842,7 +28089,7 @@ enum CheckoutErrorCode @doc(category: "Checkout") {
 }
 
 """
-Update billing address in the existing checkout.
+Updates billing address in the existing checkout.
 
 Triggers the following webhook events:
 - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -27019,7 +28266,7 @@ input CheckoutValidationRules @doc(category: "Checkout") {
   billingAddress: CheckoutAddressValidationRules
 }
 
-"""Create new checkout from existing order."""
+"""Creates a new checkout from existing order."""
 type CheckoutCreateFromOrder @doc(category: "Checkout") {
   """Variants that were not attached to the checkout."""
   unavailableVariants: [CheckoutCreateFromOrderUnavailableVariant!]
@@ -27222,7 +28469,7 @@ type CheckoutRemovePromoCode @doc(category: "Checkout") @webhookEventsInfo(async
   errors: [CheckoutError!]!
 }
 
-"""Create a new payment for given checkout."""
+"""Creates a new payment for given checkout."""
 type CheckoutPaymentCreate @doc(category: "Checkout") {
   """Related checkout object."""
   checkout: Checkout
@@ -27280,7 +28527,7 @@ enum StorePaymentMethodEnum @doc(category: "Payments") {
 }
 
 """
-Update shipping address in the existing checkout.
+Updates shipping address in the existing checkout.
 
 Triggers the following webhook events:
 - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -27320,7 +28567,7 @@ type CheckoutDeliveryMethodUpdate @doc(category: "Checkout") @webhookEventsInfo(
 }
 
 """
-Update language code in the existing checkout.
+Updates language code in the existing checkout.
 
 Triggers the following webhook events:
 - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -27390,7 +28637,7 @@ enum OrderCreateFromCheckoutErrorCode @doc(category: "Orders") {
 }
 
 """
-Creates new channel. 
+Creates a new channel. 
 
 Requires one of the following permissions: MANAGE_CHANNELS.
 
@@ -27575,6 +28822,27 @@ input PaymentSettingsInput @doc(category: "Payments") {
   Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
   """
   defaultTransactionFlowStrategy: TransactionFlowStrategyEnum
+
+  """
+  Determine if the funds for expired checkouts should be released automatically.
+  
+  Added in Saleor 3.20.
+  """
+  releaseFundsForExpiredCheckouts: Boolean
+
+  """
+  The time in hours after which funds for expired checkouts will be released.
+  
+  Added in Saleor 3.20.
+  """
+  checkoutTtlBeforeReleasingFunds: Hour
+
+  """
+  Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+  
+  Added in Saleor 3.20.
+  """
+  checkoutReleaseFundsCutOffDate: DateTime
 }
 
 """
@@ -27650,7 +28918,7 @@ input ChannelUpdateInput @doc(category: "Channels") {
 }
 
 """
-Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed. 
+Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed. 
 
 Requires one of the following permissions: MANAGE_CHANNELS.
 
@@ -27718,6 +28986,7 @@ Triggers the following webhook events:
 - ATTRIBUTE_CREATED (async): An attribute was created.
 """
 type AttributeCreate @doc(category: "Attributes") @webhookEventsInfo(asyncEvents: [ATTRIBUTE_CREATED], syncEvents: []) {
+  """The created attribute."""
   attribute: Attribute
   attributeErrors: [AttributeError!]! @deprecated(reason: "Use `errors` field instead.")
   errors: [AttributeError!]!
@@ -27797,6 +29066,15 @@ input AttributeCreateInput @doc(category: "Attributes") {
 
   """External ID of this attribute."""
   externalReference: String
+
+  """
+  Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+  
+  A maximum of 100 reference types can be specified.
+  
+  Added in Saleor 3.22.
+  """
+  referenceTypes: [ID!]
 }
 
 input AttributeValueCreateInput @doc(category: "Attributes") {
@@ -27853,6 +29131,7 @@ Triggers the following webhook events:
 - ATTRIBUTE_UPDATED (async): An attribute was updated.
 """
 type AttributeUpdate @doc(category: "Attributes") @webhookEventsInfo(asyncEvents: [ATTRIBUTE_UPDATED], syncEvents: []) {
+  """The updated attribute."""
   attribute: Attribute
   attributeErrors: [AttributeError!]! @deprecated(reason: "Use `errors` field instead.")
   errors: [AttributeError!]!
@@ -27904,6 +29183,15 @@ input AttributeUpdateInput @doc(category: "Attributes") {
 
   """External ID of this product."""
   externalReference: String
+
+  """
+  Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+  
+  A maximum of 100 reference types can be specified.
+  
+  Added in Saleor 3.22.
+  """
+  referenceTypes: [ID!]
 }
 
 input AttributeValueUpdateInput @doc(category: "Attributes") {
@@ -28196,7 +29484,7 @@ type AttributeValueUpdate @doc(category: "Attributes") @webhookEventsInfo(asyncE
 }
 
 """
-Creates/updates translations for attributes values. 
+Creates/updates translations for attribute values. 
 
 Requires one of the following permissions: MANAGE_TRANSLATIONS.
 """
@@ -28461,7 +29749,7 @@ type AppRetryInstall @doc(category: "Apps") @webhookEventsInfo(asyncEvents: [APP
 }
 
 """
-Delete failed installation. 
+Deletes failed installation. 
 
 Requires one of the following permissions: MANAGE_APPS.
 """
@@ -28986,7 +30274,7 @@ type AccountAddressUpdate @doc(category: "Users") @webhookEventsInfo(asyncEvents
 }
 
 """
-Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
 
 Triggers the following webhook events:
 - ADDRESS_DELETED (async): An address was deleted.
@@ -29023,11 +30311,12 @@ Triggers the following webhook events:
 - ACCOUNT_CONFIRMATION_REQUESTED (async): An user confirmation was requested. This event is always sent regardless of settings.
 """
 type AccountRegister @doc(category: "Users") @webhookEventsInfo(asyncEvents: [CUSTOMER_CREATED, NOTIFY_USER, ACCOUNT_CONFIRMATION_REQUESTED], syncEvents: []) {
+  user: User @deprecated(reason: "The field always returns a `User` object constructed from the input data. The `user.id` is always empty. To determine whether the user exists in Saleor, query via an external app with the required permissions.")
+
   """Informs whether users need to confirm their email address."""
   requiresConfirmation: Boolean
   accountErrors: [AccountError!]! @deprecated(reason: "Use `errors` field instead.")
   errors: [AccountError!]!
-  user: User
 }
 
 """Fields required to create a user."""
@@ -29996,6 +31285,20 @@ type Subscription @doc(category: "Miscellaneous") {
   ): CheckoutFullyPaid @doc(category: "Checkout")
 
   """
+  Event sent when checkout is fully authorized.
+  
+  Added in Saleor 3.21.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  checkoutFullyAuthorized(
+    """
+    List of channel slugs. The event will be sent only if the object belongs to one of the provided channels. If the channel slug list is empty, objects that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): CheckoutFullyAuthorized @doc(category: "Checkout")
+
+  """
   Event sent when checkout metadata is updated.
   
   Added in Saleor 3.21.
@@ -30335,9 +31638,33 @@ type CheckoutUpdated implements Event @doc(category: "Checkout") {
 }
 
 """
-Event sent when checkout is fully paid with transactions. The checkout is considered as fully paid when the checkout `charge_status` is `FULL` or `OVERCHARGED`. The event is not sent when the checkout authorization flow strategy is used.
+Event sent when a checkout was fully paid. A checkout is considered fully paid when its `chargeStatus` is `FULL` or `OVERCHARGED`. This event is not sent if payments are only authorized but not fully charged.
+
+It is triggered only for checkouts whose payments are processed through the Transaction API.
 """
 type CheckoutFullyPaid implements Event @doc(category: "Checkout") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The checkout the event relates to."""
+  checkout: Checkout
+}
+
+"""
+Event sent when a checkout was fully authorized. A checkout is considered fully authorized when its `authorizeStatus` is `FULL`.
+
+It is triggered only for checkouts whose payments are processed through the Transaction API.
+"""
+type CheckoutFullyAuthorized implements Event @doc(category: "Checkout") {
   """Time of the event."""
   issuedAt: DateTime
 
@@ -33490,11 +34817,367 @@ type PaymentMethodProcessTokenizationSession implements Event @doc(category: "Pa
   id: String!
 }
 
+"""
+Represents a card payment method used for a transaction.
+
+Added in Saleor 3.22.
+"""
+type CardPaymentMethodDetails implements PaymentMethodDetails {
+  """Name of the payment method."""
+  name: String!
+
+  """Card brand."""
+  brand: String
+
+  """First 4 digits of the card number."""
+  firstDigits: String
+
+  """Last 4 digits of the card number."""
+  lastDigits: String
+
+  """Two-digit number representing the card’s expiration month."""
+  expMonth: Int
+
+  """Four-digit number representing the card’s expiration year."""
+  expYear: Int
+}
+
+"""
+Represents a payment method used for a transaction.
+
+Added in Saleor 3.22.
+"""
+type OtherPaymentMethodDetails implements PaymentMethodDetails {
+  """Name of the payment method."""
+  name: String!
+}
+
+"""
+Represents a numeric value of an attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedNumericAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned numeric value."""
+  value: Float
+}
+
+"""
+Represents text attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedTextAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned rich text content."""
+  value: JSON
+
+  """Translation of the rich text content in the specified language."""
+  translation(languageCode: LanguageCodeEnum!): JSON
+}
+
+"""
+Represents plain text attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedPlainTextAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned plain text content."""
+  value: String
+
+  """Translation of the plain text content in the specified language."""
+  translation(languageCode: LanguageCodeEnum!): String
+}
+
+"""
+Represents file attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedFileAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned file."""
+  value: File
+}
+
+"""
+Represents a single choice attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedSingleChoiceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned choice value."""
+  value: AssignedChoiceAttributeValue
+}
+
+"""
+Represents a single choice value of the attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedChoiceAttributeValue @doc(category: "Attributes") {
+  """Name of a value displayed in the interface."""
+  name: String
+
+  """Internal representation of a value (unique per attribute)."""
+  slug: String
+
+  """Translation of the name."""
+  translation(languageCode: LanguageCodeEnum!): String
+}
+
+"""
+Represents a multi choice attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedMultiChoiceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """List of assigned choice values."""
+  value(
+    """Maximum number of choices to return. Default is 100."""
+    limit: PositiveInt = 100
+  ): [AssignedChoiceAttributeValue!]!
+}
+
+"""
+Represents a swatch attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedSwatchAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned swatch value."""
+  value: AssignedSwatchAttributeValue
+}
+
+"""
+Represents a single swatch value.
+
+Added in Saleor 3.22.
+"""
+type AssignedSwatchAttributeValue @doc(category: "Attributes") {
+  """Name of the selected swatch value."""
+  name: String
+
+  """Slug of the selected swatch value."""
+  slug: String
+
+  """Hex color code."""
+  hexColor: String
+
+  """File associated with the attribute."""
+  file: File
+}
+
+"""
+Represents a boolean attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedBooleanAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned boolean value."""
+  value: Boolean
+}
+
+"""
+Represents a date attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedDateAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned date value."""
+  value: Date
+}
+
+"""
+Represents a date time attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedDateTimeAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned date time value."""
+  value: DateTime
+}
+
+"""
+Represents single page reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedSinglePageReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned page reference."""
+  value: Page
+}
+
+"""
+Represents single product reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedSingleProductReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned product reference."""
+  value: Product
+}
+
+"""
+Represents single product variant reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedSingleProductVariantReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned product variant reference."""
+  value: ProductVariant
+}
+
+"""
+Represents single category reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedSingleCategoryReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned category reference."""
+  value: Category
+}
+
+"""
+Represents single collection reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedSingleCollectionReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """The assigned collection reference."""
+  value: Collection
+}
+
+"""
+Represents multi page reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedMultiPageReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """List of assigned page references."""
+  value(
+    """Maximum number of referenced pages to return. Default is 100."""
+    limit: PositiveInt = 100
+  ): [Page!]!
+}
+
+"""
+Represents multi product reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedMultiProductReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """List of assigned product references."""
+  value(
+    """Maximum number of referenced products to return. Default is 100."""
+    limit: PositiveInt = 100
+  ): [Product!]!
+}
+
+"""
+Represents multi product variant reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedMultiProductVariantReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """List of assigned product variant references."""
+  value(
+    """
+    Maximum number of referenced product variants to return. Default is 100.
+    """
+    limit: PositiveInt = 100
+  ): [ProductVariant!]!
+}
+
+"""
+Represents multi category reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedMultiCategoryReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """List of assigned category references."""
+  value(
+    """Maximum number of referenced categories to return. Default is 100."""
+    limit: PositiveInt = 100
+  ): [Category!]!
+}
+
+"""
+Represents multi collection reference attribute.
+
+Added in Saleor 3.22.
+"""
+type AssignedMultiCollectionReferenceAttribute implements AssignedAttribute @doc(category: "Attributes") {
+  """Attribute assigned to an object."""
+  attribute: Attribute!
+
+  """List of assigned collection references."""
+  value(
+    """Maximum number of referenced collections to return. Default is 100"""
+    limit: PositiveInt = 100
+  ): [Collection!]!
+}
+
 """_Any value scalar as defined by Federation spec."""
 scalar _Any
 
 """_Entity union as defined by Federation spec."""
-union _Entity = App | Address | User | Group | ProductVariant | Product | ProductType | ProductMedia | Category | Collection | Order | PageType
+union _Entity = App | PageType | Address | User | Group | ProductVariant | Product | ProductType | ProductMedia | Category | Collection | Order
 
 """_Service manifest as defined by Federation spec."""
 type _Service {

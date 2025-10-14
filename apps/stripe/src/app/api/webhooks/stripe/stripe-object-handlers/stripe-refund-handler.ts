@@ -169,6 +169,7 @@ export class StripeRefundHandler {
             saleorMoney,
             timestamp,
             externalUrl: generateRefundStripeDashboardUrl(refundId, stripeEnv),
+            paymentMethodDetails: null, // there is no payment method details in refund event
           }),
         );
       }

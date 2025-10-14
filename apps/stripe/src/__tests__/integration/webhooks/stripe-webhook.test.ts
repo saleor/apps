@@ -6,6 +6,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
+  mockedSaleorSchemaVersion,
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
@@ -154,6 +155,7 @@ describe("Stripe Webhook: integration", () => {
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersion,
       }),
     );
 

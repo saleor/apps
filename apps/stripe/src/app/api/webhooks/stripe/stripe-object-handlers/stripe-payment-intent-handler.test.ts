@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedPaymentIntentAmountCapturableUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-amount-capturable-updated";
@@ -30,6 +31,7 @@ describe("StripePaymentIntentHandler", () => {
       transactionRecorder: mockTransactionRecorder,
       appId: "appId",
       saleorApiUrl: mockedSaleorApiUrl,
+      stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
@@ -66,6 +68,7 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
           const { type, amount, pspReference, time } = result
@@ -116,6 +119,7 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
           const { type, amount, pspReference, time } = result
@@ -168,6 +172,7 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
           const { type, amount, pspReference, time } = result
@@ -218,6 +223,7 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
           const { type, amount, pspReference, time } = result
@@ -268,6 +274,7 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
           const { type, amount, pspReference, time } = result
@@ -318,6 +325,7 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
           const { type, amount, pspReference, time } = result
