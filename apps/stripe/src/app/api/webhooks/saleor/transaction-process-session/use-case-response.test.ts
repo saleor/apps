@@ -288,6 +288,201 @@ describe("TransactionProcessSessionUseCaseResponses", () => {
       `);
     });
 
+    it("getResponse() returns valid Response with card payment method details when transactionResult is ChargeActionRequired", async () => {
+      const saleorPaymentMethodDetails = SaleorPaymentMethodDetails.createFromStripe(
+        mockedStripeCardPaymentMethod,
+      )._unsafeUnwrap();
+
+      const transactionResult = new ChargeActionRequiredResult(
+        createStripePaymentIntentStatus("requires_action"),
+      );
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorMoney: getMockedSaleorMoney(),
+        transactionResult,
+        timestamp: null,
+        appContext: {
+          stripeEnv: "LIVE",
+        },
+        saleorPaymentMethodDetails,
+      });
+      const fetchResponse = response.getResponse();
+
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [
+            "CANCEL",
+          ],
+          "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+          "message": "Payment intent requires action",
+          "paymentMethodDetails": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+            "type": "CARD",
+          },
+          "pspReference": "pi_TEST_TEST_TEST",
+          "result": "CHARGE_ACTION_REQUIRED",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with card payment method details when transactionResult is AuthorizationActionRequired", async () => {
+      const saleorPaymentMethodDetails = SaleorPaymentMethodDetails.createFromStripe(
+        mockedStripeCardPaymentMethod,
+      )._unsafeUnwrap();
+
+      const transactionResult = new AuthorizationActionRequiredResult(
+        createStripePaymentIntentStatus("requires_action"),
+      );
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorMoney: getMockedSaleorMoney(),
+        transactionResult,
+        timestamp: null,
+        appContext: {
+          stripeEnv: "LIVE",
+        },
+        saleorPaymentMethodDetails,
+      });
+      const fetchResponse = response.getResponse();
+
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [
+            "CANCEL",
+          ],
+          "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+          "message": "Payment intent requires action",
+          "paymentMethodDetails": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+            "type": "CARD",
+          },
+          "pspReference": "pi_TEST_TEST_TEST",
+          "result": "AUTHORIZATION_ACTION_REQUIRED",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with card payment method details when transactionResult is ChargeRequest", async () => {
+      const saleorPaymentMethodDetails = SaleorPaymentMethodDetails.createFromStripe(
+        mockedStripeCardPaymentMethod,
+      )._unsafeUnwrap();
+
+      const transactionResult = new ChargeRequestResult();
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorMoney: getMockedSaleorMoney(),
+        transactionResult,
+        timestamp: null,
+        appContext: {
+          stripeEnv: "LIVE",
+        },
+        saleorPaymentMethodDetails,
+      });
+      const fetchResponse = response.getResponse();
+
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [],
+          "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+          "message": "Payment intent is processing",
+          "paymentMethodDetails": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+            "type": "CARD",
+          },
+          "pspReference": "pi_TEST_TEST_TEST",
+          "result": "CHARGE_REQUEST",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response with card payment method details when transactionResult is AuthorizationRequest", async () => {
+      const saleorPaymentMethodDetails = SaleorPaymentMethodDetails.createFromStripe(
+        mockedStripeCardPaymentMethod,
+      )._unsafeUnwrap();
+
+      const transactionResult = new AuthorizationRequestResult();
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorMoney: getMockedSaleorMoney(),
+        transactionResult,
+        timestamp: null,
+        appContext: {
+          stripeEnv: "LIVE",
+        },
+        saleorPaymentMethodDetails,
+      });
+      const fetchResponse = response.getResponse();
+
+      expect(fetchResponse.status).toBe(200);
+      expect(await fetchResponse.json()).toMatchInlineSnapshot(`
+        {
+          "actions": [],
+          "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+          "message": "Payment intent is processing",
+          "paymentMethodDetails": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+            "type": "CARD",
+          },
+          "pspReference": "pi_TEST_TEST_TEST",
+          "result": "AUTHORIZATION_REQUEST",
+        }
+      `);
+    });
+
+    it("getResponse() returns valid Response without paymentMethodDetails field when saleorPaymentMethodDetails is null", async () => {
+      const transactionResult = new ChargeSuccessResult();
+      const response = new TransactionProcessSessionUseCaseResponses.Success({
+        stripePaymentIntentId: mockedStripePaymentIntentId,
+        saleorMoney: getMockedSaleorMoney(),
+        transactionResult,
+        timestamp: null,
+        appContext: {
+          stripeEnv: "LIVE",
+        },
+        saleorPaymentMethodDetails: null,
+      });
+      const fetchResponse = response.getResponse();
+      const jsonResponse = await fetchResponse.json();
+
+      expect(fetchResponse.status).toBe(200);
+      expect(jsonResponse).not.toHaveProperty("paymentMethodDetails");
+      expect(jsonResponse).toMatchInlineSnapshot(`
+        {
+          "actions": [
+            "REFUND",
+          ],
+          "amount": 10,
+          "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
+          "message": "Payment intent has been successful",
+          "pspReference": "pi_TEST_TEST_TEST",
+          "result": "CHARGE_SUCCESS",
+        }
+      `);
+    });
+
     describe("Failure", () => {
       it("getResponse() returns valid Response with status 200 and message with error reason and additional information inside data object if transactionResult is ChargeFailure", async () => {
         const transactionResult = new ChargeFailureResult();
