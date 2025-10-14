@@ -1,9 +1,15 @@
+import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+import { err, ok } from "neverthrow";
 import Stripe from "stripe";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
+import {
+  mockedStripeCardPaymentMethod,
+  mockedStripeOtherPaymentMethod,
+} from "@/__tests__/mocks/mocked-stripe-payment-method";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedPaymentIntentAmountCapturableUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-amount-capturable-updated";
@@ -13,10 +19,26 @@ import { getMockedPaymentIntentProcessingEvent } from "@/__tests__/mocks/stripe-
 import { getMockedPaymentIntentRequiresActionEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-requires-action";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
 import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
+import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 
 import { StripePaymentIntentHandler } from "./stripe-payment-intent-handler";
 
 describe("StripePaymentIntentHandler", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // Default mock for getPaymentIntent used in getPaymentMethodDetails
+    vi.mocked(mockedStripePaymentIntentsApi.getPaymentIntent).mockResolvedValue(
+      ok({
+        id: mockedStripePaymentIntentId,
+        payment_method: mockedStripeCardPaymentMethod,
+      } as Stripe.PaymentIntent),
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("should return NotSupportedEventError for unsupported event", async () => {
     const mockTransactionRecorder = new MockedTransactionRecorder();
     const event = {
@@ -340,6 +362,152 @@ describe("StripePaymentIntentHandler", () => {
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
         },
       );
+    });
+  });
+
+  describe("getPaymentMethodDetails", () => {
+    describe("when Saleor version is compatible (>= 3.22)", () => {
+      const compatibleVersion: SaleorSchemaVersion = [3, 22];
+
+      it("returns SaleorPaymentMethodDetails when payment intent has card payment method", async () => {
+        const mockPaymentIntent: Stripe.PaymentIntent = {
+          id: mockedStripePaymentIntentId,
+          payment_method: mockedStripeCardPaymentMethod,
+        } as Stripe.PaymentIntent;
+
+        vi.mocked(mockedStripePaymentIntentsApi.getPaymentIntent).mockResolvedValue(
+          ok(mockPaymentIntent),
+        );
+
+        const handler = new StripePaymentIntentHandler();
+        const result = await handler["getPaymentMethodDetails"](
+          compatibleVersion,
+          mockedStripePaymentIntentsApi,
+          mockedStripePaymentIntentId,
+        );
+
+        expect(mockedStripePaymentIntentsApi.getPaymentIntent).toHaveBeenCalledWith({
+          id: mockedStripePaymentIntentId,
+        });
+        expect(result).toBeInstanceOf(SaleorPaymentMethodDetails);
+      });
+
+      it("returns SaleorPaymentMethodDetails when payment intent has other payment method", async () => {
+        const mockPaymentIntent: Stripe.PaymentIntent = {
+          id: mockedStripePaymentIntentId,
+          payment_method: mockedStripeOtherPaymentMethod,
+        } as Stripe.PaymentIntent;
+
+        vi.mocked(mockedStripePaymentIntentsApi.getPaymentIntent).mockResolvedValue(
+          ok(mockPaymentIntent),
+        );
+
+        const handler = new StripePaymentIntentHandler();
+        const result = await handler["getPaymentMethodDetails"](
+          compatibleVersion,
+          mockedStripePaymentIntentsApi,
+          mockedStripePaymentIntentId,
+        );
+
+        expect(mockedStripePaymentIntentsApi.getPaymentIntent).toHaveBeenCalledWith({
+          id: mockedStripePaymentIntentId,
+        });
+        expect(result).toBeInstanceOf(SaleorPaymentMethodDetails);
+      });
+
+      it("returns null when API call fails to fetch payment intent", async () => {
+        vi.mocked(mockedStripePaymentIntentsApi.getPaymentIntent).mockResolvedValue(
+          err(new Error("API error")),
+        );
+
+        const handler = new StripePaymentIntentHandler();
+        const result = await handler["getPaymentMethodDetails"](
+          compatibleVersion,
+          mockedStripePaymentIntentsApi,
+          mockedStripePaymentIntentId,
+        );
+
+        expect(mockedStripePaymentIntentsApi.getPaymentIntent).toHaveBeenCalledWith({
+          id: mockedStripePaymentIntentId,
+        });
+        expect(result).toBeNull();
+      });
+
+      it("returns null when payment method is null", async () => {
+        const mockPaymentIntent: Stripe.PaymentIntent = {
+          id: mockedStripePaymentIntentId,
+          payment_method: null,
+        } as Stripe.PaymentIntent;
+
+        vi.mocked(mockedStripePaymentIntentsApi.getPaymentIntent).mockResolvedValue(
+          ok(mockPaymentIntent),
+        );
+
+        const handler = new StripePaymentIntentHandler();
+        const result = await handler["getPaymentMethodDetails"](
+          compatibleVersion,
+          mockedStripePaymentIntentsApi,
+          mockedStripePaymentIntentId,
+        );
+
+        expect(mockedStripePaymentIntentsApi.getPaymentIntent).toHaveBeenCalledWith({
+          id: mockedStripePaymentIntentId,
+        });
+        expect(result).toBeNull();
+      });
+
+      it("returns null when payment method is a string (not expanded)", async () => {
+        const mockPaymentIntent: Stripe.PaymentIntent = {
+          id: mockedStripePaymentIntentId,
+          payment_method: "pm_123456789",
+        } as Stripe.PaymentIntent;
+
+        vi.mocked(mockedStripePaymentIntentsApi.getPaymentIntent).mockResolvedValue(
+          ok(mockPaymentIntent),
+        );
+
+        const handler = new StripePaymentIntentHandler();
+        const result = await handler["getPaymentMethodDetails"](
+          compatibleVersion,
+          mockedStripePaymentIntentsApi,
+          mockedStripePaymentIntentId,
+        );
+
+        expect(mockedStripePaymentIntentsApi.getPaymentIntent).toHaveBeenCalledWith({
+          id: mockedStripePaymentIntentId,
+        });
+        expect(result).toBeNull();
+      });
+    });
+
+    describe("when Saleor version is incompatible (< 3.22)", () => {
+      const incompatibleVersion: SaleorSchemaVersion = [3, 21];
+
+      it("returns null without calling API", async () => {
+        const handler = new StripePaymentIntentHandler();
+        const result = await handler["getPaymentMethodDetails"](
+          incompatibleVersion,
+          mockedStripePaymentIntentsApi,
+          mockedStripePaymentIntentId,
+        );
+
+        expect(mockedStripePaymentIntentsApi.getPaymentIntent).not.toHaveBeenCalled();
+        expect(result).toBeNull();
+      });
+
+      it("returns null for version 3.20", async () => {
+        const olderVersion: SaleorSchemaVersion = [3, 20];
+
+        const handler = new StripePaymentIntentHandler();
+        const result = await handler["getPaymentMethodDetails"](
+          olderVersion,
+          mockedStripePaymentIntentsApi,
+          mockedStripePaymentIntentId,
+        );
+
+        expect(mockedStripePaymentIntentsApi.getPaymentIntent).not.toHaveBeenCalled();
+        expect(result).toBeNull();
+      });
     });
   });
 });
