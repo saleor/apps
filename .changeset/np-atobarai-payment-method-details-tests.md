@@ -1,10 +1,10 @@
 ---
-"saleor-app-payment-np-atobarai": patch
+"saleor-app-payment-np-atobarai": minor
 ---
 
-Add comprehensive unit tests for payment method details functionality:
+Add support for payment method details in transaction events. The NP Atobarai app now includes payment method information when reporting transaction events to Saleor. This feature is available for Saleor 3.22+ and includes:
 
-- Add unit tests for `SaleorPaymentMethodDetails` class with snapshot testing to verify correct payment method structure
-- Add test coverage for transaction-initialize-session responses with payment method details (both null and non-null cases)
-- Add test coverage for transaction-process-session responses with payment method details (both null and non-null cases)
-- Convert inline comments to JSDoc format in `SaleorPaymentMethodDetails` class for better documentation
+- New `SaleorPaymentMethodDetails` class for formatting NP Atobarai payment method data to Saleor format
+- Payment method details included in transaction-initialize-session webhook responses
+- Payment method details included in transaction-process-session webhook responses
+- Comprehensive unit test coverage with snapshot testing to ensure correct payment method structure

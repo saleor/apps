@@ -48,6 +48,7 @@ describe("TransactionRefundRequestedUseCase", () => {
 
     const result = await useCase.execute({
       appId: mockedSaleorAppId,
+      // @ts-expect-error - testing invalid input
       event,
       saleorApiUrl: mockedSaleorApiUrl,
     });
