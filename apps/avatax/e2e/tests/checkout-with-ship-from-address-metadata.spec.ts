@@ -1,12 +1,10 @@
 import { e2e } from "pactum";
 import { describe, it } from "vitest";
 
-import { envE2e } from "../env-e2e";
 import {
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
   CreateCheckout,
-  StaffUserTokenCreate,
   UpdatePrivateMetadata,
 } from "../generated/graphql";
 import { getCompleteMoney } from "../utils/money";
@@ -16,11 +14,6 @@ describe("App should use shipFrom address from private metadata TC: AVATAX_SHIP_
   const testCase = e2e(
     "Checkout with avataxShipFromAddress private metadata [pricesEnteredWithTax: True]",
   );
-
-  const staffCredentials = {
-    email: envE2e.E2E_USER_NAME as string,
-    password: envE2e.E2E_USER_PASSWORD as string,
-  };
 
   const shipFromAddressMetadata = [
     {
@@ -47,25 +40,6 @@ describe("App should use shipFrom address from private metadata TC: AVATAX_SHIP_
   const TOTAL_GROSS_PRICE_AFTER_SHIPPING = 84.31;
   const TOTAL_NET_PRICE_AFTER_SHIPPING = 77.43;
   const TOTAL_TAX_PRICE_AFTER_SHIPPING = 6.88;
-
-  it("creates token for staff user", async () => {
-    await testCase
-      .step("Create token for staff user")
-      .spec()
-      .post("/graphql/")
-      .withGraphQLQuery(StaffUserTokenCreate)
-      .withGraphQLVariables(staffCredentials)
-      .expectStatus(200)
-      .expectJsonLike({
-        data: {
-          tokenCreate: {
-            token: "typeof $V === 'string'",
-          },
-        },
-      })
-      .stores("StaffUserToken", "data.tokenCreate.token")
-      .retry();
-  });
 
   it("should have created a checkout", async () => {
     await testCase
@@ -102,9 +76,6 @@ describe("App should use shipFrom address from private metadata TC: AVATAX_SHIP_
       .withGraphQLVariables({
         id: "$S{CheckoutId}",
         input: shipFromAddressMetadata,
-      })
-      .withHeaders({
-        Authorization: "Bearer $S{StaffUserToken}",
       })
       .expectStatus(200)
       .expectJson("data.updatePrivateMetadata.item.privateMetadata", shipFromAddressMetadata);
