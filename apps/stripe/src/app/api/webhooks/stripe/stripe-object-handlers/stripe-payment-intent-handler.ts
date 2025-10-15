@@ -147,7 +147,7 @@ export class StripePaymentIntentHandler {
         getPaymentIntentResult.value.payment_method,
       );
 
-      return paymentMethodDetailsResult.map((details) => details).unwrapOr(null);
+      return paymentMethodDetailsResult.unwrapOr(null);
     }
 
     return null;

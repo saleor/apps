@@ -189,9 +189,7 @@ export class TransactionProcessSessionUseCase {
         appContext: appContextContainer.getContextValue(),
         saleorPaymentMethodDetails: SaleorPaymentMethodDetails.createFromStripe(
           getPaymentIntentResult.value.payment_method,
-        )
-          .map((details) => details)
-          .unwrapOr(null),
+        ).unwrapOr(null),
       }),
     );
   }
