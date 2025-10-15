@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.23.17
+
+### Patch Changes
+
+- f430bdcf: Map multi-value attributes as arrays instead of comma-separated strings in Algolia indexing. They should be properly represented in Algolia now
+
 ## 1.23.16
 
 ### Patch Changes

@@ -112,6 +112,11 @@ static ValidationError = BaseError.subclass("ValidationError", {
 3. **Type Safety**: All apps use strict TypeScript - ensure no `any` types
 4. **Testing**: Write unit tests alongside features, E2E tests for critical workflows
 5. **Linting**: Code must pass ESLint rules including custom app-specific rules like `n/no-process-env`
+6. **Changeset**: Functional changes, like new features or fixes should have changeset attached. Do not attach it if code changes do not have visible impact to the user, like refactor. To run changeset: 
+    - Execute `pnpm changeset add` from root directory
+    - Select affected app(s) or package(s)
+    - If many changes applied in single commit, create multiple changesets
+    - Ensure changeset has a good value, describing what was the actual change. It should be less technical than the commit. Best if it has before/after described.
 
 ## App-Specific Notes
 

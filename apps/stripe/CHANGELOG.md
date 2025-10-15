@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.2.2
+
+### Patch Changes
+
+- 22c28c1f: Removed unnecessary error logs that printed all non-ok responses from tRPC in the main Procedure. That is not necessary because main tRPC config already prints errors from 500 status errors. Now only one error will be logged if necessary
+
 ## 2.2.1
 
 ### Patch Changes
