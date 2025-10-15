@@ -1,10 +1,11 @@
+import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import { describe, expect, it } from "vitest";
 
 import { SaleorVersionCompatibilityValidator } from "./saleor-version-compatibility-validator";
 
 describe("SaleorVersionCompatibilityValidator", () => {
   describe("isSaleorCompatible", () => {
-    it.each<[string, [number, number]]>([
+    it.each<[string, SaleorSchemaVersion]>([
       [">=3.10 <4", [3, 12]],
       [">=3.10 <4", [3, 999]],
       [">=3.10", [4, 0]],
@@ -28,7 +29,7 @@ describe("SaleorVersionCompatibilityValidator", () => {
       },
     );
 
-    it.each<[string, [number, number]]>([
+    it.each<[string, SaleorSchemaVersion]>([
       [">=3.10 <4", [4, 0]],
       [">3.10 <4", [3, 10]],
       [">3.10", [3, 10]],
@@ -46,7 +47,7 @@ describe("SaleorVersionCompatibilityValidator", () => {
   });
 
   describe("isValid", () => {
-    it.each<[string, string]>([
+    it.each([
       [">=3.10 <4", "3.12.0"],
       [">=3.10 <4", "3.999.0"],
       [">=3.10", "4.0.0"],
@@ -69,7 +70,7 @@ describe("SaleorVersionCompatibilityValidator", () => {
       },
     );
 
-    it.each<[string, string]>([
+    it.each([
       [">=3.10 <4", "4.0.0"],
       [">3.10 <4", "3.10.0"],
       [">3.10", "3.10.0"],
@@ -87,7 +88,7 @@ describe("SaleorVersionCompatibilityValidator", () => {
   });
 
   describe("validateOrThrow", () => {
-    it.each<[string, string]>([
+    it.each([
       [">=3.10 <4", "3.12.0"],
       [">=3.10 <4", "3.999.0"],
       [">=3.10", "4.0.0"],
@@ -108,7 +109,7 @@ describe("SaleorVersionCompatibilityValidator", () => {
       },
     );
 
-    it.each<[string, string]>([
+    it.each([
       [">=3.10 <4", "4.0.0"],
       [">3.10 <4", "3.10.0"],
       [">3.10", "3.10.0"],
