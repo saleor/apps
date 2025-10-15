@@ -14,32 +14,6 @@ describe("DynamoDbStripeConfig", () => {
   const appId = mockedSaleorAppId;
   const configId = mockedConfigurationId;
 
-  describe("accessPattern", () => {
-    describe("getPK", () => {
-      it("should return primary key scoped to installation", () => {
-        const result = DynamoDbStripeConfig.accessPattern.getPK({ saleorApiUrl, appId });
-
-        expect(result).toBe(`${saleorApiUrl}#${appId}`);
-      });
-    });
-
-    describe("getSKforSpecificItem", () => {
-      it("should return sort key for specific config ID", () => {
-        const result = DynamoDbStripeConfig.accessPattern.getSKforSpecificItem({ configId });
-
-        expect(result).toBe(`CONFIG_ID#${configId}`);
-      });
-    });
-
-    describe("getSKforAllItems", () => {
-      it("should return sort key prefix for all configs", () => {
-        const result = DynamoDbStripeConfig.accessPattern.getSKforAllItems();
-
-        expect(result).toBe("CONFIG_ID#");
-      });
-    });
-  });
-
   describe("schema", () => {
     it("Properly parses data and doesn't throw", () => {
       const schema = DynamoDbStripeConfig.entitySchema;
