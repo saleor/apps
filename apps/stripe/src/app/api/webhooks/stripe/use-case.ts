@@ -361,17 +361,20 @@ export class StripeWebhookUseCase {
       return err(new StripeWebhookSeverErrorResponse());
     }
 
+    loggerContext.set(
+      ObservabilityAttributes.TRANSACTION_ID,
+      processingResult.value.saleorTransactionId,
+    );
+    loggerContext.set("amount", processingResult.value.saleorMoney.amount);
+    loggerContext.set("result", processingResult.value.transactionResult.result);
+
     const reportResult = await transactionEventReporter.reportTransactionEvent(
       processingResult.value.resolveEventReportVariables(),
     );
 
     if (reportResult.isErr()) {
       if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
-        this.logger.info("Transaction event already reported", {
-          transactionId: processingResult.value.saleorTransactionId,
-          amount: processingResult.value.saleorMoney.amount,
-          result: processingResult.value.transactionResult,
-        });
+        this.logger.info("Transaction event already reported");
 
         return ok(new StripeWebhookSuccessResponse());
       }
@@ -383,11 +386,7 @@ export class StripeWebhookUseCase {
       return err(new StripeWebhookSeverErrorResponse());
     }
 
-    this.logger.info("Transaction event reported", {
-      transactionId: processingResult.value.saleorTransactionId,
-      amount: processingResult.value.saleorMoney.amount,
-      result: processingResult.value.transactionResult,
-    });
+    this.logger.info("Transaction event reported");
 
     return ok(new StripeWebhookSuccessResponse());
   }

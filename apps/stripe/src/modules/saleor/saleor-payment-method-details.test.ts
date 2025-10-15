@@ -77,7 +77,7 @@ describe("SaleorPaymentMethodDetails", () => {
           "expMonth": 12,
           "expYear": 2025,
           "lastDigits": "4242",
-          "name": "ard",
+          "name": "card",
           "type": "CARD",
         }
       `);
@@ -141,7 +141,7 @@ describe("SaleorPaymentMethodDetails", () => {
             "expMonth": 12,
             "expYear": 2025,
             "lastDigits": "4242",
-            "name": "ard",
+            "name": "card",
           },
         }
       `);
