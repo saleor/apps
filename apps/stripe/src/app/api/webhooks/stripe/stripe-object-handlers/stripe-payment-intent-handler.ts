@@ -57,13 +57,13 @@ const PAYMENT_METHOD_DETAILS_MIN_VERSION = "3.22";
 export class StripePaymentIntentHandler {
   static NotSupportedEventError = BaseError.subclass("NotSupportedEventError", {
     props: {
-      __internalName: "StripePaymentIntentHandler.NotSupportedEventError",
+      _internalName: "StripePaymentIntentHandler.NotSupportedEventError" as const,
     },
   });
 
   static MalformedEventError = BaseError.subclass("MalformedEventError", {
     props: {
-      __internalName: "StripePaymentIntentHandler.MalformedEventError",
+      _internalName: "StripePaymentIntentHandler.MalformedEventError" as const,
     },
   });
 

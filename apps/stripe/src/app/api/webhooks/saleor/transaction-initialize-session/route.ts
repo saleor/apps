@@ -61,7 +61,7 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
         const response = new MalformedRequestResponse(
           appContextContainer.getContextValue(),
           new BaseError("No schema version provided", {
-            props: { __internalName: "TransactionInitializeSession.NoSchemaVersion" },
+            props: { _internalName: "TransactionInitializeSession.NoSchemaVersion" as const },
           }),
         );
 
