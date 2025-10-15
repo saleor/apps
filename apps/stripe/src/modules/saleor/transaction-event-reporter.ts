@@ -2,6 +2,7 @@ import { err, ok, Result } from "neverthrow";
 import { Client } from "urql";
 
 import {
+  PaymentMethodDetailsInput,
   TransactionActionEnum,
   TransactionEventReportDocument,
   TransactionEventReportWithPaymentDetailsDocument,
@@ -13,7 +14,6 @@ import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 import { StripeRefundId } from "../stripe/stripe-refund-id";
-import { SaleorPaymentMethodDetails } from "./saleor-payment-method-details";
 
 export type TransactionEventReportInput = {
   transactionId: string;
@@ -24,7 +24,7 @@ export type TransactionEventReportInput = {
   type: TransactionEventTypeEnum;
   actions: TransactionActionEnum[] | null;
   externalUrl: string;
-  saleorPaymentMethodDetails: SaleorPaymentMethodDetails | null;
+  saleorPaymentMethodDetailsInput: PaymentMethodDetailsInput | null;
 };
 
 export type PossibleTransactionEventReportErrors = InstanceType<typeof AlreadyReportedError>;
@@ -83,14 +83,14 @@ export class TransactionEventReporter implements ITransactionEventReporter {
   ): Promise<Result<TransactionEventReportResultResult, PossibleTransactionEventReportErrors>> {
     try {
       const mutationResult = await this.gqlClient.mutation(
-        input.saleorPaymentMethodDetails
+        input.saleorPaymentMethodDetailsInput
           ? TransactionEventReportWithPaymentDetailsDocument
           : TransactionEventReportDocument,
         {
           ...input,
           amount: input.amount.amount,
           availableActions: input.actions,
-          paymentMethodDetails: input.saleorPaymentMethodDetails?.toSaleorTransactionEventPayload(),
+          paymentMethodDetails: input.saleorPaymentMethodDetailsInput,
         },
       );
 

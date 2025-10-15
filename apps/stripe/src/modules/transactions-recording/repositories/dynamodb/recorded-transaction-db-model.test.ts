@@ -35,6 +35,7 @@ describe("DynamoDbRecordedTransaction", () => {
           saleorTransactionFlow: "AUTHORIZATION",
           resolvedTransactionFlow: "CHARGE",
           selectedPaymentMethod: "card",
+          saleorSchemaVersion: { major: 3, minor: 20 },
         }),
       ).toThrowErrorMatchingInlineSnapshot(`[Error: Attribute 'paymentIntentId' is required.]`);
 
@@ -47,6 +48,7 @@ describe("DynamoDbRecordedTransaction", () => {
           saleorTransactionFlow: "AUTHORIZATION",
           resolvedTransactionFlow: "CHARGE",
           selectedPaymentMethod: "card",
+          saleorSchemaVersion: { major: 3, minor: 20 },
         }),
       ).toMatchInlineSnapshot(`
         {
@@ -54,6 +56,10 @@ describe("DynamoDbRecordedTransaction", () => {
           "SK": "TRANSACTION#mocked-transaction-id",
           "paymentIntentId": "pi_TEST_TEST_TEST",
           "resolvedTransactionFlow": "CHARGE",
+          "saleorSchemaVersion": {
+            "major": 3,
+            "minor": 20,
+          },
           "saleorTransactionFlow": "AUTHORIZATION",
           "saleorTransactionId": "mocked-transaction-id",
           "selectedPaymentMethod": "card",

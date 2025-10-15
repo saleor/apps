@@ -78,7 +78,8 @@ export class TransactionEventReportVariablesResolver {
       pspReference: this.stripeObjectId,
       actions: this.transactionResult.actions,
       externalUrl: this.externalUrl,
-      saleorPaymentMethodDetails: this.saleorPaymentMethodDetails,
+      saleorPaymentMethodDetailsInput:
+        this.saleorPaymentMethodDetails?.toSaleorTransactionEventPayload() || null,
     };
   }
 }

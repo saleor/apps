@@ -39,7 +39,7 @@ describe("TransactionEventReporter", () => {
       transactionId: mockedSaleorTransactionId,
       actions: [],
       externalUrl: generatePaymentIntentStripeDashboardUrl(mockedStripePaymentIntentId, "LIVE"),
-      saleorPaymentMethodDetails: null,
+      saleorPaymentMethodDetailsInput: null,
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
@@ -75,7 +75,7 @@ describe("TransactionEventReporter", () => {
       transactionId: mockedSaleorTransactionId,
       actions: [],
       externalUrl: generatePaymentIntentStripeDashboardUrl(mockedStripePaymentIntentId, "LIVE"),
-      saleorPaymentMethodDetails: null,
+      saleorPaymentMethodDetailsInput: null,
     });
 
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
@@ -108,7 +108,7 @@ describe("TransactionEventReporter", () => {
       transactionId: mockedSaleorTransactionId,
       actions: [],
       externalUrl: generatePaymentIntentStripeDashboardUrl(mockedStripePaymentIntentId, "LIVE"),
-      saleorPaymentMethodDetails: null,
+      saleorPaymentMethodDetailsInput: null,
     });
 
     expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`

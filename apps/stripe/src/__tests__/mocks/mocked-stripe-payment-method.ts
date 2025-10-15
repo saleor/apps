@@ -15,12 +15,14 @@ export const mockedStripeCardPaymentMethod: Stripe.PaymentMethod = {
     email: null,
     name: null,
     phone: null,
+    tax_id: null,
   },
   created: 1234567890,
   customer: null,
   livemode: false,
   type: "card",
   card: {
+    regulated_status: "regulated",
     brand: "visa",
     checks: {
       address_line1_check: null,
@@ -62,6 +64,7 @@ export const mockedStripeOtherPaymentMethod: Stripe.PaymentMethod = {
     email: null,
     name: null,
     phone: null,
+    tax_id: null,
   },
   created: 1234567890,
   customer: null,

@@ -3,7 +3,10 @@ import Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedSaleorAppId, mockedSaleorSchemaVersion } from "@/__tests__/mocks/constants";
+import {
+  mockedSaleorAppId,
+  mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+} from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -70,7 +73,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
-        saleorSchemaVersion: mockedSaleorSchemaVersion,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       expect(spy).toHaveBeenCalledWith({
@@ -134,7 +137,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
-        saleorSchemaVersion: mockedSaleorSchemaVersion,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedSuccessResponse);
@@ -157,7 +160,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionInitializeSessionEvent(),
-      saleorSchemaVersion: mockedSaleorSchemaVersion,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
     });
 
     const err = responsePayload._unsafeUnwrapErr();
@@ -197,7 +200,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
-        saleorSchemaVersion: mockedSaleorSchemaVersion,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
@@ -238,7 +241,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: eventWithNotSupportedPaymentMethod,
-        saleorSchemaVersion: mockedSaleorSchemaVersion,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
@@ -280,7 +283,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: eventWithAdditionalFieldinData,
-        saleorSchemaVersion: mockedSaleorSchemaVersion,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
@@ -308,7 +311,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: saleorEvent,
-      saleorSchemaVersion: mockedSaleorSchemaVersion,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -336,7 +339,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: saleorEvent,
-      saleorSchemaVersion: mockedSaleorSchemaVersion,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -365,7 +368,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: saleorEvent,
-      saleorSchemaVersion: mockedSaleorSchemaVersion,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -394,7 +397,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: saleorEvent,
-      saleorSchemaVersion: mockedSaleorSchemaVersion,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -428,7 +431,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: saleorEvent,
-      saleorSchemaVersion: mockedSaleorSchemaVersion,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -469,7 +472,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
-        saleorSchemaVersion: mockedSaleorSchemaVersion,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       expect(transactionRecorder.recordTransaction).toHaveBeenCalledWith(
@@ -483,6 +486,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           saleorTransactionId: "mocked-transaction-id",
           selectedPaymentMethod: "card",
           stripePaymentIntentId: "pi_test",
+          saleorSchemaVersion: [3, 22],
         },
       );
     },
