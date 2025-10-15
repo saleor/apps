@@ -87,7 +87,12 @@ export class TransactionEventReporter implements ITransactionEventReporter {
           ? TransactionEventReportWithPaymentDetailsDocument
           : TransactionEventReportDocument,
         {
-          ...input,
+          transactionId: input.transactionId,
+          message: input.message,
+          pspReference: input.pspReference,
+          time: input.time,
+          type: input.type,
+          externalUrl: input.externalUrl,
           amount: input.amount.amount,
           availableActions: input.actions,
           paymentMethodDetails: input.saleorPaymentMethodDetailsInput,

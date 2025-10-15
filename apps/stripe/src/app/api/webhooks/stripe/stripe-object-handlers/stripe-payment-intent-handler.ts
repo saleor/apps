@@ -47,6 +47,8 @@ type PossibleErrors =
     >
   | TransactionRecorderError;
 
+const PAYMENT_METHOD_DETAILS_MIN_VERSION = "3.22";
+
 export class StripePaymentIntentHandler {
   static NotSupportedEventError = BaseError.subclass("NotSupportedEventError", {
     props: {
@@ -125,7 +127,7 @@ export class StripePaymentIntentHandler {
     stripePaymentIntentsApi: IStripePaymentIntentsApi,
     paymentIntentId: StripePaymentIntentId,
   ): Promise<SaleorPaymentMethodDetails | null> {
-    const validator = new SaleorVersionCompatibilityValidator("3.22");
+    const validator = new SaleorVersionCompatibilityValidator(PAYMENT_METHOD_DETAILS_MIN_VERSION);
 
     if (validator.isSaleorCompatible(saleorSchemaVersion)) {
       const getPaymentIntentResult = await stripePaymentIntentsApi.getPaymentIntent({

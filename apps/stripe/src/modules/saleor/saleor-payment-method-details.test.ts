@@ -62,7 +62,7 @@ describe("SaleorPaymentMethodDetails", () => {
         ...mockedStripeCardPaymentMethod,
         card: {
           ...mockedStripeCardPaymentMethod.card!,
-          display_brand: undefined,
+          display_brand: null,
         },
       };
 
@@ -77,7 +77,7 @@ describe("SaleorPaymentMethodDetails", () => {
           "expMonth": 12,
           "expYear": 2025,
           "lastDigits": "4242",
-          "name": "generic_card",
+          "name": "ard",
           "type": "CARD",
         }
       `);
@@ -125,7 +125,7 @@ describe("SaleorPaymentMethodDetails", () => {
         ...mockedStripeCardPaymentMethod,
         card: {
           ...mockedStripeCardPaymentMethod.card!,
-          display_brand: undefined,
+          display_brand: null,
         },
       };
 
@@ -141,7 +141,7 @@ describe("SaleorPaymentMethodDetails", () => {
             "expMonth": 12,
             "expYear": 2025,
             "lastDigits": "4242",
-            "name": "generic_card",
+            "name": "ard",
           },
         }
       `);

@@ -90,6 +90,9 @@ describe("Stripe Webhook: integration", () => {
         if (request.url.includes(env.AWS_ENDPOINT_URL)) {
           return; // Do not print warnings for DynamoDB local
         }
+        if (request.url.includes("stripe.com")) {
+          return; // Do not print warnings for Stripe API - we use real Stripe API in these tests
+        }
         print.warning();
       },
     }),
@@ -207,7 +210,6 @@ describe("Stripe Webhook: integration", () => {
         const requestSpyData = saleorRequestVarsSpy.mock.calls[0][0];
 
         expect(requestSpyData.variables).toStrictEqual({
-          actions: ["REFUND"],
           amount: 1.013,
           availableActions: ["REFUND"],
           externalUrl: expect.stringContaining(stripePaymentIntentId),
@@ -216,6 +218,15 @@ describe("Stripe Webhook: integration", () => {
           time: expect.any(String),
           transactionId: mockedSaleorTransactionId,
           type: "CHARGE_SUCCESS",
+          paymentMethodDetails: {
+            card: {
+              brand: "visa",
+              name: "visa",
+              expMonth: 10,
+              expYear: 2026,
+              lastDigits: "4242",
+            },
+          },
         });
       },
     });
@@ -268,7 +279,6 @@ describe("Stripe Webhook: integration", () => {
         const requestSpyData = saleorRequestVarsSpy.mock.calls[0][0];
 
         expect(requestSpyData.variables).toStrictEqual({
-          actions: ["REFUND"],
           amount: 10,
           availableActions: ["REFUND"],
           externalUrl: expect.stringContaining(stripeRefundId),
@@ -277,6 +287,7 @@ describe("Stripe Webhook: integration", () => {
           time: expect.any(String),
           transactionId: mockedSaleorTransactionId,
           type: "REFUND_SUCCESS",
+          paymentMethodDetails: null,
         });
       },
     });

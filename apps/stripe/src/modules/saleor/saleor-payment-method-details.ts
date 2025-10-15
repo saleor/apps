@@ -43,7 +43,7 @@ export class SaleorPaymentMethodDetails {
   }
 
   private getCardName() {
-    return this.stripePaymentMethod.card?.display_brand || "generic_card";
+    return this.stripePaymentMethod.card?.display_brand || "ard";
   }
 
   toSaleorWebhookResponse(): Paymentmethoddetails {

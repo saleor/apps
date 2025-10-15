@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 
 import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+import { mockedStripeCardPaymentMethod } from "@/__tests__/mocks/mocked-stripe-payment-method";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 export const paymentIntentSucceededEventFixture = (
@@ -49,7 +50,7 @@ export const paymentIntentSucceededEventFixture = (
         },
         next_action: null,
         on_behalf_of: null,
-        payment_method: null,
+        payment_method: mockedStripeCardPaymentMethod,
         payment_method_configuration_details: null,
         payment_method_options: null,
         payment_method_types: [],
