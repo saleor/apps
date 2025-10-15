@@ -69,7 +69,6 @@ fragment TaxBase on TaxableObject {
       id
       avataxEntityCode: metafield(key: "avataxEntityCode")
       avataxCustomerCode: metafield(key: "avataxCustomerCode")
-      avataxShipFromAddress: privateMetafield(key: "avataxShipFromAddress")
       user {
         ...User
       }
@@ -78,7 +77,6 @@ fragment TaxBase on TaxableObject {
       id
       avataxEntityCode: metafield(key: "avataxEntityCode")
       avataxCustomerCode: metafield(key: "avataxCustomerCode")
-      avataxShipFromAddress: privateMetafield(key: "avataxShipFromAddress")
       user {
         ...User
       }
