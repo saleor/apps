@@ -1,3 +1,4 @@
+# Used when app is installed in Saleor 3.22+.
 mutation TransactionEventReportWithPaymentDetails(
   $transactionId: ID!
   $message: String!

@@ -127,44 +127,45 @@ export class StripePaymentIntentHandler {
     return ok(recordedTransactionResult.value);
   }
 
-  private async getPaymentMethodDetails(
+  private checkIfSaleorSupportsPaymentMethodDetails(
     saleorSchemaVersion: SaleorSchemaVersion,
+  ): boolean {
+    const validator = new SaleorVersionCompatibilityValidator(PAYMENT_METHOD_DETAILS_MIN_VERSION);
+
+    return validator.isSaleorCompatible(saleorSchemaVersion);
+  }
+
+  private async getPaymentMethodDetails(
     stripePaymentIntentsApi: IStripePaymentIntentsApi,
     paymentIntentId: StripePaymentIntentId,
   ): Promise<SaleorPaymentMethodDetails | null> {
-    const validator = new SaleorVersionCompatibilityValidator(PAYMENT_METHOD_DETAILS_MIN_VERSION);
+    const getPaymentIntentResult = await stripePaymentIntentsApi.getPaymentIntent({
+      id: paymentIntentId,
+    });
 
-    if (validator.isSaleorCompatible(saleorSchemaVersion)) {
-      const getPaymentIntentResult = await stripePaymentIntentsApi.getPaymentIntent({
-        id: paymentIntentId,
-      });
-
-      if (getPaymentIntentResult.isErr()) {
-        this.logger.warn(
-          "Failed to fetch payment intent details - falling back to null as payment method details",
-          {
-            error: getPaymentIntentResult.error,
-          },
-        );
-
-        return null;
-      }
-
-      const paymentMethodDetailsResult = SaleorPaymentMethodDetails.createFromStripe(
-        getPaymentIntentResult.value.payment_method,
+    if (getPaymentIntentResult.isErr()) {
+      this.logger.warn(
+        "Failed to fetch payment intent details - falling back to null as payment method details",
+        {
+          error: getPaymentIntentResult.error,
+        },
       );
 
-      return paymentMethodDetailsResult
-        .mapErr((e) =>
-          this.logger.warn(
-            "Failed to create payment method details from Stripe payment method - falling back to null",
-            { error: e },
-          ),
-        )
-        .unwrapOr(null);
+      return null;
     }
 
-    return null;
+    const paymentMethodDetailsResult = SaleorPaymentMethodDetails.createFromStripe(
+      getPaymentIntentResult.value.payment_method,
+    );
+
+    return paymentMethodDetailsResult
+      .mapErr((e) =>
+        this.logger.warn(
+          "Failed to create payment method details from Stripe payment method - falling back to null",
+          { error: e },
+        ),
+      )
+      .unwrapOr(null);
   }
 
   async processPaymentIntentEvent({
@@ -212,11 +213,9 @@ export class StripePaymentIntentHandler {
 
     const externalUrl = generatePaymentIntentStripeDashboardUrl(stripePaymentIntentId, stripeEnv);
 
-    const paymentMethodDetails = await this.getPaymentMethodDetails(
-      saleorSchemaVersion,
-      stripePaymentIntentsApi,
-      stripePaymentIntentId,
-    );
+    const paymentMethodDetails = this.checkIfSaleorSupportsPaymentMethodDetails(saleorSchemaVersion)
+      ? await this.getPaymentMethodDetails(stripePaymentIntentsApi, stripePaymentIntentId)
+      : null;
 
     switch (event.type) {
       case "payment_intent.succeeded":
