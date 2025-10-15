@@ -158,14 +158,16 @@ export class StripePaymentIntentHandler {
       getPaymentIntentResult.value.payment_method,
     );
 
-    return paymentMethodDetailsResult
-      .mapErr((e) =>
-        this.logger.warn(
-          "Failed to create payment method details from Stripe payment method - falling back to null",
-          { error: e },
-        ),
-      )
-      .unwrapOr(null);
+    if (paymentMethodDetailsResult.isErr()) {
+      this.logger.warn(
+        "Failed to create payment method details from Stripe payment method - falling back to null",
+        { error: paymentMethodDetailsResult.error },
+      );
+
+      return null;
+    }
+
+    return paymentMethodDetailsResult.value;
   }
 
   async processPaymentIntentEvent({
