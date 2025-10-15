@@ -47,6 +47,11 @@ type PossibleErrors =
     >
   | TransactionRecorderError;
 
+/*
+ * Minimum Saleor version required for payment method details support.
+ * Saleor 3.22 introduced the `paymentMethodDetails` field in the Transaction API.
+ * See: https://github.com/saleor/saleor/releases/tag/3.22.0
+ */
 const PAYMENT_METHOD_DETAILS_MIN_VERSION = "3.22";
 
 export class StripePaymentIntentHandler {
@@ -149,7 +154,14 @@ export class StripePaymentIntentHandler {
         getPaymentIntentResult.value.payment_method,
       );
 
-      return paymentMethodDetailsResult.unwrapOr(null);
+      return paymentMethodDetailsResult
+        .mapErr((e) =>
+          this.logger.warn(
+            "Failed to create payment method details from Stripe payment method - falling back to null",
+            { error: e },
+          ),
+        )
+        .unwrapOr(null);
     }
 
     return null;
