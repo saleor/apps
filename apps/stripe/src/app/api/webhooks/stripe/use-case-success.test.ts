@@ -3,9 +3,19 @@ import { ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockAdyenWebhookUrl, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+import {
+  mockAdyenWebhookUrl,
+  mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
+  mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+  mockedSaleorTransactionId,
+} from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
+import {
+  mockedStripeCardPaymentMethod,
+  mockedStripeOtherPaymentMethod,
+} from "@/__tests__/mocks/mocked-stripe-payment-method";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { getMockedChargeRefundUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-charge-refund-updated";
 import { getMockedPaymentIntentAmountCapturableUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-amount-capturable-updated";
@@ -22,7 +32,7 @@ import {
 } from "@/modules/saleor/transaction-event-reporter";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
-import { IStripeEventVerify } from "@/modules/stripe/types";
+import { IStripeEventVerify, IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
 import { StripeWebhookUseCase } from "./use-case";
@@ -49,6 +59,10 @@ let instance: StripeWebhookUseCase;
 
 const mockTransactionRecorder = new MockedTransactionRecorder();
 
+const stripePaymentIntentsApiFactory = {
+  create: () => mockedStripePaymentIntentsApi,
+} satisfies IStripePaymentIntentsApiFactory;
+
 describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
   beforeEach(() => {
     mockApl.get.mockImplementation(async () => mockAuthData);
@@ -63,7 +77,14 @@ describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
       },
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
+      stripePaymentIntentsApiFactory,
     });
+
+    vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(async () =>
+      ok({
+        payment_method: mockedStripeCardPaymentMethod,
+      }),
+    );
   });
 
   it("Reports CHARGE_SUCCESS transaction event to Saleor when resolvedFlow is CHARGE", async () => {
@@ -79,6 +100,7 @@ describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -125,6 +147,15 @@ describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent has been successful",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": {
+          "card": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+          },
+        },
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_SUCCESS",
@@ -146,6 +177,7 @@ describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -192,6 +224,15 @@ describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent has been successful",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": {
+          "card": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+          },
+        },
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_SUCCESS",
@@ -205,6 +246,11 @@ describe("StripeWebhookUseCase - handling payment_intent.amount_capturable_updat
   beforeEach(() => {
     mockApl.get.mockImplementation(async () => mockAuthData);
     mockTransactionRecorder.reset();
+    vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(async () =>
+      ok({
+        payment_method: mockedStripeOtherPaymentMethod,
+      }),
+    );
 
     instance = new StripeWebhookUseCase({
       apl: mockApl,
@@ -215,6 +261,7 @@ describe("StripeWebhookUseCase - handling payment_intent.amount_capturable_updat
       },
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
+      stripePaymentIntentsApiFactory,
     });
   });
 
@@ -232,6 +279,7 @@ describe("StripeWebhookUseCase - handling payment_intent.amount_capturable_updat
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -279,6 +327,11 @@ describe("StripeWebhookUseCase - handling payment_intent.amount_capturable_updat
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent has been successful",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": {
+          "other": {
+            "name": "sepa_debit",
+          },
+        },
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_SUCCESS",
@@ -293,6 +346,12 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
     mockApl.get.mockImplementation(async () => mockAuthData);
     mockTransactionRecorder.reset();
 
+    vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(async () =>
+      ok({
+        payment_method: null,
+      }),
+    );
+
     instance = new StripeWebhookUseCase({
       apl: mockApl,
       appConfigRepo: mockedAppConfigRepo,
@@ -302,6 +361,7 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
       },
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
+      stripePaymentIntentsApiFactory,
     });
   });
 
@@ -318,6 +378,7 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -364,6 +425,7 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent failed",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_FAILURE",
@@ -385,6 +447,7 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -431,6 +494,7 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent failed",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_FAILURE",
@@ -444,6 +508,11 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
   beforeEach(() => {
     mockApl.get.mockImplementation(async () => mockAuthData);
     mockTransactionRecorder.reset();
+    vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(async () =>
+      ok({
+        payment_method: mockedStripeCardPaymentMethod,
+      }),
+    );
 
     instance = new StripeWebhookUseCase({
       apl: mockApl,
@@ -454,6 +523,7 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
       },
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
+      stripePaymentIntentsApiFactory,
     });
   });
 
@@ -470,6 +540,7 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
       }),
     };
 
@@ -514,6 +585,7 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent is processing",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_REQUEST",
@@ -535,6 +607,7 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -579,6 +652,15 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent is processing",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": {
+          "card": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+          },
+        },
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_REQUEST",
@@ -592,6 +674,11 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
   beforeEach(() => {
     mockApl.get.mockImplementation(async () => mockAuthData);
     mockTransactionRecorder.reset();
+    vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(async () =>
+      ok({
+        payment_method: mockedStripeCardPaymentMethod,
+      }),
+    );
 
     instance = new StripeWebhookUseCase({
       apl: mockApl,
@@ -602,6 +689,7 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
       },
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
+      stripePaymentIntentsApiFactory,
     });
   });
 
@@ -618,6 +706,7 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -664,6 +753,15 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent requires action",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": {
+          "card": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+          },
+        },
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_ACTION_REQUIRED",
@@ -685,6 +783,7 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -731,6 +830,15 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent requires action",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": {
+          "card": {
+            "brand": "visa",
+            "expMonth": 12,
+            "expYear": 2025,
+            "lastDigits": "4242",
+            "name": "Visa",
+          },
+        },
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_ACTION_REQUIRED",
@@ -744,6 +852,11 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
   beforeEach(() => {
     mockApl.get.mockImplementation(async () => mockAuthData);
     mockTransactionRecorder.reset();
+    vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(async () =>
+      ok({
+        payment_method: mockedStripeCardPaymentMethod,
+      }),
+    );
 
     instance = new StripeWebhookUseCase({
       apl: mockApl,
@@ -754,6 +867,7 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
       },
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
+      stripePaymentIntentsApiFactory,
     });
   });
 
@@ -770,6 +884,7 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
       }),
     };
 
@@ -814,6 +929,7 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent was cancelled",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CANCEL_SUCCESS",
@@ -835,6 +951,7 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
       }),
     };
 
@@ -879,6 +996,7 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent was cancelled",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "CANCEL_SUCCESS",
@@ -902,6 +1020,7 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
       },
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
+      stripePaymentIntentsApiFactory,
     });
   });
 
@@ -917,6 +1036,7 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -963,6 +1083,7 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
         "externalUrl": "https://dashboard.stripe.com/refunds/re_TEST_TEST_TEST",
         "message": "Refund was successful",
         "pspReference": "re_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "REFUND_SUCCESS",
@@ -985,6 +1106,7 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -1031,6 +1153,7 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
         "externalUrl": "https://dashboard.stripe.com/refunds/re_TEST_TEST_TEST",
         "message": "Refund failed",
         "pspReference": "re_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "REFUND_FAILURE",
@@ -1053,6 +1176,7 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -1097,6 +1221,7 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
         "externalUrl": "https://dashboard.stripe.com/refunds/re_TEST_TEST_TEST",
         "message": "Refund is processing",
         "pspReference": "re_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": toSatisfy<[Function anonymous]>,
         "transactionId": "mocked-transaction-id",
         "type": "REFUND_REQUEST",
@@ -1120,6 +1245,7 @@ describe("StripeWebhookUseCase - handling events without metadata created by Sal
       },
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
+      stripePaymentIntentsApiFactory,
     });
   });
 

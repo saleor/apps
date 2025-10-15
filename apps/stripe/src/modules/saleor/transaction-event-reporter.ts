@@ -2,8 +2,10 @@ import { err, ok, Result } from "neverthrow";
 import { Client } from "urql";
 
 import {
+  PaymentMethodDetailsInput,
   TransactionActionEnum,
   TransactionEventReportDocument,
+  TransactionEventReportWithPaymentDetailsDocument,
   TransactionEventTypeEnum,
 } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
@@ -22,6 +24,7 @@ export type TransactionEventReportInput = {
   type: TransactionEventTypeEnum;
   actions: TransactionActionEnum[] | null;
   externalUrl: string;
+  saleorPaymentMethodDetailsInput: PaymentMethodDetailsInput | null;
 };
 
 export type PossibleTransactionEventReportErrors = InstanceType<typeof AlreadyReportedError>;
@@ -79,11 +82,22 @@ export class TransactionEventReporter implements ITransactionEventReporter {
     input: TransactionEventReportInput,
   ): Promise<Result<TransactionEventReportResultResult, PossibleTransactionEventReportErrors>> {
     try {
-      const mutationResult = await this.gqlClient.mutation(TransactionEventReportDocument, {
-        ...input,
-        amount: input.amount.amount,
-        availableActions: input.actions,
-      });
+      const mutationResult = await this.gqlClient.mutation(
+        input.saleorPaymentMethodDetailsInput
+          ? TransactionEventReportWithPaymentDetailsDocument
+          : TransactionEventReportDocument,
+        {
+          transactionId: input.transactionId,
+          message: input.message,
+          pspReference: input.pspReference,
+          time: input.time,
+          type: input.type,
+          externalUrl: input.externalUrl,
+          amount: input.amount.amount,
+          availableActions: input.actions,
+          paymentMethodDetails: input.saleorPaymentMethodDetailsInput,
+        },
+      );
 
       const { data, error } = mutationResult;
 

@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
+  mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
@@ -133,6 +134,7 @@ describe("TransactionProcessSession webhook: integration", async () => {
         saleorTransactionFlow,
         resolvedTransactionFlow,
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     );
 
@@ -160,6 +162,14 @@ describe("TransactionProcessSession webhook: integration", async () => {
           pspReference: expect.stringContaining("pi_"),
           message: "Payment intent has been successful",
           externalUrl: expect.stringContaining("https://dashboard.stripe.com/test/payments/pi_"),
+          paymentMethodDetails: {
+            brand: "visa",
+            name: "visa",
+            expMonth: 10,
+            expYear: 2026,
+            lastDigits: "4242",
+            type: "CARD",
+          },
         });
 
         expect(response.status).toStrictEqual(200);
@@ -204,6 +214,7 @@ describe("TransactionProcessSession webhook: integration", async () => {
         saleorTransactionFlow,
         resolvedTransactionFlow,
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     );
 
@@ -231,6 +242,14 @@ describe("TransactionProcessSession webhook: integration", async () => {
           pspReference: expect.stringContaining("pi_"),
           message: "Payment intent has been successful",
           externalUrl: expect.stringContaining("https://dashboard.stripe.com/test/payments/pi_"),
+          paymentMethodDetails: {
+            brand: "visa",
+            expMonth: 10,
+            expYear: 2026,
+            lastDigits: "4242",
+            name: "visa",
+            type: "CARD",
+          },
         });
 
         expect(response.status).toStrictEqual(200);
