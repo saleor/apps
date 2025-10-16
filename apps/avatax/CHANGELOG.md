@@ -1,5 +1,12 @@
 # saleor-app-avatax
 
+## 1.21.1
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
 ## 1.21.0
 
 ### Minor Changes
