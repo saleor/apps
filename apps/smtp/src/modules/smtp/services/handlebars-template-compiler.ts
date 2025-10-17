@@ -37,10 +37,7 @@ export class HandlebarsTemplateCompiler implements ITemplateCompiler {
     props: {} as { publicMessage: string; errorCode: TemplateErrorCode },
   });
   static FailedCompileError = this.HandlebarsTemplateCompilerError.subclass("FailedCompileError", {
-    props: {
-      publicMessage: "Template cannot be compiled due to invalid syntax",
-      errorCode: templateErrorCodes.HANDLEBARS_COMPILE_ERROR,
-    },
+    props: {} as { publicMessage: string; errorCode: TemplateErrorCode },
   });
 
   compile(

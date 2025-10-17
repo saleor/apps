@@ -14,10 +14,7 @@ export class MjmlCompiler implements IMjmlCompiler {
     props: {} as { publicMessage: string; errorCode: TemplateErrorCode },
   });
   static FailedToCompileError = this.MjmlCompilerError.subclass("FailedToCompileError", {
-    props: {
-      publicMessage: "MJML syntax compilation error",
-      errorCode: templateErrorCodes.MJML_COMPILE_ERROR,
-    },
+    props: {} as { publicMessage: string; errorCode: TemplateErrorCode },
   });
 
   private logger = createLogger("MjmlCompiler");
