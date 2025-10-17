@@ -14,6 +14,7 @@ import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url
 import { saleorApp } from "@/lib/saleor-app";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { TransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
+import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { StripeWebhookSignatureValidator } from "@/modules/stripe/stripe-webhook-signature-validator";
 import { transactionRecorder } from "@/modules/transactions-recording/repositories/transaction-recorder-impl";
@@ -38,6 +39,7 @@ const useCase = new StripeWebhookUseCase({
     });
   },
   webhookManager: new StripeWebhookManager(),
+  stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
 });
 
 const logger = createLogger("StripeWebhookHandler");

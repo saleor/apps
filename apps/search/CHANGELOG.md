@@ -1,5 +1,12 @@
 # saleor-app-search
 
+## 1.23.18
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
 ## 1.23.17
 
 ### Patch Changes

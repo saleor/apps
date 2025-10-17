@@ -7,13 +7,13 @@ import { BaseError } from "@/lib/errors";
 
 const MissingTransactionError = BaseError.subclass("MissingTransactionError", {
   props: {
-    __internalName: "MissingTransactionError",
+    _internalName: "MissingTransactionError" as const,
   },
 });
 
 const MissingChannelIdError = BaseError.subclass("MissingChannelIdError", {
   props: {
-    __internalName: "MissingChannelIdError",
+    _internalName: "MissingChannelIdError" as const,
   },
 });
 

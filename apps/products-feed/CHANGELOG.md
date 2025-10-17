@@ -1,5 +1,12 @@
 # saleor-app-products-feed
 
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
 ## 2.0.4
 
 ### Patch Changes

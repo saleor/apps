@@ -4,9 +4,14 @@ import Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockAdyenWebhookUrl, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+import {
+  mockAdyenWebhookUrl,
+  mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+  mockedSaleorTransactionId,
+} from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
 import { BaseError } from "@/lib/errors";
@@ -17,7 +22,11 @@ import {
   TransactionEventReportResultResult,
 } from "@/modules/saleor/transaction-event-reporter";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
-import { IStripeEventVerify, StripeEventParsingError } from "@/modules/stripe/types";
+import {
+  IStripeEventVerify,
+  IStripePaymentIntentsApiFactory,
+  StripeEventParsingError,
+} from "@/modules/stripe/types";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
 import { StripeWebhookUseCase } from "./use-case";
@@ -47,6 +56,10 @@ describe("StripeWebhookUseCase - Error cases", () => {
 
   const mockTransactionRecorder = new MockedTransactionRecorder();
 
+  const stripePaymentIntentsApiFactory = {
+    create: () => mockedStripePaymentIntentsApi,
+  } satisfies IStripePaymentIntentsApiFactory;
+
   beforeEach(() => {
     mockApl.get.mockImplementation(async () => mockAuthData);
     mockTransactionRecorder.reset();
@@ -60,6 +73,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
       },
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
+      stripePaymentIntentsApiFactory,
     });
   });
 
@@ -181,6 +195,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 
@@ -234,6 +249,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     };
 

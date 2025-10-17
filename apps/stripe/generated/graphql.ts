@@ -67,6 +67,12 @@ export type Scalars = {
    * Should be used in places where value must be nonnegative (0 or greater).
    */
   PositiveDecimal: { input: number; output: number; }
+  /**
+   * Positive Integer scalar implementation.
+   *
+   * Should be used in places where value must be positive (greater than 0).
+   */
+  PositiveInt: { input: number; output: number; }
   UUID: { input: string; output: string; }
   /** Variables of this type must be set to null in mutations. They will be replaced with a filename from a following multipart part containing a binary file. See: https://github.com/jaydenseric/graphql-multipart-request-spec. */
   Upload: { input: unknown; output: unknown; }
@@ -94,7 +100,7 @@ export type AccountAddressCreate = {
 };
 
 /**
- * Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+ * Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
  *
  * Triggers the following webhook events:
  * - ADDRESS_DELETED (async): An address was deleted.
@@ -358,6 +364,7 @@ export type AccountRegister = {
   readonly errors: ReadonlyArray<AccountError>;
   /** Informs whether users need to confirm their email address. */
   readonly requiresConfirmation?: Maybe<Scalars['Boolean']['output']>;
+  /** @deprecated The field always returns a `User` object constructed from the input data. The `user.id` is always empty. To determine whether the user exists in Saleor, query via an external app with the required permissions. */
   readonly user?: Maybe<User>;
 };
 
@@ -590,6 +597,12 @@ export type AddressDeleted = Event & {
   readonly recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/** Filtering options for addresses. */
+export type AddressFilterInput = {
+  readonly country?: InputMaybe<CountryCodeEnumFilterInput>;
+  readonly phoneNumber?: InputMaybe<StringFilterInput>;
 };
 
 export type AddressInput = {
@@ -1001,7 +1014,7 @@ export type AppDelete = {
 };
 
 /**
- * Delete failed installation.
+ * Deletes failed installation.
  *
  * Requires one of the following permissions: MANAGE_APPS.
  */
@@ -1066,6 +1079,12 @@ export type AppExtension = Node & {
   readonly label: Scalars['String']['output'];
   /** Place where given extension will be mounted. */
   readonly mount: AppExtensionMountEnum;
+  /**
+   * App extension options.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly options?: Maybe<AppExtensionPossibleOptions>;
   /** List of the app extension's permissions. */
   readonly permissions: ReadonlyArray<Permission>;
   /** Type of way how app extension will be opened. */
@@ -1096,9 +1115,31 @@ export type AppExtensionFilterInput = {
 
 /** All places where app extension can be mounted. */
 export type AppExtensionMountEnum =
+  | 'CATEGORY_DETAILS_MORE_ACTIONS'
+  | 'CATEGORY_OVERVIEW_CREATE'
+  | 'CATEGORY_OVERVIEW_MORE_ACTIONS'
+  | 'COLLECTION_DETAILS_MORE_ACTIONS'
+  | 'COLLECTION_DETAILS_WIDGETS'
+  | 'COLLECTION_OVERVIEW_CREATE'
+  | 'COLLECTION_OVERVIEW_MORE_ACTIONS'
   | 'CUSTOMER_DETAILS_MORE_ACTIONS'
+  | 'CUSTOMER_DETAILS_WIDGETS'
   | 'CUSTOMER_OVERVIEW_CREATE'
   | 'CUSTOMER_OVERVIEW_MORE_ACTIONS'
+  | 'DISCOUNT_DETAILS_MORE_ACTIONS'
+  | 'DISCOUNT_OVERVIEW_CREATE'
+  | 'DISCOUNT_OVERVIEW_MORE_ACTIONS'
+  | 'DRAFT_ORDER_DETAILS_MORE_ACTIONS'
+  | 'DRAFT_ORDER_DETAILS_WIDGETS'
+  | 'DRAFT_ORDER_OVERVIEW_CREATE'
+  | 'DRAFT_ORDER_OVERVIEW_MORE_ACTIONS'
+  | 'GIFT_CARD_DETAILS_MORE_ACTIONS'
+  | 'GIFT_CARD_DETAILS_WIDGETS'
+  | 'GIFT_CARD_OVERVIEW_CREATE'
+  | 'GIFT_CARD_OVERVIEW_MORE_ACTIONS'
+  | 'MENU_DETAILS_MORE_ACTIONS'
+  | 'MENU_OVERVIEW_CREATE'
+  | 'MENU_OVERVIEW_MORE_ACTIONS'
   | 'NAVIGATION_CATALOG'
   | 'NAVIGATION_CUSTOMERS'
   | 'NAVIGATION_DISCOUNTS'
@@ -1106,11 +1147,37 @@ export type AppExtensionMountEnum =
   | 'NAVIGATION_PAGES'
   | 'NAVIGATION_TRANSLATIONS'
   | 'ORDER_DETAILS_MORE_ACTIONS'
+  | 'ORDER_DETAILS_WIDGETS'
   | 'ORDER_OVERVIEW_CREATE'
   | 'ORDER_OVERVIEW_MORE_ACTIONS'
+  | 'PAGE_DETAILS_MORE_ACTIONS'
+  | 'PAGE_OVERVIEW_CREATE'
+  | 'PAGE_OVERVIEW_MORE_ACTIONS'
+  | 'PAGE_TYPE_DETAILS_MORE_ACTIONS'
+  | 'PAGE_TYPE_OVERVIEW_CREATE'
+  | 'PAGE_TYPE_OVERVIEW_MORE_ACTIONS'
   | 'PRODUCT_DETAILS_MORE_ACTIONS'
+  | 'PRODUCT_DETAILS_WIDGETS'
   | 'PRODUCT_OVERVIEW_CREATE'
-  | 'PRODUCT_OVERVIEW_MORE_ACTIONS';
+  | 'PRODUCT_OVERVIEW_MORE_ACTIONS'
+  | 'VOUCHER_DETAILS_MORE_ACTIONS'
+  | 'VOUCHER_DETAILS_WIDGETS'
+  | 'VOUCHER_OVERVIEW_CREATE'
+  | 'VOUCHER_OVERVIEW_MORE_ACTIONS';
+
+/** Represents the options for an app extension. */
+export type AppExtensionOptionsNewTab = {
+  /** Options controlling behavior of the NEW_TAB extension target */
+  readonly newTabTarget?: Maybe<NewTabTargetOptions>;
+};
+
+/** Represents the options for an app extension. */
+export type AppExtensionOptionsWidget = {
+  /** Options for displaying a Widget */
+  readonly widgetTarget?: Maybe<WidgetTargetOptions>;
+};
+
+export type AppExtensionPossibleOptions = AppExtensionOptionsNewTab | AppExtensionOptionsWidget;
 
 /**
  * All available ways of opening an app extension.
@@ -1120,7 +1187,9 @@ export type AppExtensionMountEnum =
  */
 export type AppExtensionTargetEnum =
   | 'APP_PAGE'
-  | 'POPUP';
+  | 'NEW_TAB'
+  | 'POPUP'
+  | 'WIDGET';
 
 /**
  * Fetch and validate manifest.
@@ -1427,6 +1496,419 @@ export type AssignNavigation = {
   readonly menuErrors: ReadonlyArray<MenuError>;
 };
 
+/**
+ * Represents an attribute assigned to an object.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedAttribute = {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+};
+
+export type AssignedAttributeReferenceInput = {
+  /** Returns objects with a reference pointing to a category identified by the given slug. */
+  readonly categorySlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a collection identified by the given slug. */
+  readonly collectionSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a page identified by the given slug. */
+  readonly pageSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a product identified by the given slug. */
+  readonly productSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a product variant identified by the given sku. */
+  readonly productVariantSkus?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to an object identified by the given ID. */
+  readonly referencedIds?: InputMaybe<ContainsFilterInput>;
+};
+
+export type AssignedAttributeValueInput = {
+  /** Filter by boolean value for attributes of boolean type. */
+  readonly boolean?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by date value for attributes of date type. */
+  readonly date?: InputMaybe<DateRangeInput>;
+  /** Filter by date time value for attributes of date time type. */
+  readonly dateTime?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by name assigned to AttributeValue. */
+  readonly name?: InputMaybe<StringFilterInput>;
+  /** Filter by numeric value for attributes of numeric type. */
+  readonly numeric?: InputMaybe<DecimalFilterInput>;
+  /** Filter by reference attribute value. */
+  readonly reference?: InputMaybe<AssignedAttributeReferenceInput>;
+  /** Filter by slug assigned to AttributeValue. */
+  readonly slug?: InputMaybe<StringFilterInput>;
+};
+
+export type AssignedAttributeWhereInput = {
+  /** Filter by attribute slug. */
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised. */
+  readonly value?: InputMaybe<AssignedAttributeValueInput>;
+};
+
+/**
+ * Represents a boolean attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedBooleanAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned boolean value. */
+  readonly value?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/**
+ * Represents a single choice value of the attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedChoiceAttributeValue = {
+  /** Name of a value displayed in the interface. */
+  readonly name?: Maybe<Scalars['String']['output']>;
+  /** Internal representation of a value (unique per attribute). */
+  readonly slug?: Maybe<Scalars['String']['output']>;
+  /** Translation of the name. */
+  readonly translation?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents a single choice value of the attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedChoiceAttributeValueTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Represents a date attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedDateAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned date value. */
+  readonly value?: Maybe<Scalars['Date']['output']>;
+};
+
+/**
+ * Represents a date time attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedDateTimeAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned date time value. */
+  readonly value?: Maybe<Scalars['DateTime']['output']>;
+};
+
+/**
+ * Represents file attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedFileAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned file. */
+  readonly value?: Maybe<File>;
+};
+
+/**
+ * Represents multi category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCategoryReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned category references. */
+  readonly value: ReadonlyArray<Category>;
+};
+
+
+/**
+ * Represents multi category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCategoryReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents a multi choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiChoiceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned choice values. */
+  readonly value: ReadonlyArray<AssignedChoiceAttributeValue>;
+};
+
+
+/**
+ * Represents a multi choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiChoiceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCollectionReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned collection references. */
+  readonly value: ReadonlyArray<Collection>;
+};
+
+
+/**
+ * Represents multi collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCollectionReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiPageReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned page references. */
+  readonly value: ReadonlyArray<Page>;
+};
+
+
+/**
+ * Represents multi page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiPageReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned product references. */
+  readonly value: ReadonlyArray<Product>;
+};
+
+
+/**
+ * Represents multi product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductVariantReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned product variant references. */
+  readonly value: ReadonlyArray<ProductVariant>;
+};
+
+
+/**
+ * Represents multi product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductVariantReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents a numeric value of an attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedNumericAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned numeric value. */
+  readonly value?: Maybe<Scalars['Float']['output']>;
+};
+
+/**
+ * Represents plain text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedPlainTextAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** Translation of the plain text content in the specified language. */
+  readonly translation?: Maybe<Scalars['String']['output']>;
+  /** The assigned plain text content. */
+  readonly value?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents plain text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedPlainTextAttributeTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Represents single category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleCategoryReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned category reference. */
+  readonly value?: Maybe<Category>;
+};
+
+/**
+ * Represents a single choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleChoiceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned choice value. */
+  readonly value?: Maybe<AssignedChoiceAttributeValue>;
+};
+
+/**
+ * Represents single collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleCollectionReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned collection reference. */
+  readonly value?: Maybe<Collection>;
+};
+
+/**
+ * Represents single page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSinglePageReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned page reference. */
+  readonly value?: Maybe<Page>;
+};
+
+/**
+ * Represents single product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleProductReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned product reference. */
+  readonly value?: Maybe<Product>;
+};
+
+/**
+ * Represents single product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleProductVariantReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned product variant reference. */
+  readonly value?: Maybe<ProductVariant>;
+};
+
+/**
+ * Represents a swatch attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned swatch value. */
+  readonly value?: Maybe<AssignedSwatchAttributeValue>;
+};
+
+/**
+ * Represents a single swatch value.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttributeValue = {
+  /** File associated with the attribute. */
+  readonly file?: Maybe<File>;
+  /** Hex color code. */
+  readonly hexColor?: Maybe<Scalars['String']['output']>;
+  /** Name of the selected swatch value. */
+  readonly name?: Maybe<Scalars['String']['output']>;
+  /** Slug of the selected swatch value. */
+  readonly slug?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Represents text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedTextAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** Translation of the rich text content in the specified language. */
+  readonly translation?: Maybe<Scalars['JSON']['output']>;
+  /** The assigned rich text content. */
+  readonly value?: Maybe<Scalars['JSON']['output']>;
+};
+
+
+/**
+ * Represents text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedTextAttributeTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
 /** Represents assigned attribute to variant with variant selection attached. */
 export type AssignedVariantAttribute = {
   /** Attribute assigned to variant. */
@@ -1442,7 +1924,7 @@ export type Attribute = Node & ObjectWithMetadata & {
    * @deprecated Field no longer supported
    */
   readonly availableInGrid: Scalars['Boolean']['output'];
-  /** List of attribute's values. */
+  /** A list of predefined attribute choices available for selection. Available only for attributes with predefined choices. */
   readonly choices?: Maybe<AttributeValueCountableConnection>;
   /** The entity type which can be used as a reference. */
   readonly entityType?: Maybe<AttributeEntityTypeEnum>;
@@ -1485,6 +1967,12 @@ export type Attribute = Node & ObjectWithMetadata & {
   readonly productTypes: ProductTypeCountableConnection;
   /** A list of product types that use this attribute as a product variant attribute. */
   readonly productVariantTypes: ProductTypeCountableConnection;
+  /**
+   * The reference types (product or page type) that are used to narrow down the choices of reference objects.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly referenceTypes?: Maybe<ReadonlyArray<ReferenceType>>;
   /** Internal representation of an attribute name. */
   readonly slug?: Maybe<Scalars['String']['output']>;
   /**
@@ -1514,7 +2002,9 @@ export type AttributeChoicesArgs = {
   filter?: InputMaybe<AttributeValueFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<AttributeChoicesSortingInput>;
+  where?: InputMaybe<AttributeValueWhereInput>;
 };
 
 
@@ -1557,6 +2047,12 @@ export type AttributeProductVariantTypesArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** Custom attribute of a product. Attributes can be assigned to products and variants at the product type level. */
+export type AttributeReferenceTypesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -1749,6 +2245,7 @@ export type AttributeCountableEdge = {
  * - ATTRIBUTE_CREATED (async): An attribute was created.
  */
 export type AttributeCreate = {
+  /** The created attribute. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
@@ -1783,6 +2280,14 @@ export type AttributeCreateInput = {
   readonly isVariantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Name of an attribute displayed in the interface. */
   readonly name: Scalars['String']['input'];
+  /**
+   * Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+   *
+   * A maximum of 100 reference types can be specified.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly referenceTypes?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Internal representation of an attribute name. */
   readonly slug?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -1846,6 +2351,8 @@ export type AttributeDeleted = Event & {
 };
 
 export type AttributeEntityTypeEnum =
+  | 'CATEGORY'
+  | 'COLLECTION'
   | 'PAGE'
   | 'PRODUCT'
   | 'PRODUCT_VARIANT';
@@ -1896,17 +2403,34 @@ export type AttributeFilterInput = {
 };
 
 export type AttributeInput = {
-  /** The boolean value of the attribute. */
+  /**
+   * The boolean value of the attribute. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly boolean?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used. */
+  /**
+   * The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly date?: InputMaybe<DateRangeInput>;
-  /** The date/time range that the returned values should be in. */
+  /**
+   * The date/time range that the returned values should be in. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly dateTime?: InputMaybe<DateTimeRangeInput>;
   /** Internal representation of an attribute name. */
-  readonly slug: Scalars['String']['input'];
-  /** Internal representation of a value (unique per attribute). */
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised. Cannot be combined with deprecated fields of `AttributeInput`. */
+  readonly value?: InputMaybe<AssignedAttributeValueInput>;
+  /**
+   * Slugs identifying the attributeValues associated with the Attribute. When specified, it filters the results to include only records with one of the matching values. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly values?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
-  /** The range that the returned values should be in. */
+  /**
+   * The range that the returned values should be in. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly valuesRange?: InputMaybe<IntRangeInput>;
 };
 
@@ -1921,6 +2445,7 @@ export type AttributeInputTypeEnum =
   | 'PLAIN_TEXT'
   | 'REFERENCE'
   | 'RICH_TEXT'
+  | 'SINGLE_REFERENCE'
   | 'SWATCH';
 
 export type AttributeInputTypeEnumFilterInput = {
@@ -2047,6 +2572,7 @@ export type AttributeTypeEnumFilterInput = {
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
  */
 export type AttributeUpdate = {
+  /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
   /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
@@ -2079,6 +2605,14 @@ export type AttributeUpdateInput = {
   readonly isVariantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Name of an attribute displayed in the interface. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+   *
+   * A maximum of 100 reference types can be specified.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly referenceTypes?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** IDs of values to be removed from this attribute. */
   readonly removeValues?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Internal representation of an attribute name. */
@@ -2130,7 +2664,7 @@ export type AttributeValue = Node & {
   readonly name?: Maybe<Scalars['String']['output']>;
   /** Represents the text of the attribute value, plain text without formatting. */
   readonly plainText?: Maybe<Scalars['String']['output']>;
-  /** The ID of the attribute reference. */
+  /** The ID of the referenced object. */
   readonly reference?: Maybe<Scalars['ID']['output']>;
   /**
    * Represents the text of the attribute value, includes formatting.
@@ -2170,7 +2704,7 @@ export type AttributeValueBulkDelete = {
 };
 
 /**
- * Creates/updates translations for attributes values.
+ * Creates/updates translations for attribute values.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
@@ -2342,6 +2876,12 @@ export type AttributeValueInput = {
   readonly numeric?: InputMaybe<Scalars['String']['input']>;
   /** Plain text content. */
   readonly plainText?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of the referenced entity for single reference attribute.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reference?: InputMaybe<Scalars['ID']['input']>;
   /** List of entity IDs that will be used as references. */
   readonly references?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Text content in JSON format. */
@@ -2511,6 +3051,17 @@ export type AttributeValueUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Where filtering options for attribute values. */
+export type AttributeValueWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<AttributeValueWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<AttributeValueWhereInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  readonly name?: InputMaybe<StringFilterInput>;
+  readonly slug?: InputMaybe<StringFilterInput>;
+};
+
 /** Where filtering options. */
 export type AttributeWhereInput = {
   /** List of conditions that must be met. */
@@ -2556,6 +3107,12 @@ export type BulkAttributeValueInput = {
   readonly numeric?: InputMaybe<Scalars['String']['input']>;
   /** Plain text content. */
   readonly plainText?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of the referenced entity for single reference attribute.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reference?: InputMaybe<Scalars['ID']['input']>;
   /** List of entity IDs that will be used as references. */
   readonly references?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Text content in JSON format. */
@@ -2623,6 +3180,41 @@ export type CardInput = {
   readonly cvc?: InputMaybe<Scalars['String']['input']>;
   /** Information about currency and amount. */
   readonly money: MoneyInput;
+};
+
+/**
+ * Represents a card payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type CardPaymentMethodDetails = PaymentMethodDetails & {
+  /** Card brand. */
+  readonly brand?: Maybe<Scalars['String']['output']>;
+  /** Two-digit number representing the card’s expiration month. */
+  readonly expMonth?: Maybe<Scalars['Int']['output']>;
+  /** Four-digit number representing the card’s expiration year. */
+  readonly expYear?: Maybe<Scalars['Int']['output']>;
+  /** First 4 digits of the card number. */
+  readonly firstDigits?: Maybe<Scalars['String']['output']>;
+  /** Last 4 digits of the card number. */
+  readonly lastDigits?: Maybe<Scalars['String']['output']>;
+  /** Name of the payment method. */
+  readonly name: Scalars['String']['output'];
+};
+
+export type CardPaymentMethodDetailsInput = {
+  /** Brand of the payment method used for the transaction. Max length is 40 characters. */
+  readonly brand?: InputMaybe<Scalars['String']['input']>;
+  /** Expiration month of the card used for the transaction. Value must be between 1 and 12. */
+  readonly expMonth?: InputMaybe<Scalars['Int']['input']>;
+  /** Expiration year of the card used for the transaction. Value must be between 2000 and 9999. */
+  readonly expYear?: InputMaybe<Scalars['Int']['input']>;
+  /** First digits of the card used for the transaction. Max length is 4 characters. */
+  readonly firstDigits?: InputMaybe<Scalars['String']['input']>;
+  /** Last digits of the card used for the transaction. Max length is 4 characters. */
+  readonly lastDigits?: InputMaybe<Scalars['String']['input']>;
+  /** Name of the payment method used for the transaction. Max length is 256 characters. */
+  readonly name: Scalars['String']['input'];
 };
 
 export type CatalogueInput = {
@@ -2772,6 +3364,7 @@ export type CategoryProductsArgs = {
   filter?: InputMaybe<ProductFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductOrder>;
   where?: InputMaybe<ProductWhereInput>;
 };
@@ -3197,7 +3790,7 @@ export type ChannelActivate = {
 };
 
 /**
- * Creates new channel.
+ * Creates a new channel.
  *
  * Requires one of the following permissions: MANAGE_CHANNELS.
  *
@@ -3279,7 +3872,7 @@ export type ChannelDeactivate = {
 };
 
 /**
- * Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
+ * Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
  *
  * Requires one of the following permissions: MANAGE_CHANNELS.
  *
@@ -3711,7 +4304,7 @@ export type CheckoutAuthorizeStatusEnum =
   | 'PARTIAL';
 
 /**
- * Update billing address in the existing checkout.
+ * Updates billing address in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -3808,7 +4401,7 @@ export type CheckoutCreate = {
   readonly errors: ReadonlyArray<CheckoutError>;
 };
 
-/** Create new checkout from existing order. */
+/** Creates a new checkout from existing order. */
 export type CheckoutCreateFromOrder = {
   /** Created checkout. */
   readonly checkout?: Maybe<Checkout>;
@@ -4064,7 +4657,29 @@ export type CheckoutFilterShippingMethods = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/** Event sent when checkout is fully paid with transactions. The checkout is considered as fully paid when the checkout `charge_status` is `FULL` or `OVERCHARGED`. The event is not sent when the checkout authorization flow strategy is used. */
+/**
+ * Event sent when a checkout was fully authorized. A checkout is considered fully authorized when its `authorizeStatus` is `FULL`.
+ *
+ * It is triggered only for checkouts whose payments are processed through the Transaction API.
+ */
+export type CheckoutFullyAuthorized = Event & {
+  /** The checkout the event relates to. */
+  readonly checkout?: Maybe<Checkout>;
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Event sent when a checkout was fully paid. A checkout is considered fully paid when its `chargeStatus` is `FULL` or `OVERCHARGED`. This event is not sent if payments are only authorized but not fully charged.
+ *
+ * It is triggered only for checkouts whose payments are processed through the Transaction API.
+ */
 export type CheckoutFullyPaid = Event & {
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
@@ -4079,7 +4694,7 @@ export type CheckoutFullyPaid = Event & {
 };
 
 /**
- * Update language code in the existing checkout.
+ * Updates language code in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -4329,7 +4944,7 @@ export type CheckoutMetadataUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/** Create a new payment for given checkout. */
+/** Creates a new payment for given checkout. */
 export type CheckoutPaymentCreate = {
   /** Related checkout object. */
   readonly checkout?: Maybe<Checkout>;
@@ -4384,7 +4999,7 @@ export type CheckoutSettingsInput = {
 };
 
 /**
- * Update shipping address in the existing checkout.
+ * Updates shipping address in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -4564,6 +5179,7 @@ export type CollectionProductsArgs = {
   filter?: InputMaybe<ProductFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductOrder>;
   where?: InputMaybe<ProductWhereInput>;
 };
@@ -4908,7 +5524,7 @@ export type CollectionSortField =
    */
   | 'PUBLICATION_DATE'
   /**
-   * Sort collections by publication date.
+   * Sort collections by published at.
    *
    * This option requires a channel filter to work as the values can vary between channels.
    */
@@ -5120,6 +5736,14 @@ export type ConfirmEmailChange = {
   readonly errors: ReadonlyArray<AccountError>;
   /** A user instance with a new email. */
   readonly user?: Maybe<User>;
+};
+
+/** Define the filtering options for fields that can contain multiple values. */
+export type ContainsFilterInput = {
+  /** The field contains all of the specified values. */
+  readonly containsAll?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+  /** The field contains at least one of the specified values. */
+  readonly containsAny?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 /**
@@ -5373,11 +5997,22 @@ export type CountryCode =
   | 'VU'
   | 'WF'
   | 'WS'
+  | 'XK'
   | 'YE'
   | 'YT'
   | 'ZA'
   | 'ZM'
   | 'ZW';
+
+/** Filter by country code. */
+export type CountryCodeEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<CountryCode>;
+  /** The value not included in. */
+  readonly notOneOf?: InputMaybe<ReadonlyArray<CountryCode>>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<CountryCode>>;
+};
 
 export type CountryDisplay = {
   /** Country code. */
@@ -5682,6 +6317,34 @@ export type CustomerUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+export type CustomerWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<CustomerWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<CustomerWhereInput>>;
+  /** Filter by addresses data associated with user. */
+  readonly addresses?: InputMaybe<AddressFilterInput>;
+  /** Filter by date joined. */
+  readonly dateJoined?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by email address. */
+  readonly email?: InputMaybe<StringFilterInput>;
+  /** Filter by first name. */
+  readonly firstName?: InputMaybe<StringFilterInput>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by whether the user is active. */
+  readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by last name. */
+  readonly lastName?: InputMaybe<StringFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by number of orders placed by the user. */
+  readonly numberOfOrders?: InputMaybe<IntFilterInput>;
+  /** Filter by date when orders were placed. */
+  readonly placedOrdersAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by last updated date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+};
+
 export type DateRangeInput = {
   /** Start date. */
   readonly gte?: InputMaybe<Scalars['Date']['input']>;
@@ -5882,7 +6545,7 @@ export type DigitalContentInput = {
 };
 
 /**
- * Update digital content.
+ * Updates digital content.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -6275,6 +6938,54 @@ export type DraftOrderUpdated = Event & {
   readonly recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+export type DraftOrderWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<DraftOrderWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<DraftOrderWhereInput>>;
+  /** Filter by authorize status. */
+  readonly authorizeStatus?: InputMaybe<OrderAuthorizeStatusEnumFilterInput>;
+  /** Filter by billing address of the order. */
+  readonly billingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by channel. */
+  readonly channelId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by charge status. */
+  readonly chargeStatus?: InputMaybe<OrderChargeStatusEnumFilterInput>;
+  /** Filter order by created at date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly events?: InputMaybe<ReadonlyArray<OrderEventFilterInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by whether the order uses the click and collect delivery method. */
+  readonly isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly lines?: InputMaybe<ReadonlyArray<LinesFilterInput>>;
+  /** Filter by number of lines in the order. */
+  readonly linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by order number. */
+  readonly number?: InputMaybe<IntFilterInput>;
+  /** Filter by the product type of related order lines. */
+  readonly productTypeId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by shipping address of the order. */
+  readonly shippingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by total gross amount of the order. */
+  readonly totalGross?: InputMaybe<PriceFilterInput>;
+  /** Filter by total net amount of the order. */
+  readonly totalNet?: InputMaybe<PriceFilterInput>;
+  /** Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly transactions?: InputMaybe<ReadonlyArray<TransactionFilterInput>>;
+  /** Filter order by updated at date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by user. */
+  readonly user?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by user email. */
+  readonly userEmail?: InputMaybe<StringFilterInput>;
+  /** Filter by voucher code used in the order. */
+  readonly voucherCode?: InputMaybe<StringFilterInput>;
 };
 
 export type ErrorPolicyEnum =
@@ -6895,6 +7606,16 @@ export type FulfillmentCreated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Filter input for order fulfillments data. */
+export type FulfillmentFilterInput = {
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by fulfillment status. */
+  readonly status?: InputMaybe<FulfillmentStatusEnumFilterInput>;
+  /** Filter by fulfillment warehouse. */
+  readonly warehouse?: InputMaybe<FulfillmentWarehouseFilterInput>;
+};
+
 /** Represents line of the fulfillment. */
 export type FulfillmentLine = Node & {
   /** ID of the fulfillment line. */
@@ -6964,6 +7685,14 @@ export type FulfillmentStatus =
   | 'RETURNED'
   | 'WAITING_FOR_APPROVAL';
 
+/** Filter by fulfillment status. */
+export type FulfillmentStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<FulfillmentStatus>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<FulfillmentStatus>>;
+};
+
 /** Event sent when the tracking number is updated. */
 export type FulfillmentTrackingNumberUpdated = Event & {
   /** The fulfillment the event relates to. */
@@ -7003,6 +7732,16 @@ export type FulfillmentUpdateTrackingInput = {
   readonly notifyCustomer?: InputMaybe<Scalars['Boolean']['input']>;
   /** Fulfillment tracking number. */
   readonly trackingNumber?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Filter input for fulfillment warehouses. */
+export type FulfillmentWarehouseFilterInput = {
+  /** Filter fulfillments by warehouse external reference. */
+  readonly externalReference?: InputMaybe<StringFilterInput>;
+  /** Filter fulfillments by warehouse ID. */
+  readonly id?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter fulfillments by warehouse slug. */
+  readonly slug?: InputMaybe<StringFilterInput>;
 };
 
 /** Payment gateway client configuration key and value pair. */
@@ -7195,7 +7934,7 @@ export type GiftCardBulkActivate = {
 };
 
 /**
- * Create gift cards.
+ * Creates gift cards.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7239,7 +7978,7 @@ export type GiftCardBulkDeactivate = {
 };
 
 /**
- * Delete gift cards.
+ * Deletes gift cards.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7362,7 +8101,7 @@ export type GiftCardDeactivate = {
 };
 
 /**
- * Delete gift card.
+ * Deletes gift card.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7769,6 +8508,10 @@ export type GroupCountableEdge = {
   readonly node: Group;
 };
 
+export type HttpMethod =
+  | 'GET'
+  | 'POST';
+
 /** Thumbnail formats for icon images. */
 export type IconThumbnailFormatEnum =
   | 'ORIGINAL'
@@ -7780,6 +8523,16 @@ export type Image = {
   readonly alt?: Maybe<Scalars['String']['output']>;
   /** The URL of the image. */
   readonly url: Scalars['String']['output'];
+};
+
+/** Define the filtering options for integer fields. */
+export type IntFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<Scalars['Int']['input']>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<Scalars['Int']['input']>>;
+  /** The value in range. */
+  readonly range?: InputMaybe<IntRangeInput>;
 };
 
 export type IntRangeInput = {
@@ -7935,6 +8688,12 @@ export type InvoiceErrorCode =
   | 'NUMBER_NOT_SET'
   | 'REQUIRED'
   | 'URL_NOT_SET';
+
+/** Filter input for invoices. */
+export type InvoiceFilterInput = {
+  /** Filter invoices by creation date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+};
 
 /**
  * Request an invoice for the order using plugin.
@@ -8856,6 +9615,12 @@ export type Limits = {
   readonly warehouses?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Filter input for order lines data. */
+export type LinesFilterInput = {
+  /** Filter by metadata fields of order lines. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+};
+
 /**
  * List payment methods stored for the user by payment gateway.
  *
@@ -9607,6 +10372,24 @@ export type MetadataFilter = {
   readonly value?: InputMaybe<Scalars['String']['input']>;
 };
 
+/**
+ * Allows filtering based on metadata key/value pairs.
+ *
+ *         Examples:
+ *         - `{key: "size"}`
+ *           Matches objects where the metadata key "size" exists, regardless of its value.
+ *         - `{key: "color", value: {oneOf: ["blue", "green"]}}`
+ *           Matches objects where the metadata key "color" is set to either "blue" or "green".
+ *         - `{key: "status", value: {eq: "active"}}`
+ *           Matches objects where the metadata key "status" is set to "active".
+ */
+export type MetadataFilterInput = {
+  /** Key to filter by. If not other fields provided - checking the existence of the key in metadata. */
+  readonly key: Scalars['String']['input'];
+  /** Value to filter by. */
+  readonly value?: InputMaybe<MetadataValueFilterInput>;
+};
+
 export type MetadataInput = {
   /** Key of a metadata item. */
   readonly key: Scalars['String']['input'];
@@ -9621,12 +10404,24 @@ export type MetadataItem = {
   readonly value: Scalars['String']['output'];
 };
 
+/** Define the filtering options for metadata value fields. */
+export type MetadataValueFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<Scalars['String']['input']>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
 /** Represents amount of money in specific currency. */
 export type Money = {
   /** Amount of money. */
   readonly amount: Scalars['Float']['output'];
   /** Currency code. */
   readonly currency: Scalars['String']['output'];
+  /** Number of digits after the decimal point in the currency. */
+  readonly fractionDigits: Scalars['Int']['output'];
+  /** Amount of money represented as an integer in the smallest currency unit. */
+  readonly fractionalAmount: Scalars['Int']['output'];
 };
 
 export type MoneyInput = {
@@ -9663,7 +10458,7 @@ export type Mutation = {
    */
   readonly accountAddressCreate?: Maybe<AccountAddressCreate>;
   /**
-   * Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+   * Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
    *
    * Triggers the following webhook events:
    * - ADDRESS_DELETED (async): An address was deleted.
@@ -9794,7 +10589,7 @@ export type Mutation = {
    */
   readonly appDelete?: Maybe<AppDelete>;
   /**
-   * Delete failed installation.
+   * Deletes failed installation.
    *
    * Requires one of the following permissions: MANAGE_APPS.
    */
@@ -9942,7 +10737,7 @@ export type Mutation = {
    */
   readonly attributeValueBulkDelete?: Maybe<AttributeValueBulkDelete>;
   /**
-   * Creates/updates translations for attributes values.
+   * Creates/updates translations for attribute values.
    *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    */
@@ -10023,7 +10818,7 @@ export type Mutation = {
    */
   readonly channelActivate?: Maybe<ChannelActivate>;
   /**
-   * Creates new channel.
+   * Creates a new channel.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
    *
@@ -10041,7 +10836,7 @@ export type Mutation = {
    */
   readonly channelDeactivate?: Maybe<ChannelDeactivate>;
   /**
-   * Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
+   * Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
    *
@@ -10076,7 +10871,7 @@ export type Mutation = {
    */
   readonly checkoutAddPromoCode?: Maybe<CheckoutAddPromoCode>;
   /**
-   * Update billing address in the existing checkout.
+   * Updates billing address in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -10107,7 +10902,7 @@ export type Mutation = {
    * - CHECKOUT_CREATED (async): A checkout was created.
    */
   readonly checkoutCreate?: Maybe<CheckoutCreate>;
-  /** Create new checkout from existing order. */
+  /** Creates a new checkout from existing order. */
   readonly checkoutCreateFromOrder?: Maybe<CheckoutCreateFromOrder>;
   /**
    * Sets the customer as the owner of the checkout.
@@ -10152,7 +10947,7 @@ export type Mutation = {
    */
   readonly checkoutEmailUpdate?: Maybe<CheckoutEmailUpdate>;
   /**
-   * Update language code in the existing checkout.
+   * Updates language code in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -10187,7 +10982,7 @@ export type Mutation = {
    * - CHECKOUT_UPDATED (async): A checkout was updated.
    */
   readonly checkoutLinesUpdate?: Maybe<CheckoutLinesUpdate>;
-  /** Create a new payment for given checkout. */
+  /** Creates a new payment for given checkout. */
   readonly checkoutPaymentCreate?: Maybe<CheckoutPaymentCreate>;
   /**
    * Remove a gift card or a voucher from a checkout.
@@ -10197,7 +10992,7 @@ export type Mutation = {
    */
   readonly checkoutRemovePromoCode?: Maybe<CheckoutRemovePromoCode>;
   /**
-   * Update shipping address in the existing checkout.
+   * Updates shipping address in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -10285,7 +11080,7 @@ export type Mutation = {
    */
   readonly confirmEmailChange?: Maybe<ConfirmEmailChange>;
   /**
-   * Creates new warehouse.
+   * Creates a new warehouse.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -10363,7 +11158,7 @@ export type Mutation = {
    */
   readonly digitalContentDelete?: Maybe<DigitalContentDelete>;
   /**
-   * Update digital content.
+   * Updates digital content.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -10499,7 +11294,7 @@ export type Mutation = {
    */
   readonly giftCardBulkActivate?: Maybe<GiftCardBulkActivate>;
   /**
-   * Create gift cards.
+   * Creates gift cards.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -10518,7 +11313,7 @@ export type Mutation = {
    */
   readonly giftCardBulkDeactivate?: Maybe<GiftCardBulkDeactivate>;
   /**
-   * Delete gift cards.
+   * Deletes gift cards.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -10546,7 +11341,7 @@ export type Mutation = {
    */
   readonly giftCardDeactivate?: Maybe<GiftCardDeactivate>;
   /**
-   * Delete gift card.
+   * Deletes gift card.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -10867,7 +11662,7 @@ export type Mutation = {
    */
   readonly orderLineUpdate?: Maybe<OrderLineUpdate>;
   /**
-   * Create order lines for an order.
+   * Creates order lines for an order.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -10970,19 +11765,19 @@ export type Mutation = {
    */
   readonly pageTranslate?: Maybe<PageTranslate>;
   /**
-   * Delete page types.
+   * Deletes page types.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
   readonly pageTypeBulkDelete?: Maybe<PageTypeBulkDelete>;
   /**
-   * Create a new page type.
+   * Creates a new page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
   readonly pageTypeCreate?: Maybe<PageTypeCreate>;
   /**
-   * Delete a page type.
+   * Deletes a page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
@@ -10994,7 +11789,7 @@ export type Mutation = {
    */
   readonly pageTypeReorderAttributes?: Maybe<PageTypeReorderAttributes>;
   /**
-   * Update page type.
+   * Updates page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
@@ -11244,7 +12039,7 @@ export type Mutation = {
    */
   readonly productVariantBulkDelete?: Maybe<ProductVariantBulkDelete>;
   /**
-   * Creates/updates translations for products variants.
+   * Creates/updates translations for product variants.
    *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    *
@@ -11254,7 +12049,7 @@ export type Mutation = {
    */
   readonly productVariantBulkTranslate?: Maybe<ProductVariantBulkTranslate>;
   /**
-   * Update multiple product variants.
+   * Updates multiple product variants.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -11308,13 +12103,13 @@ export type Mutation = {
    */
   readonly productVariantStocksCreate?: Maybe<ProductVariantStocksCreate>;
   /**
-   * Delete stocks from product variant.
+   * Deletes stocks from product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   readonly productVariantStocksDelete?: Maybe<ProductVariantStocksDelete>;
   /**
-   * Update stocks for product variant.
+   * Updates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -11409,6 +12204,22 @@ export type Mutation = {
    * - PROMOTION_ENDED (async): Optionally called if promotion was ended.
    */
   readonly promotionUpdate?: Maybe<PromotionUpdate>;
+  /**
+   * Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  readonly refundReasonReferenceClear?: Maybe<RefundReasonReferenceTypeClear>;
+  /**
+   * Update refund settings across all channels.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  readonly refundSettingsUpdate?: Maybe<RefundSettingsUpdate>;
   /**
    * Request email change of the logged in user.
    *
@@ -11657,7 +12468,7 @@ export type Mutation = {
    */
   readonly staffNotificationRecipientCreate?: Maybe<StaffNotificationRecipientCreate>;
   /**
-   * Delete staff notification recipient.
+   * Deletes staff notification recipient.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
@@ -11696,25 +12507,25 @@ export type Mutation = {
    */
   readonly storedPaymentMethodRequestDelete?: Maybe<StoredPaymentMethodRequestDelete>;
   /**
-   * Create a tax class.
+   * Creates a tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxClassCreate?: Maybe<TaxClassCreate>;
   /**
-   * Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
+   * Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxClassDelete?: Maybe<TaxClassDelete>;
   /**
-   * Update a tax class.
+   * Updates a tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxClassUpdate?: Maybe<TaxClassUpdate>;
   /**
-   * Update tax configuration for a channel.
+   * Updates tax configuration for a channel.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
@@ -11726,7 +12537,7 @@ export type Mutation = {
    */
   readonly taxCountryConfigurationDelete?: Maybe<TaxCountryConfigurationDelete>;
   /**
-   * Update tax class rates for a specific country.
+   * Updates tax class rates for a specific country.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
@@ -11750,7 +12561,7 @@ export type Mutation = {
    */
   readonly tokensDeactivateAll?: Maybe<DeactivateAllUserTokens>;
   /**
-   * Create transaction for checkout or order.
+   * Creates transaction for checkout or order.
    *
    * Requires one of the following permissions: HANDLE_PAYMENTS.
    */
@@ -11931,7 +12742,7 @@ export type Mutation = {
    */
   readonly webhookCreate?: Maybe<WebhookCreate>;
   /**
-   * Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
+   * Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
    *
    * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
    */
@@ -13423,6 +14234,11 @@ export type MutationPromotionUpdateArgs = {
 };
 
 
+export type MutationRefundSettingsUpdateArgs = {
+  input: RefundSettingsUpdateInput;
+};
+
+
 export type MutationRequestEmailChangeArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
   newEmail: Scalars['String']['input'];
@@ -13704,6 +14520,7 @@ export type MutationTransactionEventReportArgs = {
   externalUrl?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   message?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
   pspReference: Scalars['String']['input'];
   time?: InputMaybe<Scalars['DateTime']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
@@ -13735,6 +14552,8 @@ export type MutationTransactionRequestActionArgs = {
   actionType: TransactionActionEnum;
   amount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  refundReason?: InputMaybe<Scalars['String']['input']>;
+  refundReasonReference?: InputMaybe<Scalars['ID']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
 };
 
@@ -13890,10 +14709,56 @@ export type NavigationType =
   /** Secondary storefront navigation. */
   | 'SECONDARY';
 
+/** Represents the NEW_TAB target options for an app extension. */
+export type NewTabTargetOptions = {
+  /** HTTP method for New Tab target (GET or POST) */
+  readonly method: HttpMethod;
+};
+
 /** An object with an ID */
 export type Node = {
   /** The ID of the object. */
   readonly id: Scalars['ID']['output'];
+};
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributes = {
+  /**
+   * Get a single attribute attached to the object by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to the object.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+};
+
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributesAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributesAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 export type ObjectWithMetadata = {
@@ -14251,6 +15116,14 @@ export type OrderAuthorizeStatusEnum =
   | 'FULL'
   | 'NONE'
   | 'PARTIAL';
+
+/** Filter by authorize status. */
+export type OrderAuthorizeStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderAuthorizeStatusEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderAuthorizeStatusEnum>>;
+};
 
 /**
  * Cancels orders.
@@ -14640,6 +15513,14 @@ export type OrderChargeStatusEnum =
   | 'OVERCHARGED'
   | 'PARTIAL';
 
+/** Filter by charge status. */
+export type OrderChargeStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderChargeStatusEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderChargeStatusEnum>>;
+};
+
 /**
  * Confirms an unconfirmed order by changing status to unfulfilled.
  *
@@ -14647,6 +15528,7 @@ export type OrderChargeStatusEnum =
  */
 export type OrderConfirm = {
   readonly errors: ReadonlyArray<OrderError>;
+  /** Order which has been confirmed. */
   readonly order?: Maybe<Order>;
   /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
@@ -14989,6 +15871,14 @@ export type OrderEventDiscountObject = {
   readonly valueType: DiscountValueTypeEnum;
 };
 
+/** Filter input for order events data. */
+export type OrderEventFilterInput = {
+  /** Filter order events by date. */
+  readonly date?: InputMaybe<DateTimeRangeInput>;
+  /** Filter order events by type. */
+  readonly type?: InputMaybe<OrderEventTypeEnumFilterInput>;
+};
+
 export type OrderEventOrderLineObject = {
   /** The discount applied to the order line. */
   readonly discount?: Maybe<OrderEventDiscountObject>;
@@ -14998,6 +15888,13 @@ export type OrderEventOrderLineObject = {
   readonly orderLine?: Maybe<OrderLine>;
   /** The variant quantity. */
   readonly quantity?: Maybe<Scalars['Int']['output']>;
+};
+
+export type OrderEventTypeEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderEventsEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderEventsEnum>>;
 };
 
 export type OrderEventsEmailsEnum =
@@ -15245,6 +16142,12 @@ export type OrderGrantRefundCreateInput = {
   /** Reason of the granted refund. */
   readonly reason?: InputMaybe<Scalars['String']['input']>;
   /**
+   * ID of a `Page` (Model) to reference in reason.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
+  /**
    * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used. Field required starting from Saleor 3.21.
    *
    * Added in Saleor 3.20.
@@ -15322,6 +16225,12 @@ export type OrderGrantRefundUpdateInput = {
   readonly grantRefundForShipping?: InputMaybe<Scalars['Boolean']['input']>;
   /** Reason of the granted refund. */
   readonly reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
   /** Lines to remove from granted refund. */
   readonly removeLines?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /**
@@ -15370,8 +16279,18 @@ export type OrderGrantedRefund = {
   readonly id: Scalars['ID']['output'];
   /** Lines assigned to the granted refund. */
   readonly lines?: Maybe<ReadonlyArray<OrderGrantedRefundLine>>;
-  /** Reason of the refund. */
+  /**
+   * Reason of the refund.
+   *
+   * Added in Saleor 3.22.
+   */
   readonly reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason Model (Page) reference for refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: Maybe<Page>;
   /** If true, the refunded amount includes the shipping price.If false, the refunded amount does not include the shipping price. */
   readonly shippingCostsIncluded: Scalars['Boolean']['output'];
   /**
@@ -15662,7 +16581,7 @@ export type OrderLineUpdate = {
 };
 
 /**
- * Create order lines for an order.
+ * Creates order lines for an order.
  *
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
@@ -16001,20 +16920,26 @@ export type OrderSettingsUpdateInput = {
 export type OrderSortField =
   /** Sort orders by creation date. */
   | 'CREATED_AT'
-  /** Sort orders by creation date. */
+  /** Sort orders by creation date */
   | 'CREATION_DATE'
   /** Sort orders by customer. */
   | 'CUSTOMER'
   /** Sort orders by fulfillment status. */
   | 'FULFILLMENT_STATUS'
-  /** Sort orders by last modified at. */
+  /** Sort orders by last modified date. */
   | 'LAST_MODIFIED_AT'
   /** Sort orders by number. */
   | 'NUMBER'
-  /** Sort orders by payment. */
+  /** Sort orders by payment status. */
   | 'PAYMENT'
   /** Sort orders by rank. Note: This option is available only with the `search` filter. */
-  | 'RANK';
+  | 'RANK'
+  /**
+   * Sort orders by order status.
+   *
+   * Added in Saleor 3.22.
+   */
+  | 'STATUS';
 
 export type OrderSortingInput = {
   /** Specifies the direction in which to sort orders. */
@@ -16033,6 +16958,14 @@ export type OrderStatus =
   | 'RETURNED'
   | 'UNCONFIRMED'
   | 'UNFULFILLED';
+
+/** Filter by order status. */
+export type OrderStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderStatus>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderStatus>>;
+};
 
 export type OrderStatusFilter =
   | 'CANCELED'
@@ -16133,9 +17066,110 @@ export type OrderVoid = {
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
+export type OrderWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<OrderWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<OrderWhereInput>>;
+  /** Filter by authorize status. */
+  readonly authorizeStatus?: InputMaybe<OrderAuthorizeStatusEnumFilterInput>;
+  /** Filter by billing address of the order. */
+  readonly billingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by channel. */
+  readonly channelId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by charge status. */
+  readonly chargeStatus?: InputMaybe<OrderChargeStatusEnumFilterInput>;
+  /** Filter by checkout id. */
+  readonly checkoutId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by checkout token. */
+  readonly checkoutToken?: InputMaybe<UuidFilterInput>;
+  /** Filter order by created at date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly events?: InputMaybe<ReadonlyArray<OrderEventFilterInput>>;
+  /** Filter by fulfillment data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly fulfillments?: InputMaybe<ReadonlyArray<FulfillmentFilterInput>>;
+  /** Filter by whether the order has any fulfillments. */
+  readonly hasFulfillments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by whether the order has any invoices. */
+  readonly hasInvoices?: InputMaybe<Scalars['Boolean']['input']>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by invoice data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly invoices?: InputMaybe<ReadonlyArray<InvoiceFilterInput>>;
+  /** Filter by whether the order uses the click and collect delivery method. */
+  readonly isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether the order includes a gift card purchase. */
+  readonly isGiftCardBought?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether a gift card was used in the order. */
+  readonly isGiftCardUsed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly lines?: InputMaybe<ReadonlyArray<LinesFilterInput>>;
+  /** Filter by number of lines in the order. */
+  readonly linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by order number. */
+  readonly number?: InputMaybe<IntFilterInput>;
+  /** Filter by the product type of related order lines. */
+  readonly productTypeId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by shipping address of the order. */
+  readonly shippingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by order status. */
+  readonly status?: InputMaybe<OrderStatusEnumFilterInput>;
+  /** Filter by total gross amount of the order. */
+  readonly totalGross?: InputMaybe<PriceFilterInput>;
+  /** Filter by total net amount of the order. */
+  readonly totalNet?: InputMaybe<PriceFilterInput>;
+  /** Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly transactions?: InputMaybe<ReadonlyArray<TransactionFilterInput>>;
+  /** Filter order by updated at date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by user. */
+  readonly user?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by user email. */
+  readonly userEmail?: InputMaybe<StringFilterInput>;
+  /** Filter by voucher code used in the order. */
+  readonly voucherCode?: InputMaybe<StringFilterInput>;
+};
+
+/**
+ * Represents a payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type OtherPaymentMethodDetails = PaymentMethodDetails & {
+  /** Name of the payment method. */
+  readonly name: Scalars['String']['output'];
+};
+
+export type OtherPaymentMethodDetailsInput = {
+  /** Name of the payment method used for the transaction. */
+  readonly name: Scalars['String']['input'];
+};
+
 /** A static page that can be manually added by a shop operator through the dashboard. */
-export type Page = Node & ObjectWithMetadata & {
-  /** List of attributes assigned to this product. */
+export type Page = Node & ObjectWithAttributes & ObjectWithMetadata & {
+  /**
+   * Get a single attribute attached to page by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this page.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+  /**
+   * Get a single attribute attached to page by attribute slug.
+   * @deprecated Use `assignedAttribute` field instead.
+   */
+  readonly attribute?: Maybe<SelectedAttribute>;
+  /**
+   * List of attributes assigned to this page.
+   * @deprecated Use `assignedAttributes` field instead.
+   */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /**
    * Content of the page.
@@ -16192,6 +17226,24 @@ export type Page = Node & ObjectWithMetadata & {
   readonly title: Scalars['String']['output'];
   /** Returns translated page fields for the given language code. */
   readonly translation?: Maybe<PageTranslation>;
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAttributeArgs = {
+  slug: Scalars['String']['input'];
 };
 
 
@@ -16635,6 +17687,7 @@ export type PageTypeAvailableAttributesArgs = {
   filter?: InputMaybe<AttributeFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<AttributeWhereInput>;
 };
 
@@ -16663,7 +17716,7 @@ export type PageTypePrivateMetafieldsArgs = {
 };
 
 /**
- * Delete page types.
+ * Deletes page types.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -16691,7 +17744,7 @@ export type PageTypeCountableEdge = {
 };
 
 /**
- * Create a new page type.
+ * Creates a new page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -16726,7 +17779,7 @@ export type PageTypeCreated = Event & {
 };
 
 /**
- * Delete a page type.
+ * Deletes a page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -16783,7 +17836,7 @@ export type PageTypeSortingInput = {
 };
 
 /**
- * Update page type.
+ * Updates page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -16843,6 +17896,22 @@ export type PageUpdated = Event & {
   readonly recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<PageWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<PageWhereInput>>;
+  /** Filter by attributes associated with the page. */
+  readonly attributes?: InputMaybe<ReadonlyArray<AssignedAttributeWhereInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by page type. */
+  readonly pageType?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by page slug. */
+  readonly slug?: InputMaybe<StringFilterInput>;
 };
 
 /**
@@ -17083,6 +18152,7 @@ export type PaymentErrorCode =
   | 'CHANNEL_INACTIVE'
   | 'CHECKOUT_COMPLETION_IN_PROGRESS'
   | 'CHECKOUT_EMAIL_NOT_SET'
+  | 'CHECKOUT_HAS_TRANSACTION'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'INVALID_SHIPPING_METHOD'
@@ -17299,6 +18369,40 @@ export type PaymentListGateways = Event & {
 };
 
 /**
+ * Represents a payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type PaymentMethodDetails = {
+  /** Name of the payment method. */
+  readonly name: Scalars['String']['output'];
+};
+
+export type PaymentMethodDetailsCardFilterInput = {
+  /** Filter by payment method brand used to pay for the order. */
+  readonly brand?: InputMaybe<StringFilterInput>;
+};
+
+export type PaymentMethodDetailsFilterInput = {
+  /** Filter by card details used to pay for the order. Skips `type` filter if provided. */
+  readonly card?: InputMaybe<PaymentMethodDetailsCardFilterInput>;
+  /** Filter by payment method type used to pay for the order. */
+  readonly type?: InputMaybe<PaymentMethodTypeEnumFilterInput>;
+};
+
+/**
+ * Details of the payment method used for the transaction. One of `card` or `other` is required.
+ *
+ * Added in Saleor 3.22.
+ */
+export type PaymentMethodDetailsInput = {
+  /** Details of the card payment method used for the transaction. */
+  readonly card?: InputMaybe<CardPaymentMethodDetailsInput>;
+  /** Details of the non-card payment method used for this transaction. */
+  readonly other?: InputMaybe<OtherPaymentMethodDetailsInput>;
+};
+
+/**
  * Tokenize payment method.
  *
  * Requires one of the following permissions: AUTHENTICATED_USER.
@@ -17432,6 +18536,24 @@ export type PaymentMethodTokenizationResult =
   | 'PENDING'
   | 'SUCCESSFULLY_TOKENIZED';
 
+/**
+ * Represents possible payment method types.
+ *
+ *     The following types are possible:
+ *     CARD - represents a card payment method.
+ *     OTHER - represents any payment method that is not a card payment.
+ */
+export type PaymentMethodTypeEnum =
+  | 'CARD'
+  | 'OTHER';
+
+export type PaymentMethodTypeEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<PaymentMethodTypeEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<PaymentMethodTypeEnum>>;
+};
+
 /** Process payment. */
 export type PaymentProcessEvent = Event & {
   /** Time of the event. */
@@ -17475,13 +18597,49 @@ export type PaymentRefundEvent = Event & {
 
 /** Represents the channel-specific payment settings. */
 export type PaymentSettings = {
+  /**
+   * Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutReleaseFundsCutOffDate?: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * The time in hours after which funds for expired checkouts will be released.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutTtlBeforeReleasingFunds?: Maybe<Scalars['Hour']['output']>;
   /** Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction. */
   readonly defaultTransactionFlowStrategy: TransactionFlowStrategyEnum;
+  /**
+   * Determine if the funds for expired checkouts should be released automatically.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly releaseFundsForExpiredCheckouts?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type PaymentSettingsInput = {
+  /**
+   * Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutReleaseFundsCutOffDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /**
+   * The time in hours after which funds for expired checkouts will be released.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutTtlBeforeReleasingFunds?: InputMaybe<Scalars['Hour']['input']>;
   /** Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction. */
   readonly defaultTransactionFlowStrategy?: InputMaybe<TransactionFlowStrategyEnum>;
+  /**
+   * Determine if the funds for expired checkouts should be released automatically.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly releaseFundsForExpiredCheckouts?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Represents a payment source stored for user in payment gateway, such as credit card. */
@@ -17861,6 +19019,13 @@ export type PreorderThreshold = {
   readonly soldUnits: Scalars['Int']['output'];
 };
 
+export type PriceFilterInput = {
+  /** The amount of the price to filter by. */
+  readonly amount: DecimalFilterInput;
+  /** The currency of the price to filter by. */
+  readonly currency?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PriceInput = {
   /** Amount of money. */
   readonly amount: Scalars['PositiveDecimal']['input'];
@@ -17876,10 +19041,28 @@ export type PriceRangeInput = {
 };
 
 /** Represents an individual item for sale in the storefront. */
-export type Product = Node & ObjectWithMetadata & {
-  /** Get a single attribute attached to product by attribute slug. */
+export type Product = Node & ObjectWithAttributes & ObjectWithMetadata & {
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this product.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   * @deprecated Use the `assignedAttribute` field instead.
+   */
   readonly attribute?: Maybe<SelectedAttribute>;
-  /** List of attributes assigned to this product. */
+  /**
+   * List of attributes assigned to this product.
+   * @deprecated Use the `assignedAttributes` field instead.
+   */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /**
    * Date when product is available for purchase.
@@ -18009,6 +19192,18 @@ export type Product = Node & ObjectWithMetadata & {
   readonly variants?: Maybe<ReadonlyArray<ProductVariant>>;
   /** Weight of the product. */
   readonly weight?: Maybe<Weight>;
+};
+
+
+/** Represents an individual item for sale in the storefront. */
+export type ProductAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** Represents an individual item for sale in the storefront. */
+export type ProductAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -19292,6 +20487,7 @@ export type ProductTypeAvailableAttributesArgs = {
   filter?: InputMaybe<AttributeFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<AttributeWhereInput>;
 };
 
@@ -19512,8 +20708,23 @@ export type ProductUpdatedProductArgs = {
 };
 
 /** Represents a version of a product such as different size or color. */
-export type ProductVariant = Node & ObjectWithMetadata & {
-  /** List of attributes assigned to this variant. */
+export type ProductVariant = Node & ObjectWithAttributes & ObjectWithMetadata & {
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this variant.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this variant.
+   * @deprecated Use the `assignedAttributes` field instead.
+   */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /** Channel given to retrieve this product variant. Also used by federation gateway to resolve this object in a federated query. */
   readonly channel?: Maybe<Scalars['String']['output']>;
@@ -19604,6 +20815,18 @@ export type ProductVariant = Node & ObjectWithMetadata & {
   readonly updatedAt: Scalars['DateTime']['output'];
   /** The weight of the product variant. */
   readonly weight?: Maybe<Weight>;
+};
+
+
+/** Represents a version of a product such as different size or color. */
+export type ProductVariantAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** Represents a version of a product such as different size or color. */
+export type ProductVariantAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -19801,7 +21024,7 @@ export type ProductVariantBulkResult = {
 };
 
 /**
- * Creates/updates translations for products variants.
+ * Creates/updates translations for product variants.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  *
@@ -19845,7 +21068,7 @@ export type ProductVariantBulkTranslateResult = {
 };
 
 /**
- * Update multiple product variants.
+ * Updates multiple product variants.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -20204,7 +21427,7 @@ export type ProductVariantSetDefault = {
 };
 
 export type ProductVariantSortField =
-  /** Sort products variants by last modified at. */
+  /** Sort product variants by last modification date. */
   | 'LAST_MODIFIED_AT';
 
 export type ProductVariantSortingInput = {
@@ -20250,7 +21473,7 @@ export type ProductVariantStocksCreate = {
 };
 
 /**
- * Delete stocks from product variant.
+ * Deletes stocks from product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -20263,7 +21486,7 @@ export type ProductVariantStocksDelete = {
 };
 
 /**
- * Update stocks for product variant.
+ * Updates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -20376,8 +21599,18 @@ export type ProductVariantWhereInput = {
   readonly AND?: InputMaybe<ReadonlyArray<ProductVariantWhereInput>>;
   /** A list of conditions of which at least one must be met. */
   readonly OR?: InputMaybe<ReadonlyArray<ProductVariantWhereInput>>;
+  /**
+   * Filter by attributes associated with the variant.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly attributes?: InputMaybe<ReadonlyArray<AssignedAttributeWhereInput>>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
+  /** Filter by product SKU. */
+  readonly sku?: InputMaybe<StringFilterInput>;
+  /** Filter by when was the most recent update. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
 };
 
 export type ProductWhereInput = {
@@ -21200,7 +22433,7 @@ export type PromotionRuleUpdatedEvent = Node & PromotionEventInterface & Promoti
 };
 
 export type PromotionSortField =
-  /** Sort promotions by created at. */
+  /** Sort promotions by creation date. */
   | 'CREATED_AT'
   /** Sort promotions by end date. */
   | 'END_DATE'
@@ -21676,6 +22909,8 @@ export type Query = {
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
   readonly promotions?: Maybe<PromotionCountableConnection>;
+  /** Refunds related settings. Returns `RefundSettings` configuration, global for the entire shop. */
+  readonly refundSettings: RefundSettings;
   /**
    * List of top selling products.
    *
@@ -21971,7 +23206,9 @@ export type QueryCustomersArgs = {
   filter?: InputMaybe<CustomerFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<UserSortingInput>;
+  where?: InputMaybe<CustomerWhereInput>;
 };
 
 
@@ -21994,7 +23231,9 @@ export type QueryDraftOrdersArgs = {
   filter?: InputMaybe<OrderDraftFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<OrderSortingInput>;
+  where?: InputMaybe<DraftOrderWhereInput>;
 };
 
 
@@ -22100,7 +23339,9 @@ export type QueryOrdersArgs = {
   filter?: InputMaybe<OrderFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<OrderSortingInput>;
+  where?: InputMaybe<OrderWhereInput>;
 };
 
 
@@ -22111,6 +23352,7 @@ export type QueryOrdersTotalArgs = {
 
 
 export type QueryPageArgs = {
+  channel?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
   slugLanguageCode?: InputMaybe<LanguageCodeEnum>;
@@ -22135,10 +23377,13 @@ export type QueryPageTypesArgs = {
 export type QueryPagesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
+  channel?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PageFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<PageSortingInput>;
+  where?: InputMaybe<PageWhereInput>;
 };
 
 
@@ -22226,6 +23471,7 @@ export type QueryProductVariantsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductVariantSortingInput>;
   where?: InputMaybe<ProductVariantWhereInput>;
 };
@@ -22440,6 +23686,13 @@ export type ReducedRate = {
   readonly rateType: Scalars['String']['output'];
 };
 
+/**
+ * The reference types (product or page type) that are used to narrow down the choices of reference objects.
+ * ProductType applicable for reference attribute with `PRODUCT` or `PRODUCT_VARIANT` entity type.
+ * PageType applicable for reference attribute with `PAGE` entity type.
+ */
+export type ReferenceType = PageType | ProductType;
+
 /** Refresh JWT token. Mutation tries to take refreshToken from the input. If it fails it will try to take `refreshToken` from the http-only cookie `refreshToken`. `csrfToken` is required when `refreshToken` is provided as a cookie. */
 export type RefreshToken = {
   /** @deprecated Use `errors` field instead. */
@@ -22449,6 +23702,78 @@ export type RefreshToken = {
   readonly token?: Maybe<Scalars['String']['output']>;
   /** A user instance. */
   readonly user?: Maybe<User>;
+};
+
+/**
+ * Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type RefundReasonReferenceTypeClear = {
+  readonly errors: ReadonlyArray<RefundReasonReferenceTypeClearError>;
+  /** Refund settings. */
+  readonly refundSettings: RefundSettings;
+  /** @deprecated Use `errors` field instead. */
+  readonly refundSettingsErrors: ReadonlyArray<RefundReasonReferenceTypeClearError>;
+};
+
+export type RefundReasonReferenceTypeClearError = {
+  /** Failed to clear refund reason reference type */
+  readonly code: RefundSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Refund related settings from site settings.
+ *
+ * Added in Saleor 3.22.
+ */
+export type RefundSettings = {
+  /** Model type used for refund reasons. */
+  readonly reasonReferenceType?: Maybe<PageType>;
+};
+
+export type RefundSettingsErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'REQUIRED';
+
+/**
+ * Update refund settings across all channels.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type RefundSettingsUpdate = {
+  readonly errors: ReadonlyArray<RefundSettingsUpdateError>;
+  /** Refund settings. */
+  readonly refundSettings: RefundSettings;
+  /** @deprecated Use `errors` field instead. */
+  readonly refundSettingsErrors: ReadonlyArray<RefundSettingsUpdateError>;
+};
+
+export type RefundSettingsUpdateError = {
+  /** Failed to update Refund Settings */
+  readonly code: RefundSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type RefundSettingsUpdateInput = {
+  /**
+   * The ID of a model type, that will be used to reference refund reasons. All models with of this type will be accepted as refund reasons.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly refundReasonReferenceType: Scalars['ID']['input'];
 };
 
 export type ReorderInput = {
@@ -22899,11 +24224,11 @@ export type SaleRemoveCatalogues = {
 };
 
 export type SaleSortField =
-  /** Sort sales by created at. */
+  /** Sort sales by creation date. */
   | 'CREATED_AT'
   /** Sort sales by end date. */
   | 'END_DATE'
-  /** Sort sales by last modified at. */
+  /** Sort sales by last modification date. */
   | 'LAST_MODIFIED_AT'
   /** Sort sales by name. */
   | 'NAME'
@@ -23067,7 +24392,7 @@ export type SaleUpdatedSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Represents a custom attribute. */
+/** Represents an assigned attribute to an object. */
 export type SelectedAttribute = {
   /** Name of an attribute displayed in the interface. */
   readonly attribute: Attribute;
@@ -24530,7 +25855,7 @@ export type StaffNotificationRecipientCreate = {
 };
 
 /**
- * Delete staff notification recipient.
+ * Deletes staff notification recipient.
  *
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
@@ -24905,6 +26230,14 @@ export type Subscription = {
    */
   readonly checkoutCreated?: Maybe<CheckoutCreated>;
   /**
+   * Event sent when checkout is fully authorized.
+   *
+   * Added in Saleor 3.21.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly checkoutFullyAuthorized?: Maybe<CheckoutFullyAuthorized>;
+  /**
    * Event sent when checkout is fully-paid.
    *
    * Added in Saleor 3.21.
@@ -25054,6 +26387,11 @@ export type Subscription = {
 
 
 export type SubscriptionCheckoutCreatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionCheckoutFullyAuthorizedArgs = {
   channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
@@ -25231,7 +26569,7 @@ export type TaxClassCountryRate = {
 };
 
 /**
- * Create a tax class.
+ * Creates a tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25264,7 +26602,7 @@ export type TaxClassCreateInput = {
 };
 
 /**
- * Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
+ * Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25312,7 +26650,7 @@ export type TaxClassSortingInput = {
 };
 
 /**
- * Update a tax class.
+ * Updates a tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25389,6 +26727,12 @@ export type TaxConfiguration = Node & ObjectWithMetadata & {
   readonly taxAppId?: Maybe<Scalars['String']['output']>;
   /** The default strategy to use for tax calculation in the given channel. Taxes can be calculated either using user-defined flat rates or with a tax app. Empty value means that no method is selected and taxes are not calculated. */
   readonly taxCalculationStrategy?: Maybe<TaxCalculationStrategy>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useWeightedTaxForShipping?: Maybe<Scalars['Boolean']['output']>;
 };
 
 
@@ -25451,6 +26795,12 @@ export type TaxConfigurationPerCountry = {
   readonly taxAppId?: Maybe<Scalars['String']['output']>;
   /** A country-specific strategy to use for tax calculation. Taxes can be calculated either using user-defined flat rates or with a tax app. If not provided, use the value from the channel's tax configuration. */
   readonly taxCalculationStrategy?: Maybe<TaxCalculationStrategy>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useWeightedTaxForShipping?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type TaxConfigurationPerCountryInput = {
@@ -25468,10 +26818,16 @@ export type TaxConfigurationPerCountryInput = {
   readonly taxAppId?: InputMaybe<Scalars['String']['input']>;
   /** A country-specific strategy to use for tax calculation. Taxes can be calculated either using user-defined flat rates or with a tax app. If not provided, use the value from the channel's tax configuration. */
   readonly taxCalculationStrategy?: InputMaybe<TaxCalculationStrategy>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines. Default value is `False`.Can be used only with `taxCalculationStrategy` set to `FLAT_RATES`.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useWeightedTaxForShipping?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /**
- * Update tax configuration for a channel.
+ * Updates tax configuration for a channel.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25516,6 +26872,12 @@ export type TaxConfigurationUpdateInput = {
   readonly taxCalculationStrategy?: InputMaybe<TaxCalculationStrategy>;
   /** List of tax country configurations to create or update (identified by a country code). */
   readonly updateCountriesConfiguration?: InputMaybe<ReadonlyArray<TaxConfigurationPerCountryInput>>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines. Default value is `False`.Can be used only with `taxCalculationStrategy` set to `FLAT_RATES`.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useWeightedTaxForShipping?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Tax class rates grouped by country. */
@@ -25552,7 +26914,7 @@ export type TaxCountryConfigurationDeleteErrorCode =
   | 'NOT_FOUND';
 
 /**
- * Update tax class rates for a specific country.
+ * Updates tax class rates for a specific country.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25760,7 +27122,10 @@ export type Transaction = Node & {
   readonly created: Scalars['DateTime']['output'];
   /** Error associated with transaction, if any. */
   readonly error?: Maybe<Scalars['String']['output']>;
-  /** Response returned by payment gateway. */
+  /**
+   * Response returned by payment gateway.
+   * @deprecated This field is a part of a legacy Payments API. Please use apps instead.
+   */
   readonly gatewayResponse: Scalars['JSONString']['output'];
   /** ID of the transaction. */
   readonly id: Scalars['ID']['output'];
@@ -25829,7 +27194,7 @@ export type TransactionChargeRequested = Event & {
 };
 
 /**
- * Create transaction for checkout or order.
+ * Creates transaction for checkout or order.
  *
  * Requires one of the following permissions: HANDLE_PAYMENTS.
  */
@@ -25879,6 +27244,12 @@ export type TransactionCreateInput = {
   /** Payment name of the transaction. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
+   * Details of the payment method used for the transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
+  /**
    * Payment private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
    * Warning: never store sensitive information, including financial data such as credit card details.
@@ -25906,6 +27277,12 @@ export type TransactionEvent = Node & {
   readonly message: Scalars['String']['output'];
   /** PSP reference of transaction. */
   readonly pspReference: Scalars['String']['output'];
+  /**
+   * Reason model of the transaction refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: Maybe<Page>;
   /** The type of action related to this event. */
   readonly type?: Maybe<TransactionEventTypeEnum>;
 };
@@ -26000,6 +27377,14 @@ export type TransactionEventTypeEnum =
   | 'REFUND_REQUEST'
   | 'REFUND_REVERSE'
   | 'REFUND_SUCCESS';
+
+/** Filter input for transactions. */
+export type TransactionFilterInput = {
+  /** Filter by metadata fields of transactions. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by payment method details used to pay for the order. */
+  readonly paymentMethodDetails?: InputMaybe<PaymentMethodDetailsFilterInput>;
+};
 
 /**
  * Determine the transaction flow strategy.
@@ -26110,6 +27495,12 @@ export type TransactionItem = Node & ObjectWithMetadata & {
   readonly name: Scalars['String']['output'];
   /** The related order. */
   readonly order?: Maybe<Order>;
+  /**
+   * The payment method used for this transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly paymentMethodDetails?: Maybe<PaymentMethodDetails>;
   /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
   /**
@@ -26122,6 +27513,18 @@ export type TransactionItem = Node & ObjectWithMetadata & {
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** PSP reference of transaction. */
   readonly pspReference: Scalars['String']['output'];
+  /**
+   * Reason of the refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason `Page` (Model) for refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: Maybe<Page>;
   /** Total amount of ongoing refund requests for the transaction. */
   readonly refundPendingAmount: Money;
   /** Total amount refunded for this payment. */
@@ -26286,7 +27689,8 @@ export type TransactionRequestActionErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'MISSING_TRANSACTION_ACTION_REQUEST_WEBHOOK'
-  | 'NOT_FOUND';
+  | 'NOT_FOUND'
+  | 'REQUIRED';
 
 /**
  * Request a refund for payment transaction based on granted refund.
@@ -26366,6 +27770,12 @@ export type TransactionUpdateInput = {
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Payment name of the transaction. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Details of the payment method used for the transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
   /**
    * Payment private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
@@ -26465,6 +27875,14 @@ export type TranslationUpdated = Event & {
   readonly translation?: Maybe<TranslationTypes>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/** Define the filtering options for string fields. */
+export type UuidFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<Scalars['UUID']['input']>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<Scalars['UUID']['input']>>;
 };
 
 export type UpdateInvoiceInput = {
@@ -27760,7 +29178,7 @@ export type WarehouseCountableEdge = {
 };
 
 /**
- * Creates new warehouse.
+ * Creates a new warehouse.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -28037,7 +29455,7 @@ export type WebhookCreateInput = {
 };
 
 /**
- * Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
+ * Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
  *
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
@@ -28188,6 +29606,17 @@ export type WebhookEventTypeAsyncEnum =
   | 'CHANNEL_UPDATED'
   /** A new checkout is created. */
   | 'CHECKOUT_CREATED'
+  /**
+   * A checkout was fully authorized (its `authorizeStatus` is `FULL`).
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
+  | 'CHECKOUT_FULLY_AUTHORIZED'
+  /**
+   * A checkout was fully paid (its `chargeStatus` is `FULL` or `OVERCHARGED`). This event is not sent if payments are only authorized but not fully charged.
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
   | 'CHECKOUT_FULLY_PAID'
   /** A checkout metadata is updated. */
   | 'CHECKOUT_METADATA_UPDATED'
@@ -28479,6 +29908,17 @@ export type WebhookEventTypeEnum =
   | 'CHECKOUT_CREATED'
   /** Filter shipping methods for checkout. */
   | 'CHECKOUT_FILTER_SHIPPING_METHODS'
+  /**
+   * A checkout was fully authorized (its `authorizeStatus` is `FULL`).
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
+  | 'CHECKOUT_FULLY_AUTHORIZED'
+  /**
+   * A checkout was fully paid (its `chargeStatus` is `FULL` or `OVERCHARGED`). This event is not sent if payments are only authorized but not fully charged.
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
   | 'CHECKOUT_FULLY_PAID'
   /** A checkout metadata is updated. */
   | 'CHECKOUT_METADATA_UPDATED'
@@ -28809,6 +30249,7 @@ export type WebhookSampleEventTypeEnum =
   | 'CHANNEL_STATUS_CHANGED'
   | 'CHANNEL_UPDATED'
   | 'CHECKOUT_CREATED'
+  | 'CHECKOUT_FULLY_AUTHORIZED'
   | 'CHECKOUT_FULLY_PAID'
   | 'CHECKOUT_METADATA_UPDATED'
   | 'CHECKOUT_UPDATED'
@@ -29009,6 +30450,12 @@ export type WeightUnitsEnum =
   | 'OZ'
   | 'TONNE';
 
+/** Represents the WIDGET target options for an app extension. */
+export type WidgetTargetOptions = {
+  /** HTTP method for Widget target (GET or POST) */
+  readonly method: HttpMethod;
+};
+
 /** _Entity union as defined by Federation spec. */
 export type _Entity = Address | App | Category | Collection | Group | Order | PageType | Product | ProductMedia | ProductType | ProductVariant | User;
 
@@ -29080,6 +30527,8 @@ type EventMetadata_ChannelUpdated_Fragment = { readonly version?: string | null,
 type EventMetadata_CheckoutCreated_Fragment = { readonly version?: string | null, readonly recipient?: { readonly id: string } | null };
 
 type EventMetadata_CheckoutFilterShippingMethods_Fragment = { readonly version?: string | null, readonly recipient?: { readonly id: string } | null };
+
+type EventMetadata_CheckoutFullyAuthorized_Fragment = { readonly version?: string | null, readonly recipient?: { readonly id: string } | null };
 
 type EventMetadata_CheckoutFullyPaid_Fragment = { readonly version?: string | null, readonly recipient?: { readonly id: string } | null };
 
@@ -29339,13 +30788,28 @@ type EventMetadata_WarehouseMetadataUpdated_Fragment = { readonly version?: stri
 
 type EventMetadata_WarehouseUpdated_Fragment = { readonly version?: string | null, readonly recipient?: { readonly id: string } | null };
 
-export type EventMetadataFragment = EventMetadata_AccountChangeEmailRequested_Fragment | EventMetadata_AccountConfirmationRequested_Fragment | EventMetadata_AccountConfirmed_Fragment | EventMetadata_AccountDeleteRequested_Fragment | EventMetadata_AccountDeleted_Fragment | EventMetadata_AccountEmailChanged_Fragment | EventMetadata_AccountSetPasswordRequested_Fragment | EventMetadata_AddressCreated_Fragment | EventMetadata_AddressDeleted_Fragment | EventMetadata_AddressUpdated_Fragment | EventMetadata_AppDeleted_Fragment | EventMetadata_AppInstalled_Fragment | EventMetadata_AppStatusChanged_Fragment | EventMetadata_AppUpdated_Fragment | EventMetadata_AttributeCreated_Fragment | EventMetadata_AttributeDeleted_Fragment | EventMetadata_AttributeUpdated_Fragment | EventMetadata_AttributeValueCreated_Fragment | EventMetadata_AttributeValueDeleted_Fragment | EventMetadata_AttributeValueUpdated_Fragment | EventMetadata_CalculateTaxes_Fragment | EventMetadata_CategoryCreated_Fragment | EventMetadata_CategoryDeleted_Fragment | EventMetadata_CategoryUpdated_Fragment | EventMetadata_ChannelCreated_Fragment | EventMetadata_ChannelDeleted_Fragment | EventMetadata_ChannelMetadataUpdated_Fragment | EventMetadata_ChannelStatusChanged_Fragment | EventMetadata_ChannelUpdated_Fragment | EventMetadata_CheckoutCreated_Fragment | EventMetadata_CheckoutFilterShippingMethods_Fragment | EventMetadata_CheckoutFullyPaid_Fragment | EventMetadata_CheckoutMetadataUpdated_Fragment | EventMetadata_CheckoutUpdated_Fragment | EventMetadata_CollectionCreated_Fragment | EventMetadata_CollectionDeleted_Fragment | EventMetadata_CollectionMetadataUpdated_Fragment | EventMetadata_CollectionUpdated_Fragment | EventMetadata_CustomerCreated_Fragment | EventMetadata_CustomerMetadataUpdated_Fragment | EventMetadata_CustomerUpdated_Fragment | EventMetadata_DraftOrderCreated_Fragment | EventMetadata_DraftOrderDeleted_Fragment | EventMetadata_DraftOrderUpdated_Fragment | EventMetadata_FulfillmentApproved_Fragment | EventMetadata_FulfillmentCanceled_Fragment | EventMetadata_FulfillmentCreated_Fragment | EventMetadata_FulfillmentMetadataUpdated_Fragment | EventMetadata_FulfillmentTrackingNumberUpdated_Fragment | EventMetadata_GiftCardCreated_Fragment | EventMetadata_GiftCardDeleted_Fragment | EventMetadata_GiftCardExportCompleted_Fragment | EventMetadata_GiftCardMetadataUpdated_Fragment | EventMetadata_GiftCardSent_Fragment | EventMetadata_GiftCardStatusChanged_Fragment | EventMetadata_GiftCardUpdated_Fragment | EventMetadata_InvoiceDeleted_Fragment | EventMetadata_InvoiceRequested_Fragment | EventMetadata_InvoiceSent_Fragment | EventMetadata_ListStoredPaymentMethods_Fragment | EventMetadata_MenuCreated_Fragment | EventMetadata_MenuDeleted_Fragment | EventMetadata_MenuItemCreated_Fragment | EventMetadata_MenuItemDeleted_Fragment | EventMetadata_MenuItemUpdated_Fragment | EventMetadata_MenuUpdated_Fragment | EventMetadata_OrderBulkCreated_Fragment | EventMetadata_OrderCancelled_Fragment | EventMetadata_OrderConfirmed_Fragment | EventMetadata_OrderCreated_Fragment | EventMetadata_OrderExpired_Fragment | EventMetadata_OrderFilterShippingMethods_Fragment | EventMetadata_OrderFulfilled_Fragment | EventMetadata_OrderFullyPaid_Fragment | EventMetadata_OrderFullyRefunded_Fragment | EventMetadata_OrderMetadataUpdated_Fragment | EventMetadata_OrderPaid_Fragment | EventMetadata_OrderRefunded_Fragment | EventMetadata_OrderUpdated_Fragment | EventMetadata_PageCreated_Fragment | EventMetadata_PageDeleted_Fragment | EventMetadata_PageTypeCreated_Fragment | EventMetadata_PageTypeDeleted_Fragment | EventMetadata_PageTypeUpdated_Fragment | EventMetadata_PageUpdated_Fragment | EventMetadata_PaymentAuthorize_Fragment | EventMetadata_PaymentCaptureEvent_Fragment | EventMetadata_PaymentConfirmEvent_Fragment | EventMetadata_PaymentGatewayInitializeSession_Fragment | EventMetadata_PaymentGatewayInitializeTokenizationSession_Fragment | EventMetadata_PaymentListGateways_Fragment | EventMetadata_PaymentMethodInitializeTokenizationSession_Fragment | EventMetadata_PaymentMethodProcessTokenizationSession_Fragment | EventMetadata_PaymentProcessEvent_Fragment | EventMetadata_PaymentRefundEvent_Fragment | EventMetadata_PaymentVoidEvent_Fragment | EventMetadata_PermissionGroupCreated_Fragment | EventMetadata_PermissionGroupDeleted_Fragment | EventMetadata_PermissionGroupUpdated_Fragment | EventMetadata_ProductCreated_Fragment | EventMetadata_ProductDeleted_Fragment | EventMetadata_ProductExportCompleted_Fragment | EventMetadata_ProductMediaCreated_Fragment | EventMetadata_ProductMediaDeleted_Fragment | EventMetadata_ProductMediaUpdated_Fragment | EventMetadata_ProductMetadataUpdated_Fragment | EventMetadata_ProductUpdated_Fragment | EventMetadata_ProductVariantBackInStock_Fragment | EventMetadata_ProductVariantCreated_Fragment | EventMetadata_ProductVariantDeleted_Fragment | EventMetadata_ProductVariantMetadataUpdated_Fragment | EventMetadata_ProductVariantOutOfStock_Fragment | EventMetadata_ProductVariantStockUpdated_Fragment | EventMetadata_ProductVariantUpdated_Fragment | EventMetadata_PromotionCreated_Fragment | EventMetadata_PromotionDeleted_Fragment | EventMetadata_PromotionEnded_Fragment | EventMetadata_PromotionRuleCreated_Fragment | EventMetadata_PromotionRuleDeleted_Fragment | EventMetadata_PromotionRuleUpdated_Fragment | EventMetadata_PromotionStarted_Fragment | EventMetadata_PromotionUpdated_Fragment | EventMetadata_SaleCreated_Fragment | EventMetadata_SaleDeleted_Fragment | EventMetadata_SaleToggle_Fragment | EventMetadata_SaleUpdated_Fragment | EventMetadata_ShippingListMethodsForCheckout_Fragment | EventMetadata_ShippingPriceCreated_Fragment | EventMetadata_ShippingPriceDeleted_Fragment | EventMetadata_ShippingPriceUpdated_Fragment | EventMetadata_ShippingZoneCreated_Fragment | EventMetadata_ShippingZoneDeleted_Fragment | EventMetadata_ShippingZoneMetadataUpdated_Fragment | EventMetadata_ShippingZoneUpdated_Fragment | EventMetadata_ShopMetadataUpdated_Fragment | EventMetadata_StaffCreated_Fragment | EventMetadata_StaffDeleted_Fragment | EventMetadata_StaffSetPasswordRequested_Fragment | EventMetadata_StaffUpdated_Fragment | EventMetadata_StoredPaymentMethodDeleteRequested_Fragment | EventMetadata_ThumbnailCreated_Fragment | EventMetadata_TransactionCancelationRequested_Fragment | EventMetadata_TransactionChargeRequested_Fragment | EventMetadata_TransactionInitializeSession_Fragment | EventMetadata_TransactionItemMetadataUpdated_Fragment | EventMetadata_TransactionProcessSession_Fragment | EventMetadata_TransactionRefundRequested_Fragment | EventMetadata_TranslationCreated_Fragment | EventMetadata_TranslationUpdated_Fragment | EventMetadata_VoucherCodeExportCompleted_Fragment | EventMetadata_VoucherCodesCreated_Fragment | EventMetadata_VoucherCodesDeleted_Fragment | EventMetadata_VoucherCreated_Fragment | EventMetadata_VoucherDeleted_Fragment | EventMetadata_VoucherMetadataUpdated_Fragment | EventMetadata_VoucherUpdated_Fragment | EventMetadata_WarehouseCreated_Fragment | EventMetadata_WarehouseDeleted_Fragment | EventMetadata_WarehouseMetadataUpdated_Fragment | EventMetadata_WarehouseUpdated_Fragment;
+export type EventMetadataFragment = EventMetadata_AccountChangeEmailRequested_Fragment | EventMetadata_AccountConfirmationRequested_Fragment | EventMetadata_AccountConfirmed_Fragment | EventMetadata_AccountDeleteRequested_Fragment | EventMetadata_AccountDeleted_Fragment | EventMetadata_AccountEmailChanged_Fragment | EventMetadata_AccountSetPasswordRequested_Fragment | EventMetadata_AddressCreated_Fragment | EventMetadata_AddressDeleted_Fragment | EventMetadata_AddressUpdated_Fragment | EventMetadata_AppDeleted_Fragment | EventMetadata_AppInstalled_Fragment | EventMetadata_AppStatusChanged_Fragment | EventMetadata_AppUpdated_Fragment | EventMetadata_AttributeCreated_Fragment | EventMetadata_AttributeDeleted_Fragment | EventMetadata_AttributeUpdated_Fragment | EventMetadata_AttributeValueCreated_Fragment | EventMetadata_AttributeValueDeleted_Fragment | EventMetadata_AttributeValueUpdated_Fragment | EventMetadata_CalculateTaxes_Fragment | EventMetadata_CategoryCreated_Fragment | EventMetadata_CategoryDeleted_Fragment | EventMetadata_CategoryUpdated_Fragment | EventMetadata_ChannelCreated_Fragment | EventMetadata_ChannelDeleted_Fragment | EventMetadata_ChannelMetadataUpdated_Fragment | EventMetadata_ChannelStatusChanged_Fragment | EventMetadata_ChannelUpdated_Fragment | EventMetadata_CheckoutCreated_Fragment | EventMetadata_CheckoutFilterShippingMethods_Fragment | EventMetadata_CheckoutFullyAuthorized_Fragment | EventMetadata_CheckoutFullyPaid_Fragment | EventMetadata_CheckoutMetadataUpdated_Fragment | EventMetadata_CheckoutUpdated_Fragment | EventMetadata_CollectionCreated_Fragment | EventMetadata_CollectionDeleted_Fragment | EventMetadata_CollectionMetadataUpdated_Fragment | EventMetadata_CollectionUpdated_Fragment | EventMetadata_CustomerCreated_Fragment | EventMetadata_CustomerMetadataUpdated_Fragment | EventMetadata_CustomerUpdated_Fragment | EventMetadata_DraftOrderCreated_Fragment | EventMetadata_DraftOrderDeleted_Fragment | EventMetadata_DraftOrderUpdated_Fragment | EventMetadata_FulfillmentApproved_Fragment | EventMetadata_FulfillmentCanceled_Fragment | EventMetadata_FulfillmentCreated_Fragment | EventMetadata_FulfillmentMetadataUpdated_Fragment | EventMetadata_FulfillmentTrackingNumberUpdated_Fragment | EventMetadata_GiftCardCreated_Fragment | EventMetadata_GiftCardDeleted_Fragment | EventMetadata_GiftCardExportCompleted_Fragment | EventMetadata_GiftCardMetadataUpdated_Fragment | EventMetadata_GiftCardSent_Fragment | EventMetadata_GiftCardStatusChanged_Fragment | EventMetadata_GiftCardUpdated_Fragment | EventMetadata_InvoiceDeleted_Fragment | EventMetadata_InvoiceRequested_Fragment | EventMetadata_InvoiceSent_Fragment | EventMetadata_ListStoredPaymentMethods_Fragment | EventMetadata_MenuCreated_Fragment | EventMetadata_MenuDeleted_Fragment | EventMetadata_MenuItemCreated_Fragment | EventMetadata_MenuItemDeleted_Fragment | EventMetadata_MenuItemUpdated_Fragment | EventMetadata_MenuUpdated_Fragment | EventMetadata_OrderBulkCreated_Fragment | EventMetadata_OrderCancelled_Fragment | EventMetadata_OrderConfirmed_Fragment | EventMetadata_OrderCreated_Fragment | EventMetadata_OrderExpired_Fragment | EventMetadata_OrderFilterShippingMethods_Fragment | EventMetadata_OrderFulfilled_Fragment | EventMetadata_OrderFullyPaid_Fragment | EventMetadata_OrderFullyRefunded_Fragment | EventMetadata_OrderMetadataUpdated_Fragment | EventMetadata_OrderPaid_Fragment | EventMetadata_OrderRefunded_Fragment | EventMetadata_OrderUpdated_Fragment | EventMetadata_PageCreated_Fragment | EventMetadata_PageDeleted_Fragment | EventMetadata_PageTypeCreated_Fragment | EventMetadata_PageTypeDeleted_Fragment | EventMetadata_PageTypeUpdated_Fragment | EventMetadata_PageUpdated_Fragment | EventMetadata_PaymentAuthorize_Fragment | EventMetadata_PaymentCaptureEvent_Fragment | EventMetadata_PaymentConfirmEvent_Fragment | EventMetadata_PaymentGatewayInitializeSession_Fragment | EventMetadata_PaymentGatewayInitializeTokenizationSession_Fragment | EventMetadata_PaymentListGateways_Fragment | EventMetadata_PaymentMethodInitializeTokenizationSession_Fragment | EventMetadata_PaymentMethodProcessTokenizationSession_Fragment | EventMetadata_PaymentProcessEvent_Fragment | EventMetadata_PaymentRefundEvent_Fragment | EventMetadata_PaymentVoidEvent_Fragment | EventMetadata_PermissionGroupCreated_Fragment | EventMetadata_PermissionGroupDeleted_Fragment | EventMetadata_PermissionGroupUpdated_Fragment | EventMetadata_ProductCreated_Fragment | EventMetadata_ProductDeleted_Fragment | EventMetadata_ProductExportCompleted_Fragment | EventMetadata_ProductMediaCreated_Fragment | EventMetadata_ProductMediaDeleted_Fragment | EventMetadata_ProductMediaUpdated_Fragment | EventMetadata_ProductMetadataUpdated_Fragment | EventMetadata_ProductUpdated_Fragment | EventMetadata_ProductVariantBackInStock_Fragment | EventMetadata_ProductVariantCreated_Fragment | EventMetadata_ProductVariantDeleted_Fragment | EventMetadata_ProductVariantMetadataUpdated_Fragment | EventMetadata_ProductVariantOutOfStock_Fragment | EventMetadata_ProductVariantStockUpdated_Fragment | EventMetadata_ProductVariantUpdated_Fragment | EventMetadata_PromotionCreated_Fragment | EventMetadata_PromotionDeleted_Fragment | EventMetadata_PromotionEnded_Fragment | EventMetadata_PromotionRuleCreated_Fragment | EventMetadata_PromotionRuleDeleted_Fragment | EventMetadata_PromotionRuleUpdated_Fragment | EventMetadata_PromotionStarted_Fragment | EventMetadata_PromotionUpdated_Fragment | EventMetadata_SaleCreated_Fragment | EventMetadata_SaleDeleted_Fragment | EventMetadata_SaleToggle_Fragment | EventMetadata_SaleUpdated_Fragment | EventMetadata_ShippingListMethodsForCheckout_Fragment | EventMetadata_ShippingPriceCreated_Fragment | EventMetadata_ShippingPriceDeleted_Fragment | EventMetadata_ShippingPriceUpdated_Fragment | EventMetadata_ShippingZoneCreated_Fragment | EventMetadata_ShippingZoneDeleted_Fragment | EventMetadata_ShippingZoneMetadataUpdated_Fragment | EventMetadata_ShippingZoneUpdated_Fragment | EventMetadata_ShopMetadataUpdated_Fragment | EventMetadata_StaffCreated_Fragment | EventMetadata_StaffDeleted_Fragment | EventMetadata_StaffSetPasswordRequested_Fragment | EventMetadata_StaffUpdated_Fragment | EventMetadata_StoredPaymentMethodDeleteRequested_Fragment | EventMetadata_ThumbnailCreated_Fragment | EventMetadata_TransactionCancelationRequested_Fragment | EventMetadata_TransactionChargeRequested_Fragment | EventMetadata_TransactionInitializeSession_Fragment | EventMetadata_TransactionItemMetadataUpdated_Fragment | EventMetadata_TransactionProcessSession_Fragment | EventMetadata_TransactionRefundRequested_Fragment | EventMetadata_TranslationCreated_Fragment | EventMetadata_TranslationUpdated_Fragment | EventMetadata_VoucherCodeExportCompleted_Fragment | EventMetadata_VoucherCodesCreated_Fragment | EventMetadata_VoucherCodesDeleted_Fragment | EventMetadata_VoucherCreated_Fragment | EventMetadata_VoucherDeleted_Fragment | EventMetadata_VoucherMetadataUpdated_Fragment | EventMetadata_VoucherUpdated_Fragment | EventMetadata_WarehouseCreated_Fragment | EventMetadata_WarehouseDeleted_Fragment | EventMetadata_WarehouseMetadataUpdated_Fragment | EventMetadata_WarehouseUpdated_Fragment;
 
 type SourceObject_Checkout_Fragment = { readonly __typename: 'Checkout', readonly id: string, readonly channel: { readonly id: string, readonly slug: string } };
 
 type SourceObject_Order_Fragment = { readonly __typename: 'Order', readonly id: string, readonly channel: { readonly id: string, readonly slug: string } };
 
 export type SourceObjectFragment = SourceObject_Checkout_Fragment | SourceObject_Order_Fragment;
+
+export type TransactionEventReportWithPaymentDetailsMutationVariables = Exact<{
+  transactionId: Scalars['ID']['input'];
+  message: Scalars['String']['input'];
+  amount: Scalars['PositiveDecimal']['input'];
+  pspReference: Scalars['String']['input'];
+  time: Scalars['DateTime']['input'];
+  type: TransactionEventTypeEnum;
+  availableActions?: InputMaybe<ReadonlyArray<TransactionActionEnum> | TransactionActionEnum>;
+  externalUrl?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
+}>;
+
+
+export type TransactionEventReportWithPaymentDetailsMutation = { readonly transactionEventReport?: { readonly alreadyProcessed?: boolean | null, readonly errors: ReadonlyArray<{ readonly message?: string | null, readonly code: TransactionEventReportErrorCode }>, readonly transactionEvent?: { readonly id: string } | null } | null };
 
 export type TransactionEventReportMutationVariables = Exact<{
   transactionId: Scalars['ID']['input'];
@@ -29551,6 +31015,30 @@ export const UntypedTransactionRefundRequestedEventFragmentDoc = gql`
   }
 }
     `;
+export const UntypedTransactionEventReportWithPaymentDetailsDocument = gql`
+    mutation TransactionEventReportWithPaymentDetails($transactionId: ID!, $message: String!, $amount: PositiveDecimal!, $pspReference: String!, $time: DateTime!, $type: TransactionEventTypeEnum!, $availableActions: [TransactionActionEnum!], $externalUrl: String, $paymentMethodDetails: PaymentMethodDetailsInput) {
+  transactionEventReport(
+    id: $transactionId
+    message: $message
+    amount: $amount
+    pspReference: $pspReference
+    time: $time
+    type: $type
+    availableActions: $availableActions
+    externalUrl: $externalUrl
+    paymentMethodDetails: $paymentMethodDetails
+  ) {
+    alreadyProcessed
+    errors {
+      message
+      code
+    }
+    transactionEvent {
+      id
+    }
+  }
+}
+    `;
 export const UntypedTransactionEventReportDocument = gql`
     mutation TransactionEventReport($transactionId: ID!, $message: String!, $amount: PositiveDecimal!, $pspReference: String!, $time: DateTime!, $type: TransactionEventTypeEnum!, $availableActions: [TransactionActionEnum!], $externalUrl: String) {
   transactionEventReport(
@@ -29647,6 +31135,7 @@ export const TransactionChargeRequestedEventFragmentDoc = {"kind":"Document","de
 export const TransactionInitializeSessionEventFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TransactionInitializeSessionEvent"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionInitializeSession"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventMetadata"}},{"kind":"Field","name":{"kind":"Name","value":"action"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"actionType"}}]}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"transaction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sourceObject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SourceObject"}}]}},{"kind":"Field","name":{"kind":"Name","value":"idempotencyKey"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Channel"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Channel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventMetadata"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"recipient"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SourceObject"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrderOrCheckout"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Checkout"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Channel"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Order"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Channel"}}]}}]}}]}}]} as unknown as DocumentNode<TransactionInitializeSessionEventFragment, unknown>;
 export const TransactionProcessSessionEventFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TransactionProcessSessionEvent"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionProcessSession"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventMetadata"}},{"kind":"Field","name":{"kind":"Name","value":"transaction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pspReference"}}]}},{"kind":"Field","name":{"kind":"Name","value":"action"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"actionType"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sourceObject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SourceObject"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Channel"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Channel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventMetadata"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"recipient"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SourceObject"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrderOrCheckout"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Checkout"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Channel"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Order"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Channel"}}]}}]}}]}}]} as unknown as DocumentNode<TransactionProcessSessionEventFragment, unknown>;
 export const TransactionRefundRequestedEventFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"TransactionRefundRequestedEvent"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionRefundRequested"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventMetadata"}},{"kind":"Field","name":{"kind":"Name","value":"action"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}},{"kind":"Field","name":{"kind":"Name","value":"transaction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}},{"kind":"Field","name":{"kind":"Name","value":"checkout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Channel"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Channel"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventMetadata"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"recipient"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Channel"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Channel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]} as unknown as DocumentNode<TransactionRefundRequestedEventFragment, unknown>;
+export const TransactionEventReportWithPaymentDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"TransactionEventReportWithPaymentDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"transactionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"message"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PositiveDecimal"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"time"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionEventTypeEnum"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"availableActions"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionActionEnum"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"externalUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentMethodDetails"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaymentMethodDetailsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transactionEventReport"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"transactionId"}}},{"kind":"Argument","name":{"kind":"Name","value":"message"},"value":{"kind":"Variable","name":{"kind":"Name","value":"message"}}},{"kind":"Argument","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"Argument","name":{"kind":"Name","value":"pspReference"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}}},{"kind":"Argument","name":{"kind":"Name","value":"time"},"value":{"kind":"Variable","name":{"kind":"Name","value":"time"}}},{"kind":"Argument","name":{"kind":"Name","value":"type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}},{"kind":"Argument","name":{"kind":"Name","value":"availableActions"},"value":{"kind":"Variable","name":{"kind":"Name","value":"availableActions"}}},{"kind":"Argument","name":{"kind":"Name","value":"externalUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"externalUrl"}}},{"kind":"Argument","name":{"kind":"Name","value":"paymentMethodDetails"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentMethodDetails"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alreadyProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"transactionEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<TransactionEventReportWithPaymentDetailsMutation, TransactionEventReportWithPaymentDetailsMutationVariables>;
 export const TransactionEventReportDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"TransactionEventReport"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"transactionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"message"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PositiveDecimal"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"time"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DateTime"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionEventTypeEnum"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"availableActions"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionActionEnum"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"externalUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transactionEventReport"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"transactionId"}}},{"kind":"Argument","name":{"kind":"Name","value":"message"},"value":{"kind":"Variable","name":{"kind":"Name","value":"message"}}},{"kind":"Argument","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"Argument","name":{"kind":"Name","value":"pspReference"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}}},{"kind":"Argument","name":{"kind":"Name","value":"time"},"value":{"kind":"Variable","name":{"kind":"Name","value":"time"}}},{"kind":"Argument","name":{"kind":"Name","value":"type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}},{"kind":"Argument","name":{"kind":"Name","value":"availableActions"},"value":{"kind":"Variable","name":{"kind":"Name","value":"availableActions"}}},{"kind":"Argument","name":{"kind":"Name","value":"externalUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"externalUrl"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alreadyProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"transactionEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<TransactionEventReportMutation, TransactionEventReportMutationVariables>;
 export const FetchChannelsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchChannels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"channels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Channel"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Channel"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Channel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]} as unknown as DocumentNode<FetchChannelsQuery, FetchChannelsQueryVariables>;
 export const PaymentGatewayInitializeSessionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"PaymentGatewayInitializeSession"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"event"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PaymentGatewayInitializeSessionEvent"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"EventMetadata"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Event"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"recipient"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Channel"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Channel"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SourceObject"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"OrderOrCheckout"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Checkout"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Channel"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Order"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Channel"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PaymentGatewayInitializeSessionEvent"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"PaymentGatewayInitializeSession"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"EventMetadata"}},{"kind":"Field","name":{"kind":"Name","value":"sourceObject"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"SourceObject"}}]}}]}}]} as unknown as DocumentNode<PaymentGatewayInitializeSessionSubscription, PaymentGatewayInitializeSessionSubscriptionVariables>;
