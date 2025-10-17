@@ -1,12 +1,15 @@
 import { Box, Text } from "@saleor/macaw-ui";
 
 import { ErrorContext } from "../services/email-compiler";
+import { TemplateErrorCode, templateErrorCodes } from "../services/template-error-codes";
 
 interface TemplateErrorDisplayProps {
   error: {
     message: string;
     data?: {
       errorContext?: ErrorContext;
+      publicMessage?: string;
+      errorCode?: TemplateErrorCode;
     } | null;
   };
 }
@@ -17,94 +20,97 @@ interface ErrorHint {
   links?: Array<{ label: string; url: string }>;
 }
 
-function getErrorHint(errorMessage: string): ErrorHint | null {
-  // Invalid JSON in payload editor
-  if (errorMessage.includes("Invalid payload JSON")) {
-    return {
-      title: "Invalid JSON Syntax",
-      description:
-        "The test payload JSON is invalid. Check for missing commas, quotes, brackets, or trailing commas.",
-      links: [
-        {
-          label: "JSON Syntax Guide",
-          url: "https://www.json.org/json-en.html",
-        },
-        {
-          label: "JSON Validator",
-          url: "https://jsonlint.com/",
-        },
-      ],
-    };
-  }
+const getErrorHint = (
+  errorCode: TemplateErrorCode | undefined,
+  errorMessage: string,
+): ErrorHint | null => {
+  switch (errorCode) {
+    case templateErrorCodes.INVALID_PAYLOAD_JSON:
+      return {
+        title: "Invalid JSON Syntax",
+        description:
+          "The test payload JSON is invalid. Check for missing commas, quotes, brackets, or trailing commas.",
+        links: [
+          {
+            label: "JSON Syntax Guide",
+            url: "https://www.json.org/json-en.html",
+          },
+          {
+            label: "JSON Validator",
+            url: "https://jsonlint.com/",
+          },
+        ],
+      };
+    case templateErrorCodes.HANDLEBARS_MISSING_HELPER: {
+      const helperMatch = errorMessage.match(/Missing helper:\s*["']?(\w+)["']?/);
+      const helperName = helperMatch?.[1];
 
-  // Missing Handlebars helper
-  if (errorMessage.includes("Missing helper")) {
-    const helperMatch = errorMessage.match(/Missing helper:\s*["']?(\w+)["']?/);
-    const helperName = helperMatch?.[1];
-
-    return {
-      title: "Missing Handlebars Helper",
-      description: helperName
-        ? `The helper "${helperName}" is not available. Make sure you're using a valid Handlebars helper.`
-        : "The template uses a helper that doesn't exist. See error message below for more details.",
-      links: [
-        {
-          label: "Available Handlebars Helpers",
-          url: "https://github.com/helpers/handlebars-helpers#helpers",
-        },
-        {
-          label: "Handlebars Documentation",
-          url: "https://handlebarsjs.com/guide/builtin-helpers.html",
-        },
-      ],
-    };
-  }
-
-  // Handlebars parse error
-  if (errorMessage.includes("Parse error")) {
-    return {
-      title: "Template Syntax Error",
-      description:
-        "There's a syntax error in your Handlebars template. Check for unclosed tags, missing brackets, or invalid expressions.",
-      links: [
-        {
-          label: "Handlebars Syntax Guide",
-          url: "https://handlebarsjs.com/guide/",
-        },
-      ],
-    };
-  }
-
-  // MJML error
-  if (errorMessage.includes("MJML") || errorMessage.includes("mj-")) {
-    return {
-      title: "MJML Template Error",
-      description:
-        "There's an error in your MJML markup. Check for unclosed tags, invalid components, or incorrect nesting.",
-      links: [
-        {
-          label: "MJML Documentation",
-          url: "https://documentation.mjml.io/",
-        },
-        {
-          label: "MJML Component Reference",
-          url: "https://documentation.mjml.io/#components",
-        },
-      ],
-    };
-  }
-
-  // Empty template
-  if (errorMessage.includes("empty")) {
-    return {
-      title: "Empty Template",
-      description: "The template cannot be empty. Please add content to your email template.",
-      links: [],
-    };
+      return {
+        title: "Missing Handlebars Helper",
+        description: helperName
+          ? `The helper "${helperName}" is not available. Make sure you're using a valid Handlebars helper.`
+          : "The template uses a helper that doesn't exist. See error message below for more details.",
+        links: [
+          {
+            label: "Available Handlebars Helpers",
+            url: "https://github.com/helpers/handlebars-helpers#helpers",
+          },
+          {
+            label: "Handlebars Documentation",
+            url: "https://handlebarsjs.com/guide/builtin-helpers.html",
+          },
+        ],
+      };
+    }
+    case templateErrorCodes.HANDLEBARS_PARSE_ERROR:
+    case templateErrorCodes.HANDLEBARS_COMPILE_ERROR:
+      return {
+        title: "Template Syntax Error",
+        description:
+          "There's a syntax error in your Handlebars template. Check for unclosed tags, missing brackets, or invalid expressions.",
+        links: [
+          {
+            label: "Handlebars Syntax Guide",
+            url: "https://handlebarsjs.com/guide/",
+          },
+        ],
+      };
+    case templateErrorCodes.MJML_VALIDATION_ERROR:
+    case templateErrorCodes.MJML_COMPILE_ERROR:
+      return {
+        title: "MJML Template Error",
+        description:
+          "There's an error in your MJML markup. Check for unclosed tags, invalid components, or incorrect nesting.",
+        links: [
+          {
+            label: "MJML Documentation",
+            url: "https://documentation.mjml.io/",
+          },
+          {
+            label: "MJML Component Reference",
+            url: "https://documentation.mjml.io/#components",
+          },
+        ],
+      };
+    case templateErrorCodes.EMPTY_EMAIL_BODY:
+    case templateErrorCodes.EMPTY_EMAIL_SUBJECT:
+      return {
+        title: "Empty Template",
+        description: "The template cannot be empty. Please add content to your email template.",
+        links: [],
+      };
+    case templateErrorCodes.PLAINTEXT_COMPILATION_FAILED:
+      return {
+        title: "Plain Text Conversion Error",
+        description:
+          "The compiled HTML could not be converted to plain text. Check if the MJML output renders correctly.",
+      };
+    default:
+      break;
   }
 
   return null;
-}
+};
 
 function getErrorTitle(errorContext?: ErrorContext): string {
   switch (errorContext) {
@@ -119,14 +125,9 @@ function getErrorTitle(errorContext?: ErrorContext): string {
   }
 }
 
-function cleanErrorMessage(message: string): string {
-  // Remove error class name prefix (e.g., "FailedCompileError: ")
-  return message.replace(/^[A-Z][a-zA-Z]*Error:\s*/, "");
-}
-
 export const TemplateErrorDisplay = ({ error }: TemplateErrorDisplayProps) => {
-  const cleanedMessage = cleanErrorMessage(error.message);
-  const hint = getErrorHint(cleanedMessage);
+  const displayMessage = error.data?.publicMessage || error.message;
+  const hint = getErrorHint(error.data?.errorCode, displayMessage);
   const errorTitle = getErrorTitle(error.data?.errorContext);
 
   return (
@@ -192,7 +193,7 @@ export const TemplateErrorDisplay = ({ error }: TemplateErrorDisplayProps) => {
         }}
       >
         <Text color="default1" size={2}>
-          {cleanedMessage}
+          {displayMessage}
         </Text>
       </Box>
     </Box>

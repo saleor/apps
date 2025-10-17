@@ -4,6 +4,7 @@ import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { createLogger } from "../../../logger";
+import { TemplateErrorCode, templateErrorCodes } from "./template-error-codes";
 
 const logger = createLogger("compileHandlebarsTemplate");
 
@@ -19,16 +20,35 @@ export interface ITemplateCompiler {
 
 handlebars_helpers({ handlebars: Handlebars });
 
+const resolveHandlebarsErrorCode = (message: string): TemplateErrorCode => {
+  if (message.includes("Missing helper")) {
+    return templateErrorCodes.HANDLEBARS_MISSING_HELPER;
+  }
+
+  if (message.includes("Parse error")) {
+    return templateErrorCodes.HANDLEBARS_PARSE_ERROR;
+  }
+
+  return templateErrorCodes.HANDLEBARS_COMPILE_ERROR;
+};
+
 export class HandlebarsTemplateCompiler implements ITemplateCompiler {
-  static HandlebarsTemplateCompilerError = BaseError.subclass("HandlebarsTemplateCompilerError");
-  static FailedCompileError = this.HandlebarsTemplateCompilerError.subclass("FailedCompileError");
+  static HandlebarsTemplateCompilerError = BaseError.subclass("HandlebarsTemplateCompilerError", {
+    props: {} as { publicMessage: string; errorCode: TemplateErrorCode },
+  });
+  static FailedCompileError = this.HandlebarsTemplateCompilerError.subclass("FailedCompileError", {
+    props: {
+      publicMessage: "Template cannot be compiled due to invalid syntax",
+      errorCode: templateErrorCodes.HANDLEBARS_COMPILE_ERROR,
+    },
+  });
 
   compile(
     template: string,
     variables: any,
   ): Result<
     { template: string },
-    InstanceType<typeof HandlebarsTemplateCompiler.HandlebarsTemplateCompilerError>
+    InstanceType<typeof HandlebarsTemplateCompiler.FailedCompileError>
   > {
     logger.debug("Compiling handlebars template");
     try {
@@ -44,10 +64,15 @@ export class HandlebarsTemplateCompiler implements ITemplateCompiler {
       logger.warn("Failed to compile template - user configuration is invalid", { error: error });
 
       const errorMessage = error instanceof Error ? error.message : "Failed to compile template";
+      const errorCode = resolveHandlebarsErrorCode(errorMessage);
 
       return err(
         new HandlebarsTemplateCompiler.FailedCompileError(errorMessage, {
           errors: [error],
+          props: {
+            publicMessage: errorMessage,
+            errorCode,
+          },
         }),
       );
     }

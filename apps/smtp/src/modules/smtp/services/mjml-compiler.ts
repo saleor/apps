@@ -3,14 +3,22 @@ import { err, fromThrowable, ok, Result } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { createLogger } from "../../../logger";
+import { TemplateErrorCode, templateErrorCodes } from "./template-error-codes";
 
 export interface IMjmlCompiler {
-  compile(mjml: string): Result<string, InstanceType<typeof BaseError>>;
+  compile(mjml: string): Result<string, InstanceType<typeof MjmlCompiler.MjmlCompilerError>>;
 }
 
 export class MjmlCompiler implements IMjmlCompiler {
-  static MjmlCompilerError = BaseError.subclass("MjmlCompilerError");
-  static FailedToCompileError = this.MjmlCompilerError.subclass("FailedToCompileError");
+  static MjmlCompilerError = BaseError.subclass("MjmlCompilerError", {
+    props: {} as { publicMessage: string; errorCode: TemplateErrorCode },
+  });
+  static FailedToCompileError = this.MjmlCompilerError.subclass("FailedToCompileError", {
+    props: {
+      publicMessage: "MJML syntax compilation error",
+      errorCode: templateErrorCodes.MJML_COMPILE_ERROR,
+    },
+  });
 
   private logger = createLogger("MjmlCompiler");
 
@@ -22,6 +30,10 @@ export class MjmlCompiler implements IMjmlCompiler {
 
       return new MjmlCompiler.FailedToCompileError(errorMessage, {
         errors: [error],
+        props: {
+          publicMessage: errorMessage,
+          errorCode: templateErrorCodes.MJML_COMPILE_ERROR,
+        },
       });
     });
 
@@ -30,9 +42,15 @@ export class MjmlCompiler implements IMjmlCompiler {
         const errorMessage =
           value.errors[0]?.message || `MJML validation failed with ${value.errors.length} error(s)`;
 
+        const errorCode = templateErrorCodes.MJML_VALIDATION_ERROR;
+
         return err(
           new MjmlCompiler.FailedToCompileError(errorMessage, {
             errors: value.errors,
+            props: {
+              publicMessage: errorMessage,
+              errorCode,
+            },
           }),
         );
       } else {

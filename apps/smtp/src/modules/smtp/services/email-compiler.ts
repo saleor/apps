@@ -6,6 +6,7 @@ import { MessageEventTypes } from "../../event-handlers/message-event-types";
 import { ITemplateCompiler } from "./handlebars-template-compiler";
 import { IHtmlToTextCompiler } from "./html-to-text-compiler";
 import { IMjmlCompiler } from "./mjml-compiler";
+import { hasErrorCode, TemplateErrorCode, templateErrorCodes } from "./template-error-codes";
 
 export interface CompileArgs {
   recipientEmail: string;
@@ -42,18 +43,34 @@ export interface IEmailCompiler {
 export class EmailCompiler implements IEmailCompiler {
   static EmailCompilerError = BaseError.subclass("EmailCompilerError");
   static CompilationFailedError = this.EmailCompilerError.subclass("CompilationFailedError", {
-    props: {} as CompilationFailedProps,
+    props: {} as CompilationFailedProps & {
+      publicMessage: string;
+      errorCode: TemplateErrorCode;
+    },
   });
   static EmptyEmailSubjectError = this.EmailCompilerError.subclass("EmptyEmailSubjectError", {
-    props: {} as EmptyEmailSubjectProps,
+    props: {} as EmptyEmailSubjectProps & {
+      publicMessage: string;
+      errorCode: TemplateErrorCode;
+    },
   });
-  static EmptyEmailBodyError = this.EmailCompilerError.subclass("EmptyEmailBodyError");
+  static EmptyEmailBodyError = this.EmailCompilerError.subclass("EmptyEmailBodyError", {
+    props: {} as { publicMessage: string; errorCode: TemplateErrorCode },
+  });
 
   constructor(
     private templateCompiler: ITemplateCompiler,
     private htmlToTextCompiler: IHtmlToTextCompiler,
     private mjmlCompiler: IMjmlCompiler,
   ) {}
+
+  private extractErrorCode = (error: unknown, fallback: TemplateErrorCode): TemplateErrorCode => {
+    if (hasErrorCode(error) && error.errorCode) {
+      return error.errorCode;
+    }
+
+    return fallback;
+  };
 
   private resolveEmailSubject = (subjectTemplate: string, payload: unknown) =>
     this.templateCompiler
@@ -64,6 +81,8 @@ export class EmailCompiler implements IEmailCompiler {
             errors: [error],
             props: {
               errorContext: "SUBJECT" as ErrorContext,
+              publicMessage: error.publicMessage || error.message,
+              errorCode: this.extractErrorCode(error, templateErrorCodes.HANDLEBARS_COMPILE_ERROR),
             },
           }),
         ),
@@ -74,6 +93,8 @@ export class EmailCompiler implements IEmailCompiler {
             new EmailCompiler.EmptyEmailSubjectError("Email subject is empty", {
               props: {
                 subject: value.template,
+                publicMessage: "Email subject is empty",
+                errorCode: templateErrorCodes.EMPTY_EMAIL_SUBJECT,
               },
             }),
           );
@@ -94,13 +115,22 @@ export class EmailCompiler implements IEmailCompiler {
             errors: [error],
             props: {
               errorContext: "BODY_TEMPLATE" as ErrorContext,
+              publicMessage: error.publicMessage || error.message,
+              errorCode: this.extractErrorCode(error, templateErrorCodes.HANDLEBARS_COMPILE_ERROR),
             },
           }),
         );
       })
       .andThen((value) => {
         if (!value.template || !value.template?.length) {
-          return err(new EmailCompiler.EmptyEmailBodyError("Email body template is empty"));
+          return err(
+            new EmailCompiler.EmptyEmailBodyError("Email body template is empty", {
+              props: {
+                publicMessage: "Email body template is empty",
+                errorCode: templateErrorCodes.EMPTY_EMAIL_BODY,
+              },
+            }),
+          );
         }
 
         return ok(value);
@@ -114,6 +144,8 @@ export class EmailCompiler implements IEmailCompiler {
           errors: [error],
           props: {
             errorContext: "BODY_MJML" as ErrorContext,
+            publicMessage: error.publicMessage || error.message,
+            errorCode: this.extractErrorCode(error, templateErrorCodes.MJML_COMPILE_ERROR),
           },
         }),
       );
@@ -126,6 +158,13 @@ export class EmailCompiler implements IEmailCompiler {
       err(
         new EmailCompiler.CompilationFailedError("Failed to compile body to plain text", {
           errors: [error],
+          props: {
+            publicMessage: "Failed to compile body to plain text",
+            errorCode: this.extractErrorCode(
+              error,
+              templateErrorCodes.PLAINTEXT_COMPILATION_FAILED,
+            ),
+          },
         }),
       ),
     );

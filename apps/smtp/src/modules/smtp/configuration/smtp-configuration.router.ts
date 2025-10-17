@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { fromThrowable } from "neverthrow";
 import { z } from "zod";
 
+import { BaseError } from "../../../errors";
 import { createLogger } from "../../../logger";
 import { updateChannelsInputSchema } from "../../channels/channel-configuration-schema";
 import { protectedWithConfigurationServices } from "../../trpc/protected-client-procedure-with-services";
@@ -10,6 +11,7 @@ import { EmailCompiler } from "../services/email-compiler";
 import { HandlebarsTemplateCompiler } from "../services/handlebars-template-compiler";
 import { HtmlToTextCompiler } from "../services/html-to-text-compiler";
 import { MjmlCompiler } from "../services/mjml-compiler";
+import { TemplateErrorCode, templateErrorCodes } from "../services/template-error-codes";
 import {
   smtpConfigurationIdInputSchema,
   smtpCreateConfigurationInputSchema,
@@ -29,6 +31,10 @@ const emailCompiler = new EmailCompiler(
   new HtmlToTextCompiler(),
   new MjmlCompiler(),
 );
+
+const InvalidPayloadJsonError = BaseError.subclass("InvalidPayloadJsonError", {
+  props: {} as { publicMessage: string; errorCode: TemplateErrorCode },
+});
 
 export const throwTrpcErrorFromConfigurationServiceError = (
   error: typeof SmtpConfigurationService.SmtpConfigurationServiceError | unknown,
@@ -175,6 +181,12 @@ export const smtpConfigurationRouter = router({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Invalid payload JSON",
+          cause: new InvalidPayloadJsonError("Invalid payload JSON", {
+            props: {
+              publicMessage: "Invalid payload JSON",
+              errorCode: templateErrorCodes.INVALID_PAYLOAD_JSON,
+            },
+          }),
         });
       }
 
