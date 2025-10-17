@@ -16,7 +16,7 @@ interface IframeProtectedFallbackProps {
  */
 export function IframeProtectedFallback({ appName }: IframeProtectedFallbackProps) {
   return (
-    <Box display="flex" flexDirection="column" padding={4}>
+    <Box display="flex" flexDirection="column" padding={10}>
       <Text as="h1" fontWeight="bold" fontSize={8} marginBottom={6}>
         {appName}
       </Text>

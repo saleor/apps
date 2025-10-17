@@ -31,13 +31,7 @@ function NextApp({ Component, pageProps }: AppProps) {
       <ThemeProvider>
         <IframeProtectedWrapper
           allowedPathNames={["/", "/order-details"]}
-          fallback={
-            <AppLayout>
-              <IframeProtectedFallback appName="Saleor AvaTax App">
-                <Text>Please install and open this app through your Saleor Dashboard.</Text>
-              </IframeProtectedFallback>
-            </AppLayout>
-          }
+          fallback={<IframeProtectedFallback appName="Saleor AvaTax App" />}
         >
           <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
             <GraphQLProvider>
