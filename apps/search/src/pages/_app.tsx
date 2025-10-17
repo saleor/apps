@@ -4,10 +4,11 @@ import "../styles/globals.css";
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
 import { GraphQLProvider } from "@saleor/apps-shared/graphql-provider";
+import { IframeProtectedFallback } from "@saleor/apps-shared/iframe-protected-fallback";
 import { IframeProtectedWrapper } from "@saleor/apps-shared/iframe-protected-wrapper";
 import { NoSSRWrapper } from "@saleor/apps-shared/no-ssr-wrapper";
 import { ThemeSynchronizer } from "@saleor/apps-shared/theme-synchronizer";
-import { Box, Text, ThemeProvider } from "@saleor/macaw-ui";
+import { Box, ThemeProvider } from "@saleor/macaw-ui";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProps } from "next/app";
 
@@ -33,14 +34,7 @@ function NextApp({ Component, pageProps }: AppProps) {
       <ThemeProvider>
         <IframeProtectedWrapper
           allowedPathNames={["/"]}
-          fallback={
-            <Box display="flex" flexDirection="column" padding={4}>
-              <Text as="h1" fontWeight="bold" fontSize={8} marginBottom={6}>
-                Saleor Search App
-              </Text>
-              <Text>This app can only be used within the Saleor Dashboard.</Text>
-            </Box>
-          }
+          fallback={<IframeProtectedFallback appName="Saleor Search App" />}
         >
           <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
             <GraphQLProvider>
