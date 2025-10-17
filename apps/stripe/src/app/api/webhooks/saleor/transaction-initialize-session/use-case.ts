@@ -1,3 +1,4 @@
+import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, fromThrowable, ok, Result } from "neverthrow";
@@ -162,8 +163,9 @@ export class TransactionInitializeSessionUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
+    saleorSchemaVersion: SaleorSchemaVersion;
   }): Promise<UseCaseExecuteResult> {
-    const { appId, saleorApiUrl, event } = args;
+    const { appId, saleorApiUrl, event, saleorSchemaVersion } = args;
 
     const saleorTransactionFlow = createSaleorTransactionFlow(event.action.actionType);
 
@@ -297,6 +299,7 @@ export class TransactionInitializeSessionUseCase {
       saleorTransactionFlow: saleorTransactionFlow,
       resolvedTransactionFlow: resolvedTransactionFlow,
       selectedPaymentMethod: selectedPaymentMethod.type,
+      saleorSchemaVersion,
     });
 
     const recordResult = await this.transactionRecorder.recordTransaction(

@@ -43,6 +43,8 @@ export type Scalars = {
    * String, Boolean, Int, Float, List or Object.
    */
   GenericScalar: { input: JSONValue; output: JSONValue; }
+  /** The `Hour` scalar type represents number of hours by integer value. */
+  Hour: { input: number; output: number; }
   JSON: { input: JSONValue; output: JSONValue; }
   JSONString: { input: string; output: string; }
   /**
@@ -65,6 +67,12 @@ export type Scalars = {
    * Should be used in places where value must be nonnegative (0 or greater).
    */
   PositiveDecimal: { input: number; output: number; }
+  /**
+   * Positive Integer scalar implementation.
+   *
+   * Should be used in places where value must be positive (greater than 0).
+   */
+  PositiveInt: { input: number; output: number; }
   UUID: { input: string; output: string; }
   /** Variables of this type must be set to null in mutations. They will be replaced with a filename from a following multipart part containing a binary file. See: https://github.com/jaydenseric/graphql-multipart-request-spec. */
   Upload: { input: unknown; output: unknown; }
@@ -83,7 +91,7 @@ export type Scalars = {
  * - ADDRESS_CREATED (async): An address was created.
  */
 export type AccountAddressCreate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -92,13 +100,13 @@ export type AccountAddressCreate = {
 };
 
 /**
- * Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+ * Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
  *
  * Triggers the following webhook events:
  * - ADDRESS_DELETED (async): An address was deleted.
  */
 export type AccountAddressDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -113,7 +121,7 @@ export type AccountAddressDelete = {
  * - ADDRESS_UPDATED (async): An address was updated.
  */
 export type AccountAddressUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -121,11 +129,7 @@ export type AccountAddressUpdate = {
   readonly user?: Maybe<User>;
 };
 
-/**
- * Event sent when account change email is requested.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when account change email is requested. */
 export type AccountChangeEmailRequested = Event & {
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
@@ -149,11 +153,7 @@ export type AccountChangeEmailRequested = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Event sent when account confirmation requested. This event is always sent. enableAccountConfirmationByEmail flag set to True is not required.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when account confirmation requested. This event is always sent. enableAccountConfirmationByEmail flag set to True is not required. */
 export type AccountConfirmationRequested = Event & {
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
@@ -175,11 +175,7 @@ export type AccountConfirmationRequested = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Event sent when account is confirmed.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when account is confirmed. */
 export type AccountConfirmed = Event & {
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
@@ -210,17 +206,13 @@ export type AccountConfirmed = Event & {
  * - ACCOUNT_DELETED (async): Account was deleted.
  */
 export type AccountDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   readonly user?: Maybe<User>;
 };
 
-/**
- * Event sent when account delete is requested.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when account delete is requested. */
 export type AccountDeleteRequested = Event & {
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
@@ -242,11 +234,7 @@ export type AccountDeleteRequested = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Event sent when account is deleted.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when account is deleted. */
 export type AccountDeleted = Event & {
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
@@ -268,11 +256,7 @@ export type AccountDeleted = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Event sent when account email is changed.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when account email is changed. */
 export type AccountEmailChanged = Event & {
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
@@ -359,9 +343,9 @@ export type AccountInput = {
   /** Family name. */
   readonly lastName?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the user metadata.
+   * Fields required to update the user metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
 };
@@ -375,11 +359,12 @@ export type AccountInput = {
  * - ACCOUNT_CONFIRMATION_REQUESTED (async): An user confirmation was requested. This event is always sent regardless of settings.
  */
 export type AccountRegister = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** Informs whether users need to confirm their email address. */
   readonly requiresConfirmation?: Maybe<Scalars['Boolean']['output']>;
+  /** @deprecated The field always returns a `User` object constructed from the input data. The `user.id` is always empty. To determine whether the user exists in Saleor, query via an external app with the required permissions. */
   readonly user?: Maybe<User>;
 };
 
@@ -395,7 +380,11 @@ export type AccountRegisterInput = {
   readonly languageCode?: InputMaybe<LanguageCodeEnum>;
   /** Family name. */
   readonly lastName?: InputMaybe<Scalars['String']['input']>;
-  /** User public metadata. */
+  /**
+   * User public metadata. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Password. */
   readonly password: Scalars['String']['input'];
@@ -413,7 +402,7 @@ export type AccountRegisterInput = {
  * - ACCOUNT_DELETE_REQUESTED (async): An account delete requested.
  */
 export type AccountRequestDeletion = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
 };
@@ -427,18 +416,14 @@ export type AccountRequestDeletion = {
  * - CUSTOMER_UPDATED (async): A customer's address was updated.
  */
 export type AccountSetDefaultAddress = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** An updated user instance. */
   readonly user?: Maybe<User>;
 };
 
-/**
- * Event sent when setting a new password is requested.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when setting a new password is requested. */
 export type AccountSetPasswordRequested = Event & {
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
@@ -470,7 +455,7 @@ export type AccountSetPasswordRequested = Event & {
  * - CUSTOMER_METADATA_UPDATED (async): Optionally called when customer's metadata was updated.
  */
 export type AccountUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   readonly user?: Maybe<User>;
@@ -498,49 +483,29 @@ export type Address = Node & ObjectWithMetadata & {
   readonly isDefaultShippingAddress?: Maybe<Scalars['Boolean']['output']>;
   /** The family name of the address. */
   readonly lastName: Scalars['String']['output'];
-  /**
-   * List of public metadata items. Can be accessed without permissions.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** List of public metadata items. Can be accessed without permissions. */
   readonly metadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.10.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** The phone number assigned the address. */
   readonly phone?: Maybe<Scalars['String']['output']>;
   /** The postal code of the address. */
   readonly postalCode: Scalars['String']['output'];
-  /**
-   * List of private metadata items. Requires staff permissions to access.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.10.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** The first line of the address. */
   readonly streetAddress1: Scalars['String']['output'];
@@ -581,7 +546,7 @@ export type AddressPrivateMetafieldsArgs = {
  * - ADDRESS_CREATED (async): A new address was created.
  */
 export type AddressCreate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -589,11 +554,7 @@ export type AddressCreate = {
   readonly user?: Maybe<User>;
 };
 
-/**
- * Event sent when new address is created.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when new address is created. */
 export type AddressCreated = Event & {
   /** The address the event relates to. */
   readonly address?: Maybe<Address>;
@@ -616,7 +577,7 @@ export type AddressCreated = Event & {
  * - ADDRESS_DELETED (async): An address was deleted.
  */
 export type AddressDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -624,11 +585,7 @@ export type AddressDelete = {
   readonly user?: Maybe<User>;
 };
 
-/**
- * Event sent when address is deleted.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when address is deleted. */
 export type AddressDeleted = Event & {
   /** The address the event relates to. */
   readonly address?: Maybe<Address>;
@@ -640,6 +597,12 @@ export type AddressDeleted = Event & {
   readonly recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/** Filtering options for addresses. */
+export type AddressFilterInput = {
+  readonly country?: InputMaybe<CountryCodeEnumFilterInput>;
+  readonly phoneNumber?: InputMaybe<StringFilterInput>;
 };
 
 export type AddressInput = {
@@ -658,9 +621,9 @@ export type AddressInput = {
   /** Family name. */
   readonly lastName?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Address public metadata.
+   * Address public metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.15.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /**
@@ -694,7 +657,7 @@ export type AddressInput = {
  * - CUSTOMER_UPDATED (async): A customer was updated.
  */
 export type AddressSetDefault = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** An updated user instance. */
@@ -714,7 +677,7 @@ export type AddressTypeEnum =
  * - ADDRESS_UPDATED (async): An address was updated.
  */
 export type AddressUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly address?: Maybe<Address>;
   readonly errors: ReadonlyArray<AccountError>;
@@ -722,11 +685,7 @@ export type AddressUpdate = {
   readonly user?: Maybe<User>;
 };
 
-/**
- * Event sent when address is updated.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when address is updated. */
 export type AddressUpdated = Event & {
   /** The address the event relates to. */
   readonly address?: Maybe<Address>;
@@ -846,41 +805,37 @@ export type App = Node & ObjectWithMetadata & {
   readonly accessToken?: Maybe<Scalars['String']['output']>;
   /** URL to iframe with the app. */
   readonly appUrl?: Maybe<Scalars['String']['output']>;
-  /**
-   * The App's author name.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The App's author name. */
   readonly author?: Maybe<Scalars['String']['output']>;
-  /**
-   * App's brand data.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** App's brand data. */
   readonly brand?: Maybe<AppBrand>;
   /**
+   * Circuit breaker last state change date.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly breakerLastStateChange?: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * Circuit breaker state, if open, sync webhooks operation is disrupted.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly breakerState: CircuitBreakerStateEnum;
+  /**
    * URL to iframe with the configuration for the app.
-   * @deprecated This field will be removed in Saleor 4.0. Use `appUrl` instead.
+   * @deprecated Use `appUrl` instead.
    */
   readonly configurationUrl?: Maybe<Scalars['String']['output']>;
   /** The date and time when the app was created. */
   readonly created?: Maybe<Scalars['DateTime']['output']>;
   /**
    * Description of the data privacy defined for this app.
-   * @deprecated This field will be removed in Saleor 4.0. Use `dataPrivacyUrl` instead.
+   * @deprecated Use `dataPrivacyUrl` instead.
    */
   readonly dataPrivacy?: Maybe<Scalars['String']['output']>;
   /** URL to details about the privacy policy on the app owner page. */
   readonly dataPrivacyUrl?: Maybe<Scalars['String']['output']>;
-  /**
-   * App's dashboard extensions.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** App's dashboard extensions. */
   readonly extensions: ReadonlyArray<AppExtension>;
   /** Homepage of the app. */
   readonly homepageUrl?: Maybe<Scalars['String']['output']>;
@@ -894,11 +849,7 @@ export type App = Node & ObjectWithMetadata & {
   readonly identifier?: Maybe<Scalars['String']['output']>;
   /** Determine if app will be set active or not. */
   readonly isActive?: Maybe<Scalars['Boolean']['output']>;
-  /**
-   * URL to manifest used during app's installation.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** URL to manifest used during app's installation. */
   readonly manifestUrl?: Maybe<Scalars['String']['output']>;
   /** List of public metadata items. Can be accessed without permissions. */
   readonly metadata: ReadonlyArray<MetadataItem>;
@@ -906,15 +857,9 @@ export type App = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Name of the app. */
   readonly name?: Maybe<Scalars['String']['output']>;
@@ -926,15 +871,9 @@ export type App = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Support page for the app. */
   readonly supportUrl?: Maybe<Scalars['String']['output']>;
@@ -990,55 +929,25 @@ export type AppPrivateMetafieldsArgs = {
  */
 export type AppActivate = {
   readonly app?: Maybe<App>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
 };
 
-/**
- * Represents the app's brand data.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the app's brand data. */
 export type AppBrand = {
-  /**
-   * App's logos details.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** App's logos details. */
   readonly logo: AppBrandLogo;
 };
 
-/**
- * Represents the app's brand logo data.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the app's brand logo data. */
 export type AppBrandLogo = {
-  /**
-   * URL to the default logo image.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** URL to the default logo image. */
   readonly default: Scalars['String']['output'];
 };
 
 
-/**
- * Represents the app's brand logo data.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the app's brand logo data. */
 export type AppBrandLogoDefaultArgs = {
   format?: InputMaybe<IconThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
@@ -1067,7 +976,7 @@ export type AppCountableEdge = {
  */
 export type AppCreate = {
   readonly app?: Maybe<App>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   /** The newly created authentication token. */
   readonly authToken?: Maybe<Scalars['String']['output']>;
@@ -1084,7 +993,7 @@ export type AppCreate = {
  */
 export type AppDeactivate = {
   readonly app?: Maybe<App>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
 };
@@ -1099,28 +1008,24 @@ export type AppDeactivate = {
  */
 export type AppDelete = {
   readonly app?: Maybe<App>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
 };
 
 /**
- * Delete failed installation.
+ * Deletes failed installation.
  *
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppDeleteFailedInstallation = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appInstallation?: Maybe<AppInstallation>;
   readonly errors: ReadonlyArray<AppError>;
 };
 
-/**
- * Event sent when app is deleted.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when app is deleted. */
 export type AppDeleted = Event & {
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
@@ -1174,6 +1079,12 @@ export type AppExtension = Node & {
   readonly label: Scalars['String']['output'];
   /** Place where given extension will be mounted. */
   readonly mount: AppExtensionMountEnum;
+  /**
+   * App extension options.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly options?: Maybe<AppExtensionPossibleOptions>;
   /** List of the app extension's permissions. */
   readonly permissions: ReadonlyArray<Permission>;
   /** Type of way how app extension will be opened. */
@@ -1204,9 +1115,31 @@ export type AppExtensionFilterInput = {
 
 /** All places where app extension can be mounted. */
 export type AppExtensionMountEnum =
+  | 'CATEGORY_DETAILS_MORE_ACTIONS'
+  | 'CATEGORY_OVERVIEW_CREATE'
+  | 'CATEGORY_OVERVIEW_MORE_ACTIONS'
+  | 'COLLECTION_DETAILS_MORE_ACTIONS'
+  | 'COLLECTION_DETAILS_WIDGETS'
+  | 'COLLECTION_OVERVIEW_CREATE'
+  | 'COLLECTION_OVERVIEW_MORE_ACTIONS'
   | 'CUSTOMER_DETAILS_MORE_ACTIONS'
+  | 'CUSTOMER_DETAILS_WIDGETS'
   | 'CUSTOMER_OVERVIEW_CREATE'
   | 'CUSTOMER_OVERVIEW_MORE_ACTIONS'
+  | 'DISCOUNT_DETAILS_MORE_ACTIONS'
+  | 'DISCOUNT_OVERVIEW_CREATE'
+  | 'DISCOUNT_OVERVIEW_MORE_ACTIONS'
+  | 'DRAFT_ORDER_DETAILS_MORE_ACTIONS'
+  | 'DRAFT_ORDER_DETAILS_WIDGETS'
+  | 'DRAFT_ORDER_OVERVIEW_CREATE'
+  | 'DRAFT_ORDER_OVERVIEW_MORE_ACTIONS'
+  | 'GIFT_CARD_DETAILS_MORE_ACTIONS'
+  | 'GIFT_CARD_DETAILS_WIDGETS'
+  | 'GIFT_CARD_OVERVIEW_CREATE'
+  | 'GIFT_CARD_OVERVIEW_MORE_ACTIONS'
+  | 'MENU_DETAILS_MORE_ACTIONS'
+  | 'MENU_OVERVIEW_CREATE'
+  | 'MENU_OVERVIEW_MORE_ACTIONS'
   | 'NAVIGATION_CATALOG'
   | 'NAVIGATION_CUSTOMERS'
   | 'NAVIGATION_DISCOUNTS'
@@ -1214,11 +1147,37 @@ export type AppExtensionMountEnum =
   | 'NAVIGATION_PAGES'
   | 'NAVIGATION_TRANSLATIONS'
   | 'ORDER_DETAILS_MORE_ACTIONS'
+  | 'ORDER_DETAILS_WIDGETS'
   | 'ORDER_OVERVIEW_CREATE'
   | 'ORDER_OVERVIEW_MORE_ACTIONS'
+  | 'PAGE_DETAILS_MORE_ACTIONS'
+  | 'PAGE_OVERVIEW_CREATE'
+  | 'PAGE_OVERVIEW_MORE_ACTIONS'
+  | 'PAGE_TYPE_DETAILS_MORE_ACTIONS'
+  | 'PAGE_TYPE_OVERVIEW_CREATE'
+  | 'PAGE_TYPE_OVERVIEW_MORE_ACTIONS'
   | 'PRODUCT_DETAILS_MORE_ACTIONS'
+  | 'PRODUCT_DETAILS_WIDGETS'
   | 'PRODUCT_OVERVIEW_CREATE'
-  | 'PRODUCT_OVERVIEW_MORE_ACTIONS';
+  | 'PRODUCT_OVERVIEW_MORE_ACTIONS'
+  | 'VOUCHER_DETAILS_MORE_ACTIONS'
+  | 'VOUCHER_DETAILS_WIDGETS'
+  | 'VOUCHER_OVERVIEW_CREATE'
+  | 'VOUCHER_OVERVIEW_MORE_ACTIONS';
+
+/** Represents the options for an app extension. */
+export type AppExtensionOptionsNewTab = {
+  /** Options controlling behavior of the NEW_TAB extension target */
+  readonly newTabTarget?: Maybe<NewTabTargetOptions>;
+};
+
+/** Represents the options for an app extension. */
+export type AppExtensionOptionsWidget = {
+  /** Options for displaying a Widget */
+  readonly widgetTarget?: Maybe<WidgetTargetOptions>;
+};
+
+export type AppExtensionPossibleOptions = AppExtensionOptionsNewTab | AppExtensionOptionsWidget;
 
 /**
  * All available ways of opening an app extension.
@@ -1228,7 +1187,9 @@ export type AppExtensionMountEnum =
  */
 export type AppExtensionTargetEnum =
   | 'APP_PAGE'
-  | 'POPUP';
+  | 'NEW_TAB'
+  | 'POPUP'
+  | 'WIDGET';
 
 /**
  * Fetch and validate manifest.
@@ -1236,7 +1197,7 @@ export type AppExtensionTargetEnum =
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppFetchManifest = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
   /** The validated manifest. */
@@ -1264,7 +1225,7 @@ export type AppInput = {
 
 /** Install new app by using app manifest. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS. */
 export type AppInstall = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appInstallation?: Maybe<AppInstallation>;
   readonly errors: ReadonlyArray<AppError>;
@@ -1285,13 +1246,7 @@ export type AppInstallInput = {
 export type AppInstallation = Job & Node & {
   /** The name of the app installation. */
   readonly appName: Scalars['String']['output'];
-  /**
-   * App's brand data.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** App's brand data. */
   readonly brand?: Maybe<AppBrand>;
   /** Created date time of job in ISO 8601 format. */
   readonly createdAt: Scalars['DateTime']['output'];
@@ -1307,11 +1262,7 @@ export type AppInstallation = Job & Node & {
   readonly updatedAt: Scalars['DateTime']['output'];
 };
 
-/**
- * Event sent when new app is installed.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when new app is installed. */
 export type AppInstalled = Event & {
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
@@ -1325,50 +1276,20 @@ export type AppInstalled = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Represents the app's manifest brand data.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the app's manifest brand data. */
 export type AppManifestBrand = {
-  /**
-   * App's logos details.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** App's logos details. */
   readonly logo: AppManifestBrandLogo;
 };
 
-/**
- * Represents the app's manifest brand data.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the app's manifest brand data. */
 export type AppManifestBrandLogo = {
-  /**
-   * Data URL with a base64 encoded logo image.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Data URL with a base64 encoded logo image. */
   readonly default: Scalars['String']['output'];
 };
 
 
-/**
- * Represents the app's manifest brand data.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the app's manifest brand data. */
 export type AppManifestBrandLogoDefaultArgs = {
   format?: InputMaybe<IconThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
@@ -1388,21 +1309,9 @@ export type AppManifestExtension = {
 };
 
 export type AppManifestRequiredSaleorVersion = {
-  /**
-   * Required Saleor version as semver range.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Required Saleor version as semver range. */
   readonly constraint: Scalars['String']['output'];
-  /**
-   * Informs if the Saleor version matches the required one.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Informs if the Saleor version matches the required one. */
   readonly satisfied: Scalars['Boolean']['output'];
 };
 
@@ -1420,6 +1329,21 @@ export type AppManifestWebhook = {
 };
 
 /**
+ * Re-enable sync webhooks for provided app. Can be used to manually re-enable sync webhooks for the app before the cooldown period ends.
+ *
+ * Added in Saleor 3.21.
+ *
+ * Requires one of the following permissions: MANAGE_APPS.
+ */
+export type AppReenableSyncWebhooks = {
+  /** App for which sync webhooks were re-enabled. */
+  readonly app?: Maybe<App>;
+  /** @deprecated Use `errors` field instead. */
+  readonly appErrors: ReadonlyArray<AppError>;
+  readonly errors: ReadonlyArray<AppError>;
+};
+
+/**
  * Retry failed installation of new app.
  *
  * Requires one of the following permissions: MANAGE_APPS.
@@ -1428,7 +1352,7 @@ export type AppManifestWebhook = {
  * - APP_INSTALLED (async): An app was installed.
  */
 export type AppRetryInstall = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appInstallation?: Maybe<AppInstallation>;
   readonly errors: ReadonlyArray<AppError>;
@@ -1447,11 +1371,7 @@ export type AppSortingInput = {
   readonly field: AppSortField;
 };
 
-/**
- * Event sent when app status has changed.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when app status has changed. */
 export type AppStatusChanged = Event & {
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
@@ -1481,7 +1401,7 @@ export type AppToken = Node & {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppTokenCreate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appToken?: Maybe<AppToken>;
   /** The newly created authentication token. */
@@ -1495,7 +1415,7 @@ export type AppTokenCreate = {
  * Requires one of the following permissions: MANAGE_APPS.
  */
 export type AppTokenDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly appToken?: Maybe<AppToken>;
   readonly errors: ReadonlyArray<AppError>;
@@ -1510,7 +1430,7 @@ export type AppTokenInput = {
 
 /** Verify provided app token. */
 export type AppTokenVerify = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
   /** Determine if token is valid or not. */
@@ -1534,16 +1454,12 @@ export type AppTypeEnum =
  */
 export type AppUpdate = {
   readonly app?: Maybe<App>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly appErrors: ReadonlyArray<AppError>;
   readonly errors: ReadonlyArray<AppError>;
 };
 
-/**
- * Event sent when app is updated.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when app is updated. */
 export type AppUpdated = Event & {
   /** The application the event relates to. */
   readonly app?: Maybe<App>;
@@ -1576,15 +1492,424 @@ export type AssignNavigation = {
   readonly errors: ReadonlyArray<MenuError>;
   /** Assigned navigation menu. */
   readonly menu?: Maybe<Menu>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
 };
 
 /**
- * Represents assigned attribute to variant with variant selection attached.
+ * Represents an attribute assigned to an object.
  *
- * Added in Saleor 3.1.
+ * Added in Saleor 3.22.
  */
+export type AssignedAttribute = {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+};
+
+export type AssignedAttributeReferenceInput = {
+  /** Returns objects with a reference pointing to a category identified by the given slug. */
+  readonly categorySlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a collection identified by the given slug. */
+  readonly collectionSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a page identified by the given slug. */
+  readonly pageSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a product identified by the given slug. */
+  readonly productSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a product variant identified by the given sku. */
+  readonly productVariantSkus?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to an object identified by the given ID. */
+  readonly referencedIds?: InputMaybe<ContainsFilterInput>;
+};
+
+export type AssignedAttributeValueInput = {
+  /** Filter by boolean value for attributes of boolean type. */
+  readonly boolean?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by date value for attributes of date type. */
+  readonly date?: InputMaybe<DateRangeInput>;
+  /** Filter by date time value for attributes of date time type. */
+  readonly dateTime?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by name assigned to AttributeValue. */
+  readonly name?: InputMaybe<StringFilterInput>;
+  /** Filter by numeric value for attributes of numeric type. */
+  readonly numeric?: InputMaybe<DecimalFilterInput>;
+  /** Filter by reference attribute value. */
+  readonly reference?: InputMaybe<AssignedAttributeReferenceInput>;
+  /** Filter by slug assigned to AttributeValue. */
+  readonly slug?: InputMaybe<StringFilterInput>;
+};
+
+export type AssignedAttributeWhereInput = {
+  /** Filter by attribute slug. */
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised. */
+  readonly value?: InputMaybe<AssignedAttributeValueInput>;
+};
+
+/**
+ * Represents a boolean attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedBooleanAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned boolean value. */
+  readonly value?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/**
+ * Represents a single choice value of the attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedChoiceAttributeValue = {
+  /** Name of a value displayed in the interface. */
+  readonly name?: Maybe<Scalars['String']['output']>;
+  /** Internal representation of a value (unique per attribute). */
+  readonly slug?: Maybe<Scalars['String']['output']>;
+  /** Translation of the name. */
+  readonly translation?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents a single choice value of the attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedChoiceAttributeValueTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Represents a date attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedDateAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned date value. */
+  readonly value?: Maybe<Scalars['Date']['output']>;
+};
+
+/**
+ * Represents a date time attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedDateTimeAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned date time value. */
+  readonly value?: Maybe<Scalars['DateTime']['output']>;
+};
+
+/**
+ * Represents file attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedFileAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned file. */
+  readonly value?: Maybe<File>;
+};
+
+/**
+ * Represents multi category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCategoryReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned category references. */
+  readonly value: ReadonlyArray<Category>;
+};
+
+
+/**
+ * Represents multi category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCategoryReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents a multi choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiChoiceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned choice values. */
+  readonly value: ReadonlyArray<AssignedChoiceAttributeValue>;
+};
+
+
+/**
+ * Represents a multi choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiChoiceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCollectionReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned collection references. */
+  readonly value: ReadonlyArray<Collection>;
+};
+
+
+/**
+ * Represents multi collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCollectionReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiPageReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned page references. */
+  readonly value: ReadonlyArray<Page>;
+};
+
+
+/**
+ * Represents multi page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiPageReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned product references. */
+  readonly value: ReadonlyArray<Product>;
+};
+
+
+/**
+ * Represents multi product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductVariantReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned product variant references. */
+  readonly value: ReadonlyArray<ProductVariant>;
+};
+
+
+/**
+ * Represents multi product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductVariantReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents a numeric value of an attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedNumericAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned numeric value. */
+  readonly value?: Maybe<Scalars['Float']['output']>;
+};
+
+/**
+ * Represents plain text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedPlainTextAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** Translation of the plain text content in the specified language. */
+  readonly translation?: Maybe<Scalars['String']['output']>;
+  /** The assigned plain text content. */
+  readonly value?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents plain text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedPlainTextAttributeTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Represents single category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleCategoryReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned category reference. */
+  readonly value?: Maybe<Category>;
+};
+
+/**
+ * Represents a single choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleChoiceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned choice value. */
+  readonly value?: Maybe<AssignedChoiceAttributeValue>;
+};
+
+/**
+ * Represents single collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleCollectionReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned collection reference. */
+  readonly value?: Maybe<Collection>;
+};
+
+/**
+ * Represents single page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSinglePageReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned page reference. */
+  readonly value?: Maybe<Page>;
+};
+
+/**
+ * Represents single product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleProductReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned product reference. */
+  readonly value?: Maybe<Product>;
+};
+
+/**
+ * Represents single product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleProductVariantReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned product variant reference. */
+  readonly value?: Maybe<ProductVariant>;
+};
+
+/**
+ * Represents a swatch attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned swatch value. */
+  readonly value?: Maybe<AssignedSwatchAttributeValue>;
+};
+
+/**
+ * Represents a single swatch value.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttributeValue = {
+  /** File associated with the attribute. */
+  readonly file?: Maybe<File>;
+  /** Hex color code. */
+  readonly hexColor?: Maybe<Scalars['String']['output']>;
+  /** Name of the selected swatch value. */
+  readonly name?: Maybe<Scalars['String']['output']>;
+  /** Slug of the selected swatch value. */
+  readonly slug?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Represents text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedTextAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** Translation of the rich text content in the specified language. */
+  readonly translation?: Maybe<Scalars['JSON']['output']>;
+  /** The assigned rich text content. */
+  readonly value?: Maybe<Scalars['JSON']['output']>;
+};
+
+
+/**
+ * Represents text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedTextAttributeTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/** Represents assigned attribute to variant with variant selection attached. */
 export type AssignedVariantAttribute = {
   /** Attribute assigned to variant. */
   readonly attribute: Attribute;
@@ -1596,24 +1921,20 @@ export type AssignedVariantAttribute = {
 export type Attribute = Node & ObjectWithMetadata & {
   /**
    * Whether the attribute can be displayed in the admin product list. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly availableInGrid: Scalars['Boolean']['output'];
-  /** List of attribute's values. */
+  /** A list of predefined attribute choices available for selection. Available only for attributes with predefined choices. */
   readonly choices?: Maybe<AttributeValueCountableConnection>;
   /** The entity type which can be used as a reference. */
   readonly entityType?: Maybe<AttributeEntityTypeEnum>;
-  /**
-   * External ID of this attribute.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this attribute. */
   readonly externalReference?: Maybe<Scalars['String']['output']>;
   /** Whether the attribute can be filtered in dashboard. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES. */
   readonly filterableInDashboard: Scalars['Boolean']['output'];
   /**
    * Whether the attribute can be filtered in storefront. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly filterableInStorefront: Scalars['Boolean']['output'];
   /** The ID of the attribute. */
@@ -1626,15 +1947,9 @@ export type Attribute = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Name of an attribute displayed in the interface. */
   readonly name?: Maybe<Scalars['String']['output']>;
@@ -1644,25 +1959,25 @@ export type Attribute = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** A list of product types that use this attribute as a product attribute. */
   readonly productTypes: ProductTypeCountableConnection;
   /** A list of product types that use this attribute as a product variant attribute. */
   readonly productVariantTypes: ProductTypeCountableConnection;
+  /**
+   * The reference types (product or page type) that are used to narrow down the choices of reference objects.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly referenceTypes?: Maybe<ReadonlyArray<ReferenceType>>;
   /** Internal representation of an attribute name. */
   readonly slug?: Maybe<Scalars['String']['output']>;
   /**
    * The position of the attribute in the storefront navigation (0 by default). Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly storefrontSearchPosition: Scalars['Int']['output'];
   /** Returns translated attribute fields for the given language code. */
@@ -1687,7 +2002,9 @@ export type AttributeChoicesArgs = {
   filter?: InputMaybe<AttributeValueFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<AttributeChoicesSortingInput>;
+  where?: InputMaybe<AttributeValueWhereInput>;
 };
 
 
@@ -1734,16 +2051,18 @@ export type AttributeProductVariantTypesArgs = {
 
 
 /** Custom attribute of a product. Attributes can be assigned to products and variants at the product type level. */
+export type AttributeReferenceTypesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+
+/** Custom attribute of a product. Attributes can be assigned to products and variants at the product type level. */
 export type AttributeTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
 /**
  * Creates attributes.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_CREATED (async): An attribute was created.
@@ -1792,7 +2111,7 @@ export type AttributeBulkCreateResult = {
  * - ATTRIBUTE_DELETED (async): An attribute was deleted.
  */
 export type AttributeBulkDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
@@ -1801,10 +2120,6 @@ export type AttributeBulkDelete = {
 
 /**
  * Creates/updates translations for attributes.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
@@ -1845,10 +2160,6 @@ export type AttributeBulkTranslateResult = {
 
 /**
  * Updates attributes.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Triggers the following webhook events:
  * - ATTRIBUTE_UPDATED (async): An attribute was updated. Optionally called when new attribute value was created or deleted.
@@ -1934,8 +2245,9 @@ export type AttributeCountableEdge = {
  * - ATTRIBUTE_CREATED (async): An attribute was created.
  */
 export type AttributeCreate = {
+  /** The created attribute. */
   readonly attribute?: Maybe<Attribute>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   readonly errors: ReadonlyArray<AttributeError>;
 };
@@ -1948,24 +2260,18 @@ export type AttributeCreate = {
 export type AttributeCreateInput = {
   /**
    * Whether the attribute can be displayed in the admin product list.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly availableInGrid?: InputMaybe<Scalars['Boolean']['input']>;
   /** The entity type which can be used as a reference. */
   readonly entityType?: InputMaybe<AttributeEntityTypeEnum>;
-  /**
-   * External ID of this attribute.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this attribute. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** Whether the attribute can be filtered in dashboard. */
   readonly filterableInDashboard?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Whether the attribute can be filtered in storefront.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly filterableInStorefront?: InputMaybe<Scalars['Boolean']['input']>;
   /** The input type to use for entering attribute values in the dashboard. */
@@ -1974,12 +2280,19 @@ export type AttributeCreateInput = {
   readonly isVariantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Name of an attribute displayed in the interface. */
   readonly name: Scalars['String']['input'];
+  /**
+   * Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+   *
+   * A maximum of 100 reference types can be specified.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly referenceTypes?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Internal representation of an attribute name. */
   readonly slug?: InputMaybe<Scalars['String']['input']>;
   /**
    * The position of the attribute in the storefront navigation (0 by default).
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly storefrontSearchPosition?: InputMaybe<Scalars['Int']['input']>;
   /** The attribute type. */
@@ -1994,11 +2307,7 @@ export type AttributeCreateInput = {
   readonly visibleInStorefront?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/**
- * Event sent when new attribute is created.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when new attribute is created. */
 export type AttributeCreated = Event & {
   /** The attribute the event relates to. */
   readonly attribute?: Maybe<Attribute>;
@@ -2022,16 +2331,12 @@ export type AttributeCreated = Event & {
  */
 export type AttributeDelete = {
   readonly attribute?: Maybe<Attribute>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   readonly errors: ReadonlyArray<AttributeError>;
 };
 
-/**
- * Event sent when attribute is deleted.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when attribute is deleted. */
 export type AttributeDeleted = Event & {
   /** The attribute the event relates to. */
   readonly attribute?: Maybe<Attribute>;
@@ -2046,6 +2351,8 @@ export type AttributeDeleted = Event & {
 };
 
 export type AttributeEntityTypeEnum =
+  | 'CATEGORY'
+  | 'COLLECTION'
   | 'PAGE'
   | 'PRODUCT'
   | 'PRODUCT_VARIANT';
@@ -2078,8 +2385,7 @@ export type AttributeFilterInput = {
   readonly availableInGrid?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Specifies the channel by which the data should be filtered.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+   * @deprecated Use root-level channel argument instead.
    */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
   readonly filterableInDashboard?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2097,17 +2403,34 @@ export type AttributeFilterInput = {
 };
 
 export type AttributeInput = {
-  /** The boolean value of the attribute. */
+  /**
+   * The boolean value of the attribute. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly boolean?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used. */
+  /**
+   * The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly date?: InputMaybe<DateRangeInput>;
-  /** The date/time range that the returned values should be in. */
+  /**
+   * The date/time range that the returned values should be in. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly dateTime?: InputMaybe<DateTimeRangeInput>;
   /** Internal representation of an attribute name. */
-  readonly slug: Scalars['String']['input'];
-  /** Internal representation of a value (unique per attribute). */
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised. Cannot be combined with deprecated fields of `AttributeInput`. */
+  readonly value?: InputMaybe<AssignedAttributeValueInput>;
+  /**
+   * Slugs identifying the attributeValues associated with the Attribute. When specified, it filters the results to include only records with one of the matching values. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly values?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
-  /** The range that the returned values should be in. */
+  /**
+   * The range that the returned values should be in. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly valuesRange?: InputMaybe<IntRangeInput>;
 };
 
@@ -2122,6 +2445,7 @@ export type AttributeInputTypeEnum =
   | 'PLAIN_TEXT'
   | 'REFERENCE'
   | 'RICH_TEXT'
+  | 'SINGLE_REFERENCE'
   | 'SWATCH';
 
 export type AttributeInputTypeEnumFilterInput = {
@@ -2143,7 +2467,7 @@ export type AttributeInputTypeEnumFilterInput = {
 export type AttributeReorderValues = {
   /** Attribute from which values are reordered. */
   readonly attribute?: Maybe<Attribute>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   readonly errors: ReadonlyArray<AttributeError>;
 };
@@ -2179,14 +2503,10 @@ export type AttributeSortingInput = {
 export type AttributeTranslatableContent = Node & {
   /**
    * Custom attribute of a product.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly attribute?: Maybe<Attribute>;
-  /**
-   * The ID of the attribute to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the attribute to translate. */
   readonly attributeId: Scalars['ID']['output'];
   /** The ID of the attribute translatable content. */
   readonly id: Scalars['ID']['output'];
@@ -2210,7 +2530,7 @@ export type AttributeTranslatableContentTranslationArgs = {
 export type AttributeTranslate = {
   readonly attribute?: Maybe<Attribute>;
   readonly errors: ReadonlyArray<TranslationError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -2228,11 +2548,7 @@ export type AttributeTranslation = Node & {
   readonly language: LanguageDisplay;
   /** Translated attribute name. */
   readonly name: Scalars['String']['output'];
-  /**
-   * Represents the attribute fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the attribute fields to translate. */
   readonly translatableContent?: Maybe<AttributeTranslatableContent>;
 };
 
@@ -2256,8 +2572,9 @@ export type AttributeTypeEnumFilterInput = {
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
  */
 export type AttributeUpdate = {
+  /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   readonly errors: ReadonlyArray<AttributeError>;
 };
@@ -2272,36 +2589,37 @@ export type AttributeUpdateInput = {
   readonly addValues?: InputMaybe<ReadonlyArray<AttributeValueUpdateInput>>;
   /**
    * Whether the attribute can be displayed in the admin product list.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly availableInGrid?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * External ID of this product.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this product. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** Whether the attribute can be filtered in dashboard. */
   readonly filterableInDashboard?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Whether the attribute can be filtered in storefront.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly filterableInStorefront?: InputMaybe<Scalars['Boolean']['input']>;
   /** Whether the attribute is for variants only. */
   readonly isVariantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Name of an attribute displayed in the interface. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+   *
+   * A maximum of 100 reference types can be specified.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly referenceTypes?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** IDs of values to be removed from this attribute. */
   readonly removeValues?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Internal representation of an attribute name. */
   readonly slug?: InputMaybe<Scalars['String']['input']>;
   /**
    * The position of the attribute in the storefront navigation (0 by default).
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly storefrontSearchPosition?: InputMaybe<Scalars['Int']['input']>;
   /** The unit of attribute values. */
@@ -2312,11 +2630,7 @@ export type AttributeUpdateInput = {
   readonly visibleInStorefront?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/**
- * Event sent when attribute is updated.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when attribute is updated. */
 export type AttributeUpdated = Event & {
   /** The attribute the event relates to. */
   readonly attribute?: Maybe<Attribute>;
@@ -2338,11 +2652,7 @@ export type AttributeValue = Node & {
   readonly date?: Maybe<Scalars['Date']['output']>;
   /** Represents the date/time value of the attribute value. */
   readonly dateTime?: Maybe<Scalars['DateTime']['output']>;
-  /**
-   * External ID of this attribute value.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this attribute value. */
   readonly externalReference?: Maybe<Scalars['String']['output']>;
   /** Represents file URL and content type (if attribute value is a file). */
   readonly file?: Maybe<File>;
@@ -2354,7 +2664,7 @@ export type AttributeValue = Node & {
   readonly name?: Maybe<Scalars['String']['output']>;
   /** Represents the text of the attribute value, plain text without formatting. */
   readonly plainText?: Maybe<Scalars['String']['output']>;
-  /** The ID of the attribute reference. */
+  /** The ID of the referenced object. */
   readonly reference?: Maybe<Scalars['ID']['output']>;
   /**
    * Represents the text of the attribute value, includes formatting.
@@ -2386,7 +2696,7 @@ export type AttributeValueTranslationArgs = {
  * - ATTRIBUTE_UPDATED (async): An attribute was updated.
  */
 export type AttributeValueBulkDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
@@ -2394,11 +2704,7 @@ export type AttributeValueBulkDelete = {
 };
 
 /**
- * Creates/updates translations for attributes values.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ * Creates/updates translations for attribute values.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
@@ -2464,7 +2770,7 @@ export type AttributeValueCountableEdge = {
 export type AttributeValueCreate = {
   /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   readonly attributeValue?: Maybe<AttributeValue>;
   readonly errors: ReadonlyArray<AttributeError>;
@@ -2473,11 +2779,7 @@ export type AttributeValueCreate = {
 export type AttributeValueCreateInput = {
   /** File content type. */
   readonly contentType?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * External ID of this attribute value.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this attribute value. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** URL of the file attribute. Every time, a new value is created. */
   readonly fileUrl?: InputMaybe<Scalars['String']['input']>;
@@ -2485,27 +2787,21 @@ export type AttributeValueCreateInput = {
   readonly name: Scalars['String']['input'];
   /**
    * Represents the text of the attribute value, plain text without formatting.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
+   * @deprecated The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
    */
   readonly plainText?: InputMaybe<Scalars['String']['input']>;
   /**
    * Represents the text of the attribute value, includes formatting.
    *
    * Rich text format. For reference see https://editorjs.io/
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.The rich text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
+   * @deprecated The rich text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
    */
   readonly richText?: InputMaybe<Scalars['JSONString']['input']>;
   /** Represent value of the attribute value (e.g. color values for swatch attributes). */
   readonly value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new attribute value is created.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when new attribute value is created. */
 export type AttributeValueCreated = Event & {
   /** The attribute value the event relates to. */
   readonly attributeValue?: Maybe<AttributeValue>;
@@ -2531,17 +2827,13 @@ export type AttributeValueCreated = Event & {
 export type AttributeValueDelete = {
   /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   readonly attributeValue?: Maybe<AttributeValue>;
   readonly errors: ReadonlyArray<AttributeError>;
 };
 
-/**
- * Event sent when attribute value is deleted.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when attribute value is deleted. */
 export type AttributeValueDeleted = Event & {
   /** The attribute value the event relates to. */
   readonly attributeValue?: Maybe<AttributeValue>;
@@ -2570,47 +2862,36 @@ export type AttributeValueInput = {
   readonly date?: InputMaybe<Scalars['Date']['input']>;
   /** Represents the date/time value of the attribute value. */
   readonly dateTime?: InputMaybe<Scalars['DateTime']['input']>;
-  /**
-   * Attribute value ID or external reference.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Attribute value ID or external reference. */
   readonly dropdown?: InputMaybe<AttributeValueSelectableTypeInput>;
-  /**
-   * External ID of this attribute.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** External ID of this attribute. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** URL of the file attribute. Every time, a new value is created. */
   readonly file?: InputMaybe<Scalars['String']['input']>;
   /** ID of the selected attribute. */
   readonly id?: InputMaybe<Scalars['ID']['input']>;
-  /**
-   * List of attribute value IDs or external references.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** List of attribute value IDs or external references. */
   readonly multiselect?: InputMaybe<ReadonlyArray<AttributeValueSelectableTypeInput>>;
-  /**
-   * Numeric value of an attribute.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Numeric value of an attribute. */
   readonly numeric?: InputMaybe<Scalars['String']['input']>;
   /** Plain text content. */
   readonly plainText?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of the referenced entity for single reference attribute.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reference?: InputMaybe<Scalars['ID']['input']>;
   /** List of entity IDs that will be used as references. */
   readonly references?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Text content in JSON format. */
   readonly richText?: InputMaybe<Scalars['JSONString']['input']>;
-  /**
-   * Attribute value ID or external reference.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Attribute value ID or external reference. */
   readonly swatch?: InputMaybe<AttributeValueSelectableTypeInput>;
-  /** The value or slug of an attribute to resolve. If the passed value is non-existent, it will be created. This field will be removed in Saleor 4.0. */
+  /**
+   * The value or slug of an attribute to resolve. If the passed value is non-existent, it will be created.
+   * @deprecated Field no longer supported
+   */
   readonly values?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
@@ -2620,15 +2901,9 @@ export type AttributeValueInput = {
  * 2. If externalReference is provided, then attribute value will be resolved by external reference.
  * 3. If value is provided, then attribute value will be resolved by value. If this attribute value doesn't exist, then it will be created.
  * 4. If externalReference and value is provided then new attribute value will be created.
- *
- * Added in Saleor 3.9.
  */
 export type AttributeValueSelectableTypeInput = {
-  /**
-   * External reference of an attribute value.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** External reference of an attribute value. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** ID of an attribute value. */
   readonly id?: InputMaybe<Scalars['ID']['input']>;
@@ -2638,22 +2913,14 @@ export type AttributeValueSelectableTypeInput = {
 
 /** Represents attribute value's original translatable fields and related translations. */
 export type AttributeValueTranslatableContent = Node & {
-  /**
-   * Associated attribute that can be translated.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Associated attribute that can be translated. */
   readonly attribute?: Maybe<AttributeTranslatableContent>;
   /**
    * Represents a value of an attribute.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly attributeValue?: Maybe<AttributeValue>;
-  /**
-   * The ID of the attribute value to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the attribute value to translate. */
   readonly attributeValueId: Scalars['ID']['output'];
   /** The ID of the attribute value translatable content. */
   readonly id: Scalars['ID']['output'];
@@ -2685,7 +2952,7 @@ export type AttributeValueTranslatableContentTranslationArgs = {
 export type AttributeValueTranslate = {
   readonly attributeValue?: Maybe<AttributeValue>;
   readonly errors: ReadonlyArray<TranslationError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -2711,11 +2978,7 @@ export type AttributeValueTranslation = Node & {
    * Rich text format. For reference see https://editorjs.io/
    */
   readonly richText?: Maybe<Scalars['JSONString']['output']>;
-  /**
-   * Represents the attribute value fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the attribute value fields to translate. */
   readonly translatableContent?: Maybe<AttributeValueTranslatableContent>;
 };
 
@@ -2743,7 +3006,7 @@ export type AttributeValueTranslationInput = {
 export type AttributeValueUpdate = {
   /** The updated attribute. */
   readonly attribute?: Maybe<Attribute>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly attributeErrors: ReadonlyArray<AttributeError>;
   readonly attributeValue?: Maybe<AttributeValue>;
   readonly errors: ReadonlyArray<AttributeError>;
@@ -2752,11 +3015,7 @@ export type AttributeValueUpdate = {
 export type AttributeValueUpdateInput = {
   /** File content type. */
   readonly contentType?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * External ID of this attribute value.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this attribute value. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** URL of the file attribute. Every time, a new value is created. */
   readonly fileUrl?: InputMaybe<Scalars['String']['input']>;
@@ -2764,27 +3023,21 @@ export type AttributeValueUpdateInput = {
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
    * Represents the text of the attribute value, plain text without formatting.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
+   * @deprecated The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
    */
   readonly plainText?: InputMaybe<Scalars['String']['input']>;
   /**
    * Represents the text of the attribute value, includes formatting.
    *
    * Rich text format. For reference see https://editorjs.io/
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.The rich text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
+   * @deprecated The rich text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
    */
   readonly richText?: InputMaybe<Scalars['JSONString']['input']>;
   /** Represent value of the attribute value (e.g. color values for swatch attributes). */
   readonly value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when attribute value is updated.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when attribute value is updated. */
 export type AttributeValueUpdated = Event & {
   /** The attribute value the event relates to. */
   readonly attributeValue?: Maybe<AttributeValue>;
@@ -2798,13 +3051,18 @@ export type AttributeValueUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Where filtering options.
- *
- * Added in Saleor 3.11.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Where filtering options for attribute values. */
+export type AttributeValueWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<AttributeValueWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<AttributeValueWhereInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  readonly name?: InputMaybe<StringFilterInput>;
+  readonly slug?: InputMaybe<StringFilterInput>;
+};
+
+/** Where filtering options. */
 export type AttributeWhereInput = {
   /** List of conditions that must be met. */
   readonly AND?: InputMaybe<ReadonlyArray<AttributeWhereInput>>;
@@ -2829,81 +3087,42 @@ export type AttributeWhereInput = {
 export type BulkAttributeValueInput = {
   /** The boolean value of an attribute to resolve. If the passed value is non-existent, it will be created. */
   readonly boolean?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * File content type.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** File content type. */
   readonly contentType?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Represents the date value of the attribute value.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Represents the date value of the attribute value. */
   readonly date?: InputMaybe<Scalars['Date']['input']>;
-  /**
-   * Represents the date/time value of the attribute value.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Represents the date/time value of the attribute value. */
   readonly dateTime?: InputMaybe<Scalars['DateTime']['input']>;
-  /**
-   * Attribute value ID.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Attribute value ID. */
   readonly dropdown?: InputMaybe<AttributeValueSelectableTypeInput>;
-  /**
-   * External ID of this attribute.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** External ID of this attribute. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * URL of the file attribute. Every time, a new value is created.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** URL of the file attribute. Every time, a new value is created. */
   readonly file?: InputMaybe<Scalars['String']['input']>;
   /** ID of the selected attribute. */
   readonly id?: InputMaybe<Scalars['ID']['input']>;
-  /**
-   * List of attribute value IDs.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** List of attribute value IDs. */
   readonly multiselect?: InputMaybe<ReadonlyArray<AttributeValueSelectableTypeInput>>;
-  /**
-   * Numeric value of an attribute.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Numeric value of an attribute. */
   readonly numeric?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Plain text content.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Plain text content. */
   readonly plainText?: InputMaybe<Scalars['String']['input']>;
   /**
-   * List of entity IDs that will be used as references.
+   * ID of the referenced entity for single reference attribute.
    *
-   * Added in Saleor 3.12.
+   * Added in Saleor 3.22.
    */
+  readonly reference?: InputMaybe<Scalars['ID']['input']>;
+  /** List of entity IDs that will be used as references. */
   readonly references?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * Text content in JSON format.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Text content in JSON format. */
   readonly richText?: InputMaybe<Scalars['JSONString']['input']>;
-  /**
-   * Attribute value ID.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Attribute value ID. */
   readonly swatch?: InputMaybe<AttributeValueSelectableTypeInput>;
-  /** The value or slug of an attribute to resolve. If the passed value is non-existent, it will be created.This field will be removed in Saleor 4.0. */
+  /**
+   * The value or slug of an attribute to resolve. If the passed value is non-existent, it will be created.
+   * @deprecated Field no longer supported
+   */
   readonly values?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
@@ -2941,11 +3160,7 @@ export type BulkStockError = {
   readonly values?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/**
- * Synchronous webhook for calculating checkout/order taxes.
- *
- * Added in Saleor 3.7.
- */
+/** Synchronous webhook for calculating checkout/order taxes. */
 export type CalculateTaxes = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -2967,6 +3182,41 @@ export type CardInput = {
   readonly money: MoneyInput;
 };
 
+/**
+ * Represents a card payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type CardPaymentMethodDetails = PaymentMethodDetails & {
+  /** Card brand. */
+  readonly brand?: Maybe<Scalars['String']['output']>;
+  /** Two-digit number representing the card’s expiration month. */
+  readonly expMonth?: Maybe<Scalars['Int']['output']>;
+  /** Four-digit number representing the card’s expiration year. */
+  readonly expYear?: Maybe<Scalars['Int']['output']>;
+  /** First 4 digits of the card number. */
+  readonly firstDigits?: Maybe<Scalars['String']['output']>;
+  /** Last 4 digits of the card number. */
+  readonly lastDigits?: Maybe<Scalars['String']['output']>;
+  /** Name of the payment method. */
+  readonly name: Scalars['String']['output'];
+};
+
+export type CardPaymentMethodDetailsInput = {
+  /** Brand of the payment method used for the transaction. Max length is 40 characters. */
+  readonly brand?: InputMaybe<Scalars['String']['input']>;
+  /** Expiration month of the card used for the transaction. Value must be between 1 and 12. */
+  readonly expMonth?: InputMaybe<Scalars['Int']['input']>;
+  /** Expiration year of the card used for the transaction. Value must be between 2000 and 9999. */
+  readonly expYear?: InputMaybe<Scalars['Int']['input']>;
+  /** First digits of the card used for the transaction. Max length is 4 characters. */
+  readonly firstDigits?: InputMaybe<Scalars['String']['input']>;
+  /** Last digits of the card used for the transaction. Max length is 4 characters. */
+  readonly lastDigits?: InputMaybe<Scalars['String']['input']>;
+  /** Name of the payment method used for the transaction. Max length is 256 characters. */
+  readonly name: Scalars['String']['input'];
+};
+
 export type CatalogueInput = {
   /** Categories related to the discount. */
   readonly categories?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
@@ -2974,11 +3224,7 @@ export type CatalogueInput = {
   readonly collections?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Products related to the discount. */
   readonly products?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * Product variant related to the discount.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Product variant related to the discount. */
   readonly variants?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
 };
 
@@ -3015,7 +3261,7 @@ export type Category = Node & ObjectWithMetadata & {
    * Description of the category.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `description` field instead.
+   * @deprecated Use the `description` field instead.
    */
   readonly descriptionJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the category. */
@@ -3028,15 +3274,9 @@ export type Category = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Name of category */
   readonly name: Scalars['String']['output'];
@@ -3048,15 +3288,9 @@ export type Category = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** List of products in the category. Requires the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   readonly products?: Maybe<ProductCountableConnection>;
@@ -3068,11 +3302,7 @@ export type Category = Node & ObjectWithMetadata & {
   readonly slug: Scalars['String']['output'];
   /** Returns translated category fields for the given language code. */
   readonly translation?: Maybe<CategoryTranslation>;
-  /**
-   * The date and time when the category was last updated.
-   *
-   * Added in Saleor 3.17.
-   */
+  /** The date and time when the category was last updated. */
   readonly updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -3134,6 +3364,7 @@ export type CategoryProductsArgs = {
   filter?: InputMaybe<ProductFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductOrder>;
   where?: InputMaybe<ProductWhereInput>;
 };
@@ -3153,7 +3384,7 @@ export type CategoryBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -3180,15 +3411,11 @@ export type CategoryCountableEdge = {
 export type CategoryCreate = {
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
-/**
- * Event sent when new category is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new category is created. */
 export type CategoryCreated = Event & {
   /** The category the event relates to. */
   readonly category?: Maybe<Category>;
@@ -3210,15 +3437,11 @@ export type CategoryCreated = Event & {
 export type CategoryDelete = {
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
-/**
- * Event sent when category is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when category is deleted. */
 export type CategoryDeleted = Event & {
   /** The category the event relates to. */
   readonly category?: Maybe<Category>;
@@ -3237,11 +3460,7 @@ export type CategoryFilterInput = {
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
   readonly search?: InputMaybe<Scalars['String']['input']>;
   readonly slugs?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
-  /**
-   * Filter by when was the most recent update.
-   *
-   * Added in Saleor 3.17.
-   */
+  /** Filter by when was the most recent update. */
   readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
 };
 
@@ -3257,17 +3476,17 @@ export type CategoryInput = {
    */
   readonly description?: InputMaybe<Scalars['JSONString']['input']>;
   /**
-   * Fields required to update the category metadata.
+   * Fields required to update the category metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Category name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the category private metadata.
+   * Fields required to update the category private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Search engine optimization fields. */
@@ -3287,8 +3506,7 @@ export type CategorySortField =
 export type CategorySortingInput = {
   /**
    * Specifies the channel in which to sort the data.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+   * @deprecated Use root-level channel argument instead.
    */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
   /** Specifies the direction in which to sort categories. */
@@ -3301,14 +3519,10 @@ export type CategorySortingInput = {
 export type CategoryTranslatableContent = Node & {
   /**
    * Represents a single category of products.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly category?: Maybe<Category>;
-  /**
-   * The ID of the category to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the category to translate. */
   readonly categoryId: Scalars['ID']['output'];
   /**
    * Category description to translate.
@@ -3320,7 +3534,7 @@ export type CategoryTranslatableContent = Node & {
    * Description of the category.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `description` field instead.
+   * @deprecated Use the `description` field instead.
    */
   readonly descriptionJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the category translatable content. */
@@ -3331,6 +3545,12 @@ export type CategoryTranslatableContent = Node & {
   readonly seoDescription?: Maybe<Scalars['String']['output']>;
   /** SEO title to translate. */
   readonly seoTitle?: Maybe<Scalars['String']['output']>;
+  /**
+   * Slug to translate.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly slug?: Maybe<Scalars['String']['output']>;
   /** Returns translated category fields for the given language code. */
   readonly translation?: Maybe<CategoryTranslation>;
 };
@@ -3349,7 +3569,7 @@ export type CategoryTranslatableContentTranslationArgs = {
 export type CategoryTranslate = {
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<TranslationError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -3365,7 +3585,7 @@ export type CategoryTranslation = Node & {
    * Translated description of the category.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `description` field instead.
+   * @deprecated Use the `description` field instead.
    */
   readonly descriptionJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the category translation. */
@@ -3379,10 +3599,12 @@ export type CategoryTranslation = Node & {
   /** Translated SEO title. */
   readonly seoTitle?: Maybe<Scalars['String']['output']>;
   /**
-   * Represents the category fields to translate.
+   * Translated category slug.
    *
-   * Added in Saleor 3.14.
+   * Added in Saleor 3.21.
    */
+  readonly slug?: Maybe<Scalars['String']['output']>;
+  /** Represents the category fields to translate. */
   readonly translatableContent?: Maybe<CategoryTranslatableContent>;
 };
 
@@ -3394,15 +3616,11 @@ export type CategoryTranslation = Node & {
 export type CategoryUpdate = {
   readonly category?: Maybe<Category>;
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
-/**
- * Event sent when category is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when category is updated. */
 export type CategoryUpdated = Event & {
   /** The category the event relates to. */
   readonly category?: Maybe<Category>;
@@ -3427,27 +3645,15 @@ export type CategoryWhereInput = {
 
 /** Represents channel. */
 export type Channel = Node & ObjectWithMetadata & {
-  /**
-   * Shipping methods that are available for the channel.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Shipping methods that are available for the channel. */
   readonly availableShippingMethodsPerCountry?: Maybe<ReadonlyArray<ShippingMethodsPerCountry>>;
   /**
    * Channel-specific checkout settings.
    *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_CHANNELS, MANAGE_CHECKOUTS.
    */
   readonly checkoutSettings: CheckoutSettings;
-  /**
-   * List of shippable countries for the channel.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** List of shippable countries for the channel. */
   readonly countries?: Maybe<ReadonlyArray<CountryDisplay>>;
   /**
    * A currency that is assigned to the channel.
@@ -3457,8 +3663,6 @@ export type Channel = Node & ObjectWithMetadata & {
   readonly currencyCode: Scalars['String']['output'];
   /**
    * Default country for the channel. Default country can be used in checkout to determine the stock quantities or calculate taxes when the country was not explicitly provided.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
    */
@@ -3477,25 +3681,15 @@ export type Channel = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
    */
   readonly isActive: Scalars['Boolean']['output'];
-  /**
-   * List of public metadata items. Can be accessed without permissions.
-   *
-   * Added in Saleor 3.15.
-   */
+  /** List of public metadata items. Can be accessed without permissions. */
   readonly metadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.15.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.15.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /**
    * Name of the channel.
@@ -3506,47 +3700,29 @@ export type Channel = Node & ObjectWithMetadata & {
   /**
    * Channel-specific order settings.
    *
-   * Added in Saleor 3.12.
-   *
    * Requires one of the following permissions: MANAGE_CHANNELS, MANAGE_ORDERS.
    */
   readonly orderSettings: OrderSettings;
   /**
    * Channel-specific payment settings.
    *
-   * Added in Saleor 3.16.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_CHANNELS, HANDLE_PAYMENTS.
    */
   readonly paymentSettings: PaymentSettings;
-  /**
-   * List of private metadata items. Requires staff permissions to access.
-   *
-   * Added in Saleor 3.15.
-   */
+  /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.15.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.15.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Slug of the channel. */
   readonly slug: Scalars['String']['output'];
   /**
    * Define the stock setting for this channel.
-   *
-   * Added in Saleor 3.7.
    *
    * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
    */
@@ -3561,8 +3737,6 @@ export type Channel = Node & ObjectWithMetadata & {
   readonly taxConfiguration: TaxConfiguration;
   /**
    * List of warehouses assigned to this channel.
-   *
-   * Added in Saleor 3.5.
    *
    * Requires one of the following permissions: AUTHENTICATED_APP, AUTHENTICATED_STAFF_USER.
    */
@@ -3610,13 +3784,13 @@ export type ChannelPrivateMetafieldsArgs = {
 export type ChannelActivate = {
   /** Activated channel. */
   readonly channel?: Maybe<Channel>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
   readonly errors: ReadonlyArray<ChannelError>;
 };
 
 /**
- * Creates new channel.
+ * Creates a new channel.
  *
  * Requires one of the following permissions: MANAGE_CHANNELS.
  *
@@ -3625,7 +3799,7 @@ export type ChannelActivate = {
  */
 export type ChannelCreate = {
   readonly channel?: Maybe<Channel>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
   readonly errors: ReadonlyArray<ChannelError>;
 };
@@ -3633,73 +3807,41 @@ export type ChannelCreate = {
 export type ChannelCreateInput = {
   /** List of shipping zones to assign to the channel. */
   readonly addShippingZones?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * List of warehouses to assign to the channel.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** List of warehouses to assign to the channel. */
   readonly addWarehouses?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * The channel checkout settings
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The channel checkout settings */
   readonly checkoutSettings?: InputMaybe<CheckoutSettingsInput>;
   /** Currency of the channel. */
   readonly currencyCode: Scalars['String']['input'];
-  /**
-   * Default country for the channel. Default country can be used in checkout to determine the stock quantities or calculate taxes when the country was not explicitly provided.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Default country for the channel. Default country can be used in checkout to determine the stock quantities or calculate taxes when the country was not explicitly provided. */
   readonly defaultCountry: CountryCode;
   /** Determine if channel will be set active or not. */
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /**
-   * Channel public metadata.
+   * Channel public metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.15.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Name of the channel. */
   readonly name: Scalars['String']['input'];
-  /**
-   * The channel order settings
-   *
-   * Added in Saleor 3.12.
-   */
+  /** The channel order settings */
   readonly orderSettings?: InputMaybe<OrderSettingsInput>;
-  /**
-   * The channel payment settings
-   *
-   * Added in Saleor 3.16.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The channel payment settings */
   readonly paymentSettings?: InputMaybe<PaymentSettingsInput>;
   /**
-   * Channel private metadata.
+   * Channel private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.15.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Slug of the channel. */
   readonly slug: Scalars['String']['input'];
-  /**
-   * The channel stock settings.
-   *
-   * Added in Saleor 3.7.
-   */
+  /** The channel stock settings. */
   readonly stockSettings?: InputMaybe<StockSettingsInput>;
 };
 
-/**
- * Event sent when new channel is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new channel is created. */
 export type ChannelCreated = Event & {
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
@@ -3724,13 +3866,13 @@ export type ChannelCreated = Event & {
 export type ChannelDeactivate = {
   /** Deactivated channel. */
   readonly channel?: Maybe<Channel>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
   readonly errors: ReadonlyArray<ChannelError>;
 };
 
 /**
- * Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
+ * Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
  *
  * Requires one of the following permissions: MANAGE_CHANNELS.
  *
@@ -3739,21 +3881,17 @@ export type ChannelDeactivate = {
  */
 export type ChannelDelete = {
   readonly channel?: Maybe<Channel>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
   readonly errors: ReadonlyArray<ChannelError>;
 };
 
 export type ChannelDeleteInput = {
-  /** ID of channel to migrate orders from origin channel. */
+  /** ID of a channel to migrate orders from the origin channel. Target channel has to have the same currency as the origin. */
   readonly channelId: Scalars['ID']['input'];
 };
 
-/**
- * Event sent when channel is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when channel is deleted. */
 export type ChannelDeleted = Event & {
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
@@ -3800,13 +3938,11 @@ export type ChannelListingUpdateInput = {
   readonly preorderThreshold?: InputMaybe<Scalars['Int']['input']>;
   /** Price of the particular variant in channel. */
   readonly price?: InputMaybe<Scalars['PositiveDecimal']['input']>;
+  /** Price of the variant before discount. */
+  readonly priorPrice?: InputMaybe<Scalars['PositiveDecimal']['input']>;
 };
 
-/**
- * Event sent when channel metadata is updated.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when channel metadata is updated. */
 export type ChannelMetadataUpdated = Event & {
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
@@ -3823,8 +3959,6 @@ export type ChannelMetadataUpdated = Event & {
 /**
  * Reorder the warehouses of a channel.
  *
- * Added in Saleor 3.7.
- *
  * Requires one of the following permissions: MANAGE_CHANNELS.
  */
 export type ChannelReorderWarehouses = {
@@ -3833,11 +3967,7 @@ export type ChannelReorderWarehouses = {
   readonly errors: ReadonlyArray<ChannelError>;
 };
 
-/**
- * Event sent when channel status has changed.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when channel status has changed. */
 export type ChannelStatusChanged = Event & {
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
@@ -3865,7 +3995,7 @@ export type ChannelStatusChanged = Event & {
  */
 export type ChannelUpdate = {
   readonly channel?: Maybe<Channel>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly channelErrors: ReadonlyArray<ChannelError>;
   readonly errors: ReadonlyArray<ChannelError>;
 };
@@ -3873,79 +4003,43 @@ export type ChannelUpdate = {
 export type ChannelUpdateInput = {
   /** List of shipping zones to assign to the channel. */
   readonly addShippingZones?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * List of warehouses to assign to the channel.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** List of warehouses to assign to the channel. */
   readonly addWarehouses?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * The channel checkout settings
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The channel checkout settings */
   readonly checkoutSettings?: InputMaybe<CheckoutSettingsInput>;
-  /**
-   * Default country for the channel. Default country can be used in checkout to determine the stock quantities or calculate taxes when the country was not explicitly provided.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Default country for the channel. Default country can be used in checkout to determine the stock quantities or calculate taxes when the country was not explicitly provided. */
   readonly defaultCountry?: InputMaybe<CountryCode>;
   /** Determine if channel will be set active or not. */
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /**
-   * Channel public metadata.
+   * Channel public metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.15.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Name of the channel. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * The channel order settings
-   *
-   * Added in Saleor 3.12.
-   */
+  /** The channel order settings */
   readonly orderSettings?: InputMaybe<OrderSettingsInput>;
-  /**
-   * The channel payment settings
-   *
-   * Added in Saleor 3.16.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The channel payment settings */
   readonly paymentSettings?: InputMaybe<PaymentSettingsInput>;
   /**
-   * Channel private metadata.
+   * Channel private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.15.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** List of shipping zones to unassign from the channel. */
   readonly removeShippingZones?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * List of warehouses to unassign from the channel.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** List of warehouses to unassign from the channel. */
   readonly removeWarehouses?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Slug of the channel. */
   readonly slug?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * The channel stock settings.
-   *
-   * Added in Saleor 3.7.
-   */
+  /** The channel stock settings. */
   readonly stockSettings?: InputMaybe<StockSettingsInput>;
 };
 
-/**
- * Event sent when channel is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when channel is updated. */
 export type ChannelUpdated = Event & {
   /** The channel the event relates to. */
   readonly channel?: Maybe<Channel>;
@@ -3964,19 +4058,11 @@ export type Checkout = Node & ObjectWithMetadata & {
   /**
    * The authorize status of the checkout.
    *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Triggers the following webhook events:
    * - CHECKOUT_CALCULATE_TAXES (sync): Optionally triggered when checkout prices are expired.
    */
   readonly authorizeStatus: CheckoutAuthorizeStatusEnum;
-  /**
-   * Collection points that can be used for this order.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Collection points that can be used for this order. */
   readonly availableCollectionPoints: ReadonlyArray<Warehouse>;
   /**
    * List of available payment gateways.
@@ -3991,7 +4077,7 @@ export type Checkout = Node & ObjectWithMetadata & {
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Optionally triggered when cached external shipping methods are invalid.
    * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Optionally triggered when cached filtered shipping methods are invalid.
-   * @deprecated This field will be removed in Saleor 4.0. Use `shippingMethods` instead.
+   * @deprecated Use `shippingMethods` instead.
    */
   readonly availableShippingMethods: ReadonlyArray<ShippingMethod>;
   /** The billing address of the checkout. */
@@ -4001,10 +4087,6 @@ export type Checkout = Node & ObjectWithMetadata & {
   /**
    * The charge status of the checkout.
    *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Triggers the following webhook events:
    * - CHECKOUT_CALCULATE_TAXES (sync): Optionally triggered when checkout prices are expired.
    */
@@ -4012,9 +4094,13 @@ export type Checkout = Node & ObjectWithMetadata & {
   /** The date and time when the checkout was created. */
   readonly created: Scalars['DateTime']['output'];
   /**
-   * The delivery method selected for this checkout.
+   * The customer note for the checkout.
    *
-   * Added in Saleor 3.1.
+   * Added in Saleor 3.21.
+   */
+  readonly customerNote: Scalars['String']['output'];
+  /**
+   * The delivery method selected for this checkout.
    *
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Optionally triggered when cached external shipping methods are invalid.
@@ -4025,11 +4111,7 @@ export type Checkout = Node & ObjectWithMetadata & {
   readonly discount?: Maybe<Money>;
   /** The name of voucher assigned to the checkout. */
   readonly discountName?: Maybe<Scalars['String']['output']>;
-  /**
-   * Determines whether displayed prices should include taxes.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Determines whether displayed prices should include taxes. */
   readonly displayGrossPrices: Scalars['Boolean']['output'];
   /** Email of a customer. */
   readonly email?: Maybe<Scalars['String']['output']>;
@@ -4041,7 +4123,7 @@ export type Checkout = Node & ObjectWithMetadata & {
   readonly isShippingRequired: Scalars['Boolean']['output'];
   /** Checkout language code. */
   readonly languageCode: LanguageCodeEnum;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `updatedAt` instead. */
+  /** @deprecated Use `updatedAt` instead. */
   readonly lastChange: Scalars['DateTime']['output'];
   /** A list of checkout lines, each containing information about an item in the checkout. */
   readonly lines: ReadonlyArray<CheckoutLine>;
@@ -4051,17 +4133,14 @@ export type Checkout = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
-  /** The note for the checkout. */
+  /**
+   * The note for the checkout.
+   * @deprecated Use `customerNote` instead.
+   */
   readonly note: Scalars['String']['output'];
   /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
@@ -4069,23 +4148,11 @@ export type Checkout = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
-  /**
-   * List of problems with the checkout.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of problems with the checkout. */
   readonly problems?: Maybe<ReadonlyArray<CheckoutProblem>>;
   /** The number of items purchased. */
   readonly quantity: Scalars['Int']['output'];
@@ -4097,7 +4164,7 @@ export type Checkout = Node & ObjectWithMetadata & {
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Optionally triggered when cached external shipping methods are invalid.
    * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Optionally triggered when cached filtered shipping methods are invalid.
-   * @deprecated This field will be removed in Saleor 4.0. Use `deliveryMethod` instead.
+   * @deprecated Use `deliveryMethod` instead.
    */
   readonly shippingMethod?: Maybe<ShippingMethod>;
   /**
@@ -4115,19 +4182,9 @@ export type Checkout = Node & ObjectWithMetadata & {
    * - CHECKOUT_CALCULATE_TAXES (sync): Optionally triggered when checkout prices are expired.
    */
   readonly shippingPrice: TaxedMoney;
-  /**
-   * Date when oldest stock reservation for this checkout expires or null if no stock is reserved.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Date when oldest stock reservation for this checkout expires or null if no stock is reserved. */
   readonly stockReservationExpires?: Maybe<Scalars['DateTime']['output']>;
-  /**
-   * List of user's stored payment methods that can be used in this checkout session. It uses the channel that the checkout was created in. When `amount` is not provided, `checkout.total` will be used as a default value.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of user's stored payment methods that can be used in this checkout session. It uses the channel that the checkout was created in. When `amount` is not provided, `checkout.total` will be used as a default value. */
   readonly storedPaymentMethods?: Maybe<ReadonlyArray<StoredPaymentMethod>>;
   /**
    * The price of the checkout before shipping, with taxes included.
@@ -4136,20 +4193,12 @@ export type Checkout = Node & ObjectWithMetadata & {
    * - CHECKOUT_CALCULATE_TAXES (sync): Optionally triggered when checkout prices are expired.
    */
   readonly subtotalPrice: TaxedMoney;
-  /**
-   * Returns True if checkout has to be exempt from taxes.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Returns True if checkout has to be exempt from taxes. */
   readonly taxExemption: Scalars['Boolean']['output'];
   /** The checkout's token. */
   readonly token: Scalars['UUID']['output'];
   /**
    * The difference between the paid and the checkout total amount.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_CALCULATE_TAXES (sync): Optionally triggered when checkout prices are expired.
@@ -4162,21 +4211,11 @@ export type Checkout = Node & ObjectWithMetadata & {
    * - CHECKOUT_CALCULATE_TAXES (sync): Optionally triggered when checkout prices are expired.
    */
   readonly totalPrice: TaxedMoney;
-  /**
-   * List of transactions for the checkout. Requires one of the following permissions: MANAGE_CHECKOUTS, HANDLE_PAYMENTS.
-   *
-   * Added in Saleor 3.4.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of transactions for the checkout. Requires one of the following permissions: MANAGE_CHECKOUTS, HANDLE_PAYMENTS. */
   readonly transactions?: Maybe<ReadonlyArray<TransactionItem>>;
   /** Translation of the discountName field in the language set in Checkout.languageCode field.Note: this field is set automatically when Checkout.languageCode is defined; otherwise it's null */
   readonly translatedDiscountName?: Maybe<Scalars['String']['output']>;
-  /**
-   * Time of last modification of the given checkout.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Time of last modification of the given checkout. */
   readonly updatedAt: Scalars['DateTime']['output'];
   /** The user assigned to the checkout. Requires one of the following permissions: MANAGE_USERS, HANDLE_PAYMENTS, OWNER. */
   readonly user?: Maybe<User>;
@@ -4231,7 +4270,7 @@ export type CheckoutStoredPaymentMethodsArgs = {
 export type CheckoutAddPromoCode = {
   /** The checkout with the added gift card or voucher. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
@@ -4265,7 +4304,7 @@ export type CheckoutAuthorizeStatusEnum =
   | 'PARTIAL';
 
 /**
- * Update billing address in the existing checkout.
+ * Updates billing address in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -4273,7 +4312,7 @@ export type CheckoutAuthorizeStatusEnum =
 export type CheckoutBillingAddressUpdate = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
@@ -4316,7 +4355,7 @@ export type CheckoutChargeStatusEnum =
  * - ORDER_CONFIRMED (async): Optionally triggered when newly created order are automatically marked as confirmed.
  */
 export type CheckoutComplete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   /** Confirmation data used to process additional authorization steps. */
   readonly confirmationData?: Maybe<Scalars['JSONString']['output']>;
@@ -4352,23 +4391,17 @@ export type CheckoutCountableEdge = {
  */
 export type CheckoutCreate = {
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   /**
    * Whether the checkout was created or the current active one was returned. Refer to checkoutLinesAdd and checkoutLinesUpdate to merge a cart with an active checkout.
-   * @deprecated This field will be removed in Saleor 4.0. Always returns `true`.
+   * @deprecated Always returns `true`.
    */
   readonly created?: Maybe<Scalars['Boolean']['output']>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
 
-/**
- * Create new checkout from existing order.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Creates a new checkout from existing order. */
 export type CheckoutCreateFromOrder = {
   /** Created checkout. */
   readonly checkout?: Maybe<Checkout>;
@@ -4423,21 +4456,43 @@ export type CheckoutCreateInput = {
   readonly languageCode?: InputMaybe<LanguageCodeEnum>;
   /** A list of checkout lines, each containing information about an item in the checkout. */
   readonly lines: ReadonlyArray<CheckoutLineInput>;
+  /**
+   * Checkout public metadata. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /**
+   * Checkout private metadata. Requires one of the following permissions: MANAGE_CHECKOUTS, HANDLE_CHECKOUTS
+   *
+   * Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /**
+   * Indicates whether the billing address should be saved to the user’s address book upon checkout completion. Can only be set when a billing address is provided. If not specified along with the address, the default behavior is to save the address.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly saveBillingAddress?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * Indicates whether the shipping address should be saved to the user’s address book upon checkout completion.Can only be set when a shipping address is provided. If not specified along with the address, the default behavior is to save the address.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly saveShippingAddress?: InputMaybe<Scalars['Boolean']['input']>;
   /** The mailing address to where the checkout will be shipped. Note: the address will be ignored if the checkout doesn't contain shippable items. `skipValidation` requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions. */
   readonly shippingAddress?: InputMaybe<AddressInput>;
-  /**
-   * The checkout validation rules that can be changed.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** The checkout validation rules that can be changed. */
   readonly validationRules?: InputMaybe<CheckoutValidationRules>;
 };
 
-/**
- * Event sent when new checkout is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new checkout is created. */
 export type CheckoutCreated = Event & {
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
@@ -4462,7 +4517,7 @@ export type CheckoutCreated = Event & {
 export type CheckoutCustomerAttach = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
@@ -4478,15 +4533,29 @@ export type CheckoutCustomerAttach = {
 export type CheckoutCustomerDetach = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
+  readonly checkoutErrors: ReadonlyArray<CheckoutError>;
+  readonly errors: ReadonlyArray<CheckoutError>;
+};
+
+/**
+ * Updates customer note in the existing checkout object.
+ *
+ * Added in Saleor 3.21.
+ *
+ * Triggers the following webhook events:
+ * - CHECKOUT_UPDATED (async): A checkout was updated.
+ */
+export type CheckoutCustomerNoteUpdate = {
+  /** An updated checkout. */
+  readonly checkout?: Maybe<Checkout>;
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
 
 /**
  * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
- *
- * Added in Saleor 3.1.
  *
  * Triggers the following webhook events:
  * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Triggered when updating the checkout delivery method with the external one.
@@ -4507,7 +4576,7 @@ export type CheckoutDeliveryMethodUpdate = {
 export type CheckoutEmailUpdate = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
@@ -4539,6 +4608,7 @@ export type CheckoutErrorCode =
   | 'INSUFFICIENT_STOCK'
   | 'INVALID'
   | 'INVALID_SHIPPING_METHOD'
+  | 'MISSING_ADDRESS_DATA'
   | 'MISSING_CHANNEL_SLUG'
   | 'NON_EDITABLE_GIFT_LINE'
   | 'NON_REMOVABLE_GIFT_LINE'
@@ -4571,11 +4641,7 @@ export type CheckoutFilterInput = {
   readonly updatedAt?: InputMaybe<DateRangeInput>;
 };
 
-/**
- * Filter shipping methods for checkout.
- *
- * Added in Saleor 3.6.
- */
+/** Filter shipping methods for checkout. */
 export type CheckoutFilterShippingMethods = Event & {
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
@@ -4585,22 +4651,34 @@ export type CheckoutFilterShippingMethods = Event & {
   readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
   /** The application receiving the webhook. */
   readonly recipient?: Maybe<App>;
-  /**
-   * Shipping methods that can be used with this checkout.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Shipping methods that can be used with this checkout. */
   readonly shippingMethods?: Maybe<ReadonlyArray<ShippingMethod>>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
 /**
- * Event sent when checkout is fully paid with transactions. The checkout is considered as fully paid when the checkout `charge_status` is `FULL` or `OVERCHARGED`. The event is not sent when the checkout authorization flow strategy is used.
+ * Event sent when a checkout was fully authorized. A checkout is considered fully authorized when its `authorizeStatus` is `FULL`.
  *
- * Added in Saleor 3.13.
+ * It is triggered only for checkouts whose payments are processed through the Transaction API.
+ */
+export type CheckoutFullyAuthorized = Event & {
+  /** The checkout the event relates to. */
+  readonly checkout?: Maybe<Checkout>;
+  /** Time of the event. */
+  readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  readonly recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Event sent when a checkout was fully paid. A checkout is considered fully paid when its `chargeStatus` is `FULL` or `OVERCHARGED`. This event is not sent if payments are only authorized but not fully charged.
  *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ * It is triggered only for checkouts whose payments are processed through the Transaction API.
  */
 export type CheckoutFullyPaid = Event & {
   /** The checkout the event relates to. */
@@ -4616,7 +4694,7 @@ export type CheckoutFullyPaid = Event & {
 };
 
 /**
- * Update language code in the existing checkout.
+ * Updates language code in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -4624,7 +4702,7 @@ export type CheckoutFullyPaid = Event & {
 export type CheckoutLanguageCodeUpdate = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
@@ -4641,53 +4719,39 @@ export type CheckoutLine = Node & ObjectWithMetadata & {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly isGift?: Maybe<Scalars['Boolean']['output']>;
-  /**
-   * List of public metadata items. Can be accessed without permissions.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** List of public metadata items. Can be accessed without permissions. */
   readonly metadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.5.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /**
-   * List of private metadata items. Requires staff permissions to access.
+   * The sum of the checkout line price prior to promotion.
    *
-   * Added in Saleor 3.5.
+   * Added in Saleor 3.21.
    */
+  readonly priorTotalPrice?: Maybe<Money>;
+  /**
+   * The unit price of the checkout line prior to promotion.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly priorUnitPrice?: Maybe<Money>;
+  /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.5.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
-  /**
-   * List of problems with the checkout line.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of problems with the checkout line. */
   readonly problems?: Maybe<ReadonlyArray<CheckoutLineProblem>>;
   /** The quantity of product variant assigned to the checkout line. */
   readonly quantity: Scalars['Int']['output'];
@@ -4763,29 +4827,21 @@ export type CheckoutLineCountableEdge = {
 export type CheckoutLineDelete = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
 
 export type CheckoutLineInput = {
-  /**
-   * Flag that allow force splitting the same variant into multiple lines by skipping the matching logic.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Flag that allow force splitting the same variant into multiple lines by skipping the matching logic. */
   readonly forceNewLine?: InputMaybe<Scalars['Boolean']['input']>;
   /**
-   * Fields required to update the object's metadata.
+   * Fields required to update the object's metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
-  /**
-   * Custom price of the item. Can be set only by apps with `HANDLE_CHECKOUTS` permission. When the line with the same variant will be provided multiple times, the last price will be used.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Custom price of the item. Can be set only by apps with `HANDLE_CHECKOUTS` permission. When the line with the same variant will be provided multiple times, the last price will be used. */
   readonly price?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   /** The number of items purchased. */
   readonly quantity: Scalars['Int']['input'];
@@ -4793,22 +4849,10 @@ export type CheckoutLineInput = {
   readonly variantId: Scalars['ID']['input'];
 };
 
-/**
- * Represents an problem in the checkout line.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents an problem in the checkout line. */
 export type CheckoutLineProblem = CheckoutLineProblemInsufficientStock | CheckoutLineProblemVariantNotAvailable;
 
-/**
- * Indicates insufficient stock for a given checkout line.Placing the order will not be possible until solving this problem.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Indicates insufficient stock for a given checkout line.Placing the order will not be possible until solving this problem. */
 export type CheckoutLineProblemInsufficientStock = {
   /** Available quantity of a variant. */
   readonly availableQuantity?: Maybe<Scalars['Int']['output']>;
@@ -4818,37 +4862,30 @@ export type CheckoutLineProblemInsufficientStock = {
   readonly variant: ProductVariant;
 };
 
-/**
- * The variant assigned to the checkout line is not available.Placing the order will not be possible until solving this problem.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** The variant assigned to the checkout line is not available.Placing the order will not be possible until solving this problem. */
 export type CheckoutLineProblemVariantNotAvailable = {
   /** The line that has variant that is not available. */
   readonly line: CheckoutLine;
 };
 
 export type CheckoutLineUpdateInput = {
-  /**
-   * ID of the line.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** ID of the line. */
   readonly lineId?: InputMaybe<Scalars['ID']['input']>;
   /**
-   * Custom price of the item. Can be set only by apps with `HANDLE_CHECKOUTS` permission. When the line with the same variant will be provided multiple times, the last price will be used.
+   * Checkout line public metadata. Will add and update keys. To delete keys use deleteMetadata mutation.
    *
-   * Added in Saleor 3.1.
+   * Added in Saleor 3.21. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
+  readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /** Custom price of the item. Can be set only by apps with `HANDLE_CHECKOUTS` permission. When the line with the same variant will be provided multiple times, the last price will be used. */
   readonly price?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   /** The number of items purchased. Optional for apps, required for any other users. */
   readonly quantity?: InputMaybe<Scalars['Int']['input']>;
   /**
    * ID of the product variant.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `lineId` instead.
+   * @deprecated Use `lineId` instead.
    */
   readonly variantId?: InputMaybe<Scalars['ID']['input']>;
 };
@@ -4862,7 +4899,7 @@ export type CheckoutLineUpdateInput = {
 export type CheckoutLinesAdd = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
@@ -4888,16 +4925,12 @@ export type CheckoutLinesDelete = {
 export type CheckoutLinesUpdate = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
 
-/**
- * Event sent when checkout metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when checkout metadata is updated. */
 export type CheckoutMetadataUpdated = Event & {
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
@@ -4911,24 +4944,18 @@ export type CheckoutMetadataUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/** Create a new payment for given checkout. */
+/** Creates a new payment for given checkout. */
 export type CheckoutPaymentCreate = {
   /** Related checkout object. */
   readonly checkout?: Maybe<Checkout>;
   readonly errors: ReadonlyArray<PaymentError>;
   /** A newly created payment. */
   readonly payment?: Maybe<Payment>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly paymentErrors: ReadonlyArray<PaymentError>;
 };
 
-/**
- * Represents an problem in the checkout.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents an problem in the checkout. */
 export type CheckoutProblem = CheckoutLineProblemInsufficientStock | CheckoutLineProblemVariantNotAvailable;
 
 /**
@@ -4940,18 +4967,12 @@ export type CheckoutProblem = CheckoutLineProblemInsufficientStock | CheckoutLin
 export type CheckoutRemovePromoCode = {
   /** The checkout with the removed gift card or voucher. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
 
-/**
- * Represents the channel-specific checkout settings.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the channel-specific checkout settings. */
 export type CheckoutSettings = {
   /**
    * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
@@ -4959,11 +4980,7 @@ export type CheckoutSettings = {
    * Added in Saleor 3.20.
    */
   readonly automaticallyCompleteFullyPaidCheckouts: Scalars['Boolean']['output'];
-  /**
-   * Default `true`. Determines if the checkout mutations should use legacy error flow. In legacy flow, all mutations can raise an exception unrelated to the requested action - (e.g. out-of-stock exception when updating checkoutShippingAddress.) If `false`, the errors will be aggregated in `checkout.problems` field. Some of the `problems` can block the finalizing checkout process. The legacy flow will be removed in Saleor 4.0. The flow with `checkout.problems` will be the default one.
-   *
-   * Added in Saleor 3.15.This field will be removed in Saleor 4.0.
-   */
+  /** Default `true`. Determines if the checkout mutations should use legacy error flow. In legacy flow, all mutations can raise an exception unrelated to the requested action - (e.g. out-of-stock exception when updating checkoutShippingAddress.) If `false`, the errors will be aggregated in `checkout.problems` field. Some of the `problems` can block the finalizing checkout process. The legacy flow will be removed in Saleor 4.0. The flow with `checkout.problems` will be the default one. */
   readonly useLegacyErrorFlow: Scalars['Boolean']['output'];
 };
 
@@ -4976,16 +4993,13 @@ export type CheckoutSettingsInput = {
   readonly automaticallyCompleteFullyPaidCheckouts?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Default `true`. Determines if the checkout mutations should use legacy error flow. In legacy flow, all mutations can raise an exception unrelated to the requested action - (e.g. out-of-stock exception when updating checkoutShippingAddress.) If `false`, the errors will be aggregated in `checkout.problems` field. Some of the `problems` can block the finalizing checkout process. The legacy flow will be removed in Saleor 4.0. The flow with `checkout.problems` will be the default one.
-   *
-   * Added in Saleor 3.15.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly useLegacyErrorFlow?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /**
- * Update shipping address in the existing checkout.
+ * Updates shipping address in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -4993,7 +5007,7 @@ export type CheckoutSettingsInput = {
 export type CheckoutShippingAddressUpdate = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
@@ -5008,7 +5022,7 @@ export type CheckoutShippingAddressUpdate = {
 export type CheckoutShippingMethodUpdate = {
   /** An updated checkout. */
   readonly checkout?: Maybe<Checkout>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly checkoutErrors: ReadonlyArray<CheckoutError>;
   readonly errors: ReadonlyArray<CheckoutError>;
 };
@@ -5028,11 +5042,7 @@ export type CheckoutSortingInput = {
   readonly field: CheckoutSortField;
 };
 
-/**
- * Event sent when checkout is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when checkout is updated. */
 export type CheckoutUpdated = Event & {
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
@@ -5060,6 +5070,15 @@ export type ChoiceValue = {
   readonly verbose?: Maybe<Scalars['String']['output']>;
 };
 
+/** Enum determining the state of a circuit breaker. */
+export type CircuitBreakerStateEnum =
+  /** The breaker is conducting (requests are passing through). */
+  | 'CLOSED'
+  /** The breaker is in a trial period (to close or open). Note that unlike classic breaker patterns, this is not a state where we are throttling the number of requests, it's a state similar to CLOSED but with different thresholds. */
+  | 'HALF_OPEN'
+  /** The breaker is tripped (no requests are passing). Breaker will enter half-open state after cooldown period. */
+  | 'OPEN';
+
 /** Represents a collection of products. */
 export type Collection = Node & ObjectWithMetadata & {
   /** Background image of the collection. */
@@ -5082,7 +5101,7 @@ export type Collection = Node & ObjectWithMetadata & {
    * Description of the collection.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `description` field instead.
+   * @deprecated Use the `description` field instead.
    */
   readonly descriptionJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the collection. */
@@ -5093,15 +5112,9 @@ export type Collection = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Name of the collection. */
   readonly name: Scalars['String']['output'];
@@ -5111,15 +5124,9 @@ export type Collection = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** List of products in this collection. */
   readonly products?: Maybe<ProductCountableConnection>;
@@ -5172,6 +5179,7 @@ export type CollectionProductsArgs = {
   filter?: InputMaybe<ProductFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductOrder>;
   where?: InputMaybe<ProductWhereInput>;
 };
@@ -5190,7 +5198,7 @@ export type CollectionTranslationArgs = {
 export type CollectionAddProducts = {
   /** Collection to which products will be added. */
   readonly collection?: Maybe<Collection>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
   readonly errors: ReadonlyArray<CollectionError>;
 };
@@ -5201,7 +5209,7 @@ export type CollectionAddProducts = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type CollectionBulkDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
@@ -5216,13 +5224,9 @@ export type CollectionChannelListing = Node & {
   readonly id: Scalars['ID']['output'];
   /** Indicates if the collection is published in the channel. */
   readonly isPublished: Scalars['Boolean']['output'];
-  /** @deprecated This field will be removed in Saleor 4.0. Use the `publishedAt` field to fetch the publication date. */
+  /** @deprecated Use the `publishedAt` field to fetch the publication date. */
   readonly publicationDate?: Maybe<Scalars['Date']['output']>;
-  /**
-   * The collection publication date.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** The collection publication date. */
   readonly publishedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -5249,7 +5253,7 @@ export type CollectionChannelListingError = {
 export type CollectionChannelListingUpdate = {
   /** An updated collection instance. */
   readonly collection?: Maybe<Collection>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly collectionChannelListingErrors: ReadonlyArray<CollectionChannelListingError>;
   readonly errors: ReadonlyArray<CollectionChannelListingError>;
 };
@@ -5284,7 +5288,7 @@ export type CollectionCountableEdge = {
  */
 export type CollectionCreate = {
   readonly collection?: Maybe<Collection>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
   readonly errors: ReadonlyArray<CollectionError>;
 };
@@ -5303,25 +5307,24 @@ export type CollectionCreateInput = {
   /** Informs whether a collection is published. */
   readonly isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   /**
-   * Fields required to update the collection metadata.
+   * Fields required to update the collection metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Name of the collection. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the collection private metadata.
+   * Fields required to update the collection private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** List of products to be added to the collection. */
   readonly products?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /**
    * Publication date. ISO 8601 standard.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly publicationDate?: InputMaybe<Scalars['Date']['input']>;
   /** Search engine optimization fields. */
@@ -5330,11 +5333,7 @@ export type CollectionCreateInput = {
   readonly slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new collection is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new collection is created. */
 export type CollectionCreated = Event & {
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
@@ -5349,11 +5348,7 @@ export type CollectionCreated = Event & {
 };
 
 
-/**
- * Event sent when new collection is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new collection is created. */
 export type CollectionCreatedCollectionArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5365,16 +5360,12 @@ export type CollectionCreatedCollectionArgs = {
  */
 export type CollectionDelete = {
   readonly collection?: Maybe<Collection>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
   readonly errors: ReadonlyArray<CollectionError>;
 };
 
-/**
- * Event sent when collection is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when collection is deleted. */
 export type CollectionDeleted = Event & {
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
@@ -5389,11 +5380,7 @@ export type CollectionDeleted = Event & {
 };
 
 
-/**
- * Event sent when collection is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when collection is deleted. */
 export type CollectionDeletedCollectionArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5421,8 +5408,7 @@ export type CollectionErrorCode =
 export type CollectionFilterInput = {
   /**
    * Specifies the channel by which the data should be filtered.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+   * @deprecated Use root-level channel argument instead.
    */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
@@ -5446,23 +5432,22 @@ export type CollectionInput = {
   /** Informs whether a collection is published. */
   readonly isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   /**
-   * Fields required to update the collection metadata.
+   * Fields required to update the collection metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Name of the collection. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the collection private metadata.
+   * Fields required to update the collection private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /**
    * Publication date. ISO 8601 standard.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly publicationDate?: InputMaybe<Scalars['Date']['input']>;
   /** Search engine optimization fields. */
@@ -5471,11 +5456,7 @@ export type CollectionInput = {
   readonly slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when collection metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when collection metadata is updated. */
 export type CollectionMetadataUpdated = Event & {
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
@@ -5490,11 +5471,7 @@ export type CollectionMetadataUpdated = Event & {
 };
 
 
-/**
- * Event sent when collection metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when collection metadata is updated. */
 export type CollectionMetadataUpdatedCollectionArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5511,7 +5488,7 @@ export type CollectionPublished =
 export type CollectionRemoveProducts = {
   /** Collection from which products will be removed. */
   readonly collection?: Maybe<Collection>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
   readonly errors: ReadonlyArray<CollectionError>;
 };
@@ -5524,7 +5501,7 @@ export type CollectionRemoveProducts = {
 export type CollectionReorderProducts = {
   /** Collection from which products are reordered. */
   readonly collection?: Maybe<Collection>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
   readonly errors: ReadonlyArray<CollectionError>;
 };
@@ -5547,7 +5524,7 @@ export type CollectionSortField =
    */
   | 'PUBLICATION_DATE'
   /**
-   * Sort collections by publication date.
+   * Sort collections by published at.
    *
    * This option requires a channel filter to work as the values can vary between channels.
    */
@@ -5556,8 +5533,7 @@ export type CollectionSortField =
 export type CollectionSortingInput = {
   /**
    * Specifies the channel in which to sort the data.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+   * @deprecated Use root-level channel argument instead.
    */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
   /** Specifies the direction in which to sort collections. */
@@ -5570,14 +5546,10 @@ export type CollectionSortingInput = {
 export type CollectionTranslatableContent = Node & {
   /**
    * Represents a collection of products.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly collection?: Maybe<Collection>;
-  /**
-   * The ID of the collection to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the collection to translate. */
   readonly collectionId: Scalars['ID']['output'];
   /**
    * Collection's description to translate.
@@ -5589,7 +5561,7 @@ export type CollectionTranslatableContent = Node & {
    * Description of the collection.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `description` field instead.
+   * @deprecated Use the `description` field instead.
    */
   readonly descriptionJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the collection translatable content. */
@@ -5600,6 +5572,12 @@ export type CollectionTranslatableContent = Node & {
   readonly seoDescription?: Maybe<Scalars['String']['output']>;
   /** SEO title to translate. */
   readonly seoTitle?: Maybe<Scalars['String']['output']>;
+  /**
+   * Slug to translate
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly slug?: Maybe<Scalars['String']['output']>;
   /** Returns translated collection fields for the given language code. */
   readonly translation?: Maybe<CollectionTranslation>;
 };
@@ -5618,7 +5596,7 @@ export type CollectionTranslatableContentTranslationArgs = {
 export type CollectionTranslate = {
   readonly collection?: Maybe<Collection>;
   readonly errors: ReadonlyArray<TranslationError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -5634,7 +5612,7 @@ export type CollectionTranslation = Node & {
    * Translated description of the collection.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `description` field instead.
+   * @deprecated Use the `description` field instead.
    */
   readonly descriptionJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the collection translation. */
@@ -5648,10 +5626,12 @@ export type CollectionTranslation = Node & {
   /** Translated SEO title. */
   readonly seoTitle?: Maybe<Scalars['String']['output']>;
   /**
-   * Represents the collection fields to translate.
+   * Translated collection slug.
    *
-   * Added in Saleor 3.14.
+   * Added in Saleor 3.21.
    */
+  readonly slug?: Maybe<Scalars['String']['output']>;
+  /** Represents the collection fields to translate. */
   readonly translatableContent?: Maybe<CollectionTranslatableContent>;
 };
 
@@ -5662,16 +5642,12 @@ export type CollectionTranslation = Node & {
  */
 export type CollectionUpdate = {
   readonly collection?: Maybe<Collection>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly collectionErrors: ReadonlyArray<CollectionError>;
   readonly errors: ReadonlyArray<CollectionError>;
 };
 
-/**
- * Event sent when collection is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when collection is updated. */
 export type CollectionUpdated = Event & {
   /** The collection the event relates to. */
   readonly collection?: Maybe<Collection>;
@@ -5686,11 +5662,7 @@ export type CollectionUpdated = Event & {
 };
 
 
-/**
- * Event sent when collection is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when collection is updated. */
 export type CollectionUpdatedCollectionArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5741,7 +5713,7 @@ export type ConfigurationTypeFieldEnum =
  * - ACCOUNT_CONFIRMED (async): Account was confirmed.
  */
 export type ConfirmAccount = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** An activated user account. */
@@ -5759,11 +5731,19 @@ export type ConfirmAccount = {
  * - ACCOUNT_EMAIL_CHANGED (async): An account email was changed.
  */
 export type ConfirmEmailChange = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** A user instance with a new email. */
   readonly user?: Maybe<User>;
+};
+
+/** Define the filtering options for fields that can contain multiple values. */
+export type ContainsFilterInput = {
+  /** The field contains all of the specified values. */
+  readonly containsAll?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+  /** The field contains at least one of the specified values. */
+  readonly containsAny?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 /**
@@ -6024,6 +6004,16 @@ export type CountryCode =
   | 'ZM'
   | 'ZW';
 
+/** Filter by country code. */
+export type CountryCodeEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<CountryCode>;
+  /** The value not included in. */
+  readonly notOneOf?: InputMaybe<ReadonlyArray<CountryCode>>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<CountryCode>>;
+};
+
 export type CountryDisplay = {
   /** Country code. */
   readonly code: Scalars['String']['output'];
@@ -6031,7 +6021,7 @@ export type CountryDisplay = {
   readonly country: Scalars['String']['output'];
   /**
    * Country tax.
-   * @deprecated This field will be removed in Saleor 4.0. Always returns `null`. Use `TaxClassCountryRate` type to manage tax rates per country.
+   * @deprecated Always returns `null`. Use `TaxClassCountryRate` type to manage tax rates per country.
    */
   readonly vat?: Maybe<Vat>;
 };
@@ -6057,7 +6047,7 @@ export type CountryRateUpdateInput = {
 
 /** Create JWT token. */
 export type CreateToken = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate access token. */
   readonly csrfToken?: Maybe<Scalars['String']['output']>;
@@ -6092,7 +6082,7 @@ export type CreditCard = {
  * - CUSTOMER_DELETED (async): A customer account was deleted.
  */
 export type CustomerBulkDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
@@ -6108,10 +6098,6 @@ export type CustomerBulkResult = {
 
 /**
  * Updates customers.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_USERS.
  *
@@ -6167,17 +6153,13 @@ export type CustomerBulkUpdateInput = {
  * - ACCOUNT_SET_PASSWORD_REQUESTED (async): Setting a new password for the account is requested.
  */
 export type CustomerCreate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   readonly user?: Maybe<User>;
 };
 
-/**
- * Event sent when new customer user is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new customer user is created. */
 export type CustomerCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -6200,7 +6182,7 @@ export type CustomerCreated = Event & {
  * - CUSTOMER_DELETED (async): A customer account was deleted.
  */
 export type CustomerDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   readonly user?: Maybe<User>;
@@ -6247,11 +6229,7 @@ export type CustomerEventsEnum =
 
 export type CustomerFilterInput = {
   readonly dateJoined?: InputMaybe<DateRangeInput>;
-  /**
-   * Filter by ids.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Filter by ids. */
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
   readonly numberOfOrders?: InputMaybe<IntRangeInput>;
@@ -6267,47 +6245,35 @@ export type CustomerInput = {
   readonly defaultShippingAddress?: InputMaybe<AddressInput>;
   /** The unique email address of the user. */
   readonly email?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * External ID of the customer.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of the customer. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** Given name. */
   readonly firstName?: InputMaybe<Scalars['String']['input']>;
   /** User account is active. */
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * User account is confirmed.
-   *
-   * Added in Saleor 3.15.
-   */
+  /** User account is confirmed. */
   readonly isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   /** User language code. */
   readonly languageCode?: InputMaybe<LanguageCodeEnum>;
   /** Family name. */
   readonly lastName?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the user metadata.
+   * Fields required to update the user metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** A note about the user. */
   readonly note?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the user private metadata.
+   * Fields required to update the user private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
 };
 
-/**
- * Event sent when customer user metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when customer user metadata is updated. */
 export type CustomerMetadataUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -6331,17 +6297,13 @@ export type CustomerMetadataUpdated = Event & {
  * - CUSTOMER_METADATA_UPDATED (async): Optionally called when customer's metadata was updated.
  */
 export type CustomerUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   readonly user?: Maybe<User>;
 };
 
-/**
- * Event sent when customer user is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when customer user is updated. */
 export type CustomerUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -6355,6 +6317,34 @@ export type CustomerUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+export type CustomerWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<CustomerWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<CustomerWhereInput>>;
+  /** Filter by addresses data associated with user. */
+  readonly addresses?: InputMaybe<AddressFilterInput>;
+  /** Filter by date joined. */
+  readonly dateJoined?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by email address. */
+  readonly email?: InputMaybe<StringFilterInput>;
+  /** Filter by first name. */
+  readonly firstName?: InputMaybe<StringFilterInput>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by whether the user is active. */
+  readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by last name. */
+  readonly lastName?: InputMaybe<StringFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by number of orders placed by the user. */
+  readonly numberOfOrders?: InputMaybe<IntFilterInput>;
+  /** Filter by date when orders were placed. */
+  readonly placedOrdersAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by last updated date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+};
+
 export type DateRangeInput = {
   /** Start date. */
   readonly gte?: InputMaybe<Scalars['Date']['input']>;
@@ -6362,13 +6352,7 @@ export type DateRangeInput = {
   readonly lte?: InputMaybe<Scalars['Date']['input']>;
 };
 
-/**
- * Define the filtering options for date time fields.
- *
- * Added in Saleor 3.11.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Define the filtering options for date time fields. */
 export type DateTimeFilterInput = {
   /** The value equal to. */
   readonly eq?: InputMaybe<Scalars['DateTime']['input']>;
@@ -6391,18 +6375,12 @@ export type DateTimeRangeInput = {
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type DeactivateAllUserTokens = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
 };
 
-/**
- * Define the filtering options for decimal fields.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Define the filtering options for decimal fields. */
 export type DecimalFilterInput = {
   /** The value equal to. */
   readonly eq?: InputMaybe<Scalars['Decimal']['input']>;
@@ -6423,7 +6401,7 @@ export type DecimalRangeInput = {
 export type DeleteMetadata = {
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly metadataErrors: ReadonlyArray<MetadataError>;
 };
 
@@ -6431,15 +6409,11 @@ export type DeleteMetadata = {
 export type DeletePrivateMetadata = {
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly metadataErrors: ReadonlyArray<MetadataError>;
 };
 
-/**
- * Represents a delivery method chosen for the checkout. `Warehouse` type is used when checkout is marked as "click and collect" and `ShippingMethod` otherwise.
- *
- * Added in Saleor 3.1.
- */
+/** Represents a delivery method chosen for the checkout. `Warehouse` type is used when checkout is marked as "click and collect" and `ShippingMethod` otherwise. */
 export type DeliveryMethod = ShippingMethod | Warehouse;
 
 /** Represents digital content associated with a product variant. */
@@ -6458,15 +6432,9 @@ export type DigitalContent = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
@@ -6474,15 +6442,9 @@ export type DigitalContent = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Product variant assigned to digital content. */
   readonly productVariant: ProductVariant;
@@ -6542,7 +6504,7 @@ export type DigitalContentCountableEdge = {
 export type DigitalContentCreate = {
   readonly content?: Maybe<DigitalContent>;
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly variant?: Maybe<ProductVariant>;
 };
@@ -6554,7 +6516,7 @@ export type DigitalContentCreate = {
  */
 export type DigitalContentDelete = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly variant?: Maybe<ProductVariant>;
 };
@@ -6565,15 +6527,15 @@ export type DigitalContentInput = {
   /** Determines how many times a download link can be accessed by a customer. */
   readonly maxDownloads?: InputMaybe<Scalars['Int']['input']>;
   /**
-   * Fields required to update the digital content metadata.
+   * Fields required to update the digital content metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /**
-   * Fields required to update the digital content private metadata.
+   * Fields required to update the digital content private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Determines for how many days a download link is active since it was generated. */
@@ -6583,14 +6545,14 @@ export type DigitalContentInput = {
 };
 
 /**
- * Update digital content.
+ * Updates digital content.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type DigitalContentUpdate = {
   readonly content?: Maybe<DigitalContent>;
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly variant?: Maybe<ProductVariant>;
 };
@@ -6603,15 +6565,15 @@ export type DigitalContentUploadInput = {
   /** Determines how many times a download link can be accessed by a customer. */
   readonly maxDownloads?: InputMaybe<Scalars['Int']['input']>;
   /**
-   * Fields required to update the digital content metadata.
+   * Fields required to update the digital content metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /**
-   * Fields required to update the digital content private metadata.
+   * Fields required to update the digital content private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Determines for how many days a download link is active since it was generated. */
@@ -6644,7 +6606,7 @@ export type DigitalContentUrl = Node & {
 export type DigitalContentUrlCreate = {
   readonly digitalContentUrl?: Maybe<DigitalContentUrl>;
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -6732,7 +6694,7 @@ export type DraftOrderBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -6745,7 +6707,7 @@ export type DraftOrderComplete = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Completed order. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -6757,7 +6719,7 @@ export type DraftOrderComplete = {
 export type DraftOrderCreate = {
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -6768,18 +6730,51 @@ export type DraftOrderCreateInput = {
   readonly channelId?: InputMaybe<Scalars['ID']['input']>;
   /** A note from a customer. Visible by customers in the order summary. */
   readonly customerNote?: InputMaybe<Scalars['String']['input']>;
-  /** Discount amount for the order. */
-  readonly discount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   /**
-   * External ID of this order.
-   *
-   * Added in Saleor 3.10.
+   * Discount amount for the order.
+   * @deprecated Providing a value for the field has no effect. Use `orderDiscountAdd` mutation instead.
    */
+  readonly discount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
+  /** External ID of this order. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Order language code.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly languageCode?: InputMaybe<LanguageCodeEnum>;
   /** Variant line input consisting of variant ID and quantity of products. */
   readonly lines?: InputMaybe<ReadonlyArray<OrderLineCreateInput>>;
+  /**
+   * Order public metadata.
+   *
+   * Added in Saleor 3.21. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /**
+   * Order private metadata.
+   *
+   * Added in Saleor 3.21. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** URL of a view where users should be redirected to see the order details. URL in RFC 1808 format. */
   readonly redirectUrl?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Indicates whether the billing address should be saved to the user’s address book upon draft order completion. Can only be set when a billing address is provided. If not specified along with the address, the default behavior is to not save the address.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly saveBillingAddress?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * Indicates whether the shipping address should be saved to the user’s address book upon draft order completion.Can only be set when a shipping address is provided. If not specified along with the address, the default behavior is to not save the address.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly saveShippingAddress?: InputMaybe<Scalars['Boolean']['input']>;
   /** Shipping address of the customer. */
   readonly shippingAddress?: InputMaybe<AddressInput>;
   /** ID of a selected shipping method. */
@@ -6798,11 +6793,7 @@ export type DraftOrderCreateInput = {
   readonly voucherCode?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new draft order is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new draft order is created. */
 export type DraftOrderCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -6824,15 +6815,11 @@ export type DraftOrderCreated = Event & {
 export type DraftOrderDelete = {
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
-/**
- * Event sent when draft order is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when draft order is deleted. */
 export type DraftOrderDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -6853,16 +6840,49 @@ export type DraftOrderInput = {
   readonly channelId?: InputMaybe<Scalars['ID']['input']>;
   /** A note from a customer. Visible by customers in the order summary. */
   readonly customerNote?: InputMaybe<Scalars['String']['input']>;
-  /** Discount amount for the order. */
-  readonly discount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   /**
-   * External ID of this order.
-   *
-   * Added in Saleor 3.10.
+   * Discount amount for the order.
+   * @deprecated Providing a value for the field has no effect. Use `orderDiscountAdd` mutation instead.
    */
+  readonly discount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
+  /** External ID of this order. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Order language code.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly languageCode?: InputMaybe<LanguageCodeEnum>;
+  /**
+   * Order public metadata.
+   *
+   * Added in Saleor 3.21. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /**
+   * Order private metadata.
+   *
+   * Added in Saleor 3.21. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** URL of a view where users should be redirected to see the order details. URL in RFC 1808 format. */
   readonly redirectUrl?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Indicates whether the billing address should be saved to the user’s address book upon draft order completion. Can only be set when a billing address is provided. If not specified along with the address, the default behavior is to not save the address.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly saveBillingAddress?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * Indicates whether the shipping address should be saved to the user’s address book upon draft order completion.Can only be set when a shipping address is provided. If not specified along with the address, the default behavior is to not save the address.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly saveShippingAddress?: InputMaybe<Scalars['Boolean']['input']>;
   /** Shipping address of the customer. */
   readonly shippingAddress?: InputMaybe<AddressInput>;
   /** ID of a selected shipping method. */
@@ -6890,7 +6910,7 @@ export type DraftOrderLinesBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -6902,15 +6922,11 @@ export type DraftOrderLinesBulkDelete = {
 export type DraftOrderUpdate = {
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
-/**
- * Event sent when draft order is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when draft order is updated. */
 export type DraftOrderUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -6922,6 +6938,54 @@ export type DraftOrderUpdated = Event & {
   readonly recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+export type DraftOrderWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<DraftOrderWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<DraftOrderWhereInput>>;
+  /** Filter by authorize status. */
+  readonly authorizeStatus?: InputMaybe<OrderAuthorizeStatusEnumFilterInput>;
+  /** Filter by billing address of the order. */
+  readonly billingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by channel. */
+  readonly channelId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by charge status. */
+  readonly chargeStatus?: InputMaybe<OrderChargeStatusEnumFilterInput>;
+  /** Filter order by created at date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly events?: InputMaybe<ReadonlyArray<OrderEventFilterInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by whether the order uses the click and collect delivery method. */
+  readonly isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly lines?: InputMaybe<ReadonlyArray<LinesFilterInput>>;
+  /** Filter by number of lines in the order. */
+  readonly linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by order number. */
+  readonly number?: InputMaybe<IntFilterInput>;
+  /** Filter by the product type of related order lines. */
+  readonly productTypeId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by shipping address of the order. */
+  readonly shippingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by total gross amount of the order. */
+  readonly totalGross?: InputMaybe<PriceFilterInput>;
+  /** Filter by total net amount of the order. */
+  readonly totalNet?: InputMaybe<PriceFilterInput>;
+  /** Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly transactions?: InputMaybe<ReadonlyArray<TransactionFilterInput>>;
+  /** Filter order by updated at date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by user. */
+  readonly user?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by user email. */
+  readonly userEmail?: InputMaybe<StringFilterInput>;
+  /** Filter by voucher code used in the order. */
+  readonly voucherCode?: InputMaybe<StringFilterInput>;
 };
 
 export type ErrorPolicyEnum =
@@ -7164,8 +7228,6 @@ export type ExportFileSortingInput = {
 /**
  * Export gift cards to csv file.
  *
- * Added in Saleor 3.1.
- *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
  * Triggers the following webhook events:
@@ -7211,7 +7273,7 @@ export type ExportInfoInput = {
  */
 export type ExportProducts = {
   readonly errors: ReadonlyArray<ExportError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly exportErrors: ReadonlyArray<ExportError>;
   /** The newly created export file job which is responsible for export data. */
   readonly exportFile?: Maybe<ExportFile>;
@@ -7275,7 +7337,7 @@ export type ExternalAuthentication = {
 
 /** Prepare external authentication URL for user by custom plugin. */
 export type ExternalAuthenticationUrl = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** The data returned by authentication plugin. */
   readonly authenticationData?: Maybe<Scalars['JSONString']['output']>;
@@ -7284,7 +7346,7 @@ export type ExternalAuthenticationUrl = {
 
 /** Logout user by custom plugin. */
 export type ExternalLogout = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** The data returned by authentication plugin. */
@@ -7306,11 +7368,7 @@ export type ExternalNotificationErrorCodes =
   | 'NOT_FOUND'
   | 'REQUIRED';
 
-/**
- * Trigger sending a notification with the notify plugin method. Serializes nodes provided as ids parameter and includes this data in the notification payload.
- *
- * Added in Saleor 3.1.
- */
+/** Trigger sending a notification with the notify plugin method. Serializes nodes provided as ids parameter and includes this data in the notification payload. */
 export type ExternalNotificationTrigger = {
   readonly errors: ReadonlyArray<ExternalNotificationError>;
 };
@@ -7326,7 +7384,7 @@ export type ExternalNotificationTriggerInput = {
 
 /** Obtain external access tokens for user by custom plugin. */
 export type ExternalObtainAccessTokens = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate external access token. */
   readonly csrfToken?: Maybe<Scalars['String']['output']>;
@@ -7341,7 +7399,7 @@ export type ExternalObtainAccessTokens = {
 
 /** Refresh user's access by custom plugin. */
 export type ExternalRefresh = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate external access token. */
   readonly csrfToken?: Maybe<Scalars['String']['output']>;
@@ -7356,7 +7414,7 @@ export type ExternalRefresh = {
 
 /** Verify external authentication data by plugin. */
 export type ExternalVerify = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** Determine if authentication data is valid or not. */
@@ -7385,7 +7443,7 @@ export type FileTypesEnum =
  */
 export type FileUpload = {
   readonly errors: ReadonlyArray<UploadError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly uploadErrors: ReadonlyArray<UploadError>;
   readonly uploadedFile?: Maybe<File>;
 };
@@ -7406,15 +7464,9 @@ export type Fulfillment = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
@@ -7422,31 +7474,17 @@ export type Fulfillment = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
-  /**
-   * Amount of refunded shipping price.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Amount of refunded shipping price. */
   readonly shippingRefundedAmount?: Maybe<Money>;
   /** Status of fulfillment. */
   readonly status: FulfillmentStatus;
   /** User-friendly fulfillment status. */
   readonly statusDisplay?: Maybe<Scalars['String']['output']>;
-  /**
-   * Total refunded amount assigned to this fulfillment.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Total refunded amount assigned to this fulfillment. */
   readonly totalRefundedAmount?: Maybe<Money>;
   /** Fulfillment tracking number. */
   readonly trackingNumber: Scalars['String']['output'];
@@ -7481,8 +7519,6 @@ export type FulfillmentPrivateMetafieldsArgs = {
 /**
  * Approve existing fulfillment.
  *
- * Added in Saleor 3.1.
- *
  * Requires one of the following permissions: MANAGE_ORDERS.
  *
  * Triggers the following webhook events:
@@ -7494,15 +7530,11 @@ export type FulfillmentApprove = {
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Order which fulfillment was approved. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
-/**
- * Event sent when fulfillment is approved.
- *
- * Added in Saleor 3.7.
- */
+/** Event sent when fulfillment is approved. */
 export type FulfillmentApproved = Event & {
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -7510,11 +7542,7 @@ export type FulfillmentApproved = Event & {
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
   readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
-  /**
-   * If true, send a notification to the customer.
-   *
-   * Added in Saleor 3.16.
-   */
+  /** If true, send a notification to the customer. */
   readonly notifyCustomer: Scalars['Boolean']['output'];
   /** The order the fulfillment belongs to. */
   readonly order?: Maybe<Order>;
@@ -7535,7 +7563,7 @@ export type FulfillmentCancel = {
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Order which fulfillment was cancelled. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -7544,11 +7572,7 @@ export type FulfillmentCancelInput = {
   readonly warehouseId?: InputMaybe<Scalars['ID']['input']>;
 };
 
-/**
- * Event sent when fulfillment is canceled.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when fulfillment is canceled. */
 export type FulfillmentCanceled = Event & {
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -7564,11 +7588,7 @@ export type FulfillmentCanceled = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Event sent when new fulfillment is created.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when new fulfillment is created. */
 export type FulfillmentCreated = Event & {
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -7576,11 +7596,7 @@ export type FulfillmentCreated = Event & {
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
   readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
-  /**
-   * If true, the app should send a notification to the customer.
-   *
-   * Added in Saleor 3.16.
-   */
+  /** If true, the app should send a notification to the customer. */
   readonly notifyCustomer: Scalars['Boolean']['output'];
   /** The order the fulfillment belongs to. */
   readonly order?: Maybe<Order>;
@@ -7588,6 +7604,16 @@ export type FulfillmentCreated = Event & {
   readonly recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+/** Filter input for order fulfillments data. */
+export type FulfillmentFilterInput = {
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by fulfillment status. */
+  readonly status?: InputMaybe<FulfillmentStatusEnumFilterInput>;
+  /** Filter by fulfillment warehouse. */
+  readonly warehouse?: InputMaybe<FulfillmentWarehouseFilterInput>;
 };
 
 /** Represents line of the fulfillment. */
@@ -7600,11 +7626,7 @@ export type FulfillmentLine = Node & {
   readonly quantity: Scalars['Int']['output'];
 };
 
-/**
- * Event sent when fulfillment metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when fulfillment metadata is updated. */
 export type FulfillmentMetadataUpdated = Event & {
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -7631,7 +7653,7 @@ export type FulfillmentRefundProducts = {
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Order which fulfillment was refunded. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -7644,7 +7666,7 @@ export type FulfillmentReturnProducts = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which fulfillment was returned. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
   /** A replace fulfillment. */
   readonly replaceFulfillment?: Maybe<Fulfillment>;
@@ -7663,11 +7685,15 @@ export type FulfillmentStatus =
   | 'RETURNED'
   | 'WAITING_FOR_APPROVAL';
 
-/**
- * Event sent when the tracking number is updated.
- *
- * Added in Saleor 3.16.
- */
+/** Filter by fulfillment status. */
+export type FulfillmentStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<FulfillmentStatus>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<FulfillmentStatus>>;
+};
+
+/** Event sent when the tracking number is updated. */
 export type FulfillmentTrackingNumberUpdated = Event & {
   /** The fulfillment the event relates to. */
   readonly fulfillment?: Maybe<Fulfillment>;
@@ -7697,7 +7723,7 @@ export type FulfillmentUpdateTracking = {
   readonly fulfillment?: Maybe<Fulfillment>;
   /** Order for which fulfillment was updated. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -7706,6 +7732,16 @@ export type FulfillmentUpdateTrackingInput = {
   readonly notifyCustomer?: InputMaybe<Scalars['Boolean']['input']>;
   /** Fulfillment tracking number. */
   readonly trackingNumber?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Filter input for fulfillment warehouses. */
+export type FulfillmentWarehouseFilterInput = {
+  /** Filter fulfillments by warehouse external reference. */
+  readonly externalReference?: InputMaybe<StringFilterInput>;
+  /** Filter fulfillments by warehouse ID. */
+  readonly id?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter fulfillments by warehouse slug. */
+  readonly slug?: InputMaybe<StringFilterInput>;
 };
 
 /** Payment gateway client configuration key and value pair. */
@@ -7721,16 +7757,10 @@ export type GiftCard = Node & ObjectWithMetadata & {
   /**
    * App which created the gift card.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_APPS, OWNER.
    */
   readonly app?: Maybe<App>;
-  /**
-   * Slug of the channel where the gift card was bought.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Slug of the channel where the gift card was bought. */
   readonly boughtInChannel?: Maybe<Scalars['String']['output']>;
   /**
    * Gift card code. It can be fetched both by a staff member with 'MANAGE_GIFT_CARD' when gift card hasn't been used yet or a user who bought or issued the gift card.
@@ -7740,16 +7770,10 @@ export type GiftCard = Node & ObjectWithMetadata & {
   readonly code: Scalars['String']['output'];
   /** Date and time when gift card was created. */
   readonly created: Scalars['DateTime']['output'];
-  /**
-   * The user who bought or issued a gift card.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** The user who bought or issued a gift card. */
   readonly createdBy?: Maybe<User>;
   /**
    * Email address of the user who bought or issued gift card.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_USERS, OWNER.
    */
@@ -7759,13 +7783,11 @@ export type GiftCard = Node & ObjectWithMetadata & {
   readonly displayCode: Scalars['String']['output'];
   /**
    * End date of gift card.
-   * @deprecated This field will be removed in Saleor 4.0. Use `expiryDate` field instead.
+   * @deprecated Use `expiryDate` field instead.
    */
   readonly endDate?: Maybe<Scalars['DateTime']['output']>;
   /**
    * List of events associated with the gift card.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    */
@@ -7786,15 +7808,9 @@ export type GiftCard = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
@@ -7802,52 +7818,36 @@ export type GiftCard = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
-  /**
-   * Related gift card product.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Related gift card product. */
   readonly product?: Maybe<Product>;
   /**
    * Start date of gift card.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly startDate?: Maybe<Scalars['DateTime']['output']>;
   /**
    * The gift card tag.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    */
   readonly tags: ReadonlyArray<GiftCardTag>;
   /**
    * The customer who used a gift card.
-   *
-   * Added in Saleor 3.1.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly usedBy?: Maybe<User>;
   /**
    * Email address of the customer who used a gift card.
-   *
-   * Added in Saleor 3.1.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly usedByEmail?: Maybe<Scalars['String']['output']>;
   /**
    * The customer who bought a gift card.
-   * @deprecated This field will be removed in Saleor 4.0. Use `createdBy` field instead.
+   * @deprecated Use `createdBy` field instead.
    */
   readonly user?: Maybe<User>;
 };
@@ -7894,14 +7894,12 @@ export type GiftCardActivate = {
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Activated gift card. */
   readonly giftCard?: Maybe<GiftCard>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly giftCardErrors: ReadonlyArray<GiftCardError>;
 };
 
 /**
  * Adds note to the gift card.
- *
- * Added in Saleor 3.1.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7924,8 +7922,6 @@ export type GiftCardAddNoteInput = {
 /**
  * Activate gift cards.
  *
- * Added in Saleor 3.1.
- *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
  * Triggers the following webhook events:
@@ -7938,9 +7934,7 @@ export type GiftCardBulkActivate = {
 };
 
 /**
- * Create gift cards.
- *
- * Added in Saleor 3.1.
+ * Creates gift cards.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7972,8 +7966,6 @@ export type GiftCardBulkCreateInput = {
 /**
  * Deactivate gift cards.
  *
- * Added in Saleor 3.1.
- *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
  * Triggers the following webhook events:
@@ -7986,9 +7978,7 @@ export type GiftCardBulkDeactivate = {
 };
 
 /**
- * Delete gift cards.
- *
- * Added in Saleor 3.1.
+ * Deletes gift cards.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -8028,70 +8018,59 @@ export type GiftCardCountableEdge = {
 export type GiftCardCreate = {
   readonly errors: ReadonlyArray<GiftCardError>;
   readonly giftCard?: Maybe<GiftCard>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly giftCardErrors: ReadonlyArray<GiftCardError>;
 };
 
 export type GiftCardCreateInput = {
-  /**
-   * The gift card tags to add.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** The gift card tags to add. */
   readonly addTags?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
   /** Balance of the gift card. */
   readonly balance: PriceInput;
-  /**
-   * Slug of a channel from which the email should be sent.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Slug of a channel from which the email should be sent. */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
   /**
    * Code to use the gift card.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. The code is now auto generated.
+   * @deprecated The code is now auto generated.
    */
   readonly code?: InputMaybe<Scalars['String']['input']>;
   /**
    * End date of the gift card in ISO 8601 format.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `expiryDate` from `expirySettings` instead.
+   * @deprecated Use `expiryDate` from `expirySettings` instead.
    */
   readonly endDate?: InputMaybe<Scalars['Date']['input']>;
-  /**
-   * The gift card expiry date.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** The gift card expiry date. */
   readonly expiryDate?: InputMaybe<Scalars['Date']['input']>;
-  /**
-   * Determine if gift card is active.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Determine if gift card is active. */
   readonly isActive: Scalars['Boolean']['input'];
   /**
-   * The gift card note from the staff member.
+   * Gift Card public metadata.
    *
-   * Added in Saleor 3.1.
+   * Added in Saleor 3.21. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
+  readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /** The gift card note from the staff member. */
   readonly note?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Start date of the gift card in ISO 8601 format.
+   * Gift Card private metadata.
    *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * Added in Saleor 3.21. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /**
+   * Start date of the gift card in ISO 8601 format.
+   * @deprecated Field no longer supported
    */
   readonly startDate?: InputMaybe<Scalars['Date']['input']>;
   /** Email of the customer to whom gift card will be sent. */
   readonly userEmail?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new gift card is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new gift card is created. */
 export type GiftCardCreated = Event & {
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -8117,14 +8096,12 @@ export type GiftCardDeactivate = {
   readonly errors: ReadonlyArray<GiftCardError>;
   /** Deactivated gift card. */
   readonly giftCard?: Maybe<GiftCard>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly giftCardErrors: ReadonlyArray<GiftCardError>;
 };
 
 /**
- * Delete gift card.
- *
- * Added in Saleor 3.1.
+ * Deletes gift card.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -8134,15 +8111,11 @@ export type GiftCardDeactivate = {
 export type GiftCardDelete = {
   readonly errors: ReadonlyArray<GiftCardError>;
   readonly giftCard?: Maybe<GiftCard>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly giftCardErrors: ReadonlyArray<GiftCardError>;
 };
 
-/**
- * Event sent when gift card is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when gift card is deleted. */
 export type GiftCardDeleted = Event & {
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -8177,11 +8150,7 @@ export type GiftCardErrorCode =
   | 'REQUIRED'
   | 'UNIQUE';
 
-/**
- * History log of the gift card.
- *
- * Added in Saleor 3.1.
- */
+/** History log of the gift card. */
 export type GiftCardEvent = Node & {
   /** App that performed the action. Requires one of the following permissions: MANAGE_APPS, OWNER. */
   readonly app?: Maybe<App>;
@@ -8243,11 +8212,7 @@ export type GiftCardEventsEnum =
   | 'UPDATED'
   | 'USED_IN_ORDER';
 
-/**
- * Event sent when gift card export is completed.
- *
- * Added in Saleor 3.16.
- */
+/** Event sent when gift card export is completed. */
 export type GiftCardExportCompleted = Event & {
   /** The export file for gift cards. */
   readonly export?: Maybe<ExportFile>;
@@ -8275,11 +8240,7 @@ export type GiftCardFilterInput = {
   readonly usedBy?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
 };
 
-/**
- * Event sent when gift card metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when gift card metadata is updated. */
 export type GiftCardMetadataUpdated = Event & {
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -8295,8 +8256,6 @@ export type GiftCardMetadataUpdated = Event & {
 
 /**
  * Resend a gift card.
- *
- * Added in Saleor 3.1.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -8318,13 +8277,7 @@ export type GiftCardResendInput = {
   readonly id: Scalars['ID']['input'];
 };
 
-/**
- * Event sent when gift card is e-mailed.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when gift card is e-mailed. */
 export type GiftCardSent = Event & {
   /** Slug of a channel for which this gift card email was sent. */
   readonly channel?: Maybe<Scalars['String']['output']>;
@@ -8387,11 +8340,7 @@ export type GiftCardSettingsUpdateInput = {
 };
 
 export type GiftCardSortField =
-  /**
-   * Sort gift cards by created at.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Sort gift cards by created at. */
   | 'CREATED_AT'
   /** Sort gift cards by current balance. */
   | 'CURRENT_BALANCE'
@@ -8407,11 +8356,7 @@ export type GiftCardSortingInput = {
   readonly field: GiftCardSortField;
 };
 
-/**
- * Event sent when gift card status has changed.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when gift card status has changed. */
 export type GiftCardStatusChanged = Event & {
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -8425,11 +8370,7 @@ export type GiftCardStatusChanged = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * The gift card tag.
- *
- * Added in Saleor 3.1.
- */
+/** The gift card tag. */
 export type GiftCardTag = Node & {
   /** ID of the tag associated with a gift card. */
   readonly id: Scalars['ID']['output'];
@@ -8467,54 +8408,48 @@ export type GiftCardTagFilterInput = {
 export type GiftCardUpdate = {
   readonly errors: ReadonlyArray<GiftCardError>;
   readonly giftCard?: Maybe<GiftCard>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly giftCardErrors: ReadonlyArray<GiftCardError>;
 };
 
 export type GiftCardUpdateInput = {
-  /**
-   * The gift card tags to add.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** The gift card tags to add. */
   readonly addTags?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
-  /**
-   * The gift card balance amount.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** The gift card balance amount. */
   readonly balanceAmount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   /**
    * End date of the gift card in ISO 8601 format.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `expiryDate` from `expirySettings` instead.
+   * @deprecated Use `expiryDate` from `expirySettings` instead.
    */
   readonly endDate?: InputMaybe<Scalars['Date']['input']>;
-  /**
-   * The gift card expiry date.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** The gift card expiry date. */
   readonly expiryDate?: InputMaybe<Scalars['Date']['input']>;
   /**
-   * The gift card tags to remove.
+   * Gift Card public metadata.
    *
-   * Added in Saleor 3.1.
+   * Added in Saleor 3.21. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
+  readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /**
+   * Gift Card private metadata.
+   *
+   * Added in Saleor 3.21. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /** The gift card tags to remove. */
   readonly removeTags?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
   /**
    * Start date of the gift card in ISO 8601 format.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly startDate?: InputMaybe<Scalars['Date']['input']>;
 };
 
-/**
- * Event sent when gift card is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when gift card is updated. */
 export type GiftCardUpdated = Event & {
   /** The gift card the event relates to. */
   readonly giftCard?: Maybe<GiftCard>;
@@ -8528,13 +8463,7 @@ export type GiftCardUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Define the filtering options for foreign key fields.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Define the filtering options for foreign key fields. */
 export type GlobalIdFilterInput = {
   /** The value equal to. */
   readonly eq?: InputMaybe<Scalars['ID']['input']>;
@@ -8544,13 +8473,7 @@ export type GlobalIdFilterInput = {
 
 /** Represents permission group data. */
 export type Group = Node & {
-  /**
-   * List of channels the group has access to.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of channels the group has access to. */
   readonly accessibleChannels?: Maybe<ReadonlyArray<Channel>>;
   /** The ID of the group. */
   readonly id: Scalars['ID']['output'];
@@ -8558,13 +8481,7 @@ export type Group = Node & {
   readonly name: Scalars['String']['output'];
   /** List of group permissions */
   readonly permissions?: Maybe<ReadonlyArray<Permission>>;
-  /**
-   * Determine if the group have restricted access to channels.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Determine if the group have restricted access to channels. */
   readonly restrictedAccessToChannels: Scalars['Boolean']['output'];
   /** True, if the currently authenticated user has rights to manage a group. */
   readonly userCanManage: Scalars['Boolean']['output'];
@@ -8591,6 +8508,10 @@ export type GroupCountableEdge = {
   readonly node: Group;
 };
 
+export type HttpMethod =
+  | 'GET'
+  | 'POST';
+
 /** Thumbnail formats for icon images. */
 export type IconThumbnailFormatEnum =
   | 'ORIGINAL'
@@ -8602,6 +8523,16 @@ export type Image = {
   readonly alt?: Maybe<Scalars['String']['output']>;
   /** The URL of the image. */
   readonly url: Scalars['String']['output'];
+};
+
+/** Define the filtering options for integer fields. */
+export type IntFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<Scalars['Int']['input']>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<Scalars['Int']['input']>>;
+  /** The value in range. */
+  readonly range?: InputMaybe<IntRangeInput>;
 };
 
 export type IntRangeInput = {
@@ -8617,7 +8548,7 @@ export type Invoice = Job & Node & ObjectWithMetadata & {
   readonly createdAt: Scalars['DateTime']['output'];
   /**
    * URL to view an invoice.
-   * @deprecated This field will be removed in Saleor 4.0. Use `url` field.This field will be removed in 4.0
+   * @deprecated Use `url` field.
    */
   readonly externalUrl?: Maybe<Scalars['String']['output']>;
   /** The ID of the object. */
@@ -8630,23 +8561,13 @@ export type Invoice = Job & Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Invoice number. */
   readonly number?: Maybe<Scalars['String']['output']>;
-  /**
-   * Order related to the invoice.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** Order related to the invoice. */
   readonly order?: Maybe<Order>;
   /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
@@ -8654,21 +8575,15 @@ export type Invoice = Job & Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Job status. */
   readonly status: JobStatusEnum;
   /** Date and time at which invoice was updated. */
   readonly updatedAt: Scalars['DateTime']['output'];
-  /** URL to view/download an invoice. This can be an internal URL if the Invoicing Plugin was used or an external URL if it has been provided. */
+  /** URL to view/download an invoice. */
   readonly url?: Maybe<Scalars['String']['output']>;
 };
 
@@ -8704,23 +8619,23 @@ export type InvoicePrivateMetafieldsArgs = {
 export type InvoiceCreate = {
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly invoiceErrors: ReadonlyArray<InvoiceError>;
 };
 
 export type InvoiceCreateInput = {
   /**
-   * Fields required to update the invoice metadata.
+   * Fields required to update the invoice metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Invoice number. */
   readonly number: Scalars['String']['input'];
   /**
-   * Fields required to update the invoice private metadata.
+   * Fields required to update the invoice private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** URL of an invoice to download. */
@@ -8735,15 +8650,11 @@ export type InvoiceCreateInput = {
 export type InvoiceDelete = {
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly invoiceErrors: ReadonlyArray<InvoiceError>;
 };
 
-/**
- * Event sent when invoice is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when invoice is deleted. */
 export type InvoiceDeleted = Event & {
   /** The invoice the event relates to. */
   readonly invoice?: Maybe<Invoice>;
@@ -8751,11 +8662,7 @@ export type InvoiceDeleted = Event & {
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
   readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
-  /**
-   * Order related to the invoice.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** Order related to the invoice. */
   readonly order?: Maybe<Order>;
   /** The application receiving the webhook. */
   readonly recipient?: Maybe<App>;
@@ -8782,6 +8689,12 @@ export type InvoiceErrorCode =
   | 'REQUIRED'
   | 'URL_NOT_SET';
 
+/** Filter input for invoices. */
+export type InvoiceFilterInput = {
+  /** Filter invoices by creation date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+};
+
 /**
  * Request an invoice for the order using plugin.
  *
@@ -8793,7 +8706,7 @@ export type InvoiceErrorCode =
 export type InvoiceRequest = {
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly invoiceErrors: ReadonlyArray<InvoiceError>;
   /** Order related to an invoice. */
   readonly order?: Maybe<Order>;
@@ -8810,15 +8723,11 @@ export type InvoiceRequest = {
 export type InvoiceRequestDelete = {
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly invoiceErrors: ReadonlyArray<InvoiceError>;
 };
 
-/**
- * Event sent when invoice is requested.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when invoice is requested. */
 export type InvoiceRequested = Event & {
   /** The invoice the event relates to. */
   readonly invoice?: Maybe<Invoice>;
@@ -8826,11 +8735,7 @@ export type InvoiceRequested = Event & {
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
   readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
-  /**
-   * Order related to the invoice.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** Order related to the invoice. */
   readonly order: Order;
   /** The application receiving the webhook. */
   readonly recipient?: Maybe<App>;
@@ -8850,15 +8755,11 @@ export type InvoiceRequested = Event & {
 export type InvoiceSendNotification = {
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly invoiceErrors: ReadonlyArray<InvoiceError>;
 };
 
-/**
- * Event sent when invoice is sent.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when invoice is sent. */
 export type InvoiceSent = Event & {
   /** The invoice the event relates to. */
   readonly invoice?: Maybe<Invoice>;
@@ -8866,11 +8767,7 @@ export type InvoiceSent = Event & {
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
   readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
-  /**
-   * Order related to the invoice.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** Order related to the invoice. */
   readonly order?: Maybe<Order>;
   /** The application receiving the webhook. */
   readonly recipient?: Maybe<App>;
@@ -8886,7 +8783,7 @@ export type InvoiceSent = Event & {
 export type InvoiceUpdate = {
   readonly errors: ReadonlyArray<InvoiceError>;
   readonly invoice?: Maybe<Invoice>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly invoiceErrors: ReadonlyArray<InvoiceError>;
 };
 
@@ -9718,10 +9615,14 @@ export type Limits = {
   readonly warehouses?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Filter input for order lines data. */
+export type LinesFilterInput = {
+  /** Filter by metadata fields of order lines. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+};
+
 /**
  * List payment methods stored for the user by payment gateway.
- *
- * Added in Saleor 3.15.
  *
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  */
@@ -9746,41 +9647,25 @@ export type Manifest = {
   readonly about?: Maybe<Scalars['String']['output']>;
   /** App website rendered in the dashboard. */
   readonly appUrl?: Maybe<Scalars['String']['output']>;
-  /**
-   * The audience that will be included in all JWT tokens for the app.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** The audience that will be included in all JWT tokens for the app. */
   readonly audience?: Maybe<Scalars['String']['output']>;
-  /**
-   * The App's author name.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The App's author name. */
   readonly author?: Maybe<Scalars['String']['output']>;
-  /**
-   * App's brand data.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** App's brand data. */
   readonly brand?: Maybe<AppManifestBrand>;
   /**
    * URL to iframe with the configuration for the app.
-   * @deprecated This field will be removed in Saleor 4.0. Use `appUrl` instead.
+   * @deprecated Use `appUrl` instead.
    */
   readonly configurationUrl?: Maybe<Scalars['String']['output']>;
   /**
    * Description of the data privacy defined for this app.
-   * @deprecated This field will be removed in Saleor 4.0. Use `dataPrivacyUrl` instead.
+   * @deprecated Use `dataPrivacyUrl` instead.
    */
   readonly dataPrivacy?: Maybe<Scalars['String']['output']>;
   /** URL to the full privacy policy. */
   readonly dataPrivacyUrl?: Maybe<Scalars['String']['output']>;
-  /** List of extensions that will be mounted in Saleor's dashboard. For details, please [see the extension section.](https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps#key-concepts) */
+  /** List of extensions that will be mounted in Saleor's dashboard. For details, please [see the extension section.](https://docs.saleor.io/developer/extending/apps/extending-dashboard-with-apps#key-concepts) */
   readonly extensions: ReadonlyArray<AppManifestExtension>;
   /** External URL to the app homepage. */
   readonly homepageUrl?: Maybe<Scalars['String']['output']>;
@@ -9790,25 +9675,15 @@ export type Manifest = {
   readonly name: Scalars['String']['output'];
   /** The array permissions required for the app. */
   readonly permissions?: Maybe<ReadonlyArray<Permission>>;
-  /**
-   * Determines the app's required Saleor version as semver range.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Determines the app's required Saleor version as semver range. */
   readonly requiredSaleorVersion?: Maybe<AppManifestRequiredSaleorVersion>;
   /** External URL to the page where app users can find support. */
   readonly supportUrl?: Maybe<Scalars['String']['output']>;
-  /** Endpoint used during process of app installation, [see installing an app.](https://docs.saleor.io/docs/3.x/developer/extending/apps/installing-apps#installing-an-app) */
+  /** Endpoint used during process of app installation, [see installing an app.](https://docs.saleor.io/developer/extending/apps/installing-apps#installing-an-app) */
   readonly tokenTargetUrl?: Maybe<Scalars['String']['output']>;
   /** The version of the manifest for the app. */
   readonly version: Scalars['String']['output'];
-  /**
-   * List of the app's webhooks.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** List of the app's webhooks. */
   readonly webhooks: ReadonlyArray<AppManifestWebhook>;
 };
 
@@ -9908,15 +9783,9 @@ export type Menu = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** The name of the menu. */
   readonly name: Scalars['String']['output'];
@@ -9926,15 +9795,9 @@ export type Menu = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Slug of the menu. */
   readonly slug: Scalars['String']['output'];
@@ -9976,7 +9839,7 @@ export type MenuBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<MenuError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
 };
 
@@ -10006,7 +9869,7 @@ export type MenuCountableEdge = {
 export type MenuCreate = {
   readonly errors: ReadonlyArray<MenuError>;
   readonly menu?: Maybe<Menu>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
 };
 
@@ -10019,11 +9882,7 @@ export type MenuCreateInput = {
   readonly slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new menu is created.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when new menu is created. */
 export type MenuCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -10038,11 +9897,7 @@ export type MenuCreated = Event & {
 };
 
 
-/**
- * Event sent when new menu is created.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when new menu is created. */
 export type MenuCreatedMenuArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10058,15 +9913,11 @@ export type MenuCreatedMenuArgs = {
 export type MenuDelete = {
   readonly errors: ReadonlyArray<MenuError>;
   readonly menu?: Maybe<Menu>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
 };
 
-/**
- * Event sent when menu is deleted.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when menu is deleted. */
 export type MenuDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -10081,11 +9932,7 @@ export type MenuDeleted = Event & {
 };
 
 
-/**
- * Event sent when menu is deleted.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when menu is deleted. */
 export type MenuDeletedMenuArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10144,15 +9991,9 @@ export type MenuItem = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** The name of the menu item. */
   readonly name: Scalars['String']['output'];
@@ -10166,15 +10007,9 @@ export type MenuItem = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Returns translated menu item fields for the given language code. */
   readonly translation?: Maybe<MenuItemTranslation>;
@@ -10224,7 +10059,7 @@ export type MenuItemBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<MenuError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
 };
 
@@ -10253,7 +10088,7 @@ export type MenuItemCountableEdge = {
  */
 export type MenuItemCreate = {
   readonly errors: ReadonlyArray<MenuError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
   readonly menuItem?: Maybe<MenuItem>;
 };
@@ -10275,11 +10110,7 @@ export type MenuItemCreateInput = {
   readonly url?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new menu item is created.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when new menu item is created. */
 export type MenuItemCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -10294,11 +10125,7 @@ export type MenuItemCreated = Event & {
 };
 
 
-/**
- * Event sent when new menu item is created.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when new menu item is created. */
 export type MenuItemCreatedMenuItemArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10313,16 +10140,12 @@ export type MenuItemCreatedMenuItemArgs = {
  */
 export type MenuItemDelete = {
   readonly errors: ReadonlyArray<MenuError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
   readonly menuItem?: Maybe<MenuItem>;
 };
 
-/**
- * Event sent when menu item is deleted.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when menu item is deleted. */
 export type MenuItemDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -10337,11 +10160,7 @@ export type MenuItemDeleted = Event & {
 };
 
 
-/**
- * Event sent when menu item is deleted.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when menu item is deleted. */
 export type MenuItemDeletedMenuItemArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10376,7 +10195,7 @@ export type MenuItemMove = {
   readonly errors: ReadonlyArray<MenuError>;
   /** Assigned menu to move within. */
   readonly menu?: Maybe<Menu>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
 };
 
@@ -10402,14 +10221,10 @@ export type MenuItemTranslatableContent = Node & {
   readonly id: Scalars['ID']['output'];
   /**
    * Represents a single item of the related menu. Can store categories, collection or pages.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly menuItem?: Maybe<MenuItem>;
-  /**
-   * The ID of the menu item to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the menu item to translate. */
   readonly menuItemId: Scalars['ID']['output'];
   /** Name of the menu item to translate. */
   readonly name: Scalars['String']['output'];
@@ -10431,7 +10246,7 @@ export type MenuItemTranslatableContentTranslationArgs = {
 export type MenuItemTranslate = {
   readonly errors: ReadonlyArray<TranslationError>;
   readonly menuItem?: Maybe<MenuItem>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -10443,11 +10258,7 @@ export type MenuItemTranslation = Node & {
   readonly language: LanguageDisplay;
   /** Translated menu item name. */
   readonly name: Scalars['String']['output'];
-  /**
-   * Represents the menu item fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the menu item fields to translate. */
   readonly translatableContent?: Maybe<MenuItemTranslatableContent>;
 };
 
@@ -10461,16 +10272,12 @@ export type MenuItemTranslation = Node & {
  */
 export type MenuItemUpdate = {
   readonly errors: ReadonlyArray<MenuError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
   readonly menuItem?: Maybe<MenuItem>;
 };
 
-/**
- * Event sent when menu item is updated.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when menu item is updated. */
 export type MenuItemUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -10485,11 +10292,7 @@ export type MenuItemUpdated = Event & {
 };
 
 
-/**
- * Event sent when menu item is updated.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when menu item is updated. */
 export type MenuItemUpdatedMenuItemArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10522,15 +10325,11 @@ export type MenuSortingInput = {
 export type MenuUpdate = {
   readonly errors: ReadonlyArray<MenuError>;
   readonly menu?: Maybe<Menu>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly menuErrors: ReadonlyArray<MenuError>;
 };
 
-/**
- * Event sent when menu is updated.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when menu is updated. */
 export type MenuUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -10545,11 +10344,7 @@ export type MenuUpdated = Event & {
 };
 
 
-/**
- * Event sent when menu is updated.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when menu is updated. */
 export type MenuUpdatedMenuArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -10577,6 +10372,24 @@ export type MetadataFilter = {
   readonly value?: InputMaybe<Scalars['String']['input']>;
 };
 
+/**
+ * Allows filtering based on metadata key/value pairs.
+ *
+ *         Examples:
+ *         - `{key: "size"}`
+ *           Matches objects where the metadata key "size" exists, regardless of its value.
+ *         - `{key: "color", value: {oneOf: ["blue", "green"]}}`
+ *           Matches objects where the metadata key "color" is set to either "blue" or "green".
+ *         - `{key: "status", value: {eq: "active"}}`
+ *           Matches objects where the metadata key "status" is set to "active".
+ */
+export type MetadataFilterInput = {
+  /** Key to filter by. If not other fields provided - checking the existence of the key in metadata. */
+  readonly key: Scalars['String']['input'];
+  /** Value to filter by. */
+  readonly value?: InputMaybe<MetadataValueFilterInput>;
+};
+
 export type MetadataInput = {
   /** Key of a metadata item. */
   readonly key: Scalars['String']['input'];
@@ -10591,12 +10404,24 @@ export type MetadataItem = {
   readonly value: Scalars['String']['output'];
 };
 
+/** Define the filtering options for metadata value fields. */
+export type MetadataValueFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<Scalars['String']['input']>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
 /** Represents amount of money in specific currency. */
 export type Money = {
   /** Amount of money. */
   readonly amount: Scalars['Float']['output'];
   /** Currency code. */
   readonly currency: Scalars['String']['output'];
+  /** Number of digits after the decimal point in the currency. */
+  readonly fractionDigits: Scalars['Int']['output'];
+  /** Amount of money represented as an integer in the smallest currency unit. */
+  readonly fractionalAmount: Scalars['Int']['output'];
 };
 
 export type MoneyInput = {
@@ -10633,7 +10458,7 @@ export type Mutation = {
    */
   readonly accountAddressCreate?: Maybe<AccountAddressCreate>;
   /**
-   * Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+   * Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
    *
    * Triggers the following webhook events:
    * - ADDRESS_DELETED (async): An address was deleted.
@@ -10764,7 +10589,7 @@ export type Mutation = {
    */
   readonly appDelete?: Maybe<AppDelete>;
   /**
-   * Delete failed installation.
+   * Deletes failed installation.
    *
    * Requires one of the following permissions: MANAGE_APPS.
    */
@@ -10777,6 +10602,14 @@ export type Mutation = {
   readonly appFetchManifest?: Maybe<AppFetchManifest>;
   /** Install new app by using app manifest. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS. */
   readonly appInstall?: Maybe<AppInstall>;
+  /**
+   * Re-enable sync webhooks for provided app. Can be used to manually re-enable sync webhooks for the app before the cooldown period ends.
+   *
+   * Added in Saleor 3.21.
+   *
+   * Requires one of the following permissions: MANAGE_APPS.
+   */
+  readonly appReenableSyncWebhooks?: Maybe<AppReenableSyncWebhooks>;
   /**
    * Retry failed installation of new app.
    *
@@ -10824,10 +10657,6 @@ export type Mutation = {
   /**
    * Creates attributes.
    *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Triggers the following webhook events:
    * - ATTRIBUTE_CREATED (async): An attribute was created.
    */
@@ -10844,19 +10673,11 @@ export type Mutation = {
   /**
    * Creates/updates translations for attributes.
    *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    */
   readonly attributeBulkTranslate?: Maybe<AttributeBulkTranslate>;
   /**
    * Updates attributes.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Triggers the following webhook events:
    * - ATTRIBUTE_UPDATED (async): An attribute was updated. Optionally called when new attribute value was created or deleted.
@@ -10916,11 +10737,7 @@ export type Mutation = {
    */
   readonly attributeValueBulkDelete?: Maybe<AttributeValueBulkDelete>;
   /**
-   * Creates/updates translations for attributes values.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   * Creates/updates translations for attribute values.
    *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    */
@@ -11001,7 +10818,7 @@ export type Mutation = {
    */
   readonly channelActivate?: Maybe<ChannelActivate>;
   /**
-   * Creates new channel.
+   * Creates a new channel.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
    *
@@ -11019,7 +10836,7 @@ export type Mutation = {
    */
   readonly channelDeactivate?: Maybe<ChannelDeactivate>;
   /**
-   * Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
+   * Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
    *
@@ -11029,8 +10846,6 @@ export type Mutation = {
   readonly channelDelete?: Maybe<ChannelDelete>;
   /**
    * Reorder the warehouses of a channel.
-   *
-   * Added in Saleor 3.7.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
    */
@@ -11056,7 +10871,7 @@ export type Mutation = {
    */
   readonly checkoutAddPromoCode?: Maybe<CheckoutAddPromoCode>;
   /**
-   * Update billing address in the existing checkout.
+   * Updates billing address in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -11087,13 +10902,7 @@ export type Mutation = {
    * - CHECKOUT_CREATED (async): A checkout was created.
    */
   readonly checkoutCreate?: Maybe<CheckoutCreate>;
-  /**
-   * Create new checkout from existing order.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Creates a new checkout from existing order. */
   readonly checkoutCreateFromOrder?: Maybe<CheckoutCreateFromOrder>;
   /**
    * Sets the customer as the owner of the checkout.
@@ -11114,9 +10923,16 @@ export type Mutation = {
    */
   readonly checkoutCustomerDetach?: Maybe<CheckoutCustomerDetach>;
   /**
-   * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
+   * Updates customer note in the existing checkout object.
    *
-   * Added in Saleor 3.1.
+   * Added in Saleor 3.21.
+   *
+   * Triggers the following webhook events:
+   * - CHECKOUT_UPDATED (async): A checkout was updated.
+   */
+  readonly checkoutCustomerNoteUpdate?: Maybe<CheckoutCustomerNoteUpdate>;
+  /**
+   * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
    *
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Triggered when updating the checkout delivery method with the external one.
@@ -11131,7 +10947,7 @@ export type Mutation = {
    */
   readonly checkoutEmailUpdate?: Maybe<CheckoutEmailUpdate>;
   /**
-   * Update language code in the existing checkout.
+   * Updates language code in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -11142,7 +10958,7 @@ export type Mutation = {
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
-   * @deprecated This field will be removed in Saleor 4.0. Use `checkoutLinesDelete` instead.
+   * @deprecated Use `checkoutLinesDelete` instead.
    */
   readonly checkoutLineDelete?: Maybe<CheckoutLineDelete>;
   /**
@@ -11166,7 +10982,7 @@ export type Mutation = {
    * - CHECKOUT_UPDATED (async): A checkout was updated.
    */
   readonly checkoutLinesUpdate?: Maybe<CheckoutLinesUpdate>;
-  /** Create a new payment for given checkout. */
+  /** Creates a new payment for given checkout. */
   readonly checkoutPaymentCreate?: Maybe<CheckoutPaymentCreate>;
   /**
    * Remove a gift card or a voucher from a checkout.
@@ -11176,7 +10992,7 @@ export type Mutation = {
    */
   readonly checkoutRemovePromoCode?: Maybe<CheckoutRemovePromoCode>;
   /**
-   * Update shipping address in the existing checkout.
+   * Updates shipping address in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -11188,7 +11004,7 @@ export type Mutation = {
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Triggered when updating the checkout shipping method with the external one.
    * - CHECKOUT_UPDATED (async): A checkout was updated.
-   * @deprecated This field will be removed in Saleor 4.0. Use `checkoutDeliveryMethodUpdate` instead.
+   * @deprecated Use `checkoutDeliveryMethodUpdate` instead.
    */
   readonly checkoutShippingMethodUpdate?: Maybe<CheckoutShippingMethodUpdate>;
   /**
@@ -11264,7 +11080,7 @@ export type Mutation = {
    */
   readonly confirmEmailChange?: Maybe<ConfirmEmailChange>;
   /**
-   * Creates new warehouse.
+   * Creates a new warehouse.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -11280,10 +11096,6 @@ export type Mutation = {
   readonly customerBulkDelete?: Maybe<CustomerBulkDelete>;
   /**
    * Updates customers.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_USERS.
    *
@@ -11346,7 +11158,7 @@ export type Mutation = {
    */
   readonly digitalContentDelete?: Maybe<DigitalContentDelete>;
   /**
-   * Update digital content.
+   * Updates digital content.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -11385,7 +11197,7 @@ export type Mutation = {
    * Deletes order lines.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly draftOrderLinesBulkDelete?: Maybe<DraftOrderLinesBulkDelete>;
   /**
@@ -11402,8 +11214,6 @@ export type Mutation = {
   readonly eventDeliveryRetry?: Maybe<EventDeliveryRetry>;
   /**
    * Export gift cards to csv file.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -11441,9 +11251,7 @@ export type Mutation = {
   readonly externalLogout?: Maybe<ExternalLogout>;
   /**
    * Trigger sending a notification with the notify plugin method. Serializes nodes provided as ids parameter and includes this data in the notification payload.
-   *
-   * Added in Saleor 3.1.
-   * @deprecated \n\nDEPRECATED: this mutation will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly externalNotificationTrigger?: Maybe<ExternalNotificationTrigger>;
   /** Obtain external access tokens for user by custom plugin. */
@@ -11470,8 +11278,6 @@ export type Mutation = {
   /**
    * Adds note to the gift card.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
    * Triggers the following webhook events:
@@ -11481,8 +11287,6 @@ export type Mutation = {
   /**
    * Activate gift cards.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
    * Triggers the following webhook events:
@@ -11490,9 +11294,7 @@ export type Mutation = {
    */
   readonly giftCardBulkActivate?: Maybe<GiftCardBulkActivate>;
   /**
-   * Create gift cards.
-   *
-   * Added in Saleor 3.1.
+   * Creates gift cards.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -11504,8 +11306,6 @@ export type Mutation = {
   /**
    * Deactivate gift cards.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
    * Triggers the following webhook events:
@@ -11513,9 +11313,7 @@ export type Mutation = {
    */
   readonly giftCardBulkDeactivate?: Maybe<GiftCardBulkDeactivate>;
   /**
-   * Delete gift cards.
-   *
-   * Added in Saleor 3.1.
+   * Deletes gift cards.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -11543,9 +11341,7 @@ export type Mutation = {
    */
   readonly giftCardDeactivate?: Maybe<GiftCardDeactivate>;
   /**
-   * Delete gift card.
-   *
-   * Added in Saleor 3.1.
+   * Deletes gift card.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -11555,8 +11351,6 @@ export type Mutation = {
   readonly giftCardDelete?: Maybe<GiftCardDelete>;
   /**
    * Resend a gift card.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -11715,10 +11509,8 @@ export type Mutation = {
   /**
    * Adds note to the order.
    *
-   * DEPRECATED: this mutation will be removed in Saleor 4.0.
-   *
    * Requires one of the following permissions: MANAGE_ORDERS.
-   * @deprecated This field will be removed in Saleor 4.0. Use `orderNoteAdd` instead.
+   * @deprecated Use `orderNoteAdd` instead.
    */
   readonly orderAddNote?: Maybe<OrderAddNote>;
   /**
@@ -11729,10 +11521,6 @@ export type Mutation = {
   readonly orderBulkCancel?: Maybe<OrderBulkCancel>;
   /**
    * Creates multiple orders.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_ORDERS_IMPORT.
    */
@@ -11757,8 +11545,6 @@ export type Mutation = {
   readonly orderConfirm?: Maybe<OrderConfirm>;
   /**
    * Create new order from existing checkout. Requires the following permissions: AUTHENTICATED_APP and HANDLE_CHECKOUTS.
-   *
-   * Added in Saleor 3.2.
    *
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Optionally triggered when cached external shipping methods are invalid.
@@ -11806,8 +11592,6 @@ export type Mutation = {
   /**
    * Approve existing fulfillment.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_ORDERS.
    *
    * Triggers the following webhook events:
@@ -11844,19 +11628,11 @@ export type Mutation = {
   /**
    * Adds granted refund to the order.
    *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
   readonly orderGrantRefundCreate?: Maybe<OrderGrantRefundCreate>;
   /**
    * Updates granted refund.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -11886,7 +11662,7 @@ export type Mutation = {
    */
   readonly orderLineUpdate?: Maybe<OrderLineUpdate>;
   /**
-   * Create order lines for an order.
+   * Creates order lines for an order.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -11900,19 +11676,11 @@ export type Mutation = {
   /**
    * Adds note to the order.
    *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
   readonly orderNoteAdd?: Maybe<OrderNoteAdd>;
   /**
    * Updates note of an order.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -11927,7 +11695,7 @@ export type Mutation = {
    * Update shop order settings across all channels. Returns `orderSettings` for the first `channel` in alphabetical order.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
-   * @deprecated \n\nDEPRECATED: this mutation will be removed in Saleor 4.0. Use `channelUpdate` mutation instead.
+   * @deprecated Use `channelUpdate` mutation instead.
    */
   readonly orderSettingsUpdate?: Maybe<OrderSettingsUpdate>;
   /**
@@ -11997,19 +11765,19 @@ export type Mutation = {
    */
   readonly pageTranslate?: Maybe<PageTranslate>;
   /**
-   * Delete page types.
+   * Deletes page types.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
   readonly pageTypeBulkDelete?: Maybe<PageTypeBulkDelete>;
   /**
-   * Create a new page type.
+   * Creates a new page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
   readonly pageTypeCreate?: Maybe<PageTypeCreate>;
   /**
-   * Delete a page type.
+   * Deletes a page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
@@ -12021,7 +11789,7 @@ export type Mutation = {
    */
   readonly pageTypeReorderAttributes?: Maybe<PageTypeReorderAttributes>;
   /**
-   * Update page type.
+   * Updates page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
@@ -12046,20 +11814,10 @@ export type Mutation = {
   readonly paymentCapture?: Maybe<PaymentCapture>;
   /** Check payment balance. */
   readonly paymentCheckBalance?: Maybe<PaymentCheckBalance>;
-  /**
-   * Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways. There is a limit of 100 transaction items per checkout / order.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways. There is a limit of 100 transaction items per checkout / order. */
   readonly paymentGatewayInitialize?: Maybe<PaymentGatewayInitialize>;
   /**
    * Initializes payment gateway for tokenizing payment method session.
-   *
-   * Added in Saleor 3.16.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: AUTHENTICATED_USER.
    *
@@ -12072,10 +11830,6 @@ export type Mutation = {
   /**
    * Tokenize payment method.
    *
-   * Added in Saleor 3.16.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: AUTHENTICATED_USER.
    *
    * Triggers the following webhook events:
@@ -12084,10 +11838,6 @@ export type Mutation = {
   readonly paymentMethodInitializeTokenization?: Maybe<PaymentMethodInitializeTokenization>;
   /**
    * Tokenize payment method.
-   *
-   * Added in Saleor 3.16.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: AUTHENTICATED_USER.
    *
@@ -12149,8 +11899,6 @@ export type Mutation = {
   /**
    * Update attributes assigned to product variant for given product type.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
    */
   readonly productAttributeAssignmentUpdate?: Maybe<ProductAttributeAssignmentUpdate>;
@@ -12163,10 +11911,6 @@ export type Mutation = {
   /**
    * Creates products.
    *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   readonly productBulkCreate?: Maybe<ProductBulkCreate>;
@@ -12178,10 +11922,6 @@ export type Mutation = {
   readonly productBulkDelete?: Maybe<ProductBulkDelete>;
   /**
    * Creates/updates translations for products.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    *
@@ -12299,11 +12039,7 @@ export type Mutation = {
    */
   readonly productVariantBulkDelete?: Maybe<ProductVariantBulkDelete>;
   /**
-   * Creates/updates translations for products variants.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   * Creates/updates translations for product variants.
    *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    *
@@ -12313,11 +12049,7 @@ export type Mutation = {
    */
   readonly productVariantBulkTranslate?: Maybe<ProductVariantBulkTranslate>;
   /**
-   * Update multiple product variants.
-   *
-   * Added in Saleor 3.11.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   * Updates multiple product variants.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -12342,8 +12074,6 @@ export type Mutation = {
   readonly productVariantDelete?: Maybe<ProductVariantDelete>;
   /**
    * Deactivates product variant preorder. It changes all preorder allocation into regular allocation.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -12373,13 +12103,13 @@ export type Mutation = {
    */
   readonly productVariantStocksCreate?: Maybe<ProductVariantStocksCreate>;
   /**
-   * Delete stocks from product variant.
+   * Deletes stocks from product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   readonly productVariantStocksDelete?: Maybe<ProductVariantStocksDelete>;
   /**
-   * Update stocks for product variant.
+   * Updates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -12399,10 +12129,6 @@ export type Mutation = {
   /**
    * Deletes promotions.
    *
-   * Added in Saleor 3.17.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
@@ -12411,10 +12137,6 @@ export type Mutation = {
   readonly promotionBulkDelete?: Maybe<PromotionBulkDelete>;
   /**
    * Creates a new promotion.
-   *
-   * Added in Saleor 3.17.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
@@ -12426,10 +12148,6 @@ export type Mutation = {
   /**
    * Deletes a promotion.
    *
-   * Added in Saleor 3.17.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
@@ -12438,10 +12156,6 @@ export type Mutation = {
   readonly promotionDelete?: Maybe<PromotionDelete>;
   /**
    * Creates a new promotion rule.
-   *
-   * Added in Saleor 3.17.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
@@ -12452,10 +12166,6 @@ export type Mutation = {
   /**
    * Deletes a promotion rule.
    *
-   * Added in Saleor 3.17.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
@@ -12465,17 +12175,11 @@ export type Mutation = {
   /**
    * Creates/updates translations for a promotion rule.
    *
-   * Added in Saleor 3.17.
-   *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    */
   readonly promotionRuleTranslate?: Maybe<PromotionRuleTranslate>;
   /**
    * Updates an existing promotion rule.
-   *
-   * Added in Saleor 3.17.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
@@ -12486,17 +12190,11 @@ export type Mutation = {
   /**
    * Creates/updates translations for a promotion.
    *
-   * Added in Saleor 3.17.
-   *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    */
   readonly promotionTranslate?: Maybe<PromotionTranslate>;
   /**
    * Updates an existing promotion.
-   *
-   * Added in Saleor 3.17.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
@@ -12506,6 +12204,22 @@ export type Mutation = {
    * - PROMOTION_ENDED (async): Optionally called if promotion was ended.
    */
   readonly promotionUpdate?: Maybe<PromotionUpdate>;
+  /**
+   * Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  readonly refundReasonReferenceClear?: Maybe<RefundReasonReferenceTypeClear>;
+  /**
+   * Update refund settings across all channels.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  readonly refundSettingsUpdate?: Maybe<RefundSettingsUpdate>;
   /**
    * Request email change of the logged in user.
    *
@@ -12537,81 +12251,70 @@ export type Mutation = {
   /**
    * Adds products, categories, collections to a sale.
    *
-   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleCreate` mutation instead.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
    * - SALE_UPDATED (async): A sale was updated.
+   * @deprecated Use `promotionRuleCreate` and `promotionRuleUpdate` mutations instead.
    */
   readonly saleCataloguesAdd?: Maybe<SaleAddCatalogues>;
   /**
    * Removes products, categories, collections from a sale.
    *
-   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleUpdate` or `promotionRuleDelete` mutations instead.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
    * - SALE_UPDATED (async): A sale was updated.
+   * @deprecated Use `promotionRuleUpdate` and `promotionRuleDelete` mutations instead.
    */
   readonly saleCataloguesRemove?: Maybe<SaleRemoveCatalogues>;
   /**
    * Manage sale's availability in channels.
    *
-   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleCreate` or `promotionRuleUpdate` mutations instead.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
+   * @deprecated Use `promotionRuleUpdate` mutation instead.
    */
   readonly saleChannelListingUpdate?: Maybe<SaleChannelListingUpdate>;
   /**
    * Creates a new sale.
    *
-   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionCreate` mutation instead.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
    * - SALE_CREATED (async): A sale was created.
+   * @deprecated Use `promotionCreate` mutation instead.
    */
   readonly saleCreate?: Maybe<SaleCreate>;
   /**
    * Deletes a sale.
    *
-   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionDelete` mutation instead.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
    * - SALE_DELETED (async): A sale was deleted.
+   * @deprecated Use `promotionDelete` mutation instead.
    */
   readonly saleDelete?: Maybe<SaleDelete>;
   /**
    * Creates/updates translations for a sale.
    *
-   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PromotionTranslate` mutation instead.
-   *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
+   * @deprecated Use `promotionTranslate` mutation instead.
    */
   readonly saleTranslate?: Maybe<SaleTranslate>;
   /**
    * Updates a sale.
-   *
-   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionUpdate` mutation instead.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
    * - SALE_UPDATED (async): A sale was updated.
    * - SALE_TOGGLE (async): Optionally triggered when a sale is started or stopped.
+   * @deprecated Use `promotionUpdate` mutation instead.
    */
   readonly saleUpdate?: Maybe<SaleUpdate>;
   /**
    * Sends a notification confirmation.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: AUTHENTICATED_USER.
    *
@@ -12703,17 +12406,15 @@ export type Mutation = {
   /**
    * Updates site domain of the shop.
    *
-   * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
-   *
    * Requires one of the following permissions: MANAGE_SETTINGS.
-   * @deprecated \n\nDEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
+   * @deprecated Use `PUBLIC_URL` environment variable instead.
    */
   readonly shopDomainUpdate?: Maybe<ShopDomainUpdate>;
   /**
    * Fetch tax rates.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
-   * @deprecated \n\nDEPRECATED: this mutation will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly shopFetchTaxRates?: Maybe<ShopFetchTaxRates>;
   /**
@@ -12767,7 +12468,7 @@ export type Mutation = {
    */
   readonly staffNotificationRecipientCreate?: Maybe<StaffNotificationRecipientCreate>;
   /**
-   * Delete staff notification recipient.
+   * Deletes staff notification recipient.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
@@ -12790,10 +12491,6 @@ export type Mutation = {
   /**
    * Updates stocks for a given variant and warehouse. Variant and warehouse selectors have to be the same for all stock inputs. Is not allowed to use 'variantId' in one input and 'variantExternalReference' in another.
    *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    *
    * Triggers the following webhook events:
@@ -12803,10 +12500,6 @@ export type Mutation = {
   /**
    * Request to delete a stored payment method on payment provider side.
    *
-   * Added in Saleor 3.16.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: AUTHENTICATED_USER.
    *
    * Triggers the following webhook events:
@@ -12814,33 +12507,25 @@ export type Mutation = {
    */
   readonly storedPaymentMethodRequestDelete?: Maybe<StoredPaymentMethodRequestDelete>;
   /**
-   * Create a tax class.
-   *
-   * Added in Saleor 3.9.
+   * Creates a tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxClassCreate?: Maybe<TaxClassCreate>;
   /**
-   * Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
-   *
-   * Added in Saleor 3.9.
+   * Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxClassDelete?: Maybe<TaxClassDelete>;
   /**
-   * Update a tax class.
-   *
-   * Added in Saleor 3.9.
+   * Updates a tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxClassUpdate?: Maybe<TaxClassUpdate>;
   /**
-   * Update tax configuration for a channel.
-   *
-   * Added in Saleor 3.9.
+   * Updates tax configuration for a channel.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
@@ -12848,23 +12533,17 @@ export type Mutation = {
   /**
    * Remove all tax class rates for a specific country.
    *
-   * Added in Saleor 3.9.
-   *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxCountryConfigurationDelete?: Maybe<TaxCountryConfigurationDelete>;
   /**
-   * Update tax class rates for a specific country.
-   *
-   * Added in Saleor 3.9.
+   * Updates tax class rates for a specific country.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxCountryConfigurationUpdate?: Maybe<TaxCountryConfigurationUpdate>;
   /**
    * Exempt checkout or order from charging the taxes. When tax exemption is enabled, taxes won't be charged for the checkout or order. Taxes may still be calculated in cases when product prices are entered with the tax included and the net price needs to be known.
-   *
-   * Added in Saleor 3.8.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
@@ -12882,21 +12561,13 @@ export type Mutation = {
    */
   readonly tokensDeactivateAll?: Maybe<DeactivateAllUserTokens>;
   /**
-   * Create transaction for checkout or order.
-   *
-   * Added in Saleor 3.4.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   * Creates transaction for checkout or order.
    *
    * Requires one of the following permissions: HANDLE_PAYMENTS.
    */
   readonly transactionCreate?: Maybe<TransactionCreate>;
   /**
    * Report the event for the transaction.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
    *
@@ -12906,28 +12577,12 @@ export type Mutation = {
    * - ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
    */
   readonly transactionEventReport?: Maybe<TransactionEventReport>;
-  /**
-   * Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. There is a limit of 100 transaction items per checkout / order.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. There is a limit of 100 transaction items per checkout / order. */
   readonly transactionInitialize?: Maybe<TransactionInitialize>;
-  /**
-   * Processes a transaction session. It triggers the webhook `TRANSACTION_PROCESS_SESSION`, to the assigned `paymentGateways`.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Processes a transaction session. It triggers the webhook `TRANSACTION_PROCESS_SESSION`, to the assigned `paymentGateways`. */
   readonly transactionProcess?: Maybe<TransactionProcess>;
   /**
    * Request an action for payment transaction.
-   *
-   * Added in Saleor 3.4.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: HANDLE_PAYMENTS.
    */
@@ -12935,19 +12590,11 @@ export type Mutation = {
   /**
    * Request a refund for payment transaction based on granted refund.
    *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: HANDLE_PAYMENTS.
    */
   readonly transactionRequestRefundForGrantedRefund?: Maybe<TransactionRequestRefundForGrantedRefund>;
   /**
    * Update transaction.
-   *
-   * Added in Saleor 3.4.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
    */
@@ -12958,9 +12605,17 @@ export type Mutation = {
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   readonly unassignWarehouseShippingZone?: Maybe<WarehouseShippingZoneUnassign>;
-  /** Updates metadata of an object. To use it, you need to have access to the modified object. */
+  /**
+   * Updates metadata of an object.Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly updateMetadata?: Maybe<UpdateMetadata>;
-  /** Updates private metadata of an object. To use it, you need to be an authenticated staff user or an app and have access to the modified object. */
+  /**
+   * Updates private metadata of an object. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly updatePrivateMetadata?: Maybe<UpdatePrivateMetadata>;
   /**
    * Updates given warehouse.
@@ -13087,7 +12742,7 @@ export type Mutation = {
    */
   readonly webhookCreate?: Maybe<WebhookCreate>;
   /**
-   * Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
+   * Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
    *
    * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
    */
@@ -13095,19 +12750,11 @@ export type Mutation = {
   /**
    * Performs a dry run of a webhook event. Supports a single event (the first, if multiple provided in the `query`). Requires permission relevant to processed event.
    *
-   * Added in Saleor 3.11.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
    */
   readonly webhookDryRun?: Maybe<WebhookDryRun>;
   /**
    * Trigger a webhook event. Supports a single event (the first, if multiple provided in the `webhook.subscription_query`). Requires permission relevant to processed event. Successfully delivered webhook returns `delivery` with status='PENDING' and empty payload.
-   *
-   * Added in Saleor 3.11.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
    */
@@ -13223,6 +12870,11 @@ export type MutationAppFetchManifestArgs = {
 
 export type MutationAppInstallArgs = {
   input: AppInstallInput;
+};
+
+
+export type MutationAppReenableSyncWebhooksArgs = {
+  appId: Scalars['ID']['input'];
 };
 
 
@@ -13430,6 +13082,7 @@ export type MutationCheckoutBillingAddressUpdateArgs = {
   billingAddress: AddressInput;
   checkoutId?: InputMaybe<Scalars['ID']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  saveAddress?: InputMaybe<Scalars['Boolean']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
   validationRules?: InputMaybe<CheckoutAddressValidationRules>;
 };
@@ -13468,6 +13121,12 @@ export type MutationCheckoutCustomerDetachArgs = {
   checkoutId?: InputMaybe<Scalars['ID']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+
+export type MutationCheckoutCustomerNoteUpdateArgs = {
+  customerNote: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
 };
 
 
@@ -13545,6 +13204,7 @@ export type MutationCheckoutRemovePromoCodeArgs = {
 export type MutationCheckoutShippingAddressUpdateArgs = {
   checkoutId?: InputMaybe<Scalars['ID']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  saveAddress?: InputMaybe<Scalars['Boolean']['input']>;
   shippingAddress: AddressInput;
   token?: InputMaybe<Scalars['UUID']['input']>;
   validationRules?: InputMaybe<CheckoutAddressValidationRules>;
@@ -14574,6 +14234,11 @@ export type MutationPromotionUpdateArgs = {
 };
 
 
+export type MutationRefundSettingsUpdateArgs = {
+  input: RefundSettingsUpdateInput;
+};
+
+
 export type MutationRequestEmailChangeArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
   newEmail: Scalars['String']['input'];
@@ -14855,6 +14520,7 @@ export type MutationTransactionEventReportArgs = {
   externalUrl?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   message?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
   pspReference: Scalars['String']['input'];
   time?: InputMaybe<Scalars['DateTime']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
@@ -14886,6 +14552,8 @@ export type MutationTransactionRequestActionArgs = {
   actionType: TransactionActionEnum;
   amount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  refundReason?: InputMaybe<Scalars['String']['input']>;
+  refundReasonReference?: InputMaybe<Scalars['ID']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
 };
 
@@ -15041,10 +14709,56 @@ export type NavigationType =
   /** Secondary storefront navigation. */
   | 'SECONDARY';
 
+/** Represents the NEW_TAB target options for an app extension. */
+export type NewTabTargetOptions = {
+  /** HTTP method for New Tab target (GET or POST) */
+  readonly method: HttpMethod;
+};
+
 /** An object with an ID */
 export type Node = {
   /** The ID of the object. */
   readonly id: Scalars['ID']['output'];
+};
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributes = {
+  /**
+   * Get a single attribute attached to the object by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to the object.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+};
+
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributesAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributesAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 export type ObjectWithMetadata = {
@@ -15094,17 +14808,9 @@ export type ObjectWithMetadataPrivateMetafieldsArgs = {
 export type Order = Node & ObjectWithMetadata & {
   /** List of actions that can be performed in the current state of an order. */
   readonly actions: ReadonlyArray<OrderAction>;
-  /**
-   * The authorize status of the order.
-   *
-   * Added in Saleor 3.4.
-   */
+  /** The authorize status of the order. */
   readonly authorizeStatus: OrderAuthorizeStatusEnum;
-  /**
-   * Collection points that can be used for this order.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Collection points that can be used for this order. */
   readonly availableCollectionPoints: ReadonlyArray<Warehouse>;
   /**
    * Shipping methods that can be used with this order.
@@ -15117,17 +14823,9 @@ export type Order = Node & ObjectWithMetadata & {
   readonly canFinalize: Scalars['Boolean']['output'];
   /** Channel through which the order was placed. */
   readonly channel: Channel;
-  /**
-   * The charge status of the order.
-   *
-   * Added in Saleor 3.4.
-   */
+  /** The charge status of the order. */
   readonly chargeStatus: OrderChargeStatusEnum;
-  /**
-   * ID of the checkout that the order was created from.
-   *
-   * Added in Saleor 3.11.
-   */
+  /** ID of the checkout that the order was created from. */
   readonly checkoutId?: Maybe<Scalars['ID']['output']>;
   /** Name of the collection point where the order should be picked up by the customer. */
   readonly collectionPointName?: Maybe<Scalars['String']['output']>;
@@ -15135,29 +14833,21 @@ export type Order = Node & ObjectWithMetadata & {
   readonly created: Scalars['DateTime']['output'];
   /** Additional information provided by the customer about the order. */
   readonly customerNote: Scalars['String']['output'];
-  /**
-   * The delivery method selected for this order.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** The delivery method selected for this order. */
   readonly deliveryMethod?: Maybe<DeliveryMethod>;
   /**
    * Returns applied discount.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `discounts` field instead.
+   * @deprecated Use the `discounts` field instead.
    */
   readonly discount?: Maybe<Money>;
   /**
    * Discount name.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `discounts` field instead.
+   * @deprecated Use the `discounts` field instead.
    */
   readonly discountName?: Maybe<Scalars['String']['output']>;
   /** List of all discounts assigned to the order. */
   readonly discounts: ReadonlyArray<OrderDiscount>;
-  /**
-   * Determines whether displayed prices should include taxes.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Determines whether displayed prices should include taxes. */
   readonly displayGrossPrices: Scalars['Boolean']['output'];
   /** List of errors that occurred during order validation. */
   readonly errors: ReadonlyArray<OrderError>;
@@ -15167,11 +14857,7 @@ export type Order = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
   readonly events: ReadonlyArray<OrderEvent>;
-  /**
-   * External ID of this order.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this order. */
   readonly externalReference?: Maybe<Scalars['String']['output']>;
   /** List of shipments for the order. */
   readonly fulfillments: ReadonlyArray<Fulfillment>;
@@ -15179,10 +14865,6 @@ export type Order = Node & ObjectWithMetadata & {
   readonly giftCards: ReadonlyArray<GiftCard>;
   /**
    * List of granted refunds.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -15195,7 +14877,7 @@ export type Order = Node & ObjectWithMetadata & {
   readonly isPaid: Scalars['Boolean']['output'];
   /** Returns True, if order requires shipping. */
   readonly isShippingRequired: Scalars['Boolean']['output'];
-  /** @deprecated This field will be removed in Saleor 4.0. Use the `languageCodeEnum` field to fetch the language code.  */
+  /** @deprecated Use the `languageCodeEnum` field to fetch the language code. */
   readonly languageCode: Scalars['String']['output'];
   /** Order language code. */
   readonly languageCodeEnum: LanguageCodeEnum;
@@ -15207,15 +14889,9 @@ export type Order = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** User-friendly number of an order. */
   readonly number: Scalars['String']['output'];
@@ -15235,15 +14911,9 @@ export type Order = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** URL to which user should be redirected after order is placed. */
   readonly redirectUrl?: Maybe<Scalars['String']['output']>;
@@ -15251,7 +14921,7 @@ export type Order = Node & ObjectWithMetadata & {
   readonly shippingAddress?: Maybe<Address>;
   /**
    * Shipping method for this order.
-   * @deprecated This field will be removed in Saleor 4.0. Use `deliveryMethod` instead.
+   * @deprecated Use `deliveryMethod` instead.
    */
   readonly shippingMethod?: Maybe<ShippingMethod>;
   /** Method used for shipping. */
@@ -15263,28 +14933,14 @@ export type Order = Node & ObjectWithMetadata & {
   /**
    * Denormalized tax class assigned to the shipping method.
    *
-   * Added in Saleor 3.9.
-   *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
   readonly shippingTaxClass?: Maybe<TaxClass>;
-  /**
-   * Denormalized public metadata of the shipping method's tax class.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Denormalized public metadata of the shipping method's tax class. */
   readonly shippingTaxClassMetadata: ReadonlyArray<MetadataItem>;
-  /**
-   * Denormalized name of the tax class assigned to the shipping method.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Denormalized name of the tax class assigned to the shipping method. */
   readonly shippingTaxClassName?: Maybe<Scalars['String']['output']>;
-  /**
-   * Denormalized private metadata of the shipping method's tax class. Requires staff permissions to access.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Denormalized private metadata of the shipping method's tax class. Requires staff permissions to access. */
   readonly shippingTaxClassPrivateMetadata: ReadonlyArray<MetadataItem>;
   /** The shipping tax rate value. */
   readonly shippingTaxRate: Scalars['Float']['output'];
@@ -15294,22 +14950,14 @@ export type Order = Node & ObjectWithMetadata & {
   readonly statusDisplay: Scalars['String']['output'];
   /** The sum of line prices not including shipping. */
   readonly subtotal: TaxedMoney;
-  /**
-   * Returns True if order has to be exempt from taxes.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Returns True if order has to be exempt from taxes. */
   readonly taxExemption: Scalars['Boolean']['output'];
-  /** @deprecated This field will be removed in Saleor 4.0. Use `id` instead. */
+  /** @deprecated Use `id` instead. */
   readonly token: Scalars['String']['output'];
   /** Total amount of the order. */
   readonly total: TaxedMoney;
   /**
    * Total amount of ongoing authorize requests for the order's transactions.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -15321,46 +14969,26 @@ export type Order = Node & ObjectWithMetadata & {
   /**
    * Total amount of ongoing cancel requests for the order's transactions.
    *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
   readonly totalCancelPending: Money;
-  /**
-   * Amount canceled for the order.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Amount canceled for the order. */
   readonly totalCanceled: Money;
   /**
    * Amount captured for the order.
-   * @deprecated This field will be removed in Saleor 4.0. Use `totalCharged` instead.
+   * @deprecated Use `totalCharged` instead.
    */
   readonly totalCaptured: Money;
   /**
    * Total amount of ongoing charge requests for the order's transactions.
    *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
   readonly totalChargePending: Money;
-  /**
-   * Amount charged for the order.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Amount charged for the order. */
   readonly totalCharged: Money;
   /**
    * Total amount of granted refund.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -15368,42 +14996,24 @@ export type Order = Node & ObjectWithMetadata & {
   /**
    * Total amount of ongoing refund requests for the order's transactions.
    *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
   readonly totalRefundPending: Money;
-  /**
-   * Total refund amount for the order.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Total refund amount for the order. */
   readonly totalRefunded: Money;
   /**
    * The difference amount between granted refund and the amounts that are pending and refunded.
    *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
   readonly totalRemainingGrant: Money;
-  /** Google Analytics tracking client ID. This field will be removed in Saleor 4.0. */
+  /** Google Analytics tracking client ID. */
   readonly trackingClientId: Scalars['String']['output'];
-  /**
-   * List of transactions for the order. Requires one of the following permissions: MANAGE_ORDERS, HANDLE_PAYMENTS.
-   *
-   * Added in Saleor 3.4.
-   */
+  /** List of transactions for the order. Requires one of the following permissions: MANAGE_ORDERS, HANDLE_PAYMENTS. */
   readonly transactions: ReadonlyArray<TransactionItem>;
   /**
    * Translated discount name.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `discounts` field instead.
+   * @deprecated Use the `discounts` field instead.
    */
   readonly translatedDiscountName?: Maybe<Scalars['String']['output']>;
   /**
@@ -15411,7 +15021,7 @@ export type Order = Node & ObjectWithMetadata & {
    *
    * Added in Saleor 3.19.
    */
-  readonly undiscountedShippingPrice?: Maybe<Money>;
+  readonly undiscountedShippingPrice: Money;
   /** Undiscounted total amount of the order. */
   readonly undiscountedTotal: TaxedMoney;
   /** Date and time when the order was created. */
@@ -15469,8 +15079,6 @@ export type OrderAction =
 /**
  * Adds note to the order.
  *
- * DEPRECATED: this mutation will be removed in Saleor 4.0.
- *
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderAddNote = {
@@ -15479,16 +15087,12 @@ export type OrderAddNote = {
   readonly event?: Maybe<OrderEvent>;
   /** Order with the note added. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
 export type OrderAddNoteInput = {
-  /**
-   * Note message.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
-   */
+  /** Note message. */
   readonly message: Scalars['String']['input'];
 };
 
@@ -15513,6 +15117,14 @@ export type OrderAuthorizeStatusEnum =
   | 'NONE'
   | 'PARTIAL';
 
+/** Filter by authorize status. */
+export type OrderAuthorizeStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderAuthorizeStatusEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderAuthorizeStatusEnum>>;
+};
+
 /**
  * Cancels orders.
  *
@@ -15522,16 +15134,12 @@ export type OrderBulkCancel = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<OrderError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
 /**
  * Creates multiple orders.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_ORDERS_IMPORT.
  */
@@ -15552,11 +15160,19 @@ export type OrderBulkCreateDeliveryMethodInput = {
   readonly shippingPrice?: InputMaybe<TaxedMoneyInput>;
   /** The ID of the tax class. */
   readonly shippingTaxClassId?: InputMaybe<Scalars['ID']['input']>;
-  /** Metadata of the tax class. */
+  /**
+   * Metadata of the tax class. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly shippingTaxClassMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** The name of the tax class. */
   readonly shippingTaxClassName?: InputMaybe<Scalars['String']['input']>;
-  /** Private metadata of the tax class. */
+  /**
+   * Private metadata of the tax class. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly shippingTaxClassPrivateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Tax rate of the shipping. */
   readonly shippingTaxRate?: InputMaybe<Scalars['PositiveDecimal']['input']>;
@@ -15646,11 +15262,19 @@ export type OrderBulkCreateInput = {
   readonly languageCode: LanguageCodeEnum;
   /** List of order lines. */
   readonly lines: ReadonlyArray<OrderBulkCreateOrderLineInput>;
-  /** Metadata of the order. */
+  /**
+   * Metadata of the order. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Notes related to the order. */
   readonly notes?: InputMaybe<ReadonlyArray<OrderBulkCreateNoteInput>>;
-  /** Private metadata of the order. */
+  /**
+   * Private metadata of the order. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** URL of a view, where users should be redirected to see the order details. */
   readonly redirectUrl?: InputMaybe<Scalars['String']['input']>;
@@ -15675,11 +15299,19 @@ export type OrderBulkCreateInput = {
 export type OrderBulkCreateInvoiceInput = {
   /** The date, when the invoice was created. */
   readonly createdAt: Scalars['DateTime']['input'];
-  /** Metadata of the invoice. */
+  /**
+   * Metadata of the invoice. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Invoice number. */
   readonly number?: InputMaybe<Scalars['String']['input']>;
-  /** Private metadata of the invoice. */
+  /**
+   * Private metadata of the invoice. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** URL of the invoice to download. */
   readonly url?: InputMaybe<Scalars['String']['input']>;
@@ -15707,9 +15339,17 @@ export type OrderBulkCreateOrderLineInput = {
   readonly isGiftCard: Scalars['Boolean']['input'];
   /** Determines whether shipping of the order line items is required. */
   readonly isShippingRequired: Scalars['Boolean']['input'];
-  /** Metadata of the order line. */
+  /**
+   * Metadata of the order line. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
-  /** Private metadata of the order line. */
+  /**
+   * Private metadata of the order line. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** The name of the product. */
   readonly productName?: InputMaybe<Scalars['String']['input']>;
@@ -15723,11 +15363,19 @@ export type OrderBulkCreateOrderLineInput = {
   readonly quantity: Scalars['Int']['input'];
   /** The ID of the tax class. */
   readonly taxClassId?: InputMaybe<Scalars['ID']['input']>;
-  /** Metadata of the tax class. */
+  /**
+   * Metadata of the tax class. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly taxClassMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** The name of the tax class. */
   readonly taxClassName?: InputMaybe<Scalars['String']['input']>;
-  /** Private metadata of the tax class. */
+  /**
+   * Private metadata of the tax class. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly taxClassPrivateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Tax rate of the order line. */
   readonly taxRate?: InputMaybe<Scalars['PositiveDecimal']['input']>;
@@ -15785,13 +15433,7 @@ export type OrderBulkCreateUserInput = {
   readonly id?: InputMaybe<Scalars['ID']['input']>;
 };
 
-/**
- * Event sent when orders are imported.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when orders are imported. */
 export type OrderBulkCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -15814,15 +15456,11 @@ export type OrderCancel = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Canceled order. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
-/**
- * Event sent when order is canceled.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when order is canceled. */
 export type OrderCancelled = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -15845,7 +15483,7 @@ export type OrderCapture = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Captured order. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -15875,6 +15513,14 @@ export type OrderChargeStatusEnum =
   | 'OVERCHARGED'
   | 'PARTIAL';
 
+/** Filter by charge status. */
+export type OrderChargeStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderChargeStatusEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderChargeStatusEnum>>;
+};
+
 /**
  * Confirms an unconfirmed order by changing status to unfulfilled.
  *
@@ -15882,16 +15528,13 @@ export type OrderChargeStatusEnum =
  */
 export type OrderConfirm = {
   readonly errors: ReadonlyArray<OrderError>;
+  /** Order which has been confirmed. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
-/**
- * Event sent when order is confirmed.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when order is confirmed. */
 export type OrderConfirmed = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -15922,8 +15565,6 @@ export type OrderCountableEdge = {
 
 /**
  * Create new order from existing checkout. Requires the following permissions: AUTHENTICATED_APP and HANDLE_CHECKOUTS.
- *
- * Added in Saleor 3.2.
  *
  * Triggers the following webhook events:
  * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Optionally triggered when cached external shipping methods are invalid.
@@ -15972,11 +15613,7 @@ export type OrderCreateFromCheckoutErrorCode =
   | 'UNAVAILABLE_VARIANT_IN_CHANNEL'
   | 'VOUCHER_NOT_APPLICABLE';
 
-/**
- * Event sent when new order is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new order is created. */
 export type OrderCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -15998,7 +15635,10 @@ export type OrderDirection =
 
 /** Contains all details related to the applied discount to the order. */
 export type OrderDiscount = Node & {
-  /** Returns amount of discount. */
+  /**
+   * Returns amount of discount.
+   * @deprecated Use `total` instead.
+   */
   readonly amount: Money;
   /** The ID of discount applied. */
   readonly id: Scalars['ID']['output'];
@@ -16010,6 +15650,12 @@ export type OrderDiscount = Node & {
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
   readonly reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * The amount of discount applied to the order.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly total: Money;
   /** Translated name of the applied discount. */
   readonly translatedName?: Maybe<Scalars['String']['output']>;
   /** The type of applied discount: Sale, Voucher or Manual. */
@@ -16029,7 +15675,7 @@ export type OrderDiscountAdd = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which has been discounted. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -16051,7 +15697,7 @@ export type OrderDiscountDelete = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which has removed discount. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -16071,7 +15717,7 @@ export type OrderDiscountUpdate = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which has been discounted. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -16119,6 +15765,7 @@ export type OrderErrorCode =
   | 'INVALID_QUANTITY'
   | 'INVALID_VOUCHER'
   | 'INVALID_VOUCHER_CODE'
+  | 'MISSING_ADDRESS_DATA'
   | 'NON_EDITABLE_GIFT_LINE'
   | 'NON_REMOVABLE_GIFT_LINE'
   | 'NOT_AVAILABLE_IN_CHANNEL'
@@ -16176,13 +15823,7 @@ export type OrderEvent = Node & {
   readonly quantity?: Maybe<Scalars['Int']['output']>;
   /** The reference of payment's transaction. */
   readonly reference?: Maybe<Scalars['String']['output']>;
-  /**
-   * The order event which is related to this event.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The order event which is related to this event. */
   readonly related?: Maybe<OrderEvent>;
   /** The order which is related to this order. */
   readonly relatedOrder?: Maybe<Order>;
@@ -16230,6 +15871,14 @@ export type OrderEventDiscountObject = {
   readonly valueType: DiscountValueTypeEnum;
 };
 
+/** Filter input for order events data. */
+export type OrderEventFilterInput = {
+  /** Filter order events by date. */
+  readonly date?: InputMaybe<DateTimeRangeInput>;
+  /** Filter order events by type. */
+  readonly type?: InputMaybe<OrderEventTypeEnumFilterInput>;
+};
+
 export type OrderEventOrderLineObject = {
   /** The discount applied to the order line. */
   readonly discount?: Maybe<OrderEventDiscountObject>;
@@ -16239,6 +15888,13 @@ export type OrderEventOrderLineObject = {
   readonly orderLine?: Maybe<OrderLine>;
   /** The variant quantity. */
   readonly quantity?: Maybe<Scalars['Int']['output']>;
+};
+
+export type OrderEventTypeEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderEventsEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderEventsEnum>>;
 };
 
 export type OrderEventsEmailsEnum =
@@ -16305,13 +15961,7 @@ export type OrderEventsEnum =
   | 'TRANSACTION_REFUND_REQUESTED'
   | 'UPDATED_ADDRESS';
 
-/**
- * Event sent when order becomes expired.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when order becomes expired. */
 export type OrderExpired = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -16346,11 +15996,7 @@ export type OrderFilterInput = {
   readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
 };
 
-/**
- * Filter shipping methods for order.
- *
- * Added in Saleor 3.6.
- */
+/** Filter shipping methods for order. */
 export type OrderFilterShippingMethods = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -16360,11 +16006,7 @@ export type OrderFilterShippingMethods = Event & {
   readonly order?: Maybe<Order>;
   /** The application receiving the webhook. */
   readonly recipient?: Maybe<App>;
-  /**
-   * Shipping methods that can be used with this checkout.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Shipping methods that can be used with this checkout. */
   readonly shippingMethods?: Maybe<ReadonlyArray<ShippingMethod>>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
@@ -16387,7 +16029,7 @@ export type OrderFulfill = {
   readonly fulfillments?: Maybe<ReadonlyArray<Fulfillment>>;
   /** Fulfilled order. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -16398,11 +16040,7 @@ export type OrderFulfillInput = {
   readonly lines: ReadonlyArray<OrderFulfillLineInput>;
   /** If true, send an email notification to the customer. */
   readonly notifyCustomer?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * Fulfillment tracking number.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Fulfillment tracking number. */
   readonly trackingNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -16420,11 +16058,7 @@ export type OrderFulfillStockInput = {
   readonly warehouse: Scalars['ID']['input'];
 };
 
-/**
- * Event sent when order is fulfilled.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when order is fulfilled. */
 export type OrderFulfilled = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -16438,11 +16072,7 @@ export type OrderFulfilled = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Event sent when order is fully paid.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when order is fully paid. */
 export type OrderFullyPaid = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -16456,13 +16086,7 @@ export type OrderFullyPaid = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * The order is fully refunded.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** The order is fully refunded. */
 export type OrderFullyRefunded = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -16479,10 +16103,6 @@ export type OrderFullyRefunded = Event & {
 /**
  * Adds granted refund to the order.
  *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- *
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderGrantRefundCreate = {
@@ -16498,13 +16118,7 @@ export type OrderGrantRefundCreateError = {
   readonly code: OrderGrantRefundCreateErrorCode;
   /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
   readonly field?: Maybe<Scalars['String']['output']>;
-  /**
-   * List of lines which cause the error.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of lines which cause the error. */
   readonly lines?: Maybe<ReadonlyArray<OrderGrantRefundCreateLineError>>;
   /** The error message. */
   readonly message?: Maybe<Scalars['String']['output']>;
@@ -16521,32 +16135,26 @@ export type OrderGrantRefundCreateErrorCode =
 export type OrderGrantRefundCreateInput = {
   /** Amount of the granted refund. If not provided, the amount will be calculated automatically based on provided `lines` and `grantRefundForShipping`. */
   readonly amount?: InputMaybe<Scalars['Decimal']['input']>;
-  /**
-   * Determine if granted refund should include shipping costs.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Determine if granted refund should include shipping costs. */
   readonly grantRefundForShipping?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * Lines to assign to granted refund.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Lines to assign to granted refund. */
   readonly lines?: InputMaybe<ReadonlyArray<OrderGrantRefundCreateLineInput>>;
   /** Reason of the granted refund. */
   readonly reason?: InputMaybe<Scalars['String']['input']>;
   /**
-   * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used.Field will be required starting from Saleor 3.21.
+   * ID of a `Page` (Model) to reference in reason.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
+  /**
+   * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used. Field required starting from Saleor 3.21.
    *
    * Added in Saleor 3.20.
    *
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
-  readonly transactionId?: InputMaybe<Scalars['ID']['input']>;
+  readonly transactionId: Scalars['ID']['input'];
 };
 
 export type OrderGrantRefundCreateLineError = {
@@ -16577,10 +16185,6 @@ export type OrderGrantRefundCreateLineInput = {
 /**
  * Updates granted refund.
  *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- *
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
 export type OrderGrantRefundUpdate = {
@@ -16592,13 +16196,7 @@ export type OrderGrantRefundUpdate = {
 };
 
 export type OrderGrantRefundUpdateError = {
-  /**
-   * List of lines to add which cause the error.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of lines to add which cause the error. */
   readonly addLines?: Maybe<ReadonlyArray<OrderGrantRefundUpdateLineError>>;
   /** The error code. */
   readonly code: OrderGrantRefundUpdateErrorCode;
@@ -16606,13 +16204,7 @@ export type OrderGrantRefundUpdateError = {
   readonly field?: Maybe<Scalars['String']['output']>;
   /** The error message. */
   readonly message?: Maybe<Scalars['String']['output']>;
-  /**
-   * List of lines to remove which cause the error.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of lines to remove which cause the error. */
   readonly removeLines?: Maybe<ReadonlyArray<OrderGrantRefundUpdateLineError>>;
 };
 
@@ -16625,33 +16217,21 @@ export type OrderGrantRefundUpdateErrorCode =
   | 'SHIPPING_COSTS_ALREADY_GRANTED';
 
 export type OrderGrantRefundUpdateInput = {
-  /**
-   * Lines to assign to granted refund.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Lines to assign to granted refund. */
   readonly addLines?: InputMaybe<ReadonlyArray<OrderGrantRefundUpdateLineAddInput>>;
   /** Amount of the granted refund. if not provided and `addLines` or `removeLines` or `grantRefundForShipping` is provided, amount will be calculated automatically. */
   readonly amount?: InputMaybe<Scalars['Decimal']['input']>;
-  /**
-   * Determine if granted refund should include shipping costs.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Determine if granted refund should include shipping costs. */
   readonly grantRefundForShipping?: InputMaybe<Scalars['Boolean']['input']>;
   /** Reason of the granted refund. */
   readonly reason?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Lines to remove from granted refund.
+   * ID of a `Page` (Model) to reference in reason.
    *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   * Added in Saleor 3.22.
    */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
+  /** Lines to remove from granted refund. */
   readonly removeLines?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /**
    * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used.Field will be required starting from Saleor 3.21.
@@ -16688,13 +16268,7 @@ export type OrderGrantRefundUpdateLineErrorCode =
   | 'NOT_FOUND'
   | 'QUANTITY_GREATER_THAN_AVAILABLE';
 
-/**
- * The details of granted refund.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** The details of granted refund. */
 export type OrderGrantedRefund = {
   /** Refund amount. */
   readonly amount: Money;
@@ -16703,23 +16277,21 @@ export type OrderGrantedRefund = {
   /** Time of creation. */
   readonly createdAt: Scalars['DateTime']['output'];
   readonly id: Scalars['ID']['output'];
-  /**
-   * Lines assigned to the granted refund.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Lines assigned to the granted refund. */
   readonly lines?: Maybe<ReadonlyArray<OrderGrantedRefundLine>>;
-  /** Reason of the refund. */
+  /**
+   * Reason of the refund.
+   *
+   * Added in Saleor 3.22.
+   */
   readonly reason?: Maybe<Scalars['String']['output']>;
   /**
-   * If true, the refunded amount includes the shipping price.If false, the refunded amount does not include the shipping price.
+   * Reason Model (Page) reference for refund.
    *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   * Added in Saleor 3.22.
    */
+  readonly reasonReference?: Maybe<Page>;
+  /** If true, the refunded amount includes the shipping price.If false, the refunded amount does not include the shipping price. */
   readonly shippingCostsIncluded: Scalars['Boolean']['output'];
   /**
    * Status of the granted refund calculated based on transactionItem assigned to granted refund.
@@ -16745,13 +16317,7 @@ export type OrderGrantedRefund = {
   readonly user?: Maybe<User>;
 };
 
-/**
- * Represents granted refund line.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents granted refund line. */
 export type OrderGrantedRefundLine = {
   readonly id: Scalars['ID']['output'];
   /** Line of the order associated with this granted refund. */
@@ -16785,6 +16351,12 @@ export type OrderLine = Node & ObjectWithMetadata & {
    */
   readonly allocations?: Maybe<ReadonlyArray<Allocation>>;
   readonly digitalContentUrl?: Maybe<DigitalContentUrl>;
+  /**
+   * List of applied discounts
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly discounts?: Maybe<ReadonlyArray<OrderLineDiscount>>;
   /** ID of the order line. */
   readonly id: Scalars['ID']['output'];
   /**
@@ -16795,53 +16367,29 @@ export type OrderLine = Node & ObjectWithMetadata & {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly isGift?: Maybe<Scalars['Boolean']['output']>;
-  /**
-   * Returns True, if the line unit price was overridden.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Returns True, if the line unit price was overridden. */
   readonly isPriceOverridden?: Maybe<Scalars['Boolean']['output']>;
   /** Whether the product variant requires shipping. */
   readonly isShippingRequired: Scalars['Boolean']['output'];
-  /**
-   * List of public metadata items. Can be accessed without permissions.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** List of public metadata items. Can be accessed without permissions. */
   readonly metadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.5.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
-  /**
-   * List of private metadata items. Requires staff permissions to access.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.5.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Name of the product in order line. */
   readonly productName: Scalars['String']['output'];
@@ -16853,43 +16401,21 @@ export type OrderLine = Node & ObjectWithMetadata & {
   readonly quantity: Scalars['Int']['output'];
   /** Number of variant items fulfilled. */
   readonly quantityFulfilled: Scalars['Int']['output'];
-  /**
-   * A quantity of items remaining to be fulfilled.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** A quantity of items remaining to be fulfilled. */
   readonly quantityToFulfill: Scalars['Int']['output'];
-  /**
-   * Denormalized sale ID, set when order line is created for a product variant that is on sale.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Denormalized sale ID, set when order line is created for a product variant that is on sale. */
   readonly saleId?: Maybe<Scalars['ID']['output']>;
   /**
    * Denormalized tax class of the product in this order line.
    *
-   * Added in Saleor 3.9.
-   *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
   readonly taxClass?: Maybe<TaxClass>;
-  /**
-   * Denormalized public metadata of the tax class.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Denormalized public metadata of the tax class. */
   readonly taxClassMetadata: ReadonlyArray<MetadataItem>;
-  /**
-   * Denormalized name of the tax class.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Denormalized name of the tax class. */
   readonly taxClassName?: Maybe<Scalars['String']['output']>;
-  /**
-   * Denormalized private metadata of the tax class. Requires staff permissions to access.
-   *
-   * Added in Saleor 3.9.
-   */
+  /** Denormalized private metadata of the tax class. Requires staff permissions to access. */
   readonly taxClassPrivateMetadata: ReadonlyArray<MetadataItem>;
   /** Rate of tax applied on product variant. */
   readonly taxRate: Scalars['Float']['output'];
@@ -16918,11 +16444,7 @@ export type OrderLine = Node & ObjectWithMetadata & {
   readonly variant?: Maybe<ProductVariant>;
   /** Name of the variant of product in order line. */
   readonly variantName: Scalars['String']['output'];
-  /**
-   * Voucher code that was used for this order line.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Voucher code that was used for this order line. */
   readonly voucherCode?: Maybe<Scalars['String']['output']>;
 };
 
@@ -16958,19 +16480,9 @@ export type OrderLineThumbnailArgs = {
 };
 
 export type OrderLineCreateInput = {
-  /**
-   * Flag that allow force splitting the same variant into multiple lines by skipping the matching logic.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Flag that allow force splitting the same variant into multiple lines by skipping the matching logic. */
   readonly forceNewLine?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * Custom price of the item.When the line with the same variant will be provided multiple times, the last price will be used.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Custom price of the item.When the line with the same variant will be provided multiple times, the last price will be used. */
   readonly price?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   /** Number of variant items ordered. */
   readonly quantity: Scalars['Int']['input'];
@@ -16987,10 +16499,36 @@ export type OrderLineDelete = {
   readonly errors: ReadonlyArray<OrderError>;
   /** A related order. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
   /** An order line that was deleted. */
   readonly orderLine?: Maybe<OrderLine>;
+};
+
+/** Represent the discount applied to order line. */
+export type OrderLineDiscount = {
+  /** The ID of discount applied. */
+  readonly id: Scalars['ID']['output'];
+  /** The name of applied discount. */
+  readonly name?: Maybe<Scalars['String']['output']>;
+  /**
+   * Explanation for the applied discount.
+   *
+   * Requires one of the following permissions: MANAGE_ORDERS.
+   */
+  readonly reason?: Maybe<Scalars['String']['output']>;
+  /** The discount amount applied to the line item. */
+  readonly total: Money;
+  /** Translated name of the applied discount. */
+  readonly translatedName?: Maybe<Scalars['String']['output']>;
+  /** The type of applied discount: Sale, Voucher or Manual. */
+  readonly type: OrderDiscountType;
+  /** The discount amount applied to the single line unit. */
+  readonly unit: Money;
+  /** Value of the discount. Can store fixed value or percent value */
+  readonly value: Scalars['PositiveDecimal']['output'];
+  /** Type of the discount: fixed or percent */
+  readonly valueType: DiscountValueTypeEnum;
 };
 
 /**
@@ -17002,7 +16540,7 @@ export type OrderLineDiscountRemove = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which is related to line which has removed discount. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
   /** Order line which has removed discount. */
   readonly orderLine?: Maybe<OrderLine>;
@@ -17017,7 +16555,7 @@ export type OrderLineDiscountUpdate = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Order which is related to the discounted line. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
   /** Order line which has been discounted. */
   readonly orderLine?: Maybe<OrderLine>;
@@ -17037,13 +16575,13 @@ export type OrderLineUpdate = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Related order. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
   readonly orderLine?: Maybe<OrderLine>;
 };
 
 /**
- * Create order lines for an order.
+ * Creates order lines for an order.
  *
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
@@ -17051,7 +16589,7 @@ export type OrderLinesCreate = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Related order. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
   /** List of added order lines. */
   readonly orderLines?: Maybe<ReadonlyArray<OrderLine>>;
@@ -17066,15 +16604,11 @@ export type OrderMarkAsPaid = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Order marked as paid. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
-/**
- * Event sent when order metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when order metadata is updated. */
 export type OrderMetadataUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -17090,10 +16624,6 @@ export type OrderMetadataUpdated = Event & {
 
 /**
  * Adds note to the order.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
@@ -17125,10 +16655,6 @@ export type OrderNoteInput = {
 
 /**
  * Updates note of an order.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
@@ -17162,13 +16688,7 @@ export type OrderOriginEnum =
   | 'DRAFT'
   | 'REISSUE';
 
-/**
- * Payment has been made. The order may be partially or fully paid.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Payment has been made. The order may be partially or fully paid. */
 export type OrderPaid = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -17200,7 +16720,7 @@ export type OrderRefund = {
   readonly errors: ReadonlyArray<OrderError>;
   /** A refunded order. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -17229,13 +16749,7 @@ export type OrderRefundProductsInput = {
   readonly orderLines?: InputMaybe<ReadonlyArray<OrderRefundLineInput>>;
 };
 
-/**
- * The order received a refund. The order may be partially or fully refunded.
- *
- * Added in Saleor 3.14.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** The order received a refund. The order may be partially or fully refunded. */
 export type OrderRefunded = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -17282,33 +16796,23 @@ export type OrderReturnProductsInput = {
 
 /** Represents the channel-specific order settings. */
 export type OrderSettings = {
-  /**
-   * Determine if it is possible to place unpaid order by calling `checkoutComplete` mutation.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Determine if it is possible to place unpaid order by calling `checkoutComplete` mutation. */
   readonly allowUnpaidOrders: Scalars['Boolean']['output'];
   /** When disabled, all new orders from checkout will be marked as unconfirmed. When enabled orders from checkout will become unfulfilled immediately. */
   readonly automaticallyConfirmAllNewOrders: Scalars['Boolean']['output'];
   /** When enabled, all non-shippable gift card orders will be fulfilled automatically. */
   readonly automaticallyFulfillNonShippableGiftCard: Scalars['Boolean']['output'];
-  /**
-   * The time in days after expired orders will be deleted.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The time in days after expired orders will be deleted. */
   readonly deleteExpiredOrdersAfter: Scalars['Day']['output'];
   /**
-   * Expiration time in minutes. Default null - means do not expire any orders.
+   * Time in hours after which the draft order line price will be refreshed.
    *
-   * Added in Saleor 3.13.
+   * Added in Saleor 3.21.
    *
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
+  readonly draftOrderLinePriceFreezePeriod?: Maybe<Scalars['Hour']['output']>;
+  /** Expiration time in minutes. Default null - means do not expire any orders. */
   readonly expireOrdersAfter?: Maybe<Scalars['Minute']['output']>;
   /**
    * Determine if voucher applied on draft order should be count toward voucher usage.
@@ -17322,12 +16826,17 @@ export type OrderSettings = {
    * Determine what strategy will be used to mark the order as paid. Based on the chosen option, the proper object will be created and attached to the order when it's manually marked as paid.
    * `PAYMENT_FLOW` - [default option] creates the `Payment` object.
    * `TRANSACTION_FLOW` - creates the `TransactionItem` object.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly markAsPaidStrategy: MarkAsPaidStrategyEnum;
+  /**
+   * This flag only affects orders created from checkout and applies specifically to vouchers of the types: `SPECIFIC_PRODUCT` and `ENTIRE_ORDER` with `applyOncePerOrder` enabled.
+   * - When legacy propagation is enabled, discounts from these vouchers are represented as `OrderDiscount` objects, attached to the order and returned in the `Order.discounts` field. Additionally, percentage-based vouchers are converted to fixed-value discounts.
+   * - When legacy propagation is disabled, discounts are represented as `OrderLineDiscount` objects, attached to individual lines and returned in the `OrderLine.discounts` field. In this case, percentage-based vouchers retain their original type.
+   * In future releases, `OrderLineDiscount` will become the default behavior, and this flag will be deprecated and removed.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useLegacyLineDiscountPropagation: Scalars['Boolean']['output'];
 };
 
 export type OrderSettingsError = {
@@ -17343,33 +16852,23 @@ export type OrderSettingsErrorCode =
   | 'INVALID';
 
 export type OrderSettingsInput = {
-  /**
-   * Determine if it is possible to place unpaid order by calling `checkoutComplete` mutation.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Determine if it is possible to place unpaid order by calling `checkoutComplete` mutation. */
   readonly allowUnpaidOrders?: InputMaybe<Scalars['Boolean']['input']>;
   /** When disabled, all new orders from checkout will be marked as unconfirmed. When enabled orders from checkout will become unfulfilled immediately. By default set to True */
   readonly automaticallyConfirmAllNewOrders?: InputMaybe<Scalars['Boolean']['input']>;
   /** When enabled, all non-shippable gift card orders will be fulfilled automatically. By default set to True. */
   readonly automaticallyFulfillNonShippableGiftCard?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * The time in days after expired orders will be deleted.Allowed range is from 1 to 120.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The time in days after expired orders will be deleted.Allowed range is from 1 to 120. */
   readonly deleteExpiredOrdersAfter?: InputMaybe<Scalars['Day']['input']>;
   /**
-   * Expiration time in minutes. Default null - means do not expire any orders. Enter 0 or null to disable.
+   * Time in hours after which the draft order line price will be refreshed. Default value is 24 hours. Enter 0 or null to disable.
    *
-   * Added in Saleor 3.13.
+   * Added in Saleor 3.21.
    *
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
+  readonly draftOrderLinePriceFreezePeriod?: InputMaybe<Scalars['Hour']['input']>;
+  /** Expiration time in minutes. Default null - means do not expire any orders. Enter 0 or null to disable. */
   readonly expireOrdersAfter?: InputMaybe<Scalars['Minute']['input']>;
   /**
    * Specify whether a coupon applied to draft orders will count toward voucher usage.
@@ -17385,12 +16884,17 @@ export type OrderSettingsInput = {
    * Determine what strategy will be used to mark the order as paid. Based on the chosen option, the proper object will be created and attached to the order when it's manually marked as paid.
    * `PAYMENT_FLOW` - [default option] creates the `Payment` object.
    * `TRANSACTION_FLOW` - creates the `TransactionItem` object.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly markAsPaidStrategy?: InputMaybe<MarkAsPaidStrategyEnum>;
+  /**
+   * This flag only affects orders created from checkout and applies specifically to vouchers of the types: `SPECIFIC_PRODUCT` and `ENTIRE_ORDER` with `applyOncePerOrder` enabled.
+   * - When legacy propagation is enabled, discounts from these vouchers are represented as `OrderDiscount` objects, attached to the order and returned in the `Order.discounts` field. Additionally, percentage-based vouchers are converted to fixed-value discounts.
+   * - When legacy propagation is disabled, discounts are represented as `OrderLineDiscount` objects, attached to individual lines and returned in the `OrderLine.discounts` field. In this case, percentage-based vouchers retain their original type.
+   * In future releases, `OrderLineDiscount` will become the default behavior, and this flag will be deprecated and removed.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useLegacyLineDiscountPropagation?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /**
@@ -17402,7 +16906,7 @@ export type OrderSettingsUpdate = {
   readonly errors: ReadonlyArray<OrderSettingsError>;
   /** Order settings. */
   readonly orderSettings?: Maybe<OrderSettings>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderSettingsErrors: ReadonlyArray<OrderSettingsError>;
 };
 
@@ -17414,30 +16918,28 @@ export type OrderSettingsUpdateInput = {
 };
 
 export type OrderSortField =
-  /**
-   * Sort orders by creation date.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
-   */
+  /** Sort orders by creation date. */
   | 'CREATED_AT'
-  /**
-   * Sort orders by creation date.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
-   */
+  /** Sort orders by creation date */
   | 'CREATION_DATE'
   /** Sort orders by customer. */
   | 'CUSTOMER'
   /** Sort orders by fulfillment status. */
   | 'FULFILLMENT_STATUS'
-  /** Sort orders by last modified at. */
+  /** Sort orders by last modified date. */
   | 'LAST_MODIFIED_AT'
   /** Sort orders by number. */
   | 'NUMBER'
-  /** Sort orders by payment. */
+  /** Sort orders by payment status. */
   | 'PAYMENT'
   /** Sort orders by rank. Note: This option is available only with the `search` filter. */
-  | 'RANK';
+  | 'RANK'
+  /**
+   * Sort orders by order status.
+   *
+   * Added in Saleor 3.22.
+   */
+  | 'STATUS';
 
 export type OrderSortingInput = {
   /** Specifies the direction in which to sort orders. */
@@ -17457,6 +16959,14 @@ export type OrderStatus =
   | 'UNCONFIRMED'
   | 'UNFULFILLED';
 
+/** Filter by order status. */
+export type OrderStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderStatus>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderStatus>>;
+};
+
 export type OrderStatusFilter =
   | 'CANCELED'
   | 'FULFILLED'
@@ -17474,19 +16984,37 @@ export type OrderStatusFilter =
 export type OrderUpdate = {
   readonly errors: ReadonlyArray<OrderError>;
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
 export type OrderUpdateInput = {
   /** Billing address of the customer. */
   readonly billingAddress?: InputMaybe<AddressInput>;
-  /**
-   * External ID of this order.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this order. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Order language code.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly languageCode?: InputMaybe<LanguageCodeEnum>;
+  /**
+   * Order public metadata.
+   *
+   * Added in Saleor 3.21.Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /**
+   * Order private metadata.
+   *
+   * Added in Saleor 3.21.Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Shipping address of the customer. */
   readonly shippingAddress?: InputMaybe<AddressInput>;
   /** Email address of the customer. */
@@ -17502,7 +17030,7 @@ export type OrderUpdateShipping = {
   readonly errors: ReadonlyArray<OrderError>;
   /** Order with updated shipping method. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
@@ -17511,11 +17039,7 @@ export type OrderUpdateShippingInput = {
   readonly shippingMethod?: InputMaybe<Scalars['ID']['input']>;
 };
 
-/**
- * Event sent when order is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when order is updated. */
 export type OrderUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -17538,13 +17062,114 @@ export type OrderVoid = {
   readonly errors: ReadonlyArray<OrderError>;
   /** A voided order. */
   readonly order?: Maybe<Order>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
+export type OrderWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<OrderWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<OrderWhereInput>>;
+  /** Filter by authorize status. */
+  readonly authorizeStatus?: InputMaybe<OrderAuthorizeStatusEnumFilterInput>;
+  /** Filter by billing address of the order. */
+  readonly billingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by channel. */
+  readonly channelId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by charge status. */
+  readonly chargeStatus?: InputMaybe<OrderChargeStatusEnumFilterInput>;
+  /** Filter by checkout id. */
+  readonly checkoutId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by checkout token. */
+  readonly checkoutToken?: InputMaybe<UuidFilterInput>;
+  /** Filter order by created at date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly events?: InputMaybe<ReadonlyArray<OrderEventFilterInput>>;
+  /** Filter by fulfillment data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly fulfillments?: InputMaybe<ReadonlyArray<FulfillmentFilterInput>>;
+  /** Filter by whether the order has any fulfillments. */
+  readonly hasFulfillments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by whether the order has any invoices. */
+  readonly hasInvoices?: InputMaybe<Scalars['Boolean']['input']>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by invoice data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly invoices?: InputMaybe<ReadonlyArray<InvoiceFilterInput>>;
+  /** Filter by whether the order uses the click and collect delivery method. */
+  readonly isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether the order includes a gift card purchase. */
+  readonly isGiftCardBought?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether a gift card was used in the order. */
+  readonly isGiftCardUsed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly lines?: InputMaybe<ReadonlyArray<LinesFilterInput>>;
+  /** Filter by number of lines in the order. */
+  readonly linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by order number. */
+  readonly number?: InputMaybe<IntFilterInput>;
+  /** Filter by the product type of related order lines. */
+  readonly productTypeId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by shipping address of the order. */
+  readonly shippingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by order status. */
+  readonly status?: InputMaybe<OrderStatusEnumFilterInput>;
+  /** Filter by total gross amount of the order. */
+  readonly totalGross?: InputMaybe<PriceFilterInput>;
+  /** Filter by total net amount of the order. */
+  readonly totalNet?: InputMaybe<PriceFilterInput>;
+  /** Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly transactions?: InputMaybe<ReadonlyArray<TransactionFilterInput>>;
+  /** Filter order by updated at date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by user. */
+  readonly user?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by user email. */
+  readonly userEmail?: InputMaybe<StringFilterInput>;
+  /** Filter by voucher code used in the order. */
+  readonly voucherCode?: InputMaybe<StringFilterInput>;
+};
+
+/**
+ * Represents a payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type OtherPaymentMethodDetails = PaymentMethodDetails & {
+  /** Name of the payment method. */
+  readonly name: Scalars['String']['output'];
+};
+
+export type OtherPaymentMethodDetailsInput = {
+  /** Name of the payment method used for the transaction. */
+  readonly name: Scalars['String']['input'];
+};
+
 /** A static page that can be manually added by a shop operator through the dashboard. */
-export type Page = Node & ObjectWithMetadata & {
-  /** List of attributes assigned to this product. */
+export type Page = Node & ObjectWithAttributes & ObjectWithMetadata & {
+  /**
+   * Get a single attribute attached to page by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this page.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+  /**
+   * Get a single attribute attached to page by attribute slug.
+   * @deprecated Use `assignedAttribute` field instead.
+   */
+  readonly attribute?: Maybe<SelectedAttribute>;
+  /**
+   * List of attributes assigned to this page.
+   * @deprecated Use `assignedAttributes` field instead.
+   */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /**
    * Content of the page.
@@ -17556,7 +17181,7 @@ export type Page = Node & ObjectWithMetadata & {
    * Content of the page.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `content` field instead.
+   * @deprecated Use the `content` field instead.
    */
   readonly contentJson: Scalars['JSONString']['output'];
   /** Date and time at which page was created. */
@@ -17571,15 +17196,9 @@ export type Page = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Determines the type of page */
   readonly pageType: PageType;
@@ -17589,23 +17208,13 @@ export type Page = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use the `publishedAt` field to fetch the publication date. */
+  /** @deprecated Use the `publishedAt` field to fetch the publication date. */
   readonly publicationDate?: Maybe<Scalars['Date']['output']>;
-  /**
-   * The page publication date.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** The page publication date. */
   readonly publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Description of the page for SEO. */
   readonly seoDescription?: Maybe<Scalars['String']['output']>;
@@ -17617,6 +17226,24 @@ export type Page = Node & ObjectWithMetadata & {
   readonly title: Scalars['String']['output'];
   /** Returns translated page fields for the given language code. */
   readonly translation?: Maybe<PageTranslation>;
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAttributeArgs = {
+  slug: Scalars['String']['input'];
 };
 
 
@@ -17656,7 +17283,7 @@ export type PageTranslationArgs = {
  */
 export type PageAttributeAssign = {
   readonly errors: ReadonlyArray<PageError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
   /** The updated page type. */
   readonly pageType?: Maybe<PageType>;
@@ -17669,7 +17296,7 @@ export type PageAttributeAssign = {
  */
 export type PageAttributeUnassign = {
   readonly errors: ReadonlyArray<PageError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
   /** The updated page type. */
   readonly pageType?: Maybe<PageType>;
@@ -17684,7 +17311,7 @@ export type PageBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<PageError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
 };
 
@@ -17697,7 +17324,7 @@ export type PageBulkPublish = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<PageError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
 };
 
@@ -17724,7 +17351,7 @@ export type PageCountableEdge = {
 export type PageCreate = {
   readonly errors: ReadonlyArray<PageError>;
   readonly page?: Maybe<Page>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
 };
 
@@ -17743,15 +17370,10 @@ export type PageCreateInput = {
   readonly pageType: Scalars['ID']['input'];
   /**
    * Publication date. ISO 8601 standard.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `publishedAt` field instead.
+   * @deprecated Use `publishedAt` field instead.
    */
   readonly publicationDate?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Publication date time. ISO 8601 standard.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Publication date time. ISO 8601 standard. */
   readonly publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Search engine optimization fields. */
   readonly seo?: InputMaybe<SeoInput>;
@@ -17761,11 +17383,7 @@ export type PageCreateInput = {
   readonly title?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new page is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new page is created. */
 export type PageCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -17787,15 +17405,11 @@ export type PageCreated = Event & {
 export type PageDelete = {
   readonly errors: ReadonlyArray<PageError>;
   readonly page?: Maybe<Page>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
 };
 
-/**
- * Event sent when page is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when page is deleted. */
 export type PageDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -17864,15 +17478,10 @@ export type PageInput = {
   readonly isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Publication date. ISO 8601 standard.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `publishedAt` field instead.
+   * @deprecated Use `publishedAt` field instead.
    */
   readonly publicationDate?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Publication date time. ISO 8601 standard.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Publication date time. ISO 8601 standard. */
   readonly publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
   /** Search engine optimization fields. */
   readonly seo?: InputMaybe<SeoInput>;
@@ -17891,34 +17500,18 @@ export type PageReorderAttributeValues = {
   readonly errors: ReadonlyArray<PageError>;
   /** Page from which attribute values are reordered. */
   readonly page?: Maybe<Page>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
 };
 
 export type PageSortField =
-  /**
-   * Sort pages by creation date.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
-   */
+  /** Sort pages by creation date. */
   | 'CREATED_AT'
-  /**
-   * Sort pages by creation date.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
-   */
+  /** Sort pages by creation date. */
   | 'CREATION_DATE'
-  /**
-   * Sort pages by publication date.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
-   */
+  /** Sort pages by publication date. */
   | 'PUBLICATION_DATE'
-  /**
-   * Sort pages by publication date.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
-   */
+  /** Sort pages by publication date. */
   | 'PUBLISHED_AT'
   /** Sort pages by slug. */
   | 'SLUG'
@@ -17948,26 +17541,28 @@ export type PageTranslatableContent = Node & {
    * Content of the page.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `content` field instead.
+   * @deprecated Use the `content` field instead.
    */
   readonly contentJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the page translatable content. */
   readonly id: Scalars['ID']['output'];
   /**
    * A static page that can be manually added by a shop operator through the dashboard.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly page?: Maybe<Page>;
-  /**
-   * The ID of the page to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the page to translate. */
   readonly pageId: Scalars['ID']['output'];
   /** SEO description to translate. */
   readonly seoDescription?: Maybe<Scalars['String']['output']>;
   /** SEO title to translate. */
   readonly seoTitle?: Maybe<Scalars['String']['output']>;
+  /**
+   * Slug to translate.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly slug?: Maybe<Scalars['String']['output']>;
   /** Page title to translate. */
   readonly title: Scalars['String']['output'];
   /** Returns translated page fields for the given language code. */
@@ -17988,7 +17583,7 @@ export type PageTranslatableContentTranslationArgs = {
 export type PageTranslate = {
   readonly errors: ReadonlyArray<TranslationError>;
   readonly page?: Maybe<PageTranslatableContent>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -18004,7 +17599,7 @@ export type PageTranslation = Node & {
    * Translated description of the page.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `content` field instead.
+   * @deprecated Use the `content` field instead.
    */
   readonly contentJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the page translation. */
@@ -18015,13 +17610,15 @@ export type PageTranslation = Node & {
   readonly seoDescription?: Maybe<Scalars['String']['output']>;
   /** Translated SEO title. */
   readonly seoTitle?: Maybe<Scalars['String']['output']>;
+  /**
+   * Translated page slug.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly slug?: Maybe<Scalars['String']['output']>;
   /** Translated page title. */
   readonly title?: Maybe<Scalars['String']['output']>;
-  /**
-   * Represents the page fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the page fields to translate. */
   readonly translatableContent?: Maybe<PageTranslatableContent>;
 };
 
@@ -18034,6 +17631,7 @@ export type PageTranslationInput = {
   readonly content?: InputMaybe<Scalars['JSONString']['input']>;
   readonly seoDescription?: InputMaybe<Scalars['String']['input']>;
   readonly seoTitle?: InputMaybe<Scalars['String']['input']>;
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
   readonly title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -18061,15 +17659,9 @@ export type PageType = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Name of the page type. */
   readonly name: Scalars['String']['output'];
@@ -18079,15 +17671,9 @@ export type PageType = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Slug of the page type. */
   readonly slug: Scalars['String']['output'];
@@ -18101,6 +17687,7 @@ export type PageTypeAvailableAttributesArgs = {
   filter?: InputMaybe<AttributeFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<AttributeWhereInput>;
 };
 
@@ -18129,7 +17716,7 @@ export type PageTypePrivateMetafieldsArgs = {
 };
 
 /**
- * Delete page types.
+ * Deletes page types.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -18137,7 +17724,7 @@ export type PageTypeBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<PageError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
 };
 
@@ -18157,13 +17744,13 @@ export type PageTypeCountableEdge = {
 };
 
 /**
- * Create a new page type.
+ * Creates a new page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeCreate = {
   readonly errors: ReadonlyArray<PageError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
   readonly pageType?: Maybe<PageType>;
 };
@@ -18177,11 +17764,7 @@ export type PageTypeCreateInput = {
   readonly slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new page type is created.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when new page type is created. */
 export type PageTypeCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -18196,22 +17779,18 @@ export type PageTypeCreated = Event & {
 };
 
 /**
- * Delete a page type.
+ * Deletes a page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeDelete = {
   readonly errors: ReadonlyArray<PageError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
   readonly pageType?: Maybe<PageType>;
 };
 
-/**
- * Event sent when page type is deleted.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when page type is deleted. */
 export type PageTypeDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -18237,7 +17816,7 @@ export type PageTypeFilterInput = {
  */
 export type PageTypeReorderAttributes = {
   readonly errors: ReadonlyArray<PageError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
   /** Page type from which attributes are reordered. */
   readonly pageType?: Maybe<PageType>;
@@ -18257,13 +17836,13 @@ export type PageTypeSortingInput = {
 };
 
 /**
- * Update page type.
+ * Updates page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
 export type PageTypeUpdate = {
   readonly errors: ReadonlyArray<PageError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
   readonly pageType?: Maybe<PageType>;
 };
@@ -18279,11 +17858,7 @@ export type PageTypeUpdateInput = {
   readonly slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when page type is updated.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when page type is updated. */
 export type PageTypeUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -18305,15 +17880,11 @@ export type PageTypeUpdated = Event & {
 export type PageUpdate = {
   readonly errors: ReadonlyArray<PageError>;
   readonly page?: Maybe<Page>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pageErrors: ReadonlyArray<PageError>;
 };
 
-/**
- * Event sent when page is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when page is updated. */
 export type PageUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -18327,13 +17898,29 @@ export type PageUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+export type PageWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<PageWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<PageWhereInput>>;
+  /** Filter by attributes associated with the page. */
+  readonly attributes?: InputMaybe<ReadonlyArray<AssignedAttributeWhereInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by page type. */
+  readonly pageType?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by page slug. */
+  readonly slug?: InputMaybe<StringFilterInput>;
+};
+
 /**
  * Change the password of the logged in user.
  *
  * Requires one of the following permissions: AUTHENTICATED_USER.
  */
 export type PasswordChange = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** A user instance with a new password. */
@@ -18388,25 +17975,15 @@ export type Payment = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Date and time at which payment was modified. */
   readonly modified: Scalars['DateTime']['output'];
   /** Order associated with a payment. */
   readonly order?: Maybe<Order>;
-  /**
-   * Informs whether this is a partial payment.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Informs whether this is a partial payment. */
   readonly partial: Scalars['Boolean']['output'];
   /** Type of method used for payment. */
   readonly paymentMethodType: Scalars['String']['output'];
@@ -18416,21 +17993,11 @@ export type Payment = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
-  /**
-   * PSP reference of the payment.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** PSP reference of the payment. */
   readonly pspReference?: Maybe<Scalars['String']['output']>;
   /** Unique token associated with a payment. */
   readonly token: Scalars['String']['output'];
@@ -18468,11 +18035,7 @@ export type PaymentPrivateMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
-/**
- * Authorize payment.
- *
- * Added in Saleor 3.6.
- */
+/** Authorize payment. */
 export type PaymentAuthorize = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -18495,15 +18058,11 @@ export type PaymentCapture = {
   readonly errors: ReadonlyArray<PaymentError>;
   /** Updated payment. */
   readonly payment?: Maybe<Payment>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly paymentErrors: ReadonlyArray<PaymentError>;
 };
 
-/**
- * Capture payment.
- *
- * Added in Saleor 3.6.
- */
+/** Capture payment. */
 export type PaymentCaptureEvent = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -18532,7 +18091,7 @@ export type PaymentCheckBalance = {
   /** Response from the gateway. */
   readonly data?: Maybe<Scalars['JSONString']['output']>;
   readonly errors: ReadonlyArray<PaymentError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly paymentErrors: ReadonlyArray<PaymentError>;
 };
 
@@ -18547,11 +18106,7 @@ export type PaymentCheckBalanceInput = {
   readonly method: Scalars['String']['input'];
 };
 
-/**
- * Confirm payment.
- *
- * Added in Saleor 3.6.
- */
+/** Confirm payment. */
 export type PaymentConfirmEvent = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -18597,6 +18152,7 @@ export type PaymentErrorCode =
   | 'CHANNEL_INACTIVE'
   | 'CHECKOUT_COMPLETION_IN_PROGRESS'
   | 'CHECKOUT_EMAIL_NOT_SET'
+  | 'CHECKOUT_HAS_TRANSACTION'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'INVALID_SHIPPING_METHOD'
@@ -18613,11 +18169,7 @@ export type PaymentErrorCode =
 
 export type PaymentFilterInput = {
   readonly checkouts?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * Filter by ids.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Filter by ids. */
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
 };
 
@@ -18655,13 +18207,7 @@ export type PaymentGatewayConfigErrorCode =
   | 'INVALID'
   | 'NOT_FOUND';
 
-/**
- * Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways. There is a limit of 100 transaction items per checkout / order.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways. There is a limit of 100 transaction items per checkout / order. */
 export type PaymentGatewayInitialize = {
   readonly errors: ReadonlyArray<PaymentGatewayInitializeError>;
   /** List of payment gateway configurations. */
@@ -18682,13 +18228,7 @@ export type PaymentGatewayInitializeErrorCode =
   | 'INVALID'
   | 'NOT_FOUND';
 
-/**
- * Event sent when user wants to initialize the payment gateway.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when user wants to initialize the payment gateway. */
 export type PaymentGatewayInitializeSession = Event & {
   /** Amount requested for initializing the payment gateway. */
   readonly amount?: Maybe<Scalars['PositiveDecimal']['output']>;
@@ -18708,10 +18248,6 @@ export type PaymentGatewayInitializeSession = Event & {
 
 /**
  * Initializes payment gateway for tokenizing payment method session.
- *
- * Added in Saleor 3.16.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: AUTHENTICATED_USER.
  *
@@ -18755,13 +18291,7 @@ export type PaymentGatewayInitializeTokenizationResult =
   | 'FAILED_TO_INITIALIZE'
   | 'SUCCESSFULLY_INITIALIZED';
 
-/**
- * Event sent to initialize a new session in payment gateway to store the payment method.
- *
- * Added in Saleor 3.16.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent to initialize a new session in payment gateway to store the payment method. */
 export type PaymentGatewayInitializeTokenizationSession = Event & {
   /** Channel related to the requested action. */
   readonly channel: Channel;
@@ -18791,7 +18321,7 @@ export type PaymentInitialize = {
   readonly errors: ReadonlyArray<PaymentError>;
   /** Payment that was initialized. */
   readonly initializedPayment?: Maybe<PaymentInitialized>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly paymentErrors: ReadonlyArray<PaymentError>;
 };
 
@@ -18811,28 +18341,20 @@ export type PaymentInput = {
   /** A gateway to use with that payment. */
   readonly gateway: Scalars['String']['input'];
   /**
-   * User public metadata.
+   * User public metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.1.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** URL of a storefront view where user should be redirected after requiring additional actions. Payment with additional actions will not be finished if this field is not provided. */
   readonly returnUrl?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Payment store type.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Payment store type. */
   readonly storePaymentMethod?: InputMaybe<StorePaymentMethodEnum>;
   /** Client-side generated payment token, representing customer's billing data in a secure manner. */
   readonly token?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * List payment gateways.
- *
- * Added in Saleor 3.6.
- */
+/** List payment gateways. */
 export type PaymentListGateways = Event & {
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
@@ -18847,11 +18369,41 @@ export type PaymentListGateways = Event & {
 };
 
 /**
+ * Represents a payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type PaymentMethodDetails = {
+  /** Name of the payment method. */
+  readonly name: Scalars['String']['output'];
+};
+
+export type PaymentMethodDetailsCardFilterInput = {
+  /** Filter by payment method brand used to pay for the order. */
+  readonly brand?: InputMaybe<StringFilterInput>;
+};
+
+export type PaymentMethodDetailsFilterInput = {
+  /** Filter by card details used to pay for the order. Skips `type` filter if provided. */
+  readonly card?: InputMaybe<PaymentMethodDetailsCardFilterInput>;
+  /** Filter by payment method type used to pay for the order. */
+  readonly type?: InputMaybe<PaymentMethodTypeEnumFilterInput>;
+};
+
+/**
+ * Details of the payment method used for the transaction. One of `card` or `other` is required.
+ *
+ * Added in Saleor 3.22.
+ */
+export type PaymentMethodDetailsInput = {
+  /** Details of the card payment method used for the transaction. */
+  readonly card?: InputMaybe<CardPaymentMethodDetailsInput>;
+  /** Details of the non-card payment method used for this transaction. */
+  readonly other?: InputMaybe<OtherPaymentMethodDetailsInput>;
+};
+
+/**
  * Tokenize payment method.
- *
- * Added in Saleor 3.16.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: AUTHENTICATED_USER.
  *
@@ -18884,13 +18436,7 @@ export type PaymentMethodInitializeTokenizationErrorCode =
   | 'INVALID'
   | 'NOT_FOUND';
 
-/**
- * Event sent when user requests a tokenization of payment method.
- *
- * Added in Saleor 3.16.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when user requests a tokenization of payment method. */
 export type PaymentMethodInitializeTokenizationSession = Event & {
   /** Channel related to the requested action. */
   readonly channel: Channel;
@@ -18912,10 +18458,6 @@ export type PaymentMethodInitializeTokenizationSession = Event & {
 
 /**
  * Tokenize payment method.
- *
- * Added in Saleor 3.16.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: AUTHENTICATED_USER.
  *
@@ -18948,13 +18490,7 @@ export type PaymentMethodProcessTokenizationErrorCode =
   | 'INVALID'
   | 'NOT_FOUND';
 
-/**
- * Event sent when user continues a tokenization of payment method.
- *
- * Added in Saleor 3.16.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when user continues a tokenization of payment method. */
 export type PaymentMethodProcessTokenizationSession = Event & {
   /** Channel related to the requested action. */
   readonly channel: Channel;
@@ -19001,10 +18537,24 @@ export type PaymentMethodTokenizationResult =
   | 'SUCCESSFULLY_TOKENIZED';
 
 /**
- * Process payment.
+ * Represents possible payment method types.
  *
- * Added in Saleor 3.6.
+ *     The following types are possible:
+ *     CARD - represents a card payment method.
+ *     OTHER - represents any payment method that is not a card payment.
  */
+export type PaymentMethodTypeEnum =
+  | 'CARD'
+  | 'OTHER';
+
+export type PaymentMethodTypeEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<PaymentMethodTypeEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<PaymentMethodTypeEnum>>;
+};
+
+/** Process payment. */
 export type PaymentProcessEvent = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -19027,15 +18577,11 @@ export type PaymentRefund = {
   readonly errors: ReadonlyArray<PaymentError>;
   /** Updated payment. */
   readonly payment?: Maybe<Payment>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly paymentErrors: ReadonlyArray<PaymentError>;
 };
 
-/**
- * Refund payment.
- *
- * Added in Saleor 3.6.
- */
+/** Refund payment. */
 export type PaymentRefundEvent = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -19052,24 +18598,48 @@ export type PaymentRefundEvent = Event & {
 /** Represents the channel-specific payment settings. */
 export type PaymentSettings = {
   /**
-   * Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
+   * Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
    *
-   * Added in Saleor 3.16.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   * Added in Saleor 3.20.
    */
+  readonly checkoutReleaseFundsCutOffDate?: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * The time in hours after which funds for expired checkouts will be released.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutTtlBeforeReleasingFunds?: Maybe<Scalars['Hour']['output']>;
+  /** Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction. */
   readonly defaultTransactionFlowStrategy: TransactionFlowStrategyEnum;
+  /**
+   * Determine if the funds for expired checkouts should be released automatically.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly releaseFundsForExpiredCheckouts?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type PaymentSettingsInput = {
   /**
-   * Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
+   * Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
    *
-   * Added in Saleor 3.16.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   * Added in Saleor 3.20.
    */
+  readonly checkoutReleaseFundsCutOffDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /**
+   * The time in hours after which funds for expired checkouts will be released.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutTtlBeforeReleasingFunds?: InputMaybe<Scalars['Hour']['input']>;
+  /** Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction. */
   readonly defaultTransactionFlowStrategy?: InputMaybe<TransactionFlowStrategyEnum>;
+  /**
+   * Determine if the funds for expired checkouts should be released automatically.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly releaseFundsForExpiredCheckouts?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Represents a payment source stored for user in payment gateway, such as credit card. */
@@ -19080,8 +18650,6 @@ export type PaymentSource = {
   readonly gateway: Scalars['String']['output'];
   /**
    * List of public metadata items.
-   *
-   * Added in Saleor 3.1.
    *
    * Can be accessed without permissions.
    */
@@ -19099,15 +18667,11 @@ export type PaymentVoid = {
   readonly errors: ReadonlyArray<PaymentError>;
   /** Updated payment. */
   readonly payment?: Maybe<Payment>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly paymentErrors: ReadonlyArray<PaymentError>;
 };
 
-/**
- * Void payment.
- *
- * Added in Saleor 3.6.
- */
+/** Void payment. */
 export type PaymentVoidEvent = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -19166,18 +18730,12 @@ export type PermissionEnum =
 export type PermissionGroupCreate = {
   readonly errors: ReadonlyArray<PermissionGroupError>;
   readonly group?: Maybe<Group>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly permissionGroupErrors: ReadonlyArray<PermissionGroupError>;
 };
 
 export type PermissionGroupCreateInput = {
-  /**
-   * List of channels to assign to this group.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of channels to assign to this group. */
   readonly addChannels?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** List of permission code names to assign to this group. */
   readonly addPermissions?: InputMaybe<ReadonlyArray<PermissionEnum>>;
@@ -19185,21 +18743,11 @@ export type PermissionGroupCreateInput = {
   readonly addUsers?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Group name. */
   readonly name: Scalars['String']['input'];
-  /**
-   * Determine if the group has restricted access to channels.  DEFAULT: False
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Determine if the group has restricted access to channels.  DEFAULT: False */
   readonly restrictedAccessToChannels?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/**
- * Event sent when new permission group is created.
- *
- * Added in Saleor 3.6.
- */
+/** Event sent when new permission group is created. */
 export type PermissionGroupCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -19224,15 +18772,11 @@ export type PermissionGroupCreated = Event & {
 export type PermissionGroupDelete = {
   readonly errors: ReadonlyArray<PermissionGroupError>;
   readonly group?: Maybe<Group>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly permissionGroupErrors: ReadonlyArray<PermissionGroupError>;
 };
 
-/**
- * Event sent when permission group is deleted.
- *
- * Added in Saleor 3.6.
- */
+/** Event sent when permission group is deleted. */
 export type PermissionGroupDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -19300,18 +18844,12 @@ export type PermissionGroupSortingInput = {
 export type PermissionGroupUpdate = {
   readonly errors: ReadonlyArray<PermissionGroupError>;
   readonly group?: Maybe<Group>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly permissionGroupErrors: ReadonlyArray<PermissionGroupError>;
 };
 
 export type PermissionGroupUpdateInput = {
-  /**
-   * List of channels to assign to this group.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of channels to assign to this group. */
   readonly addChannels?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** List of permission code names to assign to this group. */
   readonly addPermissions?: InputMaybe<ReadonlyArray<PermissionEnum>>;
@@ -19319,33 +18857,17 @@ export type PermissionGroupUpdateInput = {
   readonly addUsers?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Group name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * List of channels to unassign from this group.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of channels to unassign from this group. */
   readonly removeChannels?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** List of permission code names to unassign from this group. */
   readonly removePermissions?: InputMaybe<ReadonlyArray<PermissionEnum>>;
   /** List of users to unassign from this group. */
   readonly removeUsers?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * Determine if the group has restricted access to channels.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Determine if the group has restricted access to channels. */
   readonly restrictedAccessToChannels?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/**
- * Event sent when permission group is updated.
- *
- * Added in Saleor 3.6.
- */
+/** Event sent when permission group is updated. */
 export type PermissionGroupUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -19449,7 +18971,7 @@ export type PluginStatusInChannelsInput = {
 export type PluginUpdate = {
   readonly errors: ReadonlyArray<PluginError>;
   readonly plugin?: Maybe<Plugin>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly pluginsErrors: ReadonlyArray<PluginError>;
 };
 
@@ -19497,6 +19019,13 @@ export type PreorderThreshold = {
   readonly soldUnits: Scalars['Int']['output'];
 };
 
+export type PriceFilterInput = {
+  /** The amount of the price to filter by. */
+  readonly amount: DecimalFilterInput;
+  /** The currency of the price to filter by. */
+  readonly currency?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PriceInput = {
   /** Amount of money. */
   readonly amount: Scalars['PositiveDecimal']['input'];
@@ -19512,18 +19041,32 @@ export type PriceRangeInput = {
 };
 
 /** Represents an individual item for sale in the storefront. */
-export type Product = Node & ObjectWithMetadata & {
+export type Product = Node & ObjectWithAttributes & ObjectWithMetadata & {
   /**
    * Get a single attribute attached to product by attribute slug.
    *
-   * Added in Saleor 3.9.
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this product.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   * @deprecated Use the `assignedAttribute` field instead.
    */
   readonly attribute?: Maybe<SelectedAttribute>;
-  /** List of attributes assigned to this product. */
+  /**
+   * List of attributes assigned to this product.
+   * @deprecated Use the `assignedAttributes` field instead.
+   */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /**
    * Date when product is available for purchase.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `availableForPurchaseAt` field to fetch the available for purchase date.
+   * @deprecated Use the `availableForPurchaseAt` field to fetch the available for purchase date.
    */
   readonly availableForPurchase?: Maybe<Scalars['Date']['output']>;
   /** Date when product is available for purchase. */
@@ -19537,7 +19080,7 @@ export type Product = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   readonly channelListings?: Maybe<ReadonlyArray<ProductChannelListing>>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `Channel.taxConfiguration` field to determine whether tax collection is enabled. */
+  /** @deprecated Use `Channel.taxConfiguration` field to determine whether tax collection is enabled. */
   readonly chargeTaxes: Scalars['Boolean']['output'];
   /** List of collections for the product. Requires the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   readonly collections?: Maybe<ReadonlyArray<Collection>>;
@@ -19555,25 +19098,21 @@ export type Product = Node & ObjectWithMetadata & {
    * Description of the product.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `description` field instead.
+   * @deprecated Use the `description` field instead.
    */
   readonly descriptionJson?: Maybe<Scalars['JSONString']['output']>;
-  /**
-   * External ID of this product.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this product. */
   readonly externalReference?: Maybe<Scalars['String']['output']>;
   /** The ID of the product. */
   readonly id: Scalars['ID']['output'];
   /**
    * Get a single product image by ID.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `mediaById` field instead.
+   * @deprecated Use the `mediaById` field instead.
    */
   readonly imageById?: Maybe<ProductImage>;
   /**
    * List of images for the product.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `media` field instead.
+   * @deprecated Use the `media` field instead.
    */
   readonly images?: Maybe<ReadonlyArray<ProductImage>>;
   /** Whether the product is in stock, set as available for purchase in the given channel, and published. */
@@ -19590,15 +19129,9 @@ export type Product = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** SEO description of the product. */
   readonly name: Scalars['String']['output'];
@@ -19610,18 +19143,18 @@ export type Product = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Type of the product. */
   readonly productType: ProductType;
+  /**
+   * List of variants for the product. Requires the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly productVariants?: Maybe<ProductVariantCountableConnection>;
   /** Rating of the product. */
   readonly rating?: Maybe<Scalars['Float']['output']>;
   /** SEO description of the product. */
@@ -19638,7 +19171,7 @@ export type Product = Node & ObjectWithMetadata & {
   readonly taxClass?: Maybe<TaxClass>;
   /**
    * A type of tax. Assigned by enabled tax gateway
-   * @deprecated This field will be removed in Saleor 4.0. Use `taxClass` field instead.
+   * @deprecated Use `taxClass` field instead.
    */
   readonly taxType?: Maybe<TaxType>;
   /** Thumbnail of the product. */
@@ -19649,15 +19182,28 @@ export type Product = Node & ObjectWithMetadata & {
   readonly updatedAt: Scalars['DateTime']['output'];
   /**
    * Get a single variant by SKU or ID.
-   *
-   * Added in Saleor 3.9.
-   * @deprecated This field will be removed in Saleor 4.0. Use top-level `variant` query.
+   * @deprecated Use top-level `variant` query.
    */
   readonly variant?: Maybe<ProductVariant>;
-  /** List of variants for the product. Requires the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
+  /**
+   * List of variants for the product. Requires the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS.
+   * @deprecated Use `productVariants` field instead.
+   */
   readonly variants?: Maybe<ReadonlyArray<ProductVariant>>;
   /** Weight of the product. */
   readonly weight?: Maybe<Weight>;
+};
+
+
+/** Represents an individual item for sale in the storefront. */
+export type ProductAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** Represents an individual item for sale in the storefront. */
+export type ProductAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -19722,6 +19268,18 @@ export type ProductPrivateMetafieldsArgs = {
 
 
 /** Represents an individual item for sale in the storefront. */
+export type ProductProductVariantsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<ProductVariantFilterInput>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<ProductVariantSortingInput>;
+  where?: InputMaybe<ProductVariantWhereInput>;
+};
+
+
+/** Represents an individual item for sale in the storefront. */
 export type ProductThumbnailArgs = {
   format?: InputMaybe<ThumbnailFormatEnum>;
   size?: InputMaybe<Scalars['Int']['input']>;
@@ -19747,7 +19305,7 @@ export type ProductVariantArgs = {
  */
 export type ProductAttributeAssign = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   /** The updated product type. */
   readonly productType?: Maybe<ProductType>;
@@ -19758,24 +19316,18 @@ export type ProductAttributeAssignInput = {
   readonly id: Scalars['ID']['input'];
   /** The attribute type to be assigned as. */
   readonly type: ProductAttributeType;
-  /**
-   * Whether attribute is allowed in variant selection. Allowed types are: ['dropdown', 'boolean', 'swatch', 'numeric'].
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Whether attribute is allowed in variant selection. Allowed types are: ['dropdown', 'boolean', 'swatch', 'numeric']. */
   readonly variantSelection?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /**
  * Update attributes assigned to product variant for given product type.
  *
- * Added in Saleor 3.1.
- *
  * Requires one of the following permissions: MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
  */
 export type ProductAttributeAssignmentUpdate = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   /** The updated product type. */
   readonly productType?: Maybe<ProductType>;
@@ -19784,11 +19336,7 @@ export type ProductAttributeAssignmentUpdate = {
 export type ProductAttributeAssignmentUpdateInput = {
   /** The ID of the attribute to assign. */
   readonly id: Scalars['ID']['input'];
-  /**
-   * Whether attribute is allowed in variant selection. Allowed types are: ['dropdown', 'boolean', 'swatch', 'numeric'].
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Whether attribute is allowed in variant selection. Allowed types are: ['dropdown', 'boolean', 'swatch', 'numeric']. */
   readonly variantSelection: Scalars['Boolean']['input'];
 };
 
@@ -19803,7 +19351,7 @@ export type ProductAttributeType =
  */
 export type ProductAttributeUnassign = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   /** The updated product type. */
   readonly productType?: Maybe<ProductType>;
@@ -19811,10 +19359,6 @@ export type ProductAttributeUnassign = {
 
 /**
  * Creates products.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -19869,8 +19413,7 @@ export type ProductBulkCreateInput = {
   readonly channelListings?: InputMaybe<ReadonlyArray<ProductChannelListingCreateInput>>;
   /**
    * Determine if taxes are being charged for the product.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `Channel.taxConfiguration` to configure whether tax collection is enabled.
+   * @deprecated Use `Channel.taxConfiguration` to configure whether tax collection is enabled.
    */
   readonly chargeTaxes?: InputMaybe<Scalars['Boolean']['input']>;
   /** List of IDs of collections that the product belongs to. */
@@ -19885,11 +19428,19 @@ export type ProductBulkCreateInput = {
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** List of media inputs associated with the product. */
   readonly media?: InputMaybe<ReadonlyArray<MediaInput>>;
-  /** Fields required to update the product metadata. */
+  /**
+   * Fields required to update the product metadata. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Product name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /** Fields required to update the product private metadata. */
+  /**
+   * Fields required to update the product private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** ID of the type that product belongs to. */
   readonly productType: Scalars['ID']['input'];
@@ -19903,8 +19454,7 @@ export type ProductBulkCreateInput = {
   readonly taxClass?: InputMaybe<Scalars['ID']['input']>;
   /**
    * Tax rate for enabled tax gateway.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use tax classes to control the tax calculation for a product. If taxCode is provided, Saleor will try to find a tax class with given code (codes are stored in metadata) and assign it. If no tax class is found, it would be created and assigned.
+   * @deprecated Use tax classes to control the tax calculation for a product. If taxCode is provided, Saleor will try to find a tax class with given code (codes are stored in metadata) and assign it. If no tax class is found, it would be created and assigned.
    */
   readonly taxCode?: InputMaybe<Scalars['String']['input']>;
   /** Input list of product variants to create. */
@@ -19922,7 +19472,7 @@ export type ProductBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -19935,10 +19485,6 @@ export type ProductBulkResult = {
 
 /**
  * Creates/updates translations for products.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  *
@@ -19983,13 +19529,9 @@ export type ProductBulkTranslateResult = {
 
 /** Represents product channel listing. */
 export type ProductChannelListing = Node & {
-  /** @deprecated This field will be removed in Saleor 4.0. Use the `availableForPurchaseAt` field to fetch the available for purchase date. */
+  /** @deprecated Use the `availableForPurchaseAt` field to fetch the available for purchase date. */
   readonly availableForPurchase?: Maybe<Scalars['Date']['output']>;
-  /**
-   * The product available for purchase date time.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** The product available for purchase date time. */
   readonly availableForPurchaseAt?: Maybe<Scalars['DateTime']['output']>;
   /** The channel in which the product is listed. */
   readonly channel: Channel;
@@ -20009,13 +19551,9 @@ export type ProductChannelListing = Node & {
   readonly margin?: Maybe<Margin>;
   /** Lists the storefront product's pricing, the current price and discounts, only meant for displaying. */
   readonly pricing?: Maybe<ProductPricingInfo>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use the `publishedAt` field to fetch the publication date. */
+  /** @deprecated Use the `publishedAt` field to fetch the publication date. */
   readonly publicationDate?: Maybe<Scalars['Date']['output']>;
-  /**
-   * The product publication date time.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** The product publication date time. */
   readonly publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /**
    * Purchase cost of product.
@@ -20036,16 +19574,11 @@ export type ProductChannelListingPricingArgs = {
 export type ProductChannelListingAddInput = {
   /** List of variants to which the channel should be assigned. */
   readonly addVariants?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * A start date time from which a product will be available for purchase. When not set and `isAvailable` is set to True, the current day is assumed.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** A start date time from which a product will be available for purchase. When not set and `isAvailable` is set to True, the current day is assumed. */
   readonly availableForPurchaseAt?: InputMaybe<Scalars['DateTime']['input']>;
   /**
    * A start date from which a product will be available for purchase. When not set and isAvailable is set to True, the current day is assumed.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `availableForPurchaseAt` field instead.
+   * @deprecated Use `availableForPurchaseAt` field instead.
    */
   readonly availableForPurchaseDate?: InputMaybe<Scalars['Date']['input']>;
   /** ID of a channel. */
@@ -20056,15 +19589,10 @@ export type ProductChannelListingAddInput = {
   readonly isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Publication date. ISO 8601 standard.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `publishedAt` field instead.
+   * @deprecated Use `publishedAt` field instead.
    */
   readonly publicationDate?: InputMaybe<Scalars['Date']['input']>;
-  /**
-   * Publication date time. ISO 8601 standard.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Publication date time. ISO 8601 standard. */
   readonly publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
   /** List of variants from which the channel should be unassigned. */
   readonly removeVariants?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
@@ -20113,7 +19641,7 @@ export type ProductChannelListingUpdate = {
   readonly errors: ReadonlyArray<ProductChannelListingError>;
   /** An updated product instance. */
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productChannelListingErrors: ReadonlyArray<ProductChannelListingError>;
 };
 
@@ -20147,7 +19675,7 @@ export type ProductCountableEdge = {
 export type ProductCreate = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -20158,8 +19686,7 @@ export type ProductCreateInput = {
   readonly category?: InputMaybe<Scalars['ID']['input']>;
   /**
    * Determine if taxes are being charged for the product.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `Channel.taxConfiguration` to configure whether tax collection is enabled.
+   * @deprecated Use `Channel.taxConfiguration` to configure whether tax collection is enabled.
    */
   readonly chargeTaxes?: InputMaybe<Scalars['Boolean']['input']>;
   /** List of IDs of collections that the product belongs to. */
@@ -20170,24 +19697,20 @@ export type ProductCreateInput = {
    * Rich text format. For reference see https://editorjs.io/
    */
   readonly description?: InputMaybe<Scalars['JSONString']['input']>;
-  /**
-   * External ID of this product.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this product. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the product metadata.
+   * Fields required to update the product metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Product name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the product private metadata.
+   * Fields required to update the product private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** ID of the type that product belongs to. */
@@ -20202,19 +19725,14 @@ export type ProductCreateInput = {
   readonly taxClass?: InputMaybe<Scalars['ID']['input']>;
   /**
    * Tax rate for enabled tax gateway.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use tax classes to control the tax calculation for a product. If taxCode is provided, Saleor will try to find a tax class with given code (codes are stored in metadata) and assign it. If no tax class is found, it would be created and assigned.
+   * @deprecated Use tax classes to control the tax calculation for a product. If taxCode is provided, Saleor will try to find a tax class with given code (codes are stored in metadata) and assign it. If no tax class is found, it would be created and assigned.
    */
   readonly taxCode?: InputMaybe<Scalars['String']['input']>;
   /** Weight of the Product. */
   readonly weight?: InputMaybe<Scalars['WeightScalar']['input']>;
 };
 
-/**
- * Event sent when new product is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new product is created. */
 export type ProductCreated = Event & {
   /** The category of the product. */
   readonly category?: Maybe<Category>;
@@ -20231,11 +19749,7 @@ export type ProductCreated = Event & {
 };
 
 
-/**
- * Event sent when new product is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new product is created. */
 export type ProductCreatedProductArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -20248,15 +19762,11 @@ export type ProductCreatedProductArgs = {
 export type ProductDelete = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
-/**
- * Event sent when product is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product is deleted. */
 export type ProductDeleted = Event & {
   /** The category of the product. */
   readonly category?: Maybe<Category>;
@@ -20273,11 +19783,7 @@ export type ProductDeleted = Event & {
 };
 
 
-/**
- * Event sent when product is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product is deleted. */
 export type ProductDeletedProductArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -20317,11 +19823,7 @@ export type ProductErrorCode =
   | 'UNSUPPORTED_MEDIA_PROVIDER'
   | 'VARIANT_NO_DIGITAL_CONTENT';
 
-/**
- * Event sent when product export is completed.
- *
- * Added in Saleor 3.16.
- */
+/** Event sent when product export is completed. */
 export type ProductExportCompleted = Event & {
   /** The export file for products. */
   readonly export?: Maybe<ExportFile>;
@@ -20351,17 +19853,12 @@ export type ProductFieldEnum =
 
 export type ProductFilterInput = {
   readonly attributes?: InputMaybe<ReadonlyArray<AttributeInput>>;
-  /**
-   * Filter by the date of availability for purchase.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Filter by the date of availability for purchase. */
   readonly availableFrom?: InputMaybe<Scalars['DateTime']['input']>;
   readonly categories?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /**
    * Specifies the channel by which the data should be filtered.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+   * @deprecated Use root-level channel argument instead.
    */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
   readonly collections?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
@@ -20370,29 +19867,17 @@ export type ProductFilterInput = {
   readonly hasCategory?: InputMaybe<Scalars['Boolean']['input']>;
   readonly hasPreorderedVariants?: InputMaybe<Scalars['Boolean']['input']>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * Filter by availability for purchase.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Filter by availability for purchase. */
   readonly isAvailable?: InputMaybe<Scalars['Boolean']['input']>;
   readonly isPublished?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * Filter by visibility in product listings.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Filter by visibility in product listings. */
   readonly isVisibleInListing?: InputMaybe<Scalars['Boolean']['input']>;
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
   /** Filter by the lowest variant price after discounts. */
   readonly minimalPrice?: InputMaybe<PriceRangeInput>;
   readonly price?: InputMaybe<PriceRangeInput>;
   readonly productTypes?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /**
-   * Filter by the publication date.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Filter by the publication date. */
   readonly publishedFrom?: InputMaybe<Scalars['DateTime']['input']>;
   readonly search?: InputMaybe<Scalars['String']['input']>;
   readonly slugs?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
@@ -20429,8 +19914,7 @@ export type ProductInput = {
   readonly category?: InputMaybe<Scalars['ID']['input']>;
   /**
    * Determine if taxes are being charged for the product.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `Channel.taxConfiguration` to configure whether tax collection is enabled.
+   * @deprecated Use `Channel.taxConfiguration` to configure whether tax collection is enabled.
    */
   readonly chargeTaxes?: InputMaybe<Scalars['Boolean']['input']>;
   /** List of IDs of collections that the product belongs to. */
@@ -20441,24 +19925,20 @@ export type ProductInput = {
    * Rich text format. For reference see https://editorjs.io/
    */
   readonly description?: InputMaybe<Scalars['JSONString']['input']>;
-  /**
-   * External ID of this product.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this product. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the product metadata.
+   * Fields required to update the product metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Product name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the product private metadata.
+   * Fields required to update the product private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Defines the product rating value. */
@@ -20471,8 +19951,7 @@ export type ProductInput = {
   readonly taxClass?: InputMaybe<Scalars['ID']['input']>;
   /**
    * Tax rate for enabled tax gateway.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use tax classes to control the tax calculation for a product. If taxCode is provided, Saleor will try to find a tax class with given code (codes are stored in metadata) and assign it. If no tax class is found, it would be created and assigned.
+   * @deprecated Use tax classes to control the tax calculation for a product. If taxCode is provided, Saleor will try to find a tax class with given code (codes are stored in metadata) and assign it. If no tax class is found, it would be created and assigned.
    */
   readonly taxCode?: InputMaybe<Scalars['String']['input']>;
   /** Weight of the Product. */
@@ -20485,53 +19964,29 @@ export type ProductMedia = Node & ObjectWithMetadata & {
   readonly alt: Scalars['String']['output'];
   /** The unique ID of the product media. */
   readonly id: Scalars['ID']['output'];
-  /**
-   * List of public metadata items. Can be accessed without permissions.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** List of public metadata items. Can be accessed without permissions. */
   readonly metadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.12.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** The oEmbed data of the media. */
   readonly oembedData: Scalars['JSONString']['output'];
-  /**
-   * List of private metadata items. Requires staff permissions to access.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.12.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
-  /**
-   * Product id the media refers to.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Product id the media refers to. */
   readonly productId?: Maybe<Scalars['ID']['output']>;
   /** The sort order of the media. */
   readonly sortOrder?: Maybe<Scalars['Int']['output']>;
@@ -20581,7 +20036,7 @@ export type ProductMediaBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -20594,7 +20049,7 @@ export type ProductMediaCreate = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -20609,11 +20064,7 @@ export type ProductMediaCreateInput = {
   readonly product: Scalars['ID']['input'];
 };
 
-/**
- * Event sent when new product media is created.
- *
- * Added in Saleor 3.12.
- */
+/** Event sent when new product media is created. */
 export type ProductMediaCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -20636,15 +20087,11 @@ export type ProductMediaDelete = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
-/**
- * Event sent when product media is deleted.
- *
- * Added in Saleor 3.12.
- */
+/** Event sent when product media is deleted. */
 export type ProductMediaDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -20667,7 +20114,7 @@ export type ProductMediaReorder = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ReadonlyArray<ProductMedia>>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -20684,7 +20131,7 @@ export type ProductMediaUpdate = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -20693,11 +20140,7 @@ export type ProductMediaUpdateInput = {
   readonly alt?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when product media is updated.
- *
- * Added in Saleor 3.12.
- */
+/** Event sent when product media is updated. */
 export type ProductMediaUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -20711,11 +20154,7 @@ export type ProductMediaUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Event sent when product metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when product metadata is updated. */
 export type ProductMetadataUpdated = Event & {
   /** The category of the product. */
   readonly category?: Maybe<Category>;
@@ -20732,11 +20171,7 @@ export type ProductMetadataUpdated = Event & {
 };
 
 
-/**
- * Event sent when product metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when product metadata is updated. */
 export type ProductMetadataUpdatedProductArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -20749,8 +20184,7 @@ export type ProductOrder = {
   readonly attributeId?: InputMaybe<Scalars['ID']['input']>;
   /**
    * Specifies the channel in which to sort the data.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+   * @deprecated Use root-level channel argument instead.
    */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
   /** Specifies the direction in which to sort products. */
@@ -20766,11 +20200,7 @@ export type ProductOrderField =
    * This option requires a channel filter to work as the values can vary between channels.
    */
   | 'COLLECTION'
-  /**
-   * Sort products by creation date.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Sort products by creation date. */
   | 'CREATED_AT'
   /** Sort products by update date. */
   | 'DATE'
@@ -20823,14 +20253,16 @@ export type ProductPricingInfo = {
   readonly discount?: Maybe<TaxedMoney>;
   /**
    * The discount amount in the local currency.
-   * @deprecated This field will be removed in Saleor 4.0. Always returns `null`.
+   * @deprecated Always returns `null`.
    */
   readonly discountLocalCurrency?: Maybe<TaxedMoney>;
   /**
-   * Determines whether displayed prices should include taxes.
+   * The discount amount compared to prior price. Null if product is not on sale or prior price was not provided in VariantChannelListing
    *
-   * Added in Saleor 3.9.
+   * Added in Saleor 3.21.
    */
+  readonly discountPrior?: Maybe<TaxedMoney>;
+  /** Determines whether displayed prices should include taxes. */
   readonly displayGrossPrices: Scalars['Boolean']['output'];
   /** Whether it is in sale or not. */
   readonly onSale?: Maybe<Scalars['Boolean']['output']>;
@@ -20838,9 +20270,15 @@ export type ProductPricingInfo = {
   readonly priceRange?: Maybe<TaxedMoneyRange>;
   /**
    * The discounted price range of the product variants in the local currency.
-   * @deprecated This field will be removed in Saleor 4.0. Always returns `null`.
+   * @deprecated Always returns `null`.
    */
   readonly priceRangeLocalCurrency?: Maybe<TaxedMoneyRange>;
+  /**
+   * The prior price range of the product variants.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly priceRangePrior?: Maybe<TaxedMoneyRange>;
   /** The undiscounted price range of the product variants. */
   readonly priceRangeUndiscounted?: Maybe<TaxedMoneyRange>;
 };
@@ -20854,7 +20292,7 @@ export type ProductReorderAttributeValues = {
   readonly errors: ReadonlyArray<ProductError>;
   /** Product from which attribute values are reordered. */
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -20877,7 +20315,7 @@ export type ProductTranslatableContent = Node & {
    * Description of the product.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `description` field instead.
+   * @deprecated Use the `description` field instead.
    */
   readonly descriptionJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the product translatable content. */
@@ -20886,19 +20324,21 @@ export type ProductTranslatableContent = Node & {
   readonly name: Scalars['String']['output'];
   /**
    * Represents an individual item for sale in the storefront.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly product?: Maybe<Product>;
-  /**
-   * The ID of the product to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the product to translate. */
   readonly productId: Scalars['ID']['output'];
   /** SEO description to translate. */
   readonly seoDescription?: Maybe<Scalars['String']['output']>;
   /** SEO title to translate. */
   readonly seoTitle?: Maybe<Scalars['String']['output']>;
+  /**
+   * Slug to translate.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly slug?: Maybe<Scalars['String']['output']>;
   /** Returns translated product fields for the given language code. */
   readonly translation?: Maybe<ProductTranslation>;
 };
@@ -20917,7 +20357,7 @@ export type ProductTranslatableContentTranslationArgs = {
 export type ProductTranslate = {
   readonly errors: ReadonlyArray<TranslationError>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -20939,7 +20379,7 @@ export type ProductTranslation = Node & {
    * Translated description of the product.
    *
    * Rich text format. For reference see https://editorjs.io/
-   * @deprecated This field will be removed in Saleor 4.0. Use the `description` field instead.
+   * @deprecated Use the `description` field instead.
    */
   readonly descriptionJson?: Maybe<Scalars['JSONString']['output']>;
   /** The ID of the product translation. */
@@ -20953,20 +20393,18 @@ export type ProductTranslation = Node & {
   /** Translated SEO title. */
   readonly seoTitle?: Maybe<Scalars['String']['output']>;
   /**
-   * Represents the product fields to translate.
+   * Translated product slug.
    *
-   * Added in Saleor 3.14.
+   * Added in Saleor 3.21.
    */
+  readonly slug?: Maybe<Scalars['String']['output']>;
+  /** Represents the product fields to translate. */
   readonly translatableContent?: Maybe<ProductTranslatableContent>;
 };
 
 /** Represents a type of product. It defines what attributes are available to products of this type. */
 export type ProductType = Node & ObjectWithMetadata & {
-  /**
-   * Variant attributes of that product type with attached variant selection.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Variant attributes of that product type with attached variant selection. */
   readonly assignedVariantAttributes?: Maybe<ReadonlyArray<AssignedVariantAttribute>>;
   /**
    * List of attributes which can be assigned to this product type.
@@ -20990,15 +20428,9 @@ export type ProductType = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Name of the product type. */
   readonly name: Scalars['String']['output'];
@@ -21008,21 +20440,15 @@ export type ProductType = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Product attributes of that product type. */
   readonly productAttributes?: Maybe<ReadonlyArray<Attribute>>;
   /**
    * List of products of this type.
-   * @deprecated This field will be removed in Saleor 4.0. Use the top-level `products` query with the `productTypes` filter.
+   * @deprecated Use the top-level `products` query with the `productTypes` filter.
    */
   readonly products?: Maybe<ProductCountableConnection>;
   /** Slug of the product type. */
@@ -21035,12 +20461,12 @@ export type ProductType = Node & ObjectWithMetadata & {
   readonly taxClass?: Maybe<TaxClass>;
   /**
    * A type of tax. Assigned by enabled tax gateway
-   * @deprecated This field will be removed in Saleor 4.0. Use `taxClass` field instead.
+   * @deprecated Use `taxClass` field instead.
    */
   readonly taxType?: Maybe<TaxType>;
   /**
    * Variant attributes of that product type.
-   * @deprecated This field will be removed in Saleor 4.0. Use `assignedVariantAttributes` instead.
+   * @deprecated Use `assignedVariantAttributes` instead.
    */
   readonly variantAttributes?: Maybe<ReadonlyArray<Attribute>>;
   /** Weight of the product type. */
@@ -21061,6 +20487,7 @@ export type ProductTypeAvailableAttributesArgs = {
   filter?: InputMaybe<AttributeFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<AttributeWhereInput>;
 };
 
@@ -21113,7 +20540,7 @@ export type ProductTypeBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -21143,7 +20570,7 @@ export type ProductTypeCountableEdge = {
  */
 export type ProductTypeCreate = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly productType?: Maybe<ProductType>;
 };
@@ -21155,7 +20582,7 @@ export type ProductTypeCreate = {
  */
 export type ProductTypeDelete = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly productType?: Maybe<ProductType>;
 };
@@ -21193,8 +20620,7 @@ export type ProductTypeInput = {
   readonly taxClass?: InputMaybe<Scalars['ID']['input']>;
   /**
    * Tax rate for enabled tax gateway.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.. Use tax classes to control the tax calculation for a product type. If taxCode is provided, Saleor will try to find a tax class with given code (codes are stored in metadata) and assign it. If no tax class is found, it would be created and assigned.
+   * @deprecated Use tax classes to control the tax calculation for a product type. If taxCode is provided, Saleor will try to find a tax class with given code (codes are stored in metadata) and assign it. If no tax class is found, it would be created and assigned.
    */
   readonly taxCode?: InputMaybe<Scalars['String']['input']>;
   /** List of attributes used to distinguish between different variants of a product. */
@@ -21214,7 +20640,7 @@ export type ProductTypeKindEnum =
  */
 export type ProductTypeReorderAttributes = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   /** Product type from which attributes are reordered. */
   readonly productType?: Maybe<ProductType>;
@@ -21242,7 +20668,7 @@ export type ProductTypeSortingInput = {
  */
 export type ProductTypeUpdate = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly productType?: Maybe<ProductType>;
 };
@@ -21255,15 +20681,11 @@ export type ProductTypeUpdate = {
 export type ProductUpdate = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
-/**
- * Event sent when product is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product is updated. */
 export type ProductUpdated = Event & {
   /** The category of the product. */
   readonly category?: Maybe<Category>;
@@ -21280,18 +20702,29 @@ export type ProductUpdated = Event & {
 };
 
 
-/**
- * Event sent when product is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product is updated. */
 export type ProductUpdatedProductArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents a version of a product such as different size or color. */
-export type ProductVariant = Node & ObjectWithMetadata & {
-  /** List of attributes assigned to this variant. */
+export type ProductVariant = Node & ObjectWithAttributes & ObjectWithMetadata & {
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this variant.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this variant.
+   * @deprecated Use the `assignedAttributes` field instead.
+   */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /** Channel given to retrieve this product variant. Also used by federation gateway to resolve this object in a federated query. */
   readonly channel?: Maybe<Scalars['String']['output']>;
@@ -21309,17 +20742,13 @@ export type ProductVariant = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   readonly digitalContent?: Maybe<DigitalContent>;
-  /**
-   * External ID of this product.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this product. */
   readonly externalReference?: Maybe<Scalars['String']['output']>;
   /** The ID of the product variant. */
   readonly id: Scalars['ID']['output'];
   /**
    * List of images for the product variant.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `media` field instead.
+   * @deprecated Use the `media` field instead.
    */
   readonly images?: Maybe<ReadonlyArray<ProductImage>>;
   /** Gross margin percentage value. */
@@ -21332,23 +20761,13 @@ export type ProductVariant = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** The name of the product variant. */
   readonly name: Scalars['String']['output'];
-  /**
-   * Preorder data for product variant.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Preorder data for product variant. */
   readonly preorder?: Maybe<PreorderData>;
   /** Lists the storefront variant's pricing, the current price and discounts, only meant for displaying. */
   readonly pricing?: Maybe<VariantPricingInfo>;
@@ -21358,15 +20777,9 @@ export type ProductVariant = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** The product to which the variant belongs. */
   readonly product: Product;
@@ -21402,6 +20815,18 @@ export type ProductVariant = Node & ObjectWithMetadata & {
   readonly updatedAt: Scalars['DateTime']['output'];
   /** The weight of the product variant. */
   readonly weight?: Maybe<Weight>;
+};
+
+
+/** Represents a version of a product such as different size or color. */
+export type ProductVariantAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** Represents a version of a product such as different size or color. */
+export type ProductVariantAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -21466,11 +20891,7 @@ export type ProductVariantTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
-/**
- * Event sent when product variant is back in stock.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product variant is back in stock. */
 export type ProductVariantBackInStock = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -21487,11 +20908,7 @@ export type ProductVariantBackInStock = Event & {
 };
 
 
-/**
- * Event sent when product variant is back in stock.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product variant is back in stock. */
 export type ProductVariantBackInStockProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -21502,18 +20919,14 @@ export type ProductVariantBackInStockProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantBulkCreate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly bulkProductErrors: ReadonlyArray<BulkProductError>;
   /** Returns how many objects were created. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<BulkProductError>;
-  /** List of the created variants.This field will be removed in Saleor 4.0. */
+  /** List of the created variants. */
   readonly productVariants: ReadonlyArray<ProductVariant>;
-  /**
-   * List of the created variants.
-   *
-   * Added in Saleor 3.11.
-   */
+  /** List of the created variants. */
   readonly results: ReadonlyArray<ProductVariantBulkResult>;
 };
 
@@ -21522,37 +20935,25 @@ export type ProductVariantBulkCreateInput = {
   readonly attributes: ReadonlyArray<BulkAttributeValueInput>;
   /** List of prices assigned to channels. */
   readonly channelListings?: InputMaybe<ReadonlyArray<ProductVariantChannelListingAddInput>>;
-  /**
-   * External ID of this product variant.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this product variant. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the product variant metadata.
+   * Fields required to update the product variant metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Variant name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Determines if variant is in preorder.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Determines if variant is in preorder. */
   readonly preorder?: InputMaybe<PreorderSettingsInput>;
   /**
-   * Fields required to update the product variant private metadata.
+   * Fields required to update the product variant private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
-  /**
-   * Determines maximum quantity of `ProductVariant`,that can be bought in a single checkout.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Determines maximum quantity of `ProductVariant`,that can be bought in a single checkout. */
   readonly quantityLimitPerCustomer?: InputMaybe<Scalars['Int']['input']>;
   /** Stock keeping unit. */
   readonly sku?: InputMaybe<Scalars['String']['input']>;
@@ -21573,7 +20974,7 @@ export type ProductVariantBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -21582,11 +20983,7 @@ export type ProductVariantBulkError = {
   readonly attributes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of channel listings IDs which causes the error. */
   readonly channelListings?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
-  /**
-   * List of channel IDs which causes the error.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** List of channel IDs which causes the error. */
   readonly channels?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
   readonly code: ProductVariantBulkErrorCode;
@@ -21594,17 +20991,9 @@ export type ProductVariantBulkError = {
   readonly field?: Maybe<Scalars['String']['output']>;
   /** The error message. */
   readonly message?: Maybe<Scalars['String']['output']>;
-  /**
-   * Path to field that caused the error. A value of `null` indicates that the error isn't associated with a particular field.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Path to field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
   readonly path?: Maybe<Scalars['String']['output']>;
-  /**
-   * List of stocks IDs which causes the error.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** List of stocks IDs which causes the error. */
   readonly stocks?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** List of attribute values IDs which causes the error. */
   readonly values?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
@@ -21635,11 +21024,7 @@ export type ProductVariantBulkResult = {
 };
 
 /**
- * Creates/updates translations for products variants.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ * Creates/updates translations for product variants.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  *
@@ -21683,11 +21068,7 @@ export type ProductVariantBulkTranslateResult = {
 };
 
 /**
- * Update multiple product variants.
- *
- * Added in Saleor 3.11.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ * Updates multiple product variants.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -21699,65 +21080,37 @@ export type ProductVariantBulkUpdate = {
   readonly results: ReadonlyArray<ProductVariantBulkResult>;
 };
 
-/**
- * Input fields to update product variants.
- *
- * Added in Saleor 3.11.
- */
+/** Input fields to update product variants. */
 export type ProductVariantBulkUpdateInput = {
   /** List of attributes specific to this variant. */
   readonly attributes?: InputMaybe<ReadonlyArray<BulkAttributeValueInput>>;
-  /**
-   * Channel listings input.
-   *
-   * Added in Saleor 3.12.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Channel listings input. */
   readonly channelListings?: InputMaybe<ProductVariantChannelListingUpdateInput>;
-  /**
-   * External ID of this product variant.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this product variant. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** ID of the product variant to update. */
   readonly id: Scalars['ID']['input'];
   /**
-   * Fields required to update the product variant metadata.
+   * Fields required to update the product variant metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Variant name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Determines if variant is in preorder.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Determines if variant is in preorder. */
   readonly preorder?: InputMaybe<PreorderSettingsInput>;
   /**
-   * Fields required to update the product variant private metadata.
+   * Fields required to update the product variant private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
-  /**
-   * Determines maximum quantity of `ProductVariant`,that can be bought in a single checkout.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Determines maximum quantity of `ProductVariant`,that can be bought in a single checkout. */
   readonly quantityLimitPerCustomer?: InputMaybe<Scalars['Int']['input']>;
   /** Stock keeping unit. */
   readonly sku?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Stocks input.
-   *
-   * Added in Saleor 3.12.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Stocks input. */
   readonly stocks?: InputMaybe<ProductVariantStocksUpdateInput>;
   /** Determines if the inventory of this variant should be tracked. If false, the quantity won't change when customers buy this item. If the field is not provided, `Shop.trackInventoryByDefault` will be used. */
   readonly trackInventory?: InputMaybe<Scalars['Boolean']['input']>;
@@ -21779,14 +21132,16 @@ export type ProductVariantChannelListing = Node & {
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   readonly margin?: Maybe<Scalars['Int']['output']>;
-  /**
-   * Preorder variant data.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Preorder variant data. */
   readonly preorderThreshold?: Maybe<PreorderThreshold>;
   /** The price of the variant. */
   readonly price?: Maybe<Money>;
+  /**
+   * Prior price of the variant used for discount calculations.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly priorPrice?: Maybe<Money>;
 };
 
 export type ProductVariantChannelListingAddInput = {
@@ -21794,14 +21149,16 @@ export type ProductVariantChannelListingAddInput = {
   readonly channelId: Scalars['ID']['input'];
   /** Cost price of the variant in channel. */
   readonly costPrice?: InputMaybe<Scalars['PositiveDecimal']['input']>;
-  /**
-   * The threshold for preorder variant in channel.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** The threshold for preorder variant in channel. */
   readonly preorderThreshold?: InputMaybe<Scalars['Int']['input']>;
   /** Price of the particular variant in channel. */
   readonly price: Scalars['PositiveDecimal']['input'];
+  /**
+   * Previous price of the variant in channel. Useful for providing promotion information required by customer protection laws such as EU Omnibus directive.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly priorPrice?: InputMaybe<Scalars['PositiveDecimal']['input']>;
 };
 
 /**
@@ -21811,7 +21168,7 @@ export type ProductVariantChannelListingAddInput = {
  */
 export type ProductVariantChannelListingUpdate = {
   readonly errors: ReadonlyArray<ProductChannelListingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productChannelListingErrors: ReadonlyArray<ProductChannelListingError>;
   /** An updated product variant instance. */
   readonly variant?: Maybe<ProductVariant>;
@@ -21848,7 +21205,7 @@ export type ProductVariantCountableEdge = {
  */
 export type ProductVariantCreate = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly productVariant?: Maybe<ProductVariant>;
 };
@@ -21856,39 +21213,27 @@ export type ProductVariantCreate = {
 export type ProductVariantCreateInput = {
   /** List of attributes specific to this variant. */
   readonly attributes: ReadonlyArray<AttributeValueInput>;
-  /**
-   * External ID of this product variant.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this product variant. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the product variant metadata.
+   * Fields required to update the product variant metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Variant name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Determines if variant is in preorder.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Determines if variant is in preorder. */
   readonly preorder?: InputMaybe<PreorderSettingsInput>;
   /**
-   * Fields required to update the product variant private metadata.
+   * Fields required to update the product variant private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Product ID of which type is the variant. */
   readonly product: Scalars['ID']['input'];
-  /**
-   * Determines maximum quantity of `ProductVariant`,that can be bought in a single checkout.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Determines maximum quantity of `ProductVariant`,that can be bought in a single checkout. */
   readonly quantityLimitPerCustomer?: InputMaybe<Scalars['Int']['input']>;
   /** Stock keeping unit. */
   readonly sku?: InputMaybe<Scalars['String']['input']>;
@@ -21900,11 +21245,7 @@ export type ProductVariantCreateInput = {
   readonly weight?: InputMaybe<Scalars['WeightScalar']['input']>;
 };
 
-/**
- * Event sent when new product variant is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new product variant is created. */
 export type ProductVariantCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -21919,11 +21260,7 @@ export type ProductVariantCreated = Event & {
 };
 
 
-/**
- * Event sent when new product variant is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new product variant is created. */
 export type ProductVariantCreatedProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -21935,16 +21272,12 @@ export type ProductVariantCreatedProductVariantArgs = {
  */
 export type ProductVariantDelete = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly productVariant?: Maybe<ProductVariant>;
 };
 
-/**
- * Event sent when product variant is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product variant is deleted. */
 export type ProductVariantDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -21959,11 +21292,7 @@ export type ProductVariantDeleted = Event & {
 };
 
 
-/**
- * Event sent when product variant is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product variant is deleted. */
 export type ProductVariantDeletedProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -21979,37 +21308,25 @@ export type ProductVariantFilterInput = {
 export type ProductVariantInput = {
   /** List of attributes specific to this variant. */
   readonly attributes?: InputMaybe<ReadonlyArray<AttributeValueInput>>;
-  /**
-   * External ID of this product variant.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this product variant. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the product variant metadata.
+   * Fields required to update the product variant metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Variant name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Determines if variant is in preorder.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Determines if variant is in preorder. */
   readonly preorder?: InputMaybe<PreorderSettingsInput>;
   /**
-   * Fields required to update the product variant private metadata.
+   * Fields required to update the product variant private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.8.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
-  /**
-   * Determines maximum quantity of `ProductVariant`,that can be bought in a single checkout.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Determines maximum quantity of `ProductVariant`,that can be bought in a single checkout. */
   readonly quantityLimitPerCustomer?: InputMaybe<Scalars['Int']['input']>;
   /** Stock keeping unit. */
   readonly sku?: InputMaybe<Scalars['String']['input']>;
@@ -22019,11 +21336,7 @@ export type ProductVariantInput = {
   readonly weight?: InputMaybe<Scalars['WeightScalar']['input']>;
 };
 
-/**
- * Event sent when product variant metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when product variant metadata is updated. */
 export type ProductVariantMetadataUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -22038,20 +21351,12 @@ export type ProductVariantMetadataUpdated = Event & {
 };
 
 
-/**
- * Event sent when product variant metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when product variant metadata is updated. */
 export type ProductVariantMetadataUpdatedProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when product variant is out of stock.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product variant is out of stock. */
 export type ProductVariantOutOfStock = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -22068,19 +21373,13 @@ export type ProductVariantOutOfStock = Event & {
 };
 
 
-/**
- * Event sent when product variant is out of stock.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product variant is out of stock. */
 export type ProductVariantOutOfStockProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
  * Deactivates product variant preorder. It changes all preorder allocation into regular allocation.
- *
- * Added in Saleor 3.1.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -22098,7 +21397,7 @@ export type ProductVariantPreorderDeactivate = {
 export type ProductVariantReorder = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
@@ -22109,7 +21408,7 @@ export type ProductVariantReorder = {
  */
 export type ProductVariantReorderAttributeValues = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   /** Product variant from which attribute values are reordered. */
   readonly productVariant?: Maybe<ProductVariant>;
@@ -22123,12 +21422,12 @@ export type ProductVariantReorderAttributeValues = {
 export type ProductVariantSetDefault = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly product?: Maybe<Product>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
 export type ProductVariantSortField =
-  /** Sort products variants by last modified at. */
+  /** Sort product variants by last modification date. */
   | 'LAST_MODIFIED_AT';
 
 export type ProductVariantSortingInput = {
@@ -22138,13 +21437,7 @@ export type ProductVariantSortingInput = {
   readonly field: ProductVariantSortField;
 };
 
-/**
- * Event sent when product variant stock is updated.
- *
- * Added in Saleor 3.11.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when product variant stock is updated. */
 export type ProductVariantStockUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -22161,13 +21454,7 @@ export type ProductVariantStockUpdated = Event & {
 };
 
 
-/**
- * Event sent when product variant stock is updated.
- *
- * Added in Saleor 3.11.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when product variant stock is updated. */
 export type ProductVariantStockUpdatedProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -22178,7 +21465,7 @@ export type ProductVariantStockUpdatedProductVariantArgs = {
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksCreate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly bulkStockErrors: ReadonlyArray<BulkStockError>;
   readonly errors: ReadonlyArray<BulkStockError>;
   /** Updated product variant. */
@@ -22186,7 +21473,7 @@ export type ProductVariantStocksCreate = {
 };
 
 /**
- * Delete stocks from product variant.
+ * Deletes stocks from product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -22194,17 +21481,17 @@ export type ProductVariantStocksDelete = {
   readonly errors: ReadonlyArray<StockError>;
   /** Updated product variant. */
   readonly productVariant?: Maybe<ProductVariant>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly stockErrors: ReadonlyArray<StockError>;
 };
 
 /**
- * Update stocks for product variant.
+ * Updates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type ProductVariantStocksUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly bulkStockErrors: ReadonlyArray<BulkStockError>;
   readonly errors: ReadonlyArray<BulkStockError>;
   /** Updated product variant. */
@@ -22230,14 +21517,10 @@ export type ProductVariantTranslatableContent = Node & {
   readonly name: Scalars['String']['output'];
   /**
    * Represents a version of a product such as different size or color.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly productVariant?: Maybe<ProductVariant>;
-  /**
-   * The ID of the product variant to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the product variant to translate. */
   readonly productVariantId: Scalars['ID']['output'];
   /** Returns translated product variant fields for the given language code. */
   readonly translation?: Maybe<ProductVariantTranslation>;
@@ -22257,7 +21540,7 @@ export type ProductVariantTranslatableContentTranslationArgs = {
 export type ProductVariantTranslate = {
   readonly errors: ReadonlyArray<TranslationError>;
   readonly productVariant?: Maybe<ProductVariant>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -22275,11 +21558,7 @@ export type ProductVariantTranslation = Node & {
   readonly language: LanguageDisplay;
   /** Translated product variant name. */
   readonly name: Scalars['String']['output'];
-  /**
-   * Represents the product variant fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the product variant fields to translate. */
   readonly translatableContent?: Maybe<ProductVariantTranslatableContent>;
 };
 
@@ -22290,16 +21569,12 @@ export type ProductVariantTranslation = Node & {
  */
 export type ProductVariantUpdate = {
   readonly errors: ReadonlyArray<ProductError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly productVariant?: Maybe<ProductVariant>;
 };
 
-/**
- * Event sent when product variant is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product variant is updated. */
 export type ProductVariantUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -22314,11 +21589,7 @@ export type ProductVariantUpdated = Event & {
 };
 
 
-/**
- * Event sent when product variant is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when product variant is updated. */
 export type ProductVariantUpdatedProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -22328,8 +21599,18 @@ export type ProductVariantWhereInput = {
   readonly AND?: InputMaybe<ReadonlyArray<ProductVariantWhereInput>>;
   /** A list of conditions of which at least one must be met. */
   readonly OR?: InputMaybe<ReadonlyArray<ProductVariantWhereInput>>;
+  /**
+   * Filter by attributes associated with the variant.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly attributes?: InputMaybe<ReadonlyArray<AssignedAttributeWhereInput>>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
+  /** Filter by product SKU. */
+  readonly sku?: InputMaybe<StringFilterInput>;
+  /** Filter by when was the most recent update. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
 };
 
 export type ProductWhereInput = {
@@ -22379,13 +21660,7 @@ export type ProductWhereInput = {
   readonly updatedAt?: InputMaybe<DateTimeFilterInput>;
 };
 
-/**
- * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers. */
 export type Promotion = Node & ObjectWithMetadata & {
   /** Date time of promotion creation. */
   readonly createdAt: Scalars['DateTime']['output'];
@@ -22402,15 +21677,9 @@ export type Promotion = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Name of the promotion. */
   readonly name: Scalars['String']['output'];
@@ -22420,15 +21689,9 @@ export type Promotion = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** The list of promotion rules. */
   readonly rules?: Maybe<ReadonlyArray<PromotionRule>>;
@@ -22449,71 +21712,37 @@ export type Promotion = Node & ObjectWithMetadata & {
 };
 
 
-/**
- * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers. */
 export type PromotionMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
 
-/**
- * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers. */
 export type PromotionMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 
-/**
- * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers. */
 export type PromotionPrivateMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
 
-/**
- * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers. */
 export type PromotionPrivateMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 
-/**
- * Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the promotion that allow creating discounts based on given conditions, and is visible to all the customers. */
 export type PromotionTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
 /**
  * Deletes promotions.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -22543,10 +21772,6 @@ export type PromotionCountableEdge = {
 
 /**
  * Creates a new promotion.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -22609,13 +21834,7 @@ export type PromotionCreateInput = {
   readonly type: PromotionTypeEnum;
 };
 
-/**
- * Event sent when new promotion is created.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when new promotion is created. */
 export type PromotionCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -22629,13 +21848,7 @@ export type PromotionCreated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * History log of the promotion created event.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** History log of the promotion created event. */
 export type PromotionCreatedEvent = Node & PromotionEventInterface & {
   /**
    * User or App that created the promotion event.
@@ -22652,10 +21865,6 @@ export type PromotionCreatedEvent = Node & PromotionEventInterface & {
 
 /**
  * Deletes a promotion.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -22680,13 +21889,7 @@ export type PromotionDeleteErrorCode =
   | 'GRAPHQL_ERROR'
   | 'NOT_FOUND';
 
-/**
- * Event sent when promotion is deleted.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when promotion is deleted. */
 export type PromotionDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -22700,13 +21903,7 @@ export type PromotionDeleted = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * The event informs about the end of the promotion.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** The event informs about the end of the promotion. */
 export type PromotionEnded = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -22720,13 +21917,7 @@ export type PromotionEnded = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * History log of the promotion ended event.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** History log of the promotion ended event. */
 export type PromotionEndedEvent = Node & PromotionEventInterface & {
   /**
    * User or App that created the promotion event.
@@ -22766,13 +21957,7 @@ export type PromotionEventsEnum =
   | 'RULE_DELETED'
   | 'RULE_UPDATED';
 
-/**
- * Represents the promotion rule that specifies the conditions that must be met to apply the promotion discount.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the promotion rule that specifies the conditions that must be met to apply the promotion discount. */
 export type PromotionRule = Node & {
   /** The catalogue predicate that must be met to apply the rule reward. */
   readonly cataloguePredicate?: Maybe<Scalars['JSON']['output']>;
@@ -22844,23 +22029,13 @@ export type PromotionRule = Node & {
 };
 
 
-/**
- * Represents the promotion rule that specifies the conditions that must be met to apply the promotion discount.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents the promotion rule that specifies the conditions that must be met to apply the promotion discount. */
 export type PromotionRuleTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
 /**
  * Creates a new promotion rule.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -22942,13 +22117,7 @@ export type PromotionRuleCreateInput = {
   readonly rewardValueType?: InputMaybe<RewardValueTypeEnum>;
 };
 
-/**
- * Event sent when new promotion rule is created.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when new promotion rule is created. */
 export type PromotionRuleCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -22962,13 +22131,7 @@ export type PromotionRuleCreated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * History log of the promotion rule created event.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** History log of the promotion rule created event. */
 export type PromotionRuleCreatedEvent = Node & PromotionEventInterface & PromotionRuleEventInterface & {
   /**
    * User or App that created the promotion event.
@@ -22987,10 +22150,6 @@ export type PromotionRuleCreatedEvent = Node & PromotionEventInterface & Promoti
 
 /**
  * Deletes a promotion rule.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -23015,13 +22174,7 @@ export type PromotionRuleDeleteErrorCode =
   | 'GRAPHQL_ERROR'
   | 'NOT_FOUND';
 
-/**
- * Event sent when new promotion rule is deleted.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when new promotion rule is deleted. */
 export type PromotionRuleDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -23035,13 +22188,7 @@ export type PromotionRuleDeleted = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * History log of the promotion rule created event.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** History log of the promotion rule created event. */
 export type PromotionRuleDeletedEvent = Node & PromotionEventInterface & PromotionRuleEventInterface & {
   /**
    * User or App that created the promotion event.
@@ -23058,13 +22205,7 @@ export type PromotionRuleDeletedEvent = Node & PromotionEventInterface & Promoti
   readonly type: PromotionEventsEnum;
 };
 
-/**
- * History log of the promotion event related to rule.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** History log of the promotion event related to rule. */
 export type PromotionRuleEventInterface = {
   /** The rule ID associated with the promotion event. */
   readonly ruleId?: Maybe<Scalars['String']['output']>;
@@ -23109,11 +22250,7 @@ export type PromotionRuleInput = {
   readonly rewardValueType?: InputMaybe<RewardValueTypeEnum>;
 };
 
-/**
- * Represents promotion rule's original translatable fields and related translations.
- *
- * Added in Saleor 3.17.
- */
+/** Represents promotion rule's original translatable fields and related translations. */
 export type PromotionRuleTranslatableContent = Node & {
   /**
    * Description of the promotion rule.
@@ -23125,30 +22262,20 @@ export type PromotionRuleTranslatableContent = Node & {
   readonly id: Scalars['ID']['output'];
   /** Name of the promotion rule. */
   readonly name?: Maybe<Scalars['String']['output']>;
-  /**
-   * ID of the promotion rule to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** ID of the promotion rule to translate. */
   readonly promotionRuleId: Scalars['ID']['output'];
   /** Returns translated promotion rule fields for the given language code. */
   readonly translation?: Maybe<PromotionRuleTranslation>;
 };
 
 
-/**
- * Represents promotion rule's original translatable fields and related translations.
- *
- * Added in Saleor 3.17.
- */
+/** Represents promotion rule's original translatable fields and related translations. */
 export type PromotionRuleTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
 /**
  * Creates/updates translations for a promotion rule.
- *
- * Added in Saleor 3.17.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
@@ -23157,11 +22284,7 @@ export type PromotionRuleTranslate = {
   readonly promotionRule?: Maybe<PromotionRule>;
 };
 
-/**
- * Represents promotion rule translations.
- *
- * Added in Saleor 3.17.
- */
+/** Represents promotion rule translations. */
 export type PromotionRuleTranslation = Node & {
   /**
    * Translated description of the promotion rule.
@@ -23175,11 +22298,7 @@ export type PromotionRuleTranslation = Node & {
   readonly language: LanguageDisplay;
   /** Translated name of the promotion rule. */
   readonly name?: Maybe<Scalars['String']['output']>;
-  /**
-   * Represents the promotion rule fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the promotion rule fields to translate. */
   readonly translatableContent?: Maybe<PromotionRuleTranslatableContent>;
 };
 
@@ -23195,10 +22314,6 @@ export type PromotionRuleTranslationInput = {
 
 /**
  * Updates an existing promotion rule.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -23286,13 +22401,7 @@ export type PromotionRuleUpdateInput = {
   readonly rewardValueType?: InputMaybe<RewardValueTypeEnum>;
 };
 
-/**
- * Event sent when new promotion rule is updated.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when new promotion rule is updated. */
 export type PromotionRuleUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -23306,13 +22415,7 @@ export type PromotionRuleUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * History log of the promotion rule created event.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** History log of the promotion rule created event. */
 export type PromotionRuleUpdatedEvent = Node & PromotionEventInterface & PromotionRuleEventInterface & {
   /**
    * User or App that created the promotion event.
@@ -23330,7 +22433,7 @@ export type PromotionRuleUpdatedEvent = Node & PromotionEventInterface & Promoti
 };
 
 export type PromotionSortField =
-  /** Sort promotions by created at. */
+  /** Sort promotions by creation date. */
   | 'CREATED_AT'
   /** Sort promotions by end date. */
   | 'END_DATE'
@@ -23346,13 +22449,7 @@ export type PromotionSortingInput = {
   readonly field: PromotionSortField;
 };
 
-/**
- * The event informs about the start of the promotion.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** The event informs about the start of the promotion. */
 export type PromotionStarted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -23366,13 +22463,7 @@ export type PromotionStarted = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * History log of the promotion started event.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** History log of the promotion started event. */
 export type PromotionStartedEvent = Node & PromotionEventInterface & {
   /**
    * User or App that created the promotion event.
@@ -23387,11 +22478,7 @@ export type PromotionStartedEvent = Node & PromotionEventInterface & {
   readonly type: PromotionEventsEnum;
 };
 
-/**
- * Represents promotion's original translatable fields and related translations.
- *
- * Added in Saleor 3.17.
- */
+/** Represents promotion's original translatable fields and related translations. */
 export type PromotionTranslatableContent = Node & {
   /**
    * Description of the promotion.
@@ -23410,19 +22497,13 @@ export type PromotionTranslatableContent = Node & {
 };
 
 
-/**
- * Represents promotion's original translatable fields and related translations.
- *
- * Added in Saleor 3.17.
- */
+/** Represents promotion's original translatable fields and related translations. */
 export type PromotionTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
 /**
  * Creates/updates translations for a promotion.
- *
- * Added in Saleor 3.17.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
@@ -23431,11 +22512,7 @@ export type PromotionTranslate = {
   readonly promotion?: Maybe<Promotion>;
 };
 
-/**
- * Represents promotion translations.
- *
- * Added in Saleor 3.17.
- */
+/** Represents promotion translations. */
 export type PromotionTranslation = Node & {
   /**
    * Translated description of the promotion.
@@ -23449,11 +22526,7 @@ export type PromotionTranslation = Node & {
   readonly language: LanguageDisplay;
   /** Translated name of the promotion. */
   readonly name?: Maybe<Scalars['String']['output']>;
-  /**
-   * Represents the promotion fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the promotion fields to translate. */
   readonly translatableContent?: Maybe<PromotionTranslatableContent>;
 };
 
@@ -23480,10 +22553,6 @@ export type PromotionTypeEnumFilterInput = {
 
 /**
  * Updates an existing promotion.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -23523,13 +22592,7 @@ export type PromotionUpdateInput = {
   readonly startDate?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
-/**
- * Event sent when promotion is updated.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when promotion is updated. */
 export type PromotionUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -23543,13 +22606,7 @@ export type PromotionUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * History log of the promotion updated event.
- *
- * Added in Saleor 3.17.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** History log of the promotion updated event. */
 export type PromotionUpdatedEvent = Node & PromotionEventInterface & {
   /**
    * User or App that created the promotion event.
@@ -23588,15 +22645,10 @@ export type PublishableChannelListingInput = {
   readonly isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Publication date. ISO 8601 standard.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `publishedAt` field instead.
+   * @deprecated Use `publishedAt` field instead.
    */
   readonly publicationDate?: InputMaybe<Scalars['Date']['input']>;
-  /**
-   * Publication date time. ISO 8601 standard.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Publication date time. ISO 8601 standard. */
   readonly publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
@@ -23620,15 +22672,11 @@ export type Query = {
   /**
    * Look up an app extension by ID.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
   readonly appExtension?: Maybe<AppExtension>;
   /**
    * List of all extensions.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
@@ -23668,18 +22716,18 @@ export type Query = {
    */
   readonly checkout?: Maybe<Checkout>;
   /**
-   * List of checkout lines.
+   * List of checkout lines. The query will not initiate any external requests, including fetching external shipping methods, filtering available shipping methods, or performing external tax calculations.
    *
    * Requires one of the following permissions: MANAGE_CHECKOUTS.
    */
   readonly checkoutLines?: Maybe<CheckoutLineCountableConnection>;
   /**
-   * List of checkouts.
+   * List of checkouts. The query will not initiate any external requests, including fetching external shipping methods, filtering available shipping methods, or performing external tax calculations.
    *
    * Requires one of the following permissions: MANAGE_CHECKOUTS, HANDLE_PAYMENTS.
    */
   readonly checkouts?: Maybe<CheckoutCountableConnection>;
-  /** Look up a collection by ID. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
+  /** Look up a collection by ID or slug. If slugLanguageCode is provided, category will be fetched by slug translation. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   readonly collection?: Maybe<Collection>;
   /** List of the shop's collections. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   readonly collections?: Maybe<CollectionCountableConnection>;
@@ -23702,7 +22750,7 @@ export type Query = {
    */
   readonly digitalContents?: Maybe<DigitalContentCountableConnection>;
   /**
-   * List of draft orders.
+   * List of draft orders. The query will not initiate any external requests, including filtering available shipping methods, or performing external tax calculations.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -23728,8 +22776,6 @@ export type Query = {
   /**
    * List of gift card currencies.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    */
   readonly giftCardCurrencies: ReadonlyArray<Scalars['String']['output']>;
@@ -23741,8 +22787,6 @@ export type Query = {
   readonly giftCardSettings: GiftCardSettings;
   /**
    * List of gift card tags.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    */
@@ -23757,7 +22801,7 @@ export type Query = {
    * List of activity events to display on homepage (at the moment it only contains order-events).
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly homepageEvents?: Maybe<OrderEventCountableConnection>;
   /** Return the currently authenticated user. */
@@ -23774,18 +22818,18 @@ export type Query = {
   readonly order?: Maybe<Order>;
   /**
    * Look up an order by token.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly orderByToken?: Maybe<Order>;
   /**
    * Order related settings from site settings. Returns `orderSettings` for the first `channel` in alphabetical order.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `channel` query to fetch the `orderSettings` field instead.
+   * @deprecated Use the `channel` query to fetch the `orderSettings` field instead.
    */
   readonly orderSettings?: Maybe<OrderSettings>;
   /**
-   * List of orders.
+   * List of orders. The query will not initiate any external requests, including filtering available shipping methods, or performing external tax calculations.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -23794,7 +22838,7 @@ export type Query = {
    * Return the total sales amount from a specific period.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly ordersTotal?: Maybe<TaxedMoney>;
   /** Look up a page by ID or slug. */
@@ -23856,42 +22900,36 @@ export type Query = {
   /**
    * Look up a promotion by ID.
    *
-   * Added in Saleor 3.17.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
   readonly promotion?: Maybe<Promotion>;
   /**
    * List of the promotions.
    *
-   * Added in Saleor 3.17.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
   readonly promotions?: Maybe<PromotionCountableConnection>;
+  /** Refunds related settings. Returns `RefundSettings` configuration, global for the entire shop. */
+  readonly refundSettings: RefundSettings;
   /**
    * List of top selling products.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly reportProductSales?: Maybe<ProductVariantCountableConnection>;
   /**
    * Look up a sale by ID.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `promotion` query instead.
+   * @deprecated Use the `promotion` query instead.
    */
   readonly sale?: Maybe<Sale>;
   /**
    * List of the shop's sales.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `promotions` query instead.
+   * @deprecated Use the `promotions` query instead.
    */
   readonly sales?: Maybe<SaleCountableConnection>;
   /**
@@ -23929,15 +22967,11 @@ export type Query = {
   /**
    * Look up a tax class.
    *
-   * Added in Saleor 3.9.
-   *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
   readonly taxClass?: Maybe<TaxClass>;
   /**
    * List of tax classes.
-   *
-   * Added in Saleor 3.9.
    *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
@@ -23945,15 +22979,11 @@ export type Query = {
   /**
    * Look up a tax configuration.
    *
-   * Added in Saleor 3.9.
-   *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
   readonly taxConfiguration?: Maybe<TaxConfiguration>;
   /**
    * List of tax configurations.
-   *
-   * Added in Saleor 3.9.
    *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
@@ -23968,15 +22998,11 @@ export type Query = {
   readonly taxCountryConfigurations?: Maybe<ReadonlyArray<TaxCountryConfiguration>>;
   /**
    * List of all tax rates available from tax gateway.
-   * @deprecated This field will be removed in Saleor 4.0. Use `taxClasses` field instead.
+   * @deprecated Use `taxClasses` field instead.
    */
   readonly taxTypes?: Maybe<ReadonlyArray<TaxType>>;
   /**
    * Look up a transaction by ID.
-   *
-   * Added in Saleor 3.6.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires one of the following permissions: HANDLE_PAYMENTS.
    */
@@ -24029,7 +23055,7 @@ export type Query = {
    * List of all available webhook events.
    *
    * Requires one of the following permissions: MANAGE_APPS.
-   * @deprecated This field will be removed in Saleor 4.0. Use `WebhookEventTypeAsyncEnum` and `WebhookEventTypeSyncEnum` to get available event types.
+   * @deprecated Use `WebhookEventTypeAsyncEnum` and `WebhookEventTypeSyncEnum` to get available event types.
    */
   readonly webhookEvents?: Maybe<ReadonlyArray<WebhookEvent>>;
   /** Retrieve a sample payload for a given webhook event based on real data. It can be useful for some integrations where sample payload is required. */
@@ -24119,6 +23145,7 @@ export type QueryCategoriesArgs = {
 export type QueryCategoryArgs = {
   id?: InputMaybe<Scalars['ID']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
+  slugLanguageCode?: InputMaybe<LanguageCodeEnum>;
 };
 
 
@@ -24157,6 +23184,7 @@ export type QueryCollectionArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
+  slugLanguageCode?: InputMaybe<LanguageCodeEnum>;
 };
 
 
@@ -24178,7 +23206,9 @@ export type QueryCustomersArgs = {
   filter?: InputMaybe<CustomerFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<UserSortingInput>;
+  where?: InputMaybe<CustomerWhereInput>;
 };
 
 
@@ -24201,7 +23231,9 @@ export type QueryDraftOrdersArgs = {
   filter?: InputMaybe<OrderDraftFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<OrderSortingInput>;
+  where?: InputMaybe<DraftOrderWhereInput>;
 };
 
 
@@ -24307,7 +23339,9 @@ export type QueryOrdersArgs = {
   filter?: InputMaybe<OrderFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<OrderSortingInput>;
+  where?: InputMaybe<OrderWhereInput>;
 };
 
 
@@ -24318,8 +23352,10 @@ export type QueryOrdersTotalArgs = {
 
 
 export type QueryPageArgs = {
+  channel?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
+  slugLanguageCode?: InputMaybe<LanguageCodeEnum>;
 };
 
 
@@ -24341,10 +23377,13 @@ export type QueryPageTypesArgs = {
 export type QueryPagesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
+  channel?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PageFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<PageSortingInput>;
+  where?: InputMaybe<PageWhereInput>;
 };
 
 
@@ -24397,6 +23436,7 @@ export type QueryProductArgs = {
   externalReference?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
+  slugLanguageCode?: InputMaybe<LanguageCodeEnum>;
 };
 
 
@@ -24431,6 +23471,7 @@ export type QueryProductVariantsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductVariantSortingInput>;
   where?: InputMaybe<ProductVariantWhereInput>;
 };
@@ -24645,15 +23686,94 @@ export type ReducedRate = {
   readonly rateType: Scalars['String']['output'];
 };
 
+/**
+ * The reference types (product or page type) that are used to narrow down the choices of reference objects.
+ * ProductType applicable for reference attribute with `PRODUCT` or `PRODUCT_VARIANT` entity type.
+ * PageType applicable for reference attribute with `PAGE` entity type.
+ */
+export type ReferenceType = PageType | ProductType;
+
 /** Refresh JWT token. Mutation tries to take refreshToken from the input. If it fails it will try to take `refreshToken` from the http-only cookie `refreshToken`. `csrfToken` is required when `refreshToken` is provided as a cookie. */
 export type RefreshToken = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** JWT token, required to authenticate. */
   readonly token?: Maybe<Scalars['String']['output']>;
   /** A user instance. */
   readonly user?: Maybe<User>;
+};
+
+/**
+ * Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type RefundReasonReferenceTypeClear = {
+  readonly errors: ReadonlyArray<RefundReasonReferenceTypeClearError>;
+  /** Refund settings. */
+  readonly refundSettings: RefundSettings;
+  /** @deprecated Use `errors` field instead. */
+  readonly refundSettingsErrors: ReadonlyArray<RefundReasonReferenceTypeClearError>;
+};
+
+export type RefundReasonReferenceTypeClearError = {
+  /** Failed to clear refund reason reference type */
+  readonly code: RefundSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Refund related settings from site settings.
+ *
+ * Added in Saleor 3.22.
+ */
+export type RefundSettings = {
+  /** Model type used for refund reasons. */
+  readonly reasonReferenceType?: Maybe<PageType>;
+};
+
+export type RefundSettingsErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'REQUIRED';
+
+/**
+ * Update refund settings across all channels.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type RefundSettingsUpdate = {
+  readonly errors: ReadonlyArray<RefundSettingsUpdateError>;
+  /** Refund settings. */
+  readonly refundSettings: RefundSettings;
+  /** @deprecated Use `errors` field instead. */
+  readonly refundSettingsErrors: ReadonlyArray<RefundSettingsUpdateError>;
+};
+
+export type RefundSettingsUpdateError = {
+  /** Failed to update Refund Settings */
+  readonly code: RefundSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type RefundSettingsUpdateInput = {
+  /**
+   * The ID of a model type, that will be used to reference refund reasons. All models with of this type will be accepted as refund reasons.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly refundReasonReferenceType: Scalars['ID']['input'];
 };
 
 export type ReorderInput = {
@@ -24677,7 +23797,7 @@ export type ReportingPeriod =
  * - ACCOUNT_CHANGE_EMAIL_REQUESTED (async): An account email change was requested.
  */
 export type RequestEmailChange = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** A user instance. */
@@ -24693,7 +23813,7 @@ export type RequestEmailChange = {
  * - STAFF_SET_PASSWORD_REQUESTED (async): Setting a new password for the staff account is requested.
  */
 export type RequestPasswordReset = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
 };
@@ -24709,7 +23829,7 @@ export type RewardValueTypeEnum =
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type Sale = Node & ObjectWithMetadata & {
   /** List of categories this sale applies to. */
@@ -24742,15 +23862,9 @@ export type Sale = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** The name of the sale. */
   readonly name: Scalars['String']['output'];
@@ -24760,15 +23874,9 @@ export type Sale = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /**
    * List of products this sale applies to.
@@ -24787,8 +23895,6 @@ export type Sale = Node & ObjectWithMetadata & {
   /**
    * List of product variants this sale applies to.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
   readonly variants?: Maybe<ProductVariantCountableConnection>;
@@ -24798,7 +23904,7 @@ export type Sale = Node & ObjectWithMetadata & {
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type SaleCategoriesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -24811,7 +23917,7 @@ export type SaleCategoriesArgs = {
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type SaleCollectionsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -24824,7 +23930,7 @@ export type SaleCollectionsArgs = {
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type SaleMetafieldArgs = {
   key: Scalars['String']['input'];
@@ -24834,7 +23940,7 @@ export type SaleMetafieldArgs = {
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type SaleMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
@@ -24844,7 +23950,7 @@ export type SaleMetafieldsArgs = {
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type SalePrivateMetafieldArgs = {
   key: Scalars['String']['input'];
@@ -24854,7 +23960,7 @@ export type SalePrivateMetafieldArgs = {
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type SalePrivateMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
@@ -24864,7 +23970,7 @@ export type SalePrivateMetafieldsArgs = {
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type SaleProductsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -24877,7 +23983,7 @@ export type SaleProductsArgs = {
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type SaleTranslationArgs = {
   languageCode: LanguageCodeEnum;
@@ -24887,7 +23993,7 @@ export type SaleTranslationArgs = {
 /**
  * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `Promotion` type instead.
+ * DEPRECATED: this type will be removed. Use `Promotion` type instead.
  */
 export type SaleVariantsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -24899,15 +24005,13 @@ export type SaleVariantsArgs = {
 /**
  * Adds products, categories, collections to a sale.
  *
- * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleCreate` mutation instead.
- *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
  * Triggers the following webhook events:
  * - SALE_UPDATED (async): A sale was updated.
  */
 export type SaleAddCatalogues = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   /** Sale of which catalogue IDs will be modified. */
@@ -24925,7 +24029,7 @@ export type SaleAddCatalogues = {
 export type SaleBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
 };
@@ -24933,7 +24037,7 @@ export type SaleBulkDelete = {
 /**
  * Represents sale channel listing.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionRule` type instead.
+ * DEPRECATED: this type will be removed. Use `PromotionRule` type instead.
  */
 export type SaleChannelListing = Node & {
   /** The channel in which the sale is available. */
@@ -24963,12 +24067,10 @@ export type SaleChannelListingInput = {
 /**
  * Manage sale's availability in channels.
  *
- * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleCreate` or `promotionRuleUpdate` mutations instead.
- *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  */
 export type SaleChannelListingUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   /** An updated sale instance. */
@@ -24993,15 +24095,13 @@ export type SaleCountableEdge = {
 /**
  * Creates a new sale.
  *
- * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionCreate` mutation instead.
- *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
  * Triggers the following webhook events:
  * - SALE_CREATED (async): A sale was created.
  */
 export type SaleCreate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   readonly sale?: Maybe<Sale>;
@@ -25010,9 +24110,7 @@ export type SaleCreate = {
 /**
  * Event sent when new sale is created.
  *
- * Added in Saleor 3.2.
- *
- * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionCreated` event instead.
+ * DEPRECATED: this event will be removed. Use `PromotionCreated` event instead.
  */
 export type SaleCreated = Event & {
   /** Time of the event. */
@@ -25031,9 +24129,7 @@ export type SaleCreated = Event & {
 /**
  * Event sent when new sale is created.
  *
- * Added in Saleor 3.2.
- *
- * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionCreated` event instead.
+ * DEPRECATED: this event will be removed. Use `PromotionCreated` event instead.
  */
 export type SaleCreatedSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -25042,15 +24138,13 @@ export type SaleCreatedSaleArgs = {
 /**
  * Deletes a sale.
  *
- * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionDelete` mutation instead.
- *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
  * Triggers the following webhook events:
  * - SALE_DELETED (async): A sale was deleted.
  */
 export type SaleDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   readonly sale?: Maybe<Sale>;
@@ -25059,9 +24153,7 @@ export type SaleDelete = {
 /**
  * Event sent when sale is deleted.
  *
- * Added in Saleor 3.2.
- *
- * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionDeleted` event instead.
+ * DEPRECATED: this event will be removed. Use `PromotionDeleted` event instead.
  */
 export type SaleDeleted = Event & {
   /** Time of the event. */
@@ -25080,9 +24172,7 @@ export type SaleDeleted = Event & {
 /**
  * Event sent when sale is deleted.
  *
- * Added in Saleor 3.2.
- *
- * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionDeleted` event instead.
+ * DEPRECATED: this event will be removed. Use `PromotionDeleted` event instead.
  */
 export type SaleDeletedSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -25120,15 +24210,13 @@ export type SaleInput = {
 /**
  * Removes products, categories, collections from a sale.
  *
- * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionRuleUpdate` or `promotionRuleDelete` mutations instead.
- *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
  * Triggers the following webhook events:
  * - SALE_UPDATED (async): A sale was updated.
  */
 export type SaleRemoveCatalogues = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   /** Sale of which catalogue IDs will be modified. */
@@ -25136,11 +24224,11 @@ export type SaleRemoveCatalogues = {
 };
 
 export type SaleSortField =
-  /** Sort sales by created at. */
+  /** Sort sales by creation date. */
   | 'CREATED_AT'
   /** Sort sales by end date. */
   | 'END_DATE'
-  /** Sort sales by last modified at. */
+  /** Sort sales by last modification date. */
   | 'LAST_MODIFIED_AT'
   /** Sort sales by name. */
   | 'NAME'
@@ -25158,8 +24246,7 @@ export type SaleSortField =
 export type SaleSortingInput = {
   /**
    * Specifies the channel in which to sort the data.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+   * @deprecated Use root-level channel argument instead.
    */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
   /** Specifies the direction in which to sort sales. */
@@ -25171,9 +24258,7 @@ export type SaleSortingInput = {
 /**
  * The event informs about the start or end of the sale.
  *
- * Added in Saleor 3.5.
- *
- * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionStarted` and `PromotionEnded` events instead.
+ * DEPRECATED: this event will be removed. Use `PromotionStarted` and `PromotionEnded` events instead.
  */
 export type SaleToggle = Event & {
   /** Time of the event. */
@@ -25182,11 +24267,7 @@ export type SaleToggle = Event & {
   readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
   /** The application receiving the webhook. */
   readonly recipient?: Maybe<App>;
-  /**
-   * The sale the event relates to.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** The sale the event relates to. */
   readonly sale?: Maybe<Sale>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
@@ -25196,9 +24277,7 @@ export type SaleToggle = Event & {
 /**
  * The event informs about the start or end of the sale.
  *
- * Added in Saleor 3.5.
- *
- * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionStarted` and `PromotionEnded` events instead.
+ * DEPRECATED: this event will be removed. Use `PromotionStarted` and `PromotionEnded` events instead.
  */
 export type SaleToggleSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
@@ -25207,7 +24286,7 @@ export type SaleToggleSaleArgs = {
 /**
  * Represents sale's original translatable fields and related translations.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionTranslatableContent` instead.
+ * DEPRECATED: this type will be removed. Use `PromotionTranslatableContent` instead.
  */
 export type SaleTranslatableContent = Node & {
   /** The ID of the sale translatable content. */
@@ -25218,14 +24297,10 @@ export type SaleTranslatableContent = Node & {
    * Sales allow creating discounts for categories, collections or products and are visible to all the customers.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly sale?: Maybe<Sale>;
-  /**
-   * The ID of the sale to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the sale to translate. */
   readonly saleId: Scalars['ID']['output'];
   /** Returns translated sale fields for the given language code. */
   readonly translation?: Maybe<SaleTranslation>;
@@ -25235,7 +24310,7 @@ export type SaleTranslatableContent = Node & {
 /**
  * Represents sale's original translatable fields and related translations.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionTranslatableContent` instead.
+ * DEPRECATED: this type will be removed. Use `PromotionTranslatableContent` instead.
  */
 export type SaleTranslatableContentTranslationArgs = {
   languageCode: LanguageCodeEnum;
@@ -25244,21 +24319,19 @@ export type SaleTranslatableContentTranslationArgs = {
 /**
  * Creates/updates translations for a sale.
  *
- * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PromotionTranslate` mutation instead.
- *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
 export type SaleTranslate = {
   readonly errors: ReadonlyArray<TranslationError>;
   readonly sale?: Maybe<Sale>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
 /**
  * Represents sale translations.
  *
- * DEPRECATED: this type will be removed in Saleor 4.0. Use `PromotionTranslation` instead.
+ * DEPRECATED: this type will be removed. Use `PromotionTranslation` instead.
  */
 export type SaleTranslation = Node & {
   /** The ID of the sale translation. */
@@ -25267,11 +24340,7 @@ export type SaleTranslation = Node & {
   readonly language: LanguageDisplay;
   /** Translated name of sale. */
   readonly name?: Maybe<Scalars['String']['output']>;
-  /**
-   * Represents the sale fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the sale fields to translate. */
   readonly translatableContent?: Maybe<SaleTranslatableContent>;
 };
 
@@ -25282,8 +24351,6 @@ export type SaleType =
 /**
  * Updates a sale.
  *
- * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `promotionUpdate` mutation instead.
- *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
  * Triggers the following webhook events:
@@ -25291,7 +24358,7 @@ export type SaleType =
  * - SALE_TOGGLE (async): Optionally triggered when a sale is started or stopped.
  */
 export type SaleUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   readonly sale?: Maybe<Sale>;
@@ -25300,9 +24367,7 @@ export type SaleUpdate = {
 /**
  * Event sent when sale is updated.
  *
- * Added in Saleor 3.2.
- *
- * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionUpdated` event instead.
+ * DEPRECATED: this event will be removed. Use `PromotionUpdated` event instead.
  */
 export type SaleUpdated = Event & {
   /** Time of the event. */
@@ -25321,15 +24386,13 @@ export type SaleUpdated = Event & {
 /**
  * Event sent when sale is updated.
  *
- * Added in Saleor 3.2.
- *
- * DEPRECATED: this event will be removed in Saleor 4.0. Use `PromotionUpdated` event instead.
+ * DEPRECATED: this event will be removed. Use `PromotionUpdated` event instead.
  */
 export type SaleUpdatedSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Represents a custom attribute. */
+/** Represents an assigned attribute to an object. */
 export type SelectedAttribute = {
   /** Name of an attribute displayed in the interface. */
   readonly attribute: Attribute;
@@ -25339,10 +24402,6 @@ export type SelectedAttribute = {
 
 /**
  * Sends a notification confirmation.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: AUTHENTICATED_USER.
  *
@@ -25378,7 +24437,7 @@ export type SeoInput = {
 
 /** Sets the user's password from the token sent by email using the RequestPasswordReset mutation. */
 export type SetPassword = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** CSRF token required to re-generate access token. */
   readonly csrfToken?: Maybe<Scalars['String']['output']>;
@@ -25414,11 +24473,7 @@ export type ShippingErrorCode =
   | 'REQUIRED'
   | 'UNIQUE';
 
-/**
- * List shipping methods for checkout.
- *
- * Added in Saleor 3.6.
- */
+/** List shipping methods for checkout. */
 export type ShippingListMethodsForCheckout = Event & {
   /** The checkout the event relates to. */
   readonly checkout?: Maybe<Checkout>;
@@ -25428,11 +24483,7 @@ export type ShippingListMethodsForCheckout = Event & {
   readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
   /** The application receiving the webhook. */
   readonly recipient?: Maybe<App>;
-  /**
-   * Shipping methods that can be used with this checkout.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Shipping methods that can be used with this checkout. */
   readonly shippingMethods?: Maybe<ReadonlyArray<ShippingMethod>>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
@@ -25456,7 +24507,7 @@ export type ShippingMethod = Node & ObjectWithMetadata & {
   readonly maximumOrderPrice?: Maybe<Money>;
   /**
    * Maximum order weight for this shipping method.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly maximumOrderWeight?: Maybe<Weight>;
   /** Message connected to this shipping method. */
@@ -25477,7 +24528,7 @@ export type ShippingMethod = Node & ObjectWithMetadata & {
   readonly minimumOrderPrice?: Maybe<Money>;
   /**
    * Minimum order weight for this shipping method.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly minimumOrderWeight?: Maybe<Weight>;
   /** Shipping method name. */
@@ -25498,7 +24549,7 @@ export type ShippingMethod = Node & ObjectWithMetadata & {
   readonly translation?: Maybe<ShippingMethodTranslation>;
   /**
    * Type of the shipping method.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly type?: Maybe<ShippingMethodTypeEnum>;
 };
@@ -25572,7 +24623,7 @@ export type ShippingMethodChannelListingInput = {
  */
 export type ShippingMethodChannelListingUpdate = {
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
   /** An updated shipping method instance. */
   readonly shippingMethod?: Maybe<ShippingMethodType>;
@@ -25606,14 +24657,10 @@ export type ShippingMethodTranslatableContent = Node & {
    * Shipping method are the methods you'll use to get customer's orders  to them. They are directly exposed to the customers.
    *
    * Requires one of the following permissions: MANAGE_SHIPPING.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly shippingMethod?: Maybe<ShippingMethodType>;
-  /**
-   * The ID of the shipping method to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the shipping method to translate. */
   readonly shippingMethodId: Scalars['ID']['output'];
   /** Returns translated shipping method fields for the given language code. */
   readonly translation?: Maybe<ShippingMethodTranslation>;
@@ -25639,11 +24686,7 @@ export type ShippingMethodTranslation = Node & {
   readonly language: LanguageDisplay;
   /** Translated shipping method name. */
   readonly name?: Maybe<Scalars['String']['output']>;
-  /**
-   * Represents the shipping method fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the shipping method fields to translate. */
   readonly translatableContent?: Maybe<ShippingMethodTranslatableContent>;
 };
 
@@ -25681,15 +24724,9 @@ export type ShippingMethodType = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Minimal number of days for delivery. */
   readonly minimumDeliveryDays?: Maybe<Scalars['Int']['output']>;
@@ -25707,15 +24744,9 @@ export type ShippingMethodType = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /**
    * Tax class assigned to this shipping method.
@@ -25772,11 +24803,7 @@ export type ShippingMethodTypeEnum =
   | 'PRICE'
   | 'WEIGHT';
 
-/**
- * List of shipping methods available for the country.
- *
- * Added in Saleor 3.6.
- */
+/** List of shipping methods available for the country. */
 export type ShippingMethodsPerCountry = {
   /** The country code. */
   readonly countryCode: CountryCode;
@@ -25800,7 +24827,7 @@ export type ShippingPriceBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
 };
 
@@ -25811,18 +24838,14 @@ export type ShippingPriceBulkDelete = {
  */
 export type ShippingPriceCreate = {
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
   readonly shippingMethod?: Maybe<ShippingMethodType>;
   /** A shipping zone to which the shipping method belongs. */
   readonly shippingZone?: Maybe<ShippingZone>;
 };
 
-/**
- * Event sent when new shipping price is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new shipping price is created. */
 export type ShippingPriceCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -25839,21 +24862,13 @@ export type ShippingPriceCreated = Event & {
 };
 
 
-/**
- * Event sent when new shipping price is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new shipping price is created. */
 export type ShippingPriceCreatedShippingMethodArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-/**
- * Event sent when new shipping price is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new shipping price is created. */
 export type ShippingPriceCreatedShippingZoneArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -25865,7 +24880,7 @@ export type ShippingPriceCreatedShippingZoneArgs = {
  */
 export type ShippingPriceDelete = {
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
   /** A shipping method to delete. */
   readonly shippingMethod?: Maybe<ShippingMethodType>;
@@ -25873,11 +24888,7 @@ export type ShippingPriceDelete = {
   readonly shippingZone?: Maybe<ShippingZone>;
 };
 
-/**
- * Event sent when shipping price is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping price is deleted. */
 export type ShippingPriceDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -25894,21 +24905,13 @@ export type ShippingPriceDeleted = Event & {
 };
 
 
-/**
- * Event sent when shipping price is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping price is deleted. */
 export type ShippingPriceDeletedShippingMethodArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-/**
- * Event sent when shipping price is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping price is deleted. */
 export type ShippingPriceDeletedShippingZoneArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -25920,7 +24923,7 @@ export type ShippingPriceDeletedShippingZoneArgs = {
  */
 export type ShippingPriceExcludeProducts = {
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
   /** A shipping method with new list of excluded products. */
   readonly shippingMethod?: Maybe<ShippingMethodType>;
@@ -25965,7 +24968,7 @@ export type ShippingPriceInput = {
  */
 export type ShippingPriceRemoveProductFromExclude = {
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
   /** A shipping method with new list of excluded products. */
   readonly shippingMethod?: Maybe<ShippingMethodType>;
@@ -25979,7 +24982,7 @@ export type ShippingPriceRemoveProductFromExclude = {
 export type ShippingPriceTranslate = {
   readonly errors: ReadonlyArray<TranslationError>;
   readonly shippingMethod?: Maybe<ShippingMethodType>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -26000,18 +25003,14 @@ export type ShippingPriceTranslationInput = {
  */
 export type ShippingPriceUpdate = {
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
   readonly shippingMethod?: Maybe<ShippingMethodType>;
   /** A shipping zone to which the shipping method belongs. */
   readonly shippingZone?: Maybe<ShippingZone>;
 };
 
-/**
- * Event sent when shipping price is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping price is updated. */
 export type ShippingPriceUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -26028,21 +25027,13 @@ export type ShippingPriceUpdated = Event & {
 };
 
 
-/**
- * Event sent when shipping price is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping price is updated. */
 export type ShippingPriceUpdatedShippingMethodArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-/**
- * Event sent when shipping price is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping price is updated. */
 export type ShippingPriceUpdatedShippingZoneArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -26065,15 +25056,9 @@ export type ShippingZone = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Shipping zone name. */
   readonly name: Scalars['String']['output'];
@@ -26085,15 +25070,9 @@ export type ShippingZone = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** List of shipping methods available for orders shipped to countries within this shipping zone. */
   readonly shippingMethods?: Maybe<ReadonlyArray<ShippingMethodType>>;
@@ -26134,7 +25113,7 @@ export type ShippingZoneBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
 };
 
@@ -26160,7 +25139,7 @@ export type ShippingZoneCountableEdge = {
  */
 export type ShippingZoneCreate = {
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
   readonly shippingZone?: Maybe<ShippingZone>;
 };
@@ -26180,11 +25159,7 @@ export type ShippingZoneCreateInput = {
   readonly name?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new shipping zone is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new shipping zone is created. */
 export type ShippingZoneCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -26199,11 +25174,7 @@ export type ShippingZoneCreated = Event & {
 };
 
 
-/**
- * Event sent when new shipping zone is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new shipping zone is created. */
 export type ShippingZoneCreatedShippingZoneArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -26215,16 +25186,12 @@ export type ShippingZoneCreatedShippingZoneArgs = {
  */
 export type ShippingZoneDelete = {
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
   readonly shippingZone?: Maybe<ShippingZone>;
 };
 
-/**
- * Event sent when shipping zone is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping zone is deleted. */
 export type ShippingZoneDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -26239,11 +25206,7 @@ export type ShippingZoneDeleted = Event & {
 };
 
 
-/**
- * Event sent when shipping zone is deleted.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping zone is deleted. */
 export type ShippingZoneDeletedShippingZoneArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -26253,11 +25216,7 @@ export type ShippingZoneFilterInput = {
   readonly search?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when shipping zone metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when shipping zone metadata is updated. */
 export type ShippingZoneMetadataUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -26272,11 +25231,7 @@ export type ShippingZoneMetadataUpdated = Event & {
 };
 
 
-/**
- * Event sent when shipping zone metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when shipping zone metadata is updated. */
 export type ShippingZoneMetadataUpdatedShippingZoneArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -26288,7 +25243,7 @@ export type ShippingZoneMetadataUpdatedShippingZoneArgs = {
  */
 export type ShippingZoneUpdate = {
   readonly errors: ReadonlyArray<ShippingError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shippingErrors: ReadonlyArray<ShippingError>;
   readonly shippingZone?: Maybe<ShippingZone>;
 };
@@ -26312,11 +25267,7 @@ export type ShippingZoneUpdateInput = {
   readonly removeWarehouses?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
 };
 
-/**
- * Event sent when shipping zone is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping zone is updated. */
 export type ShippingZoneUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -26331,11 +25282,7 @@ export type ShippingZoneUpdated = Event & {
 };
 
 
-/**
- * Event sent when shipping zone is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when shipping zone is updated. */
 export type ShippingZoneUpdatedShippingZoneArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -26344,8 +25291,6 @@ export type ShippingZoneUpdatedShippingZoneArgs = {
 export type Shop = ObjectWithMetadata & {
   /**
    * Determines if user can login without confirmation when `enableAccountConfirmation` is enabled.
-   *
-   * Added in Saleor 3.15.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
@@ -26373,14 +25318,12 @@ export type Shop = ObjectWithMetadata & {
   /**
    * List of all currencies supported by shop's channels.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
   readonly channelCurrencies: ReadonlyArray<Scalars['String']['output']>;
   /**
    * Charge taxes on shipping.
-   * @deprecated This field will be removed in Saleor 4.0. Use `ShippingMethodType.taxClass` to determine whether taxes are calculated for shipping methods; if a tax class is set, the taxes will be calculated, otherwise no tax rate will be applied.
+   * @deprecated Use `ShippingMethodType.taxClass` to determine whether taxes are calculated for shipping methods; if a tax class is set, the taxes will be calculated, otherwise no tax rate will be applied.
    */
   readonly chargeTaxesOnShipping: Scalars['Boolean']['output'];
   /** Company address. */
@@ -26421,7 +25364,7 @@ export type Shop = ObjectWithMetadata & {
   readonly description?: Maybe<Scalars['String']['output']>;
   /**
    * Display prices with tax in store.
-   * @deprecated This field will be removed in Saleor 4.0. Use `Channel.taxConfiguration` to determine whether to display gross or net prices.
+   * @deprecated Use `Channel.taxConfiguration` to determine whether to display gross or net prices.
    */
   readonly displayGrossPrices: Scalars['Boolean']['output'];
   /** Shop's domain data. */
@@ -26429,22 +25372,12 @@ export type Shop = ObjectWithMetadata & {
   /**
    * Determines if account confirmation by email is enabled.
    *
-   * Added in Saleor 3.14.
-   *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
   readonly enableAccountConfirmationByEmail?: Maybe<Scalars['Boolean']['output']>;
-  /**
-   * Allow to approve fulfillments which are unpaid.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Allow to approve fulfillments which are unpaid. */
   readonly fulfillmentAllowUnpaid: Scalars['Boolean']['output'];
-  /**
-   * Automatically approve all new fulfillments.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Automatically approve all new fulfillments. */
   readonly fulfillmentAutoApprove: Scalars['Boolean']['output'];
   /** Header text. */
   readonly headerText?: Maybe<Scalars['String']['output']>;
@@ -26452,15 +25385,13 @@ export type Shop = ObjectWithMetadata & {
   readonly id: Scalars['ID']['output'];
   /**
    * Include taxes in prices.
-   * @deprecated This field will be removed in Saleor 4.0. Use `Channel.taxConfiguration.pricesEnteredWithTax` to determine whether prices are entered with tax.
+   * @deprecated Use `Channel.taxConfiguration.pricesEnteredWithTax` to determine whether prices are entered with tax.
    */
   readonly includeTaxesInPrices: Scalars['Boolean']['output'];
   /** List of the shops's supported languages. */
   readonly languages: ReadonlyArray<LanguageDisplay>;
   /**
    * Default number of maximum line quantity in single checkout (per single checkout line).
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
@@ -26469,7 +25400,7 @@ export type Shop = ObjectWithMetadata & {
    * Resource limitations and current usage if any set for a shop
    *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
-   * @deprecated This field will be removed in Saleor 4.0.
+   * @deprecated Field no longer supported
    */
   readonly limits: LimitInfo;
   /** List of public metadata items. Can be accessed without permissions. */
@@ -26501,24 +25432,16 @@ export type Shop = ObjectWithMetadata & {
   /**
    * Default number of minutes stock will be reserved for anonymous checkout or null when stock reservation is disabled.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
   readonly reserveStockDurationAnonymousUser?: Maybe<Scalars['Int']['output']>;
   /**
    * Default number of minutes stock will be reserved for authenticated checkout or null when stock reservation is disabled.
    *
-   * Added in Saleor 3.1.
-   *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
   readonly reserveStockDurationAuthenticatedUser?: Maybe<Scalars['Int']['output']>;
-  /**
-   * Minor Saleor API version.
-   *
-   * Added in Saleor 3.5.
-   */
+  /** Minor Saleor API version. */
   readonly schemaVersion: Scalars['String']['output'];
   /**
    * List of staff notification recipients.
@@ -26598,14 +25521,12 @@ export type ShopAddressUpdate = {
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
 };
 
 /**
  * Updates site domain of the shop.
- *
- * DEPRECATED: this mutation will be removed in Saleor 4.0. Use `PUBLIC_URL` environment variable instead.
  *
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
@@ -26613,7 +25534,7 @@ export type ShopDomainUpdate = {
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
 };
 
@@ -26644,15 +25565,11 @@ export type ShopFetchTaxRates = {
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
 };
 
-/**
- * Event sent when shop metadata is updated.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when shop metadata is updated. */
 export type ShopMetadataUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -26667,18 +25584,13 @@ export type ShopMetadataUpdated = Event & {
 };
 
 export type ShopSettingsInput = {
-  /**
-   * Enable possibility to login without account confirmation.
-   *
-   * Added in Saleor 3.15.
-   */
+  /** Enable possibility to login without account confirmation. */
   readonly allowLoginWithoutConfirmation?: InputMaybe<Scalars['Boolean']['input']>;
   /** Enable automatic fulfillment for all digital products. */
   readonly automaticFulfillmentDigitalProducts?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Charge taxes on shipping.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. To enable taxes for a shipping method, assign a tax class to the shipping method with `shippingPriceCreate` or `shippingPriceUpdate` mutations.
+   * @deprecated To enable taxes for a shipping method, assign a tax class to the shipping method with `shippingPriceCreate` or `shippingPriceUpdate` mutations.
    */
   readonly chargeTaxesOnShipping?: InputMaybe<Scalars['Boolean']['input']>;
   /** URL of a view where customers can set their password. */
@@ -26697,65 +25609,39 @@ export type ShopSettingsInput = {
   readonly description?: InputMaybe<Scalars['String']['input']>;
   /**
    * Display prices with tax in store.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `taxConfigurationUpdate` mutation to configure this setting per channel or country.
+   * @deprecated Use `taxConfigurationUpdate` mutation to configure this setting per channel or country.
    */
   readonly displayGrossPrices?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * Enable automatic account confirmation by email.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Enable automatic account confirmation by email. */
   readonly enableAccountConfirmationByEmail?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * Enable ability to approve fulfillments which are unpaid.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Enable ability to approve fulfillments which are unpaid. */
   readonly fulfillmentAllowUnpaid?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * Enable automatic approval of all new fulfillments.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Enable automatic approval of all new fulfillments. */
   readonly fulfillmentAutoApprove?: InputMaybe<Scalars['Boolean']['input']>;
   /** Header text. */
   readonly headerText?: InputMaybe<Scalars['String']['input']>;
   /**
    * Include taxes in prices.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `taxConfigurationUpdate` mutation to configure this setting per channel or country.
+   * @deprecated Use `taxConfigurationUpdate` mutation to configure this setting per channel or country.
    */
   readonly includeTaxesInPrices?: InputMaybe<Scalars['Boolean']['input']>;
-  /**
-   * Default number of maximum line quantity in single checkout. Minimum possible value is 1, default value is 50.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Default number of maximum line quantity in single checkout. Minimum possible value is 1, default value is 50. */
   readonly limitQuantityPerCheckout?: InputMaybe<Scalars['Int']['input']>;
   /**
-   * Shop public metadata.
+   * Shop public metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.15.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /**
-   * Shop private metadata.
+   * Shop private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.15.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
-  /**
-   * Default number of minutes stock will be reserved for anonymous checkout. Enter 0 or null to disable.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Default number of minutes stock will be reserved for anonymous checkout. Enter 0 or null to disable. */
   readonly reserveStockDurationAnonymousUser?: InputMaybe<Scalars['Int']['input']>;
-  /**
-   * Default number of minutes stock will be reserved for authenticated checkout. Enter 0 or null to disable.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Default number of minutes stock will be reserved for authenticated checkout. Enter 0 or null to disable. */
   readonly reserveStockDurationAuthenticatedUser?: InputMaybe<Scalars['Int']['input']>;
   /** This field is used as a default value for `ProductVariant.trackInventory`. */
   readonly trackInventoryByDefault?: InputMaybe<Scalars['Boolean']['input']>;
@@ -26770,7 +25656,7 @@ export type ShopSettingsTranslate = {
   readonly errors: ReadonlyArray<TranslationError>;
   /** Updated shop settings. */
   readonly shop?: Maybe<Shop>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
@@ -26791,7 +25677,7 @@ export type ShopSettingsUpdate = {
   readonly errors: ReadonlyArray<ShopError>;
   /** Updated shop. */
   readonly shop?: Maybe<Shop>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
 };
 
@@ -26826,7 +25712,7 @@ export type StaffBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
   readonly errors: ReadonlyArray<StaffError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
 };
 
@@ -26842,7 +25728,7 @@ export type StaffBulkDelete = {
  */
 export type StaffCreate = {
   readonly errors: ReadonlyArray<StaffError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
   readonly user?: Maybe<User>;
 };
@@ -26860,28 +25746,24 @@ export type StaffCreateInput = {
   /** Family name. */
   readonly lastName?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the user metadata.
+   * Fields required to update the user metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** A note about the user. */
   readonly note?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the user private metadata.
+   * Fields required to update the user private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** URL of a view where users should be redirected to set the password. URL in RFC 1808 format. */
   readonly redirectUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new staff user is created.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when new staff user is created. */
 export type StaffCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -26905,16 +25787,12 @@ export type StaffCreated = Event & {
  */
 export type StaffDelete = {
   readonly errors: ReadonlyArray<StaffError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
   readonly user?: Maybe<User>;
 };
 
-/**
- * Event sent when staff user is deleted.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when staff user is deleted. */
 export type StaffDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -26971,19 +25849,19 @@ export type StaffNotificationRecipient = Node & {
  */
 export type StaffNotificationRecipientCreate = {
   readonly errors: ReadonlyArray<ShopError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
   readonly staffNotificationRecipient?: Maybe<StaffNotificationRecipient>;
 };
 
 /**
- * Delete staff notification recipient.
+ * Deletes staff notification recipient.
  *
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
 export type StaffNotificationRecipientDelete = {
   readonly errors: ReadonlyArray<ShopError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
   readonly staffNotificationRecipient?: Maybe<StaffNotificationRecipient>;
 };
@@ -27004,16 +25882,12 @@ export type StaffNotificationRecipientInput = {
  */
 export type StaffNotificationRecipientUpdate = {
   readonly errors: ReadonlyArray<ShopError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly shopErrors: ReadonlyArray<ShopError>;
   readonly staffNotificationRecipient?: Maybe<StaffNotificationRecipient>;
 };
 
-/**
- * Event sent when setting a new password for staff is requested.
- *
- * Added in Saleor 3.15.
- */
+/** Event sent when setting a new password for staff is requested. */
 export type StaffSetPasswordRequested = Event & {
   /** The channel data. */
   readonly channel?: Maybe<Channel>;
@@ -27045,7 +25919,7 @@ export type StaffSetPasswordRequested = Event & {
  */
 export type StaffUpdate = {
   readonly errors: ReadonlyArray<StaffError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly staffErrors: ReadonlyArray<StaffError>;
   readonly user?: Maybe<User>;
 };
@@ -27063,28 +25937,24 @@ export type StaffUpdateInput = {
   /** Family name. */
   readonly lastName?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the user metadata.
+   * Fields required to update the user metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** A note about the user. */
   readonly note?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the user private metadata.
+   * Fields required to update the user private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** List of permission group IDs from which user should be unassigned. */
   readonly removeGroups?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
 };
 
-/**
- * Event sent when staff user is updated.
- *
- * Added in Saleor 3.5.
- */
+/** Event sent when staff user is updated. */
 export type StaffUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -27145,10 +26015,6 @@ export type StockBulkResult = {
 
 /**
  * Updates stocks for a given variant and warehouse. Variant and warehouse selectors have to be the same for all stock inputs. Is not allowed to use 'variantId' in one input and 'variantExternalReference' in another.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  *
@@ -27235,11 +26101,7 @@ export type StockInput = {
   readonly warehouse: Scalars['ID']['input'];
 };
 
-/**
- * Represents the channel stock settings.
- *
- * Added in Saleor 3.7.
- */
+/** Represents the channel stock settings. */
 export type StockSettings = {
   /** Allocation strategy defines the preference of warehouses for allocations and reservations. */
   readonly allocationStrategy: AllocationStrategyEnum;
@@ -27278,13 +26140,7 @@ export type StorePaymentMethodEnum =
   /** On session storage type. The payment is stored only to be reused when the customer is present in the checkout flow. */
   | 'ON_SESSION';
 
-/**
- * Represents a payment method stored for user (tokenized) in payment gateway.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents a payment method stored for user (tokenized) in payment gateway. */
 export type StoredPaymentMethod = {
   /** Stored credit card details if available. */
   readonly creditCardInfo?: Maybe<CreditCard>;
@@ -27303,13 +26159,7 @@ export type StoredPaymentMethod = {
   readonly type: Scalars['String']['output'];
 };
 
-/**
- * Event sent when user requests to delete a payment method.
- *
- * Added in Saleor 3.16.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when user requests to delete a payment method. */
 export type StoredPaymentMethodDeleteRequested = Event & {
   /** Channel related to the requested delete action. */
   readonly channel: Channel;
@@ -27329,10 +26179,6 @@ export type StoredPaymentMethodDeleteRequested = Event & {
 
 /**
  * Request to delete a stored payment method on payment provider side.
- *
- * Added in Saleor 3.16.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: AUTHENTICATED_USER.
  *
@@ -27366,13 +26212,7 @@ export type StoredPaymentMethodRequestDeleteResult =
   | 'FAILED_TO_DELIVER'
   | 'SUCCESSFULLY_DELETED';
 
-/**
- * Define the filtering options for string fields.
- *
- * Added in Saleor 3.11.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Define the filtering options for string fields. */
 export type StringFilterInput = {
   /** The value equal to. */
   readonly eq?: InputMaybe<Scalars['String']['input']>;
@@ -27381,6 +26221,46 @@ export type StringFilterInput = {
 };
 
 export type Subscription = {
+  /**
+   * Event sent when new checkout is created.
+   *
+   * Added in Saleor 3.21.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly checkoutCreated?: Maybe<CheckoutCreated>;
+  /**
+   * Event sent when checkout is fully authorized.
+   *
+   * Added in Saleor 3.21.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly checkoutFullyAuthorized?: Maybe<CheckoutFullyAuthorized>;
+  /**
+   * Event sent when checkout is fully-paid.
+   *
+   * Added in Saleor 3.21.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly checkoutFullyPaid?: Maybe<CheckoutFullyPaid>;
+  /**
+   * Event sent when checkout metadata is updated.
+   *
+   * Added in Saleor 3.21.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly checkoutMetadataUpdated?: Maybe<CheckoutMetadataUpdated>;
+  /**
+   * Event sent when checkout is updated.
+   *
+   * Added in Saleor 3.21.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly checkoutUpdated?: Maybe<CheckoutUpdated>;
   /**
    * Event sent when new draft order is created.
    *
@@ -27405,11 +26285,7 @@ export type Subscription = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly draftOrderUpdated?: Maybe<DraftOrderUpdated>;
-  /**
-   * Look up subscription event.
-   *
-   * Added in Saleor 3.2.
-   */
+  /** Look up subscription event. */
   readonly event?: Maybe<Event>;
   /**
    * Event sent when orders are imported.
@@ -27510,6 +26386,31 @@ export type Subscription = {
 };
 
 
+export type SubscriptionCheckoutCreatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionCheckoutFullyAuthorizedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionCheckoutFullyPaidArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionCheckoutMetadataUpdatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionCheckoutUpdatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
 export type SubscriptionDraftOrderCreatedArgs = {
   channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
@@ -27588,11 +26489,7 @@ export type TaxCalculationStrategy =
   | 'FLAT_RATES'
   | 'TAX_APP';
 
-/**
- * Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates.
- *
- * Added in Saleor 3.9.
- */
+/** Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates. */
 export type TaxClass = Node & ObjectWithMetadata & {
   /** Country-specific tax rates for this tax class. */
   readonly countries: ReadonlyArray<TaxClassCountryRate>;
@@ -27604,15 +26501,9 @@ export type TaxClass = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Name of the tax class. */
   readonly name: Scalars['String']['output'];
@@ -27622,54 +26513,32 @@ export type TaxClass = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
 };
 
 
-/**
- * Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates.
- *
- * Added in Saleor 3.9.
- */
+/** Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates. */
 export type TaxClassMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
 
-/**
- * Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates.
- *
- * Added in Saleor 3.9.
- */
+/** Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates. */
 export type TaxClassMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 
-/**
- * Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates.
- *
- * Added in Saleor 3.9.
- */
+/** Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates. */
 export type TaxClassPrivateMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
 
-/**
- * Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates.
- *
- * Added in Saleor 3.9.
- */
+/** Tax class is a named object used to define tax rates per country. Tax class can be assigned to product types, products and shipping methods to define their tax rates. */
 export type TaxClassPrivateMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
@@ -27689,11 +26558,7 @@ export type TaxClassCountableEdge = {
   readonly node: TaxClass;
 };
 
-/**
- * Tax rate for a country. When tax class is null, it represents the default tax rate for that country; otherwise it's a country tax rate specific to the given tax class.
- *
- * Added in Saleor 3.9.
- */
+/** Tax rate for a country. When tax class is null, it represents the default tax rate for that country; otherwise it's a country tax rate specific to the given tax class. */
 export type TaxClassCountryRate = {
   /** Country in which this tax rate applies. */
   readonly country: CountryDisplay;
@@ -27704,9 +26569,7 @@ export type TaxClassCountryRate = {
 };
 
 /**
- * Create a tax class.
- *
- * Added in Saleor 3.9.
+ * Creates a tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -27739,9 +26602,7 @@ export type TaxClassCreateInput = {
 };
 
 /**
- * Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
- *
- * Added in Saleor 3.9.
+ * Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -27789,9 +26650,7 @@ export type TaxClassSortingInput = {
 };
 
 /**
- * Update a tax class.
- *
- * Added in Saleor 3.9.
+ * Updates a tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -27826,11 +26685,7 @@ export type TaxClassUpdateInput = {
   readonly updateCountryRates?: InputMaybe<ReadonlyArray<CountryRateUpdateInput>>;
 };
 
-/**
- * Channel-specific tax configuration.
- *
- * Added in Saleor 3.9.
- */
+/** Channel-specific tax configuration. */
 export type TaxConfiguration = Node & ObjectWithMetadata & {
   /** A channel to which the tax configuration applies to. */
   readonly channel: Channel;
@@ -27848,15 +26703,9 @@ export type TaxConfiguration = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Determines whether prices are entered with the tax included. */
   readonly pricesEnteredWithTax: Scalars['Boolean']['output'];
@@ -27866,15 +26715,9 @@ export type TaxConfiguration = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /**
    * The tax app `App.identifier` that will be used to calculate the taxes for the given channel. Empty value for `TAX_APP` set as `taxCalculationStrategy` means that Saleor will iterate over all installed tax apps. If multiple tax apps exist with provided tax app id use the `App` with newest `created` date. Will become mandatory in 4.0 for `TAX_APP` `taxCalculationStrategy`.
@@ -27884,44 +26727,34 @@ export type TaxConfiguration = Node & ObjectWithMetadata & {
   readonly taxAppId?: Maybe<Scalars['String']['output']>;
   /** The default strategy to use for tax calculation in the given channel. Taxes can be calculated either using user-defined flat rates or with a tax app. Empty value means that no method is selected and taxes are not calculated. */
   readonly taxCalculationStrategy?: Maybe<TaxCalculationStrategy>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useWeightedTaxForShipping?: Maybe<Scalars['Boolean']['output']>;
 };
 
 
-/**
- * Channel-specific tax configuration.
- *
- * Added in Saleor 3.9.
- */
+/** Channel-specific tax configuration. */
 export type TaxConfigurationMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
 
-/**
- * Channel-specific tax configuration.
- *
- * Added in Saleor 3.9.
- */
+/** Channel-specific tax configuration. */
 export type TaxConfigurationMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 
-/**
- * Channel-specific tax configuration.
- *
- * Added in Saleor 3.9.
- */
+/** Channel-specific tax configuration. */
 export type TaxConfigurationPrivateMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
 
-/**
- * Channel-specific tax configuration.
- *
- * Added in Saleor 3.9.
- */
+/** Channel-specific tax configuration. */
 export type TaxConfigurationPrivateMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
@@ -27946,11 +26779,7 @@ export type TaxConfigurationFilterInput = {
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
 };
 
-/**
- * Country-specific exceptions of a channel's tax configuration.
- *
- * Added in Saleor 3.9.
- */
+/** Country-specific exceptions of a channel's tax configuration. */
 export type TaxConfigurationPerCountry = {
   /** Determines whether taxes are charged in this country. */
   readonly chargeTaxes: Scalars['Boolean']['output'];
@@ -27966,6 +26795,12 @@ export type TaxConfigurationPerCountry = {
   readonly taxAppId?: Maybe<Scalars['String']['output']>;
   /** A country-specific strategy to use for tax calculation. Taxes can be calculated either using user-defined flat rates or with a tax app. If not provided, use the value from the channel's tax configuration. */
   readonly taxCalculationStrategy?: Maybe<TaxCalculationStrategy>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useWeightedTaxForShipping?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type TaxConfigurationPerCountryInput = {
@@ -27983,12 +26818,16 @@ export type TaxConfigurationPerCountryInput = {
   readonly taxAppId?: InputMaybe<Scalars['String']['input']>;
   /** A country-specific strategy to use for tax calculation. Taxes can be calculated either using user-defined flat rates or with a tax app. If not provided, use the value from the channel's tax configuration. */
   readonly taxCalculationStrategy?: InputMaybe<TaxCalculationStrategy>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines. Default value is `False`.Can be used only with `taxCalculationStrategy` set to `FLAT_RATES`.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useWeightedTaxForShipping?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /**
- * Update tax configuration for a channel.
- *
- * Added in Saleor 3.9.
+ * Updates tax configuration for a channel.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -28033,13 +26872,15 @@ export type TaxConfigurationUpdateInput = {
   readonly taxCalculationStrategy?: InputMaybe<TaxCalculationStrategy>;
   /** List of tax country configurations to create or update (identified by a country code). */
   readonly updateCountriesConfiguration?: InputMaybe<ReadonlyArray<TaxConfigurationPerCountryInput>>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines. Default value is `False`.Can be used only with `taxCalculationStrategy` set to `FLAT_RATES`.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly useWeightedTaxForShipping?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/**
- * Tax class rates grouped by country.
- *
- * Added in Saleor 3.9.
- */
+/** Tax class rates grouped by country. */
 export type TaxCountryConfiguration = {
   /** A country for which tax class rates are grouped. */
   readonly country: CountryDisplay;
@@ -28049,8 +26890,6 @@ export type TaxCountryConfiguration = {
 
 /**
  * Remove all tax class rates for a specific country.
- *
- * Added in Saleor 3.9.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -28075,9 +26914,7 @@ export type TaxCountryConfigurationDeleteErrorCode =
   | 'NOT_FOUND';
 
 /**
- * Update tax class rates for a specific country.
- *
- * Added in Saleor 3.9.
+ * Updates tax class rates for a specific country.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -28107,8 +26944,6 @@ export type TaxCountryConfigurationUpdateErrorCode =
 
 /**
  * Exempt checkout or order from charging the taxes. When tax exemption is enabled, taxes won't be charged for the checkout or order. Taxes may still be calculated in cases when product prices are entered with the tax included and the net price needs to be known.
- *
- * Added in Saleor 3.8.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -28224,41 +27059,21 @@ export type TaxedMoneyRange = {
   readonly stop?: Maybe<TaxedMoney>;
 };
 
-/**
- * Event sent when thumbnail is created.
- *
- * Added in Saleor 3.12.
- */
+/** Event sent when thumbnail is created. */
 export type ThumbnailCreated = Event & {
-  /**
-   * Thumbnail id.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Thumbnail id. */
   readonly id?: Maybe<Scalars['ID']['output']>;
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
   /** The user or application that triggered the event. */
   readonly issuingPrincipal?: Maybe<IssuingPrincipal>;
-  /**
-   * Original media url.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Original media url. */
   readonly mediaUrl?: Maybe<Scalars['String']['output']>;
-  /**
-   * Object the thumbnail refers to.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Object the thumbnail refers to. */
   readonly objectId?: Maybe<Scalars['ID']['output']>;
   /** The application receiving the webhook. */
   readonly recipient?: Maybe<App>;
-  /**
-   * Thumbnail url.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** Thumbnail url. */
   readonly url?: Maybe<Scalars['String']['output']>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
@@ -28307,7 +27122,10 @@ export type Transaction = Node & {
   readonly created: Scalars['DateTime']['output'];
   /** Error associated with transaction, if any. */
   readonly error?: Maybe<Scalars['String']['output']>;
-  /** Response returned by payment gateway. */
+  /**
+   * Response returned by payment gateway.
+   * @deprecated This field is a part of a legacy Payments API. Please use apps instead.
+   */
   readonly gatewayResponse: Scalars['JSONString']['output'];
   /** ID of the transaction. */
   readonly id: Scalars['ID']['output'];
@@ -28324,13 +27142,9 @@ export type Transaction = Node & {
 export type TransactionAction = {
   /** Determines the action type. */
   readonly actionType: TransactionActionEnum;
-  /** Transaction request amount. Null when action type is VOID. */
-  readonly amount?: Maybe<Scalars['PositiveDecimal']['output']>;
-  /**
-   * Currency code.
-   *
-   * Added in Saleor 3.16.
-   */
+  /** Transaction request amount. */
+  readonly amount: Scalars['PositiveDecimal']['output'];
+  /** Currency code. */
   readonly currency: Scalars['String']['output'];
 };
 
@@ -28347,13 +27161,7 @@ export type TransactionActionEnum =
   | 'CHARGE'
   | 'REFUND';
 
-/**
- * Event sent when transaction cancelation is requested.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when transaction cancelation is requested. */
 export type TransactionCancelationRequested = Event & {
   /** Requested action data. */
   readonly action: TransactionAction;
@@ -28369,13 +27177,7 @@ export type TransactionCancelationRequested = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Event sent when transaction charge is requested.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when transaction charge is requested. */
 export type TransactionChargeRequested = Event & {
   /** Requested action data. */
   readonly action: TransactionAction;
@@ -28392,11 +27194,7 @@ export type TransactionChargeRequested = Event & {
 };
 
 /**
- * Create transaction for checkout or order.
- *
- * Added in Saleor 3.4.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+ * Creates transaction for checkout or order.
  *
  * Requires one of the following permissions: HANDLE_PAYMENTS.
  */
@@ -28425,11 +27223,7 @@ export type TransactionCreateErrorCode =
 export type TransactionCreateInput = {
   /** Amount authorized by this transaction. */
   readonly amountAuthorized?: InputMaybe<MoneyInput>;
-  /**
-   * Amount canceled by this transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Amount canceled by this transaction. */
   readonly amountCanceled?: InputMaybe<MoneyInput>;
   /** Amount charged by this transaction. */
   readonly amountCharged?: InputMaybe<MoneyInput>;
@@ -28437,107 +27231,71 @@ export type TransactionCreateInput = {
   readonly amountRefunded?: InputMaybe<MoneyInput>;
   /** List of all possible actions for the transaction */
   readonly availableActions?: InputMaybe<ReadonlyArray<TransactionActionEnum>>;
-  /**
-   * The url that will allow to redirect user to payment provider page with transaction event details.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** The url that will allow to redirect user to payment provider page with transaction event details. */
   readonly externalUrl?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * The message of the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** The message of the transaction. */
   readonly message?: InputMaybe<Scalars['String']['input']>;
-  /** Payment public metadata. */
+  /**
+   * Payment public metadata. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
-  /**
-   * Payment name of the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Payment name of the transaction. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /** Payment private metadata. */
-  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /**
-   * PSP Reference of the transaction.
+   * Details of the payment method used for the transaction.
    *
-   * Added in Saleor 3.13.
+   * Added in Saleor 3.22.
    */
+  readonly paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
+  /**
+   * Payment private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /** PSP Reference of the transaction. */
   readonly pspReference?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Represents transaction's event. */
 export type TransactionEvent = Node & {
-  /**
-   * The amount related to this event.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** The amount related to this event. */
   readonly amount: Money;
   /** Date and time at which a transaction event was created. */
   readonly createdAt: Scalars['DateTime']['output'];
-  /**
-   * User or App that created the transaction event.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** User or App that created the transaction event. */
   readonly createdBy?: Maybe<UserOrApp>;
-  /**
-   * The url that will allow to redirect user to payment provider page with transaction details.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** The url that will allow to redirect user to payment provider page with transaction details. */
   readonly externalUrl: Scalars['String']['output'];
   /** The ID of the object. */
   readonly id: Scalars['ID']['output'];
-  /**
-   * Idempotency key assigned to the event.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Idempotency key assigned to the event. */
   readonly idempotencyKey?: Maybe<Scalars['String']['output']>;
-  /**
-   * Message related to the transaction's event.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Message related to the transaction's event. */
   readonly message: Scalars['String']['output'];
-  /**
-   * PSP reference of transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** PSP reference of transaction. */
   readonly pspReference: Scalars['String']['output'];
   /**
-   * The type of action related to this event.
+   * Reason model of the transaction refund.
    *
-   * Added in Saleor 3.13.
+   * Added in Saleor 3.22.
    */
+  readonly reasonReference?: Maybe<Page>;
+  /** The type of action related to this event. */
   readonly type?: Maybe<TransactionEventTypeEnum>;
 };
 
 export type TransactionEventInput = {
-  /**
-   * The message related to the event.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** The message related to the event. */
   readonly message?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * PSP Reference related to this action.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** PSP Reference related to this action. */
   readonly pspReference?: InputMaybe<Scalars['String']['input']>;
 };
 
 /**
  * Report the event for the transaction.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
  *
@@ -28620,6 +27378,14 @@ export type TransactionEventTypeEnum =
   | 'REFUND_REVERSE'
   | 'REFUND_SUCCESS';
 
+/** Filter input for transactions. */
+export type TransactionFilterInput = {
+  /** Filter by metadata fields of transactions. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by payment method details used to pay for the order. */
+  readonly paymentMethodDetails?: InputMaybe<PaymentMethodDetailsFilterInput>;
+};
+
 /**
  * Determine the transaction flow strategy.
  *
@@ -28630,13 +27396,7 @@ export type TransactionFlowStrategyEnum =
   | 'AUTHORIZATION'
   | 'CHARGE';
 
-/**
- * Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. There is a limit of 100 transaction items per checkout / order.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. There is a limit of 100 transaction items per checkout / order. */
 export type TransactionInitialize = {
   /** The JSON data required to finalize the payment. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
@@ -28663,29 +27423,15 @@ export type TransactionInitializeErrorCode =
   | 'NOT_FOUND'
   | 'UNIQUE';
 
-/**
- * Event sent when user starts processing the payment.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when user starts processing the payment. */
 export type TransactionInitializeSession = Event & {
   /** Action to proceed for the transaction */
   readonly action: TransactionProcessAction;
-  /**
-   * The customer's IP address. If not provided as a parameter in the mutation, Saleor will try to determine the customer's IP address on its own.
-   *
-   * Added in Saleor 3.16.
-   */
+  /** The customer's IP address. If not provided as a parameter in the mutation, Saleor will try to determine the customer's IP address on its own. */
   readonly customerIpAddress?: Maybe<Scalars['String']['output']>;
   /** Payment gateway data in JSON format, received from storefront. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
-  /**
-   * Idempotency key assigned to the transaction initialize.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Idempotency key assigned to the transaction initialize. */
   readonly idempotencyKey: Scalars['String']['output'];
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -28703,73 +27449,35 @@ export type TransactionInitializeSession = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Represents a payment transaction.
- *
- * Added in Saleor 3.4.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents a payment transaction. */
 export type TransactionItem = Node & ObjectWithMetadata & {
   /** List of actions that can be performed in the current state of a payment. */
   readonly actions: ReadonlyArray<TransactionActionEnum>;
-  /**
-   * Total amount of ongoing authorization requests for the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Total amount of ongoing authorization requests for the transaction. */
   readonly authorizePendingAmount: Money;
   /** Total amount authorized for this payment. */
   readonly authorizedAmount: Money;
-  /**
-   * Total amount of ongoing cancel requests for the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Total amount of ongoing cancel requests for the transaction. */
   readonly cancelPendingAmount: Money;
-  /**
-   * Total amount canceled for this payment.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Total amount canceled for this payment. */
   readonly canceledAmount: Money;
-  /**
-   * Total amount of ongoing charge requests for the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Total amount of ongoing charge requests for the transaction. */
   readonly chargePendingAmount: Money;
   /** Total amount charged for this payment. */
   readonly chargedAmount: Money;
-  /**
-   * The related checkout.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The related checkout. */
   readonly checkout?: Maybe<Checkout>;
   /** Date and time at which payment transaction was created. */
   readonly createdAt: Scalars['DateTime']['output'];
-  /**
-   * User or App that created the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** User or App that created the transaction. */
   readonly createdBy?: Maybe<UserOrApp>;
   /** List of all transaction's events. */
   readonly events: ReadonlyArray<TransactionEvent>;
-  /**
-   * The url that will allow to redirect user to payment provider page with transaction details.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** The url that will allow to redirect user to payment provider page with transaction details. */
   readonly externalUrl: Scalars['String']['output'];
   /** The ID of the object. */
   readonly id: Scalars['ID']['output'];
-  /**
-   * Message related to the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Message related to the transaction. */
   readonly message: Scalars['String']['output'];
   /** List of public metadata items. Can be accessed without permissions. */
   readonly metadata: ReadonlyArray<MetadataItem>;
@@ -28777,121 +27485,79 @@ export type TransactionItem = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Date and time at which payment transaction was modified. */
   readonly modifiedAt: Scalars['DateTime']['output'];
-  /**
-   * Name of the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Name of the transaction. */
   readonly name: Scalars['String']['output'];
-  /**
-   * The related order.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** The related order. */
   readonly order?: Maybe<Order>;
+  /**
+   * The payment method used for this transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly paymentMethodDetails?: Maybe<PaymentMethodDetails>;
   /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
   /**
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
-  /**
-   * PSP reference of transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** PSP reference of transaction. */
   readonly pspReference: Scalars['String']['output'];
   /**
-   * Total amount of ongoing refund requests for the transaction.
+   * Reason of the refund.
    *
-   * Added in Saleor 3.13.
+   * Added in Saleor 3.22.
    */
+  readonly reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason `Page` (Model) for refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: Maybe<Page>;
+  /** Total amount of ongoing refund requests for the transaction. */
   readonly refundPendingAmount: Money;
   /** Total amount refunded for this payment. */
   readonly refundedAmount: Money;
-  /**
-   * The transaction token.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The transaction token. */
   readonly token: Scalars['UUID']['output'];
 };
 
 
-/**
- * Represents a payment transaction.
- *
- * Added in Saleor 3.4.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents a payment transaction. */
 export type TransactionItemMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
 
-/**
- * Represents a payment transaction.
- *
- * Added in Saleor 3.4.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents a payment transaction. */
 export type TransactionItemMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 
-/**
- * Represents a payment transaction.
- *
- * Added in Saleor 3.4.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents a payment transaction. */
 export type TransactionItemPrivateMetafieldArgs = {
   key: Scalars['String']['input'];
 };
 
 
-/**
- * Represents a payment transaction.
- *
- * Added in Saleor 3.4.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Represents a payment transaction. */
 export type TransactionItemPrivateMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
-/**
- * Event sent when transaction item metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when transaction item metadata is updated. */
 export type TransactionItemMetadataUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -28917,13 +27583,7 @@ export type TransactionKind =
   | 'REFUND_ONGOING'
   | 'VOID';
 
-/**
- * Processes a transaction session. It triggers the webhook `TRANSACTION_PROCESS_SESSION`, to the assigned `paymentGateways`.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Processes a transaction session. It triggers the webhook `TRANSACTION_PROCESS_SESSION`, to the assigned `paymentGateways`. */
 export type TransactionProcess = {
   /** The json data required to finalize the payment. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
@@ -28960,21 +27620,11 @@ export type TransactionProcessErrorCode =
   | 'NOT_FOUND'
   | 'TRANSACTION_ALREADY_PROCESSED';
 
-/**
- * Event sent when user has additional payment action to process.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when user has additional payment action to process. */
 export type TransactionProcessSession = Event & {
   /** Action to proceed for the transaction */
   readonly action: TransactionProcessAction;
-  /**
-   * The customer's IP address. If not provided as a parameter in the mutation, Saleor will try to determine the customer's IP address on its own.
-   *
-   * Added in Saleor 3.16.
-   */
+  /** The customer's IP address. If not provided as a parameter in the mutation, Saleor will try to determine the customer's IP address on its own. */
   readonly customerIpAddress?: Maybe<Scalars['String']['output']>;
   /** Payment gateway data in JSON format, received from storefront. */
   readonly data?: Maybe<Scalars['JSON']['output']>;
@@ -28994,20 +27644,12 @@ export type TransactionProcessSession = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Event sent when transaction refund is requested.
- *
- * Added in Saleor 3.13.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- */
+/** Event sent when transaction refund is requested. */
 export type TransactionRefundRequested = Event & {
   /** Requested action data. */
   readonly action: TransactionAction;
   /**
    * Granted refund related to refund request.
-   *
-   * Added in Saleor 3.15.
    *
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
@@ -29026,10 +27668,6 @@ export type TransactionRefundRequested = Event & {
 
 /**
  * Request an action for payment transaction.
- *
- * Added in Saleor 3.4.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: HANDLE_PAYMENTS.
  */
@@ -29051,14 +27689,11 @@ export type TransactionRequestActionErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'MISSING_TRANSACTION_ACTION_REQUEST_WEBHOOK'
-  | 'NOT_FOUND';
+  | 'NOT_FOUND'
+  | 'REQUIRED';
 
 /**
  * Request a refund for payment transaction based on granted refund.
- *
- * Added in Saleor 3.15.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: HANDLE_PAYMENTS.
  */
@@ -29088,10 +27723,6 @@ export type TransactionRequestRefundForGrantedRefundErrorCode =
 /**
  * Update transaction.
  *
- * Added in Saleor 3.4.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- *
  * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
  */
 export type TransactionUpdate = {
@@ -29119,11 +27750,7 @@ export type TransactionUpdateErrorCode =
 export type TransactionUpdateInput = {
   /** Amount authorized by this transaction. */
   readonly amountAuthorized?: InputMaybe<MoneyInput>;
-  /**
-   * Amount canceled by this transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Amount canceled by this transaction. */
   readonly amountCanceled?: InputMaybe<MoneyInput>;
   /** Amount charged by this transaction. */
   readonly amountCharged?: InputMaybe<MoneyInput>;
@@ -29131,33 +27758,31 @@ export type TransactionUpdateInput = {
   readonly amountRefunded?: InputMaybe<MoneyInput>;
   /** List of all possible actions for the transaction */
   readonly availableActions?: InputMaybe<ReadonlyArray<TransactionActionEnum>>;
-  /**
-   * The url that will allow to redirect user to payment provider page with transaction event details.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** The url that will allow to redirect user to payment provider page with transaction event details. */
   readonly externalUrl?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * The message of the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** The message of the transaction. */
   readonly message?: InputMaybe<Scalars['String']['input']>;
-  /** Payment public metadata. */
+  /**
+   * Payment public metadata. Can be read by any API client authorized to read the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
-  /**
-   * Payment name of the transaction.
-   *
-   * Added in Saleor 3.13.
-   */
+  /** Payment name of the transaction. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /** Payment private metadata. */
-  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /**
-   * PSP Reference of the transaction.
+   * Details of the payment method used for the transaction.
    *
-   * Added in Saleor 3.13.
+   * Added in Saleor 3.22.
    */
+  readonly paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
+  /**
+   * Payment private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
+   *
+   * Warning: never store sensitive information, including financial data such as credit card details.
+   */
+  readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  /** PSP Reference of the transaction. */
   readonly pspReference?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -29193,11 +27818,7 @@ export type TranslatableKinds =
   | 'VARIANT'
   | 'VOUCHER';
 
-/**
- * Event sent when new translation is created.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when new translation is created. */
 export type TranslationCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -29224,7 +27845,8 @@ export type TranslationErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'NOT_FOUND'
-  | 'REQUIRED';
+  | 'REQUIRED'
+  | 'UNIQUE';
 
 export type TranslationInput = {
   /**
@@ -29236,15 +27858,12 @@ export type TranslationInput = {
   readonly name?: InputMaybe<Scalars['String']['input']>;
   readonly seoDescription?: InputMaybe<Scalars['String']['input']>;
   readonly seoTitle?: InputMaybe<Scalars['String']['input']>;
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TranslationTypes = AttributeTranslation | AttributeValueTranslation | CategoryTranslation | CollectionTranslation | MenuItemTranslation | PageTranslation | ProductTranslation | ProductVariantTranslation | PromotionRuleTranslation | PromotionTranslation | SaleTranslation | ShippingMethodTranslation | VoucherTranslation;
 
-/**
- * Event sent when translation is updated.
- *
- * Added in Saleor 3.2.
- */
+/** Event sent when translation is updated. */
 export type TranslationUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -29258,38 +27877,54 @@ export type TranslationUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Define the filtering options for string fields. */
+export type UuidFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<Scalars['UUID']['input']>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<Scalars['UUID']['input']>>;
+};
+
 export type UpdateInvoiceInput = {
   /**
-   * Fields required to update the invoice metadata.
+   * Fields required to update the invoice metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Invoice number */
   readonly number?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the invoice private metadata.
+   * Fields required to update the invoice private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** URL of an invoice to download. */
   readonly url?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Updates metadata of an object. To use it, you need to have access to the modified object. */
+/**
+ * Updates metadata of an object.Requires permissions to modify and to read the metadata of the object it's attached to.
+ *
+ * Warning: never store sensitive information, including financial data such as credit card details.
+ */
 export type UpdateMetadata = {
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly metadataErrors: ReadonlyArray<MetadataError>;
 };
 
-/** Updates private metadata of an object. To use it, you need to be an authenticated staff user or an app and have access to the modified object. */
+/**
+ * Updates private metadata of an object. Requires permissions to modify and to read the metadata of the object it's attached to.
+ *
+ * Warning: never store sensitive information, including financial data such as credit card details.
+ */
 export type UpdatePrivateMetadata = {
   readonly errors: ReadonlyArray<MetadataError>;
   readonly item?: Maybe<ObjectWithMetadata>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly metadataErrors: ReadonlyArray<MetadataError>;
 };
 
@@ -29307,13 +27942,7 @@ export type UploadErrorCode =
 
 /** Represents user data. */
 export type User = Node & ObjectWithMetadata & {
-  /**
-   * List of channels the user has access to. The sum of channels from all user groups. If at least one group has `restrictedAccessToChannels` set to False - all channels are returned.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** List of channels the user has access to. The sum of channels from all user groups. If at least one group has `restrictedAccessToChannels` set to False - all channels are returned. */
   readonly accessibleChannels?: Maybe<ReadonlyArray<Channel>>;
   /** List of all user's addresses. */
   readonly addresses: ReadonlyArray<Address>;
@@ -29321,21 +27950,17 @@ export type User = Node & ObjectWithMetadata & {
   readonly avatar?: Maybe<Image>;
   /**
    * Returns the last open checkout of this user.
-   * @deprecated This field will be removed in Saleor 4.0. Use the `checkoutTokens` field to fetch the user checkouts.
+   * @deprecated Use the `checkoutTokens` field to fetch the user checkouts.
    */
   readonly checkout?: Maybe<Checkout>;
   /** Returns the checkout ID's assigned to this user. */
   readonly checkoutIds?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /**
    * Returns the checkout UUID's assigned to this user.
-   * @deprecated This field will be removed in Saleor 4.0. Use `checkoutIds` instead.
+   * @deprecated Use `checkoutIds` instead.
    */
   readonly checkoutTokens?: Maybe<ReadonlyArray<Scalars['UUID']['output']>>;
-  /**
-   * Returns checkouts assigned to this user.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Returns checkouts assigned to this user. The query will not initiate any external requests, including fetching external shipping methods, filtering available shipping methods, or performing external tax calculations. */
   readonly checkouts?: Maybe<CheckoutCountableConnection>;
   /** The data when the user create account. */
   readonly dateJoined: Scalars['DateTime']['output'];
@@ -29353,11 +27978,7 @@ export type User = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
    */
   readonly events?: Maybe<ReadonlyArray<CustomerEvent>>;
-  /**
-   * External ID of this user.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this user. */
   readonly externalReference?: Maybe<Scalars['String']['output']>;
   /** The given name of the address. */
   readonly firstName: Scalars['String']['output'];
@@ -29367,11 +27988,7 @@ export type User = Node & ObjectWithMetadata & {
   readonly id: Scalars['ID']['output'];
   /** Determine if the user is active. */
   readonly isActive: Scalars['Boolean']['output'];
-  /**
-   * Determines if user has confirmed email.
-   *
-   * Added in Saleor 3.15.
-   */
+  /** Determines if user has confirmed email. */
   readonly isConfirmed: Scalars['Boolean']['output'];
   /** Determine if the user is a staff admin. */
   readonly isStaff: Scalars['Boolean']['output'];
@@ -29387,15 +28004,9 @@ export type User = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /**
    * A note about the customer.
@@ -29403,7 +28014,7 @@ export type User = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_USERS, MANAGE_STAFF.
    */
   readonly note?: Maybe<Scalars['String']['output']>;
-  /** List of user's orders. Requires one of the following permissions: MANAGE_STAFF, OWNER. */
+  /** List of user's orders. The query will not initiate any external requests, including filtering available shipping methods, or performing external tax calculations. Requires one of the following permissions: MANAGE_STAFF, OWNER. */
   readonly orders?: Maybe<OrderCountableConnection>;
   /** List of user's permission groups. */
   readonly permissionGroups?: Maybe<ReadonlyArray<Group>>;
@@ -29413,31 +28024,13 @@ export type User = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
-  /**
-   * Determine if user have restricted access to channels. False if at least one user group has `restrictedAccessToChannels` set to False.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Determine if user have restricted access to channels. False if at least one user group has `restrictedAccessToChannels` set to False. */
   readonly restrictedAccessToChannels: Scalars['Boolean']['output'];
-  /**
-   * Returns a list of user's stored payment methods that can be used in provided channel. The field returns a list of stored payment methods by payment apps. When `amount` is not provided, 0 will be used as default value.
-   *
-   * Added in Saleor 3.15.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Returns a list of user's stored payment methods that can be used in provided channel. The field returns a list of stored payment methods by payment apps. When `amount` is not provided, 0 will be used as default value. */
   readonly storedPaymentMethods?: Maybe<ReadonlyArray<StoredPaymentMethod>>;
   /** List of stored payment sources. The field returns a list of payment sources stored for payment plugins. */
   readonly storedPaymentSources?: Maybe<ReadonlyArray<PaymentSource>>;
@@ -29536,7 +28129,7 @@ export type UserStoredPaymentSourcesArgs = {
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type UserAvatarDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** An updated user instance. */
@@ -29549,7 +28142,7 @@ export type UserAvatarDelete = {
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type UserAvatarUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** An updated user instance. */
@@ -29562,7 +28155,7 @@ export type UserAvatarUpdate = {
  * Requires one of the following permissions: MANAGE_USERS.
  */
 export type UserBulkSetActive = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
@@ -29593,11 +28186,7 @@ export type UserCreateInput = {
   readonly defaultShippingAddress?: InputMaybe<AddressInput>;
   /** The unique email address of the user. */
   readonly email?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * External ID of the customer.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of the customer. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** Given name. */
   readonly firstName?: InputMaybe<Scalars['String']['input']>;
@@ -29605,12 +28194,7 @@ export type UserCreateInput = {
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * User account is confirmed.
-   *
-   * Added in Saleor 3.15.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
-   *
-   * The user will be always set as unconfirmed. The confirmation will take place when the user sets the password.
+   * @deprecated The user will be always set as unconfirmed. The confirmation will take place when the user sets the password.
    */
   readonly isConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
   /** User language code. */
@@ -29618,17 +28202,17 @@ export type UserCreateInput = {
   /** Family name. */
   readonly lastName?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the user metadata.
+   * Fields required to update the user metadata. Can be read by any API client authorized to read the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** A note about the user. */
   readonly note?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Fields required to update the user private metadata.
+   * Fields required to update the user private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
-   * Added in Saleor 3.14.
+   * Warning: never store sensitive information, including financial data such as credit card details.
    */
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** URL of a view where users should be redirected to set the password. URL in RFC 1808 format. */
@@ -29697,7 +28281,7 @@ export type VariantAttributeScope =
 export type VariantMediaAssign = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly productVariant?: Maybe<ProductVariant>;
 };
@@ -29710,7 +28294,7 @@ export type VariantMediaAssign = {
 export type VariantMediaUnassign = {
   readonly errors: ReadonlyArray<ProductError>;
   readonly media?: Maybe<ProductMedia>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly productErrors: ReadonlyArray<ProductError>;
   readonly productVariant?: Maybe<ProductVariant>;
 };
@@ -29721,25 +28305,37 @@ export type VariantPricingInfo = {
   readonly discount?: Maybe<TaxedMoney>;
   /**
    * The discount amount in the local currency.
-   * @deprecated This field will be removed in Saleor 4.0. Always returns `null`.
+   * @deprecated Always returns `null`.
    */
   readonly discountLocalCurrency?: Maybe<TaxedMoney>;
+  /**
+   * The discount amount compared to prior price. Null if product is not on sale or prior price was not provided in VariantChannelListing
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly discountPrior?: Maybe<TaxedMoney>;
   /** Whether it is in sale or not. */
   readonly onSale?: Maybe<Scalars['Boolean']['output']>;
   /** The price, with any discount subtracted. */
   readonly price?: Maybe<TaxedMoney>;
   /**
    * The discounted price in the local currency.
-   * @deprecated This field will be removed in Saleor 4.0. Always returns `null`.
+   * @deprecated Always returns `null`.
    */
   readonly priceLocalCurrency?: Maybe<TaxedMoney>;
+  /**
+   * The price prior to discount.
+   *
+   * Added in Saleor 3.21.
+   */
+  readonly pricePrior?: Maybe<TaxedMoney>;
   /** The price without any discount. */
   readonly priceUndiscounted?: Maybe<TaxedMoney>;
 };
 
 /** Verify JWT token. */
 export type VerifyToken = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly accountErrors: ReadonlyArray<AccountError>;
   readonly errors: ReadonlyArray<AccountError>;
   /** Determine if token is valid or not. */
@@ -29779,7 +28375,7 @@ export type Voucher = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
   readonly channelListings?: Maybe<ReadonlyArray<VoucherChannelListing>>;
-  /** The code of the voucher.This field will be removed in Saleor 4.0. */
+  /** The code of the voucher. */
   readonly code?: Maybe<Scalars['String']['output']>;
   /**
    * List of codes available for this voucher.
@@ -29811,15 +28407,9 @@ export type Voucher = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Determine minimum quantity of items for checkout. */
   readonly minCheckoutItemsQuantity?: Maybe<Scalars['Int']['output']>;
@@ -29835,15 +28425,9 @@ export type Voucher = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /**
    * List of products this voucher applies to.
@@ -29871,8 +28455,6 @@ export type Voucher = Node & ObjectWithMetadata & {
   readonly used: Scalars['Int']['output'];
   /**
    * List of product variants this voucher applies to.
-   *
-   * Added in Saleor 3.1.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
@@ -29963,7 +28545,7 @@ export type VoucherVariantsArgs = {
  * - VOUCHER_UPDATED (async): A voucher was updated.
  */
 export type VoucherAddCatalogues = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   /** Voucher of which catalogue IDs will be modified. */
@@ -29981,7 +28563,7 @@ export type VoucherAddCatalogues = {
 export type VoucherBulkDelete = {
   /** Returns how many objects were affected. */
   readonly count: Scalars['Int']['output'];
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
 };
@@ -30025,7 +28607,7 @@ export type VoucherChannelListingInput = {
  * - VOUCHER_UPDATED (async): A voucher was updated.
  */
 export type VoucherChannelListingUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   /** An updated voucher instance. */
@@ -30178,17 +28760,13 @@ export type VoucherCountableEdge = {
  * - VOUCHER_CODES_CREATED (async): A voucher codes were created.
  */
 export type VoucherCreate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   readonly voucher?: Maybe<Voucher>;
 };
 
-/**
- * Event sent when new voucher is created.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when new voucher is created. */
 export type VoucherCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -30203,11 +28781,7 @@ export type VoucherCreated = Event & {
 };
 
 
-/**
- * Event sent when new voucher is created.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when new voucher is created. */
 export type VoucherCreatedVoucherArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -30221,17 +28795,13 @@ export type VoucherCreatedVoucherArgs = {
  * - VOUCHER_DELETED (async): A voucher was deleted.
  */
 export type VoucherDelete = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   readonly voucher?: Maybe<Voucher>;
 };
 
-/**
- * Event sent when voucher is deleted.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when voucher is deleted. */
 export type VoucherDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -30246,11 +28816,7 @@ export type VoucherDeleted = Event & {
 };
 
 
-/**
- * Event sent when voucher is deleted.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when voucher is deleted. */
 export type VoucherDeletedVoucherArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -30285,7 +28851,10 @@ export type VoucherInput = {
   readonly applyOncePerOrder?: InputMaybe<Scalars['Boolean']['input']>;
   /** Categories discounted by the voucher. */
   readonly categories?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
-  /** Code to use the voucher. This field will be removed in Saleor 4.0. Use `addCodes` instead. */
+  /**
+   * Code to use the voucher.
+   * @deprecated Use `addCodes` instead.
+   */
   readonly code?: InputMaybe<Scalars['String']['input']>;
   /** Collections discounted by the voucher. */
   readonly collections?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
@@ -30319,19 +28888,11 @@ export type VoucherInput = {
   readonly type?: InputMaybe<VoucherTypeEnum>;
   /** Limit number of times this voucher can be used in total. */
   readonly usageLimit?: InputMaybe<Scalars['Int']['input']>;
-  /**
-   * Variants discounted by the voucher.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Variants discounted by the voucher. */
   readonly variants?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
 };
 
-/**
- * Event sent when voucher metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when voucher metadata is updated. */
 export type VoucherMetadataUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -30346,11 +28907,7 @@ export type VoucherMetadataUpdated = Event & {
 };
 
 
-/**
- * Event sent when voucher metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when voucher metadata is updated. */
 export type VoucherMetadataUpdatedVoucherArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -30364,7 +28921,7 @@ export type VoucherMetadataUpdatedVoucherArgs = {
  * - VOUCHER_UPDATED (async): A voucher was updated.
  */
 export type VoucherRemoveCatalogues = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   /** Voucher of which catalogue IDs will be modified. */
@@ -30372,11 +28929,7 @@ export type VoucherRemoveCatalogues = {
 };
 
 export type VoucherSortField =
-  /**
-   * Sort vouchers by code.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0.
-   */
+  /** Sort vouchers by code. */
   | 'CODE'
   /** Sort vouchers by end date. */
   | 'END_DATE'
@@ -30408,8 +28961,7 @@ export type VoucherSortField =
 export type VoucherSortingInput = {
   /**
    * Specifies the channel in which to sort the data.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use root-level channel argument instead.
+   * @deprecated Use root-level channel argument instead.
    */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
   /** Specifies the direction in which to sort vouchers. */
@@ -30430,14 +28982,10 @@ export type VoucherTranslatableContent = Node & {
    * Vouchers allow giving discounts to particular customers on categories, collections or specific products. They can be used during checkout by providing valid voucher codes.
    *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
-   * @deprecated This field will be removed in Saleor 4.0. Get model fields from the root level queries.
+   * @deprecated Get model fields from the root level queries.
    */
   readonly voucher?: Maybe<Voucher>;
-  /**
-   * The ID of the voucher to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** The ID of the voucher to translate. */
   readonly voucherId: Scalars['ID']['output'];
 };
 
@@ -30454,7 +29002,7 @@ export type VoucherTranslatableContentTranslationArgs = {
  */
 export type VoucherTranslate = {
   readonly errors: ReadonlyArray<TranslationError>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly translationErrors: ReadonlyArray<TranslationError>;
   readonly voucher?: Maybe<Voucher>;
 };
@@ -30467,11 +29015,7 @@ export type VoucherTranslation = Node & {
   readonly language: LanguageDisplay;
   /** Translated voucher name. */
   readonly name?: Maybe<Scalars['String']['output']>;
-  /**
-   * Represents the voucher fields to translate.
-   *
-   * Added in Saleor 3.14.
-   */
+  /** Represents the voucher fields to translate. */
   readonly translatableContent?: Maybe<VoucherTranslatableContent>;
 };
 
@@ -30490,17 +29034,13 @@ export type VoucherTypeEnum =
  * - VOUCHER_CODES_CREATED (async): A voucher code was created.
  */
 export type VoucherUpdate = {
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly discountErrors: ReadonlyArray<DiscountError>;
   readonly errors: ReadonlyArray<DiscountError>;
   readonly voucher?: Maybe<Voucher>;
 };
 
-/**
- * Event sent when voucher is updated.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when voucher is updated. */
 export type VoucherUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -30515,11 +29055,7 @@ export type VoucherUpdated = Event & {
 };
 
 
-/**
- * Event sent when voucher is updated.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when voucher is updated. */
 export type VoucherUpdatedVoucherArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
@@ -30528,24 +29064,16 @@ export type VoucherUpdatedVoucherArgs = {
 export type Warehouse = Node & ObjectWithMetadata & {
   /** Address of the warehouse. */
   readonly address: Address;
-  /**
-   * Click and collect options: local, all or disabled.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Click and collect options: local, all or disabled. */
   readonly clickAndCollectOption: WarehouseClickAndCollectOptionEnum;
   /**
    * Warehouse company name.
-   * @deprecated This field will be removed in Saleor 4.0. Use `Address.companyName` instead.
+   * @deprecated Use `Address.companyName` instead.
    */
   readonly companyName: Scalars['String']['output'];
   /** Warehouse email. */
   readonly email: Scalars['String']['output'];
-  /**
-   * External ID of this warehouse.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of this warehouse. */
   readonly externalReference?: Maybe<Scalars['String']['output']>;
   /** The ID of the warehouse. */
   readonly id: Scalars['ID']['output'];
@@ -30557,15 +29085,9 @@ export type Warehouse = Node & ObjectWithMetadata & {
    * A single key from public metadata.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly metafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Public metadata. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly metafields?: Maybe<Scalars['Metadata']['output']>;
   /** Warehouse name. */
   readonly name: Scalars['String']['output'];
@@ -30575,15 +29097,9 @@ export type Warehouse = Node & ObjectWithMetadata & {
    * A single key from private metadata. Requires staff permissions to access.
    *
    * Tip: Use GraphQL aliases to fetch multiple keys.
-   *
-   * Added in Saleor 3.3.
    */
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
-  /**
-   * Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything.
-   *
-   * Added in Saleor 3.3.
-   */
+  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** Shipping zones supported by the warehouse. */
   readonly shippingZones: ShippingZoneCountableConnection;
@@ -30662,14 +29178,14 @@ export type WarehouseCountableEdge = {
 };
 
 /**
- * Creates new warehouse.
+ * Creates a new warehouse.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
 export type WarehouseCreate = {
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly warehouseErrors: ReadonlyArray<WarehouseError>;
 };
 
@@ -30678,29 +29194,20 @@ export type WarehouseCreateInput = {
   readonly address: AddressInput;
   /** The email address of the warehouse. */
   readonly email?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * External ID of the warehouse.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of the warehouse. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
   /** Warehouse name. */
   readonly name: Scalars['String']['input'];
   /**
    * Shipping zones supported by the warehouse.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Providing the zone ids will raise a ValidationError.
+   * @deprecated Providing the zone ids will raise a ValidationError.
    */
   readonly shippingZones?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Warehouse slug. */
   readonly slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when new warehouse is created.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when new warehouse is created. */
 export type WarehouseCreated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -30722,15 +29229,11 @@ export type WarehouseCreated = Event & {
 export type WarehouseDelete = {
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly warehouseErrors: ReadonlyArray<WarehouseError>;
 };
 
-/**
- * Event sent when warehouse is deleted.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when warehouse is deleted. */
 export type WarehouseDeleted = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -30773,11 +29276,7 @@ export type WarehouseFilterInput = {
   readonly slugs?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
-/**
- * Event sent when warehouse metadata is updated.
- *
- * Added in Saleor 3.8.
- */
+/** Event sent when warehouse metadata is updated. */
 export type WarehouseMetadataUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -30799,7 +29298,7 @@ export type WarehouseMetadataUpdated = Event & {
 export type WarehouseShippingZoneAssign = {
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly warehouseErrors: ReadonlyArray<WarehouseError>;
 };
 
@@ -30811,7 +29310,7 @@ export type WarehouseShippingZoneAssign = {
 export type WarehouseShippingZoneUnassign = {
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly warehouseErrors: ReadonlyArray<WarehouseError>;
 };
 
@@ -30834,32 +29333,20 @@ export type WarehouseSortingInput = {
 export type WarehouseUpdate = {
   readonly errors: ReadonlyArray<WarehouseError>;
   readonly warehouse?: Maybe<Warehouse>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly warehouseErrors: ReadonlyArray<WarehouseError>;
 };
 
 export type WarehouseUpdateInput = {
   /** Address of the warehouse. */
   readonly address?: InputMaybe<AddressInput>;
-  /**
-   * Click and collect options: local, all or disabled.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Click and collect options: local, all or disabled. */
   readonly clickAndCollectOption?: InputMaybe<WarehouseClickAndCollectOptionEnum>;
   /** The email address of the warehouse. */
   readonly email?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * External ID of the warehouse.
-   *
-   * Added in Saleor 3.10.
-   */
+  /** External ID of the warehouse. */
   readonly externalReference?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Visibility of warehouse stocks.
-   *
-   * Added in Saleor 3.1.
-   */
+  /** Visibility of warehouse stocks. */
   readonly isPrivate?: InputMaybe<Scalars['Boolean']['input']>;
   /** Warehouse name. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
@@ -30867,11 +29354,7 @@ export type WarehouseUpdateInput = {
   readonly slug?: InputMaybe<Scalars['String']['input']>;
 };
 
-/**
- * Event sent when warehouse is updated.
- *
- * Added in Saleor 3.4.
- */
+/** Event sent when warehouse is updated. */
 export type WarehouseUpdated = Event & {
   /** Time of the event. */
   readonly issuedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -30891,19 +29374,13 @@ export type Webhook = Node & {
   readonly app: App;
   /** List of asynchronous webhook events. */
   readonly asyncEvents: ReadonlyArray<WebhookEventAsync>;
-  /**
-   * Custom headers, which will be added to HTTP request.
-   *
-   * Added in Saleor 3.12.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Custom headers, which will be added to HTTP request. */
   readonly customHeaders?: Maybe<Scalars['JSONString']['output']>;
   /** Event deliveries. */
   readonly eventDeliveries?: Maybe<EventDeliveryCountableConnection>;
   /**
    * List of webhook events.
-   * @deprecated This field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
+   * @deprecated Use `asyncEvents` or `syncEvents` instead.
    */
   readonly events: ReadonlyArray<WebhookEvent>;
   /** The ID of webhook. */
@@ -30914,7 +29391,7 @@ export type Webhook = Node & {
   readonly name?: Maybe<Scalars['String']['output']>;
   /**
    * Used to create a hash signature for each payload.
-   * @deprecated This field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
+   * @deprecated As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
    */
   readonly secretKey?: Maybe<Scalars['String']['output']>;
   /** Used to define payloads for specific events. */
@@ -30944,7 +29421,7 @@ export type WebhookEventDeliveriesArgs = {
 export type WebhookCreate = {
   readonly errors: ReadonlyArray<WebhookError>;
   readonly webhook?: Maybe<Webhook>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly webhookErrors: ReadonlyArray<WebhookError>;
 };
 
@@ -30953,34 +29430,22 @@ export type WebhookCreateInput = {
   readonly app?: InputMaybe<Scalars['ID']['input']>;
   /** The asynchronous events that webhook wants to subscribe. */
   readonly asyncEvents?: InputMaybe<ReadonlyArray<WebhookEventTypeAsyncEnum>>;
-  /**
-   * Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only `X-*`, `Authorization*`, and `BrokerProperties` keys are allowed.
-   *
-   * Added in Saleor 3.12.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only `X-*`, `Authorization*`, and `BrokerProperties` keys are allowed. */
   readonly customHeaders?: InputMaybe<Scalars['JSONString']['input']>;
   /**
    * The events that webhook wants to subscribe.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
+   * @deprecated Use `asyncEvents` or `syncEvents` instead.
    */
   readonly events?: InputMaybe<ReadonlyArray<WebhookEventTypeEnum>>;
   /** Determine if webhook will be set active or not. */
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The name of the webhook. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Subscription query used to define a webhook payload.
-   *
-   * Added in Saleor 3.2.
-   */
+  /** Subscription query used to define a webhook payload. */
   readonly query?: InputMaybe<Scalars['String']['input']>;
   /**
    * The secret key used to create a hash signature with each payload.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
+   * @deprecated As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
    */
   readonly secretKey?: InputMaybe<Scalars['String']['input']>;
   /** The synchronous events that webhook wants to subscribe. */
@@ -30990,23 +29455,19 @@ export type WebhookCreateInput = {
 };
 
 /**
- * Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
+ * Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
  *
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
 export type WebhookDelete = {
   readonly errors: ReadonlyArray<WebhookError>;
   readonly webhook?: Maybe<Webhook>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly webhookErrors: ReadonlyArray<WebhookError>;
 };
 
 /**
  * Performs a dry run of a webhook event. Supports a single event (the first, if multiple provided in the `query`). Requires permission relevant to processed event.
- *
- * Added in Saleor 3.11.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
@@ -31105,11 +29566,7 @@ export type WebhookEventTypeAsyncEnum =
   | 'ADDRESS_DELETED'
   /** An address updated. */
   | 'ADDRESS_UPDATED'
-  /**
-   * All the events.
-   *
-   * DEPRECATED: this value will be removed in Saleor 4.0.
-   */
+  /** All the events. */
   | 'ANY_EVENTS'
   /** An app deleted. */
   | 'APP_DELETED'
@@ -31149,12 +29606,19 @@ export type WebhookEventTypeAsyncEnum =
   | 'CHANNEL_UPDATED'
   /** A new checkout is created. */
   | 'CHECKOUT_CREATED'
-  | 'CHECKOUT_FULLY_PAID'
   /**
-   * A checkout metadata is updated.
+   * A checkout was fully authorized (its `authorizeStatus` is `FULL`).
    *
-   * Added in Saleor 3.8.
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
    */
+  | 'CHECKOUT_FULLY_AUTHORIZED'
+  /**
+   * A checkout was fully paid (its `chargeStatus` is `FULL` or `OVERCHARGED`). This event is not sent if payments are only authorized but not fully charged.
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
+  | 'CHECKOUT_FULLY_PAID'
+  /** A checkout metadata is updated. */
   | 'CHECKOUT_METADATA_UPDATED'
   /** A checkout is updated. It also triggers all updates related to the checkout. */
   | 'CHECKOUT_UPDATED'
@@ -31162,11 +29626,7 @@ export type WebhookEventTypeAsyncEnum =
   | 'COLLECTION_CREATED'
   /** A collection is deleted. */
   | 'COLLECTION_DELETED'
-  /**
-   * A collection metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A collection metadata is updated. */
   | 'COLLECTION_METADATA_UPDATED'
   /** A collection is updated. */
   | 'COLLECTION_UPDATED'
@@ -31174,11 +29634,7 @@ export type WebhookEventTypeAsyncEnum =
   | 'CUSTOMER_CREATED'
   /** A customer account is deleted. */
   | 'CUSTOMER_DELETED'
-  /**
-   * A customer account metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A customer account metadata is updated. */
   | 'CUSTOMER_METADATA_UPDATED'
   /** A customer account is updated. */
   | 'CUSTOMER_UPDATED'
@@ -31194,36 +29650,18 @@ export type WebhookEventTypeAsyncEnum =
   | 'FULFILLMENT_CANCELED'
   /** A new fulfillment is created. */
   | 'FULFILLMENT_CREATED'
-  /**
-   * A fulfillment metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A fulfillment metadata is updated. */
   | 'FULFILLMENT_METADATA_UPDATED'
   | 'FULFILLMENT_TRACKING_NUMBER_UPDATED'
   /** A new gift card created. */
   | 'GIFT_CARD_CREATED'
   /** A gift card is deleted. */
   | 'GIFT_CARD_DELETED'
-  /**
-   * A gift card export is completed.
-   *
-   * Added in Saleor 3.16.
-   */
+  /** A gift card export is completed. */
   | 'GIFT_CARD_EXPORT_COMPLETED'
-  /**
-   * A gift card metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A gift card metadata is updated. */
   | 'GIFT_CARD_METADATA_UPDATED'
-  /**
-   * A gift card has been sent.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** A gift card has been sent. */
   | 'GIFT_CARD_SENT'
   /** A gift card status is changed. */
   | 'GIFT_CARD_STATUS_CHANGED'
@@ -31247,21 +29685,11 @@ export type WebhookEventTypeAsyncEnum =
   | 'MENU_ITEM_UPDATED'
   /** A menu is updated. */
   | 'MENU_UPDATED'
-  /**
-   * User notification triggered.
-   *
-   * DEPRECATED: this value will be removed in Saleor 4.0. See the docs for more details about migrating from NOTIFY_USER to other events: https://docs.saleor.io/docs/next/upgrade-guides/notify-user-deprecation
-   */
+  /** User notification triggered. */
   | 'NOTIFY_USER'
   /** An observability event is created. */
   | 'OBSERVABILITY'
-  /**
-   * Orders are imported.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Orders are imported. */
   | 'ORDER_BULK_CREATED'
   /** An order is cancelled. */
   | 'ORDER_CANCELLED'
@@ -31275,35 +29703,13 @@ export type WebhookEventTypeAsyncEnum =
   | 'ORDER_FULFILLED'
   /** Payment is made and an order is fully paid. */
   | 'ORDER_FULLY_PAID'
-  /**
-   * The order is fully refunded.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The order is fully refunded. */
   | 'ORDER_FULLY_REFUNDED'
-  /**
-   * An order metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** An order metadata is updated. */
   | 'ORDER_METADATA_UPDATED'
-  /**
-   * Payment has been made. The order may be partially or fully paid.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Payment has been made. The order may be partially or fully paid. */
   | 'ORDER_PAID'
-  /**
-   * The order received a refund. The order may be partially or fully refunded.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The order received a refund. The order may be partially or fully refunded. */
   | 'ORDER_REFUNDED'
   /** An order is updated; triggered for all changes related to an order; covers all other order webhooks, except for ORDER_CREATED. */
   | 'ORDER_UPDATED'
@@ -31329,35 +29735,15 @@ export type WebhookEventTypeAsyncEnum =
   | 'PRODUCT_CREATED'
   /** A product is deleted. */
   | 'PRODUCT_DELETED'
-  /**
-   * A product export is completed.
-   *
-   * Added in Saleor 3.16.
-   */
+  /** A product export is completed. */
   | 'PRODUCT_EXPORT_COMPLETED'
-  /**
-   * A new product media is created.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** A new product media is created. */
   | 'PRODUCT_MEDIA_CREATED'
-  /**
-   * A product media is deleted.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** A product media is deleted. */
   | 'PRODUCT_MEDIA_DELETED'
-  /**
-   * A product media is updated.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** A product media is updated. */
   | 'PRODUCT_MEDIA_UPDATED'
-  /**
-   * A product metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A product metadata is updated. */
   | 'PRODUCT_METADATA_UPDATED'
   /** A product is updated. */
   | 'PRODUCT_UPDATED'
@@ -31367,11 +29753,7 @@ export type WebhookEventTypeAsyncEnum =
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   | 'PRODUCT_VARIANT_DELETED'
-  /**
-   * A product variant metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A product variant metadata is updated. */
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
@@ -31413,19 +29795,11 @@ export type WebhookEventTypeAsyncEnum =
   | 'SHIPPING_ZONE_CREATED'
   /** A shipping zone is deleted. */
   | 'SHIPPING_ZONE_DELETED'
-  /**
-   * A shipping zone metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A shipping zone metadata is updated. */
   | 'SHIPPING_ZONE_METADATA_UPDATED'
   /** A shipping zone is updated. */
   | 'SHIPPING_ZONE_UPDATED'
-  /**
-   * Shop metadata is updated.
-   *
-   * Added in Saleor 3.15.
-   */
+  /** Shop metadata is updated. */
   | 'SHOP_METADATA_UPDATED'
   /** A new staff user is created. */
   | 'STAFF_CREATED'
@@ -31435,17 +29809,9 @@ export type WebhookEventTypeAsyncEnum =
   | 'STAFF_SET_PASSWORD_REQUESTED'
   /** A staff user is updated. */
   | 'STAFF_UPDATED'
-  /**
-   * A thumbnail is created.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** A thumbnail is created. */
   | 'THUMBNAIL_CREATED'
-  /**
-   * Transaction item metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Transaction item metadata is updated. */
   | 'TRANSACTION_ITEM_METADATA_UPDATED'
   /** A new translation is created. */
   | 'TRANSLATION_CREATED'
@@ -31463,11 +29829,7 @@ export type WebhookEventTypeAsyncEnum =
   | 'VOUCHER_CREATED'
   /** A voucher is deleted. */
   | 'VOUCHER_DELETED'
-  /**
-   * A voucher metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A voucher metadata is updated. */
   | 'VOUCHER_METADATA_UPDATED'
   /** A voucher is updated. */
   | 'VOUCHER_UPDATED'
@@ -31475,11 +29837,7 @@ export type WebhookEventTypeAsyncEnum =
   | 'WAREHOUSE_CREATED'
   /** A warehouse is deleted. */
   | 'WAREHOUSE_DELETED'
-  /**
-   * A warehouse metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A warehouse metadata is updated. */
   | 'WAREHOUSE_METADATA_UPDATED'
   /** A warehouse is updated. */
   | 'WAREHOUSE_UPDATED';
@@ -31506,11 +29864,7 @@ export type WebhookEventTypeEnum =
   | 'ADDRESS_DELETED'
   /** An address updated. */
   | 'ADDRESS_UPDATED'
-  /**
-   * All the events.
-   *
-   * DEPRECATED: this value will be removed in Saleor 4.0.
-   */
+  /** All the events. */
   | 'ANY_EVENTS'
   /** An app deleted. */
   | 'APP_DELETED'
@@ -31548,22 +29902,25 @@ export type WebhookEventTypeEnum =
   | 'CHANNEL_STATUS_CHANGED'
   /** A channel is updated. */
   | 'CHANNEL_UPDATED'
-  /**
-   * Event called for checkout tax calculation.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Event called for checkout tax calculation. */
   | 'CHECKOUT_CALCULATE_TAXES'
   /** A new checkout is created. */
   | 'CHECKOUT_CREATED'
   /** Filter shipping methods for checkout. */
   | 'CHECKOUT_FILTER_SHIPPING_METHODS'
-  | 'CHECKOUT_FULLY_PAID'
   /**
-   * A checkout metadata is updated.
+   * A checkout was fully authorized (its `authorizeStatus` is `FULL`).
    *
-   * Added in Saleor 3.8.
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
    */
+  | 'CHECKOUT_FULLY_AUTHORIZED'
+  /**
+   * A checkout was fully paid (its `chargeStatus` is `FULL` or `OVERCHARGED`). This event is not sent if payments are only authorized but not fully charged.
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
+  | 'CHECKOUT_FULLY_PAID'
+  /** A checkout metadata is updated. */
   | 'CHECKOUT_METADATA_UPDATED'
   /** A checkout is updated. It also triggers all updates related to the checkout. */
   | 'CHECKOUT_UPDATED'
@@ -31571,11 +29928,7 @@ export type WebhookEventTypeEnum =
   | 'COLLECTION_CREATED'
   /** A collection is deleted. */
   | 'COLLECTION_DELETED'
-  /**
-   * A collection metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A collection metadata is updated. */
   | 'COLLECTION_METADATA_UPDATED'
   /** A collection is updated. */
   | 'COLLECTION_UPDATED'
@@ -31583,11 +29936,7 @@ export type WebhookEventTypeEnum =
   | 'CUSTOMER_CREATED'
   /** A customer account is deleted. */
   | 'CUSTOMER_DELETED'
-  /**
-   * A customer account metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A customer account metadata is updated. */
   | 'CUSTOMER_METADATA_UPDATED'
   /** A customer account is updated. */
   | 'CUSTOMER_UPDATED'
@@ -31603,36 +29952,18 @@ export type WebhookEventTypeEnum =
   | 'FULFILLMENT_CANCELED'
   /** A new fulfillment is created. */
   | 'FULFILLMENT_CREATED'
-  /**
-   * A fulfillment metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A fulfillment metadata is updated. */
   | 'FULFILLMENT_METADATA_UPDATED'
   | 'FULFILLMENT_TRACKING_NUMBER_UPDATED'
   /** A new gift card created. */
   | 'GIFT_CARD_CREATED'
   /** A gift card is deleted. */
   | 'GIFT_CARD_DELETED'
-  /**
-   * A gift card export is completed.
-   *
-   * Added in Saleor 3.16.
-   */
+  /** A gift card export is completed. */
   | 'GIFT_CARD_EXPORT_COMPLETED'
-  /**
-   * A gift card metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A gift card metadata is updated. */
   | 'GIFT_CARD_METADATA_UPDATED'
-  /**
-   * A gift card has been sent.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** A gift card has been sent. */
   | 'GIFT_CARD_SENT'
   /** A gift card status is changed. */
   | 'GIFT_CARD_STATUS_CHANGED'
@@ -31657,27 +29988,13 @@ export type WebhookEventTypeEnum =
   | 'MENU_ITEM_UPDATED'
   /** A menu is updated. */
   | 'MENU_UPDATED'
-  /**
-   * User notification triggered.
-   *
-   * DEPRECATED: this value will be removed in Saleor 4.0. See the docs for more details about migrating from NOTIFY_USER to other events: https://docs.saleor.io/docs/next/upgrade-guides/notify-user-deprecation
-   */
+  /** User notification triggered. */
   | 'NOTIFY_USER'
   /** An observability event is created. */
   | 'OBSERVABILITY'
-  /**
-   * Orders are imported.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Orders are imported. */
   | 'ORDER_BULK_CREATED'
-  /**
-   * Event called for order tax calculation.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Event called for order tax calculation. */
   | 'ORDER_CALCULATE_TAXES'
   /** An order is cancelled. */
   | 'ORDER_CANCELLED'
@@ -31693,35 +30010,13 @@ export type WebhookEventTypeEnum =
   | 'ORDER_FULFILLED'
   /** Payment is made and an order is fully paid. */
   | 'ORDER_FULLY_PAID'
-  /**
-   * The order is fully refunded.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The order is fully refunded. */
   | 'ORDER_FULLY_REFUNDED'
-  /**
-   * An order metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** An order metadata is updated. */
   | 'ORDER_METADATA_UPDATED'
-  /**
-   * Payment has been made. The order may be partially or fully paid.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Payment has been made. The order may be partially or fully paid. */
   | 'ORDER_PAID'
-  /**
-   * The order received a refund. The order may be partially or fully refunded.
-   *
-   * Added in Saleor 3.14.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** The order received a refund. The order may be partially or fully refunded. */
   | 'ORDER_REFUNDED'
   /** An order is updated; triggered for all changes related to an order; covers all other order webhooks, except for ORDER_CREATED. */
   | 'ORDER_UPDATED'
@@ -31765,35 +30060,15 @@ export type WebhookEventTypeEnum =
   | 'PRODUCT_CREATED'
   /** A product is deleted. */
   | 'PRODUCT_DELETED'
-  /**
-   * A product export is completed.
-   *
-   * Added in Saleor 3.16.
-   */
+  /** A product export is completed. */
   | 'PRODUCT_EXPORT_COMPLETED'
-  /**
-   * A new product media is created.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** A new product media is created. */
   | 'PRODUCT_MEDIA_CREATED'
-  /**
-   * A product media is deleted.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** A product media is deleted. */
   | 'PRODUCT_MEDIA_DELETED'
-  /**
-   * A product media is updated.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** A product media is updated. */
   | 'PRODUCT_MEDIA_UPDATED'
-  /**
-   * A product metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A product metadata is updated. */
   | 'PRODUCT_METADATA_UPDATED'
   /** A product is updated. */
   | 'PRODUCT_UPDATED'
@@ -31803,11 +30078,7 @@ export type WebhookEventTypeEnum =
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   | 'PRODUCT_VARIANT_DELETED'
-  /**
-   * A product variant metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A product variant metadata is updated. */
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
   | 'PRODUCT_VARIANT_OUT_OF_STOCK'
@@ -31851,19 +30122,11 @@ export type WebhookEventTypeEnum =
   | 'SHIPPING_ZONE_CREATED'
   /** A shipping zone is deleted. */
   | 'SHIPPING_ZONE_DELETED'
-  /**
-   * A shipping zone metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A shipping zone metadata is updated. */
   | 'SHIPPING_ZONE_METADATA_UPDATED'
   /** A shipping zone is updated. */
   | 'SHIPPING_ZONE_UPDATED'
-  /**
-   * Shop metadata is updated.
-   *
-   * Added in Saleor 3.15.
-   */
+  /** Shop metadata is updated. */
   | 'SHOP_METADATA_UPDATED'
   /** A new staff user is created. */
   | 'STAFF_CREATED'
@@ -31874,43 +30137,17 @@ export type WebhookEventTypeEnum =
   /** A staff user is updated. */
   | 'STAFF_UPDATED'
   | 'STORED_PAYMENT_METHOD_DELETE_REQUESTED'
-  /**
-   * A thumbnail is created.
-   *
-   * Added in Saleor 3.12.
-   */
+  /** A thumbnail is created. */
   | 'THUMBNAIL_CREATED'
-  /**
-   * Event called when cancel has been requested for transaction.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Event called when cancel has been requested for transaction. */
   | 'TRANSACTION_CANCELATION_REQUESTED'
-  /**
-   * Event called when charge has been requested for transaction.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Event called when charge has been requested for transaction. */
   | 'TRANSACTION_CHARGE_REQUESTED'
   | 'TRANSACTION_INITIALIZE_SESSION'
-  /**
-   * Transaction item metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** Transaction item metadata is updated. */
   | 'TRANSACTION_ITEM_METADATA_UPDATED'
   | 'TRANSACTION_PROCESS_SESSION'
-  /**
-   * Event called when refund has been requested for transaction.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Event called when refund has been requested for transaction. */
   | 'TRANSACTION_REFUND_REQUESTED'
   /** A new translation is created. */
   | 'TRANSLATION_CREATED'
@@ -31928,11 +30165,7 @@ export type WebhookEventTypeEnum =
   | 'VOUCHER_CREATED'
   /** A voucher is deleted. */
   | 'VOUCHER_DELETED'
-  /**
-   * A voucher metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A voucher metadata is updated. */
   | 'VOUCHER_METADATA_UPDATED'
   /** A voucher is updated. */
   | 'VOUCHER_UPDATED'
@@ -31940,31 +30173,19 @@ export type WebhookEventTypeEnum =
   | 'WAREHOUSE_CREATED'
   /** A warehouse is deleted. */
   | 'WAREHOUSE_DELETED'
-  /**
-   * A warehouse metadata is updated.
-   *
-   * Added in Saleor 3.8.
-   */
+  /** A warehouse metadata is updated. */
   | 'WAREHOUSE_METADATA_UPDATED'
   /** A warehouse is updated. */
   | 'WAREHOUSE_UPDATED';
 
 /** Enum determining type of webhook. */
 export type WebhookEventTypeSyncEnum =
-  /**
-   * Event called for checkout tax calculation.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Event called for checkout tax calculation. */
   | 'CHECKOUT_CALCULATE_TAXES'
   /** Filter shipping methods for checkout. */
   | 'CHECKOUT_FILTER_SHIPPING_METHODS'
   | 'LIST_STORED_PAYMENT_METHODS'
-  /**
-   * Event called for order tax calculation.
-   *
-   * Added in Saleor 3.6.
-   */
+  /** Event called for order tax calculation. */
   | 'ORDER_CALCULATE_TAXES'
   /** Filter shipping methods for order. */
   | 'ORDER_FILTER_SHIPPING_METHODS'
@@ -31989,31 +30210,13 @@ export type WebhookEventTypeSyncEnum =
   /** Fetch external shipping methods for checkout. */
   | 'SHIPPING_LIST_METHODS_FOR_CHECKOUT'
   | 'STORED_PAYMENT_METHOD_DELETE_REQUESTED'
-  /**
-   * Event called when cancel has been requested for transaction.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Event called when cancel has been requested for transaction. */
   | 'TRANSACTION_CANCELATION_REQUESTED'
-  /**
-   * Event called when charge has been requested for transaction.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Event called when charge has been requested for transaction. */
   | 'TRANSACTION_CHARGE_REQUESTED'
   | 'TRANSACTION_INITIALIZE_SESSION'
   | 'TRANSACTION_PROCESS_SESSION'
-  /**
-   * Event called when refund has been requested for transaction.
-   *
-   * Added in Saleor 3.13.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Event called when refund has been requested for transaction. */
   | 'TRANSACTION_REFUND_REQUESTED';
 
 export type WebhookSampleEventTypeEnum =
@@ -32046,6 +30249,7 @@ export type WebhookSampleEventTypeEnum =
   | 'CHANNEL_STATUS_CHANGED'
   | 'CHANNEL_UPDATED'
   | 'CHECKOUT_CREATED'
+  | 'CHECKOUT_FULLY_AUTHORIZED'
   | 'CHECKOUT_FULLY_PAID'
   | 'CHECKOUT_METADATA_UPDATED'
   | 'CHECKOUT_UPDATED'
@@ -32162,10 +30366,6 @@ export type WebhookSampleEventTypeEnum =
 /**
  * Trigger a webhook event. Supports a single event (the first, if multiple provided in the `webhook.subscription_query`). Requires permission relevant to processed event. Successfully delivered webhook returns `delivery` with status='PENDING' and empty payload.
  *
- * Added in Saleor 3.11.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
- *
  * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
  */
 export type WebhookTrigger = {
@@ -32202,7 +30402,7 @@ export type WebhookTriggerErrorCode =
 export type WebhookUpdate = {
   readonly errors: ReadonlyArray<WebhookError>;
   readonly webhook?: Maybe<Webhook>;
-  /** @deprecated This field will be removed in Saleor 4.0. Use `errors` field instead. */
+  /** @deprecated Use `errors` field instead. */
   readonly webhookErrors: ReadonlyArray<WebhookError>;
 };
 
@@ -32211,34 +30411,22 @@ export type WebhookUpdateInput = {
   readonly app?: InputMaybe<Scalars['ID']['input']>;
   /** The asynchronous events that webhook wants to subscribe. */
   readonly asyncEvents?: InputMaybe<ReadonlyArray<WebhookEventTypeAsyncEnum>>;
-  /**
-   * Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only `X-*`, `Authorization*`, and `BrokerProperties` keys are allowed.
-   *
-   * Added in Saleor 3.12.
-   *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   */
+  /** Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only `X-*`, `Authorization*`, and `BrokerProperties` keys are allowed. */
   readonly customHeaders?: InputMaybe<Scalars['JSONString']['input']>;
   /**
    * The events that webhook wants to subscribe.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. Use `asyncEvents` or `syncEvents` instead.
+   * @deprecated Use `asyncEvents` or `syncEvents` instead.
    */
   readonly events?: InputMaybe<ReadonlyArray<WebhookEventTypeEnum>>;
   /** Determine if webhook will be set active or not. */
   readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
   /** The new name of the webhook. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
-  /**
-   * Subscription query used to define a webhook payload.
-   *
-   * Added in Saleor 3.2.
-   */
+  /** Subscription query used to define a webhook payload. */
   readonly query?: InputMaybe<Scalars['String']['input']>;
   /**
    * Use to create a hash signature with each payload.
-   *
-   * DEPRECATED: this field will be removed in Saleor 4.0. As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
+   * @deprecated As of Saleor 3.5, webhook payloads default to signing using a verifiable JWS.
    */
   readonly secretKey?: InputMaybe<Scalars['String']['input']>;
   /** The synchronous events that webhook wants to subscribe. */
@@ -32261,6 +30449,12 @@ export type WeightUnitsEnum =
   | 'LB'
   | 'OZ'
   | 'TONNE';
+
+/** Represents the WIDGET target options for an app extension. */
+export type WidgetTargetOptions = {
+  /** HTTP method for Widget target (GET or POST) */
+  readonly method: HttpMethod;
+};
 
 /** _Entity union as defined by Federation spec. */
 export type _Entity = Address | App | Category | Collection | Group | Order | PageType | Product | ProductMedia | ProductType | ProductVariant | User;
@@ -32335,6 +30529,8 @@ type EventMetadata_ChannelUpdated_Fragment = { readonly version?: string | null,
 type EventMetadata_CheckoutCreated_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
 type EventMetadata_CheckoutFilterShippingMethods_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
+
+type EventMetadata_CheckoutFullyAuthorized_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
 type EventMetadata_CheckoutFullyPaid_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
@@ -32594,7 +30790,7 @@ type EventMetadata_WarehouseMetadataUpdated_Fragment = { readonly version?: stri
 
 type EventMetadata_WarehouseUpdated_Fragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly recipient?: { readonly id: string } | null };
 
-export type EventMetadataFragment = EventMetadata_AccountChangeEmailRequested_Fragment | EventMetadata_AccountConfirmationRequested_Fragment | EventMetadata_AccountConfirmed_Fragment | EventMetadata_AccountDeleteRequested_Fragment | EventMetadata_AccountDeleted_Fragment | EventMetadata_AccountEmailChanged_Fragment | EventMetadata_AccountSetPasswordRequested_Fragment | EventMetadata_AddressCreated_Fragment | EventMetadata_AddressDeleted_Fragment | EventMetadata_AddressUpdated_Fragment | EventMetadata_AppDeleted_Fragment | EventMetadata_AppInstalled_Fragment | EventMetadata_AppStatusChanged_Fragment | EventMetadata_AppUpdated_Fragment | EventMetadata_AttributeCreated_Fragment | EventMetadata_AttributeDeleted_Fragment | EventMetadata_AttributeUpdated_Fragment | EventMetadata_AttributeValueCreated_Fragment | EventMetadata_AttributeValueDeleted_Fragment | EventMetadata_AttributeValueUpdated_Fragment | EventMetadata_CalculateTaxes_Fragment | EventMetadata_CategoryCreated_Fragment | EventMetadata_CategoryDeleted_Fragment | EventMetadata_CategoryUpdated_Fragment | EventMetadata_ChannelCreated_Fragment | EventMetadata_ChannelDeleted_Fragment | EventMetadata_ChannelMetadataUpdated_Fragment | EventMetadata_ChannelStatusChanged_Fragment | EventMetadata_ChannelUpdated_Fragment | EventMetadata_CheckoutCreated_Fragment | EventMetadata_CheckoutFilterShippingMethods_Fragment | EventMetadata_CheckoutFullyPaid_Fragment | EventMetadata_CheckoutMetadataUpdated_Fragment | EventMetadata_CheckoutUpdated_Fragment | EventMetadata_CollectionCreated_Fragment | EventMetadata_CollectionDeleted_Fragment | EventMetadata_CollectionMetadataUpdated_Fragment | EventMetadata_CollectionUpdated_Fragment | EventMetadata_CustomerCreated_Fragment | EventMetadata_CustomerMetadataUpdated_Fragment | EventMetadata_CustomerUpdated_Fragment | EventMetadata_DraftOrderCreated_Fragment | EventMetadata_DraftOrderDeleted_Fragment | EventMetadata_DraftOrderUpdated_Fragment | EventMetadata_FulfillmentApproved_Fragment | EventMetadata_FulfillmentCanceled_Fragment | EventMetadata_FulfillmentCreated_Fragment | EventMetadata_FulfillmentMetadataUpdated_Fragment | EventMetadata_FulfillmentTrackingNumberUpdated_Fragment | EventMetadata_GiftCardCreated_Fragment | EventMetadata_GiftCardDeleted_Fragment | EventMetadata_GiftCardExportCompleted_Fragment | EventMetadata_GiftCardMetadataUpdated_Fragment | EventMetadata_GiftCardSent_Fragment | EventMetadata_GiftCardStatusChanged_Fragment | EventMetadata_GiftCardUpdated_Fragment | EventMetadata_InvoiceDeleted_Fragment | EventMetadata_InvoiceRequested_Fragment | EventMetadata_InvoiceSent_Fragment | EventMetadata_ListStoredPaymentMethods_Fragment | EventMetadata_MenuCreated_Fragment | EventMetadata_MenuDeleted_Fragment | EventMetadata_MenuItemCreated_Fragment | EventMetadata_MenuItemDeleted_Fragment | EventMetadata_MenuItemUpdated_Fragment | EventMetadata_MenuUpdated_Fragment | EventMetadata_OrderBulkCreated_Fragment | EventMetadata_OrderCancelled_Fragment | EventMetadata_OrderConfirmed_Fragment | EventMetadata_OrderCreated_Fragment | EventMetadata_OrderExpired_Fragment | EventMetadata_OrderFilterShippingMethods_Fragment | EventMetadata_OrderFulfilled_Fragment | EventMetadata_OrderFullyPaid_Fragment | EventMetadata_OrderFullyRefunded_Fragment | EventMetadata_OrderMetadataUpdated_Fragment | EventMetadata_OrderPaid_Fragment | EventMetadata_OrderRefunded_Fragment | EventMetadata_OrderUpdated_Fragment | EventMetadata_PageCreated_Fragment | EventMetadata_PageDeleted_Fragment | EventMetadata_PageTypeCreated_Fragment | EventMetadata_PageTypeDeleted_Fragment | EventMetadata_PageTypeUpdated_Fragment | EventMetadata_PageUpdated_Fragment | EventMetadata_PaymentAuthorize_Fragment | EventMetadata_PaymentCaptureEvent_Fragment | EventMetadata_PaymentConfirmEvent_Fragment | EventMetadata_PaymentGatewayInitializeSession_Fragment | EventMetadata_PaymentGatewayInitializeTokenizationSession_Fragment | EventMetadata_PaymentListGateways_Fragment | EventMetadata_PaymentMethodInitializeTokenizationSession_Fragment | EventMetadata_PaymentMethodProcessTokenizationSession_Fragment | EventMetadata_PaymentProcessEvent_Fragment | EventMetadata_PaymentRefundEvent_Fragment | EventMetadata_PaymentVoidEvent_Fragment | EventMetadata_PermissionGroupCreated_Fragment | EventMetadata_PermissionGroupDeleted_Fragment | EventMetadata_PermissionGroupUpdated_Fragment | EventMetadata_ProductCreated_Fragment | EventMetadata_ProductDeleted_Fragment | EventMetadata_ProductExportCompleted_Fragment | EventMetadata_ProductMediaCreated_Fragment | EventMetadata_ProductMediaDeleted_Fragment | EventMetadata_ProductMediaUpdated_Fragment | EventMetadata_ProductMetadataUpdated_Fragment | EventMetadata_ProductUpdated_Fragment | EventMetadata_ProductVariantBackInStock_Fragment | EventMetadata_ProductVariantCreated_Fragment | EventMetadata_ProductVariantDeleted_Fragment | EventMetadata_ProductVariantMetadataUpdated_Fragment | EventMetadata_ProductVariantOutOfStock_Fragment | EventMetadata_ProductVariantStockUpdated_Fragment | EventMetadata_ProductVariantUpdated_Fragment | EventMetadata_PromotionCreated_Fragment | EventMetadata_PromotionDeleted_Fragment | EventMetadata_PromotionEnded_Fragment | EventMetadata_PromotionRuleCreated_Fragment | EventMetadata_PromotionRuleDeleted_Fragment | EventMetadata_PromotionRuleUpdated_Fragment | EventMetadata_PromotionStarted_Fragment | EventMetadata_PromotionUpdated_Fragment | EventMetadata_SaleCreated_Fragment | EventMetadata_SaleDeleted_Fragment | EventMetadata_SaleToggle_Fragment | EventMetadata_SaleUpdated_Fragment | EventMetadata_ShippingListMethodsForCheckout_Fragment | EventMetadata_ShippingPriceCreated_Fragment | EventMetadata_ShippingPriceDeleted_Fragment | EventMetadata_ShippingPriceUpdated_Fragment | EventMetadata_ShippingZoneCreated_Fragment | EventMetadata_ShippingZoneDeleted_Fragment | EventMetadata_ShippingZoneMetadataUpdated_Fragment | EventMetadata_ShippingZoneUpdated_Fragment | EventMetadata_ShopMetadataUpdated_Fragment | EventMetadata_StaffCreated_Fragment | EventMetadata_StaffDeleted_Fragment | EventMetadata_StaffSetPasswordRequested_Fragment | EventMetadata_StaffUpdated_Fragment | EventMetadata_StoredPaymentMethodDeleteRequested_Fragment | EventMetadata_ThumbnailCreated_Fragment | EventMetadata_TransactionCancelationRequested_Fragment | EventMetadata_TransactionChargeRequested_Fragment | EventMetadata_TransactionInitializeSession_Fragment | EventMetadata_TransactionItemMetadataUpdated_Fragment | EventMetadata_TransactionProcessSession_Fragment | EventMetadata_TransactionRefundRequested_Fragment | EventMetadata_TranslationCreated_Fragment | EventMetadata_TranslationUpdated_Fragment | EventMetadata_VoucherCodeExportCompleted_Fragment | EventMetadata_VoucherCodesCreated_Fragment | EventMetadata_VoucherCodesDeleted_Fragment | EventMetadata_VoucherCreated_Fragment | EventMetadata_VoucherDeleted_Fragment | EventMetadata_VoucherMetadataUpdated_Fragment | EventMetadata_VoucherUpdated_Fragment | EventMetadata_WarehouseCreated_Fragment | EventMetadata_WarehouseDeleted_Fragment | EventMetadata_WarehouseMetadataUpdated_Fragment | EventMetadata_WarehouseUpdated_Fragment;
+export type EventMetadataFragment = EventMetadata_AccountChangeEmailRequested_Fragment | EventMetadata_AccountConfirmationRequested_Fragment | EventMetadata_AccountConfirmed_Fragment | EventMetadata_AccountDeleteRequested_Fragment | EventMetadata_AccountDeleted_Fragment | EventMetadata_AccountEmailChanged_Fragment | EventMetadata_AccountSetPasswordRequested_Fragment | EventMetadata_AddressCreated_Fragment | EventMetadata_AddressDeleted_Fragment | EventMetadata_AddressUpdated_Fragment | EventMetadata_AppDeleted_Fragment | EventMetadata_AppInstalled_Fragment | EventMetadata_AppStatusChanged_Fragment | EventMetadata_AppUpdated_Fragment | EventMetadata_AttributeCreated_Fragment | EventMetadata_AttributeDeleted_Fragment | EventMetadata_AttributeUpdated_Fragment | EventMetadata_AttributeValueCreated_Fragment | EventMetadata_AttributeValueDeleted_Fragment | EventMetadata_AttributeValueUpdated_Fragment | EventMetadata_CalculateTaxes_Fragment | EventMetadata_CategoryCreated_Fragment | EventMetadata_CategoryDeleted_Fragment | EventMetadata_CategoryUpdated_Fragment | EventMetadata_ChannelCreated_Fragment | EventMetadata_ChannelDeleted_Fragment | EventMetadata_ChannelMetadataUpdated_Fragment | EventMetadata_ChannelStatusChanged_Fragment | EventMetadata_ChannelUpdated_Fragment | EventMetadata_CheckoutCreated_Fragment | EventMetadata_CheckoutFilterShippingMethods_Fragment | EventMetadata_CheckoutFullyAuthorized_Fragment | EventMetadata_CheckoutFullyPaid_Fragment | EventMetadata_CheckoutMetadataUpdated_Fragment | EventMetadata_CheckoutUpdated_Fragment | EventMetadata_CollectionCreated_Fragment | EventMetadata_CollectionDeleted_Fragment | EventMetadata_CollectionMetadataUpdated_Fragment | EventMetadata_CollectionUpdated_Fragment | EventMetadata_CustomerCreated_Fragment | EventMetadata_CustomerMetadataUpdated_Fragment | EventMetadata_CustomerUpdated_Fragment | EventMetadata_DraftOrderCreated_Fragment | EventMetadata_DraftOrderDeleted_Fragment | EventMetadata_DraftOrderUpdated_Fragment | EventMetadata_FulfillmentApproved_Fragment | EventMetadata_FulfillmentCanceled_Fragment | EventMetadata_FulfillmentCreated_Fragment | EventMetadata_FulfillmentMetadataUpdated_Fragment | EventMetadata_FulfillmentTrackingNumberUpdated_Fragment | EventMetadata_GiftCardCreated_Fragment | EventMetadata_GiftCardDeleted_Fragment | EventMetadata_GiftCardExportCompleted_Fragment | EventMetadata_GiftCardMetadataUpdated_Fragment | EventMetadata_GiftCardSent_Fragment | EventMetadata_GiftCardStatusChanged_Fragment | EventMetadata_GiftCardUpdated_Fragment | EventMetadata_InvoiceDeleted_Fragment | EventMetadata_InvoiceRequested_Fragment | EventMetadata_InvoiceSent_Fragment | EventMetadata_ListStoredPaymentMethods_Fragment | EventMetadata_MenuCreated_Fragment | EventMetadata_MenuDeleted_Fragment | EventMetadata_MenuItemCreated_Fragment | EventMetadata_MenuItemDeleted_Fragment | EventMetadata_MenuItemUpdated_Fragment | EventMetadata_MenuUpdated_Fragment | EventMetadata_OrderBulkCreated_Fragment | EventMetadata_OrderCancelled_Fragment | EventMetadata_OrderConfirmed_Fragment | EventMetadata_OrderCreated_Fragment | EventMetadata_OrderExpired_Fragment | EventMetadata_OrderFilterShippingMethods_Fragment | EventMetadata_OrderFulfilled_Fragment | EventMetadata_OrderFullyPaid_Fragment | EventMetadata_OrderFullyRefunded_Fragment | EventMetadata_OrderMetadataUpdated_Fragment | EventMetadata_OrderPaid_Fragment | EventMetadata_OrderRefunded_Fragment | EventMetadata_OrderUpdated_Fragment | EventMetadata_PageCreated_Fragment | EventMetadata_PageDeleted_Fragment | EventMetadata_PageTypeCreated_Fragment | EventMetadata_PageTypeDeleted_Fragment | EventMetadata_PageTypeUpdated_Fragment | EventMetadata_PageUpdated_Fragment | EventMetadata_PaymentAuthorize_Fragment | EventMetadata_PaymentCaptureEvent_Fragment | EventMetadata_PaymentConfirmEvent_Fragment | EventMetadata_PaymentGatewayInitializeSession_Fragment | EventMetadata_PaymentGatewayInitializeTokenizationSession_Fragment | EventMetadata_PaymentListGateways_Fragment | EventMetadata_PaymentMethodInitializeTokenizationSession_Fragment | EventMetadata_PaymentMethodProcessTokenizationSession_Fragment | EventMetadata_PaymentProcessEvent_Fragment | EventMetadata_PaymentRefundEvent_Fragment | EventMetadata_PaymentVoidEvent_Fragment | EventMetadata_PermissionGroupCreated_Fragment | EventMetadata_PermissionGroupDeleted_Fragment | EventMetadata_PermissionGroupUpdated_Fragment | EventMetadata_ProductCreated_Fragment | EventMetadata_ProductDeleted_Fragment | EventMetadata_ProductExportCompleted_Fragment | EventMetadata_ProductMediaCreated_Fragment | EventMetadata_ProductMediaDeleted_Fragment | EventMetadata_ProductMediaUpdated_Fragment | EventMetadata_ProductMetadataUpdated_Fragment | EventMetadata_ProductUpdated_Fragment | EventMetadata_ProductVariantBackInStock_Fragment | EventMetadata_ProductVariantCreated_Fragment | EventMetadata_ProductVariantDeleted_Fragment | EventMetadata_ProductVariantMetadataUpdated_Fragment | EventMetadata_ProductVariantOutOfStock_Fragment | EventMetadata_ProductVariantStockUpdated_Fragment | EventMetadata_ProductVariantUpdated_Fragment | EventMetadata_PromotionCreated_Fragment | EventMetadata_PromotionDeleted_Fragment | EventMetadata_PromotionEnded_Fragment | EventMetadata_PromotionRuleCreated_Fragment | EventMetadata_PromotionRuleDeleted_Fragment | EventMetadata_PromotionRuleUpdated_Fragment | EventMetadata_PromotionStarted_Fragment | EventMetadata_PromotionUpdated_Fragment | EventMetadata_SaleCreated_Fragment | EventMetadata_SaleDeleted_Fragment | EventMetadata_SaleToggle_Fragment | EventMetadata_SaleUpdated_Fragment | EventMetadata_ShippingListMethodsForCheckout_Fragment | EventMetadata_ShippingPriceCreated_Fragment | EventMetadata_ShippingPriceDeleted_Fragment | EventMetadata_ShippingPriceUpdated_Fragment | EventMetadata_ShippingZoneCreated_Fragment | EventMetadata_ShippingZoneDeleted_Fragment | EventMetadata_ShippingZoneMetadataUpdated_Fragment | EventMetadata_ShippingZoneUpdated_Fragment | EventMetadata_ShopMetadataUpdated_Fragment | EventMetadata_StaffCreated_Fragment | EventMetadata_StaffDeleted_Fragment | EventMetadata_StaffSetPasswordRequested_Fragment | EventMetadata_StaffUpdated_Fragment | EventMetadata_StoredPaymentMethodDeleteRequested_Fragment | EventMetadata_ThumbnailCreated_Fragment | EventMetadata_TransactionCancelationRequested_Fragment | EventMetadata_TransactionChargeRequested_Fragment | EventMetadata_TransactionInitializeSession_Fragment | EventMetadata_TransactionItemMetadataUpdated_Fragment | EventMetadata_TransactionProcessSession_Fragment | EventMetadata_TransactionRefundRequested_Fragment | EventMetadata_TranslationCreated_Fragment | EventMetadata_TranslationUpdated_Fragment | EventMetadata_VoucherCodeExportCompleted_Fragment | EventMetadata_VoucherCodesCreated_Fragment | EventMetadata_VoucherCodesDeleted_Fragment | EventMetadata_VoucherCreated_Fragment | EventMetadata_VoucherDeleted_Fragment | EventMetadata_VoucherMetadataUpdated_Fragment | EventMetadata_VoucherUpdated_Fragment | EventMetadata_WarehouseCreated_Fragment | EventMetadata_WarehouseDeleted_Fragment | EventMetadata_WarehouseMetadataUpdated_Fragment | EventMetadata_WarehouseUpdated_Fragment;
 
 export type OrderGrantedRefundFragment = { readonly shippingCostsIncluded: boolean, readonly lines?: ReadonlyArray<{ readonly quantity: number, readonly orderLine: { readonly id: string } }> | null };
 
@@ -32645,12 +30841,12 @@ export type TransactionProcessSessionSubscriptionVariables = Exact<{ [key: strin
 
 export type TransactionProcessSessionSubscription = { readonly event?: { readonly version?: string | null, readonly issuedAt?: string | null, readonly action: { readonly amount: number, readonly currency: string }, readonly transaction: { readonly token: string, readonly pspReference: string }, readonly sourceObject: { readonly __typename: 'Checkout', readonly id: string, readonly email?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly totalPrice: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'CheckoutLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly checkoutVariant: { readonly sku?: string | null, readonly product: { readonly name: string } } }> } | { readonly __typename: 'Order', readonly id: string, readonly userEmail?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly total: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly orderVariant?: { readonly sku?: string | null, readonly product: { readonly name: string } } | null }> }, readonly recipient?: { readonly id: string } | null } | {} | null };
 
-export type TransactionRefundRequestedEventFragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly action: { readonly amount?: number | null, readonly currency: string }, readonly grantedRefund?: { readonly shippingCostsIncluded: boolean, readonly lines?: ReadonlyArray<{ readonly quantity: number, readonly orderLine: { readonly id: string } }> | null } | null, readonly transaction?: { readonly token: string, readonly pspReference: string, readonly checkout?: { readonly __typename: 'Checkout', readonly id: string, readonly email?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly totalPrice: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'CheckoutLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly checkoutVariant: { readonly sku?: string | null, readonly product: { readonly name: string } } }> } | null, readonly order?: { readonly __typename: 'Order', readonly id: string, readonly userEmail?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly total: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly orderVariant?: { readonly sku?: string | null, readonly product: { readonly name: string } } | null }> } | null } | null, readonly recipient?: { readonly id: string } | null };
+export type TransactionRefundRequestedEventFragment = { readonly version?: string | null, readonly issuedAt?: string | null, readonly action: { readonly amount: number, readonly currency: string }, readonly grantedRefund?: { readonly shippingCostsIncluded: boolean, readonly lines?: ReadonlyArray<{ readonly quantity: number, readonly orderLine: { readonly id: string } }> | null } | null, readonly transaction?: { readonly token: string, readonly pspReference: string, readonly checkout?: { readonly __typename: 'Checkout', readonly id: string, readonly email?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly totalPrice: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'CheckoutLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly checkoutVariant: { readonly sku?: string | null, readonly product: { readonly name: string } } }> } | null, readonly order?: { readonly __typename: 'Order', readonly id: string, readonly userEmail?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly total: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly orderVariant?: { readonly sku?: string | null, readonly product: { readonly name: string } } | null }> } | null } | null, readonly recipient?: { readonly id: string } | null };
 
 export type TransactionRefundRequestedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TransactionRefundRequestedSubscription = { readonly event?: { readonly version?: string | null, readonly issuedAt?: string | null, readonly action: { readonly amount?: number | null, readonly currency: string }, readonly grantedRefund?: { readonly shippingCostsIncluded: boolean, readonly lines?: ReadonlyArray<{ readonly quantity: number, readonly orderLine: { readonly id: string } }> | null } | null, readonly transaction?: { readonly token: string, readonly pspReference: string, readonly checkout?: { readonly __typename: 'Checkout', readonly id: string, readonly email?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly totalPrice: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'CheckoutLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly checkoutVariant: { readonly sku?: string | null, readonly product: { readonly name: string } } }> } | null, readonly order?: { readonly __typename: 'Order', readonly id: string, readonly userEmail?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly total: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly orderVariant?: { readonly sku?: string | null, readonly product: { readonly name: string } } | null }> } | null } | null, readonly recipient?: { readonly id: string } | null } | {} | null };
+export type TransactionRefundRequestedSubscription = { readonly event?: { readonly version?: string | null, readonly issuedAt?: string | null, readonly action: { readonly amount: number, readonly currency: string }, readonly grantedRefund?: { readonly shippingCostsIncluded: boolean, readonly lines?: ReadonlyArray<{ readonly quantity: number, readonly orderLine: { readonly id: string } }> | null } | null, readonly transaction?: { readonly token: string, readonly pspReference: string, readonly checkout?: { readonly __typename: 'Checkout', readonly id: string, readonly email?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly totalPrice: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'CheckoutLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly checkoutVariant: { readonly sku?: string | null, readonly product: { readonly name: string } } }> } | null, readonly order?: { readonly __typename: 'Order', readonly id: string, readonly userEmail?: string | null, readonly channel: { readonly id: string, readonly slug: string, readonly currencyCode: string }, readonly billingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly shippingAddress?: { readonly firstName: string, readonly lastName: string, readonly companyName: string, readonly postalCode: string, readonly countryArea: string, readonly streetAddress1: string, readonly streetAddress2: string, readonly phone?: string | null, readonly country: { readonly code: string } } | null, readonly discount?: { readonly amount: number } | null, readonly shippingPrice: { readonly gross: { readonly amount: number } }, readonly total: { readonly gross: { readonly amount: number } }, readonly lines: ReadonlyArray<{ readonly __typename: 'OrderLine', readonly id: string, readonly quantity: number, readonly unitPrice: { readonly gross: { readonly amount: number } }, readonly orderVariant?: { readonly sku?: string | null, readonly product: { readonly name: string } } | null }> } | null } | null, readonly recipient?: { readonly id: string } | null } | {} | null };
 
 export const UntypedEventMetadataFragmentDoc = gql`
     fragment EventMetadata on Event {

@@ -1,5 +1,12 @@
 # saleor-app-cms
 
+## 2.12.6
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
 ## 2.12.5
 
 ### Patch Changes

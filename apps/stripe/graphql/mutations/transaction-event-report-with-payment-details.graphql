@@ -1,0 +1,33 @@
+# Used when app is installed in Saleor 3.22+.
+mutation TransactionEventReportWithPaymentDetails(
+  $transactionId: ID!
+  $message: String!
+  $amount: PositiveDecimal!
+  $pspReference: String!
+  $time: DateTime!
+  $type: TransactionEventTypeEnum!
+  $availableActions: [TransactionActionEnum!]
+  $externalUrl: String
+  $paymentMethodDetails: PaymentMethodDetailsInput
+) {
+  transactionEventReport(
+    id: $transactionId
+    message: $message
+    amount: $amount
+    pspReference: $pspReference
+    time: $time
+    type: $type
+    availableActions: $availableActions
+    externalUrl: $externalUrl
+    paymentMethodDetails: $paymentMethodDetails
+  ) {
+    alreadyProcessed
+    errors {
+      message
+      code
+    }
+    transactionEvent {
+      id
+    }
+  }
+}

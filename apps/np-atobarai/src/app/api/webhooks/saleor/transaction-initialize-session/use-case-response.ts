@@ -12,6 +12,7 @@ import {
   AtobaraiMultipleResultsErrorPublicCode,
 } from "@/modules/atobarai/api/types";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,
@@ -24,14 +25,17 @@ import { AtobaraiFailureTransactionErrorPublicCode, UseCaseErrors } from "../use
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
   readonly atobaraiTransactionId: AtobaraiTransactionId;
+  readonly saleorPaymentMethodDetails: SaleorPaymentMethodDetails | null;
 
   constructor(args: {
     transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
     atobaraiTransactionId: AtobaraiTransactionId;
+    saleorPaymentMethodDetails: SaleorPaymentMethodDetails | null;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.atobaraiTransactionId = args.atobaraiTransactionId;
+    this.saleorPaymentMethodDetails = args.saleorPaymentMethodDetails;
   }
 
   private getMessage(): string {
@@ -49,6 +53,7 @@ class Success extends SuccessWebhookResponse {
       actions: this.transactionResult.actions,
       message: this.getMessage(),
       pspReference: this.atobaraiTransactionId,
+      paymentMethodDetails: this.saleorPaymentMethodDetails?.toSaleorWebhookResponse(),
     };
 
     return Response.json(typeSafeResponse, {

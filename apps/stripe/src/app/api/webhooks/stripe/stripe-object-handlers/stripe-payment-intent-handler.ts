@@ -1,10 +1,14 @@
+import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared/saleor-version-compatibility-validator";
 import { err, ok, Result } from "neverthrow";
 import Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
+import { createLogger } from "@/lib/logger";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import {
@@ -13,6 +17,7 @@ import {
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import { createTimestampFromStripeEvent } from "@/modules/stripe/stripe-timestamps";
+import { IStripePaymentIntentsApi } from "@/modules/stripe/types";
 import { CancelSuccessResult } from "@/modules/transaction-result/cancel-result";
 import {
   AuthorizationFailureResult,
@@ -42,18 +47,27 @@ type PossibleErrors =
     >
   | TransactionRecorderError;
 
+/*
+ * Minimum Saleor version required for payment method details support.
+ * Saleor 3.22 introduced the `paymentMethodDetails` field in the Transaction API.
+ * See: https://github.com/saleor/saleor/releases/tag/3.22.0
+ */
+const PAYMENT_METHOD_DETAILS_MIN_VERSION = "3.22";
+
 export class StripePaymentIntentHandler {
   static NotSupportedEventError = BaseError.subclass("NotSupportedEventError", {
     props: {
-      __internalName: "StripePaymentIntentHandler.NotSupportedEventError",
+      _internalName: "StripePaymentIntentHandler.NotSupportedEventError" as const,
     },
   });
 
   static MalformedEventError = BaseError.subclass("MalformedEventError", {
     props: {
-      __internalName: "StripePaymentIntentHandler.MalformedEventError",
+      _internalName: "StripePaymentIntentHandler.MalformedEventError" as const,
     },
   });
+
+  logger = createLogger("StripePaymentIntentHandler");
 
   private prepareTransactionEventReportParams(event: StripePaymentIntentHandlerSupportedEvents) {
     const timestamp = createTimestampFromStripeEvent(event);
@@ -113,18 +127,63 @@ export class StripePaymentIntentHandler {
     return ok(recordedTransactionResult.value);
   }
 
+  private checkIfSaleorSupportsPaymentMethodDetails(
+    saleorSchemaVersion: SaleorSchemaVersion,
+  ): boolean {
+    const validator = new SaleorVersionCompatibilityValidator(PAYMENT_METHOD_DETAILS_MIN_VERSION);
+
+    return validator.isSaleorCompatible(saleorSchemaVersion);
+  }
+
+  private async getPaymentMethodDetails(
+    stripePaymentIntentsApi: IStripePaymentIntentsApi,
+    paymentIntentId: StripePaymentIntentId,
+  ): Promise<SaleorPaymentMethodDetails | null> {
+    const getPaymentIntentResult = await stripePaymentIntentsApi.getPaymentIntent({
+      id: paymentIntentId,
+    });
+
+    if (getPaymentIntentResult.isErr()) {
+      this.logger.warn(
+        "Failed to fetch payment intent details - falling back to null as payment method details",
+        {
+          error: getPaymentIntentResult.error,
+        },
+      );
+
+      return null;
+    }
+
+    const paymentMethodDetailsResult = SaleorPaymentMethodDetails.createFromStripe(
+      getPaymentIntentResult.value.payment_method,
+    );
+
+    if (paymentMethodDetailsResult.isErr()) {
+      this.logger.warn(
+        "Failed to create payment method details from Stripe payment method - falling back to null",
+        { error: paymentMethodDetailsResult.error },
+      );
+
+      return null;
+    }
+
+    return paymentMethodDetailsResult.value;
+  }
+
   async processPaymentIntentEvent({
     event,
     stripeEnv,
     transactionRecorder,
     appId,
     saleorApiUrl,
+    stripePaymentIntentsApi,
   }: {
     event: Stripe.Event;
     stripeEnv: StripeEnv;
     transactionRecorder: TransactionRecorderRepo;
     appId: string;
     saleorApiUrl: SaleorApiUrl;
+    stripePaymentIntentsApi: IStripePaymentIntentsApi;
   }): Promise<Result<TransactionEventReportVariablesResolver, PossibleErrors>> {
     if (!this.checkIfEventIsSupported(event)) {
       return err(new StripePaymentIntentHandler.NotSupportedEventError("Unsupported event type"));
@@ -143,7 +202,8 @@ export class StripePaymentIntentHandler {
       return err(recordedTransactionResult.error);
     }
 
-    const { resolvedTransactionFlow, saleorTransactionId } = recordedTransactionResult.value;
+    const { resolvedTransactionFlow, saleorTransactionId, saleorSchemaVersion } =
+      recordedTransactionResult.value;
 
     const paramsResult = this.prepareTransactionEventReportParams(event);
 
@@ -154,6 +214,10 @@ export class StripePaymentIntentHandler {
     const { saleorMoney, paymentIntentStatus, timestamp } = paramsResult.value;
 
     const externalUrl = generatePaymentIntentStripeDashboardUrl(stripePaymentIntentId, stripeEnv);
+
+    const paymentMethodDetails = this.checkIfSaleorSupportsPaymentMethodDetails(saleorSchemaVersion)
+      ? await this.getPaymentMethodDetails(stripePaymentIntentsApi, stripePaymentIntentId)
+      : null;
 
     switch (event.type) {
       case "payment_intent.succeeded":
@@ -171,6 +235,7 @@ export class StripePaymentIntentHandler {
             saleorTransactionId,
             stripeObjectId: stripePaymentIntentId,
             externalUrl,
+            paymentMethodDetails,
           }),
         );
       }
@@ -189,6 +254,7 @@ export class StripePaymentIntentHandler {
             saleorTransactionId,
             stripeObjectId: stripePaymentIntentId,
             externalUrl,
+            paymentMethodDetails,
           }),
         );
       }
@@ -202,6 +268,7 @@ export class StripePaymentIntentHandler {
             saleorTransactionId,
             stripeObjectId: stripePaymentIntentId,
             externalUrl,
+            paymentMethodDetails,
           }),
         );
       }

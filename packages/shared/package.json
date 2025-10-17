@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-shared",
-  "version": "1.13.1",
+  "version": "1.14.0",
   "type": "module",
   "exports": {
     "./compose": "./src/compose.ts",

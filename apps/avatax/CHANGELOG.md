@@ -1,5 +1,22 @@
 # saleor-app-avatax
 
+## 1.21.1
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
+## 1.21.0
+
+### Minor Changes
+
+- b1c2ff47: ~~Adding support to overwrite the shipFrom address in the avatax calculation using private metadata on order or checkout object.~~ Change reverted
+
+### Patch Changes
+
+- 118190c3: Validating the tax calculation and making e2e tests work for the new shipFrom address feature
+
 ## 1.20.0
 
 ### Minor Changes

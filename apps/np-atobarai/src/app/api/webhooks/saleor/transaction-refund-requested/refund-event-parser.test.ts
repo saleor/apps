@@ -30,6 +30,7 @@ describe("RefundEventParser", () => {
     });
 
     it("should return error when refund amount is missing", () => {
+      // @ts-expect-error - testing invalid input
       const invalidEvent = {
         ...mockedRefundRequestedEvent,
         action: { ...mockedRefundRequestedEvent.action, amount: null },

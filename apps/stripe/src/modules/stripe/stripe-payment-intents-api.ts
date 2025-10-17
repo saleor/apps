@@ -47,7 +47,9 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
     id: StripePaymentIntentId;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.retrieve(args.id),
+      this.stripeApiWrapper.paymentIntents.retrieve(args.id, {
+        expand: ["payment_method"],
+      }),
       (error) => error,
     );
   }
