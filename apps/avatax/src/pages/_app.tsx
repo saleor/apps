@@ -4,10 +4,11 @@ import "../styles/globals.css";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
+import { IframeProtectedFallback } from "@saleor/apps-shared/iframe-protected-fallback";
 import { IframeProtectedWrapper } from "@saleor/apps-shared/iframe-protected-wrapper";
 import { NoSSRWrapper } from "@saleor/apps-shared/no-ssr-wrapper";
 import { ThemeSynchronizer } from "@saleor/apps-shared/theme-synchronizer";
-import { Box, Text, ThemeProvider } from "@saleor/macaw-ui";
+import { Text, ThemeProvider } from "@saleor/macaw-ui";
 import { AppProps } from "next/app";
 
 import { trpcClient } from "../modules/trpc/trpc-client";
@@ -27,34 +28,22 @@ function NextApp({ Component, pageProps }: AppProps) {
 
   return (
     <NoSSRWrapper>
-      <IframeProtectedWrapper
-        allowedPathNames={["/"]}
-        fallback={
-          <ThemeProvider>
-            <AppLayout>
-              <Box display="flex" flexDirection="column" padding={4}>
-                <Text as="h1" fontWeight="bold" fontSize={8} marginBottom={6}>
-                  Saleor AvaTax App
-                </Text>
-                <Text>This app can only be used within the Saleor Dashboard.</Text>
-                <Text>Please install and open this app through your Saleor Dashboard.</Text>
-              </Box>
-            </AppLayout>
-          </ThemeProvider>
-        }
-      >
-        <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-          <GraphQLProvider>
-            <ThemeProvider>
+      <ThemeProvider>
+        <IframeProtectedWrapper
+          allowedPathNames={["/", "/order-details"]}
+          fallback={<IframeProtectedFallback appName="Saleor AvaTax App" />}
+        >
+          <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
+            <GraphQLProvider>
               <ThemeSynchronizer />
               <RoutePropagator />
               <AppLayout>
                 <Component {...pageProps} />
               </AppLayout>
-            </ThemeProvider>
-          </GraphQLProvider>
-        </AppBridgeProvider>
-      </IframeProtectedWrapper>
+            </GraphQLProvider>
+          </AppBridgeProvider>
+        </IframeProtectedWrapper>
+      </ThemeProvider>
     </NoSSRWrapper>
   );
 }
