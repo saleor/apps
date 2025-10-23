@@ -138,9 +138,11 @@ export class StripePaymentIntentHandler {
   private async getPaymentMethodDetails(
     stripePaymentIntentsApi: IStripePaymentIntentsApi,
     paymentIntentId: StripePaymentIntentId,
+    stripeAccountId?: string,
   ): Promise<SaleorPaymentMethodDetails | null> {
     const getPaymentIntentResult = await stripePaymentIntentsApi.getPaymentIntent({
       id: paymentIntentId,
+      stripeAccount: stripeAccountId,
     });
 
     if (getPaymentIntentResult.isErr()) {
@@ -202,7 +204,7 @@ export class StripePaymentIntentHandler {
       return err(recordedTransactionResult.error);
     }
 
-    const { resolvedTransactionFlow, saleorTransactionId, saleorSchemaVersion } =
+    const { resolvedTransactionFlow, saleorTransactionId, saleorSchemaVersion, stripeAccountId } =
       recordedTransactionResult.value;
 
     const paramsResult = this.prepareTransactionEventReportParams(event);
@@ -216,7 +218,11 @@ export class StripePaymentIntentHandler {
     const externalUrl = generatePaymentIntentStripeDashboardUrl(stripePaymentIntentId, stripeEnv);
 
     const paymentMethodDetails = this.checkIfSaleorSupportsPaymentMethodDetails(saleorSchemaVersion)
-      ? await this.getPaymentMethodDetails(stripePaymentIntentsApi, stripePaymentIntentId)
+      ? await this.getPaymentMethodDetails(
+          stripePaymentIntentsApi,
+          stripePaymentIntentId,
+          stripeAccountId,
+        )
       : null;
 
     switch (event.type) {

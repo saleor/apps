@@ -157,6 +157,7 @@ describe("StripeWebhookManager", () => {
       .toMatchInlineSnapshot(`
         {
           "api_version": "2025-04-30.basil",
+          "connect": true,
           "description": "Created by Saleor App Payment Stripe, config name: config name",
           "enabled_events": [
             "payment_intent.amount_capturable_updated",
