@@ -3,7 +3,10 @@ import Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import {
+  mockedSaleorAppId,
+  mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+} from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -84,6 +87,7 @@ describe("Vendor-specific Stripe account functionality", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -165,6 +169,7 @@ describe("Vendor-specific Stripe account functionality", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       // Verify the response includes the vendor's Stripe account ID
@@ -224,6 +229,7 @@ describe("Vendor-specific Stripe account functionality", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -286,6 +292,7 @@ describe("Vendor-specific Stripe account functionality", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       // Verify the response does NOT include a Stripe account ID (main account used)
@@ -350,6 +357,7 @@ describe("Vendor-specific Stripe account functionality", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       // Verify transaction was recorded WITHOUT vendor's account
@@ -404,6 +412,7 @@ describe("Vendor-specific Stripe account functionality", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event,
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
       // Should still succeed but use main account

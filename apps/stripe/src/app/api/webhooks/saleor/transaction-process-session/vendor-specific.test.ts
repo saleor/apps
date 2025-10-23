@@ -3,7 +3,10 @@ import Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
-import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
+import {
+  mockedSaleorAppId,
+  mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+} from "@/__tests__/mocks/constants";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -49,6 +52,7 @@ describe("Transaction Process Session with vendor-specific accounts", () => {
               resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
               selectedPaymentMethod: "card",
               stripeAccountId: vendorStripeAccountId,
+              saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
             }),
           ),
         );
@@ -114,6 +118,7 @@ describe("Transaction Process Session with vendor-specific accounts", () => {
               resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
               selectedPaymentMethod: "card",
               stripeAccountId: undefined, // No vendor account
+              saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
             }),
           ),
         );
@@ -172,6 +177,7 @@ describe("Transaction Process Session with vendor-specific accounts", () => {
             resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
             selectedPaymentMethod: "card",
             stripeAccountId: vendorStripeAccountId,
+            saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
           }),
         ),
       );

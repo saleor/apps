@@ -203,6 +203,7 @@ describe("DynamoDBTransactionRecorderRepo", () => {
             resolvedTransactionFlow: "CHARGE",
             selectedPaymentMethod: "card",
             // No stripeAccountId field
+            saleorSchemaVersion: { major: 3, minor: 22 },
             createdAt: "2023-01-01T00:00:00.000Z",
             modifiedAt: "2023-01-01T00:00:00.000Z",
           },
@@ -256,6 +257,7 @@ describe("DynamoDBTransactionRecorderRepo", () => {
           resolvedTransactionFlow: "CHARGE",
           selectedPaymentMethod: "card",
           stripeAccountId: "acct_vendor456",
+          saleorSchemaVersion: { major: 3, minor: 22 },
           createdAt: "2023-01-01T00:00:00.000Z",
           modifiedAt: "2023-01-01T00:00:00.000Z",
         },
