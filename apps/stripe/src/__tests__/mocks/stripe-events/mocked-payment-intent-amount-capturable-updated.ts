@@ -1,5 +1,7 @@
 import Stripe from "stripe";
 
+import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+
 import { mockedStripePaymentIntentId } from "../mocked-stripe-payment-intent-id";
 
 export const getMockedPaymentIntentAmountCapturableUpdatedEvent =
@@ -40,7 +42,11 @@ export const getMockedPaymentIntentAmountCapturableUpdatedEvent =
           last_payment_error: null,
           latest_charge: "ch_id",
           livemode: false,
-          metadata: {},
+          metadata: {
+            saleor_transaction_id: mockedSaleorTransactionId,
+            saleor_source_id: "checkout-id-123",
+            saleor_source_type: "Checkout",
+          },
           next_action: null,
           on_behalf_of: null,
           payment_method: "pm_id",

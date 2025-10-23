@@ -35,6 +35,16 @@ export class DynamoMainTable extends Table<PartitionKey, SortKey> {
       },
     });
   }
+
+  static getPrimaryKeyScopedToInstallation({
+    saleorApiUrl,
+    appId,
+  }: {
+    saleorApiUrl: string;
+    appId: string;
+  }): `${string}#${string}` {
+    return `${saleorApiUrl}#${appId}` as const;
+  }
 }
 
 const client = createDynamoDBClient();

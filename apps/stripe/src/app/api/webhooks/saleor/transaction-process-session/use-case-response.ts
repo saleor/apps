@@ -10,6 +10,7 @@ import {
 import { AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
 import {
   StripeApiError,
@@ -47,6 +48,7 @@ class Success extends SuccessWebhookResponse {
   readonly saleorMoney: SaleorMoney;
   readonly timestamp: Date | null;
   readonly stripePaymentIntentId: StripePaymentIntentId;
+  readonly paymentMethodDetails: SaleorPaymentMethodDetails | null;
 
   constructor(args: {
     transactionResult: TransactionResult;
@@ -54,12 +56,14 @@ class Success extends SuccessWebhookResponse {
     timestamp: Date | null;
     stripePaymentIntentId: StripePaymentIntentId;
     appContext: AppContext;
+    saleorPaymentMethodDetails: SaleorPaymentMethodDetails | null;
   }) {
     super(args.appContext);
     this.transactionResult = args.transactionResult;
     this.saleorMoney = args.saleorMoney;
     this.timestamp = args.timestamp;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
+    this.paymentMethodDetails = args.saleorPaymentMethodDetails;
   }
 
   getResponse(): Response {
@@ -79,6 +83,7 @@ class Success extends SuccessWebhookResponse {
         this.appContext.stripeEnv,
       ),
       time: this.timestamp?.toISOString(),
+      paymentMethodDetails: this.paymentMethodDetails?.toSaleorWebhookResponse(),
     };
 
     return Response.json(typeSafeResponse, { status: this.statusCode });

@@ -1,5 +1,76 @@
 # saleor-app-payment-stripe
 
+## 2.3.0
+
+### Minor Changes
+
+- 6b9305d3: Add support for payment method details in transaction events. The Stripe app now fetches and includes payment method information (card brand, last digits, expiration date, etc.) when reporting transaction events to Saleor. This feature is only available for Saleor 3.22+ and includes:
+
+  - New `SaleorPaymentMethodDetails` class for converting Stripe payment method data to Saleor format
+  - Automatic fetching of payment method details from Stripe PaymentIntent
+  - Support for card payment methods (brand, last 4 digits, expiration month/year) and other payment method types
+  - Payment method details included in transaction event reports sent to Saleor
+  - Version compatibility check using `SaleorVersionCompatibilityValidator` to ensure the feature is only used with compatible Saleor versions
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+  - @saleor/apps-trpc@4.0.3
+
+## 2.2.2
+
+### Patch Changes
+
+- 22c28c1f: Removed unnecessary error logs that printed all non-ok responses from tRPC in the main Procedure. That is not necessary because main tRPC config already prints errors from 500 status errors. Now only one error will be logged if necessary
+
+## 2.2.1
+
+### Patch Changes
+
+- d19e88fc: Fix copy for restricted key validation. After this change error text will point to proper prefix (rk) instead of (pk).
+
+## 2.2.0
+
+### Minor Changes
+
+- 46ed6766: Add support for [ACH Direct Debit](https://docs.stripe.com/payments/ach-direct-debit) and [SEPA Direct Debit](https://docs.stripe.com/payments/sepa-debit) payment methods.
+  Also fixed issue where app was using incorrect amount when handling processing event from Stripe (previously it was using `amount_received` and after this change it is using `amount` from Stripe event).
+
+### Patch Changes
+
+- 08c22078: Client error with invalid data provided from the storefront now is logged as warning (instead of error). Additionally, data with expected payment method is now printed in log.
+
+## 2.1.3
+
+### Patch Changes
+
+- 45be18b8: Pass metadata to Stripe when creating PaymentIntents to fix webhook validation errors.
+
+## 2.1.2
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+- Updated dependencies [16b87f53]
+  - @saleor/react-hook-form-macaw@0.2.15
+  - @saleor/apps-shared@1.13.1
+  - @saleor/apps-ui@1.3.1
+  - @saleor/apps-trpc@4.0.3
+
+## 2.1.1
+
+### Patch Changes
+
+- 4c6ab870: Used DynamoAPL from app-sdk instead local package.
+
+## 2.1.0
+
+### Minor Changes
+
+- 30813d53: Events from Stripe that doesn't contain metadata are now gracefully ignored. App will not try to proceed such event, which eventually ended with TransactionNotFound error. Instead it's early returned, not DB is called and proper status is returned to Stripe.
+
 ## 2.0.7
 
 ### Patch Changes

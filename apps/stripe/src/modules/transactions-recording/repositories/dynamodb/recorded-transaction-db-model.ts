@@ -1,4 +1,4 @@
-import { Entity, string } from "dynamodb-toolbox";
+import { Entity, map, number, string } from "dynamodb-toolbox";
 import { item } from "dynamodb-toolbox/schema/item";
 
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
@@ -25,6 +25,10 @@ const Schema = item({
   resolvedTransactionFlow: string(),
   selectedPaymentMethod: string(),
   stripeAccountId: string().optional(),
+  saleorSchemaVersion: map({
+    major: number(),
+    minor: number(),
+  }),
 });
 
 const createEntity = (table: DynamoMainTable) => {

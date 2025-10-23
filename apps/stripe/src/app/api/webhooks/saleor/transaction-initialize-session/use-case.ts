@@ -1,3 +1,4 @@
+import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, fromThrowable, ok, Result } from "neverthrow";
@@ -173,15 +174,16 @@ export class TransactionInitializeSessionUseCase {
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
     appUrl?: string;
+    saleorSchemaVersion: SaleorSchemaVersion;
   }): Promise<UseCaseExecuteResult> {
-    const { appId, saleorApiUrl, event } = args;
+    const { appId, saleorApiUrl, event, saleorSchemaVersion } = args;
 
     const saleorTransactionFlow = createSaleorTransactionFlow(event.action.actionType);
 
     const eventDataResult = parseTransactionInitializeSessionEventData(event.data);
 
     if (eventDataResult.isErr()) {
-      this.logger.error("Failed to parse event data", { error: eventDataResult.error });
+      this.logger.warn("Failed to parse event data", { error: eventDataResult.error });
 
       return ok(
         new TransactionInitializeSessionUseCaseResponses.Failure({
@@ -398,6 +400,7 @@ export class TransactionInitializeSessionUseCase {
       resolvedTransactionFlow: resolvedTransactionFlow,
       selectedPaymentMethod: selectedPaymentMethod.type,
       stripeAccountId,
+      saleorSchemaVersion,
     });
 
     const recordResult = await this.transactionRecorder.recordTransaction(

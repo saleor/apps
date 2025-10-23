@@ -8,6 +8,8 @@ import { GooglePayPaymentMethod } from "@/modules/stripe/payment-methods/google-
 import { IdealPaymentMethod } from "@/modules/stripe/payment-methods/ideal";
 import { KlarnaPaymentMethod } from "@/modules/stripe/payment-methods/klarna";
 import { PayPalPaymentMethod } from "@/modules/stripe/payment-methods/paypal";
+import { SepaDebitPaymentMethod } from "@/modules/stripe/payment-methods/sepa-debit";
+import { USBankAccountPaymentMethod } from "@/modules/stripe/payment-methods/us-bank-account";
 
 const TransactionInitializeEventDataSchema = z
   .object({
@@ -18,6 +20,8 @@ const TransactionInitializeEventDataSchema = z
       ApplePayPaymentMethod.TransactionInitializeSchema,
       PayPalPaymentMethod.TransactionInitializeSchema,
       IdealPaymentMethod.TransactionInitializeSchema,
+      USBankAccountPaymentMethod.TransactionInitializeSchema,
+      SepaDebitPaymentMethod.TransactionInitializeSchema,
     ]),
   })
   .strict()
@@ -61,6 +65,7 @@ export const parseTransactionInitializeSessionEventData = (raw: unknown) => {
       // todo print payment method from the frontend
       new UnsupportedPaymentMethodError("Payment method is not supported", {
         cause: parsingResult.error,
+        props: { data: raw },
       }),
     );
   }

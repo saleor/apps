@@ -4,9 +4,9 @@ Shared package with [Open Telemetry](https://opentelemetry.io/) (OTEL) related h
 
 ## Running app with OTEL locally
 
-1. Make sure you have OTEL collector running (either locally or in the internet).
+1. Make sure you have an OTEL collector running (either locally or on the internet).
 
-2. Add those env variables to `.env` file for given app:
+2. Add these env variables to the `.env` file for the given app:
 
 ```
 OTEL_SERVICE_NAME=saleor-app- # name of the app - the same as in package.json
@@ -18,13 +18,13 @@ OTEL_ACCESS_TOKEN=token
 ```
 
 > [!IMPORTANT]
-> We change default sampler to be [`TraceIDRatioBasedSampler`](https://opentelemetry.io/docs/languages/js/sampling/#traceidratiobasedsampler) so you can see all request in collector. In production apps are using [`parentbased_always_on`](https://opentelemetry.io/docs/languages/sdk-configuration/general/#otel_traces_sampler) sampler meaning parent span (coming from Saleor) is deciding if span is sampled or not.
+> We change the default sampler to be [`TraceIDRatioBasedSampler`](https://opentelemetry.io/docs/languages/js/sampling/#traceidratiobasedsampler) so you can see all requests in the collector. In production, apps are using the [`parentbased_always_on`](https://opentelemetry.io/docs/languages/sdk-configuration/general/#otel_traces_sampler) sampler, meaning the parent span (coming from Saleor) decides if a span is sampled or not.
 
-3. Run app e.g via `pnpm run dev`
+3. Run the app, e.g., via `pnpm run dev`
 
 ## Writing your own sampler
 
-Alternatively to setting `OTEL_TRACES_SAMPLER` variable you can write your own sampler that samples all spans:
+Alternatively to setting the `OTEL_TRACES_SAMPLER` variable, you can write your own sampler that samples all spans:
 
 ```ts
 import { Context, Sampler, SamplingResult, SpanKind } from "@opentelemetry/api";

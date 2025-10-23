@@ -5,7 +5,7 @@
 </div>
 
 <div align="center">
-  <p>Connect your dynamic taxes calculation to AvaTax API.</p>
+  <p>Connect your dynamic tax calculations to the AvaTax API.</p>
 </div>
 
 <div align="center">
@@ -21,21 +21,21 @@
 ## Running app locally in development containers
 
 > [!IMPORTANT]
-> You can use devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` and `./scripts/setup-dynamodb.sh` manually
+> You can use the devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` and `pnpm setup-dynamodb` manually
 
-The easiest way of running Saleor for local development is to use [development containers](https://containers.dev/).
-If you have Visual Studio Code follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open existing folder in container.
+The easiest way to run Saleor for local development is to use [development containers](https://containers.dev/).
+If you have Visual Studio Code, follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open an existing folder in a container.
 
-Development container only creates container, you still need to start the server. See [common-commands](#common-commands) section to learn more.
+The development container only creates a container; you still need to start the server. See the [common-commands](#common-commands) section to learn more.
 
-Development container will have two ports opened:
+The development container will have two ports opened:
 
-1. `3000` - were AvaTax app dev server will listen to requests
-2. `8000` - were local DynamoDB will listen to requests and allow [NoSQL Workbench for DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.html) to connect
+1. `3000` - where the AvaTax app dev server will listen for requests
+2. `8000` - where the local DynamoDB will listen for requests and allow [NoSQL Workbench for DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.html) to connect
 
 ### Common commands
 
-Running app in development server:
+Running the app in development server:
 
 ```shell
 pnpm run dev
@@ -49,21 +49,22 @@ pnpm run test
 
 ## DynamoDB
 
-DynamoDB is used to store Client-side logs. To develop this feature locally use development containers or use [docker-compose](../../.devcontainer/avatax/docker-compose.yml) from `.devcontainer`:
+DynamoDB is used to store client-side logs and auth data. To develop this feature locally, use development containers or use [docker-compose](../../.devcontainer/avatax/docker-compose.yml) from `.devcontainer`:
 
 1. Run `docker compose up` for local DynamoDB instance
-2. Run `./scripts/setup-dynamodb.sh` to describe DynamoDB table
+2. Run `pnpm run setup-dynamodb` to create the DynamoDB table
 
-Ensure following env variables are set
+Ensure the following env variables are set:
 
 ```dotenv
 DYNAMODB_LOGS_ITEM_TTL_IN_DAYS=30
-DYNAMODB_LOGS_TABLE_NAME=avatax-client-logs # must match scripts/setup-dynamodb.sh
+DYNAMODB_LOGS_TABLE_NAME=avatax-client-logs
+DYNAMODB_MAIN_TABLE_NAME=avatax-main-table
 ```
 
 Alternatively, you can connect to AWS-based DynamoDB:
 
-1. Create table in your AWS, based on parameters in [`scripts/setup-dynamodb.sh`](./scripts/setup-dynamodb.sh)
+1. Create a table in your AWS, based on the parameters in [`scripts/setup-dynamodb.ts`](./scripts/setup-dynamodb.ts)
 2. Set AWS-specific [env variables](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-environment.html)
 
 ## Testing

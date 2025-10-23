@@ -1,5 +1,35 @@
 # saleor-app-search
 
+## 1.23.18
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
+## 1.23.17
+
+### Patch Changes
+
+- f430bdcf: Map multi-value attributes as arrays instead of comma-separated strings in Algolia indexing. They should be properly represented in Algolia now
+
+## 1.23.16
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+- Updated dependencies [16b87f53]
+  - @saleor/react-hook-form-macaw@0.2.15
+  - @saleor/apps-shared@1.13.1
+  - @saleor/apps-ui@1.3.1
+
+## 1.23.15
+
+### Patch Changes
+
+- 51b4d859: Installed DynamoDB APL (controlled via env variable).
+
 ## 1.23.14
 
 ### Patch Changes

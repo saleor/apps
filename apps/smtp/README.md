@@ -5,7 +5,7 @@
 <div style="text-align: center">
   <h1>Saleor App SMTP</h1>
 
-  <p>SMTP application is responsible for sending emails and messages to customers. It is connected to the Saleor API via webhooks, which notify the application about the events. The messages are delivered by the SMTP protocol configured in the application</p>
+  <p>The SMTP application is responsible for sending emails and messages to customers. It is connected to the Saleor API via webhooks, which notify the application about events. The messages are delivered by the SMTP protocol configured in the application.</p>
 </div>
 
 <div style="text-align: center">
@@ -22,20 +22,21 @@
 - [ngrok](https://ngrok.com/)
 - [docker](https://www.docker.com/)
 - Saleor Cloud account (free!) or local instance
+- SMTP server - e.g [Mailpit](https://mailpit.axllent.org/)
 
 #### Running app locally in development containers
 
 > [!IMPORTANT]
-> You can use devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` manually
+> You can use the devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` manually
 
-The easiest way of running Saleor for local development is to use [development containers](https://containers.dev/).
-If you have Visual Studio Code follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open existing folder in container.
+The easiest way to run Saleor for local development is to use [development containers](https://containers.dev/).
+If you have Visual Studio Code, follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open an existing folder in a container.
 
-Development container only creates container, you still need to start the server.
+The development container only creates a container; you still need to start the server.
 
-Development container will have port opened:
+The development container will have a port opened:
 
-1. `3000` - were app dev server will listen to requests
+1. `3000` - where the app dev server will listen for requests
 
 #### Running app in development mode
 
@@ -66,9 +67,29 @@ ngrok http localhost:3000
 
 6. Go to Dashboard, open the `Apps` tab and click `Install external app`, provide your tunnel URL with the path for the manifest file. For example `${YOUR_TUNNEL_URL}/api/manifest`
 
-### Configuration
+### How to configure the SMTP app
 
-[Here](./docs/configuration.md) you can find doc how configure the app
+To configure the app you need an SMTP server. You can run it locally using Docker.
+
+1. In the terminal navigate to [devcontainer for the app](../../.devcontainer/smtp/) and run `docker-compose up mailpit`
+2. The Mailpit server is now running, here are the server details that you need to configure the app:
+
+- Host: localhost
+- Port: 1025
+- User: test
+- Password: test
+
+3. Go to the app and click the `Add configuration` button
+4. Now in the `Status and name` section provide the configuration name and save
+5. Go to the `Connect SMTP server` section and fill `Host`, `Port`, `User` and `Password` fields with data from point 2, save the config
+6. Go to the `Sender` section and provide the sender email and name, save the config
+7. Go to `Events` and select which event you want to send email to, for example, `Order created` and save config
+
+## How to test the configuration
+
+1. If you selected `Order created` as an event go to the `Order` tab and create a new order
+2. After order creation, the app should send the email
+3. Open `http://localhost:8025/` and you should see the new email
 
 ### Generated schema and typings
 

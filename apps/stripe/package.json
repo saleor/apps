@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-stripe",
-  "version": "2.0.7",
+  "version": "2.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,12 +12,13 @@
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run /generate:.*/",
     "generate:app-graphql-types": "graphql-codegen",
-    "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts",
+    "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=${npm_package_config_saleor_schemaVersion}",
     "generate:e2e-graphql-types": "graphql-codegen --project e2e",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts --dry-run",
+    "setup-dynamodb": "tsx --env-file-if-exists=.env ./scripts/setup-dynamodb.ts",
     "start": "next start",
     "test": "pnpm run test:unit",
     "test:ci": "pnpm run test:unit --coverage",
@@ -28,7 +29,7 @@
   },
   "config": {
     "saleor": {
-      "schemaVersion": "3.21"
+      "schemaVersion": "3.22"
     }
   },
   "dependencies": {
@@ -43,7 +44,6 @@
     "@opentelemetry/sdk-logs": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
-    "@saleor/apl-dynamo": "workspace:*",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",

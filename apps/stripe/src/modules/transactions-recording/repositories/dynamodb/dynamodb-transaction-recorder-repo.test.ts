@@ -94,6 +94,7 @@ describe("DynamoDBTransactionRecorderRepo", () => {
             resolvedTransactionFlow: "CHARGE",
             selectedPaymentMethod: "card",
             stripeAccountId: "acct_vendor123",
+            saleorSchemaVersion: { major: 3, minor: 22 },
             createdAt: "2023-01-01T00:00:00.000Z",
             modifiedAt: "2023-01-01T00:00:00.000Z",
             saleorApiUrl: mockedSaleorApiUrl,
@@ -117,6 +118,10 @@ describe("DynamoDBTransactionRecorderRepo", () => {
       expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
         RecordedTransaction {
           "resolvedTransactionFlow": "CHARGE",
+          "saleorSchemaVersion": [
+            3,
+            22,
+          ],
           "saleorTransactionFlow": "CHARGE",
           "saleorTransactionId": "mocked-transaction-id",
           "selectedPaymentMethod": "card",

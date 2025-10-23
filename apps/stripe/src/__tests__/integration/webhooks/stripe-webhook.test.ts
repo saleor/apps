@@ -1,4 +1,4 @@
-import { DynamoAPL } from "@saleor/apl-dynamo";
+import { DynamoAPL } from "@saleor/app-sdk/APL/dynamodb";
 import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { testApiHandler } from "next-test-api-route-handler";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,14 +6,13 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
+  mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as stripeWebhookHandlers from "@/app/api/webhooks/stripe/route";
 import { WebhookParams } from "@/app/api/webhooks/stripe/webhook-params";
-import { createLogger } from "@/lib/logger";
 import { RandomId } from "@/lib/random-id";
-import { appInternalTracer } from "@/lib/tracing";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
 import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
@@ -60,15 +59,7 @@ const transactionRecorderRepo = new DynamoDBTransactionRecorderRepo({
 });
 
 const apl = DynamoAPL.create({
-  logger: createLogger("Test logger"),
   table: dynamoMainTable,
-  tracer: appInternalTracer,
-  env: {
-    AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
-    APL_TABLE_NAME: env.DYNAMODB_MAIN_TABLE_NAME,
-    AWS_REGION: env.AWS_REGION,
-    AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
-  },
 });
 
 const restrictedKey = createStripeRestrictedKey(env.INTEGRATION_STRIPE_RK)._unsafeUnwrap();
@@ -98,6 +89,9 @@ describe("Stripe Webhook: integration", () => {
       onUnhandledRequest: (request, print) => {
         if (request.url.includes(env.AWS_ENDPOINT_URL)) {
           return; // Do not print warnings for DynamoDB local
+        }
+        if (request.url.includes("stripe.com")) {
+          return; // Do not print warnings for Stripe API - we use real Stripe API in these tests
         }
         print.warning();
       },
@@ -164,6 +158,7 @@ describe("Stripe Webhook: integration", () => {
         saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
         resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     );
 
@@ -215,7 +210,6 @@ describe("Stripe Webhook: integration", () => {
         const requestSpyData = saleorRequestVarsSpy.mock.calls[0][0];
 
         expect(requestSpyData.variables).toStrictEqual({
-          actions: ["REFUND"],
           amount: 1.013,
           availableActions: ["REFUND"],
           externalUrl: expect.stringContaining(stripePaymentIntentId),
@@ -224,6 +218,15 @@ describe("Stripe Webhook: integration", () => {
           time: expect.any(String),
           transactionId: mockedSaleorTransactionId,
           type: "CHARGE_SUCCESS",
+          paymentMethodDetails: {
+            card: {
+              brand: "visa",
+              name: "visa",
+              expMonth: 10,
+              expYear: 2026,
+              lastDigits: "4242",
+            },
+          },
         });
       },
     });
@@ -276,7 +279,6 @@ describe("Stripe Webhook: integration", () => {
         const requestSpyData = saleorRequestVarsSpy.mock.calls[0][0];
 
         expect(requestSpyData.variables).toStrictEqual({
-          actions: ["REFUND"],
           amount: 10,
           availableActions: ["REFUND"],
           externalUrl: expect.stringContaining(stripeRefundId),
@@ -285,6 +287,7 @@ describe("Stripe Webhook: integration", () => {
           time: expect.any(String),
           transactionId: mockedSaleorTransactionId,
           type: "REFUND_SUCCESS",
+          paymentMethodDetails: null,
         });
       },
     });

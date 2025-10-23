@@ -16,7 +16,7 @@ export default [
   },
   {
     name: "saleor-app-segment/override-no-process-env",
-    files: ["next.config.ts", "src/env.ts", "src/instrumentation.ts"],
+    files: ["next.config.ts", "src/env.ts", "src/instrumentation.ts", "scripts/setup-dynamodb.ts"],
     rules: {
       "n/no-process-env": "off",
     },

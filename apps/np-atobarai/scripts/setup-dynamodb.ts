@@ -8,7 +8,9 @@ import {
   ResourceNotFoundException,
 } from "@aws-sdk/client-dynamodb";
 
-const tableName = "np-atobarai-main-table";
+import { env } from "@/lib/env";
+
+const npAtobaraiMainTableName = env.DYNAMODB_MAIN_TABLE_NAME;
 
 try {
   const {
@@ -35,56 +37,62 @@ try {
     },
   });
 
-  try {
-    const possibleTable = await dynamoClient.send(
-      new DescribeTableCommand({
-        TableName: tableName,
-      }),
-    );
+  const createTableIfNotExists = async (tableName: string) => {
+    try {
+      const possibleTable = await dynamoClient.send(
+        new DescribeTableCommand({
+          TableName: tableName,
+        }),
+      );
 
-    if (possibleTable.Table) {
-      console.log(`Table ${tableName} already exists - creation is skipped`);
+      if (possibleTable.Table) {
+        console.log(`Table ${tableName} already exists - creation is skipped`);
 
-      process.exit(0);
+        return;
+      }
+    } catch (error) {
+      if (error instanceof ResourceNotFoundException) {
+        console.log(`Table ${tableName} does not exist, proceeding with creation.`);
+      } else {
+        throw error;
+      }
     }
-  } catch (error) {
-    if (error instanceof ResourceNotFoundException) {
-      console.log(`Table ${tableName} does not exist, proceeding with creation.`);
-    } else {
-      throw error; // Re-throw unexpected errors
-    }
-  }
 
-  const createTableCommand = new CreateTableCommand({
-    TableName: tableName,
-    AttributeDefinitions: [
-      {
-        AttributeName: "PK",
-        AttributeType: "S",
+    const createTableCommand = new CreateTableCommand({
+      TableName: tableName,
+      AttributeDefinitions: [
+        {
+          AttributeName: "PK",
+          AttributeType: "S",
+        },
+        {
+          AttributeName: "SK",
+          AttributeType: "S",
+        },
+      ],
+      KeySchema: [
+        {
+          AttributeName: "PK",
+          KeyType: "HASH",
+        },
+        {
+          AttributeName: "SK",
+          KeyType: "RANGE",
+        },
+      ],
+      ProvisionedThroughput: {
+        ReadCapacityUnits: 5,
+        WriteCapacityUnits: 5,
       },
-      {
-        AttributeName: "SK",
-        AttributeType: "S",
-      },
-    ],
-    KeySchema: [
-      {
-        AttributeName: "PK",
-        KeyType: "HASH",
-      },
-      {
-        AttributeName: "SK",
-        KeyType: "RANGE",
-      },
-    ],
-    ProvisionedThroughput: {
-      ReadCapacityUnits: 5,
-      WriteCapacityUnits: 5,
-    },
-  });
+    });
 
-  await dynamoClient.send(createTableCommand);
-  console.log(`Table ${tableName} created successfully`);
+    await dynamoClient.send(createTableCommand);
+    console.log(`Table ${tableName} created successfully`);
+  };
+
+  await createTableIfNotExists(npAtobaraiMainTableName);
+
+  console.log("DynamoDB setup completed successfully");
   process.exit(0);
 } catch (error) {
   console.error("Error setting up DynamoDB:", error);

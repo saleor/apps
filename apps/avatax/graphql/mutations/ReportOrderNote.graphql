@@ -1,0 +1,8 @@
+mutation ReportOrderNote($orderId: ID!, $note: String!) {
+  orderNoteAdd(order: $orderId, input: { message: $note }) {
+    errors {
+      code
+      message
+    }
+  }
+}

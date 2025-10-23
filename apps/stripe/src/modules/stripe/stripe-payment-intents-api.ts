@@ -33,7 +33,7 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
           ...args.intentParams,
           amount: args.stripeMoney.amount,
           currency: args.stripeMoney.currency,
-          metadata: args.metadata,
+          ...(args.metadata && { metadata: args.metadata }),
         },
         {
           idempotencyKey: args.idempotencyKey,
@@ -49,10 +49,10 @@ export class StripePaymentIntentsApi implements IStripePaymentIntentsApi {
     stripeAccount?: string;
   }): Promise<Result<Stripe.PaymentIntent, unknown>> {
     return ResultAsync.fromPromise(
-      this.stripeApiWrapper.paymentIntents.retrieve(
-        args.id,
-        args.stripeAccount ? { stripeAccount: args.stripeAccount } : undefined,
-      ),
+      this.stripeApiWrapper.paymentIntents.retrieve(args.id, {
+        expand: ["payment_method"],
+        ...(args.stripeAccount && { stripeAccount: args.stripeAccount }),
+      }),
       (error) => error,
     );
   }

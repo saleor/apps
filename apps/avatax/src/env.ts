@@ -1,6 +1,8 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+import packageJson from "@/package.json";
+
 // https://env.t3.gg/docs/recipes#booleans
 const booleanSchema = z
   .string()
@@ -13,16 +15,19 @@ export const env = createEnv({
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
-    APL: z.enum(["saleor-cloud", "file"]).optional().default("file"),
+    APL: z.enum(["saleor-cloud", "file", "dynamodb"]).optional().default("file"),
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
     AVATAX_CLIENT_TIMEOUT: z.coerce.number().optional().default(15000),
+    AVATAX_CLIENT_APP_NAME: z.string().optional().default(packageJson.name),
+    AVATAX_CLIENT_APP_VERSION: z.string().optional().default(packageJson.version),
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_REGION: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
     DYNAMODB_LOGS_ITEM_TTL_IN_DAYS: z.coerce.number().positive().optional().default(14),
     DYNAMODB_LOGS_TABLE_NAME: z.string(),
+    DYNAMODB_MAIN_TABLE_NAME: z.string(),
     E2E_USER_NAME: z.string().optional(),
     E2E_USER_PASSWORD: z.string().optional(),
     E2E_SALEOR_VERSION: z.enum(["319", "320", "321", "latest"]).optional(),
@@ -66,11 +71,14 @@ export const env = createEnv({
     APP_IFRAME_BASE_URL: process.env.APP_IFRAME_BASE_URL,
     APP_LOG_LEVEL: process.env.APP_LOG_LEVEL,
     AVATAX_CLIENT_TIMEOUT: process.env.AVATAX_CLIENT_TIMEOUT,
+    AVATAX_CLIENT_APP_NAME: process.env.AVATAX_CLIENT_APP_NAME,
+    AVATAX_CLIENT_APP_VERSION: process.env.AVATAX_CLIENT_APP_VERSION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_REGION: process.env.AWS_REGION,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
     DYNAMODB_LOGS_ITEM_TTL_IN_DAYS: process.env.DYNAMODB_LOGS_ITEM_TTL_IN_DAYS,
     DYNAMODB_LOGS_TABLE_NAME: process.env.DYNAMODB_LOGS_TABLE_NAME,
+    DYNAMODB_MAIN_TABLE_NAME: process.env.DYNAMODB_MAIN_TABLE_NAME,
     E2E_USER_NAME: process.env.E2E_USER_NAME,
     E2E_USER_PASSWORD: process.env.E2E_USER_PASSWORD,
     E2E_SALEOR_VERSION: process.env.E2E_SALEOR_VERSION,

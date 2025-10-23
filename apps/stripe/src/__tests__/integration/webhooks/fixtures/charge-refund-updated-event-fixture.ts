@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 
+import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripeRefundId } from "@/modules/stripe/stripe-refund-id";
 
@@ -27,7 +28,11 @@ export const chargeRefundUpdatedEventFixture = (
         amount: 1000,
         id: mockedStripeRefundId,
         created: date,
-        metadata: {},
+        metadata: {
+          saleor_transaction_id: mockedSaleorTransactionId,
+          saleor_source_id: "checkout-id-123",
+          saleor_source_type: "Checkout",
+        },
         presentment_details: { presentment_amount: 0, presentment_currency: "usd" },
         status: "succeeded",
         balance_transaction: null,

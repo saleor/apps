@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-klaviyo",
-  "version": "1.13.13",
+  "version": "1.13.16",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,6 +15,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "catalog:",
+    "@aws-sdk/lib-dynamodb": "catalog:",
+    "@aws-sdk/util-dynamodb": "catalog:",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/api-logs": "catalog:",
     "@opentelemetry/instrumentation": "catalog:",
@@ -33,6 +36,7 @@
     "@sentry/nextjs": "catalog:",
     "@vercel/otel": "catalog:",
     "dotenv": "catalog:",
+    "dynamodb-toolbox": "catalog:",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
     "next": "catalog:",

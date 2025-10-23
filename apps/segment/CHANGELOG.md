@@ -1,5 +1,29 @@
 # saleor-app-segment
 
+## 2.1.16
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
+## 2.1.15
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+- Updated dependencies [16b87f53]
+  - @saleor/react-hook-form-macaw@0.2.15
+  - @saleor/apps-shared@1.13.1
+  - @saleor/apps-ui@1.3.1
+
+## 2.1.14
+
+### Patch Changes
+
+- 4c6ab870: Used DynamoAPL from app-sdk instead local package.
+
 ## 2.1.13
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-segment",
-  "version": "2.1.13",
+  "version": "2.1.16",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,6 +14,7 @@
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts",
     "migrate:dry-run": "pnpm tsx --require dotenv/config ./scripts/run-webhooks-migration.ts --dry-run",
+    "setup-dynamodb": "tsx --require dotenv/config ./scripts/setup-dynamodb.ts",
     "start": "next start",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
@@ -30,7 +31,6 @@
     "@opentelemetry/sdk-logs": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
-    "@saleor/apl-dynamo": "workspace:*",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",

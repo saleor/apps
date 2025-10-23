@@ -1,4 +1,4 @@
-import { DynamoAPL } from "@saleor/apl-dynamo";
+import { DynamoAPL } from "@saleor/app-sdk/APL/dynamodb";
 import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,14 +6,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
+  mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as transactionProcessSession from "@/app/api/webhooks/saleor/transaction-process-session/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
-import { createLogger } from "@/lib/logger";
 import { RandomId } from "@/lib/random-id";
-import { appInternalTracer } from "@/lib/tracing";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
 import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
@@ -51,15 +50,7 @@ const transactionRecorderRepo = new DynamoDBTransactionRecorderRepo({
 });
 
 const apl = DynamoAPL.create({
-  logger: createLogger("Test logger"),
   table: dynamoMainTable,
-  tracer: appInternalTracer,
-  env: {
-    AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
-    APL_TABLE_NAME: env.DYNAMODB_MAIN_TABLE_NAME,
-    AWS_REGION: env.AWS_REGION,
-    AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
-  },
 });
 
 const restrictedKey = createStripeRestrictedKey(env.INTEGRATION_STRIPE_RK)._unsafeUnwrap();
@@ -143,6 +134,7 @@ describe("TransactionProcessSession webhook: integration", async () => {
         saleorTransactionFlow,
         resolvedTransactionFlow,
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     );
 
@@ -170,6 +162,14 @@ describe("TransactionProcessSession webhook: integration", async () => {
           pspReference: expect.stringContaining("pi_"),
           message: "Payment intent has been successful",
           externalUrl: expect.stringContaining("https://dashboard.stripe.com/test/payments/pi_"),
+          paymentMethodDetails: {
+            brand: "visa",
+            name: "visa",
+            expMonth: 10,
+            expYear: 2026,
+            lastDigits: "4242",
+            type: "CARD",
+          },
         });
 
         expect(response.status).toStrictEqual(200);
@@ -214,6 +214,7 @@ describe("TransactionProcessSession webhook: integration", async () => {
         saleorTransactionFlow,
         resolvedTransactionFlow,
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     );
 
@@ -241,6 +242,14 @@ describe("TransactionProcessSession webhook: integration", async () => {
           pspReference: expect.stringContaining("pi_"),
           message: "Payment intent has been successful",
           externalUrl: expect.stringContaining("https://dashboard.stripe.com/test/payments/pi_"),
+          paymentMethodDetails: {
+            brand: "visa",
+            expMonth: 10,
+            expYear: 2026,
+            lastDigits: "4242",
+            name: "visa",
+            type: "CARD",
+          },
         });
 
         expect(response.status).toStrictEqual(200);

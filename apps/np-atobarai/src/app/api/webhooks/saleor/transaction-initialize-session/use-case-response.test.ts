@@ -1,17 +1,18 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
-import { AtobaraiApiClientRegisterTransactionError } from "@/modules/atobarai/api/types";
+import {
+  AtobaraiApiClientRegisterTransactionError,
+  AtobaraiMultipleResultsError,
+} from "@/modules/atobarai/api/types";
+import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
 
-import {
-  AtobaraiFailureTransactionError,
-  AtobaraiMultipleFailureTransactionError,
-} from "../use-case-errors";
+import { AtobaraiFailureTransactionError } from "../use-case-errors";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
 describe("TransactionInitializeSessionUseCaseResponse", () => {
@@ -21,6 +22,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
         const response = new TransactionInitializeSessionUseCaseResponse.Success({
           transactionResult: new ChargeSuccessResult(),
           atobaraiTransactionId: mockedAtobaraiTransactionId,
+          saleorPaymentMethodDetails: null,
         });
 
         const fetchResponse = response.getResponse();
@@ -44,6 +46,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
         const response = new TransactionInitializeSessionUseCaseResponse.Success({
           transactionResult: new ChargeActionRequiredResult(),
           atobaraiTransactionId: mockedAtobaraiTransactionId,
+          saleorPaymentMethodDetails: null,
         });
 
         const fetchResponse = response.getResponse();
@@ -53,6 +56,60 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
           {
             "actions": [],
             "message": "NP Atobarai transaction requires further action",
+            "pspReference": "np_trans_id",
+            "result": "CHARGE_ACTION_REQUIRED",
+          }
+        `);
+      });
+    });
+
+    describe("with ChargeSuccessResult and non-null saleorPaymentMethodDetails", () => {
+      it("getResponse() returns valid Response with status 200, success result, PSP reference, and payment method details", async () => {
+        const response = new TransactionInitializeSessionUseCaseResponse.Success({
+          transactionResult: new ChargeSuccessResult(),
+          atobaraiTransactionId: mockedAtobaraiTransactionId,
+          saleorPaymentMethodDetails: new SaleorPaymentMethodDetails(),
+        });
+
+        const fetchResponse = response.getResponse();
+
+        expect(fetchResponse.status).toBe(200);
+        expect(await fetchResponse.json()).toMatchInlineSnapshot(`
+          {
+            "actions": [
+              "REFUND",
+            ],
+            "message": "Successfully registered NP Atobarai transaction",
+            "paymentMethodDetails": {
+              "name": "np_atobarai",
+              "type": "OTHER",
+            },
+            "pspReference": "np_trans_id",
+            "result": "CHARGE_SUCCESS",
+          }
+        `);
+      });
+    });
+
+    describe("with ChargeActionRequiredResult and non-null saleorPaymentMethodDetails", () => {
+      it("getResponse() returns valid Response with status 200, action required result, PSP reference, and payment method details", async () => {
+        const response = new TransactionInitializeSessionUseCaseResponse.Success({
+          transactionResult: new ChargeActionRequiredResult(),
+          atobaraiTransactionId: mockedAtobaraiTransactionId,
+          saleorPaymentMethodDetails: new SaleorPaymentMethodDetails(),
+        });
+
+        const fetchResponse = response.getResponse();
+
+        expect(fetchResponse.status).toBe(200);
+        expect(await fetchResponse.json()).toMatchInlineSnapshot(`
+          {
+            "actions": [],
+            "message": "NP Atobarai transaction requires further action",
+            "paymentMethodDetails": {
+              "name": "np_atobarai",
+              "type": "OTHER",
+            },
             "pspReference": "np_trans_id",
             "result": "CHARGE_ACTION_REQUIRED",
           }
@@ -119,11 +176,11 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
       });
     });
 
-    describe("with ChargeFailureResult and AtobaraiMultipleFailureTransactionError", () => {
+    describe("with ChargeFailureResult and AtobaraiMultipleResultsError", () => {
       it("getResponse() returns valid Response with status 200 and multiple failure result with transaction error details", async () => {
         const response = new TransactionInitializeSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
-          error: new AtobaraiMultipleFailureTransactionError("Multiple failed transactions"),
+          error: new AtobaraiMultipleResultsError("Multiple failed transactions"),
         });
 
         const fetchResponse = response.getResponse();
@@ -135,7 +192,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
             "data": {
               "errors": [
                 {
-                  "code": "AtobaraiMultipleFailureTransactionError",
+                  "code": "AtobaraiMultipleResultsError",
                   "message": "Atobarai returned multiple transactions",
                 },
               ],

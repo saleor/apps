@@ -18,7 +18,11 @@ import { StripeClient } from "@/modules/stripe/stripe-client";
 import { StripeEnv } from "@/modules/stripe/stripe-env";
 import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
-import { IStripeEventVerify } from "@/modules/stripe/types";
+import {
+  AllowedStripeObjectMetadata,
+  IStripeEventVerify,
+  IStripePaymentIntentsApiFactory,
+} from "@/modules/stripe/types";
 import {
   TransactionRecorderError,
   TransactionRecorderRepo,
@@ -27,13 +31,14 @@ import {
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
 import {
+  ObjectCreatedOutsideOfSaleorResponse,
   PossibleStripeWebhookErrorResponses,
   PossibleStripeWebhookSuccessResponses,
   StripeWebhookAppIsNotConfiguredResponse,
   StripeWebhookMalformedRequestResponse,
   StripeWebhookSeverErrorResponse,
   StripeWebhookSuccessResponse,
-  StripeWebhookTransactionMissingReponse,
+  StripeWebhookTransactionMissingResponse,
 } from "./stripe-webhook-responses";
 import { WebhookParams } from "./webhook-params";
 
@@ -44,6 +49,8 @@ type R = Promise<
 type StripeVerifyEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
 type SaleorTransactionEventReporterFactory = (authData: AuthData) => ITransactionEventReporter;
 
+const ObjectMetadataMissingError = BaseError.subclass("ObjectMetadataMissingError");
+
 export class StripeWebhookUseCase {
   private appConfigRepo: AppConfigRepo;
   private webhookEventVerifyFactory: StripeVerifyEventFactory;
@@ -52,6 +59,7 @@ export class StripeWebhookUseCase {
   private transactionRecorder: TransactionRecorderRepo;
   private transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
   private webhookManager: StripeWebhookManager;
+  private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
 
   constructor(deps: {
     appConfigRepo: AppConfigRepo;
@@ -60,6 +68,7 @@ export class StripeWebhookUseCase {
     transactionRecorder: TransactionRecorderRepo;
     transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
     webhookManager: StripeWebhookManager;
+    stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
   }) {
     this.appConfigRepo = deps.appConfigRepo;
     this.webhookEventVerifyFactory = deps.webhookEventVerifyFactory;
@@ -67,6 +76,7 @@ export class StripeWebhookUseCase {
     this.transactionRecorder = deps.transactionRecorder;
     this.transactionEventReporterFactory = deps.transactionEventReporterFactory;
     this.webhookManager = deps.webhookManager;
+    this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
   }
 
   private async removeStripeWebhook({
@@ -94,17 +104,38 @@ export class StripeWebhookUseCase {
     saleorApiUrl,
     appId,
     stripeEnv,
+    restrictedKey,
   }: {
     event: Stripe.Event;
     saleorApiUrl: SaleorApiUrl;
     appId: string;
     stripeEnv: StripeEnv;
+    restrictedKey: StripeRestrictedKey;
   }) {
     switch (event.data.object.object) {
       case "payment_intent": {
         loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, event.data.object.id);
 
+        const meta = event.data.object.metadata as AllowedStripeObjectMetadata;
+
+        if (!meta?.saleor_transaction_id) {
+          return err(
+            new ObjectMetadataMissingError(
+              "Missing metadata on object, it was not created by Saleor",
+              {
+                props: {
+                  meta,
+                },
+              },
+            ),
+          );
+        }
+
         const handler = new StripePaymentIntentHandler();
+
+        const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({
+          key: restrictedKey,
+        });
 
         return handler.processPaymentIntentEvent({
           event,
@@ -112,11 +143,27 @@ export class StripeWebhookUseCase {
           transactionRecorder: this.transactionRecorder,
           appId,
           saleorApiUrl,
+          stripePaymentIntentsApi,
         });
       }
 
       case "refund": {
         loggerContext.set("stripeRefundId", event.data.object.id);
+
+        const meta = event.data.object.metadata as AllowedStripeObjectMetadata;
+
+        if (!meta?.saleor_transaction_id) {
+          return err(
+            new ObjectMetadataMissingError(
+              "Missing metadata on object, it was not created by Saleor",
+              {
+                props: {
+                  meta,
+                },
+              },
+            ),
+          );
+        }
 
         const handler = new StripeRefundHandler();
 
@@ -292,29 +339,38 @@ export class StripeWebhookUseCase {
       saleorApiUrl: webhookParams.saleorApiUrl,
       appId: authData.appId,
       stripeEnv: config.value.getStripeEnvValue(),
+      restrictedKey: config.value.restrictedKey,
     });
 
     if (processingResult.isErr()) {
+      /**
+       * This is technically not an error, so we catch it here without the error log.
+       */
+      if (processingResult.error instanceof ObjectMetadataMissingError) {
+        return err(new ObjectCreatedOutsideOfSaleorResponse());
+      }
+
       this.logger.error("Failed to process event", {
         error: processingResult.error,
       });
 
       if (processingResult.error instanceof TransactionRecorderError.TransactionMissingError) {
-        return err(new StripeWebhookTransactionMissingReponse());
+        return err(new StripeWebhookTransactionMissingResponse());
       }
 
       return err(new StripeWebhookSeverErrorResponse());
     }
 
+    loggerContext.set(
+      ObservabilityAttributes.TRANSACTION_ID,
+      processingResult.value.saleorTransactionId,
+    );
+    loggerContext.set("amount", processingResult.value.saleorMoney.amount);
+    loggerContext.set("result", processingResult.value.transactionResult.result);
+
     const reportResult = await transactionEventReporter.reportTransactionEvent(
       processingResult.value.resolveEventReportVariables(),
     );
-
-    this.logger.info("Transaction event reported", {
-      transactionId: processingResult.value.saleorTransactionId,
-      amount: processingResult.value.saleorMoney.amount,
-      result: processingResult.value.transactionResult,
-    });
 
     if (reportResult.isErr()) {
       if (reportResult.error instanceof TransactionEventReporterErrors.AlreadyReportedError) {
@@ -329,6 +385,8 @@ export class StripeWebhookUseCase {
 
       return err(new StripeWebhookSeverErrorResponse());
     }
+
+    this.logger.info("Transaction event reported");
 
     return ok(new StripeWebhookSuccessResponse());
   }

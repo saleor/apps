@@ -16,7 +16,7 @@ import {
   type LogByCheckoutOrOrderIdEntity,
   type LogByDateEntity,
   LogsTable,
-} from "./dynamo-schema";
+} from "./dynamo-logs-table";
 import { LogsTransformer } from "./log-transformer";
 
 export type LastEvaluatedKey = Record<string, unknown> | undefined;

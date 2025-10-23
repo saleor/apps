@@ -1,4 +1,8 @@
-import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
+import {
+  mockedSaleorAppId,
+  mockedSaleorChannelId,
+  mockedSaleorTransactionId,
+} from "@/__tests__/mocks/constants";
 import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
@@ -11,6 +15,7 @@ export const transactionChargeRequestedFixture = (args: {
       amount: args.amount,
     },
     transaction: {
+      id: mockedSaleorTransactionId,
       pspReference: args.stripePaymentIntentId,
       checkout: {
         id: "checkout-id",

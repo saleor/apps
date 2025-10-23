@@ -1,3 +1,5 @@
+import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+
 import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
 import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
@@ -18,6 +20,7 @@ export class RecordedTransaction {
   readonly resolvedTransactionFlow: ResolvedTransactionFlow;
   readonly selectedPaymentMethod: PaymentMethod["type"];
   readonly stripeAccountId?: string;
+  readonly saleorSchemaVersion: SaleorSchemaVersion;
 
   constructor(args: {
     saleorTransactionId: SaleorTransationId;
@@ -26,6 +29,7 @@ export class RecordedTransaction {
     resolvedTransactionFlow: ResolvedTransactionFlow;
     selectedPaymentMethod: PaymentMethod["type"];
     stripeAccountId?: string;
+    saleorSchemaVersion: SaleorSchemaVersion;
   }) {
     this.saleorTransactionId = args.saleorTransactionId;
     this.stripePaymentIntentId = args.stripePaymentIntentId;
@@ -33,5 +37,6 @@ export class RecordedTransaction {
     this.resolvedTransactionFlow = args.resolvedTransactionFlow;
     this.selectedPaymentMethod = args.selectedPaymentMethod;
     this.stripeAccountId = args.stripeAccountId;
+    this.saleorSchemaVersion = args.saleorSchemaVersion;
   }
 }

@@ -1,6 +1,6 @@
 ## Scope of the PR
 
-<!-- Describe briefly changed made in this PR -->
+<!-- Describe briefly the changes made in this PR -->
 
 ## Related issues
 

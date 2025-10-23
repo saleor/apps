@@ -1,5 +1,29 @@
 # saleor-app-cms
 
+## 2.12.6
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
+## 2.12.5
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+- Updated dependencies [16b87f53]
+  - @saleor/react-hook-form-macaw@0.2.15
+  - @saleor/apps-shared@1.13.1
+  - @saleor/apps-ui@1.3.1
+
+## 2.12.4
+
+### Patch Changes
+
+- 51b4d859: Installed DynamoDB APL (controlled via env variable).
+
 ## 2.12.3
 
 ### Patch Changes

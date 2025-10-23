@@ -55,6 +55,18 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
 
       setObservabilitySaleorApiUrl(saleorApiUrlResult.value, ctx.payload.version);
 
+      if (!ctx.schemaVersion) {
+        captureException(new Error("No schema version provided"));
+        const response = new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          new BaseError("No schema version provided", {
+            props: { _internalName: "TransactionInitializeSession.NoSchemaVersion" as const },
+          }),
+        );
+
+        return response.getResponse();
+      }
+
       // Create GraphQL client and VendorResolver dynamically
       const graphqlClient = createInstrumentedGraphqlClient(ctx.authData);
       const vendorResolver = new VendorResolver(graphqlClient);
@@ -76,6 +88,7 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
         saleorApiUrl: saleorApiUrlResult.value,
         event: ctx.payload,
         appUrl,
+        saleorSchemaVersion: ctx.schemaVersion,
       });
 
       return result.match(

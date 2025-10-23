@@ -20,16 +20,16 @@
 ### Running app locally in development containers
 
 > [!IMPORTANT]
-> You can use devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` manually
+> You can use the devcontainer Dockerfile and docker-compose.yaml directly - but remember to run `pnpm install` manually
 
-The easiest way of running Saleor for local development is to use [development containers](https://containers.dev/).
-If you have Visual Studio Code follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open existing folder in container.
+The easiest way to run Saleor for local development is to use [development containers](https://containers.dev/).
+If you have Visual Studio Code, follow their [guide](https://code.visualstudio.com/docs/devcontainers/containers#_quick-start-open-an-existing-folder-in-a-container) on how to open an existing folder in a container.
 
-Development container only creates container, you still need to start the server.
+The development container only creates a container; you still need to start the server.
 
-Development container will have two ports opened:
+The development container will have two ports opened:
 
-1. `3000` - were app dev server will listen to requests
+1. `3000` - where the app dev server will listen for requests
 
 ### Running app in development mode
 
@@ -47,40 +47,40 @@ pnpm install
 pnpm dev
 ```
 
-4. App will be available under `http://localhost:3000`
+4. The app will be available under `http://localhost:3000`.
 
 > [!NOTE]
 > To install app in Saleor Cloud, you need to expose your local server to the internet (tunnel). You can use Saleor CLI to do that. See this [guide](https://docs.saleor.io/developer/extending/apps/developing-with-tunnels) for more details.
 
-6. Install app on the Saleor dashboard.
+6. Install the app on the Saleor dashboard.
 
 ### Integration tests
 
 To run integration tests:
 
 1. Create a file named `.env.test` and use the contents of the [`.env.test.example`](./.env.test.example) file as a reference.
-2. Change values of `INTEGRATION_*` variables
+2. Change the values of `INTEGRATION_*` variables
 3. Run tests:
 
 ```shell
 pnpm run test:integration
 ```
 
-Tests are using mocking Saleor and using local DynamoDB in Docker but are calling real Stripe API.
+Tests are using mocked Saleor and local DynamoDB in Docker but are calling the real Stripe API.
 
 ### E2E tests
 
 To run e2e tests:
 
 1. Create a file named `.env.test` and use the contents of the [`.env.test.example`](./.env.test.example) file as a reference.
-2. Change values of `E2E_*` variables
+2. Change the values of `E2E_*` variables
 3. Run tests:
 
 ```shell
 pnpm run test:e2e
 ```
 
-Tests are using Stripe staging app that is already installed on Saleor environments.
+Tests are using the Stripe staging app that is already installed on Saleor environments.
 
 ## Supported Payment Methods
 

@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { ClientLog, ClientLogStoreRequest } from "@/modules/client-logs/client-log";
 
-import { ClientLogDynamoEntityFactory, LogsTable } from "./dynamo-schema";
+import { ClientLogDynamoEntityFactory, LogsTable } from "./dynamo-logs-table";
 import { LogsRepositoryDynamodb, LogsRepositoryMemory } from "./logs-repository";
 
 const saleorApiUrl = "https://test.com/graphql/";

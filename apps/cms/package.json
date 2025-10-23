@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-cms",
-  "version": "2.12.3",
+  "version": "2.12.6",
   "private": true,
   "type": "module",
   "scripts": {
@@ -18,6 +18,9 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "catalog:",
+    "@aws-sdk/lib-dynamodb": "catalog:",
+    "@aws-sdk/util-dynamodb": "catalog:",
     "@datocms/cma-client-browser": "2.0.0",
     "@hookform/resolvers": "catalog:",
     "@opentelemetry/api": "catalog:",
@@ -46,6 +49,7 @@
     "@vitejs/plugin-react": "4.3.4",
     "contentful-management": "10.46.4",
     "dotenv": "catalog:",
+    "dynamodb-toolbox": "catalog:",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
     "jsdom": "catalog:",

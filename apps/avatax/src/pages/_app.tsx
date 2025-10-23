@@ -1,11 +1,14 @@
+/* eslint-disable react-naming-convention/filename */
 import "@saleor/macaw-ui/style";
 import "../styles/globals.css";
 
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { RoutePropagator } from "@saleor/app-sdk/app-bridge/next";
+import { IframeProtectedFallback } from "@saleor/apps-shared/iframe-protected-fallback";
+import { IframeProtectedWrapper } from "@saleor/apps-shared/iframe-protected-wrapper";
 import { NoSSRWrapper } from "@saleor/apps-shared/no-ssr-wrapper";
 import { ThemeSynchronizer } from "@saleor/apps-shared/theme-synchronizer";
-import { ThemeProvider } from "@saleor/macaw-ui";
+import { Text, ThemeProvider } from "@saleor/macaw-ui";
 import { AppProps } from "next/app";
 
 import { trpcClient } from "../modules/trpc/trpc-client";
@@ -25,17 +28,22 @@ function NextApp({ Component, pageProps }: AppProps) {
 
   return (
     <NoSSRWrapper>
-      <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
-        <GraphQLProvider>
-          <ThemeProvider>
-            <ThemeSynchronizer />
-            <RoutePropagator />
-            <AppLayout>
-              <Component {...pageProps} />
-            </AppLayout>
-          </ThemeProvider>
-        </GraphQLProvider>
-      </AppBridgeProvider>
+      <ThemeProvider>
+        <IframeProtectedWrapper
+          allowedPathNames={["/", "/order-details"]}
+          fallback={<IframeProtectedFallback appName="Saleor AvaTax App" />}
+        >
+          <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
+            <GraphQLProvider>
+              <ThemeSynchronizer />
+              <RoutePropagator />
+              <AppLayout>
+                <Component {...pageProps} />
+              </AppLayout>
+            </GraphQLProvider>
+          </AppBridgeProvider>
+        </IframeProtectedWrapper>
+      </ThemeProvider>
     </NoSSRWrapper>
   );
 }

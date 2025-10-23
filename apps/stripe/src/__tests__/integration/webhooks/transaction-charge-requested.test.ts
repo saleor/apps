@@ -1,4 +1,4 @@
-import { DynamoAPL } from "@saleor/apl-dynamo";
+import { DynamoAPL } from "@saleor/app-sdk/APL/dynamodb";
 import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { testApiHandler } from "next-test-api-route-handler";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,14 +6,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   mockedSaleorAppId,
   mockedSaleorChannelId,
+  mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { mockStripeWebhookSecret } from "@/__tests__/mocks/stripe-webhook-secret";
 import * as chargeRequestedHandlers from "@/app/api/webhooks/saleor/transaction-charge-requested/route";
 import * as verifyWebhookSignatureModule from "@/app/api/webhooks/saleor/verify-signature";
-import { createLogger } from "@/lib/logger";
 import { RandomId } from "@/lib/random-id";
-import { appInternalTracer } from "@/lib/tracing";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import { DynamoDbChannelConfigMapping } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
 import { DynamodbAppConfigRepo } from "@/modules/app-config/repositories/dynamodb/dynamodb-app-config-repo";
@@ -54,15 +53,7 @@ const transactionRecorderRepo = new DynamoDBTransactionRecorderRepo({
 });
 
 const apl = DynamoAPL.create({
-  logger: createLogger("Test logger"),
   table: dynamoMainTable,
-  tracer: appInternalTracer,
-  env: {
-    AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
-    APL_TABLE_NAME: env.DYNAMODB_MAIN_TABLE_NAME,
-    AWS_REGION: env.AWS_REGION,
-    AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
-  },
 });
 
 const restrictedKey = createStripeRestrictedKey(env.INTEGRATION_STRIPE_RK)._unsafeUnwrap();
@@ -146,6 +137,7 @@ describe("TransactionChargeRequested webhook: integration", async () => {
         saleorTransactionFlow: createSaleorTransactionFlow("AUTHORIZATION"),
         resolvedTransactionFlow: createResolvedTransactionFlow("AUTHORIZATION"),
         selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       }),
     );
   });

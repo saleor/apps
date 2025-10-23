@@ -40,13 +40,13 @@ export type SaleorApiUrl = z.infer<typeof saleorApiUrlSchema>;
 ### Usage
 
 ```ts
-function setOtelAttrs = (saleorApiUrl: SaleorApiUrl) => {
-    tracer.setAttrs('saleorApiUrl', saleorApiUrl)
+function setOtelAttrs(saleorApiUrl: SaleorApiUrl) {
+    tracer.setAttrs('saleorApiUrl', saleorApiUrl);
 }
 
 const saleorApiUrl = createSaleorApiUrl(ctx.authData.saleorApiUrl);
 
-setOtelAttrs(saleorApiUrl)
+setOtelAttrs(saleorApiUrl);
 ```
 
 ### Guideline
@@ -57,4 +57,4 @@ If you need additional logic (e.g. conversion methods), use a class instead.
 
 ## Consequences
 
-When creating new apps use Zod branded types. If you are refactoring existing app consider using Zod branded types.
+When creating new apps, use Zod branded types. If you are refactoring an existing app, consider using Zod branded types.

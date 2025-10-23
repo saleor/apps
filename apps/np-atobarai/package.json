@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-np-atobarai",
-  "version": "0.0.4",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run /generate:.*/",
     "generate:app-graphql-types": "graphql-codegen",
-    "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts",
+    "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=${npm_package_config_saleor_schemaVersion}",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts",
@@ -24,7 +24,7 @@
   },
   "config": {
     "saleor": {
-      "schemaVersion": "3.20"
+      "schemaVersion": "3.22"
     }
   },
   "dependencies": {
@@ -38,7 +38,6 @@
     "@opentelemetry/sdk-logs": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
-    "@saleor/apl-dynamo": "workspace:*",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-domain": "workspace:*",
     "@saleor/apps-logger": "workspace:*",
@@ -91,6 +90,7 @@
     "@types/react-dom": "18.2.5",
     "@vitejs/plugin-react": "4.3.4",
     "@vitest/coverage-v8": "catalog:",
+    "aws-sdk-client-mock": "4.0.1",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
     "graphql": "catalog:",

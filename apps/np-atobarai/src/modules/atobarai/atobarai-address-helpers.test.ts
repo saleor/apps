@@ -26,6 +26,11 @@ describe("getEmailFromSourceObject", () => {
           amount: 0,
         },
       },
+      totalPrice: {
+        gross: {
+          amount: 0,
+        },
+      },
     } satisfies SourceObjectFragment;
     const email = getEmailFromSourceObject(mockedCheckoutSourceObject);
 
@@ -44,6 +49,11 @@ describe("getEmailFromSourceObject", () => {
       },
       lines: [],
       shippingPrice: {
+        gross: {
+          amount: 0,
+        },
+      },
+      total: {
         gross: {
           amount: 0,
         },

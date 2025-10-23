@@ -9,6 +9,7 @@ import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 export const transactionInitializeSessionFixture =
   (): TransactionInitializeSessionEventFragment => {
     return {
+      version: "3.22",
       sourceObject: {
         __typename: "Checkout",
         channel: {

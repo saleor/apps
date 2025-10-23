@@ -4,6 +4,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException, setTag } from "@sentry/nextjs";
+import { after } from "next/server";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
@@ -21,8 +22,11 @@ import { createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig } from "@/modules/ava
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 import { OrderConfirmedLogRequest } from "@/modules/client-logs/order-confirmed-log-request";
 import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
+import { OrderNoteReporter } from "@/modules/saleor/order-note-reporter";
 import {
   AvataxEntityNotFoundError,
+  AvataxGetTaxSystemError,
+  AvataxGetTaxWrongUserInputError,
   AvataxStringLengthError,
   TaxBadPayloadError,
 } from "@/modules/taxes/tax-error";
@@ -273,17 +277,31 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
           );
           logger.info("Updated order metadata with externalId");
 
-          OrderConfirmedLogRequest.createSuccessLog({
-            sourceId: payload.order?.id,
-            channelId: payload.order?.channel.id,
-            avataxId: confirmedOrder.id,
-          })
-            .mapErr(captureException)
-            .map(logWriter.writeLog);
-
           span.setStatus({
             code: SpanStatusCode.OK,
             message: "AvaTax transaction committed successfully",
+          });
+
+          after(async () => {
+            // We ignore promise because it's not critical and can fail
+            OrderConfirmedLogRequest.createSuccessLog({
+              sourceId: payload.order?.id,
+              channelId: payload.order?.channel.id,
+              avataxId: confirmedOrder.id,
+            })
+              .mapErr(captureException)
+              .map(logWriter.writeLog);
+
+            const noteReporter = new OrderNoteReporter(client);
+
+            if (!payload.order?.id) {
+              return;
+            }
+
+            await noteReporter.reportOrderNote(
+              payload.order.id,
+              "Transaction confirmed in AvaTax: " + confirmedOrder.id,
+            );
           });
 
           return Response.json({ message: "Success" }, { status: 200 });
@@ -355,6 +373,53 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
                   message: `AvaTax service returned validation error: ${error?.description}`,
                 },
                 { status: 400 },
+              );
+            }
+
+            case error instanceof AvataxGetTaxWrongUserInputError: {
+              OrderConfirmedLogRequest.createErrorLog({
+                sourceId: payload.order?.id,
+                channelId: payload.order?.channel.id,
+                errorReason: `Failed to commit AvaTax transaction due to user input error (${error.faultSubCode}): ${error.description}`,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
+
+              span.setStatus({
+                code: SpanStatusCode.ERROR,
+                message: "Failed to commit AvaTax transaction: user input error",
+              });
+
+              return Response.json(
+                {
+                  message: `AvaTax service returned user input error (${error.faultSubCode}): ${error.description}`,
+                },
+                { status: 400 },
+              );
+            }
+
+            case error instanceof AvataxGetTaxSystemError: {
+              OrderConfirmedLogRequest.createErrorLog({
+                sourceId: payload.order?.id,
+                channelId: payload.order?.channel.id,
+                errorReason: `Failed to commit AvaTax transaction due to system error (${error.faultSubCode}): ${error.description}`,
+              })
+                .mapErr(captureException)
+                .map(logWriter.writeLog);
+
+              span.setStatus({
+                code: SpanStatusCode.ERROR,
+                message: "Failed to commit AvaTax transaction: system error",
+              });
+
+              // System errors should be reported to Sentry and return HTTP 500
+              captureException(error);
+
+              return Response.json(
+                {
+                  message: `AvaTax service returned system error (${error.faultSubCode}): ${error.description}`,
+                },
+                { status: 500 },
               );
             }
           }

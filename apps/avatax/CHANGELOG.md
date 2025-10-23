@@ -1,5 +1,78 @@
 # saleor-app-avatax
 
+## 1.21.1
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
+## 1.21.0
+
+### Minor Changes
+
+- b1c2ff47: ~~Adding support to overwrite the shipFrom address in the avatax calculation using private metadata on order or checkout object.~~ Change reverted
+
+### Patch Changes
+
+- 118190c3: Validating the tax calculation and making e2e tests work for the new shipFrom address feature
+
+## 1.20.0
+
+### Minor Changes
+
+- 7e590663: Send Saleor order number instead of order id as AvaTax document code. Previously app was using first 20 characters of order id. This was causing a problem on AvaTax side as there weren't any way of connecting Saleor order (as order id was truncated to first 20 chars). After this change app will send order number (e.g 2137) instead. Thanks to that you will see it in AvaTax dashboard and you will be able to use this number for searching for order in Saleor.
+- 3583edfc: Improve tax code search functionality in AvaTax matcher
+
+  - Enhanced tax code combobox to display full format (`code - description`) for both selected values and initial values loaded from database
+  - Updated tax code filtering to search both tax code and description fields instead of code only
+  - Implemented client-side filtering for more flexible and responsive search experience
+  - Fixed initial value formatting to show complete tax code information when data is available
+
+  Users can now search for tax codes by typing either the tax code (e.g., "TX001") or the description (e.g., "Taxable").
+
+### Patch Changes
+
+- adb38165: Added InvalidZipForStateError to expected errors. It will no longer be treated as exception in logs and Sentry. This error is thrown when user enters incorrect Zip code for their state.
+- 055aabc9: Changed tRPC logs to add `[TRPC Error]` prefix, to distinguish these errors from others. Changed tRPC error codes to better reflect HTTP status codes (e.g. unauthorized, instead of internal server error).
+- b23b47ad: Allow AvaTax app name and app version to be dynamically set up via env variables.
+- 0a1c07ef: When users open app outside of Saleor Dashboard's iframe we will now display an error message with explanation. Previously we rendered app's UI, which caused frontend to make requests to the app without any required data (tokens, saleorApiUrl, etc.) which resulted in error logs.
+- af002a41: Update AvaTax UI. This includes: removing providers mentions where possible, changing form labels of AvaTax configuration, adding breadcrumbs to tax code matcher view.
+- 4135836e: Replaced `TaxCodeSelect` with `TaxCodeCombobox` component for AvaTax tax code matcher section.
+
+## 1.19.0
+
+### Minor Changes
+
+- 5e19ceff: App will now add Note to Order when a transaction is committed or cancelled in AvaTax. This leads to better visibility of the order, e.g., on the Dashboard page
+
+### Patch Changes
+
+- 16b87f53: Update MacawUI to 1.3.0
+- a7c1cedf: Updated @saleor/app-sdk to 1.3.0
+- Updated dependencies [16b87f53]
+  - @saleor/react-hook-form-macaw@0.2.15
+  - @saleor/apps-shared@1.13.1
+  - @saleor/apps-ui@1.3.1
+
+## 1.18.2
+
+### Patch Changes
+
+- c7f719c7: Handle AvaTaxGetTaxError for order confirmed. After this change such error will be considered handled (as this is connected to wrong input provided by user).
+
+## 1.18.1
+
+### Patch Changes
+
+- 51b4d859: Installed DynamoDB APL (controlled via env variable).
+
+## 1.18.0
+
+### Minor Changes
+
+- 04066f00: Added DynamoDB APL instantiation
+
 ## 1.17.3
 
 ### Patch Changes

@@ -9,8 +9,10 @@ import { assertUnreachable } from "@/lib/assert-unreachable";
 import {
   AtobaraiApiClientRegisterTransactionErrorPublicCode,
   AtobaraiApiRegisterTransactionErrors,
+  AtobaraiMultipleResultsErrorPublicCode,
 } from "@/modules/atobarai/api/types";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import {
   ChargeActionRequiredResult,
   ChargeFailureResult,
@@ -18,23 +20,22 @@ import {
 } from "@/modules/transaction-result/charge-result";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
-import {
-  AtobaraiFailureTransactionErrorPublicCode,
-  AtobaraiMultipleFailureTransactionErrorPublicCode,
-  UseCaseErrors,
-} from "../use-case-errors";
+import { AtobaraiFailureTransactionErrorPublicCode, UseCaseErrors } from "../use-case-errors";
 
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
   readonly atobaraiTransactionId: AtobaraiTransactionId;
+  readonly saleorPaymentMethodDetails: SaleorPaymentMethodDetails | null;
 
   constructor(args: {
     transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
     atobaraiTransactionId: AtobaraiTransactionId;
+    saleorPaymentMethodDetails: SaleorPaymentMethodDetails | null;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.atobaraiTransactionId = args.atobaraiTransactionId;
+    this.saleorPaymentMethodDetails = args.saleorPaymentMethodDetails;
   }
 
   private getMessage(): string {
@@ -52,6 +53,7 @@ class Success extends SuccessWebhookResponse {
       actions: this.transactionResult.actions,
       message: this.getMessage(),
       pspReference: this.atobaraiTransactionId,
+      paymentMethodDetails: this.saleorPaymentMethodDetails?.toSaleorWebhookResponse(),
     };
 
     return Response.json(typeSafeResponse, {
@@ -70,7 +72,7 @@ class Failure extends SuccessWebhookResponse {
         code: z.union([
           z.literal(AtobaraiApiClientRegisterTransactionErrorPublicCode),
           z.literal(AtobaraiFailureTransactionErrorPublicCode),
-          z.literal(AtobaraiMultipleFailureTransactionErrorPublicCode),
+          z.literal(AtobaraiMultipleResultsErrorPublicCode),
         ]),
         message: z.string(),
       }),
@@ -79,7 +81,7 @@ class Failure extends SuccessWebhookResponse {
 
   constructor(args: {
     transactionResult: ChargeFailureResult;
-    error: AtobaraiApiRegisterTransactionErrors;
+    error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors;
   }) {
     super();
     this.transactionResult = args.transactionResult;
