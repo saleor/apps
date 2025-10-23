@@ -146,6 +146,7 @@ export class StripeWebhookManager {
         url: webhookUrl.value.toString(),
         description: `Created by Saleor App Payment Stripe, config name: ${config.name}`,
         enabled_events: supportedStripeEvents,
+        connect: true, // Only receive events from connected accounts, not platform account
         metadata: {
           saleorAppConfigurationId: config.configurationId,
         },
