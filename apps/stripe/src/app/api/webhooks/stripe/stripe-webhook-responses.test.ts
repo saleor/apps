@@ -5,6 +5,7 @@ import {
   StripeWebhookMalformedRequestResponse,
   StripeWebhookSeverErrorResponse,
   StripeWebhookSuccessResponse,
+  StripeWebhookUnrecognizedEventResponse,
 } from "./stripe-webhook-responses";
 
 describe("StripeWebhookSuccessResponse", () => {
@@ -40,5 +41,16 @@ describe("StripeWebhookSeverErrorResponse", () => {
 
     expect(response.status).toBe(500);
     await expect(response.text()).resolves.toMatchInlineSnapshot(`"Server error"`);
+  });
+});
+
+describe("StripeWebhookUnrecognizedEventResponse", () => {
+  it("Returns response with status 200 for unrecognized events to prevent webhook disabling", async () => {
+    const response = new StripeWebhookUnrecognizedEventResponse().getResponse();
+
+    expect(response.status).toBe(200);
+    await expect(response.text()).resolves.toMatchInlineSnapshot(
+      `"Event from unrecognized connected account - ignored"`,
+    );
   });
 });

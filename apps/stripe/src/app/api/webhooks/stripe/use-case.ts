@@ -38,7 +38,7 @@ import {
   StripeWebhookMalformedRequestResponse,
   StripeWebhookSeverErrorResponse,
   StripeWebhookSuccessResponse,
-  StripeWebhookTransactionMissingResponse,
+  StripeWebhookUnrecognizedEventResponse,
 } from "./stripe-webhook-responses";
 import { WebhookParams } from "./webhook-params";
 
@@ -350,13 +350,17 @@ export class StripeWebhookUseCase {
         return err(new ObjectCreatedOutsideOfSaleorResponse());
       }
 
+      if (processingResult.error instanceof TransactionRecorderError.TransactionMissingError) {
+        this.logger.info(
+          "Received webhook for unrecognized transaction - likely from connected account not managed by this app",
+        );
+
+        return ok(new StripeWebhookUnrecognizedEventResponse());
+      }
+
       this.logger.error("Failed to process event", {
         error: processingResult.error,
       });
-
-      if (processingResult.error instanceof TransactionRecorderError.TransactionMissingError) {
-        return err(new StripeWebhookTransactionMissingResponse());
-      }
 
       return err(new StripeWebhookSeverErrorResponse());
     }
