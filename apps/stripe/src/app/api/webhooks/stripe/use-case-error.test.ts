@@ -95,7 +95,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
   });
 
   it("Returns error when Config can not be fetched", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getStripeConfig").mockImplementationOnce(async () =>
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(async () =>
       err(new BaseError("Test error - cant fetch config")),
     );
 
@@ -114,7 +114,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
   });
 
   it("Returns error when Config for specific channel is empty", async () => {
-    vi.spyOn(mockedAppConfigRepo, "getStripeConfig").mockImplementationOnce(async () => ok(null));
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(async () => ok(null));
 
     const result = await instance.execute({
       rawBody: rawEventBody,
