@@ -67,7 +67,20 @@ export class ObjectCreatedOutsideOfSaleorResponse extends NonRetryableErrorWebho
   }
 }
 
-export type PossibleStripeWebhookSuccessResponses = StripeWebhookSuccessResponse;
+export class StripeWebhookUnrecognizedEventResponse {
+  readonly statusCode = 200;
+  readonly message = "Event from unrecognized connected account - ignored";
+
+  getResponse() {
+    return new Response(this.message, {
+      status: this.statusCode,
+    });
+  }
+}
+
+export type PossibleStripeWebhookSuccessResponses =
+  | StripeWebhookSuccessResponse
+  | StripeWebhookUnrecognizedEventResponse;
 
 export type PossibleStripeWebhookErrorResponses =
   | StripeWebhookMalformedRequestResponse

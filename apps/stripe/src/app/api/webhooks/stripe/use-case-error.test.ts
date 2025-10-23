@@ -149,7 +149,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
     `);
   });
 
-  it("Returns error if transaction not previously recorded", async () => {
+  it("Returns 200 success if transaction not previously recorded (unrecognized connected account)", async () => {
     eventVerify.verifyEvent.mockImplementationOnce(() =>
       ok(getMockedPaymentIntentSucceededEvent()),
     );
@@ -160,10 +160,10 @@ describe("StripeWebhookUseCase - Error cases", () => {
       webhookParams: webhookParams,
     });
 
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      StripeWebhookTransactionMissingResponse {
-        "message": "Transaction is missing",
-        "statusCode": 400,
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+      StripeWebhookUnrecognizedEventResponse {
+        "message": "Event from unrecognized connected account - ignored",
+        "statusCode": 200,
       }
     `);
   });
