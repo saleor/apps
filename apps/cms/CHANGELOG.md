@@ -1,5 +1,15 @@
 # saleor-app-cms
 
+## 2.13.0
+
+### Minor Changes
+
+- 16c6448f: After this change required Saleor version for running the app will be **3.20**
+
+### Patch Changes
+
+- 86747b3c: When users open app outside of Saleor Dashboard's iframe we will now display an error message with explanation. Previously we rendered app's UI, which caused frontend to make requests to the app without any required data (tokens, saleorApiUrl, etc.) which resulted in error logs.
+
 ## 2.12.6
 
 ### Patch Changes

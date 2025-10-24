@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.3.1
+
+### Patch Changes
+
+- 86747b3c: When users open app outside of Saleor Dashboard's iframe we will now display an error message with explanation. Previously we rendered app's UI, which caused frontend to make requests to the app without any required data (tokens, saleorApiUrl, etc.) which resulted in error logs.
+
 ## 2.3.0
 
 ### Minor Changes

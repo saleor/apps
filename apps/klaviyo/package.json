@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-klaviyo",
-  "version": "1.13.16",
+  "version": "1.14.0",
   "private": true,
   "type": "module",
   "scripts": {

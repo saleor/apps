@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.1.1
+
+### Patch Changes
+
+- 86747b3c: When users open app outside of Saleor Dashboard's iframe we will now display an error message with explanation. Previously we rendered app's UI, which caused frontend to make requests to the app without any required data (tokens, saleorApiUrl, etc.) which resulted in error logs.
+
 ## 1.1.0
 
 ### Minor Changes
