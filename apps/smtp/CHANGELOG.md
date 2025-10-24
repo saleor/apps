@@ -1,5 +1,17 @@
 # saleor-app-smtp
 
+## 1.4.0
+
+### Minor Changes
+
+- 16c6448f: After this change required Saleor version for running the app will be **3.20**
+
+### Patch Changes
+
+- 933441ef: Email templates will now be validated before saving them. Invalid templates cannot be saved to prevent errors when handling Saleor webhooks. Errors are now also shown when editing template with clear explanation on how to resolve them.
+- 933441ef: App will now correctly parse email templates that use handlers from handlebars-helpers (e.g. `equals`). Previously app threw an error when clicking "Render template".
+- 86747b3c: When users open app outside of Saleor Dashboard's iframe we will now display an error message with explanation. Previously we rendered app's UI, which caused frontend to make requests to the app without any required data (tokens, saleorApiUrl, etc.) which resulted in error logs.
+
 ## 1.3.19
 
 ### Patch Changes
