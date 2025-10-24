@@ -1,6 +1,6 @@
 ---
 "saleor-app-avatax": patch
-"saleor-app-stripe": patch
+"saleor-app-payment-stripe": patch
 "saleor-app-smtp": patch
 "saleor-app-segment": patch
 "saleor-app-search": patch
