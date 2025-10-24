@@ -5,7 +5,7 @@
 "saleor-app-segment": patch
 "saleor-app-search": patch
 "saleor-app-products-feed": patch
-"saleor-app-np-atobarai": patch
+"saleor-app-payment-np-atobarai": patch
 "saleor-app-klaviyo": patch
 "saleor-app-cms": patch
 ---
