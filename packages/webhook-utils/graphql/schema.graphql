@@ -227,7 +227,7 @@ type Query {
   Requires one of the following permissions: MANAGE_PRODUCTS.
   """
   stock(
-    """ID of an warehouse"""
+    """ID of a stock"""
     id: ID!
   ): Stock @doc(category: "Products")
 
@@ -790,7 +790,9 @@ type Query {
     """
     External ID of an order. 
     
-    Added in Saleor 3.10.
+    Added in Saleor 3.10..
+    
+    Requires one of the following permissions: MANAGE_ORDERS.
     """
     externalReference: String
   ): Order @doc(category: "Orders")
@@ -1282,12 +1284,12 @@ type Query {
   ): ExportFileCountableConnection
 
   """List of all tax rates available from tax gateway."""
-  taxTypes: [TaxType!] @doc(category: "Taxes")
+  taxTypes: [TaxType!] @doc(category: "Taxes") @deprecated(reason: "This field will be removed in Saleor 4.0. Use `taxClasses` field instead.")
 
   """
   Look up a checkout by id.
   
-  Requires one of the following permissions to query checkouts that belong to other users: MANAGE_CHECKOUTS, IMPERSONATE_USER.
+  Requires one of the following permissions to query a checkout, if a checkout is in inactive channel: MANAGE_CHECKOUTS, IMPERSONATE_USER, HANDLE_PAYMENTS.
   """
   checkout(
     """
@@ -1308,7 +1310,7 @@ type Query {
   """
   List of checkouts.
   
-  Requires one of the following permissions: MANAGE_CHECKOUTS.
+  Requires one of the following permissions: MANAGE_CHECKOUTS, HANDLE_PAYMENTS.
   """
   checkouts(
     """
@@ -1560,7 +1562,7 @@ type Query {
   ): Address @doc(category: "Users")
 
   """
-  List of the shop's customers.
+  List of the shop's customers. This list includes all users who registered through the accountRegister mutation. Additionally, staff users who have placed an order using their account will also appear in this list.
   
   Requires one of the following permissions: MANAGE_ORDERS, MANAGE_USERS.
   """
@@ -3147,7 +3149,7 @@ type App implements Node & ObjectWithMetadata @doc(category: "Apps") {
   """Version number of the app."""
   version: String
 
-  """JWT token used to authenticate by thridparty app."""
+  """JWT token used to authenticate by third-party app."""
   accessToken: String
 
   """
@@ -3238,7 +3240,6 @@ type Permission @doc(category: "Authentication") {
   name: String!
 }
 
-"""An enumeration."""
 enum PermissionEnum @doc(category: "Users") {
   MANAGE_USERS
   MANAGE_STAFF
@@ -3579,7 +3580,6 @@ input EventDeliveryFilterInput {
 
 scalar JSONString
 
-"""An enumeration."""
 enum WebhookSampleEventTypeEnum @doc(category: "Webhooks") {
   ACCOUNT_CONFIRMATION_REQUESTED
   ACCOUNT_CHANGE_EMAIL_REQUESTED
@@ -3812,6 +3812,31 @@ type Warehouse implements Node & ObjectWithMetadata @doc(category: "Products") {
   ): ShippingZoneCountableConnection!
 
   """
+  Stocks that belong to this warehouse.
+  
+  Added in Saleor 3.20.
+  
+  Requires one of the following permissions: MANAGE_PRODUCTS, MANAGE_ORDERS.
+  """
+  stocks(
+    """Return the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Return the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Retrieve the first n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    first: Int
+
+    """
+    Retrieve the last n elements from the list. Note that the system only allows fetching a maximum of 100 objects in a single query.
+    """
+    last: Int
+  ): StockCountableConnection
+
+  """
   External ID of this warehouse. 
   
   Added in Saleor 3.10.
@@ -3942,7 +3967,6 @@ type ReducedRate @doc(category: "Taxes") {
   rateType: String!
 }
 
-"""An enumeration."""
 enum WarehouseClickAndCollectOptionEnum @doc(category: "Products") {
   DISABLED
   LOCAL
@@ -4181,7 +4205,6 @@ type ShippingMethodType implements Node & ObjectWithMetadata @doc(category: "Shi
   taxClass: TaxClass
 }
 
-"""An enumeration."""
 enum ShippingMethodTypeEnum @doc(category: "Shipping") {
   PRICE
   WEIGHT
@@ -4196,7 +4219,7 @@ type ShippingMethodTranslation implements Node @doc(category: "Shipping") {
   language: LanguageDisplay!
 
   """Translated shipping method name."""
-  name: String!
+  name: String
 
   """
   Translated description of the shipping method.
@@ -4221,7 +4244,6 @@ type LanguageDisplay {
   language: String!
 }
 
-"""An enumeration."""
 enum LanguageCodeEnum {
   AF
   AF_NA
@@ -5217,6 +5239,8 @@ type Channel implements Node & ObjectWithMetadata @doc(category: "Channels") {
   """
   Channel specific tax configuration.
   
+  Added in Saleor 3.20.
+  
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
   """
   taxConfiguration: TaxConfiguration!
@@ -5235,7 +5259,11 @@ type ShippingMethodsPerCountry @doc(category: "Shipping") {
   shippingMethods: [ShippingMethod!]
 }
 
-"""An enumeration."""
+"""
+Represents country codes defined by the ISO 3166-1 alpha-2 standard.
+
+The `EU` value is DEPRECATED and will be removed in Saleor 3.21.
+"""
 enum CountryCode {
   AF
   AX
@@ -5356,6 +5384,7 @@ enum CountryCode {
   KZ
   KE
   KI
+  XK
   KW
   KG
   LA
@@ -5582,7 +5611,6 @@ type Weight {
   value: Float!
 }
 
-"""An enumeration."""
 enum WeightUnitsEnum {
   G
   LB
@@ -5658,7 +5686,7 @@ type OrderSettings {
   deleteExpiredOrdersAfter: Day!
 
   """
-  Determine if it is possible to place unpdaid order by calling `checkoutComplete` mutation.
+  Determine if it is possible to place unpaid order by calling `checkoutComplete` mutation.
   
   Added in Saleor 3.15.
   
@@ -5712,6 +5740,13 @@ type CheckoutSettings {
   Added in Saleor 3.15.This field will be removed in Saleor 4.0.
   """
   useLegacyErrorFlow: Boolean!
+
+  """
+  Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
+  
+  Added in Saleor 3.20.
+  """
+  automaticallyCompleteFullyPaidCheckouts: Boolean!
 }
 
 """Represents the channel-specific payment settings."""
@@ -5724,6 +5759,27 @@ type PaymentSettings {
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   defaultTransactionFlowStrategy: TransactionFlowStrategyEnum!
+
+  """
+  Determine if the funds for expired checkouts should be released automatically.
+  
+  Added in Saleor 3.20.
+  """
+  releaseFundsForExpiredCheckouts: Boolean
+
+  """
+  The time in hours after which funds for expired checkouts will be released.
+  
+  Added in Saleor 3.20.
+  """
+  checkoutTtlBeforeReleasingFunds: Hour
+
+  """
+  Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+  
+  Added in Saleor 3.20.
+  """
+  checkoutReleaseFundsCutOffDate: DateTime
 }
 
 """
@@ -5736,6 +5792,9 @@ enum TransactionFlowStrategyEnum @doc(category: "Payments") {
   AUTHORIZATION
   CHARGE
 }
+
+"""The `Hour` scalar type represents number of hours by integer value."""
+scalar Hour
 
 """
 Channel-specific tax configuration.
@@ -5862,7 +5921,6 @@ type ShippingMethodPostalCodeRule implements Node @doc(category: "Shipping") {
   inclusionType: PostalCodeRuleInclusionTypeEnum
 }
 
-"""An enumeration."""
 enum PostalCodeRuleInclusionTypeEnum @doc(category: "Shipping") {
   INCLUDE
   EXCLUDE
@@ -6261,7 +6319,6 @@ type ProductType implements Node & ObjectWithMetadata @doc(category: "Products")
   ): AttributeCountableConnection
 }
 
-"""An enumeration."""
 enum ProductTypeKindEnum @doc(category: "Products") {
   NORMAL
   GIFT_CARD
@@ -6523,7 +6580,6 @@ type Attribute implements Node & ObjectWithMetadata @doc(category: "Attributes")
   externalReference: String
 }
 
-"""An enumeration."""
 enum AttributeInputTypeEnum @doc(category: "Attributes") {
   DROPDOWN
   MULTISELECT
@@ -6538,20 +6594,17 @@ enum AttributeInputTypeEnum @doc(category: "Attributes") {
   DATE_TIME
 }
 
-"""An enumeration."""
 enum AttributeEntityTypeEnum @doc(category: "Attributes") {
   PAGE
   PRODUCT
   PRODUCT_VARIANT
 }
 
-"""An enumeration."""
 enum AttributeTypeEnum @doc(category: "Attributes") {
   PRODUCT_TYPE
   PAGE_TYPE
 }
 
-"""An enumeration."""
 enum MeasurementUnitsEnum {
   MM
   CM
@@ -6645,7 +6698,7 @@ type AttributeValue implements Node @doc(category: "Attributes") {
   richText: JSONString
 
   """
-  Represents the text of the attribute value, plain text without formating.
+  Represents the text of the attribute value, plain text without formatting.
   """
   plainText: String
 
@@ -7559,7 +7612,6 @@ type Image {
   alt: String
 }
 
-"""An enumeration."""
 enum ThumbnailFormatEnum {
   ORIGINAL
   AVIF
@@ -7956,6 +8008,15 @@ input AddressInput {
   Added in Saleor 3.15.
   """
   metadata: [MetadataInput!]
+
+  """
+  Determine if the address should be validated. By default, Saleor accepts only address inputs matching ruleset from [Google Address Data]{https://chromium-i18n.appspot.com/ssl-address), using [i18naddress](https://github.com/mirumee/google-i18n-address) library. Some mutations may require additional permissions to use the the field. More info about permissions can be found in relevant mutation.
+  
+  Added in Saleor 3.19.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  skipValidation: Boolean = false
 }
 
 input MetadataInput {
@@ -8095,7 +8156,6 @@ type ProductMedia implements Node & ObjectWithMetadata @doc(category: "Products"
   productId: ID
 }
 
-"""An enumeration."""
 enum ProductMediaType @doc(category: "Products") {
   IMAGE
   VIDEO
@@ -8745,6 +8805,23 @@ type ProductTranslatableContent implements Node @doc(category: "Products") {
 
   """List of product attribute values that can be translated."""
   attributeValues: [AttributeValueTranslatableContent!]!
+}
+
+type StockCountableConnection @doc(category: "Products") {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+  edges: [StockCountableEdge!]!
+
+  """A total count of items in the collection."""
+  totalCount: Int
+}
+
+type StockCountableEdge @doc(category: "Products") {
+  """The item at the end of the edge."""
+  node: Stock!
+
+  """A cursor for use in pagination."""
+  cursor: String!
 }
 
 type WarehouseCountableConnection @doc(category: "Products") {
@@ -10121,23 +10198,6 @@ type TaxCountryConfiguration @doc(category: "Taxes") {
   taxClassCountryRates: [TaxClassCountryRate!]!
 }
 
-type StockCountableConnection @doc(category: "Products") {
-  """Pagination data for this connection."""
-  pageInfo: PageInfo!
-  edges: [StockCountableEdge!]!
-
-  """A total count of items in the collection."""
-  totalCount: Int
-}
-
-type StockCountableEdge @doc(category: "Products") {
-  """The item at the end of the edge."""
-  node: Stock!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
 input StockFilterInput @doc(category: "Products") {
   quantity: Float
   search: String
@@ -10364,7 +10424,7 @@ type Shop implements ObjectWithMetadata {
   enableAccountConfirmationByEmail: Boolean
 
   """
-  Determines if user can login without confirmation when `enableAccountConfrimation` is enabled.
+  Determines if user can login without confirmation when `enableAccountConfirmation` is enabled.
   
   Added in Saleor 3.15.
   
@@ -10377,7 +10437,7 @@ type Shop implements ObjectWithMetadata {
   
   Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
   """
-  limits: LimitInfo!
+  limits: LimitInfo! @deprecated(reason: "This field will be removed in Saleor 4.0.")
 
   """
   Saleor API version.
@@ -10949,7 +11009,7 @@ type Checkout implements Node & ObjectWithMetadata @doc(category: "Checkout") {
   token: UUID!
 
   """
-  The sum of the the checkout line prices, with all the taxes,shipping costs, and discounts included.
+  The sum of the checkout line prices, with all the taxes,shipping costs, and discounts included.
   
   Triggers the following webhook events:
   - CHECKOUT_CALCULATE_TAXES (sync): Optionally triggered when checkout prices are expired.
@@ -11240,7 +11300,6 @@ type GiftCardEvent implements Node @doc(category: "Gift cards") {
   oldExpiryDate: Date
 }
 
-"""An enumeration."""
 enum GiftCardEventsEnum @doc(category: "Gift cards") {
   ISSUED
   BOUGHT
@@ -11783,6 +11842,13 @@ type Order implements Node & ObjectWithMetadata @doc(category: "Orders") {
   """Shipping method for this order."""
   shippingMethod: ShippingMethod @deprecated(reason: "This field will be removed in Saleor 4.0. Use `deliveryMethod` instead.")
 
+  """
+  Undiscounted total price of shipping.
+  
+  Added in Saleor 3.19.
+  """
+  undiscountedShippingPrice: Money
+
   """Total price of shipping."""
   shippingPrice: TaxedMoney!
 
@@ -12025,7 +12091,6 @@ type Order implements Node & ObjectWithMetadata @doc(category: "Orders") {
   totalRemainingGrant: Money!
 }
 
-"""An enumeration."""
 enum OrderStatus @doc(category: "Orders") {
   DRAFT
   UNCONFIRMED
@@ -12117,7 +12182,6 @@ type Fulfillment implements Node & ObjectWithMetadata @doc(category: "Orders") {
   totalRefundedAmount: Money
 }
 
-"""An enumeration."""
 enum FulfillmentStatus @doc(category: "Orders") {
   FULFILLED
   REFUNDED
@@ -12212,9 +12276,6 @@ type OrderLine implements Node & ObjectWithMetadata @doc(category: "Orders") {
   """Number of variant items fulfilled."""
   quantityFulfilled: Int!
 
-  """Reason for any discounts applied on a product in the order."""
-  unitDiscountReason: String
-
   """Rate of tax applied on product variant."""
   taxRate: Float!
   digitalContentUrl: DigitalContentUrl
@@ -12232,25 +12293,48 @@ type OrderLine implements Node & ObjectWithMetadata @doc(category: "Orders") {
     format: ThumbnailFormatEnum = ORIGINAL
   ): Image
 
-  """Price of the single item in the order line."""
+  """
+  Price of the single item in the order line with all the line-level discounts and order-level discount portions applied.
+  """
   unitPrice: TaxedMoney!
 
   """
-  Price of the single item in the order line without applied an order line discount.
+  Price of the single item in the order line without any discount applied.
   """
   undiscountedUnitPrice: TaxedMoney!
 
-  """The discount applied to the single order line."""
+  """
+  Sum of the line-level discounts applied to the order line. Order-level discounts which affect the line are not visible in this field. For order-level discount portion (if any), please query `order.discounts` field.
+  """
   unitDiscount: Money!
 
-  """Value of the discount. Can store fixed value or percent value"""
+  """
+  Reason for line-level discounts applied on the order line. Order-level discounts which affect the line are not visible in this field. For order-level discount reason (if any), please query `order.discounts` field.
+  """
+  unitDiscountReason: String
+
+  """
+  Value of the discount. Can store fixed value or percent value. This field shouldn't be used when multiple discounts affect the line. There is a limitation, that after running `checkoutComplete` mutation the field always stores fixed value.
+  """
   unitDiscountValue: PositiveDecimal!
+
+  """
+  Type of the discount: `fixed` or `percent`. This field shouldn't be used when multiple discounts affect the line. There is a limitation, that after running `checkoutComplete` mutation the field is always set to `fixed`.
+  """
+  unitDiscountType: DiscountValueTypeEnum
 
   """Price of the order line."""
   totalPrice: TaxedMoney!
 
   """Price of the order line without discounts."""
   undiscountedTotalPrice: TaxedMoney!
+
+  """
+  Returns True, if the line unit price was overridden.
+  
+  Added in Saleor 3.14.
+  """
+  isPriceOverridden: Boolean
 
   """
   A purchased product variant. Note: this field may be null if the variant has been removed from stock at all. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS.
@@ -12283,9 +12367,6 @@ type OrderLine implements Node & ObjectWithMetadata @doc(category: "Orders") {
   Added in Saleor 3.1.
   """
   quantityToFulfill: Int!
-
-  """Type of the discount: fixed or percent"""
-  unitDiscountType: DiscountValueTypeEnum
 
   """
   Denormalized tax class of the product in this order line.
@@ -12463,7 +12544,6 @@ interface Job {
   message: String
 }
 
-"""An enumeration."""
 enum JobStatusEnum {
   PENDING
   SUCCESS
@@ -12471,7 +12551,6 @@ enum JobStatusEnum {
   DELETED
 }
 
-"""An enumeration."""
 enum OrderOriginEnum @doc(category: "Orders") {
   CHECKOUT
   DRAFT
@@ -12479,7 +12558,6 @@ enum OrderOriginEnum @doc(category: "Orders") {
   BULK_CREATE
 }
 
-"""An enumeration."""
 enum PaymentChargeStatusEnum @doc(category: "Payments") {
   NOT_CHARGED
   PENDING
@@ -12699,7 +12777,6 @@ type Transaction implements Node @doc(category: "Payments") {
   amount: Money
 }
 
-"""An enumeration."""
 enum TransactionKind @doc(category: "Payments") {
   EXTERNAL
   AUTH
@@ -12824,6 +12901,7 @@ enum OrderEventsEnum @doc(category: "Orders") {
   REMOVED_PRODUCTS
   PLACED
   PLACED_FROM_DRAFT
+  PLACED_AUTOMATICALLY_FROM_PAID_CHECKOUT
   OVERSOLD_ITEMS
   CANCELED
   EXPIRED
@@ -12869,7 +12947,6 @@ enum OrderEventsEnum @doc(category: "Orders") {
   OTHER
 }
 
-"""An enumeration."""
 enum OrderEventsEmailsEnum @doc(category: "Orders") {
   PAYMENT_CONFIRMATION
   CONFIRMED
@@ -12950,7 +13027,6 @@ type OrderDiscount implements Node @doc(category: "Discounts") {
   amount: Money!
 }
 
-"""An enumeration."""
 enum OrderDiscountType @doc(category: "Discounts") {
   SALE
   VOUCHER
@@ -12984,7 +13060,6 @@ type OrderError @doc(category: "Orders") {
   addressType: AddressTypeEnum
 }
 
-"""An enumeration."""
 enum OrderErrorCode @doc(category: "Orders") {
   BILLING_ADDRESS_NOT_SET
   CANNOT_CANCEL_FULFILLMENT
@@ -13024,7 +13099,6 @@ enum OrderErrorCode @doc(category: "Orders") {
   NON_REMOVABLE_GIFT_LINE
 }
 
-"""An enumeration."""
 enum AddressTypeEnum {
   BILLING
   SHIPPING
@@ -13077,6 +13151,27 @@ type OrderGrantedRefund @doc(category: "Orders") {
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   lines: [OrderGrantedRefundLine!]
+
+  """
+  Status of the granted refund calculated based on transactionItem assigned to granted refund.
+  
+  Added in Saleor 3.20.
+  """
+  status: OrderGrantedRefundStatusEnum!
+
+  """
+  List of refund events associated with the granted refund.
+  
+  Added in Saleor 3.20.
+  """
+  transactionEvents: [TransactionEvent!]
+
+  """
+  The transaction assigned to the granted refund.
+  
+  Added in Saleor 3.20.
+  """
+  transaction: TransactionItem
 }
 
 """
@@ -13097,6 +13192,21 @@ type OrderGrantedRefundLine {
 
   """Reason for refunding the line."""
   reason: String
+}
+
+"""
+Represents the status of a granted refund.
+
+    NONE - the refund on related transactionItem is not processed
+    PENDING - the refund on related transactionItem is pending
+    FULL - the refund on related transactionItem is fully processed
+    FAIL - the refund on related transactionItem failed
+"""
+enum OrderGrantedRefundStatusEnum @doc(category: "Orders") {
+  NONE
+  PENDING
+  SUCCESS
+  FAILURE
 }
 
 """Represents transaction's event."""
@@ -13445,7 +13555,6 @@ type CustomerEvent implements Node @doc(category: "Users") {
   orderLine: OrderLine
 }
 
-"""An enumeration."""
 enum CustomerEventsEnum @doc(category: "Users") {
   ACCOUNT_CREATED
   ACCOUNT_ACTIVATED
@@ -13522,7 +13631,6 @@ type GiftCardSettings @doc(category: "Gift cards") {
   expiryPeriod: TimePeriod
 }
 
-"""An enumeration."""
 enum GiftCardSettingsExpiryTypeEnum @doc(category: "Gift cards") {
   NEVER_EXPIRE
   EXPIRY_PERIOD
@@ -13536,7 +13644,6 @@ type TimePeriod {
   type: TimePeriodTypeEnum!
 }
 
-"""An enumeration."""
 enum TimePeriodTypeEnum {
   DAY
   WEEK
@@ -13976,6 +14083,7 @@ input OrderFilterInput @doc(category: "Orders") {
   isClickAndCollect: Boolean
   isPreorder: Boolean
   ids: [ID!]
+  checkoutTokens: [UUID!]
   giftCardUsed: Boolean
   giftCardBought: Boolean
   numbers: [String!]
@@ -14184,7 +14292,6 @@ type ConfigurationItem {
   label: String
 }
 
-"""An enumeration."""
 enum ConfigurationTypeFieldEnum {
   STRING
   MULTILINE
@@ -14493,7 +14600,6 @@ type Promotion implements Node & ObjectWithMetadata @doc(category: "Discounts") 
   events: [PromotionEvent!]
 }
 
-"""An enumeration."""
 enum PromotionTypeEnum @doc(category: "Discounts") {
   CATALOGUE
   ORDER
@@ -14592,13 +14698,11 @@ type PromotionRule implements Node @doc(category: "Discounts") {
   giftsLimit: Int
 }
 
-"""An enumeration."""
 enum RewardValueTypeEnum @doc(category: "Discounts") {
   FIXED
   PERCENTAGE
 }
 
-"""An enumeration."""
 enum RewardTypeEnum @doc(category: "Discounts") {
   SUBTOTAL_DISCOUNT
   GIFT
@@ -14647,7 +14751,6 @@ interface PromotionEventInterface {
   createdBy: UserOrApp
 }
 
-"""An enumeration."""
 enum PromotionEventsEnum @doc(category: "Discounts") {
   PROMOTION_CREATED
   PROMOTION_UPDATED
@@ -14947,7 +15050,6 @@ type ExportEvent implements Node {
   message: String!
 }
 
-"""An enumeration."""
 enum ExportEventsEnum {
   EXPORT_PENDING
   EXPORT_SUCCESS
@@ -15191,7 +15293,7 @@ type AddressValidationData @doc(category: "Users") {
   Many fields in the JSON refer to address fields by one-letter abbreviations. These are defined as follows:
   
   - `N`: Name
-  - `O`: Organisation
+  - `O`: Organization
   - `A`: Street Address Line(s)
   - `D`: Dependent locality (may be an inner-city district or a suburb)
   - `C`: City or Locality
@@ -15209,7 +15311,7 @@ type AddressValidationData @doc(category: "Users") {
   Many fields in the JSON refer to address fields by one-letter abbreviations. These are defined as follows:
   
   - `N`: Name
-  - `O`: Organisation
+  - `O`: Organization
   - `A`: Street Address Line(s)
   - `D`: Dependent locality (may be an inner-city district or a suburb)
   - `C`: City or Locality
@@ -16862,13 +16964,13 @@ type Mutation {
     """The ID of the granted refund."""
     grantedRefundId: ID!
 
-    """The ID of the transaction. One of field id or token is required."""
+    """
+    The ID of the transaction. One of field id or token is required, if `transactionItem` is not already assigned to the `orderGrantedRefund`. If `transactionItem` is already assigned to the grantedRefund the field will be ignored.
+    """
     id: ID
 
     """
-    The token of the transaction. One of field id or token is required.
-    
-    Added in Saleor 3.14.
+    The token of the transaction. One of field id or token is required, if `transactionItem` is not already assigned to the `orderGrantedRefund`. If `transactionItem` is already assigned to the grantedRefund the field will be ignored.
     """
     token: UUID
   ): TransactionRequestRefundForGrantedRefund @doc(category: "Payments")
@@ -16881,10 +16983,19 @@ type Mutation {
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   
   Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
+  
+  Triggers the following webhook events:
+  - TRANSACTION_ITEM_METADATA_UPDATED (async): Optionally called when transaction's metadata was updated.
+  - CHECKOUT_FULLY_PAID (async): Optionally called when the checkout charge status changed to `FULL` or `OVERCHARGED`.
+  - ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
   """
   transactionEventReport(
-    """The amount of the event to report."""
-    amount: PositiveDecimal!
+    """
+    The amount of the event to report. 
+    
+    Required for all `REQUEST`, `SUCCESS`, `ACTION_REQUIRED`, and `ADJUSTMENT` events. For other events, the amount will be calculated based on the previous events with the same pspReference. If not possible to calculate, the mutation will return an error.
+    """
+    amount: PositiveDecimal
 
     """List of all possible actions for the transaction"""
     availableActions: [TransactionActionEnum!]
@@ -16897,7 +17008,9 @@ type Mutation {
     """The ID of the transaction. One of field id or token is required."""
     id: ID
 
-    """The message related to the event."""
+    """
+    The message related to the event. The maximum length is 512 characters; any text exceeding this limit will be truncated.
+    """
     message: String
 
     """PSP Reference of the event to report."""
@@ -16915,12 +17028,26 @@ type Mutation {
     """
     token: UUID
 
+    """
+    Fields required to update the transaction metadata.
+    
+    Added in Saleor 3.17.
+    """
+    transactionMetadata: [MetadataInput!]
+
+    """
+    Fields required to update the transaction private metadata.
+    
+    Added in Saleor 3.17.
+    """
+    transactionPrivateMetadata: [MetadataInput!]
+
     """Current status of the event to report."""
     type: TransactionEventTypeEnum!
-  ): TransactionEventReport @doc(category: "Payments")
+  ): TransactionEventReport @doc(category: "Payments") @webhookEventsInfo(asyncEvents: [TRANSACTION_ITEM_METADATA_UPDATED, CHECKOUT_FULLY_PAID, ORDER_UPDATED], syncEvents: [])
 
   """
-  Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways.
+  Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways. There is a limit of 100 transaction items per checkout / order.
   
   Added in Saleor 3.13.
   
@@ -16940,7 +17067,7 @@ type Mutation {
   ): PaymentGatewayInitialize @doc(category: "Payments")
 
   """
-  Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. 
+  Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. There is a limit of 100 transaction items per checkout / order.
   
   Added in Saleor 3.13.
   
@@ -18862,6 +18989,8 @@ type Mutation {
   """
   Create a new checkout.
   
+  `skipValidation` field requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions.
+  
   Triggers the following webhook events:
   - CHECKOUT_CREATED (async): A checkout was created.
   """
@@ -20051,15 +20180,22 @@ type Mutation {
   ): ConfirmEmailChange @doc(category: "Users") @webhookEventsInfo(asyncEvents: [CUSTOMER_UPDATED, NOTIFY_USER, ACCOUNT_EMAIL_CHANGED], syncEvents: [])
 
   """
-  Create a new address for the customer. 
+  Create a new address for the customer.
   
-  Requires one of the following permissions: AUTHENTICATED_USER.
+  Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
   
   Triggers the following webhook events:
   - CUSTOMER_UPDATED (async): A customer account was updated.
   - ADDRESS_CREATED (async): An address was created.
   """
   accountAddressCreate(
+    """
+    ID of customer the application is impersonating. The field can be used and is required by apps only. Requires IMPERSONATE_USER and AUTHENTICATED_APP permission.
+    
+    Added in Saleor 3.19.
+    """
+    customerId: ID
+
     """Fields required to create address."""
     input: AddressInput!
 
@@ -20124,15 +20260,22 @@ type Mutation {
   ): AccountRegister @doc(category: "Users") @webhookEventsInfo(asyncEvents: [CUSTOMER_CREATED, NOTIFY_USER, ACCOUNT_CONFIRMATION_REQUESTED], syncEvents: [])
 
   """
-  Updates the account of the logged-in user. 
+  Updates the account of the logged-in user.
   
-  Requires one of the following permissions: AUTHENTICATED_USER.
+  Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
   
   Triggers the following webhook events:
   - CUSTOMER_UPDATED (async): A customer account was updated.
   - CUSTOMER_METADATA_UPDATED (async): Optionally called when customer's metadata was updated.
   """
   accountUpdate(
+    """
+    ID of customer the application is impersonating. The field can be used and is required by apps only. Requires IMPERSONATE_USER and AUTHENTICATED_APP permission.
+    
+    Added in Saleor 3.19.
+    """
+    customerId: ID
+
     """Fields required to update the account of the logged-in user."""
     input: AccountInput!
   ): AccountUpdate @doc(category: "Users") @webhookEventsInfo(asyncEvents: [CUSTOMER_UPDATED, CUSTOMER_METADATA_UPDATED], syncEvents: [])
@@ -20485,7 +20628,6 @@ type WebhookError @doc(category: "Webhooks") {
   code: WebhookErrorCode!
 }
 
-"""An enumeration."""
 enum WebhookErrorCode @doc(category: "Webhooks") {
   GRAPHQL_ERROR
   INVALID
@@ -20542,7 +20684,7 @@ input WebhookCreateInput @doc(category: "Webhooks") {
   query: String
 
   """
-  Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only "X-*" and "Authorization*" keys are allowed.
+  Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only `X-*`, `Authorization*`, and `BrokerProperties` keys are allowed.
   
   Added in Saleor 3.12.
   
@@ -20614,7 +20756,7 @@ input WebhookUpdateInput @doc(category: "Webhooks") {
   query: String
 
   """
-  Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only "X-*" and "Authorization*" keys are allowed.
+  Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only `X-*`, `Authorization*`, and `BrokerProperties` keys are allowed.
   
   Added in Saleor 3.12.
   
@@ -20662,7 +20804,6 @@ type WebhookDryRunError @doc(category: "Webhooks") {
   code: WebhookDryRunErrorCode!
 }
 
-"""An enumeration."""
 enum WebhookDryRunErrorCode @doc(category: "Webhooks") {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -20702,7 +20843,6 @@ type WebhookTriggerError @doc(category: "Webhooks") {
   code: WebhookTriggerErrorCode!
 }
 
-"""An enumeration."""
 enum WebhookTriggerErrorCode @doc(category: "Webhooks") {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -20743,7 +20883,6 @@ type WarehouseError @doc(category: "Products") {
   shippingZones: [ID!]
 }
 
-"""An enumeration."""
 enum WarehouseErrorCode @doc(category: "Products") {
   ALREADY_EXISTS
   GRAPHQL_ERROR
@@ -20888,7 +21027,6 @@ type TaxClassCreateError @doc(category: "Taxes") {
   countryCodes: [String!]!
 }
 
-"""An enumeration."""
 enum TaxClassCreateErrorCode @doc(category: "Taxes") {
   GRAPHQL_ERROR
   INVALID
@@ -20938,7 +21076,6 @@ type TaxClassDeleteError @doc(category: "Taxes") {
   code: TaxClassDeleteErrorCode!
 }
 
-"""An enumeration."""
 enum TaxClassDeleteErrorCode @doc(category: "Taxes") {
   GRAPHQL_ERROR
   INVALID
@@ -20973,7 +21110,6 @@ type TaxClassUpdateError @doc(category: "Taxes") {
   countryCodes: [String!]!
 }
 
-"""An enumeration."""
 enum TaxClassUpdateErrorCode @doc(category: "Taxes") {
   DUPLICATED_INPUT_ITEM
   GRAPHQL_ERROR
@@ -21034,7 +21170,6 @@ type TaxConfigurationUpdateError @doc(category: "Taxes") {
   countryCodes: [String!]!
 }
 
-"""An enumeration."""
 enum TaxConfigurationUpdateErrorCode @doc(category: "Taxes") {
   DUPLICATED_INPUT_ITEM
   GRAPHQL_ERROR
@@ -21127,7 +21262,6 @@ type TaxCountryConfigurationUpdateError @doc(category: "Taxes") {
   taxClassIds: [String!]!
 }
 
-"""An enumeration."""
 enum TaxCountryConfigurationUpdateErrorCode @doc(category: "Taxes") {
   GRAPHQL_ERROR
   INVALID
@@ -21170,7 +21304,6 @@ type TaxCountryConfigurationDeleteError @doc(category: "Taxes") {
   code: TaxCountryConfigurationDeleteErrorCode!
 }
 
-"""An enumeration."""
 enum TaxCountryConfigurationDeleteErrorCode @doc(category: "Taxes") {
   GRAPHQL_ERROR
   INVALID
@@ -21204,7 +21337,6 @@ type TaxExemptionManageError @doc(category: "Taxes") {
   code: TaxExemptionManageErrorCode!
 }
 
-"""An enumeration."""
 enum TaxExemptionManageErrorCode @doc(category: "Taxes") {
   GRAPHQL_ERROR
   INVALID
@@ -21254,7 +21386,6 @@ type StockBulkUpdateError @doc(category: "Products") {
   code: StockBulkUpdateErrorCode!
 }
 
-"""An enumeration."""
 enum StockBulkUpdateErrorCode @doc(category: "Products") {
   GRAPHQL_ERROR
   INVALID
@@ -21316,7 +21447,6 @@ type ShopError @doc(category: "Shop") {
   code: ShopErrorCode!
 }
 
-"""An enumeration."""
 enum ShopErrorCode {
   ALREADY_EXISTS
   CANNOT_FETCH_TAX_RATES
@@ -21552,7 +21682,6 @@ type TranslationError {
   code: TranslationErrorCode!
 }
 
-"""An enumeration."""
 enum TranslationErrorCode {
   GRAPHQL_ERROR
   INVALID
@@ -21602,7 +21731,6 @@ type OrderSettingsError @doc(category: "Orders") {
   code: OrderSettingsErrorCode!
 }
 
-"""An enumeration."""
 enum OrderSettingsErrorCode @doc(category: "Orders") {
   INVALID
 }
@@ -21643,7 +21771,6 @@ type GiftCardSettingsError @doc(category: "Gift cards") {
   code: GiftCardSettingsErrorCode!
 }
 
-"""An enumeration."""
 enum GiftCardSettingsErrorCode @doc(category: "Gift cards") {
   INVALID
   REQUIRED
@@ -21697,7 +21824,6 @@ type ShippingError @doc(category: "Shipping") {
   channels: [ID!]
 }
 
-"""An enumeration."""
 enum ShippingErrorCode @doc(category: "Shipping") {
   ALREADY_EXISTS
   GRAPHQL_ERROR
@@ -22011,7 +22137,6 @@ type ProductError @doc(category: "Products") {
   values: [ID!]
 }
 
-"""An enumeration."""
 enum ProductErrorCode @doc(category: "Products") {
   ALREADY_EXISTS
   ATTRIBUTE_ALREADY_ASSIGNED
@@ -22241,7 +22366,6 @@ type CollectionError @doc(category: "Products") {
   code: CollectionErrorCode!
 }
 
-"""An enumeration."""
 enum CollectionErrorCode @doc(category: "Products") {
   DUPLICATED_INPUT_ITEM
   GRAPHQL_ERROR
@@ -22749,7 +22873,6 @@ type ProductBulkCreateError @doc(category: "Products") {
   channels: [ID!]
 }
 
-"""An enumeration."""
 enum ProductBulkCreateErrorCode @doc(category: "Products") {
   ATTRIBUTE_ALREADY_ASSIGNED
   ATTRIBUTE_CANNOT_BE_ASSIGNED
@@ -23210,7 +23333,6 @@ type ProductBulkTranslateError {
   code: ProductTranslateErrorCode!
 }
 
-"""An enumeration."""
 enum ProductTranslateErrorCode @doc(category: "Products") {
   GRAPHQL_ERROR
   INVALID
@@ -23830,7 +23952,6 @@ type ProductVariantBulkError @doc(category: "Products") {
   channelListings: [ID!]
 }
 
-"""An enumeration."""
 enum ProductVariantBulkErrorCode @doc(category: "Products") {
   ATTRIBUTE_ALREADY_ASSIGNED
   ATTRIBUTE_CANNOT_BE_ASSIGNED
@@ -24088,7 +24209,6 @@ type StockError @doc(category: "Products") {
   code: StockErrorCode!
 }
 
-"""An enumeration."""
 enum StockErrorCode @doc(category: "Products") {
   ALREADY_EXISTS
   GRAPHQL_ERROR
@@ -24244,7 +24364,6 @@ type ProductVariantBulkTranslateError {
   code: ProductVariantTranslateErrorCode!
 }
 
-"""An enumeration."""
 enum ProductVariantTranslateErrorCode @doc(category: "Products") {
   GRAPHQL_ERROR
   INVALID
@@ -24355,7 +24474,6 @@ type PaymentError @doc(category: "Payments") {
   variants: [ID!]
 }
 
-"""An enumeration."""
 enum PaymentErrorCode @doc(category: "Payments") {
   BILLING_ADDRESS_NOT_SET
   GRAPHQL_ERROR
@@ -24374,6 +24492,7 @@ enum PaymentErrorCode @doc(category: "Payments") {
   CHECKOUT_EMAIL_NOT_SET
   UNAVAILABLE_VARIANT_IN_CHANNEL
   NO_CHECKOUT_LINES
+  CHECKOUT_COMPLETION_IN_PROGRESS
 }
 
 """
@@ -24492,7 +24611,6 @@ type TransactionCreateError @doc(category: "Payments") {
   code: TransactionCreateErrorCode!
 }
 
-"""An enumeration."""
 enum TransactionCreateErrorCode @doc(category: "Payments") {
   INVALID
   GRAPHQL_ERROR
@@ -24600,7 +24718,6 @@ type TransactionUpdateError @doc(category: "Payments") {
   code: TransactionUpdateErrorCode!
 }
 
-"""An enumeration."""
 enum TransactionUpdateErrorCode @doc(category: "Payments") {
   INVALID
   GRAPHQL_ERROR
@@ -24692,7 +24809,6 @@ type TransactionRequestActionError @doc(category: "Payments") {
   code: TransactionRequestActionErrorCode!
 }
 
-"""An enumeration."""
 enum TransactionRequestActionErrorCode @doc(category: "Payments") {
   INVALID
   GRAPHQL_ERROR
@@ -24727,12 +24843,14 @@ type TransactionRequestRefundForGrantedRefundError @doc(category: "Payments") {
   code: TransactionRequestRefundForGrantedRefundErrorCode!
 }
 
-"""An enumeration."""
 enum TransactionRequestRefundForGrantedRefundErrorCode @doc(category: "Payments") {
   INVALID
   GRAPHQL_ERROR
   NOT_FOUND
+  AMOUNT_GREATER_THAN_AVAILABLE
   MISSING_TRANSACTION_ACTION_REQUEST_WEBHOOK
+  REFUND_ALREADY_PROCESSED
+  REFUND_IS_PENDING
 }
 
 """
@@ -24743,8 +24861,13 @@ Added in Saleor 3.13.
 Note: this API is currently in Feature Preview and can be subject to changes at later point.
 
 Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
+
+Triggers the following webhook events:
+- TRANSACTION_ITEM_METADATA_UPDATED (async): Optionally called when transaction's metadata was updated.
+- CHECKOUT_FULLY_PAID (async): Optionally called when the checkout charge status changed to `FULL` or `OVERCHARGED`.
+- ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
 """
-type TransactionEventReport @doc(category: "Payments") {
+type TransactionEventReport @doc(category: "Payments") @webhookEventsInfo(asyncEvents: [TRANSACTION_ITEM_METADATA_UPDATED, CHECKOUT_FULLY_PAID, ORDER_UPDATED], syncEvents: []) {
   """Defines if the reported event hasn't been processed earlier."""
   alreadyProcessed: Boolean
 
@@ -24771,17 +24894,17 @@ type TransactionEventReportError @doc(category: "Payments") {
   code: TransactionEventReportErrorCode!
 }
 
-"""An enumeration."""
 enum TransactionEventReportErrorCode @doc(category: "Payments") {
   INVALID
   GRAPHQL_ERROR
   NOT_FOUND
   INCORRECT_DETAILS
   ALREADY_EXISTS
+  REQUIRED
 }
 
 """
-Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways.
+Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways. There is a limit of 100 transaction items per checkout / order.
 
 Added in Saleor 3.13.
 
@@ -24815,7 +24938,6 @@ type PaymentGatewayConfigError @doc(category: "Payments") {
   code: PaymentGatewayConfigErrorCode!
 }
 
-"""An enumeration."""
 enum PaymentGatewayConfigErrorCode @doc(category: "Payments") {
   GRAPHQL_ERROR
   INVALID
@@ -24835,7 +24957,6 @@ type PaymentGatewayInitializeError @doc(category: "Payments") {
   code: PaymentGatewayInitializeErrorCode!
 }
 
-"""An enumeration."""
 enum PaymentGatewayInitializeErrorCode @doc(category: "Payments") {
   GRAPHQL_ERROR
   INVALID
@@ -24851,7 +24972,7 @@ input PaymentGatewayToInitialize @doc(category: "Payments") {
 }
 
 """
-Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. 
+Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. There is a limit of 100 transaction items per checkout / order.
 
 Added in Saleor 3.13.
 
@@ -24882,12 +25003,12 @@ type TransactionInitializeError @doc(category: "Payments") {
   code: TransactionInitializeErrorCode!
 }
 
-"""An enumeration."""
 enum TransactionInitializeErrorCode @doc(category: "Payments") {
   GRAPHQL_ERROR
   INVALID
   NOT_FOUND
   UNIQUE
+  CHECKOUT_COMPLETION_IN_PROGRESS
 }
 
 """
@@ -24922,7 +25043,6 @@ type TransactionProcessError @doc(category: "Payments") {
   code: TransactionProcessErrorCode!
 }
 
-"""An enumeration."""
 enum TransactionProcessErrorCode @doc(category: "Payments") {
   GRAPHQL_ERROR
   INVALID
@@ -24930,6 +25050,7 @@ enum TransactionProcessErrorCode @doc(category: "Payments") {
   TRANSACTION_ALREADY_PROCESSED
   MISSING_PAYMENT_APP_RELATION
   MISSING_PAYMENT_APP
+  CHECKOUT_COMPLETION_IN_PROGRESS
 }
 
 """
@@ -24978,7 +25099,6 @@ type PaymentMethodRequestDeleteError @doc(category: "Payments") {
   code: StoredPaymentMethodRequestDeleteErrorCode!
 }
 
-"""An enumeration."""
 enum StoredPaymentMethodRequestDeleteErrorCode @doc(category: "Payments") {
   GRAPHQL_ERROR
   INVALID
@@ -25035,7 +25155,6 @@ type PaymentGatewayInitializeTokenizationError @doc(category: "Payments") {
   code: PaymentGatewayInitializeTokenizationErrorCode!
 }
 
-"""An enumeration."""
 enum PaymentGatewayInitializeTokenizationErrorCode @doc(category: "Payments") {
   GRAPHQL_ERROR
   INVALID
@@ -25099,7 +25218,6 @@ type PaymentMethodInitializeTokenizationError @doc(category: "Payments") {
   code: PaymentMethodInitializeTokenizationErrorCode!
 }
 
-"""An enumeration."""
 enum PaymentMethodInitializeTokenizationErrorCode @doc(category: "Payments") {
   GRAPHQL_ERROR
   INVALID
@@ -25145,7 +25263,6 @@ type PaymentMethodProcessTokenizationError @doc(category: "Payments") {
   code: PaymentMethodProcessTokenizationErrorCode!
 }
 
-"""An enumeration."""
 enum PaymentMethodProcessTokenizationErrorCode @doc(category: "Payments") {
   GRAPHQL_ERROR
   INVALID
@@ -25184,7 +25301,6 @@ type PageError @doc(category: "Pages") {
   values: [ID!]
 }
 
-"""An enumeration."""
 enum PageErrorCode @doc(category: "Pages") {
   GRAPHQL_ERROR
   INVALID
@@ -25987,11 +26103,11 @@ type OrderGrantRefundCreateError @doc(category: "Orders") {
   lines: [OrderGrantRefundCreateLineError!]
 }
 
-"""An enumeration."""
 enum OrderGrantRefundCreateErrorCode @doc(category: "Orders") {
   GRAPHQL_ERROR
   NOT_FOUND
   SHIPPING_COSTS_ALREADY_GRANTED
+  AMOUNT_GREATER_THAN_AVAILABLE
   REQUIRED
   INVALID
 }
@@ -26012,7 +26128,6 @@ type OrderGrantRefundCreateLineError {
   lineId: ID!
 }
 
-"""An enumeration."""
 enum OrderGrantRefundCreateLineErrorCode {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -26045,6 +26160,15 @@ input OrderGrantRefundCreateInput @doc(category: "Orders") {
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   grantRefundForShipping: Boolean
+
+  """
+  The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used.Field will be required starting from Saleor 3.21.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  transactionId: ID
 }
 
 input OrderGrantRefundCreateLineInput @doc(category: "Orders") {
@@ -26107,12 +26231,12 @@ type OrderGrantRefundUpdateError @doc(category: "Orders") {
   removeLines: [OrderGrantRefundUpdateLineError!]
 }
 
-"""An enumeration."""
 enum OrderGrantRefundUpdateErrorCode @doc(category: "Orders") {
   GRAPHQL_ERROR
   NOT_FOUND
   REQUIRED
   INVALID
+  AMOUNT_GREATER_THAN_AVAILABLE
   SHIPPING_COSTS_ALREADY_GRANTED
 }
 
@@ -26132,7 +26256,6 @@ type OrderGrantRefundUpdateLineError {
   lineId: ID!
 }
 
-"""An enumeration."""
 enum OrderGrantRefundUpdateLineErrorCode {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -26174,6 +26297,15 @@ input OrderGrantRefundUpdateInput @doc(category: "Orders") {
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   grantRefundForShipping: Boolean
+
+  """
+  The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used.Field will be required starting from Saleor 3.21.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  transactionId: ID
 }
 
 input OrderGrantRefundUpdateLineAddInput @doc(category: "Orders") {
@@ -26343,7 +26475,6 @@ type OrderNoteAddError @doc(category: "Orders") {
   code: OrderNoteAddErrorCode
 }
 
-"""An enumeration."""
 enum OrderNoteAddErrorCode @doc(category: "Orders") {
   GRAPHQL_ERROR
   REQUIRED
@@ -26385,7 +26516,6 @@ type OrderNoteUpdateError @doc(category: "Orders") {
   code: OrderNoteUpdateErrorCode
 }
 
-"""An enumeration."""
 enum OrderNoteUpdateErrorCode @doc(category: "Orders") {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -26527,7 +26657,6 @@ type OrderBulkCreateError @doc(category: "Orders") {
   code: OrderBulkCreateErrorCode
 }
 
-"""An enumeration."""
 enum OrderBulkCreateErrorCode {
   GRAPHQL_ERROR
   REQUIRED
@@ -26676,6 +26805,13 @@ input OrderBulkCreateOrderLineInput @doc(category: "Orders") {
   """The name of the product."""
   productName: String
 
+  """
+  The SKU of the product.
+  
+  Added in Saleor 3.18.
+  """
+  productSku: String
+
   """Translation of the product variant name."""
   translatedVariantName: String
 
@@ -26699,6 +26835,27 @@ input OrderBulkCreateOrderLineInput @doc(category: "Orders") {
 
   """Price of the order line excluding applied discount."""
   undiscountedTotalPrice: TaxedMoneyInput!
+
+  """
+  Reason of the discount on order line.
+  
+  Added in Saleor 3.19.
+  """
+  unitDiscountReason: String
+
+  """
+  Type of the discount: fixed or percent
+  
+  Added in Saleor 3.19.
+  """
+  unitDiscountType: DiscountValueTypeEnum
+
+  """
+  Value of the discount. Can store fixed value or percent value
+  
+  Added in Saleor 3.19.
+  """
+  unitDiscountValue: PositiveDecimal
 
   """The ID of the warehouse, where the line will be allocated."""
   warehouse: ID!
@@ -26845,7 +27002,6 @@ type MetadataError {
   code: MetadataErrorCode!
 }
 
-"""An enumeration."""
 enum MetadataErrorCode {
   GRAPHQL_ERROR
   INVALID
@@ -26906,7 +27062,6 @@ type MenuError @doc(category: "Menu") {
   code: MenuErrorCode!
 }
 
-"""An enumeration."""
 enum MenuErrorCode {
   CANNOT_ASSIGN_NODE
   GRAPHQL_ERROR
@@ -27168,7 +27323,6 @@ type InvoiceError @doc(category: "Orders") {
   code: InvoiceErrorCode!
 }
 
-"""An enumeration."""
 enum InvoiceErrorCode @doc(category: "Orders") {
   REQUIRED
   NOT_READY
@@ -27317,7 +27471,6 @@ type GiftCardError @doc(category: "Gift cards") {
   tags: [String!]
 }
 
-"""An enumeration."""
 enum GiftCardErrorCode @doc(category: "Gift cards") {
   ALREADY_EXISTS
   GRAPHQL_ERROR
@@ -27665,7 +27818,6 @@ type PluginError {
   code: PluginErrorCode!
 }
 
-"""An enumeration."""
 enum PluginErrorCode {
   GRAPHQL_ERROR
   INVALID
@@ -27713,7 +27865,6 @@ type ExternalNotificationError {
   code: ExternalNotificationErrorCodes!
 }
 
-"""An enumeration."""
 enum ExternalNotificationErrorCodes {
   REQUIRED
   INVALID_MODEL_TYPE
@@ -27728,7 +27879,7 @@ input ExternalNotificationTriggerInput {
   ids: [ID!]!
 
   """
-  Additional payload that will be merged with the one based on the bussines object ID.
+  Additional payload that will be merged with the one based on the business object ID.
   """
   extraPayload: JSONString
 
@@ -27784,7 +27935,6 @@ type PromotionCreateError {
   giftsLimitExceedBy: Int
 }
 
-"""An enumeration."""
 enum PromotionCreateErrorCode {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -27814,13 +27964,9 @@ input PromotionCreateInput @doc(category: "Discounts") {
   """
   Defines the promotion type. Implicate the required promotion rules predicate type and whether the promotion rules will give the catalogue or order discount. 
   
-  The default value is `Catalogue`.
-  
-  This field will be required from Saleor 3.20.
-  
   Added in Saleor 3.19.
   """
-  type: PromotionTypeEnum
+  type: PromotionTypeEnum!
 
   """List of promotion rules."""
   rules: [PromotionRuleInput!]
@@ -27956,7 +28102,6 @@ type PromotionUpdateError {
   code: PromotionUpdateErrorCode!
 }
 
-"""An enumeration."""
 enum PromotionUpdateErrorCode {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -28008,7 +28153,6 @@ type PromotionDeleteError {
   code: PromotionDeleteErrorCode!
 }
 
-"""An enumeration."""
 enum PromotionDeleteErrorCode {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -28056,7 +28200,6 @@ type PromotionRuleCreateError {
   giftsLimitExceedBy: Int
 }
 
-"""An enumeration."""
 enum PromotionRuleCreateErrorCode {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -28165,7 +28308,6 @@ type PromotionRuleUpdateError {
   giftsLimitExceedBy: Int
 }
 
-"""An enumeration."""
 enum PromotionRuleUpdateErrorCode {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -28274,7 +28416,6 @@ type PromotionRuleDeleteError {
   code: PromotionRuleDeleteErrorCode!
 }
 
-"""An enumeration."""
 enum PromotionRuleDeleteErrorCode {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -28370,7 +28511,6 @@ type DiscountError @doc(category: "Discounts") {
   voucherCodes: [String!]
 }
 
-"""An enumeration."""
 enum DiscountErrorCode @doc(category: "Discounts") {
   ALREADY_EXISTS
   GRAPHQL_ERROR
@@ -28811,7 +28951,6 @@ type VoucherCodeBulkDeleteError @doc(category: "Discounts") {
   voucherCodes: [ID!]
 }
 
-"""An enumeration."""
 enum VoucherCodeBulkDeleteErrorCode @doc(category: "Discounts") {
   GRAPHQL_ERROR
   NOT_FOUND
@@ -28849,7 +28988,6 @@ type ExportError {
   code: ExportErrorCode!
 }
 
-"""An enumeration."""
 enum ExportErrorCode {
   GRAPHQL_ERROR
   INVALID
@@ -28914,7 +29052,6 @@ enum ProductFieldEnum @doc(category: "Products") {
   VARIANT_MEDIA
 }
 
-"""An enumeration."""
 enum FileTypesEnum {
   CSV
   XLSX
@@ -29010,7 +29147,6 @@ type UploadError {
   code: UploadErrorCode!
 }
 
-"""An enumeration."""
 enum UploadErrorCode {
   GRAPHQL_ERROR
 }
@@ -29040,7 +29176,7 @@ type CheckoutError @doc(category: "Checkout") {
   """The error code."""
   code: CheckoutErrorCode!
 
-  """List of varint IDs which causes the error."""
+  """List of variant IDs which causes the error."""
   variants: [ID!]
 
   """List of line Ids which cause the error."""
@@ -29050,7 +29186,6 @@ type CheckoutError @doc(category: "Checkout") {
   addressType: AddressTypeEnum
 }
 
-"""An enumeration."""
 enum CheckoutErrorCode @doc(category: "Checkout") {
   BILLING_ADDRESS_NOT_SET
   CHECKOUT_NOT_FULLY_PAID
@@ -29148,6 +29283,8 @@ type CheckoutComplete @doc(category: "Checkout") @webhookEventsInfo(asyncEvents:
 """
 Create a new checkout.
 
+`skipValidation` field requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions.
+
 Triggers the following webhook events:
 - CHECKOUT_CREATED (async): A checkout was created.
 """
@@ -29174,11 +29311,13 @@ input CheckoutCreateInput @doc(category: "Checkout") {
   email: String
 
   """
-  The mailing address to where the checkout will be shipped. Note: the address will be ignored if the checkout doesn't contain shippable items.
+  The mailing address to where the checkout will be shipped. Note: the address will be ignored if the checkout doesn't contain shippable items. `skipValidation` requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions.
   """
   shippingAddress: AddressInput
 
-  """Billing address of the customer."""
+  """
+  Billing address of the customer. `skipValidation` requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions.
+  """
   billingAddress: AddressInput
 
   """Checkout language code."""
@@ -29263,7 +29402,6 @@ type CheckoutCreateFromOrderUnavailableVariant @doc(category: "Checkout") {
   lineId: ID!
 }
 
-"""An enumeration."""
 enum CheckoutCreateFromOrderUnavailableVariantErrorCode @doc(category: "Checkout") {
   NOT_FOUND
   PRODUCT_UNAVAILABLE_FOR_PURCHASE
@@ -29286,7 +29424,6 @@ type CheckoutCreateFromOrderError @doc(category: "Checkout") {
   code: CheckoutCreateFromOrderErrorCode!
 }
 
-"""An enumeration."""
 enum CheckoutCreateFromOrderErrorCode @doc(category: "Checkout") {
   GRAPHQL_ERROR
   INVALID
@@ -29588,7 +29725,6 @@ type OrderCreateFromCheckoutError @doc(category: "Orders") {
   lines: [ID!]
 }
 
-"""An enumeration."""
 enum OrderCreateFromCheckoutErrorCode @doc(category: "Orders") {
   GRAPHQL_ERROR
   CHECKOUT_NOT_FOUND
@@ -29639,7 +29775,6 @@ type ChannelError @doc(category: "Channels") {
   warehouses: [ID!]
 }
 
-"""An enumeration."""
 enum ChannelErrorCode @doc(category: "Channels") {
   ALREADY_EXISTS
   GRAPHQL_ERROR
@@ -29743,7 +29878,7 @@ input OrderSettingsInput @doc(category: "Orders") {
   automaticallyConfirmAllNewOrders: Boolean
 
   """
-  When enabled, all non-shippable gift card orders will be fulfilled automatically. By defualt set to True.
+  When enabled, all non-shippable gift card orders will be fulfilled automatically. By default set to True.
   """
   automaticallyFulfillNonShippableGiftCard: Boolean
 
@@ -29806,6 +29941,13 @@ input CheckoutSettingsInput @doc(category: "Checkout") {
   DEPRECATED: this field will be removed in Saleor 4.0.
   """
   useLegacyErrorFlow: Boolean
+
+  """
+  Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
+  
+  Added in Saleor 3.20.
+  """
+  automaticallyCompleteFullyPaidCheckouts: Boolean
 }
 
 input PaymentSettingsInput @doc(category: "Payments") {
@@ -29817,6 +29959,27 @@ input PaymentSettingsInput @doc(category: "Payments") {
   Note: this API is currently in Feature Preview and can be subject to changes at later point.
   """
   defaultTransactionFlowStrategy: TransactionFlowStrategyEnum
+
+  """
+  Determine if the funds for expired checkouts should be released automatically.
+  
+  Added in Saleor 3.20.
+  """
+  releaseFundsForExpiredCheckouts: Boolean
+
+  """
+  The time in hours after which funds for expired checkouts will be released.
+  
+  Added in Saleor 3.20.
+  """
+  checkoutTtlBeforeReleasingFunds: Hour
+
+  """
+  Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+  
+  Added in Saleor 3.20.
+  """
+  checkoutReleaseFundsCutOffDate: DateTime
 }
 
 """
@@ -30008,7 +30171,6 @@ type AttributeError @doc(category: "Attributes") {
   code: AttributeErrorCode!
 }
 
-"""An enumeration."""
 enum AttributeErrorCode @doc(category: "Attributes") {
   ALREADY_EXISTS
   GRAPHQL_ERROR
@@ -30102,7 +30264,7 @@ input AttributeValueCreateInput @doc(category: "Attributes") {
   richText: JSONString
 
   """
-  Represents the text of the attribute value, plain text without formating.
+  Represents the text of the attribute value, plain text without formatting.
   
   DEPRECATED: this field will be removed in Saleor 4.0.The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
   """
@@ -30231,7 +30393,7 @@ input AttributeValueUpdateInput @doc(category: "Attributes") {
   richText: JSONString
 
   """
-  Represents the text of the attribute value, plain text without formating.
+  Represents the text of the attribute value, plain text without formatting.
   
   DEPRECATED: this field will be removed in Saleor 4.0.The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
   """
@@ -30294,7 +30456,6 @@ type AttributeBulkCreateError @doc(category: "Attributes") {
   code: AttributeBulkCreateErrorCode!
 }
 
-"""An enumeration."""
 enum AttributeBulkCreateErrorCode @doc(category: "Attributes") {
   ALREADY_EXISTS
   BLANK
@@ -30349,7 +30510,6 @@ type AttributeBulkUpdateError @doc(category: "Attributes") {
   code: AttributeBulkUpdateErrorCode!
 }
 
-"""An enumeration."""
 enum AttributeBulkUpdateErrorCode {
   ALREADY_EXISTS
   BLANK
@@ -30423,7 +30583,6 @@ type AttributeBulkTranslateError {
   code: AttributeTranslateErrorCode!
 }
 
-"""An enumeration."""
 enum AttributeTranslateErrorCode @doc(category: "Attributes") {
   GRAPHQL_ERROR
   INVALID
@@ -30566,7 +30725,6 @@ type AttributeValueBulkTranslateError {
   code: AttributeValueTranslateErrorCode!
 }
 
-"""An enumeration."""
 enum AttributeValueTranslateErrorCode @doc(category: "Attributes") {
   GRAPHQL_ERROR
   INVALID
@@ -30659,7 +30817,6 @@ type AppError @doc(category: "Apps") {
   permissions: [PermissionEnum!]
 }
 
-"""An enumeration."""
 enum AppErrorCode @doc(category: "Apps") {
   FORBIDDEN
   GRAPHQL_ERROR
@@ -31074,7 +31231,6 @@ type AccountError @doc(category: "Users") {
   addressType: AddressTypeEnum
 }
 
-"""An enumeration."""
 enum AccountErrorCode @doc(category: "Users") {
   ACTIVATE_OWN_ACCOUNT
   ACTIVATE_SUPERUSER_ACCOUNT
@@ -31110,6 +31266,8 @@ enum AccountErrorCode @doc(category: "Users") {
   CHANNEL_INACTIVE
   MISSING_CHANNEL_SLUG
   ACCOUNT_NOT_CONFIRMED
+  LOGIN_ATTEMPT_DELAYED
+  UNKNOWN_IP_ADDRESS
 }
 
 """
@@ -31263,7 +31421,6 @@ type SendConfirmationEmailError @doc(category: "Users") {
   code: SendConfirmationEmailErrorCode!
 }
 
-"""An enumeration."""
 enum SendConfirmationEmailErrorCode @doc(category: "Users") {
   INVALID
   ACCOUNT_CONFIRMED
@@ -31349,9 +31506,9 @@ type ConfirmEmailChange @doc(category: "Users") @webhookEventsInfo(asyncEvents: 
 }
 
 """
-Create a new address for the customer. 
+Create a new address for the customer.
 
-Requires one of the following permissions: AUTHENTICATED_USER.
+Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
 
 Triggers the following webhook events:
 - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -31441,7 +31598,9 @@ input AccountRegisterInput @doc(category: "Users") {
   """Password."""
   password: String!
 
-  """Base of frontend URL that will be needed to create confirmation URL."""
+  """
+  Base of frontend URL that will be needed to create confirmation URL. Required when account confirmation is enabled.
+  """
   redirectUrl: String
 
   """User public metadata."""
@@ -31454,9 +31613,9 @@ input AccountRegisterInput @doc(category: "Users") {
 }
 
 """
-Updates the account of the logged-in user. 
+Updates the account of the logged-in user.
 
-Requires one of the following permissions: AUTHENTICATED_USER.
+Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
 
 Triggers the following webhook events:
 - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -31810,7 +31969,6 @@ type CustomerBulkUpdateError @doc(category: "Users") {
   code: CustomerBulkUpdateErrorCode!
 }
 
-"""An enumeration."""
 enum CustomerBulkUpdateErrorCode @doc(category: "Users") {
   BLANK
   DUPLICATED_INPUT_ITEM
@@ -32063,11 +32221,10 @@ type PermissionGroupError @doc(category: "Users") {
   """List of user IDs which causes the error."""
   users: [ID!]
 
-  """List of chnnels IDs which causes the error."""
+  """List of channels IDs which causes the error."""
   channels: [ID!]
 }
 
-"""An enumeration."""
 enum PermissionGroupErrorCode @doc(category: "Users") {
   REQUIRED
   UNIQUE
@@ -32188,6 +32345,216 @@ type Subscription @doc(category: "Miscellaneous") {
   Added in Saleor 3.2.
   """
   event: Event
+
+  """
+  Event sent when new draft order is created.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  draftOrderCreated(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): DraftOrderCreated @doc(category: "Orders")
+
+  """
+  Event sent when draft order is updated.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  draftOrderUpdated(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): DraftOrderUpdated @doc(category: "Orders")
+
+  """
+  Event sent when draft order is deleted.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  draftOrderDeleted(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): DraftOrderDeleted @doc(category: "Orders")
+
+  """
+  Event sent when new order is created.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderCreated(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderCreated @doc(category: "Orders")
+
+  """
+  Event sent when order is updated.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderUpdated(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderUpdated @doc(category: "Orders")
+
+  """
+  Event sent when order is confirmed.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderConfirmed(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderConfirmed @doc(category: "Orders")
+
+  """
+  Payment has been made. The order may be partially or fully paid.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderPaid(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderPaid @doc(category: "Orders")
+
+  """
+  Event sent when order is fully paid.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderFullyPaid(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderFullyPaid @doc(category: "Orders")
+
+  """
+  The order received a refund. The order may be partially or fully refunded.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderRefunded(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderRefunded @doc(category: "Orders")
+
+  """
+  The order is fully refunded.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderFullyRefunded(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderFullyRefunded @doc(category: "Orders")
+
+  """
+  Event sent when order is fulfilled.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderFulfilled(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderFulfilled @doc(category: "Orders")
+
+  """
+  Event sent when order is cancelled.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderCancelled(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderCancelled @doc(category: "Orders")
+
+  """
+  Event sent when order becomes expired.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderExpired(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderExpired @doc(category: "Orders")
+
+  """
+  Event sent when order metadata is updated.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderMetadataUpdated(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderMetadataUpdated @doc(category: "Orders")
+
+  """
+  Event sent when orders are imported.
+  
+  Added in Saleor 3.20.
+  
+  Note: this API is currently in Feature Preview and can be subject to changes at later point.
+  """
+  orderBulkCreated(
+    """
+    List of channel slugs. The event will be sent only if the order belongs to one of the provided channels. If the channel slug list is empty, orders that belong to any channel will be sent. Maximally 500 items.
+    """
+    channels: [String!]
+  ): OrderBulkCreated @doc(category: "Orders")
 }
 
 interface Event {
@@ -32206,7 +32573,346 @@ interface Event {
 
 union IssuingPrincipal = App | User
 
-"""An enumeration."""
+"""
+Event sent when new draft order is created.
+
+Added in Saleor 3.2.
+"""
+type DraftOrderCreated implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when draft order is updated.
+
+Added in Saleor 3.2.
+"""
+type DraftOrderUpdated implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when draft order is deleted.
+
+Added in Saleor 3.2.
+"""
+type DraftOrderDeleted implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when new order is created.
+
+Added in Saleor 3.2.
+"""
+type OrderCreated implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when order is updated.
+
+Added in Saleor 3.2.
+"""
+type OrderUpdated implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when order is confirmed.
+
+Added in Saleor 3.2.
+"""
+type OrderConfirmed implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Payment has been made. The order may be partially or fully paid.
+
+Added in Saleor 3.14.
+
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
+"""
+type OrderPaid implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when order is fully paid.
+
+Added in Saleor 3.2.
+"""
+type OrderFullyPaid implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+The order received a refund. The order may be partially or fully refunded.
+
+Added in Saleor 3.14.
+
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
+"""
+type OrderRefunded implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+The order is fully refunded.
+
+Added in Saleor 3.14.
+
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
+"""
+type OrderFullyRefunded implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when order is fulfilled.
+
+Added in Saleor 3.2.
+"""
+type OrderFulfilled implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when order is canceled.
+
+Added in Saleor 3.2.
+"""
+type OrderCancelled implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when order becomes expired.
+
+Added in Saleor 3.13.
+
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
+"""
+type OrderExpired implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when order metadata is updated.
+
+Added in Saleor 3.8.
+"""
+type OrderMetadataUpdated implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The order the event relates to."""
+  order: Order
+}
+
+"""
+Event sent when orders are imported.
+
+Added in Saleor 3.14.
+
+Note: this API is currently in Feature Preview and can be subject to changes at later point.
+"""
+type OrderBulkCreated implements Event @doc(category: "Orders") {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """The orders the event relates to."""
+  orders: [Order!]
+}
+
 enum DistanceUnitsEnum {
   MM
   CM
@@ -32218,7 +32924,6 @@ enum DistanceUnitsEnum {
   INCH
 }
 
-"""An enumeration."""
 enum AreaUnitsEnum {
   SQ_MM
   SQ_CM
@@ -32230,7 +32935,6 @@ enum AreaUnitsEnum {
   SQ_INCH
 }
 
-"""An enumeration."""
 enum VolumeUnitsEnum {
   CUBIC_MILLIMETER
   CUBIC_CENTIMETER
@@ -33263,346 +33967,6 @@ type MenuItemDeleted implements Event @doc(category: "Menu") {
     """Slug of a channel for which the data should be returned."""
     channel: String
   ): MenuItem
-}
-
-"""
-Event sent when new order is created.
-
-Added in Saleor 3.2.
-"""
-type OrderCreated implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when order is updated.
-
-Added in Saleor 3.2.
-"""
-type OrderUpdated implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when order is confirmed.
-
-Added in Saleor 3.2.
-"""
-type OrderConfirmed implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when order is fully paid.
-
-Added in Saleor 3.2.
-"""
-type OrderFullyPaid implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Payment has been made. The order may be partially or fully paid.
-
-Added in Saleor 3.14.
-
-Note: this API is currently in Feature Preview and can be subject to changes at later point.
-"""
-type OrderPaid implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-The order received a refund. The order may be partially or fully refunded.
-
-Added in Saleor 3.14.
-
-Note: this API is currently in Feature Preview and can be subject to changes at later point.
-"""
-type OrderRefunded implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-The order is fully refunded.
-
-Added in Saleor 3.14.
-
-Note: this API is currently in Feature Preview and can be subject to changes at later point.
-"""
-type OrderFullyRefunded implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when order is fulfilled.
-
-Added in Saleor 3.2.
-"""
-type OrderFulfilled implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when order is canceled.
-
-Added in Saleor 3.2.
-"""
-type OrderCancelled implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when order becomes expired.
-
-Added in Saleor 3.13.
-
-Note: this API is currently in Feature Preview and can be subject to changes at later point.
-"""
-type OrderExpired implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when order metadata is updated.
-
-Added in Saleor 3.8.
-"""
-type OrderMetadataUpdated implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when orders are imported.
-
-Added in Saleor 3.14.
-
-Note: this API is currently in Feature Preview and can be subject to changes at later point.
-"""
-type OrderBulkCreated implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The orders the event relates to."""
-  orders: [Order!]
-}
-
-"""
-Event sent when new draft order is created.
-
-Added in Saleor 3.2.
-"""
-type DraftOrderCreated implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when draft order is updated.
-
-Added in Saleor 3.2.
-"""
-type DraftOrderUpdated implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
-}
-
-"""
-Event sent when draft order is deleted.
-
-Added in Saleor 3.2.
-"""
-type DraftOrderDeleted implements Event @doc(category: "Orders") {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """The order the event relates to."""
-  order: Order
 }
 
 """
@@ -34732,7 +35096,7 @@ type CheckoutUpdated implements Event @doc(category: "Checkout") {
 }
 
 """
-Event sent when checkout is fully paid with transactions.
+Event sent when checkout is fully paid with transactions. The checkout is considered as fully paid when the checkout `charge_status` is `FULL` or `OVERCHARGED`. The event is not sent when the checkout authorization flow strategy is used.
 
 Added in Saleor 3.13.
 
@@ -35166,6 +35530,28 @@ type ShippingZoneMetadataUpdated implements Event @doc(category: "Shipping") {
     """Slug of a channel for which the data should be returned."""
     channel: String
   ): ShippingZone
+}
+
+"""
+Event sent when shop metadata is updated.
+
+Added in Saleor 3.15.
+"""
+type ShopMetadataUpdated implements Event {
+  """Time of the event."""
+  issuedAt: DateTime
+
+  """Saleor version that triggered the event."""
+  version: String
+
+  """The user or application that triggered the event."""
+  issuingPrincipal: IssuingPrincipal
+
+  """The application receiving the webhook."""
+  recipient: App
+
+  """Shop data."""
+  shop: Shop
 }
 
 """
@@ -36014,7 +36400,9 @@ type TaxableObject @doc(category: "Taxes") {
   """The currency of the object."""
   currency: String!
 
-  """The price of shipping method."""
+  """
+  The price of shipping method, includes shipping voucher discount if applied.
+  """
   shippingPrice: Money!
 
   """The address data."""
@@ -36035,6 +36423,19 @@ type TaxableObjectDiscount @doc(category: "Taxes") {
 
   """The amount of the discount."""
   amount: Money!
+
+  """
+  Indicates which part of the order the discount should affect: SUBTOTAL or SHIPPING.
+  """
+  type: TaxableObjectDiscountTypeEnum!
+}
+
+"""
+Indicates which part of the order the discount should affect: SUBTOTAL or SHIPPING.
+"""
+enum TaxableObjectDiscountTypeEnum @doc(category: "Taxes") {
+  SUBTOTAL
+  SHIPPING
 }
 
 type TaxableObjectLine @doc(category: "Taxes") {
@@ -36056,10 +36457,14 @@ type TaxableObjectLine @doc(category: "Taxes") {
   """The product sku."""
   productSku: String
 
-  """Price of the single item in the order line."""
+  """
+  Price of the single item in the order line. The price includes catalogue promotions, specific product and applied once per order voucher discounts. The price does not include the entire order discount.
+  """
   unitPrice: Money!
 
-  """Price of the order line."""
+  """
+  Price of the order line. The price includes catalogue promotions, specific product and applied once per order voucher discounts. The price does not include the entire order discount.
+  """
   totalPrice: Money!
 }
 
@@ -36197,28 +36602,6 @@ type TransactionProcessSession implements Event @doc(category: "Payments") {
 
   """Action to proceed for the transaction"""
   action: TransactionProcessAction!
-}
-
-"""
-Event sent when shop metadata is updated.
-
-Added in Saleor 3.15.
-"""
-type ShopMetadataUpdated implements Event {
-  """Time of the event."""
-  issuedAt: DateTime
-
-  """Saleor version that triggered the event."""
-  version: String
-
-  """The user or application that triggered the event."""
-  issuingPrincipal: IssuingPrincipal
-
-  """The application receiving the webhook."""
-  recipient: App
-
-  """Shop data."""
-  shop: Shop
 }
 
 """

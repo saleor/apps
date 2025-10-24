@@ -5,12 +5,17 @@
   "main": "index.ts",
   "scripts": {
     "check-types": "tsc",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
+    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
+  },
+  "config": {
+    "saleor": {
+      "schemaVersion": "3.20"
+    }
   },
   "dependencies": {
     "graphql": "catalog:",
@@ -41,8 +46,5 @@
   "peerDependencies": {
     "next": "catalog:",
     "urql": "catalog:"
-  },
-  "saleor": {
-    "schemaVersion": "3.19"
   }
 }
