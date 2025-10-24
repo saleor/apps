@@ -14,7 +14,8 @@ import { trpcClient } from "../../trpc/trpc-client";
 import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { CodeEditor } from "./code-editor";
-import { MjmlPreview } from "./mjml-preview";
+import { TemplateErrorDisplay } from "./template-error-display";
+import { TemplatePreview } from "./template-preview";
 
 const PREVIEW_DEBOUNCE_DELAY = 500;
 
@@ -53,13 +54,21 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
     },
   });
 
+  const [lastValidRenderedTemplate, setLastValidRenderedTemplate] = useState("");
+  const [lastValidRenderedSubject, setLastValidRenderedSubject] = useState("");
+  const [lastError, setLastError] = useState<typeof _error | null>(null);
+  const [payload, setPayload] = useState<string>(
+    JSON.stringify(examplePayloads[eventType], undefined, 2),
+  );
+
   const {
     mutate: fetchTemplatePreview,
     isLoading: isFetchingTemplatePreview,
-    error,
-    isError,
+    error: _error,
   } = trpcClient.smtpConfiguration.renderTemplate.useMutation({
     onSuccess: (data) => {
+      setLastError(null);
+
       if (data.renderedEmailBody) {
         setLastValidRenderedTemplate(data.renderedEmailBody);
       }
@@ -67,15 +76,10 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
         setLastValidRenderedSubject(data.renderedSubject);
       }
     },
+    onError: (err) => {
+      setLastError(err);
+    },
   });
-
-  const [lastValidRenderedTemplate, setLastValidRenderedTemplate] = useState("");
-
-  const [lastValidRenderedSubject, setLastValidRenderedSubject] = useState("");
-
-  const [payload, setPayload] = useState<string>(
-    JSON.stringify(examplePayloads[eventType], undefined, 2),
-  );
 
   const { template, subject } = getValues();
   const debouncedMutationVariables = useDebounce(
@@ -99,7 +103,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
 
   return (
     <form
-      onSubmit={handleSubmit((data, event) => {
+      onSubmit={handleSubmit((data) => {
         mutate({
           ...data,
         });
@@ -110,13 +114,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
           <Text size={10} fontWeight="bold">
             Edit template
           </Text>
-          <Button type="submit">Save</Button>
         </Box>
-        {isError && (
-          <Box>
-            <Text color={"critical1"}>Template compilation failed: {error.message}</Text>
-          </Box>
-        )}
         <Box display="grid" gridTemplateColumns={{ desktop: 3, mobile: 1 }}>
           <Input control={control} name="subject" label="Subject" />
         </Box>
@@ -159,11 +157,26 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
             flexDirection="column"
             gap={defaultPadding}
           >
-            <Text size={5} fontWeight="bold" as="p">
-              Subject: {lastValidRenderedSubject}
-            </Text>
-            <MjmlPreview value={lastValidRenderedTemplate} />
+            {lastError ? (
+              <TemplateErrorDisplay error={lastError} />
+            ) : (
+              <TemplatePreview
+                subject={lastValidRenderedSubject}
+                template={lastValidRenderedTemplate}
+                isUpdating={isFetchingTemplatePreview}
+              />
+            )}
           </Box>
+        </Box>
+        <Box display="flex" justifyContent="flex-end" gap={2} alignItems="center">
+          {lastError && (
+            <Text size={3} color="critical1">
+              Fix template errors before saving
+            </Text>
+          )}
+          <Button type="submit" disabled={!!lastError}>
+            Save
+          </Button>
         </Box>
       </Box>
     </form>
