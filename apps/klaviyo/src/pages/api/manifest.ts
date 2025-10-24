@@ -26,6 +26,7 @@ const handler = wrapWithLoggerContext(
               default: `${apiBaseURL}/logo.png`,
             },
           },
+          requiredSaleorVersion: ">=3.20 <4",
           dataPrivacyUrl: "https://saleor.io/legal/privacy/",
           homepageUrl: "https://github.com/saleor/apps",
           id: "saleor.app.klaviyo",

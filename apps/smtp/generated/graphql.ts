@@ -43,6 +43,8 @@ export type Scalars = {
    * String, Boolean, Int, Float, List or Object.
    */
   GenericScalar: { input: JSONValue; output: JSONValue; }
+  /** The `Hour` scalar type represents number of hours by integer value. */
+  Hour: { input: number; output: number; }
   JSON: { input: JSONValue; output: JSONValue; }
   JSONString: { input: string; output: string; }
   /**
@@ -76,7 +78,7 @@ export type Scalars = {
 /**
  * Create a new address for the customer.
  *
- * Requires one of the following permissions: AUTHENTICATED_USER.
+ * Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
  *
  * Triggers the following webhook events:
  * - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -308,7 +310,6 @@ export type AccountError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type AccountErrorCode =
   | 'ACCOUNT_NOT_CONFIRMED'
   | 'ACTIVATE_OWN_ACCOUNT'
@@ -332,6 +333,7 @@ export type AccountErrorCode =
   | 'JWT_MISSING_TOKEN'
   | 'JWT_SIGNATURE_EXPIRED'
   | 'LEFT_NOT_MANAGEABLE_PERMISSION'
+  | 'LOGIN_ATTEMPT_DELAYED'
   | 'MISSING_CHANNEL_SLUG'
   | 'NOT_FOUND'
   | 'OUT_OF_SCOPE_GROUP'
@@ -343,7 +345,8 @@ export type AccountErrorCode =
   | 'PASSWORD_TOO_SHORT'
   | 'PASSWORD_TOO_SIMILAR'
   | 'REQUIRED'
-  | 'UNIQUE';
+  | 'UNIQUE'
+  | 'UNKNOWN_IP_ADDRESS';
 
 /** Fields required to update the user. */
 export type AccountInput = {
@@ -398,7 +401,7 @@ export type AccountRegisterInput = {
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** Password. */
   readonly password: Scalars['String']['input'];
-  /** Base of frontend URL that will be needed to create confirmation URL. */
+  /** Base of frontend URL that will be needed to create confirmation URL. Required when account confirmation is enabled. */
   readonly redirectUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -462,7 +465,7 @@ export type AccountSetPasswordRequested = Event & {
 /**
  * Updates the account of the logged-in user.
  *
- * Requires one of the following permissions: AUTHENTICATED_USER.
+ * Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
  *
  * Triggers the following webhook events:
  * - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -670,6 +673,14 @@ export type AddressInput = {
   readonly phone?: InputMaybe<Scalars['String']['input']>;
   /** Postal code. */
   readonly postalCode?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Determine if the address should be validated. By default, Saleor accepts only address inputs matching ruleset from [Google Address Data]{https://chromium-i18n.appspot.com/ssl-address), using [i18naddress](https://github.com/mirumee/google-i18n-address) library. Some mutations may require additional permissions to use the the field. More info about permissions can be found in relevant mutation.
+   *
+   * Added in Saleor 3.19.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly skipValidation?: InputMaybe<Scalars['Boolean']['input']>;
   /** Address. */
   readonly streetAddress1?: InputMaybe<Scalars['String']['input']>;
   /** Address. */
@@ -692,7 +703,6 @@ export type AddressSetDefault = {
   readonly user?: Maybe<User>;
 };
 
-/** An enumeration. */
 export type AddressTypeEnum =
   | 'BILLING'
   | 'SHIPPING';
@@ -740,7 +750,7 @@ export type AddressValidationData = {
    * Many fields in the JSON refer to address fields by one-letter abbreviations. These are defined as follows:
    *
    * - `N`: Name
-   * - `O`: Organisation
+   * - `O`: Organization
    * - `A`: Street Address Line(s)
    * - `D`: Dependent locality (may be an inner-city district or a suburb)
    * - `C`: City or Locality
@@ -757,7 +767,7 @@ export type AddressValidationData = {
    * Many fields in the JSON refer to address fields by one-letter abbreviations. These are defined as follows:
    *
    * - `N`: Name
-   * - `O`: Organisation
+   * - `O`: Organization
    * - `A`: Street Address Line(s)
    * - `D`: Dependent locality (may be an inner-city district or a suburb)
    * - `C`: City or Locality
@@ -834,7 +844,7 @@ export type AllocationStrategyEnum =
 export type App = Node & ObjectWithMetadata & {
   /** Description of this app. */
   readonly aboutApp?: Maybe<Scalars['String']['output']>;
-  /** JWT token used to authenticate by thridparty app. */
+  /** JWT token used to authenticate by third-party app. */
   readonly accessToken?: Maybe<Scalars['String']['output']>;
   /** URL to iframe with the app. */
   readonly appUrl?: Maybe<Scalars['String']['output']>;
@@ -1137,7 +1147,6 @@ export type AppError = {
   readonly permissions?: Maybe<ReadonlyArray<PermissionEnum>>;
 };
 
-/** An enumeration. */
 export type AppErrorCode =
   | 'FORBIDDEN'
   | 'GRAPHQL_ERROR'
@@ -1550,7 +1559,6 @@ export type AppUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type AreaUnitsEnum =
   | 'SQ_CM'
   | 'SQ_DM'
@@ -1759,7 +1767,6 @@ export type AttributeBulkCreateError = {
   readonly path?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type AttributeBulkCreateErrorCode =
   | 'ALREADY_EXISTS'
   | 'BLANK'
@@ -1867,7 +1874,6 @@ export type AttributeBulkUpdateError = {
   readonly path?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type AttributeBulkUpdateErrorCode =
   | 'ALREADY_EXISTS'
   | 'BLANK'
@@ -2041,7 +2047,6 @@ export type AttributeDeleted = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type AttributeEntityTypeEnum =
   | 'PAGE'
   | 'PRODUCT'
@@ -2063,7 +2068,6 @@ export type AttributeError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type AttributeErrorCode =
   | 'ALREADY_EXISTS'
   | 'GRAPHQL_ERROR'
@@ -2109,7 +2113,6 @@ export type AttributeInput = {
   readonly valuesRange?: InputMaybe<IntRangeInput>;
 };
 
-/** An enumeration. */
 export type AttributeInputTypeEnum =
   | 'BOOLEAN'
   | 'DATE'
@@ -2213,7 +2216,6 @@ export type AttributeTranslate = {
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
-/** An enumeration. */
 export type AttributeTranslateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -2236,7 +2238,6 @@ export type AttributeTranslation = Node & {
   readonly translatableContent?: Maybe<AttributeTranslatableContent>;
 };
 
-/** An enumeration. */
 export type AttributeTypeEnum =
   | 'PAGE_TYPE'
   | 'PRODUCT_TYPE';
@@ -2353,7 +2354,7 @@ export type AttributeValue = Node & {
   readonly inputType?: Maybe<AttributeInputTypeEnum>;
   /** Name of a value displayed in the interface. */
   readonly name?: Maybe<Scalars['String']['output']>;
-  /** Represents the text of the attribute value, plain text without formating. */
+  /** Represents the text of the attribute value, plain text without formatting. */
   readonly plainText?: Maybe<Scalars['String']['output']>;
   /** The ID of the attribute reference. */
   readonly reference?: Maybe<Scalars['ID']['output']>;
@@ -2485,7 +2486,7 @@ export type AttributeValueCreateInput = {
   /** Name of a value displayed in the interface. */
   readonly name: Scalars['String']['input'];
   /**
-   * Represents the text of the attribute value, plain text without formating.
+   * Represents the text of the attribute value, plain text without formatting.
    *
    * DEPRECATED: this field will be removed in Saleor 4.0.The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
    */
@@ -2690,7 +2691,6 @@ export type AttributeValueTranslate = {
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
-/** An enumeration. */
 export type AttributeValueTranslateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -2765,7 +2765,7 @@ export type AttributeValueUpdateInput = {
   /** Name of a value displayed in the interface. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
-   * Represents the text of the attribute value, plain text without formating.
+   * Represents the text of the attribute value, plain text without formatting.
    *
    * DEPRECATED: this field will be removed in Saleor 4.0.The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
    */
@@ -3556,6 +3556,8 @@ export type Channel = Node & ObjectWithMetadata & {
   /**
    * Channel specific tax configuration.
    *
+   * Added in Saleor 3.20.
+   *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
   readonly taxConfiguration: TaxConfiguration;
@@ -3780,7 +3782,6 @@ export type ChannelError = {
   readonly warehouses?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type ChannelErrorCode =
   | 'ALREADY_EXISTS'
   | 'CHANNELS_CURRENCY_MUST_BE_THE_SAME'
@@ -4157,7 +4158,7 @@ export type Checkout = Node & ObjectWithMetadata & {
    */
   readonly totalBalance: Money;
   /**
-   * The sum of the the checkout line prices, with all the taxes,shipping costs, and discounts included.
+   * The sum of the checkout line prices, with all the taxes,shipping costs, and discounts included.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_CALCULATE_TAXES (sync): Optionally triggered when checkout prices are expired.
@@ -4346,6 +4347,8 @@ export type CheckoutCountableEdge = {
 /**
  * Create a new checkout.
  *
+ * `skipValidation` field requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions.
+ *
  * Triggers the following webhook events:
  * - CHECKOUT_CREATED (async): A checkout was created.
  */
@@ -4385,7 +4388,6 @@ export type CheckoutCreateFromOrderError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type CheckoutCreateFromOrderErrorCode =
   | 'CHANNEL_INACTIVE'
   | 'GRAPHQL_ERROR'
@@ -4404,7 +4406,6 @@ export type CheckoutCreateFromOrderUnavailableVariant = {
   readonly variantId: Scalars['ID']['output'];
 };
 
-/** An enumeration. */
 export type CheckoutCreateFromOrderUnavailableVariantErrorCode =
   | 'INSUFFICIENT_STOCK'
   | 'NOT_FOUND'
@@ -4414,7 +4415,7 @@ export type CheckoutCreateFromOrderUnavailableVariantErrorCode =
   | 'UNAVAILABLE_VARIANT_IN_CHANNEL';
 
 export type CheckoutCreateInput = {
-  /** Billing address of the customer. */
+  /** Billing address of the customer. `skipValidation` requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions. */
   readonly billingAddress?: InputMaybe<AddressInput>;
   /** Slug of a channel in which to create a checkout. */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
@@ -4424,7 +4425,7 @@ export type CheckoutCreateInput = {
   readonly languageCode?: InputMaybe<LanguageCodeEnum>;
   /** A list of checkout lines, each containing information about an item in the checkout. */
   readonly lines: ReadonlyArray<CheckoutLineInput>;
-  /** The mailing address to where the checkout will be shipped. Note: the address will be ignored if the checkout doesn't contain shippable items. */
+  /** The mailing address to where the checkout will be shipped. Note: the address will be ignored if the checkout doesn't contain shippable items. `skipValidation` requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions. */
   readonly shippingAddress?: InputMaybe<AddressInput>;
   /**
    * The checkout validation rules that can be changed.
@@ -4524,11 +4525,10 @@ export type CheckoutError = {
   readonly lines?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error message. */
   readonly message?: Maybe<Scalars['String']['output']>;
-  /** List of varint IDs which causes the error. */
+  /** List of variant IDs which causes the error. */
   readonly variants?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type CheckoutErrorCode =
   | 'BILLING_ADDRESS_NOT_SET'
   | 'CHANNEL_INACTIVE'
@@ -4598,7 +4598,7 @@ export type CheckoutFilterShippingMethods = Event & {
 };
 
 /**
- * Event sent when checkout is fully paid with transactions.
+ * Event sent when checkout is fully paid with transactions. The checkout is considered as fully paid when the checkout `charge_status` is `FULL` or `OVERCHARGED`. The event is not sent when the checkout authorization flow strategy is used.
  *
  * Added in Saleor 3.13.
  *
@@ -4956,6 +4956,12 @@ export type CheckoutRemovePromoCode = {
  */
 export type CheckoutSettings = {
   /**
+   * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly automaticallyCompleteFullyPaidCheckouts: Scalars['Boolean']['output'];
+  /**
    * Default `true`. Determines if the checkout mutations should use legacy error flow. In legacy flow, all mutations can raise an exception unrelated to the requested action - (e.g. out-of-stock exception when updating checkoutShippingAddress.) If `false`, the errors will be aggregated in `checkout.problems` field. Some of the `problems` can block the finalizing checkout process. The legacy flow will be removed in Saleor 4.0. The flow with `checkout.problems` will be the default one.
    *
    * Added in Saleor 3.15.This field will be removed in Saleor 4.0.
@@ -4964,6 +4970,12 @@ export type CheckoutSettings = {
 };
 
 export type CheckoutSettingsInput = {
+  /**
+   * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly automaticallyCompleteFullyPaidCheckouts?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * Default `true`. Determines if the checkout mutations should use legacy error flow. In legacy flow, all mutations can raise an exception unrelated to the requested action - (e.g. out-of-stock exception when updating checkoutShippingAddress.) If `false`, the errors will be aggregated in `checkout.problems` field. Some of the `problems` can block the finalizing checkout process. The legacy flow will be removed in Saleor 4.0. The flow with `checkout.problems` will be the default one.
    *
@@ -5399,7 +5411,6 @@ export type CollectionError = {
   readonly products?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type CollectionErrorCode =
   | 'CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT'
   | 'DUPLICATED_INPUT_ITEM'
@@ -5716,7 +5727,6 @@ export type ConfigurationItemInput = {
   readonly value?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** An enumeration. */
 export type ConfigurationTypeFieldEnum =
   | 'BOOLEAN'
   | 'MULTILINE'
@@ -5758,7 +5768,11 @@ export type ConfirmEmailChange = {
   readonly user?: Maybe<User>;
 };
 
-/** An enumeration. */
+/**
+ * Represents country codes defined by the ISO 3166-1 alpha-2 standard.
+ *
+ * The `EU` value is DEPRECATED and will be removed in Saleor 3.21.
+ */
 export type CountryCode =
   | 'AD'
   | 'AE'
@@ -6005,6 +6019,7 @@ export type CountryCode =
   | 'VU'
   | 'WF'
   | 'WS'
+  | 'XK'
   | 'YE'
   | 'YT'
   | 'ZA'
@@ -6123,7 +6138,6 @@ export type CustomerBulkUpdateError = {
   readonly path?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type CustomerBulkUpdateErrorCode =
   | 'BLANK'
   | 'DUPLICATED_INPUT_ITEM'
@@ -6216,7 +6230,6 @@ export type CustomerEvent = Node & {
   readonly user?: Maybe<User>;
 };
 
-/** An enumeration. */
 export type CustomerEventsEnum =
   | 'ACCOUNT_ACTIVATED'
   | 'ACCOUNT_CREATED'
@@ -6661,7 +6674,6 @@ export type DiscountError = {
   readonly voucherCodes?: Maybe<ReadonlyArray<Scalars['String']['output']>>;
 };
 
-/** An enumeration. */
 export type DiscountErrorCode =
   | 'ALREADY_EXISTS'
   | 'CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT'
@@ -6693,7 +6705,6 @@ export type DiscountedObjectWhereInput = {
   readonly baseTotalPrice?: InputMaybe<DecimalFilterInput>;
 };
 
-/** An enumeration. */
 export type DistanceUnitsEnum =
   | 'CM'
   | 'DM'
@@ -7064,7 +7075,6 @@ export type ExportError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type ExportErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -7087,7 +7097,6 @@ export type ExportEvent = Node & {
   readonly user?: Maybe<User>;
 };
 
-/** An enumeration. */
 export type ExportEventsEnum =
   | 'EXPORTED_FILE_SENT'
   | 'EXPORT_DELETED'
@@ -7293,7 +7302,6 @@ export type ExternalNotificationError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type ExternalNotificationErrorCodes =
   | 'CHANNEL_INACTIVE'
   | 'INVALID_MODEL_TYPE'
@@ -7312,7 +7320,7 @@ export type ExternalNotificationTrigger = {
 export type ExternalNotificationTriggerInput = {
   /** External event type. This field is passed to a plugin as an event type. */
   readonly externalEventType: Scalars['String']['input'];
-  /** Additional payload that will be merged with the one based on the bussines object ID. */
+  /** Additional payload that will be merged with the one based on the business object ID. */
   readonly extraPayload?: InputMaybe<Scalars['JSONString']['input']>;
   /** The list of customers or orders node IDs that will be serialized and included in the notification payload. */
   readonly ids: ReadonlyArray<Scalars['ID']['input']>;
@@ -7368,7 +7376,6 @@ export type File = {
   readonly url: Scalars['String']['output'];
 };
 
-/** An enumeration. */
 export type FileTypesEnum =
   | 'CSV'
   | 'XLSX';
@@ -7649,7 +7656,6 @@ export type FulfillmentReturnProducts = {
   readonly returnFulfillment?: Maybe<Fulfillment>;
 };
 
-/** An enumeration. */
 export type FulfillmentStatus =
   | 'CANCELED'
   | 'FULFILLED'
@@ -8163,7 +8169,6 @@ export type GiftCardError = {
   readonly tags?: Maybe<ReadonlyArray<Scalars['String']['output']>>;
 };
 
-/** An enumeration. */
 export type GiftCardErrorCode =
   | 'ALREADY_EXISTS'
   | 'DUPLICATED_INPUT_ITEM'
@@ -8226,7 +8231,6 @@ export type GiftCardEventFilterInput = {
   readonly type?: InputMaybe<GiftCardEventsEnum>;
 };
 
-/** An enumeration. */
 export type GiftCardEventsEnum =
   | 'ACTIVATED'
   | 'BALANCE_RESET'
@@ -8357,13 +8361,11 @@ export type GiftCardSettingsError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type GiftCardSettingsErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'REQUIRED';
 
-/** An enumeration. */
 export type GiftCardSettingsExpiryTypeEnum =
   | 'EXPIRY_PERIOD'
   | 'NEVER_EXPIRE';
@@ -8772,7 +8774,6 @@ export type InvoiceError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type InvoiceErrorCode =
   | 'EMAIL_NOT_SET'
   | 'INVALID_STATUS'
@@ -8904,14 +8905,12 @@ export type Job = {
   readonly updatedAt: Scalars['DateTime']['output'];
 };
 
-/** An enumeration. */
 export type JobStatusEnum =
   | 'DELETED'
   | 'FAILED'
   | 'PENDING'
   | 'SUCCESS';
 
-/** An enumeration. */
 export type LanguageCodeEnum =
   | 'AF'
   | 'AF_NA'
@@ -9836,7 +9835,6 @@ export type MarkAsPaidStrategyEnum =
   | 'PAYMENT_FLOW'
   | 'TRANSACTION_FLOW';
 
-/** An enumeration. */
 export type MeasurementUnitsEnum =
   | 'ACRE_FT'
   | 'ACRE_IN'
@@ -10103,7 +10101,6 @@ export type MenuError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type MenuErrorCode =
   | 'CANNOT_ASSIGN_NODE'
   | 'GRAPHQL_ERROR'
@@ -10568,7 +10565,6 @@ export type MetadataError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type MetadataErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -10631,7 +10627,7 @@ export type Mutation = {
   /**
    * Create a new address for the customer.
    *
-   * Requires one of the following permissions: AUTHENTICATED_USER.
+   * Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
    *
    * Triggers the following webhook events:
    * - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -10692,7 +10688,7 @@ export type Mutation = {
   /**
    * Updates the account of the logged-in user.
    *
-   * Requires one of the following permissions: AUTHENTICATED_USER.
+   * Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
    *
    * Triggers the following webhook events:
    * - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -11086,6 +11082,8 @@ export type Mutation = {
   readonly checkoutComplete?: Maybe<CheckoutComplete>;
   /**
    * Create a new checkout.
+   *
+   * `skipValidation` field requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_CREATED (async): A checkout was created.
@@ -12903,6 +12901,11 @@ export type Mutation = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
+   *
+   * Triggers the following webhook events:
+   * - TRANSACTION_ITEM_METADATA_UPDATED (async): Optionally called when transaction's metadata was updated.
+   * - CHECKOUT_FULLY_PAID (async): Optionally called when the checkout charge status changed to `FULL` or `OVERCHARGED`.
+   * - ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
    */
   readonly transactionEventReport?: Maybe<TransactionEventReport>;
   /**
@@ -13121,6 +13124,7 @@ export type Mutation = {
 
 
 export type MutationAccountAddressCreateArgs = {
+  customerId?: InputMaybe<Scalars['ID']['input']>;
   input: AddressInput;
   type?: InputMaybe<AddressTypeEnum>;
 };
@@ -13160,6 +13164,7 @@ export type MutationAccountSetDefaultAddressArgs = {
 
 
 export type MutationAccountUpdateArgs = {
+  customerId?: InputMaybe<Scalars['ID']['input']>;
   input: AccountInput;
 };
 
@@ -14847,7 +14852,7 @@ export type MutationTransactionCreateArgs = {
 
 
 export type MutationTransactionEventReportArgs = {
-  amount: Scalars['PositiveDecimal']['input'];
+  amount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   availableActions?: InputMaybe<ReadonlyArray<TransactionActionEnum>>;
   externalUrl?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -14855,6 +14860,8 @@ export type MutationTransactionEventReportArgs = {
   pspReference: Scalars['String']['input'];
   time?: InputMaybe<Scalars['DateTime']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
+  transactionMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  transactionPrivateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   type: TransactionEventTypeEnum;
 };
 
@@ -15401,6 +15408,12 @@ export type Order = Node & ObjectWithMetadata & {
    * @deprecated This field will be removed in Saleor 4.0. Use the `discounts` field instead.
    */
   readonly translatedDiscountName?: Maybe<Scalars['String']['output']>;
+  /**
+   * Undiscounted total price of shipping.
+   *
+   * Added in Saleor 3.19.
+   */
+  readonly undiscountedShippingPrice?: Maybe<Money>;
   /** Undiscounted total amount of the order. */
   readonly undiscountedTotal: TaxedMoney;
   /** Date and time when the order was created. */
@@ -15564,7 +15577,6 @@ export type OrderBulkCreateError = {
   readonly path?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type OrderBulkCreateErrorCode =
   | 'BULK_LIMIT'
   | 'FUTURE_DATE'
@@ -15703,6 +15715,12 @@ export type OrderBulkCreateOrderLineInput = {
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** The name of the product. */
   readonly productName?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * The SKU of the product.
+   *
+   * Added in Saleor 3.18.
+   */
+  readonly productSku?: InputMaybe<Scalars['String']['input']>;
   /** Number of items in the order line */
   readonly quantity: Scalars['Int']['input'];
   /** The ID of the tax class. */
@@ -15723,6 +15741,24 @@ export type OrderBulkCreateOrderLineInput = {
   readonly translatedVariantName?: InputMaybe<Scalars['String']['input']>;
   /** Price of the order line excluding applied discount. */
   readonly undiscountedTotalPrice: TaxedMoneyInput;
+  /**
+   * Reason of the discount on order line.
+   *
+   * Added in Saleor 3.19.
+   */
+  readonly unitDiscountReason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Type of the discount: fixed or percent
+   *
+   * Added in Saleor 3.19.
+   */
+  readonly unitDiscountType?: InputMaybe<DiscountValueTypeEnum>;
+  /**
+   * Value of the discount. Can store fixed value or percent value
+   *
+   * Added in Saleor 3.19.
+   */
+  readonly unitDiscountValue?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   /** The external ID of the product variant. */
   readonly variantExternalReference?: InputMaybe<Scalars['String']['input']>;
   /** The ID of the product variant. */
@@ -15922,7 +15958,6 @@ export type OrderCreateFromCheckoutError = {
   readonly variants?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type OrderCreateFromCheckoutErrorCode =
   | 'BILLING_ADDRESS_NOT_SET'
   | 'CHANNEL_INACTIVE'
@@ -16022,7 +16057,6 @@ export type OrderDiscountDelete = {
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
-/** An enumeration. */
 export type OrderDiscountType =
   | 'MANUAL'
   | 'ORDER_PROMOTION'
@@ -16068,7 +16102,6 @@ export type OrderError = {
   readonly warehouse?: Maybe<Scalars['ID']['output']>;
 };
 
-/** An enumeration. */
 export type OrderErrorCode =
   | 'BILLING_ADDRESS_NOT_SET'
   | 'CANNOT_CANCEL_FULFILLMENT'
@@ -16210,7 +16243,6 @@ export type OrderEventOrderLineObject = {
   readonly quantity?: Maybe<Scalars['Int']['output']>;
 };
 
-/** An enumeration. */
 export type OrderEventsEmailsEnum =
   | 'CONFIRMED'
   | 'DIGITAL_LINKS'
@@ -16264,6 +16296,7 @@ export type OrderEventsEnum =
   | 'PAYMENT_REFUNDED'
   | 'PAYMENT_VOIDED'
   | 'PLACED'
+  | 'PLACED_AUTOMATICALLY_FROM_PAID_CHECKOUT'
   | 'PLACED_FROM_DRAFT'
   | 'REMOVED_PRODUCTS'
   | 'TRACKING_UPDATED'
@@ -16299,6 +16332,7 @@ export type OrderFilterInput = {
   readonly channels?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly chargeStatus?: InputMaybe<ReadonlyArray<OrderChargeStatusEnum>>;
   readonly checkoutIds?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  readonly checkoutTokens?: InputMaybe<ReadonlyArray<Scalars['UUID']['input']>>;
   readonly created?: InputMaybe<DateRangeInput>;
   readonly customer?: InputMaybe<Scalars['String']['input']>;
   readonly giftCardBought?: InputMaybe<Scalars['Boolean']['input']>;
@@ -16478,8 +16512,8 @@ export type OrderGrantRefundCreateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type OrderGrantRefundCreateErrorCode =
+  | 'AMOUNT_GREATER_THAN_AVAILABLE'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'NOT_FOUND'
@@ -16507,6 +16541,14 @@ export type OrderGrantRefundCreateInput = {
   readonly lines?: InputMaybe<ReadonlyArray<OrderGrantRefundCreateLineInput>>;
   /** Reason of the granted refund. */
   readonly reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used.Field will be required starting from Saleor 3.21.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly transactionId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type OrderGrantRefundCreateLineError = {
@@ -16520,7 +16562,6 @@ export type OrderGrantRefundCreateLineError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type OrderGrantRefundCreateLineErrorCode =
   | 'GRAPHQL_ERROR'
   | 'NOT_FOUND'
@@ -16577,8 +16618,8 @@ export type OrderGrantRefundUpdateError = {
   readonly removeLines?: Maybe<ReadonlyArray<OrderGrantRefundUpdateLineError>>;
 };
 
-/** An enumeration. */
 export type OrderGrantRefundUpdateErrorCode =
+  | 'AMOUNT_GREATER_THAN_AVAILABLE'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'NOT_FOUND'
@@ -16614,6 +16655,14 @@ export type OrderGrantRefundUpdateInput = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly removeLines?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /**
+   * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used.Field will be required starting from Saleor 3.21.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly transactionId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type OrderGrantRefundUpdateLineAddInput = {
@@ -16636,7 +16685,6 @@ export type OrderGrantRefundUpdateLineError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type OrderGrantRefundUpdateLineErrorCode =
   | 'GRAPHQL_ERROR'
   | 'NOT_FOUND'
@@ -16675,6 +16723,24 @@ export type OrderGrantedRefund = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly shippingCostsIncluded: Scalars['Boolean']['output'];
+  /**
+   * Status of the granted refund calculated based on transactionItem assigned to granted refund.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly status: OrderGrantedRefundStatusEnum;
+  /**
+   * The transaction assigned to the granted refund.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly transaction?: Maybe<TransactionItem>;
+  /**
+   * List of refund events associated with the granted refund.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly transactionEvents?: Maybe<ReadonlyArray<TransactionEvent>>;
   /** Time of last update. */
   readonly updatedAt: Scalars['DateTime']['output'];
   /** User who performed the action. Requires of of the following permissions: MANAGE_USERS, MANAGE_STAFF, OWNER. */
@@ -16698,6 +16764,20 @@ export type OrderGrantedRefundLine = {
   readonly reason?: Maybe<Scalars['String']['output']>;
 };
 
+/**
+ * Represents the status of a granted refund.
+ *
+ *     NONE - the refund on related transactionItem is not processed
+ *     PENDING - the refund on related transactionItem is pending
+ *     FULL - the refund on related transactionItem is fully processed
+ *     FAIL - the refund on related transactionItem failed
+ */
+export type OrderGrantedRefundStatusEnum =
+  | 'FAILURE'
+  | 'NONE'
+  | 'PENDING'
+  | 'SUCCESS';
+
 /** Represents order line of particular order. */
 export type OrderLine = Node & ObjectWithMetadata & {
   /**
@@ -16717,6 +16797,12 @@ export type OrderLine = Node & ObjectWithMetadata & {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly isGift?: Maybe<Scalars['Boolean']['output']>;
+  /**
+   * Returns True, if the line unit price was overridden.
+   *
+   * Added in Saleor 3.14.
+   */
+  readonly isPriceOverridden?: Maybe<Scalars['Boolean']['output']>;
   /** Whether the product variant requires shipping. */
   readonly isShippingRequired: Scalars['Boolean']['output'];
   /**
@@ -16818,17 +16904,17 @@ export type OrderLine = Node & ObjectWithMetadata & {
   readonly translatedVariantName: Scalars['String']['output'];
   /** Price of the order line without discounts. */
   readonly undiscountedTotalPrice: TaxedMoney;
-  /** Price of the single item in the order line without applied an order line discount. */
+  /** Price of the single item in the order line without any discount applied. */
   readonly undiscountedUnitPrice: TaxedMoney;
-  /** The discount applied to the single order line. */
+  /** Sum of the line-level discounts applied to the order line. Order-level discounts which affect the line are not visible in this field. For order-level discount portion (if any), please query `order.discounts` field. */
   readonly unitDiscount: Money;
-  /** Reason for any discounts applied on a product in the order. */
+  /** Reason for line-level discounts applied on the order line. Order-level discounts which affect the line are not visible in this field. For order-level discount reason (if any), please query `order.discounts` field. */
   readonly unitDiscountReason?: Maybe<Scalars['String']['output']>;
-  /** Type of the discount: fixed or percent */
+  /** Type of the discount: `fixed` or `percent`. This field shouldn't be used when multiple discounts affect the line. There is a limitation, that after running `checkoutComplete` mutation the field is always set to `fixed`. */
   readonly unitDiscountType?: Maybe<DiscountValueTypeEnum>;
-  /** Value of the discount. Can store fixed value or percent value */
+  /** Value of the discount. Can store fixed value or percent value. This field shouldn't be used when multiple discounts affect the line. There is a limitation, that after running `checkoutComplete` mutation the field always stores fixed value. */
   readonly unitDiscountValue: Scalars['PositiveDecimal']['output'];
-  /** Price of the single item in the order line. */
+  /** Price of the single item in the order line with all the line-level discounts and order-level discount portions applied. */
   readonly unitPrice: TaxedMoney;
   /** A purchased product variant. Note: this field may be null if the variant has been removed from stock at all. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   readonly variant?: Maybe<ProductVariant>;
@@ -17030,7 +17116,6 @@ export type OrderNoteAddError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type OrderNoteAddErrorCode =
   | 'GRAPHQL_ERROR'
   | 'REQUIRED';
@@ -17066,7 +17151,6 @@ export type OrderNoteUpdateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type OrderNoteUpdateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'NOT_FOUND'
@@ -17074,7 +17158,6 @@ export type OrderNoteUpdateErrorCode =
 
 export type OrderOrCheckout = Checkout | Order;
 
-/** An enumeration. */
 export type OrderOriginEnum =
   | 'BULK_CREATE'
   | 'CHECKOUT'
@@ -17202,7 +17285,7 @@ export type OrderReturnProductsInput = {
 /** Represents the channel-specific order settings. */
 export type OrderSettings = {
   /**
-   * Determine if it is possible to place unpdaid order by calling `checkoutComplete` mutation.
+   * Determine if it is possible to place unpaid order by calling `checkoutComplete` mutation.
    *
    * Added in Saleor 3.15.
    *
@@ -17258,7 +17341,6 @@ export type OrderSettingsError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type OrderSettingsErrorCode =
   | 'INVALID';
 
@@ -17273,7 +17355,7 @@ export type OrderSettingsInput = {
   readonly allowUnpaidOrders?: InputMaybe<Scalars['Boolean']['input']>;
   /** When disabled, all new orders from checkout will be marked as unconfirmed. When enabled orders from checkout will become unfulfilled immediately. By default set to True */
   readonly automaticallyConfirmAllNewOrders?: InputMaybe<Scalars['Boolean']['input']>;
-  /** When enabled, all non-shippable gift card orders will be fulfilled automatically. By defualt set to True. */
+  /** When enabled, all non-shippable gift card orders will be fulfilled automatically. By default set to True. */
   readonly automaticallyFulfillNonShippableGiftCard?: InputMaybe<Scalars['Boolean']['input']>;
   /**
    * The time in days after expired orders will be deleted.Allowed range is from 1 to 120.
@@ -17366,7 +17448,6 @@ export type OrderSortingInput = {
   readonly field: OrderSortField;
 };
 
-/** An enumeration. */
 export type OrderStatus =
   | 'CANCELED'
   | 'DRAFT'
@@ -17743,7 +17824,6 @@ export type PageError = {
   readonly values?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type PageErrorCode =
   | 'ATTRIBUTE_ALREADY_ASSIGNED'
   | 'DUPLICATED_INPUT_ITEM'
@@ -18439,7 +18519,6 @@ export type PaymentCaptureEvent = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PaymentChargeStatusEnum =
   | 'CANCELLED'
   | 'FULLY_CHARGED'
@@ -18514,7 +18593,6 @@ export type PaymentError = {
   readonly variants?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type PaymentErrorCode =
   | 'BALANCE_CHECK_ERROR'
   | 'BILLING_ADDRESS_NOT_SET'
@@ -18574,7 +18652,6 @@ export type PaymentGatewayConfigError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PaymentGatewayConfigErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -18602,7 +18679,6 @@ export type PaymentGatewayInitializeError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PaymentGatewayInitializeErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -18661,7 +18737,6 @@ export type PaymentGatewayInitializeTokenizationError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PaymentGatewayInitializeTokenizationErrorCode =
   | 'CHANNEL_INACTIVE'
   | 'GATEWAY_ERROR'
@@ -18804,7 +18879,6 @@ export type PaymentMethodInitializeTokenizationError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PaymentMethodInitializeTokenizationErrorCode =
   | 'CHANNEL_INACTIVE'
   | 'GATEWAY_ERROR'
@@ -18869,7 +18943,6 @@ export type PaymentMethodProcessTokenizationError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PaymentMethodProcessTokenizationErrorCode =
   | 'CHANNEL_INACTIVE'
   | 'GATEWAY_ERROR'
@@ -18981,6 +19054,18 @@ export type PaymentRefundEvent = Event & {
 /** Represents the channel-specific payment settings. */
 export type PaymentSettings = {
   /**
+   * Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutReleaseFundsCutOffDate?: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * The time in hours after which funds for expired checkouts will be released.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutTtlBeforeReleasingFunds?: Maybe<Scalars['Hour']['output']>;
+  /**
    * Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
    *
    * Added in Saleor 3.16.
@@ -18988,9 +19073,27 @@ export type PaymentSettings = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly defaultTransactionFlowStrategy: TransactionFlowStrategyEnum;
+  /**
+   * Determine if the funds for expired checkouts should be released automatically.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly releaseFundsForExpiredCheckouts?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type PaymentSettingsInput = {
+  /**
+   * Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutReleaseFundsCutOffDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /**
+   * The time in hours after which funds for expired checkouts will be released.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly checkoutTtlBeforeReleasingFunds?: InputMaybe<Scalars['Hour']['input']>;
   /**
    * Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction.
    *
@@ -18999,6 +19102,12 @@ export type PaymentSettingsInput = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly defaultTransactionFlowStrategy?: InputMaybe<TransactionFlowStrategyEnum>;
+  /**
+   * Determine if the funds for expired checkouts should be released automatically.
+   *
+   * Added in Saleor 3.20.
+   */
+  readonly releaseFundsForExpiredCheckouts?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Represents a payment source stored for user in payment gateway, such as credit card. */
@@ -19058,7 +19167,6 @@ export type Permission = {
   readonly name: Scalars['String']['output'];
 };
 
-/** An enumeration. */
 export type PermissionEnum =
   | 'HANDLE_CHECKOUTS'
   | 'HANDLE_PAYMENTS'
@@ -19177,7 +19285,7 @@ export type PermissionGroupDeleted = Event & {
 };
 
 export type PermissionGroupError = {
-  /** List of chnnels IDs which causes the error. */
+  /** List of channels IDs which causes the error. */
   readonly channels?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
   /** The error code. */
   readonly code: PermissionGroupErrorCode;
@@ -19191,7 +19299,6 @@ export type PermissionGroupError = {
   readonly users?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type PermissionGroupErrorCode =
   | 'ASSIGN_NON_STAFF_MEMBER'
   | 'CANNOT_REMOVE_FROM_LAST_GROUP'
@@ -19342,7 +19449,6 @@ export type PluginError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PluginErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -19392,7 +19498,6 @@ export type PluginUpdateInput = {
   readonly configuration?: InputMaybe<ReadonlyArray<ConfigurationItemInput>>;
 };
 
-/** An enumeration. */
 export type PostalCodeRuleInclusionTypeEnum =
   | 'EXCLUDE'
   | 'INCLUDE';
@@ -19776,7 +19881,6 @@ export type ProductBulkCreateError = {
   readonly warehouses?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type ProductBulkCreateErrorCode =
   | 'ATTRIBUTE_ALREADY_ASSIGNED'
   | 'ATTRIBUTE_CANNOT_BE_ASSIGNED'
@@ -20229,7 +20333,6 @@ export type ProductError = {
   readonly values?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type ProductErrorCode =
   | 'ALREADY_EXISTS'
   | 'ATTRIBUTE_ALREADY_ASSIGNED'
@@ -20606,7 +20709,6 @@ export type ProductMediaReorder = {
   readonly productErrors: ReadonlyArray<ProductError>;
 };
 
-/** An enumeration. */
 export type ProductMediaType =
   | 'IMAGE'
   | 'VIDEO';
@@ -20857,7 +20959,6 @@ export type ProductTranslate = {
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
-/** An enumeration. */
 export type ProductTranslateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -21140,7 +21241,6 @@ export type ProductTypeInput = {
   readonly weight?: InputMaybe<Scalars['WeightScalar']['input']>;
 };
 
-/** An enumeration. */
 export type ProductTypeKindEnum =
   | 'GIFT_CARD'
   | 'NORMAL';
@@ -21550,7 +21650,6 @@ export type ProductVariantBulkError = {
   readonly warehouses?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type ProductVariantBulkErrorCode =
   | 'ATTRIBUTE_ALREADY_ASSIGNED'
   | 'ATTRIBUTE_CANNOT_BE_ASSIGNED'
@@ -22200,7 +22299,6 @@ export type ProductVariantTranslate = {
   readonly translationErrors: ReadonlyArray<TranslationError>;
 };
 
-/** An enumeration. */
 export type ProductVariantTranslateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -22518,7 +22616,6 @@ export type PromotionCreateError = {
   readonly rulesLimitExceedBy?: Maybe<Scalars['Int']['output']>;
 };
 
-/** An enumeration. */
 export type PromotionCreateErrorCode =
   | 'GIFTS_NUMBER_LIMIT'
   | 'GRAPHQL_ERROR'
@@ -22545,13 +22642,9 @@ export type PromotionCreateInput = {
   /**
    * Defines the promotion type. Implicate the required promotion rules predicate type and whether the promotion rules will give the catalogue or order discount.
    *
-   * The default value is `Catalogue`.
-   *
-   * This field will be required from Saleor 3.20.
-   *
    * Added in Saleor 3.19.
    */
-  readonly type?: InputMaybe<PromotionTypeEnum>;
+  readonly type: PromotionTypeEnum;
 };
 
 /**
@@ -22621,7 +22714,6 @@ export type PromotionDeleteError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PromotionDeleteErrorCode =
   | 'GRAPHQL_ERROR'
   | 'NOT_FOUND';
@@ -22703,7 +22795,6 @@ export type PromotionEventInterface = {
   readonly type: PromotionEventsEnum;
 };
 
-/** An enumeration. */
 export type PromotionEventsEnum =
   | 'PROMOTION_CREATED'
   | 'PROMOTION_ENDED'
@@ -22836,7 +22927,6 @@ export type PromotionRuleCreateError = {
   readonly rulesLimitExceedBy?: Maybe<Scalars['Int']['output']>;
 };
 
-/** An enumeration. */
 export type PromotionRuleCreateErrorCode =
   | 'GIFTS_NUMBER_LIMIT'
   | 'GRAPHQL_ERROR'
@@ -22959,7 +23049,6 @@ export type PromotionRuleDeleteError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PromotionRuleDeleteErrorCode =
   | 'GRAPHQL_ERROR'
   | 'NOT_FOUND';
@@ -23174,7 +23263,6 @@ export type PromotionRuleUpdateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PromotionRuleUpdateErrorCode =
   | 'DUPLICATED_INPUT_ITEM'
   | 'GIFTS_NUMBER_LIMIT'
@@ -23417,7 +23505,6 @@ export type PromotionTranslationInput = {
   readonly name?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** An enumeration. */
 export type PromotionTypeEnum =
   | 'CATALOGUE'
   | 'ORDER';
@@ -23457,7 +23544,6 @@ export type PromotionUpdateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type PromotionUpdateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -23616,7 +23702,7 @@ export type Query = {
   /**
    * Look up a checkout by id.
    *
-   * Requires one of the following permissions to query checkouts that belong to other users: MANAGE_CHECKOUTS, IMPERSONATE_USER.
+   * Requires one of the following permissions to query a checkout, if a checkout is in inactive channel: MANAGE_CHECKOUTS, IMPERSONATE_USER, HANDLE_PAYMENTS.
    */
   readonly checkout?: Maybe<Checkout>;
   /**
@@ -23628,7 +23714,7 @@ export type Query = {
   /**
    * List of checkouts.
    *
-   * Requires one of the following permissions: MANAGE_CHECKOUTS.
+   * Requires one of the following permissions: MANAGE_CHECKOUTS, HANDLE_PAYMENTS.
    */
   readonly checkouts?: Maybe<CheckoutCountableConnection>;
   /** Look up a collection by ID. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
@@ -23636,7 +23722,7 @@ export type Query = {
   /** List of the shop's collections. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   readonly collections?: Maybe<CollectionCountableConnection>;
   /**
-   * List of the shop's customers.
+   * List of the shop's customers. This list includes all users who registered through the accountRegister mutation. Additionally, staff users who have placed an order using their account will also appear in this list.
    *
    * Requires one of the following permissions: MANAGE_ORDERS, MANAGE_USERS.
    */
@@ -23918,7 +24004,10 @@ export type Query = {
   readonly taxCountryConfiguration?: Maybe<TaxCountryConfiguration>;
   /** \n\nRequires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP. */
   readonly taxCountryConfigurations?: Maybe<ReadonlyArray<TaxCountryConfiguration>>;
-  /** List of all tax rates available from tax gateway. */
+  /**
+   * List of all tax rates available from tax gateway.
+   * @deprecated This field will be removed in Saleor 4.0. Use `taxClasses` field instead.
+   */
   readonly taxTypes?: Maybe<ReadonlyArray<TaxType>>;
   /**
    * Look up a transaction by ID.
@@ -24647,12 +24736,10 @@ export type RequestPasswordReset = {
   readonly errors: ReadonlyArray<AccountError>;
 };
 
-/** An enumeration. */
 export type RewardTypeEnum =
   | 'GIFT'
   | 'SUBTOTAL_DISCOUNT';
 
-/** An enumeration. */
 export type RewardValueTypeEnum =
   | 'FIXED'
   | 'PERCENTAGE';
@@ -25314,7 +25401,6 @@ export type SendConfirmationEmailError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type SendConfirmationEmailErrorCode =
   | 'ACCOUNT_CONFIRMED'
   | 'CONFIRMATION_ALREADY_REQUESTED'
@@ -25356,7 +25442,6 @@ export type ShippingError = {
   readonly warehouses?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type ShippingErrorCode =
   | 'ALREADY_EXISTS'
   | 'DUPLICATED_INPUT_ITEM'
@@ -25591,7 +25676,7 @@ export type ShippingMethodTranslation = Node & {
   /** Translation language. */
   readonly language: LanguageDisplay;
   /** Translated shipping method name. */
-  readonly name: Scalars['String']['output'];
+  readonly name?: Maybe<Scalars['String']['output']>;
   /**
    * Represents the shipping method fields to translate.
    *
@@ -25721,7 +25806,6 @@ export type ShippingMethodTypeTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
-/** An enumeration. */
 export type ShippingMethodTypeEnum =
   | 'PRICE'
   | 'WEIGHT';
@@ -26297,7 +26381,7 @@ export type ShippingZoneUpdatedShippingZoneArgs = {
 /** Represents a shop resource containing general shop data and configuration. */
 export type Shop = ObjectWithMetadata & {
   /**
-   * Determines if user can login without confirmation when `enableAccountConfrimation` is enabled.
+   * Determines if user can login without confirmation when `enableAccountConfirmation` is enabled.
    *
    * Added in Saleor 3.15.
    *
@@ -26423,6 +26507,7 @@ export type Shop = ObjectWithMetadata & {
    * Resource limitations and current usage if any set for a shop
    *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
+   * @deprecated This field will be removed in Saleor 4.0.
    */
   readonly limits: LimitInfo;
   /** List of public metadata items. Can be accessed without permissions. */
@@ -26579,7 +26664,6 @@ export type ShopError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type ShopErrorCode =
   | 'ALREADY_EXISTS'
   | 'CANNOT_FETCH_TAX_RATES'
@@ -27126,7 +27210,6 @@ export type StockBulkUpdateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type StockBulkUpdateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -27170,7 +27253,6 @@ export type StockError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type StockErrorCode =
   | 'ALREADY_EXISTS'
   | 'GRAPHQL_ERROR'
@@ -27301,7 +27383,6 @@ export type StoredPaymentMethodRequestDelete = {
   readonly result: StoredPaymentMethodRequestDeleteResult;
 };
 
-/** An enumeration. */
 export type StoredPaymentMethodRequestDeleteErrorCode =
   | 'CHANNEL_INACTIVE'
   | 'GATEWAY_ERROR'
@@ -27339,11 +27420,206 @@ export type StringFilterInput = {
 
 export type Subscription = {
   /**
+   * Event sent when new draft order is created.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly draftOrderCreated?: Maybe<DraftOrderCreated>;
+  /**
+   * Event sent when draft order is deleted.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly draftOrderDeleted?: Maybe<DraftOrderDeleted>;
+  /**
+   * Event sent when draft order is updated.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly draftOrderUpdated?: Maybe<DraftOrderUpdated>;
+  /**
    * Look up subscription event.
    *
    * Added in Saleor 3.2.
    */
   readonly event?: Maybe<Event>;
+  /**
+   * Event sent when orders are imported.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderBulkCreated?: Maybe<OrderBulkCreated>;
+  /**
+   * Event sent when order is cancelled.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderCancelled?: Maybe<OrderCancelled>;
+  /**
+   * Event sent when order is confirmed.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderConfirmed?: Maybe<OrderConfirmed>;
+  /**
+   * Event sent when new order is created.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderCreated?: Maybe<OrderCreated>;
+  /**
+   * Event sent when order becomes expired.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderExpired?: Maybe<OrderExpired>;
+  /**
+   * Event sent when order is fulfilled.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderFulfilled?: Maybe<OrderFulfilled>;
+  /**
+   * Event sent when order is fully paid.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderFullyPaid?: Maybe<OrderFullyPaid>;
+  /**
+   * The order is fully refunded.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderFullyRefunded?: Maybe<OrderFullyRefunded>;
+  /**
+   * Event sent when order metadata is updated.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderMetadataUpdated?: Maybe<OrderMetadataUpdated>;
+  /**
+   * Payment has been made. The order may be partially or fully paid.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderPaid?: Maybe<OrderPaid>;
+  /**
+   * The order received a refund. The order may be partially or fully refunded.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderRefunded?: Maybe<OrderRefunded>;
+  /**
+   * Event sent when order is updated.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly orderUpdated?: Maybe<OrderUpdated>;
+};
+
+
+export type SubscriptionDraftOrderCreatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionDraftOrderDeletedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionDraftOrderUpdatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderBulkCreatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderCancelledArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderConfirmedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderCreatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderExpiredArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderFulfilledArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderFullyPaidArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderFullyRefundedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderMetadataUpdatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderPaidArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderRefundedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionOrderUpdatedArgs = {
+  channels?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 export type TaxCalculationStrategy =
@@ -27488,7 +27764,6 @@ export type TaxClassCreateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TaxClassCreateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -27522,7 +27797,6 @@ export type TaxClassDeleteError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TaxClassDeleteErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -27575,7 +27849,6 @@ export type TaxClassUpdateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TaxClassUpdateErrorCode =
   | 'DUPLICATED_INPUT_ITEM'
   | 'GRAPHQL_ERROR'
@@ -27773,7 +28046,6 @@ export type TaxConfigurationUpdateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TaxConfigurationUpdateErrorCode =
   | 'DUPLICATED_INPUT_ITEM'
   | 'GRAPHQL_ERROR'
@@ -27835,7 +28107,6 @@ export type TaxCountryConfigurationDeleteError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TaxCountryConfigurationDeleteErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -27865,7 +28136,6 @@ export type TaxCountryConfigurationUpdateError = {
   readonly taxClassIds: ReadonlyArray<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TaxCountryConfigurationUpdateErrorCode =
   | 'CANNOT_CREATE_NEGATIVE_RATE'
   | 'GRAPHQL_ERROR'
@@ -27894,7 +28164,6 @@ export type TaxExemptionManageError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TaxExemptionManageErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -27926,7 +28195,7 @@ export type TaxableObject = {
   readonly lines: ReadonlyArray<TaxableObjectLine>;
   /** Determines if prices contain entered tax.. */
   readonly pricesEnteredWithTax: Scalars['Boolean']['output'];
-  /** The price of shipping method. */
+  /** The price of shipping method, includes shipping voucher discount if applied. */
   readonly shippingPrice: Money;
   /** The source object related to this tax object. */
   readonly sourceObject: TaxSourceObject;
@@ -27938,7 +28207,14 @@ export type TaxableObjectDiscount = {
   readonly amount: Money;
   /** The name of the discount. */
   readonly name?: Maybe<Scalars['String']['output']>;
+  /** Indicates which part of the order the discount should affect: SUBTOTAL or SHIPPING. */
+  readonly type: TaxableObjectDiscountTypeEnum;
 };
+
+/** Indicates which part of the order the discount should affect: SUBTOTAL or SHIPPING. */
+export type TaxableObjectDiscountTypeEnum =
+  | 'SHIPPING'
+  | 'SUBTOTAL';
 
 export type TaxableObjectLine = {
   /** Determines if taxes are being charged for the product. */
@@ -27951,9 +28227,9 @@ export type TaxableObjectLine = {
   readonly quantity: Scalars['Int']['output'];
   /** The source line related to this tax line. */
   readonly sourceLine: TaxSourceLine;
-  /** Price of the order line. */
+  /** Price of the order line. The price includes catalogue promotions, specific product and applied once per order voucher discounts. The price does not include the entire order discount. */
   readonly totalPrice: Money;
-  /** Price of the single item in the order line. */
+  /** Price of the single item in the order line. The price includes catalogue promotions, specific product and applied once per order voucher discounts. The price does not include the entire order discount. */
   readonly unitPrice: Money;
   /** The variant name. */
   readonly variantName: Scalars['String']['output'];
@@ -28026,7 +28302,6 @@ export type ThumbnailCreated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type ThumbnailFormatEnum =
   | 'AVIF'
   | 'ORIGINAL'
@@ -28046,7 +28321,6 @@ export type TimePeriodInputType = {
   readonly type: TimePeriodTypeEnum;
 };
 
-/** An enumeration. */
 export type TimePeriodTypeEnum =
   | 'DAY'
   | 'MONTH'
@@ -28178,7 +28452,6 @@ export type TransactionCreateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TransactionCreateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INCORRECT_CURRENCY'
@@ -28305,6 +28578,11 @@ export type TransactionEventInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
+ *
+ * Triggers the following webhook events:
+ * - TRANSACTION_ITEM_METADATA_UPDATED (async): Optionally called when transaction's metadata was updated.
+ * - CHECKOUT_FULLY_PAID (async): Optionally called when the checkout charge status changed to `FULL` or `OVERCHARGED`.
+ * - ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
  */
 export type TransactionEventReport = {
   /** Defines if the reported event hasn't been processed earlier. */
@@ -28325,13 +28603,13 @@ export type TransactionEventReportError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TransactionEventReportErrorCode =
   | 'ALREADY_EXISTS'
   | 'GRAPHQL_ERROR'
   | 'INCORRECT_DETAILS'
   | 'INVALID'
-  | 'NOT_FOUND';
+  | 'NOT_FOUND'
+  | 'REQUIRED';
 
 /**
  * Represents possible event types.
@@ -28416,8 +28694,8 @@ export type TransactionInitializeError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TransactionInitializeErrorCode =
+  | 'CHECKOUT_COMPLETION_IN_PROGRESS'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'NOT_FOUND'
@@ -28665,7 +28943,6 @@ export type TransactionItemMetadataUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TransactionKind =
   | 'ACTION_TO_CONFIRM'
   | 'AUTH'
@@ -28712,8 +28989,8 @@ export type TransactionProcessError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TransactionProcessErrorCode =
+  | 'CHECKOUT_COMPLETION_IN_PROGRESS'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'MISSING_PAYMENT_APP'
@@ -28808,7 +29085,6 @@ export type TransactionRequestActionError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TransactionRequestActionErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -28838,12 +29114,14 @@ export type TransactionRequestRefundForGrantedRefundError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TransactionRequestRefundForGrantedRefundErrorCode =
+  | 'AMOUNT_GREATER_THAN_AVAILABLE'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'MISSING_TRANSACTION_ACTION_REQUEST_WEBHOOK'
-  | 'NOT_FOUND';
+  | 'NOT_FOUND'
+  | 'REFUND_ALREADY_PROCESSED'
+  | 'REFUND_IS_PENDING';
 
 /**
  * Update transaction.
@@ -28868,7 +29146,6 @@ export type TransactionUpdateError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TransactionUpdateErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INCORRECT_CURRENCY'
@@ -28981,7 +29258,6 @@ export type TranslationError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type TranslationErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -29064,7 +29340,6 @@ export type UploadError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type UploadErrorCode =
   | 'GRAPHQL_ERROR';
 
@@ -29513,7 +29788,6 @@ export type VerifyToken = {
   readonly user?: Maybe<User>;
 };
 
-/** An enumeration. */
 export type VolumeUnitsEnum =
   | 'ACRE_FT'
   | 'ACRE_IN'
@@ -29843,7 +30117,6 @@ export type VoucherCodeBulkDeleteError = {
   readonly voucherCodes?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type VoucherCodeBulkDeleteErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -30354,6 +30627,14 @@ export type Warehouse = Node & ObjectWithMetadata & {
   readonly shippingZones: ShippingZoneCountableConnection;
   /** Warehouse slug. */
   readonly slug: Scalars['String']['output'];
+  /**
+   * Stocks that belong to this warehouse.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Requires one of the following permissions: MANAGE_PRODUCTS, MANAGE_ORDERS.
+   */
+  readonly stocks?: Maybe<StockCountableConnection>;
 };
 
 
@@ -30389,7 +30670,15 @@ export type WarehouseShippingZonesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
 };
 
-/** An enumeration. */
+
+/** Represents warehouse. */
+export type WarehouseStocksArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type WarehouseClickAndCollectOptionEnum =
   | 'ALL'
   | 'DISABLED'
@@ -30504,7 +30793,6 @@ export type WarehouseError = {
   readonly shippingZones?: Maybe<ReadonlyArray<Scalars['ID']['output']>>;
 };
 
-/** An enumeration. */
 export type WarehouseErrorCode =
   | 'ALREADY_EXISTS'
   | 'GRAPHQL_ERROR'
@@ -30775,7 +31063,6 @@ export type WebhookDryRunError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type WebhookDryRunErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID_ID'
@@ -30796,7 +31083,6 @@ export type WebhookError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type WebhookErrorCode =
   | 'DELETE_FAILED'
   | 'GRAPHQL_ERROR'
@@ -31768,7 +32054,6 @@ export type WebhookEventTypeSyncEnum =
    */
   | 'TRANSACTION_REFUND_REQUESTED';
 
-/** An enumeration. */
 export type WebhookSampleEventTypeEnum =
   | 'ACCOUNT_CHANGE_EMAIL_REQUESTED'
   | 'ACCOUNT_CONFIRMATION_REQUESTED'
@@ -31935,7 +32220,6 @@ export type WebhookTriggerError = {
   readonly message?: Maybe<Scalars['String']['output']>;
 };
 
-/** An enumeration. */
 export type WebhookTriggerErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID_ID'
@@ -32009,7 +32293,6 @@ export type Weight = {
   readonly value: Scalars['Float']['output'];
 };
 
-/** An enumeration. */
 export type WeightUnitsEnum =
   | 'G'
   | 'KG'

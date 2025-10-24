@@ -31,7 +31,7 @@ export default withSpanAttributes(
         id: "saleor.app.smtp",
         name: "SMTP",
         permissions: ["MANAGE_ORDERS", "MANAGE_USERS", "MANAGE_GIFT_CARD"],
-        requiredSaleorVersion: ">=3.19 <4",
+        requiredSaleorVersion: ">=3.20 <4",
         supportUrl: "https://github.com/saleor/apps/discussions",
         tokenTargetUrl: `${apiBaseURL}/api/register`,
         version: packageJson.version,
