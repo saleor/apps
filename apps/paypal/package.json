@@ -17,6 +17,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "migrate": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts",
+    "migrate:database": "pnpm tsx --env-file-if-exists=.env ./scripts/migrate-database.ts",
     "migrate:dry-run": "pnpm tsx --env-file-if-exists=.env ./scripts/run-webhooks-migration.ts --dry-run",
     "start": "next start",
     "test": "pnpm run test:unit",

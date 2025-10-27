@@ -3,6 +3,7 @@ import { CreateMerchantReferralTrpcHandler } from "./create-merchant-referral-tr
 import { GetMerchantStatusTrpcHandler } from "./get-merchant-status-trpc-handler";
 import { RefreshMerchantStatusTrpcHandler } from "./refresh-merchant-status-trpc-handler";
 import { ListMerchantsTrpcHandler } from "./list-merchants-trpc-handler";
+import { UpdateMerchantIdTrpcHandler } from "./update-merchant-id-trpc-handler";
 
 /**
  * Merchant Onboarding Router
@@ -18,6 +19,11 @@ export const merchantOnboardingRouter = router({
    * Get the current onboarding status for a merchant
    */
   getMerchantStatus: new GetMerchantStatusTrpcHandler().getTrpcProcedure(),
+
+  /**
+   * Update merchant's PayPal merchant ID after returning from PayPal ISU
+   */
+  updateMerchantId: new UpdateMerchantIdTrpcHandler().getTrpcProcedure(),
 
   /**
    * Refresh merchant status from PayPal (check seller status API)
