@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.3.2
+
+### Patch Changes
+
+- baf821a9: Fix logger message when canceling payment intent.
+
 ## 2.3.1
 
 ### Patch Changes
