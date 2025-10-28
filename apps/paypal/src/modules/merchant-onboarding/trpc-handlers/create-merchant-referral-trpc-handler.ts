@@ -49,34 +49,50 @@ export class CreateMerchantReferralTrpcHandler {
       }
 
       try {
-        // Get PayPal configuration from metadata
-        const metadataManager = PayPalMultiConfigMetadataManager.createFromAuthData({
-          saleorApiUrl: saleorApiUrl.value,
-          token: ctx.appToken,
-          appId: ctx.appId,
-        });
+        // Try to get global WSM configuration first
+        const { GlobalPayPalConfigRepository } = await import("@/modules/wsm-admin/global-paypal-config-repository");
+        const globalConfigRepo = GlobalPayPalConfigRepository.create(getPool());
+        const globalConfigResult = await globalConfigRepo.getActiveConfig();
 
-        const configResult = await metadataManager.getRootConfig();
-        if (configResult.isErr()) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to load PayPal configuration",
+        let paypalConfig;
+
+        if (globalConfigResult.isOk() && globalConfigResult.value) {
+          // Use global WSM configuration
+          const globalConfig = globalConfigResult.value;
+          paypalConfig = {
+            clientId: globalConfig.clientId,
+            clientSecret: globalConfig.clientSecret,
+            environment: globalConfig.environment,
+          };
+        } else {
+          // Fallback to per-tenant configuration in metadata
+          const metadataManager = PayPalMultiConfigMetadataManager.createFromAuthData({
+            saleorApiUrl: saleorApiUrl.value,
+            token: ctx.appToken,
+            appId: ctx.appId,
           });
+
+          const configResult = await metadataManager.getRootConfig();
+          if (configResult.isErr()) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "Failed to load PayPal configuration",
+            });
+          }
+
+          const rootConfig = configResult.value;
+
+          // Get the first PayPal config (or use channel-specific config)
+          const configIds = Object.keys(rootConfig.paypalConfigsById);
+          if (configIds.length === 0) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "No PayPal configuration found. Please contact administrator or configure PayPal.",
+            });
+          }
+
+          paypalConfig = rootConfig.paypalConfigsById[configIds[0]];
         }
-
-        const rootConfig = configResult.value;
-
-        // Get the first PayPal config (or use channel-specific config)
-        // TODO: Support channel-specific configuration selection
-        const configIds = Object.keys(rootConfig.paypalConfigsById);
-        if (configIds.length === 0) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "No PayPal configuration found. Please configure PayPal first.",
-          });
-        }
-
-        const paypalConfig = rootConfig.paypalConfigsById[configIds[0]];
 
         // Create Partner Referrals API client
         const apiFactory = PayPalPartnerReferralsApiFactory.create();

@@ -1058,7 +1058,7 @@ importers:
         version: 15.0.4
       next-test-api-route-handler:
         specifier: 'catalog:'
-        version: 4.0.16(next@15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 4.0.16(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
@@ -1119,6 +1119,9 @@ importers:
       '@saleor/apps-ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@saleor/errors':
+        specifier: workspace:*
+        version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
         version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -1158,6 +1161,9 @@ importers:
       currency.js:
         specifier: 2.0.4
         version: 2.0.4
+      dotenv:
+        specifier: 'catalog:'
+        version: 16.3.1
       modern-errors:
         specifier: 'catalog:'
         version: 7.0.1
@@ -1281,7 +1287,7 @@ importers:
         version: 2.10.2(@types/node@22.13.10)(typescript@5.8.2)
       next-test-api-route-handler:
         specifier: 'catalog:'
-        version: 4.0.16(next@15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 4.0.16(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
@@ -2366,7 +2372,7 @@ importers:
         version: 2.10.2(@types/node@22.13.10)(typescript@5.8.2)
       next-test-api-route-handler:
         specifier: 'catalog:'
-        version: 4.0.16(next@15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+        version: 4.0.16(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
@@ -2483,6 +2489,12 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.23.0(jiti@2.4.2)
+      modern-errors:
+        specifier: 'catalog:'
+        version: 7.0.1
+      modern-errors-serialize:
+        specifier: 'catalog:'
+        version: 6.1.0(modern-errors@7.0.1)
     devDependencies:
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -2493,12 +2505,6 @@ importers:
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 3.1.1(vitest@3.1.1(@types/node@22.13.10)(jiti@2.4.2)(jsdom@20.0.3)(msw@2.10.2(@types/node@22.13.10)(typescript@5.8.2))(terser@5.18.0)(tsx@4.19.3)(yaml@2.7.0))
-      modern-errors:
-        specifier: 'catalog:'
-        version: 7.0.1
-      modern-errors-serialize:
-        specifier: 'catalog:'
-        version: 6.1.0(modern-errors@7.0.1)
       typescript:
         specifier: 'catalog:'
         version: 5.8.2
@@ -21577,7 +21583,7 @@ snapshots:
 
   neverthrow@6.2.1: {}
 
-  next-test-api-route-handler@4.0.16(next@15.2.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
+  next-test-api-route-handler@4.0.16(next@15.2.4(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)):
     dependencies:
       '@whatwg-node/server': 0.10.3
       cookie: 1.0.2

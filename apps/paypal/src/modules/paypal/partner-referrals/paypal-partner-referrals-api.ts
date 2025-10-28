@@ -44,7 +44,11 @@ export interface IPayPalPartnerReferralsApi {
  * PayPal Partner Referrals API Implementation
  */
 export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
-  constructor(private client: PayPalClient) {}
+  private client: PayPalClient;
+
+  constructor(client: PayPalClient) {
+    this.client = client;
+  }
 
   static create(client: PayPalClient): PayPalPartnerReferralsApi {
     return new PayPalPartnerReferralsApi(client);
@@ -77,11 +81,11 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
       return ok(response);
     } catch (error) {
       return err(
-        new PayPalApiError({
+        new PayPalApiError((error as any).message || "Failed to create partner referral", {
           statusCode: (error as any).statusCode || 500,
-          name: (error as any).name || "CreatePartnerReferralError",
-          message: (error as any).message || "Failed to create partner referral",
-          details: error,
+          paypalErrorName: (error as any).name || "CreatePartnerReferralError",
+          paypalErrorMessage: (error as any).message || "Failed to create partner referral",
+          cause: error,
         })
       );
     }
@@ -105,11 +109,11 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
       return ok(response);
     } catch (error) {
       return err(
-        new PayPalApiError({
+        new PayPalApiError((error as any).message || "Failed to get seller status", {
           statusCode: (error as any).statusCode || 500,
-          name: (error as any).name || "GetSellerStatusError",
-          message: (error as any).message || "Failed to get seller status",
-          details: error,
+          paypalErrorName: (error as any).name || "GetSellerStatusError",
+          paypalErrorMessage: (error as any).message || "Failed to get seller status",
+          cause: error,
         })
       );
     }

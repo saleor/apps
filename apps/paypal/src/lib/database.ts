@@ -45,6 +45,22 @@ export const initializeDatabase = async (): Promise<void> => {
     CREATE INDEX IF NOT EXISTS idx_saleor_app_configuration_app_name ON saleor_app_configuration(app_name);
     CREATE INDEX IF NOT EXISTS idx_saleor_app_configuration_is_active ON saleor_app_configuration(is_active);
 
+    -- WSM Global PayPal Configuration
+    -- Stores Partner API credentials shared across all tenants
+    CREATE TABLE IF NOT EXISTS wsm_global_paypal_config (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+      client_id TEXT NOT NULL,
+      client_secret TEXT NOT NULL,        -- Should be encrypted in production
+      environment TEXT NOT NULL CHECK (environment IN ('SANDBOX', 'LIVE')),
+      is_active BOOLEAN DEFAULT TRUE,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW()
+    );
+
+    -- Only allow one active global config at a time
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_wsm_global_paypal_config_active
+      ON wsm_global_paypal_config(is_active) WHERE is_active = TRUE;
+
     -- PayPal Merchant Onboarding Table
     CREATE TABLE IF NOT EXISTS paypal_merchant_onboarding (
       id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

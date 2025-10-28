@@ -5,6 +5,7 @@ import { NextPage } from "next";
 import { AppHeader } from "@/modules/ui/app-header";
 import { ChannelConfigMappingSection } from "@/modules/ui/channel-configs/channel-config-mapping-section";
 import { ChannelConfigSection } from "@/modules/ui/paypal-configs/channel-config-section";
+import { MerchantConnectionSection } from "@/modules/ui/merchant-connection/merchant-connection-section";
 import { useHasAppAccess } from "@/modules/ui/use-has-app-access";
 
 const ConfigPage: NextPage = () => {
@@ -17,6 +18,24 @@ const ConfigPage: NextPage = () => {
   return (
     <Box>
       <AppHeader />
+      <Layout.AppSection
+        marginBottom={8}
+        heading="PayPal Account Connection"
+        sideContent={
+          <Box display="flex" flexDirection="column" gap={4}>
+            <Text>
+              Connect your PayPal account to start accepting payments. This uses the global PayPal
+              Partner credentials configured by WSM.
+            </Text>
+            <Text>
+              Once connected, you can accept PayPal, credit cards, Apple Pay, Google Pay, and other
+              payment methods.
+            </Text>
+          </Box>
+        }
+      >
+        <MerchantConnectionSection />
+      </Layout.AppSection>
       <Layout.AppSection
         marginBottom={14}
         heading="PayPal configurations"

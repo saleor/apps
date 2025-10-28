@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env tsx
 
 /**
  * Database Migration Script
@@ -10,11 +10,9 @@
  * - Before starting the app in production
  *
  * Usage:
- *   pnpm run migrate
- *   # or
- *   ts-node scripts/migrate-database.ts
+ *   pnpm run migrate:database
  *
- * Environment Variables Required:
+ * Environment Variables Required (loaded via --env-file-if-exists=.env):
  *   DB_HOST - PostgreSQL host
  *   DB_PORT - PostgreSQL port (default: 5432)
  *   DB_NAME - Database name
@@ -22,13 +20,7 @@
  *   DB_PASSWORD - Database password
  */
 
-import { config } from "dotenv";
-import { resolve } from "path";
-import { initializeDatabase } from "../src/lib/database";
-
-// Load environment variables
-config({ path: resolve(__dirname, "../.env") });
-config({ path: resolve(__dirname, "../.env.local") });
+import { initializeDatabase } from "../src/lib/database.js";
 
 async function main() {
   console.log("🚀 Starting PayPal App database migration...\n");

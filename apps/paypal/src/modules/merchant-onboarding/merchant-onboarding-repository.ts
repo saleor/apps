@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 import { Result, ok, err } from "neverthrow";
-import { BaseError } from "@saleor/apps-errors";
+import { BaseError } from "@saleor/errors";
 import { PayPalMerchantId } from "../paypal/paypal-merchant-id";
 import { PayPalPartnerReferralId } from "../paypal/paypal-partner-referral-id";
 import { PaymentMethodReadiness } from "../paypal/partner-referrals/types";
@@ -126,7 +126,11 @@ export interface IMerchantOnboardingRepository {
  * PostgreSQL implementation of Merchant Onboarding Repository
  */
 export class PostgresMerchantOnboardingRepository implements IMerchantOnboardingRepository {
-  constructor(private pool: Pool) {}
+  private pool: Pool;
+
+  constructor(pool: Pool) {
+    this.pool = pool;
+  }
 
   static create(pool: Pool): PostgresMerchantOnboardingRepository {
     return new PostgresMerchantOnboardingRepository(pool);
