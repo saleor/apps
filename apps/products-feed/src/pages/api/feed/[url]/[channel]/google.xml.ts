@@ -42,9 +42,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
   const channel = req.query.channel as string;
 
+  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, url);
+  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
+
   const logger = createLogger("Feed handler", {
-    saleorApiUrl: url,
-    channel,
     route: "api/feed/{url}/{channel}/google.xml",
   });
 
