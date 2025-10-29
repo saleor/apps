@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.3.3
+
+### Patch Changes
+
+- f531475b: Added additional logging to UpdateMapping handler. Previously no logs were issues when error occured which prevented proper debugging.
+
 ## 2.3.2
 
 ### Patch Changes

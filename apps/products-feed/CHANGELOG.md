@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 2.1.1
+
+### Patch Changes
+
+- ff48a9e4: Add info about Saleor API url & channel to all logs. This will help us with debugging.
+
 ## 2.1.0
 
 ### Minor Changes
