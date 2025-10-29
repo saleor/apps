@@ -1,5 +1,6 @@
 import { AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { NextApiHandler } from "next";
 
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
@@ -41,10 +42,11 @@ const handler: NextApiHandler = async (req, res) => {
 
   const decodedCursor = decodeURIComponent(cursor);
 
+  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, authData.saleorApiUrl);
+  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
+
   logger.info("Generate chunk of products", {
     cursor: decodedCursor,
-    channel: channel,
-    saleorApiUrl: authData.saleorApiUrl,
   });
 
   const client = createInstrumentedGraphqlClient({
