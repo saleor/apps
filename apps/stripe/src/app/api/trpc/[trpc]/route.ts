@@ -17,11 +17,14 @@ const handler = (request: Request) => {
     createContext: createTrpcContextAppRouter,
     onError: ({ path, error }) => {
       if (error.code === "INTERNAL_SERVER_ERROR") {
-        logger.error(`${path} returned error:`, error);
+        logger.error(`${path} returned error`, {
+          trpcErrorMessage: error.message,
+          stack: error.cause,
+        });
 
         return;
       }
-      logger.debug(`${path} returned error:`, error);
+      logger.debug(`${path} returned error`, error);
     },
   });
 };
