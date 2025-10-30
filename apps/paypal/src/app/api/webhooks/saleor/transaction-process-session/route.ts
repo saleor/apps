@@ -78,4 +78,8 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(async (
   }
 });
 
-export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
+export const POST = compose(
+  appContextContainer.wrapRequest,
+  withLoggerContext,
+  withSpanAttributesAppRouter
+)(handler);
