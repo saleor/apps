@@ -22,7 +22,7 @@ This document clarifies the **tenant vs merchant** relationship in the PayPal ap
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│ LEVEL 1: TENANT SETUP (Platform Configuration)         │
+│ LEVEL 1: Partner SETUP (Platform Configuration)         │
 │ Done once by platform admin                             │
 └─────────────────────────────────────────────────────────┘
                           │

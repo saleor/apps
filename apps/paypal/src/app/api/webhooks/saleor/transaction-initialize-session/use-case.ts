@@ -191,7 +191,7 @@ export class TransactionInitializeSessionUseCase {
         new TransactionInitializeSessionUseCaseResponses.Failure({
           transactionResult: failureResult,
           error,
-          appContext,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -218,7 +218,7 @@ export class TransactionInitializeSessionUseCase {
             paypal_order_id: paypalOrder.id,
             environment: config.environment,
           },
-          appContext,
+          appContext: appContextContainer.getContextValue(),
         }),
       );
     }
@@ -233,7 +233,7 @@ export class TransactionInitializeSessionUseCase {
 
       return err(
         new BrokenAppResponse(
-          appContext,
+          appContextContainer.getContextValue(),
           saleorMoneyResult.error,
         ),
       );
@@ -249,7 +249,7 @@ export class TransactionInitializeSessionUseCase {
         transactionResult: successResult,
         paypalOrderId: createPayPalOrderId(paypalOrder.id),
         saleorMoney: saleorMoneyResult.value,
-        appContext,
+        appContext: appContextContainer.getContextValue(),
       }),
     );
   }
