@@ -70,6 +70,27 @@ ngrok http localhost:3000
 
 [Here](./docs/configuration.md) you can find doc how configure the app
 
+### Scripts
+
+#### Disable webhooks
+
+Disable all registered webhooks for a specific Saleor instance:
+
+```shell
+pnpm disable-webhooks --saleor-api-url https://your-store.saleor.cloud/graphql/
+```
+
+Options:
+- `--saleor-api-url` or `-u`: Saleor API URL (required)
+- `--dry-run` or `-d`: Preview changes without applying them
+
+Example with dry-run:
+```shell
+pnpm disable-webhooks -u https://your-store.saleor.cloud/graphql/ -d
+```
+
+The script fetches the auth token from DynamoDB APL and disables all active webhooks for the specified Saleor instance.
+
 ### Generated schema and typings
 
 Commands `build` and `dev` would generate schema and typed functions using Saleor's GraphQL endpoint. Commit `generated` folder to your repo as they are necessary for queries and keeping track of the schema changes.

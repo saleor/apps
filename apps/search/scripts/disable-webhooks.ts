@@ -2,9 +2,11 @@
 import { parseArgs } from "node:util";
 
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
+import { getAppDetailsAndWebhooksData } from "@saleor/webhook-utils";
 
-import { DisableWebhookDocument, FetchAppWebhooksDocument } from "../generated/graphql";
-import { saleorApp } from "../src/saleor-app";
+import { DisableWebhookDocument } from "../generated/graphql";
+import { saleorApp } from "../saleor-app";
+import { appWebhooks } from "../webhooks";
 
 const {
   values: { "saleor-api-url": saleorApiUrl, "dry-run": dryRun },
@@ -24,9 +26,9 @@ const {
   },
 });
 
+// saleorApiUrl is guaranteed to be defined due to required: true above
 if (!saleorApiUrl) {
-  console.error("Error: Saleor API URL is required");
-  process.exit(1);
+  throw new Error("Saleor API URL is required");
 }
 
 console.log(`\n🔍 Looking up auth data for: ${saleorApiUrl}`);
@@ -53,34 +55,43 @@ if (!authData) {
 
 console.log(`✅ Found auth data for app ID: ${authData.appId}\n`);
 
+// Show app webhook definitions
+console.log(`📋 App defines ${appWebhooks.length} webhook(s):`);
+appWebhooks.forEach((webhook) => {
+  console.log(`  - ${webhook.event}`);
+});
+console.log();
+
 // Create GraphQL client
 const client = createGraphQLClient({
   saleorApiUrl: authData.saleorApiUrl,
   token: authData.token,
 });
 
-// Fetch app webhooks
-console.log("📡 Fetching app webhooks...");
-const { data, error } = await client.query(FetchAppWebhooksDocument, {}).toPromise();
+// Fetch registered webhooks from Saleor
+console.log("📡 Fetching registered webhooks from Saleor...");
+let appDetails;
 
-if (error || !data?.app) {
-  console.error("❌ Failed to fetch app webhooks");
+try {
+  appDetails = await getAppDetailsAndWebhooksData({ client });
+} catch (error) {
+  console.error("❌ Failed to fetch app details and webhooks");
   console.error(error);
   process.exit(1);
 }
 
-const webhooks = data.app.webhooks || [];
+const webhooks = appDetails.webhooks || [];
 
 if (webhooks.length === 0) {
   console.log("ℹ️  No webhooks found for this app");
   process.exit(0);
 }
 
-console.log(`\n📋 Found ${webhooks.length} webhook(s):\n`);
+console.log(`\n📋 Found ${webhooks.length} registered webhook(s):\n`);
 
 webhooks.forEach((webhook) => {
   const status = webhook.isActive ? "🟢 Active" : "⚫ Inactive";
-  const events = webhook.asyncEvents.map((e) => e.eventType).join(", ");
+  const events = [...webhook.asyncEventsTypes, ...webhook.syncEventsTypes].join(", ");
 
   console.log(`  ${status} ${webhook.name || webhook.id}`);
   console.log(`     ID: ${webhook.id}`);
