@@ -1,0 +1,15 @@
+query FetchAppWebhooks {
+  app {
+    id
+    name
+    webhooks {
+      id
+      name
+      isActive
+      targetUrl
+      asyncEvents {
+        eventType
+      }
+    }
+  }
+}

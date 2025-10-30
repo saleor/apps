@@ -1,0 +1,12 @@
+mutation DisableWebhook($id: ID!) {
+  webhookUpdate(id: $id, input: { isActive: false }) {
+    errors {
+      field
+      message
+    }
+    webhook {
+      id
+      isActive
+    }
+  }
+}
