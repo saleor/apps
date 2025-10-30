@@ -93,9 +93,15 @@ export class TransactionProcessSessionUseCase {
     const config = paypalConfigResult.value;
 
     // Set app context early so it's available even if errors occur later
+    const paypalEnv = config.environment || config.getPayPalEnvValue();
+    this.logger.debug("Setting app context", { paypalEnv });
     appContextContainer.set({
-      paypalEnv: config.environment || config.getPayPalEnvValue(),
+      paypalEnv,
     });
+
+    // Verify context was set
+    const contextCheck = appContextContainer.getContextValue();
+    this.logger.debug("App context after set", { paypalEnv: contextCheck.paypalEnv });
 
     // Fetch BN code from global config for partner attribution
     let bnCode: string | undefined;

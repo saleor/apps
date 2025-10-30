@@ -51,7 +51,21 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(async (
           result: result.transactionResult.result,
         });
 
-        return result.getResponse();
+        try {
+          const appContext = appContextContainer.getContextValue();
+          logger.info("About to generate response", {
+            hasPaypalEnv: !!appContext.paypalEnv,
+            paypalEnv: appContext.paypalEnv,
+          });
+          return result.getResponse();
+        } catch (error: unknown) {
+          logger.error("Error generating response", {
+            error,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            errorName: error instanceof Error ? error.name : typeof error,
+          });
+          throw error;
+        }
       },
       (error) => {
         if (error instanceof BaseError) {
