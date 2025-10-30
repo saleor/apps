@@ -9,6 +9,7 @@ import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { getPool } from "@/lib/database";
 import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { IPayPalOrdersApiFactory } from "@/modules/paypal/types";
@@ -24,10 +25,11 @@ import {
   ChargeActionRequiredResult,
   AuthorizationActionRequiredResult,
 } from "@/modules/transaction-result/action-required-result";
-import { 
+import {
   ChargeFailureResult,
   AuthorizationFailureResult,
 } from "@/modules/transaction-result/failure-result";
+import { GlobalPayPalConfigRepository } from "@/modules/wsm-admin/global-paypal-config-repository";
 
 import {
   TransactionInitializeSessionUseCaseResponses,
@@ -69,7 +71,7 @@ export class TransactionInitializeSessionUseCase {
     const channelId = event.sourceObject.channel.id;
 
     // Get PayPal configuration for this channel
-    const paypalConfigResult = await this.paypalConfigRepo.getPayPalConfig(authData);
+    const paypalConfigResult = await this.paypalConfigRepo.getPayPalConfig(authData, channelId);
 
     if (paypalConfigResult.isErr()) {
       this.logger.error("Failed to get PayPal configuration", {
@@ -99,15 +101,51 @@ export class TransactionInitializeSessionUseCase {
 
     const config = paypalConfigResult.value;
 
-    // Set app context
-    appContextContainer.set({
-      paypalEnv: config.environment,
+    this.logger.debug("Loaded PayPal configuration", {
+      hasClientId: !!config.clientId,
+      hasClientSecret: !!config.clientSecret,
+      environment: config.environment,
+      hasMerchantEmail: !!config.merchantEmail,
+      hasMerchantClientId: !!config.merchantClientId,
+      hasMerchantId: !!config.merchantId,
+      merchantEmail: config.merchantEmail,
     });
 
-    // Create PayPal orders API instance
+    // Set app context early so it's available even if errors occur later
+    const appContext = {
+      paypalEnv: config.environment || config.getPayPalEnvValue(),
+    };
+    appContextContainer.set(appContext);
+
+    // Fetch BN code from global config for partner attribution
+    let bnCode: string | undefined;
+    try {
+      const pool = getPool();
+      const globalConfigRepository = GlobalPayPalConfigRepository.create(pool);
+      const globalConfigResult = await globalConfigRepository.getActiveConfig();
+
+      if (globalConfigResult.isOk() && globalConfigResult.value) {
+        bnCode = globalConfigResult.value.bnCode || undefined;
+        this.logger.debug("Retrieved BN code from global config", {
+          hasBnCode: !!bnCode,
+        });
+      } else {
+        this.logger.warn("No active global config found for BN code", {
+          error: globalConfigResult.isErr() ? globalConfigResult.error : undefined,
+        });
+      }
+    } catch (error) {
+      this.logger.warn("Failed to fetch BN code from global config", {
+        error,
+      });
+    }
+
+    // Create PayPal orders API instance with merchant context
     const paypalOrdersApi = this.paypalOrdersApiFactory.create({
       clientId: config.clientId,
       clientSecret: config.clientSecret,
+      merchantEmail: config.merchantEmail || undefined,
+      bnCode,
       env: config.environment,
     });
 
@@ -153,7 +191,7 @@ export class TransactionInitializeSessionUseCase {
         new TransactionInitializeSessionUseCaseResponses.Failure({
           transactionResult: failureResult,
           error,
-          appContext: appContextContainer.getContextValue(),
+          appContext,
         }),
       );
     }
@@ -180,7 +218,7 @@ export class TransactionInitializeSessionUseCase {
             paypal_order_id: paypalOrder.id,
             environment: config.environment,
           },
-          appContext: appContextContainer.getContextValue(),
+          appContext,
         }),
       );
     }
@@ -195,7 +233,7 @@ export class TransactionInitializeSessionUseCase {
 
       return err(
         new BrokenAppResponse(
-          appContextContainer.getContextValue(),
+          appContext,
           saleorMoneyResult.error,
         ),
       );
@@ -211,7 +249,7 @@ export class TransactionInitializeSessionUseCase {
         transactionResult: successResult,
         paypalOrderId: createPayPalOrderId(paypalOrder.id),
         saleorMoney: saleorMoneyResult.value,
-        appContext: appContextContainer.getContextValue(),
+        appContext,
       }),
     );
   }

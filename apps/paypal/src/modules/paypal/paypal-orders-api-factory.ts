@@ -8,6 +8,9 @@ export class PayPalOrdersApiFactory implements IPayPalOrdersApiFactory {
   create(args: {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
+    partnerMerchantId?: string | null;
+    merchantEmail?: string | null;
+    bnCode?: string | null;
     env: PayPalEnv;
   }) {
     return PayPalOrdersApi.create(args);

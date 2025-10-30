@@ -12,6 +12,7 @@ const WsmAdminPage: NextPage = () => {
   const [clientId, setClientId] = useState("");
   const [clientSecret, setClientSecret] = useState("");
   const [partnerMerchantId, setPartnerMerchantId] = useState("");
+  const [bnCode, setBnCode] = useState("");
   const [environment, setEnvironment] = useState<"SANDBOX" | "LIVE">("SANDBOX");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -75,6 +76,7 @@ const WsmAdminPage: NextPage = () => {
           setClientId("");
           setClientSecret("");
           setPartnerMerchantId("");
+          setBnCode("");
         }
       },
       onError: (err: any) => {
@@ -109,6 +111,7 @@ const WsmAdminPage: NextPage = () => {
       clientId,
       clientSecret,
       partnerMerchantId: partnerMerchantId || undefined,
+      bnCode: bnCode || undefined,
       environment,
     });
   };
@@ -194,6 +197,11 @@ const WsmAdminPage: NextPage = () => {
                     <strong>Partner Merchant ID:</strong> {configData.config.partnerMerchantId}
                   </Text>
                 )}
+                {configData.config.bnCode && (
+                  <Text>
+                    <strong>BN Code:</strong> {configData.config.bnCode}
+                  </Text>
+                )}
                 <Text color="default2">
                   Last updated: {new Date(configData.config.updatedAt).toLocaleString()}
                 </Text>
@@ -265,6 +273,19 @@ const WsmAdminPage: NextPage = () => {
               />
               <Text marginTop={1} variant="caption" color="default2">
                 Your PayPal Partner Merchant ID, required for querying seller status
+              </Text>
+            </Box>
+
+            <Box>
+              <Text marginBottom={2}>BN Code (Optional)</Text>
+              <Input
+                type="text"
+                value={bnCode}
+                onChange={(e) => setBnCode(e.target.value)}
+                placeholder="YourPartnerName_SP"
+              />
+              <Text marginTop={1} variant="caption" color="default2">
+                PayPal Partner Attribution BN code for tracking partner fees
               </Text>
             </Box>
 

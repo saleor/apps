@@ -8,6 +8,10 @@ import { PayPalPartnerReferralsApiFactory } from "@/modules/paypal/partner-refer
 import { createPayPalMerchantId } from "@/modules/paypal/paypal-merchant-id";
 import { PostgresMerchantOnboardingRepository } from "../merchant-onboarding-repository";
 import { GlobalPayPalConfigRepository } from "@/modules/wsm-admin/global-paypal-config-repository";
+import { PayPalMultiConfigMetadataManager } from "@/modules/paypal/configuration/paypal-multi-config-metadata-manager";
+import { PayPalConfig } from "@/modules/app-config/domain/paypal-config";
+import { createSettingsManager } from "@/lib/metadata-manager";
+import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 
 /**
  * tRPC Handler for refreshing merchant status from PayPal
@@ -248,6 +252,81 @@ export class RefreshMerchantStatusTrpcHandler {
               onboardingStatus,
               onboardingCompletedAt: onboardingStatus === "COMPLETED" ? new Date() : undefined,
             });
+          }
+
+          // If onboarding is completed, extract OAuth credentials and save to metadata + database
+          if (onboardingStatus === "COMPLETED" && status.oauth_integrations && status.oauth_integrations.length > 0) {
+            try {
+              const oauthIntegration = status.oauth_integrations[0];
+              const oauthThirdParty = oauthIntegration.oauth_third_party?.[0];
+
+              if (oauthThirdParty?.merchant_client_id && record.merchantEmail) {
+                // Save to database first
+                await repository.update(saleorApiUrl.value, input.trackingId, {
+                  merchantClientId: oauthThirdParty.merchant_client_id,
+                  merchantOauthEmail: record.merchantEmail,
+                });
+
+                // Create metadata manager
+                const settingsManager = createSettingsManager(
+                  createGraphQLClient({
+                    saleorApiUrl: ctx.saleorApiUrl,
+                    token: ctx.appToken,
+                  }),
+                  ctx.appId
+                );
+                const metadataManager = new PayPalMultiConfigMetadataManager(settingsManager);
+
+                // Get current configuration for this tenant
+                const configResult = await metadataManager.getAllConfigs();
+                if (configResult.isOk()) {
+                  const configs = configResult.value;
+
+                  // Find or create the config for this merchant
+                  // For now, we'll update the first config or create a new one
+                  // TODO: In a multi-tenant setup, we should match by some tenant identifier
+                  let existingConfig = configs.length > 0 ? configs[0] : null;
+
+                  if (existingConfig) {
+                    // Update existing config with merchant OAuth credentials
+                    const updatedConfigResult = PayPalConfig.create({
+                      id: existingConfig.id,
+                      name: existingConfig.name,
+                      clientId: existingConfig.clientId,
+                      clientSecret: existingConfig.clientSecret,
+                      environment: existingConfig.environment,
+                      merchantClientId: oauthThirdParty.merchant_client_id,
+                      merchantEmail: record.merchantEmail,
+                      merchantId: status.merchant_id,
+                    });
+
+                    if (updatedConfigResult.isOk()) {
+                      await metadataManager.saveConfig(updatedConfigResult.value);
+                    }
+                  } else {
+                    // Create new config with partner credentials and merchant OAuth
+                    const newConfigResult = PayPalConfig.create({
+                      id: crypto.randomUUID(),
+                      name: "PayPal Configuration",
+                      clientId: paypalConfig.clientId,
+                      clientSecret: paypalConfig.clientSecret,
+                      environment: paypalConfig.environment,
+                      merchantClientId: oauthThirdParty.merchant_client_id,
+                      merchantEmail: record.merchantEmail,
+                      merchantId: status.merchant_id,
+                    });
+
+                    if (newConfigResult.isOk()) {
+                      await metadataManager.saveConfig(newConfigResult.value);
+                    }
+                  }
+                }
+              }
+            } catch (error) {
+              // Log error but don't fail the entire operation
+              captureException(error);
+              console.error("Failed to save merchant OAuth credentials:", error);
+            }
           }
 
           return {

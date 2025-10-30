@@ -56,19 +56,22 @@ export class PayPalMultiConfigMetadataManager {
       const configs: PayPalConfig[] = [];
 
       for (const configData of configsData) {
-        const paypalConfig = PayPalConfig.create({
+        const paypalConfigResult = PayPalConfig.create({
           id: configData.id,
           name: configData.name,
           clientId: createPayPalClientId(configData.clientId),
           clientSecret: createPayPalClientSecret(configData.clientSecret),
           environment: configData.environment,
+          merchantClientId: configData.merchantClientId,
+          merchantEmail: configData.merchantEmail,
+          merchantId: configData.merchantId,
         });
 
-        if (paypalConfig.isErr()) {
-          return err(new Error(`Failed to parse PayPal config ${configData.id}: ${paypalConfig.error.message}`));
+        if (paypalConfigResult.isErr()) {
+          return err(new Error(`Failed to parse PayPal config ${configData.id}: ${paypalConfigResult.error.message}`));
         }
 
-        configs.push(paypalConfig.value);
+        configs.push(paypalConfigResult.value);
       }
 
       return ok(configs);
@@ -111,6 +114,9 @@ export class PayPalMultiConfigMetadataManager {
         clientId: c.clientId,
         clientSecret: c.clientSecret,
         environment: c.environment,
+        merchantClientId: c.merchantClientId,
+        merchantEmail: c.merchantEmail,
+        merchantId: c.merchantId,
       }));
 
       await this.settingsManager.set({
@@ -139,6 +145,9 @@ export class PayPalMultiConfigMetadataManager {
         clientId: c.clientId,
         clientSecret: c.clientSecret,
         environment: c.environment,
+        merchantClientId: c.merchantClientId,
+        merchantEmail: c.merchantEmail,
+        merchantId: c.merchantId,
       }));
 
       await this.settingsManager.set({

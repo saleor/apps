@@ -58,6 +58,9 @@ export interface IPayPalOrdersApiFactory {
   create(args: {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
+    partnerMerchantId?: string | null;
+    merchantEmail?: string | null;
+    bnCode?: string | null;
     env: PayPalEnv;
   }): IPayPalOrdersApi;
 }

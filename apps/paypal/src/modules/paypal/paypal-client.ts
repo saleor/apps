@@ -9,6 +9,8 @@ export class PayPalClient {
   private clientId: PayPalClientId;
   private clientSecret: PayPalClientSecret;
   private partnerMerchantId: string | null;
+  private merchantEmail: string | null;
+  private bnCode: string | null;
   private env: PayPalEnv;
   private baseUrl: string;
   private accessToken: string | null = null;
@@ -18,11 +20,15 @@ export class PayPalClient {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     partnerMerchantId?: string | null;
+    merchantEmail?: string | null;
+    bnCode?: string | null;
     env: PayPalEnv;
   }) {
     this.clientId = args.clientId;
     this.clientSecret = args.clientSecret;
     this.partnerMerchantId = args.partnerMerchantId ?? null;
+    this.merchantEmail = args.merchantEmail ?? null;
+    this.bnCode = args.bnCode ?? null;
     this.env = args.env;
     this.baseUrl = getPayPalApiUrl(args.env);
   }
@@ -31,9 +37,31 @@ export class PayPalClient {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     partnerMerchantId?: string | null;
+    merchantEmail?: string | null;
+    bnCode?: string | null;
     env: PayPalEnv;
   }): PayPalClient {
     return new PayPalClient(args);
+  }
+
+  /**
+   * Generate PayPal-Auth-Assertion header for partner authentication with merchant context
+   * Format: base64({"alg":"none"}).base64({"iss":"partner_client_id","payer_id":"merchant_email"}).
+   */
+  private generateAuthAssertion(): string | null {
+    if (!this.merchantEmail) {
+      return null;
+    }
+
+    const header = Buffer.from(JSON.stringify({ alg: "none" })).toString("base64");
+    const payload = Buffer.from(
+      JSON.stringify({
+        iss: this.clientId,
+        payer_id: this.merchantEmail,
+      })
+    ).toString("base64");
+
+    return `${header}.${payload}.`;
   }
 
   private async getAccessToken(): Promise<string> {
@@ -101,12 +129,27 @@ export class PayPalClient {
       path: args.path,
       env: this.env,
       has_body: !!args.body,
+      has_merchant_context: !!this.merchantEmail,
+      has_bn_code: !!this.bnCode,
     });
 
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     };
+
+    // Add PayPal-Auth-Assertion header for partner-managed payments
+    const authAssertion = this.generateAuthAssertion();
+    if (authAssertion) {
+      headers["PayPal-Auth-Assertion"] = authAssertion;
+      logger.debug("Added PayPal-Auth-Assertion header for merchant context");
+    }
+
+    // Add PayPal-Partner-Attribution-Id header (BN code)
+    if (this.bnCode) {
+      headers["PayPal-Partner-Attribution-Id"] = this.bnCode;
+      logger.debug("Added PayPal-Partner-Attribution-Id header", { bnCode: this.bnCode });
+    }
 
     const response = await fetch(`${this.baseUrl}${args.path}`, {
       method: args.method,

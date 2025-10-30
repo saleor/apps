@@ -9,6 +9,7 @@ import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { getPool } from "@/lib/database";
 import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { mapPayPalErrorToApiError } from "@/modules/paypal/paypal-api-error";
 import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
@@ -20,6 +21,7 @@ import {
   AuthorizationFailureResult,
   ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
+import { GlobalPayPalConfigRepository } from "@/modules/wsm-admin/global-paypal-config-repository";
 
 import {
   TransactionProcessSessionUseCaseResponses,
@@ -60,7 +62,7 @@ export class TransactionProcessSessionUseCase {
     const channelId = event.sourceObject.channel.id;
 
     // Get PayPal configuration for this channel
-    const paypalConfigResult = await this.paypalConfigRepo.getPayPalConfig(authData);
+    const paypalConfigResult = await this.paypalConfigRepo.getPayPalConfig(authData, channelId);
 
     if (paypalConfigResult.isErr()) {
       this.logger.error("Failed to get PayPal configuration", {
@@ -90,15 +92,40 @@ export class TransactionProcessSessionUseCase {
 
     const config = paypalConfigResult.value;
 
-    // Set app context
+    // Set app context early so it's available even if errors occur later
     appContextContainer.set({
-      paypalEnv: config.environment,
+      paypalEnv: config.environment || config.getPayPalEnvValue(),
     });
 
-    // Create PayPal orders API instance
+    // Fetch BN code from global config for partner attribution
+    let bnCode: string | undefined;
+    try {
+      const pool = getPool();
+      const globalConfigRepository = GlobalPayPalConfigRepository.create(pool);
+      const globalConfigResult = await globalConfigRepository.getActiveConfig();
+
+      if (globalConfigResult.isOk() && globalConfigResult.value) {
+        bnCode = globalConfigResult.value.bnCode || undefined;
+        this.logger.debug("Retrieved BN code from global config", {
+          hasBnCode: !!bnCode,
+        });
+      } else {
+        this.logger.warn("No active global config found for BN code", {
+          error: globalConfigResult.isErr() ? globalConfigResult.error : undefined,
+        });
+      }
+    } catch (error) {
+      this.logger.warn("Failed to fetch BN code from global config", {
+        error,
+      });
+    }
+
+    // Create PayPal orders API instance with merchant context
     const paypalOrdersApi = this.paypalOrdersApiFactory.create({
       clientId: config.clientId,
       clientSecret: config.clientSecret,
+      merchantEmail: config.merchantEmail || undefined,
+      bnCode,
       env: config.environment,
     });
 

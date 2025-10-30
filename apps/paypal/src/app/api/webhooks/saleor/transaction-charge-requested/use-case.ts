@@ -8,6 +8,7 @@ import {
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
+import { getPool } from "@/lib/database";
 import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { mapPayPalErrorToApiError } from "@/modules/paypal/paypal-api-error";
 import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
@@ -20,6 +21,7 @@ import {
 } from "@/modules/saleor/transaction-requested-event-helpers";
 import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
 import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
+import { GlobalPayPalConfigRepository } from "@/modules/wsm-admin/global-paypal-config-repository";
 
 import {
   TransactionChargeRequestedUseCaseResponses,
@@ -53,7 +55,7 @@ export class TransactionChargeRequestedUseCase {
     const transaction = getTransactionFromRequestedEventPayload(event);
     const channelId = getChannelIdFromRequestedEventPayload(event);
 
-    const paypalConfigForThisChannel = await this.paypalConfigRepo.getPayPalConfig(authData);
+    const paypalConfigForThisChannel = await this.paypalConfigRepo.getPayPalConfig(authData, channelId);
 
     if (paypalConfigForThisChannel.isErr()) {
       this.logger.error("Failed to get configuration", {
@@ -81,14 +83,43 @@ export class TransactionChargeRequestedUseCase {
       );
     }
 
+    const config = paypalConfigForThisChannel.value;
+
+    // Set app context early so it's available even if errors occur later
     appContextContainer.set({
-      paypalEnv: paypalConfigForThisChannel.value.environment,
+      paypalEnv: config.environment || config.getPayPalEnvValue(),
     });
 
+    // Fetch BN code from global config for partner attribution
+    let bnCode: string | undefined;
+    try {
+      const pool = getPool();
+      const globalConfigRepository = GlobalPayPalConfigRepository.create(pool);
+      const globalConfigResult = await globalConfigRepository.getActiveConfig();
+
+      if (globalConfigResult.isOk() && globalConfigResult.value) {
+        bnCode = globalConfigResult.value.bnCode || undefined;
+        this.logger.debug("Retrieved BN code from global config", {
+          hasBnCode: !!bnCode,
+        });
+      } else {
+        this.logger.warn("No active global config found for BN code", {
+          error: globalConfigResult.isErr() ? globalConfigResult.error : undefined,
+        });
+      }
+    } catch (error) {
+      this.logger.warn("Failed to fetch BN code from global config", {
+        error,
+      });
+    }
+
+    // Create PayPal orders API instance with merchant context
     const paypalOrdersApi = this.paypalOrdersApiFactory.create({
-      clientId: paypalConfigForThisChannel.value.clientId,
-      clientSecret: paypalConfigForThisChannel.value.clientSecret,
-      env: paypalConfigForThisChannel.value.environment,
+      clientId: config.clientId,
+      clientSecret: config.clientSecret,
+      merchantEmail: config.merchantEmail || undefined,
+      bnCode,
+      env: config.environment,
     });
 
     this.logger.debug("Capturing PayPal order with id", {

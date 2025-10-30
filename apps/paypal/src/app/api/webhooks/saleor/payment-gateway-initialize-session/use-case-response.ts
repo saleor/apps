@@ -7,20 +7,24 @@ import { PayPalClientId } from "@/modules/paypal/paypal-client-id";
 
 class Success extends SuccessWebhookResponse {
   readonly pk: PayPalClientId;
+  readonly merchantClientId?: string;
 
   private static ResponseDataSchema = z.object({
     paypalClientId: z.string(),
+    merchantClientId: z.string().optional(),
   });
 
-  constructor(args: { pk: PayPalClientId; appContext: AppContext }) {
+  constructor(args: { pk: PayPalClientId; merchantClientId?: string; appContext: AppContext }) {
     super(args.appContext);
     this.pk = args.pk;
+    this.merchantClientId = args.merchantClientId;
   }
 
   getResponse() {
     const typeSafeResponse: PaymentGatewayInitializeSession = {
       data: Success.ResponseDataSchema.parse({
         paypalClientId: this.pk,
+        merchantClientId: this.merchantClientId,
       }),
     };
 

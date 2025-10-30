@@ -17,6 +17,9 @@ export class PayPalRefundsApi implements IPayPalRefundsApi {
   static create(args: {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
+    partnerMerchantId?: string | null;
+    merchantEmail?: string | null;
+    bnCode?: string | null;
     env: PayPalEnv;
   }): PayPalRefundsApi {
     const client = PayPalClient.create(args);

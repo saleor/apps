@@ -52,11 +52,23 @@ export const initializeDatabase = async (): Promise<void> => {
       client_id TEXT NOT NULL,
       client_secret TEXT NOT NULL,        -- Should be encrypted in production
       partner_merchant_id TEXT,           -- PayPal Partner Merchant ID for API calls
+      bn_code TEXT,                       -- PayPal Partner Attribution BN code
       environment TEXT NOT NULL CHECK (environment IN ('SANDBOX', 'LIVE')),
       is_active BOOLEAN DEFAULT TRUE,
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW()
     );
+
+    -- Add bn_code column if it doesn't exist (for existing installations)
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name='wsm_global_paypal_config' AND column_name='bn_code'
+      ) THEN
+        ALTER TABLE wsm_global_paypal_config ADD COLUMN bn_code TEXT;
+      END IF;
+    END $$;
 
     -- Only allow one active global config at a time
     CREATE UNIQUE INDEX IF NOT EXISTS idx_wsm_global_paypal_config_active
@@ -71,6 +83,8 @@ export const initializeDatabase = async (): Promise<void> => {
       partner_referral_id TEXT,
       merchant_email TEXT,
       merchant_country TEXT,
+      merchant_client_id TEXT,                -- Merchant OAuth client ID
+      merchant_oauth_email TEXT,              -- Merchant OAuth email
       onboarding_status TEXT NOT NULL DEFAULT 'PENDING',
       onboarding_started_at TIMESTAMP,
       onboarding_completed_at TIMESTAMP,
@@ -93,6 +107,24 @@ export const initializeDatabase = async (): Promise<void> => {
       CONSTRAINT unique_tracking_id_per_instance UNIQUE (saleor_api_url, tracking_id),
       CONSTRAINT unique_merchant_id_per_instance UNIQUE (saleor_api_url, paypal_merchant_id)
     );
+
+    -- Add merchant OAuth columns if they don't exist (for existing installations)
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name='paypal_merchant_onboarding' AND column_name='merchant_client_id'
+      ) THEN
+        ALTER TABLE paypal_merchant_onboarding ADD COLUMN merchant_client_id TEXT;
+      END IF;
+
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name='paypal_merchant_onboarding' AND column_name='merchant_oauth_email'
+      ) THEN
+        ALTER TABLE paypal_merchant_onboarding ADD COLUMN merchant_oauth_email TEXT;
+      END IF;
+    END $$;
 
     CREATE INDEX IF NOT EXISTS idx_merchant_onboarding_saleor_url ON paypal_merchant_onboarding(saleor_api_url);
     CREATE INDEX IF NOT EXISTS idx_merchant_onboarding_tracking_id ON paypal_merchant_onboarding(tracking_id);

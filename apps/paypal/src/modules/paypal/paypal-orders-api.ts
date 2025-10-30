@@ -18,6 +18,9 @@ export class PayPalOrdersApi implements IPayPalOrdersApi {
   static create(args: {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
+    partnerMerchantId?: string | null;
+    merchantEmail?: string | null;
+    bnCode?: string | null;
     env: PayPalEnv;
   }): PayPalOrdersApi {
     const client = PayPalClient.create(args);

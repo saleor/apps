@@ -21,6 +21,8 @@ export interface MerchantOnboardingRecord {
   partnerReferralId?: PayPalPartnerReferralId;
   merchantEmail?: string;
   merchantCountry?: string;
+  merchantClientId?: string;
+  merchantOauthEmail?: string;
   onboardingStatus: OnboardingStatus;
   onboardingStartedAt?: Date;
   onboardingCompletedAt?: Date;
@@ -60,6 +62,8 @@ export interface CreateMerchantOnboardingRequest {
  */
 export interface UpdateMerchantOnboardingRequest {
   paypalMerchantId?: PayPalMerchantId;
+  merchantClientId?: string;
+  merchantOauthEmail?: string;
   onboardingStatus?: OnboardingStatus;
   onboardingStartedAt?: Date;
   onboardingCompletedAt?: Date;
@@ -145,6 +149,8 @@ export class PostgresMerchantOnboardingRepository implements IMerchantOnboarding
       partnerReferralId: row.partner_referral_id,
       merchantEmail: row.merchant_email,
       merchantCountry: row.merchant_country,
+      merchantClientId: row.merchant_client_id,
+      merchantOauthEmail: row.merchant_oauth_email,
       onboardingStatus: row.onboarding_status as OnboardingStatus,
       onboardingStartedAt: row.onboarding_started_at,
       onboardingCompletedAt: row.onboarding_completed_at,
@@ -266,6 +272,16 @@ export class PostgresMerchantOnboardingRepository implements IMerchantOnboarding
       if (updates.paypalMerchantId !== undefined) {
         setClause.push(`paypal_merchant_id = $${paramIndex++}`);
         values.push(updates.paypalMerchantId);
+      }
+
+      if (updates.merchantClientId !== undefined) {
+        setClause.push(`merchant_client_id = $${paramIndex++}`);
+        values.push(updates.merchantClientId);
+      }
+
+      if (updates.merchantOauthEmail !== undefined) {
+        setClause.push(`merchant_oauth_email = $${paramIndex++}`);
+        values.push(updates.merchantOauthEmail);
       }
 
       if (updates.onboardingStatus !== undefined) {

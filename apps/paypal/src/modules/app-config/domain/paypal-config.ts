@@ -11,6 +11,9 @@ export class PayPalConfig {
   readonly clientId: PayPalClientId;
   readonly clientSecret: PayPalClientSecret;
   readonly environment: PayPalEnv;
+  readonly merchantClientId?: string;
+  readonly merchantEmail?: string;
+  readonly merchantId?: string;
 
   static ValidationError = BaseError.subclass("ValidationError", {
     props: {
@@ -24,12 +27,18 @@ export class PayPalConfig {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     environment: PayPalEnv;
+    merchantClientId?: string;
+    merchantEmail?: string;
+    merchantId?: string;
   }) {
     this.name = props.name;
     this.id = props.id;
     this.clientId = props.clientId;
     this.clientSecret = props.clientSecret;
     this.environment = props.environment;
+    this.merchantClientId = props.merchantClientId;
+    this.merchantEmail = props.merchantEmail;
+    this.merchantId = props.merchantId;
   }
 
   getPayPalEnvValue(): PayPalEnv {
@@ -42,6 +51,9 @@ export class PayPalConfig {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     environment: PayPalEnv;
+    merchantClientId?: string;
+    merchantEmail?: string;
+    merchantId?: string;
   }): Result<PayPalConfig, InstanceType<typeof PayPalConfig.ValidationError>> {
     if (args.name.length === 0) {
       return err(new PayPalConfig.ValidationError("Config name cannot be empty"));
@@ -64,6 +76,9 @@ export class PayPalConfig {
         clientId: args.clientId,
         clientSecret: args.clientSecret,
         environment: args.environment,
+        merchantClientId: args.merchantClientId,
+        merchantEmail: args.merchantEmail,
+        merchantId: args.merchantId,
       }),
     );
   }

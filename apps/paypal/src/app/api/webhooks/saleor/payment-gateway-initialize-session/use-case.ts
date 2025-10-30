@@ -65,6 +65,7 @@ export class PaymentGatewayInitializeSessionUseCase {
       return ok(
         new PaymentGatewayInitializeSessionUseCaseResponses.Success({
           pk: config.clientId,
+          merchantClientId: config.merchantClientId,
           appContext: appContextContainer.getContextValue(),
         }),
       );
