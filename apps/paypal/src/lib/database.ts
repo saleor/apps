@@ -51,6 +51,7 @@ export const initializeDatabase = async (): Promise<void> => {
       id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
       client_id TEXT NOT NULL,
       client_secret TEXT NOT NULL,        -- Should be encrypted in production
+      partner_merchant_id TEXT,           -- PayPal Partner Merchant ID for API calls
       environment TEXT NOT NULL CHECK (environment IN ('SANDBOX', 'LIVE')),
       is_active BOOLEAN DEFAULT TRUE,
       created_at TIMESTAMP DEFAULT NOW(),

@@ -243,9 +243,9 @@ export interface ShowSellerStatusResponse {
   products?: SellerProduct[];
   capabilities?: SellerCapability[];
 
-  // Account status flags
-  PRIMARY_EMAIL_CONFIRMED?: boolean;
-  PAYMENTS_RECEIVABLE?: boolean;
+  // Account status flags (PayPal returns these in snake_case)
+  primary_email_confirmed?: boolean;
+  payments_receivable?: boolean;
 
   // OAuth integrations
   oauth_integrations?: Array<{

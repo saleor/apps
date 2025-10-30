@@ -22,7 +22,7 @@ export class GlobalPayPalConfigRepository {
   async getActiveConfig(): Promise<Result<GlobalPayPalConfig | null, Error>> {
     try {
       const query = `
-        SELECT id, client_id, client_secret, environment, is_active, created_at, updated_at
+        SELECT id, client_id, client_secret, partner_merchant_id, environment, is_active, created_at, updated_at
         FROM wsm_global_paypal_config
         WHERE is_active = TRUE
         LIMIT 1
@@ -39,6 +39,7 @@ export class GlobalPayPalConfigRepository {
         id: row.id,
         clientId: row.client_id,
         clientSecret: row.client_secret,
+        partnerMerchantId: row.partner_merchant_id,
         environment: row.environment as PayPalEnvironment,
         isActive: row.is_active,
         createdAt: row.created_at,
@@ -62,6 +63,7 @@ export class GlobalPayPalConfigRepository {
   async upsertConfig(data: {
     clientId: string;
     clientSecret: string;
+    partnerMerchantId?: string | null;
     environment: PayPalEnvironment;
   }): Promise<Result<GlobalPayPalConfig, Error>> {
     const client = await this.pool.connect();
@@ -77,14 +79,15 @@ export class GlobalPayPalConfigRepository {
 
       // Insert new config
       const insertQuery = `
-        INSERT INTO wsm_global_paypal_config (client_id, client_secret, environment, is_active)
-        VALUES ($1, $2, $3, TRUE)
-        RETURNING id, client_id, client_secret, environment, is_active, created_at, updated_at
+        INSERT INTO wsm_global_paypal_config (client_id, client_secret, partner_merchant_id, environment, is_active)
+        VALUES ($1, $2, $3, $4, TRUE)
+        RETURNING id, client_id, client_secret, partner_merchant_id, environment, is_active, created_at, updated_at
       `;
 
       const result = await client.query(insertQuery, [
         data.clientId,
         data.clientSecret,
+        data.partnerMerchantId ?? null,
         data.environment,
       ]);
 
@@ -95,6 +98,7 @@ export class GlobalPayPalConfigRepository {
         id: row.id,
         clientId: row.client_id,
         clientSecret: row.client_secret,
+        partnerMerchantId: row.partner_merchant_id,
         environment: row.environment as PayPalEnvironment,
         isActive: row.is_active,
         createdAt: row.created_at,

@@ -17,6 +17,7 @@ export class GlobalPayPalConfig {
   public readonly id: string;
   public readonly clientId: PayPalClientId;
   public readonly clientSecret: PayPalClientSecret;
+  public readonly partnerMerchantId: string | null;
   public readonly environment: PayPalEnvironment;
   public readonly isActive: boolean;
   public readonly createdAt: Date;
@@ -26,6 +27,7 @@ export class GlobalPayPalConfig {
     id: string,
     clientId: PayPalClientId,
     clientSecret: PayPalClientSecret,
+    partnerMerchantId: string | null,
     environment: PayPalEnvironment,
     isActive: boolean,
     createdAt: Date,
@@ -34,6 +36,7 @@ export class GlobalPayPalConfig {
     this.id = id;
     this.clientId = clientId;
     this.clientSecret = clientSecret;
+    this.partnerMerchantId = partnerMerchantId;
     this.environment = environment;
     this.isActive = isActive;
     this.createdAt = createdAt;
@@ -44,6 +47,7 @@ export class GlobalPayPalConfig {
     id: string;
     clientId: string;
     clientSecret: string;
+    partnerMerchantId?: string | null;
     environment: PayPalEnvironment;
     isActive?: boolean;
     createdAt?: Date;
@@ -58,6 +62,7 @@ export class GlobalPayPalConfig {
           data.id,
           clientId,
           clientSecret,
+          data.partnerMerchantId ?? null,
           data.environment,
           data.isActive ?? true,
           data.createdAt ?? new Date(),
@@ -76,6 +81,7 @@ export class GlobalPayPalConfig {
     id: string;
     clientId: string;
     clientSecret: string;
+    partnerMerchantId: string | null;
     environment: PayPalEnvironment;
     isActive: boolean;
     createdAt: Date;
@@ -85,6 +91,7 @@ export class GlobalPayPalConfig {
       id: this.id,
       clientId: this.clientId,
       clientSecret: this.clientSecret,
+      partnerMerchantId: this.partnerMerchantId,
       environment: this.environment,
       isActive: this.isActive,
       createdAt: this.createdAt,

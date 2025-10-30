@@ -7,6 +7,7 @@ export const wsmAdminAuthSchema = z.object({
 export const setGlobalConfigInputSchema = wsmAdminAuthSchema.extend({
   clientId: z.string().min(1, "Client ID is required"),
   clientSecret: z.string().min(1, "Client Secret is required"),
+  partnerMerchantId: z.string().optional(),
   environment: z.enum(["SANDBOX", "LIVE"]),
 });
 

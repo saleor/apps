@@ -42,6 +42,7 @@ export class SetGlobalConfigHandler {
       const configResult = await repository.upsertConfig({
         clientId: input.clientId,
         clientSecret: input.clientSecret,
+        partnerMerchantId: input.partnerMerchantId,
         environment: input.environment,
       });
 

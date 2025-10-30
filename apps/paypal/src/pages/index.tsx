@@ -27,7 +27,7 @@ const IndexPage: NextPage = () => {
         This is Saleor App that allows to accept online payments from customers using PayPal as
         their payment processor.
       </p>
-      <p>Install the app in your Saleor instance and open it in Dashboard.</p>
+      <p>Return to your Saleor admin dashboard and refresh the page to access the app.</p>
     </div>
   );
 };

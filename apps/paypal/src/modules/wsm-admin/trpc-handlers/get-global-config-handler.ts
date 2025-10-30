@@ -61,6 +61,7 @@ export class GetGlobalConfigHandler {
           id: config.id,
           clientId: config.clientId,
           clientSecret: "***" + config.clientSecret.slice(-4), // Mask for security
+          partnerMerchantId: config.partnerMerchantId,
           environment: config.environment,
           createdAt: config.createdAt,
           updatedAt: config.updatedAt,

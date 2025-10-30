@@ -11,6 +11,7 @@ const WsmAdminPage: NextPage = () => {
   const [secretKey, setSecretKey] = useState("");
   const [clientId, setClientId] = useState("");
   const [clientSecret, setClientSecret] = useState("");
+  const [partnerMerchantId, setPartnerMerchantId] = useState("");
   const [environment, setEnvironment] = useState<"SANDBOX" | "LIVE">("SANDBOX");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -73,6 +74,7 @@ const WsmAdminPage: NextPage = () => {
           // Clear form
           setClientId("");
           setClientSecret("");
+          setPartnerMerchantId("");
         }
       },
       onError: (err: any) => {
@@ -106,6 +108,7 @@ const WsmAdminPage: NextPage = () => {
       secretKey,
       clientId,
       clientSecret,
+      partnerMerchantId: partnerMerchantId || undefined,
       environment,
     });
   };
@@ -186,6 +189,11 @@ const WsmAdminPage: NextPage = () => {
                 <Text>
                   <strong>Client Secret:</strong> {configData.config.clientSecret}
                 </Text>
+                {configData.config.partnerMerchantId && (
+                  <Text>
+                    <strong>Partner Merchant ID:</strong> {configData.config.partnerMerchantId}
+                  </Text>
+                )}
                 <Text color="default2">
                   Last updated: {new Date(configData.config.updatedAt).toLocaleString()}
                 </Text>
@@ -245,6 +253,19 @@ const WsmAdminPage: NextPage = () => {
                 onChange={(e) => setClientSecret(e.target.value)}
                 placeholder="EHnHq7t06p..."
               />
+            </Box>
+
+            <Box>
+              <Text marginBottom={2}>Partner Merchant ID (Optional)</Text>
+              <Input
+                type="text"
+                value={partnerMerchantId}
+                onChange={(e) => setPartnerMerchantId(e.target.value)}
+                placeholder="ABCDEFGHIJKLM"
+              />
+              <Text marginTop={1} variant="caption" color="default2">
+                Your PayPal Partner Merchant ID, required for querying seller status
+              </Text>
             </Box>
 
             <Box display="flex" gap={2}>

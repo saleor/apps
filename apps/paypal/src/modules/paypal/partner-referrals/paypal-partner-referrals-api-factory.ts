@@ -14,6 +14,7 @@ export interface IPayPalPartnerReferralsApiFactory {
   create(args: {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
+    partnerMerchantId?: string | null;
     env: PayPalEnv;
   }): IPayPalPartnerReferralsApi;
 }
@@ -29,11 +30,13 @@ export class PayPalPartnerReferralsApiFactory implements IPayPalPartnerReferrals
   create(args: {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
+    partnerMerchantId?: string | null;
     env: PayPalEnv;
   }): IPayPalPartnerReferralsApi {
     const client = PayPalClient.create({
       clientId: args.clientId,
       clientSecret: args.clientSecret,
+      partnerMerchantId: args.partnerMerchantId,
       env: args.env,
     });
 

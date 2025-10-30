@@ -4,10 +4,10 @@ import { z } from "zod";
 import { getPool } from "@/lib/database";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
-import { PayPalMultiConfigMetadataManager } from "@/modules/paypal/configuration/paypal-multi-config-metadata-manager";
 import { PayPalPartnerReferralsApiFactory } from "@/modules/paypal/partner-referrals/paypal-partner-referrals-api-factory";
 import { createPayPalMerchantId } from "@/modules/paypal/paypal-merchant-id";
 import { PostgresMerchantOnboardingRepository } from "../merchant-onboarding-repository";
+import { GlobalPayPalConfigRepository } from "@/modules/wsm-admin/global-paypal-config-repository";
 
 /**
  * tRPC Handler for refreshing merchant status from PayPal
@@ -77,67 +77,147 @@ export class RefreshMerchantStatusTrpcHandler {
 
           const record = recordResult.value;
 
-          // Check if merchant has completed onboarding
-          if (!record.paypalMerchantId) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Merchant has not completed onboarding yet",
-            });
-          }
+          // Fetch PayPal configuration from the global repository
+          const globalConfigRepository = GlobalPayPalConfigRepository.create(pool);
+          const paypalConfigResult = await globalConfigRepository.getActiveConfig();
 
-          // Get PayPal configuration
-          const metadataManager = PayPalMultiConfigMetadataManager.createFromAuthData({
-            saleorApiUrl: saleorApiUrl.value,
-            token: ctx.appToken,
-            appId: ctx.appId,
-          });
-
-          const configResult = await metadataManager.getRootConfig();
-          if (configResult.isErr()) {
+          if (paypalConfigResult.isErr()) {
+            captureException(paypalConfigResult.error);
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
-              message: "Failed to load PayPal configuration",
+              message: "Failed to retrieve PayPal configuration",
             });
           }
 
-          const rootConfig = configResult.value;
-          const configIds = Object.keys(rootConfig.paypalConfigsById);
-          if (configIds.length === 0) {
+          const paypalConfig = paypalConfigResult.value;
+
+          if (!paypalConfig) {
             throw new TRPCError({
               code: "BAD_REQUEST",
-              message: "No PayPal configuration found",
+              message: "No active PayPal configuration found",
             });
           }
-
-          const paypalConfig = rootConfig.paypalConfigsById[configIds[0]];
 
           // Create Partner Referrals API client
           const apiFactory = PayPalPartnerReferralsApiFactory.create();
           const referralsApi = apiFactory.create({
             clientId: paypalConfig.clientId,
             clientSecret: paypalConfig.clientSecret,
+            partnerMerchantId: paypalConfig.partnerMerchantId,
             env: paypalConfig.environment,
           });
 
-          // Check payment method readiness
-          const merchantId = createPayPalMerchantId(record.paypalMerchantId);
-          const readinessResult = await referralsApi.checkPaymentMethodReadiness(merchantId);
+          // Query seller status - use tracking_id if merchant hasn't completed onboarding yet
+          let statusResult;
+          if (!record.paypalMerchantId) {
+            // Merchant hasn't completed onboarding - query by tracking_id
+            statusResult = await referralsApi.getSellerStatusByTrackingId(input.trackingId);
+          } else {
+            // Merchant has completed onboarding - query by merchant_id
+            const merchantId = createPayPalMerchantId(record.paypalMerchantId);
+            statusResult = await referralsApi.getSellerStatus(merchantId);
+          }
 
-          if (readinessResult.isErr()) {
+          if (statusResult.isErr()) {
             // Update with error
             await repository.update(saleorApiUrl.value, input.trackingId, {
               lastStatusCheck: new Date(),
-              statusCheckError: readinessResult.error.message,
+              statusCheckError: statusResult.error.message,
             });
 
-            captureException(readinessResult.error);
+            captureException(statusResult.error);
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
-              message: `Failed to check seller status: ${readinessResult.error.message}`,
+              message: `Failed to check seller status: ${statusResult.error.message}`,
             });
           }
 
-          const readiness = readinessResult.value;
+          const status = statusResult.value;
+
+          // Parse readiness from status
+          const readiness = {
+            paypalButtons: false,
+            advancedCardProcessing: false,
+            applePay: false,
+            googlePay: false,
+            vaulting: false,
+            primaryEmailConfirmed: status.primary_email_confirmed ?? false,
+            paymentsReceivable: status.payments_receivable ?? false,
+            oauthIntegrated: (status.oauth_integrations?.length ?? 0) > 0,
+          };
+
+          // Check products for payment methods
+          const products = status.products || [];
+          const ppcpStandard = products.find((p) => p.name === "PPCP_STANDARD");
+          const ppcpCustom = products.find((p) => p.name === "PPCP_CUSTOM");
+          const advancedVaulting = products.find((p) => p.name === "ADVANCED_VAULTING");
+
+          // Check if merchant has any PPCP subscription (STANDARD or CUSTOM)
+          const hasPPCP =
+            ppcpStandard?.vetting_status === "SUBSCRIBED" ||
+            ppcpCustom?.vetting_status === "SUBSCRIBED";
+
+          if (hasPPCP) {
+            // PayPal Buttons are available with any PPCP subscription
+            readiness.paypalButtons = true;
+
+            const capabilities = status.capabilities || [];
+
+            // Advanced Card Processing requires CUSTOM_CARD_PROCESSING capability
+            const cardProcessing = capabilities.find((c) => c.name === "CUSTOM_CARD_PROCESSING");
+            if (cardProcessing?.status === "ACTIVE" && !cardProcessing.limits?.length) {
+              readiness.advancedCardProcessing = true;
+            }
+
+            // Apple Pay and Google Pay - check if capabilities are active
+            // No longer requires PAYMENT_METHODS product, just checks capability status
+            const applePay = capabilities.find((c) => c.name === "APPLE_PAY");
+            if (applePay?.status === "ACTIVE") {
+              readiness.applePay = true;
+            }
+
+            const googlePay = capabilities.find((c) => c.name === "GOOGLE_PAY");
+            if (googlePay?.status === "ACTIVE") {
+              readiness.googlePay = true;
+            }
+          }
+
+          if (advancedVaulting?.vetting_status === "SUBSCRIBED") {
+            const capabilities = status.capabilities || [];
+            const vaultingCapability = capabilities.find(
+              (c) => c.name === "PAYPAL_WALLET_VAULTING_ADVANCED"
+            );
+
+            if (vaultingCapability?.status === "ACTIVE") {
+              const hasRequiredScopes =
+                vaultingCapability.scopes?.includes(
+                  "https://uri.paypal.com/services/billing-agreements"
+                ) &&
+                vaultingCapability.scopes?.includes(
+                  "https://uri.paypal.com/services/vault/payment-tokens/read"
+                ) &&
+                vaultingCapability.scopes?.includes(
+                  "https://uri.paypal.com/services/vault/payment-tokens/readwrite"
+                );
+
+              if (hasRequiredScopes) {
+                readiness.vaulting = true;
+              }
+            }
+          }
+
+          // Update merchant ID if it's now available (merchant completed onboarding)
+          if (!record.paypalMerchantId && status.merchant_id) {
+            await repository.update(saleorApiUrl.value, input.trackingId, {
+              paypalMerchantId: createPayPalMerchantId(status.merchant_id),
+            });
+          }
+
+          // Store raw products and capabilities for debugging and auditing
+          await repository.update(saleorApiUrl.value, input.trackingId, {
+            subscribedProducts: status.products || [],
+            activeCapabilities: status.capabilities || [],
+          });
 
           // Update onboarding record with readiness info
           const updateResult = await repository.updatePaymentMethodReadiness(
