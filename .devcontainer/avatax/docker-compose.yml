@@ -6,6 +6,8 @@ services:
     build:
       context: ../..
       dockerfile: .devcontainer/avatax/Dockerfile
+    extra_hosts:
+      - "localhost:host-gateway"
     volumes:
       - "../..:/app"
       - "pnpm-store:/app/.pnpm-store"
@@ -13,7 +15,7 @@ services:
   dynamodb:
     image: "amazon/dynamodb-local:latest"
     ports:
-      - 8000:8000
+      - "8000"
     volumes:
       - "dynamodb-data:/home/dynamodblocal/data"
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data"
