@@ -8,16 +8,19 @@ import { PayPalClientId } from "@/modules/paypal/paypal-client-id";
 class Success extends SuccessWebhookResponse {
   readonly pk: PayPalClientId;
   readonly merchantClientId?: string;
+  readonly merchantId?: string;
 
   private static ResponseDataSchema = z.object({
     paypalClientId: z.string(),
     merchantClientId: z.string().optional(),
+    merchantId: z.string().optional(),
   });
 
-  constructor(args: { pk: PayPalClientId; merchantClientId?: string; appContext: AppContext }) {
+  constructor(args: { pk: PayPalClientId; merchantClientId?: string; merchantId?: string; appContext: AppContext }) {
     super(args.appContext);
     this.pk = args.pk;
     this.merchantClientId = args.merchantClientId;
+    this.merchantId = args.merchantId;
   }
 
   getResponse() {
@@ -25,6 +28,7 @@ class Success extends SuccessWebhookResponse {
       data: Success.ResponseDataSchema.parse({
         paypalClientId: this.pk,
         merchantClientId: this.merchantClientId,
+        merchantId: this.merchantId,
       }),
     };
 
