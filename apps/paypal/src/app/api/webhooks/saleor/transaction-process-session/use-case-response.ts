@@ -29,7 +29,7 @@ class Success extends SuccessWebhookResponse {
 
   getResponse(): Response {
     if (!this.appContext.paypalEnv) {
-      throw new BaseError("PayPal environment is not set. Ensure AppContext is set earlier");
+      throw new BaseError(`PayPal environment is not set. AppContext: ${JSON.stringify(this.appContext)}`);
     }
 
     const typeSafeResponse = {
@@ -63,7 +63,7 @@ class Failure extends SuccessWebhookResponse {
 
   getResponse(): Response {
     if (!this.appContext.paypalEnv) {
-      throw new BaseError("PayPal environment is not set. Ensure AppContext is set earlier");
+      throw new BaseError(`PayPal environment is not set. AppContext: ${JSON.stringify(this.appContext)}`);
     }
 
     const typeSafeResponse = {

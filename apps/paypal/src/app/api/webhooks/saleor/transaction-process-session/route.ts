@@ -81,7 +81,12 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(async (
     );
   } catch (error) {
     captureException(error);
-    logger.error("Unhandled error in transaction process session webhook", { error });
+    logger.error("Unhandled error in transaction process session webhook", {
+      error,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      errorName: error instanceof Error ? error.name : typeof error,
+      errorStack: error instanceof Error ? error.stack : undefined,
+    });
 
     const unhandledErrorResponse = new UnhandledErrorResponse(
       appContextContainer.getContextValue(),
