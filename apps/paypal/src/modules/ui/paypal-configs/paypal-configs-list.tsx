@@ -17,15 +17,30 @@ const webhookDisabled = <Text color="warning1">Webhook disabled, app will not wo
 const webhookMissing = <Text color="critical1">Webhook missing, create config again</Text>;
 
 const testEnvChip = (
-  <Chip marginLeft="auto" __backgroundColor="#CC4B00" borderColor="transparent" size="large">
-    <Text __color={"#FFF"} size={1} whiteSpace="nowrap">
-      PayPal test mode
+  <Chip
+    marginLeft="auto"
+    __backgroundColor="#FEF3C7"
+    borderColor="warning1"
+    borderWidth={1}
+    size="large"
+  >
+    <Text __color="#92400E" size={2} whiteSpace="nowrap" fontWeight="medium">
+      🧪 Test Mode
     </Text>
   </Chip>
 );
 const liveEnvChip = (
-  <Chip marginLeft={"auto"} size="large" whiteSpace="nowrap">
-    <Text size={1}>PayPal live mode</Text>
+  <Chip
+    marginLeft={"auto"}
+    __backgroundColor="#D1FAE5"
+    borderColor="success1"
+    borderWidth={1}
+    size="large"
+    whiteSpace="nowrap"
+  >
+    <Text __color="#065F46" size={2} fontWeight="medium">
+      ✓ Live Mode
+    </Text>
   </Chip>
 );
 

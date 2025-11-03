@@ -189,93 +189,164 @@ export const MerchantConnectionSection = () => {
   if (!merchantStatus) {
     // Not connected state
     return (
-      <Box display="flex" flexDirection="column" gap={4}>
+      <Box display="flex" flexDirection="column" gap={5}>
         {error && (
-          <Box padding={4} borderRadius={4} borderWidth={1} borderColor="critical1">
-            <Text color="critical1">{error}</Text>
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderColor="critical1"
+            __backgroundColor="#FEF2F2"
+          >
+            <Text color="critical1" fontWeight="medium">
+              ⚠️ {error}
+            </Text>
           </Box>
         )}
 
-        <Text>
-          Connect your PayPal account to start accepting payments through PayPal.
-        </Text>
-
-        <Box display="flex" flexDirection="column" gap={2}>
-          <Text>
-            <strong>PayPal Account Email</strong>
-          </Text>
-          <Input
-            type="email"
-            value={merchantEmail}
-            onChange={(e) => setMerchantEmail(e.target.value)}
-            placeholder="Enter your PayPal account email"
-            disabled={isLoading}
-          />
-          <Text size={2} color="default2">
-            This email will be used to connect your PayPal merchant account.
-          </Text>
-        </Box>
-
-        <Button
-          variant="primary"
-          onClick={handleConnectPayPal}
-          disabled={isLoading || !merchantEmail}
+        <Box
+          padding={6}
+          borderRadius={4}
+          borderWidth={1}
+          borderColor="default1"
+          __backgroundColor="#FAFAFA"
         >
-          {isLoading ? "Connecting..." : "Connect PayPal Account"}
-        </Button>
+          <Text size={4} marginBottom={4} fontWeight="medium">
+            Get Started with PayPal
+          </Text>
+          <Text size={3} color="default2" marginBottom={5}>
+            Connect your PayPal merchant account to enable payment processing for your store.
+          </Text>
 
-        <Text color="default2">
-          You'll be redirected to PayPal to complete the connection process.
-        </Text>
+          <Box display="flex" flexDirection="column" gap={2} marginBottom={5}>
+            <Text size={3} fontWeight="medium">
+              PayPal Account Email
+            </Text>
+            <Input
+              type="email"
+              value={merchantEmail}
+              onChange={(e) => setMerchantEmail(e.target.value)}
+              placeholder="your-business@example.com"
+              disabled={isLoading}
+              size="large"
+            />
+            <Text size={2} color="default2">
+              Enter the email address associated with your PayPal merchant account.
+            </Text>
+          </Box>
+
+          <Button
+            variant="primary"
+            onClick={handleConnectPayPal}
+            disabled={isLoading || !merchantEmail}
+            size="large"
+          >
+            {isLoading ? "Connecting..." : "🔗 Connect PayPal Account"}
+          </Button>
+
+          <Box
+            marginTop={4}
+            padding={3}
+            borderRadius={4}
+            __backgroundColor="#EFF6FF"
+            borderWidth={1}
+            borderColor="info1"
+          >
+            <Text size={2} color="default2">
+              ℹ️ You'll be securely redirected to PayPal to authorize the connection. Once completed, you'll be brought back to this page.
+            </Text>
+          </Box>
+        </Box>
       </Box>
     );
   }
 
   // Connected state
   return (
-    <Box display="flex" flexDirection="column" gap={4}>
+    <Box display="flex" flexDirection="column" gap={5}>
       {error && (
-        <Box padding={4} borderRadius={4} borderWidth={1} borderColor="critical1">
-          <Text color="critical1">{error}</Text>
+        <Box
+          padding={4}
+          borderRadius={4}
+          borderWidth={1}
+          borderColor="critical1"
+          __backgroundColor="#FEF2F2"
+        >
+          <Text color="critical1" fontWeight="medium">
+            ⚠️ {error}
+          </Text>
         </Box>
       )}
 
       <Box
-        padding={4}
+        padding={6}
         borderRadius={4}
         borderWidth={1}
         borderColor="success1"
+        __backgroundColor="#F0FDF4"
       >
-        <Text size={5} marginBottom={3}>
-          <strong>✓ PayPal Connected</strong>
+        <Text size={5} marginBottom={4} fontWeight="bold" __color="#059669">
+          ✓ PayPal Account Connected
         </Text>
-        <Box display="flex" flexDirection="column" gap={2}>
-          <Text>
-            <strong>Email:</strong> {merchantStatus.merchantEmail || "Not provided"}
-          </Text>
-          <Text>
-            <strong>Tracking ID:</strong> {merchantStatus.trackingId}
-          </Text>
-          <Text>
-            <strong>Status:</strong>{" "}
+        <Box display="flex" flexDirection="column" gap={3}>
+          <Box display="flex" alignItems="center" gap={2}>
+            <Text size={3} fontWeight="medium" __color="#6B7280">
+              Email:
+            </Text>
+            <Text size={3} fontWeight="medium">
+              {merchantStatus.merchantEmail || "Not provided"}
+            </Text>
+          </Box>
+          <Box display="flex" alignItems="center" gap={2}>
+            <Text size={3} fontWeight="medium" __color="#6B7280">
+              Tracking ID:
+            </Text>
+            <Text size={2} __color="#374151">
+              {merchantStatus.trackingId}
+            </Text>
+          </Box>
+          <Box display="flex" alignItems="center" gap={2}>
+            <Text size={3} fontWeight="medium" __color="#6B7280">
+              Status:
+            </Text>
             {merchantStatus.paymentsReceivable ? (
-              <Text as="span" color="success1">
-                Ready to receive payments
-              </Text>
+              <Box
+                paddingX={3}
+                paddingY={1}
+                borderRadius={4}
+                __backgroundColor="#10B981"
+              >
+                <Text size={2} fontWeight="medium" __color="#FFFFFF">
+                  Ready to receive payments
+                </Text>
+              </Box>
             ) : (
-              <Text as="span" color="warning1">
-                Setup in progress
-              </Text>
+              <Box
+                paddingX={3}
+                paddingY={1}
+                borderRadius={4}
+                __backgroundColor="#F59E0B"
+              >
+                <Text size={2} fontWeight="medium" __color="#FFFFFF">
+                  Setup in progress
+                </Text>
+              </Box>
             )}
-          </Text>
+          </Box>
         </Box>
       </Box>
 
-      <Box>
-        <Text size={5} marginBottom={2}>
-          <strong>Payment Methods Status</strong>
+      <Box
+        padding={5}
+        borderRadius={4}
+        borderWidth={1}
+        borderColor="default1"
+        __backgroundColor="#FAFAFA"
+      >
+        <Text size={4} marginBottom={4} fontWeight="medium">
+          Payment Methods
         </Text>
-        <Box display="flex" flexWrap="wrap" gap={2}>
+        <Box display="flex" flexWrap="wrap" gap={3}>
           <PaymentMethodBadge
             label="PayPal Buttons"
             enabled={merchantStatus.paymentMethods?.paypalButtons || false}
@@ -296,25 +367,31 @@ export const MerchantConnectionSection = () => {
       </Box>
 
       {merchantStatus.onboardingStatus === "PENDING" && (
-        <Box padding={4} borderRadius={4} borderWidth={1} borderColor="warning1">
-          <Text color="warning1">
-            <strong>Complete PayPal Onboarding</strong>
+        <Box
+          padding={4}
+          borderRadius={4}
+          borderWidth={1}
+          borderColor="warning1"
+          __backgroundColor="#FFFBEB"
+        >
+          <Text size={3} fontWeight="medium" color="warning1" marginBottom={2}>
+            ⚠️ Complete PayPal Onboarding
           </Text>
-          <Text size={2} marginTop={1}>
+          <Text size={3} color="default2">
             You've started the connection process but haven't completed the PayPal onboarding yet.
             Please complete the setup in the PayPal window, or click "Connect PayPal Account" again to restart.
           </Text>
         </Box>
       )}
 
-      <Box display="flex" gap={2}>
+      <Box display="flex" gap={3} flexWrap="wrap">
         <Button
           variant="secondary"
           onClick={handleRefreshStatus}
           disabled={isLoading}
           title="Refresh payment method status from PayPal"
         >
-          {isRefreshing ? "Refreshing..." : "Refresh Status"}
+          {isRefreshing ? "Refreshing..." : "🔄 Refresh Status"}
         </Button>
         <Button variant="tertiary" onClick={handleDisconnect} disabled={isLoading}>
           Disconnect
@@ -322,7 +399,7 @@ export const MerchantConnectionSection = () => {
       </Box>
 
       {merchantStatus.lastStatusCheck && (
-        <Text color="default2">
+        <Text size={2} color="default2">
           Last updated: {new Date(merchantStatus.lastStatusCheck).toLocaleString()}
         </Text>
       )}
@@ -333,13 +410,31 @@ export const MerchantConnectionSection = () => {
 const PaymentMethodBadge = ({ label, enabled }: { label: string; enabled: boolean }) => {
   return (
     <Box
-      padding={2}
+      paddingX={4}
+      paddingY={3}
       borderRadius={4}
       borderWidth={1}
       borderColor={enabled ? "success1" : "default1"}
+      __backgroundColor={enabled ? "#ECFDF5" : "#F9FAFB"}
+      display="flex"
+      alignItems="center"
+      gap={2}
     >
-      <Text>
-        {enabled ? "✓" : "○"} {label}
+      <Box
+        __width="20px"
+        __height="20px"
+        __borderRadius="50%"
+        __backgroundColor={enabled ? "#10B981" : "#E5E7EB"}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Text size={1} __color="#FFFFFF" fontWeight="bold">
+          {enabled ? "✓" : "○"}
+        </Text>
+      </Box>
+      <Text size={3} fontWeight="medium" __color={enabled ? "#059669" : "#6B7280"}>
+        {label}
       </Text>
     </Box>
   );

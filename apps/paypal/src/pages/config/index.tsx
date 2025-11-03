@@ -19,17 +19,15 @@ const ConfigPage: NextPage = () => {
     <Box>
       <AppHeader />
       <Layout.AppSection
-        marginBottom={8}
-        heading="PayPal Account Connection"
+        marginBottom={10}
+        heading="🔗 PayPal Account Connection"
         sideContent={
-          <Box display="flex" flexDirection="column" gap={4}>
-            <Text>
-              Connect your PayPal account to start accepting payments. This uses the global PayPal
-              Partner credentials configured by WSM.
+          <Box display="flex" flexDirection="column" gap={3}>
+            <Text size={3}>
+              Connect your PayPal merchant account to enable payment processing. This integration uses secure Partner credentials managed by WSM.
             </Text>
-            <Text>
-              Once connected, you can accept PayPal, credit cards, Apple Pay, Google Pay, and other
-              payment methods.
+            <Text size={3} color="default2">
+              Once connected, customers can pay using PayPal, credit/debit cards, Apple Pay, Google Pay, and other payment methods.
             </Text>
           </Box>
         }
@@ -37,17 +35,15 @@ const ConfigPage: NextPage = () => {
         <MerchantConnectionSection />
       </Layout.AppSection>
       <Layout.AppSection
-        marginBottom={14}
-        heading="PayPal configurations"
+        marginBottom={10}
+        heading="⚙️ PayPal Configurations"
         sideContent={
-          <Box display="flex" flexDirection="column" gap={4}>
-            <Text>
-              App allows to create and use multiple PayPal configurations e.g one for test mode and
-              the other for live mode.
+          <Box display="flex" flexDirection="column" gap={3}>
+            <Text size={3}>
+              Create and manage multiple PayPal configurations for different environments (test and live mode).
             </Text>
-            <Text>
-              You can set up multiple PayPal configurations and assign them to each channel
-              individually.
+            <Text size={3} color="default2">
+              Each configuration can be assigned to specific sales channels to support multi-channel operations.
             </Text>
           </Box>
         }
@@ -55,11 +51,16 @@ const ConfigPage: NextPage = () => {
         <ChannelConfigSection />
       </Layout.AppSection>
       <Layout.AppSection
-        heading="Channels configurations"
+        marginBottom={8}
+        heading="🏪 Channel Assignments"
         sideContent={
-          <Box display="flex" flexDirection="column" gap={4}>
-            <Text>Assign created PayPal configurations to Saleor channel.</Text>
-            <Text>You can configure multiple channels to use the same PayPal configuration.</Text>
+          <Box display="flex" flexDirection="column" gap={3}>
+            <Text size={3}>
+              Map your PayPal configurations to specific Saleor sales channels.
+            </Text>
+            <Text size={3} color="default2">
+              Multiple channels can share the same configuration, making it easy to manage payments across your store.
+            </Text>
           </Box>
         }
       >
