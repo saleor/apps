@@ -7,7 +7,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 
 import { appRootTracer } from "@/lib/app-root-tracer";
-import { chunkArray } from "@/lib/chunk-array";
+import { ChunkCaller } from "@/lib/chunk-caller";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
@@ -204,43 +204,36 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const baseUrl = getBaseUrl(req.headers);
 
-  const cursorChunks = chunkArray(cursors, MAX_PARALLEL_CALLS);
-  const xmlUrlResponses = [];
+  const caller = new ChunkCaller(cursors, MAX_PARALLEL_CALLS, (cursor) => {
+    const urlToFetch = new URL(
+      `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
+        channel,
+      )}/${encodeURIComponent(cursor)}/generate-chunk`,
+      baseUrl,
+    );
 
-  for (const chunk of cursorChunks) {
-    const chunkPromises = chunk.map(async (cursor) => {
-      const urlToFetch = new URL(
-        `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
-          channel,
-        )}/${encodeURIComponent(cursor)}/generate-chunk`,
-        baseUrl,
-      );
+    return fetch(urlToFetch, {
+      body: JSON.stringify({
+        authData,
+        channelSettings: channelSettings,
+      }),
+      headers: {
+        ContentType: "application/json",
+        authorization: process.env.REQUEST_SECRET as string,
+      },
+      method: "POST",
+    }).then((r) => r.json() as Promise<{ downloadUrl: string; fileName: string }>);
+  });
 
-      return fetch(urlToFetch, {
-        body: JSON.stringify({
-          authData,
-          channelSettings: channelSettings,
-        }),
-        headers: {
-          ContentType: "application/json",
-          authorization: process.env.REQUEST_SECRET as string,
-        },
-        method: "POST",
-      }).then((r) => r.json());
-    });
+  const xmlUrlResponses = await caller.executeCalls();
 
-    const chunkResults = await Promise.all(chunkPromises);
-
-    xmlUrlResponses.push(...chunkResults);
-  }
-
-  const chunks = await Promise.all(
+  const xmlFileChunks = await Promise.all(
     xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.text())),
   );
 
   const chunkFileNames = await Promise.all(xmlUrlResponses.map((res) => res.fileName));
 
-  const mergedChunks = chunks.join("\n");
+  const mergedChunks = xmlFileChunks.join("\n");
 
   const xmlBuilder = new FeedXmlBuilder();
 
