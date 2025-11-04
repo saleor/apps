@@ -7,6 +7,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 
 import { appRootTracer } from "@/lib/app-root-tracer";
+import { chunkArray } from "@/lib/chunk-array";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
@@ -37,6 +38,8 @@ const validateRequestParams = (req: NextApiRequest) => {
 
   queryShape.parse(req.query);
 };
+
+const MAX_PARALLEL_CALLS = parseInt(process.env.MAX_PARALLEL_CALLS ?? "5", 10);
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
@@ -201,29 +204,34 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const baseUrl = getBaseUrl(req.headers);
 
+  const cursorChunks = chunkArray(cursors, MAX_PARALLEL_CALLS);
   const xmlUrlResponses = [];
 
-  for (const cursor of cursors) {
-    const urlToFetch = new URL(
-      `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
-        channel,
-      )}/${encodeURIComponent(cursor)}/generate-chunk`,
-      baseUrl,
-    );
+  for (const chunk of cursorChunks) {
+    const chunkPromises = chunk.map(async (cursor) => {
+      const urlToFetch = new URL(
+        `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
+          channel,
+        )}/${encodeURIComponent(cursor)}/generate-chunk`,
+        baseUrl,
+      );
 
-    const result = await fetch(urlToFetch, {
-      body: JSON.stringify({
-        authData,
-        channelSettings: channelSettings,
-      }),
-      headers: {
-        ContentType: "application/json",
-        authorization: process.env.REQUEST_SECRET as string,
-      },
-      method: "POST",
-    }).then((r) => r.json());
+      return fetch(urlToFetch, {
+        body: JSON.stringify({
+          authData,
+          channelSettings: channelSettings,
+        }),
+        headers: {
+          ContentType: "application/json",
+          authorization: process.env.REQUEST_SECRET as string,
+        },
+        method: "POST",
+      }).then((r) => r.json());
+    });
 
-    xmlUrlResponses.push(result);
+    const chunkResults = await Promise.all(chunkPromises);
+
+    xmlUrlResponses.push(...chunkResults);
   }
 
   const chunks = await Promise.all(
