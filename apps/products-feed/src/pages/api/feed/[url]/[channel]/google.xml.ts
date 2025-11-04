@@ -201,28 +201,30 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const baseUrl = getBaseUrl(req.headers);
 
-  const xmlUrlResponses = await Promise.all(
-    cursors.map((cursor) => {
-      const urlToFetch = new URL(
-        `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
-          channel,
-        )}/${encodeURIComponent(cursor)}/generate-chunk`,
-        baseUrl,
-      );
+  const xmlUrlResponses = [];
 
-      return fetch(urlToFetch, {
-        body: JSON.stringify({
-          authData,
-          channelSettings: channelSettings,
-        }),
-        headers: {
-          ContentType: "application/json",
-          authorization: process.env.REQUEST_SECRET as string,
-        },
-        method: "POST",
-      }).then((r) => r.json());
-    }),
-  );
+  for (const cursor of cursors) {
+    const urlToFetch = new URL(
+      `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
+        channel,
+      )}/${encodeURIComponent(cursor)}/generate-chunk`,
+      baseUrl,
+    );
+
+    const result = await fetch(urlToFetch, {
+      body: JSON.stringify({
+        authData,
+        channelSettings: channelSettings,
+      }),
+      headers: {
+        ContentType: "application/json",
+        authorization: process.env.REQUEST_SECRET as string,
+      },
+      method: "POST",
+    }).then((r) => r.json());
+
+    xmlUrlResponses.push(result);
+  }
 
   const chunks = await Promise.all(
     xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.text())),
