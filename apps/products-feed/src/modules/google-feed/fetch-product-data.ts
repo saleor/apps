@@ -12,7 +12,7 @@ import {
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
 
-const VARIANTS_PER_PAGE = 100;
+const VARIANTS_PER_PAGE = 50;
 
 export type ProductVariant = Omit<BasicProductDataFragment, "product"> &
   ProductAttributesFragment & { product: RelatedProductsFragment };
