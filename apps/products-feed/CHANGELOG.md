@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 2.1.2
+
+### Patch Changes
+
+- 025e9ae2: Changed app to fetch chunks of products sequential instead of parallel to avoid abusing the API
+
 ## 2.1.1
 
 ### Patch Changes
