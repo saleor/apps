@@ -1,5 +1,6 @@
 import { PayPalClientId } from "./paypal-client-id";
 import { PayPalClientSecret } from "./paypal-client-secret";
+import { PayPalMerchantId } from "./paypal-merchant-id";
 import { getPayPalApiUrl, PayPalEnv } from "./paypal-env";
 import { createLogger } from "@/lib/logger";
 
@@ -9,6 +10,7 @@ export class PayPalClient {
   private clientId: PayPalClientId;
   private clientSecret: PayPalClientSecret;
   private partnerMerchantId: string | null;
+  private merchantId: PayPalMerchantId | null;
   private merchantEmail: string | null;
   private bnCode: string | null;
   private env: PayPalEnv;
@@ -20,6 +22,7 @@ export class PayPalClient {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     partnerMerchantId?: string | null;
+    merchantId?: PayPalMerchantId | null;
     merchantEmail?: string | null;
     bnCode?: string | null;
     env: PayPalEnv;
@@ -27,6 +30,7 @@ export class PayPalClient {
     this.clientId = args.clientId;
     this.clientSecret = args.clientSecret;
     this.partnerMerchantId = args.partnerMerchantId ?? null;
+    this.merchantId = args.merchantId ?? null;
     this.merchantEmail = args.merchantEmail ?? null;
     this.bnCode = args.bnCode ?? null;
     this.env = args.env;
@@ -37,6 +41,7 @@ export class PayPalClient {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     partnerMerchantId?: string | null;
+    merchantId?: PayPalMerchantId | null;
     merchantEmail?: string | null;
     bnCode?: string | null;
     env: PayPalEnv;
@@ -46,10 +51,16 @@ export class PayPalClient {
 
   /**
    * Generate PayPal-Auth-Assertion header for partner authentication with merchant context
-   * Format: base64({"alg":"none"}).base64({"iss":"partner_client_id","payer_id":"merchant_email"}).
+   * Format: base64({"alg":"none"}).base64({"iss":"partner_client_id","payer_id":"merchant_id"}).
+   *
+   * NOTE: PayPal requires merchant_id (PayPal Merchant ID) in the payer_id field, not merchant_email.
+   * This is crucial for partner fee collection and proper merchant account association.
    */
   private generateAuthAssertion(): string | null {
-    if (!this.merchantEmail) {
+    // Prefer merchantId over merchantEmail (merchantEmail is deprecated for this purpose)
+    const payerId = this.merchantId || this.merchantEmail;
+
+    if (!payerId) {
       return null;
     }
 
@@ -57,7 +68,7 @@ export class PayPalClient {
     const payload = Buffer.from(
       JSON.stringify({
         iss: this.clientId,
-        payer_id: this.merchantEmail,
+        payer_id: payerId,
       })
     ).toString("base64");
 
@@ -129,7 +140,8 @@ export class PayPalClient {
       path: args.path,
       env: this.env,
       has_body: !!args.body,
-      has_merchant_context: !!this.merchantEmail,
+      has_merchant_id: !!this.merchantId,
+      has_merchant_email: !!this.merchantEmail,
       has_bn_code: !!this.bnCode,
     });
 

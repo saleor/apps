@@ -2,6 +2,7 @@ import { Result } from "neverthrow";
 
 import { PayPalClientId } from "./paypal-client-id";
 import { PayPalClientSecret } from "./paypal-client-secret";
+import { PayPalMerchantId } from "./paypal-merchant-id";
 import { PayPalEnv } from "./paypal-env";
 import { PayPalMoney } from "./paypal-money";
 import { PayPalOrderId } from "./paypal-order-id";
@@ -11,6 +12,14 @@ export interface PayPalOrder {
   status: "CREATED" | "SAVED" | "APPROVED" | "VOIDED" | "COMPLETED" | "PAYER_ACTION_REQUIRED";
   purchase_units: Array<{
     amount: PayPalMoney;
+    payment_instruction?: {
+      platform_fees?: Array<{
+        amount: PayPalMoney;
+        payee: {
+          merchant_id: string;
+        };
+      }>;
+    };
     payments?: {
       captures?: Array<{
         id: string;
@@ -37,6 +46,12 @@ export interface IPayPalOrdersApi {
     amount: PayPalMoney;
     intent: "CAPTURE" | "AUTHORIZE";
     metadata?: Record<string, string>;
+    platformFees?: Array<{
+      amount: PayPalMoney;
+      payee: {
+        merchant_id: string;
+      };
+    }>;
   }): Promise<Result<PayPalOrder, unknown>>;
 
   captureOrder(args: { orderId: PayPalOrderId }): Promise<Result<PayPalOrder, unknown>>;
@@ -59,6 +74,7 @@ export interface IPayPalOrdersApiFactory {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     partnerMerchantId?: string | null;
+    merchantId?: PayPalMerchantId | null;
     merchantEmail?: string | null;
     bnCode?: string | null;
     env: PayPalEnv;
@@ -69,6 +85,9 @@ export interface IPayPalRefundsApiFactory {
   create(args: {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
+    merchantId?: PayPalMerchantId | null;
+    merchantEmail?: string | null;
+    bnCode?: string | null;
     env: PayPalEnv;
   }): IPayPalRefundsApi;
 }

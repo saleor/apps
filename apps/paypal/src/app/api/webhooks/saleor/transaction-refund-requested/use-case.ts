@@ -92,6 +92,8 @@ export class TransactionRefundRequestedUseCase {
     const paypalRefundsApi = this.paypalRefundsApiFactory.create({
       clientId: paypalConfigForThisChannel.value.clientId,
       clientSecret: paypalConfigForThisChannel.value.clientSecret,
+      merchantId: paypalConfigForThisChannel.value.merchantId ? (paypalConfigForThisChannel.value.merchantId as any) : undefined,
+      merchantEmail: paypalConfigForThisChannel.value.merchantEmail || undefined,
       env: paypalConfigForThisChannel.value.environment,
     });
 

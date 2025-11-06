@@ -3,6 +3,7 @@ import { Result, ResultAsync } from "neverthrow";
 import { PayPalClient } from "./paypal-client";
 import { PayPalClientId } from "./paypal-client-id";
 import { PayPalClientSecret } from "./paypal-client-secret";
+import { PayPalMerchantId } from "./paypal-merchant-id";
 import { PayPalEnv } from "./paypal-env";
 import { PayPalMoney } from "./paypal-money";
 import { IPayPalRefundsApi, PayPalRefund } from "./types";
@@ -18,6 +19,7 @@ export class PayPalRefundsApi implements IPayPalRefundsApi {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     partnerMerchantId?: string | null;
+    merchantId?: PayPalMerchantId | null;
     merchantEmail?: string | null;
     bnCode?: string | null;
     env: PayPalEnv;

@@ -3,6 +3,7 @@ import { Result, ResultAsync } from "neverthrow";
 import { PayPalClient } from "./paypal-client";
 import { PayPalClientId } from "./paypal-client-id";
 import { PayPalClientSecret } from "./paypal-client-secret";
+import { PayPalMerchantId } from "./paypal-merchant-id";
 import { PayPalEnv } from "./paypal-env";
 import { PayPalMoney } from "./paypal-money";
 import { PayPalOrderId } from "./paypal-order-id";
@@ -19,6 +20,7 @@ export class PayPalOrdersApi implements IPayPalOrdersApi {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     partnerMerchantId?: string | null;
+    merchantId?: PayPalMerchantId | null;
     merchantEmail?: string | null;
     bnCode?: string | null;
     env: PayPalEnv;
@@ -31,21 +33,37 @@ export class PayPalOrdersApi implements IPayPalOrdersApi {
     amount: PayPalMoney;
     intent: "CAPTURE" | "AUTHORIZE";
     metadata?: Record<string, string>;
+    platformFees?: Array<{
+      amount: PayPalMoney;
+      payee: {
+        merchant_id: string;
+      };
+    }>;
   }): Promise<Result<PayPalOrder, unknown>> {
+    // Build purchase unit with optional platform fees
+    const purchaseUnit: any = {
+      amount: args.amount,
+      ...(args.metadata && {
+        custom_id: JSON.stringify(args.metadata),
+      }),
+    };
+
+    // Add platform fees if provided
+    // Platform fees are used by PayPal partners to collect partner fees from merchant transactions
+    // Each fee must include the partner's merchant_id in the payee field
+    if (args.platformFees && args.platformFees.length > 0) {
+      purchaseUnit.payment_instruction = {
+        platform_fees: args.platformFees,
+      };
+    }
+
     return ResultAsync.fromPromise(
       this.client.makeRequest<PayPalOrder>({
         method: "POST",
         path: "/v2/checkout/orders",
         body: {
           intent: args.intent,
-          purchase_units: [
-            {
-              amount: args.amount,
-              ...(args.metadata && {
-                custom_id: JSON.stringify(args.metadata),
-              }),
-            },
-          ],
+          purchase_units: [purchaseUnit],
         },
       }),
       (error) => error,

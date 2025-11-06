@@ -124,6 +124,7 @@ export class TransactionCancelationRequestedUseCase {
     const paypalOrdersApi = this.paypalOrdersApiFactory.create({
       clientId: config.clientId,
       clientSecret: config.clientSecret,
+      merchantId: config.merchantId ? (config.merchantId as any) : undefined,
       merchantEmail: config.merchantEmail || undefined,
       bnCode,
       env: config.environment,
