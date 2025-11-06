@@ -20,7 +20,8 @@
         "AWS_REGION",
         "AWS_SECRET_ACCESS_KEY",
         "DYNAMODB_MAIN_TABLE_NAME",
-        "MAX_PARALLEL_CALLS"
+        "MAX_PARALLEL_CALLS",
+        "VARIANTS_PER_PAGE"
       ]
     }
   }

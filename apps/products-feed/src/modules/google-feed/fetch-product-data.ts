@@ -2,6 +2,8 @@
 
 import { Client } from "urql";
 
+import { VARIANTS_PER_PAGE } from "@/settings";
+
 import {
   BasicProductDataFragment,
   FetchProductCursorsDocument,
@@ -11,8 +13,6 @@ import {
   RelatedProductsFragment,
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
-
-const VARIANTS_PER_PAGE = 100;
 
 export type ProductVariant = Omit<BasicProductDataFragment, "product"> &
   ProductAttributesFragment & { product: RelatedProductsFragment };

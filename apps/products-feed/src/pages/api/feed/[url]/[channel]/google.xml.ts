@@ -24,11 +24,7 @@ import { fetchShopData } from "@/modules/google-feed/fetch-shop-data";
 import { GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
 import { shopDetailsToProxy } from "@/modules/google-feed/shop-details-to-proxy";
 import { apl } from "@/saleor-app";
-
-// By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
-const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
-  ? parseInt(process.env.FEED_CACHE_MAX_AGE, 10)
-  : 60 * 5;
+import { FEED_CACHE_MAX_AGE, MAX_PARALLEL_CALLS } from "@/settings";
 
 const validateRequestParams = (req: NextApiRequest) => {
   const queryShape = z.object({
@@ -38,8 +34,6 @@ const validateRequestParams = (req: NextApiRequest) => {
 
   queryShape.parse(req.query);
 };
-
-const MAX_PARALLEL_CALLS = parseInt(process.env.MAX_PARALLEL_CALLS ?? "5", 10);
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
