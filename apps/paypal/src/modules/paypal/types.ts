@@ -45,10 +45,11 @@ export interface IPayPalOrdersApi {
   createOrder(args: {
     amount: PayPalMoney;
     intent: "CAPTURE" | "AUTHORIZE";
+    payeeMerchantId?: string;
     metadata?: Record<string, string>;
     platformFees?: Array<{
       amount: PayPalMoney;
-      payee: {
+      payee?: {
         merchant_id: string;
       };
     }>;

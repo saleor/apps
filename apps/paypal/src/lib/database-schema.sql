@@ -91,3 +91,48 @@ COMMENT ON COLUMN paypal_merchant_onboarding.primary_email_confirmed IS 'Must be
 COMMENT ON COLUMN paypal_merchant_onboarding.payments_receivable IS 'Must be true for merchant to accept payments';
 COMMENT ON COLUMN paypal_merchant_onboarding.oauth_integrated IS 'OAuth permissions granted to platform';
 COMMENT ON COLUMN paypal_merchant_onboarding.acdc_enabled IS 'Advanced Credit/Debit Card processing enabled';
+
+-- WSM Global PayPal Configuration Table
+-- Stores partner API credentials and settings shared across all tenants
+CREATE TABLE IF NOT EXISTS wsm_global_paypal_config (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+
+  -- PayPal Partner API Credentials
+  client_id TEXT NOT NULL,                       -- PayPal Partner API Client ID
+  client_secret TEXT NOT NULL,                   -- PayPal Partner API Client Secret
+  partner_merchant_id TEXT,                      -- PayPal Partner Merchant ID
+  partner_fee_percent NUMERIC(5,2),              -- Platform fee percentage (0-100)
+  bn_code TEXT,                                  -- PayPal Partner Attribution BN Code
+
+  -- Environment
+  environment TEXT NOT NULL CHECK (environment IN ('SANDBOX', 'LIVE')),
+
+  -- Status
+  is_active BOOLEAN DEFAULT TRUE,                -- Only one config can be active
+
+  -- Metadata
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_wsm_global_config_active
+  ON wsm_global_paypal_config(is_active);
+
+-- Trigger to update updated_at timestamp
+CREATE OR REPLACE FUNCTION update_wsm_global_config_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_wsm_global_config_timestamp
+  BEFORE UPDATE ON wsm_global_paypal_config
+  FOR EACH ROW
+  EXECUTE FUNCTION update_wsm_global_config_timestamp();
+
+-- Comments
+COMMENT ON TABLE wsm_global_paypal_config IS 'Stores PayPal partner API credentials and settings shared across all tenants';
+COMMENT ON COLUMN wsm_global_paypal_config.partner_fee_percent IS 'Platform fee percentage (e.g., 2.00 for 2%). PayPal deducts this from merchant payments';

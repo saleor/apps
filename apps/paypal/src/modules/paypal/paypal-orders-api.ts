@@ -32,10 +32,11 @@ export class PayPalOrdersApi implements IPayPalOrdersApi {
   async createOrder(args: {
     amount: PayPalMoney;
     intent: "CAPTURE" | "AUTHORIZE";
+    payeeMerchantId?: string;
     metadata?: Record<string, string>;
     platformFees?: Array<{
       amount: PayPalMoney;
-      payee: {
+      payee?: {
         merchant_id: string;
       };
     }>;
@@ -48,11 +49,20 @@ export class PayPalOrdersApi implements IPayPalOrdersApi {
       }),
     };
 
+    // Add merchant payee if provided (required for platform fees)
+    if (args.payeeMerchantId) {
+      purchaseUnit.payee = {
+        merchant_id: args.payeeMerchantId,
+      };
+    }
+
     // Add platform fees if provided
     // Platform fees are used by PayPal partners to collect partner fees from merchant transactions
-    // Each fee must include the partner's merchant_id in the payee field
+    // The payee in purchase_units specifies who receives the payment (the merchant)
+    // The payee in platform_fees can optionally specify who receives the fee (defaults to the partner)
     if (args.platformFees && args.platformFees.length > 0) {
       purchaseUnit.payment_instruction = {
+        disbursement_mode: "INSTANT",
         platform_fees: args.platformFees,
       };
     }

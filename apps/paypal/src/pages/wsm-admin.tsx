@@ -12,6 +12,7 @@ const WsmAdminPage: NextPage = () => {
   const [clientId, setClientId] = useState("");
   const [clientSecret, setClientSecret] = useState("");
   const [partnerMerchantId, setPartnerMerchantId] = useState("");
+  const [partnerFeePercent, setPartnerFeePercent] = useState("");
   const [bnCode, setBnCode] = useState("");
   const [environment, setEnvironment] = useState<"SANDBOX" | "LIVE">("SANDBOX");
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -76,6 +77,7 @@ const WsmAdminPage: NextPage = () => {
           setClientId("");
           setClientSecret("");
           setPartnerMerchantId("");
+          setPartnerFeePercent("");
           setBnCode("");
         }
       },
@@ -111,6 +113,7 @@ const WsmAdminPage: NextPage = () => {
       clientId,
       clientSecret,
       partnerMerchantId: partnerMerchantId || undefined,
+      partnerFeePercent: partnerFeePercent ? parseFloat(partnerFeePercent) : undefined,
       bnCode: bnCode || undefined,
       environment,
     });
@@ -197,6 +200,11 @@ const WsmAdminPage: NextPage = () => {
                     <strong>Partner Merchant ID:</strong> {configData.config.partnerMerchantId}
                   </Text>
                 )}
+                {configData.config.partnerFeePercent !== null && configData.config.partnerFeePercent !== undefined && (
+                  <Text>
+                    <strong>Partner Fee Percent:</strong> {configData.config.partnerFeePercent}%
+                  </Text>
+                )}
                 {configData.config.bnCode && (
                   <Text>
                     <strong>BN Code:</strong> {configData.config.bnCode}
@@ -273,6 +281,22 @@ const WsmAdminPage: NextPage = () => {
               />
               <Text marginTop={1} size={2} color="default2">
                 Your PayPal Partner Merchant ID, required for querying seller status
+              </Text>
+            </Box>
+
+            <Box>
+              <Text marginBottom={2}>Partner Fee Percent (Optional)</Text>
+              <Input
+                type="number"
+                value={partnerFeePercent}
+                onChange={(e) => setPartnerFeePercent(e.target.value)}
+                placeholder="2.00"
+                min="0"
+                max="100"
+                step="0.01"
+              />
+              <Text marginTop={1} size={2} color="default2">
+                Platform fee percentage (e.g., 2.00 for 2%). PayPal deducts this from merchant payments
               </Text>
             </Box>
 

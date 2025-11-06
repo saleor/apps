@@ -52,6 +52,7 @@ export const initializeDatabase = async (): Promise<void> => {
       client_id TEXT NOT NULL,
       client_secret TEXT NOT NULL,        -- Should be encrypted in production
       partner_merchant_id TEXT,           -- PayPal Partner Merchant ID for API calls
+      partner_fee_percent NUMERIC(5,2),   -- Platform fee percentage (0-100)
       bn_code TEXT,                       -- PayPal Partner Attribution BN code
       environment TEXT NOT NULL CHECK (environment IN ('SANDBOX', 'LIVE')),
       is_active BOOLEAN DEFAULT TRUE,
@@ -68,11 +69,33 @@ export const initializeDatabase = async (): Promise<void> => {
       ) THEN
         ALTER TABLE wsm_global_paypal_config ADD COLUMN bn_code TEXT;
       END IF;
+
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name='wsm_global_paypal_config' AND column_name='partner_fee_percent'
+      ) THEN
+        ALTER TABLE wsm_global_paypal_config ADD COLUMN partner_fee_percent NUMERIC(5,2);
+      END IF;
     END $$;
 
     -- Only allow one active global config at a time
     CREATE UNIQUE INDEX IF NOT EXISTS idx_wsm_global_paypal_config_active
       ON wsm_global_paypal_config(is_active) WHERE is_active = TRUE;
+
+    -- Trigger to update updated_at timestamp for global config
+    CREATE OR REPLACE FUNCTION update_wsm_global_config_timestamp()
+    RETURNS TRIGGER AS $$
+    BEGIN
+      NEW.updated_at = NOW();
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    DROP TRIGGER IF EXISTS trigger_update_wsm_global_config_timestamp ON wsm_global_paypal_config;
+    CREATE TRIGGER trigger_update_wsm_global_config_timestamp
+      BEFORE UPDATE ON wsm_global_paypal_config
+      FOR EACH ROW
+      EXECUTE FUNCTION update_wsm_global_config_timestamp();
 
     -- PayPal Merchant Onboarding Table
     CREATE TABLE IF NOT EXISTS paypal_merchant_onboarding (

@@ -20,7 +20,7 @@ import {
   getTransactionFromRequestedEventPayload,
 } from "@/modules/saleor/transaction-requested-event-helpers";
 import { mapPayPalErrorToApiError } from "@/modules/paypal/paypal-api-error";
-import { PayPalMoney } from "@/modules/paypal/paypal-money";
+import { createPayPalMoney } from "@/modules/paypal/paypal-money";
 import {
   ChargeActionRequiredResult,
   AuthorizationActionRequiredResult,
@@ -117,25 +117,32 @@ export class TransactionInitializeSessionUseCase {
     };
     appContextContainer.set(appContext);
 
-    // Fetch BN code from global config for partner attribution
+    // Fetch BN code and partner fee percentage from global config
     let bnCode: string | undefined;
+    let partnerMerchantId: string | undefined;
+    let partnerFeePercent: number | undefined;
     try {
       const pool = getPool();
       const globalConfigRepository = GlobalPayPalConfigRepository.create(pool);
       const globalConfigResult = await globalConfigRepository.getActiveConfig();
 
       if (globalConfigResult.isOk() && globalConfigResult.value) {
-        bnCode = globalConfigResult.value.bnCode || undefined;
-        this.logger.debug("Retrieved BN code from global config", {
+        const globalConfig = globalConfigResult.value;
+        bnCode = globalConfig.bnCode || undefined;
+        partnerMerchantId = globalConfig.partnerMerchantId || undefined;
+        partnerFeePercent = globalConfig.partnerFeePercent || undefined;
+        this.logger.debug("Retrieved config from global config", {
           hasBnCode: !!bnCode,
+          hasPartnerMerchantId: !!partnerMerchantId,
+          partnerFeePercent,
         });
       } else {
-        this.logger.warn("No active global config found for BN code", {
+        this.logger.warn("No active global config found", {
           error: globalConfigResult.isErr() ? globalConfigResult.error : undefined,
         });
       }
     } catch (error) {
-      this.logger.warn("Failed to fetch BN code from global config", {
+      this.logger.warn("Failed to fetch global config", {
         error,
       });
     }
@@ -150,11 +157,62 @@ export class TransactionInitializeSessionUseCase {
       env: config.environment,
     });
 
+    // Validate and convert amount
+    if (typeof event.action.amount !== "number" || event.action.amount == null) {
+      this.logger.error("Invalid amount in transaction event", {
+        amount: event.action.amount,
+        transactionId: event.transaction.id,
+      });
+
+      return err(
+        new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          new BaseError("Invalid amount in transaction event"),
+        ),
+      );
+    }
+
+    if (event.action.amount < 0) {
+      this.logger.error("Amount must be greater than or equal to 0", {
+        amount: event.action.amount,
+        transactionId: event.transaction.id,
+      });
+
+      return err(
+        new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          new BaseError("Amount must be greater than or equal to 0"),
+        ),
+      );
+    }
+
     // Convert Saleor money to PayPal money format
-    const paypalMoney: PayPalMoney = {
-      currency_code: event.action.currency,
-      value: (event.action.amount as number).toString(),
-    };
+    const paypalMoney = createPayPalMoney({
+      currencyCode: event.action.currency,
+      amount: event.action.amount,
+    });
+
+    // Calculate platform fee if configured
+    let platformFees: Array<{ amount: typeof paypalMoney; payee?: { merchant_id: string } }> | undefined;
+    if (partnerFeePercent && partnerFeePercent > 0 && config.merchantId && partnerMerchantId) {
+      const feeAmount = event.action.amount * (partnerFeePercent / 100);
+      const platformFeeMoney = createPayPalMoney({
+        currencyCode: event.action.currency,
+        amount: feeAmount,
+      });
+
+      // Platform fee payee is optional - if not specified, PayPal uses the partner's merchant ID
+      // from the authentication context
+      platformFees = [{
+        amount: platformFeeMoney,
+      }];
+
+      this.logger.debug("Calculated platform fee", {
+        partnerFeePercent,
+        feeAmount,
+        platformFeeMoney,
+      });
+    }
 
     // Determine PayPal intent based on action type
     const intent = event.action.actionType === "CHARGE" ? "CAPTURE" : "AUTHORIZE";
@@ -162,6 +220,8 @@ export class TransactionInitializeSessionUseCase {
     this.logger.debug("Creating PayPal order", {
       intent,
       amount: paypalMoney,
+      hasPlatformFees: !!platformFees,
+      payeeMerchantId: config.merchantId,
       transactionId: event.transaction.id,
     });
 
@@ -169,6 +229,8 @@ export class TransactionInitializeSessionUseCase {
     const createOrderResult = await paypalOrdersApi.createOrder({
       amount: paypalMoney,
       intent,
+      payeeMerchantId: config.merchantId || undefined,
+      platformFees,
       metadata: {
         saleor_transaction_id: event.transaction.id,
         saleor_source_id: event.sourceObject.id,

@@ -18,6 +18,7 @@ export class GlobalPayPalConfig {
   public readonly clientId: PayPalClientId;
   public readonly clientSecret: PayPalClientSecret;
   public readonly partnerMerchantId: string | null;
+  public readonly partnerFeePercent: number | null;
   public readonly bnCode: string | null;
   public readonly environment: PayPalEnvironment;
   public readonly isActive: boolean;
@@ -29,6 +30,7 @@ export class GlobalPayPalConfig {
     clientId: PayPalClientId,
     clientSecret: PayPalClientSecret,
     partnerMerchantId: string | null,
+    partnerFeePercent: number | null,
     bnCode: string | null,
     environment: PayPalEnvironment,
     isActive: boolean,
@@ -39,6 +41,7 @@ export class GlobalPayPalConfig {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.partnerMerchantId = partnerMerchantId;
+    this.partnerFeePercent = partnerFeePercent;
     this.bnCode = bnCode;
     this.environment = environment;
     this.isActive = isActive;
@@ -51,6 +54,7 @@ export class GlobalPayPalConfig {
     clientId: string;
     clientSecret: string;
     partnerMerchantId?: string | null;
+    partnerFeePercent?: number | null;
     bnCode?: string | null;
     environment: PayPalEnvironment;
     isActive?: boolean;
@@ -67,6 +71,7 @@ export class GlobalPayPalConfig {
           clientId,
           clientSecret,
           data.partnerMerchantId ?? null,
+          data.partnerFeePercent ?? null,
           data.bnCode ?? null,
           data.environment,
           data.isActive ?? true,
@@ -87,6 +92,7 @@ export class GlobalPayPalConfig {
     clientId: string;
     clientSecret: string;
     partnerMerchantId: string | null;
+    partnerFeePercent: number | null;
     bnCode: string | null;
     environment: PayPalEnvironment;
     isActive: boolean;
@@ -98,6 +104,7 @@ export class GlobalPayPalConfig {
       clientId: this.clientId,
       clientSecret: this.clientSecret,
       partnerMerchantId: this.partnerMerchantId,
+      partnerFeePercent: this.partnerFeePercent,
       bnCode: this.bnCode,
       environment: this.environment,
       isActive: this.isActive,

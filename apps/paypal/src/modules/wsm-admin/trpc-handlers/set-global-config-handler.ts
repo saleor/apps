@@ -43,6 +43,7 @@ export class SetGlobalConfigHandler {
         clientId: input.clientId,
         clientSecret: input.clientSecret,
         partnerMerchantId: input.partnerMerchantId,
+        partnerFeePercent: input.partnerFeePercent,
         bnCode: input.bnCode,
         environment: input.environment,
       });
