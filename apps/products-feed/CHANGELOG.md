@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 2.1.3
+
+### Patch Changes
+
+- bb71489c: Allow app to execute Saleor calls in batches, that are configured as env variable (MAX_PARALLEL_CALLS). Default 5.
+
 ## 2.1.2
 
 ### Patch Changes
