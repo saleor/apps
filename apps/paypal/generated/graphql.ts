@@ -29339,9 +29339,9 @@ type EventMetadata_WarehouseUpdated_Fragment = { version?: string | null | undef
 
 export type EventMetadataFragment = EventMetadata_AccountChangeEmailRequested_Fragment | EventMetadata_AccountConfirmationRequested_Fragment | EventMetadata_AccountConfirmed_Fragment | EventMetadata_AccountDeleteRequested_Fragment | EventMetadata_AccountDeleted_Fragment | EventMetadata_AccountEmailChanged_Fragment | EventMetadata_AccountSetPasswordRequested_Fragment | EventMetadata_AddressCreated_Fragment | EventMetadata_AddressDeleted_Fragment | EventMetadata_AddressUpdated_Fragment | EventMetadata_AppDeleted_Fragment | EventMetadata_AppInstalled_Fragment | EventMetadata_AppStatusChanged_Fragment | EventMetadata_AppUpdated_Fragment | EventMetadata_AttributeCreated_Fragment | EventMetadata_AttributeDeleted_Fragment | EventMetadata_AttributeUpdated_Fragment | EventMetadata_AttributeValueCreated_Fragment | EventMetadata_AttributeValueDeleted_Fragment | EventMetadata_AttributeValueUpdated_Fragment | EventMetadata_CalculateTaxes_Fragment | EventMetadata_CategoryCreated_Fragment | EventMetadata_CategoryDeleted_Fragment | EventMetadata_CategoryUpdated_Fragment | EventMetadata_ChannelCreated_Fragment | EventMetadata_ChannelDeleted_Fragment | EventMetadata_ChannelMetadataUpdated_Fragment | EventMetadata_ChannelStatusChanged_Fragment | EventMetadata_ChannelUpdated_Fragment | EventMetadata_CheckoutCreated_Fragment | EventMetadata_CheckoutFilterShippingMethods_Fragment | EventMetadata_CheckoutFullyPaid_Fragment | EventMetadata_CheckoutMetadataUpdated_Fragment | EventMetadata_CheckoutUpdated_Fragment | EventMetadata_CollectionCreated_Fragment | EventMetadata_CollectionDeleted_Fragment | EventMetadata_CollectionMetadataUpdated_Fragment | EventMetadata_CollectionUpdated_Fragment | EventMetadata_CustomerCreated_Fragment | EventMetadata_CustomerMetadataUpdated_Fragment | EventMetadata_CustomerUpdated_Fragment | EventMetadata_DraftOrderCreated_Fragment | EventMetadata_DraftOrderDeleted_Fragment | EventMetadata_DraftOrderUpdated_Fragment | EventMetadata_FulfillmentApproved_Fragment | EventMetadata_FulfillmentCanceled_Fragment | EventMetadata_FulfillmentCreated_Fragment | EventMetadata_FulfillmentMetadataUpdated_Fragment | EventMetadata_FulfillmentTrackingNumberUpdated_Fragment | EventMetadata_GiftCardCreated_Fragment | EventMetadata_GiftCardDeleted_Fragment | EventMetadata_GiftCardExportCompleted_Fragment | EventMetadata_GiftCardMetadataUpdated_Fragment | EventMetadata_GiftCardSent_Fragment | EventMetadata_GiftCardStatusChanged_Fragment | EventMetadata_GiftCardUpdated_Fragment | EventMetadata_InvoiceDeleted_Fragment | EventMetadata_InvoiceRequested_Fragment | EventMetadata_InvoiceSent_Fragment | EventMetadata_ListStoredPaymentMethods_Fragment | EventMetadata_MenuCreated_Fragment | EventMetadata_MenuDeleted_Fragment | EventMetadata_MenuItemCreated_Fragment | EventMetadata_MenuItemDeleted_Fragment | EventMetadata_MenuItemUpdated_Fragment | EventMetadata_MenuUpdated_Fragment | EventMetadata_OrderBulkCreated_Fragment | EventMetadata_OrderCancelled_Fragment | EventMetadata_OrderConfirmed_Fragment | EventMetadata_OrderCreated_Fragment | EventMetadata_OrderExpired_Fragment | EventMetadata_OrderFilterShippingMethods_Fragment | EventMetadata_OrderFulfilled_Fragment | EventMetadata_OrderFullyPaid_Fragment | EventMetadata_OrderFullyRefunded_Fragment | EventMetadata_OrderMetadataUpdated_Fragment | EventMetadata_OrderPaid_Fragment | EventMetadata_OrderRefunded_Fragment | EventMetadata_OrderUpdated_Fragment | EventMetadata_PageCreated_Fragment | EventMetadata_PageDeleted_Fragment | EventMetadata_PageTypeCreated_Fragment | EventMetadata_PageTypeDeleted_Fragment | EventMetadata_PageTypeUpdated_Fragment | EventMetadata_PageUpdated_Fragment | EventMetadata_PaymentAuthorize_Fragment | EventMetadata_PaymentCaptureEvent_Fragment | EventMetadata_PaymentConfirmEvent_Fragment | EventMetadata_PaymentGatewayInitializeSession_Fragment | EventMetadata_PaymentGatewayInitializeTokenizationSession_Fragment | EventMetadata_PaymentListGateways_Fragment | EventMetadata_PaymentMethodInitializeTokenizationSession_Fragment | EventMetadata_PaymentMethodProcessTokenizationSession_Fragment | EventMetadata_PaymentProcessEvent_Fragment | EventMetadata_PaymentRefundEvent_Fragment | EventMetadata_PaymentVoidEvent_Fragment | EventMetadata_PermissionGroupCreated_Fragment | EventMetadata_PermissionGroupDeleted_Fragment | EventMetadata_PermissionGroupUpdated_Fragment | EventMetadata_ProductCreated_Fragment | EventMetadata_ProductDeleted_Fragment | EventMetadata_ProductExportCompleted_Fragment | EventMetadata_ProductMediaCreated_Fragment | EventMetadata_ProductMediaDeleted_Fragment | EventMetadata_ProductMediaUpdated_Fragment | EventMetadata_ProductMetadataUpdated_Fragment | EventMetadata_ProductUpdated_Fragment | EventMetadata_ProductVariantBackInStock_Fragment | EventMetadata_ProductVariantCreated_Fragment | EventMetadata_ProductVariantDeleted_Fragment | EventMetadata_ProductVariantMetadataUpdated_Fragment | EventMetadata_ProductVariantOutOfStock_Fragment | EventMetadata_ProductVariantStockUpdated_Fragment | EventMetadata_ProductVariantUpdated_Fragment | EventMetadata_PromotionCreated_Fragment | EventMetadata_PromotionDeleted_Fragment | EventMetadata_PromotionEnded_Fragment | EventMetadata_PromotionRuleCreated_Fragment | EventMetadata_PromotionRuleDeleted_Fragment | EventMetadata_PromotionRuleUpdated_Fragment | EventMetadata_PromotionStarted_Fragment | EventMetadata_PromotionUpdated_Fragment | EventMetadata_SaleCreated_Fragment | EventMetadata_SaleDeleted_Fragment | EventMetadata_SaleToggle_Fragment | EventMetadata_SaleUpdated_Fragment | EventMetadata_ShippingListMethodsForCheckout_Fragment | EventMetadata_ShippingPriceCreated_Fragment | EventMetadata_ShippingPriceDeleted_Fragment | EventMetadata_ShippingPriceUpdated_Fragment | EventMetadata_ShippingZoneCreated_Fragment | EventMetadata_ShippingZoneDeleted_Fragment | EventMetadata_ShippingZoneMetadataUpdated_Fragment | EventMetadata_ShippingZoneUpdated_Fragment | EventMetadata_ShopMetadataUpdated_Fragment | EventMetadata_StaffCreated_Fragment | EventMetadata_StaffDeleted_Fragment | EventMetadata_StaffSetPasswordRequested_Fragment | EventMetadata_StaffUpdated_Fragment | EventMetadata_StoredPaymentMethodDeleteRequested_Fragment | EventMetadata_ThumbnailCreated_Fragment | EventMetadata_TransactionCancelationRequested_Fragment | EventMetadata_TransactionChargeRequested_Fragment | EventMetadata_TransactionInitializeSession_Fragment | EventMetadata_TransactionItemMetadataUpdated_Fragment | EventMetadata_TransactionProcessSession_Fragment | EventMetadata_TransactionRefundRequested_Fragment | EventMetadata_TranslationCreated_Fragment | EventMetadata_TranslationUpdated_Fragment | EventMetadata_VoucherCodeExportCompleted_Fragment | EventMetadata_VoucherCodesCreated_Fragment | EventMetadata_VoucherCodesDeleted_Fragment | EventMetadata_VoucherCreated_Fragment | EventMetadata_VoucherDeleted_Fragment | EventMetadata_VoucherMetadataUpdated_Fragment | EventMetadata_VoucherUpdated_Fragment | EventMetadata_WarehouseCreated_Fragment | EventMetadata_WarehouseDeleted_Fragment | EventMetadata_WarehouseMetadataUpdated_Fragment | EventMetadata_WarehouseUpdated_Fragment;
 
-type SourceObject_Checkout_Fragment = { __typename: 'Checkout', id: string, channel: { id: string, slug: string } };
+type SourceObject_Checkout_Fragment = { __typename: 'Checkout', id: string, channel: { id: string, slug: string }, subtotalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, quantity: number, variant: { id: string, name: string, sku?: string | null | undefined, product: { id: string, name: string, thumbnail?: { url: string } | null | undefined } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } } }> };
 
-type SourceObject_Order_Fragment = { __typename: 'Order', id: string, channel: { id: string, slug: string } };
+type SourceObject_Order_Fragment = { __typename: 'Order', id: string, channel: { id: string, slug: string }, subtotal: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, total: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, productName: string, variantName: string, productSku?: string | null | undefined, quantity: number, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, thumbnail?: { url: string } | null | undefined }> };
 
 export type SourceObjectFragment = SourceObject_Checkout_Fragment | SourceObject_Order_Fragment;
 
@@ -29364,12 +29364,12 @@ export type FetchChannelsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FetchChannelsQuery = { channels?: Array<{ id: string, slug: string }> | null | undefined };
 
-export type PaymentGatewayInitializeSessionEventFragment = { version?: string | null | undefined, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string } } | { __typename: 'Order', id: string, channel: { id: string, slug: string } }, recipient?: { id: string } | null | undefined };
+export type PaymentGatewayInitializeSessionEventFragment = { version?: string | null | undefined, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string }, subtotalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, quantity: number, variant: { id: string, name: string, sku?: string | null | undefined, product: { id: string, name: string, thumbnail?: { url: string } | null | undefined } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } } }> } | { __typename: 'Order', id: string, channel: { id: string, slug: string }, subtotal: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, total: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, productName: string, variantName: string, productSku?: string | null | undefined, quantity: number, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, thumbnail?: { url: string } | null | undefined }> }, recipient?: { id: string } | null | undefined };
 
 export type PaymentGatewayInitializeSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentGatewayInitializeSessionSubscription = { event?: { version?: string | null | undefined, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string } } | { __typename: 'Order', id: string, channel: { id: string, slug: string } }, recipient?: { id: string } | null | undefined } | {} | null | undefined };
+export type PaymentGatewayInitializeSessionSubscription = { event?: { version?: string | null | undefined, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string }, subtotalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, quantity: number, variant: { id: string, name: string, sku?: string | null | undefined, product: { id: string, name: string, thumbnail?: { url: string } | null | undefined } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } } }> } | { __typename: 'Order', id: string, channel: { id: string, slug: string }, subtotal: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, total: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, productName: string, variantName: string, productSku?: string | null | undefined, quantity: number, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, thumbnail?: { url: string } | null | undefined }> }, recipient?: { id: string } | null | undefined } | {} | null | undefined };
 
 export type TransactionCancelationRequestedEventFragment = { version?: string | null | undefined, transaction?: { id: string, pspReference: string, checkout?: { id: string, channel: { id: string, slug: string } } | null | undefined, order?: { id: string, channel: { id: string, slug: string } } | null | undefined } | null | undefined, recipient?: { id: string } | null | undefined };
 
@@ -29385,19 +29385,19 @@ export type TransactionChargeRequestedSubscriptionVariables = Exact<{ [key: stri
 
 export type TransactionChargeRequestedSubscription = { event?: { version?: string | null | undefined, action: { amount: unknown }, transaction?: { id: string, pspReference: string, checkout?: { id: string, channel: { id: string, slug: string } } | null | undefined, order?: { id: string, channel: { id: string, slug: string } } | null | undefined } | null | undefined, recipient?: { id: string } | null | undefined } | {} | null | undefined };
 
-export type TransactionInitializeSessionEventFragment = { data?: unknown | null | undefined, idempotencyKey: string, version?: string | null | undefined, action: { amount: unknown, currency: string, actionType: TransactionFlowStrategyEnum }, transaction: { id: string }, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string } } | { __typename: 'Order', id: string, channel: { id: string, slug: string } }, recipient?: { id: string } | null | undefined };
+export type TransactionInitializeSessionEventFragment = { data?: unknown | null | undefined, idempotencyKey: string, version?: string | null | undefined, action: { amount: unknown, currency: string, actionType: TransactionFlowStrategyEnum }, transaction: { id: string }, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string }, subtotalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, quantity: number, variant: { id: string, name: string, sku?: string | null | undefined, product: { id: string, name: string, thumbnail?: { url: string } | null | undefined } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } } }> } | { __typename: 'Order', id: string, channel: { id: string, slug: string }, subtotal: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, total: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, productName: string, variantName: string, productSku?: string | null | undefined, quantity: number, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, thumbnail?: { url: string } | null | undefined }> }, recipient?: { id: string } | null | undefined };
 
 export type TransactionInitializeSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TransactionInitializeSessionSubscription = { event?: { data?: unknown | null | undefined, idempotencyKey: string, version?: string | null | undefined, action: { amount: unknown, currency: string, actionType: TransactionFlowStrategyEnum }, transaction: { id: string }, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string } } | { __typename: 'Order', id: string, channel: { id: string, slug: string } }, recipient?: { id: string } | null | undefined } | {} | null | undefined };
+export type TransactionInitializeSessionSubscription = { event?: { data?: unknown | null | undefined, idempotencyKey: string, version?: string | null | undefined, action: { amount: unknown, currency: string, actionType: TransactionFlowStrategyEnum }, transaction: { id: string }, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string }, subtotalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, quantity: number, variant: { id: string, name: string, sku?: string | null | undefined, product: { id: string, name: string, thumbnail?: { url: string } | null | undefined } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } } }> } | { __typename: 'Order', id: string, channel: { id: string, slug: string }, subtotal: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, total: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, productName: string, variantName: string, productSku?: string | null | undefined, quantity: number, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, thumbnail?: { url: string } | null | undefined }> }, recipient?: { id: string } | null | undefined } | {} | null | undefined };
 
-export type TransactionProcessSessionEventFragment = { version?: string | null | undefined, transaction: { pspReference: string }, action: { amount: unknown, actionType: TransactionFlowStrategyEnum }, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string } } | { __typename: 'Order', id: string, channel: { id: string, slug: string } }, recipient?: { id: string } | null | undefined };
+export type TransactionProcessSessionEventFragment = { version?: string | null | undefined, transaction: { pspReference: string }, action: { amount: unknown, actionType: TransactionFlowStrategyEnum }, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string }, subtotalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, quantity: number, variant: { id: string, name: string, sku?: string | null | undefined, product: { id: string, name: string, thumbnail?: { url: string } | null | undefined } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } } }> } | { __typename: 'Order', id: string, channel: { id: string, slug: string }, subtotal: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, total: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, productName: string, variantName: string, productSku?: string | null | undefined, quantity: number, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, thumbnail?: { url: string } | null | undefined }> }, recipient?: { id: string } | null | undefined };
 
 export type TransactionProcessSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TransactionProcessSessionSubscription = { event?: { version?: string | null | undefined, transaction: { pspReference: string }, action: { amount: unknown, actionType: TransactionFlowStrategyEnum }, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string } } | { __typename: 'Order', id: string, channel: { id: string, slug: string } }, recipient?: { id: string } | null | undefined } | {} | null | undefined };
+export type TransactionProcessSessionSubscription = { event?: { version?: string | null | undefined, transaction: { pspReference: string }, action: { amount: unknown, actionType: TransactionFlowStrategyEnum }, sourceObject: { __typename: 'Checkout', id: string, channel: { id: string, slug: string }, subtotalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, quantity: number, variant: { id: string, name: string, sku?: string | null | undefined, product: { id: string, name: string, thumbnail?: { url: string } | null | undefined } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } } }> } | { __typename: 'Order', id: string, channel: { id: string, slug: string }, subtotal: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, shippingPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, total: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, lines: Array<{ id: string, productName: string, variantName: string, productSku?: string | null | undefined, quantity: number, unitPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, totalPrice: { gross: { amount: number, currency: string }, net: { amount: number, currency: string }, tax: { amount: number, currency: string } }, thumbnail?: { url: string } | null | undefined }> }, recipient?: { id: string } | null | undefined } | {} | null | undefined };
 
 export type TransactionRefundRequestedEventFragment = { version?: string | null | undefined, action: { amount: unknown, currency: string }, transaction?: { id: string, pspReference: string, checkout?: { id: string, channel: { id: string, slug: string } } | null | undefined, order?: { id: string, channel: { id: string, slug: string } } | null | undefined } | null | undefined, recipient?: { id: string } | null | undefined };
 
@@ -29428,12 +29428,178 @@ export const SourceObjectFragmentDoc = gql`
     channel {
       ...Channel
     }
+    subtotalPrice {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    shippingPrice {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    totalPrice {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    lines {
+      id
+      quantity
+      variant {
+        id
+        name
+        sku
+        product {
+          id
+          name
+          thumbnail {
+            url
+          }
+        }
+      }
+      totalPrice {
+        gross {
+          amount
+          currency
+        }
+        net {
+          amount
+          currency
+        }
+        tax {
+          amount
+          currency
+        }
+      }
+      unitPrice {
+        gross {
+          amount
+          currency
+        }
+        net {
+          amount
+          currency
+        }
+        tax {
+          amount
+          currency
+        }
+      }
+    }
   }
   ... on Order {
     __typename
     id
     channel {
       ...Channel
+    }
+    subtotal {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    shippingPrice {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    total {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    lines {
+      id
+      productName
+      variantName
+      productSku
+      quantity
+      unitPrice {
+        gross {
+          amount
+          currency
+        }
+        net {
+          amount
+          currency
+        }
+        tax {
+          amount
+          currency
+        }
+      }
+      totalPrice {
+        gross {
+          amount
+          currency
+        }
+        net {
+          amount
+          currency
+        }
+        tax {
+          amount
+          currency
+        }
+      }
+      thumbnail {
+        url
+      }
     }
   }
 }

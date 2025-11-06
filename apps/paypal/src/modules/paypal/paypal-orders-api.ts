@@ -34,6 +34,20 @@ export class PayPalOrdersApi implements IPayPalOrdersApi {
     intent: "CAPTURE" | "AUTHORIZE";
     payeeMerchantId?: string;
     metadata?: Record<string, string>;
+    items?: Array<{
+      name: string;
+      quantity: string;
+      unit_amount: PayPalMoney;
+      description?: string;
+      sku?: string;
+      category?: "DIGITAL_GOODS" | "PHYSICAL_GOODS" | "DONATION";
+      image_url?: string;
+    }>;
+    amountBreakdown?: {
+      itemTotal?: number;
+      shipping?: number;
+      taxTotal?: number;
+    };
     platformFees?: Array<{
       amount: PayPalMoney;
       payee?: {
@@ -41,11 +55,43 @@ export class PayPalOrdersApi implements IPayPalOrdersApi {
       };
     }>;
   }): Promise<Result<PayPalOrder, unknown>> {
-    // Build purchase unit with optional platform fees
+    // Build amount object with breakdown if items are provided
+    // PayPal requires: amount.value = breakdown.item_total + breakdown.shipping + breakdown.tax_total
+    const amountObject: any = args.items && args.items.length > 0 && args.amountBreakdown
+      ? {
+          currency_code: args.amount.currency_code,
+          value: args.amount.value,
+          breakdown: {
+            ...(args.amountBreakdown.itemTotal !== undefined && {
+              item_total: {
+                currency_code: args.amount.currency_code,
+                value: args.amountBreakdown.itemTotal.toFixed(2),
+              },
+            }),
+            ...(args.amountBreakdown.shipping !== undefined && args.amountBreakdown.shipping > 0 && {
+              shipping: {
+                currency_code: args.amount.currency_code,
+                value: args.amountBreakdown.shipping.toFixed(2),
+              },
+            }),
+            ...(args.amountBreakdown.taxTotal !== undefined && args.amountBreakdown.taxTotal > 0 && {
+              tax_total: {
+                currency_code: args.amount.currency_code,
+                value: args.amountBreakdown.taxTotal.toFixed(2),
+              },
+            }),
+          },
+        }
+      : args.amount;
+
+    // Build purchase unit with optional platform fees and items
     const purchaseUnit: any = {
-      amount: args.amount,
+      amount: amountObject,
       ...(args.metadata && {
         custom_id: JSON.stringify(args.metadata),
+      }),
+      ...(args.items && args.items.length > 0 && {
+        items: args.items,
       }),
     };
 

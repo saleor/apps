@@ -12,7 +12,7 @@ import { createLogger } from "@/lib/logger";
 import { getPool } from "@/lib/database";
 import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
-import { IPayPalOrdersApiFactory } from "@/modules/paypal/types";
+import { IPayPalOrdersApiFactory, PayPalOrderItem } from "@/modules/paypal/types";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { resolveSaleorMoneyFromPayPalOrder } from "@/modules/saleor/resolve-saleor-money-from-paypal-order";
 import {
@@ -35,6 +35,101 @@ import {
   TransactionInitializeSessionUseCaseResponses,
   TransactionInitializeSessionUseCaseResponsesType,
 } from "./use-case-response";
+
+/**
+ * Helper function to extract and map line items from Saleor to PayPal format
+ */
+function extractPayPalItemsFromSource(
+  sourceObject: TransactionInitializeSessionEventFragment["sourceObject"],
+  currency: string
+): PayPalOrderItem[] {
+  const items: PayPalOrderItem[] = [];
+
+  if (sourceObject.__typename === "Checkout" && sourceObject.lines) {
+    for (const line of sourceObject.lines) {
+      if (!line.variant || !line.unitPrice) continue;
+
+      const productName = line.variant.product?.name || line.variant.name || "Product";
+      const variantName = line.variant.name;
+      const fullName = variantName ? `${productName} - ${variantName}` : productName;
+
+      // Use NET unit price (without tax) to match the item_total breakdown
+      const unitAmount = line.unitPrice.net?.amount ?? line.unitPrice.gross.amount;
+
+      items.push({
+        name: fullName.substring(0, 127), // PayPal max 127 chars
+        quantity: String(line.quantity),
+        unit_amount: createPayPalMoney({
+          currencyCode: currency,
+          amount: unitAmount,
+        }),
+        sku: line.variant.sku || undefined,
+        image_url: line.variant.product?.thumbnail?.url || undefined,
+        category: "PHYSICAL_GOODS",
+      });
+    }
+  } else if (sourceObject.__typename === "Order" && sourceObject.lines) {
+    for (const line of sourceObject.lines) {
+      if (!line.unitPrice) continue;
+
+      const productName = line.productName || "Product";
+      const variantName = line.variantName;
+      const fullName = variantName ? `${productName} - ${variantName}` : productName;
+
+      // Use NET unit price (without tax) to match the item_total breakdown
+      const unitAmount = line.unitPrice.net?.amount ?? line.unitPrice.gross.amount;
+
+      items.push({
+        name: fullName.substring(0, 127), // PayPal max 127 chars
+        quantity: String(line.quantity),
+        unit_amount: createPayPalMoney({
+          currencyCode: currency,
+          amount: unitAmount,
+        }),
+        sku: line.productSku || undefined,
+        image_url: line.thumbnail?.url || undefined,
+        category: "PHYSICAL_GOODS",
+      });
+    }
+  }
+
+  return items;
+}
+
+/**
+ * Helper function to extract amount breakdown from Saleor source object
+ */
+function extractAmountBreakdown(
+  sourceObject: TransactionInitializeSessionEventFragment["sourceObject"]
+) {
+  let subtotal: number | undefined;
+  let shipping: number | undefined;
+  let taxTotal: number | undefined;
+
+  if (sourceObject.__typename === "Checkout") {
+    // Use NET amounts (without tax) for item_total and shipping
+    subtotal = sourceObject.subtotalPrice?.net?.amount;
+    shipping = sourceObject.shippingPrice?.net?.amount;
+    // Calculate total tax (subtotal tax + shipping tax)
+    const subtotalTax = sourceObject.subtotalPrice?.tax?.amount || 0;
+    const shippingTax = sourceObject.shippingPrice?.tax?.amount || 0;
+    taxTotal = subtotalTax + shippingTax;
+  } else if (sourceObject.__typename === "Order") {
+    // Use NET amounts (without tax) for item_total and shipping
+    subtotal = sourceObject.subtotal?.net?.amount;
+    shipping = sourceObject.shippingPrice?.net?.amount;
+    // Calculate total tax (subtotal tax + shipping tax)
+    const subtotalTax = sourceObject.subtotal?.tax?.amount || 0;
+    const shippingTax = sourceObject.shippingPrice?.tax?.amount || 0;
+    taxTotal = subtotalTax + shippingTax;
+  }
+
+  return {
+    subtotal,
+    shipping,
+    taxTotal,
+  };
+}
 
 type UseCaseExecuteResult = Result<
   TransactionInitializeSessionUseCaseResponsesType,
@@ -192,6 +287,37 @@ export class TransactionInitializeSessionUseCase {
       amount: event.action.amount,
     });
 
+    // Log the source object to debug line items
+    this.logger.debug("Source object for line items extraction", {
+      typename: event.sourceObject.__typename,
+      sourceObjectId: event.sourceObject.id,
+      hasLines: "lines" in event.sourceObject,
+      linesCount: "lines" in event.sourceObject ? (event.sourceObject.lines?.length || 0) : "N/A",
+      sourceObject: JSON.stringify(event.sourceObject, null, 2),
+    });
+
+    // Extract line items from source object (Checkout or Order)
+    const paypalItems = extractPayPalItemsFromSource(event.sourceObject, event.action.currency);
+
+    // Extract amount breakdown (subtotal, shipping)
+    const breakdown = extractAmountBreakdown(event.sourceObject);
+
+    this.logger.debug("Extracted line items and breakdown for PayPal order", {
+      itemCount: paypalItems.length,
+      items: paypalItems.map((item) => ({
+        name: item.name,
+        quantity: item.quantity,
+        sku: item.sku,
+        unitAmount: item.unit_amount,
+      })),
+      breakdown: {
+        subtotal: breakdown.subtotal,
+        shipping: breakdown.shipping,
+        taxTotal: breakdown.taxTotal,
+        total: event.action.amount,
+      },
+    });
+
     // Calculate platform fee if configured
     let platformFees: Array<{ amount: typeof paypalMoney; payee?: { merchant_id: string } }> | undefined;
     if (partnerFeePercent && partnerFeePercent > 0 && config.merchantId && partnerMerchantId) {
@@ -220,6 +346,7 @@ export class TransactionInitializeSessionUseCase {
     this.logger.debug("Creating PayPal order", {
       intent,
       amount: paypalMoney,
+      itemsCount: paypalItems.length,
       hasPlatformFees: !!platformFees,
       payeeMerchantId: config.merchantId,
       transactionId: event.transaction.id,
@@ -230,6 +357,12 @@ export class TransactionInitializeSessionUseCase {
       amount: paypalMoney,
       intent,
       payeeMerchantId: config.merchantId || undefined,
+      items: paypalItems.length > 0 ? paypalItems : undefined,
+      amountBreakdown: paypalItems.length > 0 ? {
+        itemTotal: breakdown.subtotal,
+        shipping: breakdown.shipping,
+        taxTotal: breakdown.taxTotal,
+      } : undefined,
       platformFees,
       metadata: {
         saleor_transaction_id: event.transaction.id,
@@ -261,10 +394,25 @@ export class TransactionInitializeSessionUseCase {
 
     const paypalOrder = createOrderResult.value;
 
-    this.logger.info("Successfully created PayPal order", {
+    // Log the full PayPal order response
+    this.logger.info("Successfully created PayPal order - Full Response", {
       paypalOrderId: paypalOrder.id,
       status: paypalOrder.status,
+      fullResponse: JSON.stringify(paypalOrder, null, 2),
     });
+
+    // Log purchase units details if available
+    if (paypalOrder.purchase_units && paypalOrder.purchase_units.length > 0) {
+      this.logger.info("PayPal order purchase units details", {
+        purchaseUnits: paypalOrder.purchase_units.map((unit) => ({
+          amount: unit.amount,
+          itemsCount: unit.items?.length || 0,
+          items: unit.items || [],
+          hasPlatformFees: !!unit.payment_instruction?.platform_fees,
+          platformFees: unit.payment_instruction?.platform_fees || [],
+        })),
+      });
+    }
 
     // Check if order requires payer action (e.g., approval)
     if (paypalOrder.status === "PAYER_ACTION_REQUIRED" || paypalOrder.status === "CREATED") {

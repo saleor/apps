@@ -7,11 +7,26 @@ import { PayPalEnv } from "./paypal-env";
 import { PayPalMoney } from "./paypal-money";
 import { PayPalOrderId } from "./paypal-order-id";
 
+/**
+ * PayPal Order Item
+ * Represents a line item in a PayPal order
+ */
+export interface PayPalOrderItem {
+  name: string; // Item name (max 127 chars)
+  quantity: string; // Item quantity
+  unit_amount: PayPalMoney; // Item unit price
+  description?: string; // Item description (max 127 chars)
+  sku?: string; // Stock keeping unit
+  category?: "DIGITAL_GOODS" | "PHYSICAL_GOODS" | "DONATION"; // Item category
+  image_url?: string; // Item image URL (max 2048 chars)
+}
+
 export interface PayPalOrder {
   id: PayPalOrderId;
   status: "CREATED" | "SAVED" | "APPROVED" | "VOIDED" | "COMPLETED" | "PAYER_ACTION_REQUIRED";
   purchase_units: Array<{
     amount: PayPalMoney;
+    items?: PayPalOrderItem[];
     payment_instruction?: {
       platform_fees?: Array<{
         amount: PayPalMoney;
@@ -47,6 +62,12 @@ export interface IPayPalOrdersApi {
     intent: "CAPTURE" | "AUTHORIZE";
     payeeMerchantId?: string;
     metadata?: Record<string, string>;
+    items?: PayPalOrderItem[];
+    amountBreakdown?: {
+      itemTotal?: number;
+      shipping?: number;
+      taxTotal?: number;
+    };
     platformFees?: Array<{
       amount: PayPalMoney;
       payee?: {

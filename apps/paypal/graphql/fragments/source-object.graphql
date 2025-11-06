@@ -5,12 +5,178 @@ fragment SourceObject on OrderOrCheckout {
     channel {
       ...Channel
     }
+    subtotalPrice {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    shippingPrice {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    totalPrice {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    lines {
+      id
+      quantity
+      variant {
+        id
+        name
+        sku
+        product {
+          id
+          name
+          thumbnail {
+            url
+          }
+        }
+      }
+      totalPrice {
+        gross {
+          amount
+          currency
+        }
+        net {
+          amount
+          currency
+        }
+        tax {
+          amount
+          currency
+        }
+      }
+      unitPrice {
+        gross {
+          amount
+          currency
+        }
+        net {
+          amount
+          currency
+        }
+        tax {
+          amount
+          currency
+        }
+      }
+    }
   }
   ... on Order {
     __typename
     id
     channel {
       ...Channel
+    }
+    subtotal {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    shippingPrice {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    total {
+      gross {
+        amount
+        currency
+      }
+      net {
+        amount
+        currency
+      }
+      tax {
+        amount
+        currency
+      }
+    }
+    lines {
+      id
+      productName
+      variantName
+      productSku
+      quantity
+      unitPrice {
+        gross {
+          amount
+          currency
+        }
+        net {
+          amount
+          currency
+        }
+        tax {
+          amount
+          currency
+        }
+      }
+      totalPrice {
+        gross {
+          amount
+          currency
+        }
+        net {
+          amount
+          currency
+        }
+        tax {
+          amount
+          currency
+        }
+      }
+      thumbnail {
+        url
+      }
     }
   }
 }
