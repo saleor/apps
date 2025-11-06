@@ -89,4 +89,20 @@ describe("chunkArray", () => {
 
     expect(input).toStrictEqual(inputCopy);
   });
+
+  it("should throw error when chunk size is zero", () => {
+    expect(() => chunkArray([1, 2, 3], 0)).toThrow("Chunk size must be a positive integer");
+  });
+
+  it("should throw error when chunk size is negative", () => {
+    expect(() => chunkArray([1, 2, 3], -5)).toThrow("Chunk size must be a positive integer");
+  });
+
+  it("should throw error when chunk size is a float", () => {
+    expect(() => chunkArray([1, 2, 3], 2.5)).toThrow("Chunk size must be a positive integer");
+  });
+
+  it("should throw error when chunk size is NaN", () => {
+    expect(() => chunkArray([1, 2, 3], NaN)).toThrow("Chunk size must be a positive integer");
+  });
 });
