@@ -67,6 +67,7 @@ export const MerchantConnectionSection = () => {
           await appBridge.dispatch({
             type: "redirect",
             payload: {
+              actionId: "paypal-onboarding-redirect",
               to: result.actionUrl,
               newContext: true,
             },

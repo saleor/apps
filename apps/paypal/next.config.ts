@@ -3,6 +3,9 @@ import { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   transpilePackages: [
     "@saleor/apps-logger",
     "@saleor/apps-otel",

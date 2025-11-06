@@ -119,7 +119,7 @@ const WsmAdminPage: NextPage = () => {
   if (!secretKey) {
     return (
       <Box padding={8}>
-        <Text variant="heading">
+        <Text size={5} fontWeight="bold">
           WSM Super Admin
         </Text>
         <Text marginTop={4} color="default2">
@@ -132,7 +132,7 @@ const WsmAdminPage: NextPage = () => {
   if (isLoadingConfig) {
     return (
       <Box padding={8}>
-        <Text variant="heading">
+        <Text size={5} fontWeight="bold">
           Authenticating...
         </Text>
       </Box>
@@ -142,7 +142,7 @@ const WsmAdminPage: NextPage = () => {
   if (configError) {
     return (
       <Box padding={8}>
-        <Text variant="heading">
+        <Text size={5} fontWeight="bold">
           Authentication Failed
         </Text>
         <Text marginTop={4} color="critical1">
@@ -179,7 +179,7 @@ const WsmAdminPage: NextPage = () => {
               borderWidth={1}
               borderColor="default1"
             >
-              <Text variant="heading" marginBottom={2}>
+              <Text size={4} fontWeight="medium" marginBottom={2}>
                 Current Configuration
               </Text>
               <Box display="flex" flexDirection="column" gap={2}>
@@ -221,7 +221,7 @@ const WsmAdminPage: NextPage = () => {
           )}
 
           <Box display="flex" flexDirection="column" gap={4}>
-            <Text variant="heading">
+            <Text size={4} fontWeight="medium">
               {configData?.configured ? "Update" : "Set"} PayPal Partner Credentials
             </Text>
 
@@ -271,7 +271,7 @@ const WsmAdminPage: NextPage = () => {
                 onChange={(e) => setPartnerMerchantId(e.target.value)}
                 placeholder="ABCDEFGHIJKLM"
               />
-              <Text marginTop={1} variant="caption" color="default2">
+              <Text marginTop={1} size={2} color="default2">
                 Your PayPal Partner Merchant ID, required for querying seller status
               </Text>
             </Box>
@@ -284,7 +284,7 @@ const WsmAdminPage: NextPage = () => {
                 onChange={(e) => setBnCode(e.target.value)}
                 placeholder="YourPartnerName_SP"
               />
-              <Text marginTop={1} variant="caption" color="default2">
+              <Text marginTop={1} size={2} color="default2">
                 PayPal Partner Attribution BN code for tracking partner fees
               </Text>
             </Box>
