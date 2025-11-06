@@ -104,10 +104,13 @@ async function updatePrivateMetadata(
 }
 
 export class EncryptedMetadataManagerFactory {
-  constructor(private encryptionKey: string) {
+  private encryptionKey: string;
+
+  constructor(encryptionKey: string) {
     if (!encryptionKey) {
       throw new Error("Encryption key is required");
     }
+    this.encryptionKey = encryptionKey;
   }
 
   create(client: MetadataManagerGraphqlClient, appId: string): SettingsManager {
