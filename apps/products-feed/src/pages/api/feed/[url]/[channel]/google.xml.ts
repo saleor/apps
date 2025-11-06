@@ -1,4 +1,5 @@
 import { SpanStatusCode } from "@opentelemetry/api";
+import { AuthData } from "@saleor/app-sdk/APL";
 import { getBaseUrl } from "@saleor/app-sdk/headers";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
@@ -36,6 +37,33 @@ const validateRequestParams = (req: NextApiRequest) => {
 };
 
 const fetchXmlChunk = (downloadUrl: string) => fetch(downloadUrl).then((r) => r.text());
+
+const generateDistributedChunk = (params: {
+  authData: AuthData;
+  channel: string;
+  cursor: string;
+  baseUrl: string;
+  channelSettings: Awaited<ReturnType<(typeof GoogleFeedSettingsFetcher)["prototype"]["fetch"]>>;
+}) => {
+  const urlToFetch = new URL(
+    `/api/feed/${encodeURIComponent(params.authData.saleorApiUrl)}/${encodeURIComponent(
+      params.channel,
+    )}/${encodeURIComponent(params.cursor)}/generate-chunk`,
+    params.baseUrl,
+  );
+
+  return fetch(urlToFetch, {
+    body: JSON.stringify({
+      authData: params.authData,
+      channelSettings: params.channelSettings,
+    }),
+    headers: {
+      ContentType: "application/json",
+      authorization: process.env.REQUEST_SECRET as string,
+    },
+    method: "POST",
+  }).then((r) => r.json() as Promise<{ downloadUrl: string; fileName: string }>);
+};
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
@@ -207,24 +235,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     maxParallelCalls: MAX_PARALLEL_CALLS,
     items: cursors,
     executeFn: (cursor) => {
-      const urlToFetch = new URL(
-        `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
-          channel,
-        )}/${encodeURIComponent(cursor)}/generate-chunk`,
+      return generateDistributedChunk({
+        authData,
+        channelSettings,
         baseUrl,
-      );
-
-      return fetch(urlToFetch, {
-        body: JSON.stringify({
-          authData,
-          channelSettings: channelSettings,
-        }),
-        headers: {
-          ContentType: "application/json",
-          authorization: process.env.REQUEST_SECRET as string,
-        },
-        method: "POST",
-      }).then((r) => r.json() as Promise<{ downloadUrl: string; fileName: string }>);
+        channel,
+        cursor,
+      });
     },
     processChunkResults: async (chunkResults) => {
       // Store file names for cleanup
