@@ -35,6 +35,8 @@ const validateRequestParams = (req: NextApiRequest) => {
   queryShape.parse(req.query);
 };
 
+const fetchXmlChunk = (downloadUrl: string) => fetch(downloadUrl).then((r) => r.text());
+
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
   const channel = req.query.channel as string;
@@ -198,34 +200,42 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const baseUrl = getBaseUrl(req.headers);
 
-  const caller = new ChunkCaller(cursors, MAX_PARALLEL_CALLS, (cursor) => {
-    const urlToFetch = new URL(
-      `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
-        channel,
-      )}/${encodeURIComponent(cursor)}/generate-chunk`,
-      baseUrl,
-    );
+  // Store file names for cleanup
+  const chunkFileNames: string[] = [];
 
-    return fetch(urlToFetch, {
-      body: JSON.stringify({
-        authData,
-        channelSettings: channelSettings,
-      }),
-      headers: {
-        ContentType: "application/json",
-        authorization: process.env.REQUEST_SECRET as string,
-      },
-      method: "POST",
-    }).then((r) => r.json() as Promise<{ downloadUrl: string; fileName: string }>);
+  const caller = new ChunkCaller({
+    maxParallelCalls: MAX_PARALLEL_CALLS,
+    items: cursors,
+    executeFn: (cursor) => {
+      const urlToFetch = new URL(
+        `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
+          channel,
+        )}/${encodeURIComponent(cursor)}/generate-chunk`,
+        baseUrl,
+      );
+
+      return fetch(urlToFetch, {
+        body: JSON.stringify({
+          authData,
+          channelSettings: channelSettings,
+        }),
+        headers: {
+          ContentType: "application/json",
+          authorization: process.env.REQUEST_SECRET as string,
+        },
+        method: "POST",
+      }).then((r) => r.json() as Promise<{ downloadUrl: string; fileName: string }>);
+    },
+    processChunkResults: async (chunkResults) => {
+      // Store file names for cleanup
+      chunkFileNames.push(...chunkResults.map((res) => res.fileName));
+
+      // Fetch XML content for this chunk immediately
+      return Promise.all(chunkResults.map((resp) => fetchXmlChunk(resp.downloadUrl)));
+    },
   });
 
-  const xmlUrlResponses = await caller.executeCalls();
-
-  const xmlFileChunks = await Promise.all(
-    xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.text())),
-  );
-
-  const chunkFileNames = await Promise.all(xmlUrlResponses.map((res) => res.fileName));
+  const xmlFileChunks = await caller.executeCalls();
 
   const mergedChunks = xmlFileChunks.join("\n");
 

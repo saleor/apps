@@ -7,7 +7,7 @@ describe("ChunkCaller", () => {
     const items = ["item1", "item2", "item3"];
     const executeFn = vi.fn(async (item: string) => `result-${item}`);
 
-    const caller = new ChunkCaller(items, 2, executeFn);
+    const caller = new ChunkCaller({ items, maxParallelCalls: 2, executeFn });
     const results = await caller.executeCalls();
 
     expect(results).toStrictEqual(["result-item1", "result-item2", "result-item3"]);
@@ -37,7 +37,7 @@ describe("ChunkCaller", () => {
       return `result-${item}`;
     });
 
-    const caller = new ChunkCaller(items, 2, executeFn);
+    const caller = new ChunkCaller({ items, maxParallelCalls: 2, executeFn });
 
     await caller.executeCalls();
 
@@ -54,7 +54,7 @@ describe("ChunkCaller", () => {
   it("should handle empty array", async () => {
     const executeFn = vi.fn(async (item: string) => `result-${item}`);
 
-    const caller = new ChunkCaller([], 2, executeFn);
+    const caller = new ChunkCaller({ items: [], maxParallelCalls: 2, executeFn });
     const results = await caller.executeCalls();
 
     expect(results).toStrictEqual([]);
@@ -64,7 +64,7 @@ describe("ChunkCaller", () => {
   it("should handle single item", async () => {
     const executeFn = vi.fn(async (item: string) => `result-${item}`);
 
-    const caller = new ChunkCaller(["item1"], 5, executeFn);
+    const caller = new ChunkCaller({ items: ["item1"], maxParallelCalls: 5, executeFn });
     const results = await caller.executeCalls();
 
     expect(results).toStrictEqual(["result-item1"]);
@@ -75,7 +75,7 @@ describe("ChunkCaller", () => {
     const items = ["item1", "item2", "item3"];
     const executeFn = vi.fn(async (item: string) => `result-${item}`);
 
-    const caller = new ChunkCaller(items, 10, executeFn);
+    const caller = new ChunkCaller({ items, maxParallelCalls: 10, executeFn });
     const results = await caller.executeCalls();
 
     expect(results).toStrictEqual(["result-item1", "result-item2", "result-item3"]);
@@ -86,7 +86,7 @@ describe("ChunkCaller", () => {
     const items = ["item1", "item2", "item3"];
     const executeFn = vi.fn(async (item: string) => `result-${item}`);
 
-    const caller = new ChunkCaller(items, 1, executeFn);
+    const caller = new ChunkCaller({ items, maxParallelCalls: 1, executeFn });
     const results = await caller.executeCalls();
 
     expect(results).toStrictEqual(["result-item1", "result-item2", "result-item3"]);
@@ -97,7 +97,7 @@ describe("ChunkCaller", () => {
     const items = ["item1", "item2", "item3", "item4", "item5", "item6"];
     const executeFn = vi.fn(async (item: string) => `result-${item}`);
 
-    const caller = new ChunkCaller(items, 3, executeFn);
+    const caller = new ChunkCaller({ items, maxParallelCalls: 3, executeFn });
     const results = await caller.executeCalls();
 
     expect(results).toStrictEqual([
@@ -121,7 +121,7 @@ describe("ChunkCaller", () => {
       return `result-${item}`;
     });
 
-    const caller = new ChunkCaller(items, 2, executeFn);
+    const caller = new ChunkCaller({ items, maxParallelCalls: 2, executeFn });
 
     await expect(caller.executeCalls()).rejects.toThrow("Execution failed for item2");
   });
@@ -140,7 +140,7 @@ describe("ChunkCaller", () => {
       }),
     );
 
-    const caller = new ChunkCaller<Result>(items, 2, executeFn);
+    const caller = new ChunkCaller<Result>({ items, maxParallelCalls: 2, executeFn });
     const results = await caller.executeCalls();
 
     expect(results).toStrictEqual([
@@ -162,7 +162,7 @@ describe("ChunkCaller", () => {
       return `result-${item}`;
     });
 
-    const caller = new ChunkCaller(items, 3, executeFn);
+    const caller = new ChunkCaller({ items, maxParallelCalls: 3, executeFn });
     const results = await caller.executeCalls();
 
     const expectedResults = items.map((item) => `result-${item}`);
@@ -174,7 +174,7 @@ describe("ChunkCaller", () => {
     const items = Array.from({ length: 100 }, (_, i) => `item${i}`);
     const executeFn = vi.fn(async (item: string) => `result-${item}`);
 
-    const caller = new ChunkCaller(items, 10, executeFn);
+    const caller = new ChunkCaller({ items, maxParallelCalls: 10, executeFn });
     const results = await caller.executeCalls();
 
     expect(results).toHaveLength(100);
@@ -196,7 +196,7 @@ describe("ChunkCaller", () => {
       return `result-${item}`;
     });
 
-    const caller = new ChunkCaller(items, 3, executeFn);
+    const caller = new ChunkCaller({ items, maxParallelCalls: 3, executeFn });
 
     await caller.executeCalls();
 
@@ -206,5 +206,96 @@ describe("ChunkCaller", () => {
 
     // Allow 20ms tolerance for execution timing variance
     expect(maxStartDiff).toBeLessThan(20);
+  });
+
+  it("should process chunk results when processChunkResults is provided", async () => {
+    interface MetadataResult {
+      id: string;
+      url: string;
+    }
+
+    const items = ["item1", "item2", "item3", "item4", "item5"];
+    const executeFn = vi.fn(
+      async (item: string): Promise<MetadataResult> => ({
+        id: item,
+        url: `https://example.com/${item}`,
+      }),
+    );
+
+    const processChunkResults = vi.fn(async (chunkResults: MetadataResult[]) => {
+      // Simulate fetching data from URLs
+      return chunkResults.map((result) => `processed-${result.id}`);
+    });
+
+    const caller = new ChunkCaller({
+      items,
+      maxParallelCalls: 2,
+      executeFn,
+      processChunkResults,
+    });
+    const results = await caller.executeCalls();
+
+    // Should have processed all items
+    expect(results).toStrictEqual([
+      "processed-item1",
+      "processed-item2",
+      "processed-item3",
+      "processed-item4",
+      "processed-item5",
+    ]);
+
+    // Execute function should be called for each item
+    expect(executeFn).toHaveBeenCalledTimes(5);
+
+    // Process function should be called for each chunk (3 chunks: 2+2+1)
+    expect(processChunkResults).toHaveBeenCalledTimes(3);
+
+    // Verify chunk sizes
+    expect(processChunkResults).toHaveBeenNthCalledWith(1, [
+      { id: "item1", url: "https://example.com/item1" },
+      { id: "item2", url: "https://example.com/item2" },
+    ]);
+    expect(processChunkResults).toHaveBeenNthCalledWith(2, [
+      { id: "item3", url: "https://example.com/item3" },
+      { id: "item4", url: "https://example.com/item4" },
+    ]);
+    expect(processChunkResults).toHaveBeenNthCalledWith(3, [
+      { id: "item5", url: "https://example.com/item5" },
+    ]);
+  });
+
+  it("should process chunks sequentially", async () => {
+    const items = ["item1", "item2", "item3", "item4"];
+    const processingOrder: string[] = [];
+
+    const executeFn = vi.fn(async (item: string) => {
+      processingOrder.push(`execute-${item}`);
+
+      return { id: item };
+    });
+
+    const processChunkResults = vi.fn(async (chunkResults: { id: string }[]) => {
+      for (const result of chunkResults) {
+        processingOrder.push(`process-${result.id}`);
+      }
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      return chunkResults.map((r) => `processed-${r.id}`);
+    });
+
+    const caller = new ChunkCaller({
+      items,
+      maxParallelCalls: 2,
+      executeFn,
+      processChunkResults,
+    });
+
+    await caller.executeCalls();
+
+    // First chunk should be fully processed before second chunk starts
+    const firstChunkProcessIndex = processingOrder.indexOf("process-item2");
+    const secondChunkExecuteIndex = processingOrder.indexOf("execute-item3");
+
+    expect(firstChunkProcessIndex).toBeLessThan(secondChunkExecuteIndex);
   });
 });
