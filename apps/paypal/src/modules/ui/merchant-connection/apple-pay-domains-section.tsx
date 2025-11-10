@@ -143,6 +143,25 @@ export const ApplePayDomainsSection = ({
         by Apple to process Apple Pay transactions.
       </Text>
 
+      {/* Sandbox Limitation Warning */}
+      {domainsData?.sandboxLimitation && (
+        <Box
+          padding={3}
+          borderRadius={4}
+          borderWidth={1}
+          borderColor="default1"
+          __backgroundColor="#FFF7ED"
+          marginBottom={4}
+        >
+          <Text fontWeight="medium" marginBottom={1}>
+            ⚠️ Sandbox Environment Limitation
+          </Text>
+          <Text size={2} color="default2">
+            {domainsData.message}
+          </Text>
+        </Box>
+      )}
+
       {/* Error/Success Messages */}
       {error && (
         <Box

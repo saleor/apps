@@ -134,7 +134,23 @@ export class GetApplePayDomainsHandler {
               merchant_id: merchant.paypalMerchantId,
               error: result.error.message,
               status_code: result.error.statusCode,
+              debug_id: (result.error as any).details?.debug_id,
             });
+
+            // Handle sandbox limitation gracefully - return empty list with warning
+            if (result.error.statusCode === 500) {
+              logger.warn("Apple Pay wallet-domains API not supported in sandbox, returning empty list", {
+                merchant_id: merchant.paypalMerchantId,
+                debug_id: (result.error as any).details?.debug_id,
+              });
+
+              return {
+                applePayEnabled: true,
+                domains: [],
+                sandboxLimitation: true,
+                message: "Apple Pay domain management is not fully supported in PayPal sandbox environment. This feature will work correctly in production.",
+              };
+            }
 
             throw new TRPCError({
               code: result.error.statusCode === 404 ? "NOT_FOUND" : "INTERNAL_SERVER_ERROR",
