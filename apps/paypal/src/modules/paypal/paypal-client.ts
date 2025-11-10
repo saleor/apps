@@ -154,7 +154,17 @@ export class PayPalClient {
     const authAssertion = this.generateAuthAssertion();
     if (authAssertion) {
       headers["PayPal-Auth-Assertion"] = authAssertion;
-      logger.debug("Added PayPal-Auth-Assertion header for merchant context");
+      logger.debug("Added PayPal-Auth-Assertion header for merchant context", {
+        merchant_id: this.merchantId,
+        client_id: this.clientId ? `${this.clientId.substring(0, 8)}...` : undefined,
+      });
+    }
+
+    // Log request body for debugging (be careful with sensitive data)
+    if (args.body) {
+      logger.debug("Request body", {
+        body: JSON.stringify(args.body, null, 2),
+      });
     }
 
     // Add PayPal-Partner-Attribution-Id header (BN code)

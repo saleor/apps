@@ -9,18 +9,45 @@ class Success extends SuccessWebhookResponse {
   readonly pk: PayPalClientId;
   readonly merchantClientId?: string;
   readonly merchantId?: string;
+  readonly paymentMethodReadiness?: {
+    applePay: boolean;
+    googlePay: boolean;
+    paypalButtons: boolean;
+    advancedCardProcessing: boolean;
+    vaulting: boolean;
+  };
 
   private static ResponseDataSchema = z.object({
     paypalClientId: z.string(),
     merchantClientId: z.string().optional(),
     merchantId: z.string().optional(),
+    paymentMethodReadiness: z.object({
+      applePay: z.boolean(),
+      googlePay: z.boolean(),
+      paypalButtons: z.boolean(),
+      advancedCardProcessing: z.boolean(),
+      vaulting: z.boolean(),
+    }).optional(),
   });
 
-  constructor(args: { pk: PayPalClientId; merchantClientId?: string; merchantId?: string; appContext: AppContext }) {
+  constructor(args: {
+    pk: PayPalClientId;
+    merchantClientId?: string;
+    merchantId?: string;
+    paymentMethodReadiness?: {
+      applePay: boolean;
+      googlePay: boolean;
+      paypalButtons: boolean;
+      advancedCardProcessing: boolean;
+      vaulting: boolean;
+    };
+    appContext: AppContext;
+  }) {
     super(args.appContext);
     this.pk = args.pk;
     this.merchantClientId = args.merchantClientId;
     this.merchantId = args.merchantId;
+    this.paymentMethodReadiness = args.paymentMethodReadiness;
   }
 
   getResponse() {
@@ -29,6 +56,7 @@ class Success extends SuccessWebhookResponse {
         paypalClientId: this.pk,
         merchantClientId: this.merchantClientId,
         merchantId: this.merchantId,
+        paymentMethodReadiness: this.paymentMethodReadiness,
       }),
     };
 

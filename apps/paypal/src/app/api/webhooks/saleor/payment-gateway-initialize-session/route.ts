@@ -14,6 +14,10 @@ import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { paypalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { PayPalClient } from "@/modules/paypal/paypal-client";
+import { PayPalPartnerReferralsApi } from "@/modules/paypal/partner-referrals/paypal-partner-referrals-api";
+import { createPayPalClientId } from "@/modules/paypal/paypal-client-id";
+import { createPayPalClientSecret } from "@/modules/paypal/paypal-client-secret";
 
 import { withRecipientVerification } from "../with-recipient-verification";
 import { PaymentGatewayInitializeSessionUseCase } from "./use-case";
@@ -21,6 +25,14 @@ import { paymentGatewayInitializeSessionWebhookDefinition } from "./webhook-defi
 
 const useCase = new PaymentGatewayInitializeSessionUseCase({
   paypalConfigRepo,
+  paypalPartnerReferralsApiFactory: (config) => {
+    const client = PayPalClient.create({
+      clientId: createPayPalClientId(config.clientId),
+      clientSecret: createPayPalClientSecret(config.clientSecret),
+      env: config.env as "SANDBOX" | "LIVE",
+    });
+    return PayPalPartnerReferralsApi.create(client);
+  },
 });
 
 const logger = createLogger("PAYMENT_GATEWAY_INITIALIZE_SESSION route");

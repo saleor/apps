@@ -2,6 +2,7 @@ import { Box, Text, Button, Input } from "@saleor/macaw-ui";
 import { useState, useEffect } from "react";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { trpcClient } from "@/modules/trpc/trpc-client";
+import { ApplePayDomainsSection } from "./apple-pay-domains-section";
 
 export const MerchantConnectionSection = () => {
   const { appBridge, appBridgeState } = useAppBridge();
@@ -366,6 +367,14 @@ export const MerchantConnectionSection = () => {
           />
         </Box>
       </Box>
+
+      {/* Apple Pay Domain Management */}
+      {trackingId && (
+        <ApplePayDomainsSection
+          trackingId={trackingId}
+          applePayEnabled={merchantStatus.paymentMethods?.applePay || false}
+        />
+      )}
 
       {merchantStatus.onboardingStatus === "PENDING" && (
         <Box

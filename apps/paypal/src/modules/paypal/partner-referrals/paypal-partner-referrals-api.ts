@@ -9,6 +9,10 @@ import {
   CreatePartnerReferralResponse,
   ShowSellerStatusResponse,
   PaymentMethodReadiness,
+  RegisterApplePayDomainRequest,
+  RegisterApplePayDomainResponse,
+  GetApplePayDomainsResponse,
+  DeleteApplePayDomainResponse,
 } from "./types";
 
 const logger = createLogger("PayPalPartnerReferralsApi");
@@ -49,6 +53,32 @@ export interface IPayPalPartnerReferralsApi {
   checkPaymentMethodReadiness(
     merchantId: PayPalMerchantId
   ): Promise<Result<PaymentMethodReadiness, PayPalApiError>>;
+
+  /**
+   * Registers a domain for Apple Pay with PayPal on behalf of a merchant
+   * POST /v1/vault/apple-pay/domains
+   */
+  registerApplePayDomain(
+    merchantId: PayPalMerchantId,
+    request: RegisterApplePayDomainRequest
+  ): Promise<Result<RegisterApplePayDomainResponse, PayPalApiError>>;
+
+  /**
+   * Gets all registered Apple Pay domains for a merchant
+   * GET /v1/vault/apple-pay/domains
+   */
+  getApplePayDomains(
+    merchantId: PayPalMerchantId
+  ): Promise<Result<GetApplePayDomainsResponse, PayPalApiError>>;
+
+  /**
+   * Deletes a registered Apple Pay domain for a merchant
+   * DELETE /v1/vault/apple-pay/domains/{domain_name}
+   */
+  deleteApplePayDomain(
+    merchantId: PayPalMerchantId,
+    domainName: string
+  ): Promise<Result<DeleteApplePayDomainResponse, PayPalApiError>>;
 }
 
 /**
@@ -376,5 +406,160 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
 
       return ok(readiness);
     });
+  }
+
+  /**
+   * Register Apple Pay Domain
+   * POST /v1/customer/wallet-domains
+   * Registers a domain with Apple Pay for a merchant using the wallet-domains API
+   * Requires PayPal-Auth-Assertion header for merchant context
+   */
+  async registerApplePayDomain(
+    merchantId: PayPalMerchantId,
+    request: RegisterApplePayDomainRequest
+  ): Promise<Result<RegisterApplePayDomainResponse, PayPalApiError>> {
+    try {
+      logger.info("Registering Apple Pay domain", {
+        merchant_id: merchantId,
+        domain_name: request.domain.name,
+      });
+
+      const response = await this.client.makeRequest<RegisterApplePayDomainResponse>({
+        method: "POST",
+        path: "/v1/customer/wallet-domains",
+        body: request,
+      });
+
+      logger.info("Apple Pay domain registered successfully", {
+        merchant_id: merchantId,
+        domain_name: response.domain.name,
+        status: response.status,
+      });
+
+      logger.debug("Apple Pay domain registration response", {
+        response: JSON.stringify(response, null, 2),
+      });
+
+      return ok(response);
+    } catch (error) {
+      logger.error("Failed to register Apple Pay domain", {
+        merchant_id: merchantId,
+        domain_name: request.domain.name,
+        error: error instanceof Error ? error.message : String(error),
+        statusCode: (error as any).statusCode,
+        paypalError: (error as any).name,
+        details: JSON.stringify((error as any).details || {}, null, 2),
+      });
+
+      return err(
+        new PayPalApiError((error as any).message || "Failed to register Apple Pay domain", {
+          statusCode: (error as any).statusCode || 500,
+          paypalErrorName: (error as any).name || "RegisterApplePayDomainError",
+          paypalErrorMessage: (error as any).message || "Failed to register Apple Pay domain",
+          cause: error,
+        })
+      );
+    }
+  }
+
+  /**
+   * Get Apple Pay Domains
+   * GET /v1/customer/wallet-domains
+   * Gets all registered Apple Pay domains for a merchant
+   */
+  async getApplePayDomains(
+    merchantId: PayPalMerchantId
+  ): Promise<Result<GetApplePayDomainsResponse, PayPalApiError>> {
+    try {
+      logger.info("Fetching Apple Pay domains", {
+        merchant_id: merchantId,
+      });
+
+      const response = await this.client.makeRequest<GetApplePayDomainsResponse>({
+        method: "GET",
+        path: "/v1/customer/wallet-domains",
+      });
+
+      logger.info("Apple Pay domains retrieved successfully", {
+        merchant_id: merchantId,
+        domains_count: response.domains?.length || 0,
+      });
+
+      logger.debug("Apple Pay domains response", {
+        response: JSON.stringify(response, null, 2),
+      });
+
+      return ok(response);
+    } catch (error) {
+      logger.error("Failed to get Apple Pay domains", {
+        merchant_id: merchantId,
+        error: error instanceof Error ? error.message : String(error),
+        statusCode: (error as any).statusCode,
+        paypalError: (error as any).name,
+        details: JSON.stringify((error as any).details || {}, null, 2),
+      });
+
+      return err(
+        new PayPalApiError((error as any).message || "Failed to get Apple Pay domains", {
+          statusCode: (error as any).statusCode || 500,
+          paypalErrorName: (error as any).name || "GetApplePayDomainsError",
+          paypalErrorMessage: (error as any).message || "Failed to get Apple Pay domains",
+          cause: error,
+        })
+      );
+    }
+  }
+
+  /**
+   * Delete Apple Pay Domain
+   * POST /v1/customer/unregister-wallet-domain
+   * Removes registration of a wallet domain for a merchant
+   */
+  async deleteApplePayDomain(
+    merchantId: PayPalMerchantId,
+    domainName: string
+  ): Promise<Result<DeleteApplePayDomainResponse, PayPalApiError>> {
+    try {
+      logger.info("Deleting Apple Pay domain", {
+        merchant_id: merchantId,
+        domain_name: domainName,
+      });
+
+      await this.client.makeRequest<void>({
+        method: "POST",
+        path: "/v1/customer/unregister-wallet-domain",
+        body: {
+          provider_type: "APPLE_PAY",
+          domain: {
+            name: domainName,
+          },
+        },
+      });
+
+      logger.info("Apple Pay domain deleted successfully", {
+        merchant_id: merchantId,
+        domain_name: domainName,
+      });
+
+      return ok({ success: true });
+    } catch (error) {
+      logger.error("Failed to delete Apple Pay domain", {
+        merchant_id: merchantId,
+        domain_name: domainName,
+        error: error instanceof Error ? error.message : String(error),
+        statusCode: (error as any).statusCode,
+        paypalError: (error as any).name,
+        details: JSON.stringify((error as any).details || {}, null, 2),
+      });
+
+      return err(
+        new PayPalApiError((error as any).message || "Failed to delete Apple Pay domain", {
+          statusCode: (error as any).statusCode || 500,
+          paypalErrorName: (error as any).name || "DeleteApplePayDomainError",
+          paypalErrorMessage: (error as any).message || "Failed to delete Apple Pay domain",
+          cause: error,
+        })
+      );
+    }
   }
 }

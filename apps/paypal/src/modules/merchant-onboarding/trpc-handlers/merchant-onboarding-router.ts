@@ -4,6 +4,9 @@ import { GetMerchantStatusTrpcHandler } from "./get-merchant-status-trpc-handler
 import { RefreshMerchantStatusTrpcHandler } from "./refresh-merchant-status-trpc-handler";
 import { ListMerchantsTrpcHandler } from "./list-merchants-trpc-handler";
 import { UpdateMerchantIdTrpcHandler } from "./update-merchant-id-trpc-handler";
+import { RegisterApplePayDomainHandler } from "./register-apple-pay-domain-handler";
+import { GetApplePayDomainsHandler } from "./get-apple-pay-domains-handler";
+import { DeleteApplePayDomainHandler } from "./delete-apple-pay-domain-handler";
 
 /**
  * Merchant Onboarding Router
@@ -34,4 +37,19 @@ export const merchantOnboardingRouter = router({
    * List all merchant onboardings for the current Saleor instance
    */
   listMerchants: new ListMerchantsTrpcHandler().getTrpcProcedure(),
+
+  /**
+   * Register an Apple Pay domain for the merchant
+   */
+  registerApplePayDomain: new RegisterApplePayDomainHandler().getTrpcProcedure(),
+
+  /**
+   * Get all registered Apple Pay domains for the merchant
+   */
+  getApplePayDomains: new GetApplePayDomainsHandler().getTrpcProcedure(),
+
+  /**
+   * Delete a registered Apple Pay domain for the merchant
+   */
+  deleteApplePayDomain: new DeleteApplePayDomainHandler().getTrpcProcedure(),
 });

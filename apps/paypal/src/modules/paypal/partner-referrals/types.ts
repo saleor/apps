@@ -188,7 +188,7 @@ export interface CreatePartnerReferralRequest {
 }
 
 /**
- * HATEOAS Link
+ * Hypermedia Link (HATEOAS)
  */
 export interface HateoasLink {
   href: string;
@@ -274,4 +274,59 @@ export interface PaymentMethodReadiness {
   primaryEmailConfirmed: boolean;
   paymentsReceivable: boolean;
   oauthIntegrated: boolean;
+}
+
+/**
+ * Apple Pay Domain Registration Types (Wallet Domains API)
+ * https://developer.paypal.com/docs/multiparty/checkout/apm/apple-pay/#set-up-your-testing-environment
+ * API Endpoint: POST /v1/customer/wallet-domains
+ */
+
+/**
+ * Register Apple Pay Domain Request
+ * Uses the wallet-domains API format
+ */
+export interface RegisterApplePayDomainRequest {
+  provider_type: "APPLE_PAY"; // Required: Provider type
+  domain: {
+    name: string; // e.g., "example.com"
+  };
+}
+
+/**
+ * Register Apple Pay Domain Response
+ * Returns 201 CREATED on success
+ */
+export interface RegisterApplePayDomainResponse {
+  provider_type: "APPLE_PAY";
+  domain: {
+    name: string;
+  };
+  status?: "VERIFIED" | "PENDING" | "DENIED";
+  links?: HateoasLink[];
+}
+
+/**
+ * Get Apple Pay Domains Response
+ * GET /v1/customer/wallet-domains
+ */
+export interface GetApplePayDomainsResponse {
+  domains?: Array<{
+    provider_type: "APPLE_PAY";
+    domain: {
+      name: string;
+    };
+    status?: "VERIFIED" | "PENDING" | "DENIED";
+    created_at?: string;
+    updated_at?: string;
+  }>;
+  links?: HateoasLink[];
+}
+
+/**
+ * Delete Apple Pay Domain Response
+ * POST /v1/customer/unregister-wallet-domain
+ */
+export interface DeleteApplePayDomainResponse {
+  success: boolean;
 }

@@ -1,6 +1,7 @@
 import { PayPalClient } from "../paypal-client";
 import { PayPalClientId } from "../paypal-client-id";
 import { PayPalClientSecret } from "../paypal-client-secret";
+import { PayPalMerchantId } from "../paypal-merchant-id";
 import { PayPalEnv } from "../paypal-env";
 import {
   IPayPalPartnerReferralsApi,
@@ -15,6 +16,7 @@ export interface IPayPalPartnerReferralsApiFactory {
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     partnerMerchantId?: string | null;
+    merchantId?: PayPalMerchantId | null;
     env: PayPalEnv;
   }): IPayPalPartnerReferralsApi;
 }
@@ -31,12 +33,14 @@ export class PayPalPartnerReferralsApiFactory implements IPayPalPartnerReferrals
     clientId: PayPalClientId;
     clientSecret: PayPalClientSecret;
     partnerMerchantId?: string | null;
+    merchantId?: PayPalMerchantId | null;
     env: PayPalEnv;
   }): IPayPalPartnerReferralsApi {
     const client = PayPalClient.create({
       clientId: args.clientId,
       clientSecret: args.clientSecret,
       partnerMerchantId: args.partnerMerchantId,
+      merchantId: args.merchantId,
       env: args.env,
     });
 
