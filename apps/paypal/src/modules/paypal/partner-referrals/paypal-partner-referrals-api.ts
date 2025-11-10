@@ -321,14 +321,25 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
       const paymentMethods = products.find((p) => p.name === "PAYMENT_METHODS");
       const advancedVaulting = products.find((p) => p.name === "ADVANCED_VAULTING");
 
+      logger.debug("Merchant products check", {
+        merchant_id: merchantId,
+        total_products: products.length,
+        product_names: products.map((p) => p.name),
+        ppcp_custom_status: ppcpCustom?.vetting_status || "NOT_FOUND",
+        payment_methods_status: paymentMethods?.vetting_status || "NOT_FOUND",
+        advanced_vaulting_status: advancedVaulting?.vetting_status || "NOT_FOUND",
+      });
+
       // PayPal Buttons: Available if PPCP_CUSTOM is subscribed
       if (ppcpCustom?.vetting_status === "SUBSCRIBED") {
         readiness.paypalButtons = true;
       }
 
+      // Get capabilities once for all checks
+      const capabilities = status.capabilities || [];
+
       // Advanced Card Processing: PPCP_CUSTOM subscribed + CUSTOM_CARD_PROCESSING active with no limits
       if (ppcpCustom?.vetting_status === "SUBSCRIBED") {
-        const capabilities = status.capabilities || [];
         const cardProcessing = capabilities.find((c) => c.name === "CUSTOM_CARD_PROCESSING");
 
         if (cardProcessing?.status === "ACTIVE" && !cardProcessing.limits?.length) {
@@ -337,34 +348,86 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
       }
 
       // Apple Pay: PPCP_CUSTOM + PAYMENT_METHODS subscribed + APPLE_PAY capability active
+      const applePayCapability = capabilities.find((c) => c.name === "APPLE_PAY");
+
+      logger.info("Apple Pay readiness check", {
+        merchant_id: merchantId,
+        ppcp_custom_subscribed: ppcpCustom?.vetting_status === "SUBSCRIBED",
+        payment_methods_subscribed: paymentMethods?.vetting_status === "SUBSCRIBED",
+        apple_pay_capability_found: !!applePayCapability,
+        apple_pay_capability_status: applePayCapability?.status || "NOT_FOUND",
+      });
+
       if (
         ppcpCustom?.vetting_status === "SUBSCRIBED" &&
         paymentMethods?.vetting_status === "SUBSCRIBED"
       ) {
-        const capabilities = status.capabilities || [];
-        const applePay = capabilities.find((c) => c.name === "APPLE_PAY");
-
-        if (applePay?.status === "ACTIVE") {
+        if (applePayCapability?.status === "ACTIVE") {
           readiness.applePay = true;
+          logger.info("✓ Apple Pay is ENABLED for merchant", { merchant_id: merchantId });
+        } else {
+          logger.warn("✗ Apple Pay is DISABLED - capability not active", {
+            merchant_id: merchantId,
+            reason: applePayCapability
+              ? `APPLE_PAY capability status is '${applePayCapability.status}' (needs 'ACTIVE')`
+              : "APPLE_PAY capability not found in merchant capabilities",
+            required_status: "ACTIVE",
+            current_status: applePayCapability?.status || "NOT_FOUND",
+          });
         }
+      } else {
+        logger.warn("✗ Apple Pay is DISABLED - product requirements not met", {
+          merchant_id: merchantId,
+          ppcp_custom_required: "SUBSCRIBED",
+          ppcp_custom_actual: ppcpCustom?.vetting_status || "NOT_FOUND",
+          payment_methods_required: "SUBSCRIBED",
+          payment_methods_actual: paymentMethods?.vetting_status || "NOT_FOUND",
+          action: "Contact PayPal support to enable PAYMENT_METHODS product and APPLE_PAY capability",
+        });
       }
 
       // Google Pay: PPCP_CUSTOM + PAYMENT_METHODS subscribed + GOOGLE_PAY capability active
+      const googlePayCapability = capabilities.find((c) => c.name === "GOOGLE_PAY");
+
+      logger.info("Google Pay readiness check", {
+        merchant_id: merchantId,
+        ppcp_custom_subscribed: ppcpCustom?.vetting_status === "SUBSCRIBED",
+        payment_methods_subscribed: paymentMethods?.vetting_status === "SUBSCRIBED",
+        google_pay_capability_found: !!googlePayCapability,
+        google_pay_capability_status: googlePayCapability?.status || "NOT_FOUND",
+        all_capabilities: capabilities.map((c) => ({ name: c.name, status: c.status })),
+      });
+
       if (
         ppcpCustom?.vetting_status === "SUBSCRIBED" &&
         paymentMethods?.vetting_status === "SUBSCRIBED"
       ) {
-        const capabilities = status.capabilities || [];
-        const googlePay = capabilities.find((c) => c.name === "GOOGLE_PAY");
-
-        if (googlePay?.status === "ACTIVE") {
+        if (googlePayCapability?.status === "ACTIVE") {
           readiness.googlePay = true;
+          logger.info("✓ Google Pay is ENABLED for merchant", { merchant_id: merchantId });
+        } else {
+          logger.warn("✗ Google Pay is DISABLED - capability not active", {
+            merchant_id: merchantId,
+            reason: googlePayCapability
+              ? `GOOGLE_PAY capability status is '${googlePayCapability.status}' (needs 'ACTIVE')`
+              : "GOOGLE_PAY capability not found in merchant capabilities",
+            required_status: "ACTIVE",
+            current_status: googlePayCapability?.status || "NOT_FOUND",
+          });
         }
+      } else {
+        logger.warn("✗ Google Pay is DISABLED - product requirements not met", {
+          merchant_id: merchantId,
+          ppcp_custom_required: "SUBSCRIBED",
+          ppcp_custom_actual: ppcpCustom?.vetting_status || "NOT_FOUND",
+          payment_methods_required: "SUBSCRIBED",
+          payment_methods_actual: paymentMethods?.vetting_status || "NOT_FOUND",
+          action: "Contact PayPal support to enable PAYMENT_METHODS product and GOOGLE_PAY capability",
+        });
       }
 
       // Vaulting: ADVANCED_VAULTING subscribed + PAYPAL_WALLET_VAULTING_ADVANCED capability active
       if (advancedVaulting?.vetting_status === "SUBSCRIBED") {
-        const capabilities = status.capabilities || [];
         const vaultingCapability = capabilities.find(
           (c) => c.name === "PAYPAL_WALLET_VAULTING_ADVANCED"
         );
