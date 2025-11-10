@@ -87,6 +87,8 @@ export class GetApplePayDomainsHandler {
             return {
               domains: [],
               applePayEnabled: false,
+              sandboxLimitation: false,
+              message: "",
             };
           }
 
@@ -172,6 +174,8 @@ export class GetApplePayDomainsHandler {
                 createdAt: domain.created_at,
                 updatedAt: domain.updated_at,
               })) || [],
+            sandboxLimitation: false,
+            message: "",
           };
         } catch (error) {
           if (error instanceof TRPCError) {
