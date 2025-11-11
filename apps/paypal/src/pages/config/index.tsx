@@ -12,7 +12,7 @@ const ConfigPage: NextPage = () => {
   const { haveAccessToApp } = useHasAppAccess();
 
   if (!haveAccessToApp) {
-    return <Text>You do not have permission to access this page.</Text>;
+    return <Text>You do not have permission to access this page, Please refresh the page and try again.</Text>;
   }
 
   return (

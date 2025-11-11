@@ -1,6 +1,6 @@
 import { Layout } from "@saleor/apps-ui";
-import { Box, Button, Modal, Text, TrashBinIcon } from "@saleor/macaw-ui";
-import { ReactNode, useState } from "react";
+import { Box, Button, Text, TrashBinIcon } from "@saleor/macaw-ui";
+import { ReactNode } from "react";
 
 type Config = {
   name: string;
@@ -15,54 +15,15 @@ type Props = {
   isLoading?: boolean;
 };
 
-const DeleteConfigurationModalContent = ({
-  onDeleteClick,
-}: {
-  onDeleteClick: () => void;
-}) => (
-  <Box display="flex" flexDirection="column" gap={4}>
-    <Text size={5} fontWeight="bold">
-      Delete Configuration
-    </Text>
-    <Text>Are you sure you want to delete this configuration?</Text>
-    <Box display="flex" justifyContent="flex-end" gap={2}>
-      <Button variant="secondary" onClick={() => {}}>
-        Cancel
-      </Button>
-      <Button variant="error" onClick={onDeleteClick}>
-        Delete
-      </Button>
-    </Box>
-  </Box>
-);
-
 export const CustomConfigsList = ({
   configs,
   onConfigDelete,
   isLoading = false,
   ...props
 }: Props) => {
-  const [configIdContext, setConfigIdContext] = useState<string | null>(null);
-
-  const modalOpen = Boolean(configIdContext);
-  const closeModal = () => setConfigIdContext(null);
-
   return (
     <Layout.AppSectionCard>
       <Box {...props}>
-        <Modal open={modalOpen} onChange={closeModal}>
-          <DeleteConfigurationModalContent
-            onDeleteClick={() => {
-              if (!configIdContext) {
-                throw new Error("Invariant, modal should be open only when configIdContext is set");
-              }
-
-              onConfigDelete(configIdContext);
-              closeModal();
-            }}
-          />
-        </Modal>
-
         {configs.map((config) => {
           return (
             <Box paddingY={4} key={config.id}>
@@ -82,7 +43,7 @@ export const CustomConfigsList = ({
                   display="block"
                   icon={<TrashBinIcon />}
                   variant="secondary"
-                  onClick={() => setConfigIdContext(config.id)}
+                  onClick={() => onConfigDelete(config.id)}
                 />
               </Box>
               {config.deleteButtonSlotRight && (
