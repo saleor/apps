@@ -130,7 +130,7 @@ export const ApplePayDomainsSection = ({
           paddingX={2}
           paddingY={1}
           borderRadius={3}
-          __backgroundColor="#10B981"
+          __backgroundColor="#3B82F6"
         >
           <Text size={1} fontWeight="medium" __color="#FFFFFF">
             ENABLED
@@ -142,25 +142,6 @@ export const ApplePayDomainsSection = ({
         Register your storefront domains to enable Apple Pay payments. Each domain must be verified
         by Apple to process Apple Pay transactions.
       </Text>
-
-      {/* Sandbox Limitation Warning */}
-      {domainsData?.sandboxLimitation && (
-        <Box
-          padding={3}
-          borderRadius={4}
-          borderWidth={1}
-          borderColor="default1"
-          __backgroundColor="#FFF7ED"
-          marginBottom={4}
-        >
-          <Text fontWeight="medium" marginBottom={1}>
-            ⚠️ Sandbox Environment Limitation
-          </Text>
-          <Text size={2} color="default2">
-            {domainsData.message}
-          </Text>
-        </Box>
-      )}
 
       {/* Error/Success Messages */}
       {error && (

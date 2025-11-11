@@ -140,16 +140,12 @@ export class RegisterApplePayDomainHandler {
               debug_id: (result.error as any).details?.debug_id,
             });
 
-            // Provide more helpful error message for common issues
-            let errorMessage = result.error.paypalErrorMessage || "Failed to register Apple Pay domain";
-
-            if (result.error.statusCode === 500) {
-              errorMessage = `PayPal API Error: ${errorMessage}. Note: Apple Pay domain registration may have limited support in sandbox environment. Debug ID: ${(result.error as any).details?.debug_id || 'N/A'}. Please verify: 1) Merchant has APPLE_PAY capability active, 2) Domain is accessible via HTTPS, 3) Try in production environment if sandbox continues to fail.`;
-            }
+            const errorMessage = result.error.paypalErrorMessage || "Failed to register Apple Pay domain";
+            const debugId = (result.error as any).details?.debug_id;
 
             throw new TRPCError({
               code: result.error.statusCode === 400 ? "BAD_REQUEST" : "INTERNAL_SERVER_ERROR",
-              message: errorMessage,
+              message: debugId ? `${errorMessage} (Debug ID: ${debugId})` : errorMessage,
             });
           }
 

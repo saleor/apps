@@ -284,10 +284,10 @@ export const MerchantConnectionSection = () => {
         padding={6}
         borderRadius={4}
         borderWidth={1}
-        borderColor="success1"
-        __backgroundColor="#F0FDF4"
+        borderColor="info1"
+        __backgroundColor="#EFF6FF"
       >
-        <Text size={5} marginBottom={4} fontWeight="bold" __color="#059669">
+        <Text size={5} marginBottom={4} fontWeight="bold" __color="#2563EB">
           ✓ PayPal Account Connected
         </Text>
         <Box display="flex" flexDirection="column" gap={3}>
@@ -316,7 +316,7 @@ export const MerchantConnectionSection = () => {
                 paddingX={3}
                 paddingY={1}
                 borderRadius={4}
-                __backgroundColor="#10B981"
+                __backgroundColor="#3B82F6"
               >
                 <Text size={2} fontWeight="medium" __color="#FFFFFF">
                   Ready to receive payments
@@ -424,8 +424,8 @@ const PaymentMethodBadge = ({ label, enabled }: { label: string; enabled: boolea
       paddingY={3}
       borderRadius={4}
       borderWidth={1}
-      borderColor={enabled ? "success1" : "default1"}
-      __backgroundColor={enabled ? "#ECFDF5" : "#F9FAFB"}
+      borderColor={enabled ? "info1" : "default1"}
+      __backgroundColor={enabled ? "#EFF6FF" : "#F9FAFB"}
       display="flex"
       alignItems="center"
       gap={2}
@@ -434,7 +434,7 @@ const PaymentMethodBadge = ({ label, enabled }: { label: string; enabled: boolea
         __width="20px"
         __height="20px"
         __borderRadius="50%"
-        __backgroundColor={enabled ? "#10B981" : "#E5E7EB"}
+        __backgroundColor={enabled ? "#3B82F6" : "#E5E7EB"}
         display="flex"
         alignItems="center"
         justifyContent="center"
@@ -443,7 +443,7 @@ const PaymentMethodBadge = ({ label, enabled }: { label: string; enabled: boolea
           {enabled ? "✓" : "○"}
         </Text>
       </Box>
-      <Text size={3} fontWeight="medium" __color={enabled ? "#059669" : "#6B7280"}>
+      <Text size={3} fontWeight="medium" __color={enabled ? "#2563EB" : "#6B7280"}>
         {label}
       </Text>
     </Box>

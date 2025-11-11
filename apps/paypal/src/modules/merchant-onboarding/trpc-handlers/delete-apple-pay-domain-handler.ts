@@ -129,16 +129,12 @@ export class DeleteApplePayDomainHandler {
               debug_id: (result.error as any).details?.debug_id,
             });
 
-            // Provide helpful error message for sandbox limitation
-            let errorMessage = result.error.paypalErrorMessage || "Failed to delete Apple Pay domain";
-
-            if (result.error.statusCode === 500) {
-              errorMessage = `PayPal API Error: ${errorMessage}. Note: Apple Pay domain deletion may have limited support in sandbox environment. Debug ID: ${(result.error as any).details?.debug_id || 'N/A'}. This feature will work correctly in production environment.`;
-            }
+            const errorMessage = result.error.paypalErrorMessage || "Failed to delete Apple Pay domain";
+            const debugId = (result.error as any).details?.debug_id;
 
             throw new TRPCError({
               code: result.error.statusCode === 404 ? "NOT_FOUND" : "INTERNAL_SERVER_ERROR",
-              message: errorMessage,
+              message: debugId ? `${errorMessage} (Debug ID: ${debugId})` : errorMessage,
             });
           }
 

@@ -87,7 +87,6 @@ export class GetApplePayDomainsHandler {
             return {
               domains: [],
               applePayEnabled: false,
-              sandboxLimitation: false,
               message: "",
             };
           }
@@ -139,24 +138,12 @@ export class GetApplePayDomainsHandler {
               debug_id: (result.error as any).details?.debug_id,
             });
 
-            // Handle sandbox limitation gracefully - return empty list with warning
-            if (result.error.statusCode === 500) {
-              logger.warn("Apple Pay wallet-domains API not supported in sandbox, returning empty list", {
-                merchant_id: merchant.paypalMerchantId,
-                debug_id: (result.error as any).details?.debug_id,
-              });
-
-              return {
-                applePayEnabled: true,
-                domains: [],
-                sandboxLimitation: true,
-                message: "Apple Pay domain management is not fully supported in PayPal sandbox environment. This feature will work correctly in production.",
-              };
-            }
+            const errorMessage = result.error.paypalErrorMessage || "Failed to retrieve Apple Pay domains";
+            const debugId = (result.error as any).details?.debug_id;
 
             throw new TRPCError({
               code: result.error.statusCode === 404 ? "NOT_FOUND" : "INTERNAL_SERVER_ERROR",
-              message: result.error.paypalErrorMessage || "Failed to retrieve Apple Pay domains",
+              message: debugId ? `${errorMessage} (Debug ID: ${debugId})` : errorMessage,
             });
           }
 
@@ -174,7 +161,6 @@ export class GetApplePayDomainsHandler {
                 createdAt: domain.created_at,
                 updatedAt: domain.updated_at,
               })) || [],
-            sandboxLimitation: false,
             message: "",
           };
         } catch (error) {
