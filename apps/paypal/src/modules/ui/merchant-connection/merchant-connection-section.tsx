@@ -1,18 +1,20 @@
-import { Box, Text, Button, Input } from "@saleor/macaw-ui";
-import { useState, useEffect } from "react";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { Box, Button, Input,Text } from "@saleor/macaw-ui";
+import { useEffect,useState } from "react";
+
 import { trpcClient } from "@/modules/trpc/trpc-client";
+
 import { ApplePayDomainsSection } from "./apple-pay-domains-section";
 
 export const MerchantConnectionSection = () => {
   const { appBridge, appBridgeState } = useAppBridge();
   const [error, setError] = useState<string | null>(null);
   const [merchantEmail, setMerchantEmail] = useState<string>("");
-  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
 
   // Set default email from app bridge user
   useEffect(() => {
     const defaultEmail = appBridgeState?.user?.email || "";
+
     setMerchantEmail(defaultEmail);
   }, [appBridgeState?.user?.email]);
 
@@ -52,12 +54,15 @@ export const MerchantConnectionSection = () => {
         if (!appBridge) {
           setError("AppBridge not available. Please refresh the page and try again.");
           console.error("AppBridge not available");
+
           return;
         }
 
         try {
-          // Use AppBridge to open URL in new context (new tab)
-          // This works even in sandboxed iframes because it communicates with parent window
+          /*
+           * Use AppBridge to open URL in new context (new tab)
+           * This works even in sandboxed iframes because it communicates with parent window
+           */
           console.log("Dispatching redirect via AppBridge...");
 
           await appBridge.dispatch({
@@ -98,13 +103,12 @@ export const MerchantConnectionSection = () => {
       onSuccess: () => {
         console.log("Merchant disconnected successfully");
         localStorage.removeItem("paypal_callback_data");
-        setShowDisconnectConfirm(false);
-        refetchStatus();
+        // Reload the page to get fresh data
+        window.location.reload();
       },
       onError: (err) => {
         console.error("Failed to disconnect merchant:", err);
         setError(`Failed to disconnect: ${err.message}`);
-        setShowDisconnectConfirm(false);
       },
     });
 
@@ -131,9 +135,11 @@ export const MerchantConnectionSection = () => {
 
         // Check if data is not too old (within last 5 minutes)
         const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
+
         if (timestamp && timestamp < fiveMinutesAgo) {
           console.warn("Callback data is too old, ignoring");
           localStorage.removeItem("paypal_callback_data");
+
           return;
         }
 
@@ -154,11 +160,13 @@ export const MerchantConnectionSection = () => {
   const handleConnectPayPal = () => {
     if (!appBridge) {
       setError("AppBridge not available. Please refresh the page and try again.");
+
       return;
     }
 
     if (!merchantEmail || !merchantEmail.includes("@")) {
       setError("Please enter a valid email address");
+
       return;
     }
 
@@ -186,17 +194,8 @@ export const MerchantConnectionSection = () => {
 
   const handleDisconnectClick = () => {
     if (!trackingId) return;
-    setShowDisconnectConfirm(true);
-  };
-
-  const handleDisconnectConfirm = () => {
-    if (!trackingId) return;
     setError(null);
     deleteMerchant({ trackingId });
-  };
-
-  const handleDisconnectCancel = () => {
-    setShowDisconnectConfirm(false);
   };
 
   const isLoading = isLoadingStatus || isCreatingReferral || isRefreshing || isDeleting;
@@ -417,49 +416,9 @@ export const MerchantConnectionSection = () => {
           {isRefreshing ? "Refreshing..." : "🔄 Refresh Status"}
         </Button>
         <Button variant="tertiary" onClick={handleDisconnectClick} disabled={isLoading}>
-          Disconnect
+          {isDeleting ? "Disconnecting..." : "Disconnect"}
         </Button>
       </Box>
-
-      {/* Disconnect Confirmation Dialog */}
-      {showDisconnectConfirm && (
-        <Box
-          position="fixed"
-          __top="0"
-          __left="0"
-          __right="0"
-          __bottom="0"
-          __backgroundColor="rgba(0, 0, 0, 0.5)"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          __zIndex="1000"
-        >
-          <Box
-            backgroundColor="default1"
-            padding={6}
-            borderRadius={4}
-            __maxWidth="500px"
-            __width="90%"
-            boxShadow="defaultModal"
-          >
-            <Text size={5} fontWeight="bold" marginBottom={4}>
-              Disconnect PayPal Account
-            </Text>
-            <Text marginBottom={6}>
-              Are you sure you want to disconnect your PayPal account? This will remove all payment configurations.
-            </Text>
-            <Box display="flex" gap={3} justifyContent="flex-end">
-              <Button variant="secondary" onClick={handleDisconnectCancel} disabled={isDeleting}>
-                Cancel
-              </Button>
-              <Button variant="error" onClick={handleDisconnectConfirm} disabled={isDeleting}>
-                {isDeleting ? "Disconnecting..." : "Disconnect"}
-              </Button>
-            </Box>
-          </Box>
-        </Box>
-      )}
 
       {merchantStatus.lastStatusCheck && (
         <Text size={2} color="default2">
