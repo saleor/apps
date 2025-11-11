@@ -94,6 +94,10 @@ export interface IMerchantOnboardingRepository {
     request: CreateMerchantOnboardingRequest
   ): Promise<Result<MerchantOnboardingRecord, MerchantOnboardingRepositoryError>>;
 
+  getBySaleorApiUrl(
+    saleorApiUrl: string
+  ): Promise<Result<MerchantOnboardingRecord | null, MerchantOnboardingRepositoryError>>;
+
   getByTrackingId(
     saleorApiUrl: string,
     trackingId: string
@@ -201,6 +205,33 @@ export class PostgresMerchantOnboardingRepository implements IMerchantOnboarding
     } catch (error: any) {
       return err(
         new MerchantOnboardingRepositoryError(`Failed to create merchant onboarding: ${error.message}`, {
+          cause: error,
+        })
+      );
+    }
+  }
+
+  async getBySaleorApiUrl(
+    saleorApiUrl: string
+  ): Promise<Result<MerchantOnboardingRecord | null, MerchantOnboardingRepositoryError>> {
+    try {
+      const query = `
+        SELECT * FROM paypal_merchant_onboarding
+        WHERE saleor_api_url = $1
+        ORDER BY created_at DESC
+        LIMIT 1
+      `;
+
+      const result = await this.pool.query(query, [saleorApiUrl]);
+
+      if (result.rows.length === 0) {
+        return ok(null);
+      }
+
+      return ok(this.mapRowToRecord(result.rows[0]));
+    } catch (error: any) {
+      return err(
+        new MerchantOnboardingRepositoryError(`Failed to get merchant onboarding: ${error.message}`, {
           cause: error,
         })
       );

@@ -16,7 +16,7 @@ export class GetMerchantStatusTrpcHandler {
     return this.baseProcedure
       .input(
         z.object({
-          trackingId: z.string().min(1),
+          trackingId: z.string().min(1).optional(),
         })
       )
       .query(async ({ input, ctx }) => {
@@ -39,7 +39,11 @@ export class GetMerchantStatusTrpcHandler {
           const pool = getPool();
           const repository = PostgresMerchantOnboardingRepository.create(pool);
 
-          const result = await repository.getByTrackingId(saleorApiUrl.value, input.trackingId);
+          // If trackingId is provided, use it for backwards compatibility
+          // Otherwise, get by saleorApiUrl only (returns the most recent record)
+          const result = input.trackingId
+            ? await repository.getByTrackingId(saleorApiUrl.value, input.trackingId)
+            : await repository.getBySaleorApiUrl(saleorApiUrl.value);
 
           if (result.isErr()) {
             captureException(result.error);

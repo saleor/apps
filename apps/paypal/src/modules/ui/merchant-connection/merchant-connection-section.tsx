@@ -6,33 +6,27 @@ import { ApplePayDomainsSection } from "./apple-pay-domains-section";
 
 export const MerchantConnectionSection = () => {
   const { appBridge, appBridgeState } = useAppBridge();
-  const [trackingId, setTrackingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [merchantEmail, setMerchantEmail] = useState<string>("");
 
-  // Generate or retrieve tracking ID and set default email
+  // Set default email from app bridge user
   useEffect(() => {
-    let storedTrackingId = localStorage.getItem("paypal_merchant_tracking_id");
-    if (!storedTrackingId) {
-      storedTrackingId = crypto.randomUUID();
-      localStorage.setItem("paypal_merchant_tracking_id", storedTrackingId);
-    }
-    setTrackingId(storedTrackingId);
-
-    // Set default email from app bridge user
     const defaultEmail = appBridgeState?.user?.email || "";
     setMerchantEmail(defaultEmail);
   }, [appBridgeState?.user?.email]);
 
-  // Query merchant status
+  // Query merchant status by saleorApiUrl (no trackingId needed)
   const {
     data: merchantStatus,
     refetch: refetchStatus,
     isLoading: isLoadingStatus,
   } = trpcClient.merchantOnboarding.getMerchantStatus.useQuery(
-    { trackingId: trackingId || "" },
-    { enabled: !!trackingId, retry: false }
+    {},
+    { retry: false }
   );
+
+  // Get trackingId from the merchant status response if available
+  const trackingId = merchantStatus?.trackingId || null;
 
   // Mutations
   const { mutate: updateMerchantId } = trpcClient.merchantOnboarding.updateMerchantId.useMutation({
@@ -142,11 +136,6 @@ export const MerchantConnectionSection = () => {
   }, [trackingId]);
 
   const handleConnectPayPal = () => {
-    if (!trackingId) {
-      setError("Failed to generate tracking ID");
-      return;
-    }
-
     if (!appBridge) {
       setError("AppBridge not available. Please refresh the page and try again.");
       return;
@@ -161,8 +150,11 @@ export const MerchantConnectionSection = () => {
 
     console.log("Creating PayPal referral with email:", merchantEmail);
 
+    // Generate a new tracking ID for this merchant onboarding
+    const newTrackingId = crypto.randomUUID();
+
     createReferral({
-      trackingId,
+      trackingId: newTrackingId,
       merchantEmail: merchantEmail.trim(),
       merchantCountry: "US",
       returnUrl: `${window.location.origin}/paypal-callback`,
@@ -181,8 +173,7 @@ export const MerchantConnectionSection = () => {
     if (!confirm("Are you sure you want to disconnect your PayPal account?")) return;
 
     setError(null);
-    localStorage.removeItem("paypal_merchant_tracking_id");
-    setTrackingId(crypto.randomUUID());
+    localStorage.removeItem("paypal_callback_data");
     window.location.reload();
   };
 
