@@ -8,6 +8,7 @@ export const MerchantConnectionSection = () => {
   const { appBridge, appBridgeState } = useAppBridge();
   const [error, setError] = useState<string | null>(null);
   const [merchantEmail, setMerchantEmail] = useState<string>("");
+  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
 
   // Set default email from app bridge user
   useEffect(() => {
@@ -92,6 +93,21 @@ export const MerchantConnectionSection = () => {
       },
     });
 
+  const { mutate: deleteMerchant, isLoading: isDeleting } =
+    trpcClient.merchantOnboarding.deleteMerchant.useMutation({
+      onSuccess: () => {
+        console.log("Merchant disconnected successfully");
+        localStorage.removeItem("paypal_callback_data");
+        setShowDisconnectConfirm(false);
+        refetchStatus();
+      },
+      onError: (err) => {
+        console.error("Failed to disconnect merchant:", err);
+        setError(`Failed to disconnect: ${err.message}`);
+        setShowDisconnectConfirm(false);
+      },
+    });
+
   // Store Saleor context for callback page to use
   useEffect(() => {
     if (appBridgeState?.saleorApiUrl) {
@@ -168,16 +184,22 @@ export const MerchantConnectionSection = () => {
     refreshStatus({ trackingId });
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnectClick = () => {
     if (!trackingId) return;
-    if (!confirm("Are you sure you want to disconnect your PayPal account?")) return;
-
-    setError(null);
-    localStorage.removeItem("paypal_callback_data");
-    window.location.reload();
+    setShowDisconnectConfirm(true);
   };
 
-  const isLoading = isLoadingStatus || isCreatingReferral || isRefreshing;
+  const handleDisconnectConfirm = () => {
+    if (!trackingId) return;
+    setError(null);
+    deleteMerchant({ trackingId });
+  };
+
+  const handleDisconnectCancel = () => {
+    setShowDisconnectConfirm(false);
+  };
+
+  const isLoading = isLoadingStatus || isCreatingReferral || isRefreshing || isDeleting;
 
   if (!merchantStatus) {
     // Not connected state
@@ -394,10 +416,50 @@ export const MerchantConnectionSection = () => {
         >
           {isRefreshing ? "Refreshing..." : "🔄 Refresh Status"}
         </Button>
-        <Button variant="tertiary" onClick={handleDisconnect} disabled={isLoading}>
+        <Button variant="tertiary" onClick={handleDisconnectClick} disabled={isLoading}>
           Disconnect
         </Button>
       </Box>
+
+      {/* Disconnect Confirmation Dialog */}
+      {showDisconnectConfirm && (
+        <Box
+          position="fixed"
+          __top="0"
+          __left="0"
+          __right="0"
+          __bottom="0"
+          __backgroundColor="rgba(0, 0, 0, 0.5)"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          __zIndex="1000"
+        >
+          <Box
+            backgroundColor="default1"
+            padding={6}
+            borderRadius={4}
+            __maxWidth="500px"
+            __width="90%"
+            boxShadow="defaultModal"
+          >
+            <Text size={5} fontWeight="bold" marginBottom={4}>
+              Disconnect PayPal Account
+            </Text>
+            <Text marginBottom={6}>
+              Are you sure you want to disconnect your PayPal account? This will remove all payment configurations.
+            </Text>
+            <Box display="flex" gap={3} justifyContent="flex-end">
+              <Button variant="secondary" onClick={handleDisconnectCancel} disabled={isDeleting}>
+                Cancel
+              </Button>
+              <Button variant="error" onClick={handleDisconnectConfirm} disabled={isDeleting}>
+                {isDeleting ? "Disconnecting..." : "Disconnect"}
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      )}
 
       {merchantStatus.lastStatusCheck && (
         <Text size={2} color="default2">

@@ -1,12 +1,14 @@
 import { router } from "@/modules/trpc/trpc-server";
+
 import { CreateMerchantReferralTrpcHandler } from "./create-merchant-referral-trpc-handler";
-import { GetMerchantStatusTrpcHandler } from "./get-merchant-status-trpc-handler";
-import { RefreshMerchantStatusTrpcHandler } from "./refresh-merchant-status-trpc-handler";
-import { ListMerchantsTrpcHandler } from "./list-merchants-trpc-handler";
-import { UpdateMerchantIdTrpcHandler } from "./update-merchant-id-trpc-handler";
-import { RegisterApplePayDomainHandler } from "./register-apple-pay-domain-handler";
-import { GetApplePayDomainsHandler } from "./get-apple-pay-domains-handler";
 import { DeleteApplePayDomainHandler } from "./delete-apple-pay-domain-handler";
+import { DeleteMerchantOnboardingTrpcHandler } from "./delete-merchant-onboarding-trpc-handler";
+import { GetApplePayDomainsHandler } from "./get-apple-pay-domains-handler";
+import { GetMerchantStatusTrpcHandler } from "./get-merchant-status-trpc-handler";
+import { ListMerchantsTrpcHandler } from "./list-merchants-trpc-handler";
+import { RefreshMerchantStatusTrpcHandler } from "./refresh-merchant-status-trpc-handler";
+import { RegisterApplePayDomainHandler } from "./register-apple-pay-domain-handler";
+import { UpdateMerchantIdTrpcHandler } from "./update-merchant-id-trpc-handler";
 
 /**
  * Merchant Onboarding Router
@@ -52,4 +54,9 @@ export const merchantOnboardingRouter = router({
    * Delete a registered Apple Pay domain for the merchant
    */
   deleteApplePayDomain: new DeleteApplePayDomainHandler().getTrpcProcedure(),
+
+  /**
+   * Delete/disconnect a merchant onboarding record
+   */
+  deleteMerchant: new DeleteMerchantOnboardingTrpcHandler().getTrpcProcedure(),
 });
