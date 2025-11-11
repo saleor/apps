@@ -29,6 +29,7 @@ const useCase = new PaymentGatewayInitializeSessionUseCase({
     const client = PayPalClient.create({
       clientId: createPayPalClientId(config.clientId),
       clientSecret: createPayPalClientSecret(config.clientSecret),
+      partnerMerchantId: config.partnerMerchantId,
       env: config.env as "SANDBOX" | "LIVE",
     });
     return PayPalPartnerReferralsApi.create(client);

@@ -22,6 +22,7 @@ export class PaymentGatewayInitializeSessionUseCase {
   private paypalPartnerReferralsApiFactory: (config: {
     clientId: string;
     clientSecret: string;
+    partnerMerchantId?: string;
     env: string;
   }) => IPayPalPartnerReferralsApi;
   private logger = createLogger("PaymentGatewayInitializeSessionUseCase");
@@ -37,6 +38,7 @@ export class PaymentGatewayInitializeSessionUseCase {
     paypalPartnerReferralsApiFactory: (config: {
       clientId: string;
       clientSecret: string;
+      partnerMerchantId?: string;
       env: string;
     }) => IPayPalPartnerReferralsApi;
   }) {
@@ -88,9 +90,21 @@ export class PaymentGatewayInitializeSessionUseCase {
 
       if (config.merchantId) {
         try {
+          // Fetch partner merchant ID from global config
+          const { GlobalPayPalConfigRepository } = await import("@/modules/wsm-admin/global-paypal-config-repository");
+          const { getPool } = await import("@/lib/database");
+          const globalConfigRepo = GlobalPayPalConfigRepository.create(getPool());
+          const globalConfigResult = await globalConfigRepo.getActiveConfig();
+
+          let partnerMerchantId: string | undefined;
+          if (globalConfigResult.isOk() && globalConfigResult.value) {
+            partnerMerchantId = globalConfigResult.value.partnerMerchantId || undefined;
+          }
+
           const partnerReferralsApi = this.paypalPartnerReferralsApiFactory({
             clientId: config.clientId,
             clientSecret: config.clientSecret,
+            partnerMerchantId: partnerMerchantId,
             env: config.environment,
           });
 

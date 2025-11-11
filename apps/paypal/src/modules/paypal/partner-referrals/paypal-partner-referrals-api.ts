@@ -347,7 +347,9 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
         }
       }
 
-      // Apple Pay: PPCP_CUSTOM + PAYMENT_METHODS subscribed + APPLE_PAY capability active
+      // Apple Pay: PPCP_CUSTOM subscribed + APPLE_PAY capability active
+      // Note: PAYMENT_METHODS product is optional - if APPLE_PAY capability is already active,
+      // it means the merchant has been granted access through PPCP_CUSTOM
       const applePayCapability = capabilities.find((c) => c.name === "APPLE_PAY");
 
       logger.info("Apple Pay readiness check", {
@@ -358,10 +360,7 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
         apple_pay_capability_status: applePayCapability?.status || "NOT_FOUND",
       });
 
-      if (
-        ppcpCustom?.vetting_status === "SUBSCRIBED" &&
-        paymentMethods?.vetting_status === "SUBSCRIBED"
-      ) {
+      if (ppcpCustom?.vetting_status === "SUBSCRIBED") {
         if (applePayCapability?.status === "ACTIVE") {
           readiness.applePay = true;
           logger.info("✓ Apple Pay is ENABLED for merchant", { merchant_id: merchantId });
@@ -380,13 +379,13 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
           merchant_id: merchantId,
           ppcp_custom_required: "SUBSCRIBED",
           ppcp_custom_actual: ppcpCustom?.vetting_status || "NOT_FOUND",
-          payment_methods_required: "SUBSCRIBED",
-          payment_methods_actual: paymentMethods?.vetting_status || "NOT_FOUND",
-          action: "Contact PayPal support to enable PAYMENT_METHODS product and APPLE_PAY capability",
+          action: "Contact PayPal support to enable PPCP product and APPLE_PAY capability",
         });
       }
 
-      // Google Pay: PPCP_CUSTOM + PAYMENT_METHODS subscribed + GOOGLE_PAY capability active
+      // Google Pay: PPCP_CUSTOM subscribed + GOOGLE_PAY capability active
+      // Note: PAYMENT_METHODS product is optional - if GOOGLE_PAY capability is already active,
+      // it means the merchant has been granted access through PPCP_CUSTOM
       const googlePayCapability = capabilities.find((c) => c.name === "GOOGLE_PAY");
 
       logger.info("Google Pay readiness check", {
@@ -398,10 +397,7 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
         all_capabilities: capabilities.map((c) => ({ name: c.name, status: c.status })),
       });
 
-      if (
-        ppcpCustom?.vetting_status === "SUBSCRIBED" &&
-        paymentMethods?.vetting_status === "SUBSCRIBED"
-      ) {
+      if (ppcpCustom?.vetting_status === "SUBSCRIBED") {
         if (googlePayCapability?.status === "ACTIVE") {
           readiness.googlePay = true;
           logger.info("✓ Google Pay is ENABLED for merchant", { merchant_id: merchantId });
@@ -420,9 +416,7 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
           merchant_id: merchantId,
           ppcp_custom_required: "SUBSCRIBED",
           ppcp_custom_actual: ppcpCustom?.vetting_status || "NOT_FOUND",
-          payment_methods_required: "SUBSCRIBED",
-          payment_methods_actual: paymentMethods?.vetting_status || "NOT_FOUND",
-          action: "Contact PayPal support to enable PAYMENT_METHODS product and GOOGLE_PAY capability",
+          action: "Contact PayPal support to enable PPCP product and GOOGLE_PAY capability",
         });
       }
 
