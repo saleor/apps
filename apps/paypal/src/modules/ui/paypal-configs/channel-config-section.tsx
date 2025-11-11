@@ -1,6 +1,5 @@
-import { EmptyConfigs, Layout } from "@saleor/apps-ui";
-import { Skeleton, Text } from "@saleor/macaw-ui";
-import { useRouter } from "next/router";
+import { Layout } from "@saleor/apps-ui";
+import { Box, Skeleton, Text } from "@saleor/macaw-ui";
 import { useEffect } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
@@ -8,7 +7,6 @@ import { PayPalConfigsList } from "@/modules/ui/paypal-configs/paypal-configs-li
 
 export const ChannelConfigSection = () => {
   const { data, error, refetch } = trpcClient.appConfig.getPayPalConfigsList.useQuery();
-  const router = useRouter();
 
   useEffect(() => {
     void refetch();
@@ -19,7 +17,13 @@ export const ChannelConfigSection = () => {
   }
 
   if (data && data.length === 0) {
-    return <EmptyConfigs onConfigurationAdd={() => router.push("/config/new")} />;
+    return (
+      <Box padding={6} display="flex" alignItems="center" justifyContent="center">
+        <Text size={3} color="default2">
+          No PayPal configurations found. Configurations are managed by WSM administrators.
+        </Text>
+      </Box>
+    );
   }
 
   if (data && data.length > 0) {

@@ -40,7 +40,7 @@ const ConfigPage: NextPage = () => {
         sideContent={
           <Box display="flex" flexDirection="column" gap={3}>
             <Text size={3}>
-              Create and manage multiple PayPal configurations for different environments (test and live mode).
+              View PayPal configurations for different environments (test and live mode). Configurations are managed by WSM administrators.
             </Text>
             <Text size={3} color="default2">
               Each configuration can be assigned to specific sales channels to support multi-channel operations.

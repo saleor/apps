@@ -1,13 +1,13 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { ConfigsList } from "@saleor/apps-ui";
 import { Chip, Text } from "@saleor/macaw-ui";
-import { useRouter } from "next/router";
 
 import {
   PayPalFrontendConfig,
   PayPalFrontendConfigSerializedFields,
 } from "@/modules/app-config/domain/paypal-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
+
+import { CustomConfigsList } from "./custom-configs-list";
 
 type Props = {
   configs: Array<PayPalFrontendConfigSerializedFields>;
@@ -45,7 +45,6 @@ const liveEnvChip = (
 );
 
 export const PayPalConfigsList = ({ configs }: Props) => {
-  const router = useRouter();
   const { notifyError, notifySuccess } = useDashboardNotification();
   const configsList = trpcClient.appConfig.getPayPalConfigsList.useQuery();
   const mappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
@@ -64,7 +63,7 @@ export const PayPalConfigsList = ({ configs }: Props) => {
     });
 
   return (
-    <ConfigsList
+    <CustomConfigsList
       onConfigDelete={(id) => {
         removePayPalConfig({
           configId: id,
@@ -82,9 +81,6 @@ export const PayPalConfigsList = ({ configs }: Props) => {
           },
         };
       })}
-      onNewConfigAdd={() => {
-        router.push("/config/new");
-      }}
       isLoading={isLoading}
     />
   );
