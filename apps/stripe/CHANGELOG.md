@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.3.4
+
+### Patch Changes
+
+- f53f6e23: Added logs when app installation fails.
+
 ## 2.3.3
 
 ### Patch Changes

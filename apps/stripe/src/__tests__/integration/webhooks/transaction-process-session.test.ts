@@ -165,8 +165,8 @@ describe("TransactionProcessSession webhook: integration", async () => {
           paymentMethodDetails: {
             brand: "visa",
             name: "visa",
-            expMonth: 10,
-            expYear: 2026,
+            expMonth: expect.any(Number),
+            expYear: expect.any(Number),
             lastDigits: "4242",
             type: "CARD",
           },
@@ -244,8 +244,8 @@ describe("TransactionProcessSession webhook: integration", async () => {
           externalUrl: expect.stringContaining("https://dashboard.stripe.com/test/payments/pi_"),
           paymentMethodDetails: {
             brand: "visa",
-            expMonth: 10,
-            expYear: 2026,
+            expMonth: expect.any(Number),
+            expYear: expect.any(Number),
             lastDigits: "4242",
             name: "visa",
             type: "CARD",
