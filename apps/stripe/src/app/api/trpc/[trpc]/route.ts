@@ -20,6 +20,8 @@ const handler = (request: Request) => {
         logger.error(`${path} returned error`, {
           trpcErrorMessage: error.message,
           stack: error.cause,
+          // eslint-disable-next-line @saleor/saleor-app/logger-leak
+          error,
         });
 
         return;
