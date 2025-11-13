@@ -28,7 +28,6 @@ const handler = createAppRegisterHandler({
         if (!checkResult) {
           logger.warn("Blocked installation attempt from disallowed Saleor instance", {
             saleorApiUrl: url,
-            allowedUrlsPattern,
           });
         }
 
