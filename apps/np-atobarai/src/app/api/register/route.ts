@@ -20,12 +20,31 @@ const handler = createAppRegisterHandler({
         // we don't escape the pattern because it's not user input - it's an ENV variable controlled by us
         const regex = new RegExp(allowedUrlsPattern);
 
-        return regex.test(url);
+        const checkResult = regex.test(url);
+
+        if (!checkResult) {
+          logger.warn("Blocked installation attempt from disallowed Saleor instance", {
+            saleorApiUrl: url,
+          });
+        }
+
+        return checkResult;
       }
 
       return true;
     },
   ],
+  onAplSetFailed: async (_req, context) => {
+    logger.error("Failed to set APL", {
+      saleorApiUrl: context.authData.saleorApiUrl,
+      error: context.error,
+    });
+  },
+  onAuthAplSaved: async (_req, context) => {
+    logger.info("App configuration set up successfully", {
+      saleorApiUrl: context.authData.saleorApiUrl,
+    });
+  },
 });
 
 export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
