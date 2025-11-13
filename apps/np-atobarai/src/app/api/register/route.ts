@@ -3,10 +3,13 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 
 import { env } from "@/lib/env";
+import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 import { saleorApp } from "@/lib/saleor-app";
 
 const allowedUrlsPattern = env.ALLOWED_DOMAIN_PATTERN;
+
+const logger = createLogger("createAppRegisterHandler");
 
 const handler = createAppRegisterHandler({
   apl: saleorApp.apl,

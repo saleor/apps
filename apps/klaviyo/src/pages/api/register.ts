@@ -1,11 +1,13 @@
 import { createAppRegisterHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { createLogger } from "src/logger";
 
 import { saleorApp } from "../../../saleor-app";
 import { loggerContext } from "../../logger-context";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
+
 const logger = createLogger("createAppRegisterHandler");
 
 const handler = createAppRegisterHandler({
