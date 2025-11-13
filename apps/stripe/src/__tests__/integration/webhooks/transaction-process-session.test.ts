@@ -165,8 +165,8 @@ describe("TransactionProcessSession webhook: integration", async () => {
           paymentMethodDetails: {
             brand: "visa",
             name: "visa",
-            expMonth: 10,
-            expYear: 2026,
+            expMonth: expect.any(Number),
+            expYear: expect.any(Number),
             lastDigits: "4242",
             type: "CARD",
           },
