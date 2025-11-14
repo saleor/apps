@@ -11,6 +11,8 @@ import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
 
+const logger = createLogger("createAppRegisterHandler");
+
 /**
  * Required endpoint, called by Saleor to install app.
  * It will exchange tokens with app, so saleorApp.apl will contain token
@@ -25,7 +27,16 @@ export default wrapWithLoggerContext(
             // we don't escape the pattern because it's not user input - it's an ENV variable controlled by us
             const regex = new RegExp(allowedUrlsPattern);
 
-            return regex.test(url);
+            const checkResult = regex.test(url);
+
+            if (!checkResult) {
+              logger.warn("Blocked installation attempt from disallowed Saleor instance", {
+                saleorApiUrl: url,
+                allowedUrlsPattern,
+              });
+            }
+
+            return checkResult;
           }
 
           return true;

@@ -3,10 +3,13 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 
 import { env } from "@/lib/env";
+import { createLogger } from "@/lib/logger";
 import { withLoggerContext } from "@/lib/logger-context";
 import { saleorApp } from "@/lib/saleor-app";
 
 const allowedUrlsPattern = env.ALLOWED_DOMAIN_PATTERN;
+
+const logger = createLogger("createAppRegisterHandler");
 
 const handler = createAppRegisterHandler({
   apl: saleorApp.apl,
@@ -20,12 +23,31 @@ const handler = createAppRegisterHandler({
         // we don't escape the pattern because it's not user input - it's an ENV variable controlled by us
         const regex = new RegExp(allowedUrlsPattern);
 
-        return regex.test(url);
+        const checkResult = regex.test(url);
+
+        if (!checkResult) {
+          logger.warn("Blocked installation attempt from disallowed Saleor instance", {
+            saleorApiUrl: url,
+          });
+        }
+
+        return checkResult;
       }
 
       return true;
     },
   ],
+  onAplSetFailed: async (_req, context) => {
+    logger.error("Failed to set APL", {
+      saleorApiUrl: context.authData.saleorApiUrl,
+      error: context.error,
+    });
+  },
+  onAuthAplSaved: async (_req, context) => {
+    logger.info("App configuration set up successfully", {
+      saleorApiUrl: context.authData.saleorApiUrl,
+    });
+  },
 });
 
 export const POST = compose(withLoggerContext, withSpanAttributesAppRouter)(handler);
