@@ -154,6 +154,7 @@ export class TransactionInitializeSessionUseCase {
     event: TransactionInitializeSessionEventFragment;
   }): Promise<UseCaseExecuteResult> {
     const { authData, event } = args;
+    const useCaseStartTime = Date.now();
 
     this.logger.info("Processing transaction initialize session event", {
       transactionId: event.transaction.id,
@@ -166,7 +167,13 @@ export class TransactionInitializeSessionUseCase {
     const channelId = event.sourceObject.channel.id;
 
     // Get PayPal configuration for this channel
+    const configLoadStart = Date.now();
     const paypalConfigResult = await this.paypalConfigRepo.getPayPalConfig(authData, channelId);
+    const configLoadTime = Date.now() - configLoadStart;
+
+    this.logger.debug("PayPal config load timing", {
+      config_load_time_ms: configLoadTime,
+    });
 
     if (paypalConfigResult.isErr()) {
       this.logger.error("Failed to get PayPal configuration", {
@@ -216,6 +223,7 @@ export class TransactionInitializeSessionUseCase {
     let bnCode: string | undefined;
     let partnerMerchantId: string | undefined;
     let partnerFeePercent: number | undefined;
+    const globalConfigLoadStart = Date.now();
     try {
       const pool = getPool();
       const globalConfigRepository = GlobalPayPalConfigRepository.create(pool);
@@ -241,6 +249,11 @@ export class TransactionInitializeSessionUseCase {
         error,
       });
     }
+    const globalConfigLoadTime = Date.now() - globalConfigLoadStart;
+
+    this.logger.debug("Global config load timing", {
+      global_config_load_time_ms: globalConfigLoadTime,
+    });
 
     // Create PayPal orders API instance with merchant context
     const paypalOrdersApi = this.paypalOrdersApiFactory.create({
@@ -353,6 +366,7 @@ export class TransactionInitializeSessionUseCase {
     });
 
     // Create PayPal order
+    const createOrderStart = Date.now();
     const createOrderResult = await paypalOrdersApi.createOrder({
       amount: paypalMoney,
       intent,
@@ -370,6 +384,16 @@ export class TransactionInitializeSessionUseCase {
         saleor_source_type: event.sourceObject.__typename,
         saleor_channel_id: channelId,
       },
+    });
+    const createOrderTime = Date.now() - createOrderStart;
+    const totalUseCaseTime = Date.now() - useCaseStartTime;
+
+    this.logger.info("Transaction initialization timing breakdown", {
+      config_load_time_ms: configLoadTime,
+      global_config_load_time_ms: globalConfigLoadTime,
+      create_order_time_ms: createOrderTime,
+      total_use_case_time_ms: totalUseCaseTime,
+      other_processing_time_ms: totalUseCaseTime - configLoadTime - globalConfigLoadTime - createOrderTime,
     });
 
     if (createOrderResult.isErr()) {

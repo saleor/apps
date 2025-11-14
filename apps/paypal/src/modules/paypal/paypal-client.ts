@@ -3,6 +3,7 @@ import { PayPalClientSecret } from "./paypal-client-secret";
 import { PayPalMerchantId } from "./paypal-merchant-id";
 import { getPayPalApiUrl, PayPalEnv } from "./paypal-env";
 import { createLogger } from "@/lib/logger";
+import { paypalOAuthTokenCache } from "./paypal-oauth-token-cache";
 
 const logger = createLogger("PayPalClient");
 
@@ -15,8 +16,6 @@ export class PayPalClient {
   private bnCode: string | null;
   private env: PayPalEnv;
   private baseUrl: string;
-  private accessToken: string | null = null;
-  private tokenExpiry: number | null = null;
 
   constructor(args: {
     clientId: PayPalClientId;
@@ -76,20 +75,19 @@ export class PayPalClient {
   }
 
   private async getAccessToken(): Promise<string> {
-    // Return cached token if still valid
-    if (this.accessToken && this.tokenExpiry && Date.now() < this.tokenExpiry) {
-      logger.debug("Using cached access token", {
-        env: this.env,
-        expires_in_seconds: Math.floor((this.tokenExpiry - Date.now()) / 1000),
-      });
-      return this.accessToken;
+    // Check global cache first
+    const cachedToken = paypalOAuthTokenCache.get(this.clientId, this.env);
+    if (cachedToken) {
+      return cachedToken;
     }
 
+    // Cache miss - acquire new token
     logger.info("Requesting new PayPal access token", {
       env: this.env,
       client_id: `${this.clientId.substring(0, 8)}...`,
     });
 
+    const tokenAcquisitionStart = Date.now();
     const auth = Buffer.from(`${this.clientId}:${this.clientSecret}`).toString("base64");
 
     const response = await fetch(`${this.baseUrl}/v1/oauth2/token`, {
@@ -107,6 +105,7 @@ export class PayPalClient {
         env: this.env,
         status: response.status,
         error: errorText,
+        acquisition_time_ms: Date.now() - tokenAcquisitionStart,
       });
       throw new Error(`PayPal auth failed: ${response.status} - ${errorText}`);
     }
@@ -116,22 +115,25 @@ export class PayPalClient {
       expires_in: number;
     };
 
-    this.accessToken = data.access_token;
-    // Refresh token 1 minute before expiry
-    this.tokenExpiry = Date.now() + (data.expires_in - 60) * 1000;
+    const acquisitionTime = Date.now() - tokenAcquisitionStart;
 
     logger.info("PayPal access token obtained successfully", {
       env: this.env,
       expires_in_seconds: data.expires_in,
+      acquisition_time_ms: acquisitionTime,
     });
 
-    return this.accessToken;
+    // Store in global cache
+    paypalOAuthTokenCache.set(this.clientId, this.env, data.access_token, data.expires_in);
+
+    return data.access_token;
   }
 
   async makeRequest<T>(args: {
     method: "GET" | "POST" | "PATCH" | "DELETE";
     path: string;
     body?: unknown;
+    skipBnCode?: boolean;
   }): Promise<T> {
     const token = await this.getAccessToken();
 
@@ -167,17 +169,45 @@ export class PayPalClient {
       });
     }
 
-    // Add PayPal-Partner-Attribution-Id header (BN code)
-    if (this.bnCode) {
+    // Add PayPal-Partner-Attribution-Id header (BN code) unless explicitly skipped
+    if (this.bnCode && !args.skipBnCode) {
       headers["PayPal-Partner-Attribution-Id"] = this.bnCode;
       logger.debug("Added PayPal-Partner-Attribution-Id header", { bnCode: this.bnCode });
     }
 
-    const response = await fetch(`${this.baseUrl}${args.path}`, {
+    const fullUrl = `${this.baseUrl}${args.path}`;
+
+    // Console log the complete request details in JSON format
+    console.log("\n" + "=".repeat(80));
+    console.log("PayPal API Request Details:");
+    console.log("=".repeat(80));
+    console.log(
+      JSON.stringify(
+        {
+          endpoint: {
+            method: args.method,
+            url: fullUrl,
+            path: args.path,
+          },
+          headers: headers,
+          payload: args.body || null,
+        },
+        null,
+        2
+      )
+    );
+    console.log("=".repeat(80) + "\n");
+
+    // Track response time
+    const startTime = Date.now();
+
+    const response = await fetch(fullUrl, {
       method: args.method,
       headers,
       body: args.body ? JSON.stringify(args.body) : undefined,
     });
+
+    const responseTime = Date.now() - startTime;
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
@@ -186,10 +216,33 @@ export class PayPalClient {
         method: args.method,
         path: args.path,
         status: response.status,
+        response_time_ms: responseTime,
         error_name: errorData.name,
         error_message: errorData.message,
         error_details: JSON.stringify(errorData, null, 2),
       });
+
+      // Console log error response with timing
+      console.log("\n" + "=".repeat(80));
+      console.log("PayPal API Response (ERROR):");
+      console.log("=".repeat(80));
+      console.log(
+        JSON.stringify(
+          {
+            endpoint: {
+              method: args.method,
+              url: fullUrl,
+              path: args.path,
+            },
+            status: response.status,
+            response_time_ms: responseTime,
+            error: errorData,
+          },
+          null,
+          2
+        )
+      );
+      console.log("=".repeat(80) + "\n");
 
       throw {
         statusCode: response.status,
@@ -203,7 +256,29 @@ export class PayPalClient {
       method: args.method,
       path: args.path,
       status: response.status,
+      response_time_ms: responseTime,
     });
+
+    // Console log successful response with timing
+    console.log("\n" + "=".repeat(80));
+    console.log("PayPal API Response (SUCCESS):");
+    console.log("=".repeat(80));
+    console.log(
+      JSON.stringify(
+        {
+          endpoint: {
+            method: args.method,
+            url: fullUrl,
+            path: args.path,
+          },
+          status: response.status,
+          response_time_ms: responseTime,
+        },
+        null,
+        2
+      )
+    );
+    console.log("=".repeat(80) + "\n");
 
     return response.json() as Promise<T>;
   }

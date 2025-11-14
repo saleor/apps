@@ -3,6 +3,10 @@ import { Result, ok, err } from "neverthrow";
 
 import { PayPalConfig } from "@/modules/app-config/domain/paypal-config";
 import { PayPalMultiConfigMetadataManager } from "@/modules/paypal/configuration/paypal-multi-config-metadata-manager";
+import { paypalConfigCache } from "./paypal-config-cache";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("PayPalConfigRepo");
 
 export interface PayPalConfigRepo {
   getPayPalConfig(authData: AuthData, channelId?: string): Promise<Result<PayPalConfig | null, Error>>;
@@ -12,6 +16,26 @@ export interface PayPalConfigRepo {
 
 export class PayPalConfigRepoImpl implements PayPalConfigRepo {
   async getPayPalConfig(authData: AuthData, channelId?: string): Promise<Result<PayPalConfig | null, Error>> {
+    const saleorApiUrl = authData.saleorApiUrl;
+
+    // Check cache first
+    const cachedConfig = paypalConfigCache.get(saleorApiUrl, channelId);
+    if (cachedConfig !== undefined) {
+      logger.debug("Returning cached PayPal config", {
+        saleor_api_url: saleorApiUrl,
+        channel_id: channelId,
+        has_config: !!cachedConfig,
+      });
+      return ok(cachedConfig);
+    }
+
+    // Cache miss - fetch from Saleor metadata
+    logger.debug("Cache miss - fetching PayPal config from Saleor metadata", {
+      saleor_api_url: saleorApiUrl,
+      channel_id: channelId,
+    });
+    const startTime = Date.now();
+
     try {
       const manager = PayPalMultiConfigMetadataManager.createFromAuthData(authData);
       const rootConfigResult = await manager.getRootConfig();
@@ -26,6 +50,14 @@ export class PayPalConfigRepoImpl implements PayPalConfigRepo {
       if (channelId) {
         const channelConfig = rootConfig.getConfigForChannel(channelId);
         if (channelConfig) {
+          const fetchTime = Date.now() - startTime;
+          logger.debug("PayPal config fetched from Saleor", {
+            fetch_time_ms: fetchTime,
+            channel_id: channelId,
+          });
+
+          // Cache the result
+          paypalConfigCache.set(saleorApiUrl, channelConfig, channelId);
           return ok(channelConfig);
         }
       }
@@ -37,19 +69,42 @@ export class PayPalConfigRepoImpl implements PayPalConfigRepo {
       }
 
       const configs = allConfigsResult.value;
-      if (configs.length > 0) {
-        return ok(configs[0]);
-      }
+      const config = configs.length > 0 ? configs[0] : null;
 
-      return ok(null);
+      const fetchTime = Date.now() - startTime;
+      logger.debug("PayPal config fetched from Saleor", {
+        fetch_time_ms: fetchTime,
+        configs_count: configs.length,
+        has_config: !!config,
+      });
+
+      // Cache the result
+      paypalConfigCache.set(saleorApiUrl, config, channelId);
+
+      return ok(config);
     } catch (error) {
+      const fetchTime = Date.now() - startTime;
+      logger.error("Failed to get PayPal config from Saleor", {
+        error: error instanceof Error ? error.message : String(error),
+        fetch_time_ms: fetchTime,
+      });
       return err(error instanceof Error ? error : new Error('Failed to get PayPal config'));
     }
   }
 
   async savePayPalConfig(authData: AuthData, config: PayPalConfig): Promise<Result<void, Error>> {
     const manager = PayPalMultiConfigMetadataManager.createFromAuthData(authData);
-    return manager.saveConfig(config);
+    const result = await manager.saveConfig(config);
+
+    if (result.isOk()) {
+      // Invalidate all cache entries for this saleorApiUrl since config changed
+      paypalConfigCache.invalidateAll(authData.saleorApiUrl);
+      logger.info("Cache invalidated due to config save", {
+        saleor_api_url: authData.saleorApiUrl,
+      });
+    }
+
+    return result;
   }
 
   async deletePayPalConfig(authData: AuthData): Promise<Result<void, Error>> {
@@ -63,7 +118,17 @@ export class PayPalConfigRepoImpl implements PayPalConfigRepo {
 
     const configs = allConfigsResult.value;
     if (configs.length > 0) {
-      return manager.deleteConfig(configs[0].id);
+      const result = await manager.deleteConfig(configs[0].id);
+
+      if (result.isOk()) {
+        // Invalidate all cache entries for this saleorApiUrl since config deleted
+        paypalConfigCache.invalidateAll(authData.saleorApiUrl);
+        logger.info("Cache invalidated due to config deletion", {
+          saleor_api_url: authData.saleorApiUrl,
+        });
+      }
+
+      return result;
     }
 
     return ok(undefined);

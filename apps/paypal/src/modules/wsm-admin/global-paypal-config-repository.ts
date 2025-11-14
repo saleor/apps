@@ -1,6 +1,10 @@
 import { Pool } from "pg";
 import { Result, ok, err } from "neverthrow";
 import { GlobalPayPalConfig, PayPalEnvironment } from "./global-paypal-config";
+import { globalPayPalConfigCache } from "./global-paypal-config-cache";
+import { createLogger } from "@/lib/logger";
+
+const logger = createLogger("GlobalPayPalConfigRepository");
 
 /**
  * Repository for managing global WSM PayPal configuration
@@ -18,8 +22,20 @@ export class GlobalPayPalConfigRepository {
 
   /**
    * Get the currently active global PayPal configuration
+   * Uses in-memory cache to reduce database queries
    */
   async getActiveConfig(): Promise<Result<GlobalPayPalConfig | null, Error>> {
+    // Check cache first
+    const cachedConfig = globalPayPalConfigCache.get();
+    if (cachedConfig !== null) {
+      logger.debug("Returning cached global PayPal config");
+      return ok(cachedConfig);
+    }
+
+    // Cache miss - fetch from database
+    logger.debug("Cache miss - fetching global PayPal config from database");
+    const startTime = Date.now();
+
     try {
       const query = `
         SELECT id, client_id, client_secret, partner_merchant_id, partner_fee_percent, bn_code, environment, is_active, created_at, updated_at
@@ -29,8 +45,16 @@ export class GlobalPayPalConfigRepository {
       `;
 
       const result = await this.pool.query(query);
+      const dbQueryTime = Date.now() - startTime;
+
+      logger.debug("Database query completed", {
+        query_time_ms: dbQueryTime,
+        rows_found: result.rows.length,
+      });
 
       if (result.rows.length === 0) {
+        // Cache the null result to avoid repeated DB queries
+        globalPayPalConfigCache.set(null);
         return ok(null);
       }
 
@@ -52,8 +76,16 @@ export class GlobalPayPalConfigRepository {
         return err(configResult.error);
       }
 
+      // Cache the result
+      globalPayPalConfigCache.set(configResult.value);
+      logger.debug("Global PayPal config cached successfully");
+
       return ok(configResult.value);
     } catch (error) {
+      logger.error("Failed to get active config from database", {
+        error: error instanceof Error ? error.message : String(error),
+        query_time_ms: Date.now() - startTime,
+      });
       return err(error instanceof Error ? error : new Error("Failed to get active config"));
     }
   }
@@ -61,6 +93,7 @@ export class GlobalPayPalConfigRepository {
   /**
    * Create or update global PayPal configuration
    * Deactivates all existing configs and creates a new active one
+   * Invalidates cache to ensure fresh data is loaded
    */
   async upsertConfig(data: {
     clientId: string;
@@ -116,6 +149,10 @@ export class GlobalPayPalConfigRepository {
       if (configResult.isErr()) {
         return err(configResult.error);
       }
+
+      // Invalidate cache since config changed
+      globalPayPalConfigCache.invalidate();
+      logger.info("Cache invalidated due to config update");
 
       return ok(configResult.value);
     } catch (error) {
