@@ -86,7 +86,7 @@
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "graphql-config": "5.0.3",
-    "node-mocks-http": "^1.12.2",
+    "node-mocks-http": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",

@@ -156,6 +156,9 @@ catalogs:
     next-test-api-route-handler:
       specifier: 4.0.16
       version: 4.0.16
+    node-mocks-http:
+      specifier: 1.16.1
+      version: 1.16.1
     react:
       specifier: 18.2.0
       version: 18.2.0
@@ -674,8 +677,8 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.8.2)
       node-mocks-http:
-        specifier: ^1.12.2
-        version: 1.12.2
+        specifier: 'catalog:'
+        version: 1.16.1(@types/node@22.13.10)
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
@@ -1277,8 +1280,8 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.8.2)
       node-mocks-http:
-        specifier: ^1.16.1
-        version: 1.17.2(@types/node@22.13.10)
+        specifier: 'catalog:'
+        version: 1.16.1(@types/node@22.13.10)
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
@@ -1473,8 +1476,8 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.8.2)
       node-mocks-http:
-        specifier: ^1.12.2
-        version: 1.12.2
+        specifier: 'catalog:'
+        version: 1.16.1(@types/node@22.13.10)
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
@@ -1690,8 +1693,8 @@ importers:
         specifier: 'catalog:'
         version: 20.0.3
       node-mocks-http:
-        specifier: ^1.12.2
-        version: 1.12.2
+        specifier: 'catalog:'
+        version: 1.16.1(@types/node@22.13.10)
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
@@ -9746,12 +9749,8 @@ packages:
   node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
 
-  node-mocks-http@1.12.2:
-    resolution: {integrity: sha512-xhWwC0dh35R9rf0j3bRZXuISXdHxxtMx0ywZQBwjrg3yl7KpRETzogfeCamUIjltpn0Fxvs/ZhGJul1vPLrdJQ==}
-    engines: {node: '>=0.6'}
-
-  node-mocks-http@1.17.2:
-    resolution: {integrity: sha512-HVxSnjNzE9NzoWMx9T9z4MLqwMpLwVvA0oVZ+L+gXskYXEJ6tFn3Kx4LargoB6ie7ZlCLplv7QbWO6N+MysWGA==}
+  node-mocks-http@1.16.1:
+    resolution: {integrity: sha512-Q2m5bmIE1KFeeKI6OsSn+c4XDara5NWnUJgzqnIkhiCNukYX+fqu0ADSeKOlpWtbCwgRnJ69F+7RUiQltzTKXA==}
     engines: {node: '>=14'}
     peerDependencies:
       '@types/express': ^4.17.21 || ^5.0.0
@@ -21361,20 +21360,7 @@ snapshots:
 
   node-int64@0.4.0: {}
 
-  node-mocks-http@1.12.2:
-    dependencies:
-      accepts: 1.3.8
-      content-disposition: 0.5.4
-      depd: 1.1.2
-      fresh: 0.5.2
-      merge-descriptors: 1.0.1
-      methods: 1.1.2
-      mime: 1.6.0
-      parseurl: 1.3.3
-      range-parser: 1.2.1
-      type-is: 1.6.18
-
-  node-mocks-http@1.17.2(@types/node@22.13.10):
+  node-mocks-http@1.16.1(@types/node@22.13.10):
     dependencies:
       accepts: 1.3.8
       content-disposition: 0.5.4
