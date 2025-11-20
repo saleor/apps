@@ -3,6 +3,7 @@ import { describe, it } from "vitest";
 
 import { envE2e } from "../env-e2e";
 import {
+  AppCreate,
   CheckoutUpdateDeliveryMethod,
   CompleteCheckout,
   CreateCheckout,
@@ -67,6 +68,26 @@ describe("App should use shipFrom address from private metadata TC: AVATAX_SHIP_
       .retry();
   });
 
+  it("creates an app token for Avatax (custom app)", async () => {
+    await testCase
+      .step("Create app with HANDLE_TAXES")
+      .spec()
+      .post("/graphql/")
+      .withHeaders({
+        Authorization: "Bearer $S{StaffUserToken}",
+      })
+      .withGraphQLQuery(AppCreate)
+      .withGraphQLVariables({
+        input: {
+          name: "Avatax E2E Test App",
+          permissions: ["HANDLE_TAXES"],
+        },
+      })
+      .expectStatus(200)
+      .expectJson("data.appCreate.errors", [])
+      .stores("AppAuthToken", "data.appCreate.authToken");
+  });
+
   it("should have created a checkout", async () => {
     await testCase
       .step("Create checkout")
@@ -104,7 +125,7 @@ describe("App should use shipFrom address from private metadata TC: AVATAX_SHIP_
         input: shipFromAddressMetadata,
       })
       .withHeaders({
-        Authorization: "Bearer $S{StaffUserToken}",
+        Authorization: "Bearer $S{AppAuthToken}",
       })
       .expectStatus(200)
       .expectJson("data.updatePrivateMetadata.item.privateMetadata", shipFromAddressMetadata);

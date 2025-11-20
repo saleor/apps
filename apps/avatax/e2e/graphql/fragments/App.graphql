@@ -1,0 +1,6 @@
+fragment App on App {
+  id
+  name
+  isActive
+  type
+}

@@ -1,0 +1,16 @@
+mutation AppCreate($input: AppInput!) {
+  appCreate(input: $input) {
+    authToken
+    app {
+      ...App
+      __typename
+    }
+    errors {
+      field
+      message
+      code
+      __typename
+    }
+    __typename
+  }
+}

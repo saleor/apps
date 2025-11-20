@@ -3,6 +3,8 @@ import * as Types from './types';
 import { gql } from '../utils';
 export type AddressFragmentFragment = { __typename?: 'Address', id: string, firstName: string, lastName: string, streetAddress1: string, streetAddress2: string, city: string, cityArea: string, postalCode: string, countryArea: string };
 
+export type AppFragment = { __typename?: 'App', id: string, name?: string | null, isActive?: boolean | null, type?: Types.AppTypeEnum | null };
+
 export type CheckoutDetailsFragment = { __typename?: 'Checkout', id: string, lines: Array<{ __typename?: 'CheckoutLine', id: string, undiscountedTotalPrice: { __typename?: 'Money', amount: number, currency: string }, undiscountedUnitPrice: { __typename?: 'Money', amount: number, currency: string }, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string }, tax: { __typename?: 'Money', amount: number, currency: string }, net: { __typename?: 'Money', amount: number, currency: string } } }>, shippingPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string }, tax: { __typename?: 'Money', amount: number, currency: string }, net: { __typename?: 'Money', amount: number, currency: string } }, totalPrice: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string }, tax: { __typename?: 'Money', amount: number, currency: string }, net: { __typename?: 'Money', amount: number, currency: string } } };
 
 export type CheckoutErrorFragment = { __typename?: 'CheckoutError', message?: string | null, field?: string | null, code: Types.CheckoutErrorCode, addressType?: Types.AddressTypeEnum | null, variants?: Array<string> | null, lines?: Array<string> | null };
@@ -14,6 +16,13 @@ export type OrderDetailsFragmentFragment = { __typename?: 'Order', id: string, t
 export type DiscountsFragment = { __typename?: 'OrderDiscount', name?: string | null, reason?: string | null, type: Types.OrderDiscountType, valueType: Types.DiscountValueTypeEnum, value: any, amount: { __typename?: 'Money', amount: number } };
 
 export type OrderErrorFragment = { __typename?: 'OrderError', field?: string | null, message?: string | null, code: Types.OrderErrorCode, variants?: Array<string> | null, orderLines?: Array<string> | null, addressType?: Types.AddressTypeEnum | null, warehouse?: string | null };
+
+export type AppCreateMutationVariables = Types.Exact<{
+  input: Types.AppInput;
+}>;
+
+
+export type AppCreateMutation = { __typename?: 'Mutation', appCreate?: { __typename: 'AppCreate', authToken?: string | null, app?: { __typename: 'App', id: string, name?: string | null, isActive?: boolean | null, type?: Types.AppTypeEnum | null } | null, errors: Array<{ __typename: 'AppError', field?: string | null, message?: string | null, code: Types.AppErrorCode }> } | null };
 
 export type CheckoutAddBillingMutationVariables = Types.Exact<{
   id: Types.Scalars['ID']['input'];
@@ -196,6 +205,14 @@ export const AddressFragment = gql`
   countryArea
 }
     `;
+export const App = gql`
+    fragment App on App {
+  id
+  name
+  isActive
+  type
+}
+    `;
 export const Money = gql`
     fragment Money on Money {
   amount
@@ -335,6 +352,24 @@ export const OrderError = gql`
   warehouse
 }
     `;
+export const AppCreate = gql`
+    mutation AppCreate($input: AppInput!) {
+  appCreate(input: $input) {
+    authToken
+    app {
+      ...App
+      __typename
+    }
+    errors {
+      field
+      message
+      code
+      __typename
+    }
+    __typename
+  }
+}
+    ${App}`;
 export const CheckoutAddBilling = gql`
     mutation CheckoutAddBilling($id: ID!, $billingAddress: AddressInput!) {
   checkoutBillingAddressUpdate(id: $id, billingAddress: $billingAddress) {
