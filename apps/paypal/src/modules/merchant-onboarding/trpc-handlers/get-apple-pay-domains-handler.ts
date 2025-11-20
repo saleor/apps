@@ -149,13 +149,13 @@ export class GetApplePayDomainsHandler {
 
           logger.info("Apple Pay domains retrieved successfully", {
             merchant_id: merchant.paypalMerchantId,
-            domains_count: result.value.domains?.length || 0,
+            domains_count: result.value.wallet_domains?.length || 0,
           });
 
           return {
             applePayEnabled: true,
             domains:
-              result.value.domains?.map((domain) => ({
+              result.value.wallet_domains?.map((domain) => ({
                 domainName: domain.domain.name,
                 status: domain.status,
                 createdAt: domain.created_at,

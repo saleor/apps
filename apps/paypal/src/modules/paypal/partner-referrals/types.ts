@@ -309,17 +309,25 @@ export interface RegisterApplePayDomainResponse {
 /**
  * Get Apple Pay Domains Response
  * GET /v1/customer/wallet-domains
+ * Note: PayPal returns "wallet_domains" not "domains" and includes pagination
  */
 export interface GetApplePayDomainsResponse {
-  domains?: Array<{
+  wallet_domains?: Array<{
     provider_type: "APPLE_PAY";
     domain: {
       name: string;
+    };
+    merchant?: {
+      account_id: string;
+      business_name?: string;
+      url?: string;
     };
     status?: "VERIFIED" | "PENDING" | "DENIED";
     created_at?: string;
     updated_at?: string;
   }>;
+  total_items?: string;
+  total_pages?: string;
   links?: HateoasLink[];
 }
 

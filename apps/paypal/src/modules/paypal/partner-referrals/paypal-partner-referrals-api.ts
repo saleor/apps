@@ -524,6 +524,7 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
    * Get Apple Pay Domains
    * GET /v1/customer/wallet-domains
    * Gets all registered Apple Pay domains for a merchant
+   * Handles pagination to fetch all domains
    */
   async getApplePayDomains(
     merchantId: PayPalMerchantId
@@ -533,22 +534,64 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
         merchant_id: merchantId,
       });
 
-      const response = await this.client.makeRequest<GetApplePayDomainsResponse>({
-        method: "GET",
-        path: "/v1/customer/wallet-domains",
-        skipBnCode: true, // Apple Pay domain operations don't require BN code
-      });
+      // Fetch all domains across all pages
+      const allDomains: GetApplePayDomainsResponse["wallet_domains"] = [];
+      let currentPage = 1;
+      let hasMorePages = true;
+      let totalPages = 1;
+
+      while (hasMorePages) {
+        const response = await this.client.makeRequest<GetApplePayDomainsResponse>({
+          method: "GET",
+          path: `/v1/customer/wallet-domains?page_size=50&page=${currentPage}`,
+          skipBnCode: true, // Apple Pay domain operations don't require BN code
+        });
+
+        // Add domains from current page
+        if (response.wallet_domains && response.wallet_domains.length > 0) {
+          allDomains.push(...response.wallet_domains);
+        }
+
+        // Check if there are more pages
+        if (response.total_pages) {
+          totalPages = parseInt(response.total_pages, 10);
+        }
+
+        logger.debug(`Fetched page ${currentPage} of ${totalPages}`, {
+          merchant_id: merchantId,
+          page_domains_count: response.wallet_domains?.length || 0,
+          total_domains_so_far: allDomains.length,
+        });
+
+        if (currentPage >= totalPages) {
+          hasMorePages = false;
+        } else {
+          currentPage++;
+        }
+      }
 
       logger.info("Apple Pay domains retrieved successfully", {
         merchant_id: merchantId,
-        domains_count: response.domains?.length || 0,
+        domains_count: allDomains.length,
+        pages_fetched: currentPage,
       });
 
       logger.debug("Apple Pay domains response", {
-        response: JSON.stringify(response, null, 2),
+        response: JSON.stringify(
+          {
+            wallet_domains: allDomains,
+            total_items: allDomains.length.toString(),
+          },
+          null,
+          2
+        ),
       });
 
-      return ok(response);
+      return ok({
+        wallet_domains: allDomains,
+        total_items: allDomains.length.toString(),
+        total_pages: "1",
+      });
     } catch (error) {
       logger.error("Failed to get Apple Pay domains", {
         merchant_id: merchantId,

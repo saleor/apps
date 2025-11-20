@@ -43,18 +43,21 @@ export const ApplePayDomainsSection = ({
       },
     });
 
-  const { mutate: deleteDomain, isLoading: isDeleting } =
-    trpcClient.merchantOnboarding.deleteApplePayDomain.useMutation({
-      onSuccess: (result) => {
-        setSuccess(result.message);
-        setError(null);
-        refetchDomains();
-      },
-      onError: (err) => {
-        setError(err.message);
-        setSuccess(null);
-      },
-    });
+  const {
+    mutate: deleteDomain,
+    isLoading: isDeleting,
+    variables: deletingDomainVars,
+  } = trpcClient.merchantOnboarding.deleteApplePayDomain.useMutation({
+    onSuccess: (result) => {
+      setSuccess(result.message);
+      setError(null);
+      refetchDomains();
+    },
+    onError: (err) => {
+      setError(err.message || "Failed to delete domain. Please try again.");
+      setSuccess(null);
+    },
+  });
 
   const handleRegisterDomain = () => {
     if (!newDomain.trim()) {
@@ -79,12 +82,9 @@ export const ApplePayDomainsSection = ({
   };
 
   const handleDeleteDomain = (domainName: string) => {
-    if (!confirm(`Are you sure you want to delete the domain "${domainName}"?`)) {
-      return;
-    }
-
     setError(null);
     setSuccess(null);
+
     deleteDomain({
       trackingId,
       domainName,
@@ -255,7 +255,7 @@ export const ApplePayDomainsSection = ({
                     <Text size={3} fontWeight="medium">
                       {domain.domainName}
                     </Text>
-                    <DomainStatusBadge status={domain.status || "PENDING"} />
+                    {domain.status && <DomainStatusBadge status={domain.status} />}
                   </Box>
                   {domain.createdAt && (
                     <Text size={2} color="default2">
@@ -269,7 +269,9 @@ export const ApplePayDomainsSection = ({
                   disabled={isLoading}
                   size="small"
                 >
-                  Delete
+                  {isDeleting && deletingDomainVars?.domainName === domain.domainName
+                    ? "Deleting..."
+                    : "Delete"}
                 </Button>
               </Box>
             ))}
@@ -305,19 +307,25 @@ const DomainStatusBadge = ({ status }: { status: string }) => {
       case "VERIFIED":
         return { bg: "#10B981", text: "#FFFFFF", label: "VERIFIED" };
       case "PENDING":
-        return { bg: "#F59E0B", text: "#FFFFFF", label: "PENDING" };
+        return { bg: "#F59E0B", text: "#1F2937", label: "PENDING" };
       case "DENIED":
       case "FAILED":
         return { bg: "#EF4444", text: "#FFFFFF", label: "FAILED" };
       default:
-        return { bg: "#6B7280", text: "#FFFFFF", label: status || "UNKNOWN" };
+        return { bg: "#E5E7EB", text: "#1F2937", label: status || "UNKNOWN" };
     }
   };
 
   const colors = getStatusColor();
 
   return (
-    <Box paddingX={2} paddingY={1} borderRadius={3} __backgroundColor={colors.bg}>
+    <Box
+      paddingX={2}
+      paddingY={1}
+      borderRadius={3}
+      __backgroundColor={colors.bg}
+      __boxShadow="0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+    >
       <Text size={1} fontWeight="medium" __color={colors.text}>
         {colors.label}
       </Text>
