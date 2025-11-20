@@ -17,7 +17,11 @@
 
 ### Minor Changes
 
-- b1c2ff47: ~~Adding support to overwrite the shipFrom address in the avatax calculation using private metadata on order or checkout object.~~ Change reverted
+- b1c2ff47: Adding support to overwrite the shipFrom address in the avatax calculation using private metadata on order or checkout object. Example:
+  {
+  "key": "avataxShipFromAddress",
+  "value": "{\"street\":\"123 Custom Street\",\"city\":\"Custom City\",\"state\":\"CA\",\"zip\":\"90210\",\"country\":\"US\"}"
+  }
 
 ### Patch Changes
 
