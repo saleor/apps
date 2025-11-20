@@ -1,5 +1,59 @@
 # saleor-app-payment-stripe
 
+## 2.3.5
+
+### Patch Changes
+
+- 27a4d622: Attach errors to trpc handlers for better debugging
+
+## 2.3.4
+
+### Patch Changes
+
+- f53f6e23: Added logs when app installation fails.
+
+## 2.3.3
+
+### Patch Changes
+
+- f531475b: Added additional logging to UpdateMapping handler. Previously no logs were issues when error occured which prevented proper debugging.
+
+## 2.3.2
+
+### Patch Changes
+
+- baf821a9: Fix logger message when canceling payment intent.
+
+## 2.3.1
+
+### Patch Changes
+
+- 86747b3c: When users open app outside of Saleor Dashboard's iframe we will now display an error message with explanation. Previously we rendered app's UI, which caused frontend to make requests to the app without any required data (tokens, saleorApiUrl, etc.) which resulted in error logs.
+
+## 2.3.0
+
+### Minor Changes
+
+- 6b9305d3: Add support for payment method details in transaction events. The Stripe app now fetches and includes payment method information (card brand, last digits, expiration date, etc.) when reporting transaction events to Saleor. This feature is only available for Saleor 3.22+ and includes:
+
+  - New `SaleorPaymentMethodDetails` class for converting Stripe payment method data to Saleor format
+  - Automatic fetching of payment method details from Stripe PaymentIntent
+  - Support for card payment methods (brand, last 4 digits, expiration month/year) and other payment method types
+  - Payment method details included in transaction event reports sent to Saleor
+  - Version compatibility check using `SaleorVersionCompatibilityValidator` to ensure the feature is only used with compatible Saleor versions
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+  - @saleor/apps-trpc@4.0.3
+
+## 2.2.2
+
+### Patch Changes
+
+- 22c28c1f: Removed unnecessary error logs that printed all non-ok responses from tRPC in the main Procedure. That is not necessary because main tRPC config already prints errors from 500 status errors. Now only one error will be logged if necessary
+
 ## 2.2.1
 
 ### Patch Changes

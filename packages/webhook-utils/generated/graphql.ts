@@ -77,7 +77,7 @@ export type Scalars = {
 /**
  * Create a new address for the customer.
  *
- * Requires one of the following permissions: AUTHENTICATED_USER.
+ * Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
  *
  * Triggers the following webhook events:
  * - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -333,6 +333,7 @@ export type AccountErrorCode =
   | 'JWT_MISSING_TOKEN'
   | 'JWT_SIGNATURE_EXPIRED'
   | 'LEFT_NOT_MANAGEABLE_PERMISSION'
+  | 'LOGIN_ATTEMPT_DELAYED'
   | 'MISSING_CHANNEL_SLUG'
   | 'NOT_FOUND'
   | 'OUT_OF_SCOPE_GROUP'
@@ -344,7 +345,8 @@ export type AccountErrorCode =
   | 'PASSWORD_TOO_SHORT'
   | 'PASSWORD_TOO_SIMILAR'
   | 'REQUIRED'
-  | 'UNIQUE';
+  | 'UNIQUE'
+  | 'UNKNOWN_IP_ADDRESS';
 
 /** Fields required to update the user. */
 export type AccountInput = {
@@ -463,7 +465,7 @@ export type AccountSetPasswordRequested = Event & {
 /**
  * Updates the account of the logged-in user.
  *
- * Requires one of the following permissions: AUTHENTICATED_USER.
+ * Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
  *
  * Triggers the following webhook events:
  * - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -671,6 +673,14 @@ export type AddressInput = {
   readonly phone?: InputMaybe<Scalars['String']['input']>;
   /** Postal code. */
   readonly postalCode?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Determine if the address should be validated. By default, Saleor accepts only address inputs matching ruleset from [Google Address Data]{https://chromium-i18n.appspot.com/ssl-address), using [i18naddress](https://github.com/mirumee/google-i18n-address) library. Some mutations may require additional permissions to use the the field. More info about permissions can be found in relevant mutation.
+   *
+   * Added in Saleor 3.19.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  readonly skipValidation?: InputMaybe<Scalars['Boolean']['input']>;
   /** Address. */
   readonly streetAddress1?: InputMaybe<Scalars['String']['input']>;
   /** Address. */
@@ -4347,6 +4357,8 @@ export type CheckoutCountableEdge = {
 /**
  * Create a new checkout.
  *
+ * `skipValidation` field requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions.
+ *
  * Triggers the following webhook events:
  * - CHECKOUT_CREATED (async): A checkout was created.
  */
@@ -4415,7 +4427,7 @@ export type CheckoutCreateFromOrderUnavailableVariantErrorCode =
   | 'UNAVAILABLE_VARIANT_IN_CHANNEL';
 
 export type CheckoutCreateInput = {
-  /** Billing address of the customer. */
+  /** Billing address of the customer. `skipValidation` requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions. */
   readonly billingAddress?: InputMaybe<AddressInput>;
   /** Slug of a channel in which to create a checkout. */
   readonly channel?: InputMaybe<Scalars['String']['input']>;
@@ -4425,7 +4437,7 @@ export type CheckoutCreateInput = {
   readonly languageCode?: InputMaybe<LanguageCodeEnum>;
   /** A list of checkout lines, each containing information about an item in the checkout. */
   readonly lines: ReadonlyArray<CheckoutLineInput>;
-  /** The mailing address to where the checkout will be shipped. Note: the address will be ignored if the checkout doesn't contain shippable items. */
+  /** The mailing address to where the checkout will be shipped. Note: the address will be ignored if the checkout doesn't contain shippable items. `skipValidation` requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions. */
   readonly shippingAddress?: InputMaybe<AddressInput>;
   /**
    * The checkout validation rules that can be changed.
@@ -10632,7 +10644,7 @@ export type Mutation = {
   /**
    * Create a new address for the customer.
    *
-   * Requires one of the following permissions: AUTHENTICATED_USER.
+   * Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
    *
    * Triggers the following webhook events:
    * - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -10693,7 +10705,7 @@ export type Mutation = {
   /**
    * Updates the account of the logged-in user.
    *
-   * Requires one of the following permissions: AUTHENTICATED_USER.
+   * Requires one of following set of permissions: AUTHENTICATED_USER or AUTHENTICATED_APP + IMPERSONATE_USER.
    *
    * Triggers the following webhook events:
    * - CUSTOMER_UPDATED (async): A customer account was updated.
@@ -11087,6 +11099,8 @@ export type Mutation = {
   readonly checkoutComplete?: Maybe<CheckoutComplete>;
   /**
    * Create a new checkout.
+   *
+   * `skipValidation` field requires HANDLE_CHECKOUTS and AUTHENTICATED_APP permissions.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_CREATED (async): A checkout was created.
@@ -12052,7 +12066,7 @@ export type Mutation = {
   /** Check payment balance. */
   readonly paymentCheckBalance?: Maybe<PaymentCheckBalance>;
   /**
-   * Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways.
+   * Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways. There is a limit of 100 transaction items per checkout / order.
    *
    * Added in Saleor 3.13.
    *
@@ -12904,10 +12918,15 @@ export type Mutation = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
+   *
+   * Triggers the following webhook events:
+   * - TRANSACTION_ITEM_METADATA_UPDATED (async): Optionally called when transaction's metadata was updated.
+   * - CHECKOUT_FULLY_PAID (async): Optionally called when the checkout charge status changed to `FULL` or `OVERCHARGED`.
+   * - ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
    */
   readonly transactionEventReport?: Maybe<TransactionEventReport>;
   /**
-   * Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`.
+   * Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. There is a limit of 100 transaction items per checkout / order.
    *
    * Added in Saleor 3.13.
    *
@@ -13122,6 +13141,7 @@ export type Mutation = {
 
 
 export type MutationAccountAddressCreateArgs = {
+  customerId?: InputMaybe<Scalars['ID']['input']>;
   input: AddressInput;
   type?: InputMaybe<AddressTypeEnum>;
 };
@@ -13161,6 +13181,7 @@ export type MutationAccountSetDefaultAddressArgs = {
 
 
 export type MutationAccountUpdateArgs = {
+  customerId?: InputMaybe<Scalars['ID']['input']>;
   input: AccountInput;
 };
 
@@ -14848,7 +14869,7 @@ export type MutationTransactionCreateArgs = {
 
 
 export type MutationTransactionEventReportArgs = {
-  amount: Scalars['PositiveDecimal']['input'];
+  amount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   availableActions?: InputMaybe<ReadonlyArray<TransactionActionEnum>>;
   externalUrl?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -14856,6 +14877,8 @@ export type MutationTransactionEventReportArgs = {
   pspReference: Scalars['String']['input'];
   time?: InputMaybe<Scalars['DateTime']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
+  transactionMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
+  transactionPrivateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   type: TransactionEventTypeEnum;
 };
 
@@ -15402,6 +15425,12 @@ export type Order = Node & ObjectWithMetadata & {
    * @deprecated This field will be removed in Saleor 4.0. Use the `discounts` field instead.
    */
   readonly translatedDiscountName?: Maybe<Scalars['String']['output']>;
+  /**
+   * Undiscounted total price of shipping.
+   *
+   * Added in Saleor 3.19.
+   */
+  readonly undiscountedShippingPrice?: Maybe<Money>;
   /** Undiscounted total amount of the order. */
   readonly undiscountedTotal: TaxedMoney;
   /** Date and time when the order was created. */
@@ -15704,6 +15733,12 @@ export type OrderBulkCreateOrderLineInput = {
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** The name of the product. */
   readonly productName?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * The SKU of the product.
+   *
+   * Added in Saleor 3.18.
+   */
+  readonly productSku?: InputMaybe<Scalars['String']['input']>;
   /** Number of items in the order line */
   readonly quantity: Scalars['Int']['input'];
   /** The ID of the tax class. */
@@ -15724,6 +15759,24 @@ export type OrderBulkCreateOrderLineInput = {
   readonly translatedVariantName?: InputMaybe<Scalars['String']['input']>;
   /** Price of the order line excluding applied discount. */
   readonly undiscountedTotalPrice: TaxedMoneyInput;
+  /**
+   * Reason of the discount on order line.
+   *
+   * Added in Saleor 3.19.
+   */
+  readonly unitDiscountReason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Type of the discount: fixed or percent
+   *
+   * Added in Saleor 3.19.
+   */
+  readonly unitDiscountType?: InputMaybe<DiscountValueTypeEnum>;
+  /**
+   * Value of the discount. Can store fixed value or percent value
+   *
+   * Added in Saleor 3.19.
+   */
+  readonly unitDiscountValue?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   /** The external ID of the product variant. */
   readonly variantExternalReference?: InputMaybe<Scalars['String']['input']>;
   /** The ID of the product variant. */
@@ -16300,6 +16353,7 @@ export type OrderFilterInput = {
   readonly channels?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly chargeStatus?: InputMaybe<ReadonlyArray<OrderChargeStatusEnum>>;
   readonly checkoutIds?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  readonly checkoutTokens?: InputMaybe<ReadonlyArray<Scalars['UUID']['input']>>;
   readonly created?: InputMaybe<DateRangeInput>;
   readonly customer?: InputMaybe<Scalars['String']['input']>;
   readonly giftCardBought?: InputMaybe<Scalars['Boolean']['input']>;
@@ -16718,6 +16772,12 @@ export type OrderLine = Node & ObjectWithMetadata & {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   readonly isGift?: Maybe<Scalars['Boolean']['output']>;
+  /**
+   * Returns True, if the line unit price was overridden.
+   *
+   * Added in Saleor 3.14.
+   */
+  readonly isPriceOverridden?: Maybe<Scalars['Boolean']['output']>;
   /** Whether the product variant requires shipping. */
   readonly isShippingRequired: Scalars['Boolean']['output'];
   /**
@@ -16819,17 +16879,17 @@ export type OrderLine = Node & ObjectWithMetadata & {
   readonly translatedVariantName: Scalars['String']['output'];
   /** Price of the order line without discounts. */
   readonly undiscountedTotalPrice: TaxedMoney;
-  /** Price of the single item in the order line without applied an order line discount. */
+  /** Price of the single item in the order line without any discount applied. */
   readonly undiscountedUnitPrice: TaxedMoney;
-  /** The discount applied to the single order line. */
+  /** Sum of the line-level discounts applied to the order line. Order-level discounts which affect the line are not visible in this field. For order-level discount portion (if any), please query `order.discounts` field. */
   readonly unitDiscount: Money;
-  /** Reason for any discounts applied on a product in the order. */
+  /** Reason for line-level discounts applied on the order line. Order-level discounts which affect the line are not visible in this field. For order-level discount reason (if any), please query `order.discounts` field. */
   readonly unitDiscountReason?: Maybe<Scalars['String']['output']>;
-  /** Type of the discount: fixed or percent */
+  /** Type of the discount: `fixed` or `percent`. This field shouldn't be used when multiple discounts affect the line. There is a limitation, that after running `checkoutComplete` mutation the field is always set to `fixed`. */
   readonly unitDiscountType?: Maybe<DiscountValueTypeEnum>;
-  /** Value of the discount. Can store fixed value or percent value */
+  /** Value of the discount. Can store fixed value or percent value. This field shouldn't be used when multiple discounts affect the line. There is a limitation, that after running `checkoutComplete` mutation the field always stores fixed value. */
   readonly unitDiscountValue: Scalars['PositiveDecimal']['output'];
-  /** Price of the single item in the order line. */
+  /** Price of the single item in the order line with all the line-level discounts and order-level discount portions applied. */
   readonly unitPrice: TaxedMoney;
   /** A purchased product variant. Note: this field may be null if the variant has been removed from stock at all. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   readonly variant?: Maybe<ProductVariant>;
@@ -18520,6 +18580,7 @@ export type PaymentErrorCode =
   | 'BALANCE_CHECK_ERROR'
   | 'BILLING_ADDRESS_NOT_SET'
   | 'CHANNEL_INACTIVE'
+  | 'CHECKOUT_COMPLETION_IN_PROGRESS'
   | 'CHECKOUT_EMAIL_NOT_SET'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
@@ -18581,7 +18642,7 @@ export type PaymentGatewayConfigErrorCode =
   | 'NOT_FOUND';
 
 /**
- * Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways.
+ * Initializes a payment gateway session. It triggers the webhook `PAYMENT_GATEWAY_INITIALIZE_SESSION`, to the requested `paymentGateways`. If `paymentGateways` is not provided, the webhook will be send to all subscribed payment gateways. There is a limit of 100 transaction items per checkout / order.
  *
  * Added in Saleor 3.13.
  *
@@ -23616,7 +23677,7 @@ export type Query = {
   /**
    * Look up a checkout by id.
    *
-   * Requires one of the following permissions to query checkouts that belong to other users: MANAGE_CHECKOUTS, IMPERSONATE_USER.
+   * Requires one of the following permissions to query a checkout, if a checkout is in inactive channel: MANAGE_CHECKOUTS, IMPERSONATE_USER, HANDLE_PAYMENTS.
    */
   readonly checkout?: Maybe<Checkout>;
   /**
@@ -23628,7 +23689,7 @@ export type Query = {
   /**
    * List of checkouts.
    *
-   * Requires one of the following permissions: MANAGE_CHECKOUTS.
+   * Requires one of the following permissions: MANAGE_CHECKOUTS, HANDLE_PAYMENTS.
    */
   readonly checkouts?: Maybe<CheckoutCountableConnection>;
   /** Look up a collection by ID. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
@@ -25591,7 +25652,7 @@ export type ShippingMethodTranslation = Node & {
   /** Translation language. */
   readonly language: LanguageDisplay;
   /** Translated shipping method name. */
-  readonly name: Scalars['String']['output'];
+  readonly name?: Maybe<Scalars['String']['output']>;
   /**
    * Represents the shipping method fields to translate.
    *
@@ -27926,7 +27987,7 @@ export type TaxableObject = {
   readonly lines: ReadonlyArray<TaxableObjectLine>;
   /** Determines if prices contain entered tax.. */
   readonly pricesEnteredWithTax: Scalars['Boolean']['output'];
-  /** The price of shipping method. */
+  /** The price of shipping method, includes shipping voucher discount if applied. */
   readonly shippingPrice: Money;
   /** The source object related to this tax object. */
   readonly sourceObject: TaxSourceObject;
@@ -27938,7 +27999,14 @@ export type TaxableObjectDiscount = {
   readonly amount: Money;
   /** The name of the discount. */
   readonly name?: Maybe<Scalars['String']['output']>;
+  /** Indicates which part of the order the discount should affect: SUBTOTAL or SHIPPING. */
+  readonly type: TaxableObjectDiscountTypeEnum;
 };
+
+/** Indicates which part of the order the discount should affect: SUBTOTAL or SHIPPING. */
+export type TaxableObjectDiscountTypeEnum =
+  | 'SHIPPING'
+  | 'SUBTOTAL';
 
 export type TaxableObjectLine = {
   /** Determines if taxes are being charged for the product. */
@@ -27951,9 +28019,9 @@ export type TaxableObjectLine = {
   readonly quantity: Scalars['Int']['output'];
   /** The source line related to this tax line. */
   readonly sourceLine: TaxSourceLine;
-  /** Price of the order line. */
+  /** Price of the order line. The price includes catalogue promotions, specific product and applied once per order voucher discounts. The price does not include the entire order discount. */
   readonly totalPrice: Money;
-  /** Price of the single item in the order line. */
+  /** Price of the single item in the order line. The price includes catalogue promotions, specific product and applied once per order voucher discounts. The price does not include the entire order discount. */
   readonly unitPrice: Money;
   /** The variant name. */
   readonly variantName: Scalars['String']['output'];
@@ -28305,6 +28373,11 @@ export type TransactionEventInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
+ *
+ * Triggers the following webhook events:
+ * - TRANSACTION_ITEM_METADATA_UPDATED (async): Optionally called when transaction's metadata was updated.
+ * - CHECKOUT_FULLY_PAID (async): Optionally called when the checkout charge status changed to `FULL` or `OVERCHARGED`.
+ * - ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
  */
 export type TransactionEventReport = {
   /** Defines if the reported event hasn't been processed earlier. */
@@ -28331,7 +28404,8 @@ export type TransactionEventReportErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INCORRECT_DETAILS'
   | 'INVALID'
-  | 'NOT_FOUND';
+  | 'NOT_FOUND'
+  | 'REQUIRED';
 
 /**
  * Represents possible event types.
@@ -28391,7 +28465,7 @@ export type TransactionFlowStrategyEnum =
   | 'CHARGE';
 
 /**
- * Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`.
+ * Initializes a transaction session. It triggers the webhook `TRANSACTION_INITIALIZE_SESSION`, to the requested `paymentGateways`. There is a limit of 100 transaction items per checkout / order.
  *
  * Added in Saleor 3.13.
  *
@@ -28418,6 +28492,7 @@ export type TransactionInitializeError = {
 
 /** An enumeration. */
 export type TransactionInitializeErrorCode =
+  | 'CHECKOUT_COMPLETION_IN_PROGRESS'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'NOT_FOUND'
@@ -28714,6 +28789,7 @@ export type TransactionProcessError = {
 
 /** An enumeration. */
 export type TransactionProcessErrorCode =
+  | 'CHECKOUT_COMPLETION_IN_PROGRESS'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'MISSING_PAYMENT_APP'
@@ -30704,7 +30780,7 @@ export type WebhookCreateInput = {
   /** The asynchronous events that webhook wants to subscribe. */
   readonly asyncEvents?: InputMaybe<ReadonlyArray<WebhookEventTypeAsyncEnum>>;
   /**
-   * Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only "X-*" and "Authorization*" keys are allowed.
+   * Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only `X-*`, `Authorization*`, and `BrokerProperties` keys are allowed.
    *
    * Added in Saleor 3.12.
    *
@@ -31966,7 +32042,7 @@ export type WebhookUpdateInput = {
   /** The asynchronous events that webhook wants to subscribe. */
   readonly asyncEvents?: InputMaybe<ReadonlyArray<WebhookEventTypeAsyncEnum>>;
   /**
-   * Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only "X-*" and "Authorization*" keys are allowed.
+   * Custom headers, which will be added to HTTP request. There is a limitation of 5 headers per webhook and 998 characters per header.Only `X-*`, `Authorization*`, and `BrokerProperties` keys are allowed.
    *
    * Added in Saleor 3.12.
    *

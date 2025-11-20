@@ -56,10 +56,23 @@ const handler = transactionInitializeSessionWebhookDefinition.createHandler(
 
       setObservabilitySaleorApiUrl(saleorApiUrlResult.value, ctx.payload.version);
 
+      if (!ctx.schemaVersion) {
+        captureException(new Error("No schema version provided"));
+        const response = new MalformedRequestResponse(
+          appContextContainer.getContextValue(),
+          new BaseError("No schema version provided", {
+            props: { _internalName: "TransactionInitializeSession.NoSchemaVersion" as const },
+          }),
+        );
+
+        return response.getResponse();
+      }
+
       const result = await useCase.execute({
         appId: ctx.authData.appId,
         saleorApiUrl: saleorApiUrlResult.value,
         event: ctx.payload,
+        saleorSchemaVersion: ctx.schemaVersion,
       });
 
       return result.match(

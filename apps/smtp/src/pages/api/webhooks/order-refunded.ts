@@ -96,9 +96,9 @@ const handler: NextJsWebhookHandler<OrderRefundedWebhookPayloadFragment> = async
             const errorInstance = err[0];
 
             if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
-              logger.error("Failed to send email(s) [server error]", { error: err });
+              logger.info("Failed to send email(s) [server error]", { error: err });
 
-              return res.status(500).json({ message: "Failed to send email" });
+              return res.status(400).json({ message: "Failed to send email" });
             } else if (errorInstance instanceof SendEventMessagesUseCase.ClientError) {
               logger.info("Failed to send email(s) [client error]", { error: err });
 

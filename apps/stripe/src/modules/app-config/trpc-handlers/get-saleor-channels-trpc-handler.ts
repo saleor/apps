@@ -23,6 +23,7 @@ export class GetSaleorChannelsTrpcHandler {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to fetch channels, contact support",
+          cause: channelsResult.error,
         });
       }
 

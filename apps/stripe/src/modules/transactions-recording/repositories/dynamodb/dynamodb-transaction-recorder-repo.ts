@@ -42,6 +42,8 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
     try {
       this.logger.debug("Trying to write Transaction to DynamoDB", { transaction });
 
+      const [major, minor] = transaction.saleorSchemaVersion;
+
       const operation = this.entity
         .build(PutItemCommand)
         .item({
@@ -57,6 +59,10 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
           saleorTransactionId: transaction.saleorTransactionId,
           saleorTransactionFlow: transaction.saleorTransactionFlow,
           resolvedTransactionFlow: transaction.resolvedTransactionFlow,
+          saleorSchemaVersion: {
+            major,
+            minor,
+          },
         })
         .options({
           condition: {
@@ -136,6 +142,10 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
             saleorTransactionId: createSaleorTransactionId(saleorTransactionId),
             stripePaymentIntentId: createStripePaymentIntentId(paymentIntentId),
             selectedPaymentMethod: selectedPaymentMethod as PaymentMethod["type"],
+            saleorSchemaVersion: [
+              result.Item.saleorSchemaVersion.major,
+              result.Item.saleorSchemaVersion.minor,
+            ],
           }),
         );
       } else {

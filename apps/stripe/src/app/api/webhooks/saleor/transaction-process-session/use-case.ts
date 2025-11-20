@@ -16,6 +16,7 @@ import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo
 import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
@@ -186,6 +187,9 @@ export class TransactionProcessSessionUseCase {
         saleorMoney: saleorMoneyResult.value,
         timestamp: createTimestampFromPaymentIntent(getPaymentIntentResult.value),
         appContext: appContextContainer.getContextValue(),
+        saleorPaymentMethodDetails: SaleorPaymentMethodDetails.createFromStripe(
+          getPaymentIntentResult.value.payment_method,
+        ).unwrapOr(null),
       }),
     );
   }

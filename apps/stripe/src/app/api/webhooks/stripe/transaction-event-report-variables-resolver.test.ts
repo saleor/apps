@@ -43,6 +43,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       }),
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -57,6 +58,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent has been successful",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_SUCCESS",
@@ -76,6 +78,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       }),
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -91,6 +94,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent has been successful",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_SUCCESS",
@@ -112,6 +116,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -126,6 +131,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent requires action",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_ACTION_REQUIRED",
@@ -147,6 +153,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -161,6 +168,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent requires action",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_ACTION_REQUIRED",
@@ -178,6 +186,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -190,6 +199,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent is processing",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_REQUEST",
@@ -207,6 +217,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -219,6 +230,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/test/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent is processing",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_REQUEST",
@@ -238,6 +250,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       transactionResult,
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -252,6 +265,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent failed",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "CHARGE_FAILURE",
@@ -271,6 +285,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -285,6 +300,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/payments/pi_TEST_TEST_TEST",
         "message": "Payment intent failed",
         "pspReference": "pi_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "AUTHORIZATION_FAILURE",
@@ -302,6 +318,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -316,6 +333,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/refunds/re_TEST_TEST_TEST",
         "message": "Refund was successful",
         "pspReference": "re_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "REFUND_SUCCESS",
@@ -333,6 +351,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -347,6 +366,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/refunds/re_TEST_TEST_TEST",
         "message": "Refund failed",
         "pspReference": "re_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "REFUND_FAILURE",
@@ -364,6 +384,7 @@ describe("TransactionEventReportVariablesResolver", () => {
       saleorMoney: getMockedSaleorMoney(),
       saleorTransactionId: mockedSaleorTransactionId,
       timestamp: new Date("2023-10-01T00:00:00Z"),
+      paymentMethodDetails: null,
     });
 
     expect(resolver.resolveEventReportVariables()).toMatchInlineSnapshot(`
@@ -376,6 +397,7 @@ describe("TransactionEventReportVariablesResolver", () => {
         "externalUrl": "https://dashboard.stripe.com/refunds/re_TEST_TEST_TEST",
         "message": "Refund is processing",
         "pspReference": "re_TEST_TEST_TEST",
+        "saleorPaymentMethodDetailsInput": null,
         "time": "2023-10-01T00:00:00.000Z",
         "transactionId": "mocked-transaction-id",
         "type": "REFUND_REQUEST",

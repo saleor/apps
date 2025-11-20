@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-avatax",
-  "version": "1.20.0",
+  "version": "1.21.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,7 @@
     "dev:debug": "APP_LOG_LEVEL=debug pnpm dev",
     "e2e": "vitest --project e2e --watch=false --sequence.sequential",
     "e2e:watch": "vitest --project e2e --watch --sequence.sequential",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
+    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run generate:app && pnpm run generate:e2e",
     "generate:app": "graphql-codegen",
     "generate:e2e": "graphql-codegen --project e2e",
@@ -23,6 +23,11 @@
     "start": "next start",
     "test": "vitest --project units --sequence.shuffle",
     "test:ci": "vitest run --coverage --project units --sequence.shuffle"
+  },
+  "config": {
+    "saleor": {
+      "schemaVersion": "3.20"
+    }
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
@@ -107,8 +112,5 @@
     "vite": "catalog:",
     "vite-tsconfig-paths": "catalog:",
     "vitest": "catalog:"
-  },
-  "saleor": {
-    "schemaVersion": "3.20"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-products-feed",
-  "version": "2.0.4",
+  "version": "2.1.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,13 +8,18 @@
     "check-types": "tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
+    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "next start",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
+  },
+  "config": {
+    "saleor": {
+      "schemaVersion": "3.21"
+    }
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
@@ -85,11 +90,9 @@
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "graphql-config": "5.0.3",
+    "node-mocks-http": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
     "vite-tsconfig-paths": "5.1.4"
-  },
-  "saleor": {
-    "schemaVersion": "3.10"
   }
 }

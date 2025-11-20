@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-klaviyo",
-  "version": "1.13.15",
+  "version": "1.14.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,11 +8,16 @@
     "check-types": "tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
+    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "next start"
+  },
+  "config": {
+    "saleor": {
+      "schemaVersion": "3.20"
+    }
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
@@ -73,8 +78,5 @@
     "pretty-quick": "^3.1.3",
     "tsx": "catalog:",
     "typescript": "5.8.2"
-  },
-  "saleor": {
-    "schemaVersion": "3.10"
   }
 }

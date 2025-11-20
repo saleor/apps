@@ -34,13 +34,13 @@ type PossibleErrors =
 export class StripeRefundHandler {
   static NotSupportedEventError = BaseError.subclass("NotSupportedEventError", {
     props: {
-      __internalName: "StripeRefundHandler.NotSupportedEventError",
+      _internalName: "StripeRefundHandler.NotSupportedEventError" as const,
     },
   });
 
   static MalformedEventError = BaseError.subclass("MalformedEventError", {
     props: {
-      __internalName: "StripeRefundHandler.MalformedEventError",
+      _internalName: "StripeRefundHandler.MalformedEventError" as const,
     },
   });
 
@@ -169,6 +169,7 @@ export class StripeRefundHandler {
             saleorMoney,
             timestamp,
             externalUrl: generateRefundStripeDashboardUrl(refundId, stripeEnv),
+            paymentMethodDetails: null, // there is no payment method details in refund event
           }),
         );
       }

@@ -64,6 +64,12 @@ export type Scalars = {
    * Should be used in places where value must be nonnegative (0 or greater).
    */
   PositiveDecimal: { input: any; output: any; }
+  /**
+   * Positive Integer scalar implementation.
+   *
+   * Should be used in places where value must be positive (greater than 0).
+   */
+  PositiveInt: { input: any; output: any; }
   UUID: { input: any; output: any; }
   /** Variables of this type must be set to null in mutations. They will be replaced with a filename from a following multipart part containing a binary file. See: https://github.com/jaydenseric/graphql-multipart-request-spec. */
   Upload: { input: any; output: any; }
@@ -92,7 +98,7 @@ export type AccountAddressCreate = {
 };
 
 /**
- * Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+ * Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
  *
  * Triggers the following webhook events:
  * - ADDRESS_DELETED (async): An address was deleted.
@@ -367,6 +373,7 @@ export type AccountRegister = {
   errors: Array<AccountError>;
   /** Informs whether users need to confirm their email address. */
   requiresConfirmation?: Maybe<Scalars['Boolean']['output']>;
+  /** @deprecated The field always returns a `User` object constructed from the input data. The `user.id` is always empty. To determine whether the user exists in Saleor, query via an external app with the required permissions. */
   user?: Maybe<User>;
 };
 
@@ -608,6 +615,12 @@ export type AddressDeleted = Event & {
   recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   version?: Maybe<Scalars['String']['output']>;
+};
+
+/** Filtering options for addresses. */
+export type AddressFilterInput = {
+  country?: InputMaybe<CountryCodeEnumFilterInput>;
+  phoneNumber?: InputMaybe<StringFilterInput>;
 };
 
 export type AddressInput = {
@@ -1033,7 +1046,7 @@ export type AppDelete = {
 };
 
 /**
- * Delete failed installation.
+ * Deletes failed installation.
  *
  * Requires one of the following permissions: MANAGE_APPS.
  */
@@ -1102,6 +1115,12 @@ export type AppExtension = Node & {
   label: Scalars['String']['output'];
   /** Place where given extension will be mounted. */
   mount: AppExtensionMountEnum;
+  /**
+   * App extension options.
+   *
+   * Added in Saleor 3.22.
+   */
+  options?: Maybe<AppExtensionPossibleOptions>;
   /** List of the app extension's permissions. */
   permissions: Array<Permission>;
   /** Type of way how app extension will be opened. */
@@ -1134,9 +1153,31 @@ export type AppExtensionFilterInput = {
 
 /** All places where app extension can be mounted. */
 export type AppExtensionMountEnum =
+  | 'CATEGORY_DETAILS_MORE_ACTIONS'
+  | 'CATEGORY_OVERVIEW_CREATE'
+  | 'CATEGORY_OVERVIEW_MORE_ACTIONS'
+  | 'COLLECTION_DETAILS_MORE_ACTIONS'
+  | 'COLLECTION_DETAILS_WIDGETS'
+  | 'COLLECTION_OVERVIEW_CREATE'
+  | 'COLLECTION_OVERVIEW_MORE_ACTIONS'
   | 'CUSTOMER_DETAILS_MORE_ACTIONS'
+  | 'CUSTOMER_DETAILS_WIDGETS'
   | 'CUSTOMER_OVERVIEW_CREATE'
   | 'CUSTOMER_OVERVIEW_MORE_ACTIONS'
+  | 'DISCOUNT_DETAILS_MORE_ACTIONS'
+  | 'DISCOUNT_OVERVIEW_CREATE'
+  | 'DISCOUNT_OVERVIEW_MORE_ACTIONS'
+  | 'DRAFT_ORDER_DETAILS_MORE_ACTIONS'
+  | 'DRAFT_ORDER_DETAILS_WIDGETS'
+  | 'DRAFT_ORDER_OVERVIEW_CREATE'
+  | 'DRAFT_ORDER_OVERVIEW_MORE_ACTIONS'
+  | 'GIFT_CARD_DETAILS_MORE_ACTIONS'
+  | 'GIFT_CARD_DETAILS_WIDGETS'
+  | 'GIFT_CARD_OVERVIEW_CREATE'
+  | 'GIFT_CARD_OVERVIEW_MORE_ACTIONS'
+  | 'MENU_DETAILS_MORE_ACTIONS'
+  | 'MENU_OVERVIEW_CREATE'
+  | 'MENU_OVERVIEW_MORE_ACTIONS'
   | 'NAVIGATION_CATALOG'
   | 'NAVIGATION_CUSTOMERS'
   | 'NAVIGATION_DISCOUNTS'
@@ -1144,11 +1185,39 @@ export type AppExtensionMountEnum =
   | 'NAVIGATION_PAGES'
   | 'NAVIGATION_TRANSLATIONS'
   | 'ORDER_DETAILS_MORE_ACTIONS'
+  | 'ORDER_DETAILS_WIDGETS'
   | 'ORDER_OVERVIEW_CREATE'
   | 'ORDER_OVERVIEW_MORE_ACTIONS'
+  | 'PAGE_DETAILS_MORE_ACTIONS'
+  | 'PAGE_OVERVIEW_CREATE'
+  | 'PAGE_OVERVIEW_MORE_ACTIONS'
+  | 'PAGE_TYPE_DETAILS_MORE_ACTIONS'
+  | 'PAGE_TYPE_OVERVIEW_CREATE'
+  | 'PAGE_TYPE_OVERVIEW_MORE_ACTIONS'
   | 'PRODUCT_DETAILS_MORE_ACTIONS'
+  | 'PRODUCT_DETAILS_WIDGETS'
   | 'PRODUCT_OVERVIEW_CREATE'
-  | 'PRODUCT_OVERVIEW_MORE_ACTIONS';
+  | 'PRODUCT_OVERVIEW_MORE_ACTIONS'
+  | 'VOUCHER_DETAILS_MORE_ACTIONS'
+  | 'VOUCHER_DETAILS_WIDGETS'
+  | 'VOUCHER_OVERVIEW_CREATE'
+  | 'VOUCHER_OVERVIEW_MORE_ACTIONS';
+
+/** Represents the options for an app extension. */
+export type AppExtensionOptionsNewTab = {
+  __typename?: 'AppExtensionOptionsNewTab';
+  /** Options controlling behavior of the NEW_TAB extension target */
+  newTabTarget?: Maybe<NewTabTargetOptions>;
+};
+
+/** Represents the options for an app extension. */
+export type AppExtensionOptionsWidget = {
+  __typename?: 'AppExtensionOptionsWidget';
+  /** Options for displaying a Widget */
+  widgetTarget?: Maybe<WidgetTargetOptions>;
+};
+
+export type AppExtensionPossibleOptions = AppExtensionOptionsNewTab | AppExtensionOptionsWidget;
 
 /**
  * All available ways of opening an app extension.
@@ -1158,7 +1227,9 @@ export type AppExtensionMountEnum =
  */
 export type AppExtensionTargetEnum =
   | 'APP_PAGE'
-  | 'POPUP';
+  | 'NEW_TAB'
+  | 'POPUP'
+  | 'WIDGET';
 
 /**
  * Fetch and validate manifest.
@@ -1484,6 +1555,441 @@ export type AssignNavigation = {
   menuErrors: Array<MenuError>;
 };
 
+/**
+ * Represents an attribute assigned to an object.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedAttribute = {
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+};
+
+export type AssignedAttributeReferenceInput = {
+  /** Returns objects with a reference pointing to a category identified by the given slug. */
+  categorySlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a collection identified by the given slug. */
+  collectionSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a page identified by the given slug. */
+  pageSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a product identified by the given slug. */
+  productSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a product variant identified by the given sku. */
+  productVariantSkus?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to an object identified by the given ID. */
+  referencedIds?: InputMaybe<ContainsFilterInput>;
+};
+
+export type AssignedAttributeValueInput = {
+  /** Filter by boolean value for attributes of boolean type. */
+  boolean?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by date value for attributes of date type. */
+  date?: InputMaybe<DateRangeInput>;
+  /** Filter by date time value for attributes of date time type. */
+  dateTime?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by name assigned to AttributeValue. */
+  name?: InputMaybe<StringFilterInput>;
+  /** Filter by numeric value for attributes of numeric type. */
+  numeric?: InputMaybe<DecimalFilterInput>;
+  /** Filter by reference attribute value. */
+  reference?: InputMaybe<AssignedAttributeReferenceInput>;
+  /** Filter by slug assigned to AttributeValue. */
+  slug?: InputMaybe<StringFilterInput>;
+};
+
+export type AssignedAttributeWhereInput = {
+  /** Filter by attribute slug. */
+  slug?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised. */
+  value?: InputMaybe<AssignedAttributeValueInput>;
+};
+
+/**
+ * Represents a boolean attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedBooleanAttribute = AssignedAttribute & {
+  __typename?: 'AssignedBooleanAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned boolean value. */
+  value?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/**
+ * Represents a single choice value of the attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedChoiceAttributeValue = {
+  __typename?: 'AssignedChoiceAttributeValue';
+  /** Name of a value displayed in the interface. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** Internal representation of a value (unique per attribute). */
+  slug?: Maybe<Scalars['String']['output']>;
+  /** Translation of the name. */
+  translation?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents a single choice value of the attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedChoiceAttributeValueTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Represents a date attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedDateAttribute = AssignedAttribute & {
+  __typename?: 'AssignedDateAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned date value. */
+  value?: Maybe<Scalars['Date']['output']>;
+};
+
+/**
+ * Represents a date time attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedDateTimeAttribute = AssignedAttribute & {
+  __typename?: 'AssignedDateTimeAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned date time value. */
+  value?: Maybe<Scalars['DateTime']['output']>;
+};
+
+/**
+ * Represents file attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedFileAttribute = AssignedAttribute & {
+  __typename?: 'AssignedFileAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned file. */
+  value?: Maybe<File>;
+};
+
+/**
+ * Represents multi category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCategoryReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedMultiCategoryReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** List of assigned category references. */
+  value: Array<Category>;
+};
+
+
+/**
+ * Represents multi category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCategoryReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents a multi choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiChoiceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedMultiChoiceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** List of assigned choice values. */
+  value: Array<AssignedChoiceAttributeValue>;
+};
+
+
+/**
+ * Represents a multi choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiChoiceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCollectionReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedMultiCollectionReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** List of assigned collection references. */
+  value: Array<Collection>;
+};
+
+
+/**
+ * Represents multi collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCollectionReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiPageReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedMultiPageReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** List of assigned page references. */
+  value: Array<Page>;
+};
+
+
+/**
+ * Represents multi page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiPageReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedMultiProductReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** List of assigned product references. */
+  value: Array<Product>;
+};
+
+
+/**
+ * Represents multi product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductVariantReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedMultiProductVariantReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** List of assigned product variant references. */
+  value: Array<ProductVariant>;
+};
+
+
+/**
+ * Represents multi product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductVariantReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents a numeric value of an attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedNumericAttribute = AssignedAttribute & {
+  __typename?: 'AssignedNumericAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned numeric value. */
+  value?: Maybe<Scalars['Float']['output']>;
+};
+
+/**
+ * Represents plain text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedPlainTextAttribute = AssignedAttribute & {
+  __typename?: 'AssignedPlainTextAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** Translation of the plain text content in the specified language. */
+  translation?: Maybe<Scalars['String']['output']>;
+  /** The assigned plain text content. */
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents plain text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedPlainTextAttributeTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Represents single category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleCategoryReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedSingleCategoryReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned category reference. */
+  value?: Maybe<Category>;
+};
+
+/**
+ * Represents a single choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleChoiceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedSingleChoiceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned choice value. */
+  value?: Maybe<AssignedChoiceAttributeValue>;
+};
+
+/**
+ * Represents single collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleCollectionReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedSingleCollectionReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned collection reference. */
+  value?: Maybe<Collection>;
+};
+
+/**
+ * Represents single page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSinglePageReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedSinglePageReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned page reference. */
+  value?: Maybe<Page>;
+};
+
+/**
+ * Represents single product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleProductReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedSingleProductReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned product reference. */
+  value?: Maybe<Product>;
+};
+
+/**
+ * Represents single product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleProductVariantReferenceAttribute = AssignedAttribute & {
+  __typename?: 'AssignedSingleProductVariantReferenceAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned product variant reference. */
+  value?: Maybe<ProductVariant>;
+};
+
+/**
+ * Represents a swatch attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttribute = AssignedAttribute & {
+  __typename?: 'AssignedSwatchAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** The assigned swatch value. */
+  value?: Maybe<AssignedSwatchAttributeValue>;
+};
+
+/**
+ * Represents a single swatch value.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttributeValue = {
+  __typename?: 'AssignedSwatchAttributeValue';
+  /** File associated with the attribute. */
+  file?: Maybe<File>;
+  /** Hex color code. */
+  hexColor?: Maybe<Scalars['String']['output']>;
+  /** Name of the selected swatch value. */
+  name?: Maybe<Scalars['String']['output']>;
+  /** Slug of the selected swatch value. */
+  slug?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Represents text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedTextAttribute = AssignedAttribute & {
+  __typename?: 'AssignedTextAttribute';
+  /** Attribute assigned to an object. */
+  attribute: Attribute;
+  /** Translation of the rich text content in the specified language. */
+  translation?: Maybe<Scalars['JSON']['output']>;
+  /** The assigned rich text content. */
+  value?: Maybe<Scalars['JSON']['output']>;
+};
+
+
+/**
+ * Represents text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedTextAttributeTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
 /** Represents assigned attribute to variant with variant selection attached. */
 export type AssignedVariantAttribute = {
   __typename?: 'AssignedVariantAttribute';
@@ -1501,7 +2007,7 @@ export type Attribute = Node & ObjectWithMetadata & {
    * @deprecated Field no longer supported
    */
   availableInGrid: Scalars['Boolean']['output'];
-  /** List of attribute's values. */
+  /** A list of predefined attribute choices available for selection. Available only for attributes with predefined choices. */
   choices?: Maybe<AttributeValueCountableConnection>;
   /** The entity type which can be used as a reference. */
   entityType?: Maybe<AttributeEntityTypeEnum>;
@@ -1544,6 +2050,12 @@ export type Attribute = Node & ObjectWithMetadata & {
   productTypes: ProductTypeCountableConnection;
   /** A list of product types that use this attribute as a product variant attribute. */
   productVariantTypes: ProductTypeCountableConnection;
+  /**
+   * The reference types (product or page type) that are used to narrow down the choices of reference objects.
+   *
+   * Added in Saleor 3.22.
+   */
+  referenceTypes?: Maybe<Array<ReferenceType>>;
   /** Internal representation of an attribute name. */
   slug?: Maybe<Scalars['String']['output']>;
   /**
@@ -1573,7 +2085,9 @@ export type AttributeChoicesArgs = {
   filter?: InputMaybe<AttributeValueFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<AttributeChoicesSortingInput>;
+  where?: InputMaybe<AttributeValueWhereInput>;
 };
 
 
@@ -1616,6 +2130,12 @@ export type AttributeProductVariantTypesArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** Custom attribute of a product. Attributes can be assigned to products and variants at the product type level. */
+export type AttributeReferenceTypesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -1821,6 +2341,7 @@ export type AttributeCountableEdge = {
  */
 export type AttributeCreate = {
   __typename?: 'AttributeCreate';
+  /** The created attribute. */
   attribute?: Maybe<Attribute>;
   /** @deprecated Use `errors` field instead. */
   attributeErrors: Array<AttributeError>;
@@ -1855,6 +2376,14 @@ export type AttributeCreateInput = {
   isVariantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Name of an attribute displayed in the interface. */
   name: Scalars['String']['input'];
+  /**
+   * Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+   *
+   * A maximum of 100 reference types can be specified.
+   *
+   * Added in Saleor 3.22.
+   */
+  referenceTypes?: InputMaybe<Array<Scalars['ID']['input']>>;
   /** Internal representation of an attribute name. */
   slug?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -1921,6 +2450,8 @@ export type AttributeDeleted = Event & {
 };
 
 export type AttributeEntityTypeEnum =
+  | 'CATEGORY'
+  | 'COLLECTION'
   | 'PAGE'
   | 'PRODUCT'
   | 'PRODUCT_VARIANT';
@@ -1972,17 +2503,34 @@ export type AttributeFilterInput = {
 };
 
 export type AttributeInput = {
-  /** The boolean value of the attribute. */
+  /**
+   * The boolean value of the attribute. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   boolean?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used. */
+  /**
+   * The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   date?: InputMaybe<DateRangeInput>;
-  /** The date/time range that the returned values should be in. */
+  /**
+   * The date/time range that the returned values should be in. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   dateTime?: InputMaybe<DateTimeRangeInput>;
   /** Internal representation of an attribute name. */
-  slug: Scalars['String']['input'];
-  /** Internal representation of a value (unique per attribute). */
+  slug?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised. Cannot be combined with deprecated fields of `AttributeInput`. */
+  value?: InputMaybe<AssignedAttributeValueInput>;
+  /**
+   * Slugs identifying the attributeValues associated with the Attribute. When specified, it filters the results to include only records with one of the matching values. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   values?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** The range that the returned values should be in. */
+  /**
+   * The range that the returned values should be in. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   valuesRange?: InputMaybe<IntRangeInput>;
 };
 
@@ -1997,6 +2545,7 @@ export type AttributeInputTypeEnum =
   | 'PLAIN_TEXT'
   | 'REFERENCE'
   | 'RICH_TEXT'
+  | 'SINGLE_REFERENCE'
   | 'SWATCH';
 
 export type AttributeInputTypeEnumFilterInput = {
@@ -2128,6 +2677,7 @@ export type AttributeTypeEnumFilterInput = {
  */
 export type AttributeUpdate = {
   __typename?: 'AttributeUpdate';
+  /** The updated attribute. */
   attribute?: Maybe<Attribute>;
   /** @deprecated Use `errors` field instead. */
   attributeErrors: Array<AttributeError>;
@@ -2160,6 +2710,14 @@ export type AttributeUpdateInput = {
   isVariantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Name of an attribute displayed in the interface. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+   *
+   * A maximum of 100 reference types can be specified.
+   *
+   * Added in Saleor 3.22.
+   */
+  referenceTypes?: InputMaybe<Array<Scalars['ID']['input']>>;
   /** IDs of values to be removed from this attribute. */
   removeValues?: InputMaybe<Array<Scalars['ID']['input']>>;
   /** Internal representation of an attribute name. */
@@ -2213,7 +2771,7 @@ export type AttributeValue = Node & {
   name?: Maybe<Scalars['String']['output']>;
   /** Represents the text of the attribute value, plain text without formatting. */
   plainText?: Maybe<Scalars['String']['output']>;
-  /** The ID of the attribute reference. */
+  /** The ID of the referenced object. */
   reference?: Maybe<Scalars['ID']['output']>;
   /**
    * Represents the text of the attribute value, includes formatting.
@@ -2254,7 +2812,7 @@ export type AttributeValueBulkDelete = {
 };
 
 /**
- * Creates/updates translations for attributes values.
+ * Creates/updates translations for attribute values.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
@@ -2435,6 +2993,12 @@ export type AttributeValueInput = {
   numeric?: InputMaybe<Scalars['String']['input']>;
   /** Plain text content. */
   plainText?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of the referenced entity for single reference attribute.
+   *
+   * Added in Saleor 3.22.
+   */
+  reference?: InputMaybe<Scalars['ID']['input']>;
   /** List of entity IDs that will be used as references. */
   references?: InputMaybe<Array<Scalars['ID']['input']>>;
   /** Text content in JSON format. */
@@ -2609,6 +3173,17 @@ export type AttributeValueUpdated = Event & {
   version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Where filtering options for attribute values. */
+export type AttributeValueWhereInput = {
+  /** List of conditions that must be met. */
+  AND?: InputMaybe<Array<AttributeValueWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  OR?: InputMaybe<Array<AttributeValueWhereInput>>;
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+  name?: InputMaybe<StringFilterInput>;
+  slug?: InputMaybe<StringFilterInput>;
+};
+
 /** Where filtering options. */
 export type AttributeWhereInput = {
   /** List of conditions that must be met. */
@@ -2654,6 +3229,12 @@ export type BulkAttributeValueInput = {
   numeric?: InputMaybe<Scalars['String']['input']>;
   /** Plain text content. */
   plainText?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of the referenced entity for single reference attribute.
+   *
+   * Added in Saleor 3.22.
+   */
+  reference?: InputMaybe<Scalars['ID']['input']>;
   /** List of entity IDs that will be used as references. */
   references?: InputMaybe<Array<Scalars['ID']['input']>>;
   /** Text content in JSON format. */
@@ -2724,6 +3305,42 @@ export type CardInput = {
   cvc?: InputMaybe<Scalars['String']['input']>;
   /** Information about currency and amount. */
   money: MoneyInput;
+};
+
+/**
+ * Represents a card payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type CardPaymentMethodDetails = PaymentMethodDetails & {
+  __typename?: 'CardPaymentMethodDetails';
+  /** Card brand. */
+  brand?: Maybe<Scalars['String']['output']>;
+  /** Two-digit number representing the card’s expiration month. */
+  expMonth?: Maybe<Scalars['Int']['output']>;
+  /** Four-digit number representing the card’s expiration year. */
+  expYear?: Maybe<Scalars['Int']['output']>;
+  /** First 4 digits of the card number. */
+  firstDigits?: Maybe<Scalars['String']['output']>;
+  /** Last 4 digits of the card number. */
+  lastDigits?: Maybe<Scalars['String']['output']>;
+  /** Name of the payment method. */
+  name: Scalars['String']['output'];
+};
+
+export type CardPaymentMethodDetailsInput = {
+  /** Brand of the payment method used for the transaction. Max length is 40 characters. */
+  brand?: InputMaybe<Scalars['String']['input']>;
+  /** Expiration month of the card used for the transaction. Value must be between 1 and 12. */
+  expMonth?: InputMaybe<Scalars['Int']['input']>;
+  /** Expiration year of the card used for the transaction. Value must be between 2000 and 9999. */
+  expYear?: InputMaybe<Scalars['Int']['input']>;
+  /** First digits of the card used for the transaction. Max length is 4 characters. */
+  firstDigits?: InputMaybe<Scalars['String']['input']>;
+  /** Last digits of the card used for the transaction. Max length is 4 characters. */
+  lastDigits?: InputMaybe<Scalars['String']['input']>;
+  /** Name of the payment method used for the transaction. Max length is 256 characters. */
+  name: Scalars['String']['input'];
 };
 
 export type CatalogueInput = {
@@ -2874,6 +3491,7 @@ export type CategoryProductsArgs = {
   filter?: InputMaybe<ProductFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductOrder>;
   where?: InputMaybe<ProductWhereInput>;
 };
@@ -3313,7 +3931,7 @@ export type ChannelActivate = {
 };
 
 /**
- * Creates new channel.
+ * Creates a new channel.
  *
  * Requires one of the following permissions: MANAGE_CHANNELS.
  *
@@ -3398,7 +4016,7 @@ export type ChannelDeactivate = {
 };
 
 /**
- * Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
+ * Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
  *
  * Requires one of the following permissions: MANAGE_CHANNELS.
  *
@@ -3840,7 +4458,7 @@ export type CheckoutAuthorizeStatusEnum =
   | 'PARTIAL';
 
 /**
- * Update billing address in the existing checkout.
+ * Updates billing address in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -3942,7 +4560,7 @@ export type CheckoutCreate = {
   errors: Array<CheckoutError>;
 };
 
-/** Create new checkout from existing order. */
+/** Creates a new checkout from existing order. */
 export type CheckoutCreateFromOrder = {
   __typename?: 'CheckoutCreateFromOrder';
   /** Created checkout. */
@@ -4209,7 +4827,30 @@ export type CheckoutFilterShippingMethods = Event & {
   version?: Maybe<Scalars['String']['output']>;
 };
 
-/** Event sent when checkout is fully paid with transactions. The checkout is considered as fully paid when the checkout `charge_status` is `FULL` or `OVERCHARGED`. The event is not sent when the checkout authorization flow strategy is used. */
+/**
+ * Event sent when a checkout was fully authorized. A checkout is considered fully authorized when its `authorizeStatus` is `FULL`.
+ *
+ * It is triggered only for checkouts whose payments are processed through the Transaction API.
+ */
+export type CheckoutFullyAuthorized = Event & {
+  __typename?: 'CheckoutFullyAuthorized';
+  /** The checkout the event relates to. */
+  checkout?: Maybe<Checkout>;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Event sent when a checkout was fully paid. A checkout is considered fully paid when its `chargeStatus` is `FULL` or `OVERCHARGED`. This event is not sent if payments are only authorized but not fully charged.
+ *
+ * It is triggered only for checkouts whose payments are processed through the Transaction API.
+ */
 export type CheckoutFullyPaid = Event & {
   __typename?: 'CheckoutFullyPaid';
   /** The checkout the event relates to. */
@@ -4225,7 +4866,7 @@ export type CheckoutFullyPaid = Event & {
 };
 
 /**
- * Update language code in the existing checkout.
+ * Updates language code in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -4486,7 +5127,7 @@ export type CheckoutMetadataUpdated = Event & {
   version?: Maybe<Scalars['String']['output']>;
 };
 
-/** Create a new payment for given checkout. */
+/** Creates a new payment for given checkout. */
 export type CheckoutPaymentCreate = {
   __typename?: 'CheckoutPaymentCreate';
   /** Related checkout object. */
@@ -4544,7 +5185,7 @@ export type CheckoutSettingsInput = {
 };
 
 /**
- * Update shipping address in the existing checkout.
+ * Updates shipping address in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -4729,6 +5370,7 @@ export type CollectionProductsArgs = {
   filter?: InputMaybe<ProductFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductOrder>;
   where?: InputMaybe<ProductWhereInput>;
 };
@@ -5088,7 +5730,7 @@ export type CollectionSortField =
    */
   | 'PUBLICATION_DATE'
   /**
-   * Sort collections by publication date.
+   * Sort collections by published at.
    *
    * This option requires a channel filter to work as the values can vary between channels.
    */
@@ -5308,6 +5950,14 @@ export type ConfirmEmailChange = {
   errors: Array<AccountError>;
   /** A user instance with a new email. */
   user?: Maybe<User>;
+};
+
+/** Define the filtering options for fields that can contain multiple values. */
+export type ContainsFilterInput = {
+  /** The field contains all of the specified values. */
+  containsAll?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** The field contains at least one of the specified values. */
+  containsAny?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 /**
@@ -5561,11 +6211,22 @@ export type CountryCode =
   | 'VU'
   | 'WF'
   | 'WS'
+  | 'XK'
   | 'YE'
   | 'YT'
   | 'ZA'
   | 'ZM'
   | 'ZW';
+
+/** Filter by country code. */
+export type CountryCodeEnumFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<CountryCode>;
+  /** The value not included in. */
+  notOneOf?: InputMaybe<Array<CountryCode>>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<CountryCode>>;
+};
 
 export type CountryDisplay = {
   __typename?: 'CountryDisplay';
@@ -5884,6 +6545,34 @@ export type CustomerUpdated = Event & {
   version?: Maybe<Scalars['String']['output']>;
 };
 
+export type CustomerWhereInput = {
+  /** List of conditions that must be met. */
+  AND?: InputMaybe<Array<CustomerWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  OR?: InputMaybe<Array<CustomerWhereInput>>;
+  /** Filter by addresses data associated with user. */
+  addresses?: InputMaybe<AddressFilterInput>;
+  /** Filter by date joined. */
+  dateJoined?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by email address. */
+  email?: InputMaybe<StringFilterInput>;
+  /** Filter by first name. */
+  firstName?: InputMaybe<StringFilterInput>;
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** Filter by whether the user is active. */
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by last name. */
+  lastName?: InputMaybe<StringFilterInput>;
+  /** Filter by metadata fields. */
+  metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by number of orders placed by the user. */
+  numberOfOrders?: InputMaybe<IntFilterInput>;
+  /** Filter by date when orders were placed. */
+  placedOrdersAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by last updated date. */
+  updatedAt?: InputMaybe<DateTimeRangeInput>;
+};
+
 export type DateRangeInput = {
   /** Start date. */
   gte?: InputMaybe<Scalars['Date']['input']>;
@@ -6092,7 +6781,7 @@ export type DigitalContentInput = {
 };
 
 /**
- * Update digital content.
+ * Updates digital content.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -6499,6 +7188,54 @@ export type DraftOrderUpdated = Event & {
   recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   version?: Maybe<Scalars['String']['output']>;
+};
+
+export type DraftOrderWhereInput = {
+  /** List of conditions that must be met. */
+  AND?: InputMaybe<Array<DraftOrderWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  OR?: InputMaybe<Array<DraftOrderWhereInput>>;
+  /** Filter by authorize status. */
+  authorizeStatus?: InputMaybe<OrderAuthorizeStatusEnumFilterInput>;
+  /** Filter by billing address of the order. */
+  billingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by channel. */
+  channelId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by charge status. */
+  chargeStatus?: InputMaybe<OrderChargeStatusEnumFilterInput>;
+  /** Filter order by created at date. */
+  createdAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  events?: InputMaybe<Array<OrderEventFilterInput>>;
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** Filter by whether the order uses the click and collect delivery method. */
+  isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  lines?: InputMaybe<Array<LinesFilterInput>>;
+  /** Filter by number of lines in the order. */
+  linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by order number. */
+  number?: InputMaybe<IntFilterInput>;
+  /** Filter by the product type of related order lines. */
+  productTypeId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by shipping address of the order. */
+  shippingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by total gross amount of the order. */
+  totalGross?: InputMaybe<PriceFilterInput>;
+  /** Filter by total net amount of the order. */
+  totalNet?: InputMaybe<PriceFilterInput>;
+  /** Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  transactions?: InputMaybe<Array<TransactionFilterInput>>;
+  /** Filter order by updated at date. */
+  updatedAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by user. */
+  user?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by user email. */
+  userEmail?: InputMaybe<StringFilterInput>;
+  /** Filter by voucher code used in the order. */
+  voucherCode?: InputMaybe<StringFilterInput>;
 };
 
 export type ErrorPolicyEnum =
@@ -7150,6 +7887,16 @@ export type FulfillmentCreated = Event & {
   version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Filter input for order fulfillments data. */
+export type FulfillmentFilterInput = {
+  /** Filter by metadata fields. */
+  metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by fulfillment status. */
+  status?: InputMaybe<FulfillmentStatusEnumFilterInput>;
+  /** Filter by fulfillment warehouse. */
+  warehouse?: InputMaybe<FulfillmentWarehouseFilterInput>;
+};
+
 /** Represents line of the fulfillment. */
 export type FulfillmentLine = Node & {
   __typename?: 'FulfillmentLine';
@@ -7223,6 +7970,14 @@ export type FulfillmentStatus =
   | 'RETURNED'
   | 'WAITING_FOR_APPROVAL';
 
+/** Filter by fulfillment status. */
+export type FulfillmentStatusEnumFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<FulfillmentStatus>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<FulfillmentStatus>>;
+};
+
 /** Event sent when the tracking number is updated. */
 export type FulfillmentTrackingNumberUpdated = Event & {
   __typename?: 'FulfillmentTrackingNumberUpdated';
@@ -7264,6 +8019,16 @@ export type FulfillmentUpdateTrackingInput = {
   notifyCustomer?: InputMaybe<Scalars['Boolean']['input']>;
   /** Fulfillment tracking number. */
   trackingNumber?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Filter input for fulfillment warehouses. */
+export type FulfillmentWarehouseFilterInput = {
+  /** Filter fulfillments by warehouse external reference. */
+  externalReference?: InputMaybe<StringFilterInput>;
+  /** Filter fulfillments by warehouse ID. */
+  id?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter fulfillments by warehouse slug. */
+  slug?: InputMaybe<StringFilterInput>;
 };
 
 /** Payment gateway client configuration key and value pair. */
@@ -7461,7 +8226,7 @@ export type GiftCardBulkActivate = {
 };
 
 /**
- * Create gift cards.
+ * Creates gift cards.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7507,7 +8272,7 @@ export type GiftCardBulkDeactivate = {
 };
 
 /**
- * Delete gift cards.
+ * Deletes gift cards.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7636,7 +8401,7 @@ export type GiftCardDeactivate = {
 };
 
 /**
- * Delete gift card.
+ * Deletes gift card.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -8064,6 +8829,10 @@ export type GroupCountableEdge = {
   node: Group;
 };
 
+export type HttpMethod =
+  | 'GET'
+  | 'POST';
+
 /** Thumbnail formats for icon images. */
 export type IconThumbnailFormatEnum =
   | 'ORIGINAL'
@@ -8076,6 +8845,16 @@ export type Image = {
   alt?: Maybe<Scalars['String']['output']>;
   /** The URL of the image. */
   url: Scalars['String']['output'];
+};
+
+/** Define the filtering options for integer fields. */
+export type IntFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<Scalars['Int']['input']>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<Scalars['Int']['input']>>;
+  /** The value in range. */
+  range?: InputMaybe<IntRangeInput>;
 };
 
 export type IntRangeInput = {
@@ -8236,6 +9015,12 @@ export type InvoiceErrorCode =
   | 'NUMBER_NOT_SET'
   | 'REQUIRED'
   | 'URL_NOT_SET';
+
+/** Filter input for invoices. */
+export type InvoiceFilterInput = {
+  /** Filter invoices by creation date. */
+  createdAt?: InputMaybe<DateTimeRangeInput>;
+};
 
 /**
  * Request an invoice for the order using plugin.
@@ -9166,6 +9951,12 @@ export type Limits = {
   warehouses?: Maybe<Scalars['Int']['output']>;
 };
 
+/** Filter input for order lines data. */
+export type LinesFilterInput = {
+  /** Filter by metadata fields of order lines. */
+  metadata?: InputMaybe<MetadataFilterInput>;
+};
+
 /**
  * List payment methods stored for the user by payment gateway.
  *
@@ -9946,6 +10737,24 @@ export type MetadataFilter = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
+/**
+ * Allows filtering based on metadata key/value pairs.
+ *
+ *         Examples:
+ *         - `{key: "size"}`
+ *           Matches objects where the metadata key "size" exists, regardless of its value.
+ *         - `{key: "color", value: {oneOf: ["blue", "green"]}}`
+ *           Matches objects where the metadata key "color" is set to either "blue" or "green".
+ *         - `{key: "status", value: {eq: "active"}}`
+ *           Matches objects where the metadata key "status" is set to "active".
+ */
+export type MetadataFilterInput = {
+  /** Key to filter by. If not other fields provided - checking the existence of the key in metadata. */
+  key: Scalars['String']['input'];
+  /** Value to filter by. */
+  value?: InputMaybe<MetadataValueFilterInput>;
+};
+
 export type MetadataInput = {
   /** Key of a metadata item. */
   key: Scalars['String']['input'];
@@ -9961,6 +10770,14 @@ export type MetadataItem = {
   value: Scalars['String']['output'];
 };
 
+/** Define the filtering options for metadata value fields. */
+export type MetadataValueFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<Scalars['String']['input']>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 /** Represents amount of money in specific currency. */
 export type Money = {
   __typename?: 'Money';
@@ -9968,6 +10785,10 @@ export type Money = {
   amount: Scalars['Float']['output'];
   /** Currency code. */
   currency: Scalars['String']['output'];
+  /** Number of digits after the decimal point in the currency. */
+  fractionDigits: Scalars['Int']['output'];
+  /** Amount of money represented as an integer in the smallest currency unit. */
+  fractionalAmount: Scalars['Int']['output'];
 };
 
 export type MoneyInput = {
@@ -10006,7 +10827,7 @@ export type Mutation = {
    */
   accountAddressCreate?: Maybe<AccountAddressCreate>;
   /**
-   * Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+   * Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
    *
    * Triggers the following webhook events:
    * - ADDRESS_DELETED (async): An address was deleted.
@@ -10137,7 +10958,7 @@ export type Mutation = {
    */
   appDelete?: Maybe<AppDelete>;
   /**
-   * Delete failed installation.
+   * Deletes failed installation.
    *
    * Requires one of the following permissions: MANAGE_APPS.
    */
@@ -10285,7 +11106,7 @@ export type Mutation = {
    */
   attributeValueBulkDelete?: Maybe<AttributeValueBulkDelete>;
   /**
-   * Creates/updates translations for attributes values.
+   * Creates/updates translations for attribute values.
    *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    */
@@ -10366,7 +11187,7 @@ export type Mutation = {
    */
   channelActivate?: Maybe<ChannelActivate>;
   /**
-   * Creates new channel.
+   * Creates a new channel.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
    *
@@ -10384,7 +11205,7 @@ export type Mutation = {
    */
   channelDeactivate?: Maybe<ChannelDeactivate>;
   /**
-   * Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
+   * Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
    *
@@ -10419,7 +11240,7 @@ export type Mutation = {
    */
   checkoutAddPromoCode?: Maybe<CheckoutAddPromoCode>;
   /**
-   * Update billing address in the existing checkout.
+   * Updates billing address in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -10450,7 +11271,7 @@ export type Mutation = {
    * - CHECKOUT_CREATED (async): A checkout was created.
    */
   checkoutCreate?: Maybe<CheckoutCreate>;
-  /** Create new checkout from existing order. */
+  /** Creates a new checkout from existing order. */
   checkoutCreateFromOrder?: Maybe<CheckoutCreateFromOrder>;
   /**
    * Sets the customer as the owner of the checkout.
@@ -10495,7 +11316,7 @@ export type Mutation = {
    */
   checkoutEmailUpdate?: Maybe<CheckoutEmailUpdate>;
   /**
-   * Update language code in the existing checkout.
+   * Updates language code in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -10530,7 +11351,7 @@ export type Mutation = {
    * - CHECKOUT_UPDATED (async): A checkout was updated.
    */
   checkoutLinesUpdate?: Maybe<CheckoutLinesUpdate>;
-  /** Create a new payment for given checkout. */
+  /** Creates a new payment for given checkout. */
   checkoutPaymentCreate?: Maybe<CheckoutPaymentCreate>;
   /**
    * Remove a gift card or a voucher from a checkout.
@@ -10540,7 +11361,7 @@ export type Mutation = {
    */
   checkoutRemovePromoCode?: Maybe<CheckoutRemovePromoCode>;
   /**
-   * Update shipping address in the existing checkout.
+   * Updates shipping address in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -10628,7 +11449,7 @@ export type Mutation = {
    */
   confirmEmailChange?: Maybe<ConfirmEmailChange>;
   /**
-   * Creates new warehouse.
+   * Creates a new warehouse.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -10706,7 +11527,7 @@ export type Mutation = {
    */
   digitalContentDelete?: Maybe<DigitalContentDelete>;
   /**
-   * Update digital content.
+   * Updates digital content.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -10842,7 +11663,7 @@ export type Mutation = {
    */
   giftCardBulkActivate?: Maybe<GiftCardBulkActivate>;
   /**
-   * Create gift cards.
+   * Creates gift cards.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -10861,7 +11682,7 @@ export type Mutation = {
    */
   giftCardBulkDeactivate?: Maybe<GiftCardBulkDeactivate>;
   /**
-   * Delete gift cards.
+   * Deletes gift cards.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -10889,7 +11710,7 @@ export type Mutation = {
    */
   giftCardDeactivate?: Maybe<GiftCardDeactivate>;
   /**
-   * Delete gift card.
+   * Deletes gift card.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -11210,7 +12031,7 @@ export type Mutation = {
    */
   orderLineUpdate?: Maybe<OrderLineUpdate>;
   /**
-   * Create order lines for an order.
+   * Creates order lines for an order.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -11313,19 +12134,19 @@ export type Mutation = {
    */
   pageTranslate?: Maybe<PageTranslate>;
   /**
-   * Delete page types.
+   * Deletes page types.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
   pageTypeBulkDelete?: Maybe<PageTypeBulkDelete>;
   /**
-   * Create a new page type.
+   * Creates a new page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
   pageTypeCreate?: Maybe<PageTypeCreate>;
   /**
-   * Delete a page type.
+   * Deletes a page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
@@ -11337,7 +12158,7 @@ export type Mutation = {
    */
   pageTypeReorderAttributes?: Maybe<PageTypeReorderAttributes>;
   /**
-   * Update page type.
+   * Updates page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
@@ -11587,7 +12408,7 @@ export type Mutation = {
    */
   productVariantBulkDelete?: Maybe<ProductVariantBulkDelete>;
   /**
-   * Creates/updates translations for products variants.
+   * Creates/updates translations for product variants.
    *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    *
@@ -11597,7 +12418,7 @@ export type Mutation = {
    */
   productVariantBulkTranslate?: Maybe<ProductVariantBulkTranslate>;
   /**
-   * Update multiple product variants.
+   * Updates multiple product variants.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -11651,13 +12472,13 @@ export type Mutation = {
    */
   productVariantStocksCreate?: Maybe<ProductVariantStocksCreate>;
   /**
-   * Delete stocks from product variant.
+   * Deletes stocks from product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   productVariantStocksDelete?: Maybe<ProductVariantStocksDelete>;
   /**
-   * Update stocks for product variant.
+   * Updates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -11752,6 +12573,22 @@ export type Mutation = {
    * - PROMOTION_ENDED (async): Optionally called if promotion was ended.
    */
   promotionUpdate?: Maybe<PromotionUpdate>;
+  /**
+   * Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  refundReasonReferenceClear?: Maybe<RefundReasonReferenceTypeClear>;
+  /**
+   * Update refund settings across all channels.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  refundSettingsUpdate?: Maybe<RefundSettingsUpdate>;
   /**
    * Request email change of the logged in user.
    *
@@ -12000,7 +12837,7 @@ export type Mutation = {
    */
   staffNotificationRecipientCreate?: Maybe<StaffNotificationRecipientCreate>;
   /**
-   * Delete staff notification recipient.
+   * Deletes staff notification recipient.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
@@ -12039,25 +12876,25 @@ export type Mutation = {
    */
   storedPaymentMethodRequestDelete?: Maybe<StoredPaymentMethodRequestDelete>;
   /**
-   * Create a tax class.
+   * Creates a tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   taxClassCreate?: Maybe<TaxClassCreate>;
   /**
-   * Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
+   * Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   taxClassDelete?: Maybe<TaxClassDelete>;
   /**
-   * Update a tax class.
+   * Updates a tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   taxClassUpdate?: Maybe<TaxClassUpdate>;
   /**
-   * Update tax configuration for a channel.
+   * Updates tax configuration for a channel.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
@@ -12069,7 +12906,7 @@ export type Mutation = {
    */
   taxCountryConfigurationDelete?: Maybe<TaxCountryConfigurationDelete>;
   /**
-   * Update tax class rates for a specific country.
+   * Updates tax class rates for a specific country.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
@@ -12093,7 +12930,7 @@ export type Mutation = {
    */
   tokensDeactivateAll?: Maybe<DeactivateAllUserTokens>;
   /**
-   * Create transaction for checkout or order.
+   * Creates transaction for checkout or order.
    *
    * Requires one of the following permissions: HANDLE_PAYMENTS.
    */
@@ -12274,7 +13111,7 @@ export type Mutation = {
    */
   webhookCreate?: Maybe<WebhookCreate>;
   /**
-   * Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
+   * Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
    *
    * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
    */
@@ -13766,6 +14603,11 @@ export type MutationPromotionUpdateArgs = {
 };
 
 
+export type MutationRefundSettingsUpdateArgs = {
+  input: RefundSettingsUpdateInput;
+};
+
+
 export type MutationRequestEmailChangeArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
   newEmail: Scalars['String']['input'];
@@ -14047,6 +14889,7 @@ export type MutationTransactionEventReportArgs = {
   externalUrl?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   message?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
   pspReference: Scalars['String']['input'];
   time?: InputMaybe<Scalars['DateTime']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
@@ -14078,6 +14921,8 @@ export type MutationTransactionRequestActionArgs = {
   actionType: TransactionActionEnum;
   amount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  refundReason?: InputMaybe<Scalars['String']['input']>;
+  refundReasonReference?: InputMaybe<Scalars['ID']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
 };
 
@@ -14233,10 +15078,57 @@ export type NavigationType =
   /** Secondary storefront navigation. */
   | 'SECONDARY';
 
+/** Represents the NEW_TAB target options for an app extension. */
+export type NewTabTargetOptions = {
+  __typename?: 'NewTabTargetOptions';
+  /** HTTP method for New Tab target (GET or POST) */
+  method: HttpMethod;
+};
+
 /** An object with an ID */
 export type Node = {
   /** The ID of the object. */
   id: Scalars['ID']['output'];
+};
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributes = {
+  /**
+   * Get a single attribute attached to the object by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to the object.
+   *
+   * Added in Saleor 3.22.
+   */
+  assignedAttributes: Array<AssignedAttribute>;
+};
+
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributesAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributesAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 export type ObjectWithMetadata = {
@@ -14596,6 +15488,14 @@ export type OrderAuthorizeStatusEnum =
   | 'FULL'
   | 'NONE'
   | 'PARTIAL';
+
+/** Filter by authorize status. */
+export type OrderAuthorizeStatusEnumFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<OrderAuthorizeStatusEnum>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<OrderAuthorizeStatusEnum>>;
+};
 
 /**
  * Cancels orders.
@@ -14993,6 +15893,14 @@ export type OrderChargeStatusEnum =
   | 'OVERCHARGED'
   | 'PARTIAL';
 
+/** Filter by charge status. */
+export type OrderChargeStatusEnumFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<OrderChargeStatusEnum>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<OrderChargeStatusEnum>>;
+};
+
 /**
  * Confirms an unconfirmed order by changing status to unfulfilled.
  *
@@ -15001,6 +15909,7 @@ export type OrderChargeStatusEnum =
 export type OrderConfirm = {
   __typename?: 'OrderConfirm';
   errors: Array<OrderError>;
+  /** Order which has been confirmed. */
   order?: Maybe<Order>;
   /** @deprecated Use `errors` field instead. */
   orderErrors: Array<OrderError>;
@@ -15358,6 +16267,14 @@ export type OrderEventDiscountObject = {
   valueType: DiscountValueTypeEnum;
 };
 
+/** Filter input for order events data. */
+export type OrderEventFilterInput = {
+  /** Filter order events by date. */
+  date?: InputMaybe<DateTimeRangeInput>;
+  /** Filter order events by type. */
+  type?: InputMaybe<OrderEventTypeEnumFilterInput>;
+};
+
 export type OrderEventOrderLineObject = {
   __typename?: 'OrderEventOrderLineObject';
   /** The discount applied to the order line. */
@@ -15368,6 +16285,13 @@ export type OrderEventOrderLineObject = {
   orderLine?: Maybe<OrderLine>;
   /** The variant quantity. */
   quantity?: Maybe<Scalars['Int']['output']>;
+};
+
+export type OrderEventTypeEnumFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<OrderEventsEnum>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<OrderEventsEnum>>;
 };
 
 export type OrderEventsEmailsEnum =
@@ -15623,6 +16547,12 @@ export type OrderGrantRefundCreateInput = {
   /** Reason of the granted refund. */
   reason?: InputMaybe<Scalars['String']['input']>;
   /**
+   * ID of a `Page` (Model) to reference in reason.
+   *
+   * Added in Saleor 3.22.
+   */
+  reasonReference?: InputMaybe<Scalars['ID']['input']>;
+  /**
    * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used. Field required starting from Saleor 3.21.
    *
    * Added in Saleor 3.20.
@@ -15703,6 +16633,12 @@ export type OrderGrantRefundUpdateInput = {
   grantRefundForShipping?: InputMaybe<Scalars['Boolean']['input']>;
   /** Reason of the granted refund. */
   reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason.
+   *
+   * Added in Saleor 3.22.
+   */
+  reasonReference?: InputMaybe<Scalars['ID']['input']>;
   /** Lines to remove from granted refund. */
   removeLines?: InputMaybe<Array<Scalars['ID']['input']>>;
   /**
@@ -15753,8 +16689,18 @@ export type OrderGrantedRefund = {
   id: Scalars['ID']['output'];
   /** Lines assigned to the granted refund. */
   lines?: Maybe<Array<OrderGrantedRefundLine>>;
-  /** Reason of the refund. */
+  /**
+   * Reason of the refund.
+   *
+   * Added in Saleor 3.22.
+   */
   reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason Model (Page) reference for refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  reasonReference?: Maybe<Page>;
   /** If true, the refunded amount includes the shipping price.If false, the refunded amount does not include the shipping price. */
   shippingCostsIncluded: Scalars['Boolean']['output'];
   /**
@@ -16052,7 +16998,7 @@ export type OrderLineUpdate = {
 };
 
 /**
- * Create order lines for an order.
+ * Creates order lines for an order.
  *
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
@@ -16404,20 +17350,26 @@ export type OrderSettingsUpdateInput = {
 export type OrderSortField =
   /** Sort orders by creation date. */
   | 'CREATED_AT'
-  /** Sort orders by creation date. */
+  /** Sort orders by creation date */
   | 'CREATION_DATE'
   /** Sort orders by customer. */
   | 'CUSTOMER'
   /** Sort orders by fulfillment status. */
   | 'FULFILLMENT_STATUS'
-  /** Sort orders by last modified at. */
+  /** Sort orders by last modified date. */
   | 'LAST_MODIFIED_AT'
   /** Sort orders by number. */
   | 'NUMBER'
-  /** Sort orders by payment. */
+  /** Sort orders by payment status. */
   | 'PAYMENT'
   /** Sort orders by rank. Note: This option is available only with the `search` filter. */
-  | 'RANK';
+  | 'RANK'
+  /**
+   * Sort orders by order status.
+   *
+   * Added in Saleor 3.22.
+   */
+  | 'STATUS';
 
 export type OrderSortingInput = {
   /** Specifies the direction in which to sort orders. */
@@ -16436,6 +17388,14 @@ export type OrderStatus =
   | 'RETURNED'
   | 'UNCONFIRMED'
   | 'UNFULFILLED';
+
+/** Filter by order status. */
+export type OrderStatusEnumFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<OrderStatus>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<OrderStatus>>;
+};
 
 export type OrderStatusFilter =
   | 'CANCELED'
@@ -16540,10 +17500,112 @@ export type OrderVoid = {
   orderErrors: Array<OrderError>;
 };
 
+export type OrderWhereInput = {
+  /** List of conditions that must be met. */
+  AND?: InputMaybe<Array<OrderWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  OR?: InputMaybe<Array<OrderWhereInput>>;
+  /** Filter by authorize status. */
+  authorizeStatus?: InputMaybe<OrderAuthorizeStatusEnumFilterInput>;
+  /** Filter by billing address of the order. */
+  billingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by channel. */
+  channelId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by charge status. */
+  chargeStatus?: InputMaybe<OrderChargeStatusEnumFilterInput>;
+  /** Filter by checkout id. */
+  checkoutId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by checkout token. */
+  checkoutToken?: InputMaybe<UuidFilterInput>;
+  /** Filter order by created at date. */
+  createdAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  events?: InputMaybe<Array<OrderEventFilterInput>>;
+  /** Filter by fulfillment data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  fulfillments?: InputMaybe<Array<FulfillmentFilterInput>>;
+  /** Filter by whether the order has any fulfillments. */
+  hasFulfillments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by whether the order has any invoices. */
+  hasInvoices?: InputMaybe<Scalars['Boolean']['input']>;
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** Filter by invoice data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  invoices?: InputMaybe<Array<InvoiceFilterInput>>;
+  /** Filter by whether the order uses the click and collect delivery method. */
+  isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether the order includes a gift card purchase. */
+  isGiftCardBought?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether a gift card was used in the order. */
+  isGiftCardUsed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  lines?: InputMaybe<Array<LinesFilterInput>>;
+  /** Filter by number of lines in the order. */
+  linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by order number. */
+  number?: InputMaybe<IntFilterInput>;
+  /** Filter by the product type of related order lines. */
+  productTypeId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by shipping address of the order. */
+  shippingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by order status. */
+  status?: InputMaybe<OrderStatusEnumFilterInput>;
+  /** Filter by total gross amount of the order. */
+  totalGross?: InputMaybe<PriceFilterInput>;
+  /** Filter by total net amount of the order. */
+  totalNet?: InputMaybe<PriceFilterInput>;
+  /** Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  transactions?: InputMaybe<Array<TransactionFilterInput>>;
+  /** Filter order by updated at date. */
+  updatedAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by user. */
+  user?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by user email. */
+  userEmail?: InputMaybe<StringFilterInput>;
+  /** Filter by voucher code used in the order. */
+  voucherCode?: InputMaybe<StringFilterInput>;
+};
+
+/**
+ * Represents a payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type OtherPaymentMethodDetails = PaymentMethodDetails & {
+  __typename?: 'OtherPaymentMethodDetails';
+  /** Name of the payment method. */
+  name: Scalars['String']['output'];
+};
+
+export type OtherPaymentMethodDetailsInput = {
+  /** Name of the payment method used for the transaction. */
+  name: Scalars['String']['input'];
+};
+
 /** A static page that can be manually added by a shop operator through the dashboard. */
-export type Page = Node & ObjectWithMetadata & {
+export type Page = Node & ObjectWithAttributes & ObjectWithMetadata & {
   __typename?: 'Page';
-  /** List of attributes assigned to this product. */
+  /**
+   * Get a single attribute attached to page by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this page.
+   *
+   * Added in Saleor 3.22.
+   */
+  assignedAttributes: Array<AssignedAttribute>;
+  /**
+   * Get a single attribute attached to page by attribute slug.
+   * @deprecated Use `assignedAttribute` field instead.
+   */
+  attribute?: Maybe<SelectedAttribute>;
+  /**
+   * List of attributes assigned to this page.
+   * @deprecated Use `assignedAttributes` field instead.
+   */
   attributes: Array<SelectedAttribute>;
   /**
    * Content of the page.
@@ -16600,6 +17662,24 @@ export type Page = Node & ObjectWithMetadata & {
   title: Scalars['String']['output'];
   /** Returns translated page fields for the given language code. */
   translation?: Maybe<PageTranslation>;
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAttributeArgs = {
+  slug: Scalars['String']['input'];
 };
 
 
@@ -17060,6 +18140,7 @@ export type PageTypeAvailableAttributesArgs = {
   filter?: InputMaybe<AttributeFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<AttributeWhereInput>;
 };
 
@@ -17088,7 +18169,7 @@ export type PageTypePrivateMetafieldsArgs = {
 };
 
 /**
- * Delete page types.
+ * Deletes page types.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -17119,7 +18200,7 @@ export type PageTypeCountableEdge = {
 };
 
 /**
- * Create a new page type.
+ * Creates a new page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -17156,7 +18237,7 @@ export type PageTypeCreated = Event & {
 };
 
 /**
- * Delete a page type.
+ * Deletes a page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -17216,7 +18297,7 @@ export type PageTypeSortingInput = {
 };
 
 /**
- * Update page type.
+ * Updates page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -17280,6 +18361,22 @@ export type PageUpdated = Event & {
   recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   version?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageWhereInput = {
+  /** List of conditions that must be met. */
+  AND?: InputMaybe<Array<PageWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  OR?: InputMaybe<Array<PageWhereInput>>;
+  /** Filter by attributes associated with the page. */
+  attributes?: InputMaybe<Array<AssignedAttributeWhereInput>>;
+  ids?: InputMaybe<Array<Scalars['ID']['input']>>;
+  /** Filter by metadata fields. */
+  metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by page type. */
+  pageType?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by page slug. */
+  slug?: InputMaybe<StringFilterInput>;
 };
 
 /**
@@ -17530,6 +18627,7 @@ export type PaymentErrorCode =
   | 'CHANNEL_INACTIVE'
   | 'CHECKOUT_COMPLETION_IN_PROGRESS'
   | 'CHECKOUT_EMAIL_NOT_SET'
+  | 'CHECKOUT_HAS_TRANSACTION'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'INVALID_SHIPPING_METHOD'
@@ -17758,6 +18856,40 @@ export type PaymentListGateways = Event & {
 };
 
 /**
+ * Represents a payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type PaymentMethodDetails = {
+  /** Name of the payment method. */
+  name: Scalars['String']['output'];
+};
+
+export type PaymentMethodDetailsCardFilterInput = {
+  /** Filter by payment method brand used to pay for the order. */
+  brand?: InputMaybe<StringFilterInput>;
+};
+
+export type PaymentMethodDetailsFilterInput = {
+  /** Filter by card details used to pay for the order. Skips `type` filter if provided. */
+  card?: InputMaybe<PaymentMethodDetailsCardFilterInput>;
+  /** Filter by payment method type used to pay for the order. */
+  type?: InputMaybe<PaymentMethodTypeEnumFilterInput>;
+};
+
+/**
+ * Details of the payment method used for the transaction. One of `card` or `other` is required.
+ *
+ * Added in Saleor 3.22.
+ */
+export type PaymentMethodDetailsInput = {
+  /** Details of the card payment method used for the transaction. */
+  card?: InputMaybe<CardPaymentMethodDetailsInput>;
+  /** Details of the non-card payment method used for this transaction. */
+  other?: InputMaybe<OtherPaymentMethodDetailsInput>;
+};
+
+/**
  * Tokenize payment method.
  *
  * Requires one of the following permissions: AUTHENTICATED_USER.
@@ -17898,6 +19030,24 @@ export type PaymentMethodTokenizationResult =
   | 'PENDING'
   | 'SUCCESSFULLY_TOKENIZED';
 
+/**
+ * Represents possible payment method types.
+ *
+ *     The following types are possible:
+ *     CARD - represents a card payment method.
+ *     OTHER - represents any payment method that is not a card payment.
+ */
+export type PaymentMethodTypeEnum =
+  | 'CARD'
+  | 'OTHER';
+
+export type PaymentMethodTypeEnumFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<PaymentMethodTypeEnum>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<PaymentMethodTypeEnum>>;
+};
+
 /** Process payment. */
 export type PaymentProcessEvent = Event & {
   __typename?: 'PaymentProcessEvent';
@@ -17945,13 +19095,49 @@ export type PaymentRefundEvent = Event & {
 /** Represents the channel-specific payment settings. */
 export type PaymentSettings = {
   __typename?: 'PaymentSettings';
+  /**
+   * Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+   *
+   * Added in Saleor 3.20.
+   */
+  checkoutReleaseFundsCutOffDate?: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * The time in hours after which funds for expired checkouts will be released.
+   *
+   * Added in Saleor 3.20.
+   */
+  checkoutTtlBeforeReleasingFunds?: Maybe<Scalars['Hour']['output']>;
   /** Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction. */
   defaultTransactionFlowStrategy: TransactionFlowStrategyEnum;
+  /**
+   * Determine if the funds for expired checkouts should be released automatically.
+   *
+   * Added in Saleor 3.20.
+   */
+  releaseFundsForExpiredCheckouts?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type PaymentSettingsInput = {
+  /**
+   * Specifies the earliest date on which funds for expired checkouts can begin to be released. Expired checkouts dated before this cut-off will not have their funds released. Additionally, no funds will be released for checkouts that are more than one year old, regardless of the cut-off date.
+   *
+   * Added in Saleor 3.20.
+   */
+  checkoutReleaseFundsCutOffDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /**
+   * The time in hours after which funds for expired checkouts will be released.
+   *
+   * Added in Saleor 3.20.
+   */
+  checkoutTtlBeforeReleasingFunds?: InputMaybe<Scalars['Hour']['input']>;
   /** Determine the transaction flow strategy to be used. Include the selected option in the payload sent to the payment app, as a requested action for the transaction. */
   defaultTransactionFlowStrategy?: InputMaybe<TransactionFlowStrategyEnum>;
+  /**
+   * Determine if the funds for expired checkouts should be released automatically.
+   *
+   * Added in Saleor 3.20.
+   */
+  releaseFundsForExpiredCheckouts?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Represents a payment source stored for user in payment gateway, such as credit card. */
@@ -18350,6 +19536,13 @@ export type PreorderThreshold = {
   soldUnits: Scalars['Int']['output'];
 };
 
+export type PriceFilterInput = {
+  /** The amount of the price to filter by. */
+  amount: DecimalFilterInput;
+  /** The currency of the price to filter by. */
+  currency?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PriceInput = {
   /** Amount of money. */
   amount: Scalars['PositiveDecimal']['input'];
@@ -18365,11 +19558,29 @@ export type PriceRangeInput = {
 };
 
 /** Represents an individual item for sale in the storefront. */
-export type Product = Node & ObjectWithMetadata & {
+export type Product = Node & ObjectWithAttributes & ObjectWithMetadata & {
   __typename?: 'Product';
-  /** Get a single attribute attached to product by attribute slug. */
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this product.
+   *
+   * Added in Saleor 3.22.
+   */
+  assignedAttributes: Array<AssignedAttribute>;
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   * @deprecated Use the `assignedAttribute` field instead.
+   */
   attribute?: Maybe<SelectedAttribute>;
-  /** List of attributes assigned to this product. */
+  /**
+   * List of attributes assigned to this product.
+   * @deprecated Use the `assignedAttributes` field instead.
+   */
   attributes: Array<SelectedAttribute>;
   /**
    * Date when product is available for purchase.
@@ -18499,6 +19710,18 @@ export type Product = Node & ObjectWithMetadata & {
   variants?: Maybe<Array<ProductVariant>>;
   /** Weight of the product. */
   weight?: Maybe<Weight>;
+};
+
+
+/** Represents an individual item for sale in the storefront. */
+export type ProductAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** Represents an individual item for sale in the storefront. */
+export type ProductAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -19820,6 +21043,7 @@ export type ProductTypeAvailableAttributesArgs = {
   filter?: InputMaybe<AttributeFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<AttributeWhereInput>;
 };
 
@@ -20049,9 +21273,24 @@ export type ProductUpdatedProductArgs = {
 };
 
 /** Represents a version of a product such as different size or color. */
-export type ProductVariant = Node & ObjectWithMetadata & {
+export type ProductVariant = Node & ObjectWithAttributes & ObjectWithMetadata & {
   __typename?: 'ProductVariant';
-  /** List of attributes assigned to this variant. */
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this variant.
+   *
+   * Added in Saleor 3.22.
+   */
+  assignedAttributes: Array<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this variant.
+   * @deprecated Use the `assignedAttributes` field instead.
+   */
   attributes: Array<SelectedAttribute>;
   /** Channel given to retrieve this product variant. Also used by federation gateway to resolve this object in a federated query. */
   channel?: Maybe<Scalars['String']['output']>;
@@ -20142,6 +21381,18 @@ export type ProductVariant = Node & ObjectWithMetadata & {
   updatedAt: Scalars['DateTime']['output'];
   /** The weight of the product variant. */
   weight?: Maybe<Weight>;
+};
+
+
+/** Represents a version of a product such as different size or color. */
+export type ProductVariantAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** Represents a version of a product such as different size or color. */
+export type ProductVariantAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -20344,7 +21595,7 @@ export type ProductVariantBulkResult = {
 };
 
 /**
- * Creates/updates translations for products variants.
+ * Creates/updates translations for product variants.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  *
@@ -20391,7 +21642,7 @@ export type ProductVariantBulkTranslateResult = {
 };
 
 /**
- * Update multiple product variants.
+ * Updates multiple product variants.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -20765,7 +22016,7 @@ export type ProductVariantSetDefault = {
 };
 
 export type ProductVariantSortField =
-  /** Sort products variants by last modified at. */
+  /** Sort product variants by last modification date. */
   | 'LAST_MODIFIED_AT';
 
 export type ProductVariantSortingInput = {
@@ -20813,7 +22064,7 @@ export type ProductVariantStocksCreate = {
 };
 
 /**
- * Delete stocks from product variant.
+ * Deletes stocks from product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -20827,7 +22078,7 @@ export type ProductVariantStocksDelete = {
 };
 
 /**
- * Update stocks for product variant.
+ * Updates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -20946,8 +22197,18 @@ export type ProductVariantWhereInput = {
   AND?: InputMaybe<Array<ProductVariantWhereInput>>;
   /** A list of conditions of which at least one must be met. */
   OR?: InputMaybe<Array<ProductVariantWhereInput>>;
+  /**
+   * Filter by attributes associated with the variant.
+   *
+   * Added in Saleor 3.22.
+   */
+  attributes?: InputMaybe<Array<AssignedAttributeWhereInput>>;
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
   metadata?: InputMaybe<Array<MetadataFilter>>;
+  /** Filter by product SKU. */
+  sku?: InputMaybe<StringFilterInput>;
+  /** Filter by when was the most recent update. */
+  updatedAt?: InputMaybe<DateTimeRangeInput>;
 };
 
 export type ProductWhereInput = {
@@ -21799,7 +23060,7 @@ export type PromotionRuleUpdatedEvent = Node & PromotionEventInterface & Promoti
 };
 
 export type PromotionSortField =
-  /** Sort promotions by created at. */
+  /** Sort promotions by creation date. */
   | 'CREATED_AT'
   /** Sort promotions by end date. */
   | 'END_DATE'
@@ -22285,6 +23546,8 @@ export type Query = {
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
   promotions?: Maybe<PromotionCountableConnection>;
+  /** Refunds related settings. Returns `RefundSettings` configuration, global for the entire shop. */
+  refundSettings: RefundSettings;
   /**
    * List of top selling products.
    *
@@ -22580,7 +23843,9 @@ export type QueryCustomersArgs = {
   filter?: InputMaybe<CustomerFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<UserSortingInput>;
+  where?: InputMaybe<CustomerWhereInput>;
 };
 
 
@@ -22603,7 +23868,9 @@ export type QueryDraftOrdersArgs = {
   filter?: InputMaybe<OrderDraftFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<OrderSortingInput>;
+  where?: InputMaybe<DraftOrderWhereInput>;
 };
 
 
@@ -22709,7 +23976,9 @@ export type QueryOrdersArgs = {
   filter?: InputMaybe<OrderFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<OrderSortingInput>;
+  where?: InputMaybe<OrderWhereInput>;
 };
 
 
@@ -22720,6 +23989,7 @@ export type QueryOrdersTotalArgs = {
 
 
 export type QueryPageArgs = {
+  channel?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
   slugLanguageCode?: InputMaybe<LanguageCodeEnum>;
@@ -22744,10 +24014,13 @@ export type QueryPageTypesArgs = {
 export type QueryPagesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
+  channel?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PageFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<PageSortingInput>;
+  where?: InputMaybe<PageWhereInput>;
 };
 
 
@@ -22835,6 +24108,7 @@ export type QueryProductVariantsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductVariantSortingInput>;
   where?: InputMaybe<ProductVariantWhereInput>;
 };
@@ -23050,6 +24324,13 @@ export type ReducedRate = {
   rateType: Scalars['String']['output'];
 };
 
+/**
+ * The reference types (product or page type) that are used to narrow down the choices of reference objects.
+ * ProductType applicable for reference attribute with `PRODUCT` or `PRODUCT_VARIANT` entity type.
+ * PageType applicable for reference attribute with `PAGE` entity type.
+ */
+export type ReferenceType = PageType | ProductType;
+
 /** Refresh JWT token. Mutation tries to take refreshToken from the input. If it fails it will try to take `refreshToken` from the http-only cookie `refreshToken`. `csrfToken` is required when `refreshToken` is provided as a cookie. */
 export type RefreshToken = {
   __typename?: 'RefreshToken';
@@ -23060,6 +24341,83 @@ export type RefreshToken = {
   token?: Maybe<Scalars['String']['output']>;
   /** A user instance. */
   user?: Maybe<User>;
+};
+
+/**
+ * Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type RefundReasonReferenceTypeClear = {
+  __typename?: 'RefundReasonReferenceTypeClear';
+  errors: Array<RefundReasonReferenceTypeClearError>;
+  /** Refund settings. */
+  refundSettings: RefundSettings;
+  /** @deprecated Use `errors` field instead. */
+  refundSettingsErrors: Array<RefundReasonReferenceTypeClearError>;
+};
+
+export type RefundReasonReferenceTypeClearError = {
+  __typename?: 'RefundReasonReferenceTypeClearError';
+  /** Failed to clear refund reason reference type */
+  code: RefundSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Refund related settings from site settings.
+ *
+ * Added in Saleor 3.22.
+ */
+export type RefundSettings = {
+  __typename?: 'RefundSettings';
+  /** Model type used for refund reasons. */
+  reasonReferenceType?: Maybe<PageType>;
+};
+
+export type RefundSettingsErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'REQUIRED';
+
+/**
+ * Update refund settings across all channels.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type RefundSettingsUpdate = {
+  __typename?: 'RefundSettingsUpdate';
+  errors: Array<RefundSettingsUpdateError>;
+  /** Refund settings. */
+  refundSettings: RefundSettings;
+  /** @deprecated Use `errors` field instead. */
+  refundSettingsErrors: Array<RefundSettingsUpdateError>;
+};
+
+export type RefundSettingsUpdateError = {
+  __typename?: 'RefundSettingsUpdateError';
+  /** Failed to update Refund Settings */
+  code: RefundSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']['output']>;
+};
+
+export type RefundSettingsUpdateInput = {
+  /**
+   * The ID of a model type, that will be used to reference refund reasons. All models with of this type will be accepted as refund reasons.
+   *
+   * Added in Saleor 3.22.
+   */
+  refundReasonReferenceType: Scalars['ID']['input'];
 };
 
 export type ReorderInput = {
@@ -23524,11 +24882,11 @@ export type SaleRemoveCatalogues = {
 };
 
 export type SaleSortField =
-  /** Sort sales by created at. */
+  /** Sort sales by creation date. */
   | 'CREATED_AT'
   /** Sort sales by end date. */
   | 'END_DATE'
-  /** Sort sales by last modified at. */
+  /** Sort sales by last modification date. */
   | 'LAST_MODIFIED_AT'
   /** Sort sales by name. */
   | 'NAME'
@@ -23698,7 +25056,7 @@ export type SaleUpdatedSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Represents a custom attribute. */
+/** Represents an assigned attribute to an object. */
 export type SelectedAttribute = {
   __typename?: 'SelectedAttribute';
   /** Name of an attribute displayed in the interface. */
@@ -25213,7 +26571,7 @@ export type StaffNotificationRecipientCreate = {
 };
 
 /**
- * Delete staff notification recipient.
+ * Deletes staff notification recipient.
  *
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
@@ -25605,6 +26963,14 @@ export type Subscription = {
    */
   checkoutCreated?: Maybe<CheckoutCreated>;
   /**
+   * Event sent when checkout is fully authorized.
+   *
+   * Added in Saleor 3.21.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  checkoutFullyAuthorized?: Maybe<CheckoutFullyAuthorized>;
+  /**
    * Event sent when checkout is fully-paid.
    *
    * Added in Saleor 3.21.
@@ -25754,6 +27120,11 @@ export type Subscription = {
 
 
 export type SubscriptionCheckoutCreatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionCheckoutFullyAuthorizedArgs = {
   channels?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
@@ -25935,7 +27306,7 @@ export type TaxClassCountryRate = {
 };
 
 /**
- * Create a tax class.
+ * Creates a tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25970,7 +27341,7 @@ export type TaxClassCreateInput = {
 };
 
 /**
- * Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
+ * Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -26020,7 +27391,7 @@ export type TaxClassSortingInput = {
 };
 
 /**
- * Update a tax class.
+ * Updates a tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -26100,6 +27471,12 @@ export type TaxConfiguration = Node & ObjectWithMetadata & {
   taxAppId?: Maybe<Scalars['String']['output']>;
   /** The default strategy to use for tax calculation in the given channel. Taxes can be calculated either using user-defined flat rates or with a tax app. Empty value means that no method is selected and taxes are not calculated. */
   taxCalculationStrategy?: Maybe<TaxCalculationStrategy>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines.
+   *
+   * Added in Saleor 3.21.
+   */
+  useWeightedTaxForShipping?: Maybe<Scalars['Boolean']['output']>;
 };
 
 
@@ -26165,6 +27542,12 @@ export type TaxConfigurationPerCountry = {
   taxAppId?: Maybe<Scalars['String']['output']>;
   /** A country-specific strategy to use for tax calculation. Taxes can be calculated either using user-defined flat rates or with a tax app. If not provided, use the value from the channel's tax configuration. */
   taxCalculationStrategy?: Maybe<TaxCalculationStrategy>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines.
+   *
+   * Added in Saleor 3.21.
+   */
+  useWeightedTaxForShipping?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type TaxConfigurationPerCountryInput = {
@@ -26182,10 +27565,16 @@ export type TaxConfigurationPerCountryInput = {
   taxAppId?: InputMaybe<Scalars['String']['input']>;
   /** A country-specific strategy to use for tax calculation. Taxes can be calculated either using user-defined flat rates or with a tax app. If not provided, use the value from the channel's tax configuration. */
   taxCalculationStrategy?: InputMaybe<TaxCalculationStrategy>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines. Default value is `False`.Can be used only with `taxCalculationStrategy` set to `FLAT_RATES`.
+   *
+   * Added in Saleor 3.21.
+   */
+  useWeightedTaxForShipping?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /**
- * Update tax configuration for a channel.
+ * Updates tax configuration for a channel.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -26232,6 +27621,12 @@ export type TaxConfigurationUpdateInput = {
   taxCalculationStrategy?: InputMaybe<TaxCalculationStrategy>;
   /** List of tax country configurations to create or update (identified by a country code). */
   updateCountriesConfiguration?: InputMaybe<Array<TaxConfigurationPerCountryInput>>;
+  /**
+   * Determines whether to use weighted tax for shipping. When set to true, the tax rate for shipping will be calculated based on the weighted average of tax rates from the order or checkout lines. Default value is `False`.Can be used only with `taxCalculationStrategy` set to `FLAT_RATES`.
+   *
+   * Added in Saleor 3.21.
+   */
+  useWeightedTaxForShipping?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /** Tax class rates grouped by country. */
@@ -26271,7 +27666,7 @@ export type TaxCountryConfigurationDeleteErrorCode =
   | 'NOT_FOUND';
 
 /**
- * Update tax class rates for a specific country.
+ * Updates tax class rates for a specific country.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -26492,7 +27887,10 @@ export type Transaction = Node & {
   created: Scalars['DateTime']['output'];
   /** Error associated with transaction, if any. */
   error?: Maybe<Scalars['String']['output']>;
-  /** Response returned by payment gateway. */
+  /**
+   * Response returned by payment gateway.
+   * @deprecated This field is a part of a legacy Payments API. Please use apps instead.
+   */
   gatewayResponse: Scalars['JSONString']['output'];
   /** ID of the transaction. */
   id: Scalars['ID']['output'];
@@ -26564,7 +27962,7 @@ export type TransactionChargeRequested = Event & {
 };
 
 /**
- * Create transaction for checkout or order.
+ * Creates transaction for checkout or order.
  *
  * Requires one of the following permissions: HANDLE_PAYMENTS.
  */
@@ -26616,6 +28014,12 @@ export type TransactionCreateInput = {
   /** Payment name of the transaction. */
   name?: InputMaybe<Scalars['String']['input']>;
   /**
+   * Details of the payment method used for the transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
+  /**
    * Payment private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
    * Warning: never store sensitive information, including financial data such as credit card details.
@@ -26644,6 +28048,12 @@ export type TransactionEvent = Node & {
   message: Scalars['String']['output'];
   /** PSP reference of transaction. */
   pspReference: Scalars['String']['output'];
+  /**
+   * Reason model of the transaction refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  reasonReference?: Maybe<Page>;
   /** The type of action related to this event. */
   type?: Maybe<TransactionEventTypeEnum>;
 };
@@ -26740,6 +28150,14 @@ export type TransactionEventTypeEnum =
   | 'REFUND_REQUEST'
   | 'REFUND_REVERSE'
   | 'REFUND_SUCCESS';
+
+/** Filter input for transactions. */
+export type TransactionFilterInput = {
+  /** Filter by metadata fields of transactions. */
+  metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by payment method details used to pay for the order. */
+  paymentMethodDetails?: InputMaybe<PaymentMethodDetailsFilterInput>;
+};
 
 /**
  * Determine the transaction flow strategy.
@@ -26854,6 +28272,12 @@ export type TransactionItem = Node & ObjectWithMetadata & {
   name: Scalars['String']['output'];
   /** The related order. */
   order?: Maybe<Order>;
+  /**
+   * The payment method used for this transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  paymentMethodDetails?: Maybe<PaymentMethodDetails>;
   /** List of private metadata items. Requires staff permissions to access. */
   privateMetadata: Array<MetadataItem>;
   /**
@@ -26866,6 +28290,18 @@ export type TransactionItem = Node & ObjectWithMetadata & {
   privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** PSP reference of transaction. */
   pspReference: Scalars['String']['output'];
+  /**
+   * Reason of the refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason `Page` (Model) for refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  reasonReference?: Maybe<Page>;
   /** Total amount of ongoing refund requests for the transaction. */
   refundPendingAmount: Money;
   /** Total amount refunded for this payment. */
@@ -27038,7 +28474,8 @@ export type TransactionRequestActionErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'MISSING_TRANSACTION_ACTION_REQUEST_WEBHOOK'
-  | 'NOT_FOUND';
+  | 'NOT_FOUND'
+  | 'REQUIRED';
 
 /**
  * Request a refund for payment transaction based on granted refund.
@@ -27122,6 +28559,12 @@ export type TransactionUpdateInput = {
   metadata?: InputMaybe<Array<MetadataInput>>;
   /** Payment name of the transaction. */
   name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Details of the payment method used for the transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
   /**
    * Payment private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
@@ -27226,6 +28669,14 @@ export type TranslationUpdated = Event & {
   translation?: Maybe<TranslationTypes>;
   /** Saleor version that triggered the event. */
   version?: Maybe<Scalars['String']['output']>;
+};
+
+/** Define the filtering options for string fields. */
+export type UuidFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<Scalars['UUID']['input']>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<Scalars['UUID']['input']>>;
 };
 
 export type UpdateInvoiceInput = {
@@ -28565,7 +30016,7 @@ export type WarehouseCountableEdge = {
 };
 
 /**
- * Creates new warehouse.
+ * Creates a new warehouse.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -28854,7 +30305,7 @@ export type WebhookCreateInput = {
 };
 
 /**
- * Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
+ * Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
  *
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
@@ -29012,6 +30463,17 @@ export type WebhookEventTypeAsyncEnum =
   | 'CHANNEL_UPDATED'
   /** A new checkout is created. */
   | 'CHECKOUT_CREATED'
+  /**
+   * A checkout was fully authorized (its `authorizeStatus` is `FULL`).
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
+  | 'CHECKOUT_FULLY_AUTHORIZED'
+  /**
+   * A checkout was fully paid (its `chargeStatus` is `FULL` or `OVERCHARGED`). This event is not sent if payments are only authorized but not fully charged.
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
   | 'CHECKOUT_FULLY_PAID'
   /** A checkout metadata is updated. */
   | 'CHECKOUT_METADATA_UPDATED'
@@ -29303,6 +30765,17 @@ export type WebhookEventTypeEnum =
   | 'CHECKOUT_CREATED'
   /** Filter shipping methods for checkout. */
   | 'CHECKOUT_FILTER_SHIPPING_METHODS'
+  /**
+   * A checkout was fully authorized (its `authorizeStatus` is `FULL`).
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
+  | 'CHECKOUT_FULLY_AUTHORIZED'
+  /**
+   * A checkout was fully paid (its `chargeStatus` is `FULL` or `OVERCHARGED`). This event is not sent if payments are only authorized but not fully charged.
+   *
+   * This event is emitted only for checkouts whose payments are processed through the Transaction API.
+   */
   | 'CHECKOUT_FULLY_PAID'
   /** A checkout metadata is updated. */
   | 'CHECKOUT_METADATA_UPDATED'
@@ -29633,6 +31106,7 @@ export type WebhookSampleEventTypeEnum =
   | 'CHANNEL_STATUS_CHANGED'
   | 'CHANNEL_UPDATED'
   | 'CHECKOUT_CREATED'
+  | 'CHECKOUT_FULLY_AUTHORIZED'
   | 'CHECKOUT_FULLY_PAID'
   | 'CHECKOUT_METADATA_UPDATED'
   | 'CHECKOUT_UPDATED'
@@ -29836,6 +31310,13 @@ export type WeightUnitsEnum =
   | 'LB'
   | 'OZ'
   | 'TONNE';
+
+/** Represents the WIDGET target options for an app extension. */
+export type WidgetTargetOptions = {
+  __typename?: 'WidgetTargetOptions';
+  /** HTTP method for Widget target (GET or POST) */
+  method: HttpMethod;
+};
 
 /** _Entity union as defined by Federation spec. */
 export type _Entity = Address | App | Category | Collection | Group | Order | PageType | Product | ProductMedia | ProductType | ProductVariant | User;

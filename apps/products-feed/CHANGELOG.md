@@ -1,5 +1,46 @@
 # saleor-app-products-feed
 
+## 2.1.4
+
+### Patch Changes
+
+- 08530771: Changed error handling. Now if internal operations in feed generation logic fails (throws error), feed generation will be interrupted and error returned. This should allow Google Merchant Center to retry operation, instead of consuming malformed XML.
+
+## 2.1.3
+
+### Patch Changes
+
+- bb71489c: Allow app to execute Saleor calls in batches, that are configured as env variable (MAX_PARALLEL_CALLS). Default 5.
+
+## 2.1.2
+
+### Patch Changes
+
+- 025e9ae2: Changed app to fetch chunks of products sequential instead of parallel to avoid abusing the API
+
+## 2.1.1
+
+### Patch Changes
+
+- ff48a9e4: Add info about Saleor API url & channel to all logs. This will help us with debugging.
+
+## 2.1.0
+
+### Minor Changes
+
+- 16c6448f: After this change required Saleor version for running the app will be **3.21**
+
+### Patch Changes
+
+- 86747b3c: When users open app outside of Saleor Dashboard's iframe we will now display an error message with explanation. Previously we rendered app's UI, which caused frontend to make requests to the app without any required data (tokens, saleorApiUrl, etc.) which resulted in error logs.
+
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies [6b9305d3]
+  - @saleor/apps-shared@1.14.0
+
 ## 2.0.4
 
 ### Patch Changes

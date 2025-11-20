@@ -30,6 +30,7 @@ describe("RefundEventParser", () => {
     });
 
     it("should return error when refund amount is missing", () => {
+      // @ts-expect-error - testing invalid input
       const invalidEvent = {
         ...mockedRefundRequestedEvent,
         action: { ...mockedRefundRequestedEvent.action, amount: null },
@@ -41,7 +42,7 @@ describe("RefundEventParser", () => {
         MalformedRequestResponse {
           "error": [BaseError: Refund amount is required],
           "message": "Malformed request",
-          "statusCode": 500,
+          "statusCode": 400,
         }
       `);
     });
@@ -61,7 +62,7 @@ describe("RefundEventParser", () => {
         MalformedRequestResponse {
           "error": [BaseError: PSP reference is required],
           "message": "Malformed request",
-          "statusCode": 500,
+          "statusCode": 400,
         }
       `);
     });
@@ -81,7 +82,7 @@ describe("RefundEventParser", () => {
         MalformedRequestResponse {
           "error": [BaseError: Transaction token is required],
           "message": "Malformed request",
-          "statusCode": 500,
+          "statusCode": 400,
         }
       `);
     });
@@ -98,7 +99,7 @@ describe("RefundEventParser", () => {
         MalformedRequestResponse {
           "error": [BaseError: Issued at date is required],
           "message": "Malformed request",
-          "statusCode": 500,
+          "statusCode": 400,
         }
       `);
     });

@@ -36,7 +36,7 @@ const handler = createManifestHandler({
       id: "saleor.app.cms2",
       name: "CMS",
       permissions: ["MANAGE_PRODUCTS"],
-      requiredSaleorVersion: ">=3.10 <4",
+      requiredSaleorVersion: ">=3.20 <4",
       supportUrl: "https://github.com/saleor/apps/discussions",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       version: packageJson.version,

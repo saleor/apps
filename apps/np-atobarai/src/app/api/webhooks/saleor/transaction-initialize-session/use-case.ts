@@ -21,6 +21,7 @@ import { TransactionGoodBuilder } from "@/modules/atobarai/atobarai-goods/transa
 import { createAtobaraiMoney } from "@/modules/atobarai/atobarai-money";
 import { createAtobaraiShopOrderDate } from "@/modules/atobarai/atobarai-shop-order-date";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import { createSaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
 import {
   ChargeActionRequiredResult,
@@ -117,12 +118,15 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
       return err(new BrokenAppResponse(createTransactionResult.error));
     }
 
+    const saleorPaymentMethodDetails = new SaleorPaymentMethodDetails();
+
     switch (transaction.authori_result) {
       case CreditCheckResult.Success:
         return ok(
           new TransactionInitializeSessionUseCaseResponse.Success({
             transactionResult: new ChargeSuccessResult(),
             atobaraiTransactionId,
+            saleorPaymentMethodDetails,
           }),
         );
       case CreditCheckResult.Pending:
@@ -130,6 +134,7 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
           new TransactionInitializeSessionUseCaseResponse.Success({
             transactionResult: new ChargeActionRequiredResult(),
             atobaraiTransactionId,
+            saleorPaymentMethodDetails,
           }),
         );
       case CreditCheckResult.Failed:
@@ -185,7 +190,11 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
     );
 
     if (registerTransactionResult.isErr()) {
-      this.logger.error("Failed to register transaction with Atobarai", {
+      /**
+       * We do not log error, because it's likely on of expected errors from the API
+       * TODO: Consider adding exact mapping of every available error - some of them can be actually errors, some of them not
+       */
+      this.logger.warn("Failed to register transaction with Atobarai", {
         error: registerTransactionResult.error,
       });
 

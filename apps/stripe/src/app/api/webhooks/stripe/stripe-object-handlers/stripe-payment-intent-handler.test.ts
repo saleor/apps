@@ -1,8 +1,15 @@
+import { ok } from "neverthrow";
 import Stripe from "stripe";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails } from "@/__tests__/mocks/constants";
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
+import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
+import {
+  mockedStripeCardPaymentMethod,
+  mockedStripeOtherPaymentMethod,
+} from "@/__tests__/mocks/mocked-stripe-payment-method";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { getMockedPaymentIntentAmountCapturableUpdatedEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-amount-capturable-updated";
@@ -16,6 +23,14 @@ import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-fl
 import { StripePaymentIntentHandler } from "./stripe-payment-intent-handler";
 
 describe("StripePaymentIntentHandler", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("should return NotSupportedEventError for unsupported event", async () => {
     const mockTransactionRecorder = new MockedTransactionRecorder();
     const event = {
@@ -30,6 +45,7 @@ describe("StripePaymentIntentHandler", () => {
       transactionRecorder: mockTransactionRecorder,
       appId: "appId",
       saleorApiUrl: mockedSaleorApiUrl,
+      stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(
@@ -53,6 +69,13 @@ describe("StripePaymentIntentHandler", () => {
             }),
           };
 
+          vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(
+            async () =>
+              ok({
+                payment_method: mockedStripeCardPaymentMethod,
+              }),
+          );
+
           const event = getMockedPaymentIntentSucceededEvent();
           const amountToUse = 123_312;
           const amountExpected = 123.312; // Converted to Saleor float
@@ -66,9 +89,10 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
-          const { type, amount, pspReference, time } = result
+          const { type, amount, pspReference, time, saleorPaymentMethodDetailsInput } = result
             ._unsafeUnwrap()
             .resolveEventReportVariables();
 
@@ -78,6 +102,15 @@ describe("StripePaymentIntentHandler", () => {
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
+          expect(saleorPaymentMethodDetailsInput).toStrictEqual({
+            card: {
+              brand: "visa",
+              expMonth: 12,
+              expYear: 2025,
+              lastDigits: "4242",
+              name: "Visa",
+            },
+          });
         },
       );
     });
@@ -104,6 +137,13 @@ describe("StripePaymentIntentHandler", () => {
             }),
           };
 
+          vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(
+            async () =>
+              ok({
+                payment_method: mockedStripeOtherPaymentMethod,
+              }),
+          );
+
           const amountToUse = 123_30;
           const amountExpected = 12330; // Converted to Saleor float
 
@@ -116,9 +156,10 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
-          const { type, amount, pspReference, time } = result
+          const { type, amount, pspReference, time, saleorPaymentMethodDetailsInput } = result
             ._unsafeUnwrap()
             .resolveEventReportVariables();
 
@@ -129,6 +170,11 @@ describe("StripePaymentIntentHandler", () => {
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
+          expect(saleorPaymentMethodDetailsInput).toStrictEqual({
+            other: {
+              name: "sepa_debit",
+            },
+          });
         },
       );
     });
@@ -154,6 +200,13 @@ describe("StripePaymentIntentHandler", () => {
             }),
           };
 
+          vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(
+            async () =>
+              ok({
+                payment_method: null,
+              }),
+          );
+
           const event = getMockedPaymentIntentRequiresActionEvent();
           const amountToUse = 123_367;
           const amountExpected = 12.3367; // Converted to Saleor float
@@ -168,9 +221,10 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
-          const { type, amount, pspReference, time } = result
+          const { type, amount, pspReference, time, saleorPaymentMethodDetailsInput } = result
             ._unsafeUnwrap()
             .resolveEventReportVariables();
 
@@ -180,6 +234,7 @@ describe("StripePaymentIntentHandler", () => {
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
+          expect(saleorPaymentMethodDetailsInput).toBeNull();
         },
       );
     });
@@ -205,6 +260,13 @@ describe("StripePaymentIntentHandler", () => {
             }),
           };
 
+          vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(
+            async () =>
+              ok({
+                payment_method: "pm_1MockedOtherPaymentMethod",
+              }),
+          );
+
           const event = getMockedPaymentIntentAmountCapturableUpdatedEvent();
           const amountToUse = 123_30;
           const amountExpected = 123.3; // Converted to Saleor float
@@ -218,9 +280,10 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
-          const { type, amount, pspReference, time } = result
+          const { type, amount, pspReference, time, saleorPaymentMethodDetailsInput } = result
             ._unsafeUnwrap()
             .resolveEventReportVariables();
 
@@ -230,6 +293,7 @@ describe("StripePaymentIntentHandler", () => {
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
+          expect(saleorPaymentMethodDetailsInput).toBeNull();
         },
       );
     });
@@ -252,8 +316,16 @@ describe("StripePaymentIntentHandler", () => {
           mockTransactionRecorder.transactions = {
             [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
               resolvedTransactionFlow,
+              saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
             }),
           };
+
+          vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(
+            async () =>
+              ok({
+                payment_method: mockedStripeOtherPaymentMethod,
+              }),
+          );
 
           const event = getMockedPaymentIntentPaymentFailedEvent();
           const amountToUse = 123_30;
@@ -268,9 +340,10 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
-          const { type, amount, pspReference, time } = result
+          const { type, amount, pspReference, time, saleorPaymentMethodDetailsInput } = result
             ._unsafeUnwrap()
             .resolveEventReportVariables();
 
@@ -280,6 +353,7 @@ describe("StripePaymentIntentHandler", () => {
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
+          expect(saleorPaymentMethodDetailsInput).toBeNull();
         },
       );
     });
@@ -302,9 +376,17 @@ describe("StripePaymentIntentHandler", () => {
 
           mockTransactionRecorder.transactions = {
             [mockedStripePaymentIntentId]: getMockedRecordedTransaction({
+              saleorSchemaVersion: mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails,
               resolvedTransactionFlow,
             }),
           };
+
+          vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(
+            async () =>
+              ok({
+                payment_method: mockedStripeCardPaymentMethod,
+              }),
+          );
 
           const amountToUse = 123_30;
           const amountExpected = 123.3; // Converted to Saleor float
@@ -318,9 +400,10 @@ describe("StripePaymentIntentHandler", () => {
             appId: "appId",
             saleorApiUrl: mockedSaleorApiUrl,
             stripeEnv: "LIVE",
+            stripePaymentIntentsApi: mockedStripePaymentIntentsApi,
           });
 
-          const { type, amount, pspReference, time } = result
+          const { type, amount, pspReference, time, saleorPaymentMethodDetailsInput } = result
             ._unsafeUnwrap()
             .resolveEventReportVariables();
 
@@ -330,6 +413,7 @@ describe("StripePaymentIntentHandler", () => {
           expect(amount.amount).toStrictEqual(amountExpected);
           expect(pspReference).toStrictEqual(event.data.object.id);
           expect(time).toStrictEqual("2025-02-01T00:00:00.000Z");
+          expect(saleorPaymentMethodDetailsInput).toBeNull();
         },
       );
     });

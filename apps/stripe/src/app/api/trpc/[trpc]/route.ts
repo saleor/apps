@@ -17,11 +17,16 @@ const handler = (request: Request) => {
     createContext: createTrpcContextAppRouter,
     onError: ({ path, error }) => {
       if (error.code === "INTERNAL_SERVER_ERROR") {
-        logger.error(`${path} returned error:`, error);
+        logger.error(`${path} returned error`, {
+          trpcErrorMessage: error.message,
+          stack: error.cause,
+          // eslint-disable-next-line @saleor/saleor-app/logger-leak
+          error,
+        });
 
         return;
       }
-      logger.debug(`${path} returned error:`, error);
+      logger.debug(`${path} returned error`, error);
     },
   });
 };

@@ -1,4 +1,5 @@
 import { SpanStatusCode } from "@opentelemetry/api";
+import { AuthData } from "@saleor/app-sdk/APL";
 import { getBaseUrl } from "@saleor/app-sdk/headers";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
@@ -7,6 +8,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 
 import { appRootTracer } from "@/lib/app-root-tracer";
+import { ChunkCaller } from "@/lib/chunk-caller";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
@@ -23,11 +25,7 @@ import { fetchShopData } from "@/modules/google-feed/fetch-shop-data";
 import { GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
 import { shopDetailsToProxy } from "@/modules/google-feed/shop-details-to-proxy";
 import { apl } from "@/saleor-app";
-
-// By default we cache the feed for 5 minutes. This can be changed by setting the FEED_CACHE_MAX_AGE
-const FEED_CACHE_MAX_AGE = process.env.FEED_CACHE_MAX_AGE
-  ? parseInt(process.env.FEED_CACHE_MAX_AGE, 10)
-  : 60 * 5;
+import { FEED_CACHE_MAX_AGE, MAX_PARALLEL_CALLS } from "@/settings";
 
 const validateRequestParams = (req: NextApiRequest) => {
   const queryShape = z.object({
@@ -38,15 +36,72 @@ const validateRequestParams = (req: NextApiRequest) => {
   queryShape.parse(req.query);
 };
 
+const logger = createLogger("Feed handler", {
+  route: "api/feed/{url}/{channel}/google.xml",
+});
+
+const fetchXmlChunk = (downloadUrl: string) =>
+  fetch(downloadUrl)
+    .then((r) => r.text())
+    .catch((e) => {
+      throw new Error("Failed to download chunk from s3", { cause: e });
+    });
+
+const withErrorHandler = (
+  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void | NextApiResponse>,
+) => {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    try {
+      return await handler(req, res);
+    } catch (error) {
+      logger.error("Unhandled error in feed handler", { error: error });
+
+      if (!res.headersSent) {
+        return res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  };
+};
+
+const generateDistributedChunk = (params: {
+  authData: AuthData;
+  channel: string;
+  cursor: string;
+  baseUrl: string;
+  channelSettings: Awaited<ReturnType<(typeof GoogleFeedSettingsFetcher)["prototype"]["fetch"]>>;
+}) => {
+  const urlToFetch = new URL(
+    `/api/feed/${encodeURIComponent(params.authData.saleorApiUrl)}/${encodeURIComponent(
+      params.channel,
+    )}/${encodeURIComponent(params.cursor)}/generate-chunk`,
+    params.baseUrl,
+  );
+
+  return fetch(urlToFetch, {
+    body: JSON.stringify({
+      authData: params.authData,
+      channelSettings: params.channelSettings,
+    }),
+    headers: {
+      ContentType: "application/json",
+      authorization: process.env.REQUEST_SECRET as string,
+    },
+    method: "POST",
+  })
+    .then((r) => r.json() as Promise<{ downloadUrl: string; fileName: string }>)
+    .catch((e) => {
+      throw new Error("Failed to generate chunk", {
+        cause: e,
+      });
+    });
+};
+
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
   const channel = req.query.channel as string;
 
-  const logger = createLogger("Feed handler", {
-    saleorApiUrl: url,
-    channel,
-    route: "api/feed/{url}/{channel}/google.xml",
-  });
+  loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, url);
+  loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
 
   logger.info("Generating Google Feed");
 
@@ -200,36 +255,33 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const baseUrl = getBaseUrl(req.headers);
 
-  const xmlUrlResponses = await Promise.all(
-    cursors.map((cursor) => {
-      const urlToFetch = new URL(
-        `/api/feed/${encodeURIComponent(authData.saleorApiUrl)}/${encodeURIComponent(
-          channel,
-        )}/${encodeURIComponent(cursor)}/generate-chunk`,
+  // Store file names for cleanup
+  const chunkFileNames: string[] = [];
+
+  const caller = new ChunkCaller({
+    maxParallelCalls: MAX_PARALLEL_CALLS,
+    items: cursors,
+    executeFn: (cursor) => {
+      return generateDistributedChunk({
+        authData,
+        channelSettings,
         baseUrl,
-      );
+        channel,
+        cursor,
+      });
+    },
+    processChunkResults: async (chunkResults) => {
+      // Store file names for cleanup
+      chunkFileNames.push(...chunkResults.map((res) => res.fileName));
 
-      return fetch(urlToFetch, {
-        body: JSON.stringify({
-          authData,
-          channelSettings: channelSettings,
-        }),
-        headers: {
-          ContentType: "application/json",
-          authorization: process.env.REQUEST_SECRET as string,
-        },
-        method: "POST",
-      }).then((r) => r.json());
-    }),
-  );
+      // Fetch XML content for this chunk immediately
+      return Promise.all(chunkResults.map((resp) => fetchXmlChunk(resp.downloadUrl)));
+    },
+  });
 
-  const chunks = await Promise.all(
-    xmlUrlResponses.map((resp) => fetch(resp.downloadUrl).then((r) => r.text())),
-  );
+  const xmlFileChunks = await caller.executeCalls();
 
-  const chunkFileNames = await Promise.all(xmlUrlResponses.map((res) => res.fileName));
-
-  const mergedChunks = chunks.join("\n");
+  const mergedChunks = xmlFileChunks.join("\n");
 
   const xmlBuilder = new FeedXmlBuilder();
 
@@ -288,4 +340,4 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 };
 
-export default wrapWithLoggerContext(withSpanAttributes(handler), loggerContext);
+export default wrapWithLoggerContext(withSpanAttributes(withErrorHandler(handler)), loggerContext);

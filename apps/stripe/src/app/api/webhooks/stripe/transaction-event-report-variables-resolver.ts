@@ -1,4 +1,5 @@
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
 import { TransactionEventReportInput } from "@/modules/saleor/transaction-event-reporter";
 import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
@@ -47,6 +48,7 @@ export class TransactionEventReportVariablesResolver {
   readonly saleorMoney: SaleorMoney;
   readonly stripeObjectId: StripePaymentIntentId | StripeRefundId;
   readonly externalUrl: string;
+  readonly saleorPaymentMethodDetails: SaleorPaymentMethodDetails | null;
 
   constructor(args: {
     saleorTransactionId: SaleorTransationId;
@@ -55,6 +57,7 @@ export class TransactionEventReportVariablesResolver {
     saleorMoney: SaleorMoney;
     stripeObjectId: StripePaymentIntentId | StripeRefundId;
     externalUrl: string;
+    paymentMethodDetails: SaleorPaymentMethodDetails | null;
   }) {
     this.timestamp = args.timestamp;
     this.saleorTransactionId = args.saleorTransactionId;
@@ -62,6 +65,7 @@ export class TransactionEventReportVariablesResolver {
     this.saleorMoney = args.saleorMoney;
     this.stripeObjectId = args.stripeObjectId;
     this.externalUrl = args.externalUrl;
+    this.saleorPaymentMethodDetails = args.paymentMethodDetails;
   }
 
   resolveEventReportVariables(): TransactionEventReportInput {
@@ -74,6 +78,8 @@ export class TransactionEventReportVariablesResolver {
       pspReference: this.stripeObjectId,
       actions: this.transactionResult.actions,
       externalUrl: this.externalUrl,
+      saleorPaymentMethodDetailsInput:
+        this.saleorPaymentMethodDetails?.toSaleorTransactionEventPayload() || null,
     };
   }
 }
