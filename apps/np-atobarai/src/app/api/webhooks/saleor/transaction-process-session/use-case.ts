@@ -154,7 +154,7 @@ export class TransactionProcessSessionUseCase extends BaseUseCase {
     );
 
     if (changeTransactionResult.isErr()) {
-      this.logger.error("Failed to change transaction with Atobarai", {
+      this.logger.warn("Failed to change transaction with Atobarai", {
         error: changeTransactionResult.error,
       });
 

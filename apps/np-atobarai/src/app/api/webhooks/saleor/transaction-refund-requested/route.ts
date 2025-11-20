@@ -54,7 +54,7 @@ const handler = transactionRefundRequestedWebhookDefinition.createHandler(
           return result.getResponse();
         },
         (err) => {
-          logger.warn("Failed to process webhook request", {
+          logger.warn("Failed to process webhook request: " + err.message, {
             httpsStatusCode: err.statusCode,
             reason: err.message,
           });
