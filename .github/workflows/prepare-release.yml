@@ -18,8 +18,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT }}
         # Tags are fetched for Changeset to distinguish from new ones while running `changeset tag`
       - name: Git fetch tags
         run: git fetch --tags origin
@@ -32,6 +30,18 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Retrieve token
+        env:
+          VAULT_URL: ${{ secrets.VAULT_URL }}
+          VAULT_JWT: ${{ secrets.VAULT_JWT }}
+        run: |
+          set -x
+
+          token=$( \
+            curl --request GET --url "$VAULT_URL" --header "Authorization: JWT $VAULT_JWT" | jq -r .token \
+          )
+
+          echo "GITHUB_TOKEN=${token}" >> $GITHUB_ENV
       - name: Create Release Pull Request
         uses: changesets/action@e2f8e964d080ae97c874b19e27b12e0a8620fb6c # v1.4.6
         id: changesets
@@ -41,8 +51,7 @@ jobs:
           publish: pnpm github:release
           createGithubReleases: true
         env:
-          # Use private access token so Github can trigger another workflow from this one
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
       - name: Find previous comment with checklist on release PR
         if: steps.changesets.outputs.hasChangesets == 'true'
         uses: peter-evans/find-comment@d5fe37641ad8451bdd80312415672ba26c86575e # v3.0.0
