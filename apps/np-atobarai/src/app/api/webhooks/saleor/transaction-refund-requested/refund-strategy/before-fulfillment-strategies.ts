@@ -43,7 +43,7 @@ export class BeforeFulfillmentFullRefundStrategy implements BeforeFulfillmentRef
     });
 
     if (cancelResult.isErr()) {
-      this.logger.error("Failed to cancel Atobarai transaction", {
+      this.logger.warn("Failed to cancel Atobarai transaction", {
         error: cancelResult.error,
       });
 
@@ -124,7 +124,7 @@ export class BeforeFulfillmentPartialRefundWithLineItemsStrategy
     });
 
     if (changeTransactionResult.isErr()) {
-      this.logger.error("Failed to change Atobarai transaction", {
+      this.logger.warn("Failed to change Atobarai transaction", {
         error: changeTransactionResult.error,
       });
 
@@ -191,7 +191,7 @@ export class BeforeFulfillmentPartialRefundWithoutLineItemsStrategy
     });
 
     if (changeTransactionResult.isErr()) {
-      this.logger.error("Failed to change Atobarai transaction", {
+      this.logger.warn("Failed to change Atobarai transaction", {
         error: changeTransactionResult.error,
       });
 
