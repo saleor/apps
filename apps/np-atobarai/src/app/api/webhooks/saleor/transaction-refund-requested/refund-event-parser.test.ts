@@ -42,7 +42,7 @@ describe("RefundEventParser", () => {
         MalformedRequestResponse {
           "error": [BaseError: Refund amount is required],
           "message": "Malformed request",
-          "statusCode": 400,
+          "statusCode": 202,
         }
       `);
     });
@@ -62,7 +62,7 @@ describe("RefundEventParser", () => {
         MalformedRequestResponse {
           "error": [BaseError: PSP reference is required],
           "message": "Malformed request",
-          "statusCode": 400,
+          "statusCode": 202,
         }
       `);
     });
@@ -82,7 +82,7 @@ describe("RefundEventParser", () => {
         MalformedRequestResponse {
           "error": [BaseError: Transaction token is required],
           "message": "Malformed request",
-          "statusCode": 400,
+          "statusCode": 202,
         }
       `);
     });
@@ -99,7 +99,7 @@ describe("RefundEventParser", () => {
         MalformedRequestResponse {
           "error": [BaseError: Issued at date is required],
           "message": "Malformed request",
-          "statusCode": 400,
+          "statusCode": 202,
         }
       `);
     });
