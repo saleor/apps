@@ -19,6 +19,8 @@ export class StripeWebhookSuccessResponse {
 
 export class StripeWebhookMalformedRequestResponse extends NonRetryableErrorWebhookResponse {
   readonly message = "Malformed request";
+  // We don't want Saleor to disable this app so we return 2xx
+  statusCode = 202;
 
   getResponse() {
     return new Response(this.message, {
@@ -49,6 +51,8 @@ export class StripeWebhookSeverErrorResponse extends RetryableErrorWebhookRespon
 
 export class StripeWebhookTransactionMissingResponse extends NonRetryableErrorWebhookResponse {
   readonly message = "Transaction is missing";
+  // We don't want Saleor to disable this app so we return 2xx
+  statusCode = 202;
 
   getResponse() {
     return new Response(this.message, {
@@ -59,6 +63,8 @@ export class StripeWebhookTransactionMissingResponse extends NonRetryableErrorWe
 
 export class ObjectCreatedOutsideOfSaleorResponse extends NonRetryableErrorWebhookResponse {
   readonly message = "Object created outside of Saleor is not processable";
+  // We don't want Saleor to disable this app so we return 2xx
+  statusCode = 202;
 
   getResponse() {
     return new Response(this.message, {
