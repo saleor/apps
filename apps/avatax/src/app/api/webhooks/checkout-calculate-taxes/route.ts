@@ -167,7 +167,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     {
                       message: `Taxes can't be calculated due to incomplete payload for checkout: ${payload.taxBase.sourceObject.id}`,
                     },
-                    { status: 400 },
+                    { status: 202 },
                   );
                 }
 

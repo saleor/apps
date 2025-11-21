@@ -144,7 +144,7 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             {
               message: `Skipping fulfilled order to prevent duplication for order: ${payload.order?.id}`,
             },
-            { status: 400 },
+            { status: 202 },
           );
         }
 
