@@ -1,7 +1,6 @@
 ---
 "saleor-app-payment-np-atobarai": patch
 "saleor-app-avatax": patch
-"saleor-app-payment-stripe": patch
 ---
 
 Changed some of Saleor webhook response statuses. 
