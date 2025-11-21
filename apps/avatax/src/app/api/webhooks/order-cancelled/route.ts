@@ -85,7 +85,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
 
             return Response.json(
               { message: `Invalid order payload for order: ${payload.order?.id}` },
-              { status: 400 },
+              { status: 202 },
             );
           }
 
@@ -133,7 +133,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
 
             return Response.json(
               { message: `Invalid order payload for order: ${payload.order?.id}` },
-              { status: 400 },
+              { status: 202 },
             );
           }
 
@@ -265,7 +265,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
 
         // TODO Test once it becomes testable
         if (e instanceof AvataxOrderCancelledAdapter.DocumentNotFoundError) {
-          logger.warn("Document was not found in AvaTax. Responding 400", {
+          logger.warn("Document was not found in AvaTax. Responding 202 and error", {
             error: e,
           });
 
@@ -285,7 +285,7 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
 
           return Response.json(
             { message: "AvaTax responded with DocumentNotFound. Please consult AvaTax docs" },
-            { status: 400 },
+            { status: 202 },
           );
         }
 

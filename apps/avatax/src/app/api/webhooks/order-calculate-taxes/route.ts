@@ -158,7 +158,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
               message: payloadVerificationResult.error.message,
             },
             {
-              status: 400,
+              status: 202,
             },
           );
         }
@@ -269,7 +269,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
 
         if (error instanceof AvataxGetTaxWrongUserInputError) {
           logger.warn(
-            "GetTaxError: App returns status 400 due to problem when user attempted to create a transaction through AvaTax",
+            "GetTaxError: App returns status 202 due to problem when user attempted to create a transaction through AvaTax",
             {
               error,
             },
@@ -294,7 +294,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
               message:
                 "GetTaxError: A problem occurred when you attempted to create a transaction through AvaTax. Check your address or line items.",
             },
-            { status: 400 },
+            { status: 202 },
           );
         }
 
@@ -360,7 +360,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             .map(logWriter.writeLog);
 
           logger.warn(
-            "AvataxStringLengthError: App returns status 400 due to not valid address data",
+            "AvataxStringLengthError: App returns status 202 with error due to not valid address data",
             {
               error,
             },
@@ -375,7 +375,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             {
               message: `AvaTax service returned validation error: ${error.description} `,
             },
-            { status: 400 },
+            { status: 202 },
           );
         }
 
@@ -390,7 +390,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             .map(logWriter.writeLog);
 
           logger.warn(
-            "AvataxEntityNotFoundError: App returns status 400 due to entity not found. See https://developer.avalara.com/avatax/errors/EntityNotFoundError/ for more details",
+            "AvataxEntityNotFoundError: App returns status 202 and error due to entity not found. See https://developer.avalara.com/avatax/errors/EntityNotFoundError/ for more details",
             { error },
           );
 
@@ -403,7 +403,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             {
               message: `AvaTax service returned validation error: ${error.description} `,
             },
-            { status: 400 },
+            { status: 202 },
           );
         }
 

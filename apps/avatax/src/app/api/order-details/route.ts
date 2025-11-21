@@ -62,7 +62,7 @@ const orderDetailsHandler = async (req: NextRequest) => {
       saleorApiUrl: saleorApiUrl,
     });
   } catch (e) {
-    return new Response("Not authorized, please refresh the page and try again.", {
+    return new Response("Failed to verify JWT", {
       status: 401,
     });
   }
@@ -89,7 +89,8 @@ const orderDetailsHandler = async (req: NextRequest) => {
 
   if (orderMetadata.error) {
     return new Response("Failed to fetch order", {
-      status: 400,
+      // Accept retrying if Saleor failed to answer
+      status: 500,
     });
   }
 
@@ -97,13 +98,13 @@ const orderDetailsHandler = async (req: NextRequest) => {
 
   if (!avataxId) {
     return new Response("AvaTax was not used for this order", {
-      status: 400,
+      status: 202,
     });
   }
 
   if (!orderMetadata.data?.order) {
     return new Response("Order can't be resolved", {
-      status: 400,
+      status: 202,
     });
   }
 
