@@ -50,6 +50,8 @@ In the `apps` folder, you will find the following applications:
 - [Stripe](./apps/stripe/) - connects Saleor with Stripe.
 - [NP Atobarai](./apps/np-atobarai/) - connects Saleor with NP Atobarai (Japanese: NP 後払い).
 
+> **Note:** Some apps may be maintained in private repositories and require separate access. See [PRIVATE_APPS.md](./PRIVATE_APPS.md) for details.
+
 #### Example apps
 
 - [Slack integration app example](https://github.com/saleor/examples/tree/main/example-app-slack)
@@ -61,6 +63,27 @@ In the `apps` folder, you will find the following applications:
 ## Development
 
 You can find the documentation for saleor/apps on [docs.saleor.io](https://docs.saleor.io/developer/extending/apps/local-app-development).
+
+### Quick start
+
+1. Clone the repository and install dependencies:
+   ```shell
+   git clone https://github.com/saleor/apps.git
+   cd apps
+   pnpm install
+   ```
+
+2. (Optional) If you have access to private apps:
+   ```shell
+   ./scripts/setup-private-apps.sh
+   ```
+
+3. Start development:
+   ```shell
+   pnpm dev
+   ```
+
+For more details on working with private apps, see [PRIVATE_APPS.md](./PRIVATE_APPS.md).
 
 ### PNPM and corepack
 

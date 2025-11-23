@@ -20,9 +20,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
+          submodules: false  # Don't automatically init submodules
         # Tags are fetched for Changeset to distinguish from new ones while running `changeset tag`
       - name: Git fetch tags
         run: git fetch --tags origin
+      - name: Initialize private apps (optional)
+        continue-on-error: true
+        run: |
+          # Try to initialize private app submodules for releases
+          # Uses PAT which may have access to private repos
+          git submodule update --init --recursive || echo "Private apps not available"
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           run_install: false
