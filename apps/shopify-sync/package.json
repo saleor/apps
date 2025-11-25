@@ -37,6 +37,7 @@
     "@saleor/apps-ui": "workspace:*",
     "@saleor/macaw-ui": "catalog:",
     "@saleor/react-hook-form-macaw": "workspace:*",
+    "@sentry/nextjs": "catalog:",
     "@shopify/shopify-api": "^11.0.0",
     "@t3-oss/env-nextjs": "catalog:",
     "@trpc/client": "catalog:",

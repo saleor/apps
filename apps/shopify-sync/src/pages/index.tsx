@@ -16,7 +16,7 @@ const IndexPage: NextPage = () => {
   const { appBridgeState } = useAppBridge();
   const [isReady, setIsReady] = useState(false);
 
-  const { data: config, isLoading, refetch } = trpcClient.config.get.useQuery(undefined, {
+  const { data: config, refetch } = trpcClient.config.get.useQuery(undefined, {
     enabled: isReady && !!appBridgeState?.ready,
   });
 

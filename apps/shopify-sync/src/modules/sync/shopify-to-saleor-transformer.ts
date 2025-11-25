@@ -40,12 +40,13 @@ function slugify(text: string): string {
 
 function extractShopifyId(gid: string): string {
   const parts = gid.split("/");
+
   return parts[parts.length - 1];
 }
 
 function transformVariant(
   variant: ShopifyProductVariant,
-  productOptions: Array<{ name: string; values: string[] }>
+  _productOptions: Array<{ name: string; values: string[] }>
 ): TransformedVariant {
   const metafields = variant.metafields?.edges?.map((edge) => ({
     key: `shopify_${edge.node.namespace}_${edge.node.key}`,

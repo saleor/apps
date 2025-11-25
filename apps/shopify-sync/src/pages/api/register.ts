@@ -4,5 +4,5 @@ import { saleorApp } from "@/lib/saleor-app";
 
 export default createAppRegisterHandler({
   apl: saleorApp.apl,
-  allowedSaleorUrls: [(saleorApiUrl: string) => true],
+  allowedSaleorUrls: [(_saleorApiUrl: string) => true],
 });

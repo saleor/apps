@@ -9,8 +9,8 @@ import { ShopifyProduct } from "@/modules/shopify/types";
 import {
   toShopifyProductInput,
   toShopifyVariantInput,
-  transformSaleorProductsToShopify,
   TransformedShopifyProduct,
+  transformSaleorProductsToShopify,
 } from "./saleor-to-shopify-transformer";
 
 const logger = createLogger("ExportToShopifyUseCase");
@@ -54,17 +54,20 @@ export class ExportToShopifyUseCase {
     };
 
     const contextResult = await this.initializeExportContext();
+
     if (contextResult.isErr()) {
       return err(contextResult.error);
     }
     const context = contextResult.value;
 
     const productsResult = await this.saleorClient.getAllProducts(args.channelSlug);
+
     if (productsResult.isErr()) {
       return err(new ExportError("Failed to fetch Saleor products", { cause: productsResult.error }));
     }
 
     const transformedProducts = transformSaleorProductsToShopify(productsResult.value);
+
     logger.info(`Found ${transformedProducts.length} products to export`);
 
     for (const product of transformedProducts) {
@@ -88,20 +91,24 @@ export class ExportToShopifyUseCase {
     }
 
     logger.info("Export completed", result);
+
     return ok(result);
   }
 
   private async initializeExportContext(): Promise<Result<ExportContext, ExportErrorType>> {
     const productsResult = await this.shopifyClient.getAllProducts();
+
     if (productsResult.isErr()) {
       return err(new ExportError("Failed to fetch Shopify products", { cause: productsResult.error }));
     }
 
     const existingProducts = new Map<string, ShopifyProduct>();
+
     for (const product of productsResult.value) {
       const saleorIdMeta = product.metafields?.edges?.find(
         (e) => e.node.namespace === "saleor" && e.node.key === "product_id"
       );
+
       if (saleorIdMeta) {
         existingProducts.set(saleorIdMeta.node.value, product);
       }
@@ -131,6 +138,7 @@ export class ExportToShopifyUseCase {
     const input = toShopifyProductInput(product);
 
     const createResult = await this.shopifyClient.createProduct(input);
+
     if (createResult.isErr()) {
       return err(new ExportError("Failed to create product in Shopify", { cause: createResult.error }));
     }
@@ -146,6 +154,7 @@ export class ExportToShopifyUseCase {
       }
 
       const variantResult = await this.shopifyClient.createProductVariant(productId, variantInput);
+
       if (variantResult.isErr()) {
         logger.warn("Failed to create variant", {
           productId,
@@ -172,6 +181,7 @@ export class ExportToShopifyUseCase {
         const saleorMeta = e.node.metafields?.edges?.find(
           (m) => m.node.namespace === "saleor" && m.node.key === "variant_id"
         );
+
         return saleorMeta?.node.value === variant.saleorId;
       });
 

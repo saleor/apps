@@ -1,5 +1,6 @@
-import { z } from "zod";
 import { err, ok, Result } from "neverthrow";
+import { z } from "zod";
+
 import { BaseError } from "@/lib/errors";
 
 export const shopifyConnectionConfigSchema = z.object({

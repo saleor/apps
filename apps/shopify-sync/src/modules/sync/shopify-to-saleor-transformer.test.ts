@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import { ShopifyProduct } from "@/modules/shopify/types";
 
 import {
-  transformShopifyProductToSaleor,
   transformShopifyProductsToSaleor,
+  transformShopifyProductToSaleor,
 } from "./shopify-to-saleor-transformer";
 
 const createMockShopifyProduct = (overrides: Partial<ShopifyProduct> = {}): ShopifyProduct => ({
@@ -129,11 +129,11 @@ describe("transformShopifyProductToSaleor", () => {
     const result = transformShopifyProductToSaleor(shopifyProduct);
 
     expect(result.options).toHaveLength(2);
-    expect(result.options[0]).toEqual({
+    expect(result.options[0]).toStrictEqual({
       name: "Size",
       values: ["Small", "Medium", "Large"],
     });
-    expect(result.options[1]).toEqual({
+    expect(result.options[1]).toStrictEqual({
       name: "Color",
       values: ["Red", "Blue"],
     });
@@ -144,7 +144,7 @@ describe("transformShopifyProductToSaleor", () => {
     const result = transformShopifyProductToSaleor(shopifyProduct);
 
     expect(result.images).toHaveLength(1);
-    expect(result.images[0]).toEqual({
+    expect(result.images[0]).toStrictEqual({
       url: "https://example.com/image1.jpg",
       alt: "Product image",
     });
@@ -155,10 +155,12 @@ describe("transformShopifyProductToSaleor", () => {
     const result = transformShopifyProductToSaleor(shopifyProduct);
 
     const brandMeta = result.metadata.find((m) => m.key === "shopify_custom_brand");
+
     expect(brandMeta).toBeDefined();
     expect(brandMeta?.value).toBe("TestBrand");
 
     const shopifyIdMeta = result.metadata.find((m) => m.key === "shopify_product_id");
+
     expect(shopifyIdMeta).toBeDefined();
     expect(shopifyIdMeta?.value).toBe("123456");
   });
@@ -184,16 +186,17 @@ describe("transformShopifyProductToSaleor", () => {
     const result = transformShopifyProductToSaleor(shopifyProduct);
 
     const variant = result.variants[0];
+
     expect(variant.options).toHaveLength(2);
-    expect(variant.options[0]).toEqual({ name: "Size", value: "Small" });
-    expect(variant.options[1]).toEqual({ name: "Color", value: "Red" });
+    expect(variant.options[0]).toStrictEqual({ name: "Size", value: "Small" });
+    expect(variant.options[1]).toStrictEqual({ name: "Color", value: "Red" });
   });
 
   it("should transform collection names", () => {
     const shopifyProduct = createMockShopifyProduct();
     const result = transformShopifyProductToSaleor(shopifyProduct);
 
-    expect(result.collectionNames).toEqual(["Summer Collection"]);
+    expect(result.collectionNames).toStrictEqual(["Summer Collection"]);
   });
 
   it("should use default product type name when not provided", () => {
@@ -239,6 +242,7 @@ describe("transformShopifyProductsToSaleor", () => {
 
   it("should return empty array for empty input", () => {
     const results = transformShopifyProductsToSaleor([]);
+
     expect(results).toHaveLength(0);
   });
 });

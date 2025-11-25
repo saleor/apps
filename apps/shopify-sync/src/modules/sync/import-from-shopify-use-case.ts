@@ -7,9 +7,9 @@ import { SaleorAttribute, SaleorProductType } from "@/modules/saleor/types";
 import { ShopifyClient } from "@/modules/shopify/shopify-client";
 
 import {
-  transformShopifyProductsToSaleor,
   TransformedProduct,
   TransformedVariant,
+  transformShopifyProductsToSaleor,
 } from "./shopify-to-saleor-transformer";
 
 const logger = createLogger("ImportFromShopifyUseCase");
@@ -59,17 +59,20 @@ export class ImportFromShopifyUseCase {
     };
 
     const contextResult = await this.initializeSyncContext(args.channelSlug);
+
     if (contextResult.isErr()) {
       return err(contextResult.error);
     }
     const context = contextResult.value;
 
     const productsResult = await this.shopifyClient.getAllProducts();
+
     if (productsResult.isErr()) {
       return err(new ImportError("Failed to fetch Shopify products", { cause: productsResult.error }));
     }
 
     const transformedProducts = transformShopifyProductsToSaleor(productsResult.value);
+
     logger.info(`Found ${transformedProducts.length} products to import`);
 
     for (const product of transformedProducts) {
@@ -93,6 +96,7 @@ export class ImportFromShopifyUseCase {
     }
 
     logger.info("Import completed", result);
+
     return ok(result);
   }
 
@@ -100,16 +104,19 @@ export class ImportFromShopifyUseCase {
     channelSlug: string
   ): Promise<Result<SyncContext, ImportErrorType>> {
     const channelsResult = await this.saleorClient.getChannels();
+
     if (channelsResult.isErr()) {
       return err(new ImportError("Failed to fetch channels", { cause: channelsResult.error }));
     }
 
     const channel = channelsResult.value.find((c) => c.slug === channelSlug);
+
     if (!channel) {
       return err(new ImportError(`Channel not found: ${channelSlug}`));
     }
 
     const warehousesResult = await this.saleorClient.getWarehouses();
+
     if (warehousesResult.isErr()) {
       return err(new ImportError("Failed to fetch warehouses", { cause: warehousesResult.error }));
     }
@@ -119,28 +126,34 @@ export class ImportFromShopifyUseCase {
     }
 
     const productTypesResult = await this.saleorClient.getProductTypes();
+
     if (productTypesResult.isErr()) {
       return err(new ImportError("Failed to fetch product types", { cause: productTypesResult.error }));
     }
 
     const attributesResult = await this.saleorClient.getAttributes();
+
     if (attributesResult.isErr()) {
       return err(new ImportError("Failed to fetch attributes", { cause: attributesResult.error }));
     }
 
     const collectionsResult = await this.saleorClient.getCollections(channelSlug);
+
     if (collectionsResult.isErr()) {
       return err(new ImportError("Failed to fetch collections", { cause: collectionsResult.error }));
     }
 
     const productsResult = await this.saleorClient.getAllProducts(channelSlug);
+
     if (productsResult.isErr()) {
       return err(new ImportError("Failed to fetch existing products", { cause: productsResult.error }));
     }
 
     const existingProducts = new Map<string, string>();
+
     for (const product of productsResult.value) {
       const shopifyIdMeta = product.metadata.find((m) => m.key === "shopify_product_id");
+
       if (shopifyIdMeta) {
         existingProducts.set(shopifyIdMeta.value, product.id);
       }
@@ -166,13 +179,14 @@ export class ImportFromShopifyUseCase {
     const existingProductId = context.existingProducts.get(product.shopifyId);
 
     const productTypeResult = await this.getOrCreateProductType(product, context);
+
     if (productTypeResult.isErr()) {
       return err(productTypeResult.error);
     }
     const productTypeId = productTypeResult.value;
 
     if (existingProductId) {
-      return this.updateExistingProduct(existingProductId, product, productTypeId, context);
+      return this.updateExistingProduct(existingProductId, product);
     }
 
     return this.createNewProduct(product, productTypeId, context);
@@ -193,6 +207,7 @@ export class ImportFromShopifyUseCase {
 
     for (const option of product.options) {
       const attrResult = await this.getOrCreateAttribute(option.name, "DROPDOWN", context);
+
       if (attrResult.isErr()) {
         return err(attrResult.error);
       }
@@ -344,9 +359,7 @@ export class ImportFromShopifyUseCase {
 
   private async updateExistingProduct(
     productId: string,
-    product: TransformedProduct,
-    productTypeId: string,
-    context: SyncContext
+    product: TransformedProduct
   ): Promise<Result<{ updated: boolean }, ImportErrorType>> {
     logger.debug("Updating existing product", { productId, name: product.name });
 
@@ -429,6 +442,7 @@ export class ImportFromShopifyUseCase {
 
     if (!attr) {
       logger.debug("Attribute not found in cache, skipping value creation", { attributeId });
+
       return;
     }
 

@@ -71,6 +71,7 @@ export class SaleorProductClient {
 
     if (result.error) {
       logger.error("Failed to fetch products", { error: result.error });
+
       return err(
         new SaleorProductClientError("Failed to fetch products", {
           cause: result.error,
@@ -94,6 +95,7 @@ export class SaleorProductClient {
       }
 
       const { products } = result.value;
+
       allProducts.push(...products.edges.map((edge) => edge.node));
       hasNextPage = products.pageInfo.hasNextPage;
       cursor = products.pageInfo.endCursor ?? undefined;

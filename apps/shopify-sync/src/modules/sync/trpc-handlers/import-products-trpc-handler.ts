@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createLogger } from "@/lib/logger";
-import { ShopifyConnectionConfig } from "@/modules/app-config/domain/shopify-connection-config";
 import { SaleorProductClient } from "@/modules/saleor/saleor-product-client";
 import { ShopifyClient } from "@/modules/shopify/shopify-client";
 import { ImportFromShopifyUseCase } from "@/modules/sync/import-from-shopify-use-case";

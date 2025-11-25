@@ -1,5 +1,7 @@
 import { Result } from "neverthrow";
+
 import { BaseError } from "@/lib/errors";
+
 import { ShopifyConnectionConfig } from "../domain/shopify-connection-config";
 
 export const ConnectionConfigRepoError = BaseError.subclass("ConnectionConfigRepoError", {

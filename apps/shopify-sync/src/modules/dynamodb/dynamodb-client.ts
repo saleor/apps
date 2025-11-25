@@ -13,8 +13,8 @@ export const createDynamoDBClient = () => {
   };
 
   // For local development with local DynamoDB
-  if (process.env.AWS_ENDPOINT_URL) {
-    config.endpoint = process.env.AWS_ENDPOINT_URL;
+  if (env.AWS_ENDPOINT_URL) {
+    config.endpoint = env.AWS_ENDPOINT_URL;
   }
 
   return new DynamoDBClient(config);

@@ -4,7 +4,7 @@ import { fromError } from "zod-validation-error";
 
 import { BaseError } from "@/lib/errors";
 
-const booleanSchema = z
+const _booleanSchema = z
   .string()
   .refine((s) => s === "true" || s === "false")
   .transform((s) => s === "true");
@@ -24,6 +24,7 @@ export const env = createEnv({
     AWS_REGION: z.string(),
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
+    AWS_ENDPOINT_URL: z.string().optional(),
     APP_NAME: z.string().optional().default("Shopify Sync"),
   },
   shared: {
@@ -45,6 +46,7 @@ export const env = createEnv({
     AWS_REGION: process.env.AWS_REGION,
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_ENDPOINT_URL: process.env.AWS_ENDPOINT_URL,
     APP_NAME: process.env.APP_NAME,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",

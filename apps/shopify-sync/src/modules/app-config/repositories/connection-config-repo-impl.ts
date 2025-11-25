@@ -3,7 +3,7 @@ import { item } from "dynamodb-toolbox/schema/item";
 import { err, ok, Result } from "neverthrow";
 
 import { createLogger } from "@/lib/logger";
-import { dynamoMainTable, DynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
+import { DynamoMainTable,dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 
 import { ShopifyConnectionConfig } from "../domain/shopify-connection-config";
 import {
@@ -52,6 +52,7 @@ class ConnectionConfigRepoImpl implements ConnectionConfigRepo {
 
       if (!result.Item) {
         logger.debug("Connection config not found", { pk });
+
         return ok(null);
       }
 
@@ -67,6 +68,7 @@ class ConnectionConfigRepoImpl implements ConnectionConfigRepo {
         logger.error("Failed to parse connection config from DynamoDB", {
           error: config.error,
         });
+
         return err(
           new ConnectionConfigRepoError("Failed to parse connection config", {
             cause: config.error,
@@ -76,7 +78,10 @@ class ConnectionConfigRepoImpl implements ConnectionConfigRepo {
 
       return ok(config.value);
     } catch (error) {
-      logger.error("Failed to fetch connection config", { error });
+      logger.error("Failed to fetch connection config", {
+        errorMessage: error instanceof Error ? error.message : String(error),
+      });
+
       return err(
         new ConnectionConfigRepoError("Failed to fetch connection config", {
           cause: error,
@@ -110,7 +115,10 @@ class ConnectionConfigRepoImpl implements ConnectionConfigRepo {
 
       return ok(undefined);
     } catch (error) {
-      logger.error("Failed to save connection config", { error });
+      logger.error("Failed to save connection config", {
+        errorMessage: error instanceof Error ? error.message : String(error),
+      });
+
       return err(
         new ConnectionConfigRepoError("Failed to save connection config", {
           cause: error,
@@ -140,7 +148,10 @@ class ConnectionConfigRepoImpl implements ConnectionConfigRepo {
 
       return ok(undefined);
     } catch (error) {
-      logger.error("Failed to delete connection config", { error });
+      logger.error("Failed to delete connection config", {
+        errorMessage: error instanceof Error ? error.message : String(error),
+      });
+
       return err(
         new ConnectionConfigRepoError("Failed to delete connection config", {
           cause: error,

@@ -235,7 +235,7 @@ export class ShopifyClient {
     this.retryConfig = { ...DEFAULT_RETRY_CONFIG, ...retryConfig };
   }
 
-  private async executeWithRetry<T>(
+  private async executeWithRetry(
     fn: () => Promise<Response>,
     attempt: number = 0
   ): Promise<Result<Response, ShopifyClientErrorType>> {
@@ -251,6 +251,7 @@ export class ShopifyClient {
 
         if (retryAfter) {
           const retryAfterMs = parseInt(retryAfter, 10) * 1000;
+
           if (!isNaN(retryAfterMs)) {
             delayMs = Math.min(retryAfterMs, this.retryConfig.maxDelayMs);
           }
@@ -264,6 +265,7 @@ export class ShopifyClient {
         });
 
         await sleep(delayMs);
+
         return this.executeWithRetry(fn, attempt + 1);
       }
 
@@ -276,13 +278,14 @@ export class ShopifyClient {
         );
 
         logger.warn("Shopify API request failed, retrying", {
-          error,
+          errorMessage: error instanceof Error ? error.message : String(error),
           attempt: attempt + 1,
           maxRetries: this.retryConfig.maxRetries,
           delayMs,
         });
 
         await sleep(delayMs);
+
         return this.executeWithRetry(fn, attempt + 1);
       }
 
@@ -300,7 +303,7 @@ export class ShopifyClient {
   ): Promise<Result<T, ShopifyClientErrorType>> {
     logger.debug("Executing Shopify GraphQL query", {
       endpoint: this.endpoint,
-      variables,
+      variableKeys: Object.keys(variables),
     });
 
     const responseResult = await this.executeWithRetry(() =>
@@ -322,10 +325,12 @@ export class ShopifyClient {
 
     if (!response.ok) {
       const errorText = await response.text();
+
       logger.error("Shopify API request failed", {
         status: response.status,
         errorText,
       });
+
       return err(
         new ShopifyClientError(`Shopify API request failed: ${response.status}`, {
           props: { status: response.status, body: errorText },
@@ -337,6 +342,7 @@ export class ShopifyClient {
 
     if (json.errors && json.errors.length > 0) {
       logger.error("Shopify GraphQL errors", { errors: json.errors });
+
       return err(
         new ShopifyClientError("Shopify GraphQL errors", {
           props: { errors: json.errors },
@@ -377,6 +383,7 @@ export class ShopifyClient {
 
       if (products.edges.length > 0) {
         const firstProduct = products.edges[0].node;
+
         if (firstProduct.variants.edges.length >= 100) {
           logger.warn("Product has 100+ variants, some may be missing", {
             productId: firstProduct.id,

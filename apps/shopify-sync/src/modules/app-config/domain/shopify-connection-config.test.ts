@@ -12,7 +12,9 @@ describe("ShopifyConnectionConfig", () => {
       });
 
       expect(result.isOk()).toBe(true);
+
       const config = result._unsafeUnwrap();
+
       expect(config.shopDomain).toBe("test-store.myshopify.com");
       expect(config.accessToken).toBe("shpat_12345");
       expect(config.apiVersion).toBe("2024-10");
@@ -25,7 +27,9 @@ describe("ShopifyConnectionConfig", () => {
       });
 
       expect(result.isOk()).toBe(true);
+
       const config = result._unsafeUnwrap();
+
       expect(config.apiVersion).toBe("2024-10");
     });
 
@@ -59,8 +63,9 @@ describe("ShopifyConnectionConfig", () => {
       });
 
       const config = result._unsafeUnwrap();
+
       expect(config.getShopifyGraphQLEndpoint()).toBe(
-        "https://test-store.myshopify.com/admin/api/2024-10/graphql.json"
+        "https://test-store.myshopify.com/admin/api/2024-10/graphql.json",
       );
     });
 
@@ -72,8 +77,9 @@ describe("ShopifyConnectionConfig", () => {
       });
 
       const config = result._unsafeUnwrap();
+
       expect(config.getShopifyGraphQLEndpoint()).toBe(
-        "https://test-store.myshopify.com/admin/api/2024-10/graphql.json"
+        "https://test-store.myshopify.com/admin/api/2024-10/graphql.json",
       );
     });
 
@@ -85,8 +91,9 @@ describe("ShopifyConnectionConfig", () => {
       });
 
       const config = result._unsafeUnwrap();
+
       expect(config.getShopifyGraphQLEndpoint()).toBe(
-        "https://test-store.myshopify.com/admin/api/2024-10/graphql.json"
+        "https://test-store.myshopify.com/admin/api/2024-10/graphql.json",
       );
     });
   });
@@ -102,7 +109,7 @@ describe("ShopifyConnectionConfig", () => {
       const config = result._unsafeUnwrap();
       const json = config.toJSON();
 
-      expect(json).toEqual({
+      expect(json).toStrictEqual({
         shopDomain: "test-store.myshopify.com",
         accessToken: "shpat_12345",
         apiVersion: "2024-10",

@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 import { parseArgs } from "node:util";
 
 import {
