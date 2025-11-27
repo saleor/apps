@@ -89,7 +89,7 @@ export class StripeWebhookUseCase {
     const result = await this.webhookManager.removeWebhook({ webhookId, restrictedKey });
 
     if (result.isErr()) {
-      this.logger.error(`Failed to remove webhook ${webhookId}`, result.error);
+      this.logger.warn(`Failed to remove webhook ${webhookId}`, result.error);
 
       return err(new BaseError("Failed to remove webhook", { cause: result.error }));
     }
@@ -273,7 +273,7 @@ export class StripeWebhookUseCase {
       const processingResult = await this.processLegacyWebhook(webhookParams);
 
       if (processingResult.isErr()) {
-        this.logger.error("Received legacy webhook but failed to handle removing it", {
+        this.logger.warn("Received legacy webhook but failed to handle removing it", {
           error: processingResult.error,
         });
 
