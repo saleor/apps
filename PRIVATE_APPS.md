@@ -15,7 +15,7 @@ Some Saleor apps are maintained in private repositories with restricted access. 
 
 | App Name | Repository | Required Access |
 |----------|-----------|----------------|
-| test-app | `@saleor/test-app` | Private repository access |
+| ai-translations | `@saleor/saleor-app-ai-translations` | Private repository access |
 
 ## Setup for Developers
 
@@ -61,7 +61,7 @@ To update private apps to their latest versions:
 Or manually:
 
 ```bash
-git submodule update --remote apps/test-app
+git submodule update --remote apps/ai-translations
 pnpm install
 ```
 
@@ -74,7 +74,7 @@ Once initialized, private apps work just like public apps:
 pnpm dev
 
 # Start a specific private app
-pnpm --filter test-app dev
+pnpm --filter ai-translations dev
 
 # Run tests
 pnpm test:ci
@@ -123,7 +123,7 @@ Private apps use **Git submodules**, which are references to separate Git reposi
 apps/
 ├── avatax/           # Public app
 ├── stripe/           # Public app
-├── test-app/         # Private app (submodule)
+├── ai-translations/  # Private app (submodule)
 │   └── .git          # Links to private repository
 └── ...
 ```
@@ -156,7 +156,7 @@ To add a new private app to the monorepo:
 
 2. **Add it as a submodule**:
    ```bash
-   git submodule add https://github.com/saleor/new-private-app.git apps/new-private-app
+   git submodule add git@github.com:saleor/new-private-app.git apps/new-private-app
    ```
 
 3. **Update `.gitignore`**:
@@ -207,7 +207,7 @@ To add a new private app to the monorepo:
 
 **Solution**:
 ```bash
-git submodule update --remote apps/test-app
+git submodule update --remote apps/ai-translations
 pnpm install
 ```
 
@@ -217,7 +217,7 @@ pnpm install
 
 **Solution**: This is normal for submodules. To work on the private app:
 ```bash
-cd apps/test-app
+cd apps/ai-translations
 git checkout main  # or your working branch
 ```
 
