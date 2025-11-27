@@ -2,9 +2,8 @@
 # These are optional submodules that require separate repository access.
 # See PRIVATE_APPS.md for setup instructions.
 
-[submodule "apps/test-app"]
-	path = apps/test-app
-	url = https://github.com/saleor/test-app.git
+[submodule "apps/ai-translations"]
+	path = apps/ai-translations
+	url = git@github.com:saleor/saleor-app-ai-translations.git
 	branch = main
-	# Mark as optional - build will continue if this submodule is missing
 	update = checkout
