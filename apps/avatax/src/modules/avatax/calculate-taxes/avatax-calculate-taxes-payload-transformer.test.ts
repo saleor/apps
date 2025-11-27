@@ -288,4 +288,121 @@ describe("AvataxCalculateTaxesPayloadTransformer", () => {
       expect(shippingLine?.discounted).toStrictEqual(false);
     });
   });
+
+  describe("shipFrom address metadata override", () => {
+    it("should use metadata shipFrom address when provided", async () => {
+      const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+      const avataxConfigMock = mockGenerator.generateAvataxConfig();
+      const discountsStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
+
+      const taxBaseMock = mockGenerator.generateTaxBase();
+      const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+      // Add shipFrom address metadata
+      const metadataAddress = JSON.stringify({
+        street: "Metadata Street 123",
+        city: "Metadata City",
+        state: "NY",
+        zip: "10001",
+        country: "US",
+      });
+
+      taxBaseMock.sourceObject.avataxShipFromAddress = metadataAddress;
+
+      const payloadMock = {
+        taxBase: taxBaseMock,
+        issuingPrincipal: {
+          __typename: "User",
+          id: "1",
+        },
+      } as unknown as CalculateTaxesPayload;
+
+      const payload = await service.transform({
+        payload: payloadMock,
+        avataxConfig: avataxConfigMock,
+        matches: matchesMock,
+        discountsStrategy,
+      });
+
+      expect(payload.model.addresses?.shipFrom).toStrictEqual({
+        line1: "Metadata Street 123",
+        city: "Metadata City",
+        region: "NY",
+        postalCode: "10001",
+        country: "US",
+      });
+    });
+
+    it("should use fallback address when metadata is not provided", async () => {
+      const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+      const avataxConfigMock = mockGenerator.generateAvataxConfig();
+      const discountsStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
+
+      const taxBaseMock = mockGenerator.generateTaxBase();
+      const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+      // Ensure no shipFrom address metadata
+      taxBaseMock.sourceObject.avataxShipFromAddress = null;
+
+      const payloadMock = {
+        taxBase: taxBaseMock,
+        issuingPrincipal: {
+          __typename: "User",
+          id: "1",
+        },
+      } as unknown as CalculateTaxesPayload;
+
+      const payload = await service.transform({
+        payload: payloadMock,
+        avataxConfig: avataxConfigMock,
+        matches: matchesMock,
+        discountsStrategy,
+      });
+
+      // Should use the address from avataxConfig
+      expect(payload.model.addresses?.shipFrom).toStrictEqual({
+        line1: avataxConfigMock.address.street,
+        city: avataxConfigMock.address.city,
+        region: avataxConfigMock.address.state,
+        postalCode: avataxConfigMock.address.zip,
+        country: avataxConfigMock.address.country,
+      });
+    });
+
+    it("should use fallback address when metadata is invalid JSON", async () => {
+      const mockGenerator = new AvataxCalculateTaxesMockGenerator();
+      const avataxConfigMock = mockGenerator.generateAvataxConfig();
+      const discountsStrategy = new AutomaticallyDistributedProductLinesDiscountsStrategy();
+
+      const taxBaseMock = mockGenerator.generateTaxBase();
+      const matchesMock = mockGenerator.generateTaxCodeMatches();
+
+      // Set invalid JSON metadata
+      taxBaseMock.sourceObject.avataxShipFromAddress = "invalid json";
+
+      const payloadMock = {
+        taxBase: taxBaseMock,
+        issuingPrincipal: {
+          __typename: "User",
+          id: "1",
+        },
+      } as unknown as CalculateTaxesPayload;
+
+      const payload = await service.transform({
+        payload: payloadMock,
+        avataxConfig: avataxConfigMock,
+        matches: matchesMock,
+        discountsStrategy,
+      });
+
+      // Should use the address from avataxConfig
+      expect(payload.model.addresses?.shipFrom).toStrictEqual({
+        line1: avataxConfigMock.address.street,
+        city: avataxConfigMock.address.city,
+        region: avataxConfigMock.address.state,
+        postalCode: avataxConfigMock.address.zip,
+        country: avataxConfigMock.address.country,
+      });
+    });
+  });
 });

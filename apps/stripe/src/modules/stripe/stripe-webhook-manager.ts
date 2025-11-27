@@ -70,7 +70,7 @@ export class StripeWebhookManager {
         status: webhook.status as "enabled" | "disabled",
       });
     } catch (e) {
-      this.logger.error("Error retrieving webhook", { error: e });
+      this.logger.warn("Error retrieving webhook", { error: e });
 
       return err(new CantFetchWebhookError("Error retrieving webhook", { cause: e }));
     }
@@ -92,7 +92,7 @@ export class StripeWebhookManager {
 
       return ok(null);
     } catch (e) {
-      this.logger.error("Error removing webhook", { error: e });
+      this.logger.warn("Error removing webhook", { error: e });
 
       return err(new CantRemoveWebhookError("Error removing webhook", { cause: e }));
     }
