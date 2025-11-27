@@ -49,6 +49,4 @@ yarn-error.log*
 # These directories are managed as submodules, but we ignore them
 # in case they're not initialized (no access to private repos)
 # Note: The app directories themselves should NOT be committed to main repo
-apps/test-app/.gitignore
-apps/test-app/*
-!apps/test-app/.gitkeep
+apps/ai-translations
