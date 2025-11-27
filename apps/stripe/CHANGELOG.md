@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.3.6
+
+### Patch Changes
+
+- 2f3ca93e: Changed legacy-webhook management logic to use "warn" instead of "error" for logs.
+
 ## 2.3.5
 
 ### Patch Changes
