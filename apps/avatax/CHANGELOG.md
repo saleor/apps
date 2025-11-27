@@ -1,5 +1,16 @@
 # saleor-app-avatax
 
+## 1.21.4
+
+### Patch Changes
+
+- 8de99889: Adding support to overwrite the shipFrom address in the avatax calculation using private metadata on order or checkout object. Example:
+  {
+  "key": "avataxShipFromAddress",
+  "value": "{\"street\":\"123 Custom Street\",\"city\":\"Custom City\",\"state\":\"CA\",\"zip\":\"90210\",\"country\":\"US\"}"
+  }
+- 58fac0d5: Dropped support for Saleor 3.19
+
 ## 1.21.3
 
 ### Patch Changes
