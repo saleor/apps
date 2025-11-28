@@ -30,7 +30,7 @@ export const handler: NextJsWebhookHandler<ProductUpdated> = async (req, res, co
   const { product } = context.payload;
 
   if (!product) {
-    logger.warn("Webhook did not received expected product data in the payload.");
+    logger.warn("Webhook did not receive expected product data in the payload.");
 
     return res.status(200).end();
   }
