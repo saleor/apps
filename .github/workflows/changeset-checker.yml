@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           sparse-checkout: ./.changeset
+          submodules: false
 
       - name: Changeset file lookup
         env:

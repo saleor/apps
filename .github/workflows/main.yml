@@ -21,6 +21,14 @@ jobs:
       TURBO_CACHE: "remote:rw"
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: false  # Don't automatically init submodules
+      - name: Initialize private apps (optional)
+        continue-on-error: true
+        run: |
+          # Try to initialize private app submodules if access is available
+          # This will fail gracefully for external contributors
+          git submodule update --init --recursive || echo "Private apps not available (expected for external contributors)"
       - name: Setup PNPM
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
@@ -51,6 +59,14 @@ jobs:
       TURBO_CACHE: "remote:rw"
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: false  # Don't automatically init submodules
+      - name: Initialize private apps (optional)
+        continue-on-error: true
+        run: |
+          # Try to initialize private app submodules if access is available
+          # This will fail gracefully for external contributors
+          git submodule update --init --recursive || echo "Private apps not available (expected for external contributors)"
       - name: Setup PNPM
         uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:

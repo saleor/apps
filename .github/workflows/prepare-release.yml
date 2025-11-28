@@ -19,10 +19,16 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.PAT }}
+          submodules: false  # Don't automatically init submodules
+
         # Tags are fetched for Changeset to distinguish from new ones while running `changeset tag`
       - name: Git fetch tags
         run: git fetch --tags origin
+      - name: Initialize private apps (optional)
+        continue-on-error: true
+        run: |
+          # Try to initialize private app submodules for releases
+          git submodule update --init --recursive || echo "Private apps not available"
       - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
         with:
           run_install: false
@@ -32,6 +38,12 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
+      - name: Get Token
+        id: get-token
+        uses: saleor/saleor-internal-actions/request-vault-token@v1.4.0
+        with:
+          vault-url: ${{ secrets.VAULT_URL }}
+          vault-jwt: ${{ secrets.VAULT_JWT }}
       - name: Create Release Pull Request
         uses: changesets/action@e2f8e964d080ae97c874b19e27b12e0a8620fb6c # v1.4.6
         id: changesets
@@ -41,8 +53,7 @@ jobs:
           publish: pnpm github:release
           createGithubReleases: true
         env:
-          # Use private access token so Github can trigger another workflow from this one
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}
       - name: Find previous comment with checklist on release PR
         if: steps.changesets.outputs.hasChangesets == 'true'
         uses: peter-evans/find-comment@d5fe37641ad8451bdd80312415672ba26c86575e # v3.0.0
