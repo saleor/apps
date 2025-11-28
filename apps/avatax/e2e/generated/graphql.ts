@@ -168,6 +168,14 @@ export type UpdateMetadataMutationVariables = Types.Exact<{
 
 export type UpdateMetadataMutation = { __typename?: 'Mutation', updateMetadata?: { __typename?: 'UpdateMetadata', errors: Array<{ __typename?: 'MetadataError', field?: string | null, message?: string | null }>, item?: { __typename?: 'Address' } | { __typename?: 'App' } | { __typename?: 'Attribute' } | { __typename?: 'Category' } | { __typename?: 'Channel' } | { __typename?: 'Checkout', id: string, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'CheckoutLine' } | { __typename?: 'Collection' } | { __typename?: 'DigitalContent' } | { __typename?: 'Fulfillment' } | { __typename?: 'GiftCard' } | { __typename?: 'Invoice' } | { __typename?: 'Menu' } | { __typename?: 'MenuItem' } | { __typename?: 'Order', id: string, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'OrderLine' } | { __typename?: 'Page' } | { __typename?: 'PageType' } | { __typename?: 'Payment' } | { __typename?: 'Product' } | { __typename?: 'ProductMedia' } | { __typename?: 'ProductType' } | { __typename?: 'ProductVariant' } | { __typename?: 'Promotion' } | { __typename?: 'Sale' } | { __typename?: 'ShippingMethod' } | { __typename?: 'ShippingMethodType' } | { __typename?: 'ShippingZone' } | { __typename?: 'Shop' } | { __typename?: 'TaxClass' } | { __typename?: 'TaxConfiguration' } | { __typename?: 'TransactionItem' } | { __typename?: 'User' } | { __typename?: 'Voucher' } | { __typename?: 'Warehouse' } | null } | null };
 
+export type UpdatePrivateMetadataMutationVariables = Types.Exact<{
+  id: Types.Scalars['ID']['input'];
+  input: Array<Types.MetadataInput> | Types.MetadataInput;
+}>;
+
+
+export type UpdatePrivateMetadataMutation = { __typename?: 'Mutation', updatePrivateMetadata?: { __typename?: 'UpdatePrivateMetadata', errors: Array<{ __typename?: 'MetadataError', field?: string | null, message?: string | null }>, item?: { __typename?: 'Address' } | { __typename?: 'App' } | { __typename?: 'Attribute' } | { __typename?: 'Category' } | { __typename?: 'Channel' } | { __typename?: 'Checkout', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'CheckoutLine' } | { __typename?: 'Collection' } | { __typename?: 'DigitalContent' } | { __typename?: 'Fulfillment' } | { __typename?: 'GiftCard' } | { __typename?: 'Invoice' } | { __typename?: 'Menu' } | { __typename?: 'MenuItem' } | { __typename?: 'Order', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | { __typename?: 'OrderLine' } | { __typename?: 'Page' } | { __typename?: 'PageType' } | { __typename?: 'Payment' } | { __typename?: 'Product' } | { __typename?: 'ProductMedia' } | { __typename?: 'ProductType' } | { __typename?: 'ProductVariant' } | { __typename?: 'Promotion' } | { __typename?: 'Sale' } | { __typename?: 'ShippingMethod' } | { __typename?: 'ShippingMethodType' } | { __typename?: 'ShippingZone' } | { __typename?: 'Shop' } | { __typename?: 'TaxClass' } | { __typename?: 'TaxConfiguration' } | { __typename?: 'TransactionItem' } | { __typename?: 'User' } | { __typename?: 'Voucher' } | { __typename?: 'Warehouse' } | null } | null };
+
 export type OrderDetailsQueryVariables = Types.Exact<{
   id: Types.Scalars['ID']['input'];
 }>;
@@ -614,6 +622,32 @@ export const UpdateMetadata = gql`
       ... on Order {
         id
         metadata {
+          key
+          value
+        }
+      }
+    }
+  }
+}
+    `;
+export const UpdatePrivateMetadata = gql`
+    mutation UpdatePrivateMetadata($id: ID!, $input: [MetadataInput!]!) {
+  updatePrivateMetadata(id: $id, input: $input) {
+    errors {
+      field
+      message
+    }
+    item {
+      ... on Checkout {
+        id
+        privateMetadata {
+          key
+          value
+        }
+      }
+      ... on Order {
+        id
+        privateMetadata {
           key
           value
         }
