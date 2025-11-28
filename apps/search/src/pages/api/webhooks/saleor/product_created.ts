@@ -3,7 +3,10 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import { ProductCreated } from "../../../../../generated/graphql";
-import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
+import {
+  AlgoliaErrorParser,
+  createRecordSizeErrorMessage,
+} from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
 import { webhookProductCreated } from "../../../../webhooks/definitions/product-created";
@@ -27,13 +30,13 @@ export const handler: NextJsWebhookHandler<ProductCreated> = async (req, res, co
   const { product } = context.payload;
 
   if (!product) {
-    logger.error("Webhook did not received expected product data in the payload.");
+    logger.warn("Webhook did not receive expected product data in the payload.");
 
     return res.status(200).end();
   }
 
   try {
-    const { algoliaClient, apiClient } = await createWebhookContext({ authData });
+    const { algoliaClient } = await createWebhookContext({ authData });
 
     try {
       await algoliaClient.createProduct(product);
@@ -45,11 +48,19 @@ export const handler: NextJsWebhookHandler<ProductCreated> = async (req, res, co
       return;
     } catch (e) {
       if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {
-        logger.error("Failed to create and save product", {
-          error: e,
+        const errorDetails = AlgoliaErrorParser.parseRecordSizeError(e);
+        const errorMessage = createRecordSizeErrorMessage(errorDetails, {
+          productId: product.id,
         });
 
-        return res.status(413).send((e as Error).message);
+        // Use warn instead of error - this is an expected error that shouldn't trigger Sentry alerts
+        logger.warn("Product exceeds Algolia record size limit", {
+          productId: product.id,
+          actualSize: errorDetails?.actualSize,
+          maxSize: errorDetails?.maxSize,
+        });
+
+        return res.status(413).send(errorMessage);
       }
 
       logger.error("Failed to execute product_created webhook (algoliaClient.createProduct)", {

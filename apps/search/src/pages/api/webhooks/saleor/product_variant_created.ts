@@ -3,7 +3,10 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import { ProductVariantCreated } from "../../../../../generated/graphql";
-import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
+import {
+  AlgoliaErrorParser,
+  createRecordSizeErrorMessage,
+} from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
 import { webhookProductVariantCreated } from "../../../../webhooks/definitions/product-variant-created";
@@ -27,13 +30,13 @@ export const handler: NextJsWebhookHandler<ProductVariantCreated> = async (req, 
   const { productVariant } = context.payload;
 
   if (!productVariant) {
-    logger.error("Webhook did not received expected product data in the payload.");
+    logger.warn("Webhook did not receive expected product data in the payload.");
 
     return res.status(200).end();
   }
 
   try {
-    const { algoliaClient, apiClient } = await createWebhookContext({ authData });
+    const { algoliaClient } = await createWebhookContext({ authData });
 
     try {
       await algoliaClient.createProductVariant(productVariant);
@@ -43,11 +46,21 @@ export const handler: NextJsWebhookHandler<ProductVariantCreated> = async (req, 
       return;
     } catch (e) {
       if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {
-        logger.error("Failed to create and save variant", {
-          error: e,
+        const errorDetails = AlgoliaErrorParser.parseRecordSizeError(e);
+        const errorMessage = createRecordSizeErrorMessage(errorDetails, {
+          productId: productVariant.product.id,
+          variantId: productVariant.id,
         });
 
-        return res.status(413).send((e as Error).message);
+        // Use warn instead of error - this is an expected error that shouldn't trigger Sentry alerts
+        logger.warn("Product variant exceeds Algolia record size limit", {
+          productId: productVariant.product.id,
+          variantId: productVariant.id,
+          actualSize: errorDetails?.actualSize,
+          maxSize: errorDetails?.maxSize,
+        });
+
+        return res.status(413).send(errorMessage);
       }
 
       logger.error(
