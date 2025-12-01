@@ -1,5 +1,14 @@
 # saleor-app-search
 
+## 1.24.1
+
+### Patch Changes
+
+- 848e170e: Improved error handling for Algolia record size limit errors.
+  When a product variant exceeds Algolia's 10KB limit, the webhook now returns a HTTP 413 error with clear error message (can be seen in Saleor Dashboard).
+  These expected errors are now logged as warnings instead of errors.
+- 4b6effba: Added 5s timeout for write operations. Now Algolia will fail faster allowing us to catch error.
+
 ## 1.24.0
 
 ### Minor Changes
