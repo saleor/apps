@@ -52,7 +52,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
         const index = this.#algolia.initIndex(indexName);
 
-        return index.saveObjects(objects);
+        return index.saveObjects(objects, { timeout: 5000 });
       }),
     );
   }
@@ -64,7 +64,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
         const index = this.#algolia.initIndex(indexName);
 
-        return index.deleteObjects(objects);
+        return index.deleteObjects(objects, { timeout: 5000 });
       }),
     );
   }
@@ -142,7 +142,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
       this.#indexNames.map((indexName) => {
         const index = this.#algolia.initIndex(indexName);
 
-        return index.deleteBy({ filters: `productId:"${product.id}"` });
+        return index.deleteBy({ filters: `productId:"${product.id}"` }, { timeout: 5000 });
       }),
     );
   }
