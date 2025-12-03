@@ -44,7 +44,7 @@ const handler = createAppRegisterHandler({
     });
   },
   onAuthAplSaved: async (_req, context) => {
-    logger.info("Stripe app configuration set up successfully", {
+    logger.info("App configuration set up successfully", {
       saleorApiUrl: context.authData.saleorApiUrl,
     });
   },

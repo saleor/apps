@@ -3,8 +3,11 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import { env } from "@/env";
+import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { saleorApp } from "@/saleor-app";
+
+const logger = createLogger("createAppRegisterHandler");
 
 const allowedUrlsPattern = env.ALLOWED_DOMAIN_PATTERN;
 
@@ -16,18 +19,41 @@ export default wrapWithLoggerContext(
   withSpanAttributes(
     createAppRegisterHandler({
       apl: saleorApp.apl,
+      /**
+       * Prohibit installation from Saleor other than specified by the regex.
+       * Regex source is ENV so if ENV is not set, all installations will be allowed.
+       */
       allowedSaleorUrls: [
         (url) => {
           if (allowedUrlsPattern) {
             // we don't escape the pattern because it's not user input - it's an ENV variable controlled by us
             const regex = new RegExp(allowedUrlsPattern);
 
-            return regex.test(url);
+            const checkResult = regex.test(url);
+
+            if (!checkResult) {
+              logger.warn("Blocked installation attempt from disallowed Saleor instance", {
+                saleorApiUrl: url,
+              });
+            }
+
+            return checkResult;
           }
 
           return true;
         },
       ],
+      onAplSetFailed: async (_req, context) => {
+        logger.error("Failed to set APL", {
+          saleorApiUrl: context.authData.saleorApiUrl,
+          error: context.error,
+        });
+      },
+      onAuthAplSaved: async (_req, context) => {
+        logger.info("App configuration set up successfully", {
+          saleorApiUrl: context.authData.saleorApiUrl,
+        });
+      },
     }),
   ),
   loggerContext,
