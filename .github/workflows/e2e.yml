@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        saleor: [319, 320, 321, 322, latest]
+        saleor: [320, 321, 322, latest]
     env:
       ACCESS_TOKEN: ${{ secrets.saleor-token }}
       SALEOR_VERSION: ${{ matrix.saleor }}
@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        saleor: [319, 320, 321, 322, latest]
+        saleor: [320, 321, 322, latest]
     needs: setup-saleor-env
     env:
       SALEOR_VERSION: ${{ matrix.saleor }}

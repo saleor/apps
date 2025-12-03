@@ -49,7 +49,7 @@ export class AfterFulfillmentFullRefundStrategy implements AfterFulfillmentRefun
     });
 
     if (cancelResult.isErr()) {
-      this.logger.error("Failed to cancel Atobarai transaction", {
+      this.logger.warn("Failed to cancel Atobarai transaction", {
         error: cancelResult.error,
       });
 
@@ -115,7 +115,7 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy
     );
 
     if (cancelTransactionResult.isErr()) {
-      this.logger.error("Failed to cancel Atobarai transaction", {
+      this.logger.warn("Failed to cancel Atobarai transaction", {
         error: cancelTransactionResult.error,
       });
 
@@ -151,7 +151,7 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy
     const registerTransactionResult = await this.registerTransaction(payload, apiClient);
 
     if (registerTransactionResult.isErr()) {
-      this.logger.error("Failed to register Atobarai transaction", {
+      this.logger.warn("Failed to register Atobarai transaction", {
         error: registerTransactionResult.error,
       });
 
@@ -173,7 +173,7 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy
     });
 
     if (fulfillmentResult.isErr()) {
-      this.logger.error("Failed to report Atobarai fulfillment", {
+      this.logger.warn("Failed to report Atobarai fulfillment", {
         error: fulfillmentResult.error,
       });
 
@@ -252,7 +252,7 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy
     );
 
     if (cancelTransactionResult.isErr()) {
-      this.logger.error("Failed to cancel Atobarai transaction", {
+      this.logger.warn("Failed to cancel Atobarai transaction", {
         error: cancelTransactionResult.error,
       });
 
@@ -290,7 +290,7 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy
     const registerTransactionResult = await this.registerTransaction(payload, apiClient);
 
     if (registerTransactionResult.isErr()) {
-      this.logger.error("Failed to register Atobarai transaction", {
+      this.logger.warn("Failed to register Atobarai transaction", {
         error: registerTransactionResult.error,
       });
 
@@ -314,7 +314,7 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy
     });
 
     if (fulfillmentResult.isErr()) {
-      this.logger.error("Failed to report Atobarai fulfillment", {
+      this.logger.warn("Failed to report Atobarai fulfillment", {
         error: fulfillmentResult.error,
       });
 

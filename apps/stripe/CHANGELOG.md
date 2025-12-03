@@ -1,5 +1,17 @@
 # saleor-app-payment-stripe
 
+## 2.3.6
+
+### Patch Changes
+
+- 2f3ca93e: Changed legacy-webhook management logic to use "warn" instead of "error" for logs.
+
+## 2.3.5
+
+### Patch Changes
+
+- 27a4d622: Attach errors to trpc handlers for better debugging
+
 ## 2.3.4
 
 ### Patch Changes

@@ -36,7 +36,32 @@ const validateRequestParams = (req: NextApiRequest) => {
   queryShape.parse(req.query);
 };
 
-const fetchXmlChunk = (downloadUrl: string) => fetch(downloadUrl).then((r) => r.text());
+const logger = createLogger("Feed handler", {
+  route: "api/feed/{url}/{channel}/google.xml",
+});
+
+const fetchXmlChunk = (downloadUrl: string) =>
+  fetch(downloadUrl)
+    .then((r) => r.text())
+    .catch((e) => {
+      throw new Error("Failed to download chunk from s3", { cause: e });
+    });
+
+const withErrorHandler = (
+  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void | NextApiResponse>,
+) => {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    try {
+      return await handler(req, res);
+    } catch (error) {
+      logger.error("Unhandled error in feed handler", { error: error });
+
+      if (!res.headersSent) {
+        return res.status(500).json({ error: "Internal server error" });
+      }
+    }
+  };
+};
 
 const generateDistributedChunk = (params: {
   authData: AuthData;
@@ -62,7 +87,13 @@ const generateDistributedChunk = (params: {
       authorization: process.env.REQUEST_SECRET as string,
     },
     method: "POST",
-  }).then((r) => r.json() as Promise<{ downloadUrl: string; fileName: string }>);
+  })
+    .then((r) => r.json() as Promise<{ downloadUrl: string; fileName: string }>)
+    .catch((e) => {
+      throw new Error("Failed to generate chunk", {
+        cause: e,
+      });
+    });
 };
 
 export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -71,10 +102,6 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   loggerContext.set(ObservabilityAttributes.SALEOR_API_URL, url);
   loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, channel);
-
-  const logger = createLogger("Feed handler", {
-    route: "api/feed/{url}/{channel}/google.xml",
-  });
 
   logger.info("Generating Google Feed");
 
@@ -313,4 +340,4 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 };
 
-export default wrapWithLoggerContext(withSpanAttributes(handler), loggerContext);
+export default wrapWithLoggerContext(withSpanAttributes(withErrorHandler(handler)), loggerContext);

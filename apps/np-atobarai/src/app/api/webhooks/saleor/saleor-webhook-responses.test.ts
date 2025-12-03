@@ -50,11 +50,11 @@ describe("UnhandledErrorResponse", () => {
 });
 
 describe("MalformedRequestResponse", () => {
-  it("getResponse() returns valid Response with status 500 and message with error reason", async () => {
+  it("getResponse() returns valid Response with status 202 and message with error reason", async () => {
     const saleorApiUrlResponse = new MalformedRequestResponse(new Error("Inner error"));
     const fetchResponse = saleorApiUrlResponse.getResponse();
 
-    expect(fetchResponse.status).toBe(500);
+    expect(fetchResponse.status).toBe(202);
     expect(await fetchResponse.json()).toMatchInlineSnapshot(`
       {
         "message": "Malformed request",

@@ -97,7 +97,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     const transaction = event.order.transactions[0];
 
     if (transaction.createdBy?.__typename !== "App") {
-      this.logger.warn("Transaction was not created by the app", {
+      this.logger.warn("Transaction was not created by the app. Skipping.", {
         event: {
           orderId: event.order.id,
           transactionPspReference: transaction.pspReference,
@@ -111,7 +111,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     }
 
     if (transaction.createdBy.id !== appId) {
-      this.logger.warn("Transaction was not created by the current app installation", {
+      this.logger.warn("Transaction was not created by the current app installation. Skipping.", {
         event: {
           orderId: event.order.id,
           transactionPspReference: transaction.pspReference,
@@ -197,7 +197,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     );
 
     if (reportFulfillmentResult.isErr()) {
-      this.logger.error("Failed to report fulfillment", {
+      this.logger.warn("Failed to report fulfillment", {
         error: reportFulfillmentResult.error,
         orderId,
         trackingNumber,

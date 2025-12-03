@@ -6,7 +6,7 @@ export const envE2e = createEnv({
     E2E_USER_NAME: z.string().optional(),
     E2E_USER_PASSWORD: z.string().optional(),
     TEST_SALEOR_API_URL: z.string().optional(),
-    E2E_SALEOR_VERSION: z.enum(["319", "320", "321", "322", "latest"]).optional(),
+    E2E_SALEOR_VERSION: z.enum(["320", "321", "322", "latest"]).optional(),
   },
   // we use the manual destruction here to validate if env variable is set inside turbo.json
   runtimeEnv: {

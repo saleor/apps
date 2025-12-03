@@ -1,5 +1,24 @@
 # saleor-app-payment-np-atobarai
 
+## 1.1.3
+
+### Patch Changes
+
+- 3f2e2f51: Changed some of Saleor webhook response statuses.
+
+  Previously, app either returned 5xx (if we expect Saleor to retry) or 4xx (if we can't process, for various reasons, but we don't want a retry).
+
+  Due to upcoming Saleor Circuit Breaker mechanism, we no longer can rely on 4xx status for every case. After this change, app will sometimes return status 202 in case of error.
+
+  For example - when app is not configured, it's expected that 4xx is returned and Saleor will disable not configured app eventually. But in case of webhooks that are not processable _sometimes_,
+  app will return ACCEPTED code and exit gracefully. This way, Saleor will not disable healthy webhooks, that can't be process under certain conditions
+
+## 1.1.2
+
+### Patch Changes
+
+- ac8ee7c7: Changed errors handling - now MalformedRequest returns 400 (as expected) instead of 500. This way we clearly distinguish between application failure and request that can't be processed. Additionally for async webhooks, Saleor will not retry the request. Also, errors from Atobarai API are logged as warnings, because usually they are related to incorrect business data (like addresses) - hence app should not indicate failures
+
 ## 1.1.1
 
 ### Patch Changes
