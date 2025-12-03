@@ -1,4 +1,4 @@
-import { Resource } from "@opentelemetry/resources";
+import { resourceFromAttributes } from "@opentelemetry/resources";
 import { MeterProvider } from "@opentelemetry/sdk-metrics";
 import {
   ATTR_DEPLOYMENT_ENVIRONMENT_NAME,
@@ -18,7 +18,7 @@ export const meterProvider = new MeterProvider({
     }),
   ],
   // Create new resource as `@vercel/otel` creates its own under the hood and don't expose it
-  resource: new Resource({
+  resource: resourceFromAttributes({
     // We don't add all attributes from `instrumentations/otel-node.ts` as they will end up as attributes on the metrics in our OTEL collector. If you are using OSS version you can add them here.
     [ATTR_SERVICE_NAME]: env.OTEL_SERVICE_NAME,
     [ATTR_DEPLOYMENT_ENVIRONMENT_NAME]: env.ENV,
