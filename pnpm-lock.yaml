@@ -79,8 +79,8 @@ catalogs:
       specifier: 1.3.0
       version: 1.3.0
     '@saleor/macaw-ui':
-      specifier: 1.3.1
-      version: 1.3.1
+      specifier: 1.4.1-dev.1
+      version: 1.4.1-dev.1
     '@sentry/cli':
       specifier: 1.77.3
       version: 1.77.3
@@ -295,7 +295,7 @@ importers:
         version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -539,7 +539,7 @@ importers:
         version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -735,7 +735,7 @@ importers:
         version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/sentry-utils':
         specifier: workspace:*
         version: link:../../packages/sentry-utils
@@ -919,7 +919,7 @@ importers:
         version: link:../../packages/errors
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1136,7 +1136,7 @@ importers:
         version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1344,7 +1344,7 @@ importers:
         version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1543,7 +1543,7 @@ importers:
         version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1763,7 +1763,7 @@ importers:
         version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -1989,7 +1989,7 @@ importers:
         version: link:../../packages/ui
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
@@ -2460,7 +2460,7 @@ importers:
         version: link:../eslint-config
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
@@ -2527,7 +2527,7 @@ importers:
         version: link:../eslint-config
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
@@ -2632,7 +2632,7 @@ importers:
         version: link:../eslint-config
       '@saleor/macaw-ui':
         specifier: 'catalog:'
-        version: 1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../typescript-config
@@ -5706,8 +5706,8 @@ packages:
     resolution: {integrity: sha512-fwWrNnGwO66ZjsOByX5+ef3hvBuzP3hrexyMWXDVgwM8TXgBKlRYN5ZBcfIipgX/2idxEHtHaTje56thLt0HlQ==}
     engines: {node: '>=22.0.0 <23.0.0', npm: '>=10.0.0 <11.0.0', pnpm: '>=10.0.0 <11.0.0'}
 
-  '@saleor/macaw-ui@1.3.1':
-    resolution: {integrity: sha512-gVAYG8Giiutjgepz7YzCOelD0CWECiYMr2kOQFQZ0CZyuNGWJAA6Dfq3W4Ck29cnssiMfdnsgLH5L6p8a8Bgjg==}
+  '@saleor/macaw-ui@1.4.1-dev.1':
+    resolution: {integrity: sha512-LJDRtuKcPhUkQvN+JsKTMzGDZT+PjtkFeJqO50JqCHh0qAPRiNuO4QYSL+Pwv2ddec11qag3bjnEqtZlmNhxcg==}
     engines: {node: 20 || 22, pnpm: '10'}
     peerDependencies:
       '@types/react': ^16.9.0 || ^17.0.0 || ^18.0.0
@@ -16243,7 +16243,7 @@ snapshots:
       - eslint
       - supports-color
 
-  '@saleor/macaw-ui@1.3.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/macaw-ui@1.4.1-dev.1(@types/react-dom@18.2.5)(@types/react@18.2.5)(@vanilla-extract/css@1.14.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@dessert-box/react': 0.4.0(react@18.2.0)
       '@floating-ui/react-dom': 2.0.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
