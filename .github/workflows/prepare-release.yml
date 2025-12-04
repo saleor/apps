@@ -16,8 +16,16 @@ jobs:
     name: Prepare release with Changesets
     runs-on: ubuntu-latest
     steps:
+      - name: Get Token
+        id: get-token
+        uses: saleor/saleor-internal-actions/request-vault-token@v1.4.0
+        with:
+          vault-url: ${{ secrets.VAULT_URL }}
+          vault-jwt: ${{ secrets.VAULT_JWT }}
       - name: Checkout Repo
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.get-token.outputs.token }}
         # Tags are fetched for Changeset to distinguish from new ones while running `changeset tag`
       - name: Git fetch tags
         run: git fetch --tags origin
@@ -30,12 +38,7 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
-      - name: Get Token
-        id: get-token
-        uses: saleor/saleor-internal-actions/request-vault-token@v1.4.0
-        with:
-          vault-url: ${{ secrets.VAULT_URL }}
-          vault-jwt: ${{ secrets.VAULT_JWT }}
+
       - name: Create Release Pull Request
         uses: changesets/action@e2f8e964d080ae97c874b19e27b12e0a8620fb6c # v1.4.6
         id: changesets
