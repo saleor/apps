@@ -22,6 +22,8 @@ export const mockedSourceObject = {
     streetAddress1: "BillingStreetAddress1",
     streetAddress2: "BillingStreetAddress2",
     companyName: "BillingCompanyName",
+    city: "Tokyo",
+    cityArea: "Shibuya",
   },
   shippingAddress: {
     firstName: "ShippingFirstName",
@@ -35,6 +37,8 @@ export const mockedSourceObject = {
     streetAddress1: "ShippingStreetAddress1",
     streetAddress2: "ShippingStreetAddress2",
     companyName: "ShippingCompanyName",
+    city: "Tokyo",
+    cityArea: "Shibuya",
   },
   email: "source-object@email.com",
   totalPrice: {

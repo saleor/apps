@@ -7,6 +7,8 @@ fragment Address on Address {
   streetAddress1
   streetAddress2
   phone
+  city
+  cityArea
   country {
     code
   }

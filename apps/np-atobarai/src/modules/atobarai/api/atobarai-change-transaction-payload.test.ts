@@ -31,7 +31,7 @@ describe("createAtobaraiChangeTransactionPayload", () => {
           {
             "billed_amount": 1000,
             "customer": {
-              "address": "BillingCountryAreaBillingStreetAddress1BillingStreetAddress2",
+              "address": "BillingCountryAreaTokyoShibuyaBillingStreetAddress1BillingStreetAddress2",
               "company_name": "BillingCompanyName",
               "customer_name": "BillingLastName BillingFirstName",
               "email": "source-object@email.com",
@@ -39,7 +39,7 @@ describe("createAtobaraiChangeTransactionPayload", () => {
               "zip_code": "BillingPostalCode",
             },
             "dest_customer": {
-              "address": "ShippingCountryAreaShippingStreetAddress1ShippingStreetAddress2",
+              "address": "ShippingCountryAreaTokyoShibuyaShippingStreetAddress1ShippingStreetAddress2",
               "company_name": "ShippingCompanyName",
               "customer_name": "ShippingLastName ShippingFirstName",
               "tel": "0shippingPhone",

@@ -5,8 +5,8 @@ export const formatCustomerName = (address: AddressFragment): string => {
 };
 
 export const formatAddress = (address: AddressFragment): string => {
-  // TODO: add support for fill_missing_address
-  return `${address.countryArea}${address.streetAddress1}${address.streetAddress2}`;
+  // TODO: add support for fill_missing_address?
+  return `${address.countryArea}${address.city}${address.cityArea}${address.streetAddress1}${address.streetAddress2}`;
 };
 
 export const formatPhone = (phone: string): string => {
