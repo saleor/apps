@@ -1,5 +1,11 @@
 # @saleor/apps-otel
 
+## 2.3.1
+
+### Patch Changes
+
+- 98459d79: Updated Next.js to 15.2.6
+
 ## 2.3.0
 
 ### Minor Changes

@@ -1,5 +1,23 @@
 # saleor-app-payment-np-atobarai
 
+## 1.1.4
+
+### Patch Changes
+
+- c91ab827: Fixed formatting address resolved for Atobarai - it will include city & city area
+- 98459d79: Updated Next.js to 15.2.6
+- b1f10da0: Added logs when app fails to install due to error in APL, or due to disallowed domain and when app installs successfully
+- Updated dependencies [98459d79]
+  - @saleor/apps-domain@1.0.2
+  - @saleor/dynamo-config-repository@1.0.1
+  - @saleor/errors@1.0.1
+  - @saleor/apps-logger@1.6.2
+  - @saleor/apps-otel@2.3.1
+  - @saleor/react-hook-form-macaw@0.2.16
+  - @saleor/apps-shared@1.14.1
+  - @saleor/apps-trpc@4.0.4
+  - @saleor/apps-ui@1.3.2
+
 ## 1.1.3
 
 ### Patch Changes
