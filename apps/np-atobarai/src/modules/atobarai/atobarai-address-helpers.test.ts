@@ -78,6 +78,7 @@ const addressFragment = {
     code: "JP",
   },
   city: "Tokyo",
+  cityArea: "Shibyua",
 } satisfies AddressFragment;
 
 describe("formatCustomerName", () => {
@@ -92,9 +93,7 @@ describe("formatAddress", () => {
   it("should convert address into Atobarai required address", () => {
     const address = formatAddress(addressFragment);
 
-    expect(address).toMatchInlineSnapshot(
-      `"CountryAreaTokyoundefinedStreetAddress1StreetAddress2"`,
-    );
+    expect(address).toMatchInlineSnapshot(`"CountryAreaTokyoShibyuaStreetAddress1StreetAddress2"`);
   });
 });
 
