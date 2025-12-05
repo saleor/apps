@@ -7,7 +7,7 @@
 "saleor-app-search": patch
 "saleor-app-smtp": patch
 "saleor-app-cms": patch
-"saleor-app-stripe": patch
+"saleor-app-payment-stripe": patch
 ---
 
 Added logs when app fails to install due to error in APL, or due to disallowed domain and when app installs successfully
