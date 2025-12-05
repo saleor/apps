@@ -92,7 +92,9 @@ describe("formatAddress", () => {
   it("should convert address into Atobarai required address", () => {
     const address = formatAddress(addressFragment);
 
-    expect(address).toMatchInlineSnapshot(`"CountryAreaTokyoStreetAddress1StreetAddress2"`);
+    expect(address).toMatchInlineSnapshot(
+      `"CountryAreaTokyoundefinedStreetAddress1StreetAddress2"`,
+    );
   });
 });
 

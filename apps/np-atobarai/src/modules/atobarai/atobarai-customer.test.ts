@@ -43,7 +43,7 @@ describe("createAtobaraiCustomer", () => {
 
     expect(customer).toMatchInlineSnapshot(`
       {
-        "address": "BillingCountryAreaTokyoBillingStreetAddress1BillingStreetAddress2",
+        "address": "BillingCountryAreaTokyoShibuyaBillingStreetAddress1BillingStreetAddress2",
         "company_name": "BillingCompanyName",
         "customer_name": "BillingLastName BillingFirstName",
         "email": "source-object@email.com",
@@ -60,7 +60,7 @@ describe("createAtobaraiCustomer", () => {
 
     expect(customer).toMatchInlineSnapshot(`
       {
-        "address": "BillingCountryAreaTokyoBillingStreetAddress1BillingStreetAddress2",
+        "address": "BillingCountryAreaTokyoShibuyaBillingStreetAddress1BillingStreetAddress2",
         "company_name": "BillingCompanyName",
         "customer_name": "BillingLastName BillingFirstName",
         "email": "user-order-email@example.com",
