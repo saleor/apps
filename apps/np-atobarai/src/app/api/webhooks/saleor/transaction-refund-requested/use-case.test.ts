@@ -289,6 +289,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
                   companyName: "Test Company",
+                  city: "Tokyo",
                 },
                 shippingAddress: {
                   firstName: "John",
@@ -302,6 +303,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
                   companyName: "Test Company",
+                  city: "Tokyo",
                 },
                 userEmail: "test@example.com",
               },
@@ -469,6 +471,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
                   companyName: "Test Company",
+                  city: "Tokyo",
                 },
                 shippingAddress: {
                   firstName: "John",
@@ -482,6 +485,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
                   companyName: "Test Company",
+                  city: "Tokyo",
                 },
                 userEmail: "test@example.com",
               },
@@ -576,7 +580,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   shop_transaction_id: "saleor-transaction-token",
                   billed_amount: 2500,
                   customer: {
-                    address: "Tokyo1-1-1 ShibuyaApt 101",
+                    address: "TokyoTokyo1-1-1 ShibuyaApt 101",
                     company_name: "Test Company",
                     customer_name: "Doe John",
                     email: "test@example.com",
@@ -584,7 +588,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                     zip_code: "1234567",
                   },
                   dest_customer: {
-                    address: "Tokyo1-1-1 ShibuyaApt 101",
+                    address: "TokyoTokyo1-1-1 ShibuyaApt 101",
                     company_name: "Test Company",
                     customer_name: "Doe John",
                     tel: "0123456789",
@@ -654,6 +658,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
                   companyName: "Test Company",
+                  city: "Tokyo",
                 },
                 shippingAddress: {
                   firstName: "John",
@@ -666,6 +671,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   countryArea: "Tokyo",
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
+                  city: "Tokyo",
                   companyName: "Test Company",
                 },
                 userEmail: "test@example.com",
@@ -734,7 +740,7 @@ describe("TransactionRefundRequestedUseCase", () => {
               transactions: [
                 {
                   dest_customer: {
-                    address: "Tokyo1-1-1 ShibuyaApt 101",
+                    address: "TokyoTokyo1-1-1 ShibuyaApt 101",
                     company_name: "Test Company",
                     customer_name: "Doe John",
                     tel: "0123456789",
@@ -746,7 +752,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   shop_transaction_id: "saleor-transaction-token",
                   np_transaction_id: mockedAtobaraiTransactionId,
                   customer: {
-                    address: "Tokyo1-1-1 ShibuyaApt 101",
+                    address: "TokyoTokyo1-1-1 ShibuyaApt 101",
                     company_name: "Test Company",
                     customer_name: "Doe John",
                     email: "test@example.com",
@@ -841,6 +847,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
                   companyName: "Test Company",
+                  city: "Tokyo",
                 },
                 shippingAddress: {
                   firstName: "John",
@@ -854,6 +861,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
                   companyName: "Test Company",
+                  city: "Tokyo",
                 },
                 userEmail: "test@example.com",
               },
@@ -1093,6 +1101,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
                 companyName: "Test Company",
+                city: "Tokyo",
               },
               shippingAddress: {
                 firstName: "John",
@@ -1106,6 +1115,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
                 companyName: "Test Company",
+                city: "Tokyo",
               },
               userEmail: "test@example.com",
             },
@@ -1233,6 +1243,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
                 companyName: "Test Company",
+                city: "Tokyo",
               },
               shippingAddress: {
                 firstName: "John",
@@ -1246,6 +1257,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
                 companyName: "Test Company",
+                city: "Tokyo",
               },
               userEmail: "test@example.com",
             },
@@ -1342,6 +1354,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
                 companyName: "Test Company",
+                city: "Tokyo",
               },
               shippingAddress: {
                 firstName: "John",
@@ -1355,6 +1368,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
                 companyName: "Test Company",
+                city: "Tokyo",
               },
               userEmail: "test@example.com",
             },
@@ -1498,6 +1512,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
                 companyName: "Test Company",
+                city: "Tokyo",
               },
               shippingAddress: {
                 firstName: "John",
@@ -1511,6 +1526,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
                 companyName: "Test Company",
+                city: "Tokyo",
               },
               userEmail: "test@example.com",
             },

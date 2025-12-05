@@ -43,7 +43,7 @@ describe("createAtobaraiDeliveryDestination", () => {
 
     expect(deliveryDestination).toMatchInlineSnapshot(`
       {
-        "address": "ShippingCountryAreaShippingStreetAddress1ShippingStreetAddress2",
+        "address": "ShippingCountryAreaTokyoShippingStreetAddress1ShippingStreetAddress2",
         "company_name": "ShippingCompanyName",
         "customer_name": "ShippingLastName ShippingFirstName",
         "tel": "0shippingPhone",
@@ -59,7 +59,7 @@ describe("createAtobaraiDeliveryDestination", () => {
 
     expect(deliveryDestination).toMatchInlineSnapshot(`
       {
-        "address": "ShippingCountryAreaShippingStreetAddress1ShippingStreetAddress2",
+        "address": "ShippingCountryAreaTokyoShippingStreetAddress1ShippingStreetAddress2",
         "company_name": "ShippingCompanyName",
         "customer_name": "ShippingLastName ShippingFirstName",
         "tel": "0shippingPhone",
