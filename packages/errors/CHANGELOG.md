@@ -1,5 +1,11 @@
 # @saleor/errors
 
+## 1.0.1
+
+### Patch Changes
+
+- 98459d79: Updated Next.js to 15.2.6
+
 ## 1.0.0
 
 ### Major Changes

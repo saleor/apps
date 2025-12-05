@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.16
+
+### Patch Changes
+
+- 98459d79: Updated Next.js to 15.2.6
+
 ## 0.2.15
 
 ### Patch Changes

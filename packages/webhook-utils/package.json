@@ -1,6 +1,6 @@
 {
   "name": "@saleor/webhook-utils",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "type": "module",
   "main": "index.ts",
   "scripts": {

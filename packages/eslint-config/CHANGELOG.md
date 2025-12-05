@@ -1,5 +1,11 @@
 # @saleor/eslint-config-apps
 
+## 0.4.15
+
+### Patch Changes
+
+- 98459d79: Updated Next.js to 15.2.6
+
 ## 0.4.14
 
 ### Patch Changes
