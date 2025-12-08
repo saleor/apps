@@ -27,4 +27,15 @@ describe("formatAddress", () => {
       `"CountryArea千代田区千代田StreetAddress1StreetAddress2"`,
     );
   });
+
+  it("should fallback to address fields when postal data is not found", () => {
+    const addressWithInvalidPostalCode = {
+      ...addressFragment,
+      postalCode: "0000000", // Invalid postal code that won't be found in postal data
+    } satisfies AddressFragment;
+
+    const address = new AtobaraiAddressFormatter().formatAddress(addressWithInvalidPostalCode);
+
+    expect(address).toMatchInlineSnapshot(`"CountryAreaTokyoShibyuaStreetAddress1StreetAddress2"`);
+  });
 });
