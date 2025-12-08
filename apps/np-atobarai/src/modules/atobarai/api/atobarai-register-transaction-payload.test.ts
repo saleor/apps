@@ -29,19 +29,19 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
           {
             "billed_amount": 1000,
             "customer": {
-              "address": "BillingCountryAreaTokyoShibuyaBillingStreetAddress1BillingStreetAddress2",
+              "address": "BillingCountryArea千代田区千代田BillingStreetAddress1BillingStreetAddress2",
               "company_name": "BillingCompanyName",
               "customer_name": "BillingLastName BillingFirstName",
               "email": "source-object@email.com",
               "tel": "0billingPhone",
-              "zip_code": "BillingPostalCode",
+              "zip_code": "1000001",
             },
             "dest_customer": {
-              "address": "ShippingCountryAreaTokyoShibuyaShippingStreetAddress1ShippingStreetAddress2",
+              "address": "ShippingCountryArea千代田区千代田ShippingStreetAddress1ShippingStreetAddress2",
               "company_name": "ShippingCompanyName",
               "customer_name": "ShippingLastName ShippingFirstName",
               "tel": "0shippingPhone",
-              "zip_code": "ShippingPostalCode",
+              "zip_code": "1000001",
             },
             "goods": [
               {
