@@ -22,6 +22,18 @@ describe("JapanesePostalData", () => {
       expect(result?.pref.name).toBe("東京都");
     });
 
+    it("should return neighbourhood data for Tokyo Chiyoda postal code - with dash format", () => {
+      const result = japanesePostalData.getNeighbourhood("100-0001");
+
+      expect(result).toBeDefined();
+      expect(result?.code).toBe("1000001");
+      expect(result?.name).toBe("千代田");
+      expect(result?.city.code).toBe("13101");
+      expect(result?.city.name).toBe("千代田区");
+      expect(result?.pref.code).toBe("13");
+      expect(result?.pref.name).toBe("東京都");
+    });
+
     it("should return neighbourhood data for Hokkaido Sapporo postal code", () => {
       const result = japanesePostalData.getNeighbourhood("0600000");
 
