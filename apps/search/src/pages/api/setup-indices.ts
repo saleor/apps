@@ -11,6 +11,7 @@ import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-g
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
 import { createSettingsManager } from "../../lib/metadata";
+import { traceExternalCall } from "../../lib/trace-external-calls";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 
 const logger = createLogger("setupIndicesHandler");
@@ -39,8 +40,14 @@ export const setupIndicesHandlerFactory =
     const configManager = new AppConfigMetadataManager(settingsManager);
 
     const [config, channelsRequest] = await Promise.all([
-      configManager.get(authData.saleorApiUrl),
-      client.query(ChannelsDocument, {}).toPromise(),
+      traceExternalCall(() => configManager.get(authData.saleorApiUrl), {
+        name: "Saleor getAppMetadata",
+        attributes: { saleorApiUrl: authData.saleorApiUrl },
+      }),
+      traceExternalCall(() => client.query(ChannelsDocument, {}).toPromise(), {
+        name: "Saleor fetchChannels",
+        attributes: { saleorApiUrl: authData.saleorApiUrl },
+      }),
     ]);
 
     const configData = config.getConfig();

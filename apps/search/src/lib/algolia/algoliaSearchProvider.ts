@@ -8,6 +8,7 @@ import { ALGOLIA_TIMEOUT_MS } from "../algolia-timeouts";
 import { isNotNil } from "../isNotNil";
 import { createLogger } from "../logger";
 import { SearchProvider } from "../searchProvider";
+import { ALGOLIA_SLOW_THRESHOLD_MS, traceExternalCall } from "../trace-external-calls";
 import {
   AlgoliaObject,
   channelListingToAlgoliaIndexId,
@@ -53,7 +54,14 @@ export class AlgoliaSearchProvider implements SearchProvider {
       Object.entries(groupedByIndex).map(([indexName, objects]) => {
         const index = this.#algolia.initIndex(indexName);
 
-        return index.saveObjects(objects, { timeout: ALGOLIA_TIMEOUT_MS });
+        return traceExternalCall(
+          () => index.saveObjects(objects, { timeout: ALGOLIA_TIMEOUT_MS }),
+          {
+            name: "Algolia saveObjects",
+            attributes: { indexName, objectsCount: objects.length },
+            slowThresholdMs: ALGOLIA_SLOW_THRESHOLD_MS,
+          },
+        );
       }),
     );
   }
@@ -62,10 +70,17 @@ export class AlgoliaSearchProvider implements SearchProvider {
     logger.debug("deleteGroupedByIndex called");
 
     return Promise.all(
-      Object.entries(groupedByIndex).map(([indexName, objects]) => {
+      Object.entries(groupedByIndex).map(([indexName, objectIds]) => {
         const index = this.#algolia.initIndex(indexName);
 
-        return index.deleteObjects(objects, { timeout: ALGOLIA_TIMEOUT_MS });
+        return traceExternalCall(
+          () => index.deleteObjects(objectIds, { timeout: ALGOLIA_TIMEOUT_MS }),
+          {
+            name: "Algolia deleteObjects",
+            attributes: { indexName, objectIdsCount: objectIds.length },
+            slowThresholdMs: ALGOLIA_SLOW_THRESHOLD_MS,
+          },
+        );
       }),
     );
   }
@@ -76,34 +91,42 @@ export class AlgoliaSearchProvider implements SearchProvider {
       this.#indexNames.map(async (indexName) => {
         const index = this.#algolia.initIndex(indexName);
 
-        return index.setSettings({
-          attributesForFaceting: [
-            "productId",
-            "inStock",
-            "categories",
-            "attributes",
-            "collections",
-            "pricing.price.net",
-            "pricing.price.gross",
-            "pricing.discount.net",
-            "pricing.discount.gross",
-            "pricing.priceUndiscounted.net",
-            "pricing.priceUndiscounted.gross",
-            "pricing.onSale",
-          ],
-          attributeForDistinct: "productId",
-          numericAttributesForFiltering: ["grossPrice"],
-          distinct: true,
-          searchableAttributes: [
-            "name",
-            "productName",
-            "variantName",
-            "productType",
-            "category",
-            "descriptionPlaintext",
-            "collections",
-          ],
-        });
+        return traceExternalCall(
+          () =>
+            index.setSettings({
+              attributesForFaceting: [
+                "productId",
+                "inStock",
+                "categories",
+                "attributes",
+                "collections",
+                "pricing.price.net",
+                "pricing.price.gross",
+                "pricing.discount.net",
+                "pricing.discount.gross",
+                "pricing.priceUndiscounted.net",
+                "pricing.priceUndiscounted.gross",
+                "pricing.onSale",
+              ],
+              attributeForDistinct: "productId",
+              numericAttributesForFiltering: ["grossPrice"],
+              distinct: true,
+              searchableAttributes: [
+                "name",
+                "productName",
+                "variantName",
+                "productType",
+                "category",
+                "descriptionPlaintext",
+                "collections",
+              ],
+            }),
+          {
+            name: "Algolia setSettings",
+            attributes: { indexName },
+            slowThresholdMs: ALGOLIA_SLOW_THRESHOLD_MS,
+          },
+        );
       }),
     );
   }
@@ -143,9 +166,17 @@ export class AlgoliaSearchProvider implements SearchProvider {
       this.#indexNames.map((indexName) => {
         const index = this.#algolia.initIndex(indexName);
 
-        return index.deleteBy(
-          { filters: `productId:"${product.id}"` },
-          { timeout: ALGOLIA_TIMEOUT_MS },
+        return traceExternalCall(
+          () =>
+            index.deleteBy(
+              { filters: `productId:"${product.id}"` },
+              { timeout: ALGOLIA_TIMEOUT_MS },
+            ),
+          {
+            name: "Algolia deleteBy",
+            attributes: { indexName, productId: product.id },
+            slowThresholdMs: ALGOLIA_SLOW_THRESHOLD_MS,
+          },
         );
       }),
     );

@@ -4,6 +4,7 @@ import { AppConfigMetadataManager } from "../../modules/configuration/app-config
 import { createInstrumentedGraphqlClient } from "../create-instrumented-graphql-client";
 import { createLogger } from "../logger";
 import { createSettingsManager } from "../metadata";
+import { traceExternalCall } from "../trace-external-calls";
 
 interface GetAlgoliaConfigurationArgs {
   authData: AuthData;
@@ -21,7 +22,10 @@ export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurat
   const configManager = new AppConfigMetadataManager(settings);
 
   try {
-    const config = await configManager.get(authData.saleorApiUrl);
+    const config = await traceExternalCall(() => configManager.get(authData.saleorApiUrl), {
+      name: "Saleor getAppMetadata",
+      attributes: { saleorApiUrl: authData.saleorApiUrl },
+    });
 
     if (config.getConfig()) {
       return {
