@@ -950,6 +950,9 @@ importers:
       dynamodb-toolbox:
         specifier: 'catalog:'
         version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
+      jp-zipcode-lookup:
+        specifier: 0.3.5
+        version: 0.3.5
       modern-errors:
         specifier: 'catalog:'
         version: 7.0.1
@@ -1053,6 +1056,9 @@ importers:
       graphql:
         specifier: 'catalog:'
         version: 16.7.1
+      graphql-config:
+        specifier: 5.0.3
+        version: 5.0.3(@types/node@22.13.10)(graphql@16.7.1)(typescript@5.8.2)
       graphql-tag:
         specifier: 'catalog:'
         version: 2.12.6(graphql@16.7.1)
@@ -1062,6 +1068,9 @@ importers:
       next-test-api-route-handler:
         specifier: 'catalog:'
         version: 4.0.16(next@15.2.6(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+      ts-node:
+        specifier: 10.9.2
+        version: 10.9.2(@types/node@22.13.10)(typescript@5.8.2)
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
@@ -3969,6 +3978,10 @@ packages:
     resolution: {integrity: sha512-GNQqST7zI85dAFVyao6oiTeg5rNhO9FH1ZAd397qQhvwfxrrniNfuoewu8gPXyP0R4XBiiaCwhBL7w9S/F5guw==}
     engines: {node: '>=18.0'}
 
+  '@cspotcode/source-map-support@0.8.1':
+    resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
+    engines: {node: '>=12'}
+
   '@datocms/cma-client-browser@2.0.0':
     resolution: {integrity: sha512-W5VwFLrvINFu/9Nc+wsRRnOqUqvYDrbIrXc8/FLTpfz5xTwYPdS1IUYilEDJDAlMQ2oaeLmKK0xQyANkHweNrA==}
 
@@ -4477,6 +4490,7 @@ packages:
   '@graphql-tools/prisma-loader@8.0.2':
     resolution: {integrity: sha512-8d28bIB0bZ9Bj0UOz9sHagVPW+6AHeqvGljjERtwCnWl8OCQw2c2pNboYXISLYUG5ub76r4lDciLLTU+Ks7Q0w==}
     engines: {node: '>=16.0.0'}
+    deprecated: 'This package was intended to be used with an older versions of Prisma.\nThe newer versions of Prisma has a different approach to GraphQL integration.\nTherefore, this package is no longer needed and has been deprecated and removed.\nLearn more: https://www.prisma.io/graphql'
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
 
@@ -4725,6 +4739,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@jridgewell/trace-mapping@0.3.9':
+    resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
@@ -6148,6 +6165,18 @@ packages:
     resolution: {integrity: sha512-rKOSCpJOb1MdTyJFqdf3QNNESDfPkbP+yBOZBM2x6iIOS4VlCfJqxsaSrb3uLPR6s8Ni7DhTu+cu/q1r0xOGcw==}
     engines: {node: '>=18.0.0'}
 
+  '@tsconfig/node10@1.0.12':
+    resolution: {integrity: sha512-UCYBaeFvM11aU2y3YPZ//O5Rhj+xKyzy7mvcIoAjASbigy8mHMryP5cK7dgjlz2hWxh1g5pLw084E0a/wlUSFQ==}
+
+  '@tsconfig/node12@1.0.11':
+    resolution: {integrity: sha512-cqefuRsh12pWyGsIoBKJA9luFu3mRxCA+ORZvA4ktLSzIuCUtWVxGIuXigEwO5/ywWFMZ2QEGKWvkZG1zDMTag==}
+
+  '@tsconfig/node14@1.0.3':
+    resolution: {integrity: sha512-ysT8mhdixWK6Hw3i1V2AeRqZ5WfXg1G43mqoYlM2nc6388Fq5jcXyr5mRsqViLx/GJYdoL0bfXD8nmF+Zn/Iow==}
+
+  '@tsconfig/node16@1.0.4':
+    resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
+
   '@types/aria-query@5.0.1':
     resolution: {integrity: sha512-XTIieEY+gvJ39ChLcB4If5zHtPxt3Syj5rgZR+e1ctpmK8NjPf0zFqsz4JpLJT0xla9GFDKjy8Cpu331nrmE1Q==}
 
@@ -6764,6 +6793,9 @@ packages:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
 
+  arg@4.1.3:
+    resolution: {integrity: sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==}
+
   argparse@1.0.10:
     resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
 
@@ -7304,6 +7336,9 @@ packages:
     resolution: {integrity: sha512-SnJYqAwa5Jon3cP8e3LMFBoRG2m/hX20vtOnC3ynhyAa6jmy+BqrPoicBtmKUutnJuphXPj7C54yOXF58Tl71Q==}
     engines: {node: '>=0.10.0'}
 
+  create-require@1.1.1:
+    resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+
   cross-fetch@3.1.8:
     resolution: {integrity: sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==}
 
@@ -7590,6 +7625,10 @@ packages:
 
   detect-node@2.1.0:
     resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
+
+  diff@4.0.2:
+    resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
+    engines: {node: '>=0.3.1'}
 
   diff@5.2.0:
     resolution: {integrity: sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==}
@@ -9035,6 +9074,9 @@ packages:
       react:
         optional: true
 
+  jp-zipcode-lookup@0.3.5:
+    resolution: {integrity: sha512-NeNYUMv0eCFNBeGV6eBeJg8MRF+tgM/GMvXmCbvlOj4JSb+PZE5lXI3vOQWxct8+VhP5qCnIp+jgQ2zbZzy6ew==}
+
   js-beautify@1.14.8:
     resolution: {integrity: sha512-4S7HFeI9YfRvRgKnEweohs0tgJj28InHVIj4Nl8Htf96Y6pHg3+tJrmo4ucAM9f7l4SHbFI3IvFAZ2a1eQPbyg==}
     engines: {node: '>=12'}
@@ -9339,6 +9381,9 @@ packages:
   make-dir@4.0.0:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
+
+  make-error@1.3.6:
+    resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
 
   map-cache@0.2.2:
     resolution: {integrity: sha512-8y/eV9QQZCiyn1SprXSrCmqJN0yNRATe+PO8ztwqrvrbdRLA3eYJF0yaR0YayLWkMbsQSKWS9N2gPcGEc4UsZg==}
@@ -11157,6 +11202,20 @@ packages:
   ts-log@2.2.5:
     resolution: {integrity: sha512-PGcnJoTBnVGy6yYNFxWVNkdcAuAMstvutN9MgDJIV6L0oG8fB+ZNNy1T+wJzah8RPGor1mZuPQkVfXNDpy9eHA==}
 
+  ts-node@10.9.2:
+    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
+    hasBin: true
+    peerDependencies:
+      '@swc/core': '>=1.2.50'
+      '@swc/wasm': '>=1.2.50'
+      '@types/node': '*'
+      typescript: '>=2.7'
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      '@swc/wasm':
+        optional: true
+
   ts-pattern@5.7.0:
     resolution: {integrity: sha512-0/FvIG4g3kNkYgbNwBBW5pZBkfpeYQnH+2AA3xmjkCAit/DSDPKmgwC3fKof4oYUq6gupClVOJlFl+939VRBMg==}
 
@@ -11471,6 +11530,9 @@ packages:
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
+
+  v8-compile-cache-lib@3.0.1:
+    resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
 
   valibot@1.0.0:
     resolution: {integrity: sha512-1Hc0ihzWxBar6NGeZv7fPLY0QuxFMyxwYR2sF1Blu7Wq7EnremwY2W02tit2ij2VJT8HcSkHAQqmFfl77f73Yw==}
@@ -11808,6 +11870,10 @@ packages:
   year@0.2.1:
     resolution: {integrity: sha512-9GnJUZ0QM4OgXuOzsKNzTJ5EOkums1Xc+3YQXp+Q+UxFjf7zLucp9dQ8QMIft0Szs1E1hUiXFim1OYfEKFq97w==}
     engines: {node: '>=0.8'}
+
+  yn@3.1.1:
+    resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
+    engines: {node: '>=6'}
 
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
@@ -13997,6 +14063,10 @@ snapshots:
 
   '@cspell/url@8.17.5': {}
 
+  '@cspotcode/source-map-support@0.8.1':
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.9
+
   '@datocms/cma-client-browser@2.0.0':
     dependencies:
       '@datocms/cma-client': 2.0.0
@@ -14756,7 +14826,7 @@ snapshots:
       '@babel/plugin-syntax-import-assertions': 7.23.3(@babel/core@7.26.10)
       '@babel/traverse': 7.23.9
       '@babel/types': 7.26.5
-      '@graphql-tools/utils': 10.0.13(graphql@16.11.0)
+      '@graphql-tools/utils': 10.8.6(graphql@16.11.0)
       graphql: 16.11.0
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -14769,7 +14839,7 @@ snapshots:
       '@babel/plugin-syntax-import-assertions': 7.23.3(@babel/core@7.26.10)
       '@babel/traverse': 7.23.9
       '@babel/types': 7.26.5
-      '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
+      '@graphql-tools/utils': 10.8.6(graphql@16.7.1)
       graphql: 16.7.1
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -14803,14 +14873,14 @@ snapshots:
 
   '@graphql-tools/import@7.0.0(graphql@16.11.0)':
     dependencies:
-      '@graphql-tools/utils': 10.0.13(graphql@16.11.0)
+      '@graphql-tools/utils': 10.8.6(graphql@16.11.0)
       graphql: 16.11.0
       resolve-from: 5.0.0
       tslib: 2.8.1
 
   '@graphql-tools/import@7.0.0(graphql@16.7.1)':
     dependencies:
-      '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
+      '@graphql-tools/utils': 10.8.6(graphql@16.7.1)
       graphql: 16.7.1
       resolve-from: 5.0.0
       tslib: 2.8.1
@@ -14849,13 +14919,13 @@ snapshots:
 
   '@graphql-tools/merge@9.0.2(graphql@16.11.0)':
     dependencies:
-      '@graphql-tools/utils': 10.0.13(graphql@16.11.0)
+      '@graphql-tools/utils': 10.8.6(graphql@16.11.0)
       graphql: 16.11.0
       tslib: 2.8.1
 
   '@graphql-tools/merge@9.0.2(graphql@16.7.1)':
     dependencies:
-      '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
+      '@graphql-tools/utils': 10.8.6(graphql@16.7.1)
       graphql: 16.7.1
       tslib: 2.8.1
 
@@ -15195,6 +15265,11 @@ snapshots:
   '@jridgewell/sourcemap-codec@1.5.0': {}
 
   '@jridgewell/trace-mapping@0.3.25':
+    dependencies:
+      '@jridgewell/resolve-uri': 3.1.2
+      '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@jridgewell/trace-mapping@0.3.9':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
@@ -16888,6 +16963,14 @@ snapshots:
 
   '@trpc/server@10.43.1': {}
 
+  '@tsconfig/node10@1.0.12': {}
+
+  '@tsconfig/node12@1.0.11': {}
+
+  '@tsconfig/node14@1.0.3': {}
+
+  '@tsconfig/node16@1.0.4': {}
+
   '@types/aria-query@5.0.1': {}
 
   '@types/babel__core@7.20.5':
@@ -17690,6 +17773,8 @@ snapshots:
       normalize-path: 3.0.0
       picomatch: 2.3.1
 
+  arg@4.1.3: {}
+
   argparse@1.0.10:
     dependencies:
       sprintf-js: 1.0.3
@@ -18378,6 +18463,8 @@ snapshots:
       isobject: 3.0.1
       lazy-cache: 2.0.2
 
+  create-require@1.1.1: {}
+
   cross-fetch@3.1.8:
     dependencies:
       node-fetch: 2.7.0
@@ -18679,6 +18766,8 @@ snapshots:
   detect-node-es@1.1.0: {}
 
   detect-node@2.1.0: {}
+
+  diff@4.0.2: {}
 
   diff@5.2.0: {}
 
@@ -19686,7 +19775,7 @@ snapshots:
       '@graphql-tools/load': 8.0.1(graphql@16.7.1)
       '@graphql-tools/merge': 9.0.2(graphql@16.7.1)
       '@graphql-tools/url-loader': 8.0.1(@types/node@22.13.10)(graphql@16.7.1)
-      '@graphql-tools/utils': 10.0.13(graphql@16.7.1)
+      '@graphql-tools/utils': 10.8.6(graphql@16.7.1)
       cosmiconfig: 8.3.6(typescript@5.8.2)
       graphql: 16.7.1
       jiti: 1.21.0
@@ -20373,6 +20462,8 @@ snapshots:
       '@types/react': 18.2.5
       react: 18.2.0
 
+  jp-zipcode-lookup@0.3.5: {}
+
   js-beautify@1.14.8:
     dependencies:
       config-chain: 1.1.13
@@ -20739,6 +20830,8 @@ snapshots:
   make-dir@4.0.0:
     dependencies:
       semver: 7.7.1
+
+  make-error@1.3.6: {}
 
   map-cache@0.2.2: {}
 
@@ -22853,6 +22946,24 @@ snapshots:
 
   ts-log@2.2.5: {}
 
+  ts-node@10.9.2(@types/node@22.13.10)(typescript@5.8.2):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.12
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 22.13.10
+      acorn: 8.14.1
+      acorn-walk: 8.3.2
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.8.2
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+
   ts-pattern@5.7.0: {}
 
   tsconfck@3.1.5(typescript@5.8.2):
@@ -23145,6 +23256,8 @@ snapshots:
   uuid@8.3.2: {}
 
   uuid@9.0.1: {}
+
+  v8-compile-cache-lib@3.0.1: {}
 
   valibot@1.0.0(typescript@5.8.2):
     optionalDependencies:
@@ -23517,6 +23630,8 @@ snapshots:
       yargs-parser: 21.1.1
 
   year@0.2.1: {}
+
+  yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
 

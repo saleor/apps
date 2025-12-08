@@ -284,7 +284,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   country: {
                     code: "JP",
                   },
-                  postalCode: "1234567",
+                  postalCode: "1000001",
                   countryArea: "Tokyo",
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
@@ -299,7 +299,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   country: {
                     code: "JP",
                   },
-                  postalCode: "1234567",
+                  postalCode: "1000001",
                   countryArea: "Tokyo",
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
@@ -468,7 +468,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   country: {
                     code: "JP",
                   },
-                  postalCode: "1234567",
+                  postalCode: "1000001",
                   countryArea: "Tokyo",
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
@@ -483,7 +483,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   country: {
                     code: "JP",
                   },
-                  postalCode: "1234567",
+                  postalCode: "1000001",
                   countryArea: "Tokyo",
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
@@ -584,19 +584,19 @@ describe("TransactionRefundRequestedUseCase", () => {
                   shop_transaction_id: "saleor-transaction-token",
                   billed_amount: 2500,
                   customer: {
-                    address: "TokyoTokyoShibuya1-1-1 ShibuyaApt 101",
+                    address: "Tokyo千代田区千代田1-1-1 ShibuyaApt 101",
                     company_name: "Test Company",
                     customer_name: "Doe John",
                     email: "test@example.com",
                     tel: "0123456789",
-                    zip_code: "1234567",
+                    zip_code: "1000001",
                   },
                   dest_customer: {
-                    address: "TokyoTokyoShibuya1-1-1 ShibuyaApt 101",
+                    address: "Tokyo千代田区千代田1-1-1 ShibuyaApt 101",
                     company_name: "Test Company",
                     customer_name: "Doe John",
                     tel: "0123456789",
-                    zip_code: "1234567",
+                    zip_code: "1000001",
                   },
                 },
               ],
@@ -657,7 +657,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   country: {
                     code: "JP",
                   },
-                  postalCode: "1234567",
+                  postalCode: "1000001",
                   countryArea: "Tokyo",
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
@@ -672,7 +672,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   country: {
                     code: "JP",
                   },
-                  postalCode: "1234567",
+                  postalCode: "1000001",
                   countryArea: "Tokyo",
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
@@ -746,11 +746,11 @@ describe("TransactionRefundRequestedUseCase", () => {
               transactions: [
                 {
                   dest_customer: {
-                    address: "TokyoTokyoShibuya1-1-1 ShibuyaApt 101",
+                    address: "Tokyo千代田区千代田1-1-1 ShibuyaApt 101",
                     company_name: "Test Company",
                     customer_name: "Doe John",
                     tel: "0123456789",
-                    zip_code: "1234567",
+                    zip_code: "1000001",
                   },
                   billed_amount: 1300,
                   settlement_type: "02",
@@ -758,12 +758,12 @@ describe("TransactionRefundRequestedUseCase", () => {
                   shop_transaction_id: "saleor-transaction-token",
                   np_transaction_id: mockedAtobaraiTransactionId,
                   customer: {
-                    address: "TokyoTokyoShibuya1-1-1 ShibuyaApt 101",
+                    address: "Tokyo千代田区千代田1-1-1 ShibuyaApt 101",
                     company_name: "Test Company",
                     customer_name: "Doe John",
                     email: "test@example.com",
                     tel: "0123456789",
-                    zip_code: "1234567",
+                    zip_code: "1000001",
                   },
                   goods: [
                     {
@@ -848,7 +848,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   country: {
                     code: "JP",
                   },
-                  postalCode: "1234567",
+                  postalCode: "1000001",
                   countryArea: "Tokyo",
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
@@ -863,7 +863,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                   country: {
                     code: "JP",
                   },
-                  postalCode: "1234567",
+                  postalCode: "1000001",
                   countryArea: "Tokyo",
                   streetAddress1: "1-1-1 Shibuya",
                   streetAddress2: "Apt 101",
@@ -1104,7 +1104,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 country: {
                   code: "JP",
                 },
-                postalCode: "1234567",
+                postalCode: "1000001",
                 countryArea: "Tokyo",
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
@@ -1119,7 +1119,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 country: {
                   code: "JP",
                 },
-                postalCode: "1234567",
+                postalCode: "1000001",
                 countryArea: "Tokyo",
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
@@ -1248,7 +1248,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 country: {
                   code: "JP",
                 },
-                postalCode: "1234567",
+                postalCode: "1000001",
                 countryArea: "Tokyo",
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
@@ -1263,7 +1263,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 country: {
                   code: "JP",
                 },
-                postalCode: "1234567",
+                postalCode: "1000001",
                 countryArea: "Tokyo",
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
@@ -1361,7 +1361,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 country: {
                   code: "JP",
                 },
-                postalCode: "1234567",
+                postalCode: "1000001",
                 countryArea: "Tokyo",
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
@@ -1376,7 +1376,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 country: {
                   code: "JP",
                 },
-                postalCode: "1234567",
+                postalCode: "1000001",
                 countryArea: "Tokyo",
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
@@ -1521,7 +1521,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 country: {
                   code: "JP",
                 },
-                postalCode: "1234567",
+                postalCode: "1000001",
                 countryArea: "Tokyo",
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
@@ -1536,7 +1536,7 @@ describe("TransactionRefundRequestedUseCase", () => {
                 country: {
                   code: "JP",
                 },
-                postalCode: "1234567",
+                postalCode: "1000001",
                 countryArea: "Tokyo",
                 streetAddress1: "1-1-1 Shibuya",
                 streetAddress2: "Apt 101",
