@@ -1,6 +1,6 @@
 {
   "name": "@saleor/eslint-config-apps",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "private": true,
   "license": "MIT",
   "type": "module",
