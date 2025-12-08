@@ -1,6 +1,6 @@
 {
   "name": "@saleor/apps-trpc",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "type": "module",
   "exports": {
     "./context-app-router": "./src/context-app-router.ts",
