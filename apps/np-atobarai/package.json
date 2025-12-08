@@ -58,6 +58,7 @@
     "@trpc/server": "catalog:",
     "@vercel/otel": "catalog:",
     "dynamodb-toolbox": "catalog:",
+    "jp-postal": "3.2.0",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
     "neverthrow": "catalog:",
