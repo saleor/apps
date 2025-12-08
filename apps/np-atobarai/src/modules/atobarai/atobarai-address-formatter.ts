@@ -17,6 +17,8 @@ export class AtobaraiAddressFormatter {
     const localCity = postalDataFrom.city.name;
     const localNeighbourhood = postalDataFrom.name;
 
-    return `${address.countryArea}${localCity}${localNeighbourhood}${address.streetAddress1}${address.streetAddress2}`;
+    return `${address.countryArea}${localCity ?? address.city}${
+      localNeighbourhood ?? address.cityArea
+    }${address.streetAddress1}${address.streetAddress2}`;
   };
 }

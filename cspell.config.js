@@ -37,6 +37,8 @@ export default {
     "bruno",
     "codegen",
     "Neighbourhood",
+    "neighbourhood",
+    "zipcode",
     "tseslint",
     "contentful",
     "corepack",
