@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.2.1
+
+### Patch Changes
+
+- 985bcfaa: Fallback to original address city and city area if zip code can't be resolved
+
 ## 1.2.0
 
 ### Minor Changes
