@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.2.2
+
+### Patch Changes
+
+- 8687dd7d: Accept zipcode with format "xxx-xxxx" (dash). Previously app was throwing internally, because address library was expecting different format.
+
 ## 1.2.1
 
 ### Patch Changes
