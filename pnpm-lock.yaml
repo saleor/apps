@@ -850,7 +850,7 @@ importers:
         version: 8.4.14
       pretty-quick:
         specifier: ^3.1.3
-        version: 3.1.3(prettier@3.0.3)
+        version: 3.1.3(prettier@3.5.3)
       tsx:
         specifier: 'catalog:'
         version: 4.19.3
@@ -950,9 +950,9 @@ importers:
       dynamodb-toolbox:
         specifier: 'catalog:'
         version: 2.6.4(@aws-sdk/client-dynamodb@3.651.1)(@aws-sdk/lib-dynamodb@3.651.1(@aws-sdk/client-dynamodb@3.651.1))
-      jp-postal:
-        specifier: 3.2.0
-        version: 3.2.0
+      jp-zipcode-lookup:
+        specifier: 0.3.5
+        version: 0.3.5
       modern-errors:
         specifier: 'catalog:'
         version: 7.0.1
@@ -9074,8 +9074,8 @@ packages:
       react:
         optional: true
 
-  jp-postal@3.2.0:
-    resolution: {integrity: sha512-3/qJFDeTkg7smwBKvwTc5YoG5tC2ntM7MssSu1T3FKRWA4nI4k+4zMyUKfWCxCt4YVpSVtDuMUbRiOs5HnX2nw==}
+  jp-zipcode-lookup@0.3.5:
+    resolution: {integrity: sha512-NeNYUMv0eCFNBeGV6eBeJg8MRF+tgM/GMvXmCbvlOj4JSb+PZE5lXI3vOQWxct8+VhP5qCnIp+jgQ2zbZzy6ew==}
 
   js-beautify@1.14.8:
     resolution: {integrity: sha512-4S7HFeI9YfRvRgKnEweohs0tgJj28InHVIj4Nl8Htf96Y6pHg3+tJrmo4ucAM9f7l4SHbFI3IvFAZ2a1eQPbyg==}
@@ -20462,7 +20462,7 @@ snapshots:
       '@types/react': 18.2.5
       react: 18.2.0
 
-  jp-postal@3.2.0: {}
+  jp-zipcode-lookup@0.3.5: {}
 
   js-beautify@1.14.8:
     dependencies:
@@ -21895,7 +21895,7 @@ snapshots:
     dependencies:
       parse-ms: 4.0.0
 
-  pretty-quick@3.1.3(prettier@3.0.3):
+  pretty-quick@3.1.3(prettier@3.5.3):
     dependencies:
       chalk: 3.0.0
       execa: 4.1.0
@@ -21903,7 +21903,7 @@ snapshots:
       ignore: 5.2.4
       mri: 1.2.0
       multimatch: 4.0.0
-      prettier: 3.0.3
+      prettier: 3.5.3
 
   process-nextick-args@2.0.1: {}
 
