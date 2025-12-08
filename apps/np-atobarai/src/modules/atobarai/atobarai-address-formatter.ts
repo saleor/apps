@@ -14,8 +14,8 @@ export class AtobaraiAddressFormatter {
     const zip = address.postalCode;
     const postalDataFrom = this.postalDataResolver.getNeighbourhood(zip);
 
-    const localCity = postalDataFrom.city.name;
-    const localNeighbourhood = postalDataFrom.name;
+    const localCity = postalDataFrom?.city?.name;
+    const localNeighbourhood = postalDataFrom?.name;
 
     return `${address.countryArea}${localCity ?? address.city}${
       localNeighbourhood ?? address.cityArea
