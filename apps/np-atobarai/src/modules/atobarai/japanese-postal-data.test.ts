@@ -11,7 +11,7 @@ describe("JapanesePostalData", () => {
 
   describe("getNeighbourhoods", () => {
     it("should return neighbourhood data for Tokyo Chiyoda postal code", () => {
-      const result = japanesePostalData.getNeighbourhoods("1000001");
+      const result = japanesePostalData.getNeighbourhood("1000001");
 
       expect(result).toBeDefined();
       expect(result?.code).toBe("1000001");
@@ -23,7 +23,7 @@ describe("JapanesePostalData", () => {
     });
 
     it("should return neighbourhood data for Hokkaido Sapporo postal code", () => {
-      const result = japanesePostalData.getNeighbourhoods("0600000");
+      const result = japanesePostalData.getNeighbourhood("0600000");
 
       expect(result).toBeDefined();
       expect(result?.code).toBe("0600000");
@@ -35,7 +35,7 @@ describe("JapanesePostalData", () => {
     });
 
     it("should return neighbourhood data for Tokyo Shinjuku postal code", () => {
-      const result = japanesePostalData.getNeighbourhoods("1600023");
+      const result = japanesePostalData.getNeighbourhood("1600023");
 
       expect(result).toBeDefined();
       expect(result?.code).toBe("1600023");
@@ -44,13 +44,13 @@ describe("JapanesePostalData", () => {
     });
 
     it("should return undefined for non-existent postal code", () => {
-      const result = japanesePostalData.getNeighbourhoods("0000000");
+      const result = japanesePostalData.getNeighbourhood("0000000");
 
       expect(result).toBeUndefined();
     });
 
     it("should return complete structure for Kyoto postal code", () => {
-      const result = japanesePostalData.getNeighbourhoods("6000000");
+      const result = japanesePostalData.getNeighbourhood("6000000");
 
       expect(result).toBeDefined();
       expect(result?.code).toBe("6000000");

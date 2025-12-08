@@ -2,9 +2,9 @@ import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
 import { SourceObjectFragment } from "@/generated/graphql";
+import { AtobaraiAddressFormatter } from "@/modules/atobarai/atobarai-address-formatter";
 
 import {
-  formatAddress,
   formatCustomerName,
   formatPhone,
   getEmailFromSourceObject,
@@ -58,7 +58,7 @@ export const createAtobaraiCustomer = (event: { sourceObject: SourceObjectFragme
     customer_name: formatCustomerName(billingAddress),
     company_name: billingAddress.companyName,
     zip_code: billingAddress.postalCode,
-    address: formatAddress(billingAddress),
+    address: new AtobaraiAddressFormatter().formatAddress(billingAddress),
     tel: formatPhone(billingAddress.phone),
     email: email,
   });

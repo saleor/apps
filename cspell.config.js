@@ -36,6 +36,7 @@ export default {
     "avatax",
     "bruno",
     "codegen",
+    "Neighbourhood",
     "tseslint",
     "contentful",
     "corepack",
