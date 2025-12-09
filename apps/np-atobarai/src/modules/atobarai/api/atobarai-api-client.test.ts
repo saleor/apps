@@ -155,6 +155,36 @@ describe("AtobaraiApiClient", () => {
       );
     });
 
+    it("should set apiError property when API returns an error", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json(
+        {
+          errors: [
+            {
+              codes: ["invalid_merchant_code", "another_error"],
+              id: "12345",
+            },
+          ],
+        },
+        { status: 400 },
+      );
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const result = await sandboxClient.registerTransaction(
+        mockedAtobaraiRegisterTransactionPayload,
+      );
+
+      const error = result._unsafeUnwrapErr();
+
+      expect(error).toBeInstanceOf(AtobaraiApiClientRegisterTransactionError);
+
+      if (error instanceof AtobaraiApiClientRegisterTransactionError) {
+        expect(error.apiError).toBe("invalid_merchant_code");
+      }
+    });
+
     it("should return AtobaraiRegisterTransactionSuccessResponse when NP Atobarai responds with success", async () => {
       const fetchSpy = vi.spyOn(globalThis, "fetch");
 
@@ -322,6 +352,34 @@ describe("AtobaraiApiClient", () => {
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
         `[AtobaraiApiClientChangeTransactionError: Atobarai API returned an error]`,
       );
+    });
+
+    it("should set apiError property when API returns an error", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      const mockResponse = Response.json(
+        {
+          errors: [
+            {
+              codes: ["transaction_not_found", "another_error"],
+              id: "12345",
+            },
+          ],
+        },
+        { status: 400 },
+      );
+
+      fetchSpy.mockResolvedValue(mockResponse);
+
+      const result = await sandboxClient.changeTransaction(mockedAtobaraiChangeTransactionPayload);
+
+      const error = result._unsafeUnwrapErr();
+
+      expect(error).toBeInstanceOf(AtobaraiApiClientChangeTransactionError);
+
+      if (error instanceof AtobaraiApiClientChangeTransactionError) {
+        expect(error.apiError).toBe("transaction_not_found");
+      }
     });
 
     it("should return AtobaraiTransactionSuccessResponse when NP Atobarai responds with success", async () => {

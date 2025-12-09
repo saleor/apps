@@ -186,6 +186,9 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
       return err(
         new AtobaraiApiClientChangeTransactionError("Atobarai API returned an error", {
           errors,
+          props: {
+            apiError: errors[0].code,
+          },
         }),
       );
     }
