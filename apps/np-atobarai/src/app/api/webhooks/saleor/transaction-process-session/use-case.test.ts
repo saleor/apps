@@ -109,6 +109,7 @@ describe("TransactionProcessSessionUseCase", () => {
     );
   });
 
+  // todo check if error returned
   it("should return Failure response with ChargeFailureResult when Atobarai returns CreditCheckResult.Failed", async () => {
     const mockFailedTransaction = createAtobaraiTransactionSuccessResponse({
       results: [
@@ -146,6 +147,7 @@ describe("TransactionProcessSessionUseCase", () => {
     expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
   });
 
+  // todo check if error returned
   it("should return Failure response with ChargeFailureResult when Atobarai returns CreditCheckResult.BeforeReview", async () => {
     const mockBeforeReviewTransaction = createAtobaraiTransactionSuccessResponse({
       results: [
@@ -183,7 +185,11 @@ describe("TransactionProcessSessionUseCase", () => {
   });
 
   it("should return Failure response when Atobarai API returns an error", async () => {
-    const mockApiError = new AtobaraiApiClientChangeTransactionError("API Error");
+    const mockApiError = new AtobaraiApiClientChangeTransactionError("API Error", {
+      props: {
+        apiError: "test-api-error-code",
+      },
+    });
 
     vi.spyOn(mockedAtobaraiApiClient, "changeTransaction").mockResolvedValue(err(mockApiError));
 
@@ -202,9 +208,14 @@ describe("TransactionProcessSessionUseCase", () => {
       event: mockedTransactionProcessSessionEvent,
     });
 
-    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionProcessSessionUseCaseResponse.Failure,
-    );
+    const response = responsePayload._unsafeUnwrap();
+
+    expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
+
+    const responseJson = await response.getResponse().json();
+
+    // @ts-expect-error testing arbitrary json
+    expect(responseJson.data.errors[0].apiError).toBe("test-api-error-code");
   });
 
   it("should return MalformedRequestResponse when event is missing issuedAt", async () => {

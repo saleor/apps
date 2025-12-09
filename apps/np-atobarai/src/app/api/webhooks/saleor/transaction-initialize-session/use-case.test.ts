@@ -193,7 +193,11 @@ describe("TransactionInitializeSessionUseCase", () => {
   });
 
   it("should return Failure response when Atobarai API returns an error", async () => {
-    const mockApiError = new AtobaraiApiClientRegisterTransactionError("API Error");
+    const mockApiError = new AtobaraiApiClientRegisterTransactionError("API Error", {
+      props: {
+        apiError: "test-api-error",
+      },
+    });
 
     vi.spyOn(mockedAtobaraiApiClient, "registerTransaction").mockResolvedValue(err(mockApiError));
 
@@ -213,9 +217,14 @@ describe("TransactionInitializeSessionUseCase", () => {
       event: mockedTransactionInitializeSessionEvent,
     });
 
-    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionInitializeSessionUseCaseResponse.Failure,
-    );
+    const response = responsePayload._unsafeUnwrap();
+
+    expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponse.Failure);
+
+    const responseJson = await response.getResponse().json();
+
+    //@ts-expect-error - testing arbitrary json, not typed
+    expect(responseJson.data.errors[0].apiError).toBe("test-api-error");
   });
 
   it("should return MalformedRequestResponse when event is missing issuedAt", async () => {

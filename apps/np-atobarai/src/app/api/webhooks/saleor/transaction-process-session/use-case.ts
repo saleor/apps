@@ -162,6 +162,10 @@ export class TransactionProcessSessionUseCase extends BaseUseCase {
         new TransactionProcessSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
           error: changeTransactionResult.error,
+          apiError:
+            "apiError" in changeTransactionResult.error
+              ? changeTransactionResult.error.apiError
+              : undefined,
         }),
       );
     }
