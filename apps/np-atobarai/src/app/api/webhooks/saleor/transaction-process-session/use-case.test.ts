@@ -109,7 +109,6 @@ describe("TransactionProcessSessionUseCase", () => {
     );
   });
 
-  // todo check if error returned
   it("should return Failure response with ChargeFailureResult when Atobarai returns CreditCheckResult.Failed", async () => {
     const mockFailedTransaction = createAtobaraiTransactionSuccessResponse({
       results: [
@@ -140,14 +139,26 @@ describe("TransactionProcessSessionUseCase", () => {
       event: mockedTransactionProcessSessionEvent,
     });
 
-    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionProcessSessionUseCaseResponse.Failure,
-    );
+    const response = responsePayload._unsafeUnwrap();
 
-    expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
+    expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
+    expect(response.transactionResult).toBeInstanceOf(ChargeFailureResult);
+
+    // Verify error details in response
+    const responseJson = await response.getResponse().json();
+
+    // @ts-expect-error testing arbitrary json
+    expect(responseJson.data.errors[0].code).toBe("AtobaraiFailureTransactionError");
+    // @ts-expect-error testing arbitrary json
+    expect(responseJson.data.errors[0].message).toBe("Atobarai returned failed transaction");
+    /*
+     * Note: apiError is undefined here because this is a business logic error, not an API error
+     * The API call succeeded but returned a failed transaction status
+     * @ts-expect-error testing arbitrary json
+     */
+    expect(responseJson.data.errors[0].apiError).toBeUndefined();
   });
 
-  // todo check if error returned
   it("should return Failure response with ChargeFailureResult when Atobarai returns CreditCheckResult.BeforeReview", async () => {
     const mockBeforeReviewTransaction = createAtobaraiTransactionSuccessResponse({
       results: [
@@ -177,11 +188,23 @@ describe("TransactionProcessSessionUseCase", () => {
       event: mockedTransactionProcessSessionEvent,
     });
 
-    expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
-      TransactionProcessSessionUseCaseResponse.Failure,
-    );
+    const response = responsePayload._unsafeUnwrap();
 
-    expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(ChargeFailureResult);
+    expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
+    expect(response.transactionResult).toBeInstanceOf(ChargeFailureResult);
+
+    // Verify error details in response
+    const responseJson = await response.getResponse().json();
+
+    // @ts-expect-error testing arbitrary json
+    expect(responseJson.data.errors[0].code).toBe("AtobaraiFailureTransactionError");
+    // @ts-expect-error testing arbitrary json
+    expect(responseJson.data.errors[0].message).toBe("Atobarai returned failed transaction");
+    /*
+     * Note: apiError is undefined here because this is a business logic error, not an API error
+     * @ts-expect-error testing arbitrary json
+     */
+    expect(responseJson.data.errors[0].apiError).toBeUndefined();
   });
 
   it("should return Failure response when Atobarai API returns an error", async () => {
@@ -278,5 +301,101 @@ describe("TransactionProcessSessionUseCase", () => {
     });
 
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
+  });
+
+  describe("Integration - Full HTTP Flow", () => {
+    it("should propagate apiError from HTTP 400 response through to final response", async () => {
+      // Mock fetch to return Atobarai API error
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      fetchSpy.mockResolvedValue(
+        Response.json(
+          {
+            errors: [
+              {
+                codes: ["TRANSACTION_NOT_FOUND", "ANOTHER_ERROR"],
+                id: "error-12345",
+              },
+            ],
+          },
+          { status: 400 },
+        ),
+      );
+
+      vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+        ok(mockedAppChannelConfig),
+      );
+
+      // Use real API client factory (not mocked)
+      const { AtobaraiApiClientFactory } = await import(
+        "@/modules/atobarai/api/atobarai-api-client-factory"
+      );
+      const realApiClientFactory = new AtobaraiApiClientFactory();
+
+      const uc = new TransactionProcessSessionUseCase({
+        appConfigRepo: mockedAppConfigRepo,
+        atobaraiApiClientFactory: realApiClientFactory,
+      });
+
+      const responsePayload = await uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: mockedTransactionProcessSessionEvent,
+      });
+
+      const response = responsePayload._unsafeUnwrap();
+
+      expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
+
+      const responseJson = await response.getResponse().json();
+
+      /*
+       * Verify API error code propagates end-to-end
+       * @ts-expect-error testing arbitrary json
+       */
+      expect(responseJson.data.errors[0].apiError).toBe("TRANSACTION_NOT_FOUND");
+      // @ts-expect-error testing arbitrary json
+      expect(responseJson.data.errors[0].code).toBe("AtobaraiChangeTransactionError");
+    });
+
+    it("should handle network errors in full HTTP flow", async () => {
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      fetchSpy.mockRejectedValue(new Error("Network connection failed"));
+
+      vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+        ok(mockedAppChannelConfig),
+      );
+
+      const { AtobaraiApiClientFactory } = await import(
+        "@/modules/atobarai/api/atobarai-api-client-factory"
+      );
+      const realApiClientFactory = new AtobaraiApiClientFactory();
+
+      const uc = new TransactionProcessSessionUseCase({
+        appConfigRepo: mockedAppConfigRepo,
+        atobaraiApiClientFactory: realApiClientFactory,
+      });
+
+      const responsePayload = await uc.execute({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        event: mockedTransactionProcessSessionEvent,
+      });
+
+      const response = responsePayload._unsafeUnwrap();
+
+      expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
+
+      const responseJson = await response.getResponse().json();
+
+      /*
+       * Network errors don't have apiError
+       * @ts-expect-error testing arbitrary json
+       */
+      expect(responseJson.data.errors[0].apiError).toBeUndefined();
+      // @ts-expect-error testing arbitrary json
+      expect(responseJson.data.errors[0].code).toBe("AtobaraiChangeTransactionError");
+    });
   });
 });
