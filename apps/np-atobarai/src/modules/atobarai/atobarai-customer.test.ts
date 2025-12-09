@@ -43,12 +43,12 @@ describe("createAtobaraiCustomer", () => {
 
     expect(customer).toMatchInlineSnapshot(`
       {
-        "address": "BillingCountryAreaTokyoShibuyaBillingStreetAddress1BillingStreetAddress2",
+        "address": "BillingCountryArea千代田区千代田BillingStreetAddress1BillingStreetAddress2",
         "company_name": "BillingCompanyName",
         "customer_name": "BillingLastName BillingFirstName",
         "email": "source-object@email.com",
         "tel": "0billingPhone",
-        "zip_code": "BillingPostalCode",
+        "zip_code": "1000001",
       }
     `);
   });
@@ -60,12 +60,12 @@ describe("createAtobaraiCustomer", () => {
 
     expect(customer).toMatchInlineSnapshot(`
       {
-        "address": "BillingCountryAreaTokyoShibuyaBillingStreetAddress1BillingStreetAddress2",
+        "address": "BillingCountryArea千代田区千代田BillingStreetAddress1BillingStreetAddress2",
         "company_name": "BillingCompanyName",
         "customer_name": "BillingLastName BillingFirstName",
         "email": "user-order-email@example.com",
         "tel": "0billingPhone",
-        "zip_code": "BillingPostalCode",
+        "zip_code": "1000001",
       }
     `);
   });

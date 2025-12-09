@@ -43,11 +43,11 @@ describe("createAtobaraiDeliveryDestination", () => {
 
     expect(deliveryDestination).toMatchInlineSnapshot(`
       {
-        "address": "ShippingCountryAreaTokyoShibuyaShippingStreetAddress1ShippingStreetAddress2",
+        "address": "ShippingCountryArea千代田区千代田ShippingStreetAddress1ShippingStreetAddress2",
         "company_name": "ShippingCompanyName",
         "customer_name": "ShippingLastName ShippingFirstName",
         "tel": "0shippingPhone",
-        "zip_code": "ShippingPostalCode",
+        "zip_code": "1000001",
       }
     `);
   });
@@ -59,11 +59,11 @@ describe("createAtobaraiDeliveryDestination", () => {
 
     expect(deliveryDestination).toMatchInlineSnapshot(`
       {
-        "address": "ShippingCountryAreaTokyoShibuyaShippingStreetAddress1ShippingStreetAddress2",
+        "address": "ShippingCountryArea千代田区千代田ShippingStreetAddress1ShippingStreetAddress2",
         "company_name": "ShippingCompanyName",
         "customer_name": "ShippingLastName ShippingFirstName",
         "tel": "0shippingPhone",
-        "zip_code": "ShippingPostalCode",
+        "zip_code": "1000001",
       }
     `);
   });

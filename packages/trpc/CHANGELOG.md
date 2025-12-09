@@ -1,5 +1,11 @@
 # @saleor/apps-trpc
 
+## 4.0.4
+
+### Patch Changes
+
+- 98459d79: Updated Next.js to 15.2.6
+
 ## 4.0.3
 
 ### Patch Changes
