@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
+import { DYNAMODB_SLOW_THRESHOLD_MS, traceExternalCall } from "../../lib/trace-external-calls";
 import { middleware, procedure } from "./trpc-server";
 
 const logger = createLogger("protectedClientProcedure");
@@ -12,7 +13,9 @@ const logger = createLogger("protectedClientProcedure");
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");
 
-  if (!ctx.saleorApiUrl) {
+  const { saleorApiUrl } = ctx;
+
+  if (!saleorApiUrl) {
     logger.debug("ctx.saleorApiUrl not found, throwing");
 
     throw new TRPCError({
@@ -21,7 +24,11 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
     });
   }
 
-  const authData = await saleorApp.apl.get(ctx.saleorApiUrl);
+  const authData = await traceExternalCall(() => saleorApp.apl.get(saleorApiUrl), {
+    name: "APL get auth data",
+    attributes: { saleorApiUrl },
+    slowThresholdMs: DYNAMODB_SLOW_THRESHOLD_MS,
+  });
 
   if (!authData) {
     logger.warn("authData not found, throwing 401");
