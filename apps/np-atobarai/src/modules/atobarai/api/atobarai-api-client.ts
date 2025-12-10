@@ -133,6 +133,9 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
       return err(
         new AtobaraiApiClientRegisterTransactionError("Atobarai API returned an error", {
           errors,
+          props: {
+            apiError: errors.length > 0 ? errors[0].code : undefined,
+          },
         }),
       );
     }
@@ -183,6 +186,9 @@ export class AtobaraiApiClient implements IAtobaraiApiClient {
       return err(
         new AtobaraiApiClientChangeTransactionError("Atobarai API returned an error", {
           errors,
+          props: {
+            apiError: errors.length > 0 ? errors[0].code : undefined,
+          },
         }),
       );
     }
