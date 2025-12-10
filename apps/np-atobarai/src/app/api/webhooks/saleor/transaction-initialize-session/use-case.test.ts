@@ -379,15 +379,14 @@ describe("TransactionInitializeSessionUseCase", () => {
       const response = responsePayload._unsafeUnwrap();
 
       expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponse.Failure);
-
-      const responseJson = await response.getResponse().json();
+      // eslint-disable-next-line
+      const responseJson = (await response.getResponse().json()) as any;
 
       /*
        * Verify API error code propagates end-to-end
        * @ts-expect-error testing arbitrary json
        */
       expect(responseJson.data.errors[0].apiError).toBe("INVALID_MERCHANT_CODE");
-      // @ts-expect-error testing arbitrary json
       expect(responseJson.data.errors[0].code).toBe("AtobaraiRegisterTransactionError");
     });
 
@@ -421,14 +420,10 @@ describe("TransactionInitializeSessionUseCase", () => {
 
       expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponse.Failure);
 
-      const responseJson = await response.getResponse().json();
+      // eslint-disable-next-line
+      const responseJson = (await response.getResponse().json()) as any;
 
-      /*
-       * Network errors don't have apiError
-       * @ts-expect-error testing arbitrary json
-       */
       expect(responseJson.data.errors[0].apiError).toBeUndefined();
-      // @ts-expect-error testing arbitrary json
       expect(responseJson.data.errors[0].code).toBe("AtobaraiRegisterTransactionError");
     });
   });

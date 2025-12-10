@@ -144,12 +144,10 @@ describe("TransactionProcessSessionUseCase", () => {
     expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
     expect(response.transactionResult).toBeInstanceOf(ChargeFailureResult);
 
-    // Verify error details in response
-    const responseJson = await response.getResponse().json();
+    // eslint-disable-next-line
+    const responseJson = (await response.getResponse().json()) as any;
 
-    // @ts-expect-error testing arbitrary json
     expect(responseJson.data.errors[0].code).toBe("AtobaraiFailureTransactionError");
-    // @ts-expect-error testing arbitrary json
     expect(responseJson.data.errors[0].message).toBe("Atobarai returned failed transaction");
     /*
      * Note: apiError is undefined here because this is a business logic error, not an API error
@@ -193,12 +191,10 @@ describe("TransactionProcessSessionUseCase", () => {
     expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
     expect(response.transactionResult).toBeInstanceOf(ChargeFailureResult);
 
-    // Verify error details in response
-    const responseJson = await response.getResponse().json();
+    // eslint-disable-next-line
+    const responseJson = (await response.getResponse().json()) as any;
 
-    // @ts-expect-error testing arbitrary json
     expect(responseJson.data.errors[0].code).toBe("AtobaraiFailureTransactionError");
-    // @ts-expect-error testing arbitrary json
     expect(responseJson.data.errors[0].message).toBe("Atobarai returned failed transaction");
     /*
      * Note: apiError is undefined here because this is a business logic error, not an API error
@@ -347,14 +343,14 @@ describe("TransactionProcessSessionUseCase", () => {
 
       expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
 
-      const responseJson = await response.getResponse().json();
+      // eslint-disable-next-line
+      const responseJson = (await response.getResponse().json()) as any;
 
       /*
        * Verify API error code propagates end-to-end
        * @ts-expect-error testing arbitrary json
        */
       expect(responseJson.data.errors[0].apiError).toBe("TRANSACTION_NOT_FOUND");
-      // @ts-expect-error testing arbitrary json
       expect(responseJson.data.errors[0].code).toBe("AtobaraiChangeTransactionError");
     });
 
@@ -387,14 +383,14 @@ describe("TransactionProcessSessionUseCase", () => {
 
       expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
 
-      const responseJson = await response.getResponse().json();
+      // eslint-disable-next-line
+      const responseJson = (await response.getResponse().json()) as any;
 
       /*
        * Network errors don't have apiError
        * @ts-expect-error testing arbitrary json
        */
       expect(responseJson.data.errors[0].apiError).toBeUndefined();
-      // @ts-expect-error testing arbitrary json
       expect(responseJson.data.errors[0].code).toBe("AtobaraiChangeTransactionError");
     });
   });
