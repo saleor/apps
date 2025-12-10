@@ -206,7 +206,7 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
           // todo test
           apiError:
             "apiError" in registerTransactionResult.error
-              ? (registerTransactionResult.error.apiError as string)
+              ? registerTransactionResult.error.apiError
               : undefined,
         }),
       );
