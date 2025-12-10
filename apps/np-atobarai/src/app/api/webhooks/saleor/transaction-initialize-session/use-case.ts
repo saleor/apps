@@ -203,7 +203,6 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
         new TransactionInitializeSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
           error: registerTransactionResult.error,
-          // todo test
           apiError:
             "apiError" in registerTransactionResult.error
               ? registerTransactionResult.error.apiError
