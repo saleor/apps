@@ -83,6 +83,7 @@ export const AtobaraiApiClientRegisterTransactionError = BaseError.subclass(
       _brand: "AtobaraiApiClientRegisterTransactionError" as const,
       publicCode: AtobaraiApiClientRegisterTransactionErrorPublicCode,
       publicMessage: "Failed to register transaction with Atobarai",
+      apiError: undefined as string | undefined,
     },
   },
 );
@@ -97,6 +98,7 @@ export const AtobaraiApiClientChangeTransactionError = BaseError.subclass(
       _brand: "AtobaraiApiClientChangeTransactionError" as const,
       publicCode: AtobaraiApiClientChangeTransactionErrorPublicCode,
       publicMessage: "Failed to change transaction with Atobarai",
+      apiError: undefined as string | undefined,
     },
   },
 );

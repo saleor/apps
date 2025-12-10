@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
+import { AtobaraiApiClient } from "@/modules/atobarai/api/atobarai-api-client";
 import {
   AtobaraiApiClientRegisterTransactionError,
   AtobaraiMultipleResultsError,
@@ -121,10 +122,13 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
   describe("Failure", () => {
     describe("with ChargeFailureResult and AtobaraiApiClientRegisterTransactionError", () => {
       it("getResponse() returns valid Response with status 200 and failure result with error details", async () => {
-        const error = new AtobaraiApiClientRegisterTransactionError("API error occurred");
+        const error = new AtobaraiApiClientRegisterTransactionError("API error occurred", {
+          errors: [new AtobaraiApiClient.AtobaraiApiError("API returned an error")],
+        });
         const response = new TransactionInitializeSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
           error,
+          apiError: "ABCDEF",
         });
 
         const fetchResponse = response.getResponse();
@@ -136,6 +140,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
             "data": {
               "errors": [
                 {
+                  "apiError": "ABCDEF",
                   "code": "AtobaraiRegisterTransactionError",
                   "message": "Failed to register transaction with Atobarai",
                 },
@@ -153,6 +158,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
         const response = new TransactionInitializeSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
           error: new AtobaraiFailureTransactionError("Pending status"),
+          apiError: "ABCDEF",
         });
 
         const fetchResponse = response.getResponse();
@@ -164,6 +170,7 @@ describe("TransactionInitializeSessionUseCaseResponse", () => {
             "data": {
               "errors": [
                 {
+                  "apiError": "ABCDEF",
                   "code": "AtobaraiFailureTransactionError",
                   "message": "Atobarai returned failed transaction",
                 },

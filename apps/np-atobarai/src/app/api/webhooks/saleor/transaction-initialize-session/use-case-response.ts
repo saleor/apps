@@ -65,6 +65,11 @@ class Success extends SuccessWebhookResponse {
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
   readonly error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors;
+  /**
+   * There are different errors that can be passed, not all are related to API,
+   * so we pass optional api error separately
+   */
+  readonly apiError?: string;
 
   private static ResponseDataSchema = z.object({
     errors: z.array(
@@ -75,6 +80,7 @@ class Failure extends SuccessWebhookResponse {
           z.literal(AtobaraiMultipleResultsErrorPublicCode),
         ]),
         message: z.string(),
+        apiError: z.string().optional(),
       }),
     ),
   });
@@ -82,10 +88,12 @@ class Failure extends SuccessWebhookResponse {
   constructor(args: {
     transactionResult: ChargeFailureResult;
     error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors;
+    apiError?: string;
   }) {
     super();
     this.transactionResult = args.transactionResult;
     this.error = args.error;
+    this.apiError = args.apiError;
   }
 
   getResponse(): Response {
@@ -95,6 +103,7 @@ class Failure extends SuccessWebhookResponse {
           {
             code: this.error.publicCode,
             message: this.error.publicMessage,
+            apiError: this.apiError,
           },
         ],
       }),

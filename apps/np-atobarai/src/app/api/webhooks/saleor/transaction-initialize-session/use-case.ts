@@ -141,6 +141,7 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
       case CreditCheckResult.BeforeReview:
         return ok(
           new TransactionInitializeSessionUseCaseResponse.Failure({
+            apiError: transaction.authori_result,
             transactionResult: new ChargeFailureResult(),
             error: new AtobaraiFailureTransactionError(
               `Atobarai transaction failed with result: ${transaction.authori_result}`,
@@ -202,6 +203,11 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
         new TransactionInitializeSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
           error: registerTransactionResult.error,
+          // todo test
+          apiError:
+            "apiError" in registerTransactionResult.error
+              ? registerTransactionResult.error.apiError
+              : undefined,
         }),
       );
     }
