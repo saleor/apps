@@ -66,7 +66,7 @@ class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
   readonly error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors;
   /**
-   * There are different errors that can be passed, not every related to API,
+   * There are different errors that can be passed, not all are related to API,
    * so we pass optional api error separately
    */
   readonly apiError?: string;
