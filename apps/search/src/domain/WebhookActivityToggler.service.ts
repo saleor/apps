@@ -1,3 +1,4 @@
+import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
 import { Client, OperationResult } from "urql";
 
 import {
@@ -9,7 +10,6 @@ import {
   RemoveWebhookDocument,
 } from "../../generated/graphql";
 import { createLogger } from "../lib/logger";
-import { traceExternalCall } from "../lib/trace-external-calls";
 
 const logger = createLogger("WebhookActivityTogglerService");
 
@@ -31,6 +31,12 @@ export interface IWebhookActivityTogglerService {
 }
 
 export class WebhooksActivityClient implements IWebhooksActivityClient {
+  private traceFetchWebhooks = createTraceEffect({ name: "Saleor fetchAppWebhooks" });
+  private traceDisableWebhook = createTraceEffect({ name: "Saleor disableWebhook" });
+  private traceEnableWebhook = createTraceEffect({ name: "Saleor enableWebhook" });
+  private traceCreateWebhook = createTraceEffect({ name: "Saleor createWebhook" });
+  private traceRemoveWebhook = createTraceEffect({ name: "Saleor removeWebhook" });
+
   constructor(private client: Pick<Client, "query" | "mutation">) {}
 
   private handleOperationFailure(r: OperationResult) {
@@ -43,9 +49,9 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
   }
 
   fetchAppWebhooksIDs(id: string) {
-    return traceExternalCall(
+    return this.traceFetchWebhooks(
       () => this.client.query(FetchOwnWebhooksDocument, { id }).toPromise(),
-      { name: "Saleor fetchAppWebhooks", attributes: { appId: id } },
+      { appId: id },
     ).then((r) => {
       this.handleOperationFailure(r);
 
@@ -58,9 +64,9 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
   }
 
   disableSingleWebhook(id: string): Promise<void> {
-    return traceExternalCall(
+    return this.traceDisableWebhook(
       () => this.client.mutation(DisableWebhookDocument, { id }).toPromise(),
-      { name: "Saleor disableWebhook", attributes: { webhookId: id } },
+      { webhookId: id },
     ).then((r) => {
       this.handleOperationFailure(r);
 
@@ -69,9 +75,9 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
   }
 
   enableSingleWebhook(id: string): Promise<void> {
-    return traceExternalCall(
+    return this.traceEnableWebhook(
       () => this.client.mutation(EnableWebhookDocument, { id }).toPromise(),
-      { name: "Saleor enableWebhook", attributes: { webhookId: id } },
+      { webhookId: id },
     ).then((r) => {
       this.handleOperationFailure(r);
 
@@ -80,9 +86,8 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
   }
 
   createWebhook(input: CreateWebhookMutationVariables["input"]): Promise<void> {
-    return traceExternalCall(
-      () => this.client.mutation(CreateWebhookDocument, { input }).toPromise(),
-      { name: "Saleor createWebhook" },
+    return this.traceCreateWebhook(() =>
+      this.client.mutation(CreateWebhookDocument, { input }).toPromise(),
     ).then((r) => {
       this.handleOperationFailure(r);
 
@@ -91,9 +96,9 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
   }
 
   removeSingleWebhook(id: string): Promise<void> {
-    return traceExternalCall(
+    return this.traceRemoveWebhook(
       () => this.client.mutation(RemoveWebhookDocument, { id }).toPromise(),
-      { name: "Saleor removeWebhook", attributes: { webhookId: id } },
+      { webhookId: id },
     ).then((r) => {
       this.handleOperationFailure(r);
 

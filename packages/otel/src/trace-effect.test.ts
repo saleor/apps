@@ -1,19 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { traceExternalCall } from "./trace-external-calls";
+import { createTraceEffect, DEFAULT_SLOW_THRESHOLD_MS } from "./trace-effect";
 
 const mockLogger = vi.hoisted(() => ({
   debug: vi.fn(),
   warn: vi.fn(),
   error: vi.fn(),
+  getSubLogger: vi.fn(() => mockLogger),
 }));
 
-vi.mock("./logger", () => ({
-  createLogger: () => mockLogger,
+vi.mock("@saleor/apps-logger", () => ({
+  rootLogger: mockLogger,
 }));
 
-describe("trace-external-calls", () => {
-  describe("traceExternalCall", () => {
+describe("trace-effect", () => {
+  describe("createTraceEffect", () => {
     beforeEach(() => {
       vi.clearAllMocks();
       vi.useFakeTimers();
@@ -26,8 +27,9 @@ describe("trace-external-calls", () => {
     it("returns the result of the operation", async () => {
       const expectedResult = { data: "test" };
       const operation = vi.fn().mockResolvedValue(expectedResult);
+      const trace = createTraceEffect({ name: "Test operation" });
 
-      const result = await traceExternalCall(operation, { name: "Test operation" });
+      const result = await trace(operation);
 
       expect(result).toStrictEqual(expectedResult);
       expect(operation).toHaveBeenCalledOnce();
@@ -36,19 +38,16 @@ describe("trace-external-calls", () => {
     it("throws when operation fails", async () => {
       const error = new Error("Operation failed");
       const operation = vi.fn().mockRejectedValue(error);
+      const trace = createTraceEffect({ name: "Test operation" });
 
-      await expect(traceExternalCall(operation, { name: "Test operation" })).rejects.toThrow(
-        "Operation failed",
-      );
+      await expect(trace(operation)).rejects.toThrow("Operation failed");
     });
 
     it("logs debug on start and finish for fast operations", async () => {
       const operation = vi.fn().mockResolvedValue("result");
+      const trace = createTraceEffect({ name: "Test operation" });
 
-      await traceExternalCall(operation, {
-        name: "Test operation",
-        attributes: { foo: "bar" },
-      });
+      await trace(operation, { foo: "bar" });
 
       expect(mockLogger.debug).toHaveBeenCalledWith("Starting: Test operation", { foo: "bar" });
       expect(mockLogger.debug).toHaveBeenCalledWith(
@@ -65,14 +64,12 @@ describe("trace-external-calls", () => {
 
         return "result";
       });
+      const trace = createTraceEffect({ name: "Slow operation", slowThresholdMs: 100 });
 
-      await traceExternalCall(operation, {
-        name: "Slow operation",
-        slowThresholdMs: 100,
-      });
+      await trace(operation);
 
       expect(mockLogger.warn).toHaveBeenCalledWith(
-        "Slow external call: Slow operation",
+        "Slow effect: Slow operation",
         expect.objectContaining({
           durationMs: expect.any(Number),
           slowThresholdMs: 100,
@@ -88,11 +85,9 @@ describe("trace-external-calls", () => {
 
         return "result";
       });
+      const trace = createTraceEffect({ name: "Fast operation", slowThresholdMs: 100 });
 
-      await traceExternalCall(operation, {
-        name: "Fast operation",
-        slowThresholdMs: 100,
-      });
+      await trace(operation);
 
       expect(mockLogger.warn).not.toHaveBeenCalled();
       expect(mockLogger.debug).toHaveBeenCalledWith(
@@ -104,11 +99,12 @@ describe("trace-external-calls", () => {
     it("logs error when operation fails", async () => {
       const error = new Error("Something went wrong");
       const operation = vi.fn().mockRejectedValue(error);
+      const trace = createTraceEffect({ name: "Failing operation" });
 
-      await expect(traceExternalCall(operation, { name: "Failing operation" })).rejects.toThrow();
+      await expect(trace(operation)).rejects.toThrow();
 
       expect(mockLogger.error).toHaveBeenCalledWith(
-        "External call failed: Failing operation",
+        "Effect failed: Failing operation",
         expect.objectContaining({
           durationMs: expect.any(Number),
           error: "Something went wrong",
@@ -118,13 +114,12 @@ describe("trace-external-calls", () => {
 
     it("logs error with string representation for non-Error objects", async () => {
       const operation = vi.fn().mockRejectedValue("string error");
+      const trace = createTraceEffect({ name: "Failing operation" });
 
-      await expect(traceExternalCall(operation, { name: "Failing operation" })).rejects.toBe(
-        "string error",
-      );
+      await expect(trace(operation)).rejects.toBe("string error");
 
       expect(mockLogger.error).toHaveBeenCalledWith(
-        "External call failed: Failing operation",
+        "Effect failed: Failing operation",
         expect.objectContaining({
           error: "string error",
         }),
@@ -134,11 +129,9 @@ describe("trace-external-calls", () => {
     it("includes attributes in all log calls", async () => {
       const attributes = { indexName: "test-index", objectsCount: 5 };
       const operation = vi.fn().mockResolvedValue("result");
+      const trace = createTraceEffect({ name: "Test operation" });
 
-      await traceExternalCall(operation, {
-        name: "Test operation",
-        attributes,
-      });
+      await trace(operation, attributes);
 
       expect(mockLogger.debug).toHaveBeenCalledWith("Starting: Test operation", attributes);
       expect(mockLogger.debug).toHaveBeenCalledWith(
@@ -154,14 +147,19 @@ describe("trace-external-calls", () => {
 
         return "result";
       });
+      const trace = createTraceEffect({ name: "Test operation" });
 
-      await traceExternalCall(operation, { name: "Test operation" });
+      await trace(operation);
 
       expect(mockLogger.warn).not.toHaveBeenCalled();
       expect(mockLogger.debug).toHaveBeenCalledWith(
         "Finished: Test operation",
         expect.objectContaining({ durationMs: expect.any(Number) }),
       );
+    });
+
+    it("exports DEFAULT_SLOW_THRESHOLD_MS constant", () => {
+      expect(DEFAULT_SLOW_THRESHOLD_MS).toBe(5000);
     });
   });
 });

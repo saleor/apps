@@ -1,14 +1,20 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
+import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
 import { TRPCError } from "@trpc/server";
 
 import { saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
-import { DYNAMODB_SLOW_THRESHOLD_MS, traceExternalCall } from "../../lib/trace-external-calls";
+import { DYNAMODB_SLOW_THRESHOLD_MS } from "../../lib/trace-effect-thresholds";
 import { middleware, procedure } from "./trpc-server";
 
 const logger = createLogger("protectedClientProcedure");
+
+const traceAplGet = createTraceEffect({
+  name: "APL get auth data",
+  slowThresholdMs: DYNAMODB_SLOW_THRESHOLD_MS,
+});
 
 const attachAppToken = middleware(async ({ ctx, next }) => {
   logger.debug("attachAppToken middleware");
@@ -24,11 +30,7 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
     });
   }
 
-  const authData = await traceExternalCall(() => saleorApp.apl.get(saleorApiUrl), {
-    name: "APL get auth data",
-    attributes: { saleorApiUrl },
-    slowThresholdMs: DYNAMODB_SLOW_THRESHOLD_MS,
-  });
+  const authData = await traceAplGet(() => saleorApp.apl.get(saleorApiUrl), { saleorApiUrl });
 
   if (!authData) {
     logger.warn("authData not found, throwing 401");

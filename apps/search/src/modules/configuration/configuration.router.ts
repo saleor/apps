@@ -1,10 +1,10 @@
+import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
 import { TRPCError } from "@trpc/server";
 
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
 import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 import { createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../../lib/metadata";
-import { traceExternalCall } from "../../lib/trace-external-calls";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";
@@ -12,6 +12,10 @@ import { AppConfigurationSchema, FieldsConfigSchema } from "./configuration";
 import { fetchLegacyConfiguration } from "./legacy-configuration";
 
 const logger = createLogger("configuration.router");
+
+const traceGetMetadata = createTraceEffect({ name: "Saleor getAppMetadata" });
+const traceSetMetadata = createTraceEffect({ name: "Saleor setAppMetadata" });
+const traceGetLegacyMetadata = createTraceEffect({ name: "Saleor getLegacyMetadata" });
 
 export const configurationRouter = router({
   getConfig: protectedClientProcedure.query(async ({ ctx }) => {
@@ -22,9 +26,9 @@ export const configurationRouter = router({
      */
     const domain = new URL(ctx.saleorApiUrl).host;
 
-    const config = await traceExternalCall(
+    const config = await traceGetMetadata(
       () => new AppConfigMetadataManager(settingsManager).get(ctx.saleorApiUrl),
-      { name: "Saleor getAppMetadata", attributes: { saleorApiUrl: ctx.saleorApiUrl } },
+      { saleorApiUrl: ctx.saleorApiUrl },
     );
 
     /**
@@ -36,9 +40,9 @@ export const configurationRouter = router({
       /**
        * Otherwise fetch legacy config from old metadata keys
        */
-      const data = await traceExternalCall(
+      const data = await traceGetLegacyMetadata(
         () => fetchLegacyConfiguration(settingsManager, domain),
-        { name: "Saleor getLegacyMetadata", attributes: { domain } },
+        { domain },
       );
 
       if (data) {
@@ -55,9 +59,8 @@ export const configurationRouter = router({
 
       const configManager = new AppConfigMetadataManager(settingsManager);
 
-      const config = await traceExternalCall(() => configManager.get(ctx.saleorApiUrl), {
-        name: "Saleor getAppMetadata",
-        attributes: { saleorApiUrl: ctx.saleorApiUrl },
+      const config = await traceGetMetadata(() => configManager.get(ctx.saleorApiUrl), {
+        saleorApiUrl: ctx.saleorApiUrl,
       });
 
       try {
@@ -72,9 +75,8 @@ export const configurationRouter = router({
 
         config.setAlgoliaSettings(input);
 
-        await traceExternalCall(() => configManager.set(config, ctx.saleorApiUrl), {
-          name: "Saleor setAppMetadata",
-          attributes: { saleorApiUrl: ctx.saleorApiUrl },
+        await traceSetMetadata(() => configManager.set(config, ctx.saleorApiUrl), {
+          saleorApiUrl: ctx.saleorApiUrl,
         });
 
         logger.info("Settings set successfully");
@@ -103,16 +105,14 @@ export const configurationRouter = router({
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
       const configManager = new AppConfigMetadataManager(settingsManager);
 
-      const config = await traceExternalCall(() => configManager.get(ctx.saleorApiUrl), {
-        name: "Saleor getAppMetadata",
-        attributes: { saleorApiUrl: ctx.saleorApiUrl },
+      const config = await traceGetMetadata(() => configManager.get(ctx.saleorApiUrl), {
+        saleorApiUrl: ctx.saleorApiUrl,
       });
 
       config.setFieldsMapping(input.enabledAlgoliaFields);
 
-      await traceExternalCall(() => configManager.set(config, ctx.saleorApiUrl), {
-        name: "Saleor setAppMetadata",
-        attributes: { saleorApiUrl: ctx.saleorApiUrl },
+      await traceSetMetadata(() => configManager.set(config, ctx.saleorApiUrl), {
+        saleorApiUrl: ctx.saleorApiUrl,
       });
     }),
 });

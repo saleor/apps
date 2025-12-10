@@ -2,10 +2,23 @@
   "name": "@saleor/apps-otel",
   "version": "2.3.1",
   "type": "module",
+  "exports": {
+    "./trace-effect": "./src/trace-effect.ts",
+    "./src/batch-span-processor-factory": "./src/batch-span-processor-factory.ts",
+    "./src/http-instrumentation-factory": "./src/http-instrumentation-factory.ts",
+    "./src/observability-attributes": "./src/observability-attributes.ts",
+    "./src/service-instance-id-factory": "./src/service-instance-id-factory.ts",
+    "./src/otel-urql-exchange-factory": "./src/otel-urql-exchange-factory.ts",
+    "./src/with-span-attributes": "./src/with-span-attributes.ts",
+    "./src/metrics-reader-factory": "./src/metrics-reader-factory.ts",
+    "./src/aws-instrumentation-factory": "./src/aws-instrumentation-factory.ts"
+  },
   "scripts": {
     "check-types": "tsc",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
   },
   "dependencies": {
     "@opentelemetry/exporter-metrics-otlp-http": "catalog:",
@@ -14,6 +27,7 @@
     "@opentelemetry/instrumentation-http": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
+    "@saleor/apps-logger": "workspace:*",
     "uuid": "11.0.4"
   },
   "devDependencies": {
@@ -25,10 +39,12 @@
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/node": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "next": "catalog:",
     "typescript": "catalog:",
-    "urql": "catalog:"
+    "urql": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "@opentelemetry/api": "catalog:",

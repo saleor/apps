@@ -1,10 +1,12 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
 
 import { ChannelsDocument } from "../../generated/graphql";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { getAlgoliaConfiguration } from "../lib/algolia/getAlgoliaConfiguration";
 import { createInstrumentedGraphqlClient } from "../lib/create-instrumented-graphql-client";
-import { traceExternalCall } from "../lib/trace-external-calls";
+
+const traceFetchChannels = createTraceEffect({ name: "Saleor fetchChannels" });
 
 /**
  * Fetches and creates all shared entities required by webhook to proceed
@@ -15,9 +17,9 @@ export const createWebhookContext = async ({ authData }: { authData: AuthData })
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });
-  const { data: channelsData } = await traceExternalCall(
+  const { data: channelsData } = await traceFetchChannels(
     () => apiClient.query(ChannelsDocument, {}).toPromise(),
-    { name: "Saleor fetchChannels", attributes: { saleorApiUrl: authData.saleorApiUrl } },
+    { saleorApiUrl: authData.saleorApiUrl },
   );
   const channels = channelsData?.channels || [];
 

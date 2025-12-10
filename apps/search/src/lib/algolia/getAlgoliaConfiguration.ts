@@ -1,10 +1,12 @@
 import { AuthData } from "@saleor/app-sdk/APL";
+import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
 
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { createInstrumentedGraphqlClient } from "../create-instrumented-graphql-client";
 import { createLogger } from "../logger";
 import { createSettingsManager } from "../metadata";
-import { traceExternalCall } from "../trace-external-calls";
+
+const traceSaleorMetadata = createTraceEffect({ name: "Saleor getAppMetadata" });
 
 interface GetAlgoliaConfigurationArgs {
   authData: AuthData;
@@ -22,9 +24,8 @@ export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurat
   const configManager = new AppConfigMetadataManager(settings);
 
   try {
-    const config = await traceExternalCall(() => configManager.get(authData.saleorApiUrl), {
-      name: "Saleor getAppMetadata",
-      attributes: { saleorApiUrl: authData.saleorApiUrl },
+    const config = await traceSaleorMetadata(() => configManager.get(authData.saleorApiUrl), {
+      saleorApiUrl: authData.saleorApiUrl,
     });
 
     if (config.getConfig()) {

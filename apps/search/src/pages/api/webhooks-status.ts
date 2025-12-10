@@ -1,6 +1,7 @@
 import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
 import { Client } from "urql";
 
 import { FetchOwnWebhooksDocument, OwnWebhookFragment } from "../../../generated/graphql";
@@ -8,9 +9,10 @@ import { saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
-import { traceExternalCall } from "../../lib/trace-external-calls";
 
 const logger = createLogger("webhooksStatusHandler");
+
+const traceFetchWebhooks = createTraceEffect({ name: "Saleor fetchOwnWebhooks" });
 
 /**
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
@@ -36,9 +38,9 @@ export const webhooksStatusHandlerFactory =
     try {
       logger.info("Will fetch Webhooks from Saleor");
 
-      const webhooks = await traceExternalCall(
+      const webhooks = await traceFetchWebhooks(
         () => client.query(FetchOwnWebhooksDocument, { id: authData.appId }).toPromise(),
-        { name: "Saleor fetchOwnWebhooks", attributes: { appId: authData.appId } },
+        { appId: authData.appId },
       ).then((r) => r.data?.app?.webhooks);
 
       if (!webhooks) {

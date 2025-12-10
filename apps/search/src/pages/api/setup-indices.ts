@@ -2,6 +2,7 @@ import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-s
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
+import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
 import { Client } from "urql";
 
 import { ChannelsDocument } from "../../../generated/graphql";
@@ -11,10 +12,12 @@ import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-g
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
 import { createSettingsManager } from "../../lib/metadata";
-import { traceExternalCall } from "../../lib/trace-external-calls";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 
 const logger = createLogger("setupIndicesHandler");
+
+const traceGetMetadata = createTraceEffect({ name: "Saleor getAppMetadata" });
+const traceFetchChannels = createTraceEffect({ name: "Saleor fetchChannels" });
 
 /**
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
@@ -40,13 +43,11 @@ export const setupIndicesHandlerFactory =
     const configManager = new AppConfigMetadataManager(settingsManager);
 
     const [config, channelsRequest] = await Promise.all([
-      traceExternalCall(() => configManager.get(authData.saleorApiUrl), {
-        name: "Saleor getAppMetadata",
-        attributes: { saleorApiUrl: authData.saleorApiUrl },
+      traceGetMetadata(() => configManager.get(authData.saleorApiUrl), {
+        saleorApiUrl: authData.saleorApiUrl,
       }),
-      traceExternalCall(() => client.query(ChannelsDocument, {}).toPromise(), {
-        name: "Saleor fetchChannels",
-        attributes: { saleorApiUrl: authData.saleorApiUrl },
+      traceFetchChannels(() => client.query(ChannelsDocument, {}).toPromise(), {
+        saleorApiUrl: authData.saleorApiUrl,
       }),
     ]);
 

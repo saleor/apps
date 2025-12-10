@@ -1,7 +1,8 @@
+import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
 import Algolia from "algoliasearch";
 
 import { createLogger } from "../logger";
-import { ALGOLIA_SLOW_THRESHOLD_MS, traceExternalCall } from "../trace-external-calls";
+import { ALGOLIA_SLOW_THRESHOLD_MS } from "../trace-effect-thresholds";
 
 export interface IAlgoliaCredentialsVerifier {
   verifyCredentials(params: { apiKey: string; appId: string }): Promise<void>;
@@ -9,14 +10,16 @@ export interface IAlgoliaCredentialsVerifier {
 
 export class AlgoliaCredentialsVerifier implements IAlgoliaCredentialsVerifier {
   private logger = createLogger("AlgoliaCredentialsVerifier");
+  private traceGetApiKey = createTraceEffect({
+    name: "Algolia getApiKey",
+    slowThresholdMs: ALGOLIA_SLOW_THRESHOLD_MS,
+  });
 
   async verifyCredentials(params: { apiKey: string; appId: string }) {
     const client = Algolia(params.appId, params.apiKey);
 
-    await traceExternalCall(() => client.getApiKey(params.apiKey, { cacheable: false }), {
-      name: "Algolia getApiKey",
-      attributes: { appId: params.appId },
-      slowThresholdMs: ALGOLIA_SLOW_THRESHOLD_MS,
+    await this.traceGetApiKey(() => client.getApiKey(params.apiKey, { cacheable: false }), {
+      appId: params.appId,
     }).catch((r) => {
       this.logger.debug("Algolia call failed");
 
