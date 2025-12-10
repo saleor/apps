@@ -31,7 +31,7 @@ export interface IWebhookActivityTogglerService {
 }
 
 export class WebhooksActivityClient implements IWebhooksActivityClient {
-  private traceFetchWebhooks = createTraceEffect({ name: "Saleor fetchAppWebhooks" });
+  private traceFetchWebhooks = createTraceEffect({ name: "Saleor fetchOwnWebhooks" });
   private traceDisableWebhook = createTraceEffect({ name: "Saleor disableWebhook" });
   private traceEnableWebhook = createTraceEffect({ name: "Saleor enableWebhook" });
   private traceCreateWebhook = createTraceEffect({ name: "Saleor createWebhook" });
