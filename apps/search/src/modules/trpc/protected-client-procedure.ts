@@ -1,5 +1,5 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
-import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
+import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
 import { TRPCError } from "@trpc/server";
 

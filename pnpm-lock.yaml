@@ -2427,9 +2427,6 @@ importers:
       '@opentelemetry/semantic-conventions':
         specifier: 'catalog:'
         version: 1.30.0
-      '@saleor/apps-logger':
-        specifier: workspace:*
-        version: link:../logger
       uuid:
         specifier: 11.0.4
         version: 11.0.4

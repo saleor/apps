@@ -1,4 +1,4 @@
-import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
+import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import Algolia from "algoliasearch";
 
 import { createLogger } from "../logger";

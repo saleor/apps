@@ -8,6 +8,9 @@
     },
     "./node": {
       "default": "./node.ts"
+    },
+    "./trace-effect": {
+      "default": "./src/trace-effect.ts"
     }
   },
   "main": "index.ts",

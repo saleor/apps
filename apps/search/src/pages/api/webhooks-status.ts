@@ -1,7 +1,7 @@
 import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
+import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
 import { Client } from "urql";
 
 import { FetchOwnWebhooksDocument, OwnWebhookFragment } from "../../../generated/graphql";

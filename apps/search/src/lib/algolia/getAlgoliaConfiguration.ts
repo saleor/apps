@@ -1,5 +1,5 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createTraceEffect } from "@saleor/apps-otel/trace-effect";
+import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { createInstrumentedGraphqlClient } from "../create-instrumented-graphql-client";

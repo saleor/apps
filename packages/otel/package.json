@@ -27,7 +27,6 @@
     "@opentelemetry/instrumentation-http": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
-    "@saleor/apps-logger": "workspace:*",
     "uuid": "11.0.4"
   },
   "devDependencies": {

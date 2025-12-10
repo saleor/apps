@@ -1,17 +1,32 @@
+import { SpanStatusCode } from "@opentelemetry/api";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createTraceEffect, DEFAULT_SLOW_THRESHOLD_MS } from "./trace-effect";
 
-const mockLogger = vi.hoisted(() => ({
-  debug: vi.fn(),
-  warn: vi.fn(),
-  error: vi.fn(),
-  getSubLogger: vi.fn(() => mockLogger),
+const mockSpan = vi.hoisted(() => ({
+  setAttribute: vi.fn(),
+  setStatus: vi.fn(),
+  recordException: vi.fn(),
+  end: vi.fn(),
 }));
 
-vi.mock("@saleor/apps-logger", () => ({
-  rootLogger: mockLogger,
+const mockTracer = vi.hoisted(() => ({
+  startSpan: vi.fn(() => mockSpan),
 }));
+
+vi.mock("@opentelemetry/api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@opentelemetry/api")>();
+
+  return {
+    ...actual,
+    trace: {
+      getTracer: () => mockTracer,
+    },
+    context: {
+      active: () => ({}),
+    },
+  };
+});
 
 describe("trace-effect", () => {
   describe("createTraceEffect", () => {
@@ -43,123 +58,189 @@ describe("trace-effect", () => {
       await expect(trace(operation)).rejects.toThrow("Operation failed");
     });
 
-    it("logs debug on start and finish for fast operations", async () => {
-      const operation = vi.fn().mockResolvedValue("result");
-      const trace = createTraceEffect({ name: "Test operation" });
-
-      await trace(operation, { foo: "bar" });
-
-      expect(mockLogger.debug).toHaveBeenCalledWith("Starting: Test operation", { foo: "bar" });
-      expect(mockLogger.debug).toHaveBeenCalledWith(
-        "Finished: Test operation",
-        expect.objectContaining({ foo: "bar", durationMs: expect.any(Number) }),
-      );
-      expect(mockLogger.warn).not.toHaveBeenCalled();
-    });
-
-    it("logs warning when operation exceeds slowThresholdMs", async () => {
-      const operation = vi.fn().mockImplementation(async () => {
-        // Advance time by 150ms (exceeds 100ms threshold)
-        vi.advanceTimersByTime(150);
-
-        return "result";
-      });
-      const trace = createTraceEffect({ name: "Slow operation", slowThresholdMs: 100 });
-
-      await trace(operation);
-
-      expect(mockLogger.warn).toHaveBeenCalledWith(
-        "Slow effect: Slow operation",
-        expect.objectContaining({
-          durationMs: expect.any(Number),
-          slowThresholdMs: 100,
-        }),
-      );
-      expect(mockLogger.debug).toHaveBeenCalledTimes(1); // Only "Starting" debug, no "Finished" debug
-    });
-
-    it("logs debug (not warning) when operation is faster than threshold", async () => {
-      const operation = vi.fn().mockImplementation(async () => {
-        // Advance time by 50ms (under 100ms threshold)
-        vi.advanceTimersByTime(50);
-
-        return "result";
-      });
-      const trace = createTraceEffect({ name: "Fast operation", slowThresholdMs: 100 });
-
-      await trace(operation);
-
-      expect(mockLogger.warn).not.toHaveBeenCalled();
-      expect(mockLogger.debug).toHaveBeenCalledWith(
-        "Finished: Fast operation",
-        expect.objectContaining({ durationMs: expect.any(Number) }),
-      );
-    });
-
-    it("logs error when operation fails", async () => {
-      const error = new Error("Something went wrong");
-      const operation = vi.fn().mockRejectedValue(error);
-      const trace = createTraceEffect({ name: "Failing operation" });
-
-      await expect(trace(operation)).rejects.toThrow();
-
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        "Effect failed: Failing operation",
-        expect.objectContaining({
-          durationMs: expect.any(Number),
-          error: "Something went wrong",
-        }),
-      );
-    });
-
-    it("logs error with string representation for non-Error objects", async () => {
-      const operation = vi.fn().mockRejectedValue("string error");
-      const trace = createTraceEffect({ name: "Failing operation" });
-
-      await expect(trace(operation)).rejects.toBe("string error");
-
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        "Effect failed: Failing operation",
-        expect.objectContaining({
-          error: "string error",
-        }),
-      );
-    });
-
-    it("includes attributes in all log calls", async () => {
-      const attributes = { indexName: "test-index", objectsCount: 5 };
-      const operation = vi.fn().mockResolvedValue("result");
-      const trace = createTraceEffect({ name: "Test operation" });
-
-      await trace(operation, attributes);
-
-      expect(mockLogger.debug).toHaveBeenCalledWith("Starting: Test operation", attributes);
-      expect(mockLogger.debug).toHaveBeenCalledWith(
-        "Finished: Test operation",
-        expect.objectContaining(attributes),
-      );
-    });
-
-    it("uses default 5000ms threshold when slowThresholdMs not provided", async () => {
-      const operation = vi.fn().mockImplementation(async () => {
-        // Advance time by 4999ms (just under default 5000ms threshold)
-        vi.advanceTimersByTime(4999);
-
-        return "result";
-      });
-      const trace = createTraceEffect({ name: "Test operation" });
-
-      await trace(operation);
-
-      expect(mockLogger.warn).not.toHaveBeenCalled();
-      expect(mockLogger.debug).toHaveBeenCalledWith(
-        "Finished: Test operation",
-        expect.objectContaining({ durationMs: expect.any(Number) }),
-      );
-    });
-
     it("exports DEFAULT_SLOW_THRESHOLD_MS constant", () => {
       expect(DEFAULT_SLOW_THRESHOLD_MS).toBe(5000);
+    });
+
+    describe("OTEL spans", () => {
+      it("creates a span with the operation name", async () => {
+        const operation = vi.fn().mockResolvedValue("result");
+        const trace = createTraceEffect({ name: "My Operation" });
+
+        await trace(operation);
+
+        expect(mockTracer.startSpan).toHaveBeenCalledWith("My Operation", {}, expect.anything());
+      });
+
+      it("sets initial attributes on the span", async () => {
+        const operation = vi.fn().mockResolvedValue("result");
+        const trace = createTraceEffect({ name: "Test" });
+
+        await trace(operation, { indexName: "products", count: 5 });
+
+        expect(mockSpan.setAttribute).toHaveBeenCalledWith("indexName", "products");
+        expect(mockSpan.setAttribute).toHaveBeenCalledWith("count", "5");
+      });
+
+      it("skips null and undefined attributes", async () => {
+        const operation = vi.fn().mockResolvedValue("result");
+        const trace = createTraceEffect({ name: "Test" });
+
+        await trace(operation, { valid: "value", nullAttr: null, undefinedAttr: undefined });
+
+        expect(mockSpan.setAttribute).toHaveBeenCalledWith("valid", "value");
+        expect(mockSpan.setAttribute).not.toHaveBeenCalledWith("nullAttr", expect.anything());
+        expect(mockSpan.setAttribute).not.toHaveBeenCalledWith("undefinedAttr", expect.anything());
+      });
+
+      it("sets OK status and ends span on successful fast operation", async () => {
+        const operation = vi.fn().mockResolvedValue("result");
+        const trace = createTraceEffect({ name: "Fast", slowThresholdMs: 100 });
+
+        await trace(operation);
+
+        expect(mockSpan.setAttribute).toHaveBeenCalledWith("trace_effect.is_slow", false);
+        expect(mockSpan.setStatus).toHaveBeenCalledWith({ code: SpanStatusCode.OK });
+        expect(mockSpan.end).toHaveBeenCalled();
+      });
+
+      it("sets ERROR status on slow operation", async () => {
+        const operation = vi.fn().mockImplementation(async () => {
+          vi.advanceTimersByTime(150);
+
+          return "result";
+        });
+        const trace = createTraceEffect({ name: "Slow", slowThresholdMs: 100 });
+
+        await trace(operation);
+
+        expect(mockSpan.setAttribute).toHaveBeenCalledWith("trace_effect.is_slow", true);
+        expect(mockSpan.setStatus).toHaveBeenCalledWith({
+          code: SpanStatusCode.ERROR,
+          message: expect.stringContaining("exceeded slow threshold"),
+        });
+        expect(mockSpan.end).toHaveBeenCalled();
+      });
+
+      it("records exception and sets ERROR status on failure", async () => {
+        const error = new Error("Something went wrong");
+        const operation = vi.fn().mockRejectedValue(error);
+        const trace = createTraceEffect({ name: "Failing" });
+
+        await expect(trace(operation)).rejects.toThrow();
+
+        expect(mockSpan.recordException).toHaveBeenCalledWith(error);
+        expect(mockSpan.setStatus).toHaveBeenCalledWith({
+          code: SpanStatusCode.ERROR,
+          message: "Something went wrong",
+        });
+        expect(mockSpan.end).toHaveBeenCalled();
+      });
+
+      it("sets duration attributes on span", async () => {
+        const operation = vi.fn().mockImplementation(async () => {
+          vi.advanceTimersByTime(50);
+
+          return "result";
+        });
+        const trace = createTraceEffect({ name: "Test", slowThresholdMs: 100 });
+
+        await trace(operation);
+
+        expect(mockSpan.setAttribute).toHaveBeenCalledWith("trace_effect.duration_ms", 50);
+        expect(mockSpan.setAttribute).toHaveBeenCalledWith("trace_effect.slow_threshold_ms", 100);
+      });
+    });
+
+    describe("callbacks", () => {
+      it("calls onStart callback at the beginning", async () => {
+        const onStart = vi.fn();
+        const operation = vi.fn().mockResolvedValue("result");
+        const trace = createTraceEffect({ name: "Test", callbacks: { onStart } });
+
+        await trace(operation, { foo: "bar" });
+
+        expect(onStart).toHaveBeenCalledWith("Test", { attributes: { foo: "bar" } });
+      });
+
+      it("calls onFinish callback on successful fast operation", async () => {
+        const onFinish = vi.fn();
+        const operation = vi.fn().mockResolvedValue("result");
+        const trace = createTraceEffect({
+          name: "Test",
+          slowThresholdMs: 100,
+          callbacks: { onFinish },
+        });
+
+        await trace(operation, { foo: "bar" });
+
+        expect(onFinish).toHaveBeenCalledWith("Test", {
+          attributes: { foo: "bar" },
+          durationMs: expect.any(Number),
+        });
+      });
+
+      it("calls onSlow callback when operation exceeds threshold", async () => {
+        const onSlow = vi.fn();
+        const onFinish = vi.fn();
+        const operation = vi.fn().mockImplementation(async () => {
+          vi.advanceTimersByTime(150);
+
+          return "result";
+        });
+        const trace = createTraceEffect({
+          name: "Test",
+          slowThresholdMs: 100,
+          callbacks: { onSlow, onFinish },
+        });
+
+        await trace(operation, { foo: "bar" });
+
+        expect(onSlow).toHaveBeenCalledWith("Test", {
+          attributes: { foo: "bar" },
+          durationMs: expect.any(Number),
+          slowThresholdMs: 100,
+        });
+        expect(onFinish).not.toHaveBeenCalled();
+      });
+
+      it("calls onError callback when operation fails", async () => {
+        const onError = vi.fn();
+        const error = new Error("Failed!");
+        const operation = vi.fn().mockRejectedValue(error);
+        const trace = createTraceEffect({ name: "Test", callbacks: { onError } });
+
+        await expect(trace(operation, { foo: "bar" })).rejects.toThrow();
+
+        expect(onError).toHaveBeenCalledWith("Test", {
+          attributes: { foo: "bar" },
+          durationMs: expect.any(Number),
+          error: "Failed!",
+        });
+      });
+
+      it("handles non-Error objects in onError callback", async () => {
+        const onError = vi.fn();
+        const operation = vi.fn().mockRejectedValue("string error");
+        const trace = createTraceEffect({ name: "Test", callbacks: { onError } });
+
+        await expect(trace(operation)).rejects.toBe("string error");
+
+        expect(onError).toHaveBeenCalledWith("Test", {
+          attributes: {},
+          durationMs: expect.any(Number),
+          error: "string error",
+        });
+      });
+
+      it("works without any callbacks", async () => {
+        const operation = vi.fn().mockResolvedValue("result");
+        const trace = createTraceEffect({ name: "Test" });
+
+        const result = await trace(operation);
+
+        expect(result).toBe("result");
+      });
     });
   });
 });
