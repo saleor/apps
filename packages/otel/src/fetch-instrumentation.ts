@@ -1,12 +1,24 @@
 /**
  * Fetch instrumentation for tail sampling support.
  *
- * Extends @vercel/otel FetchInstrumentation but overrides enable() to support
- * tail sampling by continuing to record spans even when not initially sampled.
- * This allows TailSamplingProcessor to promote error spans at span end.
+ * ## Why this file exists
  *
- * Key difference: Removed the early bailout check `!isSampled(traceFlags)`
- * so that error information is captured for non-sampled spans.
+ * @vercel/otel's FetchInstrumentation has a hardcoded check that skips recording
+ * for non-sampled spans. For tail sampling to work, we need to record span data
+ * (including errors) even when the span wasn't initially sampled, so that
+ * TailSamplingProcessor can decide to promote error spans at span end.
+ *
+ * ## What's copied from @vercel/otel
+ *
+ * Code is copied @vercel/otel v1.10.1 FetchInstrumentation.enable().
+ * Source: https://github.com/vercel/otel/blob/v1.10.1/packages/otel/src/instrumentations/fetch.ts
+ *
+ * Some comments to disable eslint errors were added.
+ * Actual code modifications are marked with "SALEOR MODIFICATION START/END" comments.
+ *
+ * ## When to update
+ *
+ * If @vercel/otel updates their FetchInstrumentation, review their changes
  */
 import type { Attributes, Span, TextMapSetter, TracerProvider } from "@opentelemetry/api";
 import {
@@ -123,7 +135,7 @@ function headersToAttributes(
 /**
  * Fetch instrumentation that supports tail sampling.
  *
- * Extends @vercel/otel's FetchInstrumentation but overrides enable() to
+ * Implementation of @vercel/otel's FetchInstrumentation but overrides enable() to
  * continue recording spans even when not sampled, allowing TailSamplingProcessor
  * to promote error spans at span end.
  */
@@ -144,13 +156,6 @@ export class TailSamplingFetchInstrumentation extends FetchInstrumentation {
     this.tailSamplingTracerProvider = tracerProvider;
   }
 
-  /**
-   * Override enable() to remove the `!isSampled()` check.
-   *
-   * This is a copy of @vercel/otel's FetchInstrumentation.enable() with one key change:
-   * The original check `if (!span.isRecording() || !isSampled(span.spanContext().traceFlags))`
-   * is changed to just `if (!span.isRecording())` to support tail sampling.
-   */
   override enable(): void {
     this.disable();
 
@@ -299,16 +304,14 @@ export class TailSamplingFetchInstrumentation extends FetchInstrumentation {
       );
 
       /*
-       * TAIL SAMPLING CHANGE: Only check isRecording(), NOT isSampled().
-       *
+       * === SALEOR MODIFICATION START ===
        * Original @vercel/otel check was:
        *   if (!span.isRecording() || !isSampled(span.spanContext().traceFlags))
        *
-       * This caused non-sampled spans to be ended early without error info.
-       * For tail sampling, we need to continue recording so that errors
-       * can be captured and the span can be promoted at end time.
-       *
-       * We still skip non-recording spans (NOT_RECORD sampling decision).
+       * We removed isSampled() check so non-sampled spans continue recording
+       * for tail sampling to capture errors.
+       * We also added isSampled() to shouldPropagate check below to avoid
+       * propagating trace context for non-sampled spans.
        */
       if (!span.isRecording()) {
         span.end();
@@ -316,12 +319,8 @@ export class TailSamplingFetchInstrumentation extends FetchInstrumentation {
         return originalFetch(input, init);
       }
 
-      /*
-       * Only propagate context if the span is actually sampled.
-       * Non-sampled spans should not propagate trace context to avoid
-       * forcing downstream services to sample.
-       */
       if (shouldPropagate(url, init) && isSampled(span.spanContext().traceFlags)) {
+        // === SALEOR MODIFICATION END ===
         const fetchContext = traceApi.setSpan(parentContext, span);
 
         propagation.inject(fetchContext, req.headers, HEADERS_SETTER);
