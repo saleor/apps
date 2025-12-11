@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.24.3
+
+### Patch Changes
+
+- d0340d6b: Increased memory limits in Vercel by 1.5x, now app can use up to 384 MB for handling Saleor webhooks.
+
 ## 1.24.2
 
 ### Patch Changes
