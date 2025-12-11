@@ -1,10 +1,10 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { createInstrumentedGraphqlClient } from "../create-instrumented-graphql-client";
 import { createLogger } from "../logger";
 import { createSettingsManager } from "../metadata";
+import { createTraceEffect } from "../trace-effect";
 
 const traceSaleorMetadata = createTraceEffect({ name: "Saleor getAppMetadata" });
 

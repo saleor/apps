@@ -1,7 +1,7 @@
-import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import Algolia from "algoliasearch";
 
 import { createLogger } from "../logger";
+import { createTraceEffect } from "../trace-effect";
 import { ALGOLIA_SLOW_THRESHOLD_MS } from "../trace-effect-thresholds";
 
 export interface IAlgoliaCredentialsVerifier {

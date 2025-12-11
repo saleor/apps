@@ -1,4 +1,3 @@
-import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import { Client, OperationResult } from "urql";
 
 import {
@@ -10,6 +9,7 @@ import {
   RemoveWebhookDocument,
 } from "../../generated/graphql";
 import { createLogger } from "../lib/logger";
+import { createTraceEffect } from "../lib/trace-effect";
 
 const logger = createLogger("WebhookActivityTogglerService");
 

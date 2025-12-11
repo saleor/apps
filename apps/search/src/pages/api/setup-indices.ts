@@ -1,7 +1,6 @@
 import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { Client } from "urql";
 
@@ -12,6 +11,7 @@ import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-g
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
 import { createSettingsManager } from "../../lib/metadata";
+import { createTraceEffect } from "../../lib/trace-effect";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 
 const logger = createLogger("setupIndicesHandler");

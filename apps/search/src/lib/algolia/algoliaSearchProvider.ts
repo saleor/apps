@@ -1,4 +1,3 @@
-import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import Algoliasearch, { SearchClient } from "algoliasearch";
 
 import {
@@ -9,6 +8,7 @@ import { ALGOLIA_TIMEOUT_MS } from "../algolia-timeouts";
 import { isNotNil } from "../isNotNil";
 import { createLogger } from "../logger";
 import { SearchProvider } from "../searchProvider";
+import { createTraceEffect } from "../trace-effect";
 import { ALGOLIA_SLOW_THRESHOLD_MS } from "../trace-effect-thresholds";
 import {
   AlgoliaObject,

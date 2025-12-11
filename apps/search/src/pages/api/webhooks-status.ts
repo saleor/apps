@@ -1,6 +1,5 @@
 import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
-import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { Client } from "urql";
 
@@ -9,6 +8,7 @@ import { saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
+import { createTraceEffect } from "../../lib/trace-effect";
 
 const logger = createLogger("webhooksStatusHandler");
 

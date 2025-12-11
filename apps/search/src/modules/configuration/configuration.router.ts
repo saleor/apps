@@ -1,10 +1,10 @@
-import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import { TRPCError } from "@trpc/server";
 
 import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
 import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 import { createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../../lib/metadata";
+import { createTraceEffect } from "../../lib/trace-effect";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";

@@ -4,9 +4,9 @@ import {
   TraceEffectOptions,
 } from "@saleor/apps-otel/trace-effect";
 
-import { rootLogger } from "./root-logger";
+import { createLogger } from "./logger";
 
-const logger = rootLogger.getSubLogger({ name: "TraceEffect" });
+const logger = createLogger("TraceEffect");
 
 const defaultCallbacks: TraceEffectCallbacks = {
   onStart: (name, ctx) => logger.debug(`Starting: ${name}`, ctx.attributes),

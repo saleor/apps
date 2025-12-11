@@ -1,10 +1,10 @@
 import { AuthData } from "@saleor/app-sdk/APL";
-import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 
 import { ChannelsDocument } from "../../generated/graphql";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { getAlgoliaConfiguration } from "../lib/algolia/getAlgoliaConfiguration";
 import { createInstrumentedGraphqlClient } from "../lib/create-instrumented-graphql-client";
+import { createTraceEffect } from "../lib/trace-effect";
 
 const traceFetchChannels = createTraceEffect({ name: "Saleor fetchChannels" });
 

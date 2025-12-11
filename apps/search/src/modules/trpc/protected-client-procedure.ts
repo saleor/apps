@@ -1,11 +1,11 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
-import { createTraceEffect } from "@saleor/apps-logger/trace-effect";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
 import { TRPCError } from "@trpc/server";
 
 import { saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
+import { createTraceEffect } from "../../lib/trace-effect";
 import { DYNAMODB_SLOW_THRESHOLD_MS } from "../../lib/trace-effect-thresholds";
 import { middleware, procedure } from "./trpc-server";
 
