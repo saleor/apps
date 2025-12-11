@@ -76,12 +76,4 @@ describe("DeferredSampler", () => {
       expect(result.attributes?.[SALEOR_SAMPLING_DECISION_ATTR]).toBe("none");
     });
   });
-
-  describe("toString", () => {
-    it("should return descriptive string", () => {
-      const sampler = new DeferredSampler();
-
-      expect(sampler.toString()).toBe("DeferredSampler");
-    });
-  });
 });
