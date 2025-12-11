@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 1.4.3
+
+### Patch Changes
+
+- d0340d6b: Increased memory limits in Vercel up to 512 MB, previously 400 MB for handling Saleor webhooks.
+
 ## 1.4.2
 
 ### Patch Changes
