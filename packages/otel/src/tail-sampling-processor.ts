@@ -1,6 +1,8 @@
-import { Context, SpanKind, SpanStatusCode, TraceFlags } from "@opentelemetry/api";
+import { Context, SpanStatusCode, TraceFlags } from "@opentelemetry/api";
 import { ReadableSpan, Span, SpanProcessor } from "@opentelemetry/sdk-trace-node";
 import { ATTR_HTTP_RESPONSE_STATUS_CODE } from "@opentelemetry/semantic-conventions";
+
+import { computeVercelResourceAttributes } from "./vercel-resource-attributes";
 
 export interface TailSamplingProcessorConfig {
   /**
@@ -170,11 +172,11 @@ export class TailSamplingProcessor implements SpanProcessor {
       enumerable: true,
     });
 
-    // Build new attributes with promotion marker + DataDog resource attributes
+    // Build new attributes with promotion marker + Vercel/DataDog resource attributes
     const newAttributes = {
       ...span.attributes,
       [TAIL_SAMPLING_PROMOTED_ATTR]: true,
-      ...this.computeResourceAttributes(span),
+      ...computeVercelResourceAttributes(span),
     };
 
     // Override attributes getter
@@ -184,78 +186,5 @@ export class TailSamplingProcessor implements SpanProcessor {
     });
 
     return sampledSpan;
-  }
-
-  /**
-   * Compute DataDog-compatible resource attributes.
-   * Mirrors logic from @vercel/otel CompositeSpanProcessor.getResourceAttributes()
-   * so that promoted spans have the same attributes as normally sampled spans.
-   */
-  private computeResourceAttributes(span: ReadableSpan): Record<string, string> {
-    const { kind, attributes } = span;
-
-    /*
-     * Skip if operation.name already exists - it was intentionally set by:
-     * - The instrumentation (e.g., fetch instrumentation sets "fetch.GET")
-     * - User code via span.setAttribute()
-     * We should not override intentionally set values.
-     */
-    if (attributes["operation.name"]) {
-      return {};
-    }
-
-    const httpMethod = attributes["http.method"];
-    const httpRoute = attributes["http.route"];
-
-    // For server spans with HTTP info, add web.request operation
-    if (
-      kind === SpanKind.SERVER &&
-      httpMethod &&
-      typeof httpMethod === "string" &&
-      httpRoute &&
-      typeof httpRoute === "string"
-    ) {
-      return {
-        "operation.name": "web.request",
-        "resource.name": `${httpMethod} ${httpRoute}`,
-      };
-    }
-
-    // Default operation name from library + kind
-    const libraryName = this.cleanLibraryName(span.instrumentationLibrary.name);
-    const kindName = this.getSpanKindName(kind);
-
-    return {
-      "operation.name": kindName ? `${libraryName}.${kindName}` : libraryName,
-    };
-  }
-
-  /**
-   * Clean library name for use in operation.name attribute.
-   * Removes @ and replaces . / with underscores.
-   */
-  private cleanLibraryName(name: string): string {
-    let cleanName = name.replace(/[@./]/g, "_");
-
-    if (cleanName.startsWith("_")) {
-      cleanName = cleanName.slice(1);
-    }
-
-    return cleanName;
-  }
-
-  /**
-   * Get string representation of SpanKind for operation.name.
-   */
-  private getSpanKindName(kind: SpanKind): string {
-    const names: Record<SpanKind, string> = {
-      [SpanKind.INTERNAL]: "",
-      [SpanKind.SERVER]: "server",
-      [SpanKind.CLIENT]: "client",
-      [SpanKind.PRODUCER]: "producer",
-      [SpanKind.CONSUMER]: "consumer",
-    };
-
-    return names[kind] || "";
   }
 }
