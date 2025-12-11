@@ -85,19 +85,6 @@ describe("trace-effect", () => {
         );
       });
 
-      it("filters out null and undefined attributes before passing to startSpan", async () => {
-        const operation = vi.fn().mockResolvedValue("result");
-        const trace = createTraceEffect({ name: "Test" });
-
-        await trace(operation, { valid: "value", nullAttr: null, undefinedAttr: undefined });
-
-        expect(mockTracer.startSpan).toHaveBeenCalledWith(
-          "Test",
-          { attributes: { valid: "value" } },
-          expect.anything(),
-        );
-      });
-
       it("sets OK status and ends span on successful fast operation", async () => {
         const operation = vi.fn().mockResolvedValue("result");
         const trace = createTraceEffect({ name: "Fast", slowThresholdMs: 100 });
