@@ -4,15 +4,30 @@ import {
   ATTR_SERVICE_INSTANCE_ID,
 } from "@opentelemetry/semantic-conventions/incubating";
 import { createBatchSpanProcessor } from "@saleor/apps-otel/src/batch-span-processor-factory";
+import { DeferredSampler } from "@saleor/apps-otel/src/deferred-sampler";
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { createServiceInstanceId } from "@saleor/apps-otel/src/service-instance-id-factory";
+import { TailSamplingProcessor } from "@saleor/apps-otel/src/tail-sampling-processor";
 import { registerOTel } from "@vercel/otel";
 
 import pkg from "../../package.json";
 
+const batchProcessor = createBatchSpanProcessor({
+  accessToken: process.env.OTEL_ACCESS_TOKEN,
+});
+
+const tailSamplingProcessor = new TailSamplingProcessor({
+  processor: batchProcessor,
+  slowThresholdMs: 5000,
+  exportErrors: true,
+  exportSlowSpans: true,
+});
+
 registerOTel({
   serviceName: process.env.OTEL_SERVICE_NAME,
+  // Note: DeferredSampler + TailSamplingProcessor must be used together
+  traceSampler: new DeferredSampler(),
   attributes: {
     [ATTR_SERVICE_VERSION]: pkg.version,
     [ATTR_DEPLOYMENT_ENVIRONMENT_NAME]: process.env.ENV,
@@ -23,10 +38,6 @@ registerOTel({
     env: undefined,
     [ObservabilityAttributes.VERCEL_ENV]: process.env.VERCEL_ENV,
   },
-  spanProcessors: [
-    createBatchSpanProcessor({
-      accessToken: process.env.OTEL_ACCESS_TOKEN,
-    }),
-  ],
-  instrumentations: [createHttpInstrumentation()],
+  spanProcessors: [tailSamplingProcessor],
+  instrumentations: [createHttpInstrumentation({ usingDeferredSpanProcessor: true })],
 });

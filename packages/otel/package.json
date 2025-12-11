@@ -5,7 +5,9 @@
   "scripts": {
     "check-types": "tsc",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
   },
   "dependencies": {
     "@opentelemetry/exporter-metrics-otlp-http": "catalog:",
@@ -18,6 +20,7 @@
   },
   "devDependencies": {
     "@opentelemetry/api": "catalog:",
+    "@opentelemetry/instrumentation": "catalog:",
     "@opentelemetry/sdk-metrics": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
@@ -25,17 +28,23 @@
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/node": "catalog:",
+    "@vercel/otel": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "next": "catalog:",
     "typescript": "catalog:",
-    "urql": "catalog:"
+    "urql": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "@opentelemetry/api": "catalog:",
+    "@opentelemetry/instrumentation": "catalog:",
     "@opentelemetry/sdk-metrics": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "catalog:",
+    "@vercel/otel": "catalog:",
     "next": "catalog:",
     "urql": "catalog:"
   }
