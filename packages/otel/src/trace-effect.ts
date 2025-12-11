@@ -1,4 +1,4 @@
-import { context, SpanStatusCode, trace } from "@opentelemetry/api";
+import { Attributes, context, SpanStatusCode, trace } from "@opentelemetry/api";
 
 const tracer = trace.getTracer("trace-effect");
 
@@ -58,16 +58,9 @@ export function createTraceEffect(options: TraceEffectOptions) {
 
   return async function traceEffect<T>(
     operation: () => Promise<T>,
-    attributes: Record<string, unknown> = {},
+    attributes: Attributes = {},
   ): Promise<T> {
-    const span = tracer.startSpan(name, {}, context.active());
-
-    // Set initial attributes on span
-    Object.entries(attributes).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        span.setAttribute(key, String(value));
-      }
-    });
+    const span = tracer.startSpan(name, { attributes }, context.active());
 
     callbacks?.onStart?.(name, { attributes });
 
@@ -82,6 +75,11 @@ export function createTraceEffect(options: TraceEffectOptions) {
 
       if (durationMs > slowThresholdMs) {
         span.setAttribute(TraceEffectAttributes.IS_SLOW, true);
+
+        /*
+         * TODO: In future we should set custom attribute only to mark span as slow
+         * For now we'll mark it as error so that it's always sampled by collector and DataDog
+         */
         span.setStatus({
           code: SpanStatusCode.ERROR,
           message: `Operation exceeded slow threshold: ${durationMs}ms > ${slowThresholdMs}ms`,
@@ -92,8 +90,6 @@ export function createTraceEffect(options: TraceEffectOptions) {
         span.setStatus({ code: SpanStatusCode.OK });
         callbacks?.onFinish?.(name, { attributes, durationMs });
       }
-
-      span.end();
 
       return result;
     } catch (error) {
@@ -109,7 +105,6 @@ export function createTraceEffect(options: TraceEffectOptions) {
         code: SpanStatusCode.ERROR,
         message: error instanceof Error ? error.message : String(error),
       });
-      span.end();
 
       callbacks?.onError?.(name, {
         attributes,
@@ -118,6 +113,8 @@ export function createTraceEffect(options: TraceEffectOptions) {
       });
 
       throw error;
+    } finally {
+      span.end();
     }
   };
 }

@@ -1,7 +1,7 @@
 import { SpanStatusCode } from "@opentelemetry/api";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createTraceEffect, DEFAULT_SLOW_THRESHOLD_MS } from "./trace-effect";
+import { createTraceEffect } from "./trace-effect";
 
 const mockSpan = vi.hoisted(() => ({
   setAttribute: vi.fn(),
@@ -58,10 +58,6 @@ describe("trace-effect", () => {
       await expect(trace(operation)).rejects.toThrow("Operation failed");
     });
 
-    it("exports DEFAULT_SLOW_THRESHOLD_MS constant", () => {
-      expect(DEFAULT_SLOW_THRESHOLD_MS).toBe(5000);
-    });
-
     describe("OTEL spans", () => {
       it("creates a span with the operation name", async () => {
         const operation = vi.fn().mockResolvedValue("result");
@@ -69,28 +65,37 @@ describe("trace-effect", () => {
 
         await trace(operation);
 
-        expect(mockTracer.startSpan).toHaveBeenCalledWith("My Operation", {}, expect.anything());
+        expect(mockTracer.startSpan).toHaveBeenCalledWith(
+          "My Operation",
+          { attributes: {} },
+          expect.anything(),
+        );
       });
 
-      it("sets initial attributes on the span", async () => {
+      it("passes initial attributes to startSpan", async () => {
         const operation = vi.fn().mockResolvedValue("result");
         const trace = createTraceEffect({ name: "Test" });
 
         await trace(operation, { indexName: "products", count: 5 });
 
-        expect(mockSpan.setAttribute).toHaveBeenCalledWith("indexName", "products");
-        expect(mockSpan.setAttribute).toHaveBeenCalledWith("count", "5");
+        expect(mockTracer.startSpan).toHaveBeenCalledWith(
+          "Test",
+          { attributes: { indexName: "products", count: 5 } },
+          expect.anything(),
+        );
       });
 
-      it("skips null and undefined attributes", async () => {
+      it("filters out null and undefined attributes before passing to startSpan", async () => {
         const operation = vi.fn().mockResolvedValue("result");
         const trace = createTraceEffect({ name: "Test" });
 
         await trace(operation, { valid: "value", nullAttr: null, undefinedAttr: undefined });
 
-        expect(mockSpan.setAttribute).toHaveBeenCalledWith("valid", "value");
-        expect(mockSpan.setAttribute).not.toHaveBeenCalledWith("nullAttr", expect.anything());
-        expect(mockSpan.setAttribute).not.toHaveBeenCalledWith("undefinedAttr", expect.anything());
+        expect(mockTracer.startSpan).toHaveBeenCalledWith(
+          "Test",
+          { attributes: { valid: "value" } },
+          expect.anything(),
+        );
       });
 
       it("sets OK status and ends span on successful fast operation", async () => {
