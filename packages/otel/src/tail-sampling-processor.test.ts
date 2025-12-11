@@ -26,7 +26,9 @@ const createMockSpan = (options: {
   } = options;
 
   const startTime: [number, number] = [Math.floor(Date.now() / 1000), 0];
-  const endTime: [number, number] = [startTime[0], durationMs * 1e6];
+  const durationSeconds = Math.floor(durationMs / 1000);
+  const durationNanos = (durationMs % 1000) * 1e6;
+  const endTime: [number, number] = [startTime[0] + durationSeconds, durationNanos];
 
   return {
     spanContext: () => ({
