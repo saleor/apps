@@ -79,6 +79,7 @@ export default {
     "claude",
     "SEPA",
     "mailpit",
+    "traceparent"
   ],
   language: "en-US",
   useGitignore: true,
