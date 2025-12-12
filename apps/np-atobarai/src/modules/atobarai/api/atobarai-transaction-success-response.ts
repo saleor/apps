@@ -28,40 +28,12 @@ export const FailedReason = {
 const schema = z
   .object({
     results: z.array(
-      z.discriminatedUnion("authori_result", [
-        z.object({
-          np_transaction_id: AtobaraiTransactionIdSchema,
-          authori_result: z.literal(CreditCheckResult.Success),
-        }),
-        z.object({
-          np_transaction_id: AtobaraiTransactionIdSchema,
-          authori_result: z.literal(CreditCheckResult.Pending),
-          authori_hold: z.array(
-            z.enum([
-              PendingReason.LackOfAddressInformation,
-              PendingReason.AddressConfirmationOfWork,
-              PendingReason.InsufficientDeliveryDestinationInformation,
-              PendingReason.AddressConfirmationOfWorkDeliveryDestination,
-              PendingReason.PhoneNumberError,
-              PendingReason.PhoneNumberErrorAtDeliveryDestination,
-              PendingReason.Other,
-            ]),
-          ),
-        }),
-        z.object({
-          np_transaction_id: AtobaraiTransactionIdSchema,
-          authori_result: z.literal(CreditCheckResult.Failed),
-          authori_ng: z.enum([
-            FailedReason.ExcessOfTheAmount,
-            FailedReason.InsufficientInformation,
-            FailedReason.Other,
-          ]),
-        }),
-        z.object({
-          np_transaction_id: AtobaraiTransactionIdSchema,
-          authori_result: z.literal(CreditCheckResult.BeforeReview),
-        }),
-      ]),
+      z.object({
+        np_transaction_id: AtobaraiTransactionIdSchema,
+        authori_result: z.string(),
+        authori_hold: z.array(z.string()).optional(),
+        authori_ng: z.string().optional(),
+      }),
     ),
   })
   .brand("AtobaraiTransactionSuccessResponse");

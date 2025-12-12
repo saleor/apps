@@ -111,6 +111,15 @@ export class TransactionProcessSessionUseCase extends BaseUseCase {
             ),
           }),
         );
+      default:
+        return ok(
+          new TransactionProcessSessionUseCaseResponse.Failure({
+            transactionResult: new ChargeFailureResult(),
+            error: new AtobaraiFailureTransactionError(
+              `Unexpected Atobarai transaction result: ${transaction.authori_result}`,
+            ),
+          }),
+        );
     }
   }
 
