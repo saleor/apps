@@ -89,5 +89,8 @@ export default {
     "**/schema.graphql",
     "**/generated/types.ts",
     "**/*.test.ts",
+    // Copied from @vercel/otel - not our code to spellcheck
+    "packages/otel/src/fetch-instrumentation.ts",
+    "packages/otel/src/vercel-resource-attributes.ts",
   ],
 };

@@ -1,8 +1,10 @@
 /**
- * DataDog resource attributes for @vercel/otel compatibility.
+ * DataDog resource attributes extracted from @vercel/otel.
  *
- * ## Why this file exists
+ * SOURCE: @vercel/otel v1.10.1 (commit a4a8662)
+ * REPO: https://github.com/vercel/otel
  *
+ * WHY THIS FILE EXISTS:
  * @vercel/otel's CompositeSpanProcessor adds DataDog-specific attributes
  * (`operation.name`, `resource.name`) in onEnd() - but ONLY for sampled spans.
  *
@@ -16,7 +18,7 @@
  *
  * Result: promoted spans are missing DataDog attributes that normally sampled spans have.
  *
- * ## Why CompositeSpanProcessor runs first
+ * WHY CompositeSpanProcessor RUNS FIRST
  *
  * registerOTel() from @vercel/otel wraps our spanProcessors inside CompositeSpanProcessor:
  *
@@ -28,88 +30,103 @@
  *
  * This creates the processor chain:
  *   SDK → CompositeSpanProcessor → TailSamplingProcessor → BatchSpanProcessor
- *
- * ## Solution
- *
- * We replicate @vercel/otel's getResourceAttributes() logic here so that
+ * SOLUTION:
+ * We extract getResourceAttributes() and its dependencies from @vercel/otel so that
  * TailSamplingProcessor can add these attributes when promoting spans.
  *
- * Source: https://github.com/vercel/otel/blob/v1.10.1/packages/otel/src/processor/composite-span-processor.ts
+ * MODIFICATIONS:
+ * - Removed CompositeSpanProcessor class (not needed)
+ * - Kept only getResourceAttributes(), toOperationName(), and SPAN_KIND_NAME
+ * - Renamed getResourceAttributes to computeVercelResourceAttributes and exported it
  *
- * ## When to update
- *
- * If @vercel/otel changes their getResourceAttributes() logic, update this file.
- * Consider requesting upstream support for tail sampling to avoid this hack.
+ * WHEN TO UPDATE:
+ * If @vercel/otel changes getResourceAttributes() logic, copy new file and re-apply modifications.
  */
+import type { Attributes } from "@opentelemetry/api";
 import { SpanKind } from "@opentelemetry/api";
-import { ReadableSpan } from "@opentelemetry/sdk-trace-node";
+import type { ReadableSpan } from "@opentelemetry/sdk-trace-node";
 
-/**
- * Compute DataDog-compatible resource attributes for a span.
- * Mirrors logic from @vercel/otel CompositeSpanProcessor.getResourceAttributes()
- */
-export function computeVercelResourceAttributes(span: ReadableSpan): Record<string, string> {
+const SPAN_KIND_NAME: { [key in SpanKind]: string } = {
+  [SpanKind.INTERNAL]: "internal",
+  [SpanKind.SERVER]: "server",
+  [SpanKind.CLIENT]: "client",
+  [SpanKind.PRODUCER]: "producer",
+  [SpanKind.CONSUMER]: "consumer",
+};
+
+// SALEOR MODIFICATION: Renamed from getResourceAttributes and exported
+export function computeVercelResourceAttributes(span: ReadableSpan): Attributes | undefined {
   const { kind, attributes } = span;
+  const {
+    "operation.name": operationName,
+    "resource.name": resourceName,
+    "span.type": spanTypeAttr,
+    "next.span_type": nextSpanType,
+    "http.method": httpMethod,
+    "http.route": httpRoute,
+  } = attributes;
 
-  /*
-   * Skip if operation.name already exists - it was intentionally set by
-   * instrumentation or user code. We should not override intentional values.
-   */
-  if (attributes["operation.name"]) {
-    return {};
+  if (operationName) {
+    return undefined;
   }
 
-  const httpMethod = attributes["http.method"];
-  const httpRoute = attributes["http.route"];
+  const resourceNameResolved =
+    resourceName ??
+    (httpMethod && typeof httpMethod === "string" && httpRoute && typeof httpRoute === "string"
+      ? `${httpMethod} ${httpRoute}`
+      : httpRoute);
 
-  // For server spans with HTTP info, add web.request operation
   if (
-    kind === SpanKind.SERVER &&
+    span.kind === SpanKind.SERVER &&
     httpMethod &&
-    typeof httpMethod === "string" &&
     httpRoute &&
+    typeof httpMethod === "string" &&
     typeof httpRoute === "string"
   ) {
     return {
       "operation.name": "web.request",
-      "resource.name": `${httpMethod} ${httpRoute}`,
+      "resource.name": resourceNameResolved,
     };
   }
 
-  // Default operation name from library + kind
-  const libraryName = cleanLibraryName(span.instrumentationLibrary.name);
-  const kindName = getSpanKindName(kind);
+  /*
+   * Per https://github.com/DataDog/datadog-agent/blob/main/pkg/config/config_template.yaml,
+   * the default operation.name is "library name + span kind".
+   */
+  const libraryName = span.instrumentationLibrary.name;
+  const spanType = nextSpanType ?? spanTypeAttr;
 
-  return {
-    "operation.name": kindName ? `${libraryName}.${kindName}` : libraryName,
-  };
-}
+  if (spanType && typeof spanType === "string") {
+    const nextOperationName = toOperationName(libraryName, spanType);
 
-/**
- * Clean library name for use in operation.name attribute.
- * Removes @ and replaces . / with underscores.
- */
-function cleanLibraryName(name: string): string {
-  let cleanName = name.replace(/[@./]/g, "_");
+    if (httpRoute) {
+      return {
+        "operation.name": nextOperationName,
+        "resource.name": resourceNameResolved,
+      };
+    }
 
-  if (cleanName.startsWith("_")) {
-    cleanName = cleanName.slice(1);
+    return { "operation.name": nextOperationName };
   }
 
-  return cleanName;
+  return {
+    "operation.name": toOperationName(
+      libraryName,
+      // SALEOR MODIFICATION: Added type assertion for stricter TypeScript config
+      kind === SpanKind.INTERNAL ? "" : SPAN_KIND_NAME[kind as SpanKind],
+    ),
+  };
 }
 
-/**
- * Get string representation of SpanKind for operation.name.
- */
-function getSpanKindName(kind: SpanKind): string {
-  const names: Record<SpanKind, string> = {
-    [SpanKind.INTERNAL]: "",
-    [SpanKind.SERVER]: "server",
-    [SpanKind.CLIENT]: "client",
-    [SpanKind.PRODUCER]: "producer",
-    [SpanKind.CONSUMER]: "consumer",
-  };
+function toOperationName(libraryName: string, name: string): string {
+  if (!libraryName) {
+    return name;
+  }
+  let cleanLibraryName = libraryName.replace(/[ @./]/g, "_");
 
-  return names[kind] || "";
+  if (cleanLibraryName.startsWith("_")) {
+    cleanLibraryName = cleanLibraryName.slice(1);
+  }
+
+  return name ? `${cleanLibraryName}.${name}` : cleanLibraryName;
 }
