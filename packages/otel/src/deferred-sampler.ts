@@ -26,8 +26,6 @@ function isSampled(traceFlags: number): boolean {
  * Without setting `RECORD` we wouldn't store any span data during runtime
  */
 export class DeferredSampler implements Sampler {
-  constructor() {}
-
   // eslint-disable-next-line @typescript-eslint/max-params -- Required by OpenTelemetry Sampler interface
   shouldSample(
     context: Context,
