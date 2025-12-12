@@ -163,35 +163,27 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
     `);
   });
 
-  it("should throw ZodError when authori_result is invalid", () => {
+  it("should successfully parse any authori_result value", () => {
     const rawResponse = {
       results: [
         {
           np_transaction_id: mockedAtobaraiTransactionId,
-          authori_result: "99", // Invalid result code
+          authori_result: "99", // Any string is valid
         },
       ],
     };
 
-    expect(() => createAtobaraiTransactionSuccessResponse(rawResponse))
-      .toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
-        {
-          "code": "invalid_union_discriminator",
-          "options": [
-            "00",
-            "10",
-            "20",
-            "40"
-          ],
-          "path": [
-            "results",
-            0,
-            "authori_result"
-          ],
-          "message": "Invalid discriminator value. Expected '00' | '10' | '20' | '40'"
-        }
-      ]]
+    const result = createAtobaraiTransactionSuccessResponse(rawResponse);
+
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "results": [
+          {
+            "authori_result": "99",
+            "np_transaction_id": "np_trans_id",
+          },
+        ],
+      }
     `);
   });
 

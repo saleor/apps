@@ -148,6 +148,16 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
             ),
           }),
         );
+      default:
+        return ok(
+          new TransactionInitializeSessionUseCaseResponse.Failure({
+            apiError: transaction.authori_result,
+            transactionResult: new ChargeFailureResult(),
+            error: new AtobaraiFailureTransactionError(
+              `Unexpected Atobarai transaction result: ${transaction.authori_result}`,
+            ),
+          }),
+        );
     }
   }
 
