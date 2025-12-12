@@ -8,7 +8,7 @@ import { DeferredSampler } from "@saleor/apps-otel/src/deferred-sampler";
 import { createHttpInstrumentation } from "@saleor/apps-otel/src/http-instrumentation-factory";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { createServiceInstanceId } from "@saleor/apps-otel/src/service-instance-id-factory";
-import { TailSamplingProcessor } from "@saleor/apps-otel/src/tail-sampling-processor";
+import { TraceBufferingTailSamplingProcessor } from "@saleor/apps-otel/src/trace-buffering-tail-sampling-processor";
 import { registerOTel } from "@vercel/otel";
 
 import pkg from "../../package.json";
@@ -17,16 +17,17 @@ const batchProcessor = createBatchSpanProcessor({
   accessToken: process.env.OTEL_ACCESS_TOKEN,
 });
 
-const tailSamplingProcessor = new TailSamplingProcessor({
+const tailSamplingProcessor = new TraceBufferingTailSamplingProcessor({
   processor: batchProcessor,
   slowThresholdMs: 5000,
+  bufferTimeoutMs: 55000, // Under Vercel's 60s timeout
   exportErrors: true,
   exportSlowSpans: true,
 });
 
 registerOTel({
   serviceName: process.env.OTEL_SERVICE_NAME,
-  // Note: DeferredSampler + TailSamplingProcessor must be used together
+  // Note: DeferredSampler + TraceBufferingTailSamplingProcessor must be used together
   traceSampler: new DeferredSampler(),
   attributes: {
     [ATTR_SERVICE_VERSION]: pkg.version,
