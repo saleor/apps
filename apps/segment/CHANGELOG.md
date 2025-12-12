@@ -1,5 +1,13 @@
 # saleor-app-segment
 
+## 2.2.2
+
+### Patch Changes
+
+- Updated dependencies [37b91c88]
+  - @saleor/apps-otel@2.4.0
+  - @saleor/apps-logger@1.6.3
+
 ## 2.2.1
 
 ### Patch Changes

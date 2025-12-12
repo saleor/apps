@@ -1,5 +1,15 @@
 # saleor-app-payment-np-atobarai
 
+## 1.2.4
+
+### Patch Changes
+
+- f25d5c2c: Loosen validation of Atobarai error response. Now app will accept shape of errors containing arbitrary strings, without expecting their specific literal value.
+- Updated dependencies [37b91c88]
+  - @saleor/apps-otel@2.4.0
+  - @saleor/apps-logger@1.6.3
+  - @saleor/dynamo-config-repository@1.0.2
+
 ## 1.2.3
 
 ### Patch Changes

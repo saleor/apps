@@ -1,5 +1,13 @@
 # saleor-app-payment-stripe
 
+## 2.3.8
+
+### Patch Changes
+
+- Updated dependencies [37b91c88]
+  - @saleor/apps-otel@2.4.0
+  - @saleor/apps-logger@1.6.3
+
 ## 2.3.7
 
 ### Patch Changes
