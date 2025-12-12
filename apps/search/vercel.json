@@ -1,8 +1,11 @@
 {
   "functions": {
     "src/pages/api/webhooks/saleor/**/*": {
-      "memory": 256
+      "memory": 384
     }
   },
-  "regions": ["dub1", "iad1"]
+  "regions": [
+    "dub1",
+    "iad1"
+  ]
 }
