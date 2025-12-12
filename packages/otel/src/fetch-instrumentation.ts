@@ -8,9 +8,24 @@
  * (including errors) even when the span wasn't initially sampled, so that
  * TailSamplingProcessor can decide to promote error spans at span end.
  *
+ * ## Why we copy-paste instead of using alternatives
+ *
+ * We evaluated wrapper/proxy and monkey-patching approaches but they don't work:
+ *
+ * | Approach              | Why it doesn't work                                         |
+ * |-----------------------|-------------------------------------------------------------|
+ * | Wrapper pattern       | Span lifecycle is inside closure - can't intercept          |
+ * | Monkey-patch isSampled| It's an imported module binding - can't patch after import  |
+ * | Proxy TracerProvider  | Would enable propagation for ALL spans (we want selective)  |
+ * | SpanProcessor post-fix| Span ends with NO attributes when non-sampled               |
+ *
+ * The fundamental issue: we need recording=YES for all spans (tail sampling)
+ * but propagation=ONLY for truly sampled spans. The original code ties both
+ * behaviors to the same isSampled() check, requiring code modification.
+ *
  * ## What's copied from @vercel/otel
  *
- * Code is copied @vercel/otel v1.10.1 FetchInstrumentation.enable().
+ * Code is copied from @vercel/otel v1.10.1 FetchInstrumentation.enable().
  * Source: https://github.com/vercel/otel/blob/v1.10.1/packages/otel/src/instrumentations/fetch.ts
  *
  * Some comments to disable eslint errors were added.
@@ -18,7 +33,7 @@
  *
  * ## When to update
  *
- * If @vercel/otel updates their FetchInstrumentation, review their changes
+ * If @vercel/otel updates their FetchInstrumentation, review their changes.
  */
 import type { Attributes, Span, TextMapSetter, TracerProvider } from "@opentelemetry/api";
 import {
