@@ -2,7 +2,7 @@ import {
   createTraceEffect as createTraceEffectBase,
   TraceEffectCallbacks,
   TraceEffectOptions,
-} from "@saleor/apps-otel/trace-effect";
+} from "@saleor/apps-otel/src/trace-effect";
 
 import { createLogger } from "./logger";
 
@@ -35,5 +35,5 @@ export type {
   TraceEffectCallbacks,
   TraceEffectLogContext,
   TraceEffectOptions,
-} from "@saleor/apps-otel/trace-effect";
-export { DEFAULT_SLOW_THRESHOLD_MS } from "@saleor/apps-otel/trace-effect";
+} from "@saleor/apps-otel/src/trace-effect";
+export { DEFAULT_SLOW_THRESHOLD_MS } from "@saleor/apps-otel/src/trace-effect";
