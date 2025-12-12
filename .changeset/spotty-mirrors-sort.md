@@ -2,7 +2,7 @@
 "saleor-app-search": patch
 ---
 
-Added logs for tracing time of external API calls. When making API request, app will start timer and produce `debug` logs:
+Added logs and spans for tracing time of external API calls. When making API request, app will start timer and produce `debug` logs:
 - on start
 - on finish
 
