@@ -1,5 +1,12 @@
 # @saleor/apps-logger
 
+## 1.6.3
+
+### Patch Changes
+
+- Updated dependencies [37b91c88]
+  - @saleor/apps-otel@2.4.0
+
 ## 1.6.2
 
 ### Patch Changes
