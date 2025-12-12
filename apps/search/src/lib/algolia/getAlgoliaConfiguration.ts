@@ -4,6 +4,9 @@ import { AppConfigMetadataManager } from "../../modules/configuration/app-config
 import { createInstrumentedGraphqlClient } from "../create-instrumented-graphql-client";
 import { createLogger } from "../logger";
 import { createSettingsManager } from "../metadata";
+import { createTraceEffect } from "../trace-effect";
+
+const traceSaleorMetadata = createTraceEffect({ name: "Saleor getAppMetadata" });
 
 interface GetAlgoliaConfigurationArgs {
   authData: AuthData;
@@ -21,7 +24,9 @@ export const getAlgoliaConfiguration = async ({ authData }: GetAlgoliaConfigurat
   const configManager = new AppConfigMetadataManager(settings);
 
   try {
-    const config = await configManager.get(authData.saleorApiUrl);
+    const config = await traceSaleorMetadata(() => configManager.get(authData.saleorApiUrl), {
+      saleorApiUrl: authData.saleorApiUrl,
+    });
 
     if (config.getConfig()) {
       return {

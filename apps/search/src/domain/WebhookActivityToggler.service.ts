@@ -9,6 +9,7 @@ import {
   RemoveWebhookDocument,
 } from "../../generated/graphql";
 import { createLogger } from "../lib/logger";
+import { createTraceEffect } from "../lib/trace-effect";
 
 const logger = createLogger("WebhookActivityTogglerService");
 
@@ -30,6 +31,12 @@ export interface IWebhookActivityTogglerService {
 }
 
 export class WebhooksActivityClient implements IWebhooksActivityClient {
+  private traceFetchWebhooks = createTraceEffect({ name: "Saleor fetchOwnWebhooks" });
+  private traceDisableWebhook = createTraceEffect({ name: "Saleor disableWebhook" });
+  private traceEnableWebhook = createTraceEffect({ name: "Saleor enableWebhook" });
+  private traceCreateWebhook = createTraceEffect({ name: "Saleor createWebhook" });
+  private traceRemoveWebhook = createTraceEffect({ name: "Saleor removeWebhook" });
+
   constructor(private client: Pick<Client, "query" | "mutation">) {}
 
   private handleOperationFailure(r: OperationResult) {
@@ -42,70 +49,61 @@ export class WebhooksActivityClient implements IWebhooksActivityClient {
   }
 
   fetchAppWebhooksIDs(id: string) {
-    return this.client
-      .query(FetchOwnWebhooksDocument, { id })
-      .toPromise()
-      .then((r) => {
-        this.handleOperationFailure(r);
+    return this.traceFetchWebhooks(
+      () => this.client.query(FetchOwnWebhooksDocument, { id }).toPromise(),
+      { appId: id },
+    ).then((r) => {
+      this.handleOperationFailure(r);
 
-        if (!r.data?.app?.webhooks) {
-          throw new Error("Webhooks not registered for app, something is wrong");
-        }
+      if (!r.data?.app?.webhooks) {
+        throw new Error("Webhooks not registered for app, something is wrong");
+      }
 
-        return r.data?.app?.webhooks?.map((w) => w.id);
-      });
+      return r.data?.app?.webhooks?.map((w) => w.id);
+    });
   }
 
   disableSingleWebhook(id: string): Promise<void> {
-    return this.client
-      .mutation(DisableWebhookDocument, {
-        id,
-      })
-      .toPromise()
-      .then((r) => {
-        this.handleOperationFailure(r);
+    return this.traceDisableWebhook(
+      () => this.client.mutation(DisableWebhookDocument, { id }).toPromise(),
+      { webhookId: id },
+    ).then((r) => {
+      this.handleOperationFailure(r);
 
-        return undefined;
-      });
+      return undefined;
+    });
   }
 
   enableSingleWebhook(id: string): Promise<void> {
-    return this.client
-      .mutation(EnableWebhookDocument, {
-        id,
-      })
-      .toPromise()
-      .then((r) => {
-        this.handleOperationFailure(r);
+    return this.traceEnableWebhook(
+      () => this.client.mutation(EnableWebhookDocument, { id }).toPromise(),
+      { webhookId: id },
+    ).then((r) => {
+      this.handleOperationFailure(r);
 
-        return undefined;
-      });
+      return undefined;
+    });
   }
 
   createWebhook(input: CreateWebhookMutationVariables["input"]): Promise<void> {
-    return this.client
-      .mutation(CreateWebhookDocument, {
-        input,
-      })
-      .toPromise()
-      .then((r) => {
-        this.handleOperationFailure(r);
+    return this.traceCreateWebhook(() =>
+      this.client.mutation(CreateWebhookDocument, { input }).toPromise(),
+    ).then((r) => {
+      this.handleOperationFailure(r);
 
-        return undefined;
-      });
+      return undefined;
+    });
   }
 
   removeSingleWebhook(id: string): Promise<void> {
-    return this.client
-      .mutation(RemoveWebhookDocument, {
-        id,
-      })
-      .toPromise()
-      .then((r) => {
-        this.handleOperationFailure(r);
+    return this.traceRemoveWebhook(
+      () => this.client.mutation(RemoveWebhookDocument, { id }).toPromise(),
+      { webhookId: id },
+    ).then((r) => {
+      this.handleOperationFailure(r);
 
-        return undefined;
-      });
+      return undefined;
+    });
   }
 }
 

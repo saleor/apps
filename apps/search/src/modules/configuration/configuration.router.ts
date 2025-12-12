@@ -4,6 +4,7 @@ import { WebhookActivityTogglerService } from "../../domain/WebhookActivityToggl
 import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
 import { createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../../lib/metadata";
+import { createTraceEffect } from "../../lib/trace-effect";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";
@@ -11,6 +12,10 @@ import { AppConfigurationSchema, FieldsConfigSchema } from "./configuration";
 import { fetchLegacyConfiguration } from "./legacy-configuration";
 
 const logger = createLogger("configuration.router");
+
+const traceGetMetadata = createTraceEffect({ name: "Saleor getAppMetadata" });
+const traceSetMetadata = createTraceEffect({ name: "Saleor setAppMetadata" });
+const traceGetLegacyMetadata = createTraceEffect({ name: "Saleor getLegacyMetadata" });
 
 export const configurationRouter = router({
   getConfig: protectedClientProcedure.query(async ({ ctx }) => {
@@ -21,7 +26,10 @@ export const configurationRouter = router({
      */
     const domain = new URL(ctx.saleorApiUrl).host;
 
-    const config = await new AppConfigMetadataManager(settingsManager).get(ctx.saleorApiUrl);
+    const config = await traceGetMetadata(
+      () => new AppConfigMetadataManager(settingsManager).get(ctx.saleorApiUrl),
+      { saleorApiUrl: ctx.saleorApiUrl },
+    );
 
     /**
      * Verify if config is filled with data - by default its null
@@ -32,7 +40,10 @@ export const configurationRouter = router({
       /**
        * Otherwise fetch legacy config from old metadata keys
        */
-      const data = await fetchLegacyConfiguration(settingsManager, domain);
+      const data = await traceGetLegacyMetadata(
+        () => fetchLegacyConfiguration(settingsManager, domain),
+        { domain },
+      );
 
       if (data) {
         config.setAlgoliaSettings(data);
@@ -48,7 +59,9 @@ export const configurationRouter = router({
 
       const configManager = new AppConfigMetadataManager(settingsManager);
 
-      const config = await configManager.get(ctx.saleorApiUrl);
+      const config = await traceGetMetadata(() => configManager.get(ctx.saleorApiUrl), {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       try {
         logger.info("Will ping Algolia");
@@ -62,7 +75,9 @@ export const configurationRouter = router({
 
         config.setAlgoliaSettings(input);
 
-        await configManager.set(config, ctx.saleorApiUrl);
+        await traceSetMetadata(() => configManager.set(config, ctx.saleorApiUrl), {
+          saleorApiUrl: ctx.saleorApiUrl,
+        });
 
         logger.info("Settings set successfully");
 
@@ -90,10 +105,14 @@ export const configurationRouter = router({
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
       const configManager = new AppConfigMetadataManager(settingsManager);
 
-      const config = await configManager.get(ctx.saleorApiUrl);
+      const config = await traceGetMetadata(() => configManager.get(ctx.saleorApiUrl), {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
 
       config.setFieldsMapping(input.enabledAlgoliaFields);
 
-      configManager.set(config, ctx.saleorApiUrl);
+      await traceSetMetadata(() => configManager.set(config, ctx.saleorApiUrl), {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
     }),
 });

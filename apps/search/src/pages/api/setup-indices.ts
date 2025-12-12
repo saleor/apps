@@ -11,9 +11,13 @@ import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-g
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
 import { createSettingsManager } from "../../lib/metadata";
+import { createTraceEffect } from "../../lib/trace-effect";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 
 const logger = createLogger("setupIndicesHandler");
+
+const traceGetMetadata = createTraceEffect({ name: "Saleor getAppMetadata" });
+const traceFetchChannels = createTraceEffect({ name: "Saleor fetchChannels" });
 
 /**
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
@@ -39,8 +43,12 @@ export const setupIndicesHandlerFactory =
     const configManager = new AppConfigMetadataManager(settingsManager);
 
     const [config, channelsRequest] = await Promise.all([
-      configManager.get(authData.saleorApiUrl),
-      client.query(ChannelsDocument, {}).toPromise(),
+      traceGetMetadata(() => configManager.get(authData.saleorApiUrl), {
+        saleorApiUrl: authData.saleorApiUrl,
+      }),
+      traceFetchChannels(() => client.query(ChannelsDocument, {}).toPromise(), {
+        saleorApiUrl: authData.saleorApiUrl,
+      }),
     ]);
 
     const configData = config.getConfig();

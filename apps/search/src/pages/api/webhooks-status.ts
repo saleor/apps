@@ -8,8 +8,11 @@ import { saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
+import { createTraceEffect } from "../../lib/trace-effect";
 
 const logger = createLogger("webhooksStatusHandler");
+
+const traceFetchWebhooks = createTraceEffect({ name: "Saleor fetchOwnWebhooks" });
 
 /**
  * Simple dependency injection - factory injects all services, in tests everything can be configured without mocks
@@ -35,10 +38,10 @@ export const webhooksStatusHandlerFactory =
     try {
       logger.info("Will fetch Webhooks from Saleor");
 
-      const webhooks = await client
-        .query(FetchOwnWebhooksDocument, { id: authData.appId })
-        .toPromise()
-        .then((r) => r.data?.app?.webhooks);
+      const webhooks = await traceFetchWebhooks(
+        () => client.query(FetchOwnWebhooksDocument, { id: authData.appId }).toPromise(),
+        { appId: authData.appId },
+      ).then((r) => r.data?.app?.webhooks);
 
       if (!webhooks) {
         logger.error("Failed to fetch webhooks from Saleor - webhooks missing");

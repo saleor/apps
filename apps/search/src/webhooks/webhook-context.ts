@@ -4,6 +4,9 @@ import { ChannelsDocument } from "../../generated/graphql";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";
 import { getAlgoliaConfiguration } from "../lib/algolia/getAlgoliaConfiguration";
 import { createInstrumentedGraphqlClient } from "../lib/create-instrumented-graphql-client";
+import { createTraceEffect } from "../lib/trace-effect";
+
+const traceFetchChannels = createTraceEffect({ name: "Saleor fetchChannels" });
 
 /**
  * Fetches and creates all shared entities required by webhook to proceed
@@ -14,7 +17,10 @@ export const createWebhookContext = async ({ authData }: { authData: AuthData })
     saleorApiUrl: authData.saleorApiUrl,
     token: authData.token,
   });
-  const { data: channelsData } = await apiClient.query(ChannelsDocument, {}).toPromise();
+  const { data: channelsData } = await traceFetchChannels(
+    () => apiClient.query(ChannelsDocument, {}).toPromise(),
+    { saleorApiUrl: authData.saleorApiUrl },
+  );
   const channels = channelsData?.channels || [];
 
   if (!settings || errors) {
