@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.24.5
+
+### Patch Changes
+
+- 1e880d4e: Increased available memory (for Vercel deployments), which should leave more margin in case of loading large products
+
 ## 1.24.4
 
 ### Patch Changes
