@@ -109,16 +109,6 @@ const validateClientToken = middleware(async ({ ctx, next, meta }) => {
   });
 });
 
-const logErrors = middleware(async ({ next }) => {
-  const result = await next();
-
-  if (!result.ok) {
-    logger.error(result.error.message, { error: result.error });
-  }
-
-  return result;
-});
-
 /**
  * Construct common graphQL client and attach it to the context
  *
@@ -128,7 +118,6 @@ const logErrors = middleware(async ({ next }) => {
  * TODO: Rethink middleware composition to enable safe server-side router calls
  */
 export const protectedClientProcedure = procedure
-  .use(logErrors)
   .use(attachAppToken)
   .use(validateClientToken)
   .use(attachSharedServices);
