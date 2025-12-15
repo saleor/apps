@@ -1,7 +1,7 @@
 {
   "functions": {
     "src/pages/api/webhooks/saleor/**/*": {
-      "memory": 420
+      "memory": 512
     }
   },
   "regions": [
