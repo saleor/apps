@@ -6,7 +6,7 @@ on:
 
 jobs:
   assign_creator:
-    if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' && github.event.pull_request.user.login != 'saleor-deployments' }}
+    if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' && github.event.pull_request.user.login != 'saleor-deployments[bot]' }}
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repo
