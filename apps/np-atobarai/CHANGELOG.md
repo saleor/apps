@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.2.5
+
+### Patch Changes
+
+- c0533509: Removed unnecessary error log (duplicated) for trpc
+
 ## 1.2.4
 
 ### Patch Changes
