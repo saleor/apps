@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.24.6
+
+### Patch Changes
+
+- 9e17703c: Updated tTRPC to 10.45.3
+
 ## 1.24.5
 
 ### Patch Changes

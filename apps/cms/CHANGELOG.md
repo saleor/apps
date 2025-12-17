@@ -1,5 +1,11 @@
 # saleor-app-cms
 
+## 2.13.3
+
+### Patch Changes
+
+- 9e17703c: Updated tTRPC to 10.45.3
+
 ## 2.13.2
 
 ### Patch Changes
