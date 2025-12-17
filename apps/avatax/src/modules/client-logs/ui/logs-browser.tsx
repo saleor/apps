@@ -137,6 +137,7 @@ const LogsByDate = () => {
 
   const isEmpty = !isLoading && data?.clientLogs && data.clientLogs.length === 0;
   const isLoaded = !isLoading && data?.clientLogs && data.clientLogs.length > 0;
+  const logs = (data?.clientLogs ?? []) as unknown as Array<ClientLogValue>;
 
   return (
     <Box>
@@ -160,7 +161,7 @@ const LogsByDate = () => {
       </Box>
       {error && <Text color="critical1">{error.message}</Text>}
       {isEmpty && <Text>No logs are available for specified date range</Text>}
-      {isLoaded && <LogsList logs={data.clientLogs} />}
+      {isLoaded && <LogsList logs={logs} />}
       {isLoading && <LogsSkeleton />}
       <LogsPagiation
         onForwardButtonClick={() => goToNextEvaluatedKey(data?.lastEvaluatedKey)}
@@ -188,6 +189,7 @@ const LogsByCheckoutOrOrderId = () => {
 
   const isEmpty = !isLoading && data?.clientLogs && data.clientLogs.length === 0;
   const isLoaded = !isLoading && data?.clientLogs && data.clientLogs.length > 0;
+  const logs = (data?.clientLogs ?? []) as unknown as Array<ClientLogValue>;
 
   return (
     <Box>
@@ -204,7 +206,7 @@ const LogsByCheckoutOrOrderId = () => {
       </Box>
       {error && <Text color="critical1">{error.message}</Text>}
       {isEmpty && <Text>No logs are available for the specified ID</Text>}
-      {isLoaded && <LogsList logs={data.clientLogs} />}
+      {isLoaded && <LogsList logs={logs} />}
       {isLoading && query && <LogsSkeleton />}
       {!query && <Text>Enter Checkout or Order ID and wait for results</Text>}
       <LogsPagiation
