@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.3.9
+
+### Patch Changes
+
+- 9e17703c: Updated tTRPC to 10.45.3
+
 ## 2.3.8
 
 ### Patch Changes

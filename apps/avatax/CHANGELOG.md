@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.21.7
+
+### Patch Changes
+
+- 9e17703c: Updated tTRPC to 10.45.3
+
 ## 1.21.6
 
 ### Patch Changes

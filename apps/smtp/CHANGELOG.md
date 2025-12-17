@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 1.4.5
+
+### Patch Changes
+
+- 9e17703c: Updated tTRPC to 10.45.3
+
 ## 1.4.4
 
 ### Patch Changes
