@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.2.7
+
+### Patch Changes
+
+- e2eb32bb: Additionally print warning logs for raw Atobarai responses
+
 ## 1.2.6
 
 ### Patch Changes
