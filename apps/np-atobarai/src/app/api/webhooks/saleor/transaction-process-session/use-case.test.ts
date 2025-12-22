@@ -26,6 +26,7 @@ import {
 } from "@/modules/transaction-result/charge-result";
 
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
+import { PayloadValidationError } from "../use-case-errors";
 import { TransactionProcessSessionUseCase } from "./use-case";
 import { TransactionProcessSessionUseCaseResponse } from "./use-case-response";
 
@@ -297,6 +298,83 @@ describe("TransactionProcessSessionUseCase", () => {
     });
 
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
+  });
+
+  it("should return Failure response with PayloadValidationError when billing address is missing", async () => {
+    const eventWithMissingBillingAddress = {
+      ...mockedTransactionProcessSessionEvent,
+      sourceObject: {
+        ...mockedTransactionProcessSessionEvent.sourceObject,
+        billingAddress: null,
+      },
+    };
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
+    );
+
+    const uc = new TransactionProcessSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+    });
+
+    const responsePayload = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithMissingBillingAddress,
+    });
+
+    const response = responsePayload._unsafeUnwrap();
+
+    expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
+    expect(response.transactionResult).toBeInstanceOf(ChargeFailureResult);
+
+    if (response instanceof TransactionProcessSessionUseCaseResponse.Failure) {
+      expect(response.error).toBeInstanceOf(PayloadValidationError);
+    }
+
+    const responseJson = (await response.getResponse().json()) as {
+      data: { errors: Array<{ code: string; message: string }> };
+    };
+
+    expect(responseJson.data.errors[0].code).toBe("PayloadValidationError");
+  });
+
+  it("should return Failure response with PayloadValidationError when phone is missing", async () => {
+    const eventWithMissingPhone = {
+      ...mockedTransactionProcessSessionEvent,
+      sourceObject: {
+        ...mockedTransactionProcessSessionEvent.sourceObject,
+        billingAddress: {
+          ...mockedTransactionProcessSessionEvent.sourceObject.billingAddress,
+          phone: null,
+        },
+      },
+    };
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
+    );
+
+    const uc = new TransactionProcessSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+    });
+
+    const responsePayload = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithMissingPhone,
+    });
+
+    const response = responsePayload._unsafeUnwrap();
+
+    expect(response).toBeInstanceOf(TransactionProcessSessionUseCaseResponse.Failure);
+
+    if (response instanceof TransactionProcessSessionUseCaseResponse.Failure) {
+      expect(response.error).toBeInstanceOf(PayloadValidationError);
+      expect(response.error.message).toContain("Phone number is required");
+    }
   });
 
   describe("Integration - Full HTTP Flow", () => {
