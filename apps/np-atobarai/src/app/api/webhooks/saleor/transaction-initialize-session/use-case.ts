@@ -1,6 +1,6 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
-import { err, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok, Result } from "neverthrow";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
@@ -37,8 +37,13 @@ import {
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "../saleor-webhook-responses";
-import { AtobaraiFailureTransactionError } from "../use-case-errors";
+import { AtobaraiFailureTransactionError, PayloadValidationError } from "../use-case-errors";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
+
+const toPayloadValidationError = (error: unknown) =>
+  new PayloadValidationError(error instanceof Error ? error.message : "Unknown validation error", {
+    cause: error,
+  });
 
 type UseCaseExecuteResult = Promise<
   Result<
@@ -193,8 +198,24 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
       atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
+    const transactionPayload = fromThrowable(
+      () => this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value),
+      toPayloadValidationError,
+    )().mapErr((error) => {
+      this.logger.warn("Failed to prepare transaction payload", { error });
+
+      return new TransactionInitializeSessionUseCaseResponse.Failure({
+        transactionResult: new ChargeFailureResult(),
+        error,
+      });
+    });
+
+    if (transactionPayload.isErr()) {
+      return ok(transactionPayload.error);
+    }
+
     const registerTransactionResult = await apiClient.registerTransaction(
-      this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value),
+      transactionPayload.value,
       {
         rejectMultipleResults: true,
       },

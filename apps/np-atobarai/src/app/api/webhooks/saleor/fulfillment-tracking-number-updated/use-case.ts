@@ -1,6 +1,6 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
-import { err, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok, Result } from "neverthrow";
 import { Client } from "urql";
 
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
@@ -137,16 +137,34 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
 
   private resolveAtobaraiPDCompanyCodeFromMetadata(
     event: FulfillmentTrackingNumberUpdatedEventFragment,
-  ): AtobaraiShippingCompanyCode | null {
-    if (event.fulfillment?.atobaraiPDCompanyCode) {
-      this.logger.info("Using Atobarai PD company code from private metadata", {
-        atobaraiPDCompanyCode: event.fulfillment.atobaraiPDCompanyCode,
-      });
-
-      return createAtobaraiShippingCompanyCode(event.fulfillment.atobaraiPDCompanyCode);
+  ): Result<AtobaraiShippingCompanyCode | null, MalformedRequestResponse> {
+    if (!event.fulfillment?.atobaraiPDCompanyCode) {
+      return ok(null);
     }
 
-    return null;
+    this.logger.info("Using Atobarai PD company code from private metadata", {
+      atobaraiPDCompanyCode: event.fulfillment.atobaraiPDCompanyCode,
+    });
+
+    const safeParser = fromThrowable(
+      createAtobaraiShippingCompanyCode,
+      (error) =>
+        new MalformedRequestResponse(
+          new BaseError(
+            `Invalid Atobarai shipping company code in metadata: ${event.fulfillment?.atobaraiPDCompanyCode}`,
+            { cause: error },
+          ),
+        ),
+    );
+
+    return safeParser(event.fulfillment.atobaraiPDCompanyCode).mapErr((error) => {
+      this.logger.warn("Invalid Atobarai shipping company code in metadata", {
+        atobaraiPDCompanyCode: event.fulfillment?.atobaraiPDCompanyCode,
+        error,
+      });
+
+      return error;
+    });
   }
 
   async execute(params: {
@@ -182,7 +200,13 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
-    const metadataShippingCompanyCode = this.resolveAtobaraiPDCompanyCodeFromMetadata(event);
+    const metadataShippingCompanyCodeResult = this.resolveAtobaraiPDCompanyCodeFromMetadata(event);
+
+    if (metadataShippingCompanyCodeResult.isErr()) {
+      return err(metadataShippingCompanyCodeResult.error);
+    }
+
+    const metadataShippingCompanyCode = metadataShippingCompanyCodeResult.value;
 
     const reportFulfillmentResult = await apiClient.reportFulfillment(
       createAtobaraiFulfillmentReportPayload({

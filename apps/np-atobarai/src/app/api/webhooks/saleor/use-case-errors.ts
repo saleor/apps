@@ -13,4 +13,16 @@ export const AtobaraiFailureTransactionError = BaseError.subclass(
   },
 );
 
-export type UseCaseErrors = InstanceType<typeof AtobaraiFailureTransactionError>;
+export const PayloadValidationErrorPublicCode = "PayloadValidationError" as const;
+
+export const PayloadValidationError = BaseError.subclass("PayloadValidationError", {
+  props: {
+    _brand: "PayloadValidationError" as const,
+    publicCode: PayloadValidationErrorPublicCode,
+    publicMessage: "Failed to prepare transaction payload",
+  },
+});
+
+export type UseCaseErrors =
+  | InstanceType<typeof AtobaraiFailureTransactionError>
+  | InstanceType<typeof PayloadValidationError>;
