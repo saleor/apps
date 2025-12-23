@@ -9,20 +9,10 @@ describe("createAtobaraiTerminalId", () => {
     expect(result).toBe("TERMINAL_ID");
   });
 
-  it("should throw ZodError when input is an empty string", () => {
-    expect(() => createAtobaraiTerminalId("")).toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
-        {
-          "code": "too_small",
-          "minimum": 1,
-          "type": "string",
-          "inclusive": true,
-          "exact": false,
-          "message": "String must contain at least 1 character(s)",
-          "path": []
-        }
-      ]]
-    `);
+  it("should throw validation error when input is an empty string", () => {
+    expect(() => createAtobaraiTerminalId("")).toThrow(
+      "Invalid terminal ID: String must contain at least 1 character(s)",
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiTerminalId", () => {

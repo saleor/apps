@@ -2,6 +2,12 @@ import { BaseError } from "@saleor/errors";
 
 import { SourceObjectFragment } from "@/generated/graphql";
 
+export const AtobaraiLineCalculationError = BaseError.subclass("AtobaraiLineCalculationError", {
+  props: {
+    _brand: "AtobaraiLineCalculationError" as const,
+  },
+});
+
 export class AtobaraiLineCalculation {
   private getProductGoodsName = (args: {
     useSkuAsName: boolean;
@@ -26,7 +32,7 @@ export class AtobaraiLineCalculation {
       const variant = line.__typename === "CheckoutLine" ? line.checkoutVariant : line.orderVariant;
 
       if (!variant) {
-        throw new BaseError(
+        throw new AtobaraiLineCalculationError(
           `Line ${line.__typename} does not have a variant. Cannot convert to AtobaraiGoods.`,
         );
       }

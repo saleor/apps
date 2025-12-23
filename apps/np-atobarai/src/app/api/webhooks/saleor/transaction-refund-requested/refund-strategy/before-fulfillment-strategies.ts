@@ -22,7 +22,7 @@ import {
   RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 
-import { MalformedRequestResponse } from "../../saleor-webhook-responses";
+import { InvalidEventDataResponse } from "../../saleor-webhook-responses";
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
 import { BeforeFulfillmentRefundContext, BeforeFulfillmentRefundStrategy } from "./types";
 
@@ -31,7 +31,7 @@ export class BeforeFulfillmentFullRefundStrategy implements BeforeFulfillmentRef
 
   async execute(
     context: BeforeFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, InvalidEventDataResponse>> {
     const { atobaraiTransactionId, apiClient } = context;
 
     const payload = createAtobaraiCancelTransactionPayload({
@@ -73,7 +73,7 @@ export class BeforeFulfillmentPartialRefundWithLineItemsStrategy
 
   async execute(
     context: BeforeFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, InvalidEventDataResponse>> {
     const { parsedEvent, appConfig, atobaraiTransactionId, apiClient } = context;
 
     if (!parsedEvent.grantedRefund) {
@@ -152,7 +152,7 @@ export class BeforeFulfillmentPartialRefundWithoutLineItemsStrategy
 
   async execute(
     context: BeforeFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, InvalidEventDataResponse>> {
     const { parsedEvent, appConfig, atobaraiTransactionId, apiClient } = context;
 
     const amountAfterRefund = parsedEvent.sourceObjectTotalAmount - parsedEvent.refundedAmount;
