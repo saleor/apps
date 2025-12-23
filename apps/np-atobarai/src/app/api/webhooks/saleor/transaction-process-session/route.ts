@@ -10,8 +10,9 @@ import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { AtobaraiApiClientFactory } from "@/modules/atobarai/api/atobarai-api-client-factory";
+import { AtobaraiCustomerMissingDataError } from "@/modules/atobarai/atobarai-customer";
 
-import { UnhandledErrorResponse } from "../saleor-webhook-responses";
+import { MalformedRequestResponse, UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
 import { TransactionProcessSessionUseCase } from "./use-case";
 import { transactionProcessSessionWebhookDefinition } from "./webhook-definition";
@@ -58,6 +59,13 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(
         },
       );
     } catch (error) {
+      // TODO: Replace with proper error handling via PayloadValidationError (PR #2176)
+      if (error instanceof AtobaraiCustomerMissingDataError) {
+        logger.warn("Missing customer data in request", { error });
+
+        return new MalformedRequestResponse(error).getResponse();
+      }
+
       captureException(error);
       logger.error("Unhandled error", { error: error });
 
