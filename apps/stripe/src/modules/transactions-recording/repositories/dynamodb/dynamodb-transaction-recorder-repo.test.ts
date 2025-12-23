@@ -1,3 +1,4 @@
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -71,8 +72,26 @@ describe("DynamoDBTransactionRecorderRepo", () => {
       );
     });
 
-    // Make it integration test todo
-    it.todo("Returns error if trying to save transaction already existing");
+    it("Returns success when transaction already exists (idempotency - handles race condition from users calling mutations)", async () => {
+      mockDocumentClient.on(PutCommand, {}).rejectsOnce(
+        new ConditionalCheckFailedException({
+          message: "The conditional request failed",
+          $metadata: {},
+        }),
+      );
+
+      const result = await repo.recordTransaction(
+        {
+          saleorApiUrl: mockedSaleorApiUrl,
+          appId: mockedSaleorAppId,
+        },
+        getMockedRecordedTransaction(),
+      );
+
+      // Should return success, not error - the desired state already exists
+      expect(result.isOk()).toBe(true);
+      expect(result._unsafeUnwrap()).toBeNull();
+    });
   });
 
   describe("getTransactionByStripePaymentIntentId", () => {
