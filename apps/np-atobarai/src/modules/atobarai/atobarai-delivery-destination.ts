@@ -45,13 +45,24 @@ export const createAtobaraiDeliveryDestination = (event: {
     );
   }
 
-  return AtobaraiDeliveryDestinationSchema.parse({
+  const parseResult = AtobaraiDeliveryDestinationSchema.safeParse({
     customer_name: formatCustomerName(shippingAddress),
     company_name: shippingAddress.companyName,
     zip_code: shippingAddress.postalCode,
     address: new AtobaraiAddressFormatter().formatAddress(shippingAddress),
     tel: formatPhone(shippingAddress.phone),
   });
+
+  if (!parseResult.success) {
+    throw new AtobaraiDeliveryDestinationMissingDataError(
+      `Invalid delivery destination data: ${parseResult.error.errors
+        .map((e) => e.message)
+        .join(", ")}`,
+      { cause: parseResult.error },
+    );
+  }
+
+  return parseResult.data;
 };
 
 export type AtobaraiDeliveryDestination = z.infer<typeof AtobaraiDeliveryDestinationSchema>;
