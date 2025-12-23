@@ -143,6 +143,19 @@ describe("createAtobaraiCustomer", () => {
     );
   });
 
+  it("should throw MissingDataError when email format is invalid", () => {
+    const eventWithInvalidEmail = {
+      sourceObject: {
+        ...mockedCheckoutSourceObject,
+        email: "invalid-email-format",
+      },
+    };
+
+    expect(() => createAtobaraiCustomer(eventWithInvalidEmail)).toThrow(
+      "Invalid customer data: Invalid email",
+    );
+  });
+
   it("shouldn't be assignable without createAtobaraiCustomer", () => {
     // @ts-expect-error - if this fails - it means the type is not branded
     const testValue: AtobaraiCustomer = { customer_name: "Test Customer" };
