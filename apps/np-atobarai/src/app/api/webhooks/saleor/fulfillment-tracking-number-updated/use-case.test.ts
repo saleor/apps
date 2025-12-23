@@ -22,7 +22,7 @@ import { TransactionRecordRepoError } from "@/modules/transactions-recording/typ
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
-  MalformedRequestResponse,
+  InvalidEventDataResponse,
 } from "../saleor-webhook-responses";
 import { FulfillmentTrackingNumberUpdatedUseCase } from "./use-case";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
@@ -164,7 +164,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
   });
 
-  it("should return MalformedRequestResponse when fulfillment is missing", async () => {
+  it("should return InvalidEventDataResponse when fulfillment is missing", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -185,10 +185,10 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
-  it("should return MalformedRequestResponse when tracking number is missing", async () => {
+  it("should return InvalidEventDataResponse when tracking number is missing", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -212,10 +212,10 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
-  it("should return MalformedRequestResponse when order transactions are missing", async () => {
+  it("should return InvalidEventDataResponse when order transactions are missing", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -240,10 +240,10 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
-  it("should return MalformedRequestResponse when multiple transactions are found", async () => {
+  it("should return InvalidEventDataResponse when multiple transactions are found", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -283,10 +283,10 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
-  it("should return MalformedRequestResponse when transaction was not created by an app", async () => {
+  it("should return InvalidEventDataResponse when transaction was not created by an app", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -318,10 +318,10 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
-  it("should return MalformedRequestResponse when transaction was created by different app", async () => {
+  it("should return InvalidEventDataResponse when transaction was created by different app", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -354,7 +354,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
   it("should return BrokenAppResponse when transactionRecordRepo fails to create transaction", async () => {

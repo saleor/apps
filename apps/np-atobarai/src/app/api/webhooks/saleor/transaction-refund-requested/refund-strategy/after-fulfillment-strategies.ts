@@ -25,7 +25,7 @@ import {
   RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 
-import { MalformedRequestResponse } from "../../saleor-webhook-responses";
+import { InvalidEventDataResponse } from "../../saleor-webhook-responses";
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
 import { AfterFulfillmentRefundContext, AfterFulfillmentRefundStrategy } from "./types";
 
@@ -37,7 +37,7 @@ export class AfterFulfillmentFullRefundStrategy implements AfterFulfillmentRefun
 
   async execute(
     context: AfterFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, InvalidEventDataResponse>> {
     const { atobaraiTransactionId, apiClient } = context;
 
     const payload = createAtobaraiCancelTransactionPayload({
@@ -85,7 +85,7 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy
 
   async execute(
     context: AfterFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, InvalidEventDataResponse>> {
     const {
       parsedEvent,
       appConfig,
@@ -234,7 +234,7 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy
 
   async execute(
     context: AfterFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, InvalidEventDataResponse>> {
     const {
       parsedEvent,
       appConfig,

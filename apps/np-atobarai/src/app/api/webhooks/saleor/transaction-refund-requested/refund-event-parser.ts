@@ -7,7 +7,7 @@ import {
   TransactionRefundRequestedEventFragment,
 } from "@/generated/graphql";
 
-import { MalformedRequestResponse } from "../saleor-webhook-responses";
+import { InvalidEventDataResponse } from "../saleor-webhook-responses";
 
 export interface ParsedRefundEvent {
   refundedAmount: number;
@@ -24,21 +24,21 @@ export interface ParsedRefundEvent {
 export class RefundEventParser {
   parse(
     event: TransactionRefundRequestedEventFragment,
-  ): Result<ParsedRefundEvent, MalformedRequestResponse> {
+  ): Result<ParsedRefundEvent, InvalidEventDataResponse> {
     if (!event.action.amount) {
-      return err(new MalformedRequestResponse(new BaseError("Refund amount is required")));
+      return err(new InvalidEventDataResponse(new BaseError("Refund amount is required")));
     }
 
     if (!event.transaction?.pspReference) {
-      return err(new MalformedRequestResponse(new BaseError("PSP reference is required")));
+      return err(new InvalidEventDataResponse(new BaseError("PSP reference is required")));
     }
 
     if (!event.transaction?.token) {
-      return err(new MalformedRequestResponse(new BaseError("Transaction token is required")));
+      return err(new InvalidEventDataResponse(new BaseError("Transaction token is required")));
     }
 
     if (!event.issuedAt) {
-      return err(new MalformedRequestResponse(new BaseError("Issued at date is required")));
+      return err(new InvalidEventDataResponse(new BaseError("Issued at date is required")));
     }
 
     const sourceObjectTotalAmount =
@@ -46,21 +46,21 @@ export class RefundEventParser {
       event.transaction.order?.total.gross.amount;
 
     if (!sourceObjectTotalAmount) {
-      return err(new MalformedRequestResponse(new BaseError("Total amount is required")));
+      return err(new InvalidEventDataResponse(new BaseError("Total amount is required")));
     }
 
     const channelId =
       event.transaction.checkout?.channel?.id || event.transaction.order?.channel?.id;
 
     if (!channelId) {
-      return err(new MalformedRequestResponse(new BaseError("Channel ID is required")));
+      return err(new InvalidEventDataResponse(new BaseError("Channel ID is required")));
     }
 
     const sourceObject = event.transaction.checkout || event.transaction.order;
 
     if (!sourceObject) {
       return err(
-        new MalformedRequestResponse(
+        new InvalidEventDataResponse(
           new BaseError("Source object (checkout or order) is required"),
         ),
       );

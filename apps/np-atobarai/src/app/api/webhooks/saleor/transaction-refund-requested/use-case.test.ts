@@ -25,7 +25,7 @@ import {
 } from "@/modules/transaction-result/refund-result";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
-import { MalformedRequestResponse } from "../saleor-webhook-responses";
+import { InvalidEventDataResponse } from "../saleor-webhook-responses";
 import { TransactionRefundRequestedUseCase } from "./use-case";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
@@ -34,7 +34,7 @@ describe("TransactionRefundRequestedUseCase", () => {
     create: () => mockedAtobaraiApiClient,
   } satisfies IAtobaraiApiClientFactory;
 
-  it("should return MalformedRequestResponse when action amount is missing", async () => {
+  it("should return InvalidEventDataResponse when action amount is missing", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
       action: { amount: null, currency: "JPY" },
@@ -53,10 +53,10 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
-  it("should return MalformedRequestResponse when transaction is missing", async () => {
+  it("should return InvalidEventDataResponse when transaction is missing", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
       transaction: null,
@@ -74,10 +74,10 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
-  it("should return MalformedRequestResponse when total amount is missing from both checkout and order", async () => {
+  it("should return InvalidEventDataResponse when total amount is missing from both checkout and order", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
       transaction: {
@@ -98,7 +98,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
   describe("before fulfillment refunds", () => {

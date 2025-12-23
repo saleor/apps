@@ -13,7 +13,7 @@ import { BaseUseCase } from "../base-use-case";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
-  MalformedRequestResponse,
+  InvalidEventDataResponse,
 } from "../saleor-webhook-responses";
 import { RefundEventParser } from "./refund-event-parser";
 import { AfterFulfillmentRefundOrchestrator } from "./refund-orchestrator/after-fulfillment-refund-orchestrator";
@@ -23,7 +23,7 @@ import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 type UseCaseExecuteResult = Promise<
   Result<
     TransactionRefundRequestedUseCaseResponse,
-    AppIsNotConfiguredResponse | MalformedRequestResponse | BrokenAppResponse
+    AppIsNotConfiguredResponse | InvalidEventDataResponse | BrokenAppResponse
   >
 >;
 

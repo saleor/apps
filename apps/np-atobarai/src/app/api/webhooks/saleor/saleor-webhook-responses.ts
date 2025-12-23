@@ -51,8 +51,8 @@ export class UnhandledErrorResponse extends ErrorWebhookResponse {
   }
 }
 
-export class MalformedRequestResponse extends ErrorWebhookResponse {
-  readonly message = "Malformed request";
+export class InvalidEventDataResponse extends ErrorWebhookResponse {
+  readonly message = "Invalid event data";
   /**
    * This happens when e.g. event can't be parsed by app, because it's different channel etc.
    * That's why we return 202 so Saleor ignores retrying, but also do not disable the webhook via circuit breaker mechanism

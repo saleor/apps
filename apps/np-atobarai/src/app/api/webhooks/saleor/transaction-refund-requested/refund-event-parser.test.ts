@@ -39,9 +39,9 @@ describe("RefundEventParser", () => {
       const result = parser.parse(invalidEvent);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        MalformedRequestResponse {
+        InvalidEventDataResponse {
           "error": [BaseError: Refund amount is required],
-          "message": "Malformed request",
+          "message": "Invalid event data",
           "statusCode": 202,
         }
       `);
@@ -59,9 +59,9 @@ describe("RefundEventParser", () => {
       const result = parser.parse(invalidEvent);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        MalformedRequestResponse {
+        InvalidEventDataResponse {
           "error": [BaseError: PSP reference is required],
-          "message": "Malformed request",
+          "message": "Invalid event data",
           "statusCode": 202,
         }
       `);
@@ -79,9 +79,9 @@ describe("RefundEventParser", () => {
       const result = parser.parse(invalidEvent);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        MalformedRequestResponse {
+        InvalidEventDataResponse {
           "error": [BaseError: Transaction token is required],
-          "message": "Malformed request",
+          "message": "Invalid event data",
           "statusCode": 202,
         }
       `);
@@ -96,9 +96,9 @@ describe("RefundEventParser", () => {
       const result = parser.parse(invalidEvent);
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        MalformedRequestResponse {
+        InvalidEventDataResponse {
           "error": [BaseError: Issued at date is required],
-          "message": "Malformed request",
+          "message": "Invalid event data",
           "statusCode": 202,
         }
       `);
