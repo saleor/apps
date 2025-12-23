@@ -187,7 +187,7 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
     `);
   });
 
-  it("should throw ZodError when np_transaction_id is missing", () => {
+  it("should throw AtobaraiTransactionSuccessResponseValidationError when np_transaction_id is missing", () => {
     const rawResponse = {
       results: [
         {
@@ -197,22 +197,9 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
       ],
     };
 
-    expect(() => createAtobaraiTransactionSuccessResponse(rawResponse))
-      .toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
-        {
-          "code": "invalid_type",
-          "expected": "string",
-          "received": "undefined",
-          "path": [
-            "results",
-            0,
-            "np_transaction_id"
-          ],
-          "message": "Required"
-        }
-      ]]
-    `);
+    expect(() => createAtobaraiTransactionSuccessResponse(rawResponse)).toThrow(
+      "Invalid Atobarai transaction success response format: Required",
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiRegisterTransactionSuccessResponse", () => {

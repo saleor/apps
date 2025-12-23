@@ -78,26 +78,15 @@ describe("createAtobaraiFulfillmentReportSuccessResponse", () => {
     `);
   });
 
-  it("should throw ZodError when results is missing", () => {
+  it("should throw validation error when results is missing", () => {
     const rawResponse = {};
 
-    expect(() => createAtobaraiFulfillmentReportSuccessResponse(rawResponse))
-      .toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
-        {
-          "code": "invalid_type",
-          "expected": "array",
-          "received": "undefined",
-          "path": [
-            "results"
-          ],
-          "message": "Required"
-        }
-      ]]
-    `);
+    expect(() => createAtobaraiFulfillmentReportSuccessResponse(rawResponse)).toThrow(
+      "Invalid Atobarai fulfillment report success response format: Required",
+    );
   });
 
-  it("should throw ZodError when np_transaction_id is missing", () => {
+  it("should throw validation error when np_transaction_id is missing", () => {
     const rawResponse = {
       results: [
         {
@@ -106,22 +95,9 @@ describe("createAtobaraiFulfillmentReportSuccessResponse", () => {
       ],
     };
 
-    expect(() => createAtobaraiFulfillmentReportSuccessResponse(rawResponse))
-      .toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
-        {
-          "code": "invalid_type",
-          "expected": "string",
-          "received": "undefined",
-          "path": [
-            "results",
-            0,
-            "np_transaction_id"
-          ],
-          "message": "Required"
-        }
-      ]]
-    `);
+    expect(() => createAtobaraiFulfillmentReportSuccessResponse(rawResponse)).toThrow(
+      "Invalid Atobarai fulfillment report success response format: Required",
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiFulfillmentReportSuccessResponse", () => {

@@ -1,3 +1,4 @@
+import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
 import { SaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
@@ -32,6 +33,15 @@ const schema = z
   })
   .brand("AtobaraiChangeTransactionPayload");
 
+export const AtobaraiChangeTransactionPayloadValidationError = BaseError.subclass(
+  "AtobaraiChangeTransactionPayloadValidationError",
+  {
+    props: {
+      _brand: "AtobaraiChangeTransactionPayloadValidationError" as const,
+    },
+  },
+);
+
 export const createAtobaraiChangeTransactionPayload = (args: {
   atobaraiTransactionId: AtobaraiTransactionId;
   saleorTransactionToken: SaleorTransactionToken;
@@ -41,7 +51,7 @@ export const createAtobaraiChangeTransactionPayload = (args: {
   atobaraiGoods: AtobaraiGoods;
   atobaraiShopOrderDate: AtobaraiShopOrderDate;
 }): AtobaraiChangeTransactionPayload => {
-  return schema.parse({
+  const parseResult = schema.safeParse({
     transactions: [
       {
         np_transaction_id: args.atobaraiTransactionId,
@@ -55,6 +65,17 @@ export const createAtobaraiChangeTransactionPayload = (args: {
       },
     ],
   });
+
+  if (!parseResult.success) {
+    throw new AtobaraiChangeTransactionPayloadValidationError(
+      `Invalid change transaction payload: ${parseResult.error.errors
+        .map((e) => e.message)
+        .join(", ")}`,
+      { cause: parseResult.error },
+    );
+  }
+
+  return parseResult.data;
 };
 
 export type AtobaraiChangeTransactionPayload = z.infer<typeof schema>;

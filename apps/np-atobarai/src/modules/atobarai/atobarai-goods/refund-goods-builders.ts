@@ -1,6 +1,6 @@
 import { OrderGrantedRefundFragment, SourceObjectFragment } from "@/generated/graphql";
 
-import { AtobaraiGoods, AtobaraiGoodsSchema } from "./atobarai-goods";
+import { AtobaraiGoods, createAtobaraiGoods } from "./atobarai-goods";
 import { AtobaraiLineCalculation } from "./atobarai-line-calculation";
 
 export class PartialRefundWithoutLineItemsGoodsBuilder {
@@ -25,7 +25,7 @@ export class PartialRefundWithoutLineItemsGoodsBuilder {
     );
     const discountLine = this.lineCalculation.calculateRefundAligment(refundedAmount);
 
-    return AtobaraiGoodsSchema.parse(
+    return createAtobaraiGoods(
       [...productLines, voucherLine, shippingLine, discountLine].filter(Boolean),
     );
   }
@@ -75,7 +75,7 @@ export class PartialRefundWithLineItemsGoodsBuilder {
       ? this.lineCalculation.calculateRefundAligment(sourceObject.shippingPrice.gross.amount)
       : null;
 
-    return AtobaraiGoodsSchema.parse(
+    return createAtobaraiGoods(
       [...productLines, voucherLine, shippingLine, refundAligmentLine].filter(Boolean),
     );
   }

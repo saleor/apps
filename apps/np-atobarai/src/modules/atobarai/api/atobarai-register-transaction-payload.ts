@@ -1,3 +1,4 @@
+import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
 import { SaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
@@ -30,6 +31,15 @@ const schema = z
   })
   .brand("AtobaraiRegisterTransactionPayload");
 
+export const AtobaraiRegisterTransactionPayloadValidationError = BaseError.subclass(
+  "AtobaraiRegisterTransactionPayloadValidationError",
+  {
+    props: {
+      _brand: "AtobaraiRegisterTransactionPayloadValidationError" as const,
+    },
+  },
+);
+
 export const createAtobaraiRegisterTransactionPayload = (args: {
   saleorTransactionToken: SaleorTransactionToken;
   atobaraiMoney: AtobaraiMoney;
@@ -37,8 +47,8 @@ export const createAtobaraiRegisterTransactionPayload = (args: {
   atobaraiDeliveryDestination: AtobaraiDeliveryDestination;
   atobaraiGoods: AtobaraiGoods;
   atobaraiShopOrderDate: AtobaraiShopOrderDate;
-}) =>
-  schema.parse({
+}) => {
+  const parseResult = schema.safeParse({
     transactions: [
       {
         shop_transaction_id: args.saleorTransactionToken,
@@ -51,5 +61,17 @@ export const createAtobaraiRegisterTransactionPayload = (args: {
       },
     ],
   });
+
+  if (!parseResult.success) {
+    throw new AtobaraiRegisterTransactionPayloadValidationError(
+      `Invalid register transaction payload: ${parseResult.error.errors
+        .map((e) => e.message)
+        .join(", ")}`,
+      { cause: parseResult.error },
+    );
+  }
+
+  return parseResult.data;
+};
 
 export type AtobaraiRegisterTransactionPayload = z.infer<typeof schema>;

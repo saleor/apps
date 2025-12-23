@@ -63,7 +63,7 @@ describe("TransactionGoodBuilder", () => {
       `);
     });
 
-    it("should throw BaseError when checkout line does not have a variant", () => {
+    it("should throw AtobaraiLineCalculationError when checkout line does not have a variant", () => {
       const sourceObjectWithNullVariant = {
         ...mockedSourceObject,
         lines: [
@@ -90,12 +90,10 @@ describe("TransactionGoodBuilder", () => {
 
       expect(() =>
         builder.build({ sourceObject: sourceObjectWithNullVariant, useSkuAsName: false }),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `[BaseError: Line CheckoutLine does not have a variant. Cannot convert to AtobaraiGoods.]`,
-      );
+      ).toThrow("Line CheckoutLine does not have a variant. Cannot convert to AtobaraiGoods.");
     });
 
-    it("should throw BaseError when order line does not have a variant", () => {
+    it("should throw AtobaraiLineCalculationError when order line does not have a variant", () => {
       const sourceObjectWithNullVariant = {
         __typename: "Order" as const,
         id: "order-id",
@@ -131,9 +129,7 @@ describe("TransactionGoodBuilder", () => {
 
       expect(() =>
         builder.build({ sourceObject: sourceObjectWithNullVariant, useSkuAsName: false }),
-      ).toThrowErrorMatchingInlineSnapshot(
-        `[BaseError: Line OrderLine does not have a variant. Cannot convert to AtobaraiGoods.]`,
-      );
+      ).toThrow("Line OrderLine does not have a variant. Cannot convert to AtobaraiGoods.");
     });
 
     it("shouldn't be assignable without createAtobaraiGoods", () => {

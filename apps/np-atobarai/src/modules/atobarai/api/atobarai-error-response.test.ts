@@ -54,24 +54,14 @@ describe("createAtobaraiRegisterTransactionErrorResponse", () => {
     `);
   });
 
-  it("should throw ZodError when response is missing errors field", () => {
+  it("should throw validation error when response is missing errors field", () => {
     const rawResponse = {
       results: [],
     };
 
-    expect(() => createAtobaraiErrorResponse(rawResponse)).toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
-        {
-          "code": "invalid_type",
-          "expected": "array",
-          "received": "undefined",
-          "path": [
-            "errors"
-          ],
-          "message": "Required"
-        }
-      ]]
-    `);
+    expect(() => createAtobaraiErrorResponse(rawResponse)).toThrow(
+      "Invalid Atobarai error response format: Required",
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiRegisterTransactionErrorResponse", () => {

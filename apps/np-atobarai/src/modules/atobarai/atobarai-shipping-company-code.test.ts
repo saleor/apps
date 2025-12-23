@@ -12,37 +12,10 @@ describe("createAtobaraiShippingCompanyCode", () => {
     expect(result).toBe("50000");
   });
 
-  it("should throw ZodError when input is an invalid shipping company code", () => {
-    expect(() => createAtobaraiShippingCompanyCode("99999")).toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
-        {
-          "received": "99999",
-          "code": "invalid_enum_value",
-          "options": [
-            "50000",
-            "59010",
-            "59020",
-            "59030",
-            "59040",
-            "59041",
-            "59042",
-            "59043",
-            "59050",
-            "59060",
-            "59080",
-            "59090",
-            "59110",
-            "59140",
-            "59150",
-            "59100",
-            "59160",
-            "55555"
-          ],
-          "path": [],
-          "message": "Invalid enum value. Expected '50000' | '59010' | '59020' | '59030' | '59040' | '59041' | '59042' | '59043' | '59050' | '59060' | '59080' | '59090' | '59110' | '59140' | '59150' | '59100' | '59160' | '55555', received '99999'"
-        }
-      ]]
-    `);
+  it("should throw validation error when input is an invalid shipping company code", () => {
+    expect(() => createAtobaraiShippingCompanyCode("99999")).toThrow(
+      'Invalid shipping company code "99999"',
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiShippingCompanyCode", () => {
