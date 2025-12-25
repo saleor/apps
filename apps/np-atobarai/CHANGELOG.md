@@ -1,5 +1,14 @@
 # saleor-app-payment-np-atobarai
 
+## 1.2.8
+
+### Patch Changes
+
+- 204d4889: Fixed HTTP 500 errors when customer data (email, phone, billing address) is missing.
+  These validation errors now return HTTP 202 instead, preventing Saleor webhook circuit breaker from disabling payment webhooks.
+- c5850b91: Zod validation errors will no longer cause app to throw unexpected exception, and instead will be properly handled.
+  Previously they were not caught and caused app to send `logger.error`
+
 ## 1.2.7
 
 ### Patch Changes
