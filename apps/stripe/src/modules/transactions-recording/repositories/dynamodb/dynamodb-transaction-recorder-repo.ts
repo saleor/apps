@@ -1,3 +1,4 @@
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { GetItemCommand, PutItemCommand } from "dynamodb-toolbox";
 import { err, ok, Result } from "neverthrow";
 
@@ -85,6 +86,18 @@ export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo 
         cause: result,
       });
     } catch (e) {
+      /*
+       * Handle race condition: if another request already wrote this transaction,
+       * treat it as success, Stripe respects idempotency-key and won't charge many times
+       */
+      if (e instanceof ConditionalCheckFailedException) {
+        this.logger.info("Transaction already recorded, skipping write (idempotent)", {
+          paymentIntentId: transaction.stripePaymentIntentId,
+        });
+
+        return ok(null);
+      }
+
       this.logger.debug("Failed to write transaction to DynamoDB", {
         error: e,
       });
