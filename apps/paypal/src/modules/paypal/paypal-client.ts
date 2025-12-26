@@ -133,7 +133,7 @@ export class PayPalClient {
     method: "GET" | "POST" | "PATCH" | "DELETE";
     path: string;
     body?: unknown;
-    skipBnCode?: boolean;
+    includeBnCode?: boolean;
   }): Promise<T> {
     const token = await this.getAccessToken();
 
@@ -169,8 +169,9 @@ export class PayPalClient {
       });
     }
 
-    // Add PayPal-Partner-Attribution-Id header (BN code) unless explicitly skipped
-    if (this.bnCode && !args.skipBnCode) {
+    // Add PayPal-Partner-Attribution-Id header (BN code) only for Orders API
+    // Per PDF Page 4: BN code is required in "create order" requests
+    if (this.bnCode && args.includeBnCode) {
       headers["PayPal-Partner-Attribution-Id"] = this.bnCode;
       logger.debug("Added PayPal-Partner-Attribution-Id header", { bnCode: this.bnCode });
     }
@@ -209,8 +210,15 @@ export class PayPalClient {
 
     const responseTime = Date.now() - startTime;
 
+    // Extract debug IDs from response headers (PayPal sends these for support troubleshooting)
+    const paypalDebugIdHeader = response.headers.get("paypal-debug-id");
+    const correlationIdHeader = response.headers.get("correlation-id");
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+
+      // Extract debug_id from body and headers (they should match)
+      const debugId = errorData.debug_id || paypalDebugIdHeader || correlationIdHeader || null;
 
       logger.error("PayPal API request failed", {
         method: args.method,
@@ -219,10 +227,13 @@ export class PayPalClient {
         response_time_ms: responseTime,
         error_name: errorData.name,
         error_message: errorData.message,
+        debug_id: debugId, // Critical for PayPal support
+        paypal_debug_id_header: paypalDebugIdHeader,
+        correlation_id: correlationIdHeader,
         error_details: JSON.stringify(errorData, null, 2),
       });
 
-      // Console log error response with timing
+      // Console log error response with timing and debug_id
       console.log("\n" + "=".repeat(80));
       console.log("PayPal API Response (ERROR):");
       console.log("=".repeat(80));
@@ -236,18 +247,23 @@ export class PayPalClient {
             },
             status: response.status,
             response_time_ms: responseTime,
+            debug_id: debugId,
             error: errorData,
           },
           null,
           2
         )
       );
+      if (debugId) {
+        console.log("PayPal Debug ID (provide to PayPal support):", debugId);
+      }
       console.log("=".repeat(80) + "\n");
 
       throw {
         statusCode: response.status,
         name: errorData.name || "PayPalApiError",
         message: errorData.message || response.statusText,
+        debug_id: debugId,
         details: errorData,
       };
     }
@@ -257,6 +273,8 @@ export class PayPalClient {
       path: args.path,
       status: response.status,
       response_time_ms: responseTime,
+      paypal_debug_id: paypalDebugIdHeader,
+      correlation_id: correlationIdHeader,
     });
 
     // Console log successful response with timing
@@ -273,6 +291,8 @@ export class PayPalClient {
           },
           status: response.status,
           response_time_ms: responseTime,
+          paypal_debug_id: paypalDebugIdHeader,
+          correlation_id: correlationIdHeader,
         },
         null,
         2

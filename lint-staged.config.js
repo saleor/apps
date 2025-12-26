@@ -2,6 +2,6 @@
  * @type {import('lint-staged').Configuration}
  */
 export default {
-  "*.{jsx,tsx,js,ts,md}": "cspell --no-must-find-files",
+  "*.{jsx,tsx,js,ts}": "cspell --no-must-find-files",
   "package.json": "sort-package-json",
 };

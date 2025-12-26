@@ -5,6 +5,37 @@ fragment SourceObject on OrderOrCheckout {
     channel {
       ...Channel
     }
+    email
+    shippingAddress {
+      firstName
+      lastName
+      companyName
+      streetAddress1
+      streetAddress2
+      city
+      cityArea
+      postalCode
+      country {
+        code
+      }
+      countryArea
+      phone
+    }
+    billingAddress {
+      firstName
+      lastName
+      companyName
+      streetAddress1
+      streetAddress2
+      city
+      cityArea
+      postalCode
+      country {
+        code
+      }
+      countryArea
+      phone
+    }
     subtotalPrice {
       gross {
         amount
@@ -97,6 +128,37 @@ fragment SourceObject on OrderOrCheckout {
     id
     channel {
       ...Channel
+    }
+    userEmail
+    shippingAddress {
+      firstName
+      lastName
+      companyName
+      streetAddress1
+      streetAddress2
+      city
+      cityArea
+      postalCode
+      country {
+        code
+      }
+      countryArea
+      phone
+    }
+    billingAddress {
+      firstName
+      lastName
+      companyName
+      streetAddress1
+      streetAddress2
+      city
+      cityArea
+      postalCode
+      country {
+        code
+      }
+      countryArea
+      phone
     }
     subtotal {
       gross {
