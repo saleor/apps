@@ -52,6 +52,19 @@ export const AvataxConfigurationSettingsFragment = () => {
         }
         name="isAutocommit"
       />
+      <AppToggle
+        control={control}
+        label="Write tax exemption status to checkout metadata"
+        disabled={disabled}
+        helperText={
+          <HelperText>
+            When enabled, the app will update checkout metadata after tax calculation with
+            information whether tax exemption was applied. This can be used by the storefront to
+            show a badge or similar.
+          </HelperText>
+        }
+        name="isExemptionStatusMetadataEnabled"
+      />
       <div>
         <Input
           disabled={disabled}

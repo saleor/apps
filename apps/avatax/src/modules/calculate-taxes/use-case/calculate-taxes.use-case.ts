@@ -241,7 +241,7 @@ export class CalculateTaxesUseCase {
         sourceId: payload.taxBase.sourceObject.id,
         channelId: payload.taxBase.channel.id,
         sourceType: "checkout",
-        calculatedTaxesResult: results,
+        calculatedTaxesResult: results.response,
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
