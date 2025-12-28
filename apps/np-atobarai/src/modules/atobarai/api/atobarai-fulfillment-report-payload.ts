@@ -1,3 +1,4 @@
+import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
 import {
@@ -18,12 +19,21 @@ const schema = z
   })
   .brand("AtobaraiFulfillmentReportPayload");
 
+export const AtobaraiFulfillmentReportPayloadValidationError = BaseError.subclass(
+  "AtobaraiFulfillmentReportPayloadValidationError",
+  {
+    props: {
+      _brand: "AtobaraiFulfillmentReportPayloadValidationError" as const,
+    },
+  },
+);
+
 export const createAtobaraiFulfillmentReportPayload = (args: {
   trackingNumber: string;
   atobaraiTransactionId: AtobaraiTransactionId;
   shippingCompanyCode: AtobaraiShippingCompanyCode;
-}) =>
-  schema.parse({
+}) => {
+  const parseResult = schema.safeParse({
     transactions: [
       {
         np_transaction_id: args.atobaraiTransactionId,
@@ -32,5 +42,17 @@ export const createAtobaraiFulfillmentReportPayload = (args: {
       },
     ],
   });
+
+  if (!parseResult.success) {
+    throw new AtobaraiFulfillmentReportPayloadValidationError(
+      `Invalid fulfillment report payload: ${parseResult.error.errors
+        .map((e) => e.message)
+        .join(", ")}`,
+      { cause: parseResult.error },
+    );
+  }
+
+  return parseResult.data;
+};
 
 export type AtobaraiFulfillmentReportPayload = z.infer<typeof schema>;

@@ -35,7 +35,7 @@ import { BaseUseCase } from "../base-use-case";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
-  MalformedRequestResponse,
+  InvalidEventDataResponse,
 } from "../saleor-webhook-responses";
 import { AtobaraiFailureTransactionError } from "../use-case-errors";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
@@ -43,7 +43,7 @@ import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response
 type UseCaseExecuteResult = Promise<
   Result<
     TransactionInitializeSessionUseCaseResponse,
-    AppIsNotConfiguredResponse | MalformedRequestResponse | BrokenAppResponse
+    AppIsNotConfiguredResponse | InvalidEventDataResponse | BrokenAppResponse
   >
 >;
 
@@ -183,7 +183,7 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
         event,
       });
 
-      return err(new MalformedRequestResponse(new BaseError("Missing issuedAt in event")));
+      return err(new InvalidEventDataResponse(new BaseError("Missing issuedAt in event")));
     }
 
     const apiClient = this.atobaraiApiClientFactory.create({
