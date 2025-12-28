@@ -1,6 +1,6 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
-import { err, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok, Result } from "neverthrow";
 
 import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
@@ -31,8 +31,13 @@ import {
 
 import { BaseUseCase } from "../base-use-case";
 import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
-import { AtobaraiFailureTransactionError } from "../use-case-errors";
+import { AtobaraiFailureTransactionError, PayloadValidationError } from "../use-case-errors";
 import { TransactionProcessSessionUseCaseResponse } from "./use-case-response";
+
+const toPayloadValidationError = (error: unknown) =>
+  new PayloadValidationError(error instanceof Error ? error.message : "Unknown validation error", {
+    cause: error,
+  });
 
 type UseCaseExecuteResult = Promise<
   Result<
@@ -155,12 +160,25 @@ export class TransactionProcessSessionUseCase extends BaseUseCase {
       atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
-    const changeTransactionResult = await apiClient.changeTransaction(
-      this.prepareChangeTransactionPayload(event, atobaraiConfigResult.value),
-      {
-        rejectMultipleResults: true,
-      },
-    );
+    const transactionPayload = fromThrowable(
+      () => this.prepareChangeTransactionPayload(event, atobaraiConfigResult.value),
+      toPayloadValidationError,
+    )().mapErr((error) => {
+      this.logger.warn("Failed to prepare change transaction payload", { error });
+
+      return new TransactionProcessSessionUseCaseResponse.Failure({
+        transactionResult: new ChargeFailureResult(),
+        error,
+      });
+    });
+
+    if (transactionPayload.isErr()) {
+      return ok(transactionPayload.error);
+    }
+
+    const changeTransactionResult = await apiClient.changeTransaction(transactionPayload.value, {
+      rejectMultipleResults: true,
+    });
 
     if (changeTransactionResult.isErr()) {
       this.logger.warn("Failed to change transaction with Atobarai", {

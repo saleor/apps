@@ -461,4 +461,39 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       },
     );
   });
+
+  it("should return MalformedRequestResponse when private metadata contains invalid shipping company code", async () => {
+    const invalidPDCompanyCode = "INVALID_CODE";
+
+    const eventWithInvalidPDCompanyCode = {
+      ...mockedFulfillmentTrackingNumberUpdatedEvent,
+      fulfillment: {
+        ...mockedFulfillmentTrackingNumberUpdatedEvent.fulfillment,
+        atobaraiPDCompanyCode: invalidPDCompanyCode,
+      },
+    };
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
+
+    const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
+    });
+
+    const result = await useCase.execute({
+      appId: mockedSaleorAppId,
+      saleorApiUrl: mockedSaleorApiUrl,
+      event: eventWithInvalidPDCompanyCode,
+      graphqlClient: mockedGraphqlClient,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(result._unsafeUnwrapErr().error.message).toContain(
+      "Invalid Atobarai shipping company code",
+    );
+  });
 });
