@@ -146,6 +146,13 @@ function extractBuyerEmail(
   return undefined;
 }
 
+const normalizeNationalNumber = (raw?: string | null) => {
+  if (!raw) return undefined;
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length < 4 || digits.length > 15) return undefined;
+  return digits;
+};
+
 /**
  * Helper function to extract shipping address from Saleor source object
  * Maps Saleor address format to PayPal address format
@@ -180,6 +187,7 @@ function extractShippingAddress(
     `${shippingAddress.firstName || ""} ${shippingAddress.lastName || ""}`.trim() || undefined;
 
   const email = extractBuyerEmail(sourceObject);
+  const normalizedPhone = normalizeNationalNumber(shippingAddress.phone);
 
   return {
     name: fullName ? { full_name: fullName } : undefined,
@@ -192,7 +200,7 @@ function extractShippingAddress(
       country_code: shippingAddress.country?.code || undefined,
     },
     email_address: email,
-    phone_number: shippingAddress.phone ? { national_number: shippingAddress.phone } : undefined,
+    phone_number: normalizedPhone ? { national_number: normalizedPhone } : undefined,
   };
 }
 
@@ -222,17 +230,19 @@ function buildPayerObject(
     return undefined;
   }
 
+  const normalizedPhone = normalizeNationalNumber(billingAddress?.phone);
+
   return {
     email_address: email,
-    phone: billingAddress?.phone
+    phone: normalizedPhone
       ? {
           phone_type: "MOBILE",
-          phone_number: { national_number: billingAddress.phone },
+          phone_number: { national_number: normalizedPhone },
         }
       : undefined,
     name: billingAddress
       ? {
-          given_name: billingAddress.firstName || undefined,
+        given_name: billingAddress.firstName || undefined,
           surname: billingAddress.lastName || undefined,
         }
       : undefined,
@@ -493,9 +503,9 @@ export class TransactionInitializeSessionUseCase {
           paypal: {
             experience_context: {
               ...experienceContext,
-              order_update_callback_config: {
-                url: `${env.APP_API_BASE_URL}/api/webhooks/paypal/order-update-callback`,
-                events: [
+              callback_configuration: {
+                callback_url: `${env.APP_API_BASE_URL}/api/webhooks/paypal/order-update-callback`,
+                callback_events: [
                   "SHIPPING_CHANGE",
                   "SHIPPING_OPTIONS_CHANGE",
                   "BILLING_ADDRESS_CHANGE",

@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     // Handle different event types
     switch (eventType) {
       case "CHECKOUT.ORDER.APPROVED": {
-        // This is sent when order_update_callback_config is configured
+        // This is sent when callback_configuration is configured
         // and buyer changes shipping address or other info
         const shippingAddress = resource.purchase_units?.[0]?.shipping?.address;
 

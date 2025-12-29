@@ -167,9 +167,9 @@ export interface IPayPalOrdersApi {
           return_url?: string;
           cancel_url?: string;
           app_switch_preference?: boolean;
-          order_update_callback_config?: {
-            url: string;
-            events?: Array<
+          callback_configuration?: {
+            callback_url: string;
+            callback_events?: Array<
               | "SHIPPING_CHANGE"
               | "SHIPPING_OPTIONS_CHANGE"
               | "BILLING_ADDRESS_CHANGE"

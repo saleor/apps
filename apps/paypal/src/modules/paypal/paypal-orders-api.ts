@@ -107,9 +107,9 @@ export class PayPalOrdersApi implements IPayPalOrdersApi {
           return_url?: string;
           cancel_url?: string;
           app_switch_preference?: boolean;
-          order_update_callback_config?: {
-            url: string;
-            events?: Array<
+          callback_configuration?: {
+            callback_url: string;
+            callback_events?: Array<
               | "SHIPPING_CHANGE"
               | "SHIPPING_OPTIONS_CHANGE"
               | "BILLING_ADDRESS_CHANGE"
@@ -211,7 +211,7 @@ export class PayPalOrdersApi implements IPayPalOrdersApi {
       requestBody.application_context = args.experienceContext;
     }
 
-    // Add payment_source if provided (includes order_update_callback_config for shipping callbacks)
+    // Add payment_source if provided (includes callback_configuration for shipping callbacks)
     if (args.paymentSource) {
       requestBody.payment_source = args.paymentSource;
     }
