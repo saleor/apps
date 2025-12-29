@@ -540,7 +540,6 @@ export class TransactionInitializeSessionUseCase {
       payer,
       shipping,
       softDescriptor: undefined, // TODO: Add softDescriptor to PayPal config
-      experienceContext,
       paymentSource,
     });
     const createOrderTime = Date.now() - createOrderStart;
