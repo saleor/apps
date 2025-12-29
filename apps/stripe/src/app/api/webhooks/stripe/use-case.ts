@@ -31,7 +31,6 @@ import {
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
 import {
-  ObjectCreatedOutsideOfSaleorResponse,
   PossibleStripeWebhookErrorResponses,
   PossibleStripeWebhookSuccessResponses,
   StripeWebhookAppIsNotConfiguredResponse,
@@ -50,6 +49,7 @@ type StripeVerifyEventFactory = (stripeClient: StripeClient) => IStripeEventVeri
 type SaleorTransactionEventReporterFactory = (authData: AuthData) => ITransactionEventReporter;
 
 const ObjectMetadataMissingError = BaseError.subclass("ObjectMetadataMissingError");
+const ObjectMetadataIncompleteError = BaseError.subclass("ObjectMetadataIncompleteError");
 
 export class StripeWebhookUseCase {
   private appConfigRepo: AppConfigRepo;
@@ -117,16 +117,25 @@ export class StripeWebhookUseCase {
         loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, event.data.object.id);
 
         const meta = event.data.object.metadata as AllowedStripeObjectMetadata;
+        const hasSaleorMetadata = meta?.saleor_source_id || meta?.saleor_source_type;
+        const hasTransactionId = meta?.saleor_transaction_id;
 
-        if (!meta?.saleor_transaction_id) {
+        if (!hasTransactionId) {
+          if (hasSaleorMetadata) {
+            // Partially-tagged: has Saleor metadata but missing transaction ID - this is a bug
+            return err(
+              new ObjectMetadataIncompleteError(
+                "Object has Saleor metadata but missing transaction ID",
+                { props: { meta } },
+              ),
+            );
+          }
+
+          // Foreign object: no Saleor metadata at all
           return err(
             new ObjectMetadataMissingError(
               "Missing metadata on object, it was not created by Saleor",
-              {
-                props: {
-                  meta,
-                },
-              },
+              { props: { meta } },
             ),
           );
         }
@@ -151,16 +160,25 @@ export class StripeWebhookUseCase {
         loggerContext.set("stripeRefundId", event.data.object.id);
 
         const meta = event.data.object.metadata as AllowedStripeObjectMetadata;
+        const hasSaleorMetadata = meta?.saleor_source_id || meta?.saleor_source_type;
+        const hasTransactionId = meta?.saleor_transaction_id;
 
-        if (!meta?.saleor_transaction_id) {
+        if (!hasTransactionId) {
+          if (hasSaleorMetadata) {
+            // Partially-tagged: has Saleor metadata but missing transaction ID - this is a bug
+            return err(
+              new ObjectMetadataIncompleteError(
+                "Object has Saleor metadata but missing transaction ID",
+                { props: { meta } },
+              ),
+            );
+          }
+
+          // Foreign object: no Saleor metadata at all
           return err(
             new ObjectMetadataMissingError(
               "Missing metadata on object, it was not created by Saleor",
-              {
-                props: {
-                  meta,
-                },
-              },
+              { props: { meta } },
             ),
           );
         }
@@ -347,7 +365,27 @@ export class StripeWebhookUseCase {
        * This is technically not an error, so we catch it here without the error log.
        */
       if (processingResult.error instanceof ObjectMetadataMissingError) {
-        return err(new ObjectCreatedOutsideOfSaleorResponse());
+        this.logger.info("Received webhook for object created outside of Saleor - ignoring", {
+          eventType: event.value.type,
+          objectId: "id" in event.value.data.object ? event.value.data.object.id : undefined,
+        });
+
+        return ok(new StripeWebhookUnrecognizedEventResponse());
+      }
+
+      if (processingResult.error instanceof ObjectMetadataIncompleteError) {
+        this.logger.error(
+          "Received webhook for object with incomplete Saleor metadata - this indicates a bug in the app",
+          {
+            eventType: event.value.type,
+            objectId: "id" in event.value.data.object ? event.value.data.object.id : undefined,
+            error: processingResult.error,
+          },
+        );
+
+        captureException(processingResult.error);
+
+        return err(new StripeWebhookSeverErrorResponse());
       }
 
       if (processingResult.error instanceof TransactionRecorderError.TransactionMissingError) {

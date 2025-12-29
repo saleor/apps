@@ -1249,7 +1249,7 @@ describe("StripeWebhookUseCase - handling events without metadata created by Sal
     });
   });
 
-  it("Returns 400 to Stripe if metadata is missing for payment_intent.succeeded event", async () => {
+  it("Returns 200 to Stripe if metadata is missing for payment_intent.succeeded event", async () => {
     const event = getMockedPaymentIntentSucceededEvent();
 
     event.data.object.metadata = {};
@@ -1262,17 +1262,17 @@ describe("StripeWebhookUseCase - handling events without metadata created by Sal
       webhookParams: webhookParams,
     });
 
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      ObjectCreatedOutsideOfSaleorResponse {
-        "message": "Object created outside of Saleor is not processable",
-        "statusCode": 400,
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+      StripeWebhookUnrecognizedEventResponse {
+        "message": "Event not managed by this Saleor app - ignored",
+        "statusCode": 200,
       }
     `);
 
     expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
   });
 
-  it("Returns 400 to Stripe if metadata is missing for charge.refund.updated event", async () => {
+  it("Returns 200 to Stripe if metadata is missing for charge.refund.updated event", async () => {
     const event = getMockedChargeRefundUpdatedEvent();
 
     event.data.object.metadata = {};
@@ -1285,10 +1285,64 @@ describe("StripeWebhookUseCase - handling events without metadata created by Sal
       webhookParams: webhookParams,
     });
 
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+      StripeWebhookUnrecognizedEventResponse {
+        "message": "Event not managed by this Saleor app - ignored",
+        "statusCode": 200,
+      }
+    `);
+
+    expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+  });
+
+  it("Returns 500 to Stripe if metadata has saleor_source_id but missing saleor_transaction_id for payment_intent.succeeded event", async () => {
+    const event = getMockedPaymentIntentSucceededEvent();
+
+    // Partially-tagged: has some Saleor metadata but missing transaction ID
+    event.data.object.metadata = {
+      saleor_source_id: "some-checkout-id",
+      saleor_source_type: "Checkout",
+    };
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
     expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      ObjectCreatedOutsideOfSaleorResponse {
-        "message": "Object created outside of Saleor is not processable",
-        "statusCode": 400,
+      StripeWebhookSeverErrorResponse {
+        "message": "Server error",
+        "statusCode": 500,
+      }
+    `);
+
+    expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+  });
+
+  it("Returns 500 to Stripe if metadata has saleor_source_id but missing saleor_transaction_id for charge.refund.updated event", async () => {
+    const event = getMockedChargeRefundUpdatedEvent();
+
+    // Partially-tagged: has some Saleor metadata but missing transaction ID
+    event.data.object.metadata = {
+      saleor_source_id: "some-checkout-id",
+      saleor_source_type: "Checkout",
+    };
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+      StripeWebhookSeverErrorResponse {
+        "message": "Server error",
+        "statusCode": 500,
       }
     `);
 
