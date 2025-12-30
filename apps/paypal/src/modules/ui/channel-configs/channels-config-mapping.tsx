@@ -1,5 +1,5 @@
 import { Layout } from "@saleor/apps-ui";
-import { Box, Select, Text } from "@saleor/macaw-ui";
+import { Box, Input, Select, Text } from "@saleor/macaw-ui";
 import React from "react";
 
 import { ChannelFragment } from "@/generated/graphql";
@@ -10,6 +10,9 @@ type Props = {
   configs: PayPalFrontendConfigSerializedFields[];
   mapping: Record<string, PayPalFrontendConfigSerializedFields>;
   onMappingChange(data: { channelId: string; configId: string }): void;
+  softDescriptor: string;
+  onSoftDescriptorChange(value: string): void;
+  onSoftDescriptorBlur(): void;
   isLoading: boolean;
 };
 
@@ -20,11 +23,30 @@ export const ChannelsConfigMapping = ({
   configs,
   mapping,
   onMappingChange,
+  softDescriptor,
+  onSoftDescriptorChange,
+  onSoftDescriptorBlur,
   isLoading,
 }: Props) => {
   return (
     <Layout.AppSectionCard>
       <Box>
+        <Box paddingBottom={4} borderBottomWidth={1} borderColor="default1">
+          <Text size={3} fontWeight="medium" marginBottom={2}>
+            Soft Descriptor
+          </Text>
+          <Input
+            disabled={isLoading}
+            value={softDescriptor}
+            maxLength={22}
+            placeholder="Max 22 characters"
+            onChange={(event) => onSoftDescriptorChange(event.target.value)}
+            onBlur={onSoftDescriptorBlur}
+          />
+          <Text size={2} color="default2" marginTop={1}>
+            Max 22 characters. Appears on buyer's card statement.
+          </Text>
+        </Box>
         {channels.map((channel) => {
           const isNotSelected = mapping[channel.id] === undefined;
 

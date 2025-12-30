@@ -11,6 +11,7 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { getPool } from "@/lib/database";
 import { env } from "@/lib/env";
+import { PayPalTenantConfigRepository } from "@/modules/app-config/repositories/paypal-tenant-config-repository";
 import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { IPayPalOrdersApiFactory, PayPalOrderItem } from "@/modules/paypal/types";
@@ -151,6 +152,13 @@ const normalizeNationalNumber = (raw?: string | null) => {
   const digits = raw.replace(/\D/g, "");
   if (digits.length < 4 || digits.length > 15) return undefined;
   return digits;
+};
+
+const normalizeSoftDescriptor = (raw?: string | null) => {
+  if (!raw) return undefined;
+  const trimmed = raw.trim();
+  if (!trimmed) return undefined;
+  return trimmed.slice(0, 22);
 };
 
 /**
@@ -488,6 +496,41 @@ export class TransactionInitializeSessionUseCase {
     const payer = buildPayerObject(event.sourceObject);
     const shipping = extractShippingAddress(event.sourceObject);
 
+    let softDescriptor: string | undefined;
+    try {
+      const tenantConfigRepository = PayPalTenantConfigRepository.create(getPool());
+      const tenantConfigResult = await tenantConfigRepository.getBySaleorApiUrl(
+        authData.saleorApiUrl,
+      );
+
+      if (tenantConfigResult.isErr()) {
+        this.logger.warn("Failed to load tenant soft descriptor", {
+          error: tenantConfigResult.error,
+        });
+      } else {
+        const rawSoftDescriptor = tenantConfigResult.value?.softDescriptor;
+        const normalizedSoftDescriptor = normalizeSoftDescriptor(rawSoftDescriptor);
+
+        if (rawSoftDescriptor !== undefined && rawSoftDescriptor !== null) {
+          if (normalizedSoftDescriptor) {
+            this.logger.info("Soft descriptor applied", {
+              length: normalizedSoftDescriptor.length,
+            });
+          } else {
+            this.logger.warn("Soft descriptor skipped due to validation", {
+              length: rawSoftDescriptor.trim().length,
+            });
+          }
+        }
+
+        softDescriptor = normalizedSoftDescriptor;
+      }
+    } catch (error) {
+      this.logger.warn("Failed to resolve tenant soft descriptor", {
+        error,
+      });
+    }
+
     // Build experience context for PayPal checkout flow
     // This controls the PayPal checkout experience (branding, return URLs, etc.)
     const experienceContext = {
@@ -539,7 +582,7 @@ export class TransactionInitializeSessionUseCase {
       // PayPal certification-required parameters
       payer,
       shipping,
-      softDescriptor: undefined, // TODO: Add softDescriptor to PayPal config
+      softDescriptor,
       paymentSource,
     });
     const createOrderTime = Date.now() - createOrderStart;

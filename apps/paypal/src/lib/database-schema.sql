@@ -92,6 +92,33 @@ COMMENT ON COLUMN paypal_merchant_onboarding.payments_receivable IS 'Must be tru
 COMMENT ON COLUMN paypal_merchant_onboarding.oauth_integrated IS 'OAuth permissions granted to platform';
 COMMENT ON COLUMN paypal_merchant_onboarding.acdc_enabled IS 'Advanced Credit/Debit Card processing enabled';
 
+-- PayPal Tenant Configuration Table
+-- Stores per-tenant configuration used by WSM Dashboard
+CREATE TABLE IF NOT EXISTS paypal_tenant_config (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  saleor_api_url TEXT NOT NULL UNIQUE,
+  soft_descriptor TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_paypal_tenant_config_saleor_url
+  ON paypal_tenant_config(saleor_api_url);
+
+-- Trigger to update updated_at timestamp
+CREATE OR REPLACE FUNCTION update_paypal_tenant_config_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_paypal_tenant_config_timestamp
+  BEFORE UPDATE ON paypal_tenant_config
+  FOR EACH ROW
+  EXECUTE FUNCTION update_paypal_tenant_config_timestamp();
+
 -- WSM Global PayPal Configuration Table
 -- Stores partner API credentials and settings shared across all tenants
 CREATE TABLE IF NOT EXISTS wsm_global_paypal_config (

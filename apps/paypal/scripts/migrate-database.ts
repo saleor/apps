@@ -52,6 +52,7 @@ async function main() {
     console.log("\n✅ Migrations completed successfully!");
     console.log("\nTables created/updated:");
     console.log("   • saleor_app_configuration");
+    console.log("   • paypal_tenant_config");
     console.log("   • wsm_global_paypal_config (with bn_code)");
     console.log("   • paypal_merchant_onboarding (with OAuth fields)");
     console.log("\nNew columns added:");
@@ -62,6 +63,7 @@ async function main() {
     console.log("   • idx_saleor_app_configuration_tenant");
     console.log("   • idx_saleor_app_configuration_app_name");
     console.log("   • idx_saleor_app_configuration_is_active");
+    console.log("   • idx_paypal_tenant_config_saleor_url");
     console.log("   • idx_wsm_global_config_active");
     console.log("   • idx_merchant_onboarding_saleor_url");
     console.log("   • idx_merchant_onboarding_tracking_id");
@@ -69,6 +71,7 @@ async function main() {
     console.log("   • idx_merchant_onboarding_status");
     console.log("   • idx_merchant_onboarding_email");
     console.log("\nTriggers created:");
+    console.log("   • trigger_update_paypal_tenant_config_timestamp");
     console.log("   • trigger_update_merchant_onboarding_timestamp");
     console.log("");
 

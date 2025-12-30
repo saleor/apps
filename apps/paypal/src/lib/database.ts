@@ -45,6 +45,34 @@ export const initializeDatabase = async (): Promise<void> => {
     CREATE INDEX IF NOT EXISTS idx_saleor_app_configuration_app_name ON saleor_app_configuration(app_name);
     CREATE INDEX IF NOT EXISTS idx_saleor_app_configuration_is_active ON saleor_app_configuration(is_active);
 
+    -- PayPal Tenant Configuration
+    -- Stores per-tenant configuration used by WSM Dashboard
+    CREATE TABLE IF NOT EXISTS paypal_tenant_config (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+      saleor_api_url TEXT NOT NULL UNIQUE,
+      soft_descriptor TEXT,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_paypal_tenant_config_saleor_url
+      ON paypal_tenant_config(saleor_api_url);
+
+    -- Trigger to update updated_at timestamp for tenant config
+    CREATE OR REPLACE FUNCTION update_paypal_tenant_config_timestamp()
+    RETURNS TRIGGER AS $$
+    BEGIN
+      NEW.updated_at = NOW();
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    DROP TRIGGER IF EXISTS trigger_update_paypal_tenant_config_timestamp ON paypal_tenant_config;
+    CREATE TRIGGER trigger_update_paypal_tenant_config_timestamp
+      BEFORE UPDATE ON paypal_tenant_config
+      FOR EACH ROW
+      EXECUTE FUNCTION update_paypal_tenant_config_timestamp();
+
     -- WSM Global PayPal Configuration
     -- Stores Partner API credentials shared across all tenants
     CREATE TABLE IF NOT EXISTS wsm_global_paypal_config (
