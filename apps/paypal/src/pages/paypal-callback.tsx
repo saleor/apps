@@ -70,21 +70,9 @@ const PayPalCallbackPage: NextPage = () => {
         setStatus("success");
         setMessage("PayPal account connected successfully! Redirecting back to configuration...");
 
-        // Redirect back to the app configuration page in Saleor dashboard after 1 second
+        // Redirect back to the app configuration page after 1 second
         setTimeout(() => {
-          // Try to get the app URL from sessionStorage or construct it
-          const saleorApiUrl = sessionStorage.getItem("saleorApiUrl");
-          const appId = sessionStorage.getItem("appId");
-
-          if (saleorApiUrl && appId) {
-            // Construct the dashboard URL to the app's config page
-            const dashboardUrl = saleorApiUrl.replace("/graphql/", "");
-            // Redirect to the extensions page which will load the app
-            window.location.href = `${dashboardUrl}/apps/${appId}/app`;
-          } else {
-            // Fallback: redirect to home and let user navigate back
-            window.location.href = "/";
-          }
+          window.location.href = "/";
         }, 1000);
       } catch (error) {
         console.error("Error processing PayPal callback:", error);
