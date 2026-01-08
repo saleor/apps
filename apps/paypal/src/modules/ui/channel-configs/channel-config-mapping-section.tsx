@@ -1,7 +1,7 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
 import { Skeleton, Text } from "@saleor/macaw-ui";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";
 import { ChannelsConfigMapping } from "@/modules/ui/channel-configs/channels-config-mapping";
@@ -10,9 +10,11 @@ export const ChannelConfigMappingSection = () => {
   const allChannels = trpcClient.appConfig.fetchChannels.useQuery();
   const allConfigs = trpcClient.appConfig.getPayPalConfigsList.useQuery();
   const allMappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
-  const allResults = [allChannels, allConfigs, allMappings];
+  const tenantConfig = trpcClient.appConfig.getTenantConfig.useQuery();
+  const allResults = [allChannels, allConfigs, allMappings, tenantConfig];
 
   const { notifyError, notifySuccess } = useDashboardNotification();
+  const [softDescriptor, setSoftDescriptor] = useState("");
 
   const mappingUpdate = trpcClient.appConfig.updateMapping.useMutation({
     onSuccess() {
@@ -25,9 +27,29 @@ export const ChannelConfigMappingSection = () => {
     },
   });
 
+  const tenantConfigUpdate = trpcClient.appConfig.setTenantConfig.useMutation({
+    onSuccess() {
+      notifySuccess("Soft descriptor updated");
+
+      return tenantConfig.refetch();
+    },
+    onError() {
+      notifyError(
+        "Error updating soft descriptor",
+        tenantConfigUpdate.error?.message ?? "Unknown error",
+      );
+    },
+  });
+
   useEffect(() => {
     allResults.forEach((query) => query.refetch());
   }, []);
+
+  useEffect(() => {
+    if (tenantConfig.data) {
+      setSoftDescriptor(tenantConfig.data.softDescriptor ?? "");
+    }
+  }, [tenantConfig.data]);
 
   const errors = allResults.map((r) => r.error).filter(Boolean);
   const anythingLoading = allResults.map((r) => r.isLoading).some(Boolean);
@@ -79,10 +101,17 @@ export const ChannelConfigMappingSection = () => {
   if (configsExist && channelsExist && mappingExist) {
     return (
       <ChannelsConfigMapping
-        isLoading={mappingUpdate.isLoading}
+        isLoading={mappingUpdate.isLoading || tenantConfigUpdate.isLoading}
         channels={allChannels.data}
         configs={allConfigs.data}
         mapping={allMappings.data}
+        softDescriptor={softDescriptor}
+        onSoftDescriptorChange={setSoftDescriptor}
+        onSoftDescriptorBlur={() => {
+          tenantConfigUpdate.mutate({
+            softDescriptor,
+          });
+        }}
         onMappingChange={({ configId, channelId }) => {
           mappingUpdate.mutate({
             configId,

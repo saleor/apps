@@ -485,7 +485,6 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
         method: "POST",
         path: "/v1/customer/wallet-domains",
         body: request,
-        skipBnCode: true, // Apple Pay domain registration doesn't require BN code
       });
 
       logger.info("Apple Pay domain registered successfully", {
@@ -544,7 +543,6 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
         const response = await this.client.makeRequest<GetApplePayDomainsResponse>({
           method: "GET",
           path: `/v1/customer/wallet-domains?page_size=50&page=${currentPage}`,
-          skipBnCode: true, // Apple Pay domain operations don't require BN code
         });
 
         // Add domains from current page
@@ -636,7 +634,6 @@ export class PayPalPartnerReferralsApi implements IPayPalPartnerReferralsApi {
             name: domainName,
           },
         },
-        skipBnCode: true, // Apple Pay domain operations don't require BN code
       });
 
       logger.info("Apple Pay domain deleted successfully", {

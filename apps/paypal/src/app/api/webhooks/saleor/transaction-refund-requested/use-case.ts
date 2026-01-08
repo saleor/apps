@@ -18,10 +18,10 @@ import {
   getChannelIdFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
 } from "@/modules/saleor/transaction-requested-event-helpers";
-import { mapPayPalErrorToApiError } from "@/modules/paypal/paypal-api-error";
+import { mapPayPalErrorToApiError, PayPalApiError } from "@/modules/paypal/paypal-api-error";
 import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { createPayPalRefundId } from "@/modules/paypal/paypal-refund-id";
-import { IPayPalRefundsApiFactory } from "@/modules/paypal/types";
+import { IPayPalOrdersApiFactory, IPayPalRefundsApiFactory } from "@/modules/paypal/types";
 
 import {
   TransactionRefundRequestedUseCaseResponses,
@@ -36,13 +36,16 @@ type UseCaseExecuteResult = Result<
 export class TransactionRefundRequestedUseCase {
   private logger = createLogger("TransactionRefundRequestedUseCase");
   private paypalConfigRepo: PayPalConfigRepo;
+  private paypalOrdersApiFactory: IPayPalOrdersApiFactory;
   private paypalRefundsApiFactory: IPayPalRefundsApiFactory;
 
   constructor(deps: {
     paypalConfigRepo: PayPalConfigRepo;
+    paypalOrdersApiFactory: IPayPalOrdersApiFactory;
     paypalRefundsApiFactory: IPayPalRefundsApiFactory;
   }) {
     this.paypalConfigRepo = deps.paypalConfigRepo;
+    this.paypalOrdersApiFactory = deps.paypalOrdersApiFactory;
     this.paypalRefundsApiFactory = deps.paypalRefundsApiFactory;
   }
 
@@ -89,13 +92,16 @@ export class TransactionRefundRequestedUseCase {
       paypalEnv: paypalConfigForThisChannel.value.environment,
     });
 
-    const paypalRefundsApi = this.paypalRefundsApiFactory.create({
+    const apiConfig = {
       clientId: paypalConfigForThisChannel.value.clientId,
       clientSecret: paypalConfigForThisChannel.value.clientSecret,
       merchantId: paypalConfigForThisChannel.value.merchantId ? (paypalConfigForThisChannel.value.merchantId as any) : undefined,
       merchantEmail: paypalConfigForThisChannel.value.merchantEmail || undefined,
       env: paypalConfigForThisChannel.value.environment,
-    });
+    };
+
+    const paypalOrdersApi = this.paypalOrdersApiFactory.create(apiConfig);
+    const paypalRefundsApi = this.paypalRefundsApiFactory.create(apiConfig);
 
     this.logger.debug("Refunding PayPal payment intent with id", {
       id: transaction.pspReference,
@@ -109,9 +115,55 @@ export class TransactionRefundRequestedUseCase {
       value: (event.action.amount as string | number).toString(),
     };
 
-    // Get capture ID from order - simplified for now
-    // In production, you'd track capture IDs or fetch from PayPal API
-    const captureId = transaction.pspReference; // Assuming pspReference is capture ID
+    // Fetch the order to get the capture ID
+    // pspReference might be the order ID, not the capture ID
+    this.logger.debug("Fetching order to extract capture ID", {
+      orderId: paypalOrderId,
+    });
+
+    const orderResult = await paypalOrdersApi.getOrder({ orderId: paypalOrderId });
+
+    if (orderResult.isErr()) {
+      const error = mapPayPalErrorToApiError(orderResult.error);
+
+      this.logger.error("Failed to fetch order", { error });
+
+      return ok(
+        new TransactionRefundRequestedUseCaseResponses.Failure({
+          paypalOrderId,
+          error,
+          appContext: appContextContainer.getContextValue(),
+        }),
+      );
+    }
+
+    const order = orderResult.value;
+
+    // Extract capture ID from the order
+    const capture = order.purchase_units[0]?.payments?.captures?.[0];
+
+    if (!capture) {
+      this.logger.error("No capture found in order", {
+        orderId: paypalOrderId,
+        orderStatus: order.status,
+      });
+
+      return ok(
+        new TransactionRefundRequestedUseCaseResponses.Failure({
+          paypalOrderId,
+          error: new PayPalApiError("No capture found in order. Order may not have been captured yet."),
+          appContext: appContextContainer.getContextValue(),
+        }),
+      );
+    }
+
+    const captureId = capture.id;
+
+    this.logger.debug("Extracted capture ID from order", {
+      orderId: paypalOrderId,
+      captureId,
+      captureStatus: capture.status,
+    });
 
     const refundResult = await paypalRefundsApi.refundCapture({
       captureId,

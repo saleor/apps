@@ -15,6 +15,7 @@ import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { paypalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { PayPalOrdersApiFactory } from "@/modules/paypal/paypal-orders-api-factory";
 import { PayPalRefundsApiFactory } from "@/modules/paypal/paypal-refunds-api-factory";
 
 import { withRecipientVerification } from "../with-recipient-verification";
@@ -23,6 +24,7 @@ import { transactionRefundRequestedWebhookDefinition } from "./webhook-definitio
 
 const useCase = new TransactionRefundRequestedUseCase({
   paypalConfigRepo,
+  paypalOrdersApiFactory: new PayPalOrdersApiFactory(),
   paypalRefundsApiFactory: new PayPalRefundsApiFactory(),
 });
 

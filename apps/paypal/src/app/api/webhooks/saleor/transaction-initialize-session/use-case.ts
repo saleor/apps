@@ -10,6 +10,8 @@ import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { getPool } from "@/lib/database";
+import { env } from "@/lib/env";
+import { PayPalTenantConfigRepository } from "@/modules/app-config/repositories/paypal-tenant-config-repository";
 import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
 import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { IPayPalOrdersApiFactory, PayPalOrderItem } from "@/modules/paypal/types";
@@ -128,6 +130,130 @@ function extractAmountBreakdown(
     subtotal,
     shipping,
     taxTotal,
+  };
+}
+
+/**
+ * Helper function to extract buyer email from Saleor source object
+ */
+function extractBuyerEmail(
+  sourceObject: TransactionInitializeSessionEventFragment["sourceObject"]
+): string | undefined {
+  if (sourceObject.__typename === "Checkout") {
+    return sourceObject.email || undefined;
+  } else if (sourceObject.__typename === "Order") {
+    return sourceObject.userEmail || undefined;
+  }
+  return undefined;
+}
+
+const normalizeNationalNumber = (raw?: string | null) => {
+  if (!raw) return undefined;
+  const digits = raw.replace(/\D/g, "");
+  if (digits.length < 4 || digits.length > 15) return undefined;
+  return digits;
+};
+
+const normalizeSoftDescriptor = (raw?: string | null) => {
+  if (!raw) return undefined;
+  const trimmed = raw.trim();
+  if (!trimmed) return undefined;
+  return trimmed.slice(0, 22);
+};
+
+/**
+ * Helper function to extract shipping address from Saleor source object
+ * Maps Saleor address format to PayPal address format
+ */
+function extractShippingAddress(
+  sourceObject: TransactionInitializeSessionEventFragment["sourceObject"]
+):
+  | {
+      name?: { full_name?: string };
+      address?: {
+        address_line_1?: string;
+        address_line_2?: string;
+        admin_area_2?: string;
+        admin_area_1?: string;
+        postal_code?: string;
+        country_code?: string;
+      };
+      email_address?: string;
+      phone_number?: { national_number?: string };
+    }
+  | undefined {
+  const shippingAddress =
+    sourceObject.__typename === "Checkout" || sourceObject.__typename === "Order"
+      ? sourceObject.shippingAddress
+      : null;
+
+  if (!shippingAddress) {
+    return undefined;
+  }
+
+  const fullName =
+    `${shippingAddress.firstName || ""} ${shippingAddress.lastName || ""}`.trim() || undefined;
+
+  const email = extractBuyerEmail(sourceObject);
+  const normalizedPhone = normalizeNationalNumber(shippingAddress.phone);
+
+  return {
+    name: fullName ? { full_name: fullName } : undefined,
+    address: {
+      address_line_1: shippingAddress.streetAddress1 || undefined,
+      address_line_2: shippingAddress.streetAddress2 || undefined,
+      admin_area_2: shippingAddress.city || undefined, // City
+      admin_area_1: shippingAddress.countryArea || undefined, // State/Province
+      postal_code: shippingAddress.postalCode || undefined,
+      country_code: shippingAddress.country?.code || undefined,
+    },
+    email_address: email,
+    phone_number: normalizedPhone ? { national_number: normalizedPhone } : undefined,
+  };
+}
+
+/**
+ * Helper function to build payer object for PayPal order
+ * This is used to prefill buyer information in PayPal checkout
+ */
+function buildPayerObject(
+  sourceObject: TransactionInitializeSessionEventFragment["sourceObject"]
+):
+  | {
+      email_address?: string;
+      phone?: {
+        phone_type?: "FAX" | "HOME" | "MOBILE" | "OTHER" | "PAGER";
+        phone_number?: { national_number: string };
+      };
+      name?: { given_name?: string; surname?: string };
+    }
+  | undefined {
+  const email = extractBuyerEmail(sourceObject);
+  const billingAddress =
+    sourceObject.__typename === "Checkout" || sourceObject.__typename === "Order"
+      ? sourceObject.billingAddress
+      : null;
+
+  if (!email && !billingAddress) {
+    return undefined;
+  }
+
+  const normalizedPhone = normalizeNationalNumber(billingAddress?.phone);
+
+  return {
+    email_address: email,
+    phone: normalizedPhone
+      ? {
+          phone_type: "MOBILE",
+          phone_number: { national_number: normalizedPhone },
+        }
+      : undefined,
+    name: billingAddress
+      ? {
+        given_name: billingAddress.firstName || undefined,
+          surname: billingAddress.lastName || undefined,
+        }
+      : undefined,
   };
 }
 
@@ -365,6 +491,75 @@ export class TransactionInitializeSessionUseCase {
       transactionId: event.transaction.id,
     });
 
+    // Extract buyer and shipping information for PayPal
+    const buyerEmail = extractBuyerEmail(event.sourceObject);
+    const payer = buildPayerObject(event.sourceObject);
+    const shipping = extractShippingAddress(event.sourceObject);
+
+    let softDescriptor: string | undefined;
+    try {
+      const tenantConfigRepository = PayPalTenantConfigRepository.create(getPool());
+      const tenantConfigResult = await tenantConfigRepository.getBySaleorApiUrl(
+        authData.saleorApiUrl,
+      );
+
+      if (tenantConfigResult.isErr()) {
+        this.logger.warn("Failed to load tenant soft descriptor", {
+          error: tenantConfigResult.error,
+        });
+      } else {
+        const rawSoftDescriptor = tenantConfigResult.value?.softDescriptor;
+        const normalizedSoftDescriptor = normalizeSoftDescriptor(rawSoftDescriptor);
+
+        if (rawSoftDescriptor !== undefined && rawSoftDescriptor !== null) {
+          if (normalizedSoftDescriptor) {
+            this.logger.info("Soft descriptor applied", {
+              length: normalizedSoftDescriptor.length,
+            });
+          } else {
+            this.logger.warn("Soft descriptor skipped due to validation", {
+              length: rawSoftDescriptor.trim().length,
+            });
+          }
+        }
+
+        softDescriptor = normalizedSoftDescriptor;
+      }
+    } catch (error) {
+      this.logger.warn("Failed to resolve tenant soft descriptor", {
+        error,
+      });
+    }
+
+    // Build experience context for PayPal checkout flow
+    // This controls the PayPal checkout experience (branding, return URLs, etc.)
+    const experienceContext = {
+      brand_name: env.APP_NAME || "Store",
+      user_action: "PAY_NOW" as const, // Show "Pay Now" instead of "Continue"
+      shipping_preference: shipping ? ("SET_PROVIDED_ADDRESS" as const) : ("GET_FROM_FILE" as const),
+    };
+
+    // Build payment source configuration
+    // This enables callbacks for shipping address changes and other checkout updates
+    const paymentSource = env.APP_API_BASE_URL
+      ? {
+          paypal: {
+            experience_context: {
+              ...experienceContext,
+              callback_configuration: {
+                callback_url: `${env.APP_API_BASE_URL}/api/webhooks/paypal/order-update-callback`,
+                callback_events: [
+                  "SHIPPING_CHANGE",
+                  "SHIPPING_OPTIONS_CHANGE",
+                  "BILLING_ADDRESS_CHANGE",
+                  "PHONE_NUMBER_CHANGE",
+                ] as Array<"SHIPPING_CHANGE" | "SHIPPING_OPTIONS_CHANGE" | "BILLING_ADDRESS_CHANGE" | "PHONE_NUMBER_CHANGE">,
+              },
+            },
+          },
+        }
+      : undefined;
+
     // Create PayPal order
     const createOrderStart = Date.now();
     const createOrderResult = await paypalOrdersApi.createOrder({
@@ -384,6 +579,11 @@ export class TransactionInitializeSessionUseCase {
         saleor_source_type: event.sourceObject.__typename,
         saleor_channel_id: channelId,
       },
+      // PayPal certification-required parameters
+      payer,
+      shipping,
+      softDescriptor,
+      paymentSource,
     });
     const createOrderTime = Date.now() - createOrderStart;
     const totalUseCaseTime = Date.now() - useCaseStartTime;
