@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 import { AtobaraiTransactionIdSchema } from "../atobarai-transaction-id";
 
 const schema = z
@@ -28,11 +30,11 @@ export const createAtobaraiFulfillmentReportSuccessResponse = (
   const parseResult = schema.safeParse(raw);
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiFulfillmentReportSuccessResponseValidationError(
-      `Invalid Atobarai fulfillment report success response format: ${parseResult.error.errors
-        .map((e) => e.message)
-        .join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid Atobarai fulfillment report success response format: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 

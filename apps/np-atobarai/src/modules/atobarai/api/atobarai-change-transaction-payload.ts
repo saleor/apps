@@ -1,6 +1,7 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
 import { SaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
 
 import { AtobaraiCustomer, AtobaraiCustomerSchema } from "../atobarai-customer";
@@ -67,11 +68,11 @@ export const createAtobaraiChangeTransactionPayload = (args: {
   });
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiChangeTransactionPayloadValidationError(
-      `Invalid change transaction payload: ${parseResult.error.errors
-        .map((e) => e.message)
-        .join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid change transaction payload: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 

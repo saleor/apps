@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 import {
   AtobaraiShippingCompanyCode,
   AtobaraiShippingCompanyCodeSchema,
@@ -44,11 +46,11 @@ export const createAtobaraiFulfillmentReportPayload = (args: {
   });
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiFulfillmentReportPayloadValidationError(
-      `Invalid fulfillment report payload: ${parseResult.error.errors
-        .map((e) => e.message)
-        .join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid fulfillment report payload: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 

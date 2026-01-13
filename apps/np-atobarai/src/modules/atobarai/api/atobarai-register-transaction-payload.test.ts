@@ -80,7 +80,22 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
         // @ts-expect-error - testing invalid date
         atobaraiShopOrderDate: "invalid-date",
       }),
-    ).toThrow("Invalid register transaction payload: Date must be in YYYY-MM-DD format");
+    ).toThrowErrorMatchingInlineSnapshot(`
+      [AtobaraiRegisterTransactionPayloadValidationError: [
+        {
+          "validation": "regex",
+          "code": "invalid_string",
+          "message": "Date must be in YYYY-MM-DD format",
+          "path": [
+            "transactions",
+            0,
+            "shop_order_date"
+          ]
+        }
+      ]
+      ZodValidationError: Validation error: Date must be in YYYY-MM-DD format at "transactions[0].shop_order_date"
+      Invalid register transaction payload: Validation error: Date must be in YYYY-MM-DD format at "transactions[0].shop_order_date"]
+    `);
   });
 
   it("should throw validation error when saleorTransactionToken is too long (more than 40 chars)", () => {
@@ -94,7 +109,27 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
         atobaraiGoods: mockedAtobaraiGoods,
         atobaraiShopOrderDate: mockedAtobaraiShopOrderDate,
       }),
-    ).toThrow("Invalid register transaction payload: String must contain at most 40 character(s)");
+    ).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiRegisterTransactionPayloadValidationError: [
+        {
+          "code": "too_big",
+          "maximum": 40,
+          "type": "string",
+          "inclusive": true,
+          "exact": false,
+          "message": "String must contain at most 40 character(s)",
+          "path": [
+            "transactions",
+            0,
+            "shop_transaction_id"
+          ]
+        }
+      ]
+      ZodValidationError: Validation error: String must contain at most 40 character(s) at "transactions[0].shop_transaction_id"
+      Invalid register transaction payload: Validation error: String must contain at most 40 character(s) at "transactions[0].shop_transaction_id"]
+    `,
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiRegisterTransactionPayload", () => {

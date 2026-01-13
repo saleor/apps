@@ -81,8 +81,24 @@ describe("createAtobaraiFulfillmentReportSuccessResponse", () => {
   it("should throw validation error when results is missing", () => {
     const rawResponse = {};
 
-    expect(() => createAtobaraiFulfillmentReportSuccessResponse(rawResponse)).toThrow(
-      "Invalid Atobarai fulfillment report success response format: Required",
+    expect(() =>
+      createAtobaraiFulfillmentReportSuccessResponse(rawResponse),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiFulfillmentReportSuccessResponseValidationError: [
+        {
+          "code": "invalid_type",
+          "expected": "array",
+          "received": "undefined",
+          "path": [
+            "results"
+          ],
+          "message": "Required"
+        }
+      ]
+      ZodValidationError: Validation error: Required at "results"
+      Invalid Atobarai fulfillment report success response format: Validation error: Required at "results"]
+    `,
     );
   });
 
@@ -95,8 +111,26 @@ describe("createAtobaraiFulfillmentReportSuccessResponse", () => {
       ],
     };
 
-    expect(() => createAtobaraiFulfillmentReportSuccessResponse(rawResponse)).toThrow(
-      "Invalid Atobarai fulfillment report success response format: Required",
+    expect(() =>
+      createAtobaraiFulfillmentReportSuccessResponse(rawResponse),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiFulfillmentReportSuccessResponseValidationError: [
+        {
+          "code": "invalid_type",
+          "expected": "string",
+          "received": "undefined",
+          "path": [
+            "results",
+            0,
+            "np_transaction_id"
+          ],
+          "message": "Required"
+        }
+      ]
+      ZodValidationError: Validation error: Required at "results[0].np_transaction_id"
+      Invalid Atobarai fulfillment report success response format: Validation error: Required at "results[0].np_transaction_id"]
+    `,
     );
   });
 

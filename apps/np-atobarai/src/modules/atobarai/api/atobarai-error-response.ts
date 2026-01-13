@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 const schema = z
   .object({
     errors: z.array(
@@ -25,11 +27,11 @@ export const createAtobaraiErrorResponse = (rawResponse: unknown | AtobaraiError
   const parseResult = schema.safeParse(rawResponse);
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiErrorResponseValidationError(
-      `Invalid Atobarai error response format: ${parseResult.error.errors
-        .map((e) => e.message)
-        .join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid Atobarai error response format: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 

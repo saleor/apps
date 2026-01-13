@@ -197,8 +197,26 @@ describe("createAtobaraiTransactionSuccessResponse", () => {
       ],
     };
 
-    expect(() => createAtobaraiTransactionSuccessResponse(rawResponse)).toThrow(
-      "Invalid Atobarai transaction success response format: Required",
+    expect(() =>
+      createAtobaraiTransactionSuccessResponse(rawResponse),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiTransactionSuccessResponseValidationError: [
+        {
+          "code": "invalid_type",
+          "expected": "string",
+          "received": "undefined",
+          "path": [
+            "results",
+            0,
+            "np_transaction_id"
+          ],
+          "message": "Required"
+        }
+      ]
+      ZodValidationError: Validation error: Required at "results[0].np_transaction_id"
+      Invalid Atobarai transaction success response format: Validation error: Required at "results[0].np_transaction_id"]
+    `,
     );
   });
 

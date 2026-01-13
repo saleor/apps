@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 import { AtobaraiTransactionId, AtobaraiTransactionIdSchema } from "../atobarai-transaction-id";
 
 const schema = z
@@ -34,11 +36,11 @@ export const createAtobaraiCancelTransactionPayload = (args: {
   });
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiCancelTransactionPayloadValidationError(
-      `Invalid cancel transaction payload: ${parseResult.error.errors
-        .map((e) => e.message)
-        .join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid cancel transaction payload: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 

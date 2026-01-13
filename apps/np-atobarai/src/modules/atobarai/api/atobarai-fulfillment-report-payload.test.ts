@@ -36,7 +36,25 @@ describe("createAtobaraiFulfillmentReportPayload", () => {
         atobaraiTransactionId: mockedAtobaraiTransactionId,
         shippingCompanyCode: mockedAtobaraiShippingCompanyCode,
       }),
-    ).toThrow("Invalid fulfillment report payload: String must contain at most 20 character(s)");
+    ).toThrowErrorMatchingInlineSnapshot(`
+      [AtobaraiFulfillmentReportPayloadValidationError: [
+        {
+          "code": "too_big",
+          "maximum": 20,
+          "type": "string",
+          "inclusive": true,
+          "exact": false,
+          "message": "String must contain at most 20 character(s)",
+          "path": [
+            "transactions",
+            0,
+            "slip_no"
+          ]
+        }
+      ]
+      ZodValidationError: Validation error: String must contain at most 20 character(s) at "transactions[0].slip_no"
+      Invalid fulfillment report payload: Validation error: String must contain at most 20 character(s) at "transactions[0].slip_no"]
+    `);
   });
 
   it("should throw validation error when slip_no is empty", () => {
@@ -46,7 +64,25 @@ describe("createAtobaraiFulfillmentReportPayload", () => {
         atobaraiTransactionId: mockedAtobaraiTransactionId,
         shippingCompanyCode: mockedAtobaraiShippingCompanyCode,
       }),
-    ).toThrow("Invalid fulfillment report payload: String must contain at least 1 character(s)");
+    ).toThrowErrorMatchingInlineSnapshot(`
+      [AtobaraiFulfillmentReportPayloadValidationError: [
+        {
+          "code": "too_small",
+          "minimum": 1,
+          "type": "string",
+          "inclusive": true,
+          "exact": false,
+          "message": "String must contain at least 1 character(s)",
+          "path": [
+            "transactions",
+            0,
+            "slip_no"
+          ]
+        }
+      ]
+      ZodValidationError: Validation error: String must contain at least 1 character(s) at "transactions[0].slip_no"
+      Invalid fulfillment report payload: Validation error: String must contain at least 1 character(s) at "transactions[0].slip_no"]
+    `);
   });
 
   it("shouldn't be assignable without createAtobaraiFulfillmentReportPayload", () => {

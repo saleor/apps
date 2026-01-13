@@ -59,8 +59,22 @@ describe("createAtobaraiRegisterTransactionErrorResponse", () => {
       results: [],
     };
 
-    expect(() => createAtobaraiErrorResponse(rawResponse)).toThrow(
-      "Invalid Atobarai error response format: Required",
+    expect(() => createAtobaraiErrorResponse(rawResponse)).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiErrorResponseValidationError: [
+        {
+          "code": "invalid_type",
+          "expected": "array",
+          "received": "undefined",
+          "path": [
+            "errors"
+          ],
+          "message": "Required"
+        }
+      ]
+      ZodValidationError: Validation error: Required at "errors"
+      Invalid Atobarai error response format: Validation error: Required at "errors"]
+    `,
     );
   });
 

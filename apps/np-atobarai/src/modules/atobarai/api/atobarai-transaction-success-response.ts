@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 import { AtobaraiTransactionIdSchema } from "../atobarai-transaction-id";
 
 export const CreditCheckResult = {
@@ -54,11 +56,11 @@ export const createAtobaraiTransactionSuccessResponse = (
   const parseResult = schema.safeParse(rawResponse);
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiTransactionSuccessResponseValidationError(
-      `Invalid Atobarai transaction success response format: ${parseResult.error.errors
-        .map((e) => e.message)
-        .join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid Atobarai transaction success response format: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 
