@@ -12,7 +12,7 @@ import { appConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { AtobaraiApiClientFactory } from "@/modules/atobarai/api/atobarai-api-client-factory";
 import { AtobaraiCustomerMissingDataError } from "@/modules/atobarai/atobarai-customer";
 
-import { MalformedRequestResponse, UnhandledErrorResponse } from "../saleor-webhook-responses";
+import { InvalidEventDataResponse, UnhandledErrorResponse } from "../saleor-webhook-responses";
 import { withRecipientVerification } from "../with-recipient-verification";
 import { TransactionProcessSessionUseCase } from "./use-case";
 import { transactionProcessSessionWebhookDefinition } from "./webhook-definition";
@@ -63,7 +63,7 @@ const handler = transactionProcessSessionWebhookDefinition.createHandler(
       if (error instanceof AtobaraiCustomerMissingDataError) {
         logger.warn("Missing customer data in request", { error });
 
-        return new MalformedRequestResponse(error).getResponse();
+        return new InvalidEventDataResponse(error).getResponse();
       }
 
       captureException(error);
