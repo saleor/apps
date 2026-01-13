@@ -54,7 +54,7 @@ export const createAtobaraiCustomer = (event: { sourceObject: SourceObjectFragme
     throw new AtobaraiCustomerMissingDataError("Email is required to create AtobaraiCustomer");
   }
 
-  return AtobaraiCustomerSchema.parse({
+  const parseResult = AtobaraiCustomerSchema.safeParse({
     customer_name: formatCustomerName(billingAddress),
     company_name: billingAddress.companyName,
     zip_code: billingAddress.postalCode,
@@ -62,6 +62,15 @@ export const createAtobaraiCustomer = (event: { sourceObject: SourceObjectFragme
     tel: formatPhone(billingAddress.phone),
     email: email,
   });
+
+  if (!parseResult.success) {
+    throw new AtobaraiCustomerMissingDataError(
+      `Invalid customer data: ${parseResult.error.errors.map((e) => e.message).join(", ")}`,
+      { cause: parseResult.error },
+    );
+  }
+
+  return parseResult.data;
 };
 
 export type AtobaraiCustomer = z.infer<typeof AtobaraiCustomerSchema>;
