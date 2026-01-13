@@ -284,6 +284,13 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+      InvalidEventDataResponse {
+        "error": [BaseError: Multiple transactions found for the order],
+        "message": "Invalid event data",
+        "statusCode": 202,
+      }
+    `);
   });
 
   it("should return InvalidEventDataResponse when transaction was not created by an app", async () => {
@@ -355,6 +362,13 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+      InvalidEventDataResponse {
+        "error": [BaseError: Transaction was not created by the current app installation],
+        "message": "Invalid event data",
+        "statusCode": 202,
+      }
+    `);
   });
 
   it("should return BrokenAppResponse when transactionRecordRepo fails to create transaction", async () => {
