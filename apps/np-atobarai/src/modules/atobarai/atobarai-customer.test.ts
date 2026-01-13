@@ -151,8 +151,21 @@ describe("createAtobaraiCustomer", () => {
       },
     };
 
-    expect(() => createAtobaraiCustomer(eventWithInvalidEmail)).toThrow(
-      "Invalid customer data: Invalid email",
+    expect(() => createAtobaraiCustomer(eventWithInvalidEmail)).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiCustomerMissingDataError: [
+        {
+          "validation": "email",
+          "code": "invalid_string",
+          "message": "Invalid email",
+          "path": [
+            "email"
+          ]
+        }
+      ]
+      ZodValidationError: Validation error: Invalid email at "email"
+      Invalid customer data: Validation error: Invalid email at "email"]
+    `,
     );
   });
 

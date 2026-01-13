@@ -13,8 +13,39 @@ describe("createAtobaraiShippingCompanyCode", () => {
   });
 
   it("should throw validation error when input is an invalid shipping company code", () => {
-    expect(() => createAtobaraiShippingCompanyCode("99999")).toThrow(
-      'Invalid shipping company code "99999"',
+    expect(() => createAtobaraiShippingCompanyCode("99999")).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiShippingCompanyCodeValidationError: [
+        {
+          "received": "99999",
+          "code": "invalid_enum_value",
+          "options": [
+            "50000",
+            "59010",
+            "59020",
+            "59030",
+            "59040",
+            "59041",
+            "59042",
+            "59043",
+            "59050",
+            "59060",
+            "59080",
+            "59090",
+            "59110",
+            "59140",
+            "59150",
+            "59100",
+            "59160",
+            "55555"
+          ],
+          "path": [],
+          "message": "Invalid enum value. Expected '50000' | '59010' | '59020' | '59030' | '59040' | '59041' | '59042' | '59043' | '59050' | '59060' | '59080' | '59090' | '59110' | '59140' | '59150' | '59100' | '59160' | '55555', received '99999'"
+        }
+      ]
+      ZodValidationError: Validation error: Invalid enum value. Expected '50000' | '59010' | '59020' | '59030' | '59040' | '59041' | '59042' | '59043' | '59050' | '59060' | '59080' | '59090' | '59110' | '59140' | '59150' | '59100' | '59160' | '55555', received '99999'
+      Invalid shipping company code: Validation error: Invalid enum value. Expected '50000' | '59010' | '59020' | '59030' | '59040' | '59041' | '59042' | '59043' | '59050' | '59060' | '59080' | '59090' | '59110' | '59140' | '59150' | '59100' | '59160' | '55555', received '99999']
+    `,
     );
   });
 

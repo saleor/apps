@@ -10,8 +10,22 @@ describe("createAtobaraiMerchantCode", () => {
   });
 
   it("should throw validation error when input is an empty string", () => {
-    expect(() => createAtobaraiMerchantCode("")).toThrow(
-      "Invalid merchant code: String must contain at least 1 character(s)",
+    expect(() => createAtobaraiMerchantCode("")).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiMerchantCodeValidationError: [
+        {
+          "code": "too_small",
+          "minimum": 1,
+          "type": "string",
+          "inclusive": true,
+          "exact": false,
+          "message": "String must contain at least 1 character(s)",
+          "path": []
+        }
+      ]
+      ZodValidationError: Validation error: String must contain at least 1 character(s)
+      Invalid merchant code: Validation error: String must contain at least 1 character(s)]
+    `,
     );
   });
 

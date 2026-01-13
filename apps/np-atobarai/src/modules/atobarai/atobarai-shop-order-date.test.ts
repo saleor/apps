@@ -10,8 +10,19 @@ describe("createAtobaraiShopOrderDate", () => {
   });
 
   it("should throw validation error when input is an empty string", () => {
-    expect(() => createAtobaraiShopOrderDate("")).toThrow(
-      "Invalid shop order date: Invalid datetime",
+    expect(() => createAtobaraiShopOrderDate("")).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiShopOrderDateValidationError: [
+        {
+          "code": "invalid_string",
+          "validation": "datetime",
+          "message": "Invalid datetime",
+          "path": []
+        }
+      ]
+      ZodValidationError: Validation error: Invalid datetime
+      Invalid shop order date: Validation error: Invalid datetime]
+    `,
     );
   });
 

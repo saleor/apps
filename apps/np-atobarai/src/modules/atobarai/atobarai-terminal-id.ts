@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 const schema = z.string().min(1).brand("AtobaraiTerminalId");
 
 export const AtobaraiTerminalIdValidationError = BaseError.subclass(
@@ -16,10 +18,11 @@ export const createAtobaraiTerminalId = (raw: string) => {
   const parseResult = schema.safeParse(raw);
 
   if (!parseResult.success) {
-    throw new AtobaraiTerminalIdValidationError(
-      `Invalid terminal ID: ${parseResult.error.errors.map((e) => e.message).join(", ")}`,
-      { cause: parseResult.error },
-    );
+    const readableError = zodReadableError(parseResult.error);
+
+    throw new AtobaraiTerminalIdValidationError(`Invalid terminal ID: ${readableError.message}`, {
+      cause: readableError,
+    });
   }
 
   return parseResult.data;

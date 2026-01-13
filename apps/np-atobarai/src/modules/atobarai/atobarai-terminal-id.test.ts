@@ -10,8 +10,22 @@ describe("createAtobaraiTerminalId", () => {
   });
 
   it("should throw validation error when input is an empty string", () => {
-    expect(() => createAtobaraiTerminalId("")).toThrow(
-      "Invalid terminal ID: String must contain at least 1 character(s)",
+    expect(() => createAtobaraiTerminalId("")).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiTerminalIdValidationError: [
+        {
+          "code": "too_small",
+          "minimum": 1,
+          "type": "string",
+          "inclusive": true,
+          "exact": false,
+          "message": "String must contain at least 1 character(s)",
+          "path": []
+        }
+      ]
+      ZodValidationError: Validation error: String must contain at least 1 character(s)
+      Invalid terminal ID: Validation error: String must contain at least 1 character(s)]
+    `,
     );
   });
 

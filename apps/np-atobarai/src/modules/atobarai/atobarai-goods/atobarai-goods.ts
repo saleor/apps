@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 export const AtobaraiGoodsSchema = z
   .array(
     z.object({
@@ -21,10 +23,11 @@ export const createAtobaraiGoods = (raw: unknown): AtobaraiGoods => {
   const parseResult = AtobaraiGoodsSchema.safeParse(raw);
 
   if (!parseResult.success) {
-    throw new AtobaraiGoodsValidationError(
-      `Invalid goods data: ${parseResult.error.errors.map((e) => e.message).join(", ")}`,
-      { cause: parseResult.error },
-    );
+    const readableError = zodReadableError(parseResult.error);
+
+    throw new AtobaraiGoodsValidationError(`Invalid goods data: ${readableError.message}`, {
+      cause: readableError,
+    });
   }
 
   return parseResult.data;

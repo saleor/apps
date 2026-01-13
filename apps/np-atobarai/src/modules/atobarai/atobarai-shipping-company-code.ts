@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 export const SHIPPING_COMPANY_CODES = [
   ["50000", "Sagawa Express"],
   ["59010", "Yamato Transport"],
@@ -41,11 +43,11 @@ export const createAtobaraiShippingCompanyCode = (raw: string) => {
   const parseResult = AtobaraiShippingCompanyCodeSchema.safeParse(raw);
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiShippingCompanyCodeValidationError(
-      `Invalid shipping company code "${raw}": ${parseResult.error.errors
-        .map((e) => e.message)
-        .join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid shipping company code: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 

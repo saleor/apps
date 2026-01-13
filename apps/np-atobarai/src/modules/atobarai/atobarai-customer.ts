@@ -2,6 +2,7 @@ import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
 import { SourceObjectFragment } from "@/generated/graphql";
+import { zodReadableError } from "@/lib/zod-readable-error";
 import { AtobaraiAddressFormatter } from "@/modules/atobarai/atobarai-address-formatter";
 
 import {
@@ -64,10 +65,11 @@ export const createAtobaraiCustomer = (event: { sourceObject: SourceObjectFragme
   });
 
   if (!parseResult.success) {
-    throw new AtobaraiCustomerMissingDataError(
-      `Invalid customer data: ${parseResult.error.errors.map((e) => e.message).join(", ")}`,
-      { cause: parseResult.error },
-    );
+    const readableError = zodReadableError(parseResult.error);
+
+    throw new AtobaraiCustomerMissingDataError(`Invalid customer data: ${readableError.message}`, {
+      cause: readableError,
+    });
   }
 
   return parseResult.data;

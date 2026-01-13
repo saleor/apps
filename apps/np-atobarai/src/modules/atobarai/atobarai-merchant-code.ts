@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 const schema = z.string().min(1).brand("AtobaraiMerchantCode");
 
 export const AtobaraiMerchantCodeValidationError = BaseError.subclass(
@@ -16,9 +18,11 @@ export const createAtobaraiMerchantCode = (raw: string) => {
   const parseResult = schema.safeParse(raw);
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiMerchantCodeValidationError(
-      `Invalid merchant code: ${parseResult.error.errors.map((e) => e.message).join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid merchant code: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 

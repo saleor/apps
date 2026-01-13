@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 const transformTo_YYYY_MM_DD = (stringDate: string) => stringDate.split("T")[0];
 
 const schema = z
@@ -22,9 +24,11 @@ export const createAtobaraiShopOrderDate = (raw: string) => {
   const parseResult = schema.safeParse(raw);
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiShopOrderDateValidationError(
-      `Invalid shop order date: ${parseResult.error.errors.map((e) => e.message).join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid shop order date: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 

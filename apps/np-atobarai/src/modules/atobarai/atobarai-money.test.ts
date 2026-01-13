@@ -16,8 +16,24 @@ describe("createAtobaraiMoney", () => {
     expect(() => createAtobaraiMoney({ amount: 1000, currency: "" })).toThrow(
       AtobaraiMoneyValidationError,
     );
-    expect(() => createAtobaraiMoney({ amount: 1000, currency: "" })).toThrow(
-      'Invalid money data: Invalid literal value, expected "JPY"',
+    expect(() =>
+      createAtobaraiMoney({ amount: 1000, currency: "" }),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiMoneyValidationError: [
+        {
+          "received": "",
+          "code": "invalid_literal",
+          "expected": "JPY",
+          "path": [
+            "currency"
+          ],
+          "message": "Invalid literal value, expected \\"JPY\\""
+        }
+      ]
+      ZodValidationError: Validation error: Invalid literal value, expected "JPY" at "currency"
+      Invalid money data: Validation error: Invalid literal value, expected "JPY" at "currency"]
+    `,
     );
   });
 
@@ -25,8 +41,24 @@ describe("createAtobaraiMoney", () => {
     expect(() => createAtobaraiMoney({ amount: 1000, currency: "USD" })).toThrow(
       AtobaraiMoneyValidationError,
     );
-    expect(() => createAtobaraiMoney({ amount: 1000, currency: "USD" })).toThrow(
-      'Invalid money data: Invalid literal value, expected "JPY"',
+    expect(() =>
+      createAtobaraiMoney({ amount: 1000, currency: "USD" }),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiMoneyValidationError: [
+        {
+          "received": "USD",
+          "code": "invalid_literal",
+          "expected": "JPY",
+          "path": [
+            "currency"
+          ],
+          "message": "Invalid literal value, expected \\"JPY\\""
+        }
+      ]
+      ZodValidationError: Validation error: Invalid literal value, expected "JPY" at "currency"
+      Invalid money data: Validation error: Invalid literal value, expected "JPY" at "currency"]
+    `,
     );
   });
 
