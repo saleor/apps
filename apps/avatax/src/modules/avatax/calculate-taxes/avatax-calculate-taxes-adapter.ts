@@ -7,7 +7,7 @@ import { extractTransactionRedactedLogProperties } from "../extract-transaction-
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
-export type AvataxCalculateTaxesResponse = {
+export type AvataxCalculateTaxesResult = {
   transaction: TransactionModel;
   response: CalculateTaxesResponse;
 };
@@ -36,7 +36,7 @@ export class AvataxCalculateTaxesAdapter {
     private avataxCalculateTaxesResponseTransformer: AvataxCalculateTaxesResponseTransformer,
   ) {}
 
-  async send(avataxModel: AvataxCalculateTaxesTarget): Promise<AvataxCalculateTaxesResponse> {
+  async send(avataxModel: AvataxCalculateTaxesTarget): Promise<AvataxCalculateTaxesResult> {
     this.logger.debug("Transforming the Saleor payload for calculating taxes with AvaTax...");
 
     this.logger.info(
