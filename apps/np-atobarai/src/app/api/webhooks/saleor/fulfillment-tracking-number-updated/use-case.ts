@@ -1,6 +1,6 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
-import { err, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok, Result } from "neverthrow";
 import { Client } from "urql";
 
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
@@ -10,6 +10,7 @@ import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/a
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import {
   AtobaraiShippingCompanyCode,
+  AtobaraiShippingCompanyCodeValidationError,
   createAtobaraiShippingCompanyCode,
 } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
@@ -137,16 +138,22 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
 
   private resolveAtobaraiPDCompanyCodeFromMetadata(
     event: FulfillmentTrackingNumberUpdatedEventFragment,
-  ): AtobaraiShippingCompanyCode | null {
+  ): Result<
+    AtobaraiShippingCompanyCode | null,
+    InstanceType<typeof AtobaraiShippingCompanyCodeValidationError>
+  > {
     if (event.fulfillment?.atobaraiPDCompanyCode) {
       this.logger.info("Using Atobarai PD company code from private metadata", {
         atobaraiPDCompanyCode: event.fulfillment.atobaraiPDCompanyCode,
       });
 
-      return createAtobaraiShippingCompanyCode(event.fulfillment.atobaraiPDCompanyCode);
+      return fromThrowable(
+        createAtobaraiShippingCompanyCode,
+        AtobaraiShippingCompanyCodeValidationError.normalize,
+      )(event.fulfillment.atobaraiPDCompanyCode);
     }
 
-    return null;
+    return ok(null);
   }
 
   async execute(params: {
@@ -182,14 +189,18 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
-    const metadataShippingCompanyCode = this.resolveAtobaraiPDCompanyCodeFromMetadata(event);
+    const metadataShippingCompanyCodeResult = this.resolveAtobaraiPDCompanyCodeFromMetadata(event);
+
+    if (metadataShippingCompanyCodeResult.isErr()) {
+      return err(new InvalidEventDataResponse(metadataShippingCompanyCodeResult.error));
+    }
 
     const reportFulfillmentResult = await apiClient.reportFulfillment(
       createAtobaraiFulfillmentReportPayload({
         trackingNumber,
         atobaraiTransactionId: createAtobaraiTransactionId(pspReference),
         shippingCompanyCode:
-          metadataShippingCompanyCode || atobaraiConfigResult.value.shippingCompanyCode,
+          metadataShippingCompanyCodeResult.value || atobaraiConfigResult.value.shippingCompanyCode,
       }),
       {
         rejectMultipleResults: true,
@@ -229,7 +240,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     const appTransaction = new TransactionRecord({
       atobaraiTransactionId,
       saleorTrackingNumber: trackingNumber,
-      fulfillmentMetadataShippingCompanyCode: metadataShippingCompanyCode,
+      fulfillmentMetadataShippingCompanyCode: metadataShippingCompanyCodeResult.value,
     });
 
     const updateTransactionResult = await this.transactionRecordRepo.updateTransaction(

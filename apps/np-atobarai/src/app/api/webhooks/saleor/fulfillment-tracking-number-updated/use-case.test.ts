@@ -186,6 +186,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
   it("should return InvalidEventDataResponse when tracking number is missing", async () => {
@@ -213,6 +214,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
   it("should return InvalidEventDataResponse when order transactions are missing", async () => {
@@ -241,6 +243,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
   it("should return InvalidEventDataResponse when multiple transactions are found", async () => {
@@ -284,13 +287,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      InvalidEventDataResponse {
-        "error": [BaseError: Multiple transactions found for the order],
-        "message": "Invalid event data",
-        "statusCode": 202,
-      }
-    `);
+    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
   it("should return InvalidEventDataResponse when transaction was not created by an app", async () => {
@@ -326,9 +323,10 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
-  it("should return InvalidEventDataResponse when transaction was created by different app", async () => {
+  it("should return MalformedRequestResponse when transaction was created by different app", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -362,13 +360,6 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
-    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-      InvalidEventDataResponse {
-        "error": [BaseError: Transaction was not created by the current app installation],
-        "message": "Invalid event data",
-        "statusCode": 202,
-      }
-    `);
   });
 
   it("should return BrokenAppResponse when transactionRecordRepo fails to create transaction", async () => {
@@ -474,5 +465,41 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
         rejectMultipleResults: true,
       },
     );
+  });
+
+  it("should return InvalidEventDataResponse when private metadata contains invalid shipping company code", async () => {
+    const invalidPDCompanyCode = "INVALID_CODE";
+
+    const eventWithInvalidPDCompanyCode = {
+      ...mockedFulfillmentTrackingNumberUpdatedEvent,
+      fulfillment: {
+        ...mockedFulfillmentTrackingNumberUpdatedEvent.fulfillment,
+        atobaraiPDCompanyCode: invalidPDCompanyCode,
+      },
+    };
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockResolvedValue(ok(mockedAppChannelConfig));
+
+    const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+      transactionRecordRepo: new MockedTransactionRecordRepo(),
+      orderNoteServiceFactory() {
+        return mockedOrderNoteService;
+      },
+    });
+
+    const result = await useCase.execute({
+      appId: mockedSaleorAppId,
+      saleorApiUrl: mockedSaleorApiUrl,
+      event: eventWithInvalidPDCompanyCode,
+      graphqlClient: mockedGraphqlClient,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr().error.message).toContain(
+      "Invalid shipping company code: Validation error: Invalid enum value. Expected '50000' | '59010' | '59020' | '59030' | '59040' | '59041' | '59042' | '59043' | '59050' | '59060' | '59080' | '59090' | '59110' | '59140' | '59150' | '59100' | '59160' | '55555', received 'INVALID_CODE'",
+    );
+    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 });

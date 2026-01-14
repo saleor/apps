@@ -51,13 +51,18 @@ export class UnhandledErrorResponse extends ErrorWebhookResponse {
   }
 }
 
-export class InvalidEventDataResponse extends ErrorWebhookResponse {
+export class InvalidEventDataResponse {
   readonly message = "Invalid event data";
   /**
    * This happens when e.g. event can't be parsed by app, because it's different channel etc.
    * That's why we return 202 so Saleor ignores retrying, but also do not disable the webhook via circuit breaker mechanism
    */
   readonly statusCode = 202;
+  error: Error;
+
+  constructor(error: Error) {
+    this.error = error;
+  }
 
   getResponse() {
     return Response.json(
