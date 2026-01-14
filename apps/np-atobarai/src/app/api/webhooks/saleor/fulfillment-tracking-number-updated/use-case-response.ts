@@ -1,3 +1,4 @@
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import { AtobaraiApiClientFulfillmentReportError } from "@/modules/atobarai/api/types";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
@@ -11,7 +12,9 @@ class Success extends SuccessWebhookResponse {
   }
 }
 
-type UseCaseErrors = AtobaraiApiClientFulfillmentReportError;
+type UseCaseErrors =
+  | AtobaraiApiClientFulfillmentReportError
+  | InstanceType<typeof InvalidEventValidationError>;
 
 class Failure extends SuccessWebhookResponse {
   public error: UseCaseErrors;

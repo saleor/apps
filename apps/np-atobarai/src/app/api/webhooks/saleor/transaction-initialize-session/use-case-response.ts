@@ -6,11 +6,7 @@ import {
   TransactionSessionSuccess,
 } from "@/generated/app-webhooks-types/transaction-initialize-session";
 import { assertUnreachable } from "@/lib/assert-unreachable";
-import {
-  AtobaraiApiClientRegisterTransactionErrorPublicCode,
-  AtobaraiApiRegisterTransactionErrors,
-  AtobaraiMultipleResultsErrorPublicCode,
-} from "@/modules/atobarai/api/types";
+import { AtobaraiApiRegisterTransactionErrors } from "@/modules/atobarai/api/types";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import {
@@ -20,7 +16,7 @@ import {
 } from "@/modules/transaction-result/charge-result";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
-import { AtobaraiFailureTransactionErrorPublicCode, UseCaseErrors } from "../use-case-errors";
+import { UseCaseErrors } from "../use-case-errors";
 
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
@@ -85,7 +81,6 @@ class Failure extends SuccessWebhookResponse {
     transactionResult: ChargeFailureResult;
     error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors;
     apiError?: string;
-    publicMessage?: string;
   }) {
     super();
     this.transactionResult = args.transactionResult;

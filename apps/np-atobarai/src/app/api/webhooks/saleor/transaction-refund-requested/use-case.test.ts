@@ -10,6 +10,7 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedRefundRequestedEvent } from "@/__tests__/mocks/saleor-events/mocked-refund-requested-event";
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import { createAtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
 import { createAtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import { createAtobaraiTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-transaction-success-response";
@@ -25,7 +26,6 @@ import {
 } from "@/modules/transaction-result/refund-result";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
-import { InvalidEventDataResponse } from "../saleor-webhook-responses";
 import { TransactionRefundRequestedUseCase } from "./use-case";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
@@ -34,7 +34,7 @@ describe("TransactionRefundRequestedUseCase", () => {
     create: () => mockedAtobaraiApiClient,
   } satisfies IAtobaraiApiClientFactory;
 
-  it("should return InvalidEventDataResponse when action amount is missing", async () => {
+  it("should return InvalidEventValidationError when action amount is missing", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
       action: { amount: null, currency: "JPY" },
@@ -53,10 +53,10 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
   });
 
-  it("should return InvalidEventDataResponse when transaction is missing", async () => {
+  it("should return InvalidEventValidationError when transaction is missing", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
       transaction: null,
@@ -74,10 +74,10 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
   });
 
-  it("should return InvalidEventDataResponse when total amount is missing from both checkout and order", async () => {
+  it("should return InvalidEventValidationError when total amount is missing from both checkout and order", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
       transaction: {
@@ -98,7 +98,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
   });
 
   describe("before fulfillment refunds", () => {

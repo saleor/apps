@@ -28,11 +28,7 @@ import {
 } from "@/modules/transaction-result/charge-result";
 import { TransactionRecordRepoError } from "@/modules/transactions-recording/types";
 
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  InvalidEventDataResponse,
-} from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
@@ -228,7 +224,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responseJson.data.errors[0].apiError).toBe("test-api-error");
   });
 
-  it("should return InvalidEventDataResponse when event is missing issuedAt", async () => {
+  it("should return InvalidEventValidationError when event is missing issuedAt", async () => {
     const eventWithoutIssuedAt = {
       ...mockedTransactionInitializeSessionEvent,
       issuedAt: null,
@@ -250,7 +246,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       event: eventWithoutIssuedAt,
     });
 
-    expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
   });
 
   it("should return AppIsNotConfiguredResponse if config not found for specified channel", async () => {

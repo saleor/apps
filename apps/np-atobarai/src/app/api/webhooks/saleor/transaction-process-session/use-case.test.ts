@@ -9,6 +9,7 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedTransactionProcessSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-process-session-event";
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import {
   createAtobaraiTransactionSuccessResponse,
   CreditCheckResult,
@@ -25,7 +26,7 @@ import {
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
 
-import { AppIsNotConfiguredResponse, InvalidEventDataResponse } from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse } from "../saleor-webhook-responses";
 import { TransactionProcessSessionUseCase } from "./use-case";
 import { TransactionProcessSessionUseCaseResponse } from "./use-case-response";
 
@@ -237,7 +238,7 @@ describe("TransactionProcessSessionUseCase", () => {
     expect(responseJson.data.errors[0].apiError).toBe("test-api-error-code");
   });
 
-  it("should return InvalidEventDataResponse when event is missing issuedAt", async () => {
+  it("should return InvalidEventValidationError when event is missing issuedAt", async () => {
     const eventWithoutIssuedAt = {
       ...mockedTransactionProcessSessionEvent,
       issuedAt: null,
@@ -258,7 +259,7 @@ describe("TransactionProcessSessionUseCase", () => {
       event: eventWithoutIssuedAt,
     });
 
-    expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(responsePayload._unsafeUnwrapErr().error).toBeInstanceOf(InvalidEventValidationError);
   });
 
   it("should return AppIsNotConfiguredResponse if config not found for specified channel", async () => {

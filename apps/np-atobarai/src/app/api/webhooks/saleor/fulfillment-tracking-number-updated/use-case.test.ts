@@ -11,6 +11,7 @@ import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedFulfillmentTrackingNumberUpdatedEvent } from "@/__tests__/mocks/saleor-events/mocked-fulfillment-tracking-number-updated-event";
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import { createAtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import {
   AtobaraiApiClientFulfillmentReportError,
@@ -19,11 +20,7 @@ import {
 import { IOrderNoteService } from "@/modules/saleor/order-note-service";
 import { TransactionRecordRepoError } from "@/modules/transactions-recording/types";
 
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  InvalidEventDataResponse,
-} from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { FulfillmentTrackingNumberUpdatedUseCase } from "./use-case";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
@@ -164,7 +161,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(AppIsNotConfiguredResponse);
   });
 
-  it("should return InvalidEventDataResponse when fulfillment is missing", async () => {
+  it("should return InvalidEventValidationError when fulfillment is missing", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -185,11 +182,11 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
     expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
-  it("should return InvalidEventDataResponse when tracking number is missing", async () => {
+  it("should return InvalidEventValidationError when tracking number is missing", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -213,11 +210,11 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
     expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
-  it("should return InvalidEventDataResponse when order transactions are missing", async () => {
+  it("should return InvalidEventValidationError when order transactions are missing", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -242,11 +239,11 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
     expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
-  it("should return InvalidEventDataResponse when multiple transactions are found", async () => {
+  it("should return InvalidEventValidationError when multiple transactions are found", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -286,11 +283,11 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr().error).toBeInstanceOf(InvalidEventValidationError);
     expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
-  it("should return InvalidEventDataResponse when transaction was not created by an app", async () => {
+  it("should return InvalidEventValidationError when transaction was not created by an app", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -322,11 +319,11 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
     expect(result._unsafeUnwrapErr().statusCode).toBe(202);
   });
 
-  it("should return MalformedRequestResponse when transaction was created by different app", async () => {
+  it("should return InvalidEventValidationError when transaction was created by different app", async () => {
     const useCase = new FulfillmentTrackingNumberUpdatedUseCase({
       appConfigRepo: mockedAppConfigRepo,
       atobaraiApiClientFactory,
@@ -359,7 +356,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr().error).toBeInstanceOf(InvalidEventValidationError);
   });
 
   it("should return BrokenAppResponse when transactionRecordRepo fails to create transaction", async () => {
@@ -467,7 +464,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
     );
   });
 
-  it("should return InvalidEventDataResponse when private metadata contains invalid shipping company code", async () => {
+  it("should return InvalidEventValidationError when private metadata contains invalid shipping company code", async () => {
     const invalidPDCompanyCode = "INVALID_CODE";
 
     const eventWithInvalidPDCompanyCode = {
@@ -496,7 +493,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(result._unsafeUnwrapErr().error).toBeInstanceOf(InvalidEventValidationError);
     expect(result._unsafeUnwrapErr().error.message).toContain(
       "Invalid shipping company code: Validation error: Invalid enum value. Expected '50000' | '59010' | '59020' | '59030' | '59040' | '59041' | '59042' | '59043' | '59050' | '59060' | '59080' | '59090' | '59110' | '59140' | '59150' | '59100' | '59160' | '55555', received 'INVALID_CODE'",
     );

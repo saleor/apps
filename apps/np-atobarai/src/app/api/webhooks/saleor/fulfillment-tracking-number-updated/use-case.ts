@@ -1,8 +1,8 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
-import { BaseError } from "@saleor/errors";
 import { err, fromThrowable, ok, Result } from "neverthrow";
 import { Client } from "urql";
 
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
@@ -19,17 +19,13 @@ import { TransactionRecord } from "@/modules/transactions-recording/transaction-
 import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
 import { BaseUseCase } from "../base-use-case";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  InvalidEventDataResponse,
-} from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
   Result<
     FulfillmentTrackingNumberUpdatedUseCaseResponse,
-    AppIsNotConfiguredResponse | InvalidEventDataResponse | BrokenAppResponse
+    AppIsNotConfiguredResponse | BrokenAppResponse
   >
 >;
 
@@ -69,9 +65,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         },
       });
 
-      return err(
-        new InvalidEventDataResponse(new BaseError("Fulfillment tracking number is missing")),
-      );
+      return err(new InvalidEventValidationError("Fulfillment tracking number is missing"));
     }
 
     if (!event.order?.transactions?.length) {
@@ -81,7 +75,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         },
       });
 
-      return err(new InvalidEventDataResponse(new BaseError("Order transactions are missing")));
+      return err(new InvalidEventValidationError("Order transactions are missing"));
     }
 
     if (event.order.transactions.length > 1) {
@@ -90,9 +84,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         event: { orderId: event.order.id },
       });
 
-      return err(
-        new InvalidEventDataResponse(new BaseError("Multiple transactions found for the order")),
-      );
+      return err(new InvalidEventValidationError("Multiple transactions found for the order"));
     }
 
     const transaction = event.order.transactions[0];
@@ -106,9 +98,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         },
       });
 
-      return err(
-        new InvalidEventDataResponse(new BaseError("Transaction was not created by the app")),
-      );
+      return err(new InvalidEventValidationError("Transaction was not created by the app"));
     }
 
     if (transaction.createdBy.id !== appId) {
@@ -122,8 +112,8 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       });
 
       return err(
-        new InvalidEventDataResponse(
-          new BaseError("Transaction was not created by the current app installation"),
+        new InvalidEventValidationError(
+          "Transaction was not created by the current app installation",
         ),
       );
     }
@@ -167,7 +157,13 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     const parsingResult = this.parseEvent({ event, appId });
 
     if (parsingResult.isErr()) {
-      return err(parsingResult.error);
+      return ok(
+        new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
+          new InvalidEventValidationError("Failed to parse Saleor event", {
+            cause: parsingResult.error,
+          }),
+        ),
+      );
     }
 
     const { orderId, channelId, pspReference, trackingNumber } = parsingResult.value;
@@ -192,7 +188,13 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     const metadataShippingCompanyCodeResult = this.resolveAtobaraiPDCompanyCodeFromMetadata(event);
 
     if (metadataShippingCompanyCodeResult.isErr()) {
-      return err(new InvalidEventDataResponse(metadataShippingCompanyCodeResult.error));
+      return ok(
+        new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
+          new InvalidEventValidationError(metadataShippingCompanyCodeResult.error.message, {
+            cause: metadataShippingCompanyCodeResult.error,
+          }),
+        ),
+      );
     }
 
     const reportFulfillmentResult = await apiClient.reportFulfillment(

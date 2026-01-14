@@ -1,5 +1,4 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
-import { BaseError } from "@saleor/errors";
 import { err, fromThrowable, ok, Result } from "neverthrow";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
@@ -33,18 +32,14 @@ import { TransactionRecord } from "@/modules/transactions-recording/transaction-
 import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
 import { BaseUseCase } from "../base-use-case";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  InvalidEventDataResponse,
-} from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { AtobaraiFailureTransactionError, InvalidEventValidationError } from "../use-case-errors";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
   Result<
     TransactionInitializeSessionUseCaseResponse,
-    AppIsNotConfiguredResponse | InvalidEventDataResponse | BrokenAppResponse
+    AppIsNotConfiguredResponse | BrokenAppResponse
   >
 >;
 
@@ -199,7 +194,16 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
         event,
       });
 
-      return err(new InvalidEventDataResponse(new BaseError("Missing issuedAt in event")));
+      return ok(
+        new TransactionInitializeSessionUseCaseResponse.Failure({
+          error: new InvalidEventValidationError("Missing issuedAt in event", {
+            props: {
+              publicMessage: "Missing issuedAt in event",
+            },
+          }),
+          transactionResult: new ChargeFailureResult(),
+        }),
+      );
     }
 
     const apiClient = this.atobaraiApiClientFactory.create({
