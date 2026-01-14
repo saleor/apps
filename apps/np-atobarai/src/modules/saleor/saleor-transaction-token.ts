@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 const schema = z.string().min(1).brand("SaleorTransactionToken");
 
 export const SaleorTransactionTokenValidationError = BaseError.subclass(
@@ -16,9 +18,13 @@ export const createSaleorTransactionToken = (raw: string) => {
   const parseResult = schema.safeParse(raw);
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new SaleorTransactionTokenValidationError(
-      `Invalid transaction token: ${parseResult.error.errors.map((e) => e.message).join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid transaction token: ${readableError.message}`,
+      {
+        cause: readableError,
+      },
     );
   }
 
