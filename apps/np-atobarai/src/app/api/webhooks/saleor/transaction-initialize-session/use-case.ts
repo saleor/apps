@@ -1,6 +1,6 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
-import { err, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok, Result } from "neverthrow";
 
 import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
@@ -8,6 +8,7 @@ import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import {
   AtobaraiRegisterTransactionPayload,
+  AtobaraiRegisterTransactionPayloadValidationError,
   createAtobaraiRegisterTransactionPayload,
 } from "@/modules/atobarai/api/atobarai-register-transaction-payload";
 import {
@@ -68,21 +69,36 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
   private prepareRegisterTransactionPayload(
     event: TransactionInitializeSessionEventFragment,
     config: AppChannelConfig,
-  ): AtobaraiRegisterTransactionPayload {
-    return createAtobaraiRegisterTransactionPayload({
-      saleorTransactionToken: createSaleorTransactionToken(event.transaction.token),
-      atobaraiMoney: createAtobaraiMoney({
-        amount: event.action.amount,
-        currency: event.action.currency,
-      }),
-      atobaraiCustomer: createAtobaraiCustomer(event),
-      atobaraiDeliveryDestination: createAtobaraiDeliveryDestination(event),
-      atobaraiGoods: this.goodsBuilder.build({
-        sourceObject: event.sourceObject,
-        useSkuAsName: config.skuAsName,
-      }),
-      atobaraiShopOrderDate: createAtobaraiShopOrderDate(event.issuedAt!), // checked if exists in execute method
-    });
+  ): Result<
+    AtobaraiRegisterTransactionPayload,
+    InstanceType<typeof AtobaraiRegisterTransactionPayloadValidationError>
+  > {
+    try {
+      const atobaraiCustomer = createAtobaraiCustomer(event);
+      const atobaraiDeliveryDestination = createAtobaraiDeliveryDestination(event);
+
+      const transactionPayloadResult = fromThrowable(
+        createAtobaraiRegisterTransactionPayload,
+        AtobaraiRegisterTransactionPayloadValidationError.normalize,
+      )({
+        saleorTransactionToken: createSaleorTransactionToken(event.transaction.token),
+        atobaraiMoney: createAtobaraiMoney({
+          amount: event.action.amount,
+          currency: event.action.currency,
+        }),
+        atobaraiCustomer,
+        atobaraiDeliveryDestination,
+        atobaraiGoods: this.goodsBuilder.build({
+          sourceObject: event.sourceObject,
+          useSkuAsName: config.skuAsName,
+        }),
+        atobaraiShopOrderDate: createAtobaraiShopOrderDate(event.issuedAt!), // checked if exists in execute method
+      });
+
+      return transactionPayloadResult;
+    } catch (error) {
+      return err(AtobaraiRegisterTransactionPayloadValidationError.normalize(error));
+    }
   }
 
   private async mapAtobaraiResponseToUseCaseResponse({
@@ -193,12 +209,24 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
       atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
-    const registerTransactionResult = await apiClient.registerTransaction(
-      this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value),
-      {
-        rejectMultipleResults: true,
-      },
-    );
+    const payloadResult = this.prepareRegisterTransactionPayload(event, atobaraiConfigResult.value);
+
+    if (payloadResult.isErr()) {
+      this.logger.warn("Failed to prepare transaction payload", {
+        error: payloadResult.error,
+      });
+
+      return ok(
+        new TransactionInitializeSessionUseCaseResponse.Failure({
+          transactionResult: new ChargeFailureResult(),
+          error: new InvalidEventDataResponse(payloadResult.error),
+        }),
+      );
+    }
+
+    const registerTransactionResult = await apiClient.registerTransaction(payloadResult.value, {
+      rejectMultipleResults: true,
+    });
 
     if (registerTransactionResult.isErr()) {
       /**

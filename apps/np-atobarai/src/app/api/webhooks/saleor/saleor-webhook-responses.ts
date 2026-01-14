@@ -52,7 +52,8 @@ export class UnhandledErrorResponse extends ErrorWebhookResponse {
 }
 
 export class InvalidEventDataResponse {
-  readonly message = "Invalid event data";
+  readonly publicCode = "PayloadValidationError" as const;
+  readonly publicMessage = "Invalid payload data";
   /**
    * This happens when e.g. event can't be parsed by app, because it's different channel etc.
    * That's why we return 202 so Saleor ignores retrying, but also do not disable the webhook via circuit breaker mechanism
@@ -62,6 +63,10 @@ export class InvalidEventDataResponse {
 
   constructor(error: Error) {
     this.error = error;
+  }
+
+  get message(): string {
+    return this.error.message || "Invalid event data";
   }
 
   getResponse() {

@@ -367,13 +367,24 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     if (response instanceof TransactionInitializeSessionUseCaseResponse.Failure) {
       expect(response.error).toBeInstanceOf(InvalidEventDataResponse);
+      expect(response.error.message).toBe(
+        "AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer",
+      );
     }
 
-    const responseJson = (await response.getResponse().json()) as {
-      data: { errors: Array<{ code: string; message: string }> };
-    };
-
-    expect(responseJson.data.errors[0].code).toBe("PayloadValidationError");
+    expect(await response.getResponse().json()).toStrictEqual({
+      actions: [],
+      data: {
+        errors: [
+          {
+            code: "PayloadValidationError",
+            message: "Invalid payload data",
+          },
+        ],
+      },
+      message: "Failed to register NP Atobarai transaction",
+      result: "CHARGE_FAILURE",
+    });
   });
 
   it("should return Failure response with InvalidEventDataResponse when phone is missing", async () => {
@@ -410,7 +421,22 @@ describe("TransactionInitializeSessionUseCase", () => {
 
     if (response instanceof TransactionInitializeSessionUseCaseResponse.Failure) {
       expect(response.error).toBeInstanceOf(InvalidEventDataResponse);
-      expect(response.error.message).toContain("Phone number is required");
+      expect(response.error.message).toBe(
+        "AtobaraiCustomerMissingDataError: Phone number is required to create AtobaraiCustomer",
+      );
+      expect(await response.getResponse().json()).toStrictEqual({
+        actions: [],
+        data: {
+          errors: [
+            {
+              code: "PayloadValidationError",
+              message: "Invalid payload data",
+            },
+          ],
+        },
+        message: "Failed to register NP Atobarai transaction",
+        result: "CHARGE_FAILURE",
+      });
     }
   });
 

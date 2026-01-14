@@ -19,7 +19,7 @@ import {
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
 
-import { SuccessWebhookResponse } from "../saleor-webhook-responses";
+import { InvalidEventDataResponse, SuccessWebhookResponse } from "../saleor-webhook-responses";
 import { AtobaraiFailureTransactionErrorPublicCode, UseCaseErrors } from "../use-case-errors";
 
 class Success extends SuccessWebhookResponse {
@@ -64,7 +64,7 @@ class Success extends SuccessWebhookResponse {
 
 class Failure extends SuccessWebhookResponse {
   readonly transactionResult: ChargeFailureResult;
-  readonly error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors;
+  readonly error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors | InvalidEventDataResponse;
   /**
    * There are different errors that can be passed, not all are related to API,
    * so we pass optional api error separately
@@ -78,6 +78,7 @@ class Failure extends SuccessWebhookResponse {
           z.literal(AtobaraiApiClientRegisterTransactionErrorPublicCode),
           z.literal(AtobaraiFailureTransactionErrorPublicCode),
           z.literal(AtobaraiMultipleResultsErrorPublicCode),
+          z.literal("PayloadValidationError"),
         ]),
         message: z.string(),
         apiError: z.string().optional(),
@@ -87,8 +88,9 @@ class Failure extends SuccessWebhookResponse {
 
   constructor(args: {
     transactionResult: ChargeFailureResult;
-    error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors;
+    error: AtobaraiApiRegisterTransactionErrors | UseCaseErrors | InvalidEventDataResponse;
     apiError?: string;
+    publicMessage?: string;
   }) {
     super();
     this.transactionResult = args.transactionResult;
