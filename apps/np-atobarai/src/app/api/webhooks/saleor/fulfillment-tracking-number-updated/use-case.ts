@@ -21,14 +21,14 @@ import { BaseUseCase } from "../base-use-case";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
-  MalformedRequestResponse,
+  InvalidEventDataResponse,
 } from "../saleor-webhook-responses";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
   Result<
     FulfillmentTrackingNumberUpdatedUseCaseResponse,
-    AppIsNotConfiguredResponse | MalformedRequestResponse | BrokenAppResponse
+    AppIsNotConfiguredResponse | InvalidEventDataResponse | BrokenAppResponse
   >
 >;
 
@@ -69,7 +69,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       });
 
       return err(
-        new MalformedRequestResponse(new BaseError("Fulfillment tracking number is missing")),
+        new InvalidEventDataResponse(new BaseError("Fulfillment tracking number is missing")),
       );
     }
 
@@ -80,7 +80,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         },
       });
 
-      return err(new MalformedRequestResponse(new BaseError("Order transactions are missing")));
+      return err(new InvalidEventDataResponse(new BaseError("Order transactions are missing")));
     }
 
     if (event.order.transactions.length > 1) {
@@ -90,7 +90,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       });
 
       return err(
-        new MalformedRequestResponse(new BaseError("Multiple transactions found for the order")),
+        new InvalidEventDataResponse(new BaseError("Multiple transactions found for the order")),
       );
     }
 
@@ -106,7 +106,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       });
 
       return err(
-        new MalformedRequestResponse(new BaseError("Transaction was not created by the app")),
+        new InvalidEventDataResponse(new BaseError("Transaction was not created by the app")),
       );
     }
 
@@ -121,7 +121,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       });
 
       return err(
-        new MalformedRequestResponse(
+        new InvalidEventDataResponse(
           new BaseError("Transaction was not created by the current app installation"),
         ),
       );

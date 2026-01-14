@@ -30,14 +30,14 @@ import {
 } from "@/modules/transaction-result/charge-result";
 
 import { BaseUseCase } from "../base-use-case";
-import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse, InvalidEventDataResponse } from "../saleor-webhook-responses";
 import { AtobaraiFailureTransactionError } from "../use-case-errors";
 import { TransactionProcessSessionUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
   Result<
     TransactionProcessSessionUseCaseResponse,
-    AppIsNotConfiguredResponse | MalformedRequestResponse
+    AppIsNotConfiguredResponse | InvalidEventDataResponse
   >
 >;
 
@@ -135,7 +135,7 @@ export class TransactionProcessSessionUseCase extends BaseUseCase {
         event,
       });
 
-      return err(new MalformedRequestResponse(new BaseError("Missing issuedAt in event")));
+      return err(new InvalidEventDataResponse(new BaseError("Missing issuedAt in event")));
     }
 
     const atobaraiConfigResult = await this.getAtobaraiConfigForChannel({

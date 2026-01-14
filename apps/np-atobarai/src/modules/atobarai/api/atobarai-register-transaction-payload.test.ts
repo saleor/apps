@@ -69,7 +69,7 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
     `);
   });
 
-  it("should throw ZodError when date is in wrong format", () => {
+  it("should throw validation error when date is in wrong format", () => {
     expect(() =>
       createAtobaraiRegisterTransactionPayload({
         saleorTransactionToken: mockedSaleorTransactionToken,
@@ -81,7 +81,7 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
         atobaraiShopOrderDate: "invalid-date",
       }),
     ).toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
+      [AtobaraiRegisterTransactionPayloadValidationError: [
         {
           "validation": "regex",
           "code": "invalid_string",
@@ -92,11 +92,13 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
             "shop_order_date"
           ]
         }
-      ]]
+      ]
+      ZodValidationError: Validation error: Date must be in YYYY-MM-DD format at "transactions[0].shop_order_date"
+      Invalid register transaction payload: Validation error: Date must be in YYYY-MM-DD format at "transactions[0].shop_order_date"]
     `);
   });
 
-  it("should throw ZodError when saleorTransactionToken is too long (more than 40 chars)", () => {
+  it("should throw validation error when saleorTransactionToken is too long (more than 40 chars)", () => {
     expect(() =>
       createAtobaraiRegisterTransactionPayload({
         // @ts-expect-error - testing invalid token
@@ -107,8 +109,9 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
         atobaraiGoods: mockedAtobaraiGoods,
         atobaraiShopOrderDate: mockedAtobaraiShopOrderDate,
       }),
-    ).toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
+    ).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiRegisterTransactionPayloadValidationError: [
         {
           "code": "too_big",
           "maximum": 40,
@@ -122,8 +125,11 @@ describe("createAtobaraiRegisterTransactionPayload", () => {
             "shop_transaction_id"
           ]
         }
-      ]]
-    `);
+      ]
+      ZodValidationError: Validation error: String must contain at most 40 character(s) at "transactions[0].shop_transaction_id"
+      Invalid register transaction payload: Validation error: String must contain at most 40 character(s) at "transactions[0].shop_transaction_id"]
+    `,
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiRegisterTransactionPayload", () => {

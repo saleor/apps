@@ -2,6 +2,7 @@ import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
 import { SourceObjectFragment } from "@/generated/graphql";
+import { zodReadableError } from "@/lib/zod-readable-error";
 import { AtobaraiAddressFormatter } from "@/modules/atobarai/atobarai-address-formatter";
 
 import { formatCustomerName, formatPhone } from "./atobarai-address-helpers";
@@ -54,11 +55,11 @@ export const createAtobaraiDeliveryDestination = (event: {
   });
 
   if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
     throw new AtobaraiDeliveryDestinationMissingDataError(
-      `Invalid delivery destination data: ${parseResult.error.errors
-        .map((e) => e.message)
-        .join(", ")}`,
-      { cause: parseResult.error },
+      `Invalid delivery destination data: ${readableError.message}`,
+      { cause: readableError },
     );
   }
 

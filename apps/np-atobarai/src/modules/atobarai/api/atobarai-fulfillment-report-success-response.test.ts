@@ -78,12 +78,14 @@ describe("createAtobaraiFulfillmentReportSuccessResponse", () => {
     `);
   });
 
-  it("should throw ZodError when results is missing", () => {
+  it("should throw validation error when results is missing", () => {
     const rawResponse = {};
 
-    expect(() => createAtobaraiFulfillmentReportSuccessResponse(rawResponse))
-      .toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
+    expect(() =>
+      createAtobaraiFulfillmentReportSuccessResponse(rawResponse),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiFulfillmentReportSuccessResponseValidationError: [
         {
           "code": "invalid_type",
           "expected": "array",
@@ -93,11 +95,14 @@ describe("createAtobaraiFulfillmentReportSuccessResponse", () => {
           ],
           "message": "Required"
         }
-      ]]
-    `);
+      ]
+      ZodValidationError: Validation error: Required at "results"
+      Invalid Atobarai fulfillment report success response format: Validation error: Required at "results"]
+    `,
+    );
   });
 
-  it("should throw ZodError when np_transaction_id is missing", () => {
+  it("should throw validation error when np_transaction_id is missing", () => {
     const rawResponse = {
       results: [
         {
@@ -106,9 +111,11 @@ describe("createAtobaraiFulfillmentReportSuccessResponse", () => {
       ],
     };
 
-    expect(() => createAtobaraiFulfillmentReportSuccessResponse(rawResponse))
-      .toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
+    expect(() =>
+      createAtobaraiFulfillmentReportSuccessResponse(rawResponse),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiFulfillmentReportSuccessResponseValidationError: [
         {
           "code": "invalid_type",
           "expected": "string",
@@ -120,8 +127,11 @@ describe("createAtobaraiFulfillmentReportSuccessResponse", () => {
           ],
           "message": "Required"
         }
-      ]]
-    `);
+      ]
+      ZodValidationError: Validation error: Required at "results[0].np_transaction_id"
+      Invalid Atobarai fulfillment report success response format: Validation error: Required at "results[0].np_transaction_id"]
+    `,
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiFulfillmentReportSuccessResponse", () => {

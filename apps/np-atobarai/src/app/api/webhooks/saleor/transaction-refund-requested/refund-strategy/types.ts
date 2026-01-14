@@ -5,7 +5,7 @@ import { IAtobaraiApiClient } from "@/modules/atobarai/api/types";
 import { AtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 
-import { MalformedRequestResponse } from "../../saleor-webhook-responses";
+import { InvalidEventDataResponse } from "../../saleor-webhook-responses";
 import { ParsedRefundEvent } from "../refund-event-parser";
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
 
@@ -28,11 +28,11 @@ export interface AfterFulfillmentRefundContext {
 export interface BeforeFulfillmentRefundStrategy {
   execute(
     context: BeforeFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>>;
+  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, InvalidEventDataResponse>>;
 }
 
 export interface AfterFulfillmentRefundStrategy {
   execute(
     context: AfterFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>>;
+  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, InvalidEventDataResponse>>;
 }

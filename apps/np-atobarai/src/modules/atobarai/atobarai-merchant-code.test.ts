@@ -9,9 +9,10 @@ describe("createAtobaraiMerchantCode", () => {
     expect(result).toBe("MERCHANT123");
   });
 
-  it("should throw ZodError when input is an empty string", () => {
-    expect(() => createAtobaraiMerchantCode("")).toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
+  it("should throw validation error when input is an empty string", () => {
+    expect(() => createAtobaraiMerchantCode("")).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiMerchantCodeValidationError: [
         {
           "code": "too_small",
           "minimum": 1,
@@ -21,8 +22,11 @@ describe("createAtobaraiMerchantCode", () => {
           "message": "String must contain at least 1 character(s)",
           "path": []
         }
-      ]]
-    `);
+      ]
+      ZodValidationError: Validation error: String must contain at least 1 character(s)
+      Invalid merchant code: Validation error: String must contain at least 1 character(s)]
+    `,
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiMerchantCode", () => {

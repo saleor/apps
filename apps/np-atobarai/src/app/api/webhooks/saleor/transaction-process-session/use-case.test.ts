@@ -25,7 +25,7 @@ import {
   ChargeSuccessResult,
 } from "@/modules/transaction-result/charge-result";
 
-import { AppIsNotConfiguredResponse, MalformedRequestResponse } from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse, InvalidEventDataResponse } from "../saleor-webhook-responses";
 import { TransactionProcessSessionUseCase } from "./use-case";
 import { TransactionProcessSessionUseCaseResponse } from "./use-case-response";
 
@@ -237,7 +237,7 @@ describe("TransactionProcessSessionUseCase", () => {
     expect(responseJson.data.errors[0].apiError).toBe("test-api-error-code");
   });
 
-  it("should return MalformedRequestResponse when event is missing issuedAt", async () => {
+  it("should return InvalidEventDataResponse when event is missing issuedAt", async () => {
     const eventWithoutIssuedAt = {
       ...mockedTransactionProcessSessionEvent,
       issuedAt: null,
@@ -258,7 +258,7 @@ describe("TransactionProcessSessionUseCase", () => {
       event: eventWithoutIssuedAt,
     });
 
-    expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
   });
 
   it("should return AppIsNotConfiguredResponse if config not found for specified channel", async () => {
