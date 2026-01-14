@@ -4,6 +4,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException, setTag } from "@sentry/nextjs";
+import Decimal from "decimal.js-light";
 import { after } from "next/server";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
@@ -130,25 +131,29 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 providerConfig.value.avataxConfig.config.isExemptionStatusMetadataEnabled
               ) {
                 try {
-                  const totalExempt = Number(value.transaction.totalExempt ?? 0);
+                  const totalExempt = new Decimal(value.transaction.totalExempt ?? 0);
                   const lineExemptAmountSum =
-                    value.transaction.lines?.reduce(
-                      (acc, line) => acc + Number(line.exemptAmount ?? 0),
-                      0,
-                    ) ?? 0;
+                    value.transaction.lines?.reduce((acc, line) => {
+                      return acc.add(new Decimal(line.exemptAmount ?? 0));
+                    }, new Decimal(0)) ?? new Decimal(0);
                   const summaryExemptionSum =
-                    value.transaction.summary?.reduce(
-                      (acc, item) => acc + Number(item.exemption ?? 0),
-                      0,
-                    ) ?? 0;
+                    value.transaction.summary?.reduce((acc, item) => {
+                      return acc.add(new Decimal(item.exemption ?? 0));
+                    }, new Decimal(0)) ?? new Decimal(0);
 
-                  const exemptAmountTotal = Math.max(
-                    totalExempt,
-                    lineExemptAmountSum,
-                    summaryExemptionSum,
-                  );
+                  let exemptAmountTotalDecimal = totalExempt;
 
-                  const exemptionAppliedToCheckout = exemptAmountTotal > 0;
+                  if (lineExemptAmountSum.gt(exemptAmountTotalDecimal)) {
+                    exemptAmountTotalDecimal = lineExemptAmountSum;
+                  }
+
+                  if (summaryExemptionSum.gt(exemptAmountTotalDecimal)) {
+                    exemptAmountTotalDecimal = summaryExemptionSum;
+                  }
+
+                  const exemptAmountTotal = exemptAmountTotalDecimal.toNumber();
+
+                  const exemptionAppliedToCheckout = exemptAmountTotalDecimal.gt(0);
 
                   const client = createInstrumentedGraphqlClient({
                     saleorApiUrl: authData.saleorApiUrl,
