@@ -13,4 +13,15 @@ export const AtobaraiFailureTransactionError = BaseError.subclass(
   },
 );
 
-export type UseCaseErrors = InstanceType<typeof AtobaraiFailureTransactionError>;
+export const InvalidEventValidationError = BaseError.subclass("InvalidEventValidationError", {
+  props: {
+    _brand: "InvalidEventValidationError" as const,
+    publicCode: "InvalidEventValidationError",
+    publicMessage:
+      "Event payload provided to app is invalid. Verify customer details and configuration",
+  },
+});
+
+export type UseCaseErrors = InstanceType<
+  typeof AtobaraiFailureTransactionError | typeof InvalidEventValidationError
+>;

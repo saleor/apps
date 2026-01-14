@@ -38,7 +38,7 @@ import {
   BrokenAppResponse,
   InvalidEventDataResponse,
 } from "../saleor-webhook-responses";
-import { AtobaraiFailureTransactionError } from "../use-case-errors";
+import { AtobaraiFailureTransactionError, InvalidEventValidationError } from "../use-case-errors";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
@@ -219,7 +219,9 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
       return ok(
         new TransactionInitializeSessionUseCaseResponse.Failure({
           transactionResult: new ChargeFailureResult(),
-          error: new InvalidEventDataResponse(payloadResult.error),
+          error: new InvalidEventValidationError(payloadResult.error.message, {
+            cause: payloadResult.error,
+          }),
         }),
       );
     }

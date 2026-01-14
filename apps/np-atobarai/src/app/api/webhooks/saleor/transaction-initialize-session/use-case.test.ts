@@ -10,6 +10,7 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-initialize-session-event";
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import {
   createAtobaraiTransactionSuccessResponse,
   CreditCheckResult,
@@ -335,7 +336,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
   });
 
-  it("should return Failure response with InvalidEventDataResponse when billing address is empty", async () => {
+  it("should return Failure response with InvalidEventValidationError when billing address is empty", async () => {
     const eventWithMissingBillingAddress = {
       ...mockedTransactionInitializeSessionEvent,
       sourceObject: {
@@ -366,10 +367,13 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(response.transactionResult).toBeInstanceOf(ChargeFailureResult);
 
     if (response instanceof TransactionInitializeSessionUseCaseResponse.Failure) {
-      expect(response.error).toBeInstanceOf(InvalidEventDataResponse);
-      expect(response.error.message).toBe(
-        "AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer",
-      );
+      expect(response.error).toBeInstanceOf(InvalidEventValidationError);
+      expect(response.error.message).toMatchInlineSnapshot(
+        
+      `
+        "AtobaraiRegisterTransactionPayloadValidationError: AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer
+        AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer"
+      `);
     }
 
     expect(await response.getResponse().json()).toStrictEqual({
@@ -377,8 +381,9 @@ describe("TransactionInitializeSessionUseCase", () => {
       data: {
         errors: [
           {
-            code: "PayloadValidationError",
-            message: "Invalid payload data",
+            code: "InvalidEventValidationError",
+            message:
+              "Event payload provided to app is invalid. Verify customer details and configuration",
           },
         ],
       },
@@ -387,7 +392,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     });
   });
 
-  it("should return Failure response with InvalidEventDataResponse when phone is missing", async () => {
+  it("should return Failure response with InvalidEventValidationError when phone is missing", async () => {
     const eventWithMissingPhone = {
       ...mockedTransactionInitializeSessionEvent,
       sourceObject: {
@@ -420,17 +425,21 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponse.Failure);
 
     if (response instanceof TransactionInitializeSessionUseCaseResponse.Failure) {
-      expect(response.error).toBeInstanceOf(InvalidEventDataResponse);
-      expect(response.error.message).toBe(
-        "AtobaraiCustomerMissingDataError: Phone number is required to create AtobaraiCustomer",
+      expect(response.error).toBeInstanceOf(InvalidEventValidationError);
+      expect(response.error.message).toMatchInlineSnapshot(
+        `
+        "AtobaraiRegisterTransactionPayloadValidationError: AtobaraiCustomerMissingDataError: Phone number is required to create AtobaraiCustomer
+        AtobaraiCustomerMissingDataError: Phone number is required to create AtobaraiCustomer"
+      `,
       );
       expect(await response.getResponse().json()).toStrictEqual({
         actions: [],
         data: {
           errors: [
             {
-              code: "PayloadValidationError",
-              message: "Invalid payload data",
+              code: "InvalidEventValidationError",
+              message:
+                "Event payload provided to app is invalid. Verify customer details and configuration",
             },
           ],
         },
