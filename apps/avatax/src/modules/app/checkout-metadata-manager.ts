@@ -67,6 +67,6 @@ export class CheckoutMetadataManager {
       });
     }
 
-    return { ok: true };
+    return;
   }
 }
