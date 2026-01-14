@@ -27,6 +27,7 @@ export class CheckoutMetadataManager {
       version: "1";
       exemptionAppliedToCheckout: boolean;
       exemptAmountTotal: number;
+      entityUseCode?: string;
       calculatedAt: string;
     },
   ) {

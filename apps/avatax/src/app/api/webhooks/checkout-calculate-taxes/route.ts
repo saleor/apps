@@ -155,6 +155,11 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
 
                   const exemptionAppliedToCheckout = exemptAmountTotalDecimal.gt(0);
 
+                  const entityUseCode =
+                    value.transaction.entityUseCode ??
+                    value.transaction.customerUsageType ??
+                    undefined;
+
                   const client = createInstrumentedGraphqlClient({
                     saleorApiUrl: authData.saleorApiUrl,
                     token: authData.token,
@@ -168,6 +173,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                         version: "1",
                         exemptionAppliedToCheckout,
                         exemptAmountTotal,
+                        entityUseCode,
                         calculatedAt: new Date().toISOString(),
                       })
                       .catch((error) => {
