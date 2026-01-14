@@ -170,7 +170,6 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                   after(() => {
                     checkoutMetadataManager
                       .updateCheckoutMetadataWithExemptionStatus(payload.taxBase.sourceObject.id, {
-                        version: "1",
                         exemptionAppliedToCheckout,
                         exemptAmountTotal,
                         entityUseCode,

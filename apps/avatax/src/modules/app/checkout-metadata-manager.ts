@@ -24,7 +24,6 @@ export class CheckoutMetadataManager {
   async updateCheckoutMetadataWithExemptionStatus(
     checkoutId: string,
     exemptionStatus: {
-      version: "1";
       exemptionAppliedToCheckout: boolean;
       exemptAmountTotal: number;
       entityUseCode?: string;
