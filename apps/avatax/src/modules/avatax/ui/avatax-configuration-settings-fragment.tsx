@@ -63,7 +63,7 @@ export const AvataxConfigurationSettingsFragment = () => {
             show a badge or similar.
           </HelperText>
         }
-        name="isExemptionStatusMetadataEnabled"
+        name="isExemptionStatusPublicMetadataEnabled"
       />
       <div>
         <Input

@@ -26,7 +26,7 @@ export const avataxConfigSchema = z
     name: z.string().min(1, { message: "Name requires at least one character." }),
     companyCode: z.string().min(1, { message: "Company code requires at least one character." }),
     isAutocommit: z.boolean(),
-    isExemptionStatusMetadataEnabled: z.boolean().default(false),
+    isExemptionStatusPublicMetadataEnabled: z.boolean().default(false),
     shippingTaxCode: z.string().optional(),
     isDocumentRecordingEnabled: z.boolean().default(true),
     address: addressSchema,
@@ -40,7 +40,7 @@ export const defaultAvataxConfig: AvataxConfig = {
   companyCode: "DEFAULT",
   isSandbox: false,
   isAutocommit: false,
-  isExemptionStatusMetadataEnabled: false,
+  isExemptionStatusPublicMetadataEnabled: false,
   isDocumentRecordingEnabled: true,
   shippingTaxCode: "",
   credentials: {

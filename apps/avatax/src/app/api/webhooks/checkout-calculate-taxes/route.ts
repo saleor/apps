@@ -128,7 +128,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
 
               if (
                 providerConfig.isOk() &&
-                providerConfig.value.avataxConfig.config.isExemptionStatusMetadataEnabled
+                providerConfig.value.avataxConfig.config.isExemptionStatusPublicMetadataEnabled
               ) {
                 try {
                   const totalExempt = new Decimal(value.transaction.totalExempt ?? 0);

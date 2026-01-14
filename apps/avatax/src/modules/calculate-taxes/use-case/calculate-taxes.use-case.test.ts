@@ -139,7 +139,7 @@ const getMockedAppConfig = (): AppConfig => {
           isSandbox: false,
           name: "config",
           isAutocommit: false,
-          isExemptionStatusMetadataEnabled: false,
+          isExemptionStatusPublicMetadataEnabled: false,
           isDocumentRecordingEnabled: false,
           shippingTaxCode: "123",
         },
