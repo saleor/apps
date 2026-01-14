@@ -201,7 +201,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
 
                     const checkoutMetadataManager = new CheckoutMetadataManager(client);
 
-                    const calculatedAt = new Date().toISOString();
+                    const calculatedAt = new Date();
 
                     const metadataPromise = shouldUpdate
                       ? checkoutMetadataManager.updateCheckoutMetadataWithExemptionStatus(

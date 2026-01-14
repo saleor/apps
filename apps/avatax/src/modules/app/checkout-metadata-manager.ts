@@ -28,15 +28,20 @@ export class CheckoutMetadataManager {
     exemptionStatus: {
       exemptAmountTotal: number;
       entityUseCode?: string;
-      calculatedAt: string;
+      calculatedAt: Date;
     },
   ) {
+    const serializedExemptionStatus = {
+      ...exemptionStatus,
+      calculatedAt: exemptionStatus.calculatedAt.toISOString(),
+    };
+
     const variables: UpdatePublicMetadataMutationVariables = {
       id: checkoutId,
       input: [
         {
           key: CHECKOUT_EXEMPTION_STATUS_KEY,
-          value: JSON.stringify(exemptionStatus),
+          value: JSON.stringify(serializedExemptionStatus),
         },
       ],
     };
