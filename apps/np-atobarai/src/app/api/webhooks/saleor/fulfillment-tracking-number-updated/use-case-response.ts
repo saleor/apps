@@ -24,7 +24,10 @@ class Failure extends SuccessWebhookResponse {
     this.error = error;
   }
   getResponse(): Response {
-    return Response.json({ message: "Failed to report fulfillment" }, { status: this.statusCode });
+    return Response.json(
+      { message: this.error.publicMessage ?? "Failed to report fulfillment" },
+      { status: this.statusCode },
+    );
   }
 }
 

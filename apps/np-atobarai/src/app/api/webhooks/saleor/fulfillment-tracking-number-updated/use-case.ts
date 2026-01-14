@@ -161,6 +161,9 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
           new InvalidEventValidationError("Failed to parse Saleor event", {
             cause: parsingResult.error,
+            props: {
+              publicMessage: parsingResult.error.message,
+            },
           }),
         ),
       );
@@ -192,6 +195,9 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
           new InvalidEventValidationError(metadataShippingCompanyCodeResult.error.message, {
             cause: metadataShippingCompanyCodeResult.error,
+            props: {
+              publicMessage: metadataShippingCompanyCodeResult.error.message,
+            },
           }),
         ),
       );

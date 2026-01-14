@@ -259,7 +259,8 @@ describe("TransactionProcessSessionUseCase", () => {
       event: eventWithoutIssuedAt,
     });
 
-    expect(responsePayload._unsafeUnwrapErr().error).toBeInstanceOf(InvalidEventValidationError);
+    // @ts-expect-error - we expect Failure response
+    expect(responsePayload._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
   });
 
   it("should return AppIsNotConfiguredResponse if config not found for specified channel", async () => {

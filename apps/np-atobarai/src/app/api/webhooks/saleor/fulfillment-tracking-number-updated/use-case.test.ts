@@ -182,8 +182,17 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
-    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
+    // @ts-expect-error we expect Failure which has error
+    expect(result._unsafeUnwrap().error.message).toMatchInlineSnapshot(`
+      "Fulfillment tracking number is missing
+      Failed to parse Saleor event"
+    `);
+    expect(result._unsafeUnwrap().statusCode).toBe(200);
+    expect(await result._unsafeUnwrap().getResponse().json()).toMatchInlineSnapshot(`
+      {
+        "message": "Fulfillment tracking number is missing",
+      }
+    `);
   });
 
   it("should return InvalidEventValidationError when tracking number is missing", async () => {
@@ -210,8 +219,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
-    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
+    // @ts-expect-error - we expect Failure response
+    expect(result._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
+    expect(result._unsafeUnwrap().statusCode).toBe(200);
   });
 
   it("should return InvalidEventValidationError when order transactions are missing", async () => {
@@ -239,8 +249,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
-    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
+    // @ts-expect-error - we expect Failure response
+    expect(result._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
+    expect(result._unsafeUnwrap().statusCode).toBe(200);
   });
 
   it("should return InvalidEventValidationError when multiple transactions are found", async () => {
@@ -283,8 +294,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr().error).toBeInstanceOf(InvalidEventValidationError);
-    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
+    // @ts-expect-error - we expect Failure response
+    expect(result._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
+    expect(result._unsafeUnwrap().statusCode).toBe(200);
   });
 
   it("should return InvalidEventValidationError when transaction was not created by an app", async () => {
@@ -319,8 +331,9 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventValidationError);
-    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
+    // @ts-expect-error - we expect Failure response
+    expect(result._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
+    expect(result._unsafeUnwrap().statusCode).toBe(200);
   });
 
   it("should return InvalidEventValidationError when transaction was created by different app", async () => {
@@ -356,7 +369,8 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr().error).toBeInstanceOf(InvalidEventValidationError);
+    // @ts-expect-error - we expect Failure response
+    expect(result._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
   });
 
   it("should return BrokenAppResponse when transactionRecordRepo fails to create transaction", async () => {
@@ -493,12 +507,14 @@ describe("FulfillmentTrackingNumberUpdatedUseCase", () => {
       graphqlClient: mockedGraphqlClient,
     });
 
-    expect(result._unsafeUnwrapErr().error).toBeInstanceOf(InvalidEventValidationError);
-    expect(result._unsafeUnwrapErr().error.message).toContain(
+    // @ts-expect-error - we expect Failure response
+    expect(result._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
+    // @ts-expect-error - we expect Failure response
+    expect(result._unsafeUnwrap().error.message).toContain(
       "Invalid shipping company code: Validation error: Invalid enum value. Expected '50000' | '59010' | '59020' | '59030' | '59040' | '59041' | '59042' | '59043' | '59050' | '59060' | '59080' | '59090' | '59110' | '59140' | '59150' | '59100' | '59160' | '55555', received 'INVALID_CODE'",
     );
-    expect(result._unsafeUnwrapErr().statusCode).toBe(202);
-    expect(await result._unsafeUnwrapErr().getResponse().json()).toMatchInlineSnapshot(`
+    expect(result._unsafeUnwrap().statusCode).toBe(200);
+    expect(await result._unsafeUnwrap().getResponse().json()).toMatchInlineSnapshot(`
       {
         "message": "[
         {
