@@ -153,39 +153,86 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
 
                   const exemptAmountTotal = exemptAmountTotalDecimal.toNumber();
 
-                  const exemptionAppliedToCheckout = exemptAmountTotalDecimal.gt(0);
-
                   const entityUseCode =
                     value.transaction.entityUseCode ??
                     value.transaction.customerUsageType ??
                     undefined;
 
-                  const client = createInstrumentedGraphqlClient({
-                    saleorApiUrl: authData.saleorApiUrl,
-                    token: authData.token,
-                  });
-
-                  const checkoutMetadataManager = new CheckoutMetadataManager(client);
-
                   after(() => {
-                    checkoutMetadataManager
-                      .updateCheckoutMetadataWithExemptionStatus(payload.taxBase.sourceObject.id, {
-                        exemptionAppliedToCheckout,
-                        exemptAmountTotal,
-                        entityUseCode,
-                        calculatedAt: new Date().toISOString(),
-                      })
-                      .catch((error) => {
-                        captureException(error);
-                        logger.warn("Failed to update checkout exemption status metadata", {
-                          errorMessage: error instanceof Error ? error.message : String(error),
-                        });
+                    const isExemptionApplied = exemptAmountTotalDecimal.gt(0);
+                    const currentExemptionStatus =
+                      payload.taxBase.sourceObject.avataxExemptionStatus ?? null;
+
+                    const parsedCurrent = (() => {
+                      if (!currentExemptionStatus) {
+                        return null;
+                      }
+
+                      try {
+                        return JSON.parse(currentExemptionStatus) as {
+                          exemptAmountTotal?: unknown;
+                          entityUseCode?: unknown;
+                        };
+                      } catch {
+                        return null;
+                      }
+                    })();
+
+                    const shouldUpdate = isExemptionApplied
+                      ? !(
+                          typeof parsedCurrent?.exemptAmountTotal === "number" &&
+                          parsedCurrent.exemptAmountTotal === exemptAmountTotal &&
+                          (typeof parsedCurrent?.entityUseCode === "string"
+                            ? parsedCurrent.entityUseCode
+                            : undefined) === entityUseCode
+                        )
+                      : false;
+
+                    const shouldDelete = !isExemptionApplied && Boolean(currentExemptionStatus);
+
+                    if (!shouldUpdate && !shouldDelete) {
+                      return;
+                    }
+
+                    const client = createInstrumentedGraphqlClient({
+                      saleorApiUrl: authData.saleorApiUrl,
+                      token: authData.token,
+                    });
+
+                    const checkoutMetadataManager = new CheckoutMetadataManager(client);
+
+                    const calculatedAt = new Date().toISOString();
+
+                    const metadataPromise = shouldUpdate
+                      ? checkoutMetadataManager.updateCheckoutMetadataWithExemptionStatus(
+                          payload.taxBase.sourceObject.id,
+                          {
+                            exemptAmountTotal,
+                            entityUseCode,
+                            calculatedAt,
+                          },
+                        )
+                      : checkoutMetadataManager.deleteCheckoutMetadataWithExemptionStatus(
+                          payload.taxBase.sourceObject.id,
+                        );
+
+                    metadataPromise.catch((error) => {
+                      captureException(error);
+                      logger.warn("Failed to update checkout exemption status metadata", {
+                        error:
+                          error instanceof Error
+                            ? { name: error.name, message: error.message }
+                            : { message: String(error) },
                       });
+                    });
                   });
                 } catch (error) {
                   captureException(error);
                   logger.warn("Failed to compute checkout exemption status metadata", {
-                    errorMessage: error instanceof Error ? error.message : String(error),
+                    error:
+                      error instanceof Error
+                        ? { name: error.name, message: error.message }
+                        : { message: String(error) },
                   });
                 }
               }

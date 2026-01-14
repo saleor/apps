@@ -4,7 +4,9 @@ import { BaseError } from "@/error";
 import { createLogger } from "@/logger";
 
 import {
-  UpdatePublicMetadataDocument,
+  DeletePublicMetadataMutation,
+  UntypedDeletePublicMetadataDocument,
+  UntypedUpdatePublicMetadataDocument,
   UpdatePublicMetadataMutation,
   UpdatePublicMetadataMutationVariables,
 } from "../../../generated/graphql";
@@ -24,7 +26,6 @@ export class CheckoutMetadataManager {
   async updateCheckoutMetadataWithExemptionStatus(
     checkoutId: string,
     exemptionStatus: {
-      exemptionAppliedToCheckout: boolean;
       exemptAmountTotal: number;
       entityUseCode?: string;
       calculatedAt: string;
@@ -41,7 +42,7 @@ export class CheckoutMetadataManager {
     };
 
     const { error, data } = await this.client
-      .mutation<UpdatePublicMetadataMutation>(UpdatePublicMetadataDocument, variables)
+      .mutation<UpdatePublicMetadataMutation>(UntypedUpdatePublicMetadataDocument, variables)
       .toPromise();
 
     const gqlErrors = data?.updateMetadata?.errors ?? [];
@@ -63,6 +64,42 @@ export class CheckoutMetadataManager {
       });
 
       throw new CheckoutMetadataManager.MutationError("Failed to update metadata", {
+        props: { error },
+      });
+    }
+
+    return;
+  }
+
+  async deleteCheckoutMetadataWithExemptionStatus(checkoutId: string) {
+    const variables = {
+      id: checkoutId,
+      keys: [CHECKOUT_EXEMPTION_STATUS_KEY],
+    };
+
+    const { error, data } = await this.client
+      .mutation<DeletePublicMetadataMutation>(UntypedDeletePublicMetadataDocument, variables)
+      .toPromise();
+
+    const gqlErrors = data?.deleteMetadata?.errors ?? [];
+
+    const errorToReport = error ?? gqlErrors[0] ?? null;
+
+    if (errorToReport) {
+      const error = new CheckoutMetadataManager.MutationError(
+        errorToReport.message ?? "Failed to delete metadata",
+        {
+          props: {
+            error: errorToReport,
+          },
+        },
+      );
+
+      this.logger.error("Failed to delete metadata", {
+        error,
+      });
+
+      throw new CheckoutMetadataManager.MutationError("Failed to delete metadata", {
         props: { error },
       });
     }
