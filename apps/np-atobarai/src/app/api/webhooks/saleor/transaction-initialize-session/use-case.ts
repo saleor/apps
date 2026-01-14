@@ -221,6 +221,9 @@ export class TransactionInitializeSessionUseCase extends BaseUseCase {
           transactionResult: new ChargeFailureResult(),
           error: new InvalidEventValidationError(payloadResult.error.message, {
             cause: payloadResult.error,
+            props: {
+              publicMessage: payloadResult.error.message,
+            },
           }),
         }),
       );

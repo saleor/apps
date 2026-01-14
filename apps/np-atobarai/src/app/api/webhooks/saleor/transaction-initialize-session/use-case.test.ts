@@ -369,11 +369,11 @@ describe("TransactionInitializeSessionUseCase", () => {
     if (response instanceof TransactionInitializeSessionUseCaseResponse.Failure) {
       expect(response.error).toBeInstanceOf(InvalidEventValidationError);
       expect(response.error.message).toMatchInlineSnapshot(
-        
-      `
+        `
         "AtobaraiRegisterTransactionPayloadValidationError: AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer
         AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer"
-      `);
+      `,
+      );
     }
 
     expect(await response.getResponse().json()).toStrictEqual({
@@ -383,7 +383,7 @@ describe("TransactionInitializeSessionUseCase", () => {
           {
             code: "InvalidEventValidationError",
             message:
-              "Event payload provided to app is invalid. Verify customer details and configuration",
+              "AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer",
           },
         ],
       },
@@ -439,7 +439,7 @@ describe("TransactionInitializeSessionUseCase", () => {
             {
               code: "InvalidEventValidationError",
               message:
-                "Event payload provided to app is invalid. Verify customer details and configuration",
+                "AtobaraiCustomerMissingDataError: Phone number is required to create AtobaraiCustomer",
             },
           ],
         },
