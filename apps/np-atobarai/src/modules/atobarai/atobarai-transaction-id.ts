@@ -23,7 +23,7 @@ export const createAtobaraiTransactionId = (rawTransactionId: string): AtobaraiT
     const readableError = zodReadableError(parseResult.error);
 
     throw new AtobaraiTransactionIdValidationError(
-      `Invalid transaction ID "${readableError.message}`,
+      `Invalid transaction ID: "${readableError.message}`,
       { cause: readableError },
     );
   }
