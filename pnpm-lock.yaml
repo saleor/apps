@@ -76,8 +76,8 @@ catalogs:
       specifier: 1.30.0
       version: 1.30.0
     '@saleor/app-sdk':
-      specifier: 1.3.0
-      version: 1.3.0
+      specifier: 1.6.0
+      version: 1.6.0
     '@saleor/macaw-ui':
       specifier: 1.3.1
       version: 1.3.1
@@ -214,7 +214,7 @@ importers:
         version: 8.17.5
       '@saleor/app-sdk':
         specifier: 'catalog:'
-        version: 1.3.0(graphql@16.11.0)(next@15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        version: 1.6.0(graphql@16.11.0)(next@15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       cspell:
         specifier: 8.17.5
         version: 8.17.5
@@ -5698,8 +5698,8 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
-  '@saleor/app-sdk@1.3.0':
-    resolution: {integrity: sha512-xEMV1bJgwoVuzKsJKA+oNFwDxttkFeudm9CyG1oOkAd2Ulb/a7P7fmPDcjpLyfsij0aMGwE4SDZbPvPlQa6hnw==}
+  '@saleor/app-sdk@1.6.0':
+    resolution: {integrity: sha512-46ZX4Tru4NiR7lsuCTtz5z3VejGC7wKI8A+suulSp4iJkgHCOeTUDnltO2YClwK9c42k3AgjHRT9O6qflPFEFA==}
     peerDependencies:
       '@aws-sdk/client-dynamodb': ^3.848.0
       '@aws-sdk/lib-dynamodb': ^3.850.0
@@ -5721,6 +5721,14 @@ packages:
       '@vercel/kv':
         optional: true
       dynamodb-toolbox:
+        optional: true
+      graphql:
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      react-dom:
         optional: true
       redis:
         optional: true
@@ -16291,15 +16299,16 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@saleor/app-sdk@1.3.0(graphql@16.11.0)(next@15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+  '@saleor/app-sdk@1.6.0(graphql@16.11.0)(next@15.2.8(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.30.0
       debug: 4.4.0
-      graphql: 16.11.0
       jose: 5.10.0
-      next: 15.2.8(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       raw-body: 3.0.0
+    optionalDependencies:
+      graphql: 16.11.0
+      next: 15.2.8(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
