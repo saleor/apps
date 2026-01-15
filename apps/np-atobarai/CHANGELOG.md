@@ -1,5 +1,12 @@
 # saleor-app-payment-np-atobarai
 
+## 1.2.9
+
+### Patch Changes
+
+- 214974b2: Fixed Zod validation errors raising exceptions. Validation errors in customer data, delivery destination, and money fields now return warnings instead of throwing exceptions, preventing HTTP 500 responses to Saleor webhooks.
+- 214974b2: Renamed `MalformedRequestResponse` to `InvalidEventDataResponse` to better reflect its purpose. This response is used for validation errors in event data, not malformed payloads.
+
 ## 1.2.8
 
 ### Patch Changes
