@@ -1,5 +1,4 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
-import { captureException } from "@sentry/nextjs";
 
 import {
   TransactionInitializeSessionDocument,
@@ -17,7 +16,6 @@ export const transactionInitializeSessionWebhookDefinition =
     query: TransactionInitializeSessionDocument,
     webhookPath: "api/webhooks/saleor/transaction-initialize-session",
     onError(error) {
-      captureException(error);
       createLogger("TRANSACTION_INITIALIZE_SESSION webhook").error("Failed to execute webhook", {
         error,
       });

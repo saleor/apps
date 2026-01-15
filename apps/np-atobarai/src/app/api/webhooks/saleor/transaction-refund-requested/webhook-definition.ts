@@ -1,5 +1,4 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
-import { captureException } from "@sentry/nextjs";
 
 import {
   TransactionRefundRequestedDocument,
@@ -17,7 +16,6 @@ export const transactionRefundRequestedWebhookDefinition =
     query: TransactionRefundRequestedDocument,
     webhookPath: "api/webhooks/saleor/transaction-refund-requested",
     onError(error) {
-      captureException(error);
       createLogger("TRANSACTION_REFUND_REQUESTED webhook").error("Failed to execute webhook", {
         error,
       });

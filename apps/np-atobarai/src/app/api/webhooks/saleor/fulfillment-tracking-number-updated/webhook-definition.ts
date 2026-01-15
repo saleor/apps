@@ -1,5 +1,4 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
-import { captureException } from "@sentry/nextjs";
 
 import {
   FulfillmentTrackingNumberUpdatedDocument,
@@ -17,7 +16,6 @@ export const fulfillmentTrackingNumberUpdatedWebhookDefinition =
     query: FulfillmentTrackingNumberUpdatedDocument,
     webhookPath: "api/webhooks/saleor/fulfillment-tracking-number-updated",
     onError(error) {
-      captureException(error);
       createLogger("FULFILLMENT_TRACKING_NUMBER_UPDATED webhook").error(
         "Failed to execute webhook",
         { error },
