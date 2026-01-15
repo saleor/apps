@@ -4,6 +4,7 @@ import {
   TransactionInitializeSessionDocument,
   TransactionInitializeSessionEventFragment,
 } from "@/generated/graphql";
+import { createLogger } from "@/lib/logger";
 import { saleorApp } from "@/lib/saleor-app";
 
 export const transactionInitializeSessionWebhookDefinition =
@@ -14,4 +15,9 @@ export const transactionInitializeSessionWebhookDefinition =
     isActive: true,
     query: TransactionInitializeSessionDocument,
     webhookPath: "api/webhooks/saleor/transaction-initialize-session",
+    onError(error) {
+      createLogger("TRANSACTION_INITIALIZE_SESSION webhook").error("Failed to execute webhook", {
+        error,
+      });
+    },
   });
