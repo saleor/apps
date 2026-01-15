@@ -1,9 +1,11 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
+import { captureException } from "@sentry/nextjs";
 
 import {
   PaymentGatewayInitializeSessionDocument,
   PaymentGatewayInitializeSessionEventFragment,
 } from "@/generated/graphql";
+import { createLogger } from "@/lib/logger";
 import { saleorApp } from "@/lib/saleor-app";
 
 export const paymentGatewayInitializeSessionWebhookDefinition =
@@ -14,4 +16,11 @@ export const paymentGatewayInitializeSessionWebhookDefinition =
     isActive: true,
     query: PaymentGatewayInitializeSessionDocument,
     webhookPath: "api/webhooks/saleor/payment-gateway-initialize-session",
+    onError(error) {
+      captureException(error);
+      createLogger("PAYMENT_GATEWAY_INITIALIZE_SESSION webhook").error(
+        "Failed to execute webhook",
+        { error },
+      );
+    },
   });
