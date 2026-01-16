@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.21.8
+
+### Patch Changes
+
+- 3a5d102e: Fixed how AWS sdk is initialized by explicitly passing credentials. This is caused by Vercel issue, which started to implicitly override some of our credentials by injecting their own.
+
 ## 1.21.7
 
 ### Patch Changes
