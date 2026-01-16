@@ -260,7 +260,7 @@ export class TransactionInitializeSessionUseCase {
     if (createPaymentIntentResult.isErr()) {
       const mappedError = mapStripeErrorToApiError(createPaymentIntentResult.error);
 
-      this.logger.error("Failed to create payment intent", { error: mappedError });
+      this.logger.warn("Failed to create payment intent", { error: mappedError });
 
       return ok(
         new TransactionInitializeSessionUseCaseResponses.Failure({

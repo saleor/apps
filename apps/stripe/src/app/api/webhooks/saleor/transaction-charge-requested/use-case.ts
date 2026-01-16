@@ -114,7 +114,7 @@ export class TransactionChargeRequestedUseCase {
     if (capturePaymentIntentResult.isErr()) {
       const error = mapStripeErrorToApiError(capturePaymentIntentResult.error);
 
-      this.logger.error("Failed to capture payment intent", {
+      this.logger.warn("Failed to capture payment intent", {
         error,
       });
 

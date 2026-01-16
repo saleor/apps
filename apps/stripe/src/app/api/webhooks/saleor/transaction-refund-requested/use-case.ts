@@ -143,7 +143,7 @@ export class TransactionRefundRequestedUseCase {
     if (createRefundResult.isErr()) {
       const error = mapStripeErrorToApiError(createRefundResult.error);
 
-      this.logger.error("Failed to create refund", {
+      this.logger.warn("Failed to create refund", {
         error,
       });
 

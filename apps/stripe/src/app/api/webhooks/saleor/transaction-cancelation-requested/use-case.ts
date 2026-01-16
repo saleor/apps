@@ -117,7 +117,7 @@ export class TransactionCancelationRequestedUseCase {
     if (cancelPaymentIntentResult.isErr()) {
       const error = mapStripeErrorToApiError(cancelPaymentIntentResult.error);
 
-      this.logger.error("Failed to cancel payment intent", {
+      this.logger.warn("Failed to cancel payment intent", {
         error,
       });
 
