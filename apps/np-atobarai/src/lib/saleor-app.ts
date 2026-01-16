@@ -8,18 +8,18 @@ import { dynamoMainTable } from "@/modules/dynamodb/dynamodb-main-table";
 
 import { env } from "./env";
 
+const logger = createLogger("saleor-app");
+
 export let apl: APL;
 switch (env.APL) {
   case "dynamodb": {
     apl = DynamoAPL.create({
       table: dynamoMainTable,
-      externalLogger(message, level) {
-        const logger = createLogger("DynamoAPL");
-
+      externalLogger: (message, level) => {
         if (level === "error") {
-          logger.error(message);
+          logger.error(`[DynamoAPL] ${message}`);
         } else {
-          logger.debug(message);
+          logger.debug(`[DynamoAPL] ${message}`);
         }
       },
     });

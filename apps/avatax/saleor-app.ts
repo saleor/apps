@@ -5,7 +5,10 @@ import { SaleorCloudAPL } from "@saleor/app-sdk/APL/saleor-cloud";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 import { env } from "@/env";
+import { createLogger } from "@/logger";
 import { dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
+
+const logger = createLogger("saleor-app");
 
 /**
  * By default auth data are stored in the `.auth-data.json` (FileAPL).
@@ -21,6 +24,13 @@ switch (env.APL) {
   case "dynamodb": {
     apl = DynamoAPL.create({
       table: dynamoMainTable,
+      externalLogger: (message, level) => {
+        if (level === "error") {
+          logger.error(`[DynamoAPL] ${message}`);
+        } else {
+          logger.debug(`[DynamoAPL] ${message}`);
+        }
+      },
     });
 
     break;
