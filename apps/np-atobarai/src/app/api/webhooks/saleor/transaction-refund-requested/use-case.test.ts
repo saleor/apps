@@ -25,7 +25,6 @@ import {
 } from "@/modules/transaction-result/refund-result";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
-import { InvalidEventDataResponse } from "../saleor-webhook-responses";
 import { TransactionRefundRequestedUseCase } from "./use-case";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
@@ -34,7 +33,7 @@ describe("TransactionRefundRequestedUseCase", () => {
     create: () => mockedAtobaraiApiClient,
   } satisfies IAtobaraiApiClientFactory;
 
-  it("should return InvalidEventDataResponse when action amount is missing", async () => {
+  it("should return REFUND_FAILURE when action amount is missing", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
       action: { amount: null, currency: "JPY" },
@@ -53,10 +52,18 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(await result._unsafeUnwrap().getResponse().json()).toMatchInlineSnapshot(`
+      {
+        "actions": [
+          "REFUND",
+        ],
+        "message": "Failed to process NP Atobarai transaction refund: missing required data for refund",
+        "result": "REFUND_FAILURE",
+      }
+    `);
   });
 
-  it("should return InvalidEventDataResponse when transaction is missing", async () => {
+  it("should return REFUND_FAILURE when transaction is missing", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
       transaction: null,
@@ -74,10 +81,20 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(await result._unsafeUnwrap().getResponse().json()).toMatchInlineSnapshot(
+      `
+      {
+        "actions": [
+          "REFUND",
+        ],
+        "message": "Failed to process NP Atobarai transaction refund: missing required data for refund",
+        "result": "REFUND_FAILURE",
+      }
+    `,
+    );
   });
 
-  it("should return InvalidEventDataResponse when total amount is missing from both checkout and order", async () => {
+  it("should return REFUND_FAILURE when total amount is missing from both checkout and order", async () => {
     const event = {
       ...mockedRefundRequestedEvent,
       transaction: {
@@ -98,7 +115,17 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
     });
 
-    expect(result._unsafeUnwrapErr()).toBeInstanceOf(InvalidEventDataResponse);
+    expect(await result._unsafeUnwrap().getResponse().json()).toMatchInlineSnapshot(
+      `
+      {
+        "actions": [
+          "REFUND",
+        ],
+        "message": "Failed to process NP Atobarai transaction refund: missing required data for refund",
+        "result": "REFUND_FAILURE",
+      }
+    `,
+    );
   });
 
   describe("before fulfillment refunds", () => {

@@ -20,7 +20,11 @@ import {
 } from "@/modules/transaction-result/charge-result";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
-import { AtobaraiFailureTransactionErrorPublicCode, UseCaseErrors } from "../use-case-errors";
+import {
+  AtobaraiFailureTransactionErrorPublicCode,
+  InvalidEventValidationErrorPublicCode,
+  UseCaseErrors,
+} from "../use-case-errors";
 
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult | ChargeActionRequiredResult;
@@ -78,6 +82,7 @@ class Failure extends SuccessWebhookResponse {
           z.literal(AtobaraiFailureTransactionErrorPublicCode),
           z.literal(AtobaraiMultipleResultsErrorPublicCode),
           z.literal(AtobaraiApiClientChangeTransactionErrorPublicCode),
+          z.literal(InvalidEventValidationErrorPublicCode),
         ]),
         message: z.string(),
         apiError: z.string().optional(),

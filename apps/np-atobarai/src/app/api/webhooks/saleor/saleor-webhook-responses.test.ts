@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
-  InvalidEventDataResponse,
   UnhandledErrorResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 
@@ -44,20 +43,6 @@ describe("UnhandledErrorResponse", () => {
     expect(await fetchResponse.json()).toMatchInlineSnapshot(`
       {
         "message": "Unhandled error",
-      }
-    `);
-  });
-});
-
-describe("InvalidEventDataResponse", () => {
-  it("getResponse() returns valid Response with status 202 and message with error reason", async () => {
-    const saleorApiUrlResponse = new InvalidEventDataResponse(new Error("Inner error"));
-    const fetchResponse = saleorApiUrlResponse.getResponse();
-
-    expect(fetchResponse.status).toBe(202);
-    expect(await fetchResponse.json()).toMatchInlineSnapshot(`
-      {
-        "message": "Invalid event data",
       }
     `);
   });

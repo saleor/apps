@@ -31,7 +31,7 @@ describe("FulfillmentTrackingNumberUpdatedUseCaseResponse", () => {
       expect(response.statusCode).toBe(200);
       expect(await fetchResponse.json()).toMatchInlineSnapshot(`
         {
-          "message": "Failed to report fulfillment",
+          "message": "Failed to report fulfillment with Atobarai",
         }
       `);
     });
