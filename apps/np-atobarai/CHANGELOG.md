@@ -1,5 +1,16 @@
 # saleor-app-payment-np-atobarai
 
+## 1.3.0
+
+### Minor Changes
+
+- 0c477d55: Added granular error handling, which will return more precise error messages in cases of errors. Also many errors were handled, meaning "status 200" will be returned in case of valid event, that misses necessary data like payload required to process the request. Previously it was not handled and caused "status 500" reported to Saleor.
+
+### Patch Changes
+
+- 1577f747: Added more verbose error for sdk webhook execution, this should help debugging early request validation
+- 2a4f27ad: Fixed how AWS sdk is initialized by explicitly passing credentials. This is caused by Vercel issue, which started to implicitly override some of our credentials by injecting their own.
+
 ## 1.2.9
 
 ### Patch Changes
