@@ -3,6 +3,7 @@ import { AvataxConfig } from "./avatax-connection-schema";
 const defaultAvataxConfig: AvataxConfig = {
   companyCode: "DEFAULT",
   isAutocommit: false,
+  isExemptionStatusPublicMetadataEnabled: false,
   isSandbox: true,
   name: "Avatax-1",
   shippingTaxCode: "FR000000",

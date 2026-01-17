@@ -97,9 +97,9 @@ async function calculateTaxes({
 
   const avataxModel = await payloadService.getPayload(payload, avataxConfig, discountStrategy);
 
-  const response = await calculateTaxesAdapter.send(avataxModel);
+  const result = await calculateTaxesAdapter.send(avataxModel);
 
-  return response;
+  return result.response;
 }
 
 const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {

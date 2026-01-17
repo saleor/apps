@@ -139,6 +139,7 @@ const getMockedAppConfig = (): AppConfig => {
           isSandbox: false,
           name: "config",
           isAutocommit: false,
+          isExemptionStatusPublicMetadataEnabled: false,
           isDocumentRecordingEnabled: false,
           shippingTaxCode: "123",
         },
@@ -249,7 +250,15 @@ describe("CalculateTaxesUseCase", () => {
   it("Calculates proper discount (extra field with sum of SUBTOTAL-type amounts) and properly reduces price of shipping line", async () => {
     mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
-    mockedAvataxClient.createTransaction.mockResolvedValueOnce(Promise.resolve(ok({ lines: [] })));
+    mockedAvataxClient.createTransaction.mockResolvedValueOnce(
+      Promise.resolve(
+        ok({
+          lines: [],
+          totalExempt: 0,
+          summary: [],
+        }),
+      ),
+    );
 
     const payload = getPayloadWithDiscounts();
 
@@ -278,7 +287,15 @@ describe("CalculateTaxesUseCase", () => {
   it("Writes successful log if taxes calculated to Log Writer", async () => {
     mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
 
-    mockedAvataxClient.createTransaction.mockResolvedValueOnce(Promise.resolve(ok({ lines: [] })));
+    mockedAvataxClient.createTransaction.mockResolvedValueOnce(
+      Promise.resolve(
+        ok({
+          lines: [],
+          totalExempt: 0,
+          summary: [],
+        }),
+      ),
+    );
 
     const payload = getPayloadWithDiscounts();
 
