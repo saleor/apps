@@ -53,10 +53,12 @@ async function main() {
     console.log("\nTables created/updated:");
     console.log("   • saleor_app_configuration");
     console.log("   • paypal_tenant_config");
-    console.log("   • wsm_global_paypal_config (with bn_code)");
+    console.log("   • wsm_global_paypal_config (with webhook fields)");
     console.log("   • paypal_merchant_onboarding (with OAuth fields)");
     console.log("\nNew columns added:");
     console.log("   • wsm_global_paypal_config.bn_code");
+    console.log("   • wsm_global_paypal_config.webhook_id");
+    console.log("   • wsm_global_paypal_config.webhook_url");
     console.log("   • paypal_merchant_onboarding.merchant_client_id");
     console.log("   • paypal_merchant_onboarding.merchant_oauth_email");
     console.log("\nIndexes created:");

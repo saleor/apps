@@ -82,13 +82,15 @@ export const initializeDatabase = async (): Promise<void> => {
       partner_merchant_id TEXT,           -- PayPal Partner Merchant ID for API calls
       partner_fee_percent NUMERIC(5,2),   -- Platform fee percentage (0-100)
       bn_code TEXT,                       -- PayPal Partner Attribution BN code
+      webhook_id TEXT,                    -- PayPal Webhook ID for platform events
+      webhook_url TEXT,                   -- Webhook URL registered with PayPal
       environment TEXT NOT NULL CHECK (environment IN ('SANDBOX', 'LIVE')),
       is_active BOOLEAN DEFAULT TRUE,
       created_at TIMESTAMP DEFAULT NOW(),
       updated_at TIMESTAMP DEFAULT NOW()
     );
 
-    -- Add bn_code column if it doesn't exist (for existing installations)
+    -- Add columns if they don't exist (for existing installations)
     DO $$
     BEGIN
       IF NOT EXISTS (
@@ -103,6 +105,20 @@ export const initializeDatabase = async (): Promise<void> => {
         WHERE table_name='wsm_global_paypal_config' AND column_name='partner_fee_percent'
       ) THEN
         ALTER TABLE wsm_global_paypal_config ADD COLUMN partner_fee_percent NUMERIC(5,2);
+      END IF;
+
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name='wsm_global_paypal_config' AND column_name='webhook_id'
+      ) THEN
+        ALTER TABLE wsm_global_paypal_config ADD COLUMN webhook_id TEXT;
+      END IF;
+
+      IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name='wsm_global_paypal_config' AND column_name='webhook_url'
+      ) THEN
+        ALTER TABLE wsm_global_paypal_config ADD COLUMN webhook_url TEXT;
       END IF;
     END $$;
 
