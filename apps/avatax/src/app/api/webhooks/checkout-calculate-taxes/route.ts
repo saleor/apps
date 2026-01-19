@@ -16,8 +16,7 @@ import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
-import { buildExemptionStatusMetadataMutationPlan } from "@/modules/app/avatax-exemption-status-metadata";
-import { ExemptionStatusMetadataManager } from "@/modules/app/exemption-status-metadata-manager";
+import { updateExemptionStatusPublicMetadata } from "@/modules/app/exemption-status-public-metadata-updater";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
@@ -146,7 +145,14 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     const currentExemptionStatus =
                       payload.taxBase.sourceObject.avataxExemptionStatus ?? null;
 
-                    const plan = buildExemptionStatusMetadataMutationPlan({
+                    const client = createInstrumentedGraphqlClient({
+                      saleorApiUrl: authData.saleorApiUrl,
+                      token: authData.token,
+                    });
+
+                    updateExemptionStatusPublicMetadata({
+                      id: payload.taxBase.sourceObject.id,
+                      client,
                       isExemptionApplied,
                       currentMetadataValue: currentExemptionStatus,
                       next: {
@@ -154,37 +160,15 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                         entityUseCode,
                         calculatedAt: new Date(),
                       },
-                    });
-
-                    if (plan.type === "none") {
-                      return;
-                    }
-
-                    const client = createInstrumentedGraphqlClient({
-                      saleorApiUrl: authData.saleorApiUrl,
-                      token: authData.token,
-                    });
-
-                    const metadataManager = new ExemptionStatusMetadataManager(client);
-
-                    const metadataPromise =
-                      plan.type === "update"
-                        ? metadataManager.updateExemptionStatusMetadata(
-                            payload.taxBase.sourceObject.id,
-                            plan.value,
-                          )
-                        : metadataManager.deleteExemptionStatusMetadata(
-                            payload.taxBase.sourceObject.id,
-                          );
-
-                    metadataPromise.catch((error) => {
-                      captureException(error);
-                      logger.warn("Failed to update checkout exemption status metadata", {
-                        error:
-                          error instanceof Error
-                            ? { name: error.name, message: error.message }
-                            : { message: String(error) },
-                      });
+                      onError: (error) => {
+                        captureException(error);
+                        logger.warn("Failed to update checkout exemption status metadata", {
+                          error:
+                            error instanceof Error
+                              ? { name: error.name, message: error.message }
+                              : { message: String(error) },
+                        });
+                      },
                     });
                   });
                 } catch (error) {

@@ -17,8 +17,7 @@ import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
-import { buildExemptionStatusMetadataMutationPlan } from "@/modules/app/avatax-exemption-status-metadata";
-import { ExemptionStatusMetadataManager } from "@/modules/app/exemption-status-metadata-manager";
+import { updateExemptionStatusPublicMetadata } from "@/modules/app/exemption-status-public-metadata-updater";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
@@ -266,7 +265,14 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
               const currentExemptionStatus =
                 payload.taxBase.sourceObject.avataxExemptionStatus ?? null;
 
-              const plan = buildExemptionStatusMetadataMutationPlan({
+              const client = createInstrumentedGraphqlClient({
+                saleorApiUrl: ctx.authData.saleorApiUrl,
+                token: ctx.authData.token,
+              });
+
+              updateExemptionStatusPublicMetadata({
+                id: orderId,
+                client,
                 isExemptionApplied,
                 currentMetadataValue: currentExemptionStatus,
                 next: {
@@ -274,32 +280,15 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
                   entityUseCode,
                   calculatedAt: new Date(),
                 },
-              });
-
-              if (plan.type === "none") {
-                return;
-              }
-
-              const client = createInstrumentedGraphqlClient({
-                saleorApiUrl: ctx.authData.saleorApiUrl,
-                token: ctx.authData.token,
-              });
-
-              const metadataManager = new ExemptionStatusMetadataManager(client);
-
-              const metadataPromise =
-                plan.type === "update"
-                  ? metadataManager.updateExemptionStatusMetadata(orderId, plan.value)
-                  : metadataManager.deleteExemptionStatusMetadata(orderId);
-
-              metadataPromise.catch((error) => {
-                captureException(error);
-                logger.warn("Failed to update order exemption status metadata", {
-                  error:
-                    error instanceof Error
-                      ? { name: error.name, message: error.message }
-                      : { message: String(error) },
-                });
+                onError: (error) => {
+                  captureException(error);
+                  logger.warn("Failed to update order exemption status metadata", {
+                    error:
+                      error instanceof Error
+                        ? { name: error.name, message: error.message }
+                        : { message: String(error) },
+                  });
+                },
               });
             });
           } catch (error) {
