@@ -5,7 +5,10 @@ import { SaleorCloudAPL } from "@saleor/app-sdk/APL/saleor-cloud";
 import { UpstashAPL } from "@saleor/app-sdk/APL/upstash";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
+import { createLogger } from "./logger";
 import { dynamoMainTable } from "./modules/dynamodb/dynamo-main-table";
+
+const logger = createLogger("saleor-app");
 
 const aplType = process.env.APL ?? "file";
 
@@ -31,6 +34,13 @@ switch (aplType) {
 
     apl = DynamoAPL.create({
       table: dynamoMainTable,
+      externalLogger: (message, level) => {
+        if (level === "error") {
+          logger.error(`[DynamoAPL] ${message}`);
+        } else {
+          logger.debug(`[DynamoAPL] ${message}`);
+        }
+      },
     });
 
     break;

@@ -6,6 +6,9 @@ import { UpstashAPL } from "@saleor/app-sdk/APL/upstash";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 import { dynamoMainTable } from "./src/dynamodb/dynamo-main-table";
+import { createLogger } from "./src/logger";
+
+const logger = createLogger("saleor-app");
 
 /**
  * By default auth data are stored in the `.auth-data.json` (FileAPL).
@@ -37,6 +40,13 @@ switch (aplType) {
 
     apl = DynamoAPL.create({
       table: dynamoMainTable,
+      externalLogger: (message, level) => {
+        if (level === "error") {
+          logger.error(`[DynamoAPL] ${message}`);
+        } else {
+          logger.debug(`[DynamoAPL] ${message}`);
+        }
+      },
     });
 
     break;
