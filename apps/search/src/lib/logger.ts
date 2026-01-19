@@ -8,22 +8,25 @@ if (process.env.NODE_ENV !== "production") {
   attachLoggerConsoleTransport(rootLogger);
 }
 
-if (typeof window === "undefined") {
-  // Don't remove require - it's necessary for proper logger initialization
-  const {
-    attachLoggerSentryTransport,
-    attachLoggerVercelRuntimeTransport,
-  } = require("@saleor/apps-logger/node");
+const asyncLoadAndAttachTransports = async () => {
+  const transports = await import("@saleor/apps-logger/node");
 
-  attachLoggerSentryTransport(rootLogger);
+  transports.attachLoggerSentryTransport(rootLogger);
 
   if (process.env.NODE_ENV === "production") {
-    attachLoggerVercelRuntimeTransport(
+    transports.attachLoggerVercelRuntimeTransport(
       rootLogger,
       packageJson.version,
       require("./logger-context").loggerContext,
     );
   }
+};
+
+if (typeof window === "undefined") {
+  /**
+   * Async loading, because mix-up of migration script, node, and client execution breaks module resolution
+   */
+  asyncLoadAndAttachTransports();
 }
 
 export const createLogger = (name: string, params?: Record<string, unknown>) =>
