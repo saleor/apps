@@ -131,25 +131,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 providerConfig.value.avataxConfig.config.isExemptionStatusPublicMetadataEnabled
               ) {
                 try {
-                  const totalExempt = new Decimal(value.transaction.totalExempt ?? 0);
-                  const lineExemptAmountSum =
-                    value.transaction.lines?.reduce((acc, line) => {
-                      return acc.add(new Decimal(line.exemptAmount ?? 0));
-                    }, new Decimal(0)) ?? new Decimal(0);
-                  const summaryExemptionSum =
-                    value.transaction.summary?.reduce((acc, item) => {
-                      return acc.add(new Decimal(item.exemption ?? 0));
-                    }, new Decimal(0)) ?? new Decimal(0);
-
-                  let exemptAmountTotalDecimal = totalExempt;
-
-                  if (lineExemptAmountSum.gt(exemptAmountTotalDecimal)) {
-                    exemptAmountTotalDecimal = lineExemptAmountSum;
-                  }
-
-                  if (summaryExemptionSum.gt(exemptAmountTotalDecimal)) {
-                    exemptAmountTotalDecimal = summaryExemptionSum;
-                  }
+                  const exemptAmountTotalDecimal = new Decimal(value.transaction.totalExempt ?? 0);
 
                   const exemptAmountTotal = exemptAmountTotalDecimal.toNumber();
 
