@@ -378,14 +378,13 @@ async function handleCaptureRefunded(resource: PayPalRefundResource): Promise<vo
     // Report refund success to Saleor
     if (amount?.value && amount?.currency_code) {
       try {
-        // Get Saleor API URL from merchant ID lookup
-        const saleorApiUrl = await getSaleorApiUrlByMerchantId(metadata.saleor_source_id);
+        // Get all Saleor instances from APL and try to report to each one
+        // This is a workaround since we can't directly map transaction ID to Saleor instance
+        const allAuthData = await saleorApp.apl.getAll();
         
-        if (saleorApiUrl) {
-          // Get auth data for this Saleor instance
-          const authData = await saleorApp.apl.get(saleorApiUrl);
-          
-          if (authData) {
+        let reported = false;
+        for (const authData of allAuthData) {
+          try {
             const reportResult = await reportTransactionEventToSaleor({
               saleorApiUrl: authData.saleorApiUrl,
               saleorToken: authData.token,
@@ -397,29 +396,30 @@ async function handleCaptureRefunded(resource: PayPalRefundResource): Promise<vo
               externalUrl: getPayPalExternalUrl(refundId, "SANDBOX"), // TODO: Use actual environment
             });
 
-            if (reportResult.isErr()) {
-              logger.error("Failed to report refund success to Saleor", {
-                error: reportResult.error.message,
-                refundId,
-                saleorTransactionId: metadata.saleor_transaction_id,
-              });
-            } else {
+            if (reportResult.isOk()) {
               logger.info("Successfully reported refund success to Saleor", {
                 refundId,
                 saleorTransactionId: metadata.saleor_transaction_id,
+                saleorApiUrl: authData.saleorApiUrl,
                 alreadyProcessed: reportResult.value.alreadyProcessed,
               });
+              reported = true;
+              break; // Stop after first successful report
             }
-          } else {
-            logger.error("No auth data found for Saleor API URL", {
-              saleorApiUrl,
-              refundId,
+          } catch (error) {
+            // Continue to next instance if this one fails
+            logger.debug("Failed to report to Saleor instance", {
+              saleorApiUrl: authData.saleorApiUrl,
+              error: error instanceof Error ? error.message : String(error),
             });
           }
-        } else {
-          logger.error("Could not find Saleor API URL for merchant", {
-            merchantId: metadata.saleor_source_id,
+        }
+
+        if (!reported) {
+          logger.error("Could not report refund to any Saleor instance", {
             refundId,
+            saleorTransactionId: metadata.saleor_transaction_id,
+            instanceCount: allAuthData.length,
           });
         }
       } catch (error) {
