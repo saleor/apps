@@ -214,6 +214,7 @@ export interface IPayPalRefundsApi {
     captureId: string;
     amount?: PayPalMoney;
     metadata?: Record<string, string>;
+    requestId?: string;
   }): Promise<Result<PayPalRefund, unknown>>;
 }
 

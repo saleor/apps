@@ -20,6 +20,8 @@ export class GlobalPayPalConfig {
   public readonly partnerMerchantId: string | null;
   public readonly partnerFeePercent: number | null;
   public readonly bnCode: string | null;
+  public readonly webhookId: string | null;
+  public readonly webhookUrl: string | null;
   public readonly environment: PayPalEnvironment;
   public readonly isActive: boolean;
   public readonly createdAt: Date;
@@ -32,6 +34,8 @@ export class GlobalPayPalConfig {
     partnerMerchantId: string | null,
     partnerFeePercent: number | null,
     bnCode: string | null,
+    webhookId: string | null,
+    webhookUrl: string | null,
     environment: PayPalEnvironment,
     isActive: boolean,
     createdAt: Date,
@@ -43,6 +47,8 @@ export class GlobalPayPalConfig {
     this.partnerMerchantId = partnerMerchantId;
     this.partnerFeePercent = partnerFeePercent;
     this.bnCode = bnCode;
+    this.webhookId = webhookId;
+    this.webhookUrl = webhookUrl;
     this.environment = environment;
     this.isActive = isActive;
     this.createdAt = createdAt;
@@ -56,6 +62,8 @@ export class GlobalPayPalConfig {
     partnerMerchantId?: string | null;
     partnerFeePercent?: number | null;
     bnCode?: string | null;
+    webhookId?: string | null;
+    webhookUrl?: string | null;
     environment: PayPalEnvironment;
     isActive?: boolean;
     createdAt?: Date;
@@ -73,6 +81,8 @@ export class GlobalPayPalConfig {
           data.partnerMerchantId ?? null,
           data.partnerFeePercent ?? null,
           data.bnCode ?? null,
+          data.webhookId ?? null,
+          data.webhookUrl ?? null,
           data.environment,
           data.isActive ?? true,
           data.createdAt ?? new Date(),
@@ -94,6 +104,8 @@ export class GlobalPayPalConfig {
     partnerMerchantId: string | null;
     partnerFeePercent: number | null;
     bnCode: string | null;
+    webhookId: string | null;
+    webhookUrl: string | null;
     environment: PayPalEnvironment;
     isActive: boolean;
     createdAt: Date;
@@ -106,6 +118,8 @@ export class GlobalPayPalConfig {
       partnerMerchantId: this.partnerMerchantId,
       partnerFeePercent: this.partnerFeePercent,
       bnCode: this.bnCode,
+      webhookId: this.webhookId,
+      webhookUrl: this.webhookUrl,
       environment: this.environment,
       isActive: this.isActive,
       createdAt: this.createdAt,

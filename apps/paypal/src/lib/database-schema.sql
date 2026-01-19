@@ -131,6 +131,10 @@ CREATE TABLE IF NOT EXISTS wsm_global_paypal_config (
   partner_fee_percent NUMERIC(5,2),              -- Platform fee percentage (0-100)
   bn_code TEXT,                                  -- PayPal Partner Attribution BN Code
 
+  -- Webhook Configuration
+  webhook_id TEXT,                               -- PayPal Webhook ID for platform events
+  webhook_url TEXT,                              -- Webhook URL registered with PayPal
+
   -- Environment
   environment TEXT NOT NULL CHECK (environment IN ('SANDBOX', 'LIVE')),
 
@@ -163,3 +167,10 @@ CREATE TRIGGER trigger_update_wsm_global_config_timestamp
 -- Comments
 COMMENT ON TABLE wsm_global_paypal_config IS 'Stores PayPal partner API credentials and settings shared across all tenants';
 COMMENT ON COLUMN wsm_global_paypal_config.partner_fee_percent IS 'Platform fee percentage (e.g., 2.00 for 2%). PayPal deducts this from merchant payments';
+COMMENT ON COLUMN wsm_global_paypal_config.webhook_id IS 'PayPal webhook ID for receiving platform events (PAYMENT.CAPTURE.*, MERCHANT.*, etc.)';
+COMMENT ON COLUMN wsm_global_paypal_config.webhook_url IS 'The URL registered with PayPal for webhook delivery';
+
+-- Migration: Add webhook columns to existing table
+-- Run this if upgrading from a previous version
+ALTER TABLE wsm_global_paypal_config ADD COLUMN IF NOT EXISTS webhook_id TEXT;
+ALTER TABLE wsm_global_paypal_config ADD COLUMN IF NOT EXISTS webhook_url TEXT;

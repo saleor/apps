@@ -38,7 +38,7 @@ export class GlobalPayPalConfigRepository {
 
     try {
       const query = `
-        SELECT id, client_id, client_secret, partner_merchant_id, partner_fee_percent, bn_code, environment, is_active, created_at, updated_at
+        SELECT id, client_id, client_secret, partner_merchant_id, partner_fee_percent, bn_code, webhook_id, webhook_url, environment, is_active, created_at, updated_at
         FROM wsm_global_paypal_config
         WHERE is_active = TRUE
         LIMIT 1
@@ -66,6 +66,8 @@ export class GlobalPayPalConfigRepository {
         partnerMerchantId: row.partner_merchant_id,
         partnerFeePercent: row.partner_fee_percent,
         bnCode: row.bn_code,
+        webhookId: row.webhook_id,
+        webhookUrl: row.webhook_url,
         environment: row.environment as PayPalEnvironment,
         isActive: row.is_active,
         createdAt: row.created_at,
@@ -101,6 +103,8 @@ export class GlobalPayPalConfigRepository {
     partnerMerchantId?: string | null;
     partnerFeePercent?: number | null;
     bnCode?: string | null;
+    webhookId?: string | null;
+    webhookUrl?: string | null;
     environment: PayPalEnvironment;
   }): Promise<Result<GlobalPayPalConfig, Error>> {
     const client = await this.pool.connect();
@@ -116,9 +120,9 @@ export class GlobalPayPalConfigRepository {
 
       // Insert new config
       const insertQuery = `
-        INSERT INTO wsm_global_paypal_config (client_id, client_secret, partner_merchant_id, partner_fee_percent, bn_code, environment, is_active)
-        VALUES ($1, $2, $3, $4, $5, $6, TRUE)
-        RETURNING id, client_id, client_secret, partner_merchant_id, partner_fee_percent, bn_code, environment, is_active, created_at, updated_at
+        INSERT INTO wsm_global_paypal_config (client_id, client_secret, partner_merchant_id, partner_fee_percent, bn_code, webhook_id, webhook_url, environment, is_active)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, TRUE)
+        RETURNING id, client_id, client_secret, partner_merchant_id, partner_fee_percent, bn_code, webhook_id, webhook_url, environment, is_active, created_at, updated_at
       `;
 
       const result = await client.query(insertQuery, [
@@ -127,6 +131,8 @@ export class GlobalPayPalConfigRepository {
         data.partnerMerchantId ?? null,
         data.partnerFeePercent ?? null,
         data.bnCode ?? null,
+        data.webhookId ?? null,
+        data.webhookUrl ?? null,
         data.environment,
       ]);
 
@@ -140,6 +146,8 @@ export class GlobalPayPalConfigRepository {
         partnerMerchantId: row.partner_merchant_id,
         partnerFeePercent: row.partner_fee_percent,
         bnCode: row.bn_code,
+        webhookId: row.webhook_id,
+        webhookUrl: row.webhook_url,
         environment: row.environment as PayPalEnvironment,
         isActive: row.is_active,
         createdAt: row.created_at,
@@ -202,6 +210,39 @@ export class GlobalPayPalConfigRepository {
       return err(new Error("No access token received from PayPal"));
     } catch (error) {
       return err(error instanceof Error ? error : new Error("Failed to test credentials"));
+    }
+  }
+
+  /**
+   * Update webhook information for the active config
+   * Used after webhook registration with PayPal
+   */
+  async updateWebhookInfo(data: {
+    webhookId: string;
+    webhookUrl: string;
+  }): Promise<Result<void, Error>> {
+    try {
+      const query = `
+        UPDATE wsm_global_paypal_config
+        SET webhook_id = $1, webhook_url = $2, updated_at = NOW()
+        WHERE is_active = TRUE
+      `;
+
+      await this.pool.query(query, [data.webhookId, data.webhookUrl]);
+
+      // Invalidate cache since config changed
+      globalPayPalConfigCache.invalidate();
+      logger.info("Webhook info updated for active config", {
+        webhookId: data.webhookId,
+        webhookUrl: data.webhookUrl,
+      });
+
+      return ok(undefined);
+    } catch (error) {
+      logger.error("Failed to update webhook info", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return err(error instanceof Error ? error : new Error("Failed to update webhook info"));
     }
   }
 

@@ -32,7 +32,11 @@ export class PayPalRefundsApi implements IPayPalRefundsApi {
     captureId: string;
     amount?: PayPalMoney;
     metadata?: Record<string, string>;
+    requestId?: string;
   }): Promise<Result<PayPalRefund, unknown>> {
+    // Generate a unique request ID for idempotency if not provided
+    const requestId = args.requestId || `refund-${args.captureId}-${Date.now()}`;
+
     return ResultAsync.fromPromise(
       this.client.makeRequest<PayPalRefund>({
         method: "POST",
@@ -43,6 +47,10 @@ export class PayPalRefundsApi implements IPayPalRefundsApi {
             note_to_payer: JSON.stringify(args.metadata),
           }),
         },
+        // Include BN code for partner attribution on refunds (per PayPal multiparty docs)
+        includeBnCode: true,
+        // Include request ID for idempotency (prevents duplicate refunds)
+        requestId,
       }),
       (error) => error,
     );

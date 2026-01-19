@@ -1,4 +1,3 @@
-import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { err, ok, Result } from "neverthrow";
 
 import {
@@ -8,12 +7,10 @@ import {
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 import { appContextContainer } from "@/lib/app-context";
+import { getPool } from "@/lib/database";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { loggerContext } from "@/lib/logger-context";
 import { PayPalConfigRepo } from "@/modules/paypal/configuration/paypal-config-repo";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   getChannelIdFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
@@ -21,7 +18,10 @@ import {
 import { mapPayPalErrorToApiError, PayPalApiError } from "@/modules/paypal/paypal-api-error";
 import { createPayPalOrderId } from "@/modules/paypal/paypal-order-id";
 import { createPayPalRefundId } from "@/modules/paypal/paypal-refund-id";
+import { createPayPalClientId } from "@/modules/paypal/paypal-client-id";
+import { createPayPalClientSecret } from "@/modules/paypal/paypal-client-secret";
 import { IPayPalOrdersApiFactory, IPayPalRefundsApiFactory } from "@/modules/paypal/types";
+import { GlobalPayPalConfigRepository } from "@/modules/wsm-admin/global-paypal-config-repository";
 
 import {
   TransactionRefundRequestedUseCaseResponses,
@@ -88,16 +88,50 @@ export class TransactionRefundRequestedUseCase {
       );
     }
 
+    const config = paypalConfigForThisChannel.value;
+
     appContextContainer.set({
-      paypalEnv: paypalConfigForThisChannel.value.environment,
+      paypalEnv: config.environment,
     });
 
+    // Fetch global config for partner credentials
+    // Partner credentials are required for refund API calls with merchant context
+    let globalClientId = config.clientId;
+    let globalClientSecret = config.clientSecret;
+    let bnCode: string | undefined;
+
+    try {
+      const pool = getPool();
+      const globalConfigRepository = GlobalPayPalConfigRepository.create(pool);
+      const globalConfigResult = await globalConfigRepository.getActiveConfig();
+
+      if (globalConfigResult.isOk() && globalConfigResult.value) {
+        const globalConfig = globalConfigResult.value;
+        globalClientId = createPayPalClientId(globalConfig.clientId);
+        globalClientSecret = createPayPalClientSecret(globalConfig.clientSecret);
+        bnCode = globalConfig.bnCode || undefined;
+        this.logger.debug("Using global partner credentials for refund", {
+          hasBnCode: !!bnCode,
+          hasPartnerCredentials: true,
+        });
+      } else {
+        this.logger.warn("No active global config found, using per-channel credentials", {
+          error: globalConfigResult.isErr() ? globalConfigResult.error : undefined,
+        });
+      }
+    } catch (error) {
+      this.logger.warn("Failed to fetch global config, using per-channel credentials", {
+        error,
+      });
+    }
+
     const apiConfig = {
-      clientId: paypalConfigForThisChannel.value.clientId,
-      clientSecret: paypalConfigForThisChannel.value.clientSecret,
-      merchantId: paypalConfigForThisChannel.value.merchantId ? (paypalConfigForThisChannel.value.merchantId as any) : undefined,
-      merchantEmail: paypalConfigForThisChannel.value.merchantEmail || undefined,
-      env: paypalConfigForThisChannel.value.environment,
+      clientId: globalClientId,
+      clientSecret: globalClientSecret,
+      merchantId: config.merchantId ? (config.merchantId as any) : undefined,
+      merchantEmail: config.merchantEmail || undefined,
+      bnCode,
+      env: config.environment,
     };
 
     const paypalOrdersApi = this.paypalOrdersApiFactory.create(apiConfig);

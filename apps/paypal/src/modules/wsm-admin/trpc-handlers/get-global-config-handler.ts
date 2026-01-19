@@ -64,6 +64,8 @@ export class GetGlobalConfigHandler {
           partnerMerchantId: config.partnerMerchantId,
           partnerFeePercent: config.partnerFeePercent,
           bnCode: config.bnCode,
+          webhookId: config.webhookId,
+          webhookUrl: config.webhookUrl,
           environment: config.environment,
           createdAt: config.createdAt,
           updatedAt: config.updatedAt,

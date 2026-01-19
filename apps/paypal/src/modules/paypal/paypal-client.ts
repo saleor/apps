@@ -134,6 +134,7 @@ export class PayPalClient {
     path: string;
     body?: unknown;
     includeBnCode?: boolean;
+    requestId?: string;
   }): Promise<T> {
     const token = await this.getAccessToken();
 
@@ -169,11 +170,17 @@ export class PayPalClient {
       });
     }
 
-    // Add PayPal-Partner-Attribution-Id header (BN code) only for Orders API
-    // Per PDF Page 4: BN code is required in "create order" requests
+    // Add PayPal-Partner-Attribution-Id header (BN code) for partner attribution
+    // Required for multiparty transactions (orders, captures, refunds)
     if (this.bnCode && args.includeBnCode) {
       headers["PayPal-Partner-Attribution-Id"] = this.bnCode;
       logger.debug("Added PayPal-Partner-Attribution-Id header", { bnCode: this.bnCode });
+    }
+
+    // Add PayPal-Request-Id header for idempotency (prevents duplicate transactions)
+    if (args.requestId) {
+      headers["PayPal-Request-Id"] = args.requestId;
+      logger.debug("Added PayPal-Request-Id header for idempotency", { requestId: args.requestId });
     }
 
     const fullUrl = `${this.baseUrl}${args.path}`;
