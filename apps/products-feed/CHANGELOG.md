@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 2.1.9
+
+### Patch Changes
+
+- 560c3de4: Added logging to DynamoDB APL for better debugging and error visibility.
+
 ## 2.1.8
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.3.1
+
+### Patch Changes
+
+- 560c3de4: Added logging to DynamoDB APL for better debugging and error visibility.
+
 ## 1.3.0
 
 ### Minor Changes

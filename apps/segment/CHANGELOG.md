@@ -1,5 +1,11 @@
 # saleor-app-segment
 
+## 2.2.5
+
+### Patch Changes
+
+- 560c3de4: Added logging to DynamoDB APL for better debugging and error visibility.
+
 ## 2.2.4
 
 ### Patch Changes
