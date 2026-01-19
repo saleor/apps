@@ -8,7 +8,12 @@ import {
   PayPalAuthorizationResource,
   PayPalMerchantResource,
   PayPalVettingResource,
+  reportTransactionEventToSaleor,
+  getSaleorApiUrlByMerchantId,
+  getPayPalExternalUrl,
 } from "@/modules/paypal/paypal-webhook-event-reporter";
+import { TransactionEventTypeEnum } from "@/generated/graphql";
+import { saleorApp } from "@/lib/saleor-app";
 
 const logger = createLogger("PayPalPlatformWebhooks");
 
@@ -369,6 +374,62 @@ async function handleCaptureRefunded(resource: PayPalRefundResource): Promise<vo
       amountValue: amount?.value,
       amountCurrency: amount?.currency_code,
     });
+
+    // Report refund success to Saleor
+    if (amount?.value && amount?.currency_code) {
+      try {
+        // Get Saleor API URL from merchant ID lookup
+        const saleorApiUrl = await getSaleorApiUrlByMerchantId(metadata.saleor_source_id);
+        
+        if (saleorApiUrl) {
+          // Get auth data for this Saleor instance
+          const authData = await saleorApp.apl.get(saleorApiUrl);
+          
+          if (authData) {
+            const reportResult = await reportTransactionEventToSaleor({
+              saleorApiUrl: authData.saleorApiUrl,
+              saleorToken: authData.token,
+              transactionId: metadata.saleor_transaction_id,
+              type: "REFUND_SUCCESS",
+              amount: amount.value,
+              pspReference: refundId,
+              message: "PayPal refund completed successfully",
+              externalUrl: getPayPalExternalUrl(refundId, "SANDBOX"), // TODO: Use actual environment
+            });
+
+            if (reportResult.isErr()) {
+              logger.error("Failed to report refund success to Saleor", {
+                error: reportResult.error.message,
+                refundId,
+                saleorTransactionId: metadata.saleor_transaction_id,
+              });
+            } else {
+              logger.info("Successfully reported refund success to Saleor", {
+                refundId,
+                saleorTransactionId: metadata.saleor_transaction_id,
+                alreadyProcessed: reportResult.value.alreadyProcessed,
+              });
+            }
+          } else {
+            logger.error("No auth data found for Saleor API URL", {
+              saleorApiUrl,
+              refundId,
+            });
+          }
+        } else {
+          logger.error("Could not find Saleor API URL for merchant", {
+            merchantId: metadata.saleor_source_id,
+            refundId,
+          });
+        }
+      } catch (error) {
+        logger.error("Exception while reporting refund to Saleor", {
+          error: error instanceof Error ? error.message : String(error),
+          refundId,
+          saleorTransactionId: metadata.saleor_transaction_id,
+        });
+      }
+    }
   } else {
     // If no metadata, this might be a refund initiated externally via PayPal dashboard
     // In this case, we can't link it back to a Saleor transaction
