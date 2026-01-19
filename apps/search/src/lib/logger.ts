@@ -1,32 +1,30 @@
 import { attachLoggerConsoleTransport, rootLogger } from "@saleor/apps-logger";
 
-import packageJson from "../../package.json";
-
 rootLogger.settings.maskValuesOfKeys = ["token", "secretKey"];
 
 if (process.env.NODE_ENV !== "production") {
   attachLoggerConsoleTransport(rootLogger);
 }
 
-const asyncLoadAndAttachTransports = async () => {
-  const transports = await import("@saleor/apps-logger/node");
-
-  transports.attachLoggerSentryTransport(rootLogger);
-
-  if (process.env.NODE_ENV === "production") {
-    transports.attachLoggerVercelRuntimeTransport(
-      rootLogger,
-      packageJson.version,
-      require("./logger-context").loggerContext,
-    );
-  }
-};
-
 if (typeof window === "undefined") {
   /**
-   * Async loading, because mix-up of migration script, node, and client execution breaks module resolution
+   * Dynamic imports to prevent node-specific code from being bundled for the browser
    */
-  asyncLoadAndAttachTransports();
+  Promise.all([
+    import("@saleor/apps-logger/node"),
+    import("../../package.json"),
+    import("./logger-context"),
+  ]).then(([transports, packageJson, loggerContextModule]) => {
+    transports.attachLoggerSentryTransport(rootLogger);
+
+    if (process.env.NODE_ENV === "production") {
+      transports.attachLoggerVercelRuntimeTransport(
+        rootLogger,
+        packageJson.default.version,
+        loggerContextModule.loggerContext,
+      );
+    }
+  });
 }
 
 export const createLogger = (name: string, params?: Record<string, unknown>) =>
