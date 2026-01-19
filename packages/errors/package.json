@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "main": "./src/index.ts",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    }
+  },
   "scripts": {
     "check-types": "tsc",
     "lint": "eslint .",
@@ -11,20 +16,16 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
-    "eslint": "catalog:"
+    "eslint": "catalog:",
+    "modern-errors": "catalog:",
+    "modern-errors-serialize": "catalog:"
   },
   "devDependencies": {
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@vitest/coverage-v8": "catalog:",
-    "modern-errors": "catalog:",
-    "modern-errors-serialize": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
-  },
-  "peerDependencies": {
-    "modern-errors": "catalog:",
-    "modern-errors-serialize": "catalog:"
   }
 }

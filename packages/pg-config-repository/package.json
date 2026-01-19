@@ -1,0 +1,26 @@
+{
+  "name": "@saleor/pg-config-repository",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "vitest",
+    "test:ci": "vitest --coverage"
+  },
+  "dependencies": {
+    "@saleor/apps-domain": "workspace:*",
+    "neverthrow": "catalog:",
+    "pg": "^8.13.1",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "^8.11.10",
+    "@vitest/coverage-v8": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

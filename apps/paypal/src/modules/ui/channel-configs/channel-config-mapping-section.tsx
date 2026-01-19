@@ -1,0 +1,126 @@
+import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
+import { Layout } from "@saleor/apps-ui";
+import { Skeleton, Text } from "@saleor/macaw-ui";
+import { useEffect, useState } from "react";
+
+import { trpcClient } from "@/modules/trpc/trpc-client";
+import { ChannelsConfigMapping } from "@/modules/ui/channel-configs/channels-config-mapping";
+
+export const ChannelConfigMappingSection = () => {
+  const allChannels = trpcClient.appConfig.fetchChannels.useQuery();
+  const allConfigs = trpcClient.appConfig.getPayPalConfigsList.useQuery();
+  const allMappings = trpcClient.appConfig.channelsConfigsMapping.useQuery();
+  const tenantConfig = trpcClient.appConfig.getTenantConfig.useQuery();
+  const allResults = [allChannels, allConfigs, allMappings, tenantConfig];
+
+  const { notifyError, notifySuccess } = useDashboardNotification();
+  const [softDescriptor, setSoftDescriptor] = useState("");
+
+  const mappingUpdate = trpcClient.appConfig.updateMapping.useMutation({
+    onSuccess() {
+      notifySuccess("Mapping updated");
+
+      return allMappings.refetch();
+    },
+    onError() {
+      notifyError("Error updating mapping", mappingUpdate.error?.message ?? "Unknown error");
+    },
+  });
+
+  const tenantConfigUpdate = trpcClient.appConfig.setTenantConfig.useMutation({
+    onSuccess() {
+      notifySuccess("Soft descriptor updated");
+
+      return tenantConfig.refetch();
+    },
+    onError() {
+      notifyError(
+        "Error updating soft descriptor",
+        tenantConfigUpdate.error?.message ?? "Unknown error",
+      );
+    },
+  });
+
+  useEffect(() => {
+    allResults.forEach((query) => query.refetch());
+  }, []);
+
+  useEffect(() => {
+    if (tenantConfig.data) {
+      setSoftDescriptor(tenantConfig.data.softDescriptor ?? "");
+    }
+  }, [tenantConfig.data]);
+
+  const errors = allResults.map((r) => r.error).filter(Boolean);
+  const anythingLoading = allResults.map((r) => r.isLoading).some(Boolean);
+
+  if (errors && errors.length > 0) {
+    // todo better ui
+
+    return <Text>Error fetching config: {errors[0]?.message || "Unknown error"}</Text>;
+  }
+
+  const channelsExist = allChannels.data && allChannels.data.length > 0;
+  const configsExist = allConfigs.data && allConfigs.data.length > 0;
+  const mappingExist = allMappings.data;
+
+  if (anythingLoading) {
+    return (
+      <Layout.AppSectionCard>
+        <Skeleton />
+      </Layout.AppSectionCard>
+    );
+  }
+
+  if (!channelsExist) {
+    return (
+      <Layout.AppSectionCard>
+        <Text as="h2" size={5} marginBottom={4}>
+          No channels found.
+        </Text>
+        <Text size={3} color="default2">
+          You must have at least one channel in your Saleor store.
+        </Text>
+      </Layout.AppSectionCard>
+    );
+  }
+
+  if (!configsExist) {
+    return (
+      <Layout.AppSectionCard>
+        <Text as="h2" size={5} marginBottom={4}>
+          No mappings found
+        </Text>
+        <Text size={3} color="default2">
+          Create your first PayPal configuration to get started.
+        </Text>
+      </Layout.AppSectionCard>
+    );
+  }
+
+  if (configsExist && channelsExist && mappingExist) {
+    return (
+      <ChannelsConfigMapping
+        isLoading={mappingUpdate.isLoading || tenantConfigUpdate.isLoading}
+        channels={allChannels.data}
+        configs={allConfigs.data}
+        mapping={allMappings.data}
+        softDescriptor={softDescriptor}
+        onSoftDescriptorChange={setSoftDescriptor}
+        onSoftDescriptorBlur={() => {
+          tenantConfigUpdate.mutate({
+            softDescriptor,
+          });
+        }}
+        onMappingChange={({ configId, channelId }) => {
+          mappingUpdate.mutate({
+            configId,
+            channelId,
+          });
+        }}
+      />
+    );
+  }
+
+  return null;
+};
