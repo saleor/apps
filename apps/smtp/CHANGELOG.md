@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 1.4.7
+
+### Patch Changes
+
+- 560c3de4: Added logging to DynamoDB APL for better debugging and error visibility.
+
 ## 1.4.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.3.12
+
+### Patch Changes
+
+- 560c3de4: Added logging to DynamoDB APL for better debugging and error visibility.
+
 ## 2.3.11
 
 ### Patch Changes
