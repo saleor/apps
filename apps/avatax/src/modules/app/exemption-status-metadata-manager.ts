@@ -10,38 +10,28 @@ import {
   UpdatePublicMetadataMutation,
   UpdatePublicMetadataMutationVariables,
 } from "../../../generated/graphql";
+import {
+  AVATAX_EXEMPTION_STATUS_METADATA_KEY,
+  AvataxExemptionStatusMetadata,
+} from "./avatax-exemption-status-metadata";
 
-const CHECKOUT_EXEMPTION_STATUS_KEY = "avataxExemptionStatus";
+export class ExemptionStatusMetadataManager {
+  private logger = createLogger("ExemptionStatusMetadataManager");
 
-export class CheckoutMetadataManager {
-  private logger = createLogger("CheckoutMetadataManager");
-
-  static BaseError = BaseError.subclass("CheckoutMetadataManagerError");
-  static MutationError = CheckoutMetadataManager.BaseError.subclass(
-    "CheckoutMetadataManagerMutationError",
+  static BaseError = BaseError.subclass("ExemptionStatusMetadataManagerError");
+  static MutationError = ExemptionStatusMetadataManager.BaseError.subclass(
+    "ExemptionStatusMetadataManagerMutationError",
   );
 
   constructor(private client: Client) {}
 
-  async updateCheckoutMetadataWithExemptionStatus(
-    checkoutId: string,
-    exemptionStatus: {
-      exemptAmountTotal: number;
-      entityUseCode?: string;
-      calculatedAt: Date;
-    },
-  ) {
-    const serializedExemptionStatus = {
-      ...exemptionStatus,
-      calculatedAt: exemptionStatus.calculatedAt.toISOString(),
-    };
-
+  async updateExemptionStatusMetadata(id: string, metadata: AvataxExemptionStatusMetadata) {
     const variables: UpdatePublicMetadataMutationVariables = {
-      id: checkoutId,
+      id,
       input: [
         {
-          key: CHECKOUT_EXEMPTION_STATUS_KEY,
-          value: JSON.stringify(serializedExemptionStatus),
+          key: AVATAX_EXEMPTION_STATUS_METADATA_KEY,
+          value: JSON.stringify(metadata),
         },
       ],
     };
@@ -55,7 +45,7 @@ export class CheckoutMetadataManager {
     const errorToReport = error ?? gqlErrors[0] ?? null;
 
     if (errorToReport) {
-      const error = new CheckoutMetadataManager.MutationError(
+      const error = new ExemptionStatusMetadataManager.MutationError(
         errorToReport.message ?? "Failed to update metadata",
         {
           props: {
@@ -68,7 +58,7 @@ export class CheckoutMetadataManager {
         error,
       });
 
-      throw new CheckoutMetadataManager.MutationError("Failed to update metadata", {
+      throw new ExemptionStatusMetadataManager.MutationError("Failed to update metadata", {
         props: { error },
       });
     }
@@ -76,10 +66,10 @@ export class CheckoutMetadataManager {
     return;
   }
 
-  async deleteCheckoutMetadataWithExemptionStatus(checkoutId: string) {
+  async deleteExemptionStatusMetadata(id: string) {
     const variables = {
-      id: checkoutId,
-      keys: [CHECKOUT_EXEMPTION_STATUS_KEY],
+      id,
+      keys: [AVATAX_EXEMPTION_STATUS_METADATA_KEY],
     };
 
     const { error, data } = await this.client
@@ -91,7 +81,7 @@ export class CheckoutMetadataManager {
     const errorToReport = error ?? gqlErrors[0] ?? null;
 
     if (errorToReport) {
-      const error = new CheckoutMetadataManager.MutationError(
+      const error = new ExemptionStatusMetadataManager.MutationError(
         errorToReport.message ?? "Failed to delete metadata",
         {
           props: {
@@ -104,7 +94,7 @@ export class CheckoutMetadataManager {
         error,
       });
 
-      throw new CheckoutMetadataManager.MutationError("Failed to delete metadata", {
+      throw new ExemptionStatusMetadataManager.MutationError("Failed to delete metadata", {
         props: { error },
       });
     }

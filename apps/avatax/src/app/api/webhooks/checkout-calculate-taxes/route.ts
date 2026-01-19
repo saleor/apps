@@ -16,7 +16,8 @@ import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
-import { CheckoutMetadataManager } from "@/modules/app/checkout-metadata-manager";
+import { buildExemptionStatusMetadataMutationPlan } from "@/modules/app/avatax-exemption-status-metadata";
+import { ExemptionStatusMetadataManager } from "@/modules/app/exemption-status-metadata-manager";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
@@ -145,34 +146,17 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     const currentExemptionStatus =
                       payload.taxBase.sourceObject.avataxExemptionStatus ?? null;
 
-                    const parsedCurrent = (() => {
-                      if (!currentExemptionStatus) {
-                        return null;
-                      }
+                    const plan = buildExemptionStatusMetadataMutationPlan({
+                      isExemptionApplied,
+                      currentMetadataValue: currentExemptionStatus,
+                      next: {
+                        exemptAmountTotal,
+                        entityUseCode,
+                        calculatedAt: new Date(),
+                      },
+                    });
 
-                      try {
-                        return JSON.parse(currentExemptionStatus) as {
-                          exemptAmountTotal?: unknown;
-                          entityUseCode?: unknown;
-                        };
-                      } catch {
-                        return null;
-                      }
-                    })();
-
-                    const shouldUpdate = isExemptionApplied
-                      ? !(
-                          typeof parsedCurrent?.exemptAmountTotal === "number" &&
-                          parsedCurrent.exemptAmountTotal === exemptAmountTotal &&
-                          (typeof parsedCurrent?.entityUseCode === "string"
-                            ? parsedCurrent.entityUseCode
-                            : undefined) === entityUseCode
-                        )
-                      : false;
-
-                    const shouldDelete = !isExemptionApplied && Boolean(currentExemptionStatus);
-
-                    if (!shouldUpdate && !shouldDelete) {
+                    if (plan.type === "none") {
                       return;
                     }
 
@@ -181,22 +165,17 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                       token: authData.token,
                     });
 
-                    const checkoutMetadataManager = new CheckoutMetadataManager(client);
+                    const metadataManager = new ExemptionStatusMetadataManager(client);
 
-                    const calculatedAt = new Date();
-
-                    const metadataPromise = shouldUpdate
-                      ? checkoutMetadataManager.updateCheckoutMetadataWithExemptionStatus(
-                          payload.taxBase.sourceObject.id,
-                          {
-                            exemptAmountTotal,
-                            entityUseCode,
-                            calculatedAt,
-                          },
-                        )
-                      : checkoutMetadataManager.deleteCheckoutMetadataWithExemptionStatus(
-                          payload.taxBase.sourceObject.id,
-                        );
+                    const metadataPromise =
+                      plan.type === "update"
+                        ? metadataManager.updateExemptionStatusMetadata(
+                            payload.taxBase.sourceObject.id,
+                            plan.value,
+                          )
+                        : metadataManager.deleteExemptionStatusMetadata(
+                            payload.taxBase.sourceObject.id,
+                          );
 
                     metadataPromise.catch((error) => {
                       captureException(error);

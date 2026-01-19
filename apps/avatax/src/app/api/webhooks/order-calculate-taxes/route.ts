@@ -5,15 +5,20 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException, setTag } from "@sentry/nextjs";
+import Decimal from "decimal.js-light";
+import { after } from "next/server";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
+import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
+import { buildExemptionStatusMetadataMutationPlan } from "@/modules/app/avatax-exemption-status-metadata";
+import { ExemptionStatusMetadataManager } from "@/modules/app/exemption-status-metadata-manager";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
@@ -99,7 +104,7 @@ async function calculateTaxes({
 
   const result = await calculateTaxesAdapter.send(avataxModel);
 
-  return result.response;
+  return result;
 }
 
 const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) => {
@@ -238,12 +243,75 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
           );
         }
 
-        const calculatedTaxes = await calculateTaxes({
+        const calculatedTaxesResult = await calculateTaxes({
           payload,
           avataxConfig: providerConfig.value.avataxConfig.config,
           authData: ctx.authData,
           discountStrategy,
         });
+
+        if (providerConfig.value.avataxConfig.config.isExemptionStatusPublicMetadataEnabled) {
+          try {
+            const exemptAmountTotalDecimal = new Decimal(
+              calculatedTaxesResult.transaction.totalExempt ?? 0,
+            );
+            const exemptAmountTotal = exemptAmountTotalDecimal.toNumber();
+            const entityUseCode =
+              calculatedTaxesResult.transaction.entityUseCode ??
+              calculatedTaxesResult.transaction.customerUsageType ??
+              undefined;
+
+            after(() => {
+              const isExemptionApplied = exemptAmountTotalDecimal.gt(0);
+              const currentExemptionStatus =
+                payload.taxBase.sourceObject.avataxExemptionStatus ?? null;
+
+              const plan = buildExemptionStatusMetadataMutationPlan({
+                isExemptionApplied,
+                currentMetadataValue: currentExemptionStatus,
+                next: {
+                  exemptAmountTotal,
+                  entityUseCode,
+                  calculatedAt: new Date(),
+                },
+              });
+
+              if (plan.type === "none") {
+                return;
+              }
+
+              const client = createInstrumentedGraphqlClient({
+                saleorApiUrl: ctx.authData.saleorApiUrl,
+                token: ctx.authData.token,
+              });
+
+              const metadataManager = new ExemptionStatusMetadataManager(client);
+
+              const metadataPromise =
+                plan.type === "update"
+                  ? metadataManager.updateExemptionStatusMetadata(orderId, plan.value)
+                  : metadataManager.deleteExemptionStatusMetadata(orderId);
+
+              metadataPromise.catch((error) => {
+                captureException(error);
+                logger.warn("Failed to update order exemption status metadata", {
+                  error:
+                    error instanceof Error
+                      ? { name: error.name, message: error.message }
+                      : { message: String(error) },
+                });
+              });
+            });
+          } catch (error) {
+            captureException(error);
+            logger.warn("Failed to compute order exemption status metadata", {
+              error:
+                error instanceof Error
+                  ? { name: error.name, message: error.message }
+                  : { message: String(error) },
+            });
+          }
+        }
 
         logger.info("Taxes calculated - returning response do Saleor");
 
@@ -251,7 +319,7 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
           sourceId: payload.taxBase.sourceObject.id,
           channelId: payload.taxBase.channel.id,
           sourceType: "order",
-          calculatedTaxesResult: calculatedTaxes,
+          calculatedTaxesResult: calculatedTaxesResult.response,
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
@@ -261,9 +329,12 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
           message: "Taxes calculated successfully",
         });
 
-        return Response.json(orderCalculateTaxesSyncWebhookReponse(calculatedTaxes), {
-          status: 200,
-        });
+        return Response.json(
+          orderCalculateTaxesSyncWebhookReponse(calculatedTaxesResult.response),
+          {
+            status: 200,
+          },
+        );
       } catch (error) {
         span.recordException(error as Error); // todo: remove casting when error handling is refactored
 
