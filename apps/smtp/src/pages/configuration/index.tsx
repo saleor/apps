@@ -4,6 +4,7 @@ import { NextPage } from "next";
 
 import { BasicLayout } from "../../components/basic-layout";
 import { SectionWithDescription } from "../../components/section-with-description";
+import { ConfigurationFallback } from "../../modules/app-configuration/ui/configuration-fallback";
 import {
   ConfigurationListItem,
   MessagingProvidersBox,
@@ -16,6 +17,8 @@ const ConfigurationPage: NextPage = () => {
 
   const { data: dataSmtp, isLoading: isLoadingSmtp } =
     trpcClient.smtpConfiguration.getConfigurations.useQuery();
+
+  const fallbackSettingsQuery = trpcClient.smtpConfiguration.getFallbackSmtpSettings.useQuery();
 
   const data: ConfigurationListItem[] = [
     ...(dataSmtp?.map((configuration) => ({
@@ -48,6 +51,22 @@ const ConfigurationPage: NextPage = () => {
         description={<Text>Manage configurations and modify it&apos;s message templates.</Text>}
       >
         <MessagingProvidersBox configurations={data || []} isLoading={isLoading} />
+      </SectionWithDescription>
+      <SectionWithDescription
+        title="Fallback behavior"
+        description={
+          <Text>
+            Configure how should app behave for events not covered by custom SMTP configuration
+          </Text>
+        }
+      >
+        <ConfigurationFallback
+          onChange={(newValue) => {
+            console.log(newValue);
+          }}
+          useSaleorSmtpFallback={fallbackSettingsQuery.data?.useSaleorSmtpFallback ?? true}
+          loading={fallbackSettingsQuery.isLoading}
+        />
       </SectionWithDescription>
     </BasicLayout>
   );

@@ -1,4 +1,4 @@
-import { SemanticChip } from "@saleor/apps-ui";
+import { SemanticChip, SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Button, Paragraph, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
@@ -61,8 +61,8 @@ export const MessagingProvidersBox = ({
 
   if (loading) {
     return (
-      <BoxWithBorder padding={7} display="grid" alignItems="center" justifyContent="center">
-        <Text>Loading</Text>
+      <BoxWithBorder padding={7}>
+        <SkeletonLayout.Section />
       </BoxWithBorder>
     );
   }

@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { fromThrowable } from "neverthrow";
 import { z } from "zod";
@@ -357,4 +358,19 @@ export const smtpConfigurationRouter = router({
         return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
+  getFallbackSmtpSettings: protectedWithConfigurationServices.query(async ({ ctx }) => {
+    return ctx.smtpConfigurationService.getConfigurationRoot().match(
+      (d) => ({
+        useSaleorSmtpFallback: d.useSaleorSmtpFallback,
+      }),
+      (e) => {
+        captureException(e);
+
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to fetch settings, please try again or contact Saleor support",
+        });
+      },
+    );
+  }),
 });
