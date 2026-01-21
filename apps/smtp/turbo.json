@@ -17,7 +17,12 @@
         "AWS_ACCESS_KEY_ID",
         "AWS_REGION",
         "AWS_SECRET_ACCESS_KEY",
-        "DYNAMODB_MAIN_TABLE_NAME"
+        "DYNAMODB_MAIN_TABLE_NAME",
+        "FALLBACK_SMTP_HOST",
+        "FALLBACK_SMTP_PORT",
+        "FALLBACK_SMTP_USER",
+        "FALLBACK_SMTP_PASSWORD",
+        "FALLBACK_SMTP_ENCRYPTION"
       ]
     }
   }
