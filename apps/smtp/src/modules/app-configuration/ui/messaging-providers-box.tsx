@@ -1,5 +1,5 @@
 import { SemanticChip } from "@saleor/apps-ui";
-import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Box, Button, Paragraph, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -16,8 +16,25 @@ const NoExistingConfigurations = () => {
   };
 
   return (
-    <BoxWithBorder padding={10} display="grid" alignItems="center" justifyContent="center">
-      <Button onClick={redirectToNewConfiguration}>Add first configuration</Button>
+    <BoxWithBorder
+      padding={10}
+      display="flex"
+      flexDirection="column"
+      alignItems="flex-start"
+      justifyContent="center"
+    >
+      <Paragraph marginBottom={2} color="accent1" fontWeight="bold">
+        Saleor Cloud SMTP enabled
+      </Paragraph>
+      <Paragraph marginBottom={4} color="default2">
+        App is using Saleor Cloud default email provider. Emails will be delivered via Saleor Cloud
+        sandbox free tier.
+        <br />
+        For production usage, configure your SMTP settings.
+      </Paragraph>
+      <Button __alignSelf="center" onClick={redirectToNewConfiguration}>
+        Add first configuration
+      </Button>
     </BoxWithBorder>
   );
 };
