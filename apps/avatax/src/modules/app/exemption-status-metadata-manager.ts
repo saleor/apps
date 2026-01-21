@@ -23,7 +23,7 @@ export class ExemptionStatusMetadataManager {
     "ExemptionStatusMetadataManagerMutationError",
   );
 
-  constructor(private client: Client) {}
+  constructor(private client: Pick<Client, "mutation">) {}
 
   async updateExemptionStatusMetadata(id: string, metadata: AvataxExemptionStatusMetadata) {
     const variables: UpdatePublicMetadataMutationVariables = {

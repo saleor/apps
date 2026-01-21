@@ -30,7 +30,7 @@ describe("ExemptionStatusMetadataManager", () => {
       };
     });
 
-    const manager = new ExemptionStatusMetadataManager(mockClient as Client);
+    const manager = new ExemptionStatusMetadataManager(mockClient);
 
     await manager.updateExemptionStatusMetadata("checkout-id", {
       exemptAmountTotal: 123,
@@ -75,7 +75,7 @@ describe("ExemptionStatusMetadataManager", () => {
       };
     });
 
-    const manager = new ExemptionStatusMetadataManager(mockClient as Client);
+    const manager = new ExemptionStatusMetadataManager(mockClient);
 
     await manager.deleteExemptionStatusMetadata("order-id");
 

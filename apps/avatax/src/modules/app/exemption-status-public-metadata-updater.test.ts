@@ -34,7 +34,7 @@ describe("updateExemptionStatusPublicMetadata", () => {
 
     await updateExemptionStatusPublicMetadata({
       id: "checkout-id",
-      client: client as Client,
+      client,
       isExemptionApplied: true,
       currentMetadataValue: null,
       next: {
@@ -86,7 +86,7 @@ describe("updateExemptionStatusPublicMetadata", () => {
 
     await updateExemptionStatusPublicMetadata({
       id: "order-id",
-      client: client as Client,
+      client,
       isExemptionApplied: false,
       currentMetadataValue: '{"exemptAmountTotal":10,"calculatedAt":"2025-01-01T00:00:00.000Z"}',
       next: {

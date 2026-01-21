@@ -11,7 +11,7 @@ type Params = {
   currentMetadataValue: string | null | undefined;
   isExemptionApplied: boolean;
   next: AvataxExemptionStatusMetadataInput;
-  client: Client;
+  client: Pick<Client, "mutation">;
   onError: (error: unknown) => void;
 };
 
