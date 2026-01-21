@@ -10,6 +10,7 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-initialize-session-event";
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import {
   createAtobaraiTransactionSuccessResponse,
   CreditCheckResult,
@@ -27,11 +28,7 @@ import {
 } from "@/modules/transaction-result/charge-result";
 import { TransactionRecordRepoError } from "@/modules/transactions-recording/types";
 
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  MalformedRequestResponse,
-} from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitializeSessionUseCaseResponse } from "./use-case-response";
 
@@ -227,7 +224,7 @@ describe("TransactionInitializeSessionUseCase", () => {
     expect(responseJson.data.errors[0].apiError).toBe("test-api-error");
   });
 
-  it("should return MalformedRequestResponse when event is missing issuedAt", async () => {
+  it("should return InvalidEventValidationError when event is missing issuedAt", async () => {
     const eventWithoutIssuedAt = {
       ...mockedTransactionInitializeSessionEvent,
       issuedAt: null,
@@ -249,7 +246,8 @@ describe("TransactionInitializeSessionUseCase", () => {
       event: eventWithoutIssuedAt,
     });
 
-    expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
+    // @ts-expect-error - we expect Failure response
+    expect(responsePayload._unsafeUnwrap().error).toBeInstanceOf(InvalidEventValidationError);
   });
 
   it("should return AppIsNotConfiguredResponse if config not found for specified channel", async () => {
@@ -333,6 +331,119 @@ describe("TransactionInitializeSessionUseCase", () => {
     });
 
     expect(responsePayload._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
+  });
+
+  it("should return Failure response with InvalidEventValidationError when billing address is empty", async () => {
+    const eventWithMissingBillingAddress = {
+      ...mockedTransactionInitializeSessionEvent,
+      sourceObject: {
+        ...mockedTransactionInitializeSessionEvent.sourceObject,
+        billingAddress: null,
+      },
+    };
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
+    );
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+      appTransactionRepo: new MockedTransactionRecordRepo(),
+    });
+
+    const responsePayload = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithMissingBillingAddress,
+    });
+
+    const response = responsePayload._unsafeUnwrap();
+
+    expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponse.Failure);
+    expect(response.transactionResult).toBeInstanceOf(ChargeFailureResult);
+
+    if (response instanceof TransactionInitializeSessionUseCaseResponse.Failure) {
+      expect(response.error).toBeInstanceOf(InvalidEventValidationError);
+      expect(response.error.message).toMatchInlineSnapshot(
+        `
+        "AtobaraiRegisterTransactionPayloadValidationError: AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer
+        AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer"
+      `,
+      );
+    }
+
+    expect(await response.getResponse().json()).toStrictEqual({
+      actions: [],
+      data: {
+        errors: [
+          {
+            code: "InvalidEventValidationError",
+            message:
+              "AtobaraiCustomerMissingDataError: Billing address is required to create AtobaraiCustomer",
+          },
+        ],
+      },
+      message: "Failed to register NP Atobarai transaction",
+      result: "CHARGE_FAILURE",
+    });
+  });
+
+  it("should return Failure response with InvalidEventValidationError when phone is missing", async () => {
+    const eventWithMissingPhone = {
+      ...mockedTransactionInitializeSessionEvent,
+      sourceObject: {
+        ...mockedTransactionInitializeSessionEvent.sourceObject,
+        billingAddress: {
+          ...mockedTransactionInitializeSessionEvent.sourceObject.billingAddress,
+          phone: null,
+        },
+      },
+    };
+
+    vi.spyOn(mockedAppConfigRepo, "getChannelConfig").mockImplementationOnce(() =>
+      ok(mockedAppChannelConfig),
+    );
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      atobaraiApiClientFactory,
+      appTransactionRepo: new MockedTransactionRecordRepo(),
+    });
+
+    const responsePayload = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithMissingPhone,
+    });
+
+    const response = responsePayload._unsafeUnwrap();
+
+    expect(response).toBeInstanceOf(TransactionInitializeSessionUseCaseResponse.Failure);
+
+    if (response instanceof TransactionInitializeSessionUseCaseResponse.Failure) {
+      expect(response.error).toBeInstanceOf(InvalidEventValidationError);
+      expect(response.error.message).toMatchInlineSnapshot(
+        `
+        "AtobaraiRegisterTransactionPayloadValidationError: AtobaraiCustomerMissingDataError: Phone number is required to create AtobaraiCustomer
+        AtobaraiCustomerMissingDataError: Phone number is required to create AtobaraiCustomer"
+      `,
+      );
+      expect(await response.getResponse().json()).toStrictEqual({
+        actions: [],
+        data: {
+          errors: [
+            {
+              code: "InvalidEventValidationError",
+              message:
+                "AtobaraiCustomerMissingDataError: Phone number is required to create AtobaraiCustomer",
+            },
+          ],
+        },
+        message: "Failed to register NP Atobarai transaction",
+        result: "CHARGE_FAILURE",
+      });
+    }
   });
 
   describe("Integration - Full HTTP Flow", () => {

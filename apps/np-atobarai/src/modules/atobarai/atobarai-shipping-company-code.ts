@@ -1,4 +1,7 @@
+import { BaseError } from "@saleor/errors";
 import { z } from "zod";
+
+import { zodReadableError } from "@/lib/zod-readable-error";
 
 export const SHIPPING_COMPANY_CODES = [
   ["50000", "Sagawa Express"],
@@ -27,7 +30,28 @@ const codes = [firstCode, ...restCodes] as const;
 
 export const AtobaraiShippingCompanyCodeSchema = z.enum(codes).brand("AtobaraiShippingCompanyCode");
 
-export const createAtobaraiShippingCompanyCode = (raw: string) =>
-  AtobaraiShippingCompanyCodeSchema.parse(raw);
+export const AtobaraiShippingCompanyCodeValidationError = BaseError.subclass(
+  "AtobaraiShippingCompanyCodeValidationError",
+  {
+    props: {
+      _brand: "AtobaraiShippingCompanyCodeValidationError" as const,
+    },
+  },
+);
+
+export const createAtobaraiShippingCompanyCode = (raw: string) => {
+  const parseResult = AtobaraiShippingCompanyCodeSchema.safeParse(raw);
+
+  if (!parseResult.success) {
+    const readableError = zodReadableError(parseResult.error);
+
+    throw new AtobaraiShippingCompanyCodeValidationError(
+      `Invalid shipping company code: ${readableError.message}`,
+      { cause: readableError },
+    );
+  }
+
+  return parseResult.data;
+};
 
 export type AtobaraiShippingCompanyCode = z.infer<typeof AtobaraiShippingCompanyCodeSchema>;

@@ -1,6 +1,6 @@
 import { SourceObjectFragment } from "@/generated/graphql";
 
-import { AtobaraiGoods, AtobaraiGoodsSchema } from "./atobarai-goods";
+import { AtobaraiGoods, createAtobaraiGoods } from "./atobarai-goods";
 import { AtobaraiLineCalculation } from "./atobarai-line-calculation";
 
 export class TransactionGoodBuilder {
@@ -22,6 +22,6 @@ export class TransactionGoodBuilder {
       sourceObject.shippingPrice.gross.amount,
     );
 
-    return AtobaraiGoodsSchema.parse([...productLines, voucherLine, shippingLine].filter(Boolean));
+    return createAtobaraiGoods([...productLines, voucherLine, shippingLine].filter(Boolean));
   }
 }

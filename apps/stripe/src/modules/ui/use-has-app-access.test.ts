@@ -35,6 +35,7 @@ describe("useHasAppAccess", () => {
         theme: "light",
         locale: "en",
         saleorApiUrl: "",
+        formContext: {},
       },
       appBridge: undefined,
     }));
@@ -57,6 +58,7 @@ describe("useHasAppAccess", () => {
         theme: "light",
         locale: "en",
         saleorApiUrl: "",
+        formContext: {},
       },
       appBridge: undefined,
     }));
@@ -79,6 +81,7 @@ describe("useHasAppAccess", () => {
         theme: "light",
         locale: "en",
         saleorApiUrl: "",
+        formContext: {},
       },
       appBridge: undefined,
     }));

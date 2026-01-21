@@ -6,25 +6,19 @@ import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
 import { BaseUseCase } from "../base-use-case";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  MalformedRequestResponse,
-} from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { RefundEventParser } from "./refund-event-parser";
 import { AfterFulfillmentRefundOrchestrator } from "./refund-orchestrator/after-fulfillment-refund-orchestrator";
 import { BeforeFulfillmentRefundOrchestrator } from "./refund-orchestrator/before-fulfillment-refund-orchestrator";
 import { TransactionRefundRequestedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
-  Result<
-    TransactionRefundRequestedUseCaseResponse,
-    AppIsNotConfiguredResponse | MalformedRequestResponse | BrokenAppResponse
-  >
+  Result<TransactionRefundRequestedUseCaseResponse, AppIsNotConfiguredResponse | BrokenAppResponse>
 >;
 
 export class TransactionRefundRequestedUseCase extends BaseUseCase {
@@ -68,7 +62,13 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
     const parsingResult = this.eventParser.parse(event);
 
     if (parsingResult.isErr()) {
-      return err(parsingResult.error);
+      return ok(
+        new TransactionRefundRequestedUseCaseResponse.Failure({
+          transactionResult: new RefundFailureResult({
+            reason: "missingData",
+          }),
+        }),
+      );
     }
     const parsedEvent = parsingResult.value;
 
@@ -117,7 +117,13 @@ export class TransactionRefundRequestedUseCase extends BaseUseCase {
     });
 
     if (refundResult.isErr()) {
-      return err(refundResult.error);
+      return ok(
+        new TransactionRefundRequestedUseCaseResponse.Failure({
+          transactionResult: new RefundFailureResult({
+            reason: "registerFailure",
+          }),
+        }),
+      );
     }
 
     return ok(refundResult.value);

@@ -29,7 +29,7 @@ describe("createAtobaraiFulfillmentReportPayload", () => {
     `);
   });
 
-  it("should throw ZodError when slip_no is more than 20 characters", () => {
+  it("should throw validation error when slip_no is more than 20 characters", () => {
     expect(() =>
       createAtobaraiFulfillmentReportPayload({
         trackingNumber: "more-then-20-characters",
@@ -37,7 +37,7 @@ describe("createAtobaraiFulfillmentReportPayload", () => {
         shippingCompanyCode: mockedAtobaraiShippingCompanyCode,
       }),
     ).toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
+      [AtobaraiFulfillmentReportPayloadValidationError: [
         {
           "code": "too_big",
           "maximum": 20,
@@ -51,11 +51,13 @@ describe("createAtobaraiFulfillmentReportPayload", () => {
             "slip_no"
           ]
         }
-      ]]
+      ]
+      ZodValidationError: Validation error: String must contain at most 20 character(s) at "transactions[0].slip_no"
+      Invalid fulfillment report payload: Validation error: String must contain at most 20 character(s) at "transactions[0].slip_no"]
     `);
   });
 
-  it("should throw ZodError when slip_no is empty", () => {
+  it("should throw validation error when slip_no is empty", () => {
     expect(() =>
       createAtobaraiFulfillmentReportPayload({
         trackingNumber: "",
@@ -63,7 +65,7 @@ describe("createAtobaraiFulfillmentReportPayload", () => {
         shippingCompanyCode: mockedAtobaraiShippingCompanyCode,
       }),
     ).toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
+      [AtobaraiFulfillmentReportPayloadValidationError: [
         {
           "code": "too_small",
           "minimum": 1,
@@ -77,7 +79,9 @@ describe("createAtobaraiFulfillmentReportPayload", () => {
             "slip_no"
           ]
         }
-      ]]
+      ]
+      ZodValidationError: Validation error: String must contain at least 1 character(s) at "transactions[0].slip_no"
+      Invalid fulfillment report payload: Validation error: String must contain at least 1 character(s) at "transactions[0].slip_no"]
     `);
   });
 

@@ -1,8 +1,8 @@
 import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
-import { BaseError } from "@saleor/errors";
-import { err, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok, Result } from "neverthrow";
 import { Client } from "urql";
 
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
@@ -10,6 +10,7 @@ import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/a
 import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import {
   AtobaraiShippingCompanyCode,
+  AtobaraiShippingCompanyCodeValidationError,
   createAtobaraiShippingCompanyCode,
 } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
@@ -18,17 +19,13 @@ import { TransactionRecord } from "@/modules/transactions-recording/transaction-
 import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
 import { BaseUseCase } from "../base-use-case";
-import {
-  AppIsNotConfiguredResponse,
-  BrokenAppResponse,
-  MalformedRequestResponse,
-} from "../saleor-webhook-responses";
+import { AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<
   Result<
     FulfillmentTrackingNumberUpdatedUseCaseResponse,
-    AppIsNotConfiguredResponse | MalformedRequestResponse | BrokenAppResponse
+    AppIsNotConfiguredResponse | BrokenAppResponse
   >
 >;
 
@@ -68,9 +65,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         },
       });
 
-      return err(
-        new MalformedRequestResponse(new BaseError("Fulfillment tracking number is missing")),
-      );
+      return err(new InvalidEventValidationError("Fulfillment tracking number is missing"));
     }
 
     if (!event.order?.transactions?.length) {
@@ -80,7 +75,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         },
       });
 
-      return err(new MalformedRequestResponse(new BaseError("Order transactions are missing")));
+      return err(new InvalidEventValidationError("Order transactions are missing"));
     }
 
     if (event.order.transactions.length > 1) {
@@ -89,9 +84,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         event: { orderId: event.order.id },
       });
 
-      return err(
-        new MalformedRequestResponse(new BaseError("Multiple transactions found for the order")),
-      );
+      return err(new InvalidEventValidationError("Multiple transactions found for the order"));
     }
 
     const transaction = event.order.transactions[0];
@@ -105,9 +98,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
         },
       });
 
-      return err(
-        new MalformedRequestResponse(new BaseError("Transaction was not created by the app")),
-      );
+      return err(new InvalidEventValidationError("Transaction was not created by the app"));
     }
 
     if (transaction.createdBy.id !== appId) {
@@ -121,8 +112,8 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       });
 
       return err(
-        new MalformedRequestResponse(
-          new BaseError("Transaction was not created by the current app installation"),
+        new InvalidEventValidationError(
+          "Transaction was not created by the current app installation",
         ),
       );
     }
@@ -137,16 +128,22 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
 
   private resolveAtobaraiPDCompanyCodeFromMetadata(
     event: FulfillmentTrackingNumberUpdatedEventFragment,
-  ): AtobaraiShippingCompanyCode | null {
+  ): Result<
+    AtobaraiShippingCompanyCode | null,
+    InstanceType<typeof AtobaraiShippingCompanyCodeValidationError>
+  > {
     if (event.fulfillment?.atobaraiPDCompanyCode) {
       this.logger.info("Using Atobarai PD company code from private metadata", {
         atobaraiPDCompanyCode: event.fulfillment.atobaraiPDCompanyCode,
       });
 
-      return createAtobaraiShippingCompanyCode(event.fulfillment.atobaraiPDCompanyCode);
+      return fromThrowable(
+        createAtobaraiShippingCompanyCode,
+        AtobaraiShippingCompanyCodeValidationError.normalize,
+      )(event.fulfillment.atobaraiPDCompanyCode);
     }
 
-    return null;
+    return ok(null);
   }
 
   async execute(params: {
@@ -160,7 +157,16 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     const parsingResult = this.parseEvent({ event, appId });
 
     if (parsingResult.isErr()) {
-      return err(parsingResult.error);
+      return ok(
+        new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
+          new InvalidEventValidationError("Failed to parse Saleor event", {
+            cause: parsingResult.error,
+            props: {
+              publicMessage: parsingResult.error.message,
+            },
+          }),
+        ),
+      );
     }
 
     const { orderId, channelId, pspReference, trackingNumber } = parsingResult.value;
@@ -182,14 +188,27 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
       atobaraiEnvironment: atobaraiConfigResult.value.useSandbox ? "sandbox" : "production",
     });
 
-    const metadataShippingCompanyCode = this.resolveAtobaraiPDCompanyCodeFromMetadata(event);
+    const metadataShippingCompanyCodeResult = this.resolveAtobaraiPDCompanyCodeFromMetadata(event);
+
+    if (metadataShippingCompanyCodeResult.isErr()) {
+      return ok(
+        new FulfillmentTrackingNumberUpdatedUseCaseResponse.Failure(
+          new InvalidEventValidationError(metadataShippingCompanyCodeResult.error.message, {
+            cause: metadataShippingCompanyCodeResult.error,
+            props: {
+              publicMessage: metadataShippingCompanyCodeResult.error.message,
+            },
+          }),
+        ),
+      );
+    }
 
     const reportFulfillmentResult = await apiClient.reportFulfillment(
       createAtobaraiFulfillmentReportPayload({
         trackingNumber,
         atobaraiTransactionId: createAtobaraiTransactionId(pspReference),
         shippingCompanyCode:
-          metadataShippingCompanyCode || atobaraiConfigResult.value.shippingCompanyCode,
+          metadataShippingCompanyCodeResult.value || atobaraiConfigResult.value.shippingCompanyCode,
       }),
       {
         rejectMultipleResults: true,
@@ -229,7 +248,7 @@ export class FulfillmentTrackingNumberUpdatedUseCase extends BaseUseCase {
     const appTransaction = new TransactionRecord({
       atobaraiTransactionId,
       saleorTrackingNumber: trackingNumber,
-      fulfillmentMetadataShippingCompanyCode: metadataShippingCompanyCode,
+      fulfillmentMetadataShippingCompanyCode: metadataShippingCompanyCodeResult.value,
     });
 
     const updateTransactionResult = await this.transactionRecordRepo.updateTransaction(

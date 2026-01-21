@@ -1,7 +1,5 @@
 import { attachLoggerConsoleTransport, rootLogger } from "@saleor/apps-logger";
 
-import packageJson from "../../package.json";
-
 rootLogger.settings.maskValuesOfKeys = ["token", "secretKey"];
 
 if (process.env.NODE_ENV !== "production") {
@@ -9,21 +7,24 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 if (typeof window === "undefined") {
-  // Don't remove require - it's necessary for proper logger initialization
-  const {
-    attachLoggerSentryTransport,
-    attachLoggerVercelRuntimeTransport,
-  } = require("@saleor/apps-logger/node");
+  /**
+   * Dynamic imports to prevent node-specific code from being bundled for the browser
+   */
+  Promise.all([
+    import("@saleor/apps-logger/node"),
+    import("../../package.json"),
+    import("./logger-context"),
+  ]).then(([transports, packageJson, loggerContextModule]) => {
+    transports.attachLoggerSentryTransport(rootLogger);
 
-  attachLoggerSentryTransport(rootLogger);
-
-  if (process.env.NODE_ENV === "production") {
-    attachLoggerVercelRuntimeTransport(
-      rootLogger,
-      packageJson.version,
-      require("./logger-context").loggerContext,
-    );
-  }
+    if (process.env.NODE_ENV === "production") {
+      transports.attachLoggerVercelRuntimeTransport(
+        rootLogger,
+        packageJson.default.version,
+        loggerContextModule.loggerContext,
+      );
+    }
+  });
 }
 
 export const createLogger = (name: string, params?: Record<string, unknown>) =>

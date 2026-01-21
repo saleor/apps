@@ -1,13 +1,13 @@
 import { BaseError } from "@saleor/errors";
 import { Result } from "neverthrow";
 
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { IAtobaraiApiClient } from "@/modules/atobarai/api/types";
 import { AtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
-import { MalformedRequestResponse } from "../../saleor-webhook-responses";
 import { ParsedRefundEvent } from "../refund-event-parser";
 import {
   AfterFulfillmentFullRefundStrategy,
@@ -80,7 +80,12 @@ export class AfterFulfillmentRefundOrchestrator extends BaseRefundOrchestrator {
     atobaraiTransactionId: AtobaraiTransactionId;
     apiClient: IAtobaraiApiClient;
     transactionRecord: TransactionRecord;
-  }): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  }): Promise<
+    Result<
+      TransactionRefundRequestedUseCaseResponse,
+      InstanceType<typeof InvalidEventValidationError>
+    >
+  > {
     const trackingNumber = transactionRecord.saleorTrackingNumber;
 
     if (!trackingNumber) {

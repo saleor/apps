@@ -1,5 +1,17 @@
 # saleor-app-smtp
 
+## 1.4.7
+
+### Patch Changes
+
+- 560c3de4: Added logging to DynamoDB APL for better debugging and error visibility.
+
+## 1.4.6
+
+### Patch Changes
+
+- 2a4f27ad: Fixed how AWS sdk is initialized by explicitly passing credentials. This is caused by Vercel issue, which started to implicitly override some of our credentials by injecting their own.
+
 ## 1.4.5
 
 ### Patch Changes

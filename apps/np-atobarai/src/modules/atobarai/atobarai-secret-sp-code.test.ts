@@ -9,9 +9,10 @@ describe("createAtobaraiSecretSpCode", () => {
     expect(result).toBe("SP_CODE");
   });
 
-  it("should throw ZodError when input is an empty string", () => {
-    expect(() => createAtobaraiSecretSpCode("")).toThrowErrorMatchingInlineSnapshot(`
-      [ZodError: [
+  it("should throw validation error when input is an empty string", () => {
+    expect(() => createAtobaraiSecretSpCode("")).toThrowErrorMatchingInlineSnapshot(
+      `
+      [AtobaraiSecretSpCodeValidationError: [
         {
           "code": "too_small",
           "minimum": 1,
@@ -21,8 +22,11 @@ describe("createAtobaraiSecretSpCode", () => {
           "message": "String must contain at least 1 character(s)",
           "path": []
         }
-      ]]
-    `);
+      ]
+      ZodValidationError: Validation error: String must contain at least 1 character(s)
+      Invalid secret SP code: Validation error: String must contain at least 1 character(s)]
+    `,
+    );
   });
 
   it("shouldn't be assignable without createAtobaraiSecretSpCode", () => {

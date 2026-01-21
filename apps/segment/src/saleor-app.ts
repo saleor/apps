@@ -8,6 +8,9 @@ import { segmentMainTable } from "@/modules/db/segment-main-table";
 
 import { env } from "./env";
 import { BaseError } from "./errors";
+import { createLogger } from "./logger";
+
+const logger = createLogger("saleor-app");
 
 export let apl: APL;
 
@@ -17,6 +20,13 @@ switch (env.APL) {
   case "dynamodb": {
     apl = DynamoAPL.create({
       table: segmentMainTable,
+      externalLogger: (message, level) => {
+        if (level === "error") {
+          logger.error(`[DynamoAPL] ${message}`);
+        } else {
+          logger.debug(`[DynamoAPL] ${message}`);
+        }
+      },
     });
     break;
   }

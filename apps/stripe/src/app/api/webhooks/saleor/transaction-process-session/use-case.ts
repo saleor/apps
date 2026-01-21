@@ -145,7 +145,7 @@ export class TransactionProcessSessionUseCase {
     if (getPaymentIntentResult.isErr()) {
       const error = mapStripeErrorToApiError(getPaymentIntentResult.error);
 
-      this.logger.error("Failed to get payment intent", {
+      this.logger.warn("Failed to get payment intent", {
         error,
       });
 

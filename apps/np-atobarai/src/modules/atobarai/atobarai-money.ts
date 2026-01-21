@@ -1,6 +1,8 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
+import { zodReadableError } from "@/lib/zod-readable-error";
+
 const schema = z
   .object({
     amount: z.number().int().positive(),
@@ -18,10 +20,11 @@ export const createAtobaraiMoney = (raw: { amount: number; currency: string }) =
   const parseResult = schema.safeParse(raw);
 
   if (!parseResult.success) {
-    throw new AtobaraiMoneyValidationError(
-      `Invalid money data: ${parseResult.error.errors.map((e) => e.message).join(", ")}`,
-      { cause: parseResult.error },
-    );
+    const readableError = zodReadableError(parseResult.error);
+
+    throw new AtobaraiMoneyValidationError(`Invalid money data: ${readableError.message}`, {
+      cause: readableError,
+    });
   }
 
   return parseResult.data;

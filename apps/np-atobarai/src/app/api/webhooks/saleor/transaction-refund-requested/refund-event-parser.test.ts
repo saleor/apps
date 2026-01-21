@@ -38,13 +38,9 @@ describe("RefundEventParser", () => {
 
       const result = parser.parse(invalidEvent);
 
-      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        MalformedRequestResponse {
-          "error": [BaseError: Refund amount is required],
-          "message": "Malformed request",
-          "statusCode": 202,
-        }
-      `);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[InvalidEventValidationError: Refund amount is required]`,
+      );
     });
 
     it("should return error when PSP reference is empty", () => {
@@ -58,13 +54,9 @@ describe("RefundEventParser", () => {
 
       const result = parser.parse(invalidEvent);
 
-      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        MalformedRequestResponse {
-          "error": [BaseError: PSP reference is required],
-          "message": "Malformed request",
-          "statusCode": 202,
-        }
-      `);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[InvalidEventValidationError: PSP reference is required]`,
+      );
     });
 
     it("should return error when transaction token is empty", () => {
@@ -78,13 +70,9 @@ describe("RefundEventParser", () => {
 
       const result = parser.parse(invalidEvent);
 
-      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        MalformedRequestResponse {
-          "error": [BaseError: Transaction token is required],
-          "message": "Malformed request",
-          "statusCode": 202,
-        }
-      `);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[InvalidEventValidationError: Transaction token is required]`,
+      );
     });
 
     it("should return error when issued at date is missing", () => {
@@ -95,13 +83,9 @@ describe("RefundEventParser", () => {
 
       const result = parser.parse(invalidEvent);
 
-      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
-        MalformedRequestResponse {
-          "error": [BaseError: Issued at date is required],
-          "message": "Malformed request",
-          "statusCode": 202,
-        }
-      `);
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[InvalidEventValidationError: Issued at date is required]`,
+      );
     });
   });
 });

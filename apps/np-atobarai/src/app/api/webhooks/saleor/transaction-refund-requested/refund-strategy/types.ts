@@ -1,11 +1,11 @@
 import { Result } from "neverthrow";
 
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import { AppChannelConfig } from "@/modules/app-config/app-config";
 import { IAtobaraiApiClient } from "@/modules/atobarai/api/types";
 import { AtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 
-import { MalformedRequestResponse } from "../../saleor-webhook-responses";
 import { ParsedRefundEvent } from "../refund-event-parser";
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
 
@@ -28,11 +28,21 @@ export interface AfterFulfillmentRefundContext {
 export interface BeforeFulfillmentRefundStrategy {
   execute(
     context: BeforeFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>>;
+  ): Promise<
+    Result<
+      TransactionRefundRequestedUseCaseResponse,
+      InstanceType<typeof InvalidEventValidationError>
+    >
+  >;
 }
 
 export interface AfterFulfillmentRefundStrategy {
   execute(
     context: AfterFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>>;
+  ): Promise<
+    Result<
+      TransactionRefundRequestedUseCaseResponse,
+      InstanceType<typeof InvalidEventValidationError>
+    >
+  >;
 }

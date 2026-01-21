@@ -1,6 +1,7 @@
 import { BaseError } from "@saleor/errors";
 import { err, ok, Result } from "neverthrow";
 
+import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import { createLogger } from "@/lib/logger";
 import { createAtobaraiCancelTransactionPayload } from "@/modules/atobarai/api/atobarai-cancel-transaction-payload";
 import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
@@ -25,7 +26,6 @@ import {
   RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 
-import { MalformedRequestResponse } from "../../saleor-webhook-responses";
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
 import { AfterFulfillmentRefundContext, AfterFulfillmentRefundStrategy } from "./types";
 
@@ -37,7 +37,12 @@ export class AfterFulfillmentFullRefundStrategy implements AfterFulfillmentRefun
 
   async execute(
     context: AfterFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  ): Promise<
+    Result<
+      TransactionRefundRequestedUseCaseResponse,
+      InstanceType<typeof InvalidEventValidationError>
+    >
+  > {
     const { atobaraiTransactionId, apiClient } = context;
 
     const payload = createAtobaraiCancelTransactionPayload({
@@ -85,7 +90,12 @@ export class AfterFulfillmentPartialRefundWithLineItemsStrategy
 
   async execute(
     context: AfterFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  ): Promise<
+    Result<
+      TransactionRefundRequestedUseCaseResponse,
+      InstanceType<typeof InvalidEventValidationError>
+    >
+  > {
     const {
       parsedEvent,
       appConfig,
@@ -234,7 +244,12 @@ export class AfterFulfillmentPartialRefundWithoutLineItemsStrategy
 
   async execute(
     context: AfterFulfillmentRefundContext,
-  ): Promise<Result<TransactionRefundRequestedUseCaseResponse, MalformedRequestResponse>> {
+  ): Promise<
+    Result<
+      TransactionRefundRequestedUseCaseResponse,
+      InstanceType<typeof InvalidEventValidationError>
+    >
+  > {
     const {
       parsedEvent,
       appConfig,
