@@ -5,15 +5,16 @@ import { BoxWithBorder } from "../../../components/box-with-border";
 import { defaultPadding } from "../../../components/ui-defaults";
 
 export const ConfigurationFallback = (props: {
-  useSaleorSmtpFallback: boolean;
+  useSaleorSmtpFallback: boolean | undefined;
   loading: boolean;
+  saving: boolean;
   onChange: (value: boolean) => void;
 }) => {
-  if (props.loading) {
+  if (props.loading || props.useSaleorSmtpFallback === undefined) {
     return (
       <BoxWithBorder>
         <Box padding={defaultPadding}>
-          <SkeletonLayout.Section/>
+          <SkeletonLayout.Section />
         </Box>
       </BoxWithBorder>
     );
@@ -23,6 +24,7 @@ export const ConfigurationFallback = (props: {
     <BoxWithBorder>
       <Box padding={defaultPadding}>
         <Checkbox
+          disabled={props.saving}
           checked={props.useSaleorSmtpFallback}
           onCheckedChange={(v) => {
             props.onChange(v as boolean);

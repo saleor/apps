@@ -360,17 +360,26 @@ export const smtpConfigurationRouter = router({
     }),
   getFallbackSmtpSettings: protectedWithConfigurationServices.query(async ({ ctx }) => {
     return ctx.smtpConfigurationService.getConfigurationRoot().match(
-      (d) => ({
-        useSaleorSmtpFallback: d.useSaleorSmtpFallback,
+      (v) => ({
+        useSaleorSmtpFallback: v.useSaleorSmtpFallback,
       }),
-      (e) => {
-        captureException(e);
-
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch settings, please try again or contact Saleor support",
-        });
-      },
+      (e) => throwTrpcErrorFromConfigurationServiceError(e),
     );
   }),
+  updateFallbackSmtpSettings: protectedWithConfigurationServices
+    .input(
+      z.object({
+        useSaleorSmtpFallback: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.smtpConfigurationService
+        .updateFallbackSmtpSettings({
+          useSaleorSmtpFallback: input.useSaleorSmtpFallback,
+        })
+        .match(
+          (v) => v,
+          (e) => throwTrpcErrorFromConfigurationServiceError(e),
+        );
+    }),
 });

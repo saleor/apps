@@ -379,4 +379,15 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
       });
     });
   }
+
+  updateFallbackSmtpSettings({ useSaleorSmtpFallback }: { useSaleorSmtpFallback: boolean }) {
+    return this.getConfigurationRoot().andThen((d) => {
+      const newSettings = {
+        ...d,
+        useSaleorSmtpFallback,
+      };
+
+      return this.setConfigurationRoot(newSettings);
+    });
+  }
 }
