@@ -3,6 +3,14 @@ import { AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import packageJson from "../../../package.json";
+import { giftCardSentWebhook } from "./webhooks/gift-card-sent";
+import { invoiceSentWebhook } from "./webhooks/invoice-sent";
+import { notifyWebhook } from "./webhooks/notify";
+import { orderCancelledWebhook } from "./webhooks/order-cancelled";
+import { orderConfirmedWebhook } from "./webhooks/order-confirmed";
+import { orderFulfilledWebhook } from "./webhooks/order-fulfilled";
+import { orderFullyPaidWebhook } from "./webhooks/order-fully-paid";
+import { orderRefundedWebhook } from "./webhooks/order-refunded";
 
 export default withSpanAttributes(
   createManifestHandler({
@@ -35,6 +43,19 @@ export default withSpanAttributes(
         supportUrl: "https://github.com/saleor/apps/discussions",
         tokenTargetUrl: `${apiBaseURL}/api/register`,
         version: packageJson.version,
+        webhooks: [
+          giftCardSentWebhook,
+          invoiceSentWebhook,
+          orderCancelledWebhook,
+          orderConfirmedWebhook,
+          orderFulfilledWebhook,
+          orderFullyPaidWebhook,
+          orderRefundedWebhook,
+          /**
+           * Legacy webhook with e.g. customer-related events. Should be replaced with modern webhooks.
+           */
+          notifyWebhook,
+        ].map((w) => w.getWebhookManifest(apiBaseURL)),
       };
 
       return manifest;
