@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.3.2
+
+### Patch Changes
+
+- 9c46f935: Changed refund logic that improperly matched refunds - now it uses transaction total instead order total to decide if refund is full
+
 ## 1.3.1
 
 ### Patch Changes
