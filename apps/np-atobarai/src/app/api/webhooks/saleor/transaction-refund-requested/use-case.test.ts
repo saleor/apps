@@ -10,6 +10,7 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedRefundRequestedEvent } from "@/__tests__/mocks/saleor-events/mocked-refund-requested-event";
+import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 import { createAtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
 import { createAtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import { createAtobaraiTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-transaction-success-response";
@@ -94,13 +95,15 @@ describe("TransactionRefundRequestedUseCase", () => {
     );
   });
 
-  it("should return REFUND_FAILURE when total amount is missing from both checkout and order", async () => {
-    const event = {
+  it("should return REFUND_FAILURE when transaction total amount is missing from both checkout and order", async () => {
+    const event: TransactionRefundRequestedEventFragment = {
       ...mockedRefundRequestedEvent,
       transaction: {
         ...mockedRefundRequestedEvent.transaction,
         pspReference: mockedAtobaraiTransactionId,
         token: "saleor-transaction-token",
+        // @ts-expect-error - for testing
+        chargedAmount: null,
       },
     };
 
