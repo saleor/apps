@@ -11,7 +11,10 @@ import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response"
 
 export abstract class BaseRefundOrchestrator {
   isFullRefundStrategy(parsedEvent: ParsedRefundEvent): boolean {
-    return parsedEvent.refundedAmount === parsedEvent.sourceObjectTotalAmount;
+    /**
+     * Compare against transaction, not entire order, because there may have been other payment transactions, like gift cards.
+     */
+    return parsedEvent.refundedAmount === parsedEvent.transactionTotalCharged;
   }
 
   isPartialRefundWithLineItemsStrategy(parsedEvent: ParsedRefundEvent): boolean {

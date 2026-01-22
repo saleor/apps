@@ -26,6 +26,7 @@ describe("RefundEventParser", () => {
         sourceObject: mockedRefundRequestedEvent.transaction?.order,
         grantedRefund: mockedRefundRequestedEvent.grantedRefund,
         currency: mockedRefundRequestedEvent.action.currency,
+        transactionTotalCharged: mockedRefundRequestedEvent.transaction?.chargedAmount.amount,
       });
     });
 
@@ -85,6 +86,25 @@ describe("RefundEventParser", () => {
 
       expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
         `[InvalidEventValidationError: Issued at date is required]`,
+      );
+    });
+
+    it("should return error when transaction charged amount is missing", () => {
+      const invalidEvent: TransactionRefundRequestedEventFragment = {
+        ...mockedRefundRequestedEvent,
+        transaction: {
+          ...mockedRefundRequestedEvent.transaction,
+          chargedAmount: {
+            // @ts-expect-error - testing invalid input
+            amount: null,
+          },
+        },
+      };
+
+      const result = parser.parse(invalidEvent);
+
+      expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(
+        `[InvalidEventValidationError: Transaction charged amount is required]`,
       );
     });
   });
