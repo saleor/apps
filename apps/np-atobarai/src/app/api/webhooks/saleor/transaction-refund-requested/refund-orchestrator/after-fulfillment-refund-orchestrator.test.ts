@@ -33,6 +33,7 @@ describe("AfterFulfillmentRefundOrchestrator", () => {
     sourceObject: mockedSourceObject,
     grantedRefund: null,
     currency: "JPY",
+    transactionTotalCharged: 2000,
   } satisfies ParsedRefundEvent;
 
   beforeEach(() => {
@@ -71,8 +72,9 @@ describe("AfterFulfillmentRefundOrchestrator", () => {
       it("should execute afterFulfillmentFullRefundStrategy for full refund", async () => {
         const fullRefundEvent = {
           ...mockParsedEvent,
-          refundedAmount: 2000, // Same as total
+          refundedAmount: 2000, // Same as transaction charged amount
           sourceObjectTotalAmount: 2000,
+          transactionTotalCharged: 2000,
           grantedRefund: null,
         };
 
@@ -296,11 +298,54 @@ describe("AfterFulfillmentRefundOrchestrator", () => {
         expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundSuccessResult);
       });
 
+      it("should execute partial refund strategy when order total differs from transaction charged (e.g., gift card used)", async () => {
+        /**
+         * Scenario: Order total is 2000 JPY, but only 1500 JPY was charged to this payment method
+         * (500 JPY was paid via gift card). Refunding the full 1500 JPY should be treated as
+         * full refund for this transaction.
+         */
+        const multiPaymentFullRefundEvent = {
+          ...mockParsedEvent,
+          refundedAmount: 1500, // Full refund of what was charged
+          sourceObjectTotalAmount: 2000, // Total order amount
+          transactionTotalCharged: 1500, // Only this much was charged to this payment
+          grantedRefund: null,
+        };
+
+        const cancelSpy = vi
+          .spyOn(mockedAtobaraiApiClient, "cancelTransaction")
+          .mockResolvedValueOnce(
+            ok(
+              createAtobaraiCancelTransactionSuccessResponse({
+                results: [
+                  {
+                    np_transaction_id: mockedAtobaraiTransactionId,
+                  },
+                ],
+              }),
+            ),
+          );
+
+        const result = await orchestrator.processRefund({
+          ...baseParams,
+          parsedEvent: multiPaymentFullRefundEvent,
+          transactionRecord: transactionRecordAfterFulfillment,
+        });
+
+        // Should trigger full refund strategy (cancel) because refundedAmount equals transactionTotalCharged
+        expect(cancelSpy).toHaveBeenCalledTimes(1);
+        expect(result._unsafeUnwrap()).toBeInstanceOf(
+          TransactionRefundRequestedUseCaseResponse.Success,
+        );
+        expect(result._unsafeUnwrap().transactionResult).toBeInstanceOf(RefundSuccessResult);
+      });
+
       it("should return failure when strategy execution fails", async () => {
         const fullRefundEvent = {
           ...mockParsedEvent,
           refundedAmount: 2000,
           sourceObjectTotalAmount: 2000,
+          transactionTotalCharged: 2000,
           grantedRefund: null,
         };
 

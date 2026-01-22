@@ -17,6 +17,7 @@ export interface ParsedRefundEvent {
   sourceObject: SourceObjectFragment;
   grantedRefund: OrderGrantedRefundFragment | null | undefined;
   currency: string;
+  transactionTotalCharged: number;
 }
 
 export class RefundEventParser {
@@ -102,6 +103,16 @@ export class RefundEventParser {
       );
     }
 
+    if (!event.transaction.chargedAmount?.amount) {
+      return err(
+        new InvalidEventValidationError("Transaction charged amount is required", {
+          props: {
+            publicMessage: "Transaction charged amount is required",
+          },
+        }),
+      );
+    }
+
     return ok({
       refundedAmount: event.action.amount,
       channelId,
@@ -112,6 +123,7 @@ export class RefundEventParser {
       sourceObject: sourceObject as SourceObjectFragment,
       grantedRefund: event.grantedRefund,
       currency: event.action.currency,
+      transactionTotalCharged: event.transaction.chargedAmount.amount,
     });
   }
 }
