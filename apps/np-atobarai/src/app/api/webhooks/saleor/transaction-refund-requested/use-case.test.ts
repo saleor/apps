@@ -98,6 +98,7 @@ describe("TransactionRefundRequestedUseCase", () => {
     const event = {
       ...mockedRefundRequestedEvent,
       transaction: {
+        ...mockedRefundRequestedEvent.transaction,
         pspReference: mockedAtobaraiTransactionId,
         token: "saleor-transaction-token",
       },

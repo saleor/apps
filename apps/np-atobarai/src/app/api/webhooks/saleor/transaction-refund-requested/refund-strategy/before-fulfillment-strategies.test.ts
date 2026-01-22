@@ -32,6 +32,7 @@ const baseContext = {
     sourceObject: mockedSourceObject,
     grantedRefund: null,
     currency: "JPY",
+    transactionTotalCharged: 200,
   },
   appConfig: mockedAppChannelConfig,
   atobaraiTransactionId: mockedAtobaraiTransactionId,
