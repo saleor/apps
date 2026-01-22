@@ -1,4 +1,3 @@
-import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { fromThrowable } from "neverthrow";
 import { z } from "zod";
@@ -131,7 +130,6 @@ export const smtpConfigurationRouter = router({
       );
     }),
   deleteConfiguration: protectedWithConfigurationServices
-    .meta({ updateWebhooks: true })
     .input(smtpConfigurationIdInputSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -243,7 +241,6 @@ export const smtpConfigurationRouter = router({
     }),
 
   updateBasicInformation: protectedWithConfigurationServices
-    .meta({ updateWebhooks: true })
     .input(smtpUpdateBasicInformationSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -257,7 +254,6 @@ export const smtpConfigurationRouter = router({
     }),
 
   updateSmtp: protectedWithConfigurationServices
-    .meta({ updateWebhooks: true })
     .input(smtpUpdateSmtpSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -306,7 +302,6 @@ export const smtpConfigurationRouter = router({
     }),
 
   updateEvent: protectedWithConfigurationServices
-    .meta({ updateWebhooks: true })
     .input(smtpUpdateEventSchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
@@ -327,7 +322,6 @@ export const smtpConfigurationRouter = router({
         );
     }),
   updateEventArray: protectedWithConfigurationServices
-    .meta({ updateWebhooks: true })
     .input(smtpUpdateEventArraySchema)
     .mutation(async ({ ctx, input }) => {
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });

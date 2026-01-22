@@ -9,7 +9,6 @@ import { TrpcContext } from "./trpc-context";
 
 interface Meta {
   requiredClientPermissions?: Permission[];
-  updateWebhooks?: boolean;
 }
 
 // Type guard for errors with errorContext property

@@ -3,11 +3,7 @@ import { createLogger } from "../../logger";
 import { FeatureFlagService } from "../feature-flag-service/feature-flag-service";
 import { SmtpConfigurationService } from "../smtp/configuration/smtp-configuration.service";
 import { SmtpMetadataManager } from "../smtp/configuration/smtp-metadata-manager";
-import { syncWebhookStatus } from "../webhook-management/sync-webhook-status";
-import { WebhookManagementService } from "../webhook-management/webhook-management-service";
 import { protectedClientProcedure } from "./protected-client-procedure";
-
-const logger = createLogger("protectedWithConfigurationServices middleware");
 
 /*
  * Allow access only for the dashboard users and attaches the
@@ -17,7 +13,7 @@ const logger = createLogger("protectedWithConfigurationServices middleware");
  * to create or remove webhooks.
  */
 export const protectedWithConfigurationServices = protectedClientProcedure.use(
-  async ({ next, ctx, meta }) => {
+  async ({ next, ctx }) => {
     /*
      * TODO: When App Bridge will add Saleor Version do the context,
      * extract it from there and pass it to the service constructor.
@@ -41,21 +37,6 @@ export const protectedWithConfigurationServices = protectedClientProcedure.use(
         featureFlagService,
       },
     });
-
-    if (meta?.updateWebhooks) {
-      logger.debug("Updating webhooks");
-
-      const webhookManagementService = new WebhookManagementService({
-        appBaseUrl: ctx.baseUrl,
-        client: ctx.apiClient,
-        featureFlagService: featureFlagService,
-      });
-
-      await syncWebhookStatus({
-        smtpConfigurationService,
-        webhookManagementService,
-      });
-    }
 
     return result;
   },
