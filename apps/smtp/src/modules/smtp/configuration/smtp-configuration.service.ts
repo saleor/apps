@@ -31,6 +31,9 @@ export interface IGetSmtpConfiguration {
     filter?: FilterConfigurationsArgs,
   ): ResultAsync<SmtpConfiguration[], InstanceType<typeof BaseError>>;
 }
+export interface IGetFallbackSmtpEnabled {
+  getIsFallbackSmtpEnabled(): ResultAsync<boolean, InstanceType<typeof BaseError>>;
+}
 
 interface TemplateValidationErrorProps {
   errorContext?: ErrorContext;
@@ -40,7 +43,7 @@ function hasErrorContext(error: unknown): error is { errorContext?: ErrorContext
   return error !== null && typeof error === "object" && "errorContext" in error;
 }
 
-export class SmtpConfigurationService implements IGetSmtpConfiguration {
+export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFallbackSmtpEnabled {
   static SmtpConfigurationServiceError = BaseError.subclass("SmtpConfigurationServiceError");
   static ConfigNotFoundError = BaseError.subclass("ConfigNotFoundError");
   static EventConfigNotFoundError = BaseError.subclass("EventConfigNotFoundError");
@@ -135,6 +138,10 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
           }),
         );
       });
+  }
+
+  getIsFallbackSmtpEnabled(): ResultAsync<boolean, InstanceType<typeof BaseError>> {
+    return this.getConfigurationRoot().andThen((d) => ok(d.useSaleorSmtpFallback));
   }
 
   private containActiveGiftCardEvent(config: SmtpConfig) {

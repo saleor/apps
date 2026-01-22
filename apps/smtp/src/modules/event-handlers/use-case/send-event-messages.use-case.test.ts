@@ -2,9 +2,13 @@ import { err, errAsync, ok, okAsync } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { BaseError } from "../../../errors";
-import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
+import {
+  FallbackSmtpConfig,
+  SmtpConfiguration,
+} from "../../smtp/configuration/smtp-config-schema";
 import {
   FilterConfigurationsArgs,
+  IGetFallbackSmtpEnabled,
   IGetSmtpConfiguration,
 } from "../../smtp/configuration/smtp-configuration.service";
 import { CompileArgs, IEmailCompiler } from "../../smtp/services/email-compiler";
@@ -12,6 +16,19 @@ import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-s
 import { MessageEventTypes } from "../message-event-types";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
 import { SendEventMessagesUseCaseFactory } from "./send-event-messages.use-case.factory";
+
+vi.mock("../../smtp/configuration/smtp-config-schema", async (importOriginal) => {
+  const original = await importOriginal<typeof import("../../smtp/configuration/smtp-config-schema")>();
+
+  return {
+    ...original,
+    getFallbackSmtpConfigSchema: vi.fn(),
+  };
+});
+
+import { getFallbackSmtpConfigSchema } from "../../smtp/configuration/smtp-config-schema";
+
+const mockGetFallbackSmtpConfigSchema = vi.mocked(getFallbackSmtpConfigSchema);
 
 const EVENT_TYPE = "ACCOUNT_DELETE" satisfies MessageEventTypes;
 
@@ -49,7 +66,7 @@ class MockSmtpSender implements ISMTPEmailSender {
   sendEmailWithSmtp = this.mockSendEmailMethod;
 }
 
-class MockSmptConfigurationService implements IGetSmtpConfiguration {
+class MockSmptConfigurationService implements IGetSmtpConfiguration, IGetFallbackSmtpEnabled {
   static getSimpleConfigurationValue = (): SmtpConfiguration => {
     return {
       id: "1",
@@ -73,6 +90,16 @@ class MockSmptConfigurationService implements IGetSmtpConfiguration {
       smtpUser: "admin",
     };
   };
+
+  static getValidFallbackConfig = (): FallbackSmtpConfig => ({
+    smtpHost: "fallback.smtp.com",
+    smtpPort: "587",
+    smtpUser: "fallback-user",
+    smtpPassword: "fallback-password",
+    encryption: "TLS",
+    senderName: "Fallback Sender",
+    senderEmail: "fallback@example.com",
+  });
 
   static returnValidSingleConfiguration: IGetSmtpConfiguration["getConfigurations"] = () => {
     return okAsync([MockSmptConfigurationService.getSimpleConfigurationValue()]);
@@ -100,7 +127,12 @@ class MockSmptConfigurationService implements IGetSmtpConfiguration {
       (args?: FilterConfigurationsArgs) => ReturnType<IGetSmtpConfiguration["getConfigurations"]>
     >();
 
+  mockGetIsFallbackSmtpEnabledMethod =
+    vi.fn<() => ReturnType<IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"]>>();
+
   getConfigurations = this.mockGetConfigurationsMethod;
+
+  getIsFallbackSmtpEnabled = this.mockGetIsFallbackSmtpEnabledMethod;
 }
 
 describe("SendEventMessagesUseCase", () => {
@@ -133,6 +165,8 @@ describe("SendEventMessagesUseCase", () => {
     smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
       MockSmptConfigurationService.returnValidSingleConfiguration,
     );
+    smtpConfigurationService.mockGetIsFallbackSmtpEnabledMethod.mockReturnValue(okAsync(false));
+    mockGetFallbackSmtpConfigSchema.mockReturnValue(null);
 
     /**
      * Create service instance for testing
@@ -311,6 +345,141 @@ describe("SendEventMessagesUseCase", () => {
         });
 
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
+      });
+    });
+
+    describe("Fallback SMTP behavior", () => {
+      beforeEach(() => {
+        smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
+          MockSmptConfigurationService.returnEmptyConfigurationsList,
+        );
+        smtpConfigurationService.mockGetIsFallbackSmtpEnabledMethod.mockReturnValue(okAsync(true));
+      });
+
+      it("Sends email using fallback SMTP configuration when enabled and no custom configs exist", async () => {
+        mockGetFallbackSmtpConfigSchema.mockReturnValue(
+          MockSmptConfigurationService.getValidFallbackConfig(),
+        );
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
+
+        expect(result.isOk()).toBe(true);
+        expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledOnce();
+        expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
+
+        const sendMailArgs = emailSender.mockSendEmailMethod.mock.calls[0][0];
+
+        expect(sendMailArgs.smtpSettings).toEqual({
+          host: "fallback.smtp.com",
+          port: 587,
+          encryption: "TLS",
+          auth: {
+            user: "fallback-user",
+            pass: "fallback-password",
+          },
+        });
+      });
+
+      it("Returns error when fallback is enabled but config is missing", async () => {
+        mockGetFallbackSmtpConfigSchema.mockReturnValue(null);
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
+
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()[0]).toBeInstanceOf(
+          SendEventMessagesUseCase.FallbackSmtpConfigurationError,
+        );
+      });
+
+      it("Returns error when email compilation fails with fallback config", async () => {
+        mockGetFallbackSmtpConfigSchema.mockReturnValue(
+          MockSmptConfigurationService.getValidFallbackConfig(),
+        );
+        emailCompiler.mockEmailCompileMethod.mockImplementation(
+          MockEmailCompiler.returnErrorCompiling,
+        );
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
+
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()[0]).toBeInstanceOf(
+          SendEventMessagesUseCase.EmailCompilationError,
+        );
+      });
+
+      it("Returns error when SMTP sending fails with fallback config", async () => {
+        mockGetFallbackSmtpConfigSchema.mockReturnValue(
+          MockSmptConfigurationService.getValidFallbackConfig(),
+        );
+        emailSender.mockSendEmailMethod.mockImplementation(MockSmtpSender.throwInvalidResponse);
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
+
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()[0]).toBeInstanceOf(SendEventMessagesUseCase.ServerError);
+      });
+
+      it("Uses fallback SMTP even when custom configs exist (when fallback is enabled)", async () => {
+        smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
+          MockSmptConfigurationService.returnValidSingleConfiguration,
+        );
+        mockGetFallbackSmtpConfigSchema.mockReturnValue(
+          MockSmptConfigurationService.getValidFallbackConfig(),
+        );
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
+
+        expect(result.isOk()).toBe(true);
+
+        const sendMailArgs = emailSender.mockSendEmailMethod.mock.calls[0][0];
+
+        expect(sendMailArgs.smtpSettings.host).toBe("fallback.smtp.com");
+      });
+
+      it("Does not include auth when fallback SMTP user is not configured", async () => {
+        const configWithoutAuth = MockSmptConfigurationService.getValidFallbackConfig();
+
+        configWithoutAuth.smtpUser = undefined;
+        configWithoutAuth.smtpPassword = undefined;
+        mockGetFallbackSmtpConfigSchema.mockReturnValue(configWithoutAuth);
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+        });
+
+        expect(result.isOk()).toBe(true);
+
+        const sendMailArgs = emailSender.mockSendEmailMethod.mock.calls[0][0];
+
+        expect(sendMailArgs.smtpSettings.auth).toBeUndefined();
       });
     });
   });

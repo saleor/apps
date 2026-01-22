@@ -3,8 +3,12 @@ import { err, errAsync, Result, ResultAsync } from "neverthrow";
 import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
-import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
-import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
+import { getFallbackSmtpConfigSchema, SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
+import {
+  IGetFallbackSmtpEnabled,
+  IGetSmtpConfiguration,
+} from "../../smtp/configuration/smtp-configuration.service";
+import { smtpDefaultEmptyConfigurations } from "../../smtp/configuration/smtp-default-empty-configurations";
 import { IEmailCompiler } from "../../smtp/services/email-compiler";
 import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
 import { MessageEventTypes } from "../message-event-types";
@@ -34,6 +38,10 @@ export class SendEventMessagesUseCase {
 
   static InvalidSenderConfigError = this.ClientError.subclass("InvalidSenderConfigError");
 
+  static FallbackSmtpConfigurationError = this.ClientError.subclass(
+    "FallbackSmtpConfigurationError",
+  );
+
   /**
    * Errors that externally can be translated to no-op operations due to design of the app.
    * In some cases app should just ignore the event, e.g. when it's disabled.
@@ -48,7 +56,7 @@ export class SendEventMessagesUseCase {
 
   constructor(
     private deps: {
-      smtpConfigurationService: IGetSmtpConfiguration;
+      smtpConfigurationService: IGetSmtpConfiguration & IGetFallbackSmtpEnabled;
       emailCompiler: IEmailCompiler;
       emailSender: ISMTPEmailSender;
     },
@@ -183,6 +191,118 @@ export class SendEventMessagesUseCase {
     );
   }
 
+  private processFallbackSmtpBehavior({
+    event,
+    payload,
+    recipientEmail,
+  }: {
+    event: MessageEventTypes;
+    payload: unknown;
+    recipientEmail: string;
+  }): ResultAsync<unknown, Array<InstanceType<typeof SendEventMessagesUseCase.BaseError>>> {
+    const fallbackConfig = getFallbackSmtpConfigSchema();
+
+    if (!fallbackConfig) {
+      this.logger.warn("Fallback SMTP is enabled but configuration is missing or invalid");
+
+      return errAsync([
+        new SendEventMessagesUseCase.FallbackSmtpConfigurationError(
+          "Fallback SMTP configuration is missing or invalid. Check environment variables: FALLBACK_SMTP_HOST, FALLBACK_SMTP_PORT, FALLBACK_SMTP_SENDER_NAME, FALLBACK_SMTP_SENDER_EMAIL",
+          {
+            props: { event },
+          },
+        ),
+      ]);
+    }
+
+    const defaultEventsConfig = smtpDefaultEmptyConfigurations.eventsConfiguration();
+    const eventSettings = defaultEventsConfig.find((e) => e.eventType === event);
+
+    if (!eventSettings) {
+      this.logger.warn("No default template found for event type", { event });
+
+      return errAsync([
+        new SendEventMessagesUseCase.EventSettingsMissingError(
+          "No default template found for this event type",
+          {
+            props: { event },
+          },
+        ),
+      ]);
+    }
+
+    const preparedEmailResult = this.deps.emailCompiler.compile({
+      event,
+      payload,
+      recipientEmail,
+      bodyTemplate: eventSettings.template,
+      subjectTemplate: eventSettings.subject,
+      senderEmail: fallbackConfig.senderEmail,
+      senderName: fallbackConfig.senderName,
+    });
+
+    if (preparedEmailResult.isErr()) {
+      this.logger.warn("Failed to compile email template using fallback configuration");
+
+      return errAsync([
+        new SendEventMessagesUseCase.EmailCompilationError(
+          "Failed to compile email with fallback configuration",
+          {
+            errors: [preparedEmailResult.error],
+            props: { event },
+          },
+        ),
+      ]);
+    }
+
+    this.logger.info("Successfully compiled email template using fallback configuration", {
+      bodyTemplateSizeKb: bytesToKb(new Blob([eventSettings.template]).size),
+      subjectTemplateSizeKb: bytesToKb(new Blob([eventSettings.subject]).size),
+    });
+
+    const smtpSettings: SendMailArgs["smtpSettings"] = {
+      host: fallbackConfig.smtpHost,
+      port: parseInt(fallbackConfig.smtpPort, 10),
+      encryption: fallbackConfig.encryption,
+    };
+
+    if (fallbackConfig.smtpUser) {
+      this.logger.debug("Detected fallback SMTP user config. Applying to configuration.");
+
+      smtpSettings.auth = {
+        user: fallbackConfig.smtpUser,
+        pass: fallbackConfig.smtpPassword,
+      };
+    }
+
+    return ResultAsync.fromPromise(
+      this.deps.emailSender.sendEmailWithSmtp({
+        mailData: preparedEmailResult.value,
+        smtpSettings,
+      }),
+      (sendErr) => {
+        this.logger.debug("Error sending email with fallback SMTP", { error: sendErr });
+
+        if (typeof sendErr === "object" && sendErr && "responseCode" in sendErr) {
+          if (sendErr.responseCode === 554) {
+            return [
+              new SendEventMessagesUseCase.ClientError(
+                "Failed to send email via fallback SMTP - 554",
+                { cause: sendErr },
+              ),
+            ];
+          }
+        }
+
+        return [
+          new SendEventMessagesUseCase.ServerError("Failed to send email via fallback SMTP", {
+            cause: sendErr,
+          }),
+        ];
+      },
+    );
+  }
+
   async sendEventMessages({
     event,
     payload,
@@ -200,6 +320,8 @@ export class SendEventMessagesUseCase {
       active: true,
       availableInChannel: channelSlug,
     });
+    const fallbackSmtpEnabledResult =
+      await this.deps.smtpConfigurationService.getIsFallbackSmtpEnabled();
 
     if (availableSmtpConfigurations.isErr()) {
       this.logger.warn("Failed to fetch configuration");
@@ -218,7 +340,12 @@ export class SendEventMessagesUseCase {
       ]);
     }
 
-    if (availableSmtpConfigurations.value.length === 0) {
+    const isFallbackSmtpEnabled = fallbackSmtpEnabledResult.isOk()
+      ? fallbackSmtpEnabledResult.value
+      : false;
+    const noConfigurations = availableSmtpConfigurations.value.length === 0;
+
+    if (noConfigurations && !isFallbackSmtpEnabled) {
       this.logger.warn("Configuration list is empty, app is not configured");
 
       return err([
@@ -233,6 +360,14 @@ export class SendEventMessagesUseCase {
           },
         ),
       ]);
+    }
+
+    if (isFallbackSmtpEnabled) {
+      return this.processFallbackSmtpBehavior({
+        event,
+        payload,
+        recipientEmail,
+      });
     }
 
     this.logger.info(
