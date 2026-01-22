@@ -34,7 +34,7 @@ export type SmtpConfiguration = z.infer<typeof smtpConfigurationSchema>;
 
 export const smtpConfigSchema = z.object({
   configurations: z.array(smtpConfigurationSchema),
-  useSaleorSmtpFallback: z.boolean().default(true),
+  useSaleorSmtpFallback: z.boolean().default(false),
 });
 
 export type SmtpConfig = z.infer<typeof smtpConfigSchema>;

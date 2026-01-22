@@ -88,7 +88,7 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
         if (!data) {
           logger.debug("No configuration found in Saleor API, creating a new one");
 
-          return okAsync({ configurations: [], useSaleorSmtpFallback: true });
+          return okAsync({ configurations: [], useSaleorSmtpFallback: false });
         }
 
         return okAsync(data);
