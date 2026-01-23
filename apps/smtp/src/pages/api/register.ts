@@ -10,6 +10,7 @@ import { createLogger } from "../../logger";
 import { loggerContext } from "../../logger-context";
 import { FeatureFlagService } from "../../modules/feature-flag-service/feature-flag-service";
 import { fetchSaleorVersion } from "../../modules/feature-flag-service/fetch-saleor-version";
+import { getFallbackSmtpConfigSchema } from "../../modules/smtp/configuration/smtp-config-schema";
 import { SmtpConfigurationService } from "../../modules/smtp/configuration/smtp-configuration.service";
 import { SmtpMetadataManager } from "../../modules/smtp/configuration/smtp-metadata-manager";
 import {
@@ -108,6 +109,15 @@ export default wrapWithLoggerContext(
         const { authData } = context;
 
         try {
+          const fallbackConfig = getFallbackSmtpConfigSchema();
+
+          /**
+           * If config not provided, do not enable webhooks.
+           */
+          if (!fallbackConfig) {
+            return;
+          }
+
           const client = createInstrumentedGraphqlClient({
             saleorApiUrl: authData.saleorApiUrl,
             token: authData.token,
