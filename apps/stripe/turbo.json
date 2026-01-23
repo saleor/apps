@@ -23,7 +23,9 @@
         "INTEGRATION_DYNAMO_REGION",
         "INTEGRATION_DYNAMO_ENDPOINT",
         "APPSTORE_URL",
-        "APP_NAME"
+        "APP_NAME",
+        "DYNAMODB_REQUEST_TIMEOUT_MS",
+        "DYNAMODB_CONNECTION_TIMEOUT_MS"
       ]
     }
   }

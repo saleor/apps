@@ -17,7 +17,9 @@
         "AWS_ACCESS_KEY_ID",
         "AWS_REGION",
         "AWS_SECRET_ACCESS_KEY",
-        "DYNAMODB_MAIN_TABLE_NAME"
+        "DYNAMODB_MAIN_TABLE_NAME",
+        "DYNAMODB_REQUEST_TIMEOUT_MS",
+        "DYNAMODB_CONNECTION_TIMEOUT_MS"
       ]
     }
   }
