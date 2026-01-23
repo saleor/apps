@@ -33,10 +33,6 @@ export class SendEventMessagesUseCase {
    */
   static ClientError = BaseError.subclass("SendEventMessagesUseCaseClientError");
 
-  static MissingAvailableConfigurationError = this.ClientError.subclass(
-    "MissingAvailableConfigurationError",
-  );
-
   static EmailCompilationError = this.ClientError.subclass("EmailCompilationError");
 
   static InvalidSenderConfigError = this.ClientError.subclass("InvalidSenderConfigError");
@@ -57,8 +53,7 @@ export class SendEventMessagesUseCase {
 
   constructor(
     private deps: {
-      smtpConfigurationService: IGetSmtpConfiguration;
-      fallbackConfigService: IGetFallbackSmtpEnabled;
+      configService: IGetSmtpConfiguration & IGetFallbackSmtpEnabled;
       emailCompiler: IEmailCompiler;
       emailSender: ISMTPEmailSender;
     },
@@ -193,6 +188,84 @@ export class SendEventMessagesUseCase {
     );
   }
 
+  private async sendWithFallback({
+    event,
+    payload,
+    recipientEmail,
+    channelSlug,
+  }: {
+    event: MessageEventTypes;
+    payload: unknown;
+    recipientEmail: string;
+    channelSlug: string;
+  }): Promise<Result<unknown, Array<InstanceType<typeof SendEventMessagesUseCase.BaseError>>>> {
+    this.logger.info("No custom configurations found, checking fallback SMTP");
+
+    const fallbackEnabledResult = await this.deps.configService.getIsFallbackSmtpEnabled();
+
+    if (fallbackEnabledResult.isErr() || !fallbackEnabledResult.value) {
+      this.logger.info("Fallback SMTP is not enabled");
+
+      return err([
+        new SendEventMessagesUseCase.FallbackNotConfiguredError(
+          "No custom configuration and fallback is not enabled",
+          {
+            props: { channelSlug, event },
+          },
+        ),
+      ]);
+    }
+
+    const fallbackSmtpConfig = getFallbackSmtpConfigSchema();
+
+    if (!fallbackSmtpConfig) {
+      this.logger.info("Fallback SMTP env vars are not configured");
+
+      return err([
+        new SendEventMessagesUseCase.FallbackNotConfiguredError(
+          "Fallback enabled but env vars are not configured",
+          {
+            props: { channelSlug, event },
+          },
+        ),
+      ]);
+    }
+
+    const fallbackConfig: SmtpConfiguration = {
+      id: "fallback",
+      active: true,
+      name: "Saleor Cloud Fallback",
+      senderName: fallbackSmtpConfig.senderName,
+      senderEmail: fallbackSmtpConfig.senderEmail,
+      smtpHost: fallbackSmtpConfig.smtpHost,
+      smtpPort: fallbackSmtpConfig.smtpPort,
+      smtpUser: fallbackSmtpConfig.smtpUser,
+      smtpPassword: fallbackSmtpConfig.smtpPassword,
+      encryption: fallbackSmtpConfig.encryption,
+      channels: { channels: [], mode: "restrict", override: false },
+      events: messageEventTypes.map((eventType) => ({
+        active: true,
+        eventType,
+        template: defaultMjmlTemplates[eventType],
+        subject: defaultMjmlSubjectTemplates[eventType],
+      })),
+    };
+
+    const fallbackResult = await this.processSingleConfiguration({
+      config: fallbackConfig,
+      event,
+      payload,
+      recipientEmail,
+      channelSlug,
+    });
+
+    if (fallbackResult.isErr()) {
+      return err([fallbackResult.error]);
+    }
+
+    return ok(fallbackResult.value);
+  }
+
   async sendEventMessages({
     event,
     payload,
@@ -206,7 +279,7 @@ export class SendEventMessagesUseCase {
   }): Promise<Result<unknown, Array<InstanceType<typeof SendEventMessagesUseCase.BaseError>>>> {
     this.logger.info("Calling sendEventMessages", { channelSlug, event });
 
-    const availableSmtpConfigurations = await this.deps.smtpConfigurationService.getConfigurations({
+    const availableSmtpConfigurations = await this.deps.configService.getConfigurations({
       active: true,
       availableInChannel: channelSlug,
     });
@@ -229,72 +302,7 @@ export class SendEventMessagesUseCase {
     }
 
     if (availableSmtpConfigurations.value.length === 0) {
-      this.logger.info("No custom configurations found, checking fallback SMTP");
-
-      const fallbackEnabledResult =
-        await this.deps.fallbackConfigService.getIsFallbackSmtpEnabled();
-
-      if (fallbackEnabledResult.isErr() || !fallbackEnabledResult.value) {
-        this.logger.info("Fallback SMTP is not enabled");
-
-        return err([
-          new SendEventMessagesUseCase.FallbackNotConfiguredError(
-            "No custom configuration and fallback is not enabled",
-            {
-              props: { channelSlug, event },
-            },
-          ),
-        ]);
-      }
-
-      const fallbackSmtpConfig = getFallbackSmtpConfigSchema();
-
-      if (!fallbackSmtpConfig) {
-        this.logger.info("Fallback SMTP env vars are not configured");
-
-        return err([
-          new SendEventMessagesUseCase.FallbackNotConfiguredError(
-            "Fallback enabled but env vars are not configured",
-            {
-              props: { channelSlug, event },
-            },
-          ),
-        ]);
-      }
-
-      const fallbackConfig: SmtpConfiguration = {
-        id: "fallback",
-        active: true,
-        name: "Saleor Cloud Fallback",
-        senderName: fallbackSmtpConfig.senderName,
-        senderEmail: fallbackSmtpConfig.senderEmail,
-        smtpHost: fallbackSmtpConfig.smtpHost,
-        smtpPort: fallbackSmtpConfig.smtpPort,
-        smtpUser: fallbackSmtpConfig.smtpUser,
-        smtpPassword: fallbackSmtpConfig.smtpPassword,
-        encryption: fallbackSmtpConfig.encryption,
-        channels: { channels: [], mode: "restrict", override: false },
-        events: messageEventTypes.map((eventType) => ({
-          active: true,
-          eventType,
-          template: defaultMjmlTemplates[eventType],
-          subject: defaultMjmlSubjectTemplates[eventType],
-        })),
-      };
-
-      const fallbackResult = await this.processSingleConfiguration({
-        config: fallbackConfig,
-        event,
-        payload,
-        recipientEmail,
-        channelSlug,
-      });
-
-      if (fallbackResult.isErr()) {
-        return err([fallbackResult.error]);
-      }
-
-      return ok(fallbackResult.value);
+      return this.sendWithFallback({ event, payload, recipientEmail, channelSlug });
     }
 
     this.logger.info(

@@ -63,26 +63,7 @@ class MockSmtpSender implements ISMTPEmailSender {
   sendEmailWithSmtp = this.mockSendEmailMethod;
 }
 
-class MockFallbackConfigService implements IGetFallbackSmtpEnabled {
-  static returnEnabled: IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"] = () => {
-    return okAsync(true);
-  };
-
-  static returnDisabled: IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"] = () => {
-    return okAsync(false);
-  };
-
-  static returnError: IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"] = () => {
-    return errAsync(new BaseError("Mock error fetching fallback config"));
-  };
-
-  mockGetIsFallbackSmtpEnabledMethod =
-    vi.fn<() => ReturnType<IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"]>>();
-
-  getIsFallbackSmtpEnabled = this.mockGetIsFallbackSmtpEnabledMethod;
-}
-
-class MockSmptConfigurationService implements IGetSmtpConfiguration {
+class MockConfigService implements IGetSmtpConfiguration, IGetFallbackSmtpEnabled {
   static getSimpleConfigurationValue = (): SmtpConfiguration => {
     return {
       id: "1",
@@ -108,7 +89,7 @@ class MockSmptConfigurationService implements IGetSmtpConfiguration {
   };
 
   static returnValidSingleConfiguration: IGetSmtpConfiguration["getConfigurations"] = () => {
-    return okAsync([MockSmptConfigurationService.getSimpleConfigurationValue()]);
+    return okAsync([MockConfigService.getSimpleConfigurationValue()]);
   };
 
   static returnEmptyConfigurationsList: IGetSmtpConfiguration["getConfigurations"] = () => {
@@ -128,58 +109,59 @@ class MockSmptConfigurationService implements IGetSmtpConfiguration {
     return okAsync([c1, c2]);
   };
 
+  static returnFallbackEnabled: IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"] = () => {
+    return okAsync(true);
+  };
+
+  static returnFallbackDisabled: IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"] = () => {
+    return okAsync(false);
+  };
+
+  static returnFallbackError: IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"] = () => {
+    return errAsync(new BaseError("Mock error fetching fallback config"));
+  };
+
   mockGetConfigurationsMethod =
     vi.fn<
       (args?: FilterConfigurationsArgs) => ReturnType<IGetSmtpConfiguration["getConfigurations"]>
     >();
 
+  mockGetIsFallbackSmtpEnabledMethod =
+    vi.fn<() => ReturnType<IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"]>>();
+
   getConfigurations = this.mockGetConfigurationsMethod;
+  getIsFallbackSmtpEnabled = this.mockGetIsFallbackSmtpEnabledMethod;
 }
 
 describe("SendEventMessagesUseCase", () => {
   let emailCompiler: MockEmailCompiler;
   let emailSender: MockSmtpSender;
-  let smtpConfigurationService: MockSmptConfigurationService;
-  let fallbackConfigService: MockFallbackConfigService;
+  let configService: MockConfigService;
 
   let useCaseInstance: SendEventMessagesUseCase;
 
   beforeEach(() => {
-    /**
-     * Just in case reset mocks if some reference is preserved
-     */
     vi.resetAllMocks();
 
-    /**
-     * Create direct dependencies
-     */
     emailCompiler = new MockEmailCompiler();
     emailSender = new MockSmtpSender();
-    smtpConfigurationService = new MockSmptConfigurationService();
-    fallbackConfigService = new MockFallbackConfigService();
+    configService = new MockConfigService();
 
-    /**
-     * Apply default return values, which can be partially overwritten in tests
-     */
     emailCompiler.mockEmailCompileMethod.mockImplementation(
       MockEmailCompiler.returnSuccessCompiledEmail,
     );
     emailSender.mockSendEmailMethod.mockImplementation(MockSmtpSender.returnEmptyResponse);
-    smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
-      MockSmptConfigurationService.returnValidSingleConfiguration,
+    configService.mockGetConfigurationsMethod.mockImplementation(
+      MockConfigService.returnValidSingleConfiguration,
     );
-    fallbackConfigService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-      MockFallbackConfigService.returnDisabled,
+    configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+      MockConfigService.returnFallbackDisabled,
     );
 
-    /**
-     * Create service instance for testing
-     */
     useCaseInstance = new SendEventMessagesUseCase({
       emailCompiler,
       emailSender,
-      smtpConfigurationService,
-      fallbackConfigService,
+      configService,
     });
   });
 
@@ -197,11 +179,11 @@ describe("SendEventMessagesUseCase", () => {
 
   describe("sendEventMessages method", () => {
     it("Returns NoOp error if configurations list is empty and fallback is disabled", async () => {
-      smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
-        MockSmptConfigurationService.returnEmptyConfigurationsList,
+      configService.mockGetConfigurationsMethod.mockImplementation(
+        MockConfigService.returnEmptyConfigurationsList,
       );
-      fallbackConfigService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-        MockFallbackConfigService.returnDisabled,
+      configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+        MockConfigService.returnFallbackDisabled,
       );
 
       const result = await useCaseInstance.sendEventMessages({
@@ -217,8 +199,8 @@ describe("SendEventMessagesUseCase", () => {
     });
 
     it("Returns error if failed to fetch configurations", async () => {
-      smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
-        MockSmptConfigurationService.returnErrorFetchingConfigurations,
+      configService.mockGetConfigurationsMethod.mockImplementation(
+        MockConfigService.returnErrorFetchingConfigurations,
       );
 
       const result = await useCaseInstance.sendEventMessages({
@@ -242,14 +224,14 @@ describe("SendEventMessagesUseCase", () => {
 
     describe("Fallback SMTP behavior", () => {
       beforeEach(() => {
-        smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
-          MockSmptConfigurationService.returnEmptyConfigurationsList,
+        configService.mockGetConfigurationsMethod.mockImplementation(
+          MockConfigService.returnEmptyConfigurationsList,
         );
       });
 
       it("Sends email with fallback config when enabled and env is configured", async () => {
-        fallbackConfigService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockFallbackConfigService.returnEnabled,
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
@@ -274,8 +256,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Returns NoOp error when fallback is enabled but env is not configured", async () => {
-        fallbackConfigService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockFallbackConfigService.returnEnabled,
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue(null);
@@ -293,8 +275,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Returns NoOp error when fallback check returns an error", async () => {
-        fallbackConfigService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockFallbackConfigService.returnError,
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackError,
         );
 
         const result = await useCaseInstance.sendEventMessages({
@@ -310,11 +292,11 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Uses custom configurations when available, regardless of fallback setting", async () => {
-        smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
-          MockSmptConfigurationService.returnValidSingleConfiguration,
+        configService.mockGetConfigurationsMethod.mockImplementation(
+          MockConfigService.returnValidSingleConfiguration,
         );
-        fallbackConfigService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockFallbackConfigService.returnEnabled,
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
         );
 
         const result = await useCaseInstance.sendEventMessages({
@@ -327,12 +309,12 @@ describe("SendEventMessagesUseCase", () => {
         expect(result.isOk()).toBe(true);
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
         // Fallback should not be checked when custom configs exist
-        expect(fallbackConfigService.mockGetIsFallbackSmtpEnabledMethod).not.toHaveBeenCalled();
+        expect(configService.mockGetIsFallbackSmtpEnabledMethod).not.toHaveBeenCalled();
       });
 
       it("Uses default templates when sending via fallback", async () => {
-        fallbackConfigService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockFallbackConfigService.returnEnabled,
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
@@ -363,8 +345,8 @@ describe("SendEventMessagesUseCase", () => {
 
     describe("Multiple configurations assigned for the same event", () => {
       it("Calls SMTP service to send email for each configuration", async () => {
-        smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
-          MockSmptConfigurationService.returnValidTwoConfigurations,
+        configService.mockGetConfigurationsMethod.mockImplementation(
+          MockConfigService.returnValidTwoConfigurations,
         );
 
         await useCaseInstance.sendEventMessages({
@@ -378,8 +360,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Returns error if at least one configuration fails, even if second one works", async () => {
-        smtpConfigurationService.mockGetConfigurationsMethod.mockImplementation(
-          MockSmptConfigurationService.returnValidTwoConfigurations,
+        configService.mockGetConfigurationsMethod.mockImplementation(
+          MockConfigService.returnValidTwoConfigurations,
         );
 
         emailSender.mockSendEmailMethod.mockImplementationOnce(MockSmtpSender.returnEmptyResponse);
@@ -403,11 +385,11 @@ describe("SendEventMessagesUseCase", () => {
 
     describe("Single configuration assigned for the event", () => {
       it("Returns error if event is set to not active", async () => {
-        const smtpConfig = MockSmptConfigurationService.getSimpleConfigurationValue();
+        const smtpConfig = MockConfigService.getSimpleConfigurationValue();
 
         smtpConfig.events[0].active = false;
 
-        smtpConfigurationService.mockGetConfigurationsMethod.mockReturnValue(okAsync([smtpConfig]));
+        configService.mockGetConfigurationsMethod.mockReturnValue(okAsync([smtpConfig]));
 
         const result = await useCaseInstance.sendEventMessages({
           event: EVENT_TYPE,
@@ -425,13 +407,11 @@ describe("SendEventMessagesUseCase", () => {
       it.each(["senderName", "senderEmail"] as const)(
         "Returns error if configuration '%s' is missing in configuration",
         async (field) => {
-          const smtpConfig = MockSmptConfigurationService.getSimpleConfigurationValue();
+          const smtpConfig = MockConfigService.getSimpleConfigurationValue();
 
           smtpConfig[field] = undefined;
 
-          smtpConfigurationService.mockGetConfigurationsMethod.mockReturnValue(
-            okAsync([smtpConfig]),
-          );
+          configService.mockGetConfigurationsMethod.mockReturnValue(okAsync([smtpConfig]));
 
           const result = await useCaseInstance.sendEventMessages({
             event: EVENT_TYPE,

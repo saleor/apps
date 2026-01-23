@@ -19,14 +19,6 @@ export class SendEventMessagesUseCaseFactory {
       token: authData.token,
     });
 
-    const smtpConfigurationService = new SmtpConfigurationService({
-      featureFlagService: new FeatureFlagService({ client }),
-      metadataManager: new SmtpMetadataManager(
-        createSettingsManager(client, authData.appId),
-        authData.saleorApiUrl,
-      ),
-    });
-
     return new SendEventMessagesUseCase({
       emailSender: new SmtpEmailSender(),
       emailCompiler: new EmailCompiler(
@@ -34,8 +26,13 @@ export class SendEventMessagesUseCaseFactory {
         new HtmlToTextCompiler(),
         new MjmlCompiler(),
       ),
-      smtpConfigurationService,
-      fallbackConfigService: smtpConfigurationService,
+      configService: new SmtpConfigurationService({
+        featureFlagService: new FeatureFlagService({ client }),
+        metadataManager: new SmtpMetadataManager(
+          createSettingsManager(client, authData.appId),
+          authData.saleorApiUrl,
+        ),
+      }),
     });
   }
 }
