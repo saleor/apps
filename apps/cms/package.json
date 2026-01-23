@@ -52,7 +52,7 @@
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "@vercel/otel": "catalog:",
-    "@vitejs/plugin-react": "4.3.4",
+    "@vitejs/plugin-react": "catalog:",
     "contentful-management": "10.46.4",
     "dotenv": "catalog:",
     "dynamodb-toolbox": "catalog:",

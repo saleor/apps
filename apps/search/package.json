@@ -83,7 +83,7 @@
     "@testing-library/react": "16.2.0",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "@vitejs/plugin-react": "4.3.4",
+    "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",

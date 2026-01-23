@@ -23,7 +23,9 @@
         "MAX_PARALLEL_CALLS",
         "VARIANTS_PER_PAGE",
         "DYNAMODB_REQUEST_TIMEOUT_MS",
-        "DYNAMODB_CONNECTION_TIMEOUT_MS"
+        "DYNAMODB_CONNECTION_TIMEOUT_MS",
+        "MANIFEST_APP_ID",
+        "FILE_APL_PATH"
       ]
     }
   }

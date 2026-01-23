@@ -51,7 +51,7 @@
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "@vercel/otel": "catalog:",
-    "@vitejs/plugin-react": "4.3.4",
+    "@vitejs/plugin-react": "catalog:",
     "dotenv": "catalog:",
     "dynamodb-toolbox": "catalog:",
     "graphql": "catalog:",
