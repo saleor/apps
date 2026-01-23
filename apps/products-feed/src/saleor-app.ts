@@ -5,34 +5,19 @@ import { SaleorCloudAPL } from "@saleor/app-sdk/APL/saleor-cloud";
 import { UpstashAPL } from "@saleor/app-sdk/APL/upstash";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
+import { env } from "@/env";
 import { dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
 
 import { createLogger } from "./logger";
 
 const logger = createLogger("saleor-app");
 
-const aplType = process.env.APL ?? "file";
+const aplType = env.APL;
 
 export let apl: APL;
 
-// TODO introduce t3/env
-const validateDynamoEnvVariables = () => {
-  const envsSet = [
-    "DYNAMODB_MAIN_TABLE_NAME",
-    "AWS_REGION",
-    "AWS_ACCESS_KEY_ID",
-    "AWS_SECRET_ACCESS_KEY",
-  ].every((req) => process.env[req] !== undefined);
-
-  if (!envsSet) {
-    throw new Error("Missing required environment variables for DynamoDB APL configuration.");
-  }
-};
-
 switch (aplType) {
   case "dynamodb": {
-    validateDynamoEnvVariables();
-
     apl = DynamoAPL.create({
       table: dynamoMainTable,
       externalLogger: (message, level) => {
@@ -58,13 +43,13 @@ switch (aplType) {
     break;
 
   case "saleor-cloud": {
-    if (!process.env.REST_APL_ENDPOINT || !process.env.REST_APL_TOKEN) {
+    if (!env.REST_APL_ENDPOINT || !env.REST_APL_TOKEN) {
       throw new Error("Rest APL is not configured - missing env variables. Check saleor-app.ts");
     }
 
     apl = new SaleorCloudAPL({
-      resourceUrl: process.env.REST_APL_ENDPOINT,
-      token: process.env.REST_APL_TOKEN,
+      resourceUrl: env.REST_APL_ENDPOINT,
+      token: env.REST_APL_TOKEN,
     });
 
     break;

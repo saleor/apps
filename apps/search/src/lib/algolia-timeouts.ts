@@ -1,3 +1,3 @@
-export const ALGOLIA_TIMEOUT_MS = process.env.ALGOLIA_TIMEOUT_MS
-  ? parseInt(process.env.ALGOLIA_TIMEOUT_MS, 10)
-  : 5000;
+import { env } from "../env";
+
+export const ALGOLIA_TIMEOUT_MS = env.ALGOLIA_TIMEOUT_MS;

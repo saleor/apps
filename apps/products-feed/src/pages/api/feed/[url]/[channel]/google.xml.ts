@@ -7,6 +7,7 @@ import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z, ZodError } from "zod";
 
+import { env } from "@/env";
 import { appRootTracer } from "@/lib/app-root-tracer";
 import { ChunkCaller } from "@/lib/chunk-caller";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
@@ -84,7 +85,7 @@ const generateDistributedChunk = (params: {
     }),
     headers: {
       ContentType: "application/json",
-      authorization: process.env.REQUEST_SECRET as string,
+      authorization: env.REQUEST_SECRET as string,
     },
     method: "POST",
   })

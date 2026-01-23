@@ -2,13 +2,14 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
+import { env } from "../../env";
 import packageJson from "../../../package.json";
 
 export default withSpanAttributes(
   createManifestHandler({
     async manifestFactory({ appBaseUrl }) {
-      const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
-      const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+      const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+      const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
 
       const manifest: AppManifest = {
         about:

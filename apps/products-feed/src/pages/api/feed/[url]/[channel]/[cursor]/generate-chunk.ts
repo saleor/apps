@@ -3,6 +3,8 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { NextApiHandler } from "next";
 
+import { env } from "@/env";
+
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
@@ -26,7 +28,7 @@ const logger = createLogger("generate-chunk");
 const handler: NextApiHandler = async (req, res) => {
   const secret = req.headers["authorization"];
 
-  if (secret !== process.env.REQUEST_SECRET) {
+  if (secret !== env.REQUEST_SECRET) {
     return res.status(401).send("Unauthorized");
   }
 

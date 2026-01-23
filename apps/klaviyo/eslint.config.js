@@ -1,8 +1,26 @@
 import { config } from "@saleor/eslint-config-apps/index.js";
+import nodePlugin from "eslint-plugin-n";
 
 /** @type {import("eslint").Linter.Config} */
 export default [
   ...config,
+  {
+    name: "saleor-app-klaviyo/custom-config",
+    files: ["**/*.ts"],
+    plugins: {
+      n: nodePlugin,
+    },
+    rules: {
+      "n/no-process-env": "error",
+    },
+  },
+  {
+    name: "saleor-app-klaviyo/override-no-process-env",
+    files: ["next.config.ts", "src/env.ts", "src/instrumentation.ts"],
+    rules: {
+      "n/no-process-env": "off",
+    },
+  },
   {
     // TODO: remove this override once the recommended rules are fixed
     name: "saleor-app-klaviyo/override-recommended",
@@ -17,7 +35,7 @@ export default [
   },
   {
     // TODO: remove this override once we rename all graphql files to kebab-case
-    name: "saleor-app-search/override-@graphql-eslint/match-document-filename",
+    name: "saleor-app-klaviyo/override-@graphql-eslint/match-document-filename",
     files: ["**/*.graphql"],
     rules: {
       "@graphql-eslint/match-document-filename": [
