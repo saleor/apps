@@ -93,6 +93,9 @@ export default wrapWithLoggerContext(
 
         logger.info("Saleor version validated successfully");
       },
+      async onAuthAplSaved(_request, context): Promise<void> {
+        // TODO: Save useSaleorSmtpFallback: true config for new installations
+      },
     }),
   ),
   loggerContext,

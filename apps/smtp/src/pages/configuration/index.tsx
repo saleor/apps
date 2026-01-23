@@ -1,9 +1,10 @@
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 
 import { BasicLayout } from "../../components/basic-layout";
 import { SectionWithDescription } from "../../components/section-with-description";
+import { ConfigurationFallback } from "../../modules/app-configuration/ui/configuration-fallback";
 import {
   ConfigurationListItem,
   MessagingProvidersBox,
@@ -12,10 +13,35 @@ import { appUrls } from "../../modules/app-configuration/urls";
 import { trpcClient } from "../../modules/trpc/trpc-client";
 
 const ConfigurationPage: NextPage = () => {
-  const { appBridgeState } = useAppBridge();
+  const { appBridgeState, appBridge } = useAppBridge();
 
   const { data: dataSmtp, isLoading: isLoadingSmtp } =
     trpcClient.smtpConfiguration.getConfigurations.useQuery();
+
+  const fallbackSettingsQuery = trpcClient.smtpConfiguration.getFallbackSmtpSettings.useQuery();
+  const fallbackSettingsMutation =
+    trpcClient.smtpConfiguration.updateFallbackSmtpSettings.useMutation({
+      onSuccess: () => {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Success",
+            status: "success",
+          }),
+        );
+      },
+      onError: (e) => {
+        appBridge?.dispatch(
+          actions.Notification({
+            title: "Error",
+            status: "error",
+            text: e.message,
+          }),
+        );
+      },
+      onSettled: () => {
+        fallbackSettingsQuery.refetch();
+      },
+    });
 
   const data: ConfigurationListItem[] = [
     ...(dataSmtp?.map((configuration) => ({
@@ -48,6 +74,23 @@ const ConfigurationPage: NextPage = () => {
         description={<Text>Manage configurations and modify it&apos;s message templates.</Text>}
       >
         <MessagingProvidersBox configurations={data || []} isLoading={isLoading} />
+      </SectionWithDescription>
+      <SectionWithDescription
+        title="Fallback behavior"
+        description={
+          <Text>
+            Configure how should app behave for events not covered by custom SMTP configuration
+          </Text>
+        }
+      >
+        <ConfigurationFallback
+          onChange={(newValue) => {
+            fallbackSettingsMutation.mutate({ useSaleorSmtpFallback: newValue });
+          }}
+          useSaleorSmtpFallback={fallbackSettingsQuery.data?.useSaleorSmtpFallback}
+          loading={fallbackSettingsQuery.isLoading}
+          saving={fallbackSettingsMutation.isLoading ?? fallbackSettingsQuery.isRefetching}
+        />
       </SectionWithDescription>
     </BasicLayout>
   );

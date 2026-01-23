@@ -357,4 +357,28 @@ export const smtpConfigurationRouter = router({
         return throwTrpcErrorFromConfigurationServiceError(e);
       }
     }),
+  getFallbackSmtpSettings: protectedWithConfigurationServices.query(async ({ ctx }) => {
+    return ctx.smtpConfigurationService.getConfigurationRoot().match(
+      (v) => ({
+        useSaleorSmtpFallback: v.useSaleorSmtpFallback,
+      }),
+      (e) => throwTrpcErrorFromConfigurationServiceError(e),
+    );
+  }),
+  updateFallbackSmtpSettings: protectedWithConfigurationServices
+    .input(
+      z.object({
+        useSaleorSmtpFallback: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.smtpConfigurationService
+        .updateFallbackSmtpSettings({
+          useSaleorSmtpFallback: input.useSaleorSmtpFallback,
+        })
+        .match(
+          (v) => v,
+          (e) => throwTrpcErrorFromConfigurationServiceError(e),
+        );
+    }),
 });
