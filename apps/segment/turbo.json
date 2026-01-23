@@ -19,7 +19,9 @@
         "REST_APL_TOKEN",
         "SECRET_KEY",
         "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT"
+        "SENTRY_PROJECT",
+        "DYNAMODB_REQUEST_TIMEOUT_MS",
+        "DYNAMODB_CONNECTION_TIMEOUT_MS"
       ]
     }
   }

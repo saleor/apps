@@ -67,7 +67,10 @@ const SegmentConfigTableSchema = {
   }),
 };
 
-export const client = createDynamoDBClient();
+export const client = createDynamoDBClient({
+  connectionTimeout: env.DYNAMODB_CONNECTION_TIMEOUT_MS,
+  requestTimeout: env.DYNAMODB_REQUEST_TIMEOUT_MS,
+});
 
 export const documentClient = createDynamoDBDocumentClient(client);
 

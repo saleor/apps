@@ -17,7 +17,10 @@ export class LogWriterFactory implements ILogWriterFactory {
 
   private createDynamoDbWriter(context: LogWriterContext): ILogWriter {
     try {
-      const dynamoClient = createDynamoClient();
+      const dynamoClient = createDynamoClient({
+        connectionTimeout: env.DYNAMODB_CONNECTION_TIMEOUT_MS,
+        requestTimeout: env.DYNAMODB_REQUEST_TIMEOUT_MS,
+      });
       const logsTable = LogsTable.create({
         documentClient: createDocumentClient(dynamoClient),
         tableName: env.DYNAMODB_LOGS_TABLE_NAME,
