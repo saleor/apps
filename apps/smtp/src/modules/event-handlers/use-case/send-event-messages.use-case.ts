@@ -3,6 +3,7 @@ import { err, errAsync, ok, Result, ResultAsync } from "neverthrow";
 import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
+import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
   getFallbackSmtpConfigSchema,
   SmtpConfiguration,
@@ -65,12 +66,14 @@ export class SendEventMessagesUseCase {
     payload,
     recipientEmail,
     channelSlug,
+    headers,
   }: {
     config: SmtpConfiguration;
     event: MessageEventTypes;
     payload: unknown;
     recipientEmail: string;
     channelSlug: string;
+    headers?: Record<string, string>;
   }) {
     const eventSettings = config.events.find((e) => e.eventType === event);
 
@@ -163,7 +166,7 @@ export class SendEventMessagesUseCase {
 
     return ResultAsync.fromPromise(
       this.deps.emailSender.sendEmailWithSmtp({
-        mailData: preparedEmailResult.value,
+        mailData: { ...preparedEmailResult.value, ...(headers && { headers }) },
         smtpSettings,
       }),
       (err) => {
@@ -193,11 +196,13 @@ export class SendEventMessagesUseCase {
     payload,
     recipientEmail,
     channelSlug,
+    saleorApiUrl,
   }: {
     event: MessageEventTypes;
     payload: unknown;
     recipientEmail: string;
     channelSlug: string;
+    saleorApiUrl: string;
   }): Promise<Result<unknown, Array<InstanceType<typeof SendEventMessagesUseCase.BaseError>>>> {
     this.logger.info("No custom configurations found, checking fallback SMTP");
 
@@ -251,12 +256,15 @@ export class SendEventMessagesUseCase {
       })),
     };
 
+    const tenantName = new TenantName(saleorApiUrl).getTenantName();
+
     const fallbackResult = await this.processSingleConfiguration({
       config: fallbackConfig,
       event,
       payload,
       recipientEmail,
       channelSlug,
+      headers: { "X-SES-TENANT": tenantName },
     });
 
     if (fallbackResult.isErr()) {
@@ -271,11 +279,13 @@ export class SendEventMessagesUseCase {
     payload,
     recipientEmail,
     channelSlug,
+    saleorApiUrl,
   }: {
     channelSlug: string;
     payload: unknown;
     recipientEmail: string;
     event: MessageEventTypes;
+    saleorApiUrl: string;
   }): Promise<Result<unknown, Array<InstanceType<typeof SendEventMessagesUseCase.BaseError>>>> {
     this.logger.info("Calling sendEventMessages", { channelSlug, event });
 
@@ -302,7 +312,7 @@ export class SendEventMessagesUseCase {
     }
 
     if (availableSmtpConfigurations.value.length === 0) {
-      return this.sendWithFallback({ event, payload, recipientEmail, channelSlug });
+      return this.sendWithFallback({ event, payload, recipientEmail, channelSlug, saleorApiUrl });
     }
 
     this.logger.info(

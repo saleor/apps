@@ -191,6 +191,7 @@ describe("SendEventMessagesUseCase", () => {
         payload: {},
         channelSlug: "channel-slug",
         recipientEmail: "recipient@test.com",
+        saleorApiUrl: "https://demo.saleor.cloud/graphql/",
       });
 
       expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
@@ -208,6 +209,7 @@ describe("SendEventMessagesUseCase", () => {
         payload: {},
         channelSlug: "channel-slug",
         recipientEmail: "recipient@test.com",
+        saleorApiUrl: "https://demo.saleor.cloud/graphql/",
       });
 
       expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
@@ -249,10 +251,43 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(result.isOk()).toBe(true);
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
+      });
+
+      it("Passes X-SES-TENANT header derived from saleorApiUrl when sending via fallback", async () => {
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderEmail: "fallback@example.com",
+        });
+
+        await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(emailSender.mockSendEmailMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            mailData: expect.objectContaining({
+              headers: { "X-SES-TENANT": "demo_saleor_cloud" },
+            }),
+          }),
+        );
       });
 
       it("Returns NoOp error when fallback is enabled but env is not configured", async () => {
@@ -267,6 +302,7 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
@@ -284,6 +320,7 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
@@ -304,6 +341,7 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(result.isOk()).toBe(true);
@@ -332,6 +370,7 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
@@ -354,6 +393,7 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledTimes(2);
@@ -373,6 +413,7 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "email@example.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(result.isErr()).toBe(true);
@@ -396,6 +437,7 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(result?.isErr()).toBe(true);
@@ -418,6 +460,7 @@ describe("SendEventMessagesUseCase", () => {
             payload: {},
             channelSlug: "channel-slug",
             recipientEmail: "recipient@test.com",
+            saleorApiUrl: "https://demo.saleor.cloud/graphql/",
           });
 
           expect(result?.isErr()).toBe(true);
@@ -437,6 +480,7 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(result?.isErr()).toBe(true);
@@ -451,6 +495,7 @@ describe("SendEventMessagesUseCase", () => {
           payload: {},
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
         });
 
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();

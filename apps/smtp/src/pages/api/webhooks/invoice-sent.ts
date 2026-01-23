@@ -101,6 +101,7 @@ const handler: NextJsWebhookHandler<InvoiceSentWebhookPayloadFragment> = async (
         event: "INVOICE_SENT",
         payload: { order: payload.order },
         recipientEmail,
+        saleorApiUrl: authData.saleorApiUrl,
       })
       .then((result) =>
         result.match(
