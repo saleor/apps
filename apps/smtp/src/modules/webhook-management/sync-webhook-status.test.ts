@@ -30,6 +30,7 @@ describe("syncWebhookStatus", function () {
     metadataManager: smtpConfigurator,
     initialData: {
       configurations: [],
+      useSaleorSmtpFallback: false,
     },
     featureFlagService: createMockedFeatureFlagService(),
   });

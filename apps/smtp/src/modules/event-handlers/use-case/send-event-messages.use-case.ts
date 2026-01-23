@@ -1,13 +1,20 @@
-import { err, errAsync, Result, ResultAsync } from "neverthrow";
+import { err, errAsync, ok, Result, ResultAsync } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
-import { SmtpConfiguration } from "../../smtp/configuration/smtp-config-schema";
-import { IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
+import {
+  getFallbackSmtpConfigSchema,
+  SmtpConfiguration,
+} from "../../smtp/configuration/smtp-config-schema";
+import {
+  IGetFallbackSmtpEnabled,
+  IGetSmtpConfiguration,
+} from "../../smtp/configuration/smtp-configuration.service";
+import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../../smtp/default-templates";
 import { IEmailCompiler } from "../../smtp/services/email-compiler";
 import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
-import { MessageEventTypes } from "../message-event-types";
+import { MessageEventTypes, messageEventTypes } from "../message-event-types";
 
 export class SendEventMessagesUseCase {
   static BaseError = BaseError.subclass("SendEventMessagesUseCaseError");
@@ -44,11 +51,14 @@ export class SendEventMessagesUseCase {
 
   static EventSettingsMissingError = this.NoOpError.subclass("EventSettingsMissingError");
 
+  static FallbackNotConfiguredError = this.NoOpError.subclass("FallbackNotConfiguredError");
+
   private logger = createLogger("SendEventMessagesUseCase");
 
   constructor(
     private deps: {
       smtpConfigurationService: IGetSmtpConfiguration;
+      fallbackConfigService: IGetFallbackSmtpEnabled;
       emailCompiler: IEmailCompiler;
       emailSender: ISMTPEmailSender;
     },
@@ -219,20 +229,72 @@ export class SendEventMessagesUseCase {
     }
 
     if (availableSmtpConfigurations.value.length === 0) {
-      this.logger.warn("Configuration list is empty, app is not configured");
+      this.logger.info("No custom configurations found, checking fallback SMTP");
 
-      return err([
-        new SendEventMessagesUseCase.MissingAvailableConfigurationError(
-          "Missing configuration for this channel that is active",
-          {
-            errors: [],
-            props: {
-              channelSlug,
-              event,
+      const fallbackEnabledResult =
+        await this.deps.fallbackConfigService.getIsFallbackSmtpEnabled();
+
+      if (fallbackEnabledResult.isErr() || !fallbackEnabledResult.value) {
+        this.logger.info("Fallback SMTP is not enabled");
+
+        return err([
+          new SendEventMessagesUseCase.FallbackNotConfiguredError(
+            "No custom configuration and fallback is not enabled",
+            {
+              props: { channelSlug, event },
             },
-          },
-        ),
-      ]);
+          ),
+        ]);
+      }
+
+      const fallbackSmtpConfig = getFallbackSmtpConfigSchema();
+
+      if (!fallbackSmtpConfig) {
+        this.logger.info("Fallback SMTP env vars are not configured");
+
+        return err([
+          new SendEventMessagesUseCase.FallbackNotConfiguredError(
+            "Fallback enabled but env vars are not configured",
+            {
+              props: { channelSlug, event },
+            },
+          ),
+        ]);
+      }
+
+      const fallbackConfig: SmtpConfiguration = {
+        id: "fallback",
+        active: true,
+        name: "Saleor Cloud Fallback",
+        senderName: fallbackSmtpConfig.senderName,
+        senderEmail: fallbackSmtpConfig.senderEmail,
+        smtpHost: fallbackSmtpConfig.smtpHost,
+        smtpPort: fallbackSmtpConfig.smtpPort,
+        smtpUser: fallbackSmtpConfig.smtpUser,
+        smtpPassword: fallbackSmtpConfig.smtpPassword,
+        encryption: fallbackSmtpConfig.encryption,
+        channels: { channels: [], mode: "restrict", override: false },
+        events: messageEventTypes.map((eventType) => ({
+          active: true,
+          eventType,
+          template: defaultMjmlTemplates[eventType],
+          subject: defaultMjmlSubjectTemplates[eventType],
+        })),
+      };
+
+      const fallbackResult = await this.processSingleConfiguration({
+        config: fallbackConfig,
+        event,
+        payload,
+        recipientEmail,
+        channelSlug,
+      });
+
+      if (fallbackResult.isErr()) {
+        return err([fallbackResult.error]);
+      }
+
+      return ok(fallbackResult.value);
     }
 
     this.logger.info(

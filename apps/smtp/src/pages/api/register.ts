@@ -4,9 +4,19 @@ import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared/saleor-version-compatibility-validator";
 
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
+import { getBaseUrl } from "../../lib/get-base-url";
+import { createSettingsManager } from "../../lib/metadata-manager";
 import { createLogger } from "../../logger";
 import { loggerContext } from "../../logger-context";
+import { FeatureFlagService } from "../../modules/feature-flag-service/feature-flag-service";
 import { fetchSaleorVersion } from "../../modules/feature-flag-service/fetch-saleor-version";
+import { SmtpConfigurationService } from "../../modules/smtp/configuration/smtp-configuration.service";
+import { SmtpMetadataManager } from "../../modules/smtp/configuration/smtp-metadata-manager";
+import {
+  AppWebhook,
+  AppWebhooks,
+  WebhookManagementService,
+} from "../../modules/webhook-management/webhook-management-service";
 import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
 
 const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
@@ -93,8 +103,52 @@ export default wrapWithLoggerContext(
 
         logger.info("Saleor version validated successfully");
       },
-      async onAuthAplSaved(_request, context): Promise<void> {
-        // TODO: Save useSaleorSmtpFallback: true config for new installations
+      async onAuthAplSaved(request, context): Promise<void> {
+        const logger = createLogger("onAuthAplSaved");
+        const { authData } = context;
+
+        try {
+          const client = createInstrumentedGraphqlClient({
+            saleorApiUrl: authData.saleorApiUrl,
+            token: authData.token,
+          });
+
+          const featureFlagService = new FeatureFlagService({ client });
+          const smtpConfigurationService = new SmtpConfigurationService({
+            featureFlagService,
+            metadataManager: new SmtpMetadataManager(
+              createSettingsManager(client, authData.appId),
+              authData.saleorApiUrl,
+            ),
+          });
+
+          const fallbackResult = await smtpConfigurationService.updateFallbackSmtpSettings({
+            useSaleorSmtpFallback: true,
+          });
+
+          if (fallbackResult.isErr()) {
+            logger.warn("Failed to enable fallback SMTP settings", {
+              error: fallbackResult.error,
+            });
+          }
+
+          const baseUrl = getBaseUrl(request.headers);
+          const webhookManagementService = new WebhookManagementService({
+            appBaseUrl: baseUrl,
+            client,
+            featureFlagService,
+          });
+
+          for (const webhook of Object.keys(AppWebhooks) as AppWebhook[]) {
+            try {
+              await webhookManagementService.createWebhook({ webhook });
+            } catch (e) {
+              logger.warn(`Failed to create webhook ${webhook}`, { error: e });
+            }
+          }
+        } catch (e) {
+          logger.error("Failed to setup fallback SMTP on registration", { error: e });
+        }
       },
     }),
   ),
