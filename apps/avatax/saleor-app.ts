@@ -1,7 +1,6 @@
 import { APL } from "@saleor/app-sdk/APL";
 import { DynamoAPL } from "@saleor/app-sdk/APL/dynamodb";
 import { FileAPL } from "@saleor/app-sdk/APL/file";
-import { SaleorCloudAPL } from "@saleor/app-sdk/APL/saleor-cloud";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 import { env } from "@/env";
@@ -31,20 +30,6 @@ switch (env.APL) {
           logger.debug(`[DynamoAPL] ${message}`);
         }
       },
-    });
-
-    break;
-  }
-
-  // todo: deprecate in sdk, remove in apps, clean envs
-  case "saleor-cloud": {
-    if (!env.REST_APL_ENDPOINT || !env.REST_APL_TOKEN) {
-      throw new Error("Rest APL is not configured - missing env variables. Check saleor-app.ts");
-    }
-
-    apl = new SaleorCloudAPL({
-      resourceUrl: env.REST_APL_ENDPOINT,
-      token: env.REST_APL_TOKEN,
     });
 
     break;

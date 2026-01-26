@@ -15,7 +15,7 @@ export const env = createEnv({
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
-    APL: z.enum(["saleor-cloud", "file", "dynamodb"]).optional().default("file"),
+    APL: z.enum(["file", "dynamodb"]).optional().default("file"),
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
@@ -58,6 +58,8 @@ export const env = createEnv({
         return s.split(",").map((domain) => domain.trim());
       }),
     OTEL_METRICS_FLUSH_TIMEOUT_MILIS: z.coerce.number().optional().default(5_000),
+    DYNAMODB_REQUEST_TIMEOUT_MS: z.coerce.number().default(5_000),
+    DYNAMODB_CONNECTION_TIMEOUT_MS: z.coerce.number().default(2_000),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
@@ -103,6 +105,8 @@ export const env = createEnv({
     OTEL_TRACES_SAMPLER_ARG: process.env.OTEL_TRACES_SAMPLER_ARG,
     OTEL_TENANT_DOMAIN_ALLOWLIST: process.env.OTEL_TENANT_DOMAIN_ALLOWLIST,
     OTEL_METRICS_FLUSH_TIMEOUT_MILIS: process.env.OTEL_METRICS_FLUSH_TIMEOUT_MILIS,
+    DYNAMODB_REQUEST_TIMEOUT_MS: process.env.DYNAMODB_REQUEST_TIMEOUT_MS,
+    DYNAMODB_CONNECTION_TIMEOUT_MS: process.env.DYNAMODB_CONNECTION_TIMEOUT_MS,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

@@ -4,14 +4,23 @@ export class TenantName {
   constructor(private saleorApiUrl: string) {}
 
   getTenantName() {
-    const url = new URL(this.saleorApiUrl);
+    try {
+      const url = new URL(this.saleorApiUrl);
 
-    const domain = url.hostname;
+      const domain = url.hostname;
 
-    const noDots = domain.replaceAll(".", "_");
+      const noDots = domain.replaceAll(".", "_");
 
-    const trimmed = noDots.substring(0, this.MAX_LENGTH);
+      const trimmed = noDots.substring(0, this.MAX_LENGTH);
 
-    return trimmed;
+      return trimmed;
+    } catch (e) {
+      throw new Error(
+        "Failed to parse Saleor API URL, usually that means Saleor request did not include it, or there is application error",
+        {
+          cause: e,
+        },
+      );
+    }
   }
 }
