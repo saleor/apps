@@ -15,8 +15,10 @@ import { trpcClient } from "../../modules/trpc/trpc-client";
 const ConfigurationPage: NextPage = () => {
   const { appBridgeState, appBridge } = useAppBridge();
 
-  // todo get from api router, that will check if config exists in env
-  const saleorCloudFallbackAvailable = true;
+  const { data: fallbackConfigData } =
+    trpcClient.smtpConfiguration.isFallbackSmtpConfigured.useQuery();
+
+  const saleorCloudFallbackAvailable = fallbackConfigData?.isConfigured ?? false;
 
   const { data: dataSmtp, isLoading: isLoadingSmtp } =
     trpcClient.smtpConfiguration.getConfigurations.useQuery();

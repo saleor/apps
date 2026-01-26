@@ -20,7 +20,7 @@ export function setBackendErrors<T extends FieldValues = FieldValues>({
   for (const fieldName in fieldErrors) {
     for (const message of fieldErrors[fieldName] || []) {
       isFieldErrorSet = true;
-      if (!!setError) {
+      if (setError) {
         setError(fieldName as keyof UseFormSetError<T>, {
           type: "manual",
           message,

@@ -23,6 +23,7 @@ import {
   smtpUpdateSenderSchema,
   smtpUpdateSmtpSchema,
 } from "./smtp-config-input-schema";
+import { getFallbackSmtpConfigSchema } from "./smtp-config-schema";
 import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
 
@@ -364,6 +365,11 @@ export const smtpConfigurationRouter = router({
       }),
       (e) => throwTrpcErrorFromConfigurationServiceError(e),
     );
+  }),
+  isFallbackSmtpConfigured: protectedWithConfigurationServices.query(async () => {
+    const fallbackConfig = getFallbackSmtpConfigSchema();
+
+    return { isConfigured: fallbackConfig !== null };
   }),
   updateFallbackSmtpSettings: protectedWithConfigurationServices
     .input(
