@@ -1,13 +1,8 @@
+import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 import packageJson from "@/package.json";
-
-// https://env.t3.gg/docs/recipes#booleans
-const booleanSchema = z
-  .string()
-  .refine((s) => s === "true" || s === "false")
-  .transform((s) => s === "true");
 
 export const env = createEnv({
   client: {
@@ -33,7 +28,7 @@ export const env = createEnv({
     E2E_SALEOR_VERSION: z.enum(["320", "321", "latest"]).optional(),
     FILE_APL_PATH: z.string().optional(),
     MANIFEST_APP_ID: z.string().optional().default("saleor.app.avatax"),
-    OTEL_ENABLED: booleanSchema.optional().default("false"),
+    OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional(),
     PORT: z.coerce.number().optional().default(3000),
     REST_APL_ENDPOINT: z.string().optional(),

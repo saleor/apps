@@ -1,11 +1,6 @@
+import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
-
-// https://env.t3.gg/docs/recipes#booleans
-const booleanSchema = z
-  .string()
-  .refine((s) => s === "true" || s === "false")
-  .transform((s) => s === "true");
 
 export const env = createEnv({
   client: {
@@ -21,7 +16,7 @@ export const env = createEnv({
     MANIFEST_APP_ID: z.string().optional().default("saleor.app.cms2"),
     REST_APL_ENDPOINT: z.string().optional(),
     REST_APL_TOKEN: z.string().optional(),
-    OTEL_ENABLED: booleanSchema.optional().default("false"),
+    OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional(),
     PORT: z.coerce.number().optional().default(3000),
     SECRET_KEY: z.string(),

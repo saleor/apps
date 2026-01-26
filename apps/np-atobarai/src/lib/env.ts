@@ -1,13 +1,8 @@
+import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { BaseError } from "@saleor/errors";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
-
-// https://env.t3.gg/docs/recipes#booleans
-const booleanSchema = z
-  .string()
-  .refine((s) => s === "true" || s === "false")
-  .transform((s) => s === "true");
 
 export const env = createEnv({
   client: {
@@ -21,7 +16,7 @@ export const env = createEnv({
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
     MANIFEST_APP_ID: z.string().optional().default("saleor.app.payment.np-atobarai"),
     OTEL_ACCESS_TOKEN: z.string().optional(),
-    OTEL_ENABLED: booleanSchema.optional().default("false"),
+    OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional().default("saleor-app-payment-np-atobarai"),
     PORT: z.coerce.number().optional().default(3000),
     REPOSITORY_URL: z.string().optional(),
