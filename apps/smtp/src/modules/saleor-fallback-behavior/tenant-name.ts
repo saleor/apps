@@ -16,7 +16,7 @@ export class TenantName {
       return trimmed;
     } catch (e) {
       throw new Error(
-        "Failed to parse Saleor API URL, usually that means Saleor request did not include it, or there is application error",
+        `Failed to parse Saleor API URL, usually that means Saleor request did not include it, or there is application error. Received: "${this.saleorApiUrl}"`,
         {
           cause: e,
         },

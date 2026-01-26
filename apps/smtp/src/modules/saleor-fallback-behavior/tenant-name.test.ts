@@ -39,7 +39,7 @@ describe("TenantName", () => {
       const tenantName = new TenantName("invalid");
 
       expect(() => tenantName.getTenantName()).toThrowErrorMatchingInlineSnapshot(
-        `[Error: Failed to parse Saleor API URL, usually that means Saleor request did not include it, or there is application error]`,
+        `[Error: Failed to parse Saleor API URL, usually that means Saleor request did not include it, or there is application error. Received: "invalid"]`,
       );
     });
   });

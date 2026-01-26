@@ -8,7 +8,24 @@ import { BoxWithBorder } from "../../../components/box-with-border";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { smtpUrls } from "../../smtp/urls";
 
-const NoExistingConfigurations = () => {
+const saleorCloudSmtpHint = (
+  <>
+    <Paragraph marginBottom={2} color="accent1" fontWeight="bold">
+      Saleor Cloud SMTP available
+    </Paragraph>
+    <Paragraph marginBottom={4} color="default2">
+      App can use fallback Saleor Cloud SMTP server (enable/disable below).
+      <br />
+      For production usage, configure your SMTP settings.
+    </Paragraph>
+  </>
+);
+
+const NoExistingConfigurations = ({
+  saleorCloudFallbackAvailable,
+}: {
+  saleorCloudFallbackAvailable: boolean;
+}) => {
   const { push } = useRouter();
 
   const redirectToNewConfiguration = () => {
@@ -23,15 +40,7 @@ const NoExistingConfigurations = () => {
       alignItems="flex-start"
       justifyContent="center"
     >
-      <Paragraph marginBottom={2} color="accent1" fontWeight="bold">
-        Saleor Cloud SMTP enabled
-      </Paragraph>
-      <Paragraph marginBottom={4} color="default2">
-        App is using Saleor Cloud default email provider. Emails will be delivered via Saleor Cloud
-        sandbox free tier.
-        <br />
-        For production usage, configure your SMTP settings.
-      </Paragraph>
+      {saleorCloudFallbackAvailable && saleorCloudSmtpHint}
       <Button __alignSelf="center" onClick={redirectToNewConfiguration}>
         Add first configuration
       </Button>
@@ -51,11 +60,13 @@ export type ConfigurationListItem = {
 interface MessagingProvidersSectionProps {
   configurations: ConfigurationListItem[];
   isLoading: boolean;
+  saleorCloudFallbackAvailable: boolean;
 }
 
 export const MessagingProvidersBox = ({
   configurations,
   isLoading: loading,
+  saleorCloudFallbackAvailable,
 }: MessagingProvidersSectionProps) => {
   const { push } = useRouter();
 
@@ -68,7 +79,7 @@ export const MessagingProvidersBox = ({
   }
 
   if (configurations.length === 0) {
-    return <NoExistingConfigurations />;
+    return <NoExistingConfigurations saleorCloudFallbackAvailable={saleorCloudFallbackAvailable} />;
   }
 
   const redirectToProvidersSelection = () => {

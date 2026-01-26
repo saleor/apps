@@ -15,6 +15,9 @@ import { trpcClient } from "../../modules/trpc/trpc-client";
 const ConfigurationPage: NextPage = () => {
   const { appBridgeState, appBridge } = useAppBridge();
 
+  // todo get from api router, that will check if config exists in env
+  const saleorCloudFallbackAvailable = true;
+
   const { data: dataSmtp, isLoading: isLoadingSmtp } =
     trpcClient.smtpConfiguration.getConfigurations.useQuery();
 
@@ -73,25 +76,31 @@ const ConfigurationPage: NextPage = () => {
         title="Configurations"
         description={<Text>Manage configurations and modify it&apos;s message templates.</Text>}
       >
-        <MessagingProvidersBox configurations={data || []} isLoading={isLoading} />
-      </SectionWithDescription>
-      <SectionWithDescription
-        title="Fallback behavior"
-        description={
-          <Text>
-            Configure how should app behave for events not covered by custom SMTP configuration
-          </Text>
-        }
-      >
-        <ConfigurationFallback
-          onChange={(newValue) => {
-            fallbackSettingsMutation.mutate({ useSaleorSmtpFallback: newValue });
-          }}
-          useSaleorSmtpFallback={fallbackSettingsQuery.data?.useSaleorSmtpFallback}
-          loading={fallbackSettingsQuery.isLoading}
-          saving={fallbackSettingsMutation.isLoading ?? fallbackSettingsQuery.isRefetching}
+        <MessagingProvidersBox
+          configurations={data || []}
+          isLoading={isLoading}
+          saleorCloudFallbackAvailable={saleorCloudFallbackAvailable}
         />
       </SectionWithDescription>
+      {saleorCloudFallbackAvailable && (
+        <SectionWithDescription
+          title="Fallback behavior"
+          description={
+            <Text>
+              Configure how should app behave for events not covered by custom SMTP configuration
+            </Text>
+          }
+        >
+          <ConfigurationFallback
+            onChange={(newValue) => {
+              fallbackSettingsMutation.mutate({ useSaleorSmtpFallback: newValue });
+            }}
+            useSaleorSmtpFallback={fallbackSettingsQuery.data?.useSaleorSmtpFallback}
+            loading={fallbackSettingsQuery.isLoading}
+            saving={fallbackSettingsMutation.isLoading ?? fallbackSettingsQuery.isRefetching}
+          />
+        </SectionWithDescription>
+      )}
     </BasicLayout>
   );
 };
