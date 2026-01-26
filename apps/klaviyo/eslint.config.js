@@ -16,7 +16,7 @@ export default [
   },
   {
     name: "saleor-app-klaviyo/override-no-process-env",
-    files: ["next.config.ts", "src/env.ts", "src/instrumentations/*"],
+    files: ["next.config.ts", "src/env.ts", "src/instrumentations/*", "src/instrumentation.ts"],
     rules: {
       "n/no-process-env": "off",
     },
