@@ -61,6 +61,12 @@ export const nonActiveSmtpConfiguration: SmtpConfiguration = {
     },
     {
       active: false,
+      eventType: "ACCOUNT_EMAIL_IN_USE",
+      template: "template",
+      subject: "Email already in use",
+    },
+    {
+      active: false,
       eventType: "ACCOUNT_PASSWORD_RESET",
       template: "template",
       subject: "Password reset request",

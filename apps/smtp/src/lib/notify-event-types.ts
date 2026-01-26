@@ -3,6 +3,7 @@ import { MessageEventTypes } from "../modules/event-handlers/message-event-types
 // Notify webhook event groups multiple event types under the one webhook. We need to map it to events recognized by the App
 export const notifyEventMapping: Record<string, MessageEventTypes> = {
   account_confirmation: "ACCOUNT_CONFIRMATION",
+  account_email_in_use: "ACCOUNT_EMAIL_IN_USE",
   account_delete: "ACCOUNT_DELETE",
   account_password_reset: "ACCOUNT_PASSWORD_RESET",
   account_change_email_request: "ACCOUNT_CHANGE_EMAIL_REQUEST",
@@ -27,6 +28,10 @@ export type NotifySubscriptionPayload = {
   | {
       notify_event: "account_confirmation";
       payload: NotifyPayloadAccountConfirmation;
+    }
+  | {
+      notify_event: "account_email_in_use";
+      payload: NotifyPayloadAccountEmailInUse;
     }
   | {
       notify_event: "account_delete";
@@ -58,6 +63,15 @@ export interface NotifyPayloadAccountConfirmation {
   recipient_email: string;
   site_name: string;
   token: string;
+  user: User;
+}
+
+export interface NotifyPayloadAccountEmailInUse {
+  channel_slug: string;
+  domain: string;
+  logo_url: string;
+  recipient_email: string;
+  site_name: string;
   user: User;
 }
 

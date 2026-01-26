@@ -14,6 +14,7 @@ import {
   NotifyPayloadAccountChangeEmailRequest,
   NotifyPayloadAccountConfirmation,
   NotifyPayloadAccountDelete,
+  NotifyPayloadAccountEmailInUse,
   NotifyPayloadAccountPasswordReset,
   NotifyPayloadFulfillmentUpdate,
 } from "../../lib/notify-event-types";
@@ -266,6 +267,25 @@ const accountConfirmationPayload: NotifyPayloadAccountConfirmation = {
   token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   confirm_url:
     "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
+  channel_slug: "default-channel",
+  domain: "demo.saleor.cloud",
+  site_name: "Saleor e-commerce",
+  logo_url: "",
+};
+
+const accountEmailInUsePayload: NotifyPayloadAccountEmailInUse = {
+  user: {
+    id: "VXNlcjoxOTY=",
+    email: "user@example.com",
+    first_name: "John",
+    last_name: "Doe",
+    is_staff: false,
+    is_active: false,
+    private_metadata: {},
+    metadata: {},
+    language_code: "en",
+  },
+  recipient_email: "user@example.com",
   channel_slug: "default-channel",
   domain: "demo.saleor.cloud",
   site_name: "Saleor e-commerce",
@@ -582,6 +602,7 @@ export const examplePayloads: Record<MessageEventTypes, any> = {
   ACCOUNT_CHANGE_EMAIL_CONFIRM: accountChangeEmailConfirmPayload,
   ACCOUNT_CHANGE_EMAIL_REQUEST: accountChangeEmailRequestPayload,
   ACCOUNT_CONFIRMATION: accountConfirmationPayload,
+  ACCOUNT_EMAIL_IN_USE: accountEmailInUsePayload,
   ACCOUNT_DELETE: accountDeletePayload,
   ACCOUNT_PASSWORD_RESET: accountPasswordResetPayload,
   GIFT_CARD_SENT: giftCardSentPayload,

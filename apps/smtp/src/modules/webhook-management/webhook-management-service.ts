@@ -33,6 +33,7 @@ export const eventToWebhookMapping: Record<MessageEventTypes, AppWebhook> = {
   ACCOUNT_CHANGE_EMAIL_CONFIRM: "notifyWebhook",
   ACCOUNT_CHANGE_EMAIL_REQUEST: "notifyWebhook",
   ACCOUNT_CONFIRMATION: "notifyWebhook",
+  ACCOUNT_EMAIL_IN_USE: "notifyWebhook",
   ACCOUNT_DELETE: "notifyWebhook",
   ACCOUNT_PASSWORD_RESET: "notifyWebhook",
   GIFT_CARD_SENT: "giftCardSentWebhook",

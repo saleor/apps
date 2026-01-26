@@ -80,6 +80,12 @@ const validConfig: SmtpConfig = {
         },
         {
           active: false,
+          eventType: "ACCOUNT_EMAIL_IN_USE",
+          template: validMjmlTemplate,
+          subject: "Email already in use",
+        },
+        {
+          active: false,
           eventType: "ACCOUNT_PASSWORD_RESET",
           template: validMjmlTemplate,
           subject: "Password reset request",

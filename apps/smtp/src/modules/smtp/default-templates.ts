@@ -347,10 +347,29 @@ const defaultOrderFulfillmentUpdatedMjmlTemplate = `<mjml>
   </mj-body>
 </mjml>`;
 
+const defaultAccountEmailInUseMjmlTemplate = `<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="16px">
+          Hi {{user.first_name}}!
+        </mj-text>
+        <mj-text>
+          Your tried to register an account with this email, but it is already in use.  
+        </mj-text>
+        <mj-text>
+          If you have forgotten your password, ask for a password reset.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>`;
+
 export const defaultMjmlTemplates: Record<MessageEventTypes, string> = {
   ACCOUNT_CHANGE_EMAIL_CONFIRM: defaultAccountChangeEmailConfirmationMjmlTemplate,
   ACCOUNT_CHANGE_EMAIL_REQUEST: defaultAccountChangeEmailRequestMjmlTemplate,
   ACCOUNT_CONFIRMATION: defaultAccountConfirmationMjmlTemplate,
+  ACCOUNT_EMAIL_IN_USE: defaultAccountEmailInUseMjmlTemplate,
   ACCOUNT_DELETE: defaultAccountDeleteMjmlTemplate,
   ACCOUNT_PASSWORD_RESET: defaultAccountPasswordResetMjmlTemplate,
   GIFT_CARD_SENT: defaultGiftCardSentMjmlTemplate,
@@ -368,6 +387,7 @@ export const defaultMjmlSubjectTemplates: Record<MessageEventTypes, string> = {
   ACCOUNT_CHANGE_EMAIL_CONFIRM: "Email change confirmation",
   ACCOUNT_CHANGE_EMAIL_REQUEST: "Email change request",
   ACCOUNT_CONFIRMATION: "Account activation",
+  ACCOUNT_EMAIL_IN_USE: "Email already in use",
   ACCOUNT_DELETE: "Account deletion",
   ACCOUNT_PASSWORD_RESET: "Password reset request",
   GIFT_CARD_SENT: "Gift card",
