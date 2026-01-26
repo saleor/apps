@@ -85,7 +85,7 @@ const generateDistributedChunk = (params: {
     }),
     headers: {
       ContentType: "application/json",
-      authorization: env.REQUEST_SECRET as string,
+      authorization: env.REQUEST_SECRET,
     },
     method: "POST",
   })

@@ -37,7 +37,7 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
     NEXT_RUNTIME: z.string().optional(),
-    REQUEST_SECRET: z.string().optional(),
+    REQUEST_SECRET: z.string(),
     FEED_CACHE_MAX_AGE: z.coerce.number().default(300),
     MAX_PARALLEL_CALLS: z.coerce.number().default(5),
     VARIANTS_PER_PAGE: z.coerce.number().default(50),
