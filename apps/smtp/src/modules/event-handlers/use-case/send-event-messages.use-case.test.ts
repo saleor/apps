@@ -284,6 +284,7 @@ describe("SendEventMessagesUseCase", () => {
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledWith(
           expect.objectContaining({
             mailData: expect.objectContaining({
+              // Calculated from saleorApiUrl, see TenantName
               headers: { "X-SES-TENANT": "demo_saleor_cloud" },
             }),
           }),
