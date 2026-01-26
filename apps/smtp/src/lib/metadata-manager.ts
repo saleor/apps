@@ -1,14 +1,13 @@
 import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/settings-manager";
 import { Client, gql } from "urql";
 
-import { env } from "../env";
-
 import {
   DeleteAppMetadataDocument,
   FetchAppDetailsDocument,
   FetchAppDetailsQuery,
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
+import { env } from "../env";
 
 gql`
   mutation UpdateAppMetadata($id: ID!, $input: [MetadataInput!]!) {

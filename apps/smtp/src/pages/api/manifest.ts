@@ -2,8 +2,8 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
-import { env } from "../../env";
 import packageJson from "../../../package.json";
+import { env } from "../../env";
 
 export default withSpanAttributes(
   createManifestHandler({

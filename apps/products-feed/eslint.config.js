@@ -43,7 +43,7 @@ export default [
   },
   {
     name: "saleor-app-products-feed/override-no-process-env",
-    files: ["next.config.ts", "src/env.ts", "src/instrumentation.ts"],
+    files: ["next.config.ts", "src/env.ts", "src/instrumentation.ts", "src/instrumentations/*"],
     rules: { "n/no-process-env": "off" },
   },
 ];
