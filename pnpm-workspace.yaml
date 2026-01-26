@@ -4,19 +4,6 @@ minimumReleaseAge: 1440 # 24h
 
 trustPolicy: no-downgrade
 
-trustPolicyExclude:
-# Semver before v7 was not signed https://www.npmjs.com/package/semver?activeTab=versions
-  - "semver@6.3.1 || 5.7.2"
-  # Old ESLint plugins were not signed, but these are deep dependencies of many other packages, so we need to make a major bump of ESLint and verify if they work together.
-  - "@typescript-eslint/types@8.28.0"
-  - "@typescript-eslint/scope-manager@8.28.0"
-  - "@typescript-eslint/utils@8.29.0"
-  - "@typescript-eslint/visitor-keys@8.29.0"
-  - "@typescript-eslint/typescript-estree@8.28.0"
-  - "@typescript-eslint/types@8.29.0"
-  - "@typescript-eslint/type-utils@8.29.0"
-
-
 packages:
   - apps/*
   - packages/*
