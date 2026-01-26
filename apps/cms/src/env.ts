@@ -37,8 +37,8 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
     NEXT_RUNTIME: z.string().optional(),
-    STRAPI_BATCH_SIZE: z.coerce.number().optional(),
-    STRAPI_MILIS_DELAY_BETWEEN_BATCHES: z.coerce.number().optional(),
+    STRAPI_BATCH_SIZE: z.coerce.number().optional().default(50),
+    STRAPI_MILIS_DELAY_BETWEEN_BATCHES: z.coerce.number().optional().default(1_000),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),

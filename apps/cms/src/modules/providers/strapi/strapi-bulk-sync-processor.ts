@@ -11,8 +11,8 @@ type VariantToProcess = {
 };
 
 export class StrapiBulkSyncProcessor implements BulkSyncProcessor {
-  private batchSize = env.STRAPI_BATCH_SIZE ?? 50;
-  private delayBetweenBatches = env.STRAPI_MILIS_DELAY_BETWEEN_BATCHES ?? 1_000;
+  private batchSize = env.STRAPI_BATCH_SIZE;
+  private delayBetweenBatches = env.STRAPI_MILIS_DELAY_BETWEEN_BATCHES;
 
   constructor(private config: StrapiProviderConfig.FullShape) {}
 
