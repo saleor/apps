@@ -285,6 +285,28 @@ export class TransactionInitializeSessionUseCase {
         error: mappedResponseResult.error,
       });
 
+      const paymentIntentIdResult = fromThrowable(createStripePaymentIntentId)(
+        stripePaymentIntent.id,
+      );
+
+      if (paymentIntentIdResult.isOk()) {
+        const cancelResult = await stripePaymentIntentsApi.cancelPaymentIntent({
+          id: paymentIntentIdResult.value,
+        });
+
+        if (cancelResult.isErr()) {
+          this.logger.warn("Failed to cancel orphaned Payment Intent after mapping failure", {
+            stripePaymentIntentId: stripePaymentIntent.id,
+            error: cancelResult.error,
+          });
+        }
+      } else {
+        this.logger.warn(
+          "Cannot cancel orphaned Payment Intent - failed to parse payment intent id",
+          { stripePaymentIntentId: stripePaymentIntent.id },
+        );
+      }
+
       return err(
         new BrokenAppResponse(appContextContainer.getContextValue(), mappedResponseResult.error),
       );
@@ -314,6 +336,17 @@ export class TransactionInitializeSessionUseCase {
       this.logger.error("Failed to record transaction", {
         error: recordResult.error,
       });
+
+      const cancelResult = await stripePaymentIntentsApi.cancelPaymentIntent({
+        id: stripePaymentIntentId,
+      });
+
+      if (cancelResult.isErr()) {
+        this.logger.warn("Failed to cancel orphaned Payment Intent after DynamoDB write failure", {
+          stripePaymentIntentId,
+          error: cancelResult.error,
+        });
+      }
 
       return err(new BrokenAppResponse(appContextContainer.getContextValue(), recordResult.error));
     }

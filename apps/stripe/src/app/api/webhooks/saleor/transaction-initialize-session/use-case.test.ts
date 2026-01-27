@@ -358,6 +358,10 @@ describe("TransactionInitializeSessionUseCase", () => {
         } as Stripe.PaymentIntent),
     );
 
+    vi.spyOn(mockedStripePaymentIntentsApi, "cancelPaymentIntent").mockImplementationOnce(
+      async () => ok({} as Stripe.PaymentIntent),
+    );
+
     const uc = new TransactionInitializeSessionUseCase({
       appConfigRepo: mockedAppConfigRepo,
       stripePaymentIntentsApiFactory,
@@ -435,6 +439,80 @@ describe("TransactionInitializeSessionUseCase", () => {
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
+  });
+
+  it("Cancels Payment Intent when mapping Stripe response fails", async () => {
+    const saleorEvent = getMockedTransactionInitializeSessionEvent();
+
+    vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+      async () =>
+        ok({
+          amount: 100,
+          currency: "abc",
+          id: "pi_orphaned",
+          status: "requires_payment_method",
+        } as Stripe.PaymentIntent),
+    );
+
+    const cancelSpy = vi
+      .spyOn(mockedStripePaymentIntentsApi, "cancelPaymentIntent")
+      .mockImplementationOnce(async () => ok({} as Stripe.PaymentIntent));
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory,
+      transactionRecorder: new MockedTransactionRecorder(),
+    });
+
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
+    expect(cancelSpy).toHaveBeenCalledWith({ id: "pi_orphaned" });
+  });
+
+  it("Cancels Payment Intent when DynamoDB write fails", async () => {
+    const saleorEvent = getMockedTransactionInitializeSessionEvent();
+    const transactionRecorder = new MockedTransactionRecorder();
+
+    vi.spyOn(transactionRecorder, "recordTransaction").mockImplementationOnce(async () =>
+      err(new TransactionRecorderError.TransactionMissingError("Transaction recorder error")),
+    );
+
+    vi.spyOn(mockedStripePaymentIntentsApi, "createPaymentIntent").mockImplementationOnce(
+      async () =>
+        ok({
+          amount: 100,
+          currency: "usd",
+          client_secret: "secret-value",
+          id: "pi_orphaned",
+          status: "requires_payment_method",
+        } as Stripe.PaymentIntent),
+    );
+
+    const cancelSpy = vi
+      .spyOn(mockedStripePaymentIntentsApi, "cancelPaymentIntent")
+      .mockImplementationOnce(async () => ok({} as Stripe.PaymentIntent));
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory,
+      transactionRecorder,
+    });
+
+    const result = await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: saleorEvent,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+    });
+
+    expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
+    expect(cancelSpy).toHaveBeenCalledWith({ id: "pi_orphaned" });
   });
 
   it.each([

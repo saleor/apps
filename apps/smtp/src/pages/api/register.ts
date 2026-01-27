@@ -3,6 +3,7 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared/saleor-version-compatibility-validator";
 
+import { env } from "../../env";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { getBaseUrl } from "../../lib/get-base-url";
 import { createSettingsManager } from "../../lib/metadata-manager";
@@ -20,7 +21,7 @@ import {
 } from "../../modules/webhook-management/webhook-management-service";
 import { REQUIRED_SALEOR_VERSION, saleorApp } from "../../saleor-app";
 
-const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
+const allowedUrlsPattern = env.ALLOWED_DOMAIN_PATTERN;
 
 const logger = createLogger("createAppRegisterHandler");
 

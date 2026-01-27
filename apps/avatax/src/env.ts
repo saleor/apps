@@ -1,13 +1,8 @@
+import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 import packageJson from "@/package.json";
-
-// https://env.t3.gg/docs/recipes#booleans
-const booleanSchema = z
-  .string()
-  .refine((s) => s === "true" || s === "false")
-  .transform((s) => s === "true");
 
 export const env = createEnv({
   client: {
@@ -15,27 +10,27 @@ export const env = createEnv({
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
-    APL: z.enum(["file", "dynamodb"]).optional().default("file"),
+    APL: z.enum(["file", "dynamodb"]).default("file"),
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
-    AVATAX_CLIENT_TIMEOUT: z.coerce.number().optional().default(15000),
-    AVATAX_CLIENT_APP_NAME: z.string().optional().default(packageJson.name),
-    AVATAX_CLIENT_APP_VERSION: z.string().optional().default(packageJson.version),
+    AVATAX_CLIENT_TIMEOUT: z.coerce.number().default(15000),
+    AVATAX_CLIENT_APP_NAME: z.string().default(packageJson.name),
+    AVATAX_CLIENT_APP_VERSION: z.string().default(packageJson.version),
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_REGION: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
-    DYNAMODB_LOGS_ITEM_TTL_IN_DAYS: z.coerce.number().positive().optional().default(14),
+    DYNAMODB_LOGS_ITEM_TTL_IN_DAYS: z.coerce.number().positive().default(14),
     DYNAMODB_LOGS_TABLE_NAME: z.string(),
     DYNAMODB_MAIN_TABLE_NAME: z.string(),
     E2E_USER_NAME: z.string().optional(),
     E2E_USER_PASSWORD: z.string().optional(),
     E2E_SALEOR_VERSION: z.enum(["320", "321", "latest"]).optional(),
     FILE_APL_PATH: z.string().optional(),
-    MANIFEST_APP_ID: z.string().optional().default("saleor.app.avatax"),
-    OTEL_ENABLED: booleanSchema.optional().default("false"),
+    MANIFEST_APP_ID: z.string().default("saleor.app.avatax"),
+    OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional(),
-    PORT: z.coerce.number().optional().default(3000),
+    PORT: z.coerce.number().default(3000),
     REST_APL_ENDPOINT: z.string().optional(),
     REST_APL_TOKEN: z.string().optional(),
     SECRET_KEY: z.string(),
@@ -46,7 +41,7 @@ export const env = createEnv({
     OTEL_ACCESS_TOKEN: z.string().optional(),
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
-    OTEL_TRACES_SAMPLER_ARG: z.coerce.number().min(0).max(1).optional().default(1),
+    OTEL_TRACES_SAMPLER_ARG: z.coerce.number().min(0).max(1).default(1),
     OTEL_TENANT_DOMAIN_ALLOWLIST: z
       .string()
       .optional()
@@ -57,13 +52,13 @@ export const env = createEnv({
 
         return s.split(",").map((domain) => domain.trim());
       }),
-    OTEL_METRICS_FLUSH_TIMEOUT_MILIS: z.coerce.number().optional().default(5_000),
+    OTEL_METRICS_FLUSH_TIMEOUT_MILIS: z.coerce.number().default(5_000),
     DYNAMODB_REQUEST_TIMEOUT_MS: z.coerce.number().default(5_000),
     DYNAMODB_CONNECTION_TIMEOUT_MS: z.coerce.number().default(2_000),
   },
   shared: {
-    NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
-    ENV: z.enum(["local", "development", "staging", "production"]).optional().default("local"),
+    NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+    ENV: z.enum(["local", "development", "staging", "production"]).default("local"),
   },
   // we use the manual destruction here to validate if env variable is set inside turbo.json
   runtimeEnv: {
