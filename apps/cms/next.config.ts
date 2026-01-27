@@ -1,22 +1,7 @@
-/* eslint-disable no-console */
-
 import { withSentryConfig } from "@sentry/nextjs";
 import { NextConfig } from "next";
-import { z } from "zod";
-
-const RequiredEnvs = z.object({
-  APL: z.string().min(1),
-});
 
 const nextConfig = (): NextConfig => {
-  const parsedEnvs = RequiredEnvs.safeParse(process.env);
-
-  if (!parsedEnvs.success) {
-    console.error("🚫 Missing required env variables, see message below");
-    console.error(parsedEnvs.error.issues);
-    process.exit(1);
-  }
-
   return {
     reactStrictMode: true,
     transpilePackages: [

@@ -1,3 +1,5 @@
+import { env } from "@/env";
+
 import { BulkImportProductFragment } from "../../../../generated/graphql";
 import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
 import { StrapiProviderConfig } from "../../configuration";
@@ -9,12 +11,8 @@ type VariantToProcess = {
 };
 
 export class StrapiBulkSyncProcessor implements BulkSyncProcessor {
-  private batchSize = process.env.STRAPI_BATCH_SIZE
-    ? parseInt(process.env.STRAPI_BATCH_SIZE, 10)
-    : 50;
-  private delayBetweenBatches = process.env.STRAPI_MILIS_DELAY_BETWEEN_BATCHES
-    ? parseInt(process.env.STRAPI_MILIS_DELAY_BETWEEN_BATCHES, 10)
-    : 1_000;
+  private batchSize = env.STRAPI_BATCH_SIZE;
+  private delayBetweenBatches = env.STRAPI_MILIS_DELAY_BETWEEN_BATCHES;
 
   constructor(private config: StrapiProviderConfig.FullShape) {}
 

@@ -7,7 +7,7 @@ import {
   FetchAppDetailsQuery,
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
-import { settingsManagerSecretKey } from "../../saleor-app";
+import { env } from "../env";
 import { createLogger } from "../logger";
 
 const logger = createLogger("MetadataManager");
@@ -86,7 +86,7 @@ export const createSettingsManager = (client: Client, appId: string) =>
    */
   new EncryptedMetadataManager({
     // Secret key should be randomly created for production and set as environment variable
-    encryptionKey: settingsManagerSecretKey,
+    encryptionKey: env.SECRET_KEY,
     fetchMetadata: () => fetchAllMetadata(client),
     mutateMetadata: (metadata) => mutateMetadata(client, appId, metadata),
     deleteMetadata: (keys) => deleteMetadata(client, keys, appId),

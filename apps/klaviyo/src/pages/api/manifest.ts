@@ -4,6 +4,7 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import pkg from "../../../package.json";
+import { env } from "../../env";
 import { loggerContext } from "../../logger-context";
 import { customerCreatedWebhook } from "./webhooks/customer-created";
 import { fulfillmentCreatedWebhook } from "./webhooks/fulfillment-created";
@@ -14,8 +15,8 @@ const handler = wrapWithLoggerContext(
   withSpanAttributes(
     createManifestHandler({
       async manifestFactory({ appBaseUrl }): Promise<AppManifest> {
-        const iframeBaseUrl = process.env.APP_IFRAME_BASE_URL ?? appBaseUrl;
-        const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
+        const iframeBaseUrl = env.APP_IFRAME_BASE_URL ?? appBaseUrl;
+        const apiBaseURL = env.APP_API_BASE_URL ?? appBaseUrl;
 
         return {
           about: "Klaviyo integration allows sending Klaviyo notifications on Saleor events.",

@@ -4,7 +4,7 @@ import {
   ProductVariantWebhookPayloadFragment,
   ProductWebhookPayloadFragment,
 } from "../../../generated/graphql";
-import { ALGOLIA_TIMEOUT_MS } from "../algolia-timeouts";
+import { env } from "../../env";
 import { isNotNil } from "../isNotNil";
 import { createLogger } from "../logger";
 import { SearchProvider } from "../searchProvider";
@@ -73,7 +73,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
         const index = this.#algolia.initIndex(indexName);
 
         return this.#traceSaveObjects(
-          () => index.saveObjects(objects, { timeout: ALGOLIA_TIMEOUT_MS }),
+          () => index.saveObjects(objects, { timeout: env.ALGOLIA_TIMEOUT_MS }),
           { indexName, objectsCount: objects.length },
         );
       }),
@@ -88,7 +88,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
         const index = this.#algolia.initIndex(indexName);
 
         return this.#traceDeleteObjects(
-          () => index.deleteObjects(objectIds, { timeout: ALGOLIA_TIMEOUT_MS }),
+          () => index.deleteObjects(objectIds, { timeout: env.ALGOLIA_TIMEOUT_MS }),
           { indexName, objectIdsCount: objectIds.length },
         );
       }),
@@ -176,7 +176,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
           () =>
             index.deleteBy(
               { filters: `productId:"${product.id}"` },
-              { timeout: ALGOLIA_TIMEOUT_MS },
+              { timeout: env.ALGOLIA_TIMEOUT_MS },
             ),
           { indexName, productId: product.id },
         );

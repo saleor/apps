@@ -1,11 +1,6 @@
+import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
-
-// https://env.t3.gg/docs/recipes#booleans
-const booleanSchema = z
-  .string()
-  .refine((s) => s === "true" || s === "false")
-  .transform((s) => s === "true");
 
 export const env = createEnv({
   client: {
@@ -13,17 +8,17 @@ export const env = createEnv({
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
-    APL: z.enum(["file", "dynamodb"]).optional().default("file"),
+    APL: z.enum(["file", "dynamodb"]).default("file"),
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
     FILE_APL_PATH: z.string().optional(),
-    MANIFEST_APP_ID: z.string().optional().default("saleor.app.segment-v2"),
+    MANIFEST_APP_ID: z.string().default("saleor.app.segment-v2"),
     REST_APL_ENDPOINT: z.string().optional(),
     REST_APL_TOKEN: z.string().optional(),
-    OTEL_ENABLED: booleanSchema.optional().default("false"),
+    OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional(),
-    PORT: z.coerce.number().optional().default(3000),
+    PORT: z.coerce.number().default(3000),
     SECRET_KEY: z.string(),
     VERCEL_URL: z.string().optional(),
     DYNAMODB_MAIN_TABLE_NAME: z.string(),
@@ -38,8 +33,8 @@ export const env = createEnv({
     REPOSITORY_URL: z.string().optional(),
   },
   shared: {
-    NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
-    ENV: z.enum(["local", "development", "staging", "production"]).optional().default("local"),
+    NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+    ENV: z.enum(["local", "development", "staging", "production"]).default("local"),
   },
   // we use the manual destruction here to validate if env variable is set inside turbo.json
   runtimeEnv: {
