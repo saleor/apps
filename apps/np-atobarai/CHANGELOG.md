@@ -1,5 +1,12 @@
 # saleor-app-payment-np-atobarai
 
+## 1.3.3
+
+### Patch Changes
+
+- d5d7a4fe: Introduced lib t3-oss/env, which adds build-time env variables validation. Now all env variables are statically declared and exposed type-safe way
+- 6e5f69c5: Added max DynamoDB connection and request limits (2s for connection, 5s for request), so in case of downtime, app will terminate earlier
+
 ## 1.3.2
 
 ### Patch Changes
