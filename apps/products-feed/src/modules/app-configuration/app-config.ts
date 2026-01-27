@@ -45,7 +45,7 @@ const rootAppConfigSchema = z.object({
   titleTemplate: titleTemplateFieldSchema
     .optional()
     .default(titleTemplateFieldSchema.parse(undefined)),
-  imageSize: imageSizeFieldSchema.optional().default(imageSizeFieldSchema.parse(undefined)),
+  imageSize: imageSizeFieldSchema.default(imageSizeFieldSchema.parse(undefined)),
   attributeMapping: attributeMappingSchema
     .nullable()
     .optional()

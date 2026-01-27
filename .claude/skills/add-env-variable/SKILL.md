@@ -1,3 +1,8 @@
+---
+name: Add Environment Variable
+description: Use when adding a new environment variable to an app.
+---
+
 # Add Environment Variable
 
 When adding a new environment variable to an app, follow these steps:
