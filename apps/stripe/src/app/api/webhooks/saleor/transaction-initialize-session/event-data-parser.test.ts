@@ -24,6 +24,22 @@ describe("parseTransactionInitializeSessionEventData", () => {
     });
   });
 
+  it("should parse valid data with link payment method", () => {
+    const storefrontData = {
+      paymentIntent: {
+        paymentMethod: "link",
+      },
+    };
+
+    const result = parseTransactionInitializeSessionEventData(storefrontData);
+
+    expect(result._unsafeUnwrap()).toStrictEqual({
+      paymentIntent: {
+        paymentMethod: "link",
+      },
+    });
+  });
+
   it("should return UnsupportedPaymentMethodError if storefront sends unsupported payment method", () => {
     const storefrontData = {
       paymentIntent: {

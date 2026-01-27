@@ -1,14 +1,9 @@
+import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
 
 import { BaseError } from "@/lib/errors";
-
-// https://env.t3.gg/docs/recipes#booleans
-const booleanSchema = z
-  .string()
-  .refine((s) => s === "true" || s === "false")
-  .transform((s) => s === "true");
 
 export const env = createEnv({
   client: {
@@ -16,15 +11,15 @@ export const env = createEnv({
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
-    APL: z.enum(["saleor-cloud", "file", "dynamodb"]).optional().default("file"),
+    APL: z.enum(["saleor-cloud", "file", "dynamodb"]).default("file"),
     APP_API_BASE_URL: z.string().optional(),
     APP_IFRAME_BASE_URL: z.string().optional(),
     APP_LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
-    MANIFEST_APP_ID: z.string().optional().default("saleor.app.payment.stripe"),
+    MANIFEST_APP_ID: z.string().default("saleor.app.payment.stripe"),
     OTEL_ACCESS_TOKEN: z.string().optional(),
-    OTEL_ENABLED: booleanSchema.optional().default("false"),
-    OTEL_SERVICE_NAME: z.string().optional().default("saleor-app-payment-stripe"),
-    PORT: z.coerce.number().optional().default(3000),
+    OTEL_ENABLED: booleanEnv.defaultFalse,
+    OTEL_SERVICE_NAME: z.string().default("saleor-app-payment-stripe"),
+    PORT: z.coerce.number().default(3000),
     REPOSITORY_URL: z.string().optional(),
     SECRET_KEY: z.string(),
     VERCEL_ENV: z.string().optional(),
@@ -37,11 +32,11 @@ export const env = createEnv({
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
     APPSTORE_URL: z.string().optional(),
-    APP_NAME: z.string().optional().default("Stripe"),
+    APP_NAME: z.string().default("Stripe"),
   },
   shared: {
-    NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
-    ENV: z.enum(["local", "development", "staging", "production"]).optional().default("local"),
+    NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+    ENV: z.enum(["local", "development", "staging", "production"]).default("local"),
   },
   // we use the manual destruction here to validate if env variable is set inside turbo.json
   runtimeEnv: {

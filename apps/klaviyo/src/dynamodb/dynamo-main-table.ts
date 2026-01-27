@@ -1,6 +1,7 @@
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { Table } from "dynamodb-toolbox";
 
+import { env } from "../env";
 import { createDynamoDBClient, createDynamoDBDocumentClient } from "./dynamodb-client";
 
 type PartitionKey = { name: "PK"; type: "string" };
@@ -57,12 +58,12 @@ export class DynamoMainTable extends Table<PartitionKey, SortKey> {
 }
 
 const client = createDynamoDBClient({
-  connectionTimeout: Number(process.env.DYNAMODB_CONNECTION_TIMEOUT_MS) || 2_000,
-  requestTimeout: Number(process.env.DYNAMODB_REQUEST_TIMEOUT_MS) || 5_000,
+  connectionTimeout: env.DYNAMODB_CONNECTION_TIMEOUT_MS,
+  requestTimeout: env.DYNAMODB_REQUEST_TIMEOUT_MS,
 });
 const documentClient = createDynamoDBDocumentClient(client);
 
 export const dynamoMainTable = DynamoMainTable.create({
   documentClient: documentClient,
-  tableName: process.env.DYNAMODB_MAIN_TABLE_NAME as string,
+  tableName: env.DYNAMODB_MAIN_TABLE_NAME,
 });

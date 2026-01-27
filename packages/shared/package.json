@@ -18,7 +18,8 @@
     "./saleor-version-compatibility-validator": "./src/saleor-version-compatibility-validator.ts",
     "./theme-synchronizer": "./src/theme-synchronizer.tsx",
     "./use-dashboard-notification": "./src/use-dashboard-notification.ts",
-    "./encryptor": "./src/encryptor.ts"
+    "./encryptor": "./src/encryptor.ts",
+    "./boolean-env": "./src/boolean-env-schema.ts"
   },
   "scripts": {
     "check-types": "tsc",
