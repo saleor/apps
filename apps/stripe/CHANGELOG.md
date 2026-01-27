@@ -1,5 +1,17 @@
 # saleor-app-payment-stripe
 
+## 2.4.0
+
+### Minor Changes
+
+- cf9c50af: Added support for _Link_ payment method. Storefront should include `link` payment method in mutation `data`
+- a628f53f: Now app will cancel Payment Intent (on Stripe side) when it fails to finish saving transaction on app's side (record in DynamoDB). That behavior was partially broken and webhooks couldn't be resolved. Now if DynamoDB write fails, app cleans the orphaned intent. This happens on TransactionInitializeSession
+
+### Patch Changes
+
+- d5d7a4fe: Introduced lib t3-oss/env, which adds build-time env variables validation. Now all env variables are statically declared and exposed type-safe way
+- 6e5f69c5: Added max DynamoDB connection and request limits (2s for connection, 5s for request), so in case of downtime, app will terminate earlier
+
 ## 2.3.12
 
 ### Patch Changes
