@@ -16,7 +16,7 @@ describe("TenantName", () => {
       expect(tenantName.getTenantName()).toBe("my-store_eu_saleor_cloud");
     });
 
-    it("includes port in the result when present", () => {
+    it("does not include port in the result when present", () => {
       const tenantName = new TenantName("https://localhost:8000/graphql/");
 
       expect(tenantName.getTenantName()).toBe("localhost");
@@ -35,7 +35,7 @@ describe("TenantName", () => {
       expect(tenantName.getTenantName()).not.toContain("graphql");
     });
 
-    it("throws if invalid URL is provded", () => {
+    it("throws if invalid URL is provided", () => {
       const tenantName = new TenantName("invalid");
 
       expect(() => tenantName.getTenantName()).toThrowErrorMatchingInlineSnapshot(

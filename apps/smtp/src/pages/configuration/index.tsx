@@ -99,7 +99,7 @@ const ConfigurationPage: NextPage = () => {
             }}
             useSaleorSmtpFallback={fallbackSettingsQuery.data?.useSaleorSmtpFallback}
             loading={fallbackSettingsQuery.isLoading}
-            saving={fallbackSettingsMutation.isLoading ?? fallbackSettingsQuery.isRefetching}
+            saving={fallbackSettingsMutation.isLoading || fallbackSettingsQuery.isRefetching}
           />
         </SectionWithDescription>
       )}

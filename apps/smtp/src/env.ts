@@ -2,8 +2,6 @@ import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-import { smtpEncryptionTypes } from "./modules/smtp/configuration/smtp-config-schema";
-
 export const env = createEnv({
   client: {
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
