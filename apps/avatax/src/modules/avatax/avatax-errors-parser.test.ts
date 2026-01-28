@@ -39,10 +39,10 @@ describe("AvataxErrorsParser", () => {
     const result = parser.parse(error, mockErrorCapture);
 
     expect(result).toBeInstanceOf(AvataxTaxCalculationError);
-    expect(mockErrorCapture).toHaveBeenCalledWith(
-      expect.objectContaining({
-        originalError: error,
-      }),
-    );
+
+    expect(mockErrorCapture.mock.calls[0][0]).toMatchInlineSnapshot(`
+      [UnhandledErrorShapeError: {"code":"UnknownError","details":[]}
+      AvaTax returned error with unknown shape]
+    `);
   });
 });
