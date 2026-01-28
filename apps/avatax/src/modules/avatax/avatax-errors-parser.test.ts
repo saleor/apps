@@ -40,7 +40,9 @@ describe("AvataxErrorsParser", () => {
 
     expect(result).toBeInstanceOf(AvataxTaxCalculationError);
     expect(mockErrorCapture).toHaveBeenCalledWith(
-      expect.any(AvataxErrorsParser.UnhandledErrorShapeError),
+      expect.objectContaining({
+        originalError: error,
+      }),
     );
   });
 });
