@@ -21,6 +21,7 @@ export interface SendMailArgs {
     text: string;
     html: string;
     subject: string;
+    headers?: Record<string, string>;
   };
 }
 
@@ -97,9 +98,12 @@ export class SmtpEmailSender implements ISMTPEmailSender {
     }
 
     // We don't wrap this in a try-catch because it will be handled in use-case via neverthrow
+    const { headers, ...restMailData } = mailData;
+
     const response = await racePromise({
       promise: transporter.sendMail({
-        ...mailData,
+        ...restMailData,
+        ...(headers && { headers }),
       }),
       error: new SmtpEmailSender.SmtpEmailSenderTimeoutError("Sending email timeout"),
       timeout: this.TIMEOUT,

@@ -32,6 +32,17 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
     NEXT_RUNTIME: z.string().optional(),
+    /**
+     * Fill these to enable fallback behavior - if app is not configured, these settings can be used.
+     * Be careful to fill all of them, otherwise it will not be used
+     */
+    FALLBACK_SMTP_HOST: z.string().min(1).optional(),
+    FALLBACK_SMTP_PORT: z.string().min(1).optional(),
+    FALLBACK_SMTP_USER: z.string().min(1).optional(),
+    FALLBACK_SMTP_PASSWORD: z.string().min(1).optional(),
+    FALLBACK_SMTP_ENCRYPTION: z.enum(["NONE", "TLS", "SSL"]).default("NONE"),
+    FALLBACK_SMTP_SENDER_NAME: z.string().min(1).optional(),
+    FALLBACK_SMTP_SENDER_EMAIL: z.string().email().min(5).optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -66,6 +77,13 @@ export const env = createEnv({
     VERCEL_ENV: process.env.VERCEL_ENV,
     REPOSITORY_URL: process.env.REPOSITORY_URL,
     NEXT_RUNTIME: process.env.NEXT_RUNTIME,
+    FALLBACK_SMTP_HOST: process.env.FALLBACK_SMTP_HOST,
+    FALLBACK_SMTP_PORT: process.env.FALLBACK_SMTP_PORT,
+    FALLBACK_SMTP_USER: process.env.FALLBACK_SMTP_USER,
+    FALLBACK_SMTP_PASSWORD: process.env.FALLBACK_SMTP_PASSWORD,
+    FALLBACK_SMTP_ENCRYPTION: process.env.FALLBACK_SMTP_ENCRYPTION,
+    FALLBACK_SMTP_SENDER_NAME: process.env.FALLBACK_SMTP_SENDER_NAME,
+    FALLBACK_SMTP_SENDER_EMAIL: process.env.FALLBACK_SMTP_SENDER_EMAIL,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });

@@ -1,5 +1,5 @@
-import { SemanticChip } from "@saleor/apps-ui";
-import { Box, Button, Text } from "@saleor/macaw-ui";
+import { SemanticChip, SkeletonLayout } from "@saleor/apps-ui";
+import { Box, Button, Paragraph, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -8,7 +8,24 @@ import { BoxWithBorder } from "../../../components/box-with-border";
 import { defaultPadding } from "../../../components/ui-defaults";
 import { smtpUrls } from "../../smtp/urls";
 
-const NoExistingConfigurations = () => {
+const saleorCloudSmtpHint = (
+  <>
+    <Paragraph marginBottom={2} color="accent1" fontWeight="bold">
+      Saleor Cloud SMTP available
+    </Paragraph>
+    <Paragraph marginBottom={4} color="default2">
+      App can use fallback Saleor Cloud SMTP server (enable/disable below).
+      <br />
+      For production usage, configure your SMTP settings.
+    </Paragraph>
+  </>
+);
+
+const NoExistingConfigurations = ({
+  saleorCloudFallbackAvailable,
+}: {
+  saleorCloudFallbackAvailable: boolean;
+}) => {
   const { push } = useRouter();
 
   const redirectToNewConfiguration = () => {
@@ -16,8 +33,17 @@ const NoExistingConfigurations = () => {
   };
 
   return (
-    <BoxWithBorder padding={10} display="grid" alignItems="center" justifyContent="center">
-      <Button onClick={redirectToNewConfiguration}>Add first configuration</Button>
+    <BoxWithBorder
+      padding={10}
+      display="flex"
+      flexDirection="column"
+      alignItems="flex-start"
+      justifyContent="center"
+    >
+      {saleorCloudFallbackAvailable && saleorCloudSmtpHint}
+      <Button __alignSelf="center" onClick={redirectToNewConfiguration}>
+        Add first configuration
+      </Button>
     </BoxWithBorder>
   );
 };
@@ -34,24 +60,26 @@ export type ConfigurationListItem = {
 interface MessagingProvidersSectionProps {
   configurations: ConfigurationListItem[];
   isLoading: boolean;
+  saleorCloudFallbackAvailable: boolean;
 }
 
 export const MessagingProvidersBox = ({
   configurations,
   isLoading: loading,
+  saleorCloudFallbackAvailable,
 }: MessagingProvidersSectionProps) => {
   const { push } = useRouter();
 
   if (loading) {
     return (
-      <BoxWithBorder padding={7} display="grid" alignItems="center" justifyContent="center">
-        <Text>Loading</Text>
+      <BoxWithBorder padding={7}>
+        <SkeletonLayout.Section />
       </BoxWithBorder>
     );
   }
 
   if (configurations.length === 0) {
-    return <NoExistingConfigurations />;
+    return <NoExistingConfigurations saleorCloudFallbackAvailable={saleorCloudFallbackAvailable} />;
   }
 
   const redirectToProvidersSelection = () => {

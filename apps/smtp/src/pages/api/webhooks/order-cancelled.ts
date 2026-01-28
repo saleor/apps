@@ -84,6 +84,7 @@ const handler: NextJsWebhookHandler<OrderCancelledWebhookPayloadFragment> = asyn
         event: "ORDER_CANCELLED",
         payload: { order: payload.order },
         recipientEmail,
+        saleorApiUrl: authData.saleorApiUrl,
       })
       .then((result) =>
         result.match(

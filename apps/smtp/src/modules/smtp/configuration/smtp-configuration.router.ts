@@ -23,6 +23,7 @@ import {
   smtpUpdateSenderSchema,
   smtpUpdateSmtpSchema,
 } from "./smtp-config-input-schema";
+import { getFallbackSmtpConfigSchema } from "./smtp-config-schema";
 import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
 
@@ -356,5 +357,34 @@ export const smtpConfigurationRouter = router({
       } catch (e) {
         return throwTrpcErrorFromConfigurationServiceError(e);
       }
+    }),
+  getFallbackSmtpSettings: protectedWithConfigurationServices.query(async ({ ctx }) => {
+    return ctx.smtpConfigurationService.getConfigurationRoot().match(
+      (v) => ({
+        useSaleorSmtpFallback: v.useSaleorSmtpFallback,
+      }),
+      (e) => throwTrpcErrorFromConfigurationServiceError(e),
+    );
+  }),
+  isFallbackSmtpConfigured: protectedWithConfigurationServices.query(async () => {
+    const fallbackConfig = getFallbackSmtpConfigSchema();
+
+    return { isConfigured: fallbackConfig !== null };
+  }),
+  updateFallbackSmtpSettings: protectedWithConfigurationServices
+    .input(
+      z.object({
+        useSaleorSmtpFallback: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.smtpConfigurationService
+        .updateFallbackSmtpSettings({
+          useSaleorSmtpFallback: input.useSaleorSmtpFallback,
+        })
+        .match(
+          (v) => v,
+          (e) => throwTrpcErrorFromConfigurationServiceError(e),
+        );
     }),
 });
