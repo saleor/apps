@@ -1,5 +1,12 @@
 # saleor-app-avatax
 
+## 1.21.11
+
+### Patch Changes
+
+- 07057788: Update DynamoDB/AWS & Toolbox dependencies
+- dec1541b: Now original AvaTax error from API is attached to custom errors that are going to Sentry, so it's easier to debug the root cause
+
 ## 1.21.10
 
 ### Patch Changes

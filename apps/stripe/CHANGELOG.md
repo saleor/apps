@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.4.1
+
+### Patch Changes
+
+- 07057788: Update DynamoDB/AWS & Toolbox dependencies
+
 ## 2.4.0
 
 ### Minor Changes

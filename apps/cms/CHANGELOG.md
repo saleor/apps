@@ -1,5 +1,11 @@
 # saleor-app-cms
 
+## 2.13.7
+
+### Patch Changes
+
+- 07057788: Update DynamoDB/AWS & Toolbox dependencies
+
 ## 2.13.6
 
 ### Patch Changes

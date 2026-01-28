@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.24.10
+
+### Patch Changes
+
+- 07057788: Update DynamoDB/AWS & Toolbox dependencies
+
 ## 1.24.9
 
 ### Patch Changes

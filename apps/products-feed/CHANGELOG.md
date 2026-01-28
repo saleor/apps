@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 2.1.11
+
+### Patch Changes
+
+- 07057788: Update DynamoDB/AWS & Toolbox dependencies
+
 ## 2.1.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # saleor-app-segment
 
+## 2.2.7
+
+### Patch Changes
+
+- 07057788: Update DynamoDB/AWS & Toolbox dependencies
+
 ## 2.2.6
 
 ### Patch Changes

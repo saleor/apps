@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.14.7
+
+### Patch Changes
+
+- 07057788: Update DynamoDB/AWS & Toolbox dependencies
+
 ## 1.14.6
 
 ### Patch Changes
