@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-smtp",
-  "version": "1.4.8",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "scripts": {

@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.3.4
+
+### Patch Changes
+
+- 07057788: Update DynamoDB/AWS & Toolbox dependencies
+
 ## 1.3.3
 
 ### Patch Changes
