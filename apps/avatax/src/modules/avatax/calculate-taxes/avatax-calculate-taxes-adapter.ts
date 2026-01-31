@@ -1,3 +1,5 @@
+import { TransactionModel } from "avatax/lib/models/TransactionModel";
+
 import { createLogger } from "../../../logger";
 import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
@@ -5,7 +7,10 @@ import { extractTransactionRedactedLogProperties } from "../extract-transaction-
 import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
-export type AvataxCalculateTaxesResponse = CalculateTaxesResponse;
+export type AvataxCalculateTaxesResult = {
+  transaction: TransactionModel;
+  response: CalculateTaxesResponse;
+};
 
 export function suspiciousLineCalculationCheck(line: {
   total_gross_amount: number;
@@ -31,7 +36,7 @@ export class AvataxCalculateTaxesAdapter {
     private avataxCalculateTaxesResponseTransformer: AvataxCalculateTaxesResponseTransformer,
   ) {}
 
-  async send(avataxModel: AvataxCalculateTaxesTarget): Promise<AvataxCalculateTaxesResponse> {
+  async send(avataxModel: AvataxCalculateTaxesTarget): Promise<AvataxCalculateTaxesResult> {
     this.logger.debug("Transforming the Saleor payload for calculating taxes with AvaTax...");
 
     this.logger.info(
@@ -67,6 +72,9 @@ export class AvataxCalculateTaxesAdapter {
 
     this.logger.debug("Transformed AvaTax createTransaction response");
 
-    return transformedResponse;
+    return {
+      transaction,
+      response: transformedResponse,
+    };
   }
 }

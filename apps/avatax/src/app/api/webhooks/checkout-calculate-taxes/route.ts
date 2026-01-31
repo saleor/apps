@@ -4,15 +4,19 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException, setTag } from "@sentry/nextjs";
+import Decimal from "decimal.js-light";
+import { after } from "next/server";
 
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
+import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { SubscriptionPayloadErrorChecker } from "@/lib/error-utils";
 import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
+import { updateExemptionStatusPublicMetadata } from "@/modules/app/exemption-status-public-metadata-updater";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
@@ -112,6 +116,8 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
           );
         }
 
+        const providerConfig = config.value.getConfigForChannelSlug(channelSlug);
+
         return useCase.calculateTaxes(payload, authData).then((result) => {
           return result.match(
             (value) => {
@@ -120,7 +126,63 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 message: "Taxes calculated successfully",
               });
 
-              return Response.json(checkoutCalculateTaxesSyncWebhookReponse(value), {
+              if (
+                providerConfig.isOk() &&
+                providerConfig.value.avataxConfig.config.isExemptionStatusPublicMetadataEnabled
+              ) {
+                try {
+                  const exemptAmountTotalDecimal = new Decimal(value.transaction.totalExempt ?? 0);
+
+                  const exemptAmountTotal = exemptAmountTotalDecimal.toNumber();
+
+                  const entityUseCode =
+                    value.transaction.entityUseCode ??
+                    value.transaction.customerUsageType ??
+                    undefined;
+
+                  after(() => {
+                    const isExemptionApplied = exemptAmountTotalDecimal.gt(0);
+                    const currentExemptionStatus =
+                      payload.taxBase.sourceObject.avataxExemptionStatus ?? null;
+
+                    const client = createInstrumentedGraphqlClient({
+                      saleorApiUrl: authData.saleorApiUrl,
+                      token: authData.token,
+                    });
+
+                    updateExemptionStatusPublicMetadata({
+                      id: payload.taxBase.sourceObject.id,
+                      client,
+                      isExemptionApplied,
+                      currentMetadataValue: currentExemptionStatus,
+                      next: {
+                        exemptAmountTotal,
+                        entityUseCode,
+                        calculatedAt: new Date(),
+                      },
+                      onError: (error) => {
+                        captureException(error);
+                        logger.warn("Failed to update checkout exemption status metadata", {
+                          error:
+                            error instanceof Error
+                              ? { name: error.name, message: error.message }
+                              : { message: String(error) },
+                        });
+                      },
+                    });
+                  });
+                } catch (error) {
+                  captureException(error);
+                  logger.warn("Failed to compute checkout exemption status metadata", {
+                    error:
+                      error instanceof Error
+                        ? { name: error.name, message: error.message }
+                        : { message: String(error) },
+                  });
+                }
+              }
+
+              return Response.json(checkoutCalculateTaxesSyncWebhookReponse(value.response), {
                 status: 200,
               });
             },

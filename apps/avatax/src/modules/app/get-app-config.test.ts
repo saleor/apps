@@ -15,6 +15,7 @@ const mockedProviders: ProviderConnections = [
       isAutocommit: false,
       isSandbox: true,
       isDocumentRecordingEnabled: true,
+      isExemptionStatusPublicMetadataEnabled: false,
       name: "avatax-1",
       shippingTaxCode: "FR000000",
       credentials: {

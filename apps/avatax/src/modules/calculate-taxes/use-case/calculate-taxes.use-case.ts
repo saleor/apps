@@ -22,7 +22,7 @@ import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
 import { createLogger } from "../../../logger";
 import {
   AvataxCalculateTaxesAdapter,
-  AvataxCalculateTaxesResponse,
+  AvataxCalculateTaxesResult,
 } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxGetTaxWrongUserInputError, TaxIncompletePayloadErrors } from "../../taxes/tax-error";
 import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
@@ -140,7 +140,7 @@ export class CalculateTaxesUseCase {
     authData: AuthData,
   ): Promise<
     Result<
-      AvataxCalculateTaxesResponse,
+      AvataxCalculateTaxesResult,
       (typeof CalculateTaxesUseCase.CalculateTaxesUseCaseError)["prototype"]
     >
   > {
@@ -241,7 +241,7 @@ export class CalculateTaxesUseCase {
         sourceId: payload.taxBase.sourceObject.id,
         channelId: payload.taxBase.channel.id,
         sourceType: "checkout",
-        calculatedTaxesResult: results,
+        calculatedTaxesResult: results.response,
       })
         .mapErr(captureException)
         .map(logWriter.writeLog);
