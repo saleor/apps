@@ -1,0 +1,47 @@
+packages/problems-reporting/package.json
+  b3a6466e7c308c1e 1-33
+packages/problems-reporting/CHANGELOG.md
+  b3a6466e7c308c1e 1-7
+packages/problems-reporting/src/problem-definition.ts
+  b3a6466e7c308c1e 1-6
+packages/problems-reporting/src/types.ts
+  b3a6466e7c308c1e 1-10
+packages/problems-reporting/src/problems-service.test.ts
+  b3a6466e7c308c1e 1-317
+packages/problems-reporting/vitest.config.ts
+  b3a6466e7c308c1e 1-13
+packages/problems-reporting/src/graphql/types.ts
+  b3a6466e7c308c1e 1-30
+packages/problems-reporting/tsconfig.json
+  b3a6466e7c308c1e 1-5
+packages/problems-reporting/src/index.ts
+  b3a6466e7c308c1e 2-3
+packages/problems-reporting/src/graphql/documents.ts
+  b3a6466e7c308c1e 1-25
+packages/problems-reporting/eslint.config.js
+  b3a6466e7c308c1e 1-4
+packages/problems-reporting/src/problems-service.ts
+  b3a6466e7c308c1e 1-151
+packages/problems-reporting/turbo.json
+  b3a6466e7c308c1e 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.42",
+  "base_commit_sha": "a0fab727662447fc6fe49ed39ae0f83a2a0ab838",
+  "prompts": {
+    "b3a6466e7c308c1e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6a59d414-933f-41e6-be14-c85e13c81d84",
+        "model": "claude-opus-4-5-20251101"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 610,
+      "total_deletions": 0,
+      "accepted_lines": 608,
+      "overriden_lines": 1
+    }
+  }
+}
