@@ -5,6 +5,7 @@ import { z } from "zod";
 export const env = createEnv({
   client: {
     NEXT_PUBLIC_SENTRY_DSN: z.string().optional(),
+    NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS: z.coerce.number().default(5000),
   },
   server: {
     ALLOWED_DOMAIN_PATTERN: z.string().optional(),
@@ -32,7 +33,6 @@ export const env = createEnv({
     VERCEL_ENV: z.string().optional(),
     REPOSITORY_URL: z.string().optional(),
     NEXT_RUNTIME: z.string().optional(),
-    ALGOLIA_TIMEOUT_MS: z.coerce.number().default(5000),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -67,7 +67,7 @@ export const env = createEnv({
     VERCEL_ENV: process.env.VERCEL_ENV,
     REPOSITORY_URL: process.env.REPOSITORY_URL,
     NEXT_RUNTIME: process.env.NEXT_RUNTIME,
-    ALGOLIA_TIMEOUT_MS: process.env.ALGOLIA_TIMEOUT_MS,
+    NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS: process.env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });
