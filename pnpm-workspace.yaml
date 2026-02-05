@@ -55,10 +55,10 @@ catalog:
   modern-errors: 7.0.1
   modern-errors-serialize: 6.1.0
   neverthrow: 6.2.1
-  dynamodb-toolbox: 2.8.0
-  "@aws-sdk/lib-dynamodb": 3.975.0
-  "@aws-sdk/client-dynamodb": 3.975.0
-  "@aws-sdk/util-dynamodb": 3.975.0
+  dynamodb-toolbox: 2.6.4
+  "@aws-sdk/lib-dynamodb": 3.651.1
+  "@aws-sdk/client-dynamodb": 3.651.1
+  "@aws-sdk/util-dynamodb": 3.651.1
   "@vitest/coverage-v8": 3.1.1
   "@t3-oss/env-nextjs": 0.11.1
   react-hook-form: 7.43.9
