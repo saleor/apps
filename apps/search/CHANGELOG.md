@@ -1,5 +1,11 @@
 # saleor-app-search
 
+## 1.24.11
+
+### Patch Changes
+
+- e7f70688: Fixed Search app crashes, due to accessing env variable previously marked as server side only on frontend (`ALGOLIA_TIMEOUT_MS`)
+
 ## 1.24.10
 
 ### Patch Changes
