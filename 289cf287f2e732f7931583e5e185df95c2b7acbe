@@ -1,0 +1,23 @@
+apps/stripe/src/pages/index.tsx
+  779a8248f1a26faa 31-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.42",
+  "base_commit_sha": "289cf287f2e732f7931583e5e185df95c2b7acbe",
+  "prompts": {
+    "779a8248f1a26faa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "150689e8-4b72-4ab4-893e-55e26890906c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 7,
+      "total_deletions": 0,
+      "accepted_lines": 7,
+      "overriden_lines": 0
+    }
+  }
+}
