@@ -1,0 +1,39 @@
+apps/cms/src/pages/_error.tsx
+  77a0d8d64566b36f 1-17
+apps/search/src/pages/_error.tsx
+  77a0d8d64566b36f 1-17
+apps/smtp/src/pages/_error.tsx
+  77a0d8d64566b36f 1-17
+apps/stripe/src/pages/_error.tsx
+  77a0d8d64566b36f 1-17
+apps/segment/src/pages/_error.tsx
+  77a0d8d64566b36f 1-17
+apps/np-atobarai/src/pages/_error.tsx
+  77a0d8d64566b36f 1-17
+apps/klaviyo/src/pages/_error.tsx
+  77a0d8d64566b36f 1-17
+apps/products-feed/src/pages/_error.tsx
+  77a0d8d64566b36f 1-17
+apps/avatax/src/pages/_error.tsx
+  77a0d8d64566b36f 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.42",
+  "base_commit_sha": "0692b94bc35a7e69cf00382e738e8cf3c34a363d",
+  "prompts": {
+    "77a0d8d64566b36f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1a583da5-38fa-4c42-8f1b-95cf69b88eeb",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 171,
+      "total_deletions": 36,
+      "accepted_lines": 153,
+      "overriden_lines": 0
+    }
+  }
+}
