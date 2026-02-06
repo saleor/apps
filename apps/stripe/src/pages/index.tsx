@@ -28,6 +28,13 @@ const IndexPage: NextPage = () => {
         their payment processor.
       </p>
       <p>Install the app in your Saleor instance and open it in Dashboard.</p>
+      <button
+        onClick={() => {
+          throw new Error("Sentry test error from Stripe app client");
+        }}
+      >
+        Throw Error
+      </button>
     </div>
   );
 };
