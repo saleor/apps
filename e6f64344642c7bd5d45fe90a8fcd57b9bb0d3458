@@ -1,0 +1,39 @@
+apps/segment/instrumentation-client.ts
+  b35646d1b3f37580 1-11
+apps/klaviyo/instrumentation-client.ts
+  b35646d1b3f37580 1-11
+apps/np-atobarai/instrumentation-client.ts
+  b35646d1b3f37580 1-11
+apps/smtp/instrumentation-client.ts
+  b35646d1b3f37580 1-11
+apps/stripe/instrumentation-client.ts
+  b35646d1b3f37580 1-11
+apps/products-feed/instrumentation-client.ts
+  b35646d1b3f37580 1-11
+apps/avatax/instrumentation-client.ts
+  b35646d1b3f37580 1-11
+apps/search/instrumentation-client.ts
+  b35646d1b3f37580 1-11
+apps/cms/instrumentation-client.ts
+  b35646d1b3f37580 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.42",
+  "base_commit_sha": "e6f64344642c7bd5d45fe90a8fcd57b9bb0d3458",
+  "prompts": {
+    "b35646d1b3f37580": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3d6f338a-eb7e-44a8-8d5d-758b98b152fc",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 99,
+      "total_deletions": 0,
+      "accepted_lines": 99,
+      "overriden_lines": 0
+    }
+  }
+}
