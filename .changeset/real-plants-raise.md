@@ -10,4 +10,4 @@
 "saleor-app-cms": patch
 ---
 
-Added error handling catching on the client side - now client side exceptions are reported to Sentry
+Added client-side error capturing so client exceptions are reported to Sentry.
