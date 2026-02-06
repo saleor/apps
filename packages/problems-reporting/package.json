@@ -1,0 +1,33 @@
+{
+  "name": "@saleor/problems-reporting",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "check-types": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@saleor/errors": "workspace:*",
+    "graphql": "catalog:",
+    "neverthrow": "catalog:"
+  },
+  "devDependencies": {
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "urql": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "modern-errors": "catalog:",
+    "modern-errors-serialize": "catalog:",
+    "urql": "catalog:"
+  }
+}
