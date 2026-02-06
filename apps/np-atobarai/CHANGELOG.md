@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.3.5
+
+### Patch Changes
+
+- d7ce7f67: Added client-side error capturing so client exceptions are reported to Sentry.
+
 ## 1.3.4
 
 ### Patch Changes
