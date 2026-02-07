@@ -1,30 +1,50 @@
 import { MessageEventTypes } from "../event-handlers/message-event-types";
 
-const addressSection = `<mj-section>
+// —— Shared design tokens (used in mj-head and components) ——
+const primaryColor = "#0f172a";
+const bodyFontSize = "16px";
+const lineHeight = "1.5";
+
+// —— Shared MJML head: fonts, breakpoint, default styles ——
+const mjHead = `<mj-head>
+  <mj-attributes>
+    <mj-body background-color="#f8fafc" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="${bodyFontSize}" line-height="${lineHeight}" />
+    <mj-text padding="8px 0" font-size="${bodyFontSize}" line-height="${lineHeight}" color="#334155" />
+    <mj-button background-color="${primaryColor}" color="white" border-radius="6px" inner-padding="12px 24px" font-size="16px" font-weight="600" />
+  </mj-attributes>
+  <mj-breakpoint width="480px" />
+</mj-head>`;
+
+// —— Reusable content fragments ——
+
+const sectionSpacer = `<mj-section padding="16px 0 0"><mj-column><mj-spacer height="8px" /></mj-column></mj-section>`;
+
+const addressSection = `<mj-section padding="24px 0">
   <mj-column>
-    <mj-table>
+    <mj-text font-weight="600" color="#0f172a" padding-bottom="8px">Order details</mj-text>
+    <mj-table padding="0" cellpadding="8" cellspacing="0" font-size="14px" color="#475569">
       <thead>
-        <tr>
-          <th>
-            Billing address
-          </th>
-          <th>
-            Shipping address
-          </th>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <th style="text-align: left; padding: 8px 12px;">Billing address</th>
+          <th style="text-align: left; padding: 8px 12px;">Shipping address</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>
+          <td style="padding: 12px; vertical-align: top;">
             {{#if order.billingAddress}}
               {{ order.billingAddress.streetAddress1 }}
+              {{#if order.billingAddress.streetAddress2}}, {{ order.billingAddress.streetAddress2 }}{{/if}}
+              <br />{{ order.billingAddress.postalCode }} {{ order.billingAddress.city }}
             {{else}}
               No billing address
             {{/if}}
           </td>
-          <td>
+          <td style="padding: 12px; vertical-align: top;">
             {{#if order.shippingAddress}}
-              {{ order.shippingAddress.streetAddress1}}
+              {{ order.shippingAddress.streetAddress1 }}
+              {{#if order.shippingAddress.streetAddress2}}, {{ order.shippingAddress.streetAddress2 }}{{/if}}
+              <br />{{ order.shippingAddress.postalCode }} {{ order.shippingAddress.city }}
             {{else}}
               No shipping required
             {{/if}}
@@ -33,34 +53,34 @@ const addressSection = `<mj-section>
       </tbody>
     </mj-table>
   </mj-column>
-</mj-section>
-`;
+</mj-section>`;
 
-const addressSectionForNotify = `<mj-section>
+const addressSectionForNotify = `<mj-section padding="24px 0">
   <mj-column>
-    <mj-table>
+    <mj-text font-weight="600" color="#0f172a" padding-bottom="8px">Order details</mj-text>
+    <mj-table padding="0" cellpadding="8" cellspacing="0" font-size="14px" color="#475569">
       <thead>
-        <tr>
-          <th>
-            Billing address
-          </th>
-          <th>
-            Shipping address
-          </th>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <th style="text-align: left; padding: 8px 12px;">Billing address</th>
+          <th style="text-align: left; padding: 8px 12px;">Shipping address</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>
+          <td style="padding: 12px; vertical-align: top;">
             {{#if order.billing_address}}
               {{ order.billing_address.street_address_1 }}
+              {{#if order.billing_address.street_address_2}}, {{ order.billing_address.street_address_2 }}{{/if}}
+              <br />{{ order.billing_address.postal_code }} {{ order.billing_address.city }}
             {{else}}
               No billing address
             {{/if}}
           </td>
-          <td>
+          <td style="padding: 12px; vertical-align: top;">
             {{#if order.shipping_address}}
-              {{ order.shipping_address.street_address_1}}
+              {{ order.shipping_address.street_address_1 }}
+              {{#if order.shipping_address.street_address_2}}, {{ order.shipping_address.street_address_2 }}{{/if}}
+              <br />{{ order.shipping_address.postal_code }} {{ order.shipping_address.city }}
             {{else}}
               No shipping required
             {{/if}}
@@ -69,281 +89,176 @@ const addressSectionForNotify = `<mj-section>
       </tbody>
     </mj-table>
   </mj-column>
-</mj-section>
-`;
+</mj-section>`;
 
-const orderLinesSection = `<mj-section>
+const orderLinesSection = `<mj-section padding="0 0 24px">
   <mj-column>
-    <mj-table>
+    <mj-table padding="0" cellpadding="8" cellspacing="0" font-size="14px" color="#475569">
       <tbody>
         {{#each order.lines }}
-          <tr>
-            <td>
-              {{ this.quantity }} x {{ this.productName }} - {{ this.variantName }}
-            </td>
-            <td align="right">
-              {{ this.totalPrice.gross.amount }} {{ this.totalPrice.gross.currency }}
-            </td>
-          </tr>
+        <tr style="border-bottom: 1px solid #f1f5f9;">
+          <td style="padding: 10px 12px;">{{ this.quantity }} × {{ this.productName }}{{#if this.variantName}} – {{ this.variantName }}{{/if}}</td>
+          <td align="right" style="padding: 10px 12px;">{{ this.totalPrice.gross.amount }} {{ this.totalPrice.gross.currency }}</td>
+        </tr>
         {{/each}}
-        <tr>
-          <td>
-          </td>
-          <td align="right">
-            Shipping: {{ order.shippingPrice.gross.amount }} {{ order.shippingPrice.gross.currency }}
-          </td>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px;">Shipping</td>
+          <td align="right" style="padding: 10px 12px;">{{ order.shippingPrice.gross.amount }} {{ order.shippingPrice.gross.currency }}</td>
         </tr>
         <tr>
-          <td>
-          </td>
-          <td align="right">
-            Total: {{ order.total.gross.amount }} {{ order.total.gross.currency }}
-          </td>
+          <td style="padding: 12px; font-weight: 600; color: #0f172a;">Total</td>
+          <td align="right" style="padding: 12px; font-weight: 600; color: #0f172a;">{{ order.total.gross.amount }} {{ order.total.gross.currency }}</td>
         </tr>
       </tbody>
     </mj-table>
   </mj-column>
-</mj-section>
-`;
+</mj-section>`;
 
-const defaultOrderCreatedMjmlTemplate = `<mjml>
+/** Builds a full order email body: greeting + message + address + order lines */
+const buildOrderEmailBody = (messageLine: string) =>
+  `<mjml>
+${mjHead}
   <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hello!
-        </mj-text>
-        <mj-text>
-          Order {{ order.number }} has been created.
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    ${addressSection}
-    ${orderLinesSection}
+    <mj-wrapper padding="24px 16px" background-color="#ffffff" border-radius="8px">
+      <mj-section padding="0 0 16px">
+        <mj-column>
+          <mj-text font-size="18px" font-weight="600" color="#0f172a">Hello!</mj-text>
+          <mj-text>${messageLine}</mj-text>
+        </mj-column>
+      </mj-section>
+${sectionSpacer}
+${addressSection}
+${orderLinesSection}
+    </mj-wrapper>
   </mj-body>
 </mjml>`;
 
-const defaultOrderFulfilledMjmlTemplate = `<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hello!
-        </mj-text>
-        <mj-text>
-          Order {{ order.number }} has been fulfilled.
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    ${addressSection}
-    ${orderLinesSection}
-  </mj-body>
-</mjml>`;
-
-const defaultOrderConfirmedMjmlTemplate = `<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-        Hello!
-        </mj-text>
-        <mj-text>
-          Order {{ order.number}} has been confirmed.
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    ${addressSection}
-    ${orderLinesSection}
-    </mj-body>
-</mjml>`;
-
-const defaultOrderFullyPaidMjmlTemplate = `<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hello!
-        </mj-text>
-        <mj-text>
-          Order {{ order.number }} has been fully paid.
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    ${addressSection}
-    ${orderLinesSection}  
-  </mj-body>
-</mjml>`;
-
-const defaultOrderRefundedMjmlTemplate = `<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hello!
-        </mj-text>
-        <mj-text>
-          Order {{ order.number }} has been refunded.
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    ${addressSection}
-    ${orderLinesSection}  
-  </mj-body>
-</mjml>`;
-
-const defaultOrderCancelledMjmlTemplate = `<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-            Hello!
-        </mj-text>
-        <mj-text>
-          Order {{ order.number }} has been cancelled.
-        </mj-text>
-      </mj-column>
-    </mj-section>
-    ${addressSection}
-    ${orderLinesSection}
-  </mj-body>
-</mjml>`;
+const defaultOrderCreatedMjmlTemplate = buildOrderEmailBody(
+  "Order {{ order.number }} has been created.",
+);
+const defaultOrderFulfilledMjmlTemplate = buildOrderEmailBody(
+  "Order {{ order.number }} has been fulfilled.",
+);
+const defaultOrderConfirmedMjmlTemplate = buildOrderEmailBody(
+  "Order {{ order.number }} has been confirmed.",
+);
+const defaultOrderFullyPaidMjmlTemplate = buildOrderEmailBody(
+  "Order {{ order.number }} has been fully paid.",
+);
+const defaultOrderRefundedMjmlTemplate = buildOrderEmailBody(
+  "Order {{ order.number }} has been refunded.",
+);
+const defaultOrderCancelledMjmlTemplate = buildOrderEmailBody(
+  "Order {{ order.number }} has been cancelled.",
+);
 
 const defaultInvoiceSentMjmlTemplate = `<mjml>
+${mjHead}
   <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hi!
-        </mj-text>
-        <mj-text>
-          New invoice has been created
-        </mj-text>
-      </mj-column>
-    </mj-section>
+    <mj-wrapper padding="24px 16px" background-color="#ffffff" border-radius="8px">
+      <mj-section padding="0 0 16px">
+        <mj-column>
+          <mj-text font-size="18px" font-weight="600" color="#0f172a">Hi!</mj-text>
+          <mj-text>A new invoice has been created for your order.</mj-text>
+          {{#if invoice.url}}
+          <mj-button href="{{invoice.url}}" padding-top="16px">Download invoice</mj-button>
+          {{/if}}
+          {{#if order}}
+          <mj-text padding-top="12px" font-size="14px" color="#64748b">Order reference: {{ order.number }}</mj-text>
+          {{/if}}
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
   </mj-body>
 </mjml>`;
 
-// TODO: Improve the template
 const defaultGiftCardSentMjmlTemplate = `<mjml>
+${mjHead}
   <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hi!
-        </mj-text>
-        <mj-text>
-          Heres your gift card
-        </mj-text>
-      </mj-column>
-    </mj-section>
+    <mj-wrapper padding="24px 16px" background-color="#ffffff" border-radius="8px">
+      <mj-section padding="0 0 16px">
+        <mj-column>
+          <mj-text font-size="18px" font-weight="600" color="#0f172a">Here's your gift card</mj-text>
+          <mj-text>You've received a gift card. Use the code below at checkout.</mj-text>
+          {{#if giftCard}}
+          <mj-section padding="16px 0" background-color="#f8fafc" border-radius="6px">
+            <mj-column>
+              <mj-text font-size="14px" color="#64748b">Code</mj-text>
+              <mj-text font-size="20px" font-weight="700" color="#0f172a" letter-spacing="2px">{{ giftCard.displayCode }}</mj-text>
+              {{#if giftCard.currentBalance}}
+              <mj-text font-size="14px" color="#64748b" padding-top="8px">Balance: {{ giftCard.currentBalance.amount }} {{ giftCard.currentBalance.currency }}</mj-text>
+              {{/if}}
+              {{#if giftCard.expiryDate}}
+              <mj-text font-size="14px" color="#64748b">Valid until: {{ giftCard.expiryDate }}</mj-text>
+              {{/if}}
+            </mj-column>
+          </mj-section>
+          {{/if}}
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
   </mj-body>
 </mjml>`;
 
-const defaultAccountConfirmationMjmlTemplate = `<mjml>
+/** Account emails: greeting + message + optional CTA button */
+const buildAccountEmailBody = (
+  message: string,
+  buttonConfig?: { href: string; label: string },
+) => `<mjml>
+${mjHead}
   <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hi {{user.first_name}}!
-        </mj-text>
-        <mj-text>
-          Your account has been created. Please follow the link to activate it: 
-        </mj-text>
-        <mj-button href="{{confirm_url}}"  background-color="black" color="white" padding-top="50px" inner-padding="20px" width="70%">
-            Activate the account 
-        </mj-button>
-      </mj-column>
-    </mj-section>
+    <mj-wrapper padding="24px 16px" background-color="#ffffff" border-radius="8px">
+      <mj-section padding="0 0 16px">
+        <mj-column>
+          <mj-text font-size="18px" font-weight="600" color="#0f172a">Hi {{user.first_name}}!</mj-text>
+          <mj-text>${message}</mj-text>
+          ${
+            buttonConfig
+              ? `<mj-button href="${buttonConfig.href}" padding-top="20px">${buttonConfig.label}</mj-button>`
+              : ""
+          }
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
   </mj-body>
 </mjml>`;
 
-const defaultAccountPasswordResetMjmlTemplate = `<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hi {{user.first_name}}!
-        </mj-text>
-        <mj-text>
-          Password reset has been requested. Please follow the link to proceed: 
-        </mj-text>
-        <mj-button href="{{reset_url}}"  background-color="black" color="white" padding-top="50px" inner-padding="20px" width="70%">
-            Reset the password 
-        </mj-button>
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>`;
-
-const defaultAccountChangeEmailRequestMjmlTemplate = `<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hi {{user.first_name}}!
-        </mj-text>
-        <mj-text>
-          Email address change has been requested. If you want to confirm changing the email address to {{new_email}}, please follow the link: 
-        </mj-text>
-        <mj-button href="{{redirect_url}}"  background-color="black" color="white" padding-top="50px" inner-padding="20px" width="70%">
-            Change the email
-        </mj-button>
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>`;
-
-const defaultAccountChangeEmailConfirmationMjmlTemplate = `<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hi {{user.first_name}}!
-        </mj-text>
-        <mj-text>
-          Email address change has been confirmed.
-        </mj-text>
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>`;
-
-const defaultAccountDeleteMjmlTemplate = `<mjml>
-  <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-          Hi {{user.first_name}}!
-        </mj-text>
-        <mj-text>
-          Account deletion has been requested. If you want to confirm, please follow the link: 
-        </mj-text>
-        <mj-button href="{{redirect_url}}"  background-color="black" color="white" padding-top="50px" inner-padding="20px" width="70%">
-            Delete the account
-        </mj-button>
-      </mj-column>
-    </mj-section>
-  </mj-body>
-</mjml>`;
+const defaultAccountConfirmationMjmlTemplate = buildAccountEmailBody(
+  "Your account has been created. Click the button below to activate it.",
+  { href: "{{confirm_url}}", label: "Activate account" },
+);
+const defaultAccountPasswordResetMjmlTemplate = buildAccountEmailBody(
+  "We received a request to reset your password. Click the button below to set a new one.",
+  { href: "{{reset_url}}", label: "Reset password" },
+);
+const defaultAccountChangeEmailRequestMjmlTemplate = buildAccountEmailBody(
+  "You requested to change your email to {{new_email}}. Click the button below to confirm.",
+  { href: "{{redirect_url}}", label: "Confirm email change" },
+);
+const defaultAccountChangeEmailConfirmationMjmlTemplate = buildAccountEmailBody(
+  "Your email address has been updated successfully.",
+);
+const defaultAccountDeleteMjmlTemplate = buildAccountEmailBody(
+  "Account deletion has been requested. If you want to proceed, click the button below.",
+  { href: "{{delete_url}}", label: "Delete account" },
+);
 
 const defaultOrderFulfillmentUpdatedMjmlTemplate = `<mjml>
+${mjHead}
   <mj-body>
-    <mj-section>
-      <mj-column>
-        <mj-text font-size="16px">
-            Hello!
-        </mj-text>
-        <mj-text>
-          Fulfillment for the order {{ order.number }} has been updated.
-        </mj-text>
-        {{#if fulfillment.tracking_number }}
-          <mj-text>
-            Tracking number: {{ fulfillment.tracking_number }}
-          </mj-text>
-        {{/if}}
-      </mj-column>
-    </mj-section>
-    ${addressSectionForNotify}
+    <mj-wrapper padding="24px 16px" background-color="#ffffff" border-radius="8px">
+      <mj-section padding="0 0 16px">
+        <mj-column>
+          <mj-text font-size="18px" font-weight="600" color="#0f172a">Hello!</mj-text>
+          <mj-text>Fulfillment for order {{ order.number }} has been updated.</mj-text>
+          {{#if fulfillment.tracking_number}}
+          <mj-text padding-top="12px">Tracking number: <strong>{{ fulfillment.tracking_number }}</strong></mj-text>
+          {{/if}}
+        </mj-column>
+      </mj-section>
+${sectionSpacer}
+${addressSectionForNotify}
+    </mj-wrapper>
   </mj-body>
 </mjml>`;
 

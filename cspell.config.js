@@ -80,6 +80,8 @@ export default {
     "claude",
     "SEPA",
     "mailpit",
+    "Neue",
+    "Segoe",
   ],
   language: "en-US",
   useGitignore: true,
