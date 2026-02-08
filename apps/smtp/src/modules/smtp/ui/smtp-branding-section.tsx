@@ -53,8 +53,7 @@ export const SmtpBrandingSection = ({ configuration }: SmtpBrandingSectionProps)
         <Box display="flex" flexDirection="column" gap={2}>
           <Text as="p">Customize the branding that appears in your email headers and footers.</Text>
           <Text as="p">
-            These values will be used in order-related emails. Account emails use branding from
-            Saleor&apos;s site settings.
+            These values are available as template variables and are used in the default templates.
           </Text>
         </Box>
       }
