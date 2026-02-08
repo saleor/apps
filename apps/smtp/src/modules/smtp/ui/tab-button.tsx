@@ -36,8 +36,7 @@ export const TabButton = ({ active, onClick, children, isDirty }: TabButtonProps
         width={1.5}
         height={1.5}
         borderRadius={7}
-        backgroundColor="default1"
-        style={{ opacity: 0.7 }}
+        backgroundColor="accent1"
         title="Unsaved changes"
       />
     )}

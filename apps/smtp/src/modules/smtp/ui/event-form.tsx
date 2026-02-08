@@ -1,30 +1,65 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Box, Button, Text } from "@saleor/macaw-ui";
+import { Box, Button, Select, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
-import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useDebounce } from "usehooks-ts";
 
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { examplePayloads } from "../../event-handlers/default-payloads";
-import { MessageEventTypes } from "../../event-handlers/message-event-types";
+import {
+  MessageEventTypes,
+  messageEventTypes,
+  messageEventTypesLabels,
+} from "../../event-handlers/message-event-types";
 import { trpcClient } from "../../trpc/trpc-client";
 import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { smtpUrls } from "../urls";
 import { CodeEditor } from "./code-editor";
 import { SaleorThrobber } from "./saleor-throbber";
 import { TabButton } from "./tab-button";
 import { TemplateErrorDisplay } from "./template-error-display";
 import { TemplatePreview } from "./template-preview";
-
-const PREVIEW_DEBOUNCE_DELAY = 500;
+import { useTemplatePreview } from "./use-template-preview";
 
 type EditorTabValue = "template" | "variables";
 
-type RenderTemplateError = ReturnType<
-  typeof trpcClient.smtpConfiguration.renderTemplate.useMutation
->["error"];
+const TEMPLATE_OPTIONS = messageEventTypes.map((type) => ({
+  value: type,
+  label: messageEventTypesLabels[type],
+}));
+
+const extractSelectValue = (value: string | { value: string }): string =>
+  typeof value === "string" ? value : value.value;
+
+interface TemplateSwitchConfirmationProps {
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+const TemplateSwitchConfirmation = ({ onConfirm, onCancel }: TemplateSwitchConfirmationProps) => (
+  <Box
+    marginTop={2}
+    padding={3}
+    backgroundColor="default2"
+    borderRadius={2}
+    display="flex"
+    flexDirection="column"
+    gap={2}
+  >
+    <Text size={2}>You have unsaved changes. Switch anyway?</Text>
+    <Box display="flex" gap={2}>
+      <Button variant="primary" size="small" type="button" onClick={onConfirm}>
+        Switch
+      </Button>
+      <Button variant="tertiary" size="small" type="button" onClick={onCancel}>
+        Cancel
+      </Button>
+    </Box>
+  </Box>
+);
 
 interface EventFormProps {
   configuration: SmtpConfiguration;
@@ -32,6 +67,7 @@ interface EventFormProps {
 }
 
 export const EventForm = ({ configuration, eventType }: EventFormProps) => {
+  const router = useRouter();
   const { notifySuccess, notifyError } = useDashboardNotification();
 
   const eventConfiguration = configuration.events.find((e) => e.eventType === eventType);
@@ -45,7 +81,9 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
     control,
     watch,
     setError,
-    formState: { dirtyFields },
+    reset,
+    getValues,
+    formState: { isDirty, dirtyFields },
   } = useForm<SmtpUpdateEvent>({
     defaultValues: {
       id: configuration.id,
@@ -57,11 +95,35 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
   const watchedTemplate = watch("template");
   const watchedSubject = watch("subject");
 
+  const [activeTab, setActiveTab] = useState<EditorTabValue>("template");
+  const [pendingEventType, setPendingEventType] = useState<MessageEventTypes | null>(null);
+
+  const initialPayload = useMemo(
+    () => JSON.stringify(examplePayloads[eventType], undefined, 2),
+    [eventType],
+  );
+  const [payload, setPayload] = useState<string>(initialPayload);
+  const isPayloadDirty = payload !== initialPayload;
+  const hasUnsavedChanges = isDirty || isPayloadDirty;
+
+  const {
+    renderedTemplate,
+    renderedSubject,
+    error: previewError,
+    isLoading: isFetchingPreview,
+  } = useTemplatePreview({
+    template: watchedTemplate,
+    subject: watchedSubject,
+    payload,
+  });
+
   const trpcContext = trpcClient.useContext();
   const { mutate, isLoading: isSaving } = trpcClient.smtpConfiguration.updateEvent.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       notifySuccess("Configuration saved");
       trpcContext.smtpConfiguration.invalidate();
+      setPendingEventType(null);
+      reset(getValues());
     },
     onError(error) {
       setBackendErrors<SmtpUpdateEvent>({
@@ -72,61 +134,54 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
     },
   });
 
-  const [activeTab, setActiveTab] = useState<EditorTabValue>("template");
-  const [lastValidRenderedTemplate, setLastValidRenderedTemplate] = useState("");
-  const [lastValidRenderedSubject, setLastValidRenderedSubject] = useState("");
-  const [previewError, setPreviewError] = useState<RenderTemplateError>(null);
+  const handleEventTypeChange = (newEventType: MessageEventTypes) => {
+    if (newEventType === eventType) return;
 
-  const initialPayload = useMemo(
-    () => JSON.stringify(examplePayloads[eventType], undefined, 2),
-    [eventType],
-  );
-  const [payload, setPayload] = useState<string>(initialPayload);
-  const isPayloadDirty = payload !== initialPayload;
+    if (hasUnsavedChanges) {
+      setPendingEventType(newEventType);
 
-  const { mutate: fetchTemplatePreview, isLoading: isFetchingTemplatePreview } =
-    trpcClient.smtpConfiguration.renderTemplate.useMutation({
-      onSuccess: (data) => {
-        setPreviewError(null);
+      return;
+    }
 
-        if (data.renderedEmailBody) {
-          setLastValidRenderedTemplate(data.renderedEmailBody);
-        }
-        if (data.renderedSubject) {
-          setLastValidRenderedSubject(data.renderedSubject);
-        }
-      },
-      onError: (error) => {
-        setPreviewError(error);
-      },
-    });
+    router.push(smtpUrls.eventConfiguration(configuration.id, newEventType));
+  };
 
-  const debouncedMutationVariables = useDebounce(
-    { template: watchedTemplate, subject: watchedSubject, payload },
-    PREVIEW_DEBOUNCE_DELAY,
-  );
+  const confirmTemplateSwitch = () => {
+    if (pendingEventType) {
+      router.push(smtpUrls.eventConfiguration(configuration.id, pendingEventType));
+    }
+  };
 
-  const {
-    template: debouncedTemplate,
-    subject: debouncedSubject,
-    payload: debouncedPayload,
-  } = debouncedMutationVariables;
-
-  useEffect(() => {
-    fetchTemplatePreview({
-      template: debouncedTemplate,
-      subject: debouncedSubject,
-      payload: debouncedPayload,
-    });
-  }, [debouncedPayload, debouncedSubject, debouncedTemplate, fetchTemplatePreview]);
+  const cancelTemplateSwitch = () => {
+    setPendingEventType(null);
+  };
 
   return (
     <form
       onSubmit={handleSubmit((data) => mutate(data))}
       style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}
     >
-      <Box marginBottom={4} flexShrink="0">
-        <Input control={control} name="subject" label="Subject" />
+      <Box display="flex" gap={4} marginBottom={4} flexShrink="0" alignItems="flex-start">
+        <Box style={{ flex: 1 }}>
+          <Select
+            label="Email template"
+            options={TEMPLATE_OPTIONS}
+            value={eventType}
+            onChange={(value) =>
+              handleEventTypeChange(extractSelectValue(value) as MessageEventTypes)
+            }
+            size="medium"
+          />
+          {pendingEventType && (
+            <TemplateSwitchConfirmation
+              onConfirm={confirmTemplateSwitch}
+              onCancel={cancelTemplateSwitch}
+            />
+          )}
+        </Box>
+        <Box style={{ flex: 2 }}>
+          <Input control={control} name="subject" label="Subject" />
+        </Box>
       </Box>
 
       <Box display="flex" gap={4} flexGrow="1" __minHeight="0">
@@ -210,9 +265,9 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
             <TemplateErrorDisplay error={previewError} />
           ) : (
             <TemplatePreview
-              subject={lastValidRenderedSubject}
-              template={lastValidRenderedTemplate}
-              isUpdating={isFetchingTemplatePreview}
+              subject={renderedSubject}
+              template={renderedTemplate}
+              isUpdating={isFetchingPreview}
             />
           )}
         </Box>

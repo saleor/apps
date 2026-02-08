@@ -115,7 +115,7 @@ const EditSmtpEventPage: NextPage = () => {
         { name: messageEventTypesLabels[eventType] },
       ]}
     >
-      <EventForm configuration={configuration} eventType={eventType} />
+      <EventForm key={eventType} configuration={configuration} eventType={eventType} />
     </EditorLayout>
   );
 };

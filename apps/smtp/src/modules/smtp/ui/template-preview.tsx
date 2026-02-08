@@ -47,11 +47,6 @@ export const TemplatePreview = ({ subject, template, isUpdating }: TemplatePrevi
         <Text size={4} color="default1" as="p">
           {subject || "\u00A0"}
         </Text>
-        {isUpdating && (
-          <Text size={1} color="default2" as="p" style={{ marginTop: "4px", fontStyle: "italic" }}>
-            Updating preview…
-          </Text>
-        )}
       </Box>
 
       <Box style={{ flex: 1, minHeight: 0 }}>

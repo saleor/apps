@@ -133,7 +133,7 @@ export const TemplateErrorDisplay = ({ error }: TemplateErrorDisplayProps) => {
   return (
     <Box
       padding={4}
-      backgroundColor="critical1"
+      backgroundColor="default1"
       borderRadius={4}
       borderColor="critical1"
       borderWidth={1}
@@ -142,7 +142,7 @@ export const TemplateErrorDisplay = ({ error }: TemplateErrorDisplayProps) => {
       flexDirection="column"
       gap={3}
     >
-      <Text color="default1" size={4} fontWeight="bold" as="p">
+      <Text color="critical1" size={4} fontWeight="bold" as="p">
         {errorTitle}
       </Text>
 
