@@ -15,6 +15,7 @@ import {
   smtpUpdateSenderSchema,
 } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { SaleorThrobber } from "./saleor-throbber";
 
 interface SmtpSenderSectionProps {
   configuration: SmtpConfiguration;
@@ -32,7 +33,7 @@ export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => 
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.smtpConfiguration.updateSender.useMutation({
+  const { mutate, isLoading: isSaving } = trpcClient.smtpConfiguration.updateSender.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration saved");
       trpcContext.smtpConfiguration.invalidate();
@@ -81,7 +82,16 @@ export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => 
             />
           </Box>
           <BoxFooter>
-            <Button type="submit">Save provider</Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? (
+                <Box display="flex" alignItems="center" gap={2}>
+                  <SaleorThrobber size={20} />
+                  <span>Saving</span>
+                </Box>
+              ) : (
+                "Save provider"
+              )}
+            </Button>
           </BoxFooter>
         </form>
       </BoxWithBorder>
