@@ -60,6 +60,26 @@ export class SendEventMessagesUseCase {
     },
   ) {}
 
+  /**
+   * Enriches the payload with branding info from the SMTP configuration.
+   * This allows templates to use {{branding.siteName}} and {{branding.logoUrl}}.
+   */
+  private enrichPayloadWithBranding(payload: unknown, config: SmtpConfiguration): unknown {
+    const hasBranding = config.brandingSiteName || config.brandingLogoUrl;
+
+    if (!hasBranding) {
+      return payload;
+    }
+
+    return {
+      ...(payload as object),
+      branding: {
+        siteName: config.brandingSiteName || null,
+        logoUrl: config.brandingLogoUrl || null,
+      },
+    };
+  }
+
   private processSingleConfiguration({
     config,
     event,
@@ -120,9 +140,12 @@ export class SendEventMessagesUseCase {
       );
     }
 
+    // Enrich payload with branding from config
+    const enrichedPayload = this.enrichPayloadWithBranding(payload, config);
+
     const preparedEmailResult = this.deps.emailCompiler.compile({
       event: event,
-      payload: payload,
+      payload: enrichedPayload,
       recipientEmail: recipientEmail,
       bodyTemplate: eventSettings.template,
       subjectTemplate: eventSettings.subject,
@@ -312,7 +335,13 @@ export class SendEventMessagesUseCase {
     }
 
     if (availableSmtpConfigurations.value.length === 0) {
-      return this.sendWithFallback({ event, payload, recipientEmail, channelSlug, saleorApiUrl });
+      return this.sendWithFallback({
+        event,
+        payload,
+        recipientEmail,
+        channelSlug,
+        saleorApiUrl,
+      });
     }
 
     this.logger.info(

@@ -24,9 +24,11 @@ const exampleOrderPayload: OrderDetailsFragment = {
   number: "198",
   status: "UNFULFILLED",
   languageCodeEnum: "EN",
-  created: "",
+  created: "2024-01-15T14:32:00+00:00",
+  redirectUrl: "https://example.com/order/57b50a40-c4fb-4b43-b188-3bafde1770d9",
   displayGrossPrices: true,
   isShippingRequired: true,
+  shippingMethodName: "Standard Shipping",
   userEmail: "adrian.king@example.com",
   metadata: [
     {
@@ -42,6 +44,7 @@ const exampleOrderPayload: OrderDetailsFragment = {
   ],
   channel: {
     slug: "default-channel",
+    name: "My Store",
   },
   user: {
     email: "adrian.king@example.com",
@@ -56,12 +59,13 @@ const exampleOrderPayload: OrderDetailsFragment = {
     streetAddress2: "",
     companyName: "",
     cityArea: "",
-    city: "METROPOLIS",
+    city: "Metropolis",
     postalCode: "71653",
-    countryArea: "PL",
+    countryArea: "NY",
     country: {
       country: "United States of America",
     },
+    phone: "+1 555-123-4567",
   },
   shippingAddress: {
     firstName: "Adrian",
@@ -70,23 +74,26 @@ const exampleOrderPayload: OrderDetailsFragment = {
     streetAddress2: "",
     companyName: "",
     cityArea: "",
-    city: "METROPOLIS",
+    city: "Metropolis",
     postalCode: "71653",
-    countryArea: "PL",
+    countryArea: "NY",
     country: {
       country: "United States of America",
     },
+    phone: "+1 555-123-4567",
   },
   lines: [
     {
       id: "T3JkZXJMaW5lOjNkNjc4OWE3LWUyNWItNDBlMi1iNjk2LTdmMzA0ZWFjOWI2OQ==",
       productName: "Black Hoodie",
       variantName: "XL",
+      productSku: "BH-XL-001",
       quantity: 1,
       thumbnail: {
         url: "https://placehold.jp/150x150.png",
-        alt: "",
+        alt: "Black Hoodie",
       },
+      digitalContentUrl: null,
       unitPrice: {
         gross: {
           currency: "USD",
@@ -121,6 +128,8 @@ const exampleOrderPayload: OrderDetailsFragment = {
       quantityFulfilled: 0,
       taxRate: 10,
       unitDiscountValue: 0,
+      unitDiscountReason: null,
+      unitDiscountType: null,
       unitDiscount: {
         amount: 0,
         currency: "USD",
@@ -137,6 +146,49 @@ const exampleOrderPayload: OrderDetailsFragment = {
         tax: {
           currency: "USD",
           amount: 1,
+        },
+      },
+      variant: {
+        preorder: null,
+        weight: {
+          unit: "KG",
+          value: 0.5,
+        },
+        attributes: [
+          {
+            attribute: {
+              id: "QXR0cmlidXRlOjE=",
+              name: "Size",
+              slug: "size",
+            },
+            values: [
+              {
+                id: "QXR0cmlidXRlVmFsdWU6MQ==",
+                name: "XL",
+                slug: "xl",
+                file: null,
+              },
+            ],
+          },
+        ],
+        product: {
+          attributes: [
+            {
+              attribute: {
+                id: "QXR0cmlidXRlOjI=",
+                name: "Color",
+                slug: "color",
+              },
+              values: [
+                {
+                  id: "QXR0cmlidXRlVmFsdWU6Mg==",
+                  name: "Black",
+                  slug: "black",
+                  file: null,
+                },
+              ],
+            },
+          ],
         },
       },
       metadata: [],
@@ -267,8 +319,8 @@ const accountConfirmationPayload: NotifyPayloadAccountConfirmation = {
   confirm_url:
     "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel_slug: "default-channel",
-  domain: "demo.saleor.cloud",
-  site_name: "Saleor e-commerce",
+  domain: "acme-store.example.com",
+  site_name: "Acme Store",
   logo_url: "",
 };
 
@@ -289,8 +341,8 @@ const accountPasswordResetPayload: NotifyPayloadAccountPasswordReset = {
   reset_url:
     "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel_slug: "default-channel",
-  domain: "demo.saleor.cloud",
-  site_name: "Saleor e-commerce",
+  domain: "acme-store.example.com",
+  site_name: "Acme Store",
   logo_url: "",
 };
 
@@ -313,8 +365,8 @@ const accountChangeEmailRequestPayload: NotifyPayloadAccountChangeEmailRequest =
   redirect_url:
     "http://example.com/reset?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel_slug: "default-channel",
-  domain: "demo.saleor.cloud",
-  site_name: "Saleor e-commerce",
+  domain: "acme-store.example.com",
+  site_name: "Acme Store",
   logo_url: "",
 };
 
@@ -334,8 +386,8 @@ const accountChangeEmailConfirmPayload: NotifyPayloadAccountChangeEmailConfirmat
   old_email: "old@example.com",
   new_email: "new@example.com",
   channel_slug: "default-channel",
-  domain: "demo.saleor.cloud",
-  site_name: "Saleor e-commerce",
+  domain: "acme-store.example.com",
+  site_name: "Acme Store",
   logo_url: "",
 };
 
@@ -356,8 +408,8 @@ const accountDeletePayload: NotifyPayloadAccountDelete = {
   delete_url:
     "http://example.com?email=user%40example.com&token=bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel_slug: "default-channel",
-  domain: "demo.saleor.cloud",
-  site_name: "Saleor e-commerce",
+  domain: "acme-store.example.com",
+  site_name: "Acme Store",
   logo_url: "",
 };
 
@@ -534,45 +586,47 @@ const fulfillmentUpdatePayload: NotifyPayloadFulfillmentUpdate = {
   recipient_email: "user@example.com",
   token: "bmt4kc-d6e379b762697f6aa357527af36bb9f6",
   channel_slug: "default-channel",
-  domain: "demo.saleor.cloud",
-  site_name: "Saleor e-commerce",
+  domain: "acme-store.example.com",
+  site_name: "Acme Store",
   logo_url: "",
 };
 
-// TODO: UPDATE WITH BETTER DATA
 const giftCardSentPayload: GiftCardSentWebhookPayloadFragment = {
-  channel: "default_channel",
-  sentToEmail: "user@example.com",
+  channel: "default-channel",
+  sentToEmail: "recipient@example.com",
   giftCard: {
-    code: "XXXX",
+    code: "GC-ABCD-1234-EFGH-5678",
     metadata: [
       {
-        key: "metadata-example",
-        value: "Example value",
+        key: "occasion",
+        value: "Birthday",
       },
     ],
     privateMetadata: [
       {
-        key: "private-metadata-example",
-        value: "Example value for private metadata",
+        key: "internal-note",
+        value: "VIP customer gift",
       },
     ],
-    tags: [],
-    created: "2021-03-16T13:12:00+00:00",
+    tags: [
+      { id: "R2lmdENhcmRUYWc6MQ==", name: "birthday" },
+      { id: "R2lmdENhcmRUYWc6Mg==", name: "premium" },
+    ],
+    created: "2024-01-15T10:30:00+00:00",
     currentBalance: {
-      amount: 100,
+      amount: 50,
       currency: "USD",
     },
     id: "R2lmdENhcmQ6MjI=",
     initialBalance: {
-      amount: 100,
+      amount: 50,
       currency: "USD",
     },
     isActive: true,
     lastUsedOn: null,
-    displayCode: "XXXX-XXXX-XXXX-XXXX",
-    last4CodeChars: "XXXX",
-    expiryDate: "2021-03-16T13:12:00+00:00",
+    displayCode: "ABCD-1234-EFGH-5678",
+    last4CodeChars: "5678",
+    expiryDate: "2025-01-15",
     usedByEmail: null,
     usedBy: null,
   },
