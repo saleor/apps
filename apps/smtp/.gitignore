@@ -1,3 +1,6 @@
 
 # Sentry Auth Token
 .sentryclirc
+
+# Local email preview build output
+email-previews/
