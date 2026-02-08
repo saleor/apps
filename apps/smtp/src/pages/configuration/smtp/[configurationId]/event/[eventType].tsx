@@ -1,5 +1,5 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { TextLink } from "@saleor/apps-ui";
+import { Breadcrumbs, SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -17,9 +17,7 @@ const LoadingView = () => {
     <BasicLayout
       breadcrumbs={[{ name: "Configuration", href: appUrls.configuration() }, { name: "..." }]}
     >
-      <Text size={10} fontWeight="bold">
-        Loading...
-      </Text>
+      <SkeletonLayout.Section />
     </BasicLayout>
   );
 };
@@ -39,6 +37,35 @@ const NotFoundView = () => {
     </BasicLayout>
   );
 };
+
+interface EditorLayoutProps {
+  children: React.ReactNode;
+  breadcrumbs: { name: string; href?: string }[];
+}
+
+const EditorLayout = ({ children, breadcrumbs }: EditorLayoutProps) => (
+  <Box
+    padding={7}
+    paddingBottom={3}
+    display="flex"
+    flexDirection="column"
+    backgroundColor="default1"
+    style={{ height: "100vh", boxSizing: "border-box" }}
+  >
+    <Box marginBottom={6}>
+      <Breadcrumbs>
+        {breadcrumbs.map((breadcrumb) => (
+          <Breadcrumbs.Item key={breadcrumb.name} href={breadcrumb.href}>
+            {breadcrumb.name}
+          </Breadcrumbs.Item>
+        ))}
+      </Breadcrumbs>
+    </Box>
+    <Box display="flex" flexDirection="column" flexGrow="1" __minHeight="0">
+      {children}
+    </Box>
+  </Box>
+);
 
 const EditSmtpEventPage: NextPage = () => {
   const { notifyError } = useDashboardNotification();
@@ -81,32 +108,15 @@ const EditSmtpEventPage: NextPage = () => {
   }
 
   return (
-    <BasicLayout
+    <EditorLayout
       breadcrumbs={[
         { name: "Configuration", href: appUrls.configuration() },
         { name: `SMTP:  ${configuration.name}`, href: smtpUrls.configuration(configurationId) },
         { name: messageEventTypesLabels[eventType] },
       ]}
     >
-      <Box display="flex" flexDirection="column" gap={10}>
-        <Text as="p">
-          Edit template for <code>{eventType}</code> event. You can learn more about{" "}
-          <TextLink href="https://mjml.io/" newTab={true}>
-            MJML
-          </TextLink>{" "}
-          and{" "}
-          <TextLink href="https://handlebarsjs.com/" newTab={true}>
-            Handlebars
-          </TextLink>
-          . Additional syntax via{" "}
-          <TextLink href="https://github.com/helpers/handlebars-helpers/tree/master" newTab>
-            Handlebars Helpers
-          </TextLink>{" "}
-          is supported
-        </Text>
-        <EventForm configuration={configuration} eventType={eventType} />
-      </Box>
-    </BasicLayout>
+      <EventForm configuration={configuration} eventType={eventType} />
+    </EditorLayout>
   );
 };
 
