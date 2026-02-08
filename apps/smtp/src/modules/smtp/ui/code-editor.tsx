@@ -7,14 +7,21 @@ type Props = {
   initialTemplate: string;
   value: string;
   language: string;
+  height?: string;
 };
 
-export const CodeEditor = ({ initialTemplate, onChange, value, language }: Props) => {
+export const CodeEditor = ({
+  initialTemplate,
+  onChange,
+  value,
+  language,
+  height = "600px",
+}: Props) => {
   const { theme } = useTheme();
   const editorRef = useRef(null);
 
-  // @ts-ignore
-  function handleEditorDidMount(editor, monaco) {
+  // @ts-expect-error Monaco types are complex, using any for editor instance
+  function handleEditorDidMount(editor, _monaco) {
     editorRef.current = editor;
   }
 
@@ -22,20 +29,29 @@ export const CodeEditor = ({ initialTemplate, onChange, value, language }: Props
     (value?: string) => {
       onChange(value ?? "");
     },
-    [value],
+    [onChange],
   );
 
   return (
-    <>
-      <Editor
-        height="600px"
-        value={value}
-        theme={theme === "defaultDark" ? "vs-dark" : "vs-light"}
-        defaultLanguage={language}
-        defaultValue={initialTemplate}
-        onMount={handleEditorDidMount}
-        onChange={handleOnChange}
-      />
-    </>
+    <Editor
+      height={height}
+      value={value}
+      theme={theme === "defaultDark" ? "vs-dark" : "vs-light"}
+      defaultLanguage={language}
+      defaultValue={initialTemplate}
+      onMount={handleEditorDidMount}
+      onChange={handleOnChange}
+      options={{
+        automaticLayout: true,
+        minimap: { enabled: false },
+        scrollBeyondLastLine: false,
+        padding: { top: 16, bottom: 16 },
+        scrollbar: {
+          verticalScrollbarSize: 10,
+          horizontalScrollbarSize: 10,
+          useShadows: false,
+        },
+      }}
+    />
   );
 };
