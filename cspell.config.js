@@ -82,6 +82,7 @@ export default {
     "mailpit",
     "Neue",
     "Segoe",
+    "Undiscounted",
   ],
   language: "en-US",
   useGitignore: true,

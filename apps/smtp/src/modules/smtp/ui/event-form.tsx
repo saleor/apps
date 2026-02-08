@@ -3,7 +3,7 @@ import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-noti
 import { Box, Button, Select, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { setBackendErrors } from "../../../lib/set-backend-errors";
@@ -16,6 +16,7 @@ import {
 import { trpcClient } from "../../trpc/trpc-client";
 import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
 import { smtpUrls } from "../urls";
 import { CodeEditor } from "./code-editor";
 import { SaleorThrobber } from "./saleor-throbber";
@@ -25,6 +26,7 @@ import { TemplatePreview } from "./template-preview";
 import { useTemplatePreview } from "./use-template-preview";
 
 type EditorTabValue = "template" | "variables";
+type ResetTarget = "subject" | "template" | null;
 
 const TEMPLATE_OPTIONS = messageEventTypes.map((type) => ({
   value: type,
@@ -61,6 +63,45 @@ const TemplateSwitchConfirmation = ({ onConfirm, onCancel }: TemplateSwitchConfi
   </Box>
 );
 
+interface ResetConfirmationProps {
+  target: ResetTarget;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+const ResetConfirmation = ({ target, onConfirm, onCancel }: ResetConfirmationProps) => {
+  if (!target) return null;
+
+  const label = target === "subject" ? "subject" : "MJML template";
+
+  return (
+    <Box
+      padding={3}
+      backgroundColor="default2"
+      borderRadius={2}
+      display="flex"
+      flexDirection="column"
+      gap={2}
+    >
+      <Text size={2} fontWeight="bold">
+        Reset {label} to default?
+      </Text>
+      <Text size={2} color="default2">
+        This will replace your current {label} with the default template. You&apos;ll need to save
+        to apply the change.
+      </Text>
+      <Box display="flex" gap={2}>
+        <Button variant="primary" size="small" type="button" onClick={onConfirm}>
+          Reset
+        </Button>
+        <Button variant="tertiary" size="small" type="button" onClick={onCancel}>
+          Cancel
+        </Button>
+      </Box>
+    </Box>
+  );
+};
+
 interface EventFormProps {
   configuration: SmtpConfiguration;
   eventType: MessageEventTypes;
@@ -82,6 +123,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
     watch,
     setError,
     reset,
+    setValue,
     getValues,
     formState: { isDirty, dirtyFields },
   } = useForm<SmtpUpdateEvent>({
@@ -97,6 +139,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
 
   const [activeTab, setActiveTab] = useState<EditorTabValue>("template");
   const [pendingEventType, setPendingEventType] = useState<MessageEventTypes | null>(null);
+  const [pendingResetTarget, setPendingResetTarget] = useState<ResetTarget>(null);
 
   const initialPayload = useMemo(
     () => JSON.stringify(examplePayloads[eventType], undefined, 2),
@@ -105,6 +148,31 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
   const [payload, setPayload] = useState<string>(initialPayload);
   const isPayloadDirty = payload !== initialPayload;
   const hasUnsavedChanges = isDirty || isPayloadDirty;
+
+  // Parse the payload JSON so the template editor can offer Handlebars autocomplete
+  const parsedPayload = useMemo<Record<string, unknown> | undefined>(() => {
+    try {
+      const parsed: unknown = JSON.parse(payload);
+
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+        return parsed as Record<string, unknown>;
+      }
+
+      return undefined;
+    } catch {
+      return undefined;
+    }
+  }, [payload]);
+
+  /**
+   * Stable reference so the template editor doesn't re-register completions on
+   * every keystroke in the payload editor – only when the parsed result changes.
+   */
+  const stablePayload = useMemo(() => parsedPayload, [JSON.stringify(parsedPayload)]);
+
+  const handlePayloadChange = useCallback((value: string) => {
+    setPayload(value);
+  }, []);
 
   const {
     renderedTemplate,
@@ -156,6 +224,23 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
     setPendingEventType(null);
   };
 
+  const handleResetRequest = (target: ResetTarget) => {
+    setPendingResetTarget(target);
+  };
+
+  const confirmReset = () => {
+    if (pendingResetTarget === "subject") {
+      setValue("subject", defaultMjmlSubjectTemplates[eventType], { shouldDirty: true });
+    } else if (pendingResetTarget === "template") {
+      setValue("template", defaultMjmlTemplates[eventType], { shouldDirty: true });
+    }
+    setPendingResetTarget(null);
+  };
+
+  const cancelReset = () => {
+    setPendingResetTarget(null);
+  };
+
   return (
     <form
       onSubmit={handleSubmit((data) => mutate(data))}
@@ -184,6 +269,16 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
         </Box>
       </Box>
 
+      {pendingResetTarget && (
+        <Box marginBottom={4}>
+          <ResetConfirmation
+            target={pendingResetTarget}
+            onConfirm={confirmReset}
+            onCancel={cancelReset}
+          />
+        </Box>
+      )}
+
       <Box display="flex" gap={4} flexGrow="1" __minHeight="0">
         <Box
           display="flex"
@@ -201,21 +296,37 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
             borderBottomWidth={1}
             borderBottomStyle="solid"
             borderColor="default1"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            <TabButton
-              active={activeTab === "template"}
-              onClick={() => setActiveTab("template")}
-              isDirty={dirtyFields.template}
-            >
-              MJML Template
-            </TabButton>
-            <TabButton
-              active={activeTab === "variables"}
-              onClick={() => setActiveTab("variables")}
-              isDirty={isPayloadDirty}
-            >
-              Test Variables
-            </TabButton>
+            <Box display="flex">
+              <TabButton
+                active={activeTab === "template"}
+                onClick={() => setActiveTab("template")}
+                isDirty={dirtyFields.template}
+              >
+                MJML Template
+              </TabButton>
+              <TabButton
+                active={activeTab === "variables"}
+                onClick={() => setActiveTab("variables")}
+                isDirty={isPayloadDirty}
+              >
+                Test Variables
+              </TabButton>
+            </Box>
+            {activeTab === "template" && (
+              <Box paddingRight={2}>
+                <Button
+                  variant="tertiary"
+                  size="small"
+                  type="button"
+                  onClick={() => handleResetRequest("template")}
+                >
+                  Reset to Saleor default
+                </Button>
+              </Box>
+            )}
           </Box>
 
           <Box style={{ flex: 1, minHeight: 0, position: "relative" }}>
@@ -237,6 +348,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
                     onChange={onChange}
                     language="xml"
                     height="100%"
+                    templatePayload={stablePayload}
                   />
                 )}
               />
@@ -252,7 +364,7 @@ export const EventForm = ({ configuration, eventType }: EventFormProps) => {
               <CodeEditor
                 initialTemplate={payload}
                 value={payload}
-                onChange={setPayload}
+                onChange={handlePayloadChange}
                 language="json"
                 height="100%"
               />

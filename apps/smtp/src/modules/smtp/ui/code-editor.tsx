@@ -1,6 +1,8 @@
-import Editor from "@monaco-editor/react";
+import Editor, { type Monaco } from "@monaco-editor/react";
 import { useTheme } from "@saleor/macaw-ui";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+
+import { registerMjmlCompletionProviders } from "./monaco-completions";
 
 type Props = {
   onChange(value: string): void;
@@ -8,6 +10,11 @@ type Props = {
   value: string;
   language: string;
   height?: string;
+  /**
+   * When provided, registers Handlebars variable + MJML tag autocomplete
+   * based on the payload's structure. Typically the parsed test-variables JSON.
+   */
+  templatePayload?: Record<string, unknown>;
 };
 
 export const CodeEditor = ({
@@ -16,14 +23,45 @@ export const CodeEditor = ({
   value,
   language,
   height = "600px",
+  templatePayload,
 }: Props) => {
   const { theme } = useTheme();
   const editorRef = useRef(null);
+  const monacoRef = useRef<Monaco | null>(null);
+  const completionDisposableRef = useRef<{ dispose(): void } | null>(null);
 
   // @ts-expect-error Monaco types are complex, using any for editor instance
-  function handleEditorDidMount(editor, _monaco) {
+  function handleEditorDidMount(editor, monaco: Monaco) {
     editorRef.current = editor;
+    monacoRef.current = monaco;
+
+    if (templatePayload && language === "xml") {
+      completionDisposableRef.current = registerMjmlCompletionProviders(monaco, templatePayload);
+    }
   }
+
+  // Re-register completions when the payload changes (e.g. user edits test variables)
+  useEffect(() => {
+    if (!monacoRef.current || language !== "xml") {
+      return;
+    }
+
+    completionDisposableRef.current?.dispose();
+
+    if (templatePayload) {
+      completionDisposableRef.current = registerMjmlCompletionProviders(
+        monacoRef.current,
+        templatePayload,
+      );
+    }
+  }, [templatePayload, language]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      completionDisposableRef.current?.dispose();
+    };
+  }, []);
 
   const handleOnChange = useCallback(
     (value?: string) => {
@@ -51,6 +89,19 @@ export const CodeEditor = ({
           horizontalScrollbarSize: 10,
           useShadows: false,
         },
+        quickSuggestions: {
+          other: true,
+          strings: true,
+          comments: false,
+        },
+        suggestOnTriggerCharacters: true,
+        suggestSelection: "first",
+        acceptSuggestionOnEnter: "on",
+        snippetSuggestions: "inline",
+        suggest: {
+          selectionMode: "always",
+        },
+        tabCompletion: "off",
       }}
     />
   );

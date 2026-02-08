@@ -28,6 +28,9 @@ const mjHead = `<mj-head>
     .product-row:last-child td { border-bottom: none; }
     .totals-row td { padding: 8px 0; }
     .totals-row.total td { padding-top: 12px; border-top: 1px solid ${colors.border}; font-weight: 600; }
+    @media only screen and (max-width: 480px) {
+      .billing-column { padding-top: 24px !important; }
+    }
   </mj-style>
 </mj-head>`;
 
@@ -117,11 +120,12 @@ const orderLinesWithImages = `<mj-section padding="0">
           <div style="width: 64px; height: 64px; background: ${colors.accent}; border-radius: 6px;"></div>
           {{/if}}
         </td>
-        <td style="vertical-align: top;">
+        <td style="vertical-align: top; max-width: 280px;">
           <div style="font-weight: 600; color: ${colors.primary}; margin-bottom: 4px;">{{this.productName}}</div>
           {{#if this.variantName}}<div style="font-size: 14px; color: ${colors.muted};">{{this.variantName}}</div>{{/if}}
           <div style="font-size: 14px; color: ${colors.muted};">Qty: {{this.quantity}}</div>
         </td>
+        <td style="width: 24px;"></td>
         <td style="text-align: right; vertical-align: top; white-space: nowrap;">
           <div style="font-weight: 600; color: ${colors.primary};">{{this.totalPrice.gross.amount}} {{this.totalPrice.gross.currency}}</div>
         </td>
@@ -157,14 +161,47 @@ const orderTotals = `<mj-section padding="16px 0 0">
   </mj-column>
 </mj-section>`;
 
-// —— Shipping address block ——
+// —— Address blocks (side by side on desktop, stacked on mobile) ——
+const addressBlocksBothColumns = `<mj-section padding="24px 0 0">
+  <mj-column>
+    <mj-text font-size="12px" font-weight="600" color="${colors.muted}" letter-spacing="1px" padding="0 0 8px">SHIPPING TO</mj-text>
+    {{#if order.shippingAddress}}
+    <mj-text padding="0" color="${colors.text}">
+      {{order.shippingAddress.firstName}} {{order.shippingAddress.lastName}}<br />
+      {{#if order.shippingAddress.companyName}}{{order.shippingAddress.companyName}}<br />{{/if}}
+      {{order.shippingAddress.streetAddress1}}{{#if order.shippingAddress.streetAddress2}}<br />{{order.shippingAddress.streetAddress2}}{{/if}}<br />
+      {{order.shippingAddress.city}}, {{order.shippingAddress.countryArea}} {{order.shippingAddress.postalCode}}<br />
+      {{order.shippingAddress.country.country}}
+    </mj-text>
+    {{else}}
+    <mj-text padding="0" color="${colors.muted}">No shipping required</mj-text>
+    {{/if}}
+  </mj-column>
+  <mj-column css-class="billing-column">
+    <mj-text font-size="12px" font-weight="600" color="${colors.muted}" letter-spacing="1px" padding="0 0 8px">BILLING TO</mj-text>
+    {{#if order.billingAddress}}
+    <mj-text padding="0" color="${colors.text}">
+      {{order.billingAddress.firstName}} {{order.billingAddress.lastName}}<br />
+      {{#if order.billingAddress.companyName}}{{order.billingAddress.companyName}}<br />{{/if}}
+      {{order.billingAddress.streetAddress1}}{{#if order.billingAddress.streetAddress2}}<br />{{order.billingAddress.streetAddress2}}{{/if}}<br />
+      {{order.billingAddress.city}}, {{order.billingAddress.countryArea}} {{order.billingAddress.postalCode}}<br />
+      {{order.billingAddress.country.country}}
+    </mj-text>
+    {{else}}
+    <mj-text padding="0" color="${colors.muted}">No billing address</mj-text>
+    {{/if}}
+  </mj-column>
+</mj-section>`;
+
+// —— Shipping address only (for fulfillment emails) ——
 const shippingAddressBlock = `<mj-section padding="24px 0 0">
   <mj-column>
     <mj-text font-size="12px" font-weight="600" color="${colors.muted}" letter-spacing="1px" padding="0 0 8px">SHIPPING TO</mj-text>
     {{#if order.shippingAddress}}
     <mj-text padding="0" color="${colors.text}">
       {{order.shippingAddress.firstName}} {{order.shippingAddress.lastName}}<br />
-      {{order.shippingAddress.streetAddress1}}{{#if order.shippingAddress.streetAddress2}}, {{order.shippingAddress.streetAddress2}}{{/if}}<br />
+      {{#if order.shippingAddress.companyName}}{{order.shippingAddress.companyName}}<br />{{/if}}
+      {{order.shippingAddress.streetAddress1}}{{#if order.shippingAddress.streetAddress2}}<br />{{order.shippingAddress.streetAddress2}}{{/if}}<br />
       {{order.shippingAddress.city}}, {{order.shippingAddress.countryArea}} {{order.shippingAddress.postalCode}}<br />
       {{order.shippingAddress.country.country}}
     </mj-text>
@@ -220,7 +257,7 @@ ${mjHead}
     <mj-section padding="16px 0"><mj-column><mj-divider border-color="${colors.border}" border-width="1px" padding="0" /></mj-column></mj-section>
     ${orderLinesWithImages}
     ${orderTotals}
-    ${shippingAddressBlock}
+    ${addressBlocksBothColumns}
     ${orderFooterSection}
   </mj-wrapper>
 </mj-body>
@@ -242,7 +279,7 @@ ${mjHead}
     <mj-section padding="16px 0"><mj-column><mj-divider border-color="${colors.border}" border-width="1px" padding="0" /></mj-column></mj-section>
     ${orderLinesWithImages}
     ${orderTotals}
-    ${shippingAddressBlock}
+    ${addressBlocksBothColumns}
     ${orderFooterSection}
   </mj-wrapper>
 </mj-body>
@@ -295,7 +332,7 @@ ${mjHead}
     <mj-section padding="16px 0"><mj-column><mj-divider border-color="${colors.border}" border-width="1px" padding="0" /></mj-column></mj-section>
     ${orderLinesWithImages}
     ${orderTotals}
-    ${shippingAddressBlock}
+    ${addressBlocksBothColumns}
     ${orderFooterSection}
   </mj-wrapper>
 </mj-body>
