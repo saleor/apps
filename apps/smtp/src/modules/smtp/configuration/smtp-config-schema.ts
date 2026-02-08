@@ -29,6 +29,9 @@ export const smtpConfigurationSchema = z.object({
   encryption: z.enum(smtpEncryptionTypes).default("NONE"),
   channels: channelConfigurationSchema,
   events: z.array(smtpConfigurationEventSchema),
+  // Email branding - displayed in email header and footer
+  brandingSiteName: z.string().optional(),
+  brandingLogoUrl: z.string().url().optional().or(z.literal("")),
 });
 
 export type SmtpConfiguration = z.infer<typeof smtpConfigurationSchema>;

@@ -425,6 +425,113 @@ describe("SendEventMessagesUseCase", () => {
       });
     });
 
+    describe("Branding enrichment", () => {
+      it("Enriches payload with branding when config has brandingSiteName", async () => {
+        const configWithBranding = MockConfigService.getSimpleConfigurationValue();
+
+        configWithBranding.brandingSiteName = "My Store";
+
+        configService.mockGetConfigurationsMethod.mockReturnValue(okAsync([configWithBranding]));
+
+        await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: { order: { number: "123" } },
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            payload: expect.objectContaining({
+              order: { number: "123" },
+              branding: { siteName: "My Store", logoUrl: null },
+            }),
+          }),
+        );
+      });
+
+      it("Enriches payload with branding when config has brandingLogoUrl", async () => {
+        const configWithBranding = MockConfigService.getSimpleConfigurationValue();
+
+        configWithBranding.brandingLogoUrl = "https://example.com/logo.png";
+
+        configService.mockGetConfigurationsMethod.mockReturnValue(okAsync([configWithBranding]));
+
+        await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: { order: { number: "456" } },
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            payload: expect.objectContaining({
+              order: { number: "456" },
+              branding: { siteName: null, logoUrl: "https://example.com/logo.png" },
+            }),
+          }),
+        );
+      });
+
+      it("Enriches payload with both siteName and logoUrl when both are configured", async () => {
+        const configWithBranding = MockConfigService.getSimpleConfigurationValue();
+
+        configWithBranding.brandingSiteName = "My Store";
+        configWithBranding.brandingLogoUrl = "https://example.com/logo.png";
+
+        configService.mockGetConfigurationsMethod.mockReturnValue(okAsync([configWithBranding]));
+
+        await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: { customer: { email: "test@example.com" } },
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            payload: expect.objectContaining({
+              customer: { email: "test@example.com" },
+              branding: {
+                siteName: "My Store",
+                logoUrl: "https://example.com/logo.png",
+              },
+            }),
+          }),
+        );
+      });
+
+      it("Does not add branding to payload when config has no branding configured", async () => {
+        // Default mock config has no branding fields set
+        const configWithoutBranding = MockConfigService.getSimpleConfigurationValue();
+
+        configService.mockGetConfigurationsMethod.mockReturnValue(okAsync([configWithoutBranding]));
+
+        await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: { order: { number: "789" } },
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            payload: { order: { number: "789" } },
+          }),
+        );
+
+        // Verify branding is NOT present in the payload
+        const callArgs = emailCompiler.mockEmailCompileMethod.mock.calls[0][0];
+
+        expect(callArgs.payload).not.toHaveProperty("branding");
+      });
+    });
+
     describe("Single configuration assigned for the event", () => {
       it("Returns error if event is set to not active", async () => {
         const smtpConfig = MockConfigService.getSimpleConfigurationValue();

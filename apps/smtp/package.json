@@ -14,6 +14,7 @@
     "lint:fix": "eslint --fix .",
     "start": "next start",
     "test": "vitest",
+    "test-email-build": "tsx ./scripts/build-email-previews.ts",
     "test:ci": "vitest run --coverage"
   },
   "config": {

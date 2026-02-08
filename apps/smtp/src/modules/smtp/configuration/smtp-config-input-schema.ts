@@ -57,6 +57,14 @@ export const smtpUpdateSenderSchema = smtpConfigurationSchema.pick({
 
 export type SmtpUpdateSender = z.infer<typeof smtpUpdateSenderSchema>;
 
+export const smtpUpdateBrandingSchema = smtpConfigurationSchema.pick({
+  id: true,
+  brandingSiteName: true,
+  brandingLogoUrl: true,
+});
+
+export type SmtpUpdateBranding = z.infer<typeof smtpUpdateBrandingSchema>;
+
 export const smtpUpdateChannelsSchema = channelConfigurationSchema.merge(
   smtpConfigurationSchema.pick({
     id: true,
