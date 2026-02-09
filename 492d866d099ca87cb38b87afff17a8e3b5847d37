@@ -1,0 +1,37 @@
+apps/smtp/src/env.ts
+  9f75b0c62a4659c7 45,86
+apps/smtp/.env.example
+  9f75b0c62a4659c7 40
+apps/smtp/src/modules/saleor-fallback-behavior/fallback-sender-email.ts
+  9f75b0c62a4659c7 1-22
+apps/smtp/src/modules/event-handlers/use-case/send-event-messages.use-case.test.ts
+  9f75b0c62a4659c7 246,273,366,379
+apps/smtp/src/modules/smtp/configuration/smtp-config-schema.ts
+  9f75b0c62a4659c7 51,66
+apps/smtp/src/modules/event-handlers/use-case/send-event-messages.use-case.ts
+  9f75b0c62a4659c7 6,240-244,250
+apps/smtp/turbo.json
+  9f75b0c62a4659c7 27
+apps/smtp/src/modules/saleor-fallback-behavior/fallback-sender-email.test.ts
+  9f75b0c62a4659c7 1-42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.42",
+  "base_commit_sha": "492d866d099ca87cb38b87afff17a8e3b5847d37",
+  "prompts": {
+    "9f75b0c62a4659c7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "70c1d3b7-ec06-4811-b03d-51ad95b0583b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 82,
+      "total_deletions": 12,
+      "accepted_lines": 81,
+      "overriden_lines": 0
+    }
+  }
+}
