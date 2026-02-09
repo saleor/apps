@@ -1,0 +1,36 @@
+name: Dashboard app smoke tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      VERSION:
+        type: choice
+        required: true
+        description: "Saleor version to test"
+        options:
+          - "3.20"
+          - "3.21"
+          - "3.22"
+      APP_IDENTIFIERS:
+        type: string
+        required: false
+        default: ""
+        description: "Comma-separated app identifiers (empty = all)"
+
+  workflow_call:
+    inputs:
+      VERSION:
+        type: string
+        required: true
+      APP_IDENTIFIERS:
+        type: string
+        required: false
+        default: ""
+
+jobs:
+  smoke-tests:
+    uses: saleor/saleor-dashboard/.github/workflows/app-smoke-tests.yml@main
+    with:
+      VERSION: ${{ inputs.VERSION }}
+      APP_IDENTIFIERS: ${{ inputs.APP_IDENTIFIERS }}
+    secrets: inherit
