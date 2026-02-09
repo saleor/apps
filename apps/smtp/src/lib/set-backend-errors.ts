@@ -1,7 +1,7 @@
 import { TRPCClientErrorLike } from "@trpc/client";
 import { FieldValues, UseFormSetError } from "react-hook-form";
 
-import { AppRouter } from "../modules/trpc/trpc-app-router";
+import type { AppRouter } from "../modules/trpc/trpc-app-router";
 
 type SetBackendErrorsProps<T extends FieldValues = FieldValues> = {
   error: TRPCClientErrorLike<AppRouter>;
