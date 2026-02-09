@@ -27,6 +27,8 @@ on:
         required: false
         default: ""
 
+permissions: {}
+
 jobs:
   smoke-tests:
     uses: saleor/saleor-dashboard/.github/workflows/app-smoke-tests.yml@main
