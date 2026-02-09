@@ -3,13 +3,12 @@ import { Box } from "@saleor/macaw-ui";
 
 interface BasicLayoutProps {
   children: React.ReactNode;
-  isLoading?: boolean;
   breadcrumbs?: { name: string; href?: string }[];
 }
 
-export const BasicLayout = ({ children, breadcrumbs, isLoading = false }: BasicLayoutProps) => {
+export const BasicLayout = ({ children, breadcrumbs }: BasicLayoutProps) => {
   return (
-    <Box padding={7} display="grid" gap={10}>
+    <Box padding={7} display="grid" gap={10} backgroundColor="default1">
       {breadcrumbs?.length && (
         <Breadcrumbs>
           {breadcrumbs.map((breadcrumb) => (

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { BasicLayout } from "../../../components/basic-layout";
 import { appUrls } from "../../../modules/app-configuration/urls";
 import { SmtpBasicInformationSection } from "../../../modules/smtp/ui/smtp-basic-information-section";
+import { SmtpBrandingSection } from "../../../modules/smtp/ui/smtp-branding-section";
 import { SmtpChannelsSection } from "../../../modules/smtp/ui/smtp-channels-section";
 import { SmtpDangerousSection } from "../../../modules/smtp/ui/smtp-dangerous-section";
 import { SmtpEventsSection } from "../../../modules/smtp/ui/smtp-events-section";
@@ -92,6 +93,7 @@ const EditSmtpConfigurationPage: NextPage = () => {
       <SmtpBasicInformationSection configuration={configuration} />
       <SmtpSection configuration={configuration} />
       <SmtpSenderSection configuration={configuration} />
+      <SmtpBrandingSection configuration={configuration} />
       <SmtpEventsSection configuration={configuration} />
       <SmtpChannelsSection configuration={configuration} />
       <SmtpDangerousSection configuration={configuration} />

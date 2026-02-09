@@ -6,7 +6,7 @@ import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 import { env } from "./env";
 import { createLogger } from "./logger";
-import { dynamoMainTable } from "./modules/dynamodb/dynamo-main-table";
+import { getDynamoMainTable } from "./modules/dynamodb/dynamo-main-table";
 
 const logger = createLogger("saleor-app");
 
@@ -17,7 +17,7 @@ export let apl: APL;
 switch (aplType) {
   case "dynamodb": {
     apl = DynamoAPL.create({
-      table: dynamoMainTable,
+      table: getDynamoMainTable(),
       externalLogger: (message, level) => {
         if (level === "error") {
           logger.error(`[DynamoAPL] ${message}`);

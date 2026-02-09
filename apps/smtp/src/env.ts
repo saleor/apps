@@ -19,9 +19,10 @@ export const env = createEnv({
     OTEL_ENABLED: booleanEnv.defaultFalse,
     OTEL_SERVICE_NAME: z.string().optional(),
     PORT: z.coerce.number().default(3000),
-    SECRET_KEY: z.string(),
+    SECRET_KEY: z.string().min(1),
     VERCEL_URL: z.string().optional(),
-    DYNAMODB_MAIN_TABLE_NAME: z.string(),
+    // DynamoDB config - only required when APL=dynamodb
+    DYNAMODB_MAIN_TABLE_NAME: z.string().optional(),
     DYNAMODB_REQUEST_TIMEOUT_MS: z.coerce.number().default(5_000),
     DYNAMODB_CONNECTION_TIMEOUT_MS: z.coerce.number().default(2_000),
     AWS_REGION: z.string(),

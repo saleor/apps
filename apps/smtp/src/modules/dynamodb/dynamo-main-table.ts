@@ -57,13 +57,45 @@ export class DynamoMainTable extends Table<PartitionKey, SortKey> {
   }
 }
 
-const client = createDynamoDBClient({
-  connectionTimeout: env.DYNAMODB_CONNECTION_TIMEOUT_MS,
-  requestTimeout: env.DYNAMODB_REQUEST_TIMEOUT_MS,
-});
-const documentClient = createDynamoDBDocumentClient(client);
+let _dynamoMainTable: DynamoMainTable | null = null;
 
-export const dynamoMainTable = DynamoMainTable.create({
-  documentClient: documentClient,
-  tableName: env.DYNAMODB_MAIN_TABLE_NAME,
+/**
+ * Get the DynamoDB main table instance.
+ * Creates lazily to avoid errors when DynamoDB env vars are not set (e.g., when APL=file).
+ */
+export function getDynamoMainTable(): DynamoMainTable {
+  if (_dynamoMainTable) {
+    return _dynamoMainTable;
+  }
+
+  if (!env.DYNAMODB_MAIN_TABLE_NAME) {
+    throw new Error(
+      "DYNAMODB_MAIN_TABLE_NAME is required when using DynamoDB. Set APL=file for local development.",
+    );
+  }
+
+  const client = createDynamoDBClient({
+    connectionTimeout: env.DYNAMODB_CONNECTION_TIMEOUT_MS,
+    requestTimeout: env.DYNAMODB_REQUEST_TIMEOUT_MS,
+  });
+  const documentClient = createDynamoDBDocumentClient(client);
+
+  _dynamoMainTable = DynamoMainTable.create({
+    documentClient: documentClient,
+    tableName: env.DYNAMODB_MAIN_TABLE_NAME,
+  });
+
+  return _dynamoMainTable;
+}
+
+/*
+ * Deprecated: Use getDynamoMainTable() instead
+ * Kept for backward compatibility, but will throw if DynamoDB vars not set
+ */
+export const dynamoMainTable = new Proxy({} as DynamoMainTable, {
+  get(_, prop) {
+    const table = getDynamoMainTable();
+
+    return (table as unknown as Record<string | symbol, unknown>)[prop];
+  },
 });

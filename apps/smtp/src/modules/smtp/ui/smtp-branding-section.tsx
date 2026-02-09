@@ -11,35 +11,34 @@ import { defaultPadding } from "../../../components/ui-defaults";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { trpcClient } from "../../trpc/trpc-client";
 import {
-  SmtpUpdateSender,
-  smtpUpdateSenderSchema,
+  SmtpUpdateBranding,
+  smtpUpdateBrandingSchema,
 } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
-import { SaleorThrobber } from "./saleor-throbber";
 
-interface SmtpSenderSectionProps {
+interface SmtpBrandingSectionProps {
   configuration: SmtpConfiguration;
 }
 
-export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => {
+export const SmtpBrandingSection = ({ configuration }: SmtpBrandingSectionProps) => {
   const { notifySuccess, notifyError } = useDashboardNotification();
-  const { handleSubmit, control, setError, register } = useForm<SmtpUpdateSender>({
+  const { handleSubmit, control, setError } = useForm<SmtpUpdateBranding>({
     defaultValues: {
       id: configuration.id,
-      senderName: configuration.senderName,
-      senderEmail: configuration.senderEmail,
+      brandingSiteName: configuration.brandingSiteName ?? "",
+      brandingLogoUrl: configuration.brandingLogoUrl ?? "",
     },
-    resolver: zodResolver(smtpUpdateSenderSchema),
+    resolver: zodResolver(smtpUpdateBrandingSchema),
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate, isLoading: isSaving } = trpcClient.smtpConfiguration.updateSender.useMutation({
+  const { mutate } = trpcClient.smtpConfiguration.updateBranding.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration saved");
       trpcContext.smtpConfiguration.invalidate();
     },
     onError(error) {
-      setBackendErrors<SmtpUpdateSender>({
+      setBackendErrors<SmtpUpdateBranding>({
         error,
         setError,
         notifyError,
@@ -49,49 +48,42 @@ export const SmtpSenderSection = ({ configuration }: SmtpSenderSectionProps) => 
 
   return (
     <SectionWithDescription
-      title="Sender"
+      title="Email branding"
       description={
         <Box display="flex" flexDirection="column" gap={2}>
+          <Text as="p">Customize the branding that appears in your email headers and footers.</Text>
           <Text as="p">
-            Sender&apos;s name and email address will be displayed as the author of an email.
+            These values are available as template variables and are used in the default templates.
           </Text>
-          <Text as="p">Setting up the sender is required to send emails.</Text>
         </Box>
       }
     >
       <BoxWithBorder>
         <form
-          onSubmit={handleSubmit((data, event) => {
+          onSubmit={handleSubmit((data) => {
             mutate({
               ...data,
+              brandingSiteName: data.brandingSiteName || undefined,
+              brandingLogoUrl: data.brandingLogoUrl || undefined,
             });
           })}
         >
           <Box padding={defaultPadding} display="flex" flexDirection="column" gap={7}>
             <Input
-              label="Email"
-              name="senderEmail"
+              label="Site name"
+              name="brandingSiteName"
               control={control}
-              helperText="Email address that will be used as sender"
+              helperText="Your store or company name displayed in email header and footer"
             />
             <Input
-              label="Name"
-              name="senderName"
+              label="Logo URL"
+              name="brandingLogoUrl"
               control={control}
-              helperText="Name that will be used as sender"
+              helperText="Full URL to your logo image (e.g., https://example.com/logo.png). Leave empty to show site name as text."
             />
           </Box>
           <BoxFooter>
-            <Button type="submit" disabled={isSaving}>
-              {isSaving ? (
-                <Box display="flex" alignItems="center" gap={2}>
-                  <SaleorThrobber size={20} />
-                  <span>Saving</span>
-                </Box>
-              ) : (
-                "Save provider"
-              )}
-            </Button>
+            <Button type="submit">Save branding</Button>
           </BoxFooter>
         </form>
       </BoxWithBorder>

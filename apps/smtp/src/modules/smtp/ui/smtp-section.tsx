@@ -12,6 +12,7 @@ import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { trpcClient } from "../../trpc/trpc-client";
 import { SmtpUpdateSmtp, smtpUpdateSmtpSchema } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { SaleorThrobber } from "./saleor-throbber";
 
 interface SmtpSectionProps {
   configuration: SmtpConfiguration;
@@ -32,7 +33,7 @@ export const SmtpSection = ({ configuration }: SmtpSectionProps) => {
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.smtpConfiguration.updateSmtp.useMutation({
+  const { mutate, isLoading: isSaving } = trpcClient.smtpConfiguration.updateSmtp.useMutation({
     onSuccess: async () => {
       notifySuccess("Configuration saved");
       trpcContext.smtpConfiguration.invalidate();
@@ -101,7 +102,16 @@ export const SmtpSection = ({ configuration }: SmtpSectionProps) => {
             </Box>
           </Box>
           <BoxFooter>
-            <Button type="submit">Save provider</Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? (
+                <Box display="flex" alignItems="center" gap={2}>
+                  <SaleorThrobber size={20} />
+                  <span>Saving</span>
+                </Box>
+              ) : (
+                "Save provider"
+              )}
+            </Button>
           </BoxFooter>
         </form>
       </BoxWithBorder>
