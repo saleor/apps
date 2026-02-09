@@ -28,10 +28,25 @@ export const updateExemptionStatusPublicMetadata = (params: Params): Promise<voi
 
   const metadataManager = new ExemptionStatusMetadataManager(params.client);
 
-  const promise =
-    plan.type === "update"
-      ? metadataManager.updateExemptionStatusMetadata(params.id, plan.value)
-      : metadataManager.deleteExemptionStatusMetadata(params.id);
+  let promise: Promise<void>;
+
+  switch (plan.type) {
+    case "update":
+      promise = metadataManager.updateExemptionStatusMetadata(params.id, plan.value);
+      break;
+    case "delete":
+      promise = metadataManager.deleteExemptionStatusMetadata(params.id);
+      break;
+    default: {
+      /**
+       * Exhaustiveness check - this should never happen at runtime
+       * but ensures type safety if new plan types are added
+       */
+      const exhaustiveCheck: never = plan;
+
+      throw new Error(`Unhandled plan type: ${JSON.stringify(exhaustiveCheck)}`);
+    }
+  }
 
   promise.catch(params.onError);
 
