@@ -1,0 +1,37 @@
+apps/search/src/modules/trpc/trpc-app-router.ts
+  7bd26087dd0a07b4 1-17
+apps/np-atobarai/src/modules/trpc/trpc-router.ts
+  7bd26087dd0a07b4 1-17
+apps/avatax/src/modules/trpc/trpc-app-router.ts
+  7bd26087dd0a07b4 1-17
+apps/segment/src/modules/trpc/trpc-app-router.ts
+  7bd26087dd0a07b4 1-17
+apps/cms/src/modules/trpc/trpc-app-router.ts
+  7bd26087dd0a07b4 1-15
+apps/products-feed/src/modules/trpc/trpc-app-router.ts
+  7bd26087dd0a07b4 1-15
+apps/smtp/src/modules/trpc/trpc-app-router.ts
+  7bd26087dd0a07b4 1-15
+apps/stripe/src/modules/trpc/trpc-router.ts
+  7bd26087dd0a07b4 1-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.42",
+  "base_commit_sha": "472c9ace96d068f623ba5bb84262d24eb1d3019a",
+  "prompts": {
+    "7bd26087dd0a07b4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "42f2d95b-c605-4980-b8c8-60355a02aa12",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 202,
+      "total_deletions": 82,
+      "accepted_lines": 132,
+      "overriden_lines": 0
+    }
+  }
+}
