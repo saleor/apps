@@ -4,7 +4,7 @@ import type { Monaco } from "@monaco-editor/react";
  * Recursively extract dot-notation paths from a JSON object.
  * Arrays produce an `#each` suggestion and recurse into the first element.
  */
-function extractPaths(obj: unknown, prefix = ""): { path: string; isArray: boolean }[] {
+export function extractPaths(obj: unknown, prefix = ""): { path: string; isArray: boolean }[] {
   if (obj === null || obj === undefined || typeof obj !== "object") {
     return [];
   }

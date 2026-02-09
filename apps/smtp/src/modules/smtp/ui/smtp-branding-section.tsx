@@ -63,6 +63,8 @@ export const SmtpBrandingSection = ({ configuration }: SmtpBrandingSectionProps)
           onSubmit={handleSubmit((data) => {
             mutate({
               ...data,
+              brandingSiteName: data.brandingSiteName || undefined,
+              brandingLogoUrl: data.brandingLogoUrl || undefined,
             });
           })}
         >

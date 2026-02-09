@@ -31,7 +31,7 @@ export const smtpConfigurationSchema = z.object({
   events: z.array(smtpConfigurationEventSchema),
   // Email branding - displayed in email header and footer
   brandingSiteName: z.string().optional(),
-  brandingLogoUrl: z.string().url().optional().or(z.literal("")),
+  brandingLogoUrl: z.string().url().optional(),
 });
 
 export type SmtpConfiguration = z.infer<typeof smtpConfigurationSchema>;

@@ -1,8 +1,33 @@
-import Editor, { type Monaco } from "@monaco-editor/react";
+import Editor, { type Monaco, type OnMount } from "@monaco-editor/react";
 import { useTheme } from "@saleor/macaw-ui";
 import { useCallback, useEffect, useRef } from "react";
 
 import { registerMjmlCompletionProviders } from "./monaco-completions";
+
+const editorOptions = {
+  automaticLayout: true,
+  minimap: { enabled: false },
+  scrollBeyondLastLine: false,
+  padding: { top: 16, bottom: 16 },
+  scrollbar: {
+    verticalScrollbarSize: 10,
+    horizontalScrollbarSize: 10,
+    useShadows: false,
+  },
+  quickSuggestions: {
+    other: true,
+    strings: true,
+    comments: false,
+  },
+  suggestOnTriggerCharacters: true,
+  suggestSelection: "first" as const,
+  acceptSuggestionOnEnter: "on" as const,
+  snippetSuggestions: "inline" as const,
+  suggest: {
+    selectionMode: "always" as const,
+  },
+  tabCompletion: "off" as const,
+} satisfies React.ComponentProps<typeof Editor>["options"];
 
 type Props = {
   onChange(value: string): void;
@@ -26,19 +51,18 @@ export const CodeEditor = ({
   templatePayload,
 }: Props) => {
   const { theme } = useTheme();
-  const editorRef = useRef(null);
+  const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
   const completionDisposableRef = useRef<{ dispose(): void } | null>(null);
 
-  // @ts-expect-error Monaco types are complex, using any for editor instance
-  function handleEditorDidMount(editor, monaco: Monaco) {
+  const handleEditorDidMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
 
     if (templatePayload && language === "xml") {
       completionDisposableRef.current = registerMjmlCompletionProviders(monaco, templatePayload);
     }
-  }
+  };
 
   // Re-register completions when the payload changes (e.g. user edits test variables)
   useEffect(() => {
@@ -79,30 +103,7 @@ export const CodeEditor = ({
       defaultValue={initialTemplate}
       onMount={handleEditorDidMount}
       onChange={handleOnChange}
-      options={{
-        automaticLayout: true,
-        minimap: { enabled: false },
-        scrollBeyondLastLine: false,
-        padding: { top: 16, bottom: 16 },
-        scrollbar: {
-          verticalScrollbarSize: 10,
-          horizontalScrollbarSize: 10,
-          useShadows: false,
-        },
-        quickSuggestions: {
-          other: true,
-          strings: true,
-          comments: false,
-        },
-        suggestOnTriggerCharacters: true,
-        suggestSelection: "first",
-        acceptSuggestionOnEnter: "on",
-        snippetSuggestions: "inline",
-        suggest: {
-          selectionMode: "always",
-        },
-        tabCompletion: "off",
-      }}
+      options={editorOptions}
     />
   );
 };
