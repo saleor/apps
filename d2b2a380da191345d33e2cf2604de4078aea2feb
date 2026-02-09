@@ -1,0 +1,57 @@
+apps/search/src/components/ImportProductsToAlgolia/useSearchProvider.ts
+  7bd26087dd0a07b4 5
+apps/np-atobarai/next.config.ts
+  7bd26087dd0a07b4 16-21
+apps/segment/next.config.ts
+  7bd26087dd0a07b4 25-30
+apps/stripe/next.config.ts
+  7bd26087dd0a07b4 16-21
+apps/segment/src/modules/trpc/trpc-client.ts
+  7bd26087dd0a07b4 8
+apps/products-feed/next.config.ts
+  7bd26087dd0a07b4 26-29
+apps/smtp/next.config.ts
+  7bd26087dd0a07b4 25-28
+apps/avatax/next.config.ts
+  7bd26087dd0a07b4 62-67
+apps/search/src/modules/trpc/trpc-client.ts
+  7bd26087dd0a07b4 7
+apps/avatax/src/modules/trpc/trpc-client.ts
+  7bd26087dd0a07b4 8
+apps/klaviyo/next.config.ts
+  7bd26087dd0a07b4 17-22
+apps/search/next.config.ts
+  7bd26087dd0a07b4 26-31
+apps/stripe/src/modules/trpc/trpc-client.ts
+  7bd26087dd0a07b4 6
+apps/cms/next.config.ts
+  7bd26087dd0a07b4 18-23
+apps/cms/src/modules/trpc/trpc-client.ts
+  7bd26087dd0a07b4 9
+apps/products-feed/src/modules/trpc/trpc-client.ts
+  7bd26087dd0a07b4 8
+apps/smtp/src/lib/set-backend-errors.ts
+  7bd26087dd0a07b4 4
+apps/np-atobarai/src/modules/trpc/trpc-client.ts
+  7bd26087dd0a07b4 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.42",
+  "base_commit_sha": "d2b2a380da191345d33e2cf2604de4078aea2feb",
+  "prompts": {
+    "7bd26087dd0a07b4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "42f2d95b-c605-4980-b8c8-60355a02aa12",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 59,
+      "total_deletions": 9,
+      "accepted_lines": 59,
+      "overriden_lines": 0
+    }
+  }
+}
