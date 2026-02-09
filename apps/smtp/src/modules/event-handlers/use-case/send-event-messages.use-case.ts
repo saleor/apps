@@ -3,6 +3,7 @@ import { err, errAsync, ok, Result, ResultAsync } from "neverthrow";
 import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
+import { FallbackSenderEmail } from "../../saleor-fallback-behavior/fallback-sender-email";
 import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
   getFallbackSmtpConfigSchema,
@@ -236,12 +237,17 @@ export class SendEventMessagesUseCase {
       ]);
     }
 
+    const senderEmail = new FallbackSenderEmail(
+      saleorApiUrl,
+      fallbackSmtpConfig.senderDomain,
+    ).getEmail();
+
     const fallbackConfig: SmtpConfiguration = {
       id: "fallback",
       active: true,
       name: "Saleor Cloud Fallback",
       senderName: fallbackSmtpConfig.senderName,
-      senderEmail: fallbackSmtpConfig.senderEmail,
+      senderEmail,
       smtpHost: fallbackSmtpConfig.smtpHost,
       smtpPort: fallbackSmtpConfig.smtpPort,
       smtpUser: fallbackSmtpConfig.smtpUser,

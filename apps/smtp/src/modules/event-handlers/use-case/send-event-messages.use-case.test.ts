@@ -243,7 +243,7 @@ describe("SendEventMessagesUseCase", () => {
           smtpPassword: "fallback-pass",
           encryption: "TLS",
           senderName: "Fallback Sender",
-          senderEmail: "fallback@example.com",
+          senderDomain: "example.com",
         });
 
         const result = await useCaseInstance.sendEventMessages({
@@ -270,7 +270,7 @@ describe("SendEventMessagesUseCase", () => {
           smtpPassword: "fallback-pass",
           encryption: "TLS",
           senderName: "Fallback Sender",
-          senderEmail: "fallback@example.com",
+          senderDomain: "example.com",
         });
 
         await useCaseInstance.sendEventMessages({
@@ -363,7 +363,7 @@ describe("SendEventMessagesUseCase", () => {
           smtpPassword: "fallback-pass",
           encryption: "TLS",
           senderName: "Fallback Sender",
-          senderEmail: "fallback@example.com",
+          senderDomain: "example.com",
         });
 
         await useCaseInstance.sendEventMessages({
@@ -376,7 +376,7 @@ describe("SendEventMessagesUseCase", () => {
 
         expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
           expect.objectContaining({
-            senderEmail: "fallback@example.com",
+            senderEmail: "demo@example.com",
             senderName: "Fallback Sender",
           }),
         );
