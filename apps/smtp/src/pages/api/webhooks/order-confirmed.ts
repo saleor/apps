@@ -85,6 +85,7 @@ const handler: NextJsWebhookHandler<OrderConfirmedWebhookPayloadFragment> = asyn
         event: "ORDER_CONFIRMED",
         payload: { order: payload.order },
         recipientEmail,
+        saleorApiUrl: authData.saleorApiUrl,
       })
       .then((result) =>
         result.match(

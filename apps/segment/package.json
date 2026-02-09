@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-segment",
-  "version": "2.2.5",
+  "version": "2.2.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -54,7 +54,7 @@
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "@vercel/otel": "catalog:",
-    "@vitejs/plugin-react": "4.3.4",
+    "@vitejs/plugin-react": "catalog:",
     "decimal.js-light": "catalog:",
     "dotenv": "catalog:",
     "dynamodb-toolbox": "catalog:",

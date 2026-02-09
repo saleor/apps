@@ -26,7 +26,7 @@ export class SendEventMessagesUseCaseFactory {
         new HtmlToTextCompiler(),
         new MjmlCompiler(),
       ),
-      smtpConfigurationService: new SmtpConfigurationService({
+      configService: new SmtpConfigurationService({
         featureFlagService: new FeatureFlagService({ client }),
         metadataManager: new SmtpMetadataManager(
           createSettingsManager(client, authData.appId),

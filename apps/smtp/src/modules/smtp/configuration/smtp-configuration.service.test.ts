@@ -200,6 +200,7 @@ const validConfig: SmtpConfig = {
       senderName: "Sender Name",
     },
   ],
+  useSaleorSmtpFallback: false,
 };
 
 describe("SmtpConfigurationService", function () {
@@ -256,6 +257,7 @@ describe("SmtpConfigurationService", function () {
     it("The API should not be called when initial data were provided", async () => {
       const emptyConfigRoot: SmtpConfig = {
         configurations: [],
+        useSaleorSmtpFallback: false,
       };
 
       const configurator = new SmtpMetadataManager(
@@ -285,6 +287,7 @@ describe("SmtpConfigurationService", function () {
     it("The API should be called and value cached, when saving the configuration", async () => {
       const emptyConfigRoot: SmtpConfig = {
         configurations: [],
+        useSaleorSmtpFallback: false,
       };
 
       const configurator = new SmtpMetadataManager(
@@ -323,6 +326,7 @@ describe("SmtpConfigurationService", function () {
     it("Operation should be rejected, when attempting to save event not available according to feature flag", async () => {
       const emptyConfigRoot: SmtpConfig = {
         configurations: [],
+        useSaleorSmtpFallback: false,
       };
 
       const configurator = new SmtpMetadataManager(
@@ -399,6 +403,7 @@ describe("SmtpConfigurationService", function () {
     it("Returns empty list when no configurations", async () => {
       const initialData: SmtpConfig = {
         configurations: [],
+        useSaleorSmtpFallback: false,
       };
 
       const configurator = new SmtpMetadataManager(
@@ -444,6 +449,7 @@ describe("SmtpConfigurationService", function () {
     it("New configuration should be sent to API, when created", async () => {
       const emptyConfigRoot: SmtpConfig = {
         configurations: [],
+        useSaleorSmtpFallback: false,
       };
 
       const configurator = new SmtpMetadataManager(

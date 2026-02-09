@@ -1,8 +1,26 @@
 import { config } from "@saleor/eslint-config-apps/index.js";
+import nodePlugin from "eslint-plugin-n";
 
 /** @type {import("eslint").Linter.Config} */
 export default [
   ...config,
+  {
+    name: "saleor-app-smtp/custom-config",
+    files: ["**/*.ts"],
+    plugins: {
+      n: nodePlugin,
+    },
+    rules: {
+      "n/no-process-env": "error",
+    },
+  },
+  {
+    name: "saleor-app-smtp/override-no-process-env",
+    files: ["next.config.ts", "src/env.ts", "src/instrumentation.ts", "src/instrumentations/*"],
+    rules: {
+      "n/no-process-env": "off",
+    },
+  },
   {
     // TODO: remove this override once the recommended rules are fixed
     name: "saleor-app-smtp/override-recommended",

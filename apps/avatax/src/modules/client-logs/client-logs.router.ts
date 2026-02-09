@@ -13,7 +13,12 @@ import { ClientLogDynamoEntityFactory, LogsTable } from "./dynamo-logs-table";
 const procedureWithLogsRepository = protectedClientProcedure.use(({ ctx, next }) => {
   try {
     const logsTable = LogsTable.create({
-      documentClient: createDocumentClient(createDynamoClient()),
+      documentClient: createDocumentClient(
+        createDynamoClient({
+          connectionTimeout: env.DYNAMODB_CONNECTION_TIMEOUT_MS,
+          requestTimeout: env.DYNAMODB_REQUEST_TIMEOUT_MS,
+        }),
+      ),
       tableName: env.DYNAMODB_LOGS_TABLE_NAME,
     });
     const logByDateEntity = ClientLogDynamoEntityFactory.createLogByDate(logsTable);

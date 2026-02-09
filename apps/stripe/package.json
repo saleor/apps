@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-stripe",
-  "version": "2.3.12",
+  "version": "2.4.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -95,7 +95,7 @@
     "@types/node": "catalog:",
     "@types/react": "18.2.5",
     "@types/react-dom": "18.2.5",
-    "@vitejs/plugin-react": "4.3.4",
+    "@vitejs/plugin-react": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "aws-sdk-client-mock": "4.0.1",
     "eslint": "catalog:",

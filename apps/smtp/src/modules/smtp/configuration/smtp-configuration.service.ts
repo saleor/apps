@@ -31,6 +31,9 @@ export interface IGetSmtpConfiguration {
     filter?: FilterConfigurationsArgs,
   ): ResultAsync<SmtpConfiguration[], InstanceType<typeof BaseError>>;
 }
+export interface IGetFallbackSmtpEnabled {
+  getIsFallbackSmtpEnabled(): ResultAsync<boolean, InstanceType<typeof BaseError>>;
+}
 
 interface TemplateValidationErrorProps {
   errorContext?: ErrorContext;
@@ -40,7 +43,7 @@ function hasErrorContext(error: unknown): error is { errorContext?: ErrorContext
   return error !== null && typeof error === "object" && "errorContext" in error;
 }
 
-export class SmtpConfigurationService implements IGetSmtpConfiguration {
+export class SmtpConfigurationService implements IGetSmtpConfiguration, IGetFallbackSmtpEnabled {
   static SmtpConfigurationServiceError = BaseError.subclass("SmtpConfigurationServiceError");
   static ConfigNotFoundError = BaseError.subclass("ConfigNotFoundError");
   static EventConfigNotFoundError = BaseError.subclass("EventConfigNotFoundError");
@@ -88,7 +91,7 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
         if (!data) {
           logger.debug("No configuration found in Saleor API, creating a new one");
 
-          return okAsync({ configurations: [] });
+          return okAsync({ configurations: [], useSaleorSmtpFallback: false });
         }
 
         return okAsync(data);
@@ -135,6 +138,10 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
           }),
         );
       });
+  }
+
+  getIsFallbackSmtpEnabled(): ResultAsync<boolean, InstanceType<typeof BaseError>> {
+    return this.getConfigurationRoot().andThen((d) => ok(d.useSaleorSmtpFallback));
   }
 
   private containActiveGiftCardEvent(config: SmtpConfig) {
@@ -226,7 +233,7 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
 
       configurationRoot.configurations.push(newConfiguration);
 
-      return this.setConfigurationRoot(configurationRoot).andThen((result) => {
+      return this.setConfigurationRoot(configurationRoot).andThen((_result) => {
         return okAsync(newConfiguration);
       });
     });
@@ -263,7 +270,7 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
   deleteConfiguration({ id }: { id: string }) {
     logger.debug("Delete configuration");
 
-    return this.getConfiguration({ id }).andThen((config) => {
+    return this.getConfiguration({ id }).andThen((_config) => {
       const updatedConfigRoot = structuredClone(this.configurationData!);
 
       updatedConfigRoot.configurations = updatedConfigRoot.configurations.filter(
@@ -377,6 +384,17 @@ export class SmtpConfigurationService implements IGetSmtpConfiguration {
       return this.updateConfiguration(config).andThen(() => {
         return okAsync(updatedEventConfiguration);
       });
+    });
+  }
+
+  updateFallbackSmtpSettings({ useSaleorSmtpFallback }: { useSaleorSmtpFallback: boolean }) {
+    return this.getConfigurationRoot().andThen((d) => {
+      const newSettings = {
+        ...d,
+        useSaleorSmtpFallback,
+      };
+
+      return this.setConfigurationRoot(newSettings);
     });
   }
 }

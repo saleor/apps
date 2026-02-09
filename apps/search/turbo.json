@@ -18,7 +18,11 @@
         "AWS_REGION",
         "AWS_SECRET_ACCESS_KEY",
         "DYNAMODB_MAIN_TABLE_NAME",
-        "ALGOLIA_TIMEOUT_MS"
+        "ALGOLIA_TIMEOUT_MS",
+        "DYNAMODB_REQUEST_TIMEOUT_MS",
+        "DYNAMODB_CONNECTION_TIMEOUT_MS",
+        "FILE_APL_PATH",
+        "MANIFEST_APP_ID"
       ]
     }
   }

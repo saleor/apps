@@ -11,6 +11,9 @@ export const mockedRefundRequestedEvent = {
   transaction: {
     pspReference: mockedAtobaraiTransactionId,
     token: "saleor-transaction-token",
+    chargedAmount: {
+      amount: 3_334,
+    },
     order: {
       __typename: "Order",
       id: "order-id",

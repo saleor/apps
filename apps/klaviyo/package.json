@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-klaviyo",
-  "version": "1.14.5",
+  "version": "1.14.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -39,6 +39,7 @@
     "@saleor/sentry-utils": "workspace:*",
     "@sentry/cli": "catalog:",
     "@sentry/nextjs": "catalog:",
+    "@t3-oss/env-nextjs": "catalog:",
     "@vercel/otel": "catalog:",
     "dotenv": "catalog:",
     "dynamodb-toolbox": "catalog:",
@@ -72,6 +73,7 @@
     "autoprefixer": "^10.4.7",
     "clean-publish": "^4.0.1",
     "eslint": "catalog:",
+    "eslint-plugin-n": "catalog:",
     "graphql-config": "5.0.3",
     "jsdom": "catalog:",
     "postcss": "^8.4.14",

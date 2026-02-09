@@ -63,7 +63,10 @@ export class DynamoMainTable extends Table<PartitionKey, SortKey> {
   }
 }
 
-const client = createDynamoDBClient();
+const client = createDynamoDBClient({
+  connectionTimeout: env.DYNAMODB_CONNECTION_TIMEOUT_MS,
+  requestTimeout: env.DYNAMODB_REQUEST_TIMEOUT_MS,
+});
 const documentClient = createDynamoDBDocumentClient(client);
 
 export const dynamoMainTable = DynamoMainTable.create({

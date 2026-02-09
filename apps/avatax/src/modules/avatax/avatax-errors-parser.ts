@@ -111,6 +111,7 @@ export class AvataxErrorsParser {
           "AvaTax returned error with unknown shape",
           {
             errors: [parsedError.error],
+            cause: err,
           },
         ),
       );

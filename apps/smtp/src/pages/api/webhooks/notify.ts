@@ -67,6 +67,7 @@ const handler: NextJsWebhookHandler<NotifySubscriptionPayload> = async (req, res
         event,
         payload: payload.payload,
         recipientEmail,
+        saleorApiUrl: authData.saleorApiUrl,
       })
       .then((result) =>
         result.match(

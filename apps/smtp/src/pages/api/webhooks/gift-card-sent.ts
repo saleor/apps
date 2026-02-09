@@ -123,6 +123,7 @@ const handler: NextJsWebhookHandler<GiftCardSentWebhookPayloadFragment> = async 
         event: "GIFT_CARD_SENT",
         payload,
         recipientEmail,
+        saleorApiUrl: authData.saleorApiUrl,
       })
       .then((result) =>
         result.match(

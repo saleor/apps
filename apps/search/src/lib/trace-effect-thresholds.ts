@@ -1,4 +1,4 @@
-import { ALGOLIA_TIMEOUT_MS } from "./algolia-timeouts";
+import { env } from "../env";
 
 export const DYNAMODB_SLOW_THRESHOLD_MS = 1000;
 
@@ -7,4 +7,4 @@ export const DYNAMODB_SLOW_THRESHOLD_MS = 1000;
  * Each request has separate timeout. So in total 3 * ALGOLIA_TIMEOUT_MS is max time. We want to get notified
  * if 2 subsequent requests start to fail, as this might cause timeouts in webhooks
  */
-export const ALGOLIA_SLOW_THRESHOLD_MS = ALGOLIA_TIMEOUT_MS * 2;
+export const ALGOLIA_SLOW_THRESHOLD_MS = env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS * 2;

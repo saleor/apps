@@ -4,10 +4,11 @@ import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { createLogger } from "src/lib/logger";
 
 import { saleorApp } from "../../../saleor-app";
+import { env } from "../../env";
 import { loggerContext } from "../../lib/logger-context";
 
 const logger = createLogger("createAppRegisterHandler");
-const allowedUrlsPattern = process.env.ALLOWED_DOMAIN_PATTERN;
+const allowedUrlsPattern = env.ALLOWED_DOMAIN_PATTERN;
 
 export default wrapWithLoggerContext(
   withSpanAttributes(
