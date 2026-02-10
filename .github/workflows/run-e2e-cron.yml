@@ -16,3 +16,13 @@ jobs:
       op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
       avatax-app-slack-webhook-url: ${{ secrets.AVATAX_APP_SLACK_WEBHOOK_URL }}
       stripe-app-slack-webhook-url: ${{ secrets.STRIPE_APP_SLACK_WEBHOOK_URL }}
+
+  dashboard-smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ["3.20", "3.21", "3.22"]
+    uses: ./.github/workflows/run-dashboard-smoke-tests.yml
+    with:
+      VERSION: ${{ matrix.version }}
+    secrets: inherit
