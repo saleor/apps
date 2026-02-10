@@ -12,7 +12,7 @@ import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -72,7 +72,7 @@ export class TransactionProcessSessionUseCase {
 
     loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, event.transaction.pspReference);
 
-    const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
+    const stripeConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
       channelId: event.sourceObject.channel.id,
       appId,
       saleorApiUrl,

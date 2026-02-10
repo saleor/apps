@@ -14,7 +14,7 @@ vi.stubEnv("AWS_ENDPOINT_URL", "http://localhost:8000");
 vi.stubEnv("DYNAMODB_MAIN_TABLE_NAME", "stripe-main-table");
 
 beforeEach(() => {
-  mockedAppConfigRepo.getStripeConfig.mockImplementation(async () => ok(mockedStripeConfig));
+  mockedAppConfigRepo.getChannelConfig.mockImplementation(async () => ok(mockedStripeConfig));
 });
 
 export {};

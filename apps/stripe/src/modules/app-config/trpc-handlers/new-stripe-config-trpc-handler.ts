@@ -155,7 +155,7 @@ export class NewStripeConfigTrpcHandler {
         });
       }
 
-      const saveResult = await ctx.configRepo.saveStripeConfig({
+      const saveResult = await ctx.configRepo.saveChannelConfig({
         config: configToSave.value,
         saleorApiUrl: saleorApiUrl.value,
         appId: ctx.appId,

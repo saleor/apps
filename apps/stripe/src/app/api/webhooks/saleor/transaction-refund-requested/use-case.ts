@@ -11,7 +11,7 @@ import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo-impl";
 import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
@@ -61,7 +61,7 @@ export class TransactionRefundRequestedUseCase {
 
     loggerContext.set(ObservabilityAttributes.PSP_REFERENCE, transaction.pspReference);
 
-    const stripeConfigForThisChannel = await this.appConfigRepo.getStripeConfig({
+    const stripeConfigForThisChannel = await this.appConfigRepo.getChannelConfig({
       channelId,
       appId,
       saleorApiUrl,

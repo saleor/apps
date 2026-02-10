@@ -40,7 +40,7 @@ export class GetStripeConfigsChannelsMappingTrpcHandler {
         }
 
         const mapping = config.value.chanelConfigMapping;
-        const allConfigs = config.value.stripeConfigsById;
+        const allConfigs = config.value.configsById;
 
         return Object.entries(mapping).reduce(
           (acc, [channelID, configId]) => {
