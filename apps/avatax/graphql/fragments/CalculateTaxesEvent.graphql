@@ -1,15 +1,14 @@
-fragment CalculateTaxesEvent on Event {
-  __typename
-  ...WebhookMetadata
-  ... on CalculateTaxes {
-    taxBase {
-      ...TaxBase
-    }
-    recipient {
-      privateMetadata {
-        key
-        value
-      }
+fragment CalculateTaxesEvent on CalculateTaxes {
+  taxBase {
+    ...TaxBase
+  }
+  recipient {
+    privateMetadata {
+      key
+      value
     }
   }
+  __typename
+  issuedAt
+  version
 }

@@ -66,6 +66,8 @@ const config: IGraphQLConfig = {
                   UUID: "string",
                   WeightScalar: "number",
                   Day: "string",
+                  Hour: "number",
+                  PositiveInt: "number",
                 },
               },
               plugins: [

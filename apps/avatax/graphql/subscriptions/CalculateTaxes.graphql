@@ -1,5 +1,13 @@
 subscription CalculateTaxes {
-  event {
-    ...CalculateTaxesEvent
+  calculateTaxes(deferIf: ADDRESS_MISSING) {
+    taxBase {
+      ...TaxBase
+    }
+    recipient {
+      privateMetadata {
+        key
+        value
+      }
+    }
   }
 }

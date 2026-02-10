@@ -39,6 +39,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
       kind: SpanKind.SERVER,
     },
     async (span) => {
+      const payload = ctx.payload.data.calculateTaxes;
       /**
        * Create deps in handler, so it's potentially faster and reduce lambda start
        * TODO: It's rather not true, we should move it outside
@@ -47,6 +48,7 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
         logger,
         captureException,
       );
+
       const useCase = new CalculateTaxesUseCase({
         configExtractor: new AppConfigExtractor(),
         logWriterFactory: new LogWriterFactory(),
@@ -57,12 +59,12 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
       });
 
       try {
-        const { payload, authData } = ctx;
+        const { authData } = ctx;
 
         subscriptionErrorChecker.checkPayload(payload);
 
-        loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, ctx.payload.taxBase.channel.slug);
-        loggerContext.set(ObservabilityAttributes.CHECKOUT_ID, ctx.payload.taxBase.sourceObject.id);
+        loggerContext.set(ObservabilityAttributes.CHANNEL_SLUG, payload.taxBase.channel.slug);
+        loggerContext.set(ObservabilityAttributes.CHECKOUT_ID, payload.taxBase.sourceObject.id);
 
         if (payload.version) {
           setTag(ObservabilityAttributes.SALEOR_VERSION, payload.version);
