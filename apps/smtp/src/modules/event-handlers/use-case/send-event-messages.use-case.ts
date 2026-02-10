@@ -1,8 +1,9 @@
-import { err, errAsync, ok, Result, ResultAsync } from "neverthrow";
+import { err, errAsync, fromThrowable, ok, Result, ResultAsync } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
+import { FallbackSenderEmail } from "../../saleor-fallback-behavior/fallback-sender-email";
 import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
   getFallbackSmtpConfigSchema,
@@ -236,12 +237,34 @@ export class SendEventMessagesUseCase {
       ]);
     }
 
+    const senderEmailResult = fromThrowable(
+      () => new FallbackSenderEmail(saleorApiUrl, fallbackSmtpConfig.senderDomain).getEmail(),
+      (error) =>
+        new SendEventMessagesUseCase.FallbackNotConfiguredError(
+          "Fallback sender email could not be derived from saleorApiUrl",
+          {
+            props: { channelSlug, event },
+            cause: error,
+          },
+        ),
+    )();
+
+    if (senderEmailResult.isErr()) {
+      this.logger.error("Failed to derive fallback sender email", {
+        error: senderEmailResult.error,
+      });
+
+      return err([senderEmailResult.error]);
+    }
+
+    const senderEmail = senderEmailResult.value;
+
     const fallbackConfig: SmtpConfiguration = {
       id: "fallback",
       active: true,
       name: "Saleor Cloud Fallback",
       senderName: fallbackSmtpConfig.senderName,
-      senderEmail: fallbackSmtpConfig.senderEmail,
+      senderEmail,
       smtpHost: fallbackSmtpConfig.smtpHost,
       smtpPort: fallbackSmtpConfig.smtpPort,
       smtpUser: fallbackSmtpConfig.smtpUser,
