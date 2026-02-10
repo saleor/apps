@@ -1,4 +1,4 @@
-import { err, errAsync, ok, Result, ResultAsync } from "neverthrow";
+import { err, errAsync, fromThrowable, ok, Result, ResultAsync } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
@@ -237,10 +237,27 @@ export class SendEventMessagesUseCase {
       ]);
     }
 
-    const senderEmail = new FallbackSenderEmail(
-      saleorApiUrl,
-      fallbackSmtpConfig.senderDomain,
-    ).getEmail();
+    const senderEmailResult = fromThrowable(
+      () => new FallbackSenderEmail(saleorApiUrl, fallbackSmtpConfig.senderDomain).getEmail(),
+      (error) =>
+        new SendEventMessagesUseCase.FallbackNotConfiguredError(
+          "Fallback sender email could not be derived from saleorApiUrl",
+          {
+            props: { channelSlug, event },
+            cause: error,
+          },
+        ),
+    )();
+
+    if (senderEmailResult.isErr()) {
+      this.logger.error("Failed to derive fallback sender email", {
+        error: senderEmailResult.error,
+      });
+
+      return err([senderEmailResult.error]);
+    }
+
+    const senderEmail = senderEmailResult.value;
 
     const fallbackConfig: SmtpConfiguration = {
       id: "fallback",
