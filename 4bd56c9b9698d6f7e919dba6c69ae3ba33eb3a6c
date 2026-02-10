@@ -1,0 +1,25 @@
+apps/smtp/src/modules/event-handlers/use-case/send-event-messages.use-case.ts
+  03a6b74d8f0b5555 1,240-260
+apps/smtp/src/modules/event-handlers/use-case/send-event-messages.use-case.test.ts
+  03a6b74d8f0b5555 332-360
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.42",
+  "base_commit_sha": "4bd56c9b9698d6f7e919dba6c69ae3ba33eb3a6c",
+  "prompts": {
+    "03a6b74d8f0b5555": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1a0570ee-24c8-4dba-8de9-1133a4539b69",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 63,
+      "total_deletions": 17,
+      "accepted_lines": 51,
+      "overriden_lines": 0
+    }
+  }
+}
