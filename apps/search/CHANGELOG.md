@@ -1,5 +1,17 @@
 # saleor-app-search
 
+## 1.24.12
+
+### Patch Changes
+
+- d7ce7f67: Added client-side error capturing so client exceptions are reported to Sentry.
+
+## 1.24.11
+
+### Patch Changes
+
+- e7f70688: Fixed Search app crashes, due to accessing env variable previously marked as server side only on frontend (`ALGOLIA_TIMEOUT_MS`)
+
 ## 1.24.10
 
 ### Patch Changes

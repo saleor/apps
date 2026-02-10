@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.14.8
+
+### Patch Changes
+
+- d7ce7f67: Added client-side error capturing so client exceptions are reported to Sentry.
+
 ## 1.14.7
 
 ### Patch Changes

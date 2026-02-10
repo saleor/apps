@@ -48,7 +48,7 @@ export const fallbackSmtpConfigSchema = z.object({
   smtpPassword: z.string(),
   encryption: z.enum(smtpEncryptionTypes).default("NONE"),
   senderName: z.string().min(1),
-  senderEmail: z.string().email().min(5),
+  senderDomain: z.string().min(1),
 });
 
 export type FallbackSmtpConfig = z.infer<typeof fallbackSmtpConfigSchema>;
@@ -63,7 +63,7 @@ export const getFallbackSmtpConfigSchema = (): FallbackSmtpConfig | null => {
       smtpPassword: env.FALLBACK_SMTP_PASSWORD,
       encryption: env.FALLBACK_SMTP_ENCRYPTION,
       senderName: env.FALLBACK_SMTP_SENDER_NAME,
-      senderEmail: env.FALLBACK_SMTP_SENDER_EMAIL,
+      senderDomain: env.FALLBACK_SMTP_SENDER_DOMAIN,
     });
   } catch (_e) {
     return null;

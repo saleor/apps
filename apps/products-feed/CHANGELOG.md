@@ -1,5 +1,11 @@
 # saleor-app-products-feed
 
+## 2.1.12
+
+### Patch Changes
+
+- d7ce7f67: Added client-side error capturing so client exceptions are reported to Sentry.
+
 ## 2.1.11
 
 ### Patch Changes

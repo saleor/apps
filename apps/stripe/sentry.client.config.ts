@@ -7,7 +7,5 @@ Sentry.init({
   environment: env.ENV,
   // we don't follow OTEL guide from Sentry https://docs.sentry.io/platforms/javascript/guides/nextjs/opentelemetry/custom-setup/ as we use Sentry just for error tracking
   skipOpenTelemetrySetup: true,
-  includeLocalVariables: true,
   ignoreErrors: ["TRPCClientError"],
-  integrations: [],
 });
