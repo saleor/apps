@@ -1,5 +1,11 @@
 # saleor-app-avatax
 
+## 1.21.13
+
+### Patch Changes
+
+- 19e7e964: Add an optional setting to write AvaTax exemption status to public checkout metadata after tax calculation.
+
 ## 1.21.12
 
 ### Patch Changes

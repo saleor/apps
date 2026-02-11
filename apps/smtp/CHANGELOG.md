@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 1.5.2
+
+### Patch Changes
+
+- f4374b68: Changed behavior of "sender email" calculation for fallback SMTP config behavior. Now it will be computed from Saleor Cloud's tenant name and the domain provided in an environment variable
+
 ## 1.5.1
 
 ### Patch Changes
