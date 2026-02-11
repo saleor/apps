@@ -1,0 +1,31 @@
+apps/stripe/src/app/api/webhooks/saleor/transaction-initialize-session/use-case.test.ts
+  4b72e83fa6f9e85f 247-254
+apps/stripe/src/app/api/webhooks/saleor/transaction-initialize-session/event-data-parser.ts
+  4b72e83fa6f9e85f 64-74,79-81
+apps/stripe/src/app/api/webhooks/saleor/transaction-initialize-session/event-data-parser.test.ts
+  4b72e83fa6f9e85f 53-55
+apps/stripe/src/app/api/webhooks/saleor/transaction-initialize-session/use-case-response.ts
+  4b72e83fa6f9e85f 125
+apps/stripe/src/app/api/webhooks/saleor/transaction-initialize-session/use-case-response.test.ts
+  4b72e83fa6f9e85f 121,153,187,222,257,289,321
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.2",
+  "base_commit_sha": "5ce724aec22e0db183c9c7308015906096442574",
+  "prompts": {
+    "4b72e83fa6f9e85f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cff330af-5e9f-4d63-8039-edf1277631aa",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 36,
+      "total_deletions": 12,
+      "accepted_lines": 33,
+      "overriden_lines": 0
+    }
+  }
+}
