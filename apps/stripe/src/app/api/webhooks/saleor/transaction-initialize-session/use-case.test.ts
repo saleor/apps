@@ -244,8 +244,15 @@ describe("TransactionInitializeSessionUseCase", () => {
         saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
       });
 
-      expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
-      expect(responsePayload._unsafeUnwrap().transactionResult).toBeInstanceOf(expectedResultType);
+      const failure = responsePayload._unsafeUnwrap() as InstanceType<
+        typeof TransactionInitializeSessionUseCaseResponses.Failure
+      >;
+
+      expect(failure).toBeInstanceOf(expectedFailureResponse);
+      expect(failure.transactionResult).toBeInstanceOf(expectedResultType);
+      expect(failure.error.publicMessage).toBe(
+        'Payment method "not-supported-payment-method" is not supported. Contact Saleor for assistance.',
+      );
     },
   );
 
