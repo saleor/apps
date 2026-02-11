@@ -1,7 +1,7 @@
 ## How to configure the Products feed app:
 
 1. Go to the app
-2. If you want to store an XML file in an S3 bucket provide this information and save the config ([Here](./s3BucketSetup) you can find a doc on how to create a new bucket):
+2. If you want to store an XML file in an S3 bucket provide this information and save the config ([Here](./s3BucketSetup.md) you can find a doc on how to create a new bucket):
 
 - AWS access key ID
 - AWS secret access key
