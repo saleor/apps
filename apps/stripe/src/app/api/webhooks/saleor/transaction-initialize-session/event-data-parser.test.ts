@@ -50,6 +50,9 @@ describe("parseTransactionInitializeSessionEventData", () => {
     const result = parseTransactionInitializeSessionEventData(storefrontData);
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(UnsupportedPaymentMethodError);
+    expect(result._unsafeUnwrapErr().publicMessage).toBe(
+      'Payment method "my-pay" is not supported. Contact Saleor for assistance.',
+    );
   });
 
   it("should return ParseError if storefront sends additional field we dont support for card payment method", () => {
