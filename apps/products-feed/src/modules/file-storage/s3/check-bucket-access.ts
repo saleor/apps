@@ -9,11 +9,27 @@ import {
 interface checkBucketAccessArgs {
   s3Client: S3Client;
   bucketName: string;
+  endpoint?: string;
 }
 
 // Check if client can access the bucket. Throws an error otherwise
-export const checkBucketAccess = async ({ s3Client, bucketName }: checkBucketAccessArgs) => {
+export const checkBucketAccess = async ({
+  s3Client,
+  bucketName,
+  endpoint,
+}: checkBucketAccessArgs) => {
   const file = "saleor_product_feed_temp/verification_file";
+
+  if (endpoint) {
+    try {
+      new URL(endpoint);
+    } catch (e) {
+      throw new Error(
+        "Failed to check access, verify endpoint URL is a valid URL (Has to start with 'http(s)://')",
+        { cause: e },
+      );
+    }
+  }
 
   const putCommand = new PutObjectCommand({
     Bucket: bucketName,
