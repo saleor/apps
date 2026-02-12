@@ -9,6 +9,7 @@ import type { AppRouter } from "./trpc-app-router";
 function getBaseUrl() {
   if (typeof window !== "undefined") return "";
   if (env.VERCEL_URL) return `https://${env.VERCEL_URL}`;
+  if (env.APP_API_BASE_URL) return env.APP_API_BASE_URL;
 
   return `http://localhost:${env.PORT}`;
 }

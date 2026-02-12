@@ -23,7 +23,8 @@
     "VERCEL_ENV",
     "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
-    "VERCEL"
+    "VERCEL",
+    "APP_API_BASE_URL"
   ],
   "tasks": {
     "topo": {
