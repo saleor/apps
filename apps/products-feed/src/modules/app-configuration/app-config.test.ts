@@ -12,6 +12,7 @@ const exampleChannelConfig: RootConfig["channelConfig"] = {
 };
 
 const exampleS3Config: RootConfig["s3"] = {
+  forcePathStyle: false,
   accessKeyId: "example-access-key",
   bucketName: "example-bucket-name",
   region: "eu-west-1",
@@ -114,6 +115,7 @@ describe("AppConfig", function () {
           bucketName: "bucket",
           accessKeyId: "access",
           secretAccessKey: "secret",
+          forcePathStyle: false,
         },
         channelConfig: {},
         attributeMapping: {
@@ -139,6 +141,7 @@ describe("AppConfig", function () {
           bucketName: "bucket",
           accessKeyId: "access",
           secretAccessKey: "secret",
+          forcePathStyle: false,
         },
         channelConfig: {},
         attributeMapping: {
@@ -163,6 +166,7 @@ describe("AppConfig", function () {
         bucketName: "bucket",
         accessKeyId: "access",
         secretAccessKey: "secret",
+        forcePathStyle: false,
       },
       channelConfig: {
         test: {
@@ -192,6 +196,7 @@ describe("AppConfig", function () {
           bucketName: "bucket",
           accessKeyId: "access",
           secretAccessKey: "secret",
+          forcePathStyle: false,
         },
         channelConfig: {
           test: {
@@ -222,6 +227,7 @@ describe("AppConfig", function () {
           bucketName: "bucket",
           accessKeyId: "access",
           secretAccessKey: "secret",
+          forcePathStyle: false,
         },
         channelConfig: {
           test: {
@@ -256,6 +262,7 @@ describe("AppConfig", function () {
 
     it("getS3Config gets s3 data", () => {
       expect(instance.getS3Config()).toStrictEqual({
+        forcePathStyle: false,
         region: "region",
         bucketName: "bucket",
         accessKeyId: "access",
@@ -281,6 +288,7 @@ describe("AppConfig", function () {
       const instance = new AppConfig();
 
       instance.setS3({
+        forcePathStyle: false,
         region: "region",
         bucketName: "bucket",
         accessKeyId: "access",
@@ -292,6 +300,7 @@ describe("AppConfig", function () {
         bucketName: "bucket",
         accessKeyId: "access",
         secretAccessKey: "secret",
+        forcePathStyle: false,
       });
 
       // @ts-expect-error
@@ -320,6 +329,7 @@ describe("AppConfig", function () {
     const instance = new AppConfig();
 
     instance.setS3({
+      forcePathStyle: false,
       region: "region",
       bucketName: "bucket",
       accessKeyId: "access",
@@ -337,6 +347,7 @@ describe("AppConfig", function () {
       bucketName: "bucket",
       accessKeyId: "access",
       secretAccessKey: "secret",
+      forcePathStyle: false,
     });
   });
 });

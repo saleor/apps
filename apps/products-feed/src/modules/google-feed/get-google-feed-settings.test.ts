@@ -24,6 +24,7 @@ describe("GoogleFeedSettingsFetcher", () => {
           },
         },
         s3: {
+          forcePathStyle: false,
           accessKeyId: "accessKeyId",
           bucketName: "bucketName",
           region: "region",
@@ -53,6 +54,7 @@ describe("GoogleFeedSettingsFetcher", () => {
         secretAccessKey: "secretAccessKey",
         accessKeyId: "accessKeyId",
         region: "region",
+        forcePathStyle: false,
       },
       attributeMapping: null,
       titleTemplate: "{{ variant.name }}",
