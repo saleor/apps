@@ -32,9 +32,42 @@ permissions:
   actions: write
 
 jobs:
+  load-secrets:
+    runs-on: ubuntu-latest
+    outputs:
+      STAGING_TOKEN: ${{ steps.secrets.outputs.STAGING_TOKEN }}
+      E2E_USER_NAME: ${{ steps.secrets.outputs.E2E_USER_NAME }}
+      E2E_USER_PASSWORD: ${{ steps.secrets.outputs.E2E_USER_PASSWORD }}
+      E2E_PERMISSIONS_USERS_PASSWORD: ${{ steps.secrets.outputs.E2E_PERMISSIONS_USERS_PASSWORD }}
+      E2E_ENCODE_PASS: ${{ steps.secrets.outputs.E2E_ENCODE_PASS }}
+      MAILPITURL: ${{ steps.secrets.outputs.MAILPITURL }}
+      TESTS_RESULT_PASSWORD: ${{ steps.secrets.outputs.TESTS_RESULT_PASSWORD }}
+    steps:
+      - uses: 1password/load-secrets-action@581a835fb51b8e7ec56b71cf2ffddd7e68bb25e0 # v2.0.0
+        id: secrets
+        with:
+          export-env: false
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          STAGING_TOKEN: "op://Continuous Integration/CLOUD_STAGING_TOKEN/password"
+          E2E_USER_NAME: "op://Continuous Integration/E2E_USER/username"
+          E2E_USER_PASSWORD: "op://Continuous Integration/E2E_USER/password"
+          E2E_PERMISSIONS_USERS_PASSWORD: "op://Continuous Integration/E2E_PERMISSIONS_USERS_PASSWORD/password"
+          E2E_ENCODE_PASS: "op://Everyone/TESTS_RESULT_PASSWORD/password"
+          MAILPITURL: "op://Continuous Integration/MAILPITURL_STAGING/password"
+          TESTS_RESULT_PASSWORD: "op://Everyone/TESTS_RESULT_PASSWORD/password"
+
   smoke-tests:
+    needs: load-secrets
     uses: saleor/saleor-dashboard/.github/workflows/app-smoke-tests.yml@main
     with:
       VERSION: ${{ inputs.VERSION }}
       APP_IDENTIFIERS: ${{ inputs.APP_IDENTIFIERS }}
-    secrets: inherit
+    secrets:
+      STAGING_TOKEN: ${{ needs.load-secrets.outputs.STAGING_TOKEN }}
+      E2E_USER_NAME: ${{ needs.load-secrets.outputs.E2E_USER_NAME }}
+      E2E_USER_PASSWORD: ${{ needs.load-secrets.outputs.E2E_USER_PASSWORD }}
+      E2E_PERMISSIONS_USERS_PASSWORD: ${{ needs.load-secrets.outputs.E2E_PERMISSIONS_USERS_PASSWORD }}
+      E2E_ENCODE_PASS: ${{ needs.load-secrets.outputs.E2E_ENCODE_PASS }}
+      MAILPITURL: ${{ needs.load-secrets.outputs.MAILPITURL }}
+      TESTS_RESULT_PASSWORD: ${{ needs.load-secrets.outputs.TESTS_RESULT_PASSWORD }}
