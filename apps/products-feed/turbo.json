@@ -25,7 +25,8 @@
         "DYNAMODB_REQUEST_TIMEOUT_MS",
         "DYNAMODB_CONNECTION_TIMEOUT_MS",
         "MANIFEST_APP_ID",
-        "FILE_APL_PATH"
+        "FILE_APL_PATH",
+        "APP_API_BASE_URL"
       ]
     }
   }

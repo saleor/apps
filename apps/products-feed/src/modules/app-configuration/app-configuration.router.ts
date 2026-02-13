@@ -50,6 +50,7 @@ export const appConfigurationRouter = router({
       try {
         await checkBucketAccess({
           bucketName: input.bucketName,
+          endpoint: input?.endpoint,
           s3Client,
         });
         logger.info("Verification succeeded");
@@ -59,8 +60,9 @@ export const appConfigurationRouter = router({
         });
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message:
-            "Could not access the S3 bucket using the provided credentials. Check permissions",
+          message: `Could not access the S3 bucket using the provided credentials. ${(
+            e as Error
+          ).toString()}`,
         });
       }
     }),
