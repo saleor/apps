@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.4.3
+
+### Patch Changes
+
+- e8996bf7: Return better error message to initializeSession CHARGE_FAILURE - previously error was only returned to storefront (inside "data"), not also visible in the dashboard
+
 ## 2.4.2
 
 ### Patch Changes
