@@ -35,6 +35,7 @@ jobs:
   load-secrets:
     runs-on: ubuntu-latest
     outputs:
+      STAGING_TOKEN: ${{ steps.secrets.outputs.STAGING_TOKEN }}
       E2E_USER_NAME: ${{ steps.secrets.outputs.E2E_USER_NAME }}
       E2E_USER_PASSWORD: ${{ steps.secrets.outputs.E2E_USER_PASSWORD }}
       E2E_PERMISSIONS_USERS_PASSWORD: ${{ steps.secrets.outputs.E2E_PERMISSIONS_USERS_PASSWORD }}
@@ -48,6 +49,7 @@ jobs:
           export-env: false
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          STAGING_TOKEN: "op://Continuous Integration/CLOUD_STAGING_TOKEN/password"
           E2E_USER_NAME: "op://Continuous Integration/E2E_USER/username"
           E2E_USER_PASSWORD: "op://Continuous Integration/E2E_USER/password"
           E2E_PERMISSIONS_USERS_PASSWORD: "op://Continuous Integration/E2E_PERMISSIONS_USERS_PASSWORD/password"
@@ -62,7 +64,7 @@ jobs:
       VERSION: ${{ inputs.VERSION }}
       APP_IDENTIFIERS: ${{ inputs.APP_IDENTIFIERS }}
     secrets:
-      OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+      STAGING_TOKEN: ${{ needs.load-secrets.outputs.STAGING_TOKEN }}
       E2E_USER_NAME: ${{ needs.load-secrets.outputs.E2E_USER_NAME }}
       E2E_USER_PASSWORD: ${{ needs.load-secrets.outputs.E2E_USER_PASSWORD }}
       E2E_PERMISSIONS_USERS_PASSWORD: ${{ needs.load-secrets.outputs.E2E_PERMISSIONS_USERS_PASSWORD }}
