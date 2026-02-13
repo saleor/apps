@@ -1,10 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { actions, DashboardEventFactory, RedirectAction } from "@saleor/app-sdk/app-bridge";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
+import { TextLink } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { Input, Toggle } from "@saleor/react-hook-form-macaw";
+import { Combobox, Input, Toggle } from "@saleor/react-hook-form-macaw";
 import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
+import { appBridgeInstance } from "@/pages/_app";
+
+import { awsRegionList } from "../file-storage/s3/aws-region-list";
 import { trpcClient } from "../trpc/trpc-client";
 import { AppConfigSchema, RootConfig } from "./app-config";
 
@@ -44,38 +49,51 @@ export const S3ConfigurationForm = (props: Props) => {
 
       <Input size={"small"} name={"bucketName"} control={control} label="Bucket name" />
 
-      {/* <Select */}
-      {/*   control={control} */}
-      {/*   label="Region" */}
-      {/*   name={"region"} */}
-      {/*   required={false} */}
-      {/*   options={awsRegionList.map((region) => ({ label: region, value: region }))} */}
-      {/* /> */}
-
-      <Input required={true} size={"small"} name={"region"} control={control} label="Region" />
+      <Combobox
+        required={true}
+        name={"region"}
+        control={control}
+        label="Region"
+        options={awsRegionList.map((region) => ({ label: region, value: region }))}
+      />
 
       <Input
         required={false}
         size={"small"}
         name={"endpoint"}
         control={control}
-        label="Custom S3 compatible endpoint (leave empty for AWS)"
+        label="Endpoint (Leave empty for AWS)"
       />
 
       <Box as="label" display="flex" gap={2} cursor="pointer">
         <Toggle name={"forcePathStyle"} control={control} type="button" />
-        <Text marginLeft={2}>Force path style (leave off for AWS)</Text>
+        <Text marginLeft={2}>Force path-style endpoint</Text>
       </Box>
 
-      <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
-        <Button variant="secondary" onClick={() => props.onValidate(getValues())}>
-          Test credentials
-        </Button>
-        <Button type="submit" variant="primary">
-          Save bucket configuration
-        </Button>
+      <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"space-between"}>
+        <TextLink href="" onClick={gotoDocumentation}>
+          Documentation
+        </TextLink>
+
+        <Box display={"flex"} flexDirection={"row"} gap={4} justifyContent={"flex-end"}>
+          <Button variant="secondary" onClick={() => props.onValidate(getValues())}>
+            Test credentials
+          </Button>
+          <Button type="submit" variant="primary">
+            Save bucket configuration
+          </Button>
+        </Box>
       </Box>
     </Box>
+  );
+};
+
+export const gotoDocumentation = async () => {
+  await appBridgeInstance?.dispatch(
+    actions.Redirect({
+      to: "https://docs.saleor.io/developer/app-store/apps/product-feed#s3-bucket",
+      newContext: true,
+    }),
   );
 };
 
