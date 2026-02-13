@@ -39,7 +39,6 @@ jobs:
       E2E_USER_NAME: ${{ steps.secrets.outputs.E2E_USER_NAME }}
       E2E_USER_PASSWORD: ${{ steps.secrets.outputs.E2E_USER_PASSWORD }}
       E2E_PERMISSIONS_USERS_PASSWORD: ${{ steps.secrets.outputs.E2E_PERMISSIONS_USERS_PASSWORD }}
-      E2E_ENCODE_PASS: ${{ steps.secrets.outputs.E2E_ENCODE_PASS }}
       MAILPITURL: ${{ steps.secrets.outputs.MAILPITURL }}
       TESTS_RESULT_PASSWORD: ${{ steps.secrets.outputs.TESTS_RESULT_PASSWORD }}
     steps:
@@ -53,7 +52,6 @@ jobs:
           E2E_USER_NAME: "op://Continuous Integration/E2E_USER/username"
           E2E_USER_PASSWORD: "op://Continuous Integration/E2E_USER/password"
           E2E_PERMISSIONS_USERS_PASSWORD: "op://Continuous Integration/E2E_PERMISSIONS_USERS_PASSWORD/password"
-          E2E_ENCODE_PASS: "op://Everyone/TESTS_RESULT_PASSWORD/password"
           MAILPITURL: "op://Continuous Integration/MAILPITURL_STAGING/password"
           TESTS_RESULT_PASSWORD: "op://Continuous Integration/TESTS_RESULT_PASSWORD/password"
 
@@ -68,6 +66,5 @@ jobs:
       E2E_USER_NAME: ${{ needs.load-secrets.outputs.E2E_USER_NAME }}
       E2E_USER_PASSWORD: ${{ needs.load-secrets.outputs.E2E_USER_PASSWORD }}
       E2E_PERMISSIONS_USERS_PASSWORD: ${{ needs.load-secrets.outputs.E2E_PERMISSIONS_USERS_PASSWORD }}
-      E2E_ENCODE_PASS: ${{ needs.load-secrets.outputs.E2E_ENCODE_PASS }}
       MAILPITURL: ${{ needs.load-secrets.outputs.MAILPITURL }}
       TESTS_RESULT_PASSWORD: ${{ needs.load-secrets.outputs.TESTS_RESULT_PASSWORD }}
