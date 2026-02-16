@@ -243,7 +243,7 @@ describe("SendEventMessagesUseCase", () => {
           smtpPassword: "fallback-pass",
           encryption: "TLS",
           senderName: "Fallback Sender",
-          senderEmail: "fallback@example.com",
+          senderDomain: "example.com",
         });
 
         const result = await useCaseInstance.sendEventMessages({
@@ -270,7 +270,7 @@ describe("SendEventMessagesUseCase", () => {
           smtpPassword: "fallback-pass",
           encryption: "TLS",
           senderName: "Fallback Sender",
-          senderEmail: "fallback@example.com",
+          senderDomain: "example.com",
         });
 
         await useCaseInstance.sendEventMessages({
@@ -329,6 +329,35 @@ describe("SendEventMessagesUseCase", () => {
         );
       });
 
+      it("Returns FallbackNotConfiguredError when saleorApiUrl is invalid and FallbackSenderEmail throws", async () => {
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+        });
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient@test.com",
+          saleorApiUrl: "not-a-valid-url",
+        });
+
+        expect(result.isErr()).toBe(true);
+        expect(result._unsafeUnwrapErr()[0]).toBeInstanceOf(
+          SendEventMessagesUseCase.FallbackNotConfiguredError,
+        );
+      });
+
       it("Uses custom configurations when available, regardless of fallback setting", async () => {
         configService.mockGetConfigurationsMethod.mockImplementation(
           MockConfigService.returnValidSingleConfiguration,
@@ -363,7 +392,7 @@ describe("SendEventMessagesUseCase", () => {
           smtpPassword: "fallback-pass",
           encryption: "TLS",
           senderName: "Fallback Sender",
-          senderEmail: "fallback@example.com",
+          senderDomain: "example.com",
         });
 
         await useCaseInstance.sendEventMessages({
@@ -376,7 +405,7 @@ describe("SendEventMessagesUseCase", () => {
 
         expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
           expect.objectContaining({
-            senderEmail: "fallback@example.com",
+            senderEmail: "demo@example.com",
             senderName: "Fallback Sender",
           }),
         );

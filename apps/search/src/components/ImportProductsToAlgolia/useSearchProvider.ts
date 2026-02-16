@@ -2,7 +2,7 @@ import { inferProcedureOutput } from "@trpc/server";
 import { useMemo } from "react";
 
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
-import { AppRouter } from "../../modules/trpc/trpc-app-router";
+import type { AppRouter } from "../../modules/trpc/trpc-app-router";
 
 type AlgoliaConfiguration = inferProcedureOutput<AppRouter["configuration"]["getConfig"]>;
 

@@ -23,6 +23,12 @@ const nextConfig: NextConfig = {
     ],
   },
   bundlePagesRouterDependencies: true,
+  serverExternalPackages: [
+    "@aws-sdk/client-dynamodb",
+    "@aws-sdk/lib-dynamodb",
+    "@aws-sdk/util-dynamodb",
+    "dynamodb-toolbox",
+  ],
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Ignore opentelemetry warnings - https://github.com/open-telemetry/opentelemetry-js/issues/4173

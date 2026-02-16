@@ -42,7 +42,7 @@ export const env = createEnv({
     FALLBACK_SMTP_PASSWORD: z.string().min(1).optional(),
     FALLBACK_SMTP_ENCRYPTION: z.enum(["NONE", "TLS", "SSL"]).default("NONE"),
     FALLBACK_SMTP_SENDER_NAME: z.string().min(1).optional(),
-    FALLBACK_SMTP_SENDER_EMAIL: z.string().email().min(5).optional(),
+    FALLBACK_SMTP_SENDER_DOMAIN: z.string().min(1).optional(),
   },
   shared: {
     NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
@@ -83,7 +83,7 @@ export const env = createEnv({
     FALLBACK_SMTP_PASSWORD: process.env.FALLBACK_SMTP_PASSWORD,
     FALLBACK_SMTP_ENCRYPTION: process.env.FALLBACK_SMTP_ENCRYPTION,
     FALLBACK_SMTP_SENDER_NAME: process.env.FALLBACK_SMTP_SENDER_NAME,
-    FALLBACK_SMTP_SENDER_EMAIL: process.env.FALLBACK_SMTP_SENDER_EMAIL,
+    FALLBACK_SMTP_SENDER_DOMAIN: process.env.FALLBACK_SMTP_SENDER_DOMAIN,
   },
   isServer: typeof window === "undefined" || process.env.NODE_ENV === "test",
 });
