@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-smtp",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,6 +14,7 @@
     "lint:fix": "eslint --fix .",
     "start": "next start",
     "test": "vitest",
+    "test-email-build": "tsx ./scripts/build-email-previews.ts",
     "test:ci": "vitest run --coverage"
   },
   "config": {

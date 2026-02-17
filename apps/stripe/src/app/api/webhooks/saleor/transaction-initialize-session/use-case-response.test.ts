@@ -118,7 +118,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent failed",
+          "message": "Provided payment method is not supported",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -150,7 +150,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent failed",
+          "message": "Provided data is invalid. Check your data argument to transactionInitializeSession mutation and try again.",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -184,7 +184,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent failed",
+          "message": "There is a problem with the request to Stripe API",
           "result": "CHARGE_FAILURE",
         }
       `);
@@ -219,7 +219,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent failed: Inner error
+          "message": "There is a problem with the request to Stripe API: Inner error
         Error from Stripe API",
           "result": "CHARGE_FAILURE",
         }
@@ -254,7 +254,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent failed",
+          "message": "Provided payment method is not supported",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);
@@ -286,7 +286,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent failed",
+          "message": "Provided data is invalid. Check your data argument to transactionInitializeSession mutation and try again.",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);
@@ -318,7 +318,7 @@ describe("TransactionInitializeSessionUseCaseResponses", () => {
               ],
             },
           },
-          "message": "Payment intent failed",
+          "message": "There is a problem with the request to Stripe API",
           "result": "AUTHORIZATION_FAILURE",
         }
       `);

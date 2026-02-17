@@ -122,7 +122,7 @@ class Failure extends SuccessWebhookResponse {
     const typeSafeResponse: TransactionSessionFailure = {
       // We don't have pspReference in this case or actions because there is no payment intent created
       result: this.transactionResult.result,
-      message: this.messageFormatter.formatMessage(this.transactionResult.message, this.error),
+      message: this.messageFormatter.formatMessage(this.error.publicMessage, this.error),
       actions: this.transactionResult.actions,
       data: Failure.ResponseDataSchema.parse({
         paymentIntent: {

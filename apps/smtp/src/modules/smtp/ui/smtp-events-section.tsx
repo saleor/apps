@@ -21,6 +21,7 @@ import {
 } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { smtpUrls } from "../urls";
+import { SaleorThrobber } from "./saleor-throbber";
 
 interface SmtpEventsSectionProps {
   configuration: SmtpConfiguration;
@@ -47,15 +48,17 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.smtpConfiguration.updateEventArray.useMutation({
-    onSuccess: async () => {
-      notifySuccess("Configuration saved");
-      trpcContext.smtpConfiguration.invalidate();
+  const { mutate, isLoading: isSaving } = trpcClient.smtpConfiguration.updateEventArray.useMutation(
+    {
+      onSuccess: async () => {
+        notifySuccess("Configuration saved");
+        trpcContext.smtpConfiguration.invalidate();
+      },
+      onError(error) {
+        setBackendErrors<SmtpUpdateEventArray>({ error, setError, notifyError });
+      },
     },
-    onError(error) {
-      setBackendErrors<SmtpUpdateEventArray>({ error, setError, notifyError });
-    },
-  });
+  );
 
   return (
     <SectionWithDescription
@@ -148,7 +151,16 @@ export const SmtpEventsSection = ({ configuration }: SmtpEventsSectionProps) => 
             </Table.Container>
           </Box>
           <BoxFooter>
-            <Button type="submit">Save provider</Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? (
+                <Box display="flex" alignItems="center" gap={2}>
+                  <SaleorThrobber size={20} />
+                  <span>Saving</span>
+                </Box>
+              ) : (
+                "Save provider"
+              )}
+            </Button>
           </BoxFooter>
         </BoxWithBorder>
       </form>

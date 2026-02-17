@@ -18,6 +18,7 @@ import {
   smtpGetConfigurationsInputSchema,
   smtpGetEventConfigurationInputSchema,
   smtpUpdateBasicInformationSchema,
+  smtpUpdateBrandingSchema,
   smtpUpdateEventArraySchema,
   smtpUpdateEventSchema,
   smtpUpdateSenderSchema,
@@ -276,6 +277,19 @@ export const smtpConfigurationRouter = router({
       const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
 
       logger.debug(input, "smtpConfigurationRouter.updateSender called");
+
+      return await ctx.smtpConfigurationService.updateConfiguration({ ...input }).match(
+        (v) => v,
+        (e) => throwTrpcErrorFromConfigurationServiceError(e),
+      );
+    }),
+
+  updateBranding: protectedWithConfigurationServices
+    .input(smtpUpdateBrandingSchema)
+    .mutation(async ({ ctx, input }) => {
+      const logger = createLogger("smtpConfigurationRouter", { saleorApiUrl: ctx.saleorApiUrl });
+
+      logger.debug(input, "smtpConfigurationRouter.updateBranding called");
 
       return await ctx.smtpConfigurationService.updateConfiguration({ ...input }).match(
         (v) => v,
