@@ -29,7 +29,7 @@ export default withSpanAttributes(
            */
         ],
         homepageUrl: "https://github.com/saleor/apps",
-        id: "saleor.app.smtp",
+        id: env.MANIFEST_APP_ID,
         name: "SMTP",
         permissions: ["MANAGE_ORDERS", "MANAGE_USERS", "MANAGE_GIFT_CARD"],
         requiredSaleorVersion: ">=3.20 <4",

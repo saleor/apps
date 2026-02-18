@@ -17,6 +17,7 @@ import {
   smtpUpdateBasicInformationSchema,
 } from "../configuration/smtp-config-input-schema";
 import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { SaleorThrobber } from "./saleor-throbber";
 
 interface SmtpBasicInformationSectionProps {
   configuration: SmtpConfiguration;
@@ -36,19 +37,20 @@ export const SmtpBasicInformationSection = ({
   });
 
   const trpcContext = trpcClient.useContext();
-  const { mutate } = trpcClient.smtpConfiguration.updateBasicInformation.useMutation({
-    onSuccess: async () => {
-      notifySuccess("Configuration saved");
-      trpcContext.smtpConfiguration.invalidate();
-    },
-    onError(error) {
-      setBackendErrors<SmtpUpdateBasicInformation>({
-        error,
-        setError,
-        notifyError,
-      });
-    },
-  });
+  const { mutate, isLoading: isSaving } =
+    trpcClient.smtpConfiguration.updateBasicInformation.useMutation({
+      onSuccess: async () => {
+        notifySuccess("Configuration saved");
+        trpcContext.smtpConfiguration.invalidate();
+      },
+      onError(error) {
+        setBackendErrors<SmtpUpdateBasicInformation>({
+          error,
+          setError,
+          notifyError,
+        });
+      },
+    });
 
   return (
     <SectionWithDescription
@@ -81,7 +83,16 @@ export const SmtpBasicInformationSection = ({
             </label>
           </Box>
           <BoxFooter>
-            <Button type="submit">Save provider</Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? (
+                <Box display="flex" alignItems="center" gap={2}>
+                  <SaleorThrobber size={20} />
+                  <span>Saving</span>
+                </Box>
+              ) : (
+                "Save provider"
+              )}
+            </Button>
           </BoxFooter>
         </form>
       </BoxWithBorder>

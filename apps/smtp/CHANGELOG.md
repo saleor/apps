@@ -1,5 +1,11 @@
 # saleor-app-smtp
 
+## 1.5.3
+
+### Patch Changes
+
+- 71a05d9b: Refresh default email templates and overhaul template editor UX
+
 ## 1.5.2
 
 ### Patch Changes
