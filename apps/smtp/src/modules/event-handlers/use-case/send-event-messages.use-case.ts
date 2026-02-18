@@ -51,6 +51,10 @@ export class SendEventMessagesUseCase {
 
   static FallbackNotConfiguredError = this.NoOpError.subclass("FallbackNotConfiguredError");
 
+  static InvalidEmailAddressError = this.NoOpError.subclass("InvalidEmailAddressError");
+
+  static RejectedTestDomainError = this.NoOpError.subclass("RejectedTestDomainError");
+
   private logger = createLogger("SendEventMessagesUseCase");
 
   constructor(
@@ -232,6 +236,21 @@ export class SendEventMessagesUseCase {
 
     const fallbackEnabledResult = await this.deps.configService.getIsFallbackSmtpEnabled();
 
+    const recipientDomain = recipientEmail.split("@")[1]?.toLowerCase();
+
+    if (!recipientDomain) {
+      this.logger.error("Received invalid input: missing domain in the email address");
+
+      return err([
+        new SendEventMessagesUseCase.InvalidEmailAddressError(
+          "Received an invalid email address: couldn't determine the domain",
+          {
+            props: { channelSlug, event, recipientEmail },
+          },
+        ),
+      ]);
+    }
+
     if (fallbackEnabledResult.isErr() || !fallbackEnabledResult.value) {
       this.logger.info("Fallback SMTP is not enabled");
 
@@ -255,6 +274,22 @@ export class SendEventMessagesUseCase {
           "Fallback enabled but env vars are not configured",
           {
             props: { channelSlug, event },
+          },
+        ),
+      ]);
+    }
+
+    // Block sending to test/invalid domains when using fallback SMTP
+    if (fallbackSmtpConfig.blockedDomains.includes(recipientDomain)) {
+      this.logger.info("Rejected sending email: test domain detected", {
+        recipientDomain,
+      });
+
+      return err([
+        new SendEventMessagesUseCase.RejectedTestDomainError(
+          "This recipient domain is blocked for fallback SMTP",
+          {
+            props: { channelSlug, event, recipientEmail },
           },
         ),
       ]);

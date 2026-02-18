@@ -244,6 +244,7 @@ describe("SendEventMessagesUseCase", () => {
           encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
+          blockedDomains: [],
         });
 
         const result = await useCaseInstance.sendEventMessages({
@@ -252,10 +253,41 @@ describe("SendEventMessagesUseCase", () => {
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
           saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+          blockedDomains: [],
         });
 
         expect(result.isOk()).toBe(true);
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
+      });
+
+      it("Email addresses without domain are rejected", async () => {
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          blockedDomains: ["example.com"],
+        });
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "recipient", // missing domain
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
+          SendEventMessagesUseCase.InvalidEmailAddressError,
+        );
+        expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
       });
 
       it("Passes X-SES-TENANT header derived from saleorApiUrl when sending via fallback", async () => {
@@ -271,6 +303,7 @@ describe("SendEventMessagesUseCase", () => {
           encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
+          blockedDomains: [],
         });
 
         await useCaseInstance.sendEventMessages({
@@ -342,6 +375,7 @@ describe("SendEventMessagesUseCase", () => {
           encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
+          blockedDomains: [],
         });
 
         const result = await useCaseInstance.sendEventMessages({
@@ -393,6 +427,7 @@ describe("SendEventMessagesUseCase", () => {
           encryption: "TLS",
           senderName: "Fallback Sender",
           senderDomain: "example.com",
+          blockedDomains: [],
         });
 
         await useCaseInstance.sendEventMessages({
