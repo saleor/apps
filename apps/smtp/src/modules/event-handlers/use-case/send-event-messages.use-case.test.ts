@@ -259,6 +259,36 @@ describe("SendEventMessagesUseCase", () => {
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
       });
 
+      it("Blocks sending email to default test domains with fallback SMTP", async () => {
+        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
+          MockConfigService.returnFallbackEnabled,
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          blockedDomains: ["example.com"],
+        });
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "user@example.com", // <--- This should be rejected
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
+          SendEventMessagesUseCase.RejectedTestDomainError,
+        );
+        expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
+      });
+
       it("Email addresses without domain are rejected", async () => {
         configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
           MockConfigService.returnFallbackEnabled,
