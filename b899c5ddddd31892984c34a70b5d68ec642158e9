@@ -1,0 +1,61 @@
+apps/smtp/src/modules/dynamodb/dynamodb-client.ts
+  d8437092efe75133 20-22,26
+apps/products-feed/src/modules/dynamodb/dynamo-main-table.ts
+  d8437092efe75133 4,61,63-67,71,73,75
+apps/smtp/src/env-dynamodb.ts
+  d8437092efe75133 1-37
+apps/products-feed/src/env-dynamodb.ts
+  d8437092efe75133 1-37
+apps/smtp/src/modules/dynamodb/dynamo-main-table.ts
+  d8437092efe75133 4,60,62-66,70,72,74
+apps/search/src/modules/dynamodb/dynamo-main-table.ts
+  d8437092efe75133 4,60,62-66,70,72,74
+apps/products-feed/src/saleor-app.ts
+  d8437092efe75133 8-9,21-23
+apps/cms/src/modules/dynamodb/dynamo-main-table.ts
+  d8437092efe75133 4,61,63-67,71,73,75
+apps/search/src/modules/dynamodb/dynamodb-client.ts
+  d8437092efe75133 20-22,26
+apps/cms/src/saleor-app.ts
+  d8437092efe75133 8-9,21-23
+apps/cms/src/env-dynamodb.ts
+  d8437092efe75133 1-37
+apps/search/src/env-dynamodb.ts
+  d8437092efe75133 1-37
+apps/klaviyo/saleor-app.ts
+  d8437092efe75133 7,9,19-21
+apps/smtp/src/saleor-app.ts
+  d8437092efe75133 8,10,20-22
+apps/klaviyo/src/dynamodb/dynamodb-client.ts
+  d8437092efe75133 20-22,26
+apps/search/saleor-app.ts
+  d8437092efe75133 8,10,19-21
+apps/klaviyo/src/dynamodb/dynamo-main-table.ts
+  d8437092efe75133 4,60,62-66,70,72,74
+apps/products-feed/src/modules/dynamodb/dynamodb-client.ts
+  d8437092efe75133 20-22,26
+apps/cms/src/modules/dynamodb/dynamodb-client.ts
+  d8437092efe75133 20-22,26
+apps/klaviyo/src/env-dynamodb.ts
+  d8437092efe75133 1-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "b899c5ddddd31892984c34a70b5d68ec642158e9",
+  "prompts": {
+    "d8437092efe75133": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "08a6ee75-78f7-43aa-bacf-d545d8709c0b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 620,
+      "total_deletions": 270,
+      "accepted_lines": 490,
+      "overriden_lines": 0
+    }
+  }
+}
