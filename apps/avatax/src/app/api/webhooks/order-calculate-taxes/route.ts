@@ -113,14 +113,15 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
       kind: SpanKind.SERVER,
     },
     async (span) => {
+      const payload = ctx.payload.data.calculateTaxes;
+
       const logWriter = logsWriterFactory.createWriter(ctx.authData);
 
-      const channelSlug = ctx.payload.taxBase.channel.slug;
-      const orderId = ctx.payload.taxBase.sourceObject.id;
-      const appMetadata = ctx.payload.recipient?.privateMetadata ?? [];
+      const channelSlug = payload.taxBase.channel.slug;
+      const orderId = payload.taxBase.sourceObject.id;
+      const appMetadata = payload.recipient?.privateMetadata ?? [];
 
       metadataCache.setMetadata(appMetadata);
-      const { payload } = ctx;
 
       try {
         subscriptionErrorChecker.checkPayload(payload);

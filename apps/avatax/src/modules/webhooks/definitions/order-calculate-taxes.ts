@@ -4,7 +4,9 @@ import { UntypedCalculateTaxesDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
 import { CalculateTaxesPayload } from "../payloads/calculate-taxes-payload";
 
-export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<CalculateTaxesPayload>({
+export const orderCalculateTaxesSyncWebhook = new SaleorSyncWebhook<{
+  data: { calculateTaxes: CalculateTaxesPayload };
+}>({
   name: "OrderCalculateTaxes",
   apl: saleorApp.apl,
   event: "ORDER_CALCULATE_TAXES",
