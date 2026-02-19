@@ -253,7 +253,6 @@ describe("SendEventMessagesUseCase", () => {
           channelSlug: "channel-slug",
           recipientEmail: "recipient@test.com",
           saleorApiUrl: "https://demo.saleor.cloud/graphql/",
-          blockedDomains: [],
         });
 
         expect(result.isOk()).toBe(true);
