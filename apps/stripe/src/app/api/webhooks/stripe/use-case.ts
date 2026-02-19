@@ -131,6 +131,20 @@ export class StripeWebhookUseCase {
           );
         }
 
+        if (meta.saleor_app_id && meta.saleor_app_id !== appId) {
+          return err(
+            new ObjectMetadataMissingError(
+              "PaymentIntent belongs to a different Saleor installation",
+              {
+                props: {
+                  meta,
+                  expectedAppId: appId,
+                },
+              },
+            ),
+          );
+        }
+
         const handler = new StripePaymentIntentHandler();
 
         const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({
@@ -162,6 +176,17 @@ export class StripeWebhookUseCase {
                 },
               },
             ),
+          );
+        }
+
+        if (meta.saleor_app_id && meta.saleor_app_id !== appId) {
+          return err(
+            new ObjectMetadataMissingError("Refund belongs to a different Saleor installation", {
+              props: {
+                meta,
+                expectedAppId: appId,
+              },
+            }),
           );
         }
 

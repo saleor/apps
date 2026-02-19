@@ -21,6 +21,7 @@ import {
   ITransactionEventReporter,
   TransactionEventReportResultResult,
 } from "@/modules/saleor/transaction-event-reporter";
+import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import {
   IStripeEventVerify,
@@ -164,6 +165,130 @@ describe("StripeWebhookUseCase - Error cases", () => {
       StripeWebhookTransactionMissingResponse {
         "message": "Transaction is missing",
         "statusCode": 400,
+      }
+    `);
+  });
+
+  it("Returns error if payment_intent belongs to a different Saleor installation and does not call DB", async () => {
+    const event = getMockedPaymentIntentSucceededEvent();
+
+    event.data.object.metadata = {
+      saleor_transaction_id: mockedSaleorTransactionId as string,
+      saleor_source_id: "checkout-id-123",
+      saleor_source_type: "Checkout",
+      saleor_app_id: "different-app-id",
+    };
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    const dbSpy = vi.spyOn(mockTransactionRecorder, "getTransactionByStripePaymentIntentId");
+
+    const result = await instance.execute({
+      rawBody: rawEventBody,
+      signatureHeader: "test-signature",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+      ObjectCreatedOutsideOfSaleorResponse {
+        "message": "Object created outside of Saleor is not processable",
+        "statusCode": 400,
+      }
+    `);
+
+    expect(dbSpy).not.toHaveBeenCalled();
+    expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+  });
+
+  it("Returns error if refund belongs to a different Saleor installation and does not call DB", async () => {
+    const event = {
+      type: "charge.refund.updated",
+      data: {
+        object: {
+          object: "refund",
+          id: "re_id",
+          payment_intent: mockedStripePaymentIntentId.toString(),
+          metadata: {
+            saleor_transaction_id: mockedSaleorTransactionId as string,
+            saleor_source_id: "checkout-id-123",
+            saleor_source_type: "Checkout",
+            saleor_app_id: "different-app-id",
+          },
+        },
+      },
+    } as unknown as Stripe.ChargeRefundUpdatedEvent;
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    const dbSpy = vi.spyOn(mockTransactionRecorder, "getTransactionByStripePaymentIntentId");
+
+    const result = await instance.execute({
+      rawBody: rawEventBody,
+      signatureHeader: "test-signature",
+      webhookParams: webhookParams,
+    });
+
+    expect(result._unsafeUnwrapErr()).toMatchInlineSnapshot(`
+      ObjectCreatedOutsideOfSaleorResponse {
+        "message": "Object created outside of Saleor is not processable",
+        "statusCode": 400,
+      }
+    `);
+
+    expect(dbSpy).not.toHaveBeenCalled();
+    expect(mockEventReporter.reportTransactionEvent).not.toHaveBeenCalled();
+  });
+
+  it("Processes payment_intent without saleor_app_id for backward compatibility", async () => {
+    const event = getMockedPaymentIntentSucceededEvent();
+
+    // Metadata has saleor_transaction_id but no saleor_app_id (old PI)
+    event.data.object.metadata = {
+      saleor_transaction_id: mockedSaleorTransactionId as string,
+      saleor_source_id: "checkout-id-123",
+      saleor_source_type: "Checkout",
+    };
+
+    const stripePiId = createStripePaymentIntentId(event.data.object.id);
+
+    eventVerify.verifyEvent.mockImplementationOnce(() => ok(event));
+
+    mockTransactionRecorder.transactions = {
+      [stripePiId]: new RecordedTransaction({
+        saleorTransactionId: mockedSaleorTransactionId,
+        stripePaymentIntentId: stripePiId,
+        saleorTransactionFlow: createSaleorTransactionFlow("CHARGE"),
+        resolvedTransactionFlow: createResolvedTransactionFlow("CHARGE"),
+        selectedPaymentMethod: "card",
+        saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      }),
+    };
+
+    vi.spyOn(mockedStripePaymentIntentsApi, "getPaymentIntent").mockImplementationOnce(async () =>
+      ok({
+        payment_method: null,
+      }),
+    );
+
+    mockEventReporter.reportTransactionEvent.mockImplementationOnce(async () => {
+      const data: TransactionEventReportResultResult = {
+        createdEventId: "TEST_EVENT_ID",
+      };
+
+      return ok(data);
+    });
+
+    const result = await instance.execute({
+      rawBody: "TEST BODY",
+      signatureHeader: "SIGNATURE",
+      webhookParams: webhookParams,
+    });
+
+    // Should NOT be rejected - backward compatible
+    expect(result._unsafeUnwrap()).toMatchInlineSnapshot(`
+      StripeWebhookSuccessResponse {
+        "message": "Ok",
+        "statusCode": 200,
       }
     `);
   });

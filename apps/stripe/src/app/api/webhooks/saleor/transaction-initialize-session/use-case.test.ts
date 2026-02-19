@@ -93,6 +93,8 @@ describe("TransactionInitializeSessionUseCase", () => {
           saleor_source_id: saleorEvent.sourceObject.id,
           saleor_source_type: saleorEvent.sourceObject.__typename,
           saleor_transaction_id: saleorEvent.transaction.id,
+          saleor_api_url: mockedSaleorApiUrl,
+          saleor_app_id: mockedSaleorAppId,
         },
       });
 

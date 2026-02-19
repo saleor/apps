@@ -58,6 +58,8 @@ describe("TransactionRefundRequestedUseCase", () => {
         saleor_source_id: "mock-channel-1",
         saleor_source_type: "Checkout",
         saleor_transaction_id: "mocked-transaction-id",
+        saleor_api_url: mockedSaleorApiUrl,
+        saleor_app_id: mockedSaleorAppId,
       },
     });
   });
@@ -89,6 +91,8 @@ describe("TransactionRefundRequestedUseCase", () => {
         saleor_source_id: "mock-channel-1",
         saleor_source_type: "Checkout",
         saleor_transaction_id: "mocked-transaction-id",
+        saleor_api_url: mockedSaleorApiUrl,
+        saleor_app_id: mockedSaleorAppId,
       },
     });
   });

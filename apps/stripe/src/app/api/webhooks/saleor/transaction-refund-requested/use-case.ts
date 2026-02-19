@@ -137,6 +137,8 @@ export class TransactionRefundRequestedUseCase {
           : transaction.order?.id,
         saleor_source_type: transaction.checkout ? "Checkout" : "Order",
         saleor_transaction_id: createSaleorTransactionId(transaction.id),
+        saleor_api_url: saleorApiUrl,
+        saleor_app_id: appId,
       },
     });
 

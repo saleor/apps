@@ -32,6 +32,8 @@ export type AllowedStripeObjectMetadata = {
   saleor_transaction_id?: SaleorTransationId;
   saleor_source_id?: string;
   saleor_source_type?: "Checkout" | "Order";
+  saleor_api_url?: string;
+  saleor_app_id?: string;
 };
 
 export interface CreatePaymentIntentArgs {

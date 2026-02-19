@@ -88,6 +88,8 @@ export class TransactionInitializeSessionUseCase {
     eventData: TransactionInitializeSessionEventData;
     selectedPaymentMethodOptions: Stripe.PaymentIntentCreateParams.PaymentMethodOptions;
     idempotencyKey: string;
+    saleorApiUrl: SaleorApiUrl;
+    appId: string;
   }): Result<CreatePaymentIntentArgs, InstanceType<typeof StripeMoney.ValdationError>> {
     return StripeMoney.createFromSaleorAmount({
       amount: args.event.action.amount,
@@ -98,6 +100,8 @@ export class TransactionInitializeSessionUseCase {
           saleor_source_id: args.event.sourceObject.id,
           saleor_source_type: args.event.sourceObject.__typename,
           saleor_transaction_id: createSaleorTransactionId(args.event.transaction.id),
+          saleor_api_url: args.saleorApiUrl,
+          saleor_app_id: args.appId,
         },
         stripeMoney,
         idempotencyKey: args.idempotencyKey,
@@ -240,6 +244,8 @@ export class TransactionInitializeSessionUseCase {
       selectedPaymentMethodOptions:
         selectedPaymentMethod.getCreatePaymentIntentMethodOptions(saleorTransactionFlow),
       idempotencyKey: event.idempotencyKey,
+      saleorApiUrl,
+      appId,
     });
 
     if (stripePaymentIntentParamsResult.isErr()) {
