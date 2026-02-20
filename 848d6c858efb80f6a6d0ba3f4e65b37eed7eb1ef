@@ -1,0 +1,25 @@
+packages/app-problems/graphql.config.ts
+  683b253d0285f51a 1-67
+packages/app-problems/package.json
+  683b253d0285f51a 14-15,21-29,31-37,42,44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "848d6c858efb80f6a6d0ba3f4e65b37eed7eb1ef",
+  "prompts": {
+    "683b253d0285f51a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "651e704d-eec5-4106-8045-3ca576965ad4",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 87,
+      "total_deletions": 0,
+      "accepted_lines": 87,
+      "overriden_lines": 0
+    }
+  }
+}
