@@ -1,0 +1,27 @@
+packages/app-problems/src/index.ts
+  d7875165d76327ae 1
+packages/app-problems/src/app-problems-reporter.test.ts
+  d7875165d76327ae 5,25,32,34,37,43,54-55,57-58,61,63,65,69-73,78,85,87,93,104-108,111,113,115,119-120,122-123
+packages/app-problems/src/app-problems-reporter.ts
+  d7875165d76327ae 1-2,11-16,21-22,28,32-34,54,56-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "63076da311bd2a45a0bf9888e2ed690670c71107",
+  "prompts": {
+    "d7875165d76327ae": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e8f8349-9c65-45ce-b517-beae3b369888",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 73,
+      "total_deletions": 30,
+      "accepted_lines": 63,
+      "overriden_lines": 0
+    }
+  }
+}
