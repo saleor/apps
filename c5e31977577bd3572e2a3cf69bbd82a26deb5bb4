@@ -1,0 +1,23 @@
+docs/app-problem-exploration.md
+  6be5ad8f55bfbe99 1-158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "c5e31977577bd3572e2a3cf69bbd82a26deb5bb4",
+  "prompts": {
+    "6be5ad8f55bfbe99": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f0810c47-d956-4b77-925b-7cf7541534aa",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 158,
+      "total_deletions": 0,
+      "accepted_lines": 158,
+      "overriden_lines": 0
+    }
+  }
+}
