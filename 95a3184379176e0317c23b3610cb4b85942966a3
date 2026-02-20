@@ -1,0 +1,27 @@
+packages/app-problems/src/app-problems-reporter.ts
+  d7875165d76327ae 1-39
+packages/app-problems/src/index.ts
+  d7875165d76327ae 1
+packages/app-problems/src/app-problems-reporter.test.ts
+  d7875165d76327ae 1-107
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "95a3184379176e0317c23b3610cb4b85942966a3",
+  "prompts": {
+    "d7875165d76327ae": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3e8f8349-9c65-45ce-b517-beae3b369888",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 152,
+      "total_deletions": 1,
+      "accepted_lines": 152,
+      "overriden_lines": 0
+    }
+  }
+}
