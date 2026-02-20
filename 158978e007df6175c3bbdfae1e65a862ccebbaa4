@@ -1,0 +1,35 @@
+apps/avatax/src/app/api/webhooks/checkout-calculate-taxes/route.ts
+  cba009460713f543 194-202,289-297
+apps/avatax/src/app/api/webhooks/order-cancelled/route.ts
+  cba009460713f543 17,327-330
+apps/avatax/src/modules/avatax/tax-code/avatax-tax-codes.router.ts
+  cba009460713f543 6,69-70
+apps/avatax/src/modules/app-problems/avatax-problem-reporter.ts
+  cba009460713f543 1-104
+apps/avatax/src/app/api/webhooks/order-calculate-taxes/route.ts
+  cba009460713f543 21,372-380,491-499
+apps/avatax/src/app/api/webhooks/order-confirmed/route.ts
+  cba009460713f543 411-419,447-454,476-484
+apps/avatax/src/modules/app-problems/avatax-problem-reporter.test.ts
+  cba009460713f543 1-133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "158978e007df6175c3bbdfae1e65a862ccebbaa4",
+  "prompts": {
+    "cba009460713f543": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29505e66-0f34-4f26-a53e-5bff5d1bce41",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 328,
+      "total_deletions": 17,
+      "accepted_lines": 311,
+      "overriden_lines": 0
+    }
+  }
+}
