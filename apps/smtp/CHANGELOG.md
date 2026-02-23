@@ -1,5 +1,16 @@
 # saleor-app-smtp
 
+## 1.6.0
+
+### Minor Changes
+
+- 2572c55a: Added deny-list for known invalid domains (such as `example.com`)
+  to reduce bounce rate in the default/fallback configuration.
+
+### Patch Changes
+
+- 567c38e1: Fixed missing `3000` port and over-exposed ports in the SMTP app devcontainer.
+
 ## 1.5.3
 
 ### Patch Changes
