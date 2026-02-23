@@ -9,14 +9,16 @@ services:
     volumes:
       - "../..:/app"
       - "pnpm-store:/app/.pnpm-store"
+    ports:
+      - 127.0.0.1:3000:3000
     depends_on:
       - mailpit
 
   mailpit:
     image: axllent/mailpit:latest
     ports:
-      - "1025:1025"  # SMTP server
-      - "8025:8025"  # Web UI
+      - "127.0.0.1:1025:1025"  # SMTP server
+      - "127.0.0.1:8025:8025"  # Web UI
     environment:
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
