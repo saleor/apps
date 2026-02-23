@@ -1,0 +1,242 @@
+version: "3.8"
+
+services:
+  # Local DynamoDB for apps that require it
+  avatax-dynamodb:
+    image: amazon/dynamodb-local:latest
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    ports:
+      - "8001:8000"
+    volumes:
+      - avatax-dynamodb-data:/home/dynamodblocal/data
+    networks: [saleor-apps]
+
+  segment-dynamodb:
+    image: amazon/dynamodb-local:latest
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    ports:
+      - "8002:8000"
+    volumes:
+      - segment-dynamodb-data:/home/dynamodblocal/data
+    networks: [saleor-apps]
+
+  avatax:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: app-avatax
+        APP_PATH: avatax
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${AVATAX_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3001
+      - APP_IFRAME_BASE_URL=http://localhost:3001
+      - PORT=3000
+    depends_on:
+      - avatax-dynamodb
+    networks: [saleor-apps]
+
+  cms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: cms
+        APP_PATH: cms
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${CMS_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3002
+      - APP_IFRAME_BASE_URL=http://localhost:3002
+      - PORT=3000
+    networks: [saleor-apps]
+
+  cms-v2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: cms-v2
+        APP_PATH: cms-v2
+    ports:
+      - "3003:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${CMS_V2_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3003
+      - APP_IFRAME_BASE_URL=http://localhost:3003
+      - PORT=3000
+    networks: [saleor-apps]
+
+  data-importer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: data-importer
+        APP_PATH: data-importer
+    ports:
+      - "3004:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${DATA_IMPORTER_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3004
+      - APP_IFRAME_BASE_URL=http://localhost:3004
+      - PORT=3000
+    networks: [saleor-apps]
+
+  klaviyo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: klaviyo
+        APP_PATH: klaviyo
+    ports:
+      - "3005:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${KLAVIYO_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3005
+      - APP_IFRAME_BASE_URL=http://localhost:3005
+      - PORT=3000
+    networks: [saleor-apps]
+
+  np-atobarai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: np-atobarai
+        APP_PATH: np-atobarai
+    ports:
+      - "3006:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${NP_ATOBARAI_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3006
+      - APP_IFRAME_BASE_URL=http://localhost:3006
+      - PORT=3000
+    networks: [saleor-apps]
+
+  products-feed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: products-feed
+        APP_PATH: products-feed
+    ports:
+      - "3007:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${PRODUCTS_FEED_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3007
+      - APP_IFRAME_BASE_URL=http://localhost:3007
+      - PORT=3000
+    networks: [saleor-apps]
+
+  search:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: search
+        APP_PATH: search
+    ports:
+      - "3008:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${SEARCH_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3008
+      - APP_IFRAME_BASE_URL=http://localhost:3008
+      - PORT=3000
+    networks: [saleor-apps]
+
+  segment:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: segment
+        APP_PATH: segment
+    ports:
+      - "3009:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${SEGMENT_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3009
+      - APP_IFRAME_BASE_URL=http://localhost:3009
+      - PORT=3000
+    depends_on:
+      - segment-dynamodb
+    networks: [saleor-apps]
+
+  smtp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: smtp
+        APP_PATH: smtp
+    ports:
+      - "3010:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${SMTP_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3010
+      - APP_IFRAME_BASE_URL=http://localhost:3010
+      - PORT=3000
+    networks: [saleor-apps]
+
+  stripe:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        APP_NAME: stripe
+        APP_PATH: stripe
+    ports:
+      - "3011:3000"
+    environment:
+      - NODE_ENV=production
+      - APL=file
+      - SECRET_KEY=${STRIPE_SECRET_KEY:-change-me}
+      - ALLOWED_DOMAIN_PATTERN=${ALLOWED_DOMAIN_PATTERN:-.*}
+      - APP_API_BASE_URL=http://localhost:3011
+      - APP_IFRAME_BASE_URL=http://localhost:3011
+      - PORT=3000
+    networks: [saleor-apps]
+
+networks:
+  saleor-apps:
+    driver: bridge
+
+volumes:
+  avatax-dynamodb-data:
+  segment-dynamodb-data:
