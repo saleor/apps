@@ -18,6 +18,7 @@ import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { updateExemptionStatusPublicMetadata } from "@/modules/app/exemption-status-public-metadata-updater";
+import { reportAvataxProblemFromError } from "@/modules/app-problems/avatax-problem-reporter";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
@@ -368,6 +369,15 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
+          after(() => {
+            const client = createInstrumentedGraphqlClient({
+              saleorApiUrl: ctx.authData.saleorApiUrl,
+              token: ctx.authData.token,
+            });
+
+            reportAvataxProblemFromError(client, error, payload.version);
+          });
+
           span.setStatus({
             code: SpanStatusCode.ERROR,
             message: "Failed to calculate taxes: error from AvaTax API",
@@ -477,6 +487,15 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
+
+        after(() => {
+          const client = createInstrumentedGraphqlClient({
+            saleorApiUrl: ctx.authData.saleorApiUrl,
+            token: ctx.authData.token,
+          });
+
+          reportAvataxProblemFromError(client, error, payload.version);
+        });
 
         span.setStatus({
           code: SpanStatusCode.ERROR,

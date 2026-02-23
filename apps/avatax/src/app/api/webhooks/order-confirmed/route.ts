@@ -16,6 +16,7 @@ import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { OrderMetadataManager } from "@/modules/app/order-metadata-manager";
+import { reportAvataxProblemFromError } from "@/modules/app-problems/avatax-problem-reporter";
 import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
 import { createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter-factory";
@@ -407,6 +408,15 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
 
+              after(() => {
+                const client = createInstrumentedGraphqlClient({
+                  saleorApiUrl: authData.saleorApiUrl,
+                  token: authData.token,
+                });
+
+                reportAvataxProblemFromError(client, error, payload.version);
+              });
+
               span.setStatus({
                 code: SpanStatusCode.ERROR,
                 message: "Failed to commit AvaTax transaction: system error",
@@ -434,6 +444,15 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
+          after(() => {
+            const client = createInstrumentedGraphqlClient({
+              saleorApiUrl: authData.saleorApiUrl,
+              token: authData.token,
+            });
+
+            reportAvataxProblemFromError(client, error, payload.version);
+          });
+
           span.setStatus({
             code: SpanStatusCode.ERROR,
             message: "Failed to commit AvaTax transaction: unhandled error",
@@ -453,6 +472,15 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
+
+        after(() => {
+          const client = createInstrumentedGraphqlClient({
+            saleorApiUrl: authData.saleorApiUrl,
+            token: authData.token,
+          });
+
+          reportAvataxProblemFromError(client, error, payload.version);
+        });
 
         span.setStatus({
           code: SpanStatusCode.ERROR,

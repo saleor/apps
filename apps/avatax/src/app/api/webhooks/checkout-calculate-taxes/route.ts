@@ -17,6 +17,7 @@ import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { updateExemptionStatusPublicMetadata } from "@/modules/app/exemption-status-public-metadata-updater";
+import { reportAvataxProblemFromError } from "@/modules/app-problems/avatax-problem-reporter";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
@@ -190,6 +191,15 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
               logger.warn("Error calculating taxes", { error });
               span.recordException(error);
 
+              after(() => {
+                const client = createInstrumentedGraphqlClient({
+                  saleorApiUrl: authData.saleorApiUrl,
+                  token: authData.token,
+                });
+
+                reportAvataxProblemFromError(client, error.cause, payload.version);
+              });
+
               switch (error.constructor) {
                 case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
                   span.setStatus({
@@ -275,6 +285,15 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
         }
 
         captureException(error);
+
+        after(() => {
+          const client = createInstrumentedGraphqlClient({
+            saleorApiUrl: ctx.authData.saleorApiUrl,
+            token: ctx.authData.token,
+          });
+
+          reportAvataxProblemFromError(client, error, ctx.payload.version);
+        });
 
         span.setStatus({
           code: SpanStatusCode.ERROR,

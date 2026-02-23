@@ -14,6 +14,7 @@ import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
+import { reportAvataxProblemFromError } from "@/modules/app-problems/avatax-problem-reporter";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
 import { createAvaTaxOrderCancelledAdapterFromConfig } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter-factory";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
@@ -322,6 +323,10 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
+
+        after(() => {
+          reportAvataxProblemFromError(client, e, payload.version);
+        });
 
         span.setStatus({
           code: SpanStatusCode.ERROR,
