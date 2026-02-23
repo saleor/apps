@@ -67,6 +67,12 @@ export type Scalars = {
    * Should be used in places where value must be nonnegative (0 or greater).
    */
   PositiveDecimal: { input: number; output: number; }
+  /**
+   * Positive Integer scalar implementation.
+   *
+   * Should be used in places where value must be positive (greater than 0).
+   */
+  PositiveInt: { input: number; output: number; }
   UUID: { input: string; output: string; }
   /** Variables of this type must be set to null in mutations. They will be replaced with a filename from a following multipart part containing a binary file. See: https://github.com/jaydenseric/graphql-multipart-request-spec. */
   Upload: { input: unknown; output: unknown; }
@@ -94,7 +100,7 @@ export type AccountAddressCreate = {
 };
 
 /**
- * Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+ * Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
  *
  * Triggers the following webhook events:
  * - ADDRESS_DELETED (async): An address was deleted.
@@ -593,6 +599,12 @@ export type AddressDeleted = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Filtering options for addresses. */
+export type AddressFilterInput = {
+  readonly country?: InputMaybe<CountryCodeEnumFilterInput>;
+  readonly phoneNumber?: InputMaybe<StringFilterInput>;
+};
+
 export type AddressInput = {
   /** City. */
   readonly city?: InputMaybe<Scalars['String']['input']>;
@@ -863,6 +875,14 @@ export type App = Node & ObjectWithMetadata & {
   readonly privateMetafield?: Maybe<Scalars['String']['output']>;
   /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
+  /**
+   * List of problems associated with this app.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_APP, MANAGE_APPS.
+   */
+  readonly problems?: Maybe<ReadonlyArray<AppProblem>>;
   /** Support page for the app. */
   readonly supportUrl?: Maybe<Scalars['String']['output']>;
   /**
@@ -905,6 +925,12 @@ export type AppPrivateMetafieldArgs = {
 /** Represents app data. */
 export type AppPrivateMetafieldsArgs = {
   keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+
+/** Represents app data. */
+export type AppProblemsArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 /**
@@ -1002,7 +1028,7 @@ export type AppDelete = {
 };
 
 /**
- * Delete failed installation.
+ * Deletes failed installation.
  *
  * Requires one of the following permissions: MANAGE_APPS.
  */
@@ -1065,12 +1091,43 @@ export type AppExtension = Node & {
   readonly id: Scalars['ID']['output'];
   /** Label of the extension to show in the dashboard. */
   readonly label: Scalars['String']['output'];
-  /** Place where given extension will be mounted. */
+  /**
+   * Place where given extension will be mounted.
+   * @deprecated Use `mountName` instead.
+   */
   readonly mount: AppExtensionMountEnum;
+  /**
+   * Name of the extension mount point in the dashboard. Replaces `mount`
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly mountName: Scalars['String']['output'];
+  /**
+   * App extension options.
+   *
+   * Added in Saleor 3.22.
+   * @deprecated Use `settings` field instead.
+   */
+  readonly options?: Maybe<AppExtensionPossibleOptions>;
   /** List of the app extension's permissions. */
   readonly permissions: ReadonlyArray<Permission>;
-  /** Type of way how app extension will be opened. */
+  /**
+   * App extension settings. Replaces `options` field.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly settings: Scalars['JSON']['output'];
+  /**
+   * Type of way how app extension will be opened.
+   * @deprecated Use `targetName` instead.
+   */
   readonly target: AppExtensionTargetEnum;
+  /**
+   * Name of the extension target in the dashboard. Replaces `target`
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly targetName: Scalars['String']['output'];
   /** URL of a view where extension's iframe is placed. */
   readonly url: Scalars['String']['output'];
 };
@@ -1091,15 +1148,57 @@ export type AppExtensionCountableEdge = {
 };
 
 export type AppExtensionFilterInput = {
+  /**
+   * DEPRECATED: Use `mountName` instead.
+   * @deprecated Field no longer supported
+   */
   readonly mount?: InputMaybe<ReadonlyArray<AppExtensionMountEnum>>;
+  /**
+   * Plain-text mount name (case insensitive)
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly mountName?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+  /**
+   * DEPRECATED: Use `targetName` instead.
+   * @deprecated Field no longer supported
+   */
   readonly target?: InputMaybe<AppExtensionTargetEnum>;
+  /**
+   * Plain-text target name (case insensitive)
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly targetName?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** All places where app extension can be mounted. */
 export type AppExtensionMountEnum =
+  | 'CATEGORY_DETAILS_MORE_ACTIONS'
+  | 'CATEGORY_OVERVIEW_CREATE'
+  | 'CATEGORY_OVERVIEW_MORE_ACTIONS'
+  | 'COLLECTION_DETAILS_MORE_ACTIONS'
+  | 'COLLECTION_DETAILS_WIDGETS'
+  | 'COLLECTION_OVERVIEW_CREATE'
+  | 'COLLECTION_OVERVIEW_MORE_ACTIONS'
   | 'CUSTOMER_DETAILS_MORE_ACTIONS'
+  | 'CUSTOMER_DETAILS_WIDGETS'
   | 'CUSTOMER_OVERVIEW_CREATE'
   | 'CUSTOMER_OVERVIEW_MORE_ACTIONS'
+  | 'DISCOUNT_DETAILS_MORE_ACTIONS'
+  | 'DISCOUNT_OVERVIEW_CREATE'
+  | 'DISCOUNT_OVERVIEW_MORE_ACTIONS'
+  | 'DRAFT_ORDER_DETAILS_MORE_ACTIONS'
+  | 'DRAFT_ORDER_DETAILS_WIDGETS'
+  | 'DRAFT_ORDER_OVERVIEW_CREATE'
+  | 'DRAFT_ORDER_OVERVIEW_MORE_ACTIONS'
+  | 'GIFT_CARD_DETAILS_MORE_ACTIONS'
+  | 'GIFT_CARD_DETAILS_WIDGETS'
+  | 'GIFT_CARD_OVERVIEW_CREATE'
+  | 'GIFT_CARD_OVERVIEW_MORE_ACTIONS'
+  | 'MENU_DETAILS_MORE_ACTIONS'
+  | 'MENU_OVERVIEW_CREATE'
+  | 'MENU_OVERVIEW_MORE_ACTIONS'
   | 'NAVIGATION_CATALOG'
   | 'NAVIGATION_CUSTOMERS'
   | 'NAVIGATION_DISCOUNTS'
@@ -1107,11 +1206,44 @@ export type AppExtensionMountEnum =
   | 'NAVIGATION_PAGES'
   | 'NAVIGATION_TRANSLATIONS'
   | 'ORDER_DETAILS_MORE_ACTIONS'
+  | 'ORDER_DETAILS_WIDGETS'
   | 'ORDER_OVERVIEW_CREATE'
   | 'ORDER_OVERVIEW_MORE_ACTIONS'
+  | 'PAGE_DETAILS_MORE_ACTIONS'
+  | 'PAGE_OVERVIEW_CREATE'
+  | 'PAGE_OVERVIEW_MORE_ACTIONS'
+  | 'PAGE_TYPE_DETAILS_MORE_ACTIONS'
+  | 'PAGE_TYPE_OVERVIEW_CREATE'
+  | 'PAGE_TYPE_OVERVIEW_MORE_ACTIONS'
   | 'PRODUCT_DETAILS_MORE_ACTIONS'
+  | 'PRODUCT_DETAILS_WIDGETS'
   | 'PRODUCT_OVERVIEW_CREATE'
-  | 'PRODUCT_OVERVIEW_MORE_ACTIONS';
+  | 'PRODUCT_OVERVIEW_MORE_ACTIONS'
+  | 'TRANSLATIONS_MORE_ACTIONS'
+  | 'VOUCHER_DETAILS_MORE_ACTIONS'
+  | 'VOUCHER_DETAILS_WIDGETS'
+  | 'VOUCHER_OVERVIEW_CREATE'
+  | 'VOUCHER_OVERVIEW_MORE_ACTIONS';
+
+/** Represents the options for an app extension. */
+export type AppExtensionOptionsNewTab = {
+  /**
+   * Options controlling behavior of the NEW_TAB extension target
+   * @deprecated Use `settings` field directly.
+   */
+  readonly newTabTarget?: Maybe<NewTabTargetOptions>;
+};
+
+/** Represents the options for an app extension. */
+export type AppExtensionOptionsWidget = {
+  /**
+   * Options for displaying a Widget
+   * @deprecated Use `settings` field directly.
+   */
+  readonly widgetTarget?: Maybe<WidgetTargetOptions>;
+};
+
+export type AppExtensionPossibleOptions = AppExtensionOptionsNewTab | AppExtensionOptionsWidget;
 
 /**
  * All available ways of opening an app extension.
@@ -1121,7 +1253,9 @@ export type AppExtensionMountEnum =
  */
 export type AppExtensionTargetEnum =
   | 'APP_PAGE'
-  | 'POPUP';
+  | 'NEW_TAB'
+  | 'POPUP'
+  | 'WIDGET';
 
 /**
  * Fetch and validate manifest.
@@ -1230,12 +1364,36 @@ export type AppManifestBrandLogoDefaultArgs = {
 export type AppManifestExtension = {
   /** Label of the extension to show in the dashboard. */
   readonly label: Scalars['String']['output'];
-  /** Place where given extension will be mounted. */
+  /**
+   * Place where given extension will be mounted.
+   * @deprecated Use `mountName` instead.
+   */
   readonly mount: AppExtensionMountEnum;
+  /**
+   * Name of the extension mount point in the dashboard. Replaces `mount`
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly mountName: Scalars['String']['output'];
   /** List of the app extension's permissions. */
   readonly permissions: ReadonlyArray<Permission>;
-  /** Type of way how app extension will be opened. */
+  /**
+   * JSON object with settings for this extension.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly settings: Scalars['JSON']['output'];
+  /**
+   * Type of way how app extension will be opened.
+   * @deprecated Use `targetName` instead.
+   */
   readonly target: AppExtensionTargetEnum;
+  /**
+   * Name of the extension target in the dashboard. Replaces `target`
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly targetName: Scalars['String']['output'];
   /** URL of a view where extension's iframe is placed. */
   readonly url: Scalars['String']['output'];
 };
@@ -1259,6 +1417,196 @@ export type AppManifestWebhook = {
   /** The url to receive the payload. */
   readonly targetUrl: Scalars['String']['output'];
 };
+
+/**
+ * Represents a problem associated with an app.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AppProblem = Node & {
+  /**
+   * Number of occurrences.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly count: Scalars['Int']['output'];
+  /**
+   * The date and time when the problem was created.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly createdAt: Scalars['DateTime']['output'];
+  /**
+   * Dismissal information. Null if the problem has not been dismissed.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_APP, MANAGE_APPS.
+   */
+  readonly dismissed?: Maybe<AppProblemDismissed>;
+  /**
+   * The ID of the app problem.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly id: Scalars['ID']['output'];
+  /**
+   * Whether the problem has reached critical threshold.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly isCritical: Scalars['Boolean']['output'];
+  /**
+   * Key identifying the type of problem.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly key: Scalars['String']['output'];
+  /**
+   * The problem message.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly message: Scalars['String']['output'];
+  /**
+   * The date and time when the problem was last updated.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly updatedAt: Scalars['DateTime']['output'];
+};
+
+/**
+ * Add a problem to the calling app.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: AUTHENTICATED_APP.
+ */
+export type AppProblemCreate = {
+  /** The created or updated app problem. */
+  readonly appProblem?: Maybe<AppProblem>;
+  readonly errors: ReadonlyArray<AppProblemCreateError>;
+};
+
+export type AppProblemCreateError = {
+  /** The error code. */
+  readonly code: AppProblemCreateErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type AppProblemCreateErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND'
+  | 'REQUIRED';
+
+export type AppProblemCreateInput = {
+  /** Time window in minutes for aggregating problems with the same key. Defaults to 60. If 0, a new problem is always created. */
+  readonly aggregationPeriod?: InputMaybe<Scalars['Minute']['input']>;
+  /** If set, the problem becomes critical when count reaches this value. If sent again with higher value than already counted, problem can be de-escalated. */
+  readonly criticalThreshold?: InputMaybe<Scalars['PositiveInt']['input']>;
+  /** Key identifying the type of problem. App can add multiple problems under the same key, to merge them together or delete them in batch. Must be between 3 and 128 characters. */
+  readonly key: Scalars['String']['input'];
+  /** The problem message to display. Must be at least 3 characters. Messages longer than 2048 characters will be truncated to 2048 characters with '...' suffix. */
+  readonly message: Scalars['String']['input'];
+};
+
+/**
+ * Dismiss problems for an app.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
+ */
+export type AppProblemDismiss = {
+  readonly errors: ReadonlyArray<AppProblemDismissError>;
+};
+
+/** Input for app callers to dismiss their own problems. */
+export type AppProblemDismissByAppInput = {
+  /** List of problem IDs to dismiss. Cannot be combined with keys. Max 100. */
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** List of problem keys to dismiss. Cannot be combined with ids. Max 100. */
+  readonly keys?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
+/** Input for staff callers to dismiss problems by IDs. */
+export type AppProblemDismissByStaffWithIdsInput = {
+  /** List of problem IDs to dismiss. Max 100. */
+  readonly ids: ReadonlyArray<Scalars['ID']['input']>;
+};
+
+/** Input for staff callers to dismiss problems by keys. */
+export type AppProblemDismissByStaffWithKeysInput = {
+  /** ID of the app whose problems to dismiss. */
+  readonly app: Scalars['ID']['input'];
+  /** List of problem keys to dismiss. Max 100. */
+  readonly keys: ReadonlyArray<Scalars['String']['input']>;
+};
+
+export type AppProblemDismissError = {
+  /** The error code. */
+  readonly code: AppProblemDismissErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type AppProblemDismissErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'NOT_FOUND'
+  | 'OUT_OF_SCOPE_APP'
+  | 'REQUIRED';
+
+/** Input for dismissing app problems. Only one can be specified. */
+export type AppProblemDismissInput = {
+  /** For app callers only - dismiss own problems. */
+  readonly byApp?: InputMaybe<AppProblemDismissByAppInput>;
+  /** For staff callers - dismiss problems by IDs. */
+  readonly byStaffWithIds?: InputMaybe<AppProblemDismissByStaffWithIdsInput>;
+  /** For staff callers - dismiss problems by keys for specified app. */
+  readonly byStaffWithKeys?: InputMaybe<AppProblemDismissByStaffWithKeysInput>;
+};
+
+/**
+ * Dismissal information for an app problem.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AppProblemDismissed = {
+  /**
+   * Whether the problem was dismissed by an App or a User.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly by: AppProblemDismissedByEnum;
+  /**
+   * The user who dismissed this problem. Null if dismissed by an app or the user was deleted.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_STAFF.
+   */
+  readonly user?: Maybe<User>;
+  /**
+   * Email of the user who dismissed this problem. Preserved even if the user is deleted.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
+   */
+  readonly userEmail?: Maybe<Scalars['String']['output']>;
+};
+
+export type AppProblemDismissedByEnum =
+  | 'APP'
+  | 'USER';
 
 /**
  * Re-enable sync webhooks for provided app. Can be used to manually re-enable sync webhooks for the app before the cooldown period ends.
@@ -1428,6 +1776,419 @@ export type AssignNavigation = {
   readonly menuErrors: ReadonlyArray<MenuError>;
 };
 
+/**
+ * Represents an attribute assigned to an object.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedAttribute = {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+};
+
+export type AssignedAttributeReferenceInput = {
+  /** Returns objects with a reference pointing to a category identified by the given slug. */
+  readonly categorySlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a collection identified by the given slug. */
+  readonly collectionSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a page identified by the given slug. */
+  readonly pageSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a product identified by the given slug. */
+  readonly productSlugs?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to a product variant identified by the given sku. */
+  readonly productVariantSkus?: InputMaybe<ContainsFilterInput>;
+  /** Returns objects with a reference pointing to an object identified by the given ID. */
+  readonly referencedIds?: InputMaybe<ContainsFilterInput>;
+};
+
+export type AssignedAttributeValueInput = {
+  /** Filter by boolean value for attributes of boolean type. */
+  readonly boolean?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by date value for attributes of date type. */
+  readonly date?: InputMaybe<DateRangeInput>;
+  /** Filter by date time value for attributes of date time type. */
+  readonly dateTime?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by name assigned to AttributeValue. */
+  readonly name?: InputMaybe<StringFilterInput>;
+  /** Filter by numeric value for attributes of numeric type. */
+  readonly numeric?: InputMaybe<DecimalFilterInput>;
+  /** Filter by reference attribute value. */
+  readonly reference?: InputMaybe<AssignedAttributeReferenceInput>;
+  /** Filter by slug assigned to AttributeValue. */
+  readonly slug?: InputMaybe<StringFilterInput>;
+};
+
+export type AssignedAttributeWhereInput = {
+  /** Filter by attribute slug. */
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised. */
+  readonly value?: InputMaybe<AssignedAttributeValueInput>;
+};
+
+/**
+ * Represents a boolean attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedBooleanAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned boolean value. */
+  readonly value?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/**
+ * Represents a single choice value of the attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedChoiceAttributeValue = {
+  /** Name of a value displayed in the interface. */
+  readonly name?: Maybe<Scalars['String']['output']>;
+  /** Internal representation of a value (unique per attribute). */
+  readonly slug?: Maybe<Scalars['String']['output']>;
+  /** Translation of the name. */
+  readonly translation?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents a single choice value of the attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedChoiceAttributeValueTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Represents a date attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedDateAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned date value. */
+  readonly value?: Maybe<Scalars['Date']['output']>;
+};
+
+/**
+ * Represents a date time attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedDateTimeAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned date time value. */
+  readonly value?: Maybe<Scalars['DateTime']['output']>;
+};
+
+/**
+ * Represents file attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedFileAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned file. */
+  readonly value?: Maybe<File>;
+};
+
+/**
+ * Represents multi category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCategoryReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned category references. */
+  readonly value: ReadonlyArray<Category>;
+};
+
+
+/**
+ * Represents multi category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCategoryReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents a multi choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiChoiceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned choice values. */
+  readonly value: ReadonlyArray<AssignedChoiceAttributeValue>;
+};
+
+
+/**
+ * Represents a multi choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiChoiceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCollectionReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned collection references. */
+  readonly value: ReadonlyArray<Collection>;
+};
+
+
+/**
+ * Represents multi collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiCollectionReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiPageReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned page references. */
+  readonly value: ReadonlyArray<Page>;
+};
+
+
+/**
+ * Represents multi page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiPageReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned product references. */
+  readonly value: ReadonlyArray<Product>;
+};
+
+
+/**
+ * Represents multi product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents multi product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductVariantReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** List of assigned product variant references. */
+  readonly value: ReadonlyArray<ProductVariant>;
+};
+
+
+/**
+ * Represents multi product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedMultiProductVariantReferenceAttributeValueArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+/**
+ * Represents a numeric value of an attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedNumericAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned numeric value. */
+  readonly value?: Maybe<Scalars['Float']['output']>;
+};
+
+/**
+ * Represents plain text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedPlainTextAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** Translation of the plain text content in the specified language. */
+  readonly translation?: Maybe<Scalars['String']['output']>;
+  /** The assigned plain text content. */
+  readonly value?: Maybe<Scalars['String']['output']>;
+};
+
+
+/**
+ * Represents plain text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedPlainTextAttributeTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
+/**
+ * Represents single category reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleCategoryReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned category reference. */
+  readonly value?: Maybe<Category>;
+};
+
+/**
+ * Represents a single choice attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleChoiceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned choice value. */
+  readonly value?: Maybe<AssignedChoiceAttributeValue>;
+};
+
+/**
+ * Represents single collection reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleCollectionReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned collection reference. */
+  readonly value?: Maybe<Collection>;
+};
+
+/**
+ * Represents single page reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSinglePageReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned page reference. */
+  readonly value?: Maybe<Page>;
+};
+
+/**
+ * Represents single product reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleProductReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned product reference. */
+  readonly value?: Maybe<Product>;
+};
+
+/**
+ * Represents single product variant reference attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSingleProductVariantReferenceAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned product variant reference. */
+  readonly value?: Maybe<ProductVariant>;
+};
+
+/**
+ * Represents a swatch attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** The assigned swatch value. */
+  readonly value?: Maybe<AssignedSwatchAttributeValue>;
+};
+
+/**
+ * Represents a single swatch value.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedSwatchAttributeValue = {
+  /** File associated with the attribute. */
+  readonly file?: Maybe<File>;
+  /** Hex color code. */
+  readonly hexColor?: Maybe<Scalars['String']['output']>;
+  /** Name of the selected swatch value. */
+  readonly name?: Maybe<Scalars['String']['output']>;
+  /** Slug of the selected swatch value. */
+  readonly slug?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Represents text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedTextAttribute = AssignedAttribute & {
+  /** Attribute assigned to an object. */
+  readonly attribute: Attribute;
+  /** Translation of the rich text content in the specified language. */
+  readonly translation?: Maybe<Scalars['JSON']['output']>;
+  /** The assigned rich text content. */
+  readonly value?: Maybe<Scalars['JSON']['output']>;
+};
+
+
+/**
+ * Represents text attribute.
+ *
+ * Added in Saleor 3.22.
+ */
+export type AssignedTextAttributeTranslationArgs = {
+  languageCode: LanguageCodeEnum;
+};
+
 /** Represents assigned attribute to variant with variant selection attached. */
 export type AssignedVariantAttribute = {
   /** Attribute assigned to variant. */
@@ -1443,7 +2204,7 @@ export type Attribute = Node & ObjectWithMetadata & {
    * @deprecated Field no longer supported
    */
   readonly availableInGrid: Scalars['Boolean']['output'];
-  /** List of attribute's values. */
+  /** A list of predefined attribute choices available for selection. Available only for attributes with predefined choices. */
   readonly choices?: Maybe<AttributeValueCountableConnection>;
   /** The entity type which can be used as a reference. */
   readonly entityType?: Maybe<AttributeEntityTypeEnum>;
@@ -1486,6 +2247,12 @@ export type Attribute = Node & ObjectWithMetadata & {
   readonly productTypes: ProductTypeCountableConnection;
   /** A list of product types that use this attribute as a product variant attribute. */
   readonly productVariantTypes: ProductTypeCountableConnection;
+  /**
+   * The reference types (product or page type) that are used to narrow down the choices of reference objects.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly referenceTypes?: Maybe<ReadonlyArray<ReferenceType>>;
   /** Internal representation of an attribute name. */
   readonly slug?: Maybe<Scalars['String']['output']>;
   /**
@@ -1515,7 +2282,9 @@ export type AttributeChoicesArgs = {
   filter?: InputMaybe<AttributeValueFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<AttributeChoicesSortingInput>;
+  where?: InputMaybe<AttributeValueWhereInput>;
 };
 
 
@@ -1558,6 +2327,12 @@ export type AttributeProductVariantTypesArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+/** Custom attribute of a product. Attributes can be assigned to products and variants at the product type level. */
+export type AttributeReferenceTypesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -1785,6 +2560,14 @@ export type AttributeCreateInput = {
   readonly isVariantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Name of an attribute displayed in the interface. */
   readonly name: Scalars['String']['input'];
+  /**
+   * Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+   *
+   * A maximum of 100 reference types can be specified.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly referenceTypes?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Internal representation of an attribute name. */
   readonly slug?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -1848,6 +2631,8 @@ export type AttributeDeleted = Event & {
 };
 
 export type AttributeEntityTypeEnum =
+  | 'CATEGORY'
+  | 'COLLECTION'
   | 'PAGE'
   | 'PRODUCT'
   | 'PRODUCT_VARIANT';
@@ -1898,17 +2683,34 @@ export type AttributeFilterInput = {
 };
 
 export type AttributeInput = {
-  /** The boolean value of the attribute. */
+  /**
+   * The boolean value of the attribute. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly boolean?: InputMaybe<Scalars['Boolean']['input']>;
-  /** The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used. */
+  /**
+   * The date range that the returned values should be in. In case of date/time attributes, the UTC midnight of the given date is used. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly date?: InputMaybe<DateRangeInput>;
-  /** The date/time range that the returned values should be in. */
+  /**
+   * The date/time range that the returned values should be in. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly dateTime?: InputMaybe<DateTimeRangeInput>;
   /** Internal representation of an attribute name. */
-  readonly slug: Scalars['String']['input'];
-  /** Internal representation of a value (unique per attribute). */
+  readonly slug?: InputMaybe<Scalars['String']['input']>;
+  /** Filter by value of the attribute. Only one value input field is allowed. If provided more than one, the error will be raised. Cannot be combined with deprecated fields of `AttributeInput`. */
+  readonly value?: InputMaybe<AssignedAttributeValueInput>;
+  /**
+   * Slugs identifying the attributeValues associated with the Attribute. When specified, it filters the results to include only records with one of the matching values. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly values?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
-  /** The range that the returned values should be in. */
+  /**
+   * The range that the returned values should be in. Requires `slug` to be provided.
+   * @deprecated Use `value` instead.
+   */
   readonly valuesRange?: InputMaybe<IntRangeInput>;
 };
 
@@ -1923,6 +2725,7 @@ export type AttributeInputTypeEnum =
   | 'PLAIN_TEXT'
   | 'REFERENCE'
   | 'RICH_TEXT'
+  | 'SINGLE_REFERENCE'
   | 'SWATCH';
 
 export type AttributeInputTypeEnumFilterInput = {
@@ -2082,6 +2885,14 @@ export type AttributeUpdateInput = {
   readonly isVariantOnly?: InputMaybe<Scalars['Boolean']['input']>;
   /** Name of an attribute displayed in the interface. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Specifies reference types to narrow down the choices of reference objects. Applicable only for `REFERENCE` and `SINGLE_REFERENCE` attributes with `PRODUCT`, `PRODUCT_VARIANT` and `PAGE` entity types. Accepts `ProductType` IDs for `PRODUCT` and `PRODUCT_VARIANT` entity types, and `PageType` IDs for `PAGE` entity type. If omitted, all objects of the selected entity type are available as attribute values.
+   *
+   * A maximum of 100 reference types can be specified.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly referenceTypes?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** IDs of values to be removed from this attribute. */
   readonly removeValues?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Internal representation of an attribute name. */
@@ -2133,7 +2944,7 @@ export type AttributeValue = Node & {
   readonly name?: Maybe<Scalars['String']['output']>;
   /** Represents the text of the attribute value, plain text without formatting. */
   readonly plainText?: Maybe<Scalars['String']['output']>;
-  /** The ID of the attribute reference. */
+  /** The ID of the referenced object. */
   readonly reference?: Maybe<Scalars['ID']['output']>;
   /**
    * Represents the text of the attribute value, includes formatting.
@@ -2173,7 +2984,7 @@ export type AttributeValueBulkDelete = {
 };
 
 /**
- * Creates/updates translations for attributes values.
+ * Creates/updates translations for attribute values.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  */
@@ -2345,6 +3156,12 @@ export type AttributeValueInput = {
   readonly numeric?: InputMaybe<Scalars['String']['input']>;
   /** Plain text content. */
   readonly plainText?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of the referenced entity for single reference attribute.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reference?: InputMaybe<Scalars['ID']['input']>;
   /** List of entity IDs that will be used as references. */
   readonly references?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Text content in JSON format. */
@@ -2514,6 +3331,17 @@ export type AttributeValueUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Where filtering options for attribute values. */
+export type AttributeValueWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<AttributeValueWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<AttributeValueWhereInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  readonly name?: InputMaybe<StringFilterInput>;
+  readonly slug?: InputMaybe<StringFilterInput>;
+};
+
 /** Where filtering options. */
 export type AttributeWhereInput = {
   /** List of conditions that must be met. */
@@ -2559,6 +3387,12 @@ export type BulkAttributeValueInput = {
   readonly numeric?: InputMaybe<Scalars['String']['input']>;
   /** Plain text content. */
   readonly plainText?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of the referenced entity for single reference attribute.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reference?: InputMaybe<Scalars['ID']['input']>;
   /** List of entity IDs that will be used as references. */
   readonly references?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /** Text content in JSON format. */
@@ -2626,6 +3460,41 @@ export type CardInput = {
   readonly cvc?: InputMaybe<Scalars['String']['input']>;
   /** Information about currency and amount. */
   readonly money: MoneyInput;
+};
+
+/**
+ * Represents a card payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type CardPaymentMethodDetails = PaymentMethodDetails & {
+  /** Card brand. */
+  readonly brand?: Maybe<Scalars['String']['output']>;
+  /** Two-digit number representing the card’s expiration month. */
+  readonly expMonth?: Maybe<Scalars['Int']['output']>;
+  /** Four-digit number representing the card’s expiration year. */
+  readonly expYear?: Maybe<Scalars['Int']['output']>;
+  /** First 4 digits of the card number. */
+  readonly firstDigits?: Maybe<Scalars['String']['output']>;
+  /** Last 4 digits of the card number. */
+  readonly lastDigits?: Maybe<Scalars['String']['output']>;
+  /** Name of the payment method. */
+  readonly name: Scalars['String']['output'];
+};
+
+export type CardPaymentMethodDetailsInput = {
+  /** Brand of the payment method used for the transaction. Max length is 40 characters. */
+  readonly brand?: InputMaybe<Scalars['String']['input']>;
+  /** Expiration month of the card used for the transaction. Value must be between 1 and 12. */
+  readonly expMonth?: InputMaybe<Scalars['Int']['input']>;
+  /** Expiration year of the card used for the transaction. Value must be between 2000 and 9999. */
+  readonly expYear?: InputMaybe<Scalars['Int']['input']>;
+  /** First digits of the card used for the transaction. Max length is 4 characters. */
+  readonly firstDigits?: InputMaybe<Scalars['String']['input']>;
+  /** Last digits of the card used for the transaction. Max length is 4 characters. */
+  readonly lastDigits?: InputMaybe<Scalars['String']['input']>;
+  /** Name of the payment method used for the transaction. Max length is 256 characters. */
+  readonly name: Scalars['String']['input'];
 };
 
 export type CatalogueInput = {
@@ -2775,6 +3644,7 @@ export type CategoryProductsArgs = {
   filter?: InputMaybe<ProductFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductOrder>;
   where?: InputMaybe<ProductWhereInput>;
 };
@@ -3200,7 +4070,7 @@ export type ChannelActivate = {
 };
 
 /**
- * Creates new channel.
+ * Creates a new channel.
  *
  * Requires one of the following permissions: MANAGE_CHANNELS.
  *
@@ -3282,7 +4152,7 @@ export type ChannelDeactivate = {
 };
 
 /**
- * Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
+ * Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
  *
  * Requires one of the following permissions: MANAGE_CHANNELS.
  *
@@ -3713,8 +4583,17 @@ export type CheckoutAuthorizeStatusEnum =
   | 'NONE'
   | 'PARTIAL';
 
+export type CheckoutAutoCompleteInput = {
+  /** Specifies the earliest date on which fully paid checkouts can begin to be automatically completed. Fully paid checkouts dated before this cut-off will not be automatically completed. Must be less than the threshold of the oldest modified checkout eligible for automatic completion. Default is current date time. */
+  readonly cutOffDate?: InputMaybe<Scalars['DateTime']['input']>;
+  /** The time in minutes after which the fully paid checkout will be automatically completed. Default is 30. Set to 0 for immediate completion. Should be less than the threshold for the oldest modified checkout eligible for automatic completion. */
+  readonly delay?: InputMaybe<Scalars['Minute']['input']>;
+  /** Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount. */
+  readonly enabled: Scalars['Boolean']['input'];
+};
+
 /**
- * Update billing address in the existing checkout.
+ * Updates billing address in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -3811,7 +4690,7 @@ export type CheckoutCreate = {
   readonly errors: ReadonlyArray<CheckoutError>;
 };
 
-/** Create new checkout from existing order. */
+/** Creates a new checkout from existing order. */
 export type CheckoutCreateFromOrder = {
   /** Created checkout. */
   readonly checkout?: Maybe<Checkout>;
@@ -4104,7 +4983,7 @@ export type CheckoutFullyPaid = Event & {
 };
 
 /**
- * Update language code in the existing checkout.
+ * Updates language code in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -4354,7 +5233,7 @@ export type CheckoutMetadataUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
-/** Create a new payment for given checkout. */
+/** Creates a new payment for given checkout. */
 export type CheckoutPaymentCreate = {
   /** Related checkout object. */
   readonly checkout?: Maybe<Checkout>;
@@ -4385,6 +5264,18 @@ export type CheckoutRemovePromoCode = {
 /** Represents the channel-specific checkout settings. */
 export type CheckoutSettings = {
   /**
+   * The date time defines the earliest checkout creation date on which fully paid checkouts can begin to be automatically completed.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly automaticCompletionCutOffDate?: Maybe<Scalars['DateTime']['output']>;
+  /**
+   * The time in minutes to wait after a checkout is fully paid before automatically completing it.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly automaticCompletionDelay?: Maybe<Scalars['Minute']['output']>;
+  /**
    * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
    *
    * Added in Saleor 3.20.
@@ -4396,9 +5287,16 @@ export type CheckoutSettings = {
 
 export type CheckoutSettingsInput = {
   /**
-   * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
+   * Settings for automatic completion of fully paid checkouts.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly automaticCompletion?: InputMaybe<CheckoutAutoCompleteInput>;
+  /**
+   * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `authorize_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
    *
    * Added in Saleor 3.20.
+   * @deprecated Use `automatic_completion` instead.
    */
   readonly automaticallyCompleteFullyPaidCheckouts?: InputMaybe<Scalars['Boolean']['input']>;
   /**
@@ -4409,7 +5307,7 @@ export type CheckoutSettingsInput = {
 };
 
 /**
- * Update shipping address in the existing checkout.
+ * Updates shipping address in the existing checkout.
  *
  * Triggers the following webhook events:
  * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -4589,6 +5487,7 @@ export type CollectionProductsArgs = {
   filter?: InputMaybe<ProductFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductOrder>;
   where?: InputMaybe<ProductWhereInput>;
 };
@@ -4933,7 +5832,7 @@ export type CollectionSortField =
    */
   | 'PUBLICATION_DATE'
   /**
-   * Sort collections by publication date.
+   * Sort collections by published at.
    *
    * This option requires a channel filter to work as the values can vary between channels.
    */
@@ -5145,6 +6044,14 @@ export type ConfirmEmailChange = {
   readonly errors: ReadonlyArray<AccountError>;
   /** A user instance with a new email. */
   readonly user?: Maybe<User>;
+};
+
+/** Define the filtering options for fields that can contain multiple values. */
+export type ContainsFilterInput = {
+  /** The field contains all of the specified values. */
+  readonly containsAll?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+  /** The field contains at least one of the specified values. */
+  readonly containsAny?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
 };
 
 /**
@@ -5404,6 +6311,16 @@ export type CountryCode =
   | 'ZA'
   | 'ZM'
   | 'ZW';
+
+/** Filter by country code. */
+export type CountryCodeEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<CountryCode>;
+  /** The value not included in. */
+  readonly notOneOf?: InputMaybe<ReadonlyArray<CountryCode>>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<CountryCode>>;
+};
 
 export type CountryDisplay = {
   /** Country code. */
@@ -5708,6 +6625,34 @@ export type CustomerUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+export type CustomerWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<CustomerWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<CustomerWhereInput>>;
+  /** Filter by addresses data associated with user. */
+  readonly addresses?: InputMaybe<AddressFilterInput>;
+  /** Filter by date joined. */
+  readonly dateJoined?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by email address. */
+  readonly email?: InputMaybe<StringFilterInput>;
+  /** Filter by first name. */
+  readonly firstName?: InputMaybe<StringFilterInput>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by whether the user is active. */
+  readonly isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by last name. */
+  readonly lastName?: InputMaybe<StringFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by number of orders placed by the user. */
+  readonly numberOfOrders?: InputMaybe<IntFilterInput>;
+  /** Filter by date when orders were placed. */
+  readonly placedOrdersAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by last updated date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+};
+
 export type DateRangeInput = {
   /** Start date. */
   readonly gte?: InputMaybe<Scalars['Date']['input']>;
@@ -5908,7 +6853,7 @@ export type DigitalContentInput = {
 };
 
 /**
- * Update digital content.
+ * Updates digital content.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -6301,6 +7246,54 @@ export type DraftOrderUpdated = Event & {
   readonly recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+export type DraftOrderWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<DraftOrderWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<DraftOrderWhereInput>>;
+  /** Filter by authorize status. */
+  readonly authorizeStatus?: InputMaybe<OrderAuthorizeStatusEnumFilterInput>;
+  /** Filter by billing address of the order. */
+  readonly billingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by channel. */
+  readonly channelId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by charge status. */
+  readonly chargeStatus?: InputMaybe<OrderChargeStatusEnumFilterInput>;
+  /** Filter order by created at date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly events?: InputMaybe<ReadonlyArray<OrderEventFilterInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by whether the order uses the click and collect delivery method. */
+  readonly isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly lines?: InputMaybe<ReadonlyArray<LinesFilterInput>>;
+  /** Filter by number of lines in the order. */
+  readonly linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by order number. */
+  readonly number?: InputMaybe<IntFilterInput>;
+  /** Filter by the product type of related order lines. */
+  readonly productTypeId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by shipping address of the order. */
+  readonly shippingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by total gross amount of the order. */
+  readonly totalGross?: InputMaybe<PriceFilterInput>;
+  /** Filter by total net amount of the order. */
+  readonly totalNet?: InputMaybe<PriceFilterInput>;
+  /** Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly transactions?: InputMaybe<ReadonlyArray<TransactionFilterInput>>;
+  /** Filter order by updated at date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by user. */
+  readonly user?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by user email. */
+  readonly userEmail?: InputMaybe<StringFilterInput>;
+  /** Filter by voucher code used in the order. */
+  readonly voucherCode?: InputMaybe<StringFilterInput>;
 };
 
 export type ErrorPolicyEnum =
@@ -6921,6 +7914,16 @@ export type FulfillmentCreated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Filter input for order fulfillments data. */
+export type FulfillmentFilterInput = {
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by fulfillment status. */
+  readonly status?: InputMaybe<FulfillmentStatusEnumFilterInput>;
+  /** Filter by fulfillment warehouse. */
+  readonly warehouse?: InputMaybe<FulfillmentWarehouseFilterInput>;
+};
+
 /** Represents line of the fulfillment. */
 export type FulfillmentLine = Node & {
   /** ID of the fulfillment line. */
@@ -6990,6 +7993,14 @@ export type FulfillmentStatus =
   | 'RETURNED'
   | 'WAITING_FOR_APPROVAL';
 
+/** Filter by fulfillment status. */
+export type FulfillmentStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<FulfillmentStatus>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<FulfillmentStatus>>;
+};
+
 /** Event sent when the tracking number is updated. */
 export type FulfillmentTrackingNumberUpdated = Event & {
   /** The fulfillment the event relates to. */
@@ -7029,6 +8040,16 @@ export type FulfillmentUpdateTrackingInput = {
   readonly notifyCustomer?: InputMaybe<Scalars['Boolean']['input']>;
   /** Fulfillment tracking number. */
   readonly trackingNumber?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Filter input for fulfillment warehouses. */
+export type FulfillmentWarehouseFilterInput = {
+  /** Filter fulfillments by warehouse external reference. */
+  readonly externalReference?: InputMaybe<StringFilterInput>;
+  /** Filter fulfillments by warehouse ID. */
+  readonly id?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter fulfillments by warehouse slug. */
+  readonly slug?: InputMaybe<StringFilterInput>;
 };
 
 /** Payment gateway client configuration key and value pair. */
@@ -7221,7 +8242,7 @@ export type GiftCardBulkActivate = {
 };
 
 /**
- * Create gift cards.
+ * Creates gift cards.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7265,7 +8286,7 @@ export type GiftCardBulkDeactivate = {
 };
 
 /**
- * Delete gift cards.
+ * Deletes gift cards.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7388,7 +8409,7 @@ export type GiftCardDeactivate = {
 };
 
 /**
- * Delete gift card.
+ * Deletes gift card.
  *
  * Requires one of the following permissions: MANAGE_GIFT_CARD.
  *
@@ -7795,6 +8816,10 @@ export type GroupCountableEdge = {
   readonly node: Group;
 };
 
+export type HttpMethod =
+  | 'GET'
+  | 'POST';
+
 /** Thumbnail formats for icon images. */
 export type IconThumbnailFormatEnum =
   | 'ORIGINAL'
@@ -7806,6 +8831,16 @@ export type Image = {
   readonly alt?: Maybe<Scalars['String']['output']>;
   /** The URL of the image. */
   readonly url: Scalars['String']['output'];
+};
+
+/** Define the filtering options for integer fields. */
+export type IntFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<Scalars['Int']['input']>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<Scalars['Int']['input']>>;
+  /** The value in range. */
+  readonly range?: InputMaybe<IntRangeInput>;
 };
 
 export type IntRangeInput = {
@@ -7962,6 +8997,12 @@ export type InvoiceErrorCode =
   | 'REQUIRED'
   | 'URL_NOT_SET';
 
+/** Filter input for invoices. */
+export type InvoiceFilterInput = {
+  /** Filter invoices by creation date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+};
+
 /**
  * Request an invoice for the order using plugin.
  *
@@ -8073,785 +9114,1565 @@ export type JobStatusEnum =
   | 'PENDING'
   | 'SUCCESS';
 
+/** Language code enum. It contains all the languages supported by Saleor. */
 export type LanguageCodeEnum =
+  /** Afrikaans */
   | 'AF'
+  /** Afrikaans (Namibia) */
   | 'AF_NA'
+  /** Afrikaans (South Africa) */
   | 'AF_ZA'
+  /** Aghem */
   | 'AGQ'
+  /** Aghem (Cameroon) */
   | 'AGQ_CM'
+  /** Akan */
   | 'AK'
+  /** Akan (Ghana) */
   | 'AK_GH'
+  /** Amharic */
   | 'AM'
+  /** Amharic (Ethiopia) */
   | 'AM_ET'
+  /** Arabic */
   | 'AR'
+  /** Arabic (United Arab Emirates) */
   | 'AR_AE'
+  /** Arabic (Bahrain) */
   | 'AR_BH'
+  /** Arabic (Djibouti) */
   | 'AR_DJ'
+  /** Arabic (Algeria) */
   | 'AR_DZ'
+  /** Arabic (Egypt) */
   | 'AR_EG'
+  /** Arabic (Western Sahara) */
   | 'AR_EH'
+  /** Arabic (Eritrea) */
   | 'AR_ER'
+  /** Arabic (Israel) */
   | 'AR_IL'
+  /** Arabic (Iraq) */
   | 'AR_IQ'
+  /** Arabic (Jordan) */
   | 'AR_JO'
+  /** Arabic (Comoros) */
   | 'AR_KM'
+  /** Arabic (Kuwait) */
   | 'AR_KW'
+  /** Arabic (Lebanon) */
   | 'AR_LB'
+  /** Arabic (Libya) */
   | 'AR_LY'
+  /** Arabic (Morocco) */
   | 'AR_MA'
+  /** Arabic (Mauritania) */
   | 'AR_MR'
+  /** Arabic (Oman) */
   | 'AR_OM'
+  /** Arabic (Palestinian Territories) */
   | 'AR_PS'
+  /** Arabic (Qatar) */
   | 'AR_QA'
+  /** Arabic (Saudi Arabia) */
   | 'AR_SA'
+  /** Arabic (Sudan) */
   | 'AR_SD'
+  /** Arabic (Somalia) */
   | 'AR_SO'
+  /** Arabic (South Sudan) */
   | 'AR_SS'
+  /** Arabic (Syria) */
   | 'AR_SY'
+  /** Arabic (Chad) */
   | 'AR_TD'
+  /** Arabic (Tunisia) */
   | 'AR_TN'
+  /** Arabic (Yemen) */
   | 'AR_YE'
+  /** Assamese */
   | 'AS'
+  /** Asu */
   | 'ASA'
+  /** Asu (Tanzania) */
   | 'ASA_TZ'
+  /** Asturian */
   | 'AST'
+  /** Asturian (Spain) */
   | 'AST_ES'
+  /** Assamese (India) */
   | 'AS_IN'
+  /** Azerbaijani */
   | 'AZ'
+  /** Azerbaijani (Cyrillic) */
   | 'AZ_CYRL'
+  /** Azerbaijani (Cyrillic, Azerbaijan) */
   | 'AZ_CYRL_AZ'
+  /** Azerbaijani (Latin) */
   | 'AZ_LATN'
+  /** Azerbaijani (Latin, Azerbaijan) */
   | 'AZ_LATN_AZ'
+  /** Basaa */
   | 'BAS'
+  /** Basaa (Cameroon) */
   | 'BAS_CM'
+  /** Belarusian */
   | 'BE'
+  /** Bemba */
   | 'BEM'
+  /** Bemba (Zambia) */
   | 'BEM_ZM'
+  /** Bena */
   | 'BEZ'
+  /** Bena (Tanzania) */
   | 'BEZ_TZ'
+  /** Belarusian (Belarus) */
   | 'BE_BY'
+  /** Bulgarian */
   | 'BG'
+  /** Bulgarian (Bulgaria) */
   | 'BG_BG'
+  /** Bambara */
   | 'BM'
+  /** Bambara (Mali) */
   | 'BM_ML'
+  /** Bangla */
   | 'BN'
+  /** Bangla (Bangladesh) */
   | 'BN_BD'
+  /** Bangla (India) */
   | 'BN_IN'
+  /** Tibetan */
   | 'BO'
+  /** Tibetan (China) */
   | 'BO_CN'
+  /** Tibetan (India) */
   | 'BO_IN'
+  /** Breton */
   | 'BR'
+  /** Bodo */
   | 'BRX'
+  /** Bodo (India) */
   | 'BRX_IN'
+  /** Breton (France) */
   | 'BR_FR'
+  /** Bosnian */
   | 'BS'
+  /** Bosnian (Cyrillic) */
   | 'BS_CYRL'
+  /** Bosnian (Cyrillic, Bosnia & Herzegovina) */
   | 'BS_CYRL_BA'
+  /** Bosnian (Latin) */
   | 'BS_LATN'
+  /** Bosnian (Latin, Bosnia & Herzegovina) */
   | 'BS_LATN_BA'
+  /** Catalan */
   | 'CA'
+  /** Catalan (Andorra) */
   | 'CA_AD'
+  /** Catalan (Spain) */
   | 'CA_ES'
+  /** Catalan (Spain, Valencian) */
   | 'CA_ES_VALENCIA'
+  /** Catalan (France) */
   | 'CA_FR'
+  /** Catalan (Italy) */
   | 'CA_IT'
+  /** Chakma */
   | 'CCP'
+  /** Chakma (Bangladesh) */
   | 'CCP_BD'
+  /** Chakma (India) */
   | 'CCP_IN'
+  /** Chechen */
   | 'CE'
+  /** Cebuano */
   | 'CEB'
+  /** Cebuano (Philippines) */
   | 'CEB_PH'
+  /** Chechen (Russia) */
   | 'CE_RU'
+  /** Chiga */
   | 'CGG'
+  /** Chiga (Uganda) */
   | 'CGG_UG'
+  /** Cherokee */
   | 'CHR'
+  /** Cherokee (United States) */
   | 'CHR_US'
+  /** Central Kurdish */
   | 'CKB'
+  /** Central Kurdish (Iraq) */
   | 'CKB_IQ'
+  /** Central Kurdish (Iran) */
   | 'CKB_IR'
+  /** Czech */
   | 'CS'
+  /** Czech (Czechia) */
   | 'CS_CZ'
+  /** Church Slavic */
   | 'CU'
+  /** Church Slavic (Russia) */
   | 'CU_RU'
+  /** Welsh */
   | 'CY'
+  /** Welsh (United Kingdom) */
   | 'CY_GB'
+  /** Danish */
   | 'DA'
+  /** Taita */
   | 'DAV'
+  /** Taita (Kenya) */
   | 'DAV_KE'
+  /** Danish (Denmark) */
   | 'DA_DK'
+  /** Danish (Greenland) */
   | 'DA_GL'
+  /** German */
   | 'DE'
+  /** German (Austria) */
   | 'DE_AT'
+  /** German (Belgium) */
   | 'DE_BE'
+  /** German (Switzerland) */
   | 'DE_CH'
+  /** German (Germany) */
   | 'DE_DE'
+  /** German (Italy) */
   | 'DE_IT'
+  /** German (Liechtenstein) */
   | 'DE_LI'
+  /** German (Luxembourg) */
   | 'DE_LU'
+  /** Zarma */
   | 'DJE'
+  /** Zarma (Niger) */
   | 'DJE_NE'
+  /** Lower Sorbian */
   | 'DSB'
+  /** Lower Sorbian (Germany) */
   | 'DSB_DE'
+  /** Duala */
   | 'DUA'
+  /** Duala (Cameroon) */
   | 'DUA_CM'
+  /** Jola-Fonyi */
   | 'DYO'
+  /** Jola-Fonyi (Senegal) */
   | 'DYO_SN'
+  /** Dzongkha */
   | 'DZ'
+  /** Dzongkha (Bhutan) */
   | 'DZ_BT'
+  /** Embu */
   | 'EBU'
+  /** Embu (Kenya) */
   | 'EBU_KE'
+  /** Ewe */
   | 'EE'
+  /** Ewe (Ghana) */
   | 'EE_GH'
+  /** Ewe (Togo) */
   | 'EE_TG'
+  /** Greek */
   | 'EL'
+  /** Greek (Cyprus) */
   | 'EL_CY'
+  /** Greek (Greece) */
   | 'EL_GR'
+  /** English */
   | 'EN'
+  /** English (United Arab Emirates) */
   | 'EN_AE'
+  /** English (Antigua & Barbuda) */
   | 'EN_AG'
+  /** English (Anguilla) */
   | 'EN_AI'
+  /** English (American Samoa) */
   | 'EN_AS'
+  /** English (Austria) */
   | 'EN_AT'
+  /** English (Australia) */
   | 'EN_AU'
+  /** English (Barbados) */
   | 'EN_BB'
+  /** English (Belgium) */
   | 'EN_BE'
+  /** English (Burundi) */
   | 'EN_BI'
+  /** English (Bermuda) */
   | 'EN_BM'
+  /** English (Bahamas) */
   | 'EN_BS'
+  /** English (Botswana) */
   | 'EN_BW'
+  /** English (Belize) */
   | 'EN_BZ'
+  /** English (Canada) */
   | 'EN_CA'
+  /** English (Cocos (Keeling) Islands) */
   | 'EN_CC'
+  /** English (Switzerland) */
   | 'EN_CH'
+  /** English (Cook Islands) */
   | 'EN_CK'
+  /** English (Cameroon) */
   | 'EN_CM'
+  /** English (Christmas Island) */
   | 'EN_CX'
+  /** English (Cyprus) */
   | 'EN_CY'
+  /** English (Germany) */
   | 'EN_DE'
+  /** English (Diego Garcia) */
   | 'EN_DG'
+  /** English (Denmark) */
   | 'EN_DK'
+  /** English (Dominica) */
   | 'EN_DM'
+  /** English (Eritrea) */
   | 'EN_ER'
+  /** English (Finland) */
   | 'EN_FI'
+  /** English (Fiji) */
   | 'EN_FJ'
+  /** English (Falkland Islands) */
   | 'EN_FK'
+  /** English (Micronesia) */
   | 'EN_FM'
+  /** English (United Kingdom) */
   | 'EN_GB'
+  /** English (Grenada) */
   | 'EN_GD'
+  /** English (Guernsey) */
   | 'EN_GG'
+  /** English (Ghana) */
   | 'EN_GH'
+  /** English (Gibraltar) */
   | 'EN_GI'
+  /** English (Gambia) */
   | 'EN_GM'
+  /** English (Guam) */
   | 'EN_GU'
+  /** English (Guyana) */
   | 'EN_GY'
+  /** English (Hong Kong SAR China) */
   | 'EN_HK'
+  /** English (Ireland) */
   | 'EN_IE'
+  /** English (Israel) */
   | 'EN_IL'
+  /** English (Isle of Man) */
   | 'EN_IM'
+  /** English (India) */
   | 'EN_IN'
+  /** English (British Indian Ocean Territory) */
   | 'EN_IO'
+  /** English (Jersey) */
   | 'EN_JE'
+  /** English (Jamaica) */
   | 'EN_JM'
+  /** English (Kenya) */
   | 'EN_KE'
+  /** English (Kiribati) */
   | 'EN_KI'
+  /** English (St. Kitts & Nevis) */
   | 'EN_KN'
+  /** English (Cayman Islands) */
   | 'EN_KY'
+  /** English (St. Lucia) */
   | 'EN_LC'
+  /** English (Liberia) */
   | 'EN_LR'
+  /** English (Lesotho) */
   | 'EN_LS'
+  /** English (Madagascar) */
   | 'EN_MG'
+  /** English (Marshall Islands) */
   | 'EN_MH'
+  /** English (Macao SAR China) */
   | 'EN_MO'
+  /** English (Northern Mariana Islands) */
   | 'EN_MP'
+  /** English (Montserrat) */
   | 'EN_MS'
+  /** English (Malta) */
   | 'EN_MT'
+  /** English (Mauritius) */
   | 'EN_MU'
+  /** English (Malawi) */
   | 'EN_MW'
+  /** English (Malaysia) */
   | 'EN_MY'
+  /** English (Namibia) */
   | 'EN_NA'
+  /** English (Norfolk Island) */
   | 'EN_NF'
+  /** English (Nigeria) */
   | 'EN_NG'
+  /** English (Netherlands) */
   | 'EN_NL'
+  /** English (Nauru) */
   | 'EN_NR'
+  /** English (Niue) */
   | 'EN_NU'
+  /** English (New Zealand) */
   | 'EN_NZ'
+  /** English (Papua New Guinea) */
   | 'EN_PG'
+  /** English (Philippines) */
   | 'EN_PH'
+  /** English (Pakistan) */
   | 'EN_PK'
+  /** English (Pitcairn Islands) */
   | 'EN_PN'
+  /** English (Puerto Rico) */
   | 'EN_PR'
+  /** English (Palau) */
   | 'EN_PW'
+  /** English (Rwanda) */
   | 'EN_RW'
+  /** English (Solomon Islands) */
   | 'EN_SB'
+  /** English (Seychelles) */
   | 'EN_SC'
+  /** English (Sudan) */
   | 'EN_SD'
+  /** English (Sweden) */
   | 'EN_SE'
+  /** English (Singapore) */
   | 'EN_SG'
+  /** English (St. Helena) */
   | 'EN_SH'
+  /** English (Slovenia) */
   | 'EN_SI'
+  /** English (Sierra Leone) */
   | 'EN_SL'
+  /** English (South Sudan) */
   | 'EN_SS'
+  /** English (Sint Maarten) */
   | 'EN_SX'
+  /** English (Eswatini) */
   | 'EN_SZ'
+  /** English (Turks & Caicos Islands) */
   | 'EN_TC'
+  /** English (Tokelau) */
   | 'EN_TK'
+  /** English (Tonga) */
   | 'EN_TO'
+  /** English (Trinidad & Tobago) */
   | 'EN_TT'
+  /** English (Tuvalu) */
   | 'EN_TV'
+  /** English (Tanzania) */
   | 'EN_TZ'
+  /** English (Uganda) */
   | 'EN_UG'
+  /** English (U.S. Outlying Islands) */
   | 'EN_UM'
+  /** English (United States) */
   | 'EN_US'
+  /** English (St. Vincent & Grenadines) */
   | 'EN_VC'
+  /** English (British Virgin Islands) */
   | 'EN_VG'
+  /** English (U.S. Virgin Islands) */
   | 'EN_VI'
+  /** English (Vanuatu) */
   | 'EN_VU'
+  /** English (Samoa) */
   | 'EN_WS'
+  /** English (South Africa) */
   | 'EN_ZA'
+  /** English (Zambia) */
   | 'EN_ZM'
+  /** English (Zimbabwe) */
   | 'EN_ZW'
+  /** Esperanto */
   | 'EO'
+  /** Spanish */
   | 'ES'
+  /** Spanish (Argentina) */
   | 'ES_AR'
+  /** Spanish (Bolivia) */
   | 'ES_BO'
+  /** Spanish (Brazil) */
   | 'ES_BR'
+  /** Spanish (Belize) */
   | 'ES_BZ'
+  /** Spanish (Chile) */
   | 'ES_CL'
+  /** Spanish (Colombia) */
   | 'ES_CO'
+  /** Spanish (Costa Rica) */
   | 'ES_CR'
+  /** Spanish (Cuba) */
   | 'ES_CU'
+  /** Spanish (Dominican Republic) */
   | 'ES_DO'
+  /** Spanish (Ceuta & Melilla) */
   | 'ES_EA'
+  /** Spanish (Ecuador) */
   | 'ES_EC'
+  /** Spanish (Spain) */
   | 'ES_ES'
+  /** Spanish (Equatorial Guinea) */
   | 'ES_GQ'
+  /** Spanish (Guatemala) */
   | 'ES_GT'
+  /** Spanish (Honduras) */
   | 'ES_HN'
+  /** Spanish (Canary Islands) */
   | 'ES_IC'
+  /** Spanish (Mexico) */
   | 'ES_MX'
+  /** Spanish (Nicaragua) */
   | 'ES_NI'
+  /** Spanish (Panama) */
   | 'ES_PA'
+  /** Spanish (Peru) */
   | 'ES_PE'
+  /** Spanish (Philippines) */
   | 'ES_PH'
+  /** Spanish (Puerto Rico) */
   | 'ES_PR'
+  /** Spanish (Paraguay) */
   | 'ES_PY'
+  /** Spanish (El Salvador) */
   | 'ES_SV'
+  /** Spanish (United States) */
   | 'ES_US'
+  /** Spanish (Uruguay) */
   | 'ES_UY'
+  /** Spanish (Venezuela) */
   | 'ES_VE'
+  /** Estonian */
   | 'ET'
+  /** Estonian (Estonia) */
   | 'ET_EE'
+  /** Basque */
   | 'EU'
+  /** Basque (Spain) */
   | 'EU_ES'
+  /** Ewondo */
   | 'EWO'
+  /** Ewondo (Cameroon) */
   | 'EWO_CM'
+  /** Persian */
   | 'FA'
+  /** Persian (Afghanistan) */
   | 'FA_AF'
+  /** Persian (Iran) */
   | 'FA_IR'
+  /** Fulah */
   | 'FF'
+  /** Fulah (Adlam) */
   | 'FF_ADLM'
+  /** Fulah (Adlam, Burkina Faso) */
   | 'FF_ADLM_BF'
+  /** Fulah (Adlam, Cameroon) */
   | 'FF_ADLM_CM'
+  /** Fulah (Adlam, Ghana) */
   | 'FF_ADLM_GH'
+  /** Fulah (Adlam, Gambia) */
   | 'FF_ADLM_GM'
+  /** Fulah (Adlam, Guinea) */
   | 'FF_ADLM_GN'
+  /** Fulah (Adlam, Guinea-Bissau) */
   | 'FF_ADLM_GW'
+  /** Fulah (Adlam, Liberia) */
   | 'FF_ADLM_LR'
+  /** Fulah (Adlam, Mauritania) */
   | 'FF_ADLM_MR'
+  /** Fulah (Adlam, Niger) */
   | 'FF_ADLM_NE'
+  /** Fulah (Adlam, Nigeria) */
   | 'FF_ADLM_NG'
+  /** Fulah (Adlam, Sierra Leone) */
   | 'FF_ADLM_SL'
+  /** Fulah (Adlam, Senegal) */
   | 'FF_ADLM_SN'
+  /** Fulah (Latin) */
   | 'FF_LATN'
+  /** Fulah (Latin, Burkina Faso) */
   | 'FF_LATN_BF'
+  /** Fulah (Latin, Cameroon) */
   | 'FF_LATN_CM'
+  /** Fulah (Latin, Ghana) */
   | 'FF_LATN_GH'
+  /** Fulah (Latin, Gambia) */
   | 'FF_LATN_GM'
+  /** Fulah (Latin, Guinea) */
   | 'FF_LATN_GN'
+  /** Fulah (Latin, Guinea-Bissau) */
   | 'FF_LATN_GW'
+  /** Fulah (Latin, Liberia) */
   | 'FF_LATN_LR'
+  /** Fulah (Latin, Mauritania) */
   | 'FF_LATN_MR'
+  /** Fulah (Latin, Niger) */
   | 'FF_LATN_NE'
+  /** Fulah (Latin, Nigeria) */
   | 'FF_LATN_NG'
+  /** Fulah (Latin, Sierra Leone) */
   | 'FF_LATN_SL'
+  /** Fulah (Latin, Senegal) */
   | 'FF_LATN_SN'
+  /** Finnish */
   | 'FI'
+  /** Filipino */
   | 'FIL'
+  /** Filipino (Philippines) */
   | 'FIL_PH'
+  /** Finnish (Finland) */
   | 'FI_FI'
+  /** Faroese */
   | 'FO'
+  /** Faroese (Denmark) */
   | 'FO_DK'
+  /** Faroese (Faroe Islands) */
   | 'FO_FO'
+  /** French */
   | 'FR'
+  /** French (Belgium) */
   | 'FR_BE'
+  /** French (Burkina Faso) */
   | 'FR_BF'
+  /** French (Burundi) */
   | 'FR_BI'
+  /** French (Benin) */
   | 'FR_BJ'
+  /** French (St. Barthélemy) */
   | 'FR_BL'
+  /** French (Canada) */
   | 'FR_CA'
+  /** French (Congo - Kinshasa) */
   | 'FR_CD'
+  /** French (Central African Republic) */
   | 'FR_CF'
+  /** French (Congo - Brazzaville) */
   | 'FR_CG'
+  /** French (Switzerland) */
   | 'FR_CH'
+  /** French (Côte d’Ivoire) */
   | 'FR_CI'
+  /** French (Cameroon) */
   | 'FR_CM'
+  /** French (Djibouti) */
   | 'FR_DJ'
+  /** French (Algeria) */
   | 'FR_DZ'
+  /** French (France) */
   | 'FR_FR'
+  /** French (Gabon) */
   | 'FR_GA'
+  /** French (French Guiana) */
   | 'FR_GF'
+  /** French (Guinea) */
   | 'FR_GN'
+  /** French (Guadeloupe) */
   | 'FR_GP'
+  /** French (Equatorial Guinea) */
   | 'FR_GQ'
+  /** French (Haiti) */
   | 'FR_HT'
+  /** French (Comoros) */
   | 'FR_KM'
+  /** French (Luxembourg) */
   | 'FR_LU'
+  /** French (Morocco) */
   | 'FR_MA'
+  /** French (Monaco) */
   | 'FR_MC'
+  /** French (St. Martin) */
   | 'FR_MF'
+  /** French (Madagascar) */
   | 'FR_MG'
+  /** French (Mali) */
   | 'FR_ML'
+  /** French (Martinique) */
   | 'FR_MQ'
+  /** French (Mauritania) */
   | 'FR_MR'
+  /** French (Mauritius) */
   | 'FR_MU'
+  /** French (New Caledonia) */
   | 'FR_NC'
+  /** French (Niger) */
   | 'FR_NE'
+  /** French (French Polynesia) */
   | 'FR_PF'
+  /** French (St. Pierre & Miquelon) */
   | 'FR_PM'
+  /** French (Réunion) */
   | 'FR_RE'
+  /** French (Rwanda) */
   | 'FR_RW'
+  /** French (Seychelles) */
   | 'FR_SC'
+  /** French (Senegal) */
   | 'FR_SN'
+  /** French (Syria) */
   | 'FR_SY'
+  /** French (Chad) */
   | 'FR_TD'
+  /** French (Togo) */
   | 'FR_TG'
+  /** French (Tunisia) */
   | 'FR_TN'
+  /** French (Vanuatu) */
   | 'FR_VU'
+  /** French (Wallis & Futuna) */
   | 'FR_WF'
+  /** French (Mayotte) */
   | 'FR_YT'
+  /** Friulian */
   | 'FUR'
+  /** Friulian (Italy) */
   | 'FUR_IT'
+  /** Western Frisian */
   | 'FY'
+  /** Western Frisian (Netherlands) */
   | 'FY_NL'
+  /** Irish */
   | 'GA'
+  /** Irish (United Kingdom) */
   | 'GA_GB'
+  /** Irish (Ireland) */
   | 'GA_IE'
+  /** Scottish Gaelic */
   | 'GD'
+  /** Scottish Gaelic (United Kingdom) */
   | 'GD_GB'
+  /** Galician */
   | 'GL'
+  /** Galician (Spain) */
   | 'GL_ES'
+  /** Swiss German */
   | 'GSW'
+  /** Swiss German (Switzerland) */
   | 'GSW_CH'
+  /** Swiss German (France) */
   | 'GSW_FR'
+  /** Swiss German (Liechtenstein) */
   | 'GSW_LI'
+  /** Gujarati */
   | 'GU'
+  /** Gusii */
   | 'GUZ'
+  /** Gusii (Kenya) */
   | 'GUZ_KE'
+  /** Gujarati (India) */
   | 'GU_IN'
+  /** Manx */
   | 'GV'
+  /** Manx (Isle of Man) */
   | 'GV_IM'
+  /** Hausa */
   | 'HA'
+  /** Hawaiian */
   | 'HAW'
+  /** Hawaiian (United States) */
   | 'HAW_US'
+  /** Hausa (Ghana) */
   | 'HA_GH'
+  /** Hausa (Niger) */
   | 'HA_NE'
+  /** Hausa (Nigeria) */
   | 'HA_NG'
+  /** Hebrew */
   | 'HE'
+  /** Hebrew (Israel) */
   | 'HE_IL'
+  /** Hindi */
   | 'HI'
+  /** Hindi (India) */
   | 'HI_IN'
+  /** Croatian */
   | 'HR'
+  /** Croatian (Bosnia & Herzegovina) */
   | 'HR_BA'
+  /** Croatian (Croatia) */
   | 'HR_HR'
+  /** Upper Sorbian */
   | 'HSB'
+  /** Upper Sorbian (Germany) */
   | 'HSB_DE'
+  /** Hungarian */
   | 'HU'
+  /** Hungarian (Hungary) */
   | 'HU_HU'
+  /** Armenian */
   | 'HY'
+  /** Armenian (Armenia) */
   | 'HY_AM'
+  /** Interlingua */
   | 'IA'
+  /** Indonesian */
   | 'ID'
+  /** Indonesian (Indonesia) */
   | 'ID_ID'
+  /** Igbo */
   | 'IG'
+  /** Igbo (Nigeria) */
   | 'IG_NG'
+  /** Sichuan Yi */
   | 'II'
+  /** Sichuan Yi (China) */
   | 'II_CN'
+  /** Icelandic */
   | 'IS'
+  /** Icelandic (Iceland) */
   | 'IS_IS'
+  /** Italian */
   | 'IT'
+  /** Italian (Switzerland) */
   | 'IT_CH'
+  /** Italian (Italy) */
   | 'IT_IT'
+  /** Italian (San Marino) */
   | 'IT_SM'
+  /** Italian (Vatican City) */
   | 'IT_VA'
+  /** Japanese */
   | 'JA'
+  /** Japanese (Japan) */
   | 'JA_JP'
+  /** Ngomba */
   | 'JGO'
+  /** Ngomba (Cameroon) */
   | 'JGO_CM'
+  /** Machame */
   | 'JMC'
+  /** Machame (Tanzania) */
   | 'JMC_TZ'
+  /** Javanese */
   | 'JV'
+  /** Javanese (Indonesia) */
   | 'JV_ID'
+  /** Georgian */
   | 'KA'
+  /** Kabyle */
   | 'KAB'
+  /** Kabyle (Algeria) */
   | 'KAB_DZ'
+  /** Kamba */
   | 'KAM'
+  /** Kamba (Kenya) */
   | 'KAM_KE'
+  /** Georgian (Georgia) */
   | 'KA_GE'
+  /** Makonde */
   | 'KDE'
+  /** Makonde (Tanzania) */
   | 'KDE_TZ'
+  /** Kabuverdianu */
   | 'KEA'
+  /** Kabuverdianu (Cape Verde) */
   | 'KEA_CV'
+  /** Koyra Chiini */
   | 'KHQ'
+  /** Koyra Chiini (Mali) */
   | 'KHQ_ML'
+  /** Kikuyu */
   | 'KI'
+  /** Kikuyu (Kenya) */
   | 'KI_KE'
+  /** Kazakh */
   | 'KK'
+  /** Kako */
   | 'KKJ'
+  /** Kako (Cameroon) */
   | 'KKJ_CM'
+  /** Kazakh (Kazakhstan) */
   | 'KK_KZ'
+  /** Kalaallisut */
   | 'KL'
+  /** Kalenjin */
   | 'KLN'
+  /** Kalenjin (Kenya) */
   | 'KLN_KE'
+  /** Kalaallisut (Greenland) */
   | 'KL_GL'
+  /** Khmer */
   | 'KM'
+  /** Khmer (Cambodia) */
   | 'KM_KH'
+  /** Kannada */
   | 'KN'
+  /** Kannada (India) */
   | 'KN_IN'
+  /** Korean */
   | 'KO'
+  /** Konkani */
   | 'KOK'
+  /** Konkani (India) */
   | 'KOK_IN'
+  /** Korean (North Korea) */
   | 'KO_KP'
+  /** Korean (South Korea) */
   | 'KO_KR'
+  /** Kashmiri */
   | 'KS'
+  /** Shambala */
   | 'KSB'
+  /** Shambala (Tanzania) */
   | 'KSB_TZ'
+  /** Bafia */
   | 'KSF'
+  /** Bafia (Cameroon) */
   | 'KSF_CM'
+  /** Colognian */
   | 'KSH'
+  /** Colognian (Germany) */
   | 'KSH_DE'
+  /** Kashmiri (Arabic) */
   | 'KS_ARAB'
+  /** Kashmiri (Arabic, India) */
   | 'KS_ARAB_IN'
+  /** Kurdish */
   | 'KU'
+  /** Kurdish (Turkey) */
   | 'KU_TR'
+  /** Cornish */
   | 'KW'
+  /** Cornish (United Kingdom) */
   | 'KW_GB'
+  /** Kyrgyz */
   | 'KY'
+  /** Kyrgyz (Kyrgyzstan) */
   | 'KY_KG'
+  /** Langi */
   | 'LAG'
+  /** Langi (Tanzania) */
   | 'LAG_TZ'
+  /** Luxembourgish */
   | 'LB'
+  /** Luxembourgish (Luxembourg) */
   | 'LB_LU'
+  /** Ganda */
   | 'LG'
+  /** Ganda (Uganda) */
   | 'LG_UG'
+  /** Lakota */
   | 'LKT'
+  /** Lakota (United States) */
   | 'LKT_US'
+  /** Lingala */
   | 'LN'
+  /** Lingala (Angola) */
   | 'LN_AO'
+  /** Lingala (Congo - Kinshasa) */
   | 'LN_CD'
+  /** Lingala (Central African Republic) */
   | 'LN_CF'
+  /** Lingala (Congo - Brazzaville) */
   | 'LN_CG'
+  /** Lao */
   | 'LO'
+  /** Lao (Laos) */
   | 'LO_LA'
+  /** Northern Luri */
   | 'LRC'
+  /** Northern Luri (Iraq) */
   | 'LRC_IQ'
+  /** Northern Luri (Iran) */
   | 'LRC_IR'
+  /** Lithuanian */
   | 'LT'
+  /** Lithuanian (Lithuania) */
   | 'LT_LT'
+  /** Luba-Katanga */
   | 'LU'
+  /** Luo */
   | 'LUO'
+  /** Luo (Kenya) */
   | 'LUO_KE'
+  /** Luyia */
   | 'LUY'
+  /** Luyia (Kenya) */
   | 'LUY_KE'
+  /** Luba-Katanga (Congo - Kinshasa) */
   | 'LU_CD'
+  /** Latvian */
   | 'LV'
+  /** Latvian (Latvia) */
   | 'LV_LV'
+  /** Maithili */
   | 'MAI'
+  /** Maithili (India) */
   | 'MAI_IN'
+  /** Masai */
   | 'MAS'
+  /** Masai (Kenya) */
   | 'MAS_KE'
+  /** Masai (Tanzania) */
   | 'MAS_TZ'
+  /** Meru */
   | 'MER'
+  /** Meru (Kenya) */
   | 'MER_KE'
+  /** Morisyen */
   | 'MFE'
+  /** Morisyen (Mauritius) */
   | 'MFE_MU'
+  /** Malagasy */
   | 'MG'
+  /** Makhuwa-Meetto */
   | 'MGH'
+  /** Makhuwa-Meetto (Mozambique) */
   | 'MGH_MZ'
+  /** Metaʼ */
   | 'MGO'
+  /** Metaʼ (Cameroon) */
   | 'MGO_CM'
+  /** Malagasy (Madagascar) */
   | 'MG_MG'
+  /** Maori */
   | 'MI'
+  /** Maori (New Zealand) */
   | 'MI_NZ'
+  /** Macedonian */
   | 'MK'
+  /** Macedonian (North Macedonia) */
   | 'MK_MK'
+  /** Malayalam */
   | 'ML'
+  /** Malayalam (India) */
   | 'ML_IN'
+  /** Mongolian */
   | 'MN'
+  /** Manipuri */
   | 'MNI'
+  /** Manipuri (Bangla) */
   | 'MNI_BENG'
+  /** Manipuri (Bangla, India) */
   | 'MNI_BENG_IN'
+  /** Mongolian (Mongolia) */
   | 'MN_MN'
+  /** Marathi */
   | 'MR'
+  /** Marathi (India) */
   | 'MR_IN'
+  /** Malay */
   | 'MS'
+  /** Malay (Brunei) */
   | 'MS_BN'
+  /** Malay (Indonesia) */
   | 'MS_ID'
+  /** Malay (Malaysia) */
   | 'MS_MY'
+  /** Malay (Singapore) */
   | 'MS_SG'
+  /** Maltese */
   | 'MT'
+  /** Maltese (Malta) */
   | 'MT_MT'
+  /** Mundang */
   | 'MUA'
+  /** Mundang (Cameroon) */
   | 'MUA_CM'
+  /** Burmese */
   | 'MY'
+  /** Burmese (Myanmar (Burma)) */
   | 'MY_MM'
+  /** Mazanderani */
   | 'MZN'
+  /** Mazanderani (Iran) */
   | 'MZN_IR'
+  /** Nama */
   | 'NAQ'
+  /** Nama (Namibia) */
   | 'NAQ_NA'
+  /** Norwegian Bokmål */
   | 'NB'
+  /** Norwegian Bokmål (Norway) */
   | 'NB_NO'
+  /** Norwegian Bokmål (Svalbard & Jan Mayen) */
   | 'NB_SJ'
+  /** North Ndebele */
   | 'ND'
+  /** Low German */
   | 'NDS'
+  /** Low German (Germany) */
   | 'NDS_DE'
+  /** Low German (Netherlands) */
   | 'NDS_NL'
+  /** North Ndebele (Zimbabwe) */
   | 'ND_ZW'
+  /** Nepali */
   | 'NE'
+  /** Nepali (India) */
   | 'NE_IN'
+  /** Nepali (Nepal) */
   | 'NE_NP'
+  /** Dutch */
   | 'NL'
+  /** Dutch (Aruba) */
   | 'NL_AW'
+  /** Dutch (Belgium) */
   | 'NL_BE'
+  /** Dutch (Caribbean Netherlands) */
   | 'NL_BQ'
+  /** Dutch (Curaçao) */
   | 'NL_CW'
+  /** Dutch (Netherlands) */
   | 'NL_NL'
+  /** Dutch (Suriname) */
   | 'NL_SR'
+  /** Dutch (Sint Maarten) */
   | 'NL_SX'
+  /** Kwasio */
   | 'NMG'
+  /** Kwasio (Cameroon) */
   | 'NMG_CM'
+  /** Norwegian Nynorsk */
   | 'NN'
+  /** Ngiemboon */
   | 'NNH'
+  /** Ngiemboon (Cameroon) */
   | 'NNH_CM'
+  /** Norwegian Nynorsk (Norway) */
   | 'NN_NO'
+  /** Nuer */
   | 'NUS'
+  /** Nuer (South Sudan) */
   | 'NUS_SS'
+  /** Nyankole */
   | 'NYN'
+  /** Nyankole (Uganda) */
   | 'NYN_UG'
+  /** Oromo */
   | 'OM'
+  /** Oromo (Ethiopia) */
   | 'OM_ET'
+  /** Oromo (Kenya) */
   | 'OM_KE'
+  /** Odia */
   | 'OR'
+  /** Odia (India) */
   | 'OR_IN'
+  /** Ossetic */
   | 'OS'
+  /** Ossetic (Georgia) */
   | 'OS_GE'
+  /** Ossetic (Russia) */
   | 'OS_RU'
+  /** Punjabi */
   | 'PA'
+  /** Punjabi (Arabic) */
   | 'PA_ARAB'
+  /** Punjabi (Arabic, Pakistan) */
   | 'PA_ARAB_PK'
+  /** Punjabi (Gurmukhi) */
   | 'PA_GURU'
+  /** Punjabi (Gurmukhi, India) */
   | 'PA_GURU_IN'
+  /** Nigerian Pidgin */
   | 'PCM'
+  /** Nigerian Pidgin (Nigeria) */
   | 'PCM_NG'
+  /** Polish */
   | 'PL'
+  /** Polish (Poland) */
   | 'PL_PL'
+  /** Prussian */
   | 'PRG'
+  /** Pashto */
   | 'PS'
+  /** Pashto (Afghanistan) */
   | 'PS_AF'
+  /** Pashto (Pakistan) */
   | 'PS_PK'
+  /** Portuguese */
   | 'PT'
+  /** Portuguese (Angola) */
   | 'PT_AO'
+  /** Portuguese (Brazil) */
   | 'PT_BR'
+  /** Portuguese (Switzerland) */
   | 'PT_CH'
+  /** Portuguese (Cape Verde) */
   | 'PT_CV'
+  /** Portuguese (Equatorial Guinea) */
   | 'PT_GQ'
+  /** Portuguese (Guinea-Bissau) */
   | 'PT_GW'
+  /** Portuguese (Luxembourg) */
   | 'PT_LU'
+  /** Portuguese (Macao SAR China) */
   | 'PT_MO'
+  /** Portuguese (Mozambique) */
   | 'PT_MZ'
+  /** Portuguese (Portugal) */
   | 'PT_PT'
+  /** Portuguese (São Tomé & Príncipe) */
   | 'PT_ST'
+  /** Portuguese (Timor-Leste) */
   | 'PT_TL'
+  /** Quechua */
   | 'QU'
+  /** Quechua (Bolivia) */
   | 'QU_BO'
+  /** Quechua (Ecuador) */
   | 'QU_EC'
+  /** Quechua (Peru) */
   | 'QU_PE'
+  /** Romansh */
   | 'RM'
+  /** Romansh (Switzerland) */
   | 'RM_CH'
+  /** Rundi */
   | 'RN'
+  /** Rundi (Burundi) */
   | 'RN_BI'
+  /** Romanian */
   | 'RO'
+  /** Rombo */
   | 'ROF'
+  /** Rombo (Tanzania) */
   | 'ROF_TZ'
+  /** Romanian (Moldova) */
   | 'RO_MD'
+  /** Romanian (Romania) */
   | 'RO_RO'
+  /** Russian */
   | 'RU'
+  /** Russian (Belarus) */
   | 'RU_BY'
+  /** Russian (Kyrgyzstan) */
   | 'RU_KG'
+  /** Russian (Kazakhstan) */
   | 'RU_KZ'
+  /** Russian (Moldova) */
   | 'RU_MD'
+  /** Russian (Russia) */
   | 'RU_RU'
+  /** Russian (Ukraine) */
   | 'RU_UA'
+  /** Kinyarwanda */
   | 'RW'
+  /** Rwa */
   | 'RWK'
+  /** Rwa (Tanzania) */
   | 'RWK_TZ'
+  /** Kinyarwanda (Rwanda) */
   | 'RW_RW'
+  /** Sakha */
   | 'SAH'
+  /** Sakha (Russia) */
   | 'SAH_RU'
+  /** Samburu */
   | 'SAQ'
+  /** Samburu (Kenya) */
   | 'SAQ_KE'
+  /** Santali */
   | 'SAT'
+  /** Santali (Ol Chiki) */
   | 'SAT_OLCK'
+  /** Santali (Ol Chiki, India) */
   | 'SAT_OLCK_IN'
+  /** Sangu */
   | 'SBP'
+  /** Sangu (Tanzania) */
   | 'SBP_TZ'
+  /** Sindhi */
   | 'SD'
+  /** Sindhi (Arabic) */
   | 'SD_ARAB'
+  /** Sindhi (Arabic, Pakistan) */
   | 'SD_ARAB_PK'
+  /** Sindhi (Devanagari) */
   | 'SD_DEVA'
+  /** Sindhi (Devanagari, India) */
   | 'SD_DEVA_IN'
+  /** Northern Sami */
   | 'SE'
+  /** Sena */
   | 'SEH'
+  /** Sena (Mozambique) */
   | 'SEH_MZ'
+  /** Koyraboro Senni */
   | 'SES'
+  /** Koyraboro Senni (Mali) */
   | 'SES_ML'
+  /** Northern Sami (Finland) */
   | 'SE_FI'
+  /** Northern Sami (Norway) */
   | 'SE_NO'
+  /** Northern Sami (Sweden) */
   | 'SE_SE'
+  /** Sango */
   | 'SG'
+  /** Sango (Central African Republic) */
   | 'SG_CF'
+  /** Tachelhit */
   | 'SHI'
+  /** Tachelhit (Latin) */
   | 'SHI_LATN'
+  /** Tachelhit (Latin, Morocco) */
   | 'SHI_LATN_MA'
+  /** Tachelhit (Tifinagh) */
   | 'SHI_TFNG'
+  /** Tachelhit (Tifinagh, Morocco) */
   | 'SHI_TFNG_MA'
+  /** Sinhala */
   | 'SI'
+  /** Sinhala (Sri Lanka) */
   | 'SI_LK'
+  /** Slovak */
   | 'SK'
+  /** Slovak (Slovakia) */
   | 'SK_SK'
+  /** Slovenian */
   | 'SL'
+  /** Slovenian (Slovenia) */
   | 'SL_SI'
+  /** Inari Sami */
   | 'SMN'
+  /** Inari Sami (Finland) */
   | 'SMN_FI'
+  /** Shona */
   | 'SN'
+  /** Shona (Zimbabwe) */
   | 'SN_ZW'
+  /** Somali */
   | 'SO'
+  /** Somali (Djibouti) */
   | 'SO_DJ'
+  /** Somali (Ethiopia) */
   | 'SO_ET'
+  /** Somali (Kenya) */
   | 'SO_KE'
+  /** Somali (Somalia) */
   | 'SO_SO'
+  /** Albanian */
   | 'SQ'
+  /** Albanian (Albania) */
   | 'SQ_AL'
+  /** Albanian (North Macedonia) */
   | 'SQ_MK'
+  /** Albanian (Kosovo) */
   | 'SQ_XK'
+  /** Serbian */
   | 'SR'
+  /** Serbian (Cyrillic) */
   | 'SR_CYRL'
+  /** Serbian (Cyrillic, Bosnia & Herzegovina) */
   | 'SR_CYRL_BA'
+  /** Serbian (Cyrillic, Montenegro) */
   | 'SR_CYRL_ME'
+  /** Serbian (Cyrillic, Serbia) */
   | 'SR_CYRL_RS'
+  /** Serbian (Cyrillic, Kosovo) */
   | 'SR_CYRL_XK'
+  /** Serbian (Latin) */
   | 'SR_LATN'
+  /** Serbian (Latin, Bosnia & Herzegovina) */
   | 'SR_LATN_BA'
+  /** Serbian (Latin, Montenegro) */
   | 'SR_LATN_ME'
+  /** Serbian (Latin, Serbia) */
   | 'SR_LATN_RS'
+  /** Serbian (Latin, Kosovo) */
   | 'SR_LATN_XK'
+  /** Sundanese */
   | 'SU'
+  /** Sundanese (Latin) */
   | 'SU_LATN'
+  /** Sundanese (Latin, Indonesia) */
   | 'SU_LATN_ID'
+  /** Swedish */
   | 'SV'
+  /** Swedish (Åland Islands) */
   | 'SV_AX'
+  /** Swedish (Finland) */
   | 'SV_FI'
+  /** Swedish (Sweden) */
   | 'SV_SE'
+  /** Swahili */
   | 'SW'
+  /** Swahili (Congo - Kinshasa) */
   | 'SW_CD'
+  /** Swahili (Kenya) */
   | 'SW_KE'
+  /** Swahili (Tanzania) */
   | 'SW_TZ'
+  /** Swahili (Uganda) */
   | 'SW_UG'
+  /** Tamil */
   | 'TA'
+  /** Tamil (India) */
   | 'TA_IN'
+  /** Tamil (Sri Lanka) */
   | 'TA_LK'
+  /** Tamil (Malaysia) */
   | 'TA_MY'
+  /** Tamil (Singapore) */
   | 'TA_SG'
+  /** Telugu */
   | 'TE'
+  /** Teso */
   | 'TEO'
+  /** Teso (Kenya) */
   | 'TEO_KE'
+  /** Teso (Uganda) */
   | 'TEO_UG'
+  /** Telugu (India) */
   | 'TE_IN'
+  /** Tajik */
   | 'TG'
+  /** Tajik (Tajikistan) */
   | 'TG_TJ'
+  /** Thai */
   | 'TH'
+  /** Thai (Thailand) */
   | 'TH_TH'
+  /** Tigrinya */
   | 'TI'
+  /** Tigrinya (Eritrea) */
   | 'TI_ER'
+  /** Tigrinya (Ethiopia) */
   | 'TI_ET'
+  /** Turkmen */
   | 'TK'
+  /** Turkmen (Turkmenistan) */
   | 'TK_TM'
+  /** Tongan */
   | 'TO'
+  /** Tongan (Tonga) */
   | 'TO_TO'
+  /** Turkish */
   | 'TR'
+  /** Turkish (Cyprus) */
   | 'TR_CY'
+  /** Turkish (Turkey) */
   | 'TR_TR'
+  /** Tatar */
   | 'TT'
+  /** Tatar (Russia) */
   | 'TT_RU'
+  /** Tasawaq */
   | 'TWQ'
+  /** Tasawaq (Niger) */
   | 'TWQ_NE'
+  /** Central Atlas Tamazight */
   | 'TZM'
+  /** Central Atlas Tamazight (Morocco) */
   | 'TZM_MA'
+  /** Uyghur */
   | 'UG'
+  /** Uyghur (China) */
   | 'UG_CN'
+  /** Ukrainian */
   | 'UK'
+  /** Ukrainian (Ukraine) */
   | 'UK_UA'
+  /** Urdu */
   | 'UR'
+  /** Urdu (India) */
   | 'UR_IN'
+  /** Urdu (Pakistan) */
   | 'UR_PK'
+  /** Uzbek */
   | 'UZ'
+  /** Uzbek (Arabic) */
   | 'UZ_ARAB'
+  /** Uzbek (Arabic, Afghanistan) */
   | 'UZ_ARAB_AF'
+  /** Uzbek (Cyrillic) */
   | 'UZ_CYRL'
+  /** Uzbek (Cyrillic, Uzbekistan) */
   | 'UZ_CYRL_UZ'
+  /** Uzbek (Latin) */
   | 'UZ_LATN'
+  /** Uzbek (Latin, Uzbekistan) */
   | 'UZ_LATN_UZ'
+  /** Vai */
   | 'VAI'
+  /** Vai (Latin) */
   | 'VAI_LATN'
+  /** Vai (Latin, Liberia) */
   | 'VAI_LATN_LR'
+  /** Vai (Vai) */
   | 'VAI_VAII'
+  /** Vai (Vai, Liberia) */
   | 'VAI_VAII_LR'
+  /** Vietnamese */
   | 'VI'
+  /** Vietnamese (Vietnam) */
   | 'VI_VN'
+  /** Volapük */
   | 'VO'
+  /** Vunjo */
   | 'VUN'
+  /** Vunjo (Tanzania) */
   | 'VUN_TZ'
+  /** Walser */
   | 'WAE'
+  /** Walser (Switzerland) */
   | 'WAE_CH'
+  /** Wolof */
   | 'WO'
+  /** Wolof (Senegal) */
   | 'WO_SN'
+  /** Xhosa */
   | 'XH'
+  /** Xhosa (South Africa) */
   | 'XH_ZA'
+  /** Soga */
   | 'XOG'
+  /** Soga (Uganda) */
   | 'XOG_UG'
+  /** Yangben */
   | 'YAV'
+  /** Yangben (Cameroon) */
   | 'YAV_CM'
+  /** Yiddish */
   | 'YI'
+  /** Yoruba */
   | 'YO'
+  /** Yoruba (Benin) */
   | 'YO_BJ'
+  /** Yoruba (Nigeria) */
   | 'YO_NG'
+  /** Cantonese */
   | 'YUE'
+  /** Cantonese (Simplified) */
   | 'YUE_HANS'
+  /** Cantonese (Simplified, China) */
   | 'YUE_HANS_CN'
+  /** Cantonese (Traditional) */
   | 'YUE_HANT'
+  /** Cantonese (Traditional, Hong Kong SAR China) */
   | 'YUE_HANT_HK'
+  /** Standard Moroccan Tamazight */
   | 'ZGH'
+  /** Standard Moroccan Tamazight (Morocco) */
   | 'ZGH_MA'
+  /** Chinese */
   | 'ZH'
+  /** Chinese (Simplified) */
   | 'ZH_HANS'
+  /** Chinese (Simplified, China) */
   | 'ZH_HANS_CN'
+  /** Chinese (Simplified, Hong Kong SAR China) */
   | 'ZH_HANS_HK'
+  /** Chinese (Simplified, Macao SAR China) */
   | 'ZH_HANS_MO'
+  /** Chinese (Simplified, Singapore) */
   | 'ZH_HANS_SG'
+  /** Chinese (Traditional) */
   | 'ZH_HANT'
+  /** Chinese (Traditional, Hong Kong SAR China) */
   | 'ZH_HANT_HK'
+  /** Chinese (Traditional, Macao SAR China) */
   | 'ZH_HANT_MO'
+  /** Chinese (Traditional, Taiwan) */
   | 'ZH_HANT_TW'
+  /** Zulu */
   | 'ZU'
+  /** Zulu (South Africa) */
   | 'ZU_ZA';
 
 export type LanguageDisplay = {
@@ -8880,6 +10701,12 @@ export type Limits = {
   readonly staffUsers?: Maybe<Scalars['Int']['output']>;
   /** Defines the number of warehouses. */
   readonly warehouses?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Filter input for order lines data. */
+export type LinesFilterInput = {
+  /** Filter by metadata fields of order lines. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
 };
 
 /**
@@ -9633,6 +11460,24 @@ export type MetadataFilter = {
   readonly value?: InputMaybe<Scalars['String']['input']>;
 };
 
+/**
+ * Allows filtering based on metadata key/value pairs.
+ *
+ *         Examples:
+ *         - `{key: "size"}`
+ *           Matches objects where the metadata key "size" exists, regardless of its value.
+ *         - `{key: "color", value: {oneOf: ["blue", "green"]}}`
+ *           Matches objects where the metadata key "color" is set to either "blue" or "green".
+ *         - `{key: "status", value: {eq: "active"}}`
+ *           Matches objects where the metadata key "status" is set to "active".
+ */
+export type MetadataFilterInput = {
+  /** Key to filter by. If not other fields provided - checking the existence of the key in metadata. */
+  readonly key: Scalars['String']['input'];
+  /** Value to filter by. */
+  readonly value?: InputMaybe<MetadataValueFilterInput>;
+};
+
 export type MetadataInput = {
   /** Key of a metadata item. */
   readonly key: Scalars['String']['input'];
@@ -9647,12 +11492,24 @@ export type MetadataItem = {
   readonly value: Scalars['String']['output'];
 };
 
+/** Define the filtering options for metadata value fields. */
+export type MetadataValueFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<Scalars['String']['input']>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<Scalars['String']['input']>>;
+};
+
 /** Represents amount of money in specific currency. */
 export type Money = {
   /** Amount of money. */
   readonly amount: Scalars['Float']['output'];
   /** Currency code. */
   readonly currency: Scalars['String']['output'];
+  /** Number of digits after the decimal point in the currency. */
+  readonly fractionDigits: Scalars['Int']['output'];
+  /** Amount of money represented as an integer in the smallest currency unit. */
+  readonly fractionalAmount: Scalars['Int']['output'];
 };
 
 export type MoneyInput = {
@@ -9689,7 +11546,7 @@ export type Mutation = {
    */
   readonly accountAddressCreate?: Maybe<AccountAddressCreate>;
   /**
-   * Delete an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
+   * Deletes an address of the logged-in user. Requires one of the following permissions: MANAGE_USERS, IS_OWNER.
    *
    * Triggers the following webhook events:
    * - ADDRESS_DELETED (async): An address was deleted.
@@ -9820,7 +11677,7 @@ export type Mutation = {
    */
   readonly appDelete?: Maybe<AppDelete>;
   /**
-   * Delete failed installation.
+   * Deletes failed installation.
    *
    * Requires one of the following permissions: MANAGE_APPS.
    */
@@ -9833,6 +11690,22 @@ export type Mutation = {
   readonly appFetchManifest?: Maybe<AppFetchManifest>;
   /** Install new app by using app manifest. Requires the following permissions: AUTHENTICATED_STAFF_USER and MANAGE_APPS. */
   readonly appInstall?: Maybe<AppInstall>;
+  /**
+   * Add a problem to the calling app.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: AUTHENTICATED_APP.
+   */
+  readonly appProblemCreate?: Maybe<AppProblemCreate>;
+  /**
+   * Dismiss problems for an app.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
+   */
+  readonly appProblemDismiss?: Maybe<AppProblemDismiss>;
   /**
    * Re-enable sync webhooks for provided app. Can be used to manually re-enable sync webhooks for the app before the cooldown period ends.
    *
@@ -9968,7 +11841,7 @@ export type Mutation = {
    */
   readonly attributeValueBulkDelete?: Maybe<AttributeValueBulkDelete>;
   /**
-   * Creates/updates translations for attributes values.
+   * Creates/updates translations for attribute values.
    *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    */
@@ -10049,7 +11922,7 @@ export type Mutation = {
    */
   readonly channelActivate?: Maybe<ChannelActivate>;
   /**
-   * Creates new channel.
+   * Creates a new channel.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
    *
@@ -10067,7 +11940,7 @@ export type Mutation = {
    */
   readonly channelDeactivate?: Maybe<ChannelDeactivate>;
   /**
-   * Delete a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
+   * Deletes a channel. Orders associated with the deleted channel will be moved to the target channel. Checkouts, product availability, and pricing will be removed.
    *
    * Requires one of the following permissions: MANAGE_CHANNELS.
    *
@@ -10102,7 +11975,7 @@ export type Mutation = {
    */
   readonly checkoutAddPromoCode?: Maybe<CheckoutAddPromoCode>;
   /**
-   * Update billing address in the existing checkout.
+   * Updates billing address in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -10133,7 +12006,7 @@ export type Mutation = {
    * - CHECKOUT_CREATED (async): A checkout was created.
    */
   readonly checkoutCreate?: Maybe<CheckoutCreate>;
-  /** Create new checkout from existing order. */
+  /** Creates a new checkout from existing order. */
   readonly checkoutCreateFromOrder?: Maybe<CheckoutCreateFromOrder>;
   /**
    * Sets the customer as the owner of the checkout.
@@ -10178,7 +12051,7 @@ export type Mutation = {
    */
   readonly checkoutEmailUpdate?: Maybe<CheckoutEmailUpdate>;
   /**
-   * Update language code in the existing checkout.
+   * Updates language code in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -10213,7 +12086,7 @@ export type Mutation = {
    * - CHECKOUT_UPDATED (async): A checkout was updated.
    */
   readonly checkoutLinesUpdate?: Maybe<CheckoutLinesUpdate>;
-  /** Create a new payment for given checkout. */
+  /** Creates a new payment for given checkout. */
   readonly checkoutPaymentCreate?: Maybe<CheckoutPaymentCreate>;
   /**
    * Remove a gift card or a voucher from a checkout.
@@ -10223,7 +12096,7 @@ export type Mutation = {
    */
   readonly checkoutRemovePromoCode?: Maybe<CheckoutRemovePromoCode>;
   /**
-   * Update shipping address in the existing checkout.
+   * Updates shipping address in the existing checkout.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_UPDATED (async): A checkout was updated.
@@ -10311,7 +12184,7 @@ export type Mutation = {
    */
   readonly confirmEmailChange?: Maybe<ConfirmEmailChange>;
   /**
-   * Creates new warehouse.
+   * Creates a new warehouse.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -10380,24 +12253,28 @@ export type Mutation = {
    * Create new digital content. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
    */
   readonly digitalContentCreate?: Maybe<DigitalContentCreate>;
   /**
    * Remove digital content assigned to given variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
    */
   readonly digitalContentDelete?: Maybe<DigitalContentDelete>;
   /**
-   * Update digital content.
+   * Updates digital content.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
    */
   readonly digitalContentUpdate?: Maybe<DigitalContentUpdate>;
   /**
    * Generate new URL to digital content.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
    */
   readonly digitalContentUrlCreate?: Maybe<DigitalContentUrlCreate>;
   /**
@@ -10525,7 +12402,7 @@ export type Mutation = {
    */
   readonly giftCardBulkActivate?: Maybe<GiftCardBulkActivate>;
   /**
-   * Create gift cards.
+   * Creates gift cards.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -10544,7 +12421,7 @@ export type Mutation = {
    */
   readonly giftCardBulkDeactivate?: Maybe<GiftCardBulkDeactivate>;
   /**
-   * Delete gift cards.
+   * Deletes gift cards.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -10572,7 +12449,7 @@ export type Mutation = {
    */
   readonly giftCardDeactivate?: Maybe<GiftCardDeactivate>;
   /**
-   * Delete gift card.
+   * Deletes gift card.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD.
    *
@@ -10893,7 +12770,7 @@ export type Mutation = {
    */
   readonly orderLineUpdate?: Maybe<OrderLineUpdate>;
   /**
-   * Create order lines for an order.
+   * Creates order lines for an order.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
    */
@@ -10996,19 +12873,19 @@ export type Mutation = {
    */
   readonly pageTranslate?: Maybe<PageTranslate>;
   /**
-   * Delete page types.
+   * Deletes page types.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
   readonly pageTypeBulkDelete?: Maybe<PageTypeBulkDelete>;
   /**
-   * Create a new page type.
+   * Creates a new page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
   readonly pageTypeCreate?: Maybe<PageTypeCreate>;
   /**
-   * Delete a page type.
+   * Deletes a page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
@@ -11020,7 +12897,7 @@ export type Mutation = {
    */
   readonly pageTypeReorderAttributes?: Maybe<PageTypeReorderAttributes>;
   /**
-   * Update page type.
+   * Updates page type.
    *
    * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
    */
@@ -11270,7 +13147,7 @@ export type Mutation = {
    */
   readonly productVariantBulkDelete?: Maybe<ProductVariantBulkDelete>;
   /**
-   * Creates/updates translations for products variants.
+   * Creates/updates translations for product variants.
    *
    * Requires one of the following permissions: MANAGE_TRANSLATIONS.
    *
@@ -11280,7 +13157,7 @@ export type Mutation = {
    */
   readonly productVariantBulkTranslate?: Maybe<ProductVariantBulkTranslate>;
   /**
-   * Update multiple product variants.
+   * Updates multiple product variants.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -11334,13 +13211,13 @@ export type Mutation = {
    */
   readonly productVariantStocksCreate?: Maybe<ProductVariantStocksCreate>;
   /**
-   * Delete stocks from product variant.
+   * Deletes stocks from product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   readonly productVariantStocksDelete?: Maybe<ProductVariantStocksDelete>;
   /**
-   * Update stocks for product variant.
+   * Updates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
@@ -11435,6 +13312,22 @@ export type Mutation = {
    * - PROMOTION_ENDED (async): Optionally called if promotion was ended.
    */
   readonly promotionUpdate?: Maybe<PromotionUpdate>;
+  /**
+   * Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  readonly refundReasonReferenceClear?: Maybe<RefundReasonReferenceTypeClear>;
+  /**
+   * Update refund settings across all channels.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: MANAGE_SETTINGS.
+   */
+  readonly refundSettingsUpdate?: Maybe<RefundSettingsUpdate>;
   /**
    * Request email change of the logged in user.
    *
@@ -11683,7 +13576,7 @@ export type Mutation = {
    */
   readonly staffNotificationRecipientCreate?: Maybe<StaffNotificationRecipientCreate>;
   /**
-   * Delete staff notification recipient.
+   * Deletes staff notification recipient.
    *
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
@@ -11722,25 +13615,25 @@ export type Mutation = {
    */
   readonly storedPaymentMethodRequestDelete?: Maybe<StoredPaymentMethodRequestDelete>;
   /**
-   * Create a tax class.
+   * Creates a tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxClassCreate?: Maybe<TaxClassCreate>;
   /**
-   * Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
+   * Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxClassDelete?: Maybe<TaxClassDelete>;
   /**
-   * Update a tax class.
+   * Updates a tax class.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
   readonly taxClassUpdate?: Maybe<TaxClassUpdate>;
   /**
-   * Update tax configuration for a channel.
+   * Updates tax configuration for a channel.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
@@ -11752,7 +13645,7 @@ export type Mutation = {
    */
   readonly taxCountryConfigurationDelete?: Maybe<TaxCountryConfigurationDelete>;
   /**
-   * Update tax class rates for a specific country.
+   * Updates tax class rates for a specific country.
    *
    * Requires one of the following permissions: MANAGE_TAXES.
    */
@@ -11776,7 +13669,7 @@ export type Mutation = {
    */
   readonly tokensDeactivateAll?: Maybe<DeactivateAllUserTokens>;
   /**
-   * Create transaction for checkout or order.
+   * Creates transaction for checkout or order.
    *
    * Requires one of the following permissions: HANDLE_PAYMENTS.
    */
@@ -11957,7 +13850,7 @@ export type Mutation = {
    */
   readonly webhookCreate?: Maybe<WebhookCreate>;
   /**
-   * Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
+   * Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
    *
    * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
    */
@@ -12085,6 +13978,16 @@ export type MutationAppFetchManifestArgs = {
 
 export type MutationAppInstallArgs = {
   input: AppInstallInput;
+};
+
+
+export type MutationAppProblemCreateArgs = {
+  input: AppProblemCreateInput;
+};
+
+
+export type MutationAppProblemDismissArgs = {
+  input: AppProblemDismissInput;
 };
 
 
@@ -13449,6 +15352,11 @@ export type MutationPromotionUpdateArgs = {
 };
 
 
+export type MutationRefundSettingsUpdateArgs = {
+  input: RefundSettingsUpdateInput;
+};
+
+
 export type MutationRequestEmailChangeArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
   newEmail: Scalars['String']['input'];
@@ -13730,6 +15638,7 @@ export type MutationTransactionEventReportArgs = {
   externalUrl?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   message?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
   pspReference: Scalars['String']['input'];
   time?: InputMaybe<Scalars['DateTime']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
@@ -13761,6 +15670,8 @@ export type MutationTransactionRequestActionArgs = {
   actionType: TransactionActionEnum;
   amount?: InputMaybe<Scalars['PositiveDecimal']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  refundReason?: InputMaybe<Scalars['String']['input']>;
+  refundReasonReference?: InputMaybe<Scalars['ID']['input']>;
   token?: InputMaybe<Scalars['UUID']['input']>;
 };
 
@@ -13916,10 +15827,59 @@ export type NavigationType =
   /** Secondary storefront navigation. */
   | 'SECONDARY';
 
+/** Represents the NEW_TAB target options for an app extension. */
+export type NewTabTargetOptions = {
+  /**
+   * HTTP method for New Tab target (GET or POST)
+   * @deprecated Use `settings` field directly.
+   */
+  readonly method: HttpMethod;
+};
+
 /** An object with an ID */
 export type Node = {
   /** The ID of the object. */
   readonly id: Scalars['ID']['output'];
+};
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributes = {
+  /**
+   * Get a single attribute attached to the object by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to the object.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+};
+
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributesAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/**
+ * An object with attributes.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ObjectWithAttributesAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 export type ObjectWithMetadata = {
@@ -14277,6 +16237,14 @@ export type OrderAuthorizeStatusEnum =
   | 'FULL'
   | 'NONE'
   | 'PARTIAL';
+
+/** Filter by authorize status. */
+export type OrderAuthorizeStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderAuthorizeStatusEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderAuthorizeStatusEnum>>;
+};
 
 /**
  * Cancels orders.
@@ -14666,6 +16634,14 @@ export type OrderChargeStatusEnum =
   | 'OVERCHARGED'
   | 'PARTIAL';
 
+/** Filter by charge status. */
+export type OrderChargeStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderChargeStatusEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderChargeStatusEnum>>;
+};
+
 /**
  * Confirms an unconfirmed order by changing status to unfulfilled.
  *
@@ -15016,6 +16992,14 @@ export type OrderEventDiscountObject = {
   readonly valueType: DiscountValueTypeEnum;
 };
 
+/** Filter input for order events data. */
+export type OrderEventFilterInput = {
+  /** Filter order events by date. */
+  readonly date?: InputMaybe<DateTimeRangeInput>;
+  /** Filter order events by type. */
+  readonly type?: InputMaybe<OrderEventTypeEnumFilterInput>;
+};
+
 export type OrderEventOrderLineObject = {
   /** The discount applied to the order line. */
   readonly discount?: Maybe<OrderEventDiscountObject>;
@@ -15025,6 +17009,13 @@ export type OrderEventOrderLineObject = {
   readonly orderLine?: Maybe<OrderLine>;
   /** The variant quantity. */
   readonly quantity?: Maybe<Scalars['Int']['output']>;
+};
+
+export type OrderEventTypeEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderEventsEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderEventsEnum>>;
 };
 
 export type OrderEventsEmailsEnum =
@@ -15272,6 +17263,12 @@ export type OrderGrantRefundCreateInput = {
   /** Reason of the granted refund. */
   readonly reason?: InputMaybe<Scalars['String']['input']>;
   /**
+   * ID of a `Page` (Model) to reference in reason.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
+  /**
    * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used. Field required starting from Saleor 3.21.
    *
    * Added in Saleor 3.20.
@@ -15349,6 +17346,12 @@ export type OrderGrantRefundUpdateInput = {
   readonly grantRefundForShipping?: InputMaybe<Scalars['Boolean']['input']>;
   /** Reason of the granted refund. */
   readonly reason?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * ID of a `Page` (Model) to reference in reason.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: InputMaybe<Scalars['ID']['input']>;
   /** Lines to remove from granted refund. */
   readonly removeLines?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   /**
@@ -15397,8 +17400,18 @@ export type OrderGrantedRefund = {
   readonly id: Scalars['ID']['output'];
   /** Lines assigned to the granted refund. */
   readonly lines?: Maybe<ReadonlyArray<OrderGrantedRefundLine>>;
-  /** Reason of the refund. */
+  /**
+   * Reason of the refund.
+   *
+   * Added in Saleor 3.22.
+   */
   readonly reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason Model (Page) reference for refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: Maybe<Page>;
   /** If true, the refunded amount includes the shipping price.If false, the refunded amount does not include the shipping price. */
   readonly shippingCostsIncluded: Scalars['Boolean']['output'];
   /**
@@ -15689,7 +17702,7 @@ export type OrderLineUpdate = {
 };
 
 /**
- * Create order lines for an order.
+ * Creates order lines for an order.
  *
  * Requires one of the following permissions: MANAGE_ORDERS.
  */
@@ -16028,20 +18041,26 @@ export type OrderSettingsUpdateInput = {
 export type OrderSortField =
   /** Sort orders by creation date. */
   | 'CREATED_AT'
-  /** Sort orders by creation date. */
+  /** Sort orders by creation date */
   | 'CREATION_DATE'
   /** Sort orders by customer. */
   | 'CUSTOMER'
   /** Sort orders by fulfillment status. */
   | 'FULFILLMENT_STATUS'
-  /** Sort orders by last modified at. */
+  /** Sort orders by last modified date. */
   | 'LAST_MODIFIED_AT'
   /** Sort orders by number. */
   | 'NUMBER'
-  /** Sort orders by payment. */
+  /** Sort orders by payment status. */
   | 'PAYMENT'
   /** Sort orders by rank. Note: This option is available only with the `search` filter. */
-  | 'RANK';
+  | 'RANK'
+  /**
+   * Sort orders by order status.
+   *
+   * Added in Saleor 3.22.
+   */
+  | 'STATUS';
 
 export type OrderSortingInput = {
   /** Specifies the direction in which to sort orders. */
@@ -16060,6 +18079,14 @@ export type OrderStatus =
   | 'RETURNED'
   | 'UNCONFIRMED'
   | 'UNFULFILLED';
+
+/** Filter by order status. */
+export type OrderStatusEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<OrderStatus>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<OrderStatus>>;
+};
 
 export type OrderStatusFilter =
   | 'CANCELED'
@@ -16160,9 +18187,110 @@ export type OrderVoid = {
   readonly orderErrors: ReadonlyArray<OrderError>;
 };
 
+export type OrderWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<OrderWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<OrderWhereInput>>;
+  /** Filter by authorize status. */
+  readonly authorizeStatus?: InputMaybe<OrderAuthorizeStatusEnumFilterInput>;
+  /** Filter by billing address of the order. */
+  readonly billingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by channel. */
+  readonly channelId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by charge status. */
+  readonly chargeStatus?: InputMaybe<OrderChargeStatusEnumFilterInput>;
+  /** Filter by checkout id. */
+  readonly checkoutId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by checkout token. */
+  readonly checkoutToken?: InputMaybe<UuidFilterInput>;
+  /** Filter order by created at date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by order events. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly events?: InputMaybe<ReadonlyArray<OrderEventFilterInput>>;
+  /** Filter by fulfillment data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly fulfillments?: InputMaybe<ReadonlyArray<FulfillmentFilterInput>>;
+  /** Filter by whether the order has any fulfillments. */
+  readonly hasFulfillments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by whether the order has any invoices. */
+  readonly hasInvoices?: InputMaybe<Scalars['Boolean']['input']>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by invoice data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly invoices?: InputMaybe<ReadonlyArray<InvoiceFilterInput>>;
+  /** Filter by whether the order uses the click and collect delivery method. */
+  readonly isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether the order includes a gift card purchase. */
+  readonly isGiftCardBought?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether a gift card was used in the order. */
+  readonly isGiftCardUsed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by line items associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly lines?: InputMaybe<ReadonlyArray<LinesFilterInput>>;
+  /** Filter by number of lines in the order. */
+  readonly linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by order number. */
+  readonly number?: InputMaybe<IntFilterInput>;
+  /** Filter by the product type of related order lines. */
+  readonly productTypeId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by shipping address of the order. */
+  readonly shippingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by order status. */
+  readonly status?: InputMaybe<OrderStatusEnumFilterInput>;
+  /** Filter by total gross amount of the order. */
+  readonly totalGross?: InputMaybe<PriceFilterInput>;
+  /** Filter by total net amount of the order. */
+  readonly totalNet?: InputMaybe<PriceFilterInput>;
+  /** Filter by transaction data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly transactions?: InputMaybe<ReadonlyArray<TransactionFilterInput>>;
+  /** Filter order by updated at date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by user. */
+  readonly user?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by user email. */
+  readonly userEmail?: InputMaybe<StringFilterInput>;
+  /** Filter by voucher code used in the order. */
+  readonly voucherCode?: InputMaybe<StringFilterInput>;
+};
+
+/**
+ * Represents a payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type OtherPaymentMethodDetails = PaymentMethodDetails & {
+  /** Name of the payment method. */
+  readonly name: Scalars['String']['output'];
+};
+
+export type OtherPaymentMethodDetailsInput = {
+  /** Name of the payment method used for the transaction. */
+  readonly name: Scalars['String']['input'];
+};
+
 /** A static page that can be manually added by a shop operator through the dashboard. */
-export type Page = Node & ObjectWithMetadata & {
-  /** List of attributes assigned to this product. */
+export type Page = Node & ObjectWithAttributes & ObjectWithMetadata & {
+  /**
+   * Get a single attribute attached to page by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this page.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+  /**
+   * Get a single attribute attached to page by attribute slug.
+   * @deprecated Use `assignedAttribute` field instead.
+   */
+  readonly attribute?: Maybe<SelectedAttribute>;
+  /**
+   * List of attributes assigned to this page.
+   * @deprecated Use `assignedAttributes` field instead.
+   */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /**
    * Content of the page.
@@ -16219,6 +18347,24 @@ export type Page = Node & ObjectWithMetadata & {
   readonly title: Scalars['String']['output'];
   /** Returns translated page fields for the given language code. */
   readonly translation?: Maybe<PageTranslation>;
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+
+/** A static page that can be manually added by a shop operator through the dashboard. */
+export type PageAttributeArgs = {
+  slug: Scalars['String']['input'];
 };
 
 
@@ -16662,6 +18808,7 @@ export type PageTypeAvailableAttributesArgs = {
   filter?: InputMaybe<AttributeFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<AttributeWhereInput>;
 };
 
@@ -16690,7 +18837,7 @@ export type PageTypePrivateMetafieldsArgs = {
 };
 
 /**
- * Delete page types.
+ * Deletes page types.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -16718,7 +18865,7 @@ export type PageTypeCountableEdge = {
 };
 
 /**
- * Create a new page type.
+ * Creates a new page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -16753,7 +18900,7 @@ export type PageTypeCreated = Event & {
 };
 
 /**
- * Delete a page type.
+ * Deletes a page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -16810,7 +18957,7 @@ export type PageTypeSortingInput = {
 };
 
 /**
- * Update page type.
+ * Updates page type.
  *
  * Requires one of the following permissions: MANAGE_PAGE_TYPES_AND_ATTRIBUTES.
  */
@@ -16870,6 +19017,22 @@ export type PageUpdated = Event & {
   readonly recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   readonly version?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<PageWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<PageWhereInput>>;
+  /** Filter by attributes associated with the page. */
+  readonly attributes?: InputMaybe<ReadonlyArray<AssignedAttributeWhereInput>>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by page type. */
+  readonly pageType?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by page slug. */
+  readonly slug?: InputMaybe<StringFilterInput>;
 };
 
 /**
@@ -17110,6 +19273,7 @@ export type PaymentErrorCode =
   | 'CHANNEL_INACTIVE'
   | 'CHECKOUT_COMPLETION_IN_PROGRESS'
   | 'CHECKOUT_EMAIL_NOT_SET'
+  | 'CHECKOUT_HAS_TRANSACTION'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'INVALID_SHIPPING_METHOD'
@@ -17326,6 +19490,40 @@ export type PaymentListGateways = Event & {
 };
 
 /**
+ * Represents a payment method used for a transaction.
+ *
+ * Added in Saleor 3.22.
+ */
+export type PaymentMethodDetails = {
+  /** Name of the payment method. */
+  readonly name: Scalars['String']['output'];
+};
+
+export type PaymentMethodDetailsCardFilterInput = {
+  /** Filter by payment method brand used to pay for the order. */
+  readonly brand?: InputMaybe<StringFilterInput>;
+};
+
+export type PaymentMethodDetailsFilterInput = {
+  /** Filter by card details used to pay for the order. Skips `type` filter if provided. */
+  readonly card?: InputMaybe<PaymentMethodDetailsCardFilterInput>;
+  /** Filter by payment method type used to pay for the order. */
+  readonly type?: InputMaybe<PaymentMethodTypeEnumFilterInput>;
+};
+
+/**
+ * Details of the payment method used for the transaction. One of `card` or `other` is required.
+ *
+ * Added in Saleor 3.22.
+ */
+export type PaymentMethodDetailsInput = {
+  /** Details of the card payment method used for the transaction. */
+  readonly card?: InputMaybe<CardPaymentMethodDetailsInput>;
+  /** Details of the non-card payment method used for this transaction. */
+  readonly other?: InputMaybe<OtherPaymentMethodDetailsInput>;
+};
+
+/**
  * Tokenize payment method.
  *
  * Requires one of the following permissions: AUTHENTICATED_USER.
@@ -17458,6 +19656,24 @@ export type PaymentMethodTokenizationResult =
   | 'FAILED_TO_TOKENIZE'
   | 'PENDING'
   | 'SUCCESSFULLY_TOKENIZED';
+
+/**
+ * Represents possible payment method types.
+ *
+ *     The following types are possible:
+ *     CARD - represents a card payment method.
+ *     OTHER - represents any payment method that is not a card payment.
+ */
+export type PaymentMethodTypeEnum =
+  | 'CARD'
+  | 'OTHER';
+
+export type PaymentMethodTypeEnumFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<PaymentMethodTypeEnum>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<PaymentMethodTypeEnum>>;
+};
 
 /** Process payment. */
 export type PaymentProcessEvent = Event & {
@@ -17924,6 +20140,13 @@ export type PreorderThreshold = {
   readonly soldUnits: Scalars['Int']['output'];
 };
 
+export type PriceFilterInput = {
+  /** The amount of the price to filter by. */
+  readonly amount: DecimalFilterInput;
+  /** The currency of the price to filter by. */
+  readonly currency?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PriceInput = {
   /** Amount of money. */
   readonly amount: Scalars['PositiveDecimal']['input'];
@@ -17939,10 +20162,28 @@ export type PriceRangeInput = {
 };
 
 /** Represents an individual item for sale in the storefront. */
-export type Product = Node & ObjectWithMetadata & {
-  /** Get a single attribute attached to product by attribute slug. */
+export type Product = Node & ObjectWithAttributes & ObjectWithMetadata & {
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this product.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   * @deprecated Use the `assignedAttribute` field instead.
+   */
   readonly attribute?: Maybe<SelectedAttribute>;
-  /** List of attributes assigned to this product. */
+  /**
+   * List of attributes assigned to this product.
+   * @deprecated Use the `assignedAttributes` field instead.
+   */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /**
    * Date when product is available for purchase.
@@ -18076,6 +20317,18 @@ export type Product = Node & ObjectWithMetadata & {
 
 
 /** Represents an individual item for sale in the storefront. */
+export type ProductAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** Represents an individual item for sale in the storefront. */
+export type ProductAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
+};
+
+
+/** Represents an individual item for sale in the storefront. */
 export type ProductAttributeArgs = {
   slug: Scalars['String']['input'];
 };
@@ -18083,7 +20336,7 @@ export type ProductAttributeArgs = {
 
 /** Represents an individual item for sale in the storefront. */
 export type ProductImageByIdArgs = {
-  id?: InputMaybe<Scalars['ID']['input']>;
+  id: Scalars['ID']['input'];
 };
 
 
@@ -18101,7 +20354,7 @@ export type ProductMediaArgs = {
 
 /** Represents an individual item for sale in the storefront. */
 export type ProductMediaByIdArgs = {
-  id?: InputMaybe<Scalars['ID']['input']>;
+  id: Scalars['ID']['input'];
 };
 
 
@@ -18678,6 +20931,7 @@ export type ProductErrorCode =
   | 'DUPLICATED_INPUT_ITEM'
   | 'GRAPHQL_ERROR'
   | 'INVALID'
+  | 'INVALID_FILE_TYPE'
   | 'INVALID_PRICE'
   | 'MEDIA_ALREADY_ASSIGNED'
   | 'NOT_FOUND'
@@ -18689,6 +20943,7 @@ export type ProductErrorCode =
   | 'REQUIRED'
   | 'UNIQUE'
   | 'UNSUPPORTED_MEDIA_PROVIDER'
+  | 'UNSUPPORTED_MIME_TYPE'
   | 'VARIANT_NO_DIGITAL_CONTENT';
 
 /** Event sent when product export is completed. */
@@ -19355,6 +21610,7 @@ export type ProductTypeAvailableAttributesArgs = {
   filter?: InputMaybe<AttributeFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   where?: InputMaybe<AttributeWhereInput>;
 };
 
@@ -19575,8 +21831,23 @@ export type ProductUpdatedProductArgs = {
 };
 
 /** Represents a version of a product such as different size or color. */
-export type ProductVariant = Node & ObjectWithMetadata & {
-  /** List of attributes assigned to this variant. */
+export type ProductVariant = Node & ObjectWithAttributes & ObjectWithMetadata & {
+  /**
+   * Get a single attribute attached to product by attribute slug.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttribute?: Maybe<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this variant.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly assignedAttributes: ReadonlyArray<AssignedAttribute>;
+  /**
+   * List of attributes assigned to this variant.
+   * @deprecated Use the `assignedAttributes` field instead.
+   */
   readonly attributes: ReadonlyArray<SelectedAttribute>;
   /** Channel given to retrieve this product variant. Also used by federation gateway to resolve this object in a federated query. */
   readonly channel?: Maybe<Scalars['String']['output']>;
@@ -19667,6 +21938,18 @@ export type ProductVariant = Node & ObjectWithMetadata & {
   readonly updatedAt: Scalars['DateTime']['output'];
   /** The weight of the product variant. */
   readonly weight?: Maybe<Weight>;
+};
+
+
+/** Represents a version of a product such as different size or color. */
+export type ProductVariantAssignedAttributeArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+/** Represents a version of a product such as different size or color. */
+export type ProductVariantAssignedAttributesArgs = {
+  limit?: InputMaybe<Scalars['PositiveInt']['input']>;
 };
 
 
@@ -19864,7 +22147,7 @@ export type ProductVariantBulkResult = {
 };
 
 /**
- * Creates/updates translations for products variants.
+ * Creates/updates translations for product variants.
  *
  * Requires one of the following permissions: MANAGE_TRANSLATIONS.
  *
@@ -19908,7 +22191,7 @@ export type ProductVariantBulkTranslateResult = {
 };
 
 /**
- * Update multiple product variants.
+ * Updates multiple product variants.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -20267,7 +22550,7 @@ export type ProductVariantSetDefault = {
 };
 
 export type ProductVariantSortField =
-  /** Sort products variants by last modified at. */
+  /** Sort product variants by last modification date. */
   | 'LAST_MODIFIED_AT';
 
 export type ProductVariantSortingInput = {
@@ -20313,7 +22596,7 @@ export type ProductVariantStocksCreate = {
 };
 
 /**
- * Delete stocks from product variant.
+ * Deletes stocks from product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -20326,7 +22609,7 @@ export type ProductVariantStocksDelete = {
 };
 
 /**
- * Update stocks for product variant.
+ * Updates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -20439,8 +22722,18 @@ export type ProductVariantWhereInput = {
   readonly AND?: InputMaybe<ReadonlyArray<ProductVariantWhereInput>>;
   /** A list of conditions of which at least one must be met. */
   readonly OR?: InputMaybe<ReadonlyArray<ProductVariantWhereInput>>;
+  /**
+   * Filter by attributes associated with the variant.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly attributes?: InputMaybe<ReadonlyArray<AssignedAttributeWhereInput>>;
   readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   readonly metadata?: InputMaybe<ReadonlyArray<MetadataFilter>>;
+  /** Filter by product SKU. */
+  readonly sku?: InputMaybe<StringFilterInput>;
+  /** Filter by when was the most recent update. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
 };
 
 export type ProductWhereInput = {
@@ -21263,7 +23556,7 @@ export type PromotionRuleUpdatedEvent = Node & PromotionEventInterface & Promoti
 };
 
 export type PromotionSortField =
-  /** Sort promotions by created at. */
+  /** Sort promotions by creation date. */
   | 'CREATED_AT'
   /** Sort promotions by end date. */
   | 'END_DATE'
@@ -21571,12 +23864,14 @@ export type Query = {
    * Look up digital content by ID.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
    */
   readonly digitalContent?: Maybe<DigitalContent>;
   /**
    * List of digital content.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
    */
   readonly digitalContents?: Maybe<DigitalContentCountableConnection>;
   /**
@@ -21739,6 +24034,8 @@ export type Query = {
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    */
   readonly promotions?: Maybe<PromotionCountableConnection>;
+  /** Refunds related settings. Returns `RefundSettings` configuration, global for the entire shop. */
+  readonly refundSettings: RefundSettings;
   /**
    * List of top selling products.
    *
@@ -21832,9 +24129,17 @@ export type Query = {
   /**
    * Look up a transaction by ID.
    *
-   * Requires one of the following permissions: HANDLE_PAYMENTS.
+   * Requires one of the following permissions: HANDLE_PAYMENTS, MANAGE_ORDERS.
    */
   readonly transaction?: Maybe<TransactionItem>;
+  /**
+   * List of transactions. For apps with `MANAGE_ORDERS` permission, returns all transactions. For apps with just `HANDLE_PAYMENTS` permission, returns only transactions created by that app. For staff users, returns transactions from orders and checkouts in channels they have access to.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Requires one of the following permissions: HANDLE_PAYMENTS, MANAGE_ORDERS.
+   */
+  readonly transactions?: Maybe<TransactionCountableConnection>;
   /**
    * Lookup a translatable item by ID.
    *
@@ -22034,7 +24339,9 @@ export type QueryCustomersArgs = {
   filter?: InputMaybe<CustomerFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<UserSortingInput>;
+  where?: InputMaybe<CustomerWhereInput>;
 };
 
 
@@ -22057,7 +24364,9 @@ export type QueryDraftOrdersArgs = {
   filter?: InputMaybe<OrderDraftFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<OrderSortingInput>;
+  where?: InputMaybe<DraftOrderWhereInput>;
 };
 
 
@@ -22163,7 +24472,9 @@ export type QueryOrdersArgs = {
   filter?: InputMaybe<OrderFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<OrderSortingInput>;
+  where?: InputMaybe<OrderWhereInput>;
 };
 
 
@@ -22174,6 +24485,7 @@ export type QueryOrdersTotalArgs = {
 
 
 export type QueryPageArgs = {
+  channel?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
   slugLanguageCode?: InputMaybe<LanguageCodeEnum>;
@@ -22198,10 +24510,13 @@ export type QueryPageTypesArgs = {
 export type QueryPagesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
+  channel?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<PageFilterInput>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<PageSortingInput>;
+  where?: InputMaybe<PageWhereInput>;
 };
 
 
@@ -22289,6 +24604,7 @@ export type QueryProductVariantsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ProductVariantSortingInput>;
   where?: InputMaybe<ProductVariantWhereInput>;
 };
@@ -22430,6 +24746,15 @@ export type QueryTransactionArgs = {
 };
 
 
+export type QueryTransactionsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<TransactionWhereInput>;
+};
+
+
 export type QueryTranslationArgs = {
   id: Scalars['ID']['input'];
   kind: TranslatableKinds;
@@ -22503,6 +24828,13 @@ export type ReducedRate = {
   readonly rateType: Scalars['String']['output'];
 };
 
+/**
+ * The reference types (product or page type) that are used to narrow down the choices of reference objects.
+ * ProductType applicable for reference attribute with `PRODUCT` or `PRODUCT_VARIANT` entity type.
+ * PageType applicable for reference attribute with `PAGE` entity type.
+ */
+export type ReferenceType = PageType | ProductType;
+
 /** Refresh JWT token. Mutation tries to take refreshToken from the input. If it fails it will try to take `refreshToken` from the http-only cookie `refreshToken`. `csrfToken` is required when `refreshToken` is provided as a cookie. */
 export type RefreshToken = {
   /** @deprecated Use `errors` field instead. */
@@ -22512,6 +24844,78 @@ export type RefreshToken = {
   readonly token?: Maybe<Scalars['String']['output']>;
   /** A user instance. */
   readonly user?: Maybe<User>;
+};
+
+/**
+ * Updates RefundSettings. The `Page` (Model) Type will be cleared from `reasonReferenceType`. When it's cleared, passing reason reference to refund mutations is no longer accepted and will raise error.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type RefundReasonReferenceTypeClear = {
+  readonly errors: ReadonlyArray<RefundReasonReferenceTypeClearError>;
+  /** Refund settings. */
+  readonly refundSettings: RefundSettings;
+  /** @deprecated Use `errors` field instead. */
+  readonly refundSettingsErrors: ReadonlyArray<RefundReasonReferenceTypeClearError>;
+};
+
+export type RefundReasonReferenceTypeClearError = {
+  /** Failed to clear refund reason reference type */
+  readonly code: RefundSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+/**
+ * Refund related settings from site settings.
+ *
+ * Added in Saleor 3.22.
+ */
+export type RefundSettings = {
+  /** Model type used for refund reasons. */
+  readonly reasonReferenceType?: Maybe<PageType>;
+};
+
+export type RefundSettingsErrorCode =
+  | 'GRAPHQL_ERROR'
+  | 'INVALID'
+  | 'REQUIRED';
+
+/**
+ * Update refund settings across all channels.
+ *
+ * Added in Saleor 3.22.
+ *
+ * Requires one of the following permissions: MANAGE_SETTINGS.
+ */
+export type RefundSettingsUpdate = {
+  readonly errors: ReadonlyArray<RefundSettingsUpdateError>;
+  /** Refund settings. */
+  readonly refundSettings: RefundSettings;
+  /** @deprecated Use `errors` field instead. */
+  readonly refundSettingsErrors: ReadonlyArray<RefundSettingsUpdateError>;
+};
+
+export type RefundSettingsUpdateError = {
+  /** Failed to update Refund Settings */
+  readonly code: RefundSettingsErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  readonly field?: Maybe<Scalars['String']['output']>;
+  /** The error message. */
+  readonly message?: Maybe<Scalars['String']['output']>;
+};
+
+export type RefundSettingsUpdateInput = {
+  /**
+   * The ID of a model type, that will be used to reference refund reasons. All models with of this type will be accepted as refund reasons.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly refundReasonReferenceType: Scalars['ID']['input'];
 };
 
 export type ReorderInput = {
@@ -22962,11 +25366,11 @@ export type SaleRemoveCatalogues = {
 };
 
 export type SaleSortField =
-  /** Sort sales by created at. */
+  /** Sort sales by creation date. */
   | 'CREATED_AT'
   /** Sort sales by end date. */
   | 'END_DATE'
-  /** Sort sales by last modified at. */
+  /** Sort sales by last modification date. */
   | 'LAST_MODIFIED_AT'
   /** Sort sales by name. */
   | 'NAME'
@@ -23130,7 +25534,7 @@ export type SaleUpdatedSaleArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** Represents a custom attribute. */
+/** Represents an assigned attribute to an object. */
 export type SelectedAttribute = {
   /** Name of an attribute displayed in the interface. */
   readonly attribute: Attribute;
@@ -24192,6 +26596,13 @@ export type Shop = ObjectWithMetadata & {
   /** Returns translated shop fields for the given language code. */
   readonly translation?: Maybe<ShopTranslation>;
   /**
+   * Use legacy update webhook emission. When enabled, update webhooks (e.g. `customerUpdated`,`productVariantUpdated`) are sent even when only metadata changes. When disabled, update webhooks are not sent for metadata-only changes; only metadata-specific webhooks (e.g., `customerMetadataUpdated`, `productVariantMetadataUpdated`) are sent.
+   *
+   * Added in Saleor 3.22.
+   * @deprecated Field no longer supported
+   */
+  readonly useLegacyUpdateWebhookEmission?: Maybe<Scalars['Boolean']['output']>;
+  /**
    * Saleor API version.
    *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
@@ -24383,6 +26794,13 @@ export type ShopSettingsInput = {
   readonly reserveStockDurationAuthenticatedUser?: InputMaybe<Scalars['Int']['input']>;
   /** This field is used as a default value for `ProductVariant.trackInventory`. */
   readonly trackInventoryByDefault?: InputMaybe<Scalars['Boolean']['input']>;
+  /**
+   * Use legacy update webhook emission. When enabled, update webhooks (e.g. `customerUpdated`,`productVariantUpdated`) are sent even when only metadata changes. When disabled, update webhooks are not sent for metadata-only changes; only metadata-specific webhooks (e.g., `customerMetadataUpdated`, `productVariantMetadataUpdated`) are sent.
+   *
+   * Added in Saleor 3.22.
+   * @deprecated Field no longer supported
+   */
+  readonly useLegacyUpdateWebhookEmission?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 /**
@@ -24593,7 +27011,7 @@ export type StaffNotificationRecipientCreate = {
 };
 
 /**
- * Delete staff notification recipient.
+ * Deletes staff notification recipient.
  *
  * Requires one of the following permissions: MANAGE_SETTINGS.
  */
@@ -25307,7 +27725,7 @@ export type TaxClassCountryRate = {
 };
 
 /**
- * Create a tax class.
+ * Creates a tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25340,7 +27758,7 @@ export type TaxClassCreateInput = {
 };
 
 /**
- * Delete a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
+ * Deletes a tax class. After deleting the tax class any products, product types or shipping methods using it are updated to use the default tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25388,7 +27806,7 @@ export type TaxClassSortingInput = {
 };
 
 /**
- * Update a tax class.
+ * Updates a tax class.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25565,7 +27983,7 @@ export type TaxConfigurationPerCountryInput = {
 };
 
 /**
- * Update tax configuration for a channel.
+ * Updates tax configuration for a channel.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25652,7 +28070,7 @@ export type TaxCountryConfigurationDeleteErrorCode =
   | 'NOT_FOUND';
 
 /**
- * Update tax class rates for a specific country.
+ * Updates tax class rates for a specific country.
  *
  * Requires one of the following permissions: MANAGE_TAXES.
  */
@@ -25860,7 +28278,10 @@ export type Transaction = Node & {
   readonly created: Scalars['DateTime']['output'];
   /** Error associated with transaction, if any. */
   readonly error?: Maybe<Scalars['String']['output']>;
-  /** Response returned by payment gateway. */
+  /**
+   * Response returned by payment gateway.
+   * @deprecated This field is a part of a legacy Payments API. Please use apps instead.
+   */
   readonly gatewayResponse: Scalars['JSONString']['output'];
   /** ID of the transaction. */
   readonly id: Scalars['ID']['output'];
@@ -25928,8 +28349,23 @@ export type TransactionChargeRequested = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+export type TransactionCountableConnection = {
+  readonly edges: ReadonlyArray<TransactionCountableEdge>;
+  /** Pagination data for this connection. */
+  readonly pageInfo: PageInfo;
+  /** A total count of items in the collection. */
+  readonly totalCount?: Maybe<Scalars['Int']['output']>;
+};
+
+export type TransactionCountableEdge = {
+  /** A cursor for use in pagination. */
+  readonly cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  readonly node: TransactionItem;
+};
+
 /**
- * Create transaction for checkout or order.
+ * Creates transaction for checkout or order.
  *
  * Requires one of the following permissions: HANDLE_PAYMENTS.
  */
@@ -25979,6 +28415,12 @@ export type TransactionCreateInput = {
   /** Payment name of the transaction. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
+   * Details of the payment method used for the transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
+  /**
    * Payment private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
    * Warning: never store sensitive information, including financial data such as credit card details.
@@ -26006,6 +28448,12 @@ export type TransactionEvent = Node & {
   readonly message: Scalars['String']['output'];
   /** PSP reference of transaction. */
   readonly pspReference: Scalars['String']['output'];
+  /**
+   * Reason model of the transaction refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: Maybe<Page>;
   /** The type of action related to this event. */
   readonly type?: Maybe<TransactionEventTypeEnum>;
 };
@@ -26100,6 +28548,20 @@ export type TransactionEventTypeEnum =
   | 'REFUND_REQUEST'
   | 'REFUND_REVERSE'
   | 'REFUND_SUCCESS';
+
+/** Filter input for transactions. */
+export type TransactionFilterInput = {
+  /** Filter by metadata fields of transactions. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
+  /** Filter by payment method details used to pay for the order. */
+  readonly paymentMethodDetails?: InputMaybe<PaymentMethodDetailsFilterInput>;
+  /**
+   * Filter by PSP reference of transactions.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly pspReference?: InputMaybe<StringFilterInput>;
+};
 
 /**
  * Determine the transaction flow strategy.
@@ -26210,6 +28672,12 @@ export type TransactionItem = Node & ObjectWithMetadata & {
   readonly name: Scalars['String']['output'];
   /** The related order. */
   readonly order?: Maybe<Order>;
+  /**
+   * The payment method used for this transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly paymentMethodDetails?: Maybe<PaymentMethodDetails>;
   /** List of private metadata items. Requires staff permissions to access. */
   readonly privateMetadata: ReadonlyArray<MetadataItem>;
   /**
@@ -26222,6 +28690,18 @@ export type TransactionItem = Node & ObjectWithMetadata & {
   readonly privateMetafields?: Maybe<Scalars['Metadata']['output']>;
   /** PSP reference of transaction. */
   readonly pspReference: Scalars['String']['output'];
+  /**
+   * Reason of the refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reason?: Maybe<Scalars['String']['output']>;
+  /**
+   * Reason `Page` (Model) for refund.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly reasonReference?: Maybe<Page>;
   /** Total amount of ongoing refund requests for the transaction. */
   readonly refundPendingAmount: Money;
   /** Total amount refunded for this payment. */
@@ -26386,7 +28866,8 @@ export type TransactionRequestActionErrorCode =
   | 'GRAPHQL_ERROR'
   | 'INVALID'
   | 'MISSING_TRANSACTION_ACTION_REQUEST_WEBHOOK'
-  | 'NOT_FOUND';
+  | 'NOT_FOUND'
+  | 'REQUIRED';
 
 /**
  * Request a refund for payment transaction based on granted refund.
@@ -26467,6 +28948,12 @@ export type TransactionUpdateInput = {
   /** Payment name of the transaction. */
   readonly name?: InputMaybe<Scalars['String']['input']>;
   /**
+   * Details of the payment method used for the transaction.
+   *
+   * Added in Saleor 3.22.
+   */
+  readonly paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
+  /**
    * Payment private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
    *
    * Warning: never store sensitive information, including financial data such as credit card details.
@@ -26474,6 +28961,18 @@ export type TransactionUpdateInput = {
   readonly privateMetadata?: InputMaybe<ReadonlyArray<MetadataInput>>;
   /** PSP Reference of the transaction. */
   readonly pspReference?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TransactionWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<TransactionWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<TransactionWhereInput>>;
+  /** Filter by app identifier. */
+  readonly appIdentifier?: InputMaybe<StringFilterInput>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by PSP reference. */
+  readonly pspReference?: InputMaybe<StringFilterInput>;
 };
 
 export type TranslatableItem = AttributeTranslatableContent | AttributeValueTranslatableContent | CategoryTranslatableContent | CollectionTranslatableContent | MenuItemTranslatableContent | PageTranslatableContent | ProductTranslatableContent | ProductVariantTranslatableContent | PromotionRuleTranslatableContent | PromotionTranslatableContent | SaleTranslatableContent | ShippingMethodTranslatableContent | VoucherTranslatableContent;
@@ -26567,6 +29066,14 @@ export type TranslationUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+/** Define the filtering options for string fields. */
+export type UuidFilterInput = {
+  /** The value equal to. */
+  readonly eq?: InputMaybe<Scalars['UUID']['input']>;
+  /** The value included in. */
+  readonly oneOf?: InputMaybe<ReadonlyArray<Scalars['UUID']['input']>>;
+};
+
 export type UpdateInvoiceInput = {
   /**
    * Fields required to update the invoice metadata. Can be read by any API client authorized to read the object it's attached to.
@@ -26620,7 +29127,9 @@ export type UploadError = {
 };
 
 export type UploadErrorCode =
-  | 'GRAPHQL_ERROR';
+  | 'GRAPHQL_ERROR'
+  | 'INVALID_FILE_TYPE'
+  | 'UNSUPPORTED_MIME_TYPE';
 
 /** Represents user data. */
 export type User = Node & ObjectWithMetadata & {
@@ -27860,7 +30369,7 @@ export type WarehouseCountableEdge = {
 };
 
 /**
- * Creates new warehouse.
+ * Creates a new warehouse.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
  */
@@ -28137,7 +30646,7 @@ export type WebhookCreateInput = {
 };
 
 /**
- * Delete a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
+ * Deletes a webhook. Before the deletion, the webhook is deactivated to pause any deliveries that are already scheduled. The deletion might fail if delivery is in progress. In such a case, the webhook is not deleted but remains deactivated.
  *
  * Requires one of the following permissions: MANAGE_APPS, AUTHENTICATED_APP.
  */
@@ -29131,6 +31640,15 @@ export type WeightUnitsEnum =
   | 'LB'
   | 'OZ'
   | 'TONNE';
+
+/** Represents the WIDGET target options for an app extension. */
+export type WidgetTargetOptions = {
+  /**
+   * HTTP method for Widget target (GET or POST)
+   * @deprecated Use `settings` field directly.
+   */
+  readonly method: HttpMethod;
+};
 
 /** _Entity union as defined by Federation spec. */
 export type _Entity = Address | App | Category | Collection | Group | Order | PageType | Product | ProductMedia | ProductType | ProductVariant | User;
