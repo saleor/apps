@@ -10,8 +10,8 @@ import { defaultPadding } from "../../../components/ui-defaults";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { appUrls } from "../../app-configuration/urls";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SmtpGetConfigurationIdInput } from "../configuration/smtp-config-input-schema";
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { type SmtpGetConfigurationIdInput } from "../configuration/smtp-config-input-schema";
+import { type SmtpConfiguration } from "../configuration/smtp-config-schema";
 
 interface SmtpDangerousSectionProps {
   configuration: SmtpConfiguration;

@@ -1,6 +1,6 @@
-import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
+import { type AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
 
-import { AddressSuggestions } from "./avatax-configuration-address-fragment";
+import { type AddressSuggestions } from "./avatax-configuration-address-fragment";
 
 export class AvataxAddressResolutionProcessor {
   extractSuggestionsFromResponse(response: AddressResolutionModel): AddressSuggestions {

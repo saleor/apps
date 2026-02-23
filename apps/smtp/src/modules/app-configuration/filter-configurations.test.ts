@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { FilterableConfiguration, filterConfigurations } from "./filter-configurations";
+import { type FilterableConfiguration, filterConfigurations } from "./filter-configurations";
 
 const enabledConfiguration: FilterableConfiguration = {
   id: "enabled",

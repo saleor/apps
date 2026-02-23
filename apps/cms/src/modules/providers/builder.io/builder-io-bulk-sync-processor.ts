@@ -1,6 +1,9 @@
-import { BulkImportProductFragment } from "../../../../generated/graphql";
-import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
-import { BuilderIoProviderConfig } from "../../configuration";
+import { type BulkImportProductFragment } from "../../../../generated/graphql";
+import {
+  type BulkSyncProcessor,
+  type BulkSyncProcessorHooks,
+} from "../../bulk-sync/bulk-sync-processor";
+import { type BuilderIoProviderConfig } from "../../configuration";
 import { BuilderIoClient } from "./builder-io.client";
 
 export class BuilderIoBulkSyncProcessor implements BulkSyncProcessor {

@@ -1,5 +1,5 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
@@ -16,7 +16,7 @@ import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { OrderMetadataManager } from "@/modules/app/order-metadata-manager";
-import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { type AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
 import { createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter-factory";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";

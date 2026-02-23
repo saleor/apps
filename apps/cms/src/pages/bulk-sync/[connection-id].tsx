@@ -1,5 +1,5 @@
 import { SkeletonLayout } from "@saleor/apps-ui";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { z } from "zod";
 

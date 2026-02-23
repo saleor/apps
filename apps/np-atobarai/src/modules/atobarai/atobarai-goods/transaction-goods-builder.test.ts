@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
-import { SourceObjectFragment } from "@/generated/graphql";
+import { type SourceObjectFragment } from "@/generated/graphql";
 
-import { AtobaraiGoods } from "./atobarai-goods";
+import { type AtobaraiGoods } from "./atobarai-goods";
 import { TransactionGoodBuilder } from "./transaction-goods-builder";
 
 describe("TransactionGoodBuilder", () => {

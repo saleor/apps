@@ -1,9 +1,9 @@
 import qs from "qs";
 
 import { createLogger } from "@/logger";
-import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
+import { type PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
 
-import { WebhookProductVariantFragment } from "../../../../generated/graphql";
+import { type WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { FieldsMapper } from "../fields-mapper";
 
 type Context = {

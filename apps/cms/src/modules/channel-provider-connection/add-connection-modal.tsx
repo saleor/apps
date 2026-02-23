@@ -6,7 +6,7 @@ import { Modal } from "../ui/modal";
 import {
   AddConnectionForm,
   AddConnectionFormID,
-  AddConnectionFormSchema,
+  type AddConnectionFormSchema,
 } from "./add-connection-form";
 
 const defaultValues: AddConnectionFormSchema = { channelSlug: "", providerId: "" };

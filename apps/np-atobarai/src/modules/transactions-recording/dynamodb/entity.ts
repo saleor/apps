@@ -1,7 +1,7 @@
-import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { type SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { anyOf, Entity, item, nul, string } from "dynamodb-toolbox";
 
-import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { type AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamodb-main-table";
 
 const schema = item({

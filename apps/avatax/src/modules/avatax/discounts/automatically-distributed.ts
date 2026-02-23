@@ -1,5 +1,5 @@
 import Decimal from "decimal.js-light";
-import { TaxBaseFragment } from "generated/graphql";
+import { type TaxBaseFragment } from "generated/graphql";
 
 /*
  * Used for checkout and order calculate taxes.

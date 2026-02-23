@@ -1,4 +1,4 @@
-import { ChannelFragment } from "../../../generated/graphql";
+import { type ChannelFragment } from "../../../generated/graphql";
 
 const defaultChannel: ChannelFragment = {
   id: "1",

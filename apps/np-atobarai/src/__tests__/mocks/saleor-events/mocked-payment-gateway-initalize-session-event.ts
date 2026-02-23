@@ -1,4 +1,4 @@
-import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
+import { type PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
 
 import { mockedSaleorAppId } from "../saleor/mocked-saleor-app-id";
 import { mockedSourceObject } from "./mocked-source-object";

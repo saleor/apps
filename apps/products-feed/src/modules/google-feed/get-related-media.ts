@@ -1,5 +1,5 @@
-import { ProductMediaType } from "../../../generated/graphql";
-import { ProductVariant } from "./fetch-product-data";
+import { type ProductMediaType } from "../../../generated/graphql";
+import { type ProductVariant } from "./fetch-product-data";
 
 type Media = {
   id: string;

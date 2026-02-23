@@ -1,46 +1,49 @@
-import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, fromThrowable, ok, Result } from "neverthrow";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
-import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { type TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type SaleorMoney } from "@/modules/saleor/saleor-money";
 import {
   createSaleorTransactionFlow,
-  SaleorTransationFlow,
+  type SaleorTransationFlow,
 } from "@/modules/saleor/saleor-transaction-flow";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import {
   createStripeClientSecret,
-  StripeClientSecret,
-  StripeClientSecretValidationError,
+  type StripeClientSecret,
+  type StripeClientSecretValidationError,
 } from "@/modules/stripe/stripe-client-secret";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import {
   createStripePaymentIntentId,
-  StripePaymentIntentId,
-  StripePaymentIntentValidationError,
+  type StripePaymentIntentId,
+  type StripePaymentIntentValidationError,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import {
   createStripePaymentIntentStatus,
-  StripePaymentIntentStatus,
+  type StripePaymentIntentStatus,
 } from "@/modules/stripe/stripe-payment-intent-status";
-import { CreatePaymentIntentArgs, IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import {
+  type CreatePaymentIntentArgs,
+  type IStripePaymentIntentsApiFactory,
+} from "@/modules/stripe/types";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
@@ -50,16 +53,16 @@ import {
   ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
-import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
+import { type TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import {
   parseTransactionInitializeSessionEventData,
-  TransactionInitializeSessionEventData,
+  type TransactionInitializeSessionEventData,
 } from "./event-data-parser";
 import { resolvePaymentMethodFromEventData } from "./payment-method-resolver";
 import {
   TransactionInitializeSessionUseCaseResponses,
-  TransactionInitializeSessionUseCaseResponsesType,
+  type TransactionInitializeSessionUseCaseResponsesType,
 } from "./use-case-response";
 
 type UseCaseExecuteResult = Result<

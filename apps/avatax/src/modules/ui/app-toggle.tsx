@@ -1,7 +1,7 @@
 import { Box, Text } from "@saleor/macaw-ui";
-import { Toggle, ToggleProps } from "@saleor/react-hook-form-macaw";
+import { Toggle, type ToggleProps } from "@saleor/react-hook-form-macaw";
 import React from "react";
-import { Control, FieldPath, FieldValues } from "react-hook-form";
+import { type Control, type FieldPath, type FieldValues } from "react-hook-form";
 
 type AppToggleProps<TFieldValues extends FieldValues = FieldValues> = Omit<
   ToggleProps<TFieldValues>,

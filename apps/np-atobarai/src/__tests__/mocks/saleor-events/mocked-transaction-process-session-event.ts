@@ -1,4 +1,4 @@
-import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
+import { type TransactionProcessSessionEventFragment } from "@/generated/graphql";
 
 import { mockedAtobaraiTransactionId } from "../atobarai/mocked-atobarai-transaction-id";
 import { mockedSaleorAppId } from "../saleor/mocked-saleor-app-id";

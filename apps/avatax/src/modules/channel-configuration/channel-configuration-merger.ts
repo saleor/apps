@@ -1,6 +1,6 @@
-import { ChannelFragment } from "../../../generated/graphql";
+import { type ChannelFragment } from "../../../generated/graphql";
 import { createId } from "../../lib/utils";
-import { ChannelsConfig } from "./channel-config";
+import { type ChannelsConfig } from "./channel-config";
 
 export class ChannelConfigurationMerger {
   merge(channels: ChannelFragment[], channelsConfig: ChannelsConfig): ChannelsConfig {

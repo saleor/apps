@@ -1,8 +1,8 @@
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
-import { createSaleorApiUrl, SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { createSaleorApiUrl, type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 /**
  * Stores attributes that Stripe webhook returns to us

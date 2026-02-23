@@ -1,5 +1,5 @@
 import { getMappedAttributes } from "../google-feed/attribute-mapping";
-import { RootConfig } from "./app-config";
+import { type RootConfig } from "./app-config";
 import { exampleVariantData } from "./example-variant-data";
 
 interface PrepareExampleVariantData {

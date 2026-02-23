@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 
 import { awsRegionList } from "../file-storage/s3/aws-region-list";
 import { trpcClient } from "../trpc/trpc-client";
-import { AppConfigSchema, RootConfig } from "./app-config";
+import { AppConfigSchema, type RootConfig } from "./app-config";
 
 type S3BucketConfiguration = Exclude<RootConfig["s3"], null>;
 

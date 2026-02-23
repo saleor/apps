@@ -1,4 +1,4 @@
-import { AddressFragment, SourceObjectFragment } from "@/generated/graphql";
+import { type AddressFragment, type SourceObjectFragment } from "@/generated/graphql";
 
 export const formatCustomerName = (address: AddressFragment): string => {
   return `${address.lastName} ${address.firstName}`;

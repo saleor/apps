@@ -1,5 +1,5 @@
 import { TextLink } from "@saleor/apps-ui";
-import { Box, BoxProps, Text } from "@saleor/macaw-ui";
+import { Box, type BoxProps, Text } from "@saleor/macaw-ui";
 
 export const AppHeader = ({ ...props }: BoxProps) => {
   return (

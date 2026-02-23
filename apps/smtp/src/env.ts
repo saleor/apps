@@ -1,6 +1,6 @@
 import { booleanEnv } from "@saleor/apps-shared/boolean-env";
 import { createEnv } from "@t3-oss/env-nextjs";
-import { z, ZodTypeAny } from "zod";
+import { z, type ZodTypeAny } from "zod";
 
 import { defaultBlockedFallbackEmailDomains } from "./const";
 

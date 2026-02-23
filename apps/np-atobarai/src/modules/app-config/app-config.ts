@@ -1,13 +1,13 @@
-import { BaseConfig } from "@saleor/dynamo-config-repository";
+import { type BaseConfig } from "@saleor/dynamo-config-repository";
 import { BaseError } from "@saleor/errors";
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 import { z } from "zod";
 
-import { AtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
-import { AtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
-import { AtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
+import { type AtobaraiMerchantCode } from "@/modules/atobarai/atobarai-merchant-code";
+import { type AtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
+import { type AtobaraiTerminalId } from "@/modules/atobarai/atobarai-terminal-id";
 
-import { AtobaraiShippingCompanyCode } from "../atobarai/atobarai-shipping-company-code";
+import { type AtobaraiShippingCompanyCode } from "../atobarai/atobarai-shipping-company-code";
 
 export type AppChannelConfigFields = {
   readonly name: string;

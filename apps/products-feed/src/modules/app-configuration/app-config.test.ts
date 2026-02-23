@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AppConfig, RootConfig } from "./app-config";
+import { AppConfig, type RootConfig } from "./app-config";
 
 const exampleChannelConfig: RootConfig["channelConfig"] = {
   test: {

@@ -2,7 +2,7 @@ import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 
 import { UntypedOrderCancelledSubscriptionDocument } from "../../../../generated/graphql";
 import { saleorApp } from "../../../../saleor-app";
-import { OrderCancelledPayload } from "../payloads/order-cancelled-payload";
+import { type OrderCancelledPayload } from "../payloads/order-cancelled-payload";
 
 export const orderCancelledAsyncWebhook = new SaleorAsyncWebhook<OrderCancelledPayload>({
   name: "OrderCancelled",

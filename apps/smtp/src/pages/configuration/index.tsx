@@ -1,12 +1,12 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Text } from "@saleor/macaw-ui";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 
 import { BasicLayout } from "../../components/basic-layout";
 import { SectionWithDescription } from "../../components/section-with-description";
 import { ConfigurationFallback } from "../../modules/app-configuration/ui/configuration-fallback";
 import {
-  ConfigurationListItem,
+  type ConfigurationListItem,
   MessagingProvidersBox,
 } from "../../modules/app-configuration/ui/messaging-providers-box";
 import { appUrls } from "../../modules/app-configuration/urls";

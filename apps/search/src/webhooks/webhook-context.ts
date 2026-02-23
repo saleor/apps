@@ -1,4 +1,4 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 
 import { ChannelsDocument } from "../../generated/graphql";
 import { AlgoliaSearchProvider } from "../lib/algolia/algoliaSearchProvider";

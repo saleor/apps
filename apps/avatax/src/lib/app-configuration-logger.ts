@@ -1,7 +1,7 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 
-import { createLogger } from "../logger";
-import { AppConfig } from "./app-config";
+import { type createLogger } from "../logger";
+import { type AppConfig } from "./app-config";
 
 export class AppConfigurationLogger {
   constructor(

@@ -1,6 +1,6 @@
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { EncryptedMetadataManagerFactory } from "@saleor/apps-shared/metadata-manager";
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { env } from "../env";
 

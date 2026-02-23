@@ -5,9 +5,9 @@ import { useState } from "react";
 import {
   ChannelsDocument,
   ProductsDataForImportDocument,
-  ProductsDataForImportQuery,
+  type ProductsDataForImportQuery,
 } from "../../../generated/graphql";
-import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
+import { type AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 
 const PER_PAGE = 100;
 const PENDING_UPLOADS_BATCH_SIZE = 10;

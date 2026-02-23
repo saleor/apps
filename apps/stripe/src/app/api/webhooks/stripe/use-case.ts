@@ -1,46 +1,46 @@
-import { APL, AuthData } from "@saleor/app-sdk/APL";
+import { type APL, type AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
-import { err, ok, Result } from "neverthrow";
-import Stripe from "stripe";
+import { err, ok, type Result } from "neverthrow";
+import type Stripe from "stripe";
 
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
-  ITransactionEventReporter,
+  type ITransactionEventReporter,
   TransactionEventReporterErrors,
 } from "@/modules/saleor/transaction-event-reporter";
 import { StripeClient } from "@/modules/stripe/stripe-client";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
-import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
+import { type StripeEnv } from "@/modules/stripe/stripe-env";
+import { type StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { type StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import {
-  AllowedStripeObjectMetadata,
-  IStripeEventVerify,
-  IStripePaymentIntentsApiFactory,
+  type AllowedStripeObjectMetadata,
+  type IStripeEventVerify,
+  type IStripePaymentIntentsApiFactory,
 } from "@/modules/stripe/types";
 import {
   TransactionRecorderError,
-  TransactionRecorderRepo,
+  type TransactionRecorderRepo,
 } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
 import {
   ObjectCreatedOutsideOfSaleorResponse,
-  PossibleStripeWebhookErrorResponses,
-  PossibleStripeWebhookSuccessResponses,
+  type PossibleStripeWebhookErrorResponses,
+  type PossibleStripeWebhookSuccessResponses,
   StripeWebhookAppIsNotConfiguredResponse,
   StripeWebhookMalformedRequestResponse,
   StripeWebhookSeverErrorResponse,
   StripeWebhookSuccessResponse,
   StripeWebhookTransactionMissingResponse,
 } from "./stripe-webhook-responses";
-import { WebhookParams } from "./webhook-params";
+import { type WebhookParams } from "./webhook-params";
 
 type R = Promise<
   Result<PossibleStripeWebhookSuccessResponses, PossibleStripeWebhookErrorResponses>

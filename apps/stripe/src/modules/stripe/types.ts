@@ -1,13 +1,13 @@
-import { Result } from "neverthrow";
-import Stripe from "stripe";
+import { type Result } from "neverthrow";
+import type Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
-import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
-import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
+import { type SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
+import { type StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
-import { StripeMoney } from "./stripe-money";
-import { StripePaymentIntentId } from "./stripe-payment-intent-id";
-import { StripeRestrictedKey } from "./stripe-restricted-key";
+import { type StripeMoney } from "./stripe-money";
+import { type StripePaymentIntentId } from "./stripe-payment-intent-id";
+import { type StripeRestrictedKey } from "./stripe-restricted-key";
 
 export interface IStripePaymentIntentsApiFactory {
   create(args: { key: StripeRestrictedKey }): IStripePaymentIntentsApi;

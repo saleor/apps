@@ -1,5 +1,5 @@
 import { err, ok } from "neverthrow";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
@@ -13,7 +13,7 @@ import {
   BrokenAppResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
-import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import { type IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   CancelFailureResult,
   CancelSuccessResult,

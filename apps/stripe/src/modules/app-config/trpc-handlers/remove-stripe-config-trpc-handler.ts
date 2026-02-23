@@ -4,8 +4,8 @@ import { Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { createSaleorApiUrl, SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { createSaleorApiUrl, type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 

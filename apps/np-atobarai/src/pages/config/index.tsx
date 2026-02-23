@@ -1,6 +1,6 @@
 import { Layout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 
 import { AppHeader } from "@/modules/ui/app-header";
 import { ChannelConfigSection } from "@/modules/ui/channel-config-section";

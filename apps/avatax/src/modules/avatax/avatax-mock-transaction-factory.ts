@@ -7,7 +7,7 @@ import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
 import { JurisTypeId } from "avatax/lib/enums/JurisTypeId";
 import { LiabilityType } from "avatax/lib/enums/LiabilityType";
 import { RateType } from "avatax/lib/enums/RateType";
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 
 const taxExcludedNoShipping: Partial<TransactionModel> = {
   totalAmount: 80,

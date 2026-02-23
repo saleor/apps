@@ -2,7 +2,7 @@ import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 
 import {
   OrderConfirmedDocument,
-  OrderConfirmedSubscriptionPayloadFragment,
+  type OrderConfirmedSubscriptionPayloadFragment,
 } from "@/generated/graphql";
 import { saleorApp } from "@/saleor-app";
 

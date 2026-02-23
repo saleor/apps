@@ -1,7 +1,7 @@
 import { createLogger } from "@/logger";
-import { BuilderIoProviderConfig } from "@/modules/configuration";
+import { type BuilderIoProviderConfig } from "@/modules/configuration";
 
-import { WebhookProductVariantFragment } from "../../../../generated/graphql";
+import { type WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { FieldsMapper } from "../fields-mapper";
 
 // https://www.builder.io/c/docs/write-api

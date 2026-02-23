@@ -1,7 +1,7 @@
-import { Analytics, TrackParams } from "@segment/analytics-node";
+import { Analytics, type TrackParams } from "@segment/analytics-node";
 
 import packageJson from "../../../package.json";
-import { TrackingBaseEvent } from "../tracking-events/tracking-events";
+import { type TrackingBaseEvent } from "../tracking-events/tracking-events";
 
 export type EventToTrack = Pick<TrackParams, "properties" | "event"> &
   Pick<TrackingBaseEvent, "user" | "issuedAt">;

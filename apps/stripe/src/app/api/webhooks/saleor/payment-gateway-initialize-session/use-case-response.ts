@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
-import { PaymentGatewayInitializeSession } from "@/generated/app-webhooks-types/payment-gateway-initialize-session";
-import { AppContext } from "@/lib/app-context";
-import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
+import { type PaymentGatewayInitializeSession } from "@/generated/app-webhooks-types/payment-gateway-initialize-session";
+import { type AppContext } from "@/lib/app-context";
+import { type StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 
 class Success extends SuccessWebhookResponse {
   readonly pk: StripePublishableKey;

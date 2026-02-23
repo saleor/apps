@@ -1,10 +1,10 @@
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 
-import { OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
+import { type OrderConfirmedSubscriptionFragment } from "../../../../generated/graphql";
 import { defaultOrder } from "../../../mocks";
-import { ChannelConfig } from "../../channel-configuration/channel-config";
+import { type ChannelConfig } from "../../channel-configuration/channel-config";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { type AvataxConfig } from "../avatax-connection-schema";
 import { orderConfirmedTransactionMock } from "./avatax-order-confirmed-response-transaction-mock";
 
 const defaultChannelConfig: ChannelConfig = {

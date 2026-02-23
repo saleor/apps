@@ -1,11 +1,11 @@
-import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 
-import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
-import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
+import { type PaymentMethod } from "@/modules/stripe/payment-methods/types";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
-import { ResolvedTransactionFlow } from "../../resolved-transaction-flow";
-import { SaleorTransationFlow } from "../../saleor/saleor-transaction-flow";
+import { type ResolvedTransactionFlow } from "../../resolved-transaction-flow";
+import { type SaleorTransationFlow } from "../../saleor/saleor-transaction-flow";
 
 /**
  * Holds transaction that app records during it's lifetime.

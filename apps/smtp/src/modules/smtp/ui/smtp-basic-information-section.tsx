@@ -13,10 +13,10 @@ import { ConfigurationActiveDescriptionText } from "../../app-configuration/ui/c
 import { ConfigurationNameDescriptionText } from "../../app-configuration/ui/configuration-name-description-text";
 import { trpcClient } from "../../trpc/trpc-client";
 import {
-  SmtpUpdateBasicInformation,
+  type SmtpUpdateBasicInformation,
   smtpUpdateBasicInformationSchema,
 } from "../configuration/smtp-config-input-schema";
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { type SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { SaleorThrobber } from "./saleor-throbber";
 
 interface SmtpBasicInformationSectionProps {

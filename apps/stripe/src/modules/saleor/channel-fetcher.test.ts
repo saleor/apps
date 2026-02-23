@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
-import { ChannelFragment } from "@/generated/graphql";
+import { type ChannelFragment } from "@/generated/graphql";
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 
 describe("ChannelFetcher", () => {

@@ -3,7 +3,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 import { Result } from "neverthrow";
-import { NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";

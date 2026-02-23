@@ -1,4 +1,4 @@
-import { SaleorProviderFieldsMappingKey } from "./schemas/saleor-provider-fields-mapping.schema";
+import { type SaleorProviderFieldsMappingKey } from "./schemas/saleor-provider-fields-mapping.schema";
 
 export const printSaleorProductFields = (fieldName: SaleorProviderFieldsMappingKey) => {
   switch (fieldName) {

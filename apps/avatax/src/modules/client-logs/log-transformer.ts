@@ -1,4 +1,4 @@
-import { type FormattedItem, FormattedValue, Parser } from "dynamodb-toolbox";
+import { type FormattedItem, type FormattedValue, Parser } from "dynamodb-toolbox";
 import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/error";

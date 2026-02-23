@@ -1,18 +1,18 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 
 import { loggerContext } from "@/logger-context";
 
 import { createLogger } from "../../../logger";
-import { SaleorOrderConfirmedEvent } from "../../saleor";
-import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
-import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
-import { AvataxClient } from "../avatax-client";
-import { AvataxConfig } from "../avatax-connection-schema";
-import { PriceReductionDiscountsStrategy } from "../discounts";
+import { type SaleorOrderConfirmedEvent } from "../../saleor";
+import { type CreateOrderResponse } from "../../taxes/tax-provider-webhook";
+import { type WebhookAdapter } from "../../taxes/tax-webhook-adapter";
+import { type AvataxClient } from "../avatax-client";
+import { type AvataxConfig } from "../avatax-connection-schema";
+import { type PriceReductionDiscountsStrategy } from "../discounts";
 import { extractTransactionRedactedLogProperties } from "../extract-transaction-redacted-log-properties";
-import { AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
-import { AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
+import { type AvataxOrderConfirmedPayloadService } from "./avatax-order-confirmed-payload.service";
+import { type AvataxOrderConfirmedResponseTransformer } from "./avatax-order-confirmed-response-transformer";
 
 type AvataxOrderConfirmedPayload = {
   confirmedOrderEvent: SaleorOrderConfirmedEvent;

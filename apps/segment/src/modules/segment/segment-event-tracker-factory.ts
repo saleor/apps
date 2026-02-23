@@ -1,8 +1,8 @@
-import { ok, Result } from "neverthrow";
+import { ok, type Result } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
-import { AppConfig } from "../configuration/app-config";
+import { type AppConfig } from "../configuration/app-config";
 import { SegmentClient } from "./segment.client";
 import { SegmentEventsTracker } from "./segment-events-tracker";
 

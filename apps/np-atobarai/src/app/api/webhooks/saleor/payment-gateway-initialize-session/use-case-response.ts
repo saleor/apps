@@ -1,7 +1,7 @@
-import { PaymentGatewayInitializeSession } from "@/generated/app-webhooks-types/payment-gateway-initialize-session";
+import { type PaymentGatewayInitializeSession } from "@/generated/app-webhooks-types/payment-gateway-initialize-session";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
-import { PaymentGatewayInitializeSessionValidationError } from "./validation-errors";
+import { type PaymentGatewayInitializeSessionValidationError } from "./validation-errors";
 
 class Success extends SuccessWebhookResponse {
   getResponse() {

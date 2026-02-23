@@ -1,37 +1,37 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
   MalformedRequestResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
-import { TransactionProcessSessionEventFragment } from "@/generated/graphql";
+import { type TransactionProcessSessionEventFragment } from "@/generated/graphql";
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import { createTimestampFromPaymentIntent } from "@/modules/stripe/stripe-timestamps";
-import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import { type IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   AuthorizationFailureResult,
   ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
 import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
-import { TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
+import { type TransactionRecorderRepo } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import {
   TransactionProcessSessionUseCaseResponses,
-  TransactionProcessSessionUseCaseResponsesType,
+  type TransactionProcessSessionUseCaseResponsesType,
 } from "./use-case-response";
 
 type UseCaseExecuteResult = Result<

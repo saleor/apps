@@ -1,5 +1,5 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Option } from "@saleor/macaw-ui";
+import { type Option } from "@saleor/macaw-ui";
 import { useCallback, useEffect, useState } from "react";
 
 import { trpcClient } from "@/modules/trpc/trpc-client";

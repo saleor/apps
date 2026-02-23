@@ -1,4 +1,4 @@
-import { MessageEventTypes, messageEventTypes } from "./message-event-types";
+import { type MessageEventTypes, messageEventTypes } from "./message-event-types";
 
 /**
  *  Returns the event type if it is valid, otherwise undefined.

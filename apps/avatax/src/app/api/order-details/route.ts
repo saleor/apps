@@ -1,12 +1,12 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
-import { ExtensionPOSTAttributes } from "@saleor/app-sdk/types";
+import { type ExtensionPOSTAttributes } from "@saleor/app-sdk/types";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
-import { NextRequest } from "next/server";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type NextRequest } from "next/server";
 
 import { metadataCache } from "@/lib/app-metadata-cache";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
-import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { type AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
 import { AvataxTransactionDetailsFetcher } from "@/modules/avatax/avatax-transaction-details-fetcher";
 import { CrudSettingsManager } from "@/modules/crud-settings/crud-settings.service";

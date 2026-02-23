@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { type Locator, type Page } from "@playwright/test";
 import { env } from "e2e/env";
 
 export class StripeCheckoutFormPage {

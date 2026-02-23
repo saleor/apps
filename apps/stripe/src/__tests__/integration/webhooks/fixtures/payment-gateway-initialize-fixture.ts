@@ -1,5 +1,5 @@
 import { mockedSaleorAppId, mockedSaleorChannelId } from "@/__tests__/mocks/constants";
-import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
+import { type PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
 
 export const paymentGatewayInitializeFixture = (): PaymentGatewayInitializeSessionEventFragment => {
   return {

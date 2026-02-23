@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { CancelOrderPayload } from "../../taxes/tax-provider-webhook";
+import { type CancelOrderPayload } from "../../taxes/tax-provider-webhook";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
 import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
 

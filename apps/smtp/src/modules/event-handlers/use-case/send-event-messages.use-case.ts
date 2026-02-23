@@ -7,16 +7,16 @@ import { FallbackSenderEmail } from "../../saleor-fallback-behavior/fallback-sen
 import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
   getFallbackSmtpConfigSchema,
-  SmtpConfiguration,
+  type SmtpConfiguration,
 } from "../../smtp/configuration/smtp-config-schema";
 import {
-  IGetFallbackSmtpEnabled,
-  IGetSmtpConfiguration,
+  type IGetFallbackSmtpEnabled,
+  type IGetSmtpConfiguration,
 } from "../../smtp/configuration/smtp-configuration.service";
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../../smtp/default-templates";
-import { IEmailCompiler } from "../../smtp/services/email-compiler";
-import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
-import { MessageEventTypes, messageEventTypes } from "../message-event-types";
+import { type IEmailCompiler } from "../../smtp/services/email-compiler";
+import { type ISMTPEmailSender, type SendMailArgs } from "../../smtp/services/smtp-email-sender";
+import { type MessageEventTypes, messageEventTypes } from "../message-event-types";
 
 export class SendEventMessagesUseCase {
   static BaseError = BaseError.subclass("SendEventMessagesUseCaseError");

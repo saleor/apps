@@ -1,6 +1,6 @@
-import { Obfuscator } from "../../../lib/obfuscator";
-import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxConnectionService } from "./avatax-connection.service";
+import { type Obfuscator } from "../../../lib/obfuscator";
+import { type AvataxConfig } from "../avatax-connection-schema";
+import { type AvataxConnectionService } from "./avatax-connection.service";
 
 /*
  * This class is used to merge the given input with the existing configuration.

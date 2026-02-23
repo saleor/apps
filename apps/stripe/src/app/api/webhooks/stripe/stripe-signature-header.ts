@@ -1,4 +1,4 @@
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
 

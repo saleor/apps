@@ -1,11 +1,11 @@
-import { Permission } from "@saleor/app-sdk/types";
+import { type Permission } from "@saleor/app-sdk/types";
 import { initTRPC } from "@trpc/server";
 import { ZodError } from "zod";
 
 import { BaseError } from "../../errors";
-import { ErrorContext } from "../smtp/services/email-compiler";
+import { type ErrorContext } from "../smtp/services/email-compiler";
 import { hasErrorCode } from "../smtp/services/template-error-codes";
-import { TrpcContext } from "./trpc-context";
+import { type TrpcContext } from "./trpc-context";
 
 interface Meta {
   requiredClientPermissions?: Permission[];

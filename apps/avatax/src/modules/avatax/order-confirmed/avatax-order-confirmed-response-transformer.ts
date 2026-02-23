@@ -1,8 +1,8 @@
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
-import { CreateOrderResponse } from "../../taxes/tax-provider-webhook";
+import { type CreateOrderResponse } from "../../taxes/tax-provider-webhook";
 
 export class AvataxOrderConfirmedResponseTransformer {
   transform(response: TransactionModel): CreateOrderResponse {

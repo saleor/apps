@@ -1,6 +1,6 @@
 import { Breadcrumbs, Layout, SkeletonLayout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 

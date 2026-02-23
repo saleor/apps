@@ -1,6 +1,6 @@
 import { S3Client } from "@aws-sdk/client-s3";
 
-import { RootConfig } from "../../app-configuration/app-config";
+import { type RootConfig } from "../../app-configuration/app-config";
 
 export const createS3ClientFromConfiguration = ({
   accessKeyId,

@@ -1,5 +1,5 @@
 import { ok } from "neverthrow";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedSaleorSchemaVersionNotSupportingPaymentMethodDetails } from "@/__tests__/mocks/constants";

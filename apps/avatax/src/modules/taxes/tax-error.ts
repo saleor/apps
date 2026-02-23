@@ -1,4 +1,4 @@
-import { CommonErrorProps, CriticalError, ExpectedError } from "../../error";
+import { type CommonErrorProps, CriticalError, ExpectedError } from "../../error";
 
 // Error thrown when there is not enough data in webhook payload to proceed with. Not reported to Sentry.
 export const TaxIncompletePayloadErrors = {

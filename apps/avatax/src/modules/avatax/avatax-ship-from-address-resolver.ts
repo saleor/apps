@@ -1,9 +1,9 @@
-import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
+import { type AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
 import { z } from "zod";
 
 import { createLogger } from "../../logger";
 import { avataxAddressFactory } from "./address-factory";
-import { AvataxConfig } from "./avatax-connection-schema";
+import { type AvataxConfig } from "./avatax-connection-schema";
 
 const logger = createLogger("avataxShipFromAddress");
 

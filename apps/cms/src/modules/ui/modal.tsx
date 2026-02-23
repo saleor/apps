@@ -1,4 +1,4 @@
-import { Box, BoxProps } from "@saleor/macaw-ui";
+import { Box, type BoxProps } from "@saleor/macaw-ui";
 
 export const Modal = ({ onClose, ...rest }: { onClose(): void } & BoxProps) => {
   return (

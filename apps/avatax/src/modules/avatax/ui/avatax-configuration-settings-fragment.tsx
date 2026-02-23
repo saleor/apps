@@ -3,7 +3,7 @@ import { Input } from "@saleor/react-hook-form-macaw";
 import { useFormContext } from "react-hook-form";
 
 import { AppToggle } from "../../ui/app-toggle";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { type AvataxConfig } from "../avatax-connection-schema";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 import { HelperText } from "./form-helper-text";
 import { FormSection } from "./form-section";

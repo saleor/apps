@@ -1,19 +1,19 @@
 import { BaseError } from "@saleor/errors";
 import { GetItemCommand, PutItemCommand, UpdateItemCommand } from "dynamodb-toolbox";
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { createLogger } from "@/lib/logger";
 
 import { createAtobaraiShippingCompanyCode } from "../atobarai/atobarai-shipping-company-code";
 import {
-  AtobaraiTransactionId,
+  type AtobaraiTransactionId,
   createAtobaraiTransactionId,
 } from "../atobarai/atobarai-transaction-id";
-import { TransactionRecordConfig, TransactionRecordEntity } from "./dynamodb/entity";
+import { TransactionRecordConfig, type TransactionRecordEntity } from "./dynamodb/entity";
 import { TransactionRecord } from "./transaction-record";
 import {
-  TransactionRecordRepo,
-  TransactionRecordRepoAccess,
+  type TransactionRecordRepo,
+  type TransactionRecordRepoAccess,
   TransactionRecordRepoError,
 } from "./types";
 

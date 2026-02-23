@@ -1,9 +1,9 @@
-import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import { type NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { AsyncLocalStorage } from "async_hooks";
-import { NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
 import { createLogger } from "@/lib/logger";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
+import { type StripeEnv } from "@/modules/stripe/stripe-env";
 
 export type AppContext = {
   stripeEnv: StripeEnv | null;

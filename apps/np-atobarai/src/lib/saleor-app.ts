@@ -1,4 +1,4 @@
-import { APL } from "@saleor/app-sdk/APL";
+import { type APL } from "@saleor/app-sdk/APL";
 import { DynamoAPL } from "@saleor/app-sdk/APL/dynamodb";
 import { FileAPL } from "@saleor/app-sdk/APL/file";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";

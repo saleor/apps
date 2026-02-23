@@ -4,16 +4,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { BaseError } from "../../../errors";
 import {
   getFallbackSmtpConfigSchema,
-  SmtpConfiguration,
+  type SmtpConfiguration,
 } from "../../smtp/configuration/smtp-config-schema";
 import {
-  FilterConfigurationsArgs,
-  IGetFallbackSmtpEnabled,
-  IGetSmtpConfiguration,
+  type FilterConfigurationsArgs,
+  type IGetFallbackSmtpEnabled,
+  type IGetSmtpConfiguration,
 } from "../../smtp/configuration/smtp-configuration.service";
-import { CompileArgs, IEmailCompiler } from "../../smtp/services/email-compiler";
-import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
-import { MessageEventTypes } from "../message-event-types";
+import { type CompileArgs, type IEmailCompiler } from "../../smtp/services/email-compiler";
+import { type ISMTPEmailSender, type SendMailArgs } from "../../smtp/services/smtp-email-sender";
+import { type MessageEventTypes } from "../message-event-types";
 import { SendEventMessagesUseCase } from "./send-event-messages.use-case";
 import { SendEventMessagesUseCaseFactory } from "./send-event-messages.use-case.factory";
 

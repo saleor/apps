@@ -16,10 +16,10 @@ import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { messageEventTypesLabels } from "../../event-handlers/message-event-types";
 import { trpcClient } from "../../trpc/trpc-client";
 import {
-  SmtpUpdateEventArray,
+  type SmtpUpdateEventArray,
   smtpUpdateEventArraySchema,
 } from "../configuration/smtp-config-input-schema";
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { type SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { smtpUrls } from "../urls";
 import { SaleorThrobber } from "./saleor-throbber";
 

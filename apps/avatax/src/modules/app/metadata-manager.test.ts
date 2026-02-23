@@ -1,5 +1,5 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
-import { Client } from "urql";
+import { type Client } from "urql";
 import { describe, expect, it, vi } from "vitest";
 
 import { AppMetadataCache } from "../../lib/app-metadata-cache";

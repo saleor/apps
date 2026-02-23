@@ -1,8 +1,8 @@
-import { NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
+import { type NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
-import { ProductUpdated } from "../../../../../generated/graphql";
+import { type ProductUpdated } from "../../../../../generated/graphql";
 import {
   AlgoliaErrorParser,
   createRecordSizeErrorMessage,

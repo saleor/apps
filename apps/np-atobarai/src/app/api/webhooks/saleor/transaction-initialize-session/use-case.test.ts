@@ -19,7 +19,7 @@ import {
 } from "@/modules/atobarai/api/atobarai-transaction-success-response";
 import {
   AtobaraiApiClientRegisterTransactionError,
-  IAtobaraiApiClientFactory,
+  type IAtobaraiApiClientFactory,
 } from "@/modules/atobarai/api/types";
 import {
   ChargeActionRequiredResult,

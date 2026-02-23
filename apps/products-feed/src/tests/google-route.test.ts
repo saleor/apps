@@ -1,4 +1,4 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createMocks } from "node-mocks-http";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";

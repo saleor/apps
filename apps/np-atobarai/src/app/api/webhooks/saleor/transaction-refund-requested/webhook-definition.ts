@@ -2,7 +2,7 @@ import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 
 import {
   TransactionRefundRequestedDocument,
-  TransactionRefundRequestedEventFragment,
+  type TransactionRefundRequestedEventFragment,
 } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { saleorApp } from "@/lib/saleor-app";

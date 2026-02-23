@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AtobaraiErrorResponse, createAtobaraiErrorResponse } from "./atobarai-error-response";
+import { type AtobaraiErrorResponse, createAtobaraiErrorResponse } from "./atobarai-error-response";
 
 describe("createAtobaraiRegisterTransactionErrorResponse", () => {
   it("should successfully parse a valid error response", () => {

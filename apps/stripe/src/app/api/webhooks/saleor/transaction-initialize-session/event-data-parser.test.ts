@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   ParseError,
   parseTransactionInitializeSessionEventData,
-  TransactionInitializeSessionEventData,
+  type TransactionInitializeSessionEventData,
   UnsupportedPaymentMethodError,
 } from "./event-data-parser";
 

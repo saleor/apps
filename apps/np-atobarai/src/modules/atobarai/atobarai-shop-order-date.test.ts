@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { AtobaraiShopOrderDate, createAtobaraiShopOrderDate } from "./atobarai-shop-order-date";
+import {
+  type AtobaraiShopOrderDate,
+  createAtobaraiShopOrderDate,
+} from "./atobarai-shop-order-date";
 
 describe("createAtobaraiShopOrderDate", () => {
   it("should create a valid AtobaraiShopOrderDate from a valid date string", () => {

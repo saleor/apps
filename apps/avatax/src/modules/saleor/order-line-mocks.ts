@@ -1,4 +1,4 @@
-import { OrderLineFragment } from "../../../generated/graphql";
+import { type OrderLineFragment } from "../../../generated/graphql";
 import { SaleorOrderLine } from "./order-line";
 
 export class SaleorOrderLineMockFactory {

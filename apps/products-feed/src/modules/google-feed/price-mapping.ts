@@ -1,4 +1,4 @@
-import { ProductVariant } from "./fetch-product-data";
+import { type ProductVariant } from "./fetch-product-data";
 
 /**
  * Price format has to be altered from the en format to the one expected by Google

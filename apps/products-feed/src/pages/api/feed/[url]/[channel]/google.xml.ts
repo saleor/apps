@@ -1,11 +1,11 @@
 import { SpanStatusCode } from "@opentelemetry/api";
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { getBaseUrl } from "@saleor/app-sdk/headers";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { z, ZodError } from "zod";
+import { z, type ZodError } from "zod";
 
 import { env } from "@/env";
 import { appRootTracer } from "@/lib/app-root-tracer";
@@ -13,7 +13,7 @@ import { ChunkCaller } from "@/lib/chunk-caller";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
-import { RootConfig } from "@/modules/app-configuration/app-config";
+import { type RootConfig } from "@/modules/app-configuration/app-config";
 import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
 import { getFileName } from "@/modules/file-storage/s3/file-names";
 import { FileRemover } from "@/modules/file-storage/s3/file-remover";

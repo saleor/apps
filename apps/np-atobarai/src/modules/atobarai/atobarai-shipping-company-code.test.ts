@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  AtobaraiShippingCompanyCode,
+  type AtobaraiShippingCompanyCode,
   createAtobaraiShippingCompanyCode,
 } from "./atobarai-shipping-company-code";
 

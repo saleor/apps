@@ -1,4 +1,4 @@
-import { IAvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
+import { type IAvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
 
 export class AvataxTransactionDetailsFetcher {
   constructor(private avataxSdkClientFactory: IAvataxSdkClientFactory) {}

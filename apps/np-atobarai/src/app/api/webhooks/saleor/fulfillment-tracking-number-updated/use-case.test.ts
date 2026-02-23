@@ -15,9 +15,9 @@ import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-
 import { createAtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import {
   AtobaraiApiClientFulfillmentReportError,
-  IAtobaraiApiClientFactory,
+  type IAtobaraiApiClientFactory,
 } from "@/modules/atobarai/api/types";
-import { IOrderNoteService } from "@/modules/saleor/order-note-service";
+import { type IOrderNoteService } from "@/modules/saleor/order-note-service";
 import { TransactionRecordRepoError } from "@/modules/transactions-recording/types";
 
 import { AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";

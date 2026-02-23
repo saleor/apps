@@ -1,6 +1,6 @@
-import { OrderGrantedRefundFragment, SourceObjectFragment } from "@/generated/graphql";
+import { type OrderGrantedRefundFragment, type SourceObjectFragment } from "@/generated/graphql";
 
-import { AtobaraiGoods, createAtobaraiGoods } from "./atobarai-goods";
+import { type AtobaraiGoods, createAtobaraiGoods } from "./atobarai-goods";
 import { AtobaraiLineCalculation } from "./atobarai-line-calculation";
 
 export class PartialRefundWithoutLineItemsGoodsBuilder {

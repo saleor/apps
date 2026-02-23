@@ -1,25 +1,25 @@
-import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
-import { err, fromThrowable, ok, Result } from "neverthrow";
-import { Client } from "urql";
+import { type SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { err, fromThrowable, ok, type Result } from "neverthrow";
+import { type Client } from "urql";
 
 import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
-import { FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
+import { type FulfillmentTrackingNumberUpdatedEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
-import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
+import { type AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { createAtobaraiFulfillmentReportPayload } from "@/modules/atobarai/api/atobarai-fulfillment-report-payload";
-import { IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
+import { type IAtobaraiApiClientFactory } from "@/modules/atobarai/api/types";
 import {
-  AtobaraiShippingCompanyCode,
+  type AtobaraiShippingCompanyCode,
   AtobaraiShippingCompanyCodeValidationError,
   createAtobaraiShippingCompanyCode,
 } from "@/modules/atobarai/atobarai-shipping-company-code";
 import { createAtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
-import { IOrderNoteService } from "@/modules/saleor/order-note-service";
+import { type IOrderNoteService } from "@/modules/saleor/order-note-service";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
-import { TransactionRecordRepo } from "@/modules/transactions-recording/types";
+import { type TransactionRecordRepo } from "@/modules/transactions-recording/types";
 
 import { BaseUseCase } from "../base-use-case";
-import { AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
+import { type AppIsNotConfiguredResponse, BrokenAppResponse } from "../saleor-webhook-responses";
 import { FulfillmentTrackingNumberUpdatedUseCaseResponse } from "./use-case-response";
 
 type UseCaseExecuteResult = Promise<

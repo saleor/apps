@@ -3,7 +3,7 @@ import {
   GetObjectAttributesCommand,
   GetObjectCommand,
   PutObjectCommand,
-  S3Client,
+  type S3Client,
 } from "@aws-sdk/client-s3";
 
 interface checkBucketAccessArgs {

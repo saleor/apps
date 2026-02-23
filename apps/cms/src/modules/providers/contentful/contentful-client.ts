@@ -1,10 +1,10 @@
 import { addBreadcrumb, captureException } from "@sentry/nextjs";
-import { ClientAPI, createClient, Environment } from "contentful-management";
+import { type ClientAPI, createClient, type Environment } from "contentful-management";
 
 import { createLogger } from "@/logger";
-import { ContentfulProviderConfig } from "@/modules/configuration";
+import { type ContentfulProviderConfig } from "@/modules/configuration";
 
-import { WebhookProductVariantFragment } from "../../../../generated/graphql";
+import { type WebhookProductVariantFragment } from "../../../../generated/graphql";
 
 type ConstructorOptions = {
   space: string;

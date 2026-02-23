@@ -2,7 +2,7 @@ import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 
 import {
   FulfillmentTrackingNumberUpdatedDocument,
-  FulfillmentTrackingNumberUpdatedEventFragment,
+  type FulfillmentTrackingNumberUpdatedEventFragment,
 } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { saleorApp } from "@/lib/saleor-app";

@@ -1,6 +1,6 @@
 import { Breadcrumbs } from "@saleor/apps-ui/src/breadcrumbs";
-import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
-import { ComponentProps, ReactElement } from "react";
+import { Box, type PropsWithBox, Text } from "@saleor/macaw-ui";
+import { type ComponentProps, type ReactElement } from "react";
 
 type Props = PropsWithBox<{
   breadcrumbs?: ReactElement<ComponentProps<typeof Breadcrumbs.Item>>[];

@@ -1,5 +1,5 @@
-import { DeleteObjectsCommand, S3Client } from "@aws-sdk/client-s3";
-import { DeleteObjectsCommandInput } from "@aws-sdk/client-s3/dist-types/commands/DeleteObjectsCommand";
+import { DeleteObjectsCommand, type S3Client } from "@aws-sdk/client-s3";
+import { type DeleteObjectsCommandInput } from "@aws-sdk/client-s3/dist-types/commands/DeleteObjectsCommand";
 
 export class FileRemover {
   constructor(private s3Client: S3Client) {}

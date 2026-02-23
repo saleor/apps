@@ -1,6 +1,6 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Text } from "@saleor/macaw-ui";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 /*
  * * ui/TextLink currently supports either in-app links or external links. This is in-dashboard link.

@@ -1,4 +1,4 @@
-import { CriticalError } from "../../error";
+import { type CriticalError } from "../../error";
 
 /*
  * The providers sdk types claim to sometimes return undefined.

@@ -1,7 +1,7 @@
-import { Client, OperationResult } from "urql";
+import { type Client, type OperationResult } from "urql";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { FetchCategoriesWithMappingQuery } from "../../../generated/graphql";
+import { type FetchCategoriesWithMappingQuery } from "../../../generated/graphql";
 import { CategoriesFetcher } from "./categories-fetcher";
 
 type FetchResult = OperationResult<FetchCategoriesWithMappingQuery, { cursor: string | undefined }>;

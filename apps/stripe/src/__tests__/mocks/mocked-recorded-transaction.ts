@@ -1,4 +1,4 @@
-import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 
 import {
   mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
@@ -7,15 +7,15 @@ import {
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import {
   createResolvedTransactionFlow,
-  ResolvedTransactionFlow,
+  type ResolvedTransactionFlow,
 } from "@/modules/resolved-transaction-flow";
 import {
   createSaleorTransactionFlow,
-  SaleorTransationFlow,
+  type SaleorTransationFlow,
 } from "@/modules/saleor/saleor-transaction-flow";
-import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
-import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
+import { type PaymentMethod } from "@/modules/stripe/payment-methods/types";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
 type Params = {

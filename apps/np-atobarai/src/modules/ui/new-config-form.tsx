@@ -2,12 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { Combobox, Input, Toggle, ToggleProps } from "@saleor/react-hook-form-macaw";
+import { Combobox, Input, Toggle, type ToggleProps } from "@saleor/react-hook-form-macaw";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import {
-  NewConfigInput,
+  type NewConfigInput,
   newConfigInputSchema,
 } from "@/modules/app-config/trpc-handlers/new-config-input-schema";
 import { trpcClient } from "@/modules/trpc/trpc-client";

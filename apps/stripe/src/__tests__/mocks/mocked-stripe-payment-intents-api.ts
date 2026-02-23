@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-import { IStripePaymentIntentsApi } from "@/modules/stripe/types";
+import { type IStripePaymentIntentsApi } from "@/modules/stripe/types";
 
 export const mockedStripePaymentIntentsApi = {
   createPaymentIntent: vi.fn(),

@@ -1,6 +1,6 @@
 import { Box, Text } from "@saleor/macaw-ui";
 
-import { CMSProviderMeta } from "../cms-provider-meta";
+import { type CMSProviderMeta } from "../cms-provider-meta";
 import logo from "./contentful-logo.svg";
 
 export const Contentful = {

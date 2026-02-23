@@ -4,7 +4,7 @@ import { SaleorOrderConfirmedEventMockFactory } from "../../saleor/order-confirm
 import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
 import { PriceReductionDiscountsStrategy } from "../discounts";
-import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { type AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { avataxConfigMock } from "./avatax-order-confirmed-payload-transformer.test";
 import { SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-lines-transformer";
 

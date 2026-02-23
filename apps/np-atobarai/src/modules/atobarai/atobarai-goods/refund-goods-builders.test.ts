@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
-import { OrderGrantedRefundFragment, SourceObjectFragment } from "@/generated/graphql";
+import { type OrderGrantedRefundFragment, type SourceObjectFragment } from "@/generated/graphql";
 
 import {
   PartialRefundWithLineItemsGoodsBuilder,

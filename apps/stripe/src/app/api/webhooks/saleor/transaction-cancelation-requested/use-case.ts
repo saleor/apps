@@ -1,19 +1,19 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import {
   AppIsNotConfiguredResponse,
   BrokenAppResponse,
-  MalformedRequestResponse,
+  type MalformedRequestResponse,
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
-import { TransactionCancelationRequestedEventFragment } from "@/generated/graphql";
+import { type TransactionCancelationRequestedEventFragment } from "@/generated/graphql";
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
   getChannelIdFromRequestedEventPayload,
   getTransactionFromRequestedEventPayload,
@@ -21,7 +21,7 @@ import {
 import { mapStripeErrorToApiError } from "@/modules/stripe/stripe-api-error";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { createTimestampFromPaymentIntent } from "@/modules/stripe/stripe-timestamps";
-import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import { type IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   CancelFailureResult,
   CancelSuccessResult,
@@ -29,7 +29,7 @@ import {
 
 import {
   TransactionCancelationRequestedUseCaseResponses,
-  TransactionCancelationRequestedUseCaseResponsesType,
+  type TransactionCancelationRequestedUseCaseResponsesType,
 } from "./use-case-response";
 
 type UseCaseExecuteResult = Result<

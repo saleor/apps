@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 
 export const mockedAppConfigRepo = {
   getStripeConfig: vi.fn(),

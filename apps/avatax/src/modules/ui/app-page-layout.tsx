@@ -1,6 +1,6 @@
 import React from "react";
 
-import { AppBreadcrumbs, Breadcrumb } from "./app-breadcrumbs";
+import { AppBreadcrumbs, type Breadcrumb } from "./app-breadcrumbs";
 import { AppColumns } from "./app-columns";
 
 export const AppPageLayout = ({

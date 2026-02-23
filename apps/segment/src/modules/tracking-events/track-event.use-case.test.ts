@@ -2,8 +2,8 @@ import { err, ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
 import { AppConfig } from "../configuration/app-config";
-import { ISegmentClient } from "../segment/segment.client";
-import { ISegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
+import { type ISegmentClient } from "../segment/segment.client";
+import { type ISegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
 import { SegmentEventsTracker } from "../segment/segment-events-tracker";
 import { mockedOrderBase } from "./__tests__/mocks";
 import { TrackEventUseCase } from "./track-event.use-case";

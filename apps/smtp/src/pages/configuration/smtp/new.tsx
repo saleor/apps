@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Box, Button, Divider, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
@@ -15,7 +15,7 @@ import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { ConfigurationNameDescriptionText } from "../../../modules/app-configuration/ui/configuration-name-description-text";
 import { appUrls } from "../../../modules/app-configuration/urls";
 import {
-  SmtpCreateConfigurationInput,
+  type SmtpCreateConfigurationInput,
   smtpCreateConfigurationInputSchema,
 } from "../../../modules/smtp/configuration/smtp-config-input-schema";
 import { smtpUrls } from "../../../modules/smtp/urls";

@@ -1,4 +1,4 @@
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import {
   AppIsNotConfiguredResponse,
@@ -7,12 +7,12 @@ import {
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import {
   PaymentGatewayInitializeSessionUseCaseResponses,
-  PaymentGatewayInitializeSessionUseCaseResponsesType,
+  type PaymentGatewayInitializeSessionUseCaseResponsesType,
 } from "./use-case-response";
 
 export class PaymentGatewayInitializeSessionUseCase {

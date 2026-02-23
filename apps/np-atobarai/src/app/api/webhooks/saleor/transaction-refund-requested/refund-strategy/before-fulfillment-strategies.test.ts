@@ -5,7 +5,7 @@ import { mockedAppChannelConfig } from "@/__tests__/mocks/app-config/mocked-app-
 import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-atobarai-api-client";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
-import { OrderGrantedRefundFragment } from "@/generated/graphql";
+import { type OrderGrantedRefundFragment } from "@/generated/graphql";
 import { createAtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
 import { createAtobaraiTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-transaction-success-response";
 import {
@@ -19,7 +19,7 @@ import {
   BeforeFulfillmentPartialRefundWithLineItemsStrategy,
   BeforeFulfillmentPartialRefundWithoutLineItemsStrategy,
 } from "./before-fulfillment-strategies";
-import { BeforeFulfillmentRefundContext } from "./types";
+import { type BeforeFulfillmentRefundContext } from "./types";
 
 const baseContext = {
   parsedEvent: {

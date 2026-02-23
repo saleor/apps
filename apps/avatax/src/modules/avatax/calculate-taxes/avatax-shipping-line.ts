@@ -1,5 +1,5 @@
-import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type LineItemModel } from "avatax/lib/models/LineItemModel";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 
 import { createLogger } from "../../../logger";
 

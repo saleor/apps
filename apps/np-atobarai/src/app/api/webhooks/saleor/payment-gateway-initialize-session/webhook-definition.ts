@@ -2,7 +2,7 @@ import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 
 import {
   PaymentGatewayInitializeSessionDocument,
-  PaymentGatewayInitializeSessionEventFragment,
+  type PaymentGatewayInitializeSessionEventFragment,
 } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
 import { saleorApp } from "@/lib/saleor-app";

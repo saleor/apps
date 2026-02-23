@@ -3,7 +3,7 @@ import { Breadcrumbs, ButtonsBox, Layout } from "@saleor/apps-ui";
 import { ArrowRightIcon, Box, Button, Text } from "@saleor/macaw-ui";
 import { useEffect, useRef, useState } from "react";
 
-import { ChannelProviderConnectionConfig, ProvidersConfig } from "../configuration";
+import { type ChannelProviderConnectionConfig, type ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
 import { AppHeader } from "../ui/app-header";
 import { useBulkSyncProductsState } from "./use-bulk-sync-products-state";

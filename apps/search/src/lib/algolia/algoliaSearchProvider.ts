@@ -1,17 +1,17 @@
-import Algoliasearch, { SearchClient } from "algoliasearch";
+import Algoliasearch, { type SearchClient } from "algoliasearch";
 
 import {
-  ProductVariantWebhookPayloadFragment,
-  ProductWebhookPayloadFragment,
+  type ProductVariantWebhookPayloadFragment,
+  type ProductWebhookPayloadFragment,
 } from "../../../generated/graphql";
 import { env } from "../../env";
 import { isNotNil } from "../isNotNil";
 import { createLogger } from "../logger";
-import { SearchProvider } from "../searchProvider";
+import { type SearchProvider } from "../searchProvider";
 import { createTraceEffect } from "../trace-effect";
 import { ALGOLIA_SLOW_THRESHOLD_MS } from "../trace-effect-thresholds";
 import {
-  AlgoliaObject,
+  type AlgoliaObject,
   channelListingToAlgoliaIndexId,
   productAndVariantToAlgolia,
   productAndVariantToObjectID,

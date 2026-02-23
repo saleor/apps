@@ -1,5 +1,5 @@
-import { Combobox, ComboboxProps } from "@saleor/react-hook-form-macaw";
-import { Control, FieldPath, FieldValues } from "react-hook-form";
+import { Combobox, type ComboboxProps } from "@saleor/react-hook-form-macaw";
+import { type Control, type FieldPath, type FieldValues } from "react-hook-form";
 
 import { countries } from "./countries";
 
