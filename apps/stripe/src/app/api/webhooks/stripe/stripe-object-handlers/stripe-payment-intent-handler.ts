@@ -1,23 +1,23 @@
-import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared/saleor-version-compatibility-validator";
-import { err, ok, Result } from "neverthrow";
-import Stripe from "stripe";
+import { err, ok, type Result } from "neverthrow";
+import type Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type SaleorMoney } from "@/modules/saleor/saleor-money";
 import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
+import { type StripeEnv } from "@/modules/stripe/stripe-env";
 import {
   createStripePaymentIntentId,
-  StripePaymentIntentId,
+  type StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { createStripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 import { createTimestampFromStripeEvent } from "@/modules/stripe/stripe-timestamps";
-import { IStripePaymentIntentsApi } from "@/modules/stripe/types";
+import { type IStripePaymentIntentsApi } from "@/modules/stripe/types";
 import { CancelSuccessResult } from "@/modules/transaction-result/cancel-result";
 import {
   AuthorizationFailureResult,
@@ -25,8 +25,8 @@ import {
 } from "@/modules/transaction-result/failure-result";
 import { mapPaymentIntentStatusToTransactionResult } from "@/modules/transaction-result/map-payment-intent-status-to-transaction-result";
 import {
-  TransactionRecorderError,
-  TransactionRecorderRepo,
+  type TransactionRecorderError,
+  type TransactionRecorderRepo,
 } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { TransactionEventReportVariablesResolver } from "../transaction-event-report-variables-resolver";

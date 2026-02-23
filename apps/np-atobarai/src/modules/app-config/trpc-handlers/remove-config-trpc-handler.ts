@@ -1,11 +1,11 @@
-import { createSaleorApiUrl, SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { createSaleorApiUrl, type SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
 import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { Result } from "neverthrow";
 import { z } from "zod";
 
-import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
+import { type AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class RemoveConfigTrpcHandler {

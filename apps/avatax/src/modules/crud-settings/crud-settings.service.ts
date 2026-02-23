@@ -1,4 +1,4 @@
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { z } from "zod";
 
 import { createId } from "../../lib/utils";

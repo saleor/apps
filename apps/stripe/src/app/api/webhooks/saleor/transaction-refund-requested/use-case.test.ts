@@ -1,5 +1,5 @@
 import { err, ok } from "neverthrow";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
@@ -16,7 +16,7 @@ import {
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
-import { IStripeRefundsApiFactory } from "@/modules/stripe/types";
+import { type IStripeRefundsApiFactory } from "@/modules/stripe/types";
 
 import { TransactionRefundRequestedUseCase } from "./use-case";
 import { TransactionRefundRequestedUseCaseResponses } from "./use-case-response";

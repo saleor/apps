@@ -3,7 +3,10 @@ import { z } from "zod";
 
 import { zodReadableError } from "@/lib/zod-readable-error";
 
-import { AtobaraiTransactionId, AtobaraiTransactionIdSchema } from "../atobarai-transaction-id";
+import {
+  type AtobaraiTransactionId,
+  AtobaraiTransactionIdSchema,
+} from "../atobarai-transaction-id";
 
 const schema = z
   .object({

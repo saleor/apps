@@ -2,7 +2,7 @@ import { useAuthenticatedFetch } from "@saleor/app-sdk/app-bridge";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
 
-import { WebhooksStatusResponse } from "../pages/api/webhooks-status";
+import { type WebhooksStatusResponse } from "../pages/api/webhooks-status";
 
 export const useWebhooksStatus = () => {
   const fetch: typeof window.fetch = useAuthenticatedFetch();

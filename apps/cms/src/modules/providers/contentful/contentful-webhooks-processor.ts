@@ -1,11 +1,11 @@
 import { createLogger } from "@/logger";
 
 import {
-  WebhookProductFragment,
-  WebhookProductVariantFragment,
+  type WebhookProductFragment,
+  type WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { ContentfulProviderConfig } from "../../configuration";
-import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
+import { type ContentfulProviderConfig } from "../../configuration";
+import { type ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { ContentfulClient } from "./contentful-client";
 
 export type ContentfulClientStrip = Pick<

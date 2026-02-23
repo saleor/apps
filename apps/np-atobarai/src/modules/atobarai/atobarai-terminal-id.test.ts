@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AtobaraiTerminalId, createAtobaraiTerminalId } from "./atobarai-terminal-id";
+import { type AtobaraiTerminalId, createAtobaraiTerminalId } from "./atobarai-terminal-id";
 
 describe("createAtobaraiTerminalId", () => {
   it("should create a valid AtobaraiTerminalId from a non-empty string", () => {

@@ -1,4 +1,4 @@
-import { Paymentmethoddetails } from "@/generated/app-webhooks-types/transaction-process-session";
+import { type Paymentmethoddetails } from "@/generated/app-webhooks-types/transaction-process-session";
 
 /**
  * Provides payment method details for Saleor webhook responses.

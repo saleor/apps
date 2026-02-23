@@ -1,7 +1,10 @@
-import { DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
+import { type DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
 
-import { BulkImportProductFragment } from "../../../../generated/graphql";
-import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
+import { type BulkImportProductFragment } from "../../../../generated/graphql";
+import {
+  type BulkSyncProcessor,
+  type BulkSyncProcessorHooks,
+} from "../../bulk-sync/bulk-sync-processor";
 import { DatoCMSClient } from "./datocms-client";
 
 export class DatocmsBulkSyncProcessor implements BulkSyncProcessor {

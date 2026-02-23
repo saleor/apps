@@ -1,18 +1,18 @@
 import { GetItemCommand, PutItemCommand } from "dynamodb-toolbox";
-import { err, ok, Result, ResultAsync } from "neverthrow";
+import { err, ok, type Result, ResultAsync } from "neverthrow";
 
 import { env } from "@/env";
 import { BaseError } from "@/errors";
 import { createLogger } from "@/logger";
 
-import { AppConfig } from "../configuration/app-config";
+import { type AppConfig } from "../configuration/app-config";
 import { DynamoConfigMapper } from "./dynamo-config-mapper";
 import {
   SegmentMainTable,
   segmentMainTable,
   SegmentMainTableEntityFactory,
 } from "./segment-main-table";
-import { ConfigRepository } from "./types";
+import { type ConfigRepository } from "./types";
 
 export class DynamoConfigRepository implements ConfigRepository {
   private logger = createLogger("SegmentConfigRepository");

@@ -1,5 +1,5 @@
-import { AtobaraiShippingCompanyCode } from "../atobarai/atobarai-shipping-company-code";
-import { AtobaraiTransactionId } from "../atobarai/atobarai-transaction-id";
+import { type AtobaraiShippingCompanyCode } from "../atobarai/atobarai-shipping-company-code";
+import { type AtobaraiTransactionId } from "../atobarai/atobarai-transaction-id";
 
 export class TransactionRecord {
   readonly atobaraiTransactionId: AtobaraiTransactionId;

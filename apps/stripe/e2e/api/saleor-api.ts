@@ -1,5 +1,5 @@
-import { TypedDocumentNode } from "@graphql-typed-document-node/core";
-import { APIRequestContext } from "@playwright/test";
+import { type TypedDocumentNode } from "@graphql-typed-document-node/core";
+import { type APIRequestContext } from "@playwright/test";
 import { env } from "e2e/env";
 import {
   CheckoutCompleteDocument,

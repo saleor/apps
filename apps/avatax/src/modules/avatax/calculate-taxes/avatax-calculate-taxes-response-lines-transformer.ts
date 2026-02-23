@@ -1,10 +1,10 @@
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 import Decimal from "decimal.js-light";
 
 import { createLogger } from "@/logger";
 import { TaxBadPayloadError } from "@/modules/taxes/tax-error";
 import { taxProviderUtils } from "@/modules/taxes/tax-provider-utils";
-import { CalculateTaxesResponse } from "@/modules/taxes/tax-provider-webhook";
+import { type CalculateTaxesResponse } from "@/modules/taxes/tax-provider-webhook";
 
 import { SHIPPING_ITEM_CODE } from "./avatax-shipping-line";
 import { extractIntegerRateFromTaxDetailsRates } from "./extract-integer-rate-from-tax-details";

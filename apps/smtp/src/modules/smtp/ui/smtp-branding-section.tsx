@@ -11,10 +11,10 @@ import { defaultPadding } from "../../../components/ui-defaults";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { trpcClient } from "../../trpc/trpc-client";
 import {
-  SmtpUpdateBranding,
+  type SmtpUpdateBranding,
   smtpUpdateBrandingSchema,
 } from "../configuration/smtp-config-input-schema";
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { type SmtpConfiguration } from "../configuration/smtp-config-schema";
 
 interface SmtpBrandingSectionProps {
   configuration: SmtpConfiguration;

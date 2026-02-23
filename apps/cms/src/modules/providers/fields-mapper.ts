@@ -1,5 +1,5 @@
-import { WebhookProductVariantFragment } from "../../../generated/graphql";
-import { ProvidersConfig } from "../configuration";
+import { type WebhookProductVariantFragment } from "../../../generated/graphql";
+import { type ProvidersConfig } from "../configuration";
 
 export class FieldsMapper {
   static mapProductVariantToConfigurationFields({

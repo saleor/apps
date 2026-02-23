@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   createStripeWebhookSecret,
-  StripeWebhookSecret,
+  type StripeWebhookSecret,
   StripeWebhookSecretValidationError,
 } from "@/modules/stripe/stripe-webhook-secret";
 

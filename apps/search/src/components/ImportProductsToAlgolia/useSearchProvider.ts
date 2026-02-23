@@ -1,4 +1,4 @@
-import { inferProcedureOutput } from "@trpc/server";
+import { type inferProcedureOutput } from "@trpc/server";
 import { useMemo } from "react";
 
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";

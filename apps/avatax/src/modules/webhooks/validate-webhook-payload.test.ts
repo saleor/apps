@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { TaxIncompletePayloadErrors } from "../taxes/tax-error";
-import { CalculateTaxesPayload } from "./payloads/calculate-taxes-payload";
+import { type CalculateTaxesPayload } from "./payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "./validate-webhook-payload";
 
 const getBasePayload = (): CalculateTaxesPayload => {

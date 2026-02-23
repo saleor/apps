@@ -1,4 +1,4 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { WebhookMigrationRunner } from "@saleor/webhook-utils";
 
 import { createInstrumentedGraphqlClient } from "../../src/lib/create-instrumented-graphql-client";

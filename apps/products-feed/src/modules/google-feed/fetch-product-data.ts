@@ -1,16 +1,16 @@
 // TODO: Refactor this file to fetcher-like class
 
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { VARIANTS_PER_PAGE } from "@/settings";
 
 import {
-  BasicProductDataFragment,
+  type BasicProductDataFragment,
   FetchProductCursorsDocument,
   FetchProductVariantsDataDocument,
   FetchRelatedProductsDataDocument,
-  ProductAttributesFragment,
-  RelatedProductsFragment,
+  type ProductAttributesFragment,
+  type RelatedProductsFragment,
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
 

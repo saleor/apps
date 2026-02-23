@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { AtobaraiMoney, AtobaraiMoneyValidationError, createAtobaraiMoney } from "./atobarai-money";
+import {
+  type AtobaraiMoney,
+  AtobaraiMoneyValidationError,
+  createAtobaraiMoney,
+} from "./atobarai-money";
 
 describe("createAtobaraiMoney", () => {
   it("should create a valid AtobaraiMoney", () => {

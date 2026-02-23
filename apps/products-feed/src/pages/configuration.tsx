@@ -1,7 +1,7 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { TextLink } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 import { useRouter } from "next/router";
 
 import { ConnectedAttributeMappingForm } from "../modules/app-configuration/attribute-mapping-form";

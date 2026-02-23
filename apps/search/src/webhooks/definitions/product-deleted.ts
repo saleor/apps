@@ -1,6 +1,6 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 
-import { ProductDeleted, ProductDeletedDocument } from "../../../generated/graphql";
+import { type ProductDeleted, ProductDeletedDocument } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";
 
 export const webhookProductDeleted = new SaleorAsyncWebhook<ProductDeleted>({

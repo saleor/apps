@@ -1,11 +1,11 @@
-import { NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { createMocks } from "node-mocks-http";
-import { Client, OperationResult } from "urql";
+import { type Client, type OperationResult } from "urql";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { FetchOwnWebhooksQuery } from "../../../generated/graphql";
-import { IWebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
+import { type FetchOwnWebhooksQuery } from "../../../generated/graphql";
+import { type IWebhookActivityTogglerService } from "../../domain/WebhookActivityToggler.service";
 import { AppConfig } from "../../modules/configuration/configuration";
 import { webhooksStatusHandlerFactory } from "../../pages/api/webhooks-status";
 

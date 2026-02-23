@@ -1,9 +1,9 @@
-import { err, ok, Result } from "neverthrow";
-import { Client } from "urql";
+import { err, ok, type Result } from "neverthrow";
+import { type Client } from "urql";
 
 import { BaseError } from "@/lib/errors";
 
-import { ChannelFragment, FetchChannelsDocument } from "../../../generated/graphql";
+import { type ChannelFragment, FetchChannelsDocument } from "../../../generated/graphql";
 
 /**
  * Shared with Avatax, consider moving common services to package

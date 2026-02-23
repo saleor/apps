@@ -3,8 +3,8 @@ import {
   mockedSaleorChannelId,
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
-import { TransactionChargeRequestedEventFragment } from "@/generated/graphql";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type TransactionChargeRequestedEventFragment } from "@/generated/graphql";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 export const transactionChargeRequestedFixture = (args: {
   stripePaymentIntentId: StripePaymentIntentId;

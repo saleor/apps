@@ -1,9 +1,9 @@
-import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
-import { Logger } from "@saleor/apps-logger";
+import { type SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { type Logger } from "@saleor/apps-logger";
 import { BaseError } from "@saleor/errors";
 import { err, ok } from "neverthrow";
 
-import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
+import { type AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 
 import { AppIsNotConfiguredResponse } from "./saleor-webhook-responses";
 

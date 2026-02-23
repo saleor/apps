@@ -1,6 +1,6 @@
 import withBundleAnalyzerConfig from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
-import { NextConfig } from "next";
+import { type NextConfig } from "next";
 
 // cache request for 1 day (in seconds) + revalidate once 60 seconds
 const cacheValue = "private,s-maxage=60,stale-while-revalidate=86400";

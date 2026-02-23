@@ -1,5 +1,5 @@
-import { ClientLogStoreRequest } from "@/modules/client-logs/client-log";
-import { ILogsRepository } from "@/modules/client-logs/logs-repository";
+import { type ClientLogStoreRequest } from "@/modules/client-logs/client-log";
+import { type ILogsRepository } from "@/modules/client-logs/logs-repository";
 
 export type LogWriterContext = { appId: string; saleorApiUrl: string };
 

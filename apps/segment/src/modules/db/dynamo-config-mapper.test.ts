@@ -1,10 +1,10 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
-import { FormattedItem } from "dynamodb-toolbox";
+import { type FormattedItem } from "dynamodb-toolbox";
 import { describe, expect, it } from "vitest";
 
 import { AppConfig } from "../configuration/app-config";
 import { DynamoConfigMapper } from "./dynamo-config-mapper";
-import { SegmentConfigEntityType } from "./segment-main-table";
+import { type SegmentConfigEntityType } from "./segment-main-table";
 
 describe("DynamoConfigMapper", () => {
   const encryptionKey = "encryptionKey";

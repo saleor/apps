@@ -2,8 +2,11 @@ import { createSaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 
-import { AppChannelConfig, AppChannelConfigFields } from "@/modules/app-config/app-config";
-import { AtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
+import {
+  type AppChannelConfig,
+  type AppChannelConfigFields,
+} from "@/modules/app-config/app-config";
+import { type AtobaraiSecretSpCode } from "@/modules/atobarai/atobarai-secret-sp-code";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class GetConfigsListTrpcHandler {

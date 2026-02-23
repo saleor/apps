@@ -2,11 +2,11 @@ import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { createLogger } from "../../../logger";
-import { MessageEventTypes } from "../../event-handlers/message-event-types";
-import { ITemplateCompiler } from "./handlebars-template-compiler";
-import { IHtmlToTextCompiler } from "./html-to-text-compiler";
-import { IMjmlCompiler } from "./mjml-compiler";
-import { hasErrorCode, TemplateErrorCode, templateErrorCodes } from "./template-error-codes";
+import { type MessageEventTypes } from "../../event-handlers/message-event-types";
+import { type ITemplateCompiler } from "./handlebars-template-compiler";
+import { type IHtmlToTextCompiler } from "./html-to-text-compiler";
+import { type IMjmlCompiler } from "./mjml-compiler";
+import { hasErrorCode, type TemplateErrorCode, templateErrorCodes } from "./template-error-codes";
 
 export interface CompileArgs {
   recipientEmail: string;

@@ -1,9 +1,9 @@
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/headers";
-import { inferAsyncReturnType } from "@trpc/server";
-import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
-import { Client } from "urql";
+import { type inferAsyncReturnType } from "@trpc/server";
+import { type FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { type Client } from "urql";
 
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
 
 export const createTrpcContextAppRouter = async ({ req }: FetchCreateContextFnOptions) => {

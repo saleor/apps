@@ -7,7 +7,7 @@ import {
 
 import { createLogger } from "../../../logger";
 import { MULTI_PART_SIZE_THRESHOLD } from "./const";
-import { UploadFileArgs } from "./upload-file";
+import { type UploadFileArgs } from "./upload-file";
 
 /*
  * Code based on S3 docs:

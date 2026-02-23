@@ -1,10 +1,13 @@
 import { createLogger } from "@/logger";
 
-import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
-import { ProvidersConfig } from "../configuration";
+import {
+  type WebhookProductFragment,
+  type WebhookProductVariantFragment,
+} from "../../../generated/graphql";
+import { type ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
-import { WebhookContext } from "./create-webhook-config-context";
-import { ProductWebhooksProcessor } from "./product-webhooks-processor";
+import { type WebhookContext } from "./create-webhook-config-context";
+import { type ProductWebhooksProcessor } from "./product-webhooks-processor";
 
 type ProcessorFactory = (config: ProvidersConfig.AnyFullShape) => ProductWebhooksProcessor;
 

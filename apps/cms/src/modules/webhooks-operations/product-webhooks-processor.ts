@@ -1,4 +1,7 @@
-import { WebhookProductFragment, WebhookProductVariantFragment } from "../../../generated/graphql";
+import {
+  type WebhookProductFragment,
+  type WebhookProductVariantFragment,
+} from "../../../generated/graphql";
 
 export interface ProductWebhooksProcessor {
   onProductVariantUpdated(productVariant: WebhookProductVariantFragment): Promise<void>;

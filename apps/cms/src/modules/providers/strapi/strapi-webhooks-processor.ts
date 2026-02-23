@@ -1,11 +1,11 @@
 import { createLogger } from "@/logger";
 
 import {
-  WebhookProductFragment,
-  WebhookProductVariantFragment,
+  type WebhookProductFragment,
+  type WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { StrapiProviderConfig } from "../../configuration/schemas/strapi-provider.schema";
-import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
+import { type StrapiProviderConfig } from "../../configuration/schemas/strapi-provider.schema";
+import { type ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { StrapiClient } from "./strapi-client";
 
 export class StrapiWebhooksProcessor implements ProductWebhooksProcessor {

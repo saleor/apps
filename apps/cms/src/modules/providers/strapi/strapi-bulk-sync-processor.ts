@@ -1,8 +1,11 @@
 import { env } from "@/env";
 
-import { BulkImportProductFragment } from "../../../../generated/graphql";
-import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
-import { StrapiProviderConfig } from "../../configuration";
+import { type BulkImportProductFragment } from "../../../../generated/graphql";
+import {
+  type BulkSyncProcessor,
+  type BulkSyncProcessorHooks,
+} from "../../bulk-sync/bulk-sync-processor";
+import { type StrapiProviderConfig } from "../../configuration";
 import { StrapiClient } from "./strapi-client";
 
 type VariantToProcess = {

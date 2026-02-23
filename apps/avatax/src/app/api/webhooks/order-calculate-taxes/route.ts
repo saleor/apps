@@ -1,5 +1,5 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
@@ -19,7 +19,7 @@ import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { updateExemptionStatusPublicMetadata } from "@/modules/app/exemption-status-public-metadata-updater";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
-import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { type AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
 import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
 import { AvataxCalculateTaxesAdapter } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
@@ -40,7 +40,7 @@ import {
   AvataxStringLengthError,
 } from "@/modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/order-calculate-taxes";
-import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
+import { type CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "@/modules/webhooks/validate-webhook-payload";
 
 const orderCalculateTaxesSyncWebhookReponse =

@@ -1,7 +1,7 @@
 import { messageEventTypes } from "../../event-handlers/message-event-types";
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
 import {
-  SmtpConfiguration,
+  type SmtpConfiguration,
   smtpConfigurationEventSchema,
   smtpConfigurationSchema,
 } from "./smtp-config-schema";

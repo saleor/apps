@@ -1,4 +1,4 @@
-import { OrderCancelledEventSubscriptionFragment } from "../../../../generated/graphql";
+import { type OrderCancelledEventSubscriptionFragment } from "../../../../generated/graphql";
 
 export type OrderCancelledPayload = Extract<
   OrderCancelledEventSubscriptionFragment,

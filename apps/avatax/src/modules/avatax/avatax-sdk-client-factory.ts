@@ -1,5 +1,5 @@
 import Avatax from "avatax";
-import { LogOptions } from "avatax/lib/utils/logger";
+import { type LogOptions } from "avatax/lib/utils/logger";
 
 import { env } from "@/env";
 

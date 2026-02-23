@@ -1,8 +1,8 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import {
   TaxConfigurationsListDocument,
-  TaxConfigurationsListQueryVariables,
+  type TaxConfigurationsListQueryVariables,
 } from "../../../generated/graphql";
 
 export class ChannelsFetcher {

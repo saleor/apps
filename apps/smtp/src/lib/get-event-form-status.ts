@@ -1,6 +1,6 @@
-import { PermissionEnum } from "../../generated/graphql";
-import { MessageEventTypes } from "../modules/event-handlers/message-event-types";
-import { FeatureFlagsState } from "../modules/feature-flag-service/get-feature-flags";
+import { type PermissionEnum } from "../../generated/graphql";
+import { type MessageEventTypes } from "../modules/event-handlers/message-event-types";
+import { type FeatureFlagsState } from "../modules/feature-flag-service/get-feature-flags";
 
 interface getEventFormStatusArgs {
   eventType: MessageEventTypes;

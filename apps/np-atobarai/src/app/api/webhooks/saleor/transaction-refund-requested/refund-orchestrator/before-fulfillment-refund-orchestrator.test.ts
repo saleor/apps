@@ -12,7 +12,7 @@ import {
   RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 
-import { ParsedRefundEvent } from "../refund-event-parser";
+import { type ParsedRefundEvent } from "../refund-event-parser";
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
 import { BeforeFulfillmentRefundOrchestrator } from "./before-fulfillment-refund-orchestrator";
 

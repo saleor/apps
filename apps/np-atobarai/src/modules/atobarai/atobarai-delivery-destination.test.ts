@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { mockedSaleorChannelId } from "@/__tests__/mocks/saleor/mocked-saleor-channel-id";
 import { mockedTransactionInitializeSessionEvent } from "@/__tests__/mocks/saleor-events/mocked-transaction-initialize-session-event";
-import { SourceObjectFragment } from "@/generated/graphql";
+import { type SourceObjectFragment } from "@/generated/graphql";
 
 import { createAtobaraiDeliveryDestination } from "./atobarai-delivery-destination";
 

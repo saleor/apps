@@ -11,7 +11,7 @@ import { EmailCompiler } from "../services/email-compiler";
 import { HandlebarsTemplateCompiler } from "../services/handlebars-template-compiler";
 import { HtmlToTextCompiler } from "../services/html-to-text-compiler";
 import { MjmlCompiler } from "../services/mjml-compiler";
-import { TemplateErrorCode, templateErrorCodes } from "../services/template-error-codes";
+import { type TemplateErrorCode, templateErrorCodes } from "../services/template-error-codes";
 import {
   smtpConfigurationIdInputSchema,
   smtpCreateConfigurationInputSchema,

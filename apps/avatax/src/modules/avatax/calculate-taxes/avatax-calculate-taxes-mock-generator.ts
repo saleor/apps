@@ -7,14 +7,14 @@ import { JurisdictionType } from "avatax/lib/enums/JurisdictionType";
 import { JurisTypeId } from "avatax/lib/enums/JurisTypeId";
 import { LiabilityType } from "avatax/lib/enums/LiabilityType";
 import { RateType } from "avatax/lib/enums/RateType";
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 
-import { TaxBaseFragment } from "../../../../generated/graphql";
-import { ChannelConfig } from "../../channel-configuration/channel-config";
+import { type TaxBaseFragment } from "../../../../generated/graphql";
+import { type ChannelConfig } from "../../channel-configuration/channel-config";
 import { ChannelConfigMockGenerator } from "../../channel-configuration/channel-config-mock-generator";
 import { AvataxConfigMockGenerator } from "../avatax-config-mock-generator";
-import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { type AvataxConfig } from "../avatax-connection-schema";
+import { type AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
 type TaxBase = TaxBaseFragment;
 

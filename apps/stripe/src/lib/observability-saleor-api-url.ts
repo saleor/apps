@@ -1,7 +1,7 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { setTag } from "@sentry/nextjs";
 
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 import { loggerContext } from "./logger-context";
 

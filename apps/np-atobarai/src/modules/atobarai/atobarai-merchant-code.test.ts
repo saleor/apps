@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AtobaraiMerchantCode, createAtobaraiMerchantCode } from "./atobarai-merchant-code";
+import { type AtobaraiMerchantCode, createAtobaraiMerchantCode } from "./atobarai-merchant-code";
 
 describe("createAtobaraiMerchantCode", () => {
   it("should create a valid AtobaraiMerchantCode from a non-empty string", () => {

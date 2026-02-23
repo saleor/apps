@@ -1,9 +1,9 @@
-import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { type SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { BaseError } from "@saleor/errors";
-import { Result } from "neverthrow";
+import { type Result } from "neverthrow";
 
-import { AtobaraiTransactionId } from "../atobarai/atobarai-transaction-id";
-import { TransactionRecord } from "./transaction-record";
+import { type AtobaraiTransactionId } from "../atobarai/atobarai-transaction-id";
+import { type TransactionRecord } from "./transaction-record";
 
 export type TransactionRecordRepoAccess = {
   saleorApiUrl: SaleorApiUrl;

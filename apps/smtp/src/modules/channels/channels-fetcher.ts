@@ -1,4 +1,4 @@
-import { Client, gql } from "urql";
+import { type Client, gql } from "urql";
 
 import { FetchChannelsDocument } from "../../../generated/graphql";
 

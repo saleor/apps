@@ -1,4 +1,4 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 
 import { mockedSaleorApiUrl } from "./mocked-saleor-api-url";
 import { mockedSaleorAppId } from "./mocked-saleor-app-id";

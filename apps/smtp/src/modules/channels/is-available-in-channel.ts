@@ -1,4 +1,4 @@
-import { ChannelConfiguration } from "./channel-configuration-schema";
+import { type ChannelConfiguration } from "./channel-configuration-schema";
 
 interface IsAvailableInChannelArgs {
   channel: string;

@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 
 import { env } from "@/lib/env";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { type StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import pkg from "@/package.json";
 
 import { STRIPE_API_VERSION } from "./stripe-api-version";

@@ -1,7 +1,7 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { NextApiHandler } from "next";
+import { type NextApiHandler } from "next";
 
 import { env } from "@/env";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
@@ -14,7 +14,7 @@ import { SignedUrls } from "@/modules/file-storage/s3/signed-urls";
 import { uploadFile } from "@/modules/file-storage/s3/upload-file";
 import { FeedXmlBuilder } from "@/modules/google-feed/feed-xml-builder";
 import { fetchVariants } from "@/modules/google-feed/fetch-product-data";
-import { GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
+import { type GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
 import { productVariantToProxy } from "@/modules/google-feed/product-variant-to-proxy";
 
 type ConfiguredChannelSettings = Awaited<

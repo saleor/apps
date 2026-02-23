@@ -1,5 +1,5 @@
-import { LineItemModel } from "avatax/lib/models/LineItemModel";
-import { TaxBaseLineFragment } from "generated/graphql";
+import { type LineItemModel } from "avatax/lib/models/LineItemModel";
+import { type TaxBaseLineFragment } from "generated/graphql";
 
 import { BaseError } from "@/error";
 

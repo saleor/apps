@@ -1,4 +1,4 @@
-import { Box, BoxProps, Skeleton } from "@saleor/macaw-ui";
+import { Box, type BoxProps, Skeleton } from "@saleor/macaw-ui";
 
 const TableSkeletonRow = () => {
   return (

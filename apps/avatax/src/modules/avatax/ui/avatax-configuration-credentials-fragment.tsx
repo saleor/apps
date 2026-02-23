@@ -7,7 +7,7 @@ import { useFormContext } from "react-hook-form";
 
 import { resolveTrpcClientError } from "../../../lib/error-utils";
 import { AppToggle } from "../../ui/app-toggle";
-import { AvataxConfig, BaseAvataxConfig } from "../avatax-connection-schema";
+import { type AvataxConfig, type BaseAvataxConfig } from "../avatax-connection-schema";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 import { HelperText } from "./form-helper-text";
 import { FormSection } from "./form-section";

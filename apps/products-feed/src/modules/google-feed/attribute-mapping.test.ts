@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { attributeArrayToValueString, getMappedAttributes } from "./attribute-mapping";
-import { ProductVariant } from "./fetch-product-data";
+import { type ProductVariant } from "./fetch-product-data";
 
 const productBase: ProductVariant["product"] = {
   name: "Product",

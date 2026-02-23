@@ -1,4 +1,4 @@
-import { Result } from "neverthrow";
+import { type Result } from "neverthrow";
 
 import { createStripePaymentIntentStatus } from "../stripe/stripe-payment-intent-status";
 import { SaleorMoney } from "./saleor-money";

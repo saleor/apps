@@ -1,4 +1,4 @@
-import { Weight } from "../../../generated/graphql";
+import { type Weight } from "../../../generated/graphql";
 
 interface getWeightAttributeValueArgs {
   weight?: Weight;

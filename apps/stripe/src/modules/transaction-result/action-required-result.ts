@@ -1,6 +1,6 @@
-import { Actions } from "@/generated/app-webhooks-types/transaction-initialize-session";
+import { type Actions } from "@/generated/app-webhooks-types/transaction-initialize-session";
 import { BaseError } from "@/lib/errors";
-import { StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
+import { type StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 
 export class ChargeActionRequiredResult {
   readonly result = "CHARGE_ACTION_REQUIRED" as const;

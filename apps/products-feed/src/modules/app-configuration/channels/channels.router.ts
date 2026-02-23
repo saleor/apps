@@ -1,4 +1,4 @@
-import { ChannelFragment } from "../../../../generated/graphql";
+import { type ChannelFragment } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { protectedClientProcedure } from "../../trpc/protected-client-procedure";
 import { router } from "../../trpc/trpc-server";

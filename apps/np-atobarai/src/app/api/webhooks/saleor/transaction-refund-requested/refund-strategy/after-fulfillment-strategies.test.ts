@@ -6,7 +6,7 @@ import { mockedAtobaraiApiClient } from "@/__tests__/mocks/atobarai/api/mocked-a
 import { mockedAtobaraiShippingCompanyCode } from "@/__tests__/mocks/atobarai/mocked-atobarai-shipping-company-code";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
-import { OrderGrantedRefundFragment } from "@/generated/graphql";
+import { type OrderGrantedRefundFragment } from "@/generated/graphql";
 import { createAtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
 import { createAtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import { createAtobaraiTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-transaction-success-response";
@@ -22,7 +22,7 @@ import {
   AfterFulfillmentPartialRefundWithLineItemsStrategy,
   AfterFulfillmentPartialRefundWithoutLineItemsStrategy,
 } from "./after-fulfillment-strategies";
-import { AfterFulfillmentRefundContext } from "./types";
+import { type AfterFulfillmentRefundContext } from "./types";
 
 const baseContext = {
   parsedEvent: {

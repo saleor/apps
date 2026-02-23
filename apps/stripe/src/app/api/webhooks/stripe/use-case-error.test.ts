@@ -1,6 +1,6 @@
-import { APL } from "@saleor/app-sdk/APL";
+import { type APL } from "@saleor/app-sdk/APL";
 import { err, ok } from "neverthrow";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
@@ -18,14 +18,14 @@ import { BaseError } from "@/lib/errors";
 import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
 import {
-  ITransactionEventReporter,
-  TransactionEventReportResultResult,
+  type ITransactionEventReporter,
+  type TransactionEventReportResultResult,
 } from "@/modules/saleor/transaction-event-reporter";
 import { createStripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import {
-  IStripeEventVerify,
-  IStripePaymentIntentsApiFactory,
+  type IStripeEventVerify,
+  type IStripePaymentIntentsApiFactory,
   StripeEventParsingError,
 } from "@/modules/stripe/types";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";

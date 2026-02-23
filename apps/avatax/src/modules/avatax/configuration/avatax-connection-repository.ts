@@ -1,11 +1,11 @@
-import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
+import { type CrudSettingsManager } from "../../crud-settings/crud-settings.service";
 import {
-  ProviderConnections,
+  type ProviderConnections,
   providerConnectionsSchema,
 } from "../../provider-connections/provider-connections";
 import {
-  AvataxConfig,
-  AvataxConnection,
+  type AvataxConfig,
+  type AvataxConnection,
   avataxConnectionSchema,
 } from "../avatax-connection-schema";
 

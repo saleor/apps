@@ -1,7 +1,7 @@
 import { TextLink } from "@saleor/apps-ui";
 import { Text } from "@saleor/macaw-ui";
 
-import { CMSProviderMeta } from "../cms-provider-meta";
+import { type CMSProviderMeta } from "../cms-provider-meta";
 import logo from "./builder-logo.svg";
 
 export const BuilderIo = {

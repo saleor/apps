@@ -1,10 +1,10 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 
 import { setBackendErrors } from "../../../lib/set-backend-errors";
-import { UpdateChannelsInput } from "../../channels/channel-configuration-schema";
+import { type UpdateChannelsInput } from "../../channels/channel-configuration-schema";
 import { UniversalChannelsSection } from "../../channels/ui/universal-channels-section";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import { type SmtpConfiguration } from "../configuration/smtp-config-schema";
 
 interface SmtpChannelsSectionProps {
   configuration: SmtpConfiguration;

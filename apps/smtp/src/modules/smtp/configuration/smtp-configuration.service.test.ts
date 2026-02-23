@@ -1,10 +1,10 @@
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { okAsync } from "neverthrow";
-import { Client } from "urql";
+import { type Client } from "urql";
 import { describe, expect, it, vi } from "vitest";
 
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
-import { SmtpConfig } from "./smtp-config-schema";
+import { type SmtpConfig } from "./smtp-config-schema";
 import { SmtpConfigurationService } from "./smtp-configuration.service";
 import { SmtpMetadataManager } from "./smtp-metadata-manager";
 

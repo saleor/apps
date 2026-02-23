@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { OrderLineFragment } from "../../../generated/graphql";
+import { type OrderLineFragment } from "../../../generated/graphql";
 import { SaleorOrderLine } from "./order-line";
 import { SaleorOrderLineMockFactory } from "./order-line-mocks";
 

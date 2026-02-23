@@ -2,18 +2,21 @@ import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
 import { zodReadableError } from "@/lib/zod-readable-error";
-import { SaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
+import { type SaleorTransactionToken } from "@/modules/saleor/saleor-transaction-token";
 
-import { AtobaraiCustomer, AtobaraiCustomerSchema } from "../atobarai-customer";
+import { type AtobaraiCustomer, AtobaraiCustomerSchema } from "../atobarai-customer";
 import {
-  AtobaraiDeliveryDestination,
+  type AtobaraiDeliveryDestination,
   AtobaraiDeliveryDestinationSchema,
 } from "../atobarai-delivery-destination";
-import { AtobaraiGoods, AtobaraiGoodsSchema } from "../atobarai-goods/atobarai-goods";
-import { AtobaraiMoney } from "../atobarai-money";
+import { type AtobaraiGoods, AtobaraiGoodsSchema } from "../atobarai-goods/atobarai-goods";
+import { type AtobaraiMoney } from "../atobarai-money";
 import { ATOBARAI_SETTLEMENT_TYPE } from "../atobarai-settelment-type";
-import { AtobaraiShopOrderDate } from "../atobarai-shop-order-date";
-import { AtobaraiTransactionId, AtobaraiTransactionIdSchema } from "../atobarai-transaction-id";
+import { type AtobaraiShopOrderDate } from "../atobarai-shop-order-date";
+import {
+  type AtobaraiTransactionId,
+  AtobaraiTransactionIdSchema,
+} from "../atobarai-transaction-id";
 
 const schema = z
   .object({

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AddressFragment } from "@/generated/graphql";
+import { type AddressFragment } from "@/generated/graphql";
 import { AtobaraiAddressFormatter } from "@/modules/atobarai/atobarai-address-formatter";
 
 const addressFragment = {

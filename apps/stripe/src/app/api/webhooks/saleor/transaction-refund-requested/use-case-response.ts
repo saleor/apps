@@ -1,15 +1,15 @@
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import {
-  TransactionRefundRequestedAsync,
-  TransactionRefundRequestedSyncFailure,
+  type TransactionRefundRequestedAsync,
+  type TransactionRefundRequestedSyncFailure,
 } from "@/generated/app-webhooks-types/transaction-refund-requested";
-import { AppContext } from "@/lib/app-context";
+import { type AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
-import { StripeApiError } from "@/modules/stripe/stripe-api-error";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { StripeRefundId } from "@/modules/stripe/stripe-refund-id";
-import { RefundFailureResult } from "@/modules/transaction-result/refund-result";
+import { type StripeApiError } from "@/modules/stripe/stripe-api-error";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type StripeRefundId } from "@/modules/stripe/stripe-refund-id";
+import { type RefundFailureResult } from "@/modules/transaction-result/refund-result";
 
 class Success extends SuccessWebhookResponse {
   readonly stripeRefundId: StripeRefundId;

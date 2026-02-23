@@ -8,7 +8,7 @@ import { IframeProtectedWrapper } from "@saleor/apps-shared/iframe-protected-wra
 import { NoSSRWrapper } from "@saleor/apps-shared/no-ssr-wrapper";
 import { ThemeSynchronizer } from "@saleor/apps-shared/theme-synchronizer";
 import { ThemeProvider } from "@saleor/macaw-ui";
-import { AppProps } from "next/app";
+import { type AppProps } from "next/app";
 
 import { trpcClient } from "../modules/trpc/trpc-client";
 

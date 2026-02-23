@@ -1,10 +1,10 @@
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
 import {
-  OrderGrantedRefundFragment,
-  SourceObjectFragment,
-  TransactionRefundRequestedEventFragment,
+  type OrderGrantedRefundFragment,
+  type SourceObjectFragment,
+  type TransactionRefundRequestedEventFragment,
 } from "@/generated/graphql";
 
 export interface ParsedRefundEvent {

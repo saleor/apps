@@ -1,6 +1,6 @@
-import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import { type NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { race } from "@saleor/apps-shared/race";
-import { after, NextRequest } from "next/server";
+import { after, type NextRequest } from "next/server";
 
 import { env } from "@/env";
 import { BaseError } from "@/error";

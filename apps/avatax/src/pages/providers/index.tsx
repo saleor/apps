@@ -1,7 +1,7 @@
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
-import { ProviderName } from "../../modules/provider-connections/provider-connections";
+import { type ProviderName } from "../../modules/provider-connections/provider-connections";
 import { AppCard } from "../../modules/ui/app-card";
 import { AppPageLayout } from "../../modules/ui/app-page-layout";
 import { Section } from "../../modules/ui/app-section";

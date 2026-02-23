@@ -1,9 +1,9 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
 import { describe, expect, it } from "vitest";
 
-import { MetadataItem } from "../../../generated/graphql";
-import { ChannelsConfig } from "../channel-configuration/channel-config";
-import { ProviderConnections } from "../provider-connections/provider-connections";
+import { type MetadataItem } from "../../../generated/graphql";
+import { type ChannelsConfig } from "../channel-configuration/channel-config";
+import { type ProviderConnections } from "../provider-connections/provider-connections";
 import { getAppConfig } from "./get-app-config";
 
 const mockedProviders: ProviderConnections = [

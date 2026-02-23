@@ -1,9 +1,9 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 
-import { AvataxConfig } from "../avatax/avatax-connection-schema";
+import { type AvataxConfig } from "../avatax/avatax-connection-schema";
 import {
-  AutomaticallyDistributedProductLinesDiscountsStrategy,
-  PriceReductionDiscountsStrategy,
+  type AutomaticallyDistributedProductLinesDiscountsStrategy,
+  type PriceReductionDiscountsStrategy,
 } from "../avatax/discounts";
 
 export interface WebhookAdapter<TPayload extends Record<string, any>, TResponse extends any> {

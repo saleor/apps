@@ -1,4 +1,4 @@
-import { SeverityLevel } from "@sentry/nextjs";
+import { type SeverityLevel } from "@sentry/nextjs";
 import ModernError from "modern-errors";
 import modernErrorsSerialize from "modern-errors-serialize";
 

@@ -1,8 +1,8 @@
-import { TaxBaseLineFragment } from "../../../../generated/graphql";
+import { type TaxBaseLineFragment } from "../../../../generated/graphql";
 import { CriticalError } from "../../../error";
 import { createLogger } from "../../../logger";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
-import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { type AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
 const AvataxCalculateTaxesTaxCodeMatcherError = CriticalError.subclass(
   "AvataxCalculateTaxesTaxCodeMatcherError",

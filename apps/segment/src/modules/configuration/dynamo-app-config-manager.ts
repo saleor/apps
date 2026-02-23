@@ -1,8 +1,8 @@
 import { env } from "@/env";
 import { BaseError } from "@/errors";
 
-import { ConfigRepository } from "../db/types";
-import { AppConfig } from "./app-config";
+import { type ConfigRepository } from "../db/types";
+import { type AppConfig } from "./app-config";
 
 export interface AppConfigManager {
   get(args: { saleorApiUrl: string; appId: string }): Promise<AppConfig | null>;

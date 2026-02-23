@@ -1,4 +1,4 @@
-import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { type NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
@@ -10,7 +10,7 @@ import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webho
 import { saleorApp } from "@/saleor-app";
 
 import {
-  ProductVariantDeletedWebhookPayloadFragment,
+  type ProductVariantDeletedWebhookPayloadFragment,
   ProductVariantDeletedWebhookPayloadFragmentDoc,
   WebhookProductVariantFragmentDoc,
 } from "../../../../generated/graphql";

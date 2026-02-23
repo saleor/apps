@@ -1,11 +1,11 @@
-import { Result, ResultAsync } from "neverthrow";
-import Stripe from "stripe";
+import { type Result, ResultAsync } from "neverthrow";
+import type Stripe from "stripe";
 
 import { StripeClient } from "./stripe-client";
-import { StripeMoney } from "./stripe-money";
-import { StripePaymentIntentId } from "./stripe-payment-intent-id";
-import { StripeRestrictedKey } from "./stripe-restricted-key";
-import { IStripeRefundsApi } from "./types";
+import { type StripeMoney } from "./stripe-money";
+import { type StripePaymentIntentId } from "./stripe-payment-intent-id";
+import { type StripeRestrictedKey } from "./stripe-restricted-key";
+import { type IStripeRefundsApi } from "./types";
 
 export class StripeRefundsApi implements IStripeRefundsApi {
   private stripeApiWrapper: Pick<Stripe, "refunds">;

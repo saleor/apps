@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ContentfulProviderConfig } from "@/modules/configuration";
+import { type ContentfulProviderConfig } from "@/modules/configuration";
 
-import { WebhookProductVariantFragment } from "../../../../generated/graphql";
+import { type WebhookProductVariantFragment } from "../../../../generated/graphql";
 import {
-  ContentfulClientStrip,
+  type ContentfulClientStrip,
   ContentfulWebhooksProcessor,
 } from "./contentful-webhooks-processor";
 

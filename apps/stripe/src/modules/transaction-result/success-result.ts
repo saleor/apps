@@ -1,4 +1,4 @@
-import { Actions } from "@/generated/app-webhooks-types/transaction-charge-requested";
+import { type Actions } from "@/generated/app-webhooks-types/transaction-charge-requested";
 
 export class ChargeSuccessResult {
   readonly result = "CHARGE_SUCCESS" as const;

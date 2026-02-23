@@ -1,4 +1,4 @@
-import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
+import { Box, type PropsWithBox, Text } from "@saleor/macaw-ui";
 
 const SALEOR_EVENTS_DOCS_URL =
   "https://docs.saleor.io/developer/extending/webhooks/asynchronous-events#available-webhook-events";

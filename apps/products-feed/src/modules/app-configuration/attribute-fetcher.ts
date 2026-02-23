@@ -1,7 +1,7 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import {
-  AttributeWithMappingFragmentFragment,
+  type AttributeWithMappingFragmentFragment,
   FetchAttributesWithMappingDocument,
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";

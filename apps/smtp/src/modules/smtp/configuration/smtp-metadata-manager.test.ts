@@ -1,4 +1,4 @@
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { SmtpMetadataManager } from "./smtp-metadata-manager";

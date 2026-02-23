@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   createStripeClientSecret,
-  StripeClientSecret,
+  type StripeClientSecret,
   StripeClientSecretValidationError,
 } from "./stripe-client-secret";
 

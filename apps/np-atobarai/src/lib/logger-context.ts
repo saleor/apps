@@ -1,4 +1,4 @@
-import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import { type NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { LoggerContext, wrapWithLoggerContextAppRouter } from "@saleor/apps-logger/node";
 
 /**

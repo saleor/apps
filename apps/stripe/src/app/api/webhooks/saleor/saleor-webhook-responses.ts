@@ -1,5 +1,5 @@
 import { ResponseMessageFormatter } from "@/app/api/webhooks/saleor/response-message-formatter";
-import { AppContext } from "@/lib/app-context";
+import { type AppContext } from "@/lib/app-context";
 
 export abstract class SuccessWebhookResponse {
   statusCode = 200;

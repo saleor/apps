@@ -1,4 +1,4 @@
-import { AppContext } from "@/lib/app-context";
+import { type AppContext } from "@/lib/app-context";
 
 export class ResponseMessageFormatter {
   private appContext: AppContext;

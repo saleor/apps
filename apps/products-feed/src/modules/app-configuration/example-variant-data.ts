@@ -1,4 +1,4 @@
-import { ProductVariant } from "../google-feed/fetch-product-data";
+import { type ProductVariant } from "../google-feed/fetch-product-data";
 
 export const exampleVariantData: ProductVariant = {
   id: "UHJvZHVjdFZhcmlhbnQ6MzYx", // cspell:disable-line

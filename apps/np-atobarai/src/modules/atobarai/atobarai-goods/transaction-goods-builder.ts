@@ -1,6 +1,6 @@
-import { SourceObjectFragment } from "@/generated/graphql";
+import { type SourceObjectFragment } from "@/generated/graphql";
 
-import { AtobaraiGoods, createAtobaraiGoods } from "./atobarai-goods";
+import { type AtobaraiGoods, createAtobaraiGoods } from "./atobarai-goods";
 import { AtobaraiLineCalculation } from "./atobarai-line-calculation";
 
 export class TransactionGoodBuilder {

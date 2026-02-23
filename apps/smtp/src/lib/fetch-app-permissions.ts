@@ -1,9 +1,9 @@
-import { Client, gql } from "urql";
+import { type Client, gql } from "urql";
 
 import {
   FetchAppPermissionsDocument,
-  FetchAppPermissionsQuery,
-  PermissionEnum,
+  type FetchAppPermissionsQuery,
+  type PermissionEnum,
 } from "../../generated/graphql";
 import { createLogger } from "../logger";
 

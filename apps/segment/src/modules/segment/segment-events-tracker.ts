@@ -1,5 +1,5 @@
-import { TrackingBaseEvent } from "../tracking-events/tracking-events";
-import { ISegmentClient } from "./segment.client";
+import { type TrackingBaseEvent } from "../tracking-events/tracking-events";
+import { type ISegmentClient } from "./segment.client";
 
 export class SegmentEventsTracker {
   constructor(private segmentClient: ISegmentClient) {}
