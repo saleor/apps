@@ -2,8 +2,8 @@ import { Layout } from "@saleor/apps-ui";
 import { Box, Select, Text } from "@saleor/macaw-ui";
 import React from "react";
 
-import { ChannelFragment } from "@/generated/graphql";
-import { AppChannelConfigFields } from "@/modules/app-config/app-config";
+import { type ChannelFragment } from "@/generated/graphql";
+import { type AppChannelConfigFields } from "@/modules/app-config/app-config";
 
 type Props = {
   channels: ChannelFragment[];

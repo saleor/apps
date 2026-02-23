@@ -1,10 +1,10 @@
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 
 import { createLogger } from "../../../logger";
-import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
-import { AvataxClient, CreateTransactionArgs } from "../avatax-client";
+import { type CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
+import { type AvataxClient, type CreateTransactionArgs } from "../avatax-client";
 import { extractTransactionRedactedLogProperties } from "../extract-transaction-redacted-log-properties";
-import { AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
+import { type AvataxCalculateTaxesResponseTransformer } from "./avatax-calculate-taxes-response-transformer";
 
 export type AvataxCalculateTaxesTarget = CreateTransactionArgs;
 export type AvataxCalculateTaxesResult = {

@@ -1,4 +1,4 @@
-import { err, Result } from "neverthrow";
+import { err, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { EmailCompiler } from "./email-compiler";

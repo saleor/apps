@@ -1,11 +1,11 @@
-import { DeepPartial, TRPCError } from "@trpc/server";
+import { type DeepPartial, TRPCError } from "@trpc/server";
 
 import { AvataxInvalidCredentialsError } from "../../taxes/tax-error";
 import { AvataxClient } from "../avatax-client";
-import { AvataxConfig, AvataxConnection } from "../avatax-connection-schema";
+import { type AvataxConfig, type AvataxConnection } from "../avatax-connection-schema";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
-import { AvataxConnectionRepository } from "./avatax-connection-repository";
+import { type AvataxConnectionRepository } from "./avatax-connection-repository";
 
 export class AvataxConnectionService {
   constructor(private avataxConnectionRepository: AvataxConnectionRepository) {}

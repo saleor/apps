@@ -1,12 +1,12 @@
-import { AuthData } from "@saleor/app-sdk/APL";
-import { err, ok, Result } from "neverthrow";
+import { type AuthData } from "@saleor/app-sdk/APL";
+import { err, ok, type Result } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
-import { ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
+import { type ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer";
 import {
   AvataxGetTaxSystemError,
   AvataxGetTaxWrongUserInputError,
@@ -14,10 +14,10 @@ import {
 
 import { BaseError } from "../../../error";
 import { AppConfig } from "../../../lib/app-config";
-import { AppConfigExtractor, IAppConfigExtractor } from "../../../lib/app-config-extractor";
+import { AppConfigExtractor, type IAppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AvataxClient } from "../../avatax/avatax-client";
 import { AvataxSdkClientFactory } from "../../avatax/avatax-sdk-client-factory";
-import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
+import { type CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { CalculateTaxesUseCase } from "./calculate-taxes.use-case";
 
 const mockGetAppConfig = vi.fn<() => Result<AppConfig, (typeof BaseError)["prototype"]>>();

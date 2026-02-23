@@ -1,7 +1,7 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import {
-  AvataxExemptionStatusMetadataInput,
+  type AvataxExemptionStatusMetadataInput,
   buildExemptionStatusMetadataMutationPlan,
 } from "./avatax-exemption-status-metadata";
 import { ExemptionStatusMetadataManager } from "./exemption-status-metadata-manager";

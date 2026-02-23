@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon, Box, Text } from "@saleor/macaw-ui";
 import { Select } from "@saleor/react-hook-form-macaw";
-import { TRPCError } from "@trpc/server";
+import { type TRPCError } from "@trpc/server";
 import { useForm } from "react-hook-form";
 
 import { ChannelProviderConnectionConfig } from "../configuration";

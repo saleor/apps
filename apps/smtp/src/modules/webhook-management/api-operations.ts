@@ -1,9 +1,9 @@
-import { Client, gql } from "urql";
+import { type Client, gql } from "urql";
 
 import {
   AppWebhooksDocument,
   CreateAppWebhookDocument,
-  CreateAppWebhookMutationVariables,
+  type CreateAppWebhookMutationVariables,
   DeleteAppWebhookDocument,
 } from "../../../generated/graphql";
 

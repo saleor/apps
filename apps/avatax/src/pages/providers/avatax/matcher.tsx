@@ -2,7 +2,7 @@ import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-noti
 import { TextLink } from "@saleor/apps-ui";
 import { Skeleton, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { AppCard } from "@/modules/ui/app-card";
 import { AppPageLayout } from "@/modules/ui/app-page-layout";

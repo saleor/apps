@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import {
-  AlgoliaRootFields,
+  type AlgoliaRootFields,
   AlgoliaRootFieldsKeys,
   AlgoliaRootFieldsLabelsMap,
 } from "../lib/algolia-fields";

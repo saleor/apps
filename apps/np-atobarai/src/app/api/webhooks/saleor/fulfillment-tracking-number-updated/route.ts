@@ -3,7 +3,7 @@ import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-att
 import { compose } from "@saleor/apps-shared/compose";
 import { BaseError } from "@saleor/errors";
 import { captureException } from "@sentry/nextjs";
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { createLogger } from "@/lib/logger";

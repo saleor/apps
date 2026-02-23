@@ -1,10 +1,10 @@
-import { TaxCodeModel } from "avatax/lib/models/TaxCodeModel";
-import { FetchResult } from "avatax/lib/utils/fetch_result";
+import { type TaxCodeModel } from "avatax/lib/models/TaxCodeModel";
+import { type FetchResult } from "avatax/lib/utils/fetch_result";
 
 import { BaseError } from "@/error";
 
 import { AvataxForbiddenAccessError } from "../taxes/tax-error";
-import { AvataxClient } from "./avatax-client";
+import { type AvataxClient } from "./avatax-client";
 
 export class AvataxClientTaxCodeService {
   static AvataxClientTaxCodeServiceError = BaseError.subclass("AvataxClientTaxCodeServiceError");

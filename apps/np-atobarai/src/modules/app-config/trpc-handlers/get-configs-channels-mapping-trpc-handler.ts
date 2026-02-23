@@ -1,7 +1,7 @@
 import { createSaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { TRPCError } from "@trpc/server";
 
-import { AppChannelConfigFields } from "@/modules/app-config/app-config";
+import { type AppChannelConfigFields } from "@/modules/app-config/app-config";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class GetConfigsChannelsMappingTrpcHandler {

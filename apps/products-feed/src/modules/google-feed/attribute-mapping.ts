@@ -1,5 +1,5 @@
-import { RootConfig } from "../app-configuration/app-config";
-import { ProductVariant } from "./fetch-product-data";
+import { type RootConfig } from "../app-configuration/app-config";
+import { type ProductVariant } from "./fetch-product-data";
 
 interface GetMappedAttributesArgs {
   variant: ProductVariant;

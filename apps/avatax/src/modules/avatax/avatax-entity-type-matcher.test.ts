@@ -1,7 +1,7 @@
 import { ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
-import { AvataxClient } from "./avatax-client";
+import { type AvataxClient } from "./avatax-client";
 import { AvataxEntityTypeMatcher } from "./avatax-entity-type-matcher";
 
 const mockGetEntityUseCode = vi.fn();

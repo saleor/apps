@@ -9,7 +9,7 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorTransactionToken } from "@/__tests__/mocks/saleor/mocked-saleor-transaction-token";
 
 import {
-  AtobaraiChangeTransactionPayload,
+  type AtobaraiChangeTransactionPayload,
   createAtobaraiChangeTransactionPayload,
 } from "./atobarai-change-transaction-payload";
 

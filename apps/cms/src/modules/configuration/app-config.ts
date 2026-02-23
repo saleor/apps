@@ -1,7 +1,7 @@
 import { ProvidersResolver } from "../providers/providers-resolver";
 import { generateId } from "../shared/generate-id";
 import { ChannelProviderConnectionConfig } from "./schemas/channel-provider-connection.schema";
-import { ProvidersConfig, RootConfig } from "./schemas/root-config.schema";
+import { type ProvidersConfig, RootConfig } from "./schemas/root-config.schema";
 
 export const Errors = {
   CONNECTION_ALREADY_EXISTS: "CONNECTION_ALREADY_EXISTS",

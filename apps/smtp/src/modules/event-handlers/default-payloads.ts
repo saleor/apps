@@ -1,23 +1,23 @@
 import {
-  GiftCardSentWebhookPayloadFragment,
-  InvoiceSentWebhookPayloadFragment,
-  OrderCancelledWebhookPayloadFragment,
-  OrderConfirmedWebhookPayloadFragment,
-  OrderCreatedWebhookPayloadFragment,
-  OrderDetailsFragment,
-  OrderFulfilledWebhookPayloadFragment,
-  OrderFullyPaidWebhookPayloadFragment,
-  OrderRefundedWebhookPayloadFragment,
+  type GiftCardSentWebhookPayloadFragment,
+  type InvoiceSentWebhookPayloadFragment,
+  type OrderCancelledWebhookPayloadFragment,
+  type OrderConfirmedWebhookPayloadFragment,
+  type OrderCreatedWebhookPayloadFragment,
+  type OrderDetailsFragment,
+  type OrderFulfilledWebhookPayloadFragment,
+  type OrderFullyPaidWebhookPayloadFragment,
+  type OrderRefundedWebhookPayloadFragment,
 } from "../../../generated/graphql";
 import {
-  NotifyPayloadAccountChangeEmailConfirmation,
-  NotifyPayloadAccountChangeEmailRequest,
-  NotifyPayloadAccountConfirmation,
-  NotifyPayloadAccountDelete,
-  NotifyPayloadAccountPasswordReset,
-  NotifyPayloadFulfillmentUpdate,
+  type NotifyPayloadAccountChangeEmailConfirmation,
+  type NotifyPayloadAccountChangeEmailRequest,
+  type NotifyPayloadAccountConfirmation,
+  type NotifyPayloadAccountDelete,
+  type NotifyPayloadAccountPasswordReset,
+  type NotifyPayloadFulfillmentUpdate,
 } from "../../lib/notify-event-types";
-import { MessageEventTypes } from "./message-event-types";
+import { type MessageEventTypes } from "./message-event-types";
 
 /*
  * =============================================================================

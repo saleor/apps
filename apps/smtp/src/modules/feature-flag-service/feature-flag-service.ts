@@ -1,8 +1,8 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { createLogger } from "../../logger";
 import { fetchSaleorVersion } from "./fetch-saleor-version";
-import { FeatureFlagsState, getFeatureFlags } from "./get-feature-flags";
+import { type FeatureFlagsState, getFeatureFlags } from "./get-feature-flags";
 
 const logger = createLogger("FeatureFlagService");
 

@@ -1,7 +1,7 @@
-import { StripeEnv } from "@/modules/stripe/stripe-env";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type StripeEnv } from "@/modules/stripe/stripe-env";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
-import { StripeRefundId } from "./stripe-refund-id";
+import { type StripeRefundId } from "./stripe-refund-id";
 
 export const generatePaymentIntentStripeDashboardUrl = (
   paymentIntentId: StripePaymentIntentId,

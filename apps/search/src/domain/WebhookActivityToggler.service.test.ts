@@ -1,8 +1,8 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
-  IWebhooksActivityClient,
+  type IWebhooksActivityClient,
   WebhookActivityTogglerService,
 } from "./WebhookActivityToggler.service";
 

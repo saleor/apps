@@ -1,8 +1,8 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
 import { mockedStripeCardPaymentMethod } from "@/__tests__/mocks/mocked-stripe-payment-method";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 
 export const paymentIntentSucceededEventFixture = (
   stripePaymentIntentId: StripePaymentIntentId,

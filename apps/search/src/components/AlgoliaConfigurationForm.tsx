@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 
 import { algoliaCredentialsVerifier } from "../lib/algolia/algolia-credentials-verifier";
 import {
-  AppConfigurationFields,
+  type AppConfigurationFields,
   AppConfigurationSchema,
 } from "../modules/configuration/configuration";
 import { trpcClient } from "../modules/trpc/trpc-client";

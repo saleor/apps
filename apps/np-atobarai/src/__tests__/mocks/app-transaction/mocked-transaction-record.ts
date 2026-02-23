@@ -1,5 +1,5 @@
-import { AtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shipping-company-code";
-import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { type AtobaraiShippingCompanyCode } from "@/modules/atobarai/atobarai-shipping-company-code";
+import { type AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 
 import { mockedAtobaraiShippingCompanyCode } from "../atobarai/mocked-atobarai-shipping-company-code";

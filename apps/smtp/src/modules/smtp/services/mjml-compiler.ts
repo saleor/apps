@@ -1,9 +1,9 @@
 import compile from "mjml";
-import { err, fromThrowable, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok, type Result } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { createLogger } from "../../../logger";
-import { TemplateErrorCode, templateErrorCodes } from "./template-error-codes";
+import { type TemplateErrorCode, templateErrorCodes } from "./template-error-codes";
 
 export interface IMjmlCompiler {
   compile(mjml: string): Result<string, InstanceType<typeof MjmlCompiler.MjmlCompilerError>>;

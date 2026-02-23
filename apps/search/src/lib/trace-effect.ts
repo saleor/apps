@@ -1,7 +1,7 @@
 import {
   createTraceEffect as createTraceEffectBase,
-  TraceEffectCallbacks,
-  TraceEffectOptions,
+  type TraceEffectCallbacks,
+  type TraceEffectOptions,
 } from "@saleor/apps-otel/src/trace-effect";
 
 import { createLogger } from "./logger";

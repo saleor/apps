@@ -5,18 +5,18 @@ import { err, ok } from "neverthrow";
 import { loggerContext } from "@/logger-context";
 
 import { createLogger } from "../../../logger";
-import { SaleorOrderConfirmedEvent } from "../../saleor";
+import { type SaleorOrderConfirmedEvent } from "../../saleor";
 import { TaxBadPayloadError } from "../../taxes/tax-error";
 import { avataxAddressFactory } from "../address-factory";
-import { AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
-import { CreateTransactionArgs } from "../avatax-client";
-import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
+import { type AvataxCalculationDateResolver } from "../avatax-calculation-date-resolver";
+import { type CreateTransactionArgs } from "../avatax-client";
+import { type AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
-import { AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
-import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
-import { PriceReductionDiscountsStrategy } from "../discounts";
-import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-lines-transformer";
+import { type AvataxDocumentCodeResolver } from "../avatax-document-code-resolver";
+import { type AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { type PriceReductionDiscountsStrategy } from "../discounts";
+import { type AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { type SaleorOrderToAvataxLinesTransformer } from "./saleor-order-to-avatax-lines-transformer";
 
 export class AvataxOrderConfirmedPayloadTransformer {
   private logger = createLogger("AvataxOrderConfirmedPayloadTransformer");

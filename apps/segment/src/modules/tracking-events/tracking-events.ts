@@ -2,7 +2,7 @@ import Decimal from "decimal.js-light";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
-import { OrderBaseFragment } from "@/generated/graphql";
+import { type OrderBaseFragment } from "@/generated/graphql";
 import { filterEmptyValuesFromObject } from "@/lib/filter-empty-values-from-object";
 
 export type TrackingBaseEvent = {

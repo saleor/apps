@@ -1,5 +1,5 @@
-import { TRPCClientErrorLike } from "@trpc/client";
-import { FieldValues, UseFormSetError } from "react-hook-form";
+import { type TRPCClientErrorLike } from "@trpc/client";
+import { type FieldValues, type UseFormSetError } from "react-hook-form";
 
 import type { AppRouter } from "../modules/trpc/trpc-app-router";
 

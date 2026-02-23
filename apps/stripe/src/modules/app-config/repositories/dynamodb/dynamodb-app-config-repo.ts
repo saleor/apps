@@ -1,7 +1,7 @@
 import { Encryptor } from "@saleor/apps-shared/encryptor";
 import { DeleteItemCommand, GetItemCommand, Parser, PutItemCommand } from "dynamodb-toolbox";
 import { QueryCommand } from "dynamodb-toolbox/table/actions/query";
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { env } from "@/lib/env";
 import { BaseError } from "@/lib/errors";
@@ -9,22 +9,22 @@ import { createLogger } from "@/lib/logger";
 import { AppRootConfig } from "@/modules/app-config/domain/app-root-config";
 import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
 import {
-  AppConfigRepo,
+  type AppConfigRepo,
   AppConfigRepoError,
-  BaseAccessPattern,
-  GetStripeConfigAccessPattern,
-  StripeConfigByChannelIdAccessPattern,
-  StripeConfigByConfigIdAccessPattern,
+  type BaseAccessPattern,
+  type GetStripeConfigAccessPattern,
+  type StripeConfigByChannelIdAccessPattern,
+  type StripeConfigByConfigIdAccessPattern,
 } from "@/modules/app-config/repositories/app-config-repo";
 import {
   DynamoDbChannelConfigMapping,
-  DynamoDbChannelConfigMappingEntity,
+  type DynamoDbChannelConfigMappingEntity,
 } from "@/modules/app-config/repositories/dynamodb/channel-config-mapping-db-model";
 import {
   DynamoDbStripeConfig,
-  DynamoDbStripeConfigEntity,
+  type DynamoDbStripeConfigEntity,
 } from "@/modules/app-config/repositories/dynamodb/stripe-config-db-model";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
 import { createStripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";

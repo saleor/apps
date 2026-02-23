@@ -1,10 +1,10 @@
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
-import { StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
-import { StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
+import { type StripeEnv } from "@/modules/stripe/stripe-env";
+import { type StripePublishableKey } from "@/modules/stripe/stripe-publishable-key";
+import { type StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { type StripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 
 export class StripeConfig {
   readonly name: string;

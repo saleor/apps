@@ -1,12 +1,12 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
 import { ATTR_PEER_SERVICE } from "@opentelemetry/semantic-conventions/incubating";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import Avatax from "avatax";
+import type Avatax from "avatax";
 import { DocumentType } from "avatax/lib/enums/DocumentType";
 import { VoidReasonCode } from "avatax/lib/enums/VoidReasonCode";
-import { AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
-import { CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
-import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
+import { type AddressLocationInfo as AvataxAddress } from "avatax/lib/models/AddressLocationInfo";
+import { type CommitTransactionModel } from "avatax/lib/models/CommitTransactionModel";
+import { type CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 import { fromPromise } from "neverthrow";
 
 import { internalMeter } from "@/lib/otel/metrics";

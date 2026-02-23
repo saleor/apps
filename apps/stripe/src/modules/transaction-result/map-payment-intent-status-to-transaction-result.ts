@@ -1,6 +1,6 @@
 import { assertUnreachable } from "@/lib/assert-unreachable";
-import { ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
-import { StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
+import { type ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
+import { type StripePaymentIntentStatus } from "@/modules/stripe/stripe-payment-intent-status";
 
 import {
   AuthorizationActionRequiredResult,

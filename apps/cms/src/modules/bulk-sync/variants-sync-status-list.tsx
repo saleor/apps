@@ -1,5 +1,5 @@
 import { SemanticChip } from "@saleor/apps-ui";
-import { Box, BoxProps, Text } from "@saleor/macaw-ui";
+import { Box, type BoxProps, Text } from "@saleor/macaw-ui";
 
 export type VariantsSyncStatusListItem = {
   productID: string;

@@ -2,7 +2,7 @@ import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "../../../error";
-import { OrderCancelledPayload as OrderCancelledPayloadFragment } from "../../webhooks/payloads/order-cancelled-payload";
+import { type OrderCancelledPayload as OrderCancelledPayloadFragment } from "../../webhooks/payloads/order-cancelled-payload";
 import { OrderCancelNoAvataxIdError, OrderCancelPayloadOrderError } from "./errors";
 
 interface ISaleorCancelledOrderEvent {

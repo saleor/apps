@@ -1,10 +1,10 @@
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared/editor-js-plaintext-renderer";
 
-import { RootConfig } from "../app-configuration/app-config";
+import { type RootConfig } from "../app-configuration/app-config";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
 import { transformTemplateFormat } from "../handlebarsTemplates/transform-template-format";
 import { getMappedAttributes } from "./attribute-mapping";
-import { ProductVariant } from "./fetch-product-data";
+import { type ProductVariant } from "./fetch-product-data";
 import { getRelatedMedia, getVariantMediaMap } from "./get-related-media";
 import { getWeightAttributeValue } from "./get-weight-attribute-value";
 import { priceMapping } from "./price-mapping";

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { TaxBaseLineFragment } from "../../../../generated/graphql";
+import { type TaxBaseLineFragment } from "../../../../generated/graphql";
 import { DEFAULT_TAX_CLASS_ID } from "../constants";
-import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { type AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
 
 const matcher = new AvataxCalculateTaxesTaxCodeMatcher();

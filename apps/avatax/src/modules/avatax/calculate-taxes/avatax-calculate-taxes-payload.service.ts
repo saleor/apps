@@ -1,9 +1,9 @@
-import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
-import { CreateTransactionArgs } from "../avatax-client";
-import { AvataxConfig } from "../avatax-connection-schema";
-import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
-import { AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
-import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
+import { type CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
+import { type CreateTransactionArgs } from "../avatax-client";
+import { type AvataxConfig } from "../avatax-connection-schema";
+import { type AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
+import { type AvataxTaxCodeMatchesService } from "../tax-code/avatax-tax-code-matches.service";
+import { type AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";
 
 export class AvataxCalculateTaxesPayloadService {
   constructor(

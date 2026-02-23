@@ -1,4 +1,4 @@
-import { ChannelConfiguration } from "../channels/channel-configuration-schema";
+import { type ChannelConfiguration } from "../channels/channel-configuration-schema";
 import { isAvailableInChannel } from "../channels/is-available-in-channel";
 
 export interface FilterableConfiguration {

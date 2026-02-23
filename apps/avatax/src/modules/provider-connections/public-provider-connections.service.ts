@@ -1,4 +1,4 @@
-import { PublicAvataxConnectionService } from "../avatax/configuration/public-avatax-connection.service";
+import { type PublicAvataxConnectionService } from "../avatax/configuration/public-avatax-connection.service";
 
 export const TAX_PROVIDER_KEY = "tax-providers-v2";
 

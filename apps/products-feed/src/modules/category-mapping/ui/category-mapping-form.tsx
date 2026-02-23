@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Box, Button, PropsWithBox } from "@saleor/macaw-ui";
+import { Box, Button, type PropsWithBox } from "@saleor/macaw-ui";
 import { Controller, useForm } from "react-hook-form";
 
-import { CategoryWithMappingFragmentFragment } from "../../../../generated/graphql";
+import { type CategoryWithMappingFragmentFragment } from "../../../../generated/graphql";
 import { trpcClient } from "../../trpc/trpc-client";
 import {
   SetCategoryMappingInputSchema,
-  SetCategoryMappingInputType,
+  type SetCategoryMappingInputType,
 } from "../category-mapping-input-schema";
 import { CategoryBreadcrumbs } from "../construct-category-breadcrumbs";
 import { GoogleProductCategories } from "../google-product-categories";

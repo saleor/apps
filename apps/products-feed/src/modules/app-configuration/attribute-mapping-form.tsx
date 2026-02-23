@@ -5,9 +5,9 @@ import { Multiselect } from "@saleor/react-hook-form-macaw";
 import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-import { AttributeWithMappingFragmentFragment } from "../../../generated/graphql";
+import { type AttributeWithMappingFragmentFragment } from "../../../generated/graphql";
 import { trpcClient } from "../trpc/trpc-client";
-import { AppConfigSchema, RootConfig } from "./app-config";
+import { AppConfigSchema, type RootConfig } from "./app-config";
 
 type AttributeMappingConfiguration = Exclude<RootConfig["attributeMapping"], null>;
 

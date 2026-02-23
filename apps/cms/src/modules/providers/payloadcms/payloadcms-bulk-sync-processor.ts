@@ -1,8 +1,11 @@
 import { createLogger } from "@/logger";
-import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
+import { type PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
 
-import { BulkImportProductFragment } from "../../../../generated/graphql";
-import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
+import { type BulkImportProductFragment } from "../../../../generated/graphql";
+import {
+  type BulkSyncProcessor,
+  type BulkSyncProcessorHooks,
+} from "../../bulk-sync/bulk-sync-processor";
 import { PayloadCMSClient } from "./payloadcms-client";
 
 // todo CORS or proxy

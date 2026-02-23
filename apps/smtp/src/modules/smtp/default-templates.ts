@@ -1,4 +1,4 @@
-import { MessageEventTypes } from "../event-handlers/message-event-types";
+import { type MessageEventTypes } from "../event-handlers/message-event-types";
 
 // —— Design System ——
 const colors = {

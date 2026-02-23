@@ -1,7 +1,7 @@
 import { errAsync, okAsync } from "neverthrow";
 
 import { AvataxInvalidCredentialsError } from "../../taxes/tax-error";
-import { AvataxClient } from "../avatax-client";
+import { type AvataxClient } from "../avatax-client";
 
 export class AvataxAuthValidationService {
   constructor(private avataxClient: AvataxClient) {}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
+import { type OrderConfirmedSubscriptionFragment } from "../../../generated/graphql";
 import { AvataxDocumentCodeResolver } from "./avatax-document-code-resolver";
 
 const resolver = new AvataxDocumentCodeResolver();

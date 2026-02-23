@@ -1,4 +1,4 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 import { describe, expect, it, vi } from "vitest";
 
 import { getCursors } from "./fetch-product-data";

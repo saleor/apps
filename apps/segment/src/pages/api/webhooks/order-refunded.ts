@@ -1,9 +1,9 @@
-import { NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
+import { type NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
-import { OrderRefundedSubscriptionPayloadFragment } from "@/generated/graphql";
+import { type OrderRefundedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { DynamoAppConfigManager } from "@/modules/configuration/dynamo-app-config-manager";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credentials-verifier";
-import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
+import { type AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { trpcClient } from "../../modules/trpc/trpc-client";
 import { useSearchProvider } from "./useSearchProvider";
 

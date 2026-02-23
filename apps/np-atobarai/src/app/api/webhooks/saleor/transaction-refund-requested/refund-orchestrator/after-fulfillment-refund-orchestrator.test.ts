@@ -16,7 +16,7 @@ import {
   RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 
-import { ParsedRefundEvent } from "../refund-event-parser";
+import { type ParsedRefundEvent } from "../refund-event-parser";
 import { TransactionRefundRequestedUseCaseResponse } from "../use-case-response";
 import { AfterFulfillmentRefundOrchestrator } from "./after-fulfillment-refund-orchestrator";
 

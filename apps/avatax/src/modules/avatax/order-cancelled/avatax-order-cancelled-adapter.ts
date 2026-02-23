@@ -2,11 +2,11 @@ import { BaseError } from "@/error";
 import { AvataxEntityNotFoundError } from "@/modules/taxes/tax-error";
 
 import { createLogger } from "../../../logger";
-import { CancelOrderPayload } from "../../taxes/tax-provider-webhook";
-import { WebhookAdapter } from "../../taxes/tax-webhook-adapter";
-import { AvataxClient, VoidTransactionArgs } from "../avatax-client";
-import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
-import { AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
+import { type CancelOrderPayload } from "../../taxes/tax-provider-webhook";
+import { type WebhookAdapter } from "../../taxes/tax-webhook-adapter";
+import { type AvataxClient, type VoidTransactionArgs } from "../avatax-client";
+import { type AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
+import { type AvataxOrderCancelledPayloadTransformer } from "./avatax-order-cancelled-payload-transformer";
 
 export type AvataxOrderCancelledTarget = VoidTransactionArgs;
 

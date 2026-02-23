@@ -1,7 +1,7 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 
 import {
-  ProductVariantBackInStock,
+  type ProductVariantBackInStock,
   ProductVariantBackInStockDocument,
 } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";

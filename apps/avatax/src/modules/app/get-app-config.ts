@@ -2,10 +2,10 @@ import { decrypt } from "@saleor/app-sdk/settings-manager";
 
 import { env } from "@/env";
 
-import { MetadataItem } from "../../../generated/graphql";
-import { ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
+import { type MetadataItem } from "../../../generated/graphql";
+import { type ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
 import {
-  ProviderConnections,
+  type ProviderConnections,
   providerConnectionsSchema,
 } from "../provider-connections/provider-connections";
 

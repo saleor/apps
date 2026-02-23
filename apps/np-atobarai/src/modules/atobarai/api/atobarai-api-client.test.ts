@@ -17,7 +17,7 @@ import {
   AtobaraiApiClientFulfillmentReportError,
   AtobaraiApiClientRegisterTransactionError,
   AtobaraiMultipleResultsError,
-  IAtobaraiApiClient,
+  type IAtobaraiApiClient,
 } from "./types";
 
 const authorizationHeader = `Basic ${btoa(

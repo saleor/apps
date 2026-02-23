@@ -1,5 +1,5 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
-import { AppManifest } from "@saleor/app-sdk/types";
+import { type AppManifest } from "@saleor/app-sdk/types";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 

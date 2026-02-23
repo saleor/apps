@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Accordion, Box, Button, Divider, PropsWithBox, Text } from "@saleor/macaw-ui";
+import { Accordion, Box, Button, Divider, type PropsWithBox, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
 import { useForm } from "react-hook-form";
 
 import { trpcClient } from "../trpc/trpc-client";
-import { AppConfigSchema, ChannelUrlsConfig } from "./app-config";
+import { AppConfigSchema, type ChannelUrlsConfig } from "./app-config";
 import { FeedPreviewCard } from "./feed-preview-card";
 
 const ChannelConfigForm = ({ channelSlug, ...props }: PropsWithBox<{ channelSlug: string }>) => {

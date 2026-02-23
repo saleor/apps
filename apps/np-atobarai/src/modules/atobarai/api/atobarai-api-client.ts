@@ -1,39 +1,39 @@
 import { BaseError } from "@saleor/errors";
-import { err, ok, Result, ResultAsync } from "neverthrow";
+import { err, ok, type Result, ResultAsync } from "neverthrow";
 
 import { createLogger } from "@/lib/logger";
 
-import { AtobaraiMerchantCode } from "../atobarai-merchant-code";
-import { AtobaraiSecretSpCode } from "../atobarai-secret-sp-code";
-import { AtobaraiTerminalId } from "../atobarai-terminal-id";
-import { AtobaraiCancelTransactionPayload } from "./atobarai-cancel-transaction-payload";
+import { type AtobaraiMerchantCode } from "../atobarai-merchant-code";
+import { type AtobaraiSecretSpCode } from "../atobarai-secret-sp-code";
+import { type AtobaraiTerminalId } from "../atobarai-terminal-id";
+import { type AtobaraiCancelTransactionPayload } from "./atobarai-cancel-transaction-payload";
 import {
-  AtobaraiCancelTransactionSuccessResponse,
+  type AtobaraiCancelTransactionSuccessResponse,
   createAtobaraiCancelTransactionSuccessResponse,
 } from "./atobarai-cancel-transaction-success-response";
-import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
+import { type AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
 import { createAtobaraiErrorResponse } from "./atobarai-error-response";
-import { AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
+import { type AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
 import {
-  AtobaraiFulfillmentReportSuccessResponse,
+  type AtobaraiFulfillmentReportSuccessResponse,
   createAtobaraiFulfillmentReportSuccessResponse,
 } from "./atobarai-fulfillment-report-success-response";
-import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
+import { type AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
 import {
-  AtobaraiTransactionSuccessResponse,
+  type AtobaraiTransactionSuccessResponse,
   createAtobaraiTransactionSuccessResponse,
 } from "./atobarai-transaction-success-response";
 import {
-  AtobaraiApiChangeTransactionErrors,
+  type AtobaraiApiChangeTransactionErrors,
   AtobaraiApiClientCancelTransactionError,
   AtobaraiApiClientChangeTransactionError,
   AtobaraiApiClientFulfillmentReportError,
   AtobaraiApiClientRegisterTransactionError,
   AtobaraiApiClientValidationError,
-  AtobaraiApiRegisterTransactionErrors,
-  AtobaraiEnvironment,
+  type AtobaraiApiRegisterTransactionErrors,
+  type AtobaraiEnvironment,
   AtobaraiMultipleResultsError,
-  IAtobaraiApiClient,
+  type IAtobaraiApiClient,
 } from "./types";
 
 export class AtobaraiApiClient implements IAtobaraiApiClient {

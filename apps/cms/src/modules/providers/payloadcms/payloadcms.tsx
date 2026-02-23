@@ -1,7 +1,7 @@
 import { TextLink } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
 
-import { CMSProviderMeta } from "../cms-provider-meta";
+import { type CMSProviderMeta } from "../cms-provider-meta";
 import logo from "./logo.png";
 
 export const PayloadCMS = {

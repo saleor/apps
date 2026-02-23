@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 import { BaseError } from "../../../errors";
 import { racePromise } from "../../../lib/race-promise";
 import { createLogger } from "../../../logger";
-import { SmtpEncryptionType } from "../configuration/smtp-config-schema";
+import { type SmtpEncryptionType } from "../configuration/smtp-config-schema";
 
 export interface SendMailArgs {
   smtpSettings: {

@@ -1,15 +1,15 @@
-import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
-import { err, ok, Result } from "neverthrow";
+import { type SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { err, ok, type Result } from "neverthrow";
 
-import { PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
+import { type PaymentGatewayInitializeSessionEventFragment } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger";
-import { AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
+import { type AppConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 
 import { BaseUseCase } from "../base-use-case";
-import { AppIsNotConfiguredResponse } from "../saleor-webhook-responses";
+import { type AppIsNotConfiguredResponse } from "../saleor-webhook-responses";
 import {
   PaymentGatewayInitializeSessionUseCaseResponses,
-  PaymentGatewayInitializeSessionUseCaseResponsesType,
+  type PaymentGatewayInitializeSessionUseCaseResponsesType,
 } from "./use-case-response";
 import {
   MissingBillingAddressError,

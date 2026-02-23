@@ -1,4 +1,4 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedStripeRestrictedKeyTest } from "@/__tests__/mocks/mocked-stripe-restricted-key";

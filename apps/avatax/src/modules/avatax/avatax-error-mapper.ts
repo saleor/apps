@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { BaseError } from "../../error";
+import { type BaseError } from "../../error";
 import { AvataxInvalidAddressError, AvataxInvalidCredentialsError } from "../taxes/tax-error";
 
 export class AvataxErrorToTrpcErrorMapper {

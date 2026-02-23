@@ -1,9 +1,9 @@
-import { DeepPartial } from "@trpc/server";
+import { type DeepPartial } from "@trpc/server";
 import { Client } from "urql";
 
-import { AvataxConfig } from "../avatax-connection-schema";
-import { AvataxObfuscator } from "../avatax-obfuscator";
-import { AvataxConnectionService } from "./avatax-connection.service";
+import { type AvataxConfig } from "../avatax-connection-schema";
+import { type AvataxObfuscator } from "../avatax-obfuscator";
+import { type AvataxConnectionService } from "./avatax-connection.service";
 
 export class PublicAvataxConnectionService {
   constructor(

@@ -1,5 +1,5 @@
 import { TextLink } from "@saleor/apps-ui";
-import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
+import { Box, type PropsWithBox, Text } from "@saleor/macaw-ui";
 
 type Props = PropsWithBox<{}>;
 

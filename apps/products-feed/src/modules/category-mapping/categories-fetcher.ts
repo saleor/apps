@@ -1,7 +1,7 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import {
-  CategoryWithMappingFragmentFragment,
+  type CategoryWithMappingFragmentFragment,
   FetchCategoriesWithMappingDocument,
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";

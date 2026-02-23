@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 
 import {
-  AtobaraiCancelTransactionPayload,
+  type AtobaraiCancelTransactionPayload,
   createAtobaraiCancelTransactionPayload,
 } from "./atobarai-cancel-transaction-payload";
 

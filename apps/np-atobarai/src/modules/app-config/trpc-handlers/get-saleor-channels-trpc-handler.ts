@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
-import { Client } from "urql";
+import { type Client } from "urql";
 
-import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
+import { type ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
 export class GetSaleorChannelsTrpcHandler {

@@ -1,6 +1,6 @@
 import { AvataxCalculationDateResolver } from "@/modules/avatax/avatax-calculation-date-resolver";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
-import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { type AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxDocumentCodeResolver } from "@/modules/avatax/avatax-document-code-resolver";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
 import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";

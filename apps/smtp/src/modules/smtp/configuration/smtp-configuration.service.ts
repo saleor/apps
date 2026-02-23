@@ -1,18 +1,22 @@
-import { err, errAsync, fromAsyncThrowable, ok, okAsync, ResultAsync } from "neverthrow";
+import { err, errAsync, fromAsyncThrowable, ok, okAsync, type ResultAsync } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { generateRandomId } from "../../../lib/generate-random-id";
 import { createLogger } from "../../../logger";
 import { filterConfigurations } from "../../app-configuration/filter-configurations";
-import { MessageEventTypes } from "../../event-handlers/message-event-types";
-import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
-import { EmailCompiler, ErrorContext } from "../services/email-compiler";
+import { type MessageEventTypes } from "../../event-handlers/message-event-types";
+import { type FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
+import { EmailCompiler, type ErrorContext } from "../services/email-compiler";
 import { HandlebarsTemplateCompiler } from "../services/handlebars-template-compiler";
 import { HtmlToTextCompiler } from "../services/html-to-text-compiler";
 import { MjmlCompiler } from "../services/mjml-compiler";
-import { SmtpConfig, SmtpConfiguration, SmtpEventConfiguration } from "./smtp-config-schema";
+import {
+  type SmtpConfig,
+  type SmtpConfiguration,
+  type SmtpEventConfiguration,
+} from "./smtp-config-schema";
 import { smtpDefaultEmptyConfigurations } from "./smtp-default-empty-configurations";
-import { SmtpMetadataManager } from "./smtp-metadata-manager";
+import { type SmtpMetadataManager } from "./smtp-metadata-manager";
 
 const logger = createLogger("SmtpConfigurationService");
 

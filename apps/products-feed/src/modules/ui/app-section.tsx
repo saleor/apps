@@ -1,5 +1,5 @@
-import { Box, PropsWithBox, Text } from "@saleor/macaw-ui";
-import { ReactNode } from "react";
+import { Box, type PropsWithBox, Text } from "@saleor/macaw-ui";
+import { type ReactNode } from "react";
 
 // todo move to shared
 export const AppSection = ({

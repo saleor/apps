@@ -15,7 +15,7 @@ import { getFallbackSmtpConfigSchema } from "../../modules/smtp/configuration/sm
 import { SmtpConfigurationService } from "../../modules/smtp/configuration/smtp-configuration.service";
 import { SmtpMetadataManager } from "../../modules/smtp/configuration/smtp-metadata-manager";
 import {
-  AppWebhook,
+  type AppWebhook,
   AppWebhooks,
   WebhookManagementService,
 } from "../../modules/webhook-management/webhook-management-service";

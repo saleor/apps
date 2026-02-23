@@ -1,4 +1,4 @@
-import { DynamicCombobox, Option } from "@saleor/macaw-ui";
+import { DynamicCombobox, type Option } from "@saleor/macaw-ui";
 
 import { useTaxCodeCombobox } from "./use-tax-code-combobox";
 

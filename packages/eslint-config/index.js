@@ -102,6 +102,14 @@ export const config = [
           ignoreRestSiblings: true,
         },
       ],
+      "@typescript-eslint/consistent-type-imports": [
+        "warn",
+        {
+          prefer: "type-imports",
+          fixStyle: "inline-type-imports",
+          disallowTypeAnnotations: true,
+        },
+      ],
     },
   },
   {

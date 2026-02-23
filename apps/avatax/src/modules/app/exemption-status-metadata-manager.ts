@@ -1,18 +1,18 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { BaseError } from "@/error";
 import { createLogger } from "@/logger";
 
 import {
-  DeletePublicMetadataMutation,
+  type DeletePublicMetadataMutation,
   UntypedDeletePublicMetadataDocument,
   UntypedUpdatePublicMetadataDocument,
-  UpdatePublicMetadataMutation,
-  UpdatePublicMetadataMutationVariables,
+  type UpdatePublicMetadataMutation,
+  type UpdatePublicMetadataMutationVariables,
 } from "../../../generated/graphql";
 import {
   AVATAX_EXEMPTION_STATUS_METADATA_KEY,
-  AvataxExemptionStatusMetadata,
+  type AvataxExemptionStatusMetadata,
 } from "./avatax-exemption-status-metadata";
 
 export class ExemptionStatusMetadataManager {

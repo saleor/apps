@@ -9,13 +9,16 @@ import { Controller, useForm } from "react-hook-form";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { examplePayloads } from "../../event-handlers/default-payloads";
 import {
-  MessageEventTypes,
+  type MessageEventTypes,
   messageEventTypes,
   messageEventTypesLabels,
 } from "../../event-handlers/message-event-types";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SmtpUpdateEvent, smtpUpdateEventSchema } from "../configuration/smtp-config-input-schema";
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import {
+  type SmtpUpdateEvent,
+  smtpUpdateEventSchema,
+} from "../configuration/smtp-config-input-schema";
+import { type SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../default-templates";
 import { smtpUrls } from "../urls";
 import { CodeEditor } from "./code-editor";

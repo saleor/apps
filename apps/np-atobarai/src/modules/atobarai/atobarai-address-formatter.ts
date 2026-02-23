@@ -1,4 +1,4 @@
-import { AddressFragment } from "@/generated/graphql";
+import { type AddressFragment } from "@/generated/graphql";
 import { JapanesePostalData } from "@/modules/atobarai/japanese-postal-data";
 
 export class AtobaraiAddressFormatter {

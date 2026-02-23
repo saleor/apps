@@ -1,8 +1,8 @@
-import { AuthData } from "@saleor/app-sdk/APL";
-import { err, ok, Result } from "neverthrow";
+import { type AuthData } from "@saleor/app-sdk/APL";
+import { err, ok, type Result } from "neverthrow";
 
 import { BaseError } from "@/errors";
-import { APLRepository } from "@/modules/db/types";
+import { type APLRepository } from "@/modules/db/types";
 
 export class MemoryAPLRepository implements APLRepository {
   public entries: Record<string, AuthData> = {};

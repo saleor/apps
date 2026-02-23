@@ -1,8 +1,11 @@
-import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import {
+  createProtectedHandler,
+  type NextJsProtectedApiHandler,
+} from "@saleor/app-sdk/handlers/next";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { ChannelsDocument } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";

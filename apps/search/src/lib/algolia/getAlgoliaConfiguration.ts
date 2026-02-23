@@ -1,4 +1,4 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 import { createInstrumentedGraphqlClient } from "../create-instrumented-graphql-client";

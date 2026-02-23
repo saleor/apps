@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import {
   ChannelsDocument,
   ProductsDataForImportDocument,
-  ProductsDataForImportQuery,
+  type ProductsDataForImportQuery,
 } from "../../generated/graphql";
 
 const PER_PAGE = 100;

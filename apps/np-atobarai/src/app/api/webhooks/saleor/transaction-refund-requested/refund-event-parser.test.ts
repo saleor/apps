@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { mockedRefundRequestedEvent } from "@/__tests__/mocks/saleor-events/mocked-refund-requested-event";
-import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
+import { type TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 
 import { RefundEventParser } from "./refund-event-parser";
 

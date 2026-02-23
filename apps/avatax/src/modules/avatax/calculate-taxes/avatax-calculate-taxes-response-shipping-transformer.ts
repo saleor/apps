@@ -1,4 +1,4 @@
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 import Decimal from "decimal.js-light";
 
 import { loggerContext } from "@/logger-context";
@@ -6,7 +6,7 @@ import { loggerContext } from "@/logger-context";
 import { createLogger } from "../../../logger";
 import { TaxBadProviderResponseError } from "../../taxes/tax-error";
 import { taxProviderUtils } from "../../taxes/tax-provider-utils";
-import { CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
+import { type CalculateTaxesResponse } from "../../taxes/tax-provider-webhook";
 import { avataxShippingLine } from "./avatax-shipping-line";
 import { extractIntegerRateFromTaxDetailsRates } from "./extract-integer-rate-from-tax-details";
 

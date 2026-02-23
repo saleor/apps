@@ -1,8 +1,8 @@
-import { NextAppRouterSyncWebhookHandler } from "@saleor/app-sdk/handlers/next-app-router";
-import { WebhookContext } from "@saleor/app-sdk/handlers/shared";
-import { NextRequest } from "next/server";
+import { type NextAppRouterSyncWebhookHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import { type WebhookContext } from "@saleor/app-sdk/handlers/shared";
+import { type NextRequest } from "next/server";
 
-import { EventMetadataFragment } from "@/generated/graphql";
+import { type EventMetadataFragment } from "@/generated/graphql";
 
 type PayloadPartial = Pick<EventMetadataFragment, "recipient">;
 

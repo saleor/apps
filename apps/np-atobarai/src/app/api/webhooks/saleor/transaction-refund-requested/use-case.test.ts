@@ -10,7 +10,7 @@ import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor/mocked-saleor-api-url";
 import { mockedSaleorAppId } from "@/__tests__/mocks/saleor/mocked-saleor-app-id";
 import { mockedRefundRequestedEvent } from "@/__tests__/mocks/saleor-events/mocked-refund-requested-event";
-import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
+import { type TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 import { createAtobaraiCancelTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-cancel-transaction-success-response";
 import { createAtobaraiFulfillmentReportSuccessResponse } from "@/modules/atobarai/api/atobarai-fulfillment-report-success-response";
 import { createAtobaraiTransactionSuccessResponse } from "@/modules/atobarai/api/atobarai-transaction-success-response";
@@ -18,7 +18,7 @@ import {
   AtobaraiApiClientCancelTransactionError,
   AtobaraiApiClientFulfillmentReportError,
   AtobaraiApiClientRegisterTransactionError,
-  IAtobaraiApiClientFactory,
+  type IAtobaraiApiClientFactory,
 } from "@/modules/atobarai/api/types";
 import {
   RefundFailureResult,

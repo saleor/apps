@@ -1,4 +1,4 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 export const mockedStripeCardPaymentMethod: Stripe.PaymentMethod = {
   id: "pm_1234567890",

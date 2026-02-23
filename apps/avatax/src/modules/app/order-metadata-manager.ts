@@ -1,12 +1,12 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { BaseError } from "@/error";
 import { createLogger } from "@/logger";
 
 import {
   UpdatePublicMetadataDocument,
-  UpdatePublicMetadataMutation,
-  UpdatePublicMetadataMutationVariables,
+  type UpdatePublicMetadataMutation,
+  type UpdatePublicMetadataMutationVariables,
 } from "../../../generated/graphql";
 
 const PROVIDER_ORDER_ID_KEY = "avataxId";

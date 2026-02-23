@@ -8,7 +8,7 @@ import { mockedAtobaraiShopOrderDate } from "@/__tests__/mocks/atobarai/mocked-a
 import { mockedSaleorTransactionToken } from "@/__tests__/mocks/saleor/mocked-saleor-transaction-token";
 
 import {
-  AtobaraiRegisterTransactionPayload,
+  type AtobaraiRegisterTransactionPayload,
   createAtobaraiRegisterTransactionPayload,
 } from "./atobarai-register-transaction-payload";
 

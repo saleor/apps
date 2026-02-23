@@ -4,7 +4,7 @@ import {
   mockedSaleorTransactionId,
 } from "@/__tests__/mocks/constants";
 import { parseTransactionInitializeSessionEventData } from "@/app/api/webhooks/saleor/transaction-initialize-session/event-data-parser";
-import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { type TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 
 export const transactionInitializeSessionFixture =
   (): TransactionInitializeSessionEventFragment => {

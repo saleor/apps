@@ -2,7 +2,7 @@ import { Entity, string } from "dynamodb-toolbox";
 import { item } from "dynamodb-toolbox/schema/item";
 
 import { DynamoMainTable, dynamoMainTable } from "@/modules/dynamodb/dynamo-main-table";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 
 class StripeConfigAccessPattern {
   static getPK({ saleorApiUrl, appId }: { saleorApiUrl: SaleorApiUrl; appId: string }) {

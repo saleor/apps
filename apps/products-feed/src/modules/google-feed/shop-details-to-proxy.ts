@@ -1,4 +1,4 @@
-import { GoogleProxyItem, ShopDetailsEntry } from "./types";
+import { type GoogleProxyItem, type ShopDetailsEntry } from "./types";
 
 export const shopDetailsToProxy = ({ title, storefrontUrl, description }: ShopDetailsEntry) => {
   const data: GoogleProxyItem[] = [

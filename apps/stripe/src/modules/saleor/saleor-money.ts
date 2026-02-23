@@ -1,6 +1,6 @@
 import { default as currencyJs } from "currency.js";
 import { default as currencyCodesData } from "currency-codes";
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
 

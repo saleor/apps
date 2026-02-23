@@ -3,7 +3,7 @@ import { Box, Button, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React from "react";
 
-import { ProvidersConfig } from "../configuration";
+import { type ProvidersConfig } from "../configuration";
 import { ProvidersResolver } from "../providers/providers-resolver";
 import { trpcClient } from "../trpc/trpc-client";
 

@@ -2,7 +2,7 @@ import { Box, Text } from "@saleor/macaw-ui";
 import Image from "next/image";
 
 import { AvataxIcon } from "../../assets";
-import { ProviderName } from "../provider-connections/provider-connections";
+import { type ProviderName } from "../provider-connections/provider-connections";
 
 type ProviderNameWithStripeTax = ProviderName;
 

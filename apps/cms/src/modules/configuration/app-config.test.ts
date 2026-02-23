@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { AppConfig } from "./app-config";
-import { ContentfulProviderConfig } from "./schemas/contentful-provider.schema";
-import { DatocmsProviderConfig } from "./schemas/datocms-provider.schema";
+import { type ContentfulProviderConfig } from "./schemas/contentful-provider.schema";
+import { type DatocmsProviderConfig } from "./schemas/datocms-provider.schema";
 
 const getMockContentfulInput = (): ContentfulProviderConfig.InputShape => {
   return {

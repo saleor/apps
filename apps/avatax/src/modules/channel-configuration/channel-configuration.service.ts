@@ -1,7 +1,7 @@
-import { ChannelConfigProperties } from "./channel-config";
+import { type ChannelConfigProperties } from "./channel-config";
 import { ChannelConfigurationMerger } from "./channel-configuration-merger";
-import { ChannelConfigurationRepository } from "./channel-configuration-repository";
-import { ChannelsFetcher } from "./channel-fetcher";
+import { type ChannelConfigurationRepository } from "./channel-configuration-repository";
+import { type ChannelsFetcher } from "./channel-fetcher";
 
 export class ChannelConfigurationService {
   constructor(

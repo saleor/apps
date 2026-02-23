@@ -2,7 +2,7 @@ import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { isInIframe } from "@saleor/apps-shared/is-in-iframe";
 import { SkeletonLayout } from "@saleor/apps-ui";
 import { Box } from "@saleor/macaw-ui";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useIsMounted } from "usehooks-ts";

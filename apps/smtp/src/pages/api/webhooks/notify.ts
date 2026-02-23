@@ -1,9 +1,12 @@
-import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { type NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
 
-import { notifyEventMapping, NotifySubscriptionPayload } from "../../../lib/notify-event-types";
+import {
+  notifyEventMapping,
+  type NotifySubscriptionPayload,
+} from "../../../lib/notify-event-types";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
 import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";

@@ -1,9 +1,9 @@
-import { Result } from "neverthrow";
+import { type Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 
 export const TransactionRecorderError = {
   PersistenceNotAvailable: BaseError.subclass(

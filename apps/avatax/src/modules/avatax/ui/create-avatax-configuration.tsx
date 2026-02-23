@@ -4,7 +4,11 @@ import { useRouter } from "next/router";
 import React from "react";
 
 import { trpcClient } from "../../trpc/trpc-client";
-import { AvataxConfig, BaseAvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
+import {
+  type AvataxConfig,
+  type BaseAvataxConfig,
+  defaultAvataxConfig,
+} from "../avatax-connection-schema";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
 
 export const CreateAvataxConfiguration = () => {

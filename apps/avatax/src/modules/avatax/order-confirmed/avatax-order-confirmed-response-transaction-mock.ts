@@ -1,4 +1,4 @@
-import { TransactionModel } from "avatax/lib/models/TransactionModel";
+import { type TransactionModel } from "avatax/lib/models/TransactionModel";
 
 export const orderConfirmedTransactionMock = {
   id: 85026453274669,

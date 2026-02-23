@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { CrudSettingsManager } from "../../crud-settings/crud-settings.service";
+import { type CrudSettingsManager } from "../../crud-settings/crud-settings.service";
 
 export const avataxTaxCodeMatchSchema = z.object({
   saleorTaxClassId: z.string(),

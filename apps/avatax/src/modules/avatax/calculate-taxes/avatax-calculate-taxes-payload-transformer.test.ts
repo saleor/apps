@@ -7,7 +7,7 @@ import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/ca
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { SHIPPING_ITEM_CODE } from "@/modules/avatax/calculate-taxes/avatax-shipping-line";
 
-import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
+import { type CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
 import { AvataxCalculateTaxesMockGenerator } from "./avatax-calculate-taxes-mock-generator";
 import { AvataxCalculateTaxesPayloadTransformer } from "./avatax-calculate-taxes-payload-transformer";

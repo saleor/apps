@@ -1,7 +1,7 @@
 import { Box, Text } from "@saleor/macaw-ui";
 
-import { ErrorContext } from "../services/email-compiler";
-import { TemplateErrorCode, templateErrorCodes } from "../services/template-error-codes";
+import { type ErrorContext } from "../services/email-compiler";
+import { type TemplateErrorCode, templateErrorCodes } from "../services/template-error-codes";
 
 interface TemplateErrorDisplayProps {
   error: {

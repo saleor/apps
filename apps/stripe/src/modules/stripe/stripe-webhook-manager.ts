@@ -1,13 +1,13 @@
 import { captureException } from "@sentry/nextjs";
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { WebhookParams } from "@/app/api/webhooks/stripe/webhook-params";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
-import { NewStripeConfigInput } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type NewStripeConfigInput } from "@/modules/app-config/trpc-handlers/new-stripe-config-input-schema";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeClient } from "@/modules/stripe/stripe-client";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { type StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookUrlBuilder } from "@/modules/stripe/stripe-webhook-url-builder";
 import { supportedStripeEvents } from "@/modules/stripe/supported-stripe-events";
 

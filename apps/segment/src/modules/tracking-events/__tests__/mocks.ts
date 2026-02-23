@@ -1,4 +1,4 @@
-import { OrderBaseFragment } from "@/generated/graphql";
+import { type OrderBaseFragment } from "@/generated/graphql";
 
 export const mockedOrderBase: OrderBaseFragment = {
   id: "order-id",

@@ -1,4 +1,4 @@
-import { MessageEventTypes } from "../modules/event-handlers/message-event-types";
+import { type MessageEventTypes } from "../modules/event-handlers/message-event-types";
 
 // Notify webhook event groups multiple event types under the one webhook. We need to map it to events recognized by the App
 export const notifyEventMapping: Record<string, MessageEventTypes> = {

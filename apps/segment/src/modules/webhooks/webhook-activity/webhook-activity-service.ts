@@ -2,7 +2,7 @@ import { err, ok, Result } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
-import { IWebhooksActivityClient } from "./webhook-activity-client";
+import { type IWebhooksActivityClient } from "./webhook-activity-client";
 
 export interface IWebhookActivityService {
   enableAppWebhooks(): Promise<Result<undefined, unknown>>;

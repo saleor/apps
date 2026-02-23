@@ -1,7 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 
-import { StripeConfig, StripeFrontendConfig } from "@/modules/app-config/domain/stripe-config";
+import { type StripeConfig, StripeFrontendConfig } from "@/modules/app-config/domain/stripe-config";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";

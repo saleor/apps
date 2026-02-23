@@ -1,10 +1,10 @@
 import { EditorJsPlaintextRenderer } from "@saleor/apps-shared/editor-js-plaintext-renderer";
 
 import {
-  ProductAttributesDataFragment,
-  ProductVariantWebhookPayloadFragment,
+  type ProductAttributesDataFragment,
+  type ProductVariantWebhookPayloadFragment,
 } from "../../../generated/graphql";
-import { AlgoliaRootFields, AlgoliaRootFieldsKeys } from "../algolia-fields";
+import { type AlgoliaRootFields, AlgoliaRootFieldsKeys } from "../algolia-fields";
 import { isNotNil } from "../isNotNil";
 import { safeParseJson } from "../safe-parse-json";
 import { metadataToAlgoliaAttribute } from "./metadata-to-algolia-attribute";

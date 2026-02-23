@@ -2,16 +2,16 @@ import { DocumentType } from "avatax/lib/enums/DocumentType";
 
 import { loggerContext } from "@/logger-context";
 
-import { CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
+import { type CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { avataxAddressFactory } from "../address-factory";
-import { CreateTransactionArgs } from "../avatax-client";
-import { AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
+import { type CreateTransactionArgs } from "../avatax-client";
+import { type AvataxConfig, defaultAvataxConfig } from "../avatax-connection-schema";
 import { avataxCustomerCode } from "../avatax-customer-code-resolver";
-import { AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
+import { type AvataxEntityTypeMatcher } from "../avatax-entity-type-matcher";
 import { avataxShipFromAddressResolver } from "../avatax-ship-from-address-resolver";
-import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
-import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
+import { type AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
+import { type AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { type AvataxCalculateTaxesPayloadLinesTransformer } from "./avatax-calculate-taxes-payload-lines-transformer";
 
 export class AvataxCalculateTaxesPayloadTransformer {
   constructor(

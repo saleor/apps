@@ -1,7 +1,7 @@
 import { createOtelUrqlExchange } from "@saleor/apps-otel/src/otel-urql-exchange-factory";
 import {
   createGraphQLClient,
-  CreateGraphQLClientArgs,
+  type CreateGraphQLClientArgs,
 } from "@saleor/apps-shared/create-graphql-client";
 
 import { appRootTracer } from "../otel/app-root-tracer";

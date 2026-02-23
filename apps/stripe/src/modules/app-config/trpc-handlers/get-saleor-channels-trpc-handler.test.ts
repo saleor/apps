@@ -6,7 +6,7 @@ import { mockedAppToken, mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockedGraphqlClient } from "@/__tests__/mocks/graphql-client";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { TEST_Procedure } from "@/__tests__/trpc-testing-procedure";
-import { ChannelFragment } from "@/generated/graphql";
+import { type ChannelFragment } from "@/generated/graphql";
 import { GetSaleorChannelsTrpcHandler } from "@/modules/app-config/trpc-handlers/get-saleor-channels-trpc-handler";
 import { ChannelsFetcher } from "@/modules/saleor/channel-fetcher";
 import { router } from "@/modules/trpc/trpc-server";

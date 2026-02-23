@@ -1,13 +1,13 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { z } from "zod";
 
 import {
   createResolvedTransactionFlow,
-  ResolvedTransactionFlow,
+  type ResolvedTransactionFlow,
 } from "@/modules/resolved-transaction-flow";
-import { SaleorTransationFlow } from "@/modules/saleor/saleor-transaction-flow";
+import { type SaleorTransationFlow } from "@/modules/saleor/saleor-transaction-flow";
 
-import { PaymentMethod } from "./types";
+import { type PaymentMethod } from "./types";
 
 /**
  * https://docs.stripe.com/google-pay

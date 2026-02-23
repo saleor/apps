@@ -4,7 +4,7 @@ import React from "react";
 import { trpcClient } from "../../trpc/trpc-client";
 import { Select } from "../../ui/_select";
 import { Table } from "../../ui/table";
-import { ChannelConfig } from "../channel-config";
+import { type ChannelConfig } from "../channel-config";
 
 const SelectProvider = (channelConfig: ChannelConfig) => {
   const {

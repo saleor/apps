@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AtobaraiSecretSpCode, createAtobaraiSecretSpCode } from "./atobarai-secret-sp-code";
+import { type AtobaraiSecretSpCode, createAtobaraiSecretSpCode } from "./atobarai-secret-sp-code";
 
 describe("createAtobaraiSecretSpCode", () => {
   it("should create a valid AtobaraiSpCode from a non-empty string", () => {

@@ -1,11 +1,11 @@
 import dynamic from "next/dynamic";
-import { ComponentType, ReactElement } from "react";
+import { type ComponentType, ReactElement } from "react";
 
-import { BulkSyncProcessor } from "../bulk-sync/bulk-sync-processor";
+import { type BulkSyncProcessor } from "../bulk-sync/bulk-sync-processor";
 import {
   BuilderIoProviderConfig,
   ContentfulProviderConfig,
-  ProvidersConfig,
+  type ProvidersConfig,
   StrapiProviderConfig,
 } from "../configuration";
 import { DatocmsProviderConfig } from "../configuration/schemas/datocms-provider.schema";
@@ -22,7 +22,7 @@ import { DatocmsWebhooksProcessor } from "./datocms/datocms-webhooks-processor";
 import { PayloadCMS } from "./payloadcms/payloadcms";
 import { PayloadCmsBulkSyncProcessor } from "./payloadcms/payloadcms-bulk-sync-processor";
 import { PayloadCmsWebhooksProcessor } from "./payloadcms/payloadcms-webhooks-processor";
-import { CMS, CMSType } from "./providers-registry";
+import { type CMS, type CMSType } from "./providers-registry";
 import { Strapi } from "./strapi/strapi";
 import { StrapiBulkSyncProcessor } from "./strapi/strapi-bulk-sync-processor";
 import { StrapiWebhooksProcessor } from "./strapi/strapi-webhooks-processor";

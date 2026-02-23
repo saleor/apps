@@ -3,7 +3,7 @@ import { SaleorVersionCompatibilityValidator } from "@saleor/apps-shared/saleor-
 import { TextLink } from "@saleor/apps-ui";
 import { Text } from "@saleor/macaw-ui";
 
-import { PermissionEnum } from "../../generated/graphql";
+import { type PermissionEnum } from "../../generated/graphql";
 
 interface ManagePermissionsTextLinkProps {
   missingPermission: PermissionEnum;

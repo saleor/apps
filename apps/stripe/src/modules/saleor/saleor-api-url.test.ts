@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { createSaleorApiUrl, SaleorApiUrl, SaleorApiUrlValidationError } from "./saleor-api-url";
+import {
+  createSaleorApiUrl,
+  type SaleorApiUrl,
+  SaleorApiUrlValidationError,
+} from "./saleor-api-url";
 
 describe("SaleorApiUrl", () => {
   describe("create", () => {

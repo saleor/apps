@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 import {
   StripeFrontendConfig,
-  StripeFrontendConfigSerializedFields,
+  type StripeFrontendConfigSerializedFields,
 } from "@/modules/app-config/domain/stripe-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 

@@ -1,10 +1,10 @@
-import { EncryptedMetadataManager, MetadataEntry } from "@saleor/app-sdk/settings-manager";
-import { Client, gql } from "urql";
+import { EncryptedMetadataManager, type MetadataEntry } from "@saleor/app-sdk/settings-manager";
+import { type Client, gql } from "urql";
 
 import {
   DeleteAppMetadataDocument,
   FetchAppDetailsDocument,
-  FetchAppDetailsQuery,
+  type FetchAppDetailsQuery,
   UpdateAppMetadataDocument,
 } from "../../generated/graphql";
 import { env } from "../env";

@@ -9,8 +9,8 @@ import { SectionWithDescription } from "../../../components/section-with-descrip
 import { defaultPadding } from "../../../components/ui-defaults";
 import { trpcClient } from "../../trpc/trpc-client";
 import {
-  ChannelConfiguration,
-  UpdateChannelsInput,
+  type ChannelConfiguration,
+  type UpdateChannelsInput,
   updateChannelsInputSchema,
 } from "../channel-configuration-schema";
 import { AssignedChannelsMessage } from "./assigned-channels-message";

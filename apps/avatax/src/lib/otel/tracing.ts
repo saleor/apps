@@ -1,12 +1,12 @@
 import {
-  Exception,
-  Span,
-  SpanOptions,
+  type Exception,
+  type Span,
+  type SpanOptions,
   SpanStatusCode,
-  TimeInput,
+  type TimeInput,
   // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   trace,
-  Tracer,
+  type Tracer,
 } from "@opentelemetry/api";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 

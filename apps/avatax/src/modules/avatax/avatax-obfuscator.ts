@@ -1,5 +1,5 @@
 import { Obfuscator } from "../../lib/obfuscator";
-import { AvataxConfig, AvataxConnection } from "./avatax-connection-schema";
+import { type AvataxConfig, type AvataxConnection } from "./avatax-connection-schema";
 
 export class AvataxObfuscator {
   private obfuscator = new Obfuscator();

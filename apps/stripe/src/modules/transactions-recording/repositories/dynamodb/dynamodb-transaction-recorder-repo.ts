@@ -1,26 +1,26 @@
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { GetItemCommand, PutItemCommand } from "dynamodb-toolbox";
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
-import { PaymentMethod } from "@/modules/stripe/payment-methods/types";
+import { type PaymentMethod } from "@/modules/stripe/payment-methods/types";
 import {
   createStripePaymentIntentId,
-  StripePaymentIntentId,
+  type StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 import {
   DynamoDbRecordedTransaction,
-  DynamoDbRecordedTransactionEntity,
+  type DynamoDbRecordedTransactionEntity,
 } from "@/modules/transactions-recording/repositories/dynamodb/recorded-transaction-db-model";
 import {
   TransactionRecorderError,
-  TransactionRecorderRepo,
-  TransactionRecorderRepoAccess,
+  type TransactionRecorderRepo,
+  type TransactionRecorderRepoAccess,
 } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 export class DynamoDBTransactionRecorderRepo implements TransactionRecorderRepo {
