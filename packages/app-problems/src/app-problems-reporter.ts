@@ -1,6 +1,6 @@
 import { BaseError } from "@saleor/errors";
 import { err, ok, type Result } from "neverthrow";
-import semver from "semver/preload";
+import semver from "semver";
 import { type Client } from "urql";
 
 import {
