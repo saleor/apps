@@ -1,0 +1,49 @@
+{
+  "name": "@saleor/app-problems",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
+  "main": "./src/index.ts",
+  "scripts": {
+    "check-types": "tsc",
+    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
+    "generate": "graphql-codegen",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "vitest",
+    "test:ci": "vitest run --coverage"
+  },
+  "config": {
+    "saleor": {
+      "schemaVersion": "3.22"
+    }
+  },
+  "dependencies": {
+    "@saleor/errors": "workspace:*",
+    "graphql": "catalog:",
+    "graphql-tag": "catalog:",
+    "neverthrow": "catalog:"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "catalog:",
+    "@graphql-codegen/schema-ast": "4.0.2",
+    "@graphql-codegen/typed-document-node": "catalog:",
+    "@graphql-codegen/typescript-operations": "catalog:",
+    "@graphql-typed-document-node/core": "catalog:",
+    "@saleor/eslint-config-apps": "workspace:*",
+    "@saleor/typescript-config-apps": "workspace:*",
+    "@vitest/coverage-v8": "catalog:",
+    "eslint": "catalog:",
+    "graphql-codegen-typescript-operation-types": "2.0.2",
+    "graphql-config": "5.0.3",
+    "typescript": "catalog:",
+    "urql": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  }
+}
