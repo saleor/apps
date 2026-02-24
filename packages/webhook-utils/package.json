@@ -11,11 +11,6 @@
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
-  "config": {
-    "saleor": {
-      "schemaVersion": "3.19"
-    }
-  },
   "dependencies": {
     "graphql": "catalog:",
     "graphql-tag": "catalog:",

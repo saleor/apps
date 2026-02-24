@@ -23,6 +23,7 @@
   },
   "config": {
     "saleor": {
+      "//": "Preserved to make json-schema working. TODO Move it to monorepo root.",
       "schemaVersion": "3.22"
     }
   },

@@ -13,11 +13,6 @@
     "lint:fix": "eslint --fix .",
     "start": "next start"
   },
-  "config": {
-    "saleor": {
-      "schemaVersion": "3.22"
-    }
-  },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
     "@aws-sdk/lib-dynamodb": "catalog:",

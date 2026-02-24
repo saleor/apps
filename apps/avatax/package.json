@@ -23,11 +23,6 @@
     "test": "vitest --project units --sequence.shuffle",
     "test:ci": "vitest run --coverage --project units --sequence.shuffle"
   },
-  "config": {
-    "saleor": {
-      "schemaVersion": "3.22"
-    }
-  },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
     "@aws-sdk/lib-dynamodb": "catalog:",
