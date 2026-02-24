@@ -8,16 +8,10 @@
     "check-types": "tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "next start"
-  },
-  "config": {
-    "saleor": {
-      "schemaVersion": "3.22"
-    }
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
