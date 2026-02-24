@@ -1,12 +1,3 @@
-mutation AppProblemCreate($input: AppProblemCreateInput!){
-    appProblemCreate(input: $input){
-        errors {
-            message
-            code
-            field
-        }
-    }
-}
 
 mutation AppProblemDismissByKey($keys: [String!]) {
     appProblemDismiss(input: {byApp: {keys: $keys}}) {
