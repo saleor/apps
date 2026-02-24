@@ -1,2 +1,3 @@
 .changeset
 pnpm-lock.yaml
+generated/**

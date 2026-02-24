@@ -1,4 +1,4 @@
-import { IGraphQLConfig } from "graphql-config";
+import { type IGraphQLConfig } from "graphql-config";
 
 const config: IGraphQLConfig = {
   projects: {
@@ -30,6 +30,8 @@ const config: IGraphQLConfig = {
                   UUID: "string",
                   WeightScalar: "number",
                   Day: "string",
+                  Hour: "number",
+                  PositiveInt: "number",
                 },
               },
               plugins: [

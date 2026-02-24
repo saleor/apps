@@ -5,24 +5,18 @@
   "main": "index.ts",
   "scripts": {
     "check-types": "tsc",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
-  "config": {
-    "saleor": {
-      "schemaVersion": "3.19"
-    }
-  },
   "dependencies": {
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
-    "semver": "7.5.1"
+    "semver": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",
@@ -34,7 +28,7 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@types/semver": "7.5.0",
+    "@types/semver": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "graphql-config": "5.0.3",

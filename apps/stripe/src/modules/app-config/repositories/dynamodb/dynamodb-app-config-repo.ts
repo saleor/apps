@@ -231,7 +231,7 @@ export class DynamodbAppConfigRepo implements AppConfigRepo {
     }
 
     if (!configId) {
-      throw new BaseError("Unreachable code reached");
+      return ok(null);
     }
 
     try {
