@@ -51,6 +51,8 @@ jobs:
           fi
 
           BRANCH="update-schema"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add -A
           git commit -m "Update GraphQL schema"
