@@ -1,0 +1,37 @@
+.github/workflows/graphql-schema-updater.yml
+  4e02363f7aab1f6c 1-7,11-56,59-73
+  12eff124f273e09f 8-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.4",
+  "base_commit_sha": "309c96e34392e5889cab8753cdbba362931d2dbc",
+  "prompts": {
+    "12eff124f273e09f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cea40c32-6b61-4a45-bef6-0519f01aaeca",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 0,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    },
+    "4e02363f7aab1f6c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3b7329cb-d728-4035-b07b-6c95dc0fad51",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 68,
+      "total_deletions": 0,
+      "accepted_lines": 68,
+      "overriden_lines": 0
+    }
+  }
+}
