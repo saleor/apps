@@ -22,7 +22,7 @@
     "graphql-tag": "catalog:",
     "modern-errors": "catalog:",
     "modern-errors-serialize": "catalog:",
-    "semver": "7.5.1"
+    "semver": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",
@@ -34,7 +34,7 @@
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
-    "@types/semver": "7.5.0",
+    "@types/semver": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "graphql-config": "5.0.3",

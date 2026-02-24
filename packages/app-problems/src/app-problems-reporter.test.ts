@@ -123,4 +123,19 @@ describe("AppProblemsReporter", () => {
       expect(error.message).toContain("Network failure");
     });
   });
+
+  describe("isApiCompatible", () => {
+    it("Returns true when provided version is ge than minimal required version (3.22.36)", () => {
+      expect(AppProblemsReporter.isApiCompatible("3.22.36")).toBe(true);
+      expect(AppProblemsReporter.isApiCompatible("3.22.37")).toBe(true);
+      expect(AppProblemsReporter.isApiCompatible("3.23.0")).toBe(true);
+      expect(AppProblemsReporter.isApiCompatible("4.0.0")).toBe(true);
+    });
+
+    it("Returns true when provided version is lower than minimal required version (3.22.36)", () => {
+      expect(AppProblemsReporter.isApiCompatible("3.22.35")).toBe(false);
+      expect(AppProblemsReporter.isApiCompatible("3.21.40")).toBe(false);
+      expect(AppProblemsReporter.isApiCompatible("2.24.40")).toBe(false);
+    });
+  });
 });

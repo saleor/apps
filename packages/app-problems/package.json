@@ -24,10 +24,12 @@
     }
   },
   "dependencies": {
+    "@saleor/app-sdk": "catalog:",
     "@saleor/errors": "workspace:*",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
-    "neverthrow": "catalog:"
+    "neverthrow": "catalog:",
+    "semver": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",
@@ -37,6 +39,7 @@
     "@graphql-typed-document-node/core": "catalog:",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
+    "@types/semver": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "graphql-codegen-typescript-operation-types": "2.0.2",
