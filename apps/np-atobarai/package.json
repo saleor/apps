@@ -9,7 +9,6 @@
     "check-types": "tsc",
     "deploy": "tsx --env-file-if-exists=.env ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run /generate:.*/",
     "generate:app-graphql-types": "graphql-codegen",
     "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=${npm_package_config_saleor_schemaVersion}",

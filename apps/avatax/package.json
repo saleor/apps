@@ -11,7 +11,6 @@
     "dev:debug": "APP_LOG_LEVEL=debug pnpm dev",
     "e2e": "vitest --project e2e --watch=false --sequence.sequential",
     "e2e:watch": "vitest --project e2e --watch --sequence.sequential",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run generate:app && pnpm run generate:e2e",
     "generate:app": "graphql-codegen",
     "generate:e2e": "graphql-codegen --project e2e",
