@@ -5,6 +5,9 @@ on:
     - cron: "0 7 * * 1" # Weekly on Monday at 07:00 UTC
   workflow_dispatch: # Manual trigger
 
+permissions:
+  contents: read
+
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
