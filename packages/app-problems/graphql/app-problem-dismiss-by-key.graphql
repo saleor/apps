@@ -1,0 +1,10 @@
+
+mutation AppProblemDismissByKey($keys: [String!]) {
+    appProblemDismiss(input: {byApp: {keys: $keys}}) {
+        errors {
+            field
+            code
+            message
+        }
+    }
+}

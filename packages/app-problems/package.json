@@ -1,8 +1,14 @@
 {
-  "name": "@saleor/webhook-utils",
-  "version": "0.2.6",
+  "name": "@saleor/app-problems",
+  "version": "0.0.0",
   "type": "module",
-  "main": "index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    }
+  },
+  "main": "./src/index.ts",
   "scripts": {
     "check-types": "tsc",
     "generate": "graphql-codegen",
@@ -12,25 +18,25 @@
     "test:ci": "vitest run --coverage"
   },
   "dependencies": {
+    "@saleor/app-sdk": "catalog:",
+    "@saleor/errors": "workspace:*",
     "graphql": "catalog:",
     "graphql-tag": "catalog:",
-    "modern-errors": "catalog:",
-    "modern-errors-serialize": "catalog:",
+    "neverthrow": "catalog:",
     "semver": "catalog:"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "catalog:",
     "@graphql-codegen/schema-ast": "4.0.2",
     "@graphql-codegen/typed-document-node": "catalog:",
-    "@graphql-codegen/typescript": "catalog:",
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
-    "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/semver": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
+    "graphql-codegen-typescript-operation-types": "2.0.2",
     "graphql-config": "5.0.3",
     "typescript": "catalog:",
     "urql": "catalog:",
@@ -38,7 +44,6 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "next": "catalog:",
     "urql": "catalog:"
   }
 }
