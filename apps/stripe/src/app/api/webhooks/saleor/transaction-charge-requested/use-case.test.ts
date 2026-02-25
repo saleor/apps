@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+import { mockStripeProblemReporter } from "@/__tests__/mocks/mock-stripe-problem-reporter";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -19,6 +20,26 @@ import { ChargeSuccessResult } from "@/modules/transaction-result/success-result
 
 import { TransactionChargeRequestedUseCase } from "./use-case";
 import { TransactionChargeRequestedUseCaseResponses } from "./use-case-response";
+
+vi.mock("@saleor/app-problems", () => ({
+  AppProblemsReporter: class {
+    reportProblem() {
+      return Promise.resolve({ isErr: () => false });
+    }
+    clearProblems() {
+      return Promise.resolve({ isErr: () => false });
+    }
+  },
+}));
+
+vi.mock("@/lib/logger", () => ({
+  createLogger: () => ({
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  }),
+}));
 
 describe("TransactionChargeRequestedUseCase", () => {
   const stripePaymentIntentsApiFactory = {
@@ -46,6 +67,7 @@ describe("TransactionChargeRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionChargeRequestedEvent(),
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -73,6 +95,7 @@ describe("TransactionChargeRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionChargeRequestedEvent(),
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -99,6 +122,7 @@ describe("TransactionChargeRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionChargeRequestedEvent(),
+      problemReporter: mockStripeProblemReporter,
     });
 
     const err = responsePayload._unsafeUnwrapErr();
@@ -125,6 +149,7 @@ describe("TransactionChargeRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionChargeRequestedEvent(),
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(response._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -143,6 +168,7 @@ describe("TransactionChargeRequestedUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
+        problemReporter: mockStripeProblemReporter,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `[MissingTransactionError: Transaction not found in event]`,
@@ -170,6 +196,7 @@ describe("TransactionChargeRequestedUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
+        problemReporter: mockStripeProblemReporter,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `[MissingChannelIdError: Channel ID not found in event Checkout or Order]`,
