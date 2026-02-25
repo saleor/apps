@@ -9,6 +9,7 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type StripeProblemReporter } from "@/modules/app-problems";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
   type ITransactionEventReporter,
@@ -48,6 +49,7 @@ type R = Promise<
 
 type StripeVerifyEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
 type SaleorTransactionEventReporterFactory = (authData: AuthData) => ITransactionEventReporter;
+type ProblemReporterFactory = (authData: AuthData) => StripeProblemReporter;
 
 const ObjectMetadataMissingError = BaseError.subclass("ObjectMetadataMissingError");
 
@@ -58,6 +60,7 @@ export class StripeWebhookUseCase {
   private logger = createLogger("StripeWebhookUseCase");
   private transactionRecorder: TransactionRecorderRepo;
   private transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
+  private problemReporterFactory: ProblemReporterFactory;
   private webhookManager: StripeWebhookManager;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
 
@@ -67,6 +70,7 @@ export class StripeWebhookUseCase {
     apl: APL;
     transactionRecorder: TransactionRecorderRepo;
     transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
+    problemReporterFactory: ProblemReporterFactory;
     webhookManager: StripeWebhookManager;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
   }) {
@@ -75,6 +79,7 @@ export class StripeWebhookUseCase {
     this.apl = deps.apl;
     this.transactionRecorder = deps.transactionRecorder;
     this.transactionEventReporterFactory = deps.transactionEventReporterFactory;
+    this.problemReporterFactory = deps.problemReporterFactory;
     this.webhookManager = deps.webhookManager;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
   }
@@ -309,6 +314,7 @@ export class StripeWebhookUseCase {
     }
 
     const transactionEventReporter = this.transactionEventReporterFactory(authData);
+    const problemReporter = this.problemReporterFactory(authData);
 
     const config = await this.appConfigRepo.getStripeConfig({
       configId: webhookParams.configurationId,
@@ -330,6 +336,8 @@ export class StripeWebhookUseCase {
 
     if (!config.value) {
       this.logger.error("Config for given webhook is missing");
+
+      void problemReporter.reportConfigMissing(webhookParams.configurationId);
 
       return err(new StripeWebhookAppIsNotConfiguredResponse());
     }
@@ -353,6 +361,11 @@ export class StripeWebhookUseCase {
       this.logger.error("Failed to verify event", {
         error: event.error,
       });
+
+      void problemReporter.reportWebhookSecretMismatch(
+        webhookParams.configurationId,
+        config.value.name,
+      );
 
       return err(new StripeWebhookMalformedRequestResponse());
     }

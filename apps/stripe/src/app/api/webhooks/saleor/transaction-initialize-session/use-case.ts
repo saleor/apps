@@ -15,6 +15,7 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type StripeProblemReporter } from "@/modules/app-problems";
 import { type ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -171,6 +172,7 @@ export class TransactionInitializeSessionUseCase {
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
     saleorSchemaVersion: SaleorSchemaVersion;
+    problemReporter: StripeProblemReporter;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event, saleorSchemaVersion } = args;
 
@@ -268,6 +270,11 @@ export class TransactionInitializeSessionUseCase {
 
     if (createPaymentIntentResult.isErr()) {
       const mappedError = mapStripeErrorToApiError(createPaymentIntentResult.error);
+
+      args.problemReporter.reportApiProblem(mappedError, {
+        id: stripeConfigForThisChannel.value.id,
+        name: stripeConfigForThisChannel.value.name,
+      });
 
       this.logger.warn("Failed to create payment intent", { error: mappedError });
 

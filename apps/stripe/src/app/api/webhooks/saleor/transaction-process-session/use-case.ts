@@ -13,6 +13,7 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type StripeProblemReporter } from "@/modules/app-problems";
 import { type ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -67,6 +68,7 @@ export class TransactionProcessSessionUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionProcessSessionEventFragment;
+    problemReporter: StripeProblemReporter;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event } = args;
 
@@ -144,6 +146,11 @@ export class TransactionProcessSessionUseCase {
 
     if (getPaymentIntentResult.isErr()) {
       const error = mapStripeErrorToApiError(getPaymentIntentResult.error);
+
+      args.problemReporter.reportApiProblem(error, {
+        id: stripeConfigForThisChannel.value.id,
+        name: stripeConfigForThisChannel.value.name,
+      });
 
       this.logger.warn("Failed to get payment intent", {
         error,

@@ -12,6 +12,7 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type StripeProblemReporter } from "@/modules/app-problems";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
@@ -54,6 +55,7 @@ export class TransactionCancelationRequestedUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionCancelationRequestedEventFragment;
+    problemReporter: StripeProblemReporter;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event } = args;
 
@@ -116,6 +118,11 @@ export class TransactionCancelationRequestedUseCase {
 
     if (cancelPaymentIntentResult.isErr()) {
       const error = mapStripeErrorToApiError(cancelPaymentIntentResult.error);
+
+      args.problemReporter.reportApiProblem(error, {
+        id: stripeConfigForThisChannel.value.id,
+        name: stripeConfigForThisChannel.value.name,
+      });
 
       this.logger.warn("Failed to cancel payment intent", {
         error,
