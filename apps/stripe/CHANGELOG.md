@@ -1,5 +1,28 @@
 # saleor-app-payment-stripe
 
+## 2.5.0
+
+### Minor Changes
+
+- 9c3453dd: Added AppProblems support - now Stripe will report common issues (like invalid secrets) directly to Saleor and Dashboard will display them for the user
+
+### Patch Changes
+
+- cb9bd90f: Fixed issue when app was missing mapping for channel used in payment. Instead of throwing exception, app will now return responses to Saleor webhook with error message.
+- d9bb00f5: GraphQL schema has been refreshed to use latest 3.22 (this updates schema but does not change which APIs are executed)
+- c1cbffb4: Applied "consistent imports" rule from ESLint to ensure type-only imports are marked with `import type` clause. This should improve tree shaking and reduce side effects
+- 041e6065: Verify if webhooks are connected to the original app installation that executed the payment intent
+- dec95470: Removed nested graphql.schema files for each app/package and added root schema. Now all packages have symlink pointing to the same file.
+- Updated dependencies [f0d36e14]
+- Updated dependencies [f0d36e14]
+  - @saleor/apps-shared@1.14.2
+  - @saleor/app-problems@1.0.0
+  - @saleor/apps-trpc@4.0.4
+  - @saleor/apps-logger@1.6.3
+  - @saleor/apps-otel@2.4.0
+  - @saleor/react-hook-form-macaw@0.2.16
+  - @saleor/apps-ui@1.3.2
+
 ## 2.4.3
 
 ### Patch Changes
