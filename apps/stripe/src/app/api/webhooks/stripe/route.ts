@@ -13,6 +13,7 @@ import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { saleorApp } from "@/lib/saleor-app";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
+import { createStripeProblemReporter } from "@/modules/app-problems";
 import { TransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
@@ -38,6 +39,7 @@ const useCase = new StripeWebhookUseCase({
       graphqlClient: createInstrumentedGraphqlClient(authData),
     });
   },
+  problemReporterFactory: (authData) => createStripeProblemReporter(authData),
   webhookManager: new StripeWebhookManager(),
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
 });

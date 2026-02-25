@@ -14,6 +14,7 @@ import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { setObservabilitySourceObjectId } from "@/lib/observability-source-object-id";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
+import { createStripeProblemReporter } from "@/modules/app-problems";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 
@@ -62,10 +63,13 @@ const handler = transactionChargeRequestedWebhookDefinition.createHandler(
 
       setObservabilitySaleorApiUrl(saleorApiUrlResult.value, ctx.payload.version);
 
+      const problemReporter = createStripeProblemReporter(ctx.authData);
+
       const result = await useCase.execute({
         appId: ctx.authData.appId,
         saleorApiUrl: saleorApiUrlResult.value,
         event: ctx.payload,
+        problemReporter,
       });
 
       return result.match(
