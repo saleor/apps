@@ -1,5 +1,6 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { err, ok, type Result } from "neverthrow";
+import { after } from "next/server";
 
 import {
   AppIsNotConfiguredResponse,
@@ -12,6 +13,7 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type StripeProblemReporter } from "@/modules/app-problems";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { SaleorMoney } from "@/modules/saleor/saleor-money";
 import { createSaleorTransactionId } from "@/modules/saleor/saleor-transaction-id";
@@ -53,6 +55,7 @@ export class TransactionRefundRequestedUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionRefundRequestedEventFragment;
+    problemReporter: StripeProblemReporter;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event } = args;
 
@@ -144,6 +147,13 @@ export class TransactionRefundRequestedUseCase {
 
     if (createRefundResult.isErr()) {
       const error = mapStripeErrorToApiError(createRefundResult.error);
+
+      const config = {
+        id: stripeConfigForThisChannel.value.id,
+        name: stripeConfigForThisChannel.value.name,
+      };
+
+      after(() => args.problemReporter.reportApiProblem(error, config));
 
       this.logger.warn("Failed to create refund", {
         error,

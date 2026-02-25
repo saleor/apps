@@ -15,6 +15,7 @@ import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-p
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
 import { BaseError } from "@/lib/errors";
+import { StripeProblemReporter } from "@/modules/app-problems";
 import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
 import {
@@ -32,6 +33,26 @@ import { RecordedTransaction } from "@/modules/transactions-recording/domain/rec
 
 import { StripeWebhookUseCase } from "./use-case";
 import { WebhookParams } from "./webhook-params";
+
+vi.mock("@saleor/app-problems", () => ({
+  AppProblemsReporter: class {
+    reportProblem() {
+      return Promise.resolve({ isErr: () => false });
+    }
+    clearProblems() {
+      return Promise.resolve({ isErr: () => false });
+    }
+  },
+}));
+
+vi.mock("@/lib/logger", () => ({
+  createLogger: () => ({
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  }),
+}));
 
 describe("StripeWebhookUseCase - Error cases", () => {
   const rawEventBody = JSON.stringify({ id: 1 });
@@ -72,6 +93,7 @@ describe("StripeWebhookUseCase - Error cases", () => {
       transactionEventReporterFactory() {
         return mockEventReporter;
       },
+      problemReporterFactory: () => new StripeProblemReporter({} as never),
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
       stripePaymentIntentsApiFactory,

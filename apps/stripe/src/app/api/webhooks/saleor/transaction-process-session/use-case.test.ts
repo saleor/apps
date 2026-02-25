@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId } from "@/__tests__/mocks/constants";
 import { mockAuthData } from "@/__tests__/mocks/mock-auth-data";
+import { mockStripeProblemReporter } from "@/__tests__/mocks/mock-stripe-problem-reporter";
 import { getMockedRecordedTransaction } from "@/__tests__/mocks/mocked-recorded-transaction";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
@@ -22,6 +23,26 @@ import { type IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 
 import { TransactionProcessSessionUseCase } from "./use-case";
 import { TransactionProcessSessionUseCaseResponses } from "./use-case-response";
+
+vi.mock("@saleor/app-problems", () => ({
+  AppProblemsReporter: class {
+    reportProblem() {
+      return Promise.resolve({ isErr: () => false });
+    }
+    clearProblems() {
+      return Promise.resolve({ isErr: () => false });
+    }
+  },
+}));
+
+vi.mock("@/lib/logger", () => ({
+  createLogger: () => ({
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  }),
+}));
 
 describe("TransactionProcessSessionUseCase", () => {
   const stripePaymentIntentsApiFactory = {
@@ -112,6 +133,7 @@ describe("TransactionProcessSessionUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
+        problemReporter: mockStripeProblemReporter,
       });
 
       expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -144,6 +166,7 @@ describe("TransactionProcessSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionProcessSessionEvent(),
+      problemReporter: mockStripeProblemReporter,
     });
 
     const err = responsePayload._unsafeUnwrapErr();
@@ -183,6 +206,7 @@ describe("TransactionProcessSessionUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
+        problemReporter: mockStripeProblemReporter,
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(
@@ -215,6 +239,7 @@ describe("TransactionProcessSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: saleorEvent,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -247,6 +272,7 @@ describe("TransactionProcessSessionUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
+        problemReporter: mockStripeProblemReporter,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       [ZodError: [
@@ -287,6 +313,7 @@ describe("TransactionProcessSessionUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: saleorEvent,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);

@@ -1,6 +1,7 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, type Result } from "neverthrow";
+import { after } from "next/server";
 
 import {
   AppIsNotConfiguredResponse,
@@ -13,6 +14,7 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type StripeProblemReporter } from "@/modules/app-problems";
 import { type ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -67,6 +69,7 @@ export class TransactionProcessSessionUseCase {
     appId: string;
     saleorApiUrl: SaleorApiUrl;
     event: TransactionProcessSessionEventFragment;
+    problemReporter: StripeProblemReporter;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event } = args;
 
@@ -144,6 +147,13 @@ export class TransactionProcessSessionUseCase {
 
     if (getPaymentIntentResult.isErr()) {
       const error = mapStripeErrorToApiError(getPaymentIntentResult.error);
+
+      const config = {
+        id: stripeConfigForThisChannel.value.id,
+        name: stripeConfigForThisChannel.value.name,
+      };
+
+      after(() => args.problemReporter.reportApiProblem(error, config));
 
       this.logger.warn("Failed to get payment intent", {
         error,
