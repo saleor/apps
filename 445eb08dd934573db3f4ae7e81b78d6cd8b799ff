@@ -1,0 +1,23 @@
+apps/stripe/src/modules/app-config/trpc-handlers/remove-stripe-config-trpc-handler.ts
+  0e6edba7dbeb2148 7,158-166
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "445eb08dd934573db3f4ae7e81b78d6cd8b799ff",
+  "prompts": {
+    "0e6edba7dbeb2148": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c29fc4e6-6207-49b0-9031-1caef7e1603b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 77,
+      "overriden_lines": 0
+    }
+  }
+}
