@@ -26,6 +26,9 @@ on:
         type: string
         required: false
         default: ""
+    secrets:
+      OP_SERVICE_ACCOUNT_TOKEN:
+        required: true
 
 permissions:
   contents: read
