@@ -27,6 +27,7 @@ export class StripeProblemReporter {
   async reportAuthFailure(configId: string, configName: string): Promise<void> {
     const result = await this.reporter.reportProblem({
       key: PROBLEM_KEYS.authFailure(configId),
+      criticalThreshold: 1,
       message: `Stripe restricted key for configuration "${configName}" is invalid or expired. Payments for channels using this configuration will fail. Please update the restricted key.`,
     });
 
@@ -38,6 +39,7 @@ export class StripeProblemReporter {
   async reportPermissionError(configId: string, configName: string): Promise<void> {
     const result = await this.reporter.reportProblem({
       key: PROBLEM_KEYS.permissionError(configId),
+      criticalThreshold: 1,
       message: `Stripe restricted key for configuration "${configName}" lacks required permissions. Payments for channels using this configuration will fail. Please verify the key has the necessary Stripe permissions.`,
     });
 
@@ -49,6 +51,7 @@ export class StripeProblemReporter {
   async reportWebhookSecretMismatch(configId: string, configName: string): Promise<void> {
     const result = await this.reporter.reportProblem({
       key: PROBLEM_KEYS.webhookSecretMismatch(configId),
+      criticalThreshold: 1,
       message: `Webhook signature verification failed for configuration "${configName}". Payment status updates from Stripe are not being processed. The webhook secret may have been rotated in Stripe. Please recreate the configuration.`,
     });
 
@@ -60,6 +63,7 @@ export class StripeProblemReporter {
   async reportConfigMissing(configId: string): Promise<void> {
     const result = await this.reporter.reportProblem({
       key: PROBLEM_KEYS.configMissing(configId),
+      criticalThreshold: 1,
       message: `Stripe is sending webhook events for configuration "${configId}" but no matching configuration was found. The configuration may have been deleted while the Stripe webhook endpoint is still active. Please remove the orphaned webhook in your Stripe Dashboard.`,
     });
 

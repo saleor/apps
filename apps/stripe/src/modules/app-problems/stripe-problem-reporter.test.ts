@@ -54,10 +54,12 @@ describe("StripeProblemReporter", () => {
 
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "stripe-auth-failure:config-123",
+        criticalThreshold: 1,
         message: expect.stringContaining("invalid or expired"),
       });
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "stripe-auth-failure:config-123",
+        criticalThreshold: 1,
         message: expect.stringContaining('"My Config"'),
       });
     });
@@ -79,10 +81,12 @@ describe("StripeProblemReporter", () => {
 
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "stripe-permission-error:config-456",
+        criticalThreshold: 1,
         message: expect.stringContaining("lacks required permissions"),
       });
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "stripe-permission-error:config-456",
+        criticalThreshold: 1,
         message: expect.stringContaining('"Prod Config"'),
       });
     });
@@ -97,10 +101,12 @@ describe("StripeProblemReporter", () => {
 
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "stripe-webhook-secret-mismatch:config-789",
+        criticalThreshold: 1,
         message: expect.stringContaining("Webhook signature verification failed"),
       });
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "stripe-webhook-secret-mismatch:config-789",
+        criticalThreshold: 1,
         message: expect.stringContaining('"Test Config"'),
       });
     });
@@ -115,10 +121,12 @@ describe("StripeProblemReporter", () => {
 
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "stripe-config-missing:config-000",
+        criticalThreshold: 1,
         message: expect.stringContaining("no matching configuration was found"),
       });
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "stripe-config-missing:config-000",
+        criticalThreshold: 1,
         message: expect.stringContaining('"config-000"'),
       });
     });
