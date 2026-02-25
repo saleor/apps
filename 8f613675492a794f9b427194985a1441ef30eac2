@@ -1,0 +1,23 @@
+apps/stripe/src/app/api/webhooks/saleor/transaction-initialize-session/use-case-problems.test.ts
+  467371314cdff2d5 148-206
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "8f613675492a794f9b427194985a1441ef30eac2",
+  "prompts": {
+    "467371314cdff2d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f6ece6ae-67f6-49a7-a806-28306bb63744",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 59,
+      "total_deletions": 0,
+      "accepted_lines": 59,
+      "overriden_lines": 0
+    }
+  }
+}
