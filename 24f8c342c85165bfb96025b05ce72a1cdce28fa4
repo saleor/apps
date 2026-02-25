@@ -1,0 +1,25 @@
+apps/smtp/src/pages/api/webhooks/send-event-messages-response-handler.test.ts
+  e0ad54f4eab6c777 41,55,59,73,77,91,95,110,123,163,174,228-249,261
+apps/smtp/src/pages/api/webhooks/send-event-messages-response-handler.ts
+  e0ad54f4eab6c777 9-40,57,63,75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "24f8c342c85165bfb96025b05ce72a1cdce28fa4",
+  "prompts": {
+    "e0ad54f4eab6c777": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "03c0d217-50cc-4cb4-bdf6-fdc9988cd43c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 73,
+      "total_deletions": 15,
+      "accepted_lines": 69,
+      "overriden_lines": 0
+    }
+  }
+}
