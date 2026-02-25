@@ -1,0 +1,31 @@
+apps/stripe/src/app/api/webhooks/saleor/transaction-cancelation-requested/use-case-problems.test.ts
+  bdd6da55a8973db7 1-137
+apps/stripe/src/app/api/webhooks/saleor/transaction-refund-requested/use-case-problems.test.ts
+  bdd6da55a8973db7 1-134
+apps/stripe/src/app/api/webhooks/saleor/transaction-charge-requested/use-case-problems.test.ts
+  bdd6da55a8973db7 1-137
+apps/stripe/src/app/api/webhooks/saleor/transaction-process-session/use-case-problems.test.ts
+  bdd6da55a8973db7 1-152
+apps/stripe/src/app/api/webhooks/saleor/transaction-initialize-session/use-case-problems.test.ts
+  bdd6da55a8973db7 1-148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "875770e50a6fcf2b31b634706aea1bfa0c8ec67a",
+  "prompts": {
+    "bdd6da55a8973db7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5a0bd669-bfb8-4617-8573-5f2fc45c7db2",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 726,
+      "total_deletions": 15,
+      "accepted_lines": 711,
+      "overriden_lines": 0
+    }
+  }
+}
