@@ -24,6 +24,7 @@ import { getMockedPaymentIntentPaymentFailedEvent } from "@/__tests__/mocks/stri
 import { getMockedPaymentIntentProcessingEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-processing";
 import { getMockedPaymentIntentRequiresActionEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-requires-action";
 import { getMockedPaymentIntentSucceededEvent } from "@/__tests__/mocks/stripe-events/mocked-payment-intent-succeeded";
+import { StripeProblemReporter } from "@/modules/app-problems";
 import { createResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction-flow";
 import {
@@ -40,6 +41,26 @@ import { RecordedTransaction } from "@/modules/transactions-recording/domain/rec
 
 import { StripeWebhookUseCase } from "./use-case";
 import { WebhookParams } from "./webhook-params";
+
+vi.mock("@saleor/app-problems", () => ({
+  AppProblemsReporter: class {
+    reportProblem() {
+      return Promise.resolve({ isErr: () => false });
+    }
+    clearProblems() {
+      return Promise.resolve({ isErr: () => false });
+    }
+  },
+}));
+
+vi.mock("@/lib/logger", () => ({
+  createLogger: () => ({
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  }),
+}));
 
 const mockApl = {
   get: vi.fn(),
@@ -78,6 +99,7 @@ describe("StripeWebhookUseCase - handling payment_intent.success event", () => {
       transactionEventReporterFactory() {
         return mockEventReporter;
       },
+      problemReporterFactory: () => new StripeProblemReporter({} as never),
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
       stripePaymentIntentsApiFactory,
@@ -262,6 +284,7 @@ describe("StripeWebhookUseCase - handling payment_intent.amount_capturable_updat
       transactionEventReporterFactory() {
         return mockEventReporter;
       },
+      problemReporterFactory: () => new StripeProblemReporter({} as never),
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
       stripePaymentIntentsApiFactory,
@@ -362,6 +385,7 @@ describe("StripeWebhookUseCase - handling payment_intent.payment_failed event", 
       transactionEventReporterFactory() {
         return mockEventReporter;
       },
+      problemReporterFactory: () => new StripeProblemReporter({} as never),
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
       stripePaymentIntentsApiFactory,
@@ -524,6 +548,7 @@ describe("StripeWebhookUseCase - handling payment_intent.processing event", () =
       transactionEventReporterFactory() {
         return mockEventReporter;
       },
+      problemReporterFactory: () => new StripeProblemReporter({} as never),
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
       stripePaymentIntentsApiFactory,
@@ -690,6 +715,7 @@ describe("StripeWebhookUseCase - handling payment_intent.requires_action event",
       transactionEventReporterFactory() {
         return mockEventReporter;
       },
+      problemReporterFactory: () => new StripeProblemReporter({} as never),
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
       stripePaymentIntentsApiFactory,
@@ -868,6 +894,7 @@ describe("StripeWebhookUseCase - handling payment_intent.canceled event", () => 
       transactionEventReporterFactory() {
         return mockEventReporter;
       },
+      problemReporterFactory: () => new StripeProblemReporter({} as never),
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
       stripePaymentIntentsApiFactory,
@@ -1021,6 +1048,7 @@ describe("StripeWebhookUseCase - handling charge.refund.updated event", () => {
       transactionEventReporterFactory() {
         return mockEventReporter;
       },
+      problemReporterFactory: () => new StripeProblemReporter({} as never),
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
       stripePaymentIntentsApiFactory,
@@ -1246,6 +1274,7 @@ describe("StripeWebhookUseCase - handling events without metadata created by Sal
       transactionEventReporterFactory() {
         return mockEventReporter;
       },
+      problemReporterFactory: () => new StripeProblemReporter({} as never),
       transactionRecorder: mockTransactionRecorder,
       webhookManager: new StripeWebhookManager(),
       stripePaymentIntentsApiFactory,

@@ -2,6 +2,7 @@ import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, fromThrowable, ok, Result } from "neverthrow";
+import { after } from "next/server";
 import type Stripe from "stripe";
 
 import {
@@ -15,6 +16,7 @@ import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type StripeProblemReporter } from "@/modules/app-problems";
 import { type ResolvedTransactionFlow } from "@/modules/resolved-transaction-flow";
 import { resolveSaleorMoneyFromStripePaymentIntent } from "@/modules/saleor/resolve-saleor-money-from-stripe-payment-intent";
 import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
@@ -58,6 +60,7 @@ import { type TransactionRecorderRepo } from "@/modules/transactions-recording/r
 import {
   parseTransactionInitializeSessionEventData,
   type TransactionInitializeSessionEventData,
+  UnsupportedPaymentMethodError,
 } from "./event-data-parser";
 import { resolvePaymentMethodFromEventData } from "./payment-method-resolver";
 import {
@@ -171,6 +174,7 @@ export class TransactionInitializeSessionUseCase {
     saleorApiUrl: SaleorApiUrl;
     event: TransactionInitializeSessionEventFragment;
     saleorSchemaVersion: SaleorSchemaVersion;
+    problemReporter: StripeProblemReporter;
   }): Promise<UseCaseExecuteResult> {
     const { appId, saleorApiUrl, event, saleorSchemaVersion } = args;
 
@@ -180,6 +184,12 @@ export class TransactionInitializeSessionUseCase {
 
     if (eventDataResult.isErr()) {
       this.logger.warn("Failed to parse event data", { error: eventDataResult.error });
+
+      if (eventDataResult.error instanceof UnsupportedPaymentMethodError) {
+        after(() => {
+          args.problemReporter.reportInvalidPaymentMethod(event.sourceObject.channel.slug);
+        });
+      }
 
       return ok(
         new TransactionInitializeSessionUseCaseResponses.Failure({
@@ -268,6 +278,13 @@ export class TransactionInitializeSessionUseCase {
 
     if (createPaymentIntentResult.isErr()) {
       const mappedError = mapStripeErrorToApiError(createPaymentIntentResult.error);
+
+      const config = {
+        id: stripeConfigForThisChannel.value.id,
+        name: stripeConfigForThisChannel.value.name,
+      };
+
+      after(() => args.problemReporter.reportApiProblem(mappedError, config));
 
       this.logger.warn("Failed to create payment intent", { error: mappedError });
 

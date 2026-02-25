@@ -16,7 +16,11 @@ export const AppProblemsReporterError = BaseError.subclass("AppProblemsReporterE
 });
 
 export class AppProblemsReporter {
-  constructor(private client: Client) {}
+  private client: Client;
+
+  constructor(client: Client) {
+    this.client = client;
+  }
 
   /**
    * https://github.com/saleor/saleor/releases/tag/3.22.36
