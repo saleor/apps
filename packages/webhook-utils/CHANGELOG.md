@@ -1,5 +1,12 @@
 # @saleor/webhook-utils
 
+## 0.2.7
+
+### Patch Changes
+
+- f0d36e14: Updated `semver` package version
+- dec95470: Removed nested graphql.schema files for each app/package and added root schema. Now all packages have symlink pointing to the same file.
+
 ## 0.2.6
 
 ### Patch Changes
