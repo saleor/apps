@@ -145,4 +145,63 @@ describe("TransactionInitializeSessionUseCase - problem reporting", () => {
       name: "config-name",
     });
   });
+
+  it("Reports invalid payment method problem when event data contains unsupported payment method", async () => {
+    const reportSpy = vi.spyOn(mockStripeProblemReporter, "reportInvalidPaymentMethod");
+
+    const eventWithUnsupportedPaymentMethod = {
+      ...getMockedTransactionInitializeSessionEvent(),
+      data: {
+        paymentIntent: {
+          paymentMethod: "not-supported-payment-method",
+        },
+      },
+    };
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory,
+      transactionRecorder: new MockedTransactionRecorder(),
+    });
+
+    await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithUnsupportedPaymentMethod,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
+    });
+
+    expect(reportSpy).toHaveBeenCalledWith("channel-slug");
+  });
+
+  it("Does not report invalid payment method problem when event data parsing fails for other reasons", async () => {
+    const reportSpy = vi.spyOn(mockStripeProblemReporter, "reportInvalidPaymentMethod");
+
+    const eventWithAdditionalField = {
+      ...getMockedTransactionInitializeSessionEvent(),
+      data: {
+        paymentIntent: {
+          paymentMethod: "card",
+          additionalField: "value",
+        },
+      },
+    };
+
+    const uc = new TransactionInitializeSessionUseCase({
+      appConfigRepo: mockedAppConfigRepo,
+      stripePaymentIntentsApiFactory,
+      transactionRecorder: new MockedTransactionRecorder(),
+    });
+
+    await uc.execute({
+      saleorApiUrl: mockedSaleorApiUrl,
+      appId: mockedSaleorAppId,
+      event: eventWithAdditionalField,
+      saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
+    });
+
+    expect(reportSpy).not.toHaveBeenCalled();
+  });
 });

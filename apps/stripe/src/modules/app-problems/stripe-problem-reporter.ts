@@ -15,6 +15,7 @@ export const PROBLEM_KEYS = {
   permissionError: (configId: string) => `stripe-permission-error:${configId}`,
   webhookSecretMismatch: (configId: string) => `stripe-webhook-secret-mismatch:${configId}`,
   configMissing: (configId: string) => `stripe-config-missing:${configId}`,
+  invalidPaymentMethod: (channelSlug: string) => `stripe-invalid-payment-method:${channelSlug}`,
 } as const;
 
 export class StripeProblemReporter {
@@ -65,6 +66,17 @@ export class StripeProblemReporter {
       key: PROBLEM_KEYS.configMissing(configId),
       criticalThreshold: 1,
       message: `Stripe is sending webhook events for configuration "${configId}" but no matching configuration was found. The configuration may have been deleted while the Stripe webhook endpoint is still active. Please remove the orphaned webhook in your Stripe Dashboard.`,
+    });
+
+    if (result.isErr()) {
+      logger.error("Failed to report config missing problem", { error: result.error });
+    }
+  }
+
+  async reportInvalidPaymentMethod(channelSlug: string) {
+    const result = await this.reporter.reportProblem({
+      key: PROBLEM_KEYS.invalidPaymentMethod(channelSlug),
+      message: `Storefront is using Payment Method that is not supported. Verify app docs and disable not supported payment methods in Stripe. Channel: ${channelSlug}`,
     });
 
     if (result.isErr()) {

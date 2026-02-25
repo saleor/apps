@@ -60,6 +60,7 @@ import { type TransactionRecorderRepo } from "@/modules/transactions-recording/r
 import {
   parseTransactionInitializeSessionEventData,
   type TransactionInitializeSessionEventData,
+  UnsupportedPaymentMethodError,
 } from "./event-data-parser";
 import { resolvePaymentMethodFromEventData } from "./payment-method-resolver";
 import {
@@ -183,6 +184,12 @@ export class TransactionInitializeSessionUseCase {
 
     if (eventDataResult.isErr()) {
       this.logger.warn("Failed to parse event data", { error: eventDataResult.error });
+
+      if (eventDataResult.error instanceof UnsupportedPaymentMethodError) {
+        after(() => {
+          args.problemReporter.reportInvalidPaymentMethod(event.sourceObject.channel.slug);
+        });
+      }
 
       return ok(
         new TransactionInitializeSessionUseCaseResponses.Failure({
