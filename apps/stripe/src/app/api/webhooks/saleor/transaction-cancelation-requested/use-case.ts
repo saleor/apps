@@ -1,5 +1,6 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { err, ok, type Result } from "neverthrow";
+import { after } from "next/server";
 
 import {
   AppIsNotConfiguredResponse,
@@ -119,10 +120,12 @@ export class TransactionCancelationRequestedUseCase {
     if (cancelPaymentIntentResult.isErr()) {
       const error = mapStripeErrorToApiError(cancelPaymentIntentResult.error);
 
-      args.problemReporter.reportApiProblem(error, {
+      const config = {
         id: stripeConfigForThisChannel.value.id,
         name: stripeConfigForThisChannel.value.name,
-      });
+      };
+
+      after(() => args.problemReporter.reportApiProblem(error, config));
 
       this.logger.warn("Failed to cancel payment intent", {
         error,

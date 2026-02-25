@@ -2,6 +2,7 @@ import { type APL, type AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, type Result } from "neverthrow";
+import { after } from "next/server";
 import type Stripe from "stripe";
 
 import { appContextContainer } from "@/lib/app-context";
@@ -337,7 +338,7 @@ export class StripeWebhookUseCase {
     if (!config.value) {
       this.logger.error("Config for given webhook is missing");
 
-      void problemReporter.reportConfigMissing(webhookParams.configurationId);
+      after(() => problemReporter.reportConfigMissing(webhookParams.configurationId));
 
       return err(new StripeWebhookAppIsNotConfiguredResponse());
     }
@@ -362,9 +363,10 @@ export class StripeWebhookUseCase {
         error: event.error,
       });
 
-      void problemReporter.reportWebhookSecretMismatch(
-        webhookParams.configurationId,
-        config.value.name,
+      const configName = config.value.name;
+
+      after(() =>
+        problemReporter.reportWebhookSecretMismatch(webhookParams.configurationId, configName),
       );
 
       return err(new StripeWebhookMalformedRequestResponse());

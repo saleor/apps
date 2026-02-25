@@ -1,6 +1,7 @@
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, ok, type Result } from "neverthrow";
+import { after } from "next/server";
 
 import {
   AppIsNotConfiguredResponse,
@@ -147,10 +148,12 @@ export class TransactionProcessSessionUseCase {
     if (getPaymentIntentResult.isErr()) {
       const error = mapStripeErrorToApiError(getPaymentIntentResult.error);
 
-      args.problemReporter.reportApiProblem(error, {
+      const config = {
         id: stripeConfigForThisChannel.value.id,
         name: stripeConfigForThisChannel.value.name,
-      });
+      };
+
+      after(() => args.problemReporter.reportApiProblem(error, config));
 
       this.logger.warn("Failed to get payment intent", {
         error,

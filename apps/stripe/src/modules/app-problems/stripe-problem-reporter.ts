@@ -77,11 +77,14 @@ export class StripeProblemReporter {
     }
   }
 
-  reportApiProblem(error: StripeApiError, config: { id: string; name: string }): void {
+  async reportApiProblem(
+    error: StripeApiError,
+    config: { id: string; name: string },
+  ): Promise<void> {
     if (error instanceof StripeAuthenticationError) {
-      void this.reportAuthFailure(config.id, config.name);
+      await this.reportAuthFailure(config.id, config.name);
     } else if (error instanceof StripePermissionError) {
-      void this.reportPermissionError(config.id, config.name);
+      await this.reportPermissionError(config.id, config.name);
     }
   }
 }

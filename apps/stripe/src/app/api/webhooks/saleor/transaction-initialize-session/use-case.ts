@@ -2,6 +2,7 @@ import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
 import { err, fromThrowable, ok, Result } from "neverthrow";
+import { after } from "next/server";
 import type Stripe from "stripe";
 
 import {
@@ -271,10 +272,12 @@ export class TransactionInitializeSessionUseCase {
     if (createPaymentIntentResult.isErr()) {
       const mappedError = mapStripeErrorToApiError(createPaymentIntentResult.error);
 
-      args.problemReporter.reportApiProblem(mappedError, {
+      const config = {
         id: stripeConfigForThisChannel.value.id,
         name: stripeConfigForThisChannel.value.name,
-      });
+      };
+
+      after(() => args.problemReporter.reportApiProblem(mappedError, config));
 
       this.logger.warn("Failed to create payment intent", { error: mappedError });
 

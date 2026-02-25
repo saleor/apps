@@ -1,6 +1,7 @@
 import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { Result } from "neverthrow";
+import { after } from "next/server";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
@@ -163,7 +164,7 @@ export class RemoveStripeConfigTrpcHandler {
           }),
         );
 
-        void reporter.clearProblemsForConfig(input.configId);
+        after(() => reporter.clearProblemsForConfig(input.configId));
       });
   }
 }
