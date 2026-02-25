@@ -38,7 +38,7 @@ describe("handleUseCaseErrors", () => {
     mockLogger = createMockLogger();
   });
 
-  it("Returns 400 with error message for ServerError", () => {
+  it("Returns 400 with safe message for FailedToFetchConfigurationError", () => {
     const serverError = new SendEventMessagesUseCase.FailedToFetchConfigurationError(
       "Failed to fetch configuration",
       { props: { channelSlug: "default", event: "ORDER_CREATED" } },
@@ -52,11 +52,11 @@ describe("handleUseCaseErrors", () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(400);
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Failed to send email: Failed to fetch configuration",
+      message: "Failed to send email: Failed to fetch SMTP configuration",
     });
   });
 
-  it("Returns 400 with error message for ClientError (email compilation)", () => {
+  it("Returns 400 with safe message for EmailCompilationError", () => {
     const clientError = new SendEventMessagesUseCase.EmailCompilationError(
       "Failed to compile error",
       { props: { channelSlug: "default", event: "ORDER_CREATED" } },
@@ -70,11 +70,11 @@ describe("handleUseCaseErrors", () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(400);
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Failed to send email: Failed to compile error",
+      message: "Failed to send email: Failed to compile email template",
     });
   });
 
-  it("Returns 400 with error message for ClientError (invalid sender config)", () => {
+  it("Returns 400 with safe message for InvalidSenderConfigError", () => {
     const clientError = new SendEventMessagesUseCase.InvalidSenderConfigError(
       "Missing sender name or email",
       { props: { senderName: undefined, senderEmail: undefined } },
@@ -88,11 +88,11 @@ describe("handleUseCaseErrors", () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(400);
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Failed to send email: Missing sender name or email",
+      message: "Failed to send email: Invalid sender configuration: missing sender name or email",
     });
   });
 
-  it("Returns 400 with SMTP error message for ServerError from SMTP sender", () => {
+  it("Returns 400 with safe message for generic ServerError", () => {
     const smtpError = new SendEventMessagesUseCase.ServerError("Failed to send email via SMTP");
 
     handleUseCaseErrors({
@@ -107,7 +107,7 @@ describe("handleUseCaseErrors", () => {
     });
   });
 
-  it("Returns 400 with SMTP 554 error message for ClientError", () => {
+  it("Returns 400 with safe message for generic ClientError", () => {
     const smtp554Error = new SendEventMessagesUseCase.ClientError(
       "Failed to send email via SMTP - 554",
     );
@@ -120,7 +120,7 @@ describe("handleUseCaseErrors", () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(400);
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Failed to send email: Failed to send email via SMTP - 554",
+      message: "Failed to send email: Failed to send email: message rejected by server",
     });
   });
 
@@ -160,7 +160,7 @@ describe("handleUseCaseErrors", () => {
     });
   });
 
-  it("Returns 500 with error message for unhandled error types", () => {
+  it("Returns 500 with safe message for unhandled error types", () => {
     const unhandledError = new SendEventMessagesUseCase.BaseError("Something unexpected happened");
 
     handleUseCaseErrors({
@@ -171,7 +171,7 @@ describe("handleUseCaseErrors", () => {
 
     expect(mockRes.status).toHaveBeenCalledWith(500);
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Failed to send email [unhandled]: Something unexpected happened",
+      message: "Failed to send email [unhandled]: An unexpected error occurred",
     });
   });
 
@@ -225,6 +225,28 @@ describe("handleUseCaseErrors", () => {
     expect(captureException).not.toHaveBeenCalled();
   });
 
+  it("Does not leak sensitive information from error cause", () => {
+    const sensitiveHost = "internal-smtp.corp.example.com";
+    const sensitivePort = "587";
+    const sensitiveMessage = `ECONNREFUSED ${sensitiveHost}:${sensitivePort}`;
+
+    const smtpError = new SendEventMessagesUseCase.ServerError("Failed to send email via SMTP", {
+      cause: new Error(sensitiveMessage),
+    });
+
+    handleUseCaseErrors({
+      errors: [smtpError],
+      logger: mockLogger,
+      res: mockRes.res,
+    });
+
+    const responseBody = mockRes.json.mock.calls[0][0];
+
+    expect(responseBody.message).not.toContain(sensitiveHost);
+    expect(responseBody.message).not.toContain(sensitivePort);
+    expect(responseBody.message).not.toContain("ECONNREFUSED");
+  });
+
   it("Uses first error from array when multiple errors present", () => {
     const firstError = new SendEventMessagesUseCase.ServerError("First SMTP host unreachable");
     const secondError = new SendEventMessagesUseCase.ServerError("Second SMTP host unreachable");
@@ -236,7 +258,7 @@ describe("handleUseCaseErrors", () => {
     });
 
     expect(mockRes.json).toHaveBeenCalledWith({
-      message: "Failed to send email: First SMTP host unreachable",
+      message: "Failed to send email: Failed to send email via SMTP",
     });
   });
 });
