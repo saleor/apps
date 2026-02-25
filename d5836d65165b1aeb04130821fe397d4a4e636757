@@ -1,0 +1,25 @@
+apps/stripe/src/modules/app-problems/stripe-problem-reporter.ts
+  b801249dd23b890b 88-93
+apps/stripe/src/modules/app-problems/stripe-problem-reporter.test.ts
+  b801249dd23b890b 159,164,172,177,185,191,200,206
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "d5836d65165b1aeb04130821fe397d4a4e636757",
+  "prompts": {
+    "b801249dd23b890b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fd4d2cdd-de2c-4eba-9f4e-f5a654eb4ae0",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 14,
+      "total_deletions": 9,
+      "accepted_lines": 14,
+      "overriden_lines": 0
+    }
+  }
+}
