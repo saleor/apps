@@ -156,12 +156,12 @@ describe("StripeProblemReporter", () => {
   });
 
   describe("reportApiProblem", () => {
-    it("calls reportAuthFailure for StripeAuthenticationError", () => {
+    it("calls reportAuthFailure for StripeAuthenticationError", async () => {
       mockReportProblem.mockResolvedValue(ok(undefined));
       const reporter = new StripeProblemReporter(mockClient);
       const spy = vi.spyOn(reporter, "reportAuthFailure");
 
-      reporter.reportApiProblem(new StripeAuthenticationError("auth failed"), {
+      await reporter.reportApiProblem(new StripeAuthenticationError("auth failed"), {
         id: "config-1",
         name: "My Config",
       });
@@ -169,12 +169,12 @@ describe("StripeProblemReporter", () => {
       expect(spy).toHaveBeenCalledWith("config-1", "My Config");
     });
 
-    it("calls reportPermissionError for StripePermissionError", () => {
+    it("calls reportPermissionError for StripePermissionError", async () => {
       mockReportProblem.mockResolvedValue(ok(undefined));
       const reporter = new StripeProblemReporter(mockClient);
       const spy = vi.spyOn(reporter, "reportPermissionError");
 
-      reporter.reportApiProblem(new StripePermissionError("permission denied"), {
+      await reporter.reportApiProblem(new StripePermissionError("permission denied"), {
         id: "config-2",
         name: "Prod Config",
       });
@@ -182,13 +182,13 @@ describe("StripeProblemReporter", () => {
       expect(spy).toHaveBeenCalledWith("config-2", "Prod Config");
     });
 
-    it("does not report for StripeCardError", () => {
+    it("does not report for StripeCardError", async () => {
       mockReportProblem.mockResolvedValue(ok(undefined));
       const reporter = new StripeProblemReporter(mockClient);
       const authSpy = vi.spyOn(reporter, "reportAuthFailure");
       const permSpy = vi.spyOn(reporter, "reportPermissionError");
 
-      reporter.reportApiProblem(new StripeCardError("card declined"), {
+      await reporter.reportApiProblem(new StripeCardError("card declined"), {
         id: "config-3",
         name: "Config",
       });
@@ -197,13 +197,13 @@ describe("StripeProblemReporter", () => {
       expect(permSpy).not.toHaveBeenCalled();
     });
 
-    it("does not report for other error types", () => {
+    it("does not report for other error types", async () => {
       mockReportProblem.mockResolvedValue(ok(undefined));
       const reporter = new StripeProblemReporter(mockClient);
       const authSpy = vi.spyOn(reporter, "reportAuthFailure");
       const permSpy = vi.spyOn(reporter, "reportPermissionError");
 
-      reporter.reportApiProblem(new StripeAPIError("api error"), {
+      await reporter.reportApiProblem(new StripeAPIError("api error"), {
         id: "config-4",
         name: "Config",
       });

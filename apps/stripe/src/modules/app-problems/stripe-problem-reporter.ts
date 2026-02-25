@@ -85,7 +85,12 @@ export class StripeProblemReporter {
   }
 
   async clearProblemsForConfig(configId: string): Promise<void> {
-    const keys = Object.values(PROBLEM_KEYS).map((fn) => fn(configId));
+    const keys = [
+      PROBLEM_KEYS.authFailure(configId),
+      PROBLEM_KEYS.permissionError(configId),
+      PROBLEM_KEYS.webhookSecretMismatch(configId),
+      PROBLEM_KEYS.configMissing(configId),
+    ];
     const result = await this.reporter.clearProblems(keys);
 
     if (result.isErr()) {
