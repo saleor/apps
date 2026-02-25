@@ -1,0 +1,43 @@
+apps/smtp/src/pages/api/webhooks/send-event-messages-response-handler.test.ts
+  72d4aaa445667c42 1-242
+apps/smtp/src/pages/api/webhooks/order-confirmed.ts
+  72d4aaa445667c42 16,97
+apps/smtp/src/pages/api/webhooks/send-event-messages-response-handler.ts
+  72d4aaa445667c42 1-40
+apps/smtp/src/pages/api/webhooks/order-fully-paid.ts
+  72d4aaa445667c42 16,97
+apps/smtp/src/pages/api/webhooks/order-fulfilled.ts
+  72d4aaa445667c42 16,97
+apps/smtp/src/pages/api/webhooks/invoice-sent.ts
+  72d4aaa445667c42 16,113
+apps/smtp/src/pages/api/webhooks/notify.ts
+  72d4aaa445667c42 14,82
+apps/smtp/src/pages/api/webhooks/order-created.ts
+  72d4aaa445667c42 16,96
+apps/smtp/src/pages/api/webhooks/order-refunded.ts
+  72d4aaa445667c42 16,96
+apps/smtp/src/pages/api/webhooks/gift-card-sent.ts
+  72d4aaa445667c42 13,135
+apps/smtp/src/pages/api/webhooks/order-cancelled.ts
+  72d4aaa445667c42 16,96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "8c686d038d17b4341ef3867b2c8ac4d9de6d855e",
+  "prompts": {
+    "72d4aaa445667c42": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3c28c015-f03e-4cae-ac45-542ae28ce6f0",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 387,
+      "total_deletions": 294,
+      "accepted_lines": 300,
+      "overriden_lines": 0
+    }
+  }
+}
