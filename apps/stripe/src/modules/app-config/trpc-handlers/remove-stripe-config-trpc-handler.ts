@@ -4,7 +4,9 @@ import { Result } from "neverthrow";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
+import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
 import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { StripeProblemReporter } from "@/modules/app-problems/stripe-problem-reporter";
 import { createSaleorApiUrl, type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
@@ -153,6 +155,15 @@ export class RemoveStripeConfigTrpcHandler {
             message: "Failed to remove Stripe configuration. Please try again.",
           });
         }
+
+        const reporter = new StripeProblemReporter(
+          createInstrumentedGraphqlClient({
+            saleorApiUrl: ctx.saleorApiUrl,
+            token: ctx.appToken,
+          }),
+        );
+
+        void reporter.clearProblemsForConfig(input.configId);
       });
   }
 }
