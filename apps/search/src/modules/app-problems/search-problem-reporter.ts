@@ -52,7 +52,7 @@ export class SearchProblemReporter {
         logger.error("Failed to report record too large problem", { error: result.error });
       }
     } catch (e) {
-      logger.error("Failed to report record too large problem - API not available", { error: e });
+      logger.warn("Failed to report record too large problem - API not available", { error: e });
     }
   }
 
@@ -69,7 +69,7 @@ export class SearchProblemReporter {
         logger.error("Failed to report index setup failure problem", { error: result.error });
       }
     } catch (e) {
-      logger.error("Failed to report index setup failure problem - API not available", {
+      logger.warn("Failed to report index setup failure problem - API not available", {
         error: e,
       });
     }
