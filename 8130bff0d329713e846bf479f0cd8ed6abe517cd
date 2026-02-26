@@ -1,0 +1,55 @@
+apps/search/src/pages/api/webhooks/saleor/product_created.ts
+  7b1ce9f53bf66f7b 12,64-67,71-74
+apps/search/src/modules/app-problems/search-problem-reporter.ts
+  7b1ce9f53bf66f7b 1-33,35-37,39-92
+apps/search/src/pages/api/webhooks/saleor/product_variant_updated.test.ts
+  7b1ce9f53bf66f7b 4,20-27,52-53,152-199
+apps/search/src/modules/app-problems/create-search-problem-reporter.ts
+  7b1ce9f53bf66f7b 1-13
+apps/search/src/pages/api/webhooks/saleor/product_updated.test.ts
+  7b1ce9f53bf66f7b 4,20-27,50-51,147-191
+apps/search/src/pages/api/webhooks/saleor/product_deleted.ts
+  7b1ce9f53bf66f7b 6,9,48-53
+apps/search/src/pages/api/setup-indices.ts
+  7b1ce9f53bf66f7b 12,88-95
+apps/search/src/modules/app-problems/search-problem-reporter.test.ts
+  7b1ce9f53bf66f7b 1-3,6-166
+apps/search/src/pages/api/webhooks/saleor/product_variant_updated.ts
+  7b1ce9f53bf66f7b 12,64-70,74-77
+apps/search/src/pages/api/webhooks/saleor/product_variant_deleted.ts
+  7b1ce9f53bf66f7b 6,9,46-51
+apps/search/src/pages/api/webhooks/saleor/product_variant_out_of_stock.ts
+  7b1ce9f53bf66f7b 6,9,50-55
+apps/search/src/pages/api/webhooks/saleor/product_updated.ts
+  7b1ce9f53bf66f7b 12,62-65,69-72
+apps/search/package.json
+  7b1ce9f53bf66f7b 32
+apps/search/src/pages/api/webhooks/saleor/product_variant_back_in_stock.ts
+  7b1ce9f53bf66f7b 6,9,50-55
+apps/search/src/pages/api/webhooks/saleor/product_variant_created.ts
+  7b1ce9f53bf66f7b 12,64-70,74-77
+apps/search/src/modules/app-problems/index.ts
+  7b1ce9f53bf66f7b 1-2
+apps/search/src/modules/configuration/configuration.router.ts
+  7b1ce9f53bf66f7b 90-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "8130bff0d329713e846bf479f0cd8ed6abe517cd",
+  "prompts": {
+    "7b1ce9f53bf66f7b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a43ddfac-0b72-4682-a173-84b8dbca3533",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 530,
+      "total_deletions": 36,
+      "accepted_lines": 484,
+      "overriden_lines": 2
+    }
+  }
+}
