@@ -58,7 +58,7 @@ describe("handleUseCaseErrors", () => {
 
   it("Returns 400 with safe message for EmailCompilationError", () => {
     const clientError = new SendEventMessagesUseCase.EmailCompilationError(
-      "Failed to compile error",
+      "Failed to compile email",
       { props: { channelSlug: "default", event: "ORDER_CREATED" } },
     );
 
