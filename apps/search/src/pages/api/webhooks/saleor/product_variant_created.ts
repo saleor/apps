@@ -9,6 +9,7 @@ import {
 } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
+import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductVariantCreated } from "../../../../webhooks/definitions/product-variant-created";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -60,7 +61,20 @@ export const handler: NextJsWebhookHandler<ProductVariantCreated> = async (req, 
           maxSize: errorDetails?.maxSize,
         });
 
+        const problemReporter = createSearchProblemReporter(authData);
+
+        await problemReporter.reportRecordTooLarge({
+          productId: productVariant.product.id,
+          variantId: productVariant.id,
+        });
+
         return res.status(413).send(errorMessage);
+      }
+
+      if (AlgoliaErrorParser.isAuthError(e)) {
+        const problemReporter = createSearchProblemReporter(authData);
+
+        await problemReporter.reportAuthError();
       }
 
       logger.error(
