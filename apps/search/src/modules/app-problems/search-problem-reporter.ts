@@ -86,7 +86,7 @@ export class SearchProblemReporter {
         logger.error("Failed to clear auth problems", { error: result.error });
       }
     } catch (e) {
-      logger.error("Failed to clear auth problems - API not available", { error: e });
+      logger.warn("Failed to clear auth problems - API not available", { error: e });
     }
   }
 }
