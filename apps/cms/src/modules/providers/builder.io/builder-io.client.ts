@@ -24,7 +24,7 @@ export class BuilderIoClient {
     this.logger.debug("uploadProductVariant called", { variantId: variant.id });
 
     try {
-      await fetch(this.endpoint, {
+      const response = await fetch(this.endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,6 +35,10 @@ export class BuilderIoClient {
           published: "published",
         }),
       });
+
+      if (!response.ok) {
+        throw new Error(`Builder.io API returned HTTP ${response.status}: ${response.statusText}`);
+      }
     } catch (err) {
       this.logger.error("Failed to upload product variant", { error: err });
 
@@ -51,7 +55,7 @@ export class BuilderIoClient {
     });
 
     try {
-      await fetch(this.endpoint + `/${builderIoEntryId}`, {
+      const response = await fetch(this.endpoint + `/${builderIoEntryId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -62,8 +66,12 @@ export class BuilderIoClient {
           published: "published",
         }),
       });
+
+      if (!response.ok) {
+        throw new Error(`Builder.io API returned HTTP ${response.status}: ${response.statusText}`);
+      }
     } catch (err) {
-      this.logger.error("Failed to upload product variant", { error: err });
+      this.logger.error("Failed to update product variant", { error: err });
 
       throw err;
     }
@@ -115,15 +123,21 @@ export class BuilderIoClient {
     this.logger.debug("Will try to delete items in Builder.io", { ids: idsToDelete });
 
     return Promise.all(
-      idsToDelete.map((id) =>
-        fetch(this.endpoint + `/${id}`, {
+      idsToDelete.map(async (id) => {
+        const response = await fetch(this.endpoint + `/${id}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${this.config.privateApiKey}`,
           },
-        }),
-      ),
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Builder.io API returned HTTP ${response.status}: ${response.statusText}`,
+          );
+        }
+      }),
     );
   }
 
@@ -140,7 +154,13 @@ export class BuilderIoClient {
     return fetch(
       `https://cdn.builder.io/api/v3/content/${this.config.modelName}?apiKey=${this.config.publicApiKey}&query.data.${this.config.productVariantFieldsMapping.variantId}.$eq=${variantId}&limit=10&includeUnpublished=false&cacheSeconds=0`,
     )
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Builder.io API returned HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        return res.json();
+      })
       .then((data) => {
         const results = data.results.map((result: any) => result.id) as string[];
 

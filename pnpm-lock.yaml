@@ -531,6 +531,9 @@ importers:
       '@opentelemetry/semantic-conventions':
         specifier: 'catalog:'
         version: 1.30.0
+      '@saleor/app-problems':
+        specifier: workspace:*
+        version: link:../../packages/app-problems
       '@saleor/app-sdk':
         specifier: link:../../node_modules/@saleor/app-sdk
         version: link:../../node_modules/@saleor/app-sdk
@@ -603,6 +606,9 @@ importers:
       jsdom:
         specifier: 'catalog:'
         version: 20.0.3
+      neverthrow:
+        specifier: 'catalog:'
+        version: 6.2.1
       next:
         specifier: 'catalog:'
         version: 15.2.8(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.52.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
