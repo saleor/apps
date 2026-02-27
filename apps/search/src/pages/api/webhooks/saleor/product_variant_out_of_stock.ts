@@ -3,8 +3,10 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import { type ProductVariantOutOfStock } from "../../../../../generated/graphql";
+import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
+import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductVariantOutOfStock } from "../../../../webhooks/definitions/product-variant-out-of-stock";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -45,6 +47,14 @@ export const handler: NextJsWebhookHandler<ProductVariantOutOfStock> = async (
 
       return;
     } catch (e) {
+      if (AlgoliaErrorParser.isAuthError(e)) {
+        const problemReporter = createSearchProblemReporter(authData);
+
+        await problemReporter.reportAuthError();
+
+        return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
       logger.error(
         "Failed to execute product_variant_out_of_stock webhook (algoliaClient.updateProductVariant)",
         { error: e },

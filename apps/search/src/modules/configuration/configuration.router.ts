@@ -5,6 +5,7 @@ import { algoliaCredentialsVerifier } from "../../lib/algolia/algolia-credential
 import { createLogger } from "../../lib/logger";
 import { createSettingsManager } from "../../lib/metadata";
 import { createTraceEffect } from "../../lib/trace-effect";
+import { SearchProblemReporter } from "../app-problems";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { AppConfigMetadataManager } from "./app-config-metadata-manager";
@@ -86,6 +87,10 @@ export const configurationRouter = router({
         await webhooksToggler.enableOwnWebhooks();
 
         logger.info("Webhooks enabled");
+
+        const problemReporter = new SearchProblemReporter(ctx.apiClient);
+
+        await problemReporter.clearAuthProblems();
       } catch (e) {
         logger.warn("Failed to check Algolia credentials", {
           error: e,

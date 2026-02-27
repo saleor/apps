@@ -3,8 +3,10 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import { type ProductVariantBackInStock } from "../../../../../generated/graphql";
+import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
+import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductVariantBackInStock } from "../../../../webhooks/definitions/product-variant-back-in-stock";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -36,7 +38,7 @@ export const handler: NextJsWebhookHandler<ProductVariantBackInStock> = async (
   }
 
   try {
-    const { algoliaClient, apiClient } = await createWebhookContext({ authData });
+    const { algoliaClient } = await createWebhookContext({ authData });
 
     try {
       await algoliaClient.updateProductVariant(productVariant);
@@ -45,6 +47,14 @@ export const handler: NextJsWebhookHandler<ProductVariantBackInStock> = async (
 
       return;
     } catch (e) {
+      if (AlgoliaErrorParser.isAuthError(e)) {
+        const problemReporter = createSearchProblemReporter(authData);
+
+        await problemReporter.reportAuthError();
+
+        return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
       logger.error(
         "Failed to execute product_variant_back_in_stock webhook (algoliaClient.updateProductVariant)",
         { error: e },
