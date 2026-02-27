@@ -1,0 +1,47 @@
+apps/cms/package.json
+  08027014b06c68b0 32,57
+apps/cms/src/modules/webhooks-operations/webhooks-processors-delegator.ts
+  08027014b06c68b0 2,15-42,50,65-67,77-80,84-115,117-130,132-138,140-170,206,208,215,218,253,255,262,265,283,285,292,295,313,315,322,325
+apps/cms/src/pages/api/webhooks/product-variant-deleted.ts
+  08027014b06c68b0 8,83,87
+apps/cms/src/pages/api/webhooks/product-variant-updated.ts
+  08027014b06c68b0 8,84,88
+apps/cms/src/modules/app-problems/cms-problem-reporter.test.ts
+  08027014b06c68b0 1-205
+apps/cms/src/modules/app-problems/cms-problem-reporter.ts
+  08027014b06c68b0 1-98
+apps/cms/src/pages/api/webhooks/product-updated.ts
+  08027014b06c68b0 8,78,82
+apps/cms/src/modules/app-problems/index.ts
+  08027014b06c68b0 1-2
+apps/cms/src/modules/providers/builder.io/builder-io.client.ts
+  08027014b06c68b0 27,38-41,71-72,74,137-140,161-163
+apps/cms/src/pages/api/webhooks/product-variant-created.ts
+  08027014b06c68b0 8,84,88
+apps/cms/src/modules/providers-listing/providers-list.router.ts
+  08027014b06c68b0 4,94,107-109
+apps/cms/src/modules/webhooks-operations/webhooks-processors-delegator.test.ts
+  08027014b06c68b0 3-4,113-118,221-344,346-393
+apps/cms/src/modules/app-problems/create-cms-problem-reporter.ts
+  08027014b06c68b0 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "bc769ccae7d9cc32e2684fdfc9d8ea44d6264f3e",
+  "prompts": {
+    "08027014b06c68b0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "35883ff4-7c43-4baa-932c-b42c58855db5",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 726,
+      "total_deletions": 60,
+      "accepted_lines": 700,
+      "overriden_lines": 0
+    }
+  }
+}
