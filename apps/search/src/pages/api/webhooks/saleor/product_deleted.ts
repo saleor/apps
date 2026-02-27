@@ -3,8 +3,10 @@ import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
 import { type ProductDeleted } from "../../../../../generated/graphql";
+import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
+import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductDeleted } from "../../../../webhooks/definitions/product-deleted";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -32,7 +34,7 @@ export const handler: NextJsWebhookHandler<ProductDeleted> = async (req, res, co
   }
 
   try {
-    const { algoliaClient, apiClient } = await createWebhookContext({ authData });
+    const { algoliaClient } = await createWebhookContext({ authData });
 
     try {
       await algoliaClient.deleteProduct(product);
@@ -43,6 +45,14 @@ export const handler: NextJsWebhookHandler<ProductDeleted> = async (req, res, co
 
       return;
     } catch (e) {
+      if (AlgoliaErrorParser.isAuthError(e)) {
+        const problemReporter = createSearchProblemReporter(authData);
+
+        await problemReporter.reportAuthError();
+
+        return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
       logger.error("Failed to execute product_deleted webhook (algoliaClient.deleteProduct)", {
         error: e,
       });

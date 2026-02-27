@@ -1,6 +1,7 @@
 import { createMocks } from "node-mocks-http";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 import { handler } from "./product_updated";
 
@@ -14,6 +15,16 @@ vi.mock("../../../../lib/logger", () => ({
     warn: vi.fn(),
     error: vi.fn(),
   }),
+}));
+
+const mockReportAuthError = vi.fn();
+const mockReportRecordTooLarge = vi.fn();
+
+vi.mock("../../../../modules/app-problems", () => ({
+  createSearchProblemReporter: vi.fn(() => ({
+    reportAuthError: mockReportAuthError,
+    reportRecordTooLarge: mockReportRecordTooLarge,
+  })),
 }));
 
 const mockContext = {
@@ -36,6 +47,8 @@ const mockContext = {
 describe("product_updated webhook handler", () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    mockReportAuthError.mockResolvedValue(undefined);
+    mockReportRecordTooLarge.mockResolvedValue(undefined);
   });
 
   it("Returns 200 when no product in payload", async () => {
@@ -130,5 +143,50 @@ describe("product_updated webhook handler", () => {
 
     expect(res._getStatusCode()).toBe(400);
     expect(res._getJSONData()).toStrictEqual({ message: "Config error" });
+  });
+
+  it("Reports auth error problem when Algolia returns 403", async () => {
+    const { req, res } = createMocks();
+
+    const authError = { status: 403, message: "Invalid Application-ID or API key" };
+
+    const mockAlgoliaClient = {
+      updateProduct: vi.fn().mockRejectedValue(authError),
+    };
+
+    vi.mocked(createWebhookContext).mockResolvedValue({
+      algoliaClient: mockAlgoliaClient,
+    } as any);
+
+    // @ts-expect-error - mocking request for testing
+    await handler(req, res, mockContext);
+
+    expect(res._getStatusCode()).toBe(401);
+    expect(mockReportAuthError).toHaveBeenCalled();
+    expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
+  });
+
+  it("Reports record too large problem when Algolia record size limit exceeded", async () => {
+    const { req, res } = createMocks();
+
+    const recordSizeError = {
+      status: 400,
+      message: "Record at the position 0 objectID=prod123_var456 is too big size=15000/10000 bytes",
+    };
+
+    const mockAlgoliaClient = {
+      updateProduct: vi.fn().mockRejectedValue(recordSizeError),
+    };
+
+    vi.mocked(createWebhookContext).mockResolvedValue({
+      algoliaClient: mockAlgoliaClient,
+    } as any);
+
+    // @ts-expect-error - mocking request for testing
+    await handler(req, res, mockContext);
+
+    expect(res._getStatusCode()).toBe(413);
+    expect(mockReportRecordTooLarge).toHaveBeenCalledWith({ productId: "prod123" });
+    expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
   });
 });
