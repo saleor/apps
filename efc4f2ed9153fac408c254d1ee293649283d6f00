@@ -1,0 +1,23 @@
+apps/products-feed/package.json
+  416d07d8b35525c2 32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.5",
+  "base_commit_sha": "efc4f2ed9153fac408c254d1ee293649283d6f00",
+  "prompts": {
+    "416d07d8b35525c2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8717ef05-391d-4f40-88e3-ebaf7a34ce7b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 556,
+      "total_deletions": 45,
+      "accepted_lines": 511,
+      "overriden_lines": 0
+    }
+  }
+}
