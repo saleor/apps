@@ -47,6 +47,8 @@ export const handler: NextJsWebhookHandler<ProductVariantDeleted> = async (req, 
         const problemReporter = createSearchProblemReporter(authData);
 
         await problemReporter.reportAuthError();
+
+        return res.status(401).send("Algolia rejected due to invalid credentials");
       }
 
       logger.error(

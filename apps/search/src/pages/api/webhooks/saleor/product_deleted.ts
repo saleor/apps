@@ -34,7 +34,7 @@ export const handler: NextJsWebhookHandler<ProductDeleted> = async (req, res, co
   }
 
   try {
-    const { algoliaClient, apiClient } = await createWebhookContext({ authData });
+    const { algoliaClient } = await createWebhookContext({ authData });
 
     try {
       await algoliaClient.deleteProduct(product);
@@ -49,6 +49,8 @@ export const handler: NextJsWebhookHandler<ProductDeleted> = async (req, res, co
         const problemReporter = createSearchProblemReporter(authData);
 
         await problemReporter.reportAuthError();
+
+        return res.status(401).send("Algolia rejected due to invalid credentials");
       }
 
       logger.error("Failed to execute product_deleted webhook (algoliaClient.deleteProduct)", {

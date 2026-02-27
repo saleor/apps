@@ -38,7 +38,7 @@ export const handler: NextJsWebhookHandler<ProductVariantBackInStock> = async (
   }
 
   try {
-    const { algoliaClient, apiClient } = await createWebhookContext({ authData });
+    const { algoliaClient } = await createWebhookContext({ authData });
 
     try {
       await algoliaClient.updateProductVariant(productVariant);
@@ -51,6 +51,8 @@ export const handler: NextJsWebhookHandler<ProductVariantBackInStock> = async (
         const problemReporter = createSearchProblemReporter(authData);
 
         await problemReporter.reportAuthError();
+
+        return res.status(401).send("Algolia rejected due to invalid credentials");
       }
 
       logger.error(

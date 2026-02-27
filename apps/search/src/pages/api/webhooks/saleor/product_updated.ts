@@ -46,6 +46,8 @@ export const handler: NextJsWebhookHandler<ProductUpdated> = async (req, res, co
 
       return;
     } catch (e) {
+      const problemReporter = createSearchProblemReporter(authData);
+
       if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {
         const errorDetails = AlgoliaErrorParser.parseRecordSizeError(e);
         const errorMessage = createRecordSizeErrorMessage(errorDetails, {
@@ -59,17 +61,15 @@ export const handler: NextJsWebhookHandler<ProductUpdated> = async (req, res, co
           maxSize: errorDetails?.maxSize,
         });
 
-        const problemReporter = createSearchProblemReporter(authData);
-
         await problemReporter.reportRecordTooLarge({ productId: product.id });
 
         return res.status(413).send(errorMessage);
       }
 
       if (AlgoliaErrorParser.isAuthError(e)) {
-        const problemReporter = createSearchProblemReporter(authData);
-
         await problemReporter.reportAuthError();
+
+        return res.status(401).send("Algolia rejected due to invalid credentials");
       }
 
       logger.error("Failed to execute product_updated webhook (algoliaClient.updateProduct)", {

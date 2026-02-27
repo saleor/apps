@@ -45,7 +45,7 @@ export class SearchProblemReporter {
     try {
       const result = await this.reporter.reportProblem({
         key: PROBLEM_KEYS.algoliaRecordTooLarge,
-        message: `${entityInfo} exceeds Algolia's record size limit (10KB). Go to Search App settings and disable large fields in 'Algolia fields filtering' (e.g. description, metadata, media) to reduce record size.`,
+        message: `${entityInfo} exceeds Algolia's record size limit. Go to Search App settings and disable large fields in 'Algolia fields filtering' (e.g. description, metadata, media) to reduce record size. https://www.algolia.com/doc/guides/scaling/algolia-service-limits`,
       });
 
       if (result.isErr()) {
