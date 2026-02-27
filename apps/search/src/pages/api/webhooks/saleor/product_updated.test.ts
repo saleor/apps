@@ -161,7 +161,7 @@ describe("product_updated webhook handler", () => {
     // @ts-expect-error - mocking request for testing
     await handler(req, res, mockContext);
 
-    expect(res._getStatusCode()).toBe(500);
+    expect(res._getStatusCode()).toBe(401);
     expect(mockReportAuthError).toHaveBeenCalled();
     expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
   });
