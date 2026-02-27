@@ -17,6 +17,8 @@ import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { updateExemptionStatusPublicMetadata } from "@/modules/app/exemption-status-public-metadata-updater";
+import { createAvataxProblemReporter } from "@/modules/app-problems";
+import { suspiciousLineCalculationCheck } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
@@ -182,6 +184,22 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 }
               }
 
+              if (providerConfig.isOk()) {
+                const hasSuspiciousLine = value.response.lines.some(suspiciousLineCalculationCheck);
+
+                if (hasSuspiciousLine) {
+                  const problemReporter = createAvataxProblemReporter(authData);
+                  const avataxConfig = providerConfig.value.avataxConfig;
+
+                  after(() =>
+                    problemReporter.reportSuspiciousZeroTax(
+                      avataxConfig.id,
+                      avataxConfig.config.name,
+                    ),
+                  );
+                }
+              }
+
               return Response.json(checkoutCalculateTaxesSyncWebhookReponse(value.response), {
                 status: 200,
               });
@@ -196,6 +214,19 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: error from AvaTax API",
                   });
+
+                  if (providerConfig.isOk()) {
+                    const problemReporter = createAvataxProblemReporter(authData);
+                    const avataxConfig = providerConfig.value.avataxConfig;
+
+                    after(() =>
+                      problemReporter.reportApiProblem(error.cause, {
+                        id: avataxConfig.id,
+                        name: avataxConfig.config.name,
+                        companyCode: avataxConfig.config.companyCode,
+                      }),
+                    );
+                  }
 
                   return Response.json(
                     {

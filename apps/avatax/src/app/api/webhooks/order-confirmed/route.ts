@@ -16,6 +16,7 @@ import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { OrderMetadataManager } from "@/modules/app/order-metadata-manager";
+import { createAvataxProblemReporter } from "@/modules/app-problems";
 import { type AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
 import { createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter-factory";
@@ -25,8 +26,10 @@ import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
 import { OrderNoteReporter } from "@/modules/saleor/order-note-reporter";
 import {
   AvataxEntityNotFoundError,
+  AvataxForbiddenAccessError,
   AvataxGetTaxSystemError,
   AvataxGetTaxWrongUserInputError,
+  AvataxInvalidCredentialsError,
   AvataxStringLengthError,
   TaxBadPayloadError,
 } from "@/modules/taxes/tax-error";
@@ -309,6 +312,22 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
           logger.debug("Error confirming order in AvaTax", { error: error });
           span.recordException(error as Error); // todo: remove casting when error handling is refactored
 
+          if (
+            error instanceof AvataxInvalidCredentialsError ||
+            error instanceof AvataxForbiddenAccessError
+          ) {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const avataxConfig = providerConfig.value.avataxConfig;
+
+            after(() =>
+              problemReporter.reportApiProblem(error, {
+                id: avataxConfig.id,
+                name: avataxConfig.config.name,
+                companyCode: avataxConfig.config.companyCode,
+              }),
+            );
+          }
+
           switch (true) {
             case error instanceof TaxBadPayloadError: {
               OrderConfirmedLogRequest.createErrorLog({
@@ -406,6 +425,19 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
+
+              {
+                const problemReporter = createAvataxProblemReporter(ctx.authData);
+                const avataxConfig = providerConfig.value.avataxConfig;
+
+                after(() =>
+                  problemReporter.reportApiProblem(error, {
+                    id: avataxConfig.id,
+                    name: avataxConfig.config.name,
+                    companyCode: avataxConfig.config.companyCode,
+                  }),
+                );
+              }
 
               span.setStatus({
                 code: SpanStatusCode.ERROR,
