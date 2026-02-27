@@ -1,4 +1,5 @@
 import { createLogger } from "@/logger";
+import { type CmsProblemReporter } from "@/modules/app-problems/cms-problem-reporter";
 
 import {
   type WebhookProductFragment,
@@ -11,6 +12,34 @@ import { type ProductWebhooksProcessor } from "./product-webhooks-processor";
 
 type ProcessorFactory = (config: ProvidersConfig.AnyFullShape) => ProductWebhooksProcessor;
 
+interface ProcessorWithConfig {
+  processor: ProductWebhooksProcessor;
+  providerConfig: ProvidersConfig.AnyFullShape;
+}
+
+const AUTH_ERROR_PATTERNS = [/401/, /403/, /unauthorized/i, /authentication/i, /access.token/i];
+
+export function classifyError(
+  error: unknown,
+  providerType: string,
+): "auth" | "builder-io-failure" | "field-mismatch" | "sync-failure" {
+  const message = error instanceof Error ? error.message : String(error);
+
+  if (AUTH_ERROR_PATTERNS.some((pattern) => pattern.test(message))) {
+    return "auth";
+  }
+
+  if (providerType === "builder.io") {
+    return "builder-io-failure";
+  }
+
+  if (providerType === "contentful" && (/422/.test(message) || /validation/i.test(message))) {
+    return "field-mismatch";
+  }
+
+  return "sync-failure";
+}
+
 export class WebhooksProcessorsDelegator {
   private processorFactory: ProcessorFactory = ProvidersResolver.createWebhooksProcessor;
   private logger = createLogger("WebhooksProcessorsDelegator");
@@ -18,6 +47,7 @@ export class WebhooksProcessorsDelegator {
   constructor(
     private opts: {
       context: WebhookContext;
+      problemReporter?: CmsProblemReporter;
       injectProcessorFactory?: ProcessorFactory;
     },
   ) {
@@ -32,7 +62,9 @@ export class WebhooksProcessorsDelegator {
     return productVariant.channelListings?.map((c) => c.channel.slug);
   }
 
-  private mapConnectionsToProcessors(connections: WebhookContext["connections"]) {
+  private mapConnectionsToProcessorsWithConfig(
+    connections: WebhookContext["connections"],
+  ): ProcessorWithConfig[] {
     return connections.map((conn) => {
       const providerConfig = this.opts.context.providers.find((p) => p.id === conn.providerId);
 
@@ -42,8 +74,100 @@ export class WebhooksProcessorsDelegator {
         throw new Error("Cant resolve provider from connection");
       }
 
-      return this.processorFactory(providerConfig);
+      return {
+        processor: this.processorFactory(providerConfig),
+        providerConfig,
+      };
     });
+  }
+
+  private async runWithProblemReporting(
+    processorsWithConfig: ProcessorWithConfig[],
+    operation: (processor: ProductWebhooksProcessor) => Promise<unknown>,
+  ): Promise<void> {
+    const results = await Promise.allSettled(
+      processorsWithConfig.map(({ processor }) => operation(processor)),
+    );
+
+    const involvedProviderIds = new Set<string>();
+    const errors: Error[] = [];
+
+    for (let i = 0; i < results.length; i++) {
+      const result = results[i];
+      const { providerConfig } = processorsWithConfig[i];
+
+      involvedProviderIds.add(providerConfig.id);
+
+      if (result.status === "rejected") {
+        const error =
+          result.reason instanceof Error ? result.reason : new Error(String(result.reason));
+
+        errors.push(error);
+
+        if (this.opts.problemReporter) {
+          await this.reportClassifiedError(error, providerConfig);
+        }
+      }
+    }
+
+    if (this.opts.problemReporter && errors.length === 0) {
+      for (const providerId of involvedProviderIds) {
+        await this.opts.problemReporter.clearProblemsForProvider(providerId);
+      }
+    }
+
+    if (errors.length > 0) {
+      throw errors[0];
+    }
+  }
+
+  private async reportClassifiedError(
+    error: Error,
+    providerConfig: ProvidersConfig.AnyFullShape,
+  ): Promise<void> {
+    if (!this.opts.problemReporter) {
+      return;
+    }
+
+    const classification = classifyError(error, providerConfig.type);
+
+    this.logger.debug("Classified CMS error", {
+      providerId: providerConfig.id,
+      providerType: providerConfig.type,
+      classification,
+      errorMessage: error.message,
+    });
+
+    switch (classification) {
+      case "auth":
+        await this.opts.problemReporter.reportProviderAuthError(
+          providerConfig.id,
+          providerConfig.type,
+          providerConfig.configName,
+        );
+        break;
+      case "builder-io-failure":
+        await this.opts.problemReporter.reportBuilderIoFailure(
+          providerConfig.id,
+          providerConfig.configName,
+          error.message,
+        );
+        break;
+      case "field-mismatch":
+        await this.opts.problemReporter.reportFieldMismatch(
+          providerConfig.id,
+          providerConfig.configName,
+          error.message,
+        );
+        break;
+      case "sync-failure":
+        await this.opts.problemReporter.reportSyncFailure(
+          providerConfig.id,
+          { type: providerConfig.type, configName: providerConfig.configName },
+          error.message,
+        );
+        break;
+    }
   }
 
   /**
@@ -79,25 +203,23 @@ export class WebhooksProcessorsDelegator {
 
     this.logger.trace("Resolved a number of connections to include", connections);
 
-    const processors = this.mapConnectionsToProcessors(connectionsToInclude);
+    const processorsWithConfig = this.mapConnectionsToProcessorsWithConfig(connectionsToInclude);
 
-    if (processors.length === 0) {
+    if (processorsWithConfig.length === 0) {
       this.logger.info("No processors found, skipping");
 
       return;
     }
 
     this.logger.trace("Resolved a number of processor to delegate to", {
-      processorsLenght: processors.length,
+      processorsLenght: processorsWithConfig.length,
     });
 
-    return Promise.all(
-      processors.map((processor) => {
-        this.logger.trace("Calling processor.onProductVariantCreated");
+    await this.runWithProblemReporting(processorsWithConfig, (processor) => {
+      this.logger.trace("Calling processor.onProductVariantCreated");
 
-        return processor.onProductVariantCreated(productVariant);
-      }),
-    );
+      return processor.onProductVariantCreated(productVariant);
+    });
   }
 
   async delegateVariantUpdatedOperations(productVariant: WebhookProductVariantFragment) {
@@ -128,23 +250,21 @@ export class WebhooksProcessorsDelegator {
 
     this.logger.trace("Resolved a number of connections to include", connections);
 
-    const processors = this.mapConnectionsToProcessors(connectionsToInclude);
+    const processorsWithConfig = this.mapConnectionsToProcessorsWithConfig(connectionsToInclude);
 
-    if (processors.length === 0) {
+    if (processorsWithConfig.length === 0) {
       this.logger.info("No processors found, skipping");
 
       return;
     }
 
     this.logger.trace("Resolved a number of processor to delegate to", {
-      processors: processors.length,
+      processors: processorsWithConfig.length,
     });
 
-    return Promise.all(
-      processors.map((processor) => {
-        return processor.onProductVariantUpdated(productVariant);
-      }),
-    );
+    await this.runWithProblemReporting(processorsWithConfig, (processor) => {
+      return processor.onProductVariantUpdated(productVariant);
+    });
   }
 
   async delegateVariantDeletedOperations(productVariant: WebhookProductVariantFragment) {
@@ -160,23 +280,21 @@ export class WebhooksProcessorsDelegator {
 
     this.logger.trace("Resolved a number of connections to include", connections);
 
-    const processors = this.mapConnectionsToProcessors(connections);
+    const processorsWithConfig = this.mapConnectionsToProcessorsWithConfig(connections);
 
-    if (processors.length === 0) {
+    if (processorsWithConfig.length === 0) {
       this.logger.info("No processors found, skipping");
 
       return;
     }
 
     this.logger.trace("Resolved a number of processor to delegate to", {
-      processorsLenght: processors.length,
+      processorsLenght: processorsWithConfig.length,
     });
 
-    return Promise.all(
-      processors.map((processor) => {
-        return processor.onProductVariantDeleted(productVariant);
-      }),
-    );
+    await this.runWithProblemReporting(processorsWithConfig, (processor) => {
+      return processor.onProductVariantDeleted(productVariant);
+    });
   }
 
   async delegateProductUpdatedOperations(product: WebhookProductFragment) {
@@ -192,22 +310,20 @@ export class WebhooksProcessorsDelegator {
 
     this.logger.trace("Resolved a number of connections to include", connections);
 
-    const processors = this.mapConnectionsToProcessors(connections);
+    const processorsWithConfig = this.mapConnectionsToProcessorsWithConfig(connections);
 
-    if (processors.length === 0) {
+    if (processorsWithConfig.length === 0) {
       this.logger.info("No processors found, skipping");
 
       return;
     }
 
     this.logger.trace("Resolved a number of processor to delegate to", {
-      processorsLenght: processors.length,
+      processorsLenght: processorsWithConfig.length,
     });
 
-    return Promise.all(
-      processors.map((processor) => {
-        return processor.onProductUpdated(product);
-      }),
-    );
+    await this.runWithProblemReporting(processorsWithConfig, (processor) => {
+      return processor.onProductUpdated(product);
+    });
   }
 }
