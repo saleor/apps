@@ -1,43 +1,43 @@
 fragment RelatedProducts on Product {
+  id
+  name
+  slug
+  description
+  seoDescription
+  productType {
+    isShippingRequired
+  }
+  media {
     id
-    name
-    slug
-    description
-    seoDescription
-    productType {
-        isShippingRequired
-    }
+    alt
+    url(size: $imageSize)
+    type
+  }
+  variants {
+    id
     media {
-        id
-        alt
-        url(size: $imageSize)
-        type
+      id
+      alt
+      url(size: $imageSize)
+      type
     }
-    variants {
-        id
-        media{
-            id
-            alt
-            url(size: $imageSize)
-            type
-        }
+  }
+  attributes {
+    attribute {
+      id
     }
-    attributes{
-        attribute{
-            id
-        }
-        values{
-            value
-            name
-        }
+    values {
+      value
+      name
     }
-    thumbnail(size: $imageSize) {
-        url
-    }
-    category {
-        id
-        name
-        googleCategoryId: metafield(key: "google_category_id")
-    }
-  
+  }
+  thumbnail(size: $imageSize) {
+    url
+  }
+  category {
+    id
+    slug
+    name
+    googleCategoryId: metafield(key: "google_category_id")
+  }
 }

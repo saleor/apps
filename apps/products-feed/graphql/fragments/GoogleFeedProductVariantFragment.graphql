@@ -67,6 +67,7 @@ fragment GoogleFeedProductVariant on ProductVariant {
       url
     }
     category {
+      slug
       id
       name
       googleCategoryId: metafield(key: "google_category_id")

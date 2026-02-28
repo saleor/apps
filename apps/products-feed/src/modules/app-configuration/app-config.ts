@@ -33,6 +33,8 @@ const s3ConfigSchema = z.object({
   secretAccessKey: z.string().min(1),
   accessKeyId: z.string().min(1),
   region: z.string().min(1),
+  endpoint: z.string().optional(),
+  forcePathStyle: z.boolean().default(false),
 });
 
 const urlConfigurationSchema = z.object({
