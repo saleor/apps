@@ -84,6 +84,7 @@ catalog:
   "@graphql-codegen/cli": 5.0.2
   "@graphql-codegen/introspection": 4.0.3
   "@graphql-codegen/typed-document-node": 5.0.5
+  "@graphql-codegen/typescript": 4.0.5
   "@graphql-codegen/typescript-operations": 4.1.3
   graphql-codegen-typescript-operation-types: 2.0.2
   "@graphql-codegen/typescript-urql": 4.0.0

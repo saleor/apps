@@ -81,7 +81,7 @@
     "@graphql-codegen/cli": "catalog:",
     "@graphql-codegen/introspection": "catalog:",
     "@graphql-codegen/typed-document-node": "catalog:",
-    "@graphql-codegen/typescript": "4.0.5",
+    "@graphql-codegen/typescript": "catalog:",
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-codegen/typescript-urql": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",

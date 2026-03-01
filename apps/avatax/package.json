@@ -80,7 +80,7 @@
     "@graphql-codegen/introspection": "catalog:",
     "@graphql-codegen/schema-ast": "4.0.2",
     "@graphql-codegen/typed-document-node": "catalog:",
-    "@graphql-codegen/typescript": "4.0.5",
+    "@graphql-codegen/typescript": "catalog:",
     "@graphql-codegen/typescript-document-nodes": "4.0.5",
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-codegen/typescript-urql": "catalog:",
