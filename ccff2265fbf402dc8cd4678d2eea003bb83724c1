@@ -1,0 +1,23 @@
+.changeset/ninety-turkeys-pay.md
+  d9e97e1ad6a79dc8 10-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "ccff2265fbf402dc8cd4678d2eea003bb83724c1",
+  "prompts": {
+    "d9e97e1ad6a79dc8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "07a0c7c1-65ac-4c34-84a9-a3af6ee91e62",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
