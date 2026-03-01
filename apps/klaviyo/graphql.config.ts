@@ -1,4 +1,4 @@
-import { IGraphQLConfig } from "graphql-config";
+import { type IGraphQLConfig } from "graphql-config";
 
 const config: IGraphQLConfig = {
   projects: {
@@ -15,6 +15,8 @@ const config: IGraphQLConfig = {
                 immutableTypes: true,
                 strictScalars: true,
                 skipTypename: true,
+                omitObjectTypes: true,
+                preResolveTypes: true,
                 scalars: {
                   _Any: "unknown",
                   Date: "string",
@@ -42,7 +44,7 @@ const config: IGraphQLConfig = {
                   },
                 },
                 {
-                  typescript: {
+                  "graphql-codegen-typescript-operation-types": {
                     enumsAsTypes: true,
                   },
                 },

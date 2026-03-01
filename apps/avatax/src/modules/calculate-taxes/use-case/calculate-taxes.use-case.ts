@@ -15,10 +15,10 @@ import { AvataxTaxCodeMatchesService } from "@/modules/avatax/tax-code/avatax-ta
 import { CalculateTaxesLogRequest } from "@/modules/client-logs/calculate-taxes-log-request";
 import { type ILogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 
-import { type MetadataItem } from "../../../../generated/graphql";
 import { BaseError } from "../../../error";
 import { AppConfigExtractor, type IAppConfigExtractor } from "../../../lib/app-config-extractor";
 import { AppConfigurationLogger } from "../../../lib/app-configuration-logger";
+import { type MetadataItem } from "../../../lib/metadata-item";
 import { createLogger } from "../../../logger";
 import {
   AvataxCalculateTaxesAdapter,

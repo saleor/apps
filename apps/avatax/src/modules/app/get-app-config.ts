@@ -2,7 +2,7 @@ import { decrypt } from "@saleor/app-sdk/settings-manager";
 
 import { env } from "@/env";
 
-import { type MetadataItem } from "../../../generated/graphql";
+import { type MetadataItem } from "../../lib/metadata-item";
 import { type ChannelsConfig, channelsSchema } from "../channel-configuration/channel-config";
 import {
   type ProviderConnections,
