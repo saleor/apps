@@ -84,7 +84,7 @@
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
-    "graphql-codegen-typescript-operation-types": "2.0.2",
+    "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
     "node-mocks-http": "catalog:",
     "tsx": "catalog:",

@@ -84,7 +84,7 @@
     "aws-sdk-client-mock": "4.0.1",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
-    "graphql-codegen-typescript-operation-types": "2.0.2",
+    "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
     "jsdom": "catalog:",
     "node-mocks-http": "catalog:",
