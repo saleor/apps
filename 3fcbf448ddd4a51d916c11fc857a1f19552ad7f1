@@ -1,0 +1,67 @@
+apps/segment/graphql.config.ts
+  4a2f24669e15cac9 23-24,52
+packages/webhook-utils/graphql.config.ts
+  4a2f24669e15cac9 18-19,47
+apps/search/src/webhooks/definitions/product-variant-updated.ts
+  4a2f24669e15cac9 3
+apps/avatax/src/lib/metadata-item.ts
+  4a2f24669e15cac9 1
+apps/search/src/webhooks/definitions/product-variant-back-in-stock.ts
+  4a2f24669e15cac9 3
+apps/klaviyo/graphql.config.ts
+  4a2f24669e15cac9 18-19,47
+apps/avatax/graphql.config.ts
+  4a2f24669e15cac9 54-55,83
+apps/stripe/graphql.config.ts
+  4a2f24669e15cac9 39-40,68
+apps/search/src/webhooks/definitions/product-created.ts
+  4a2f24669e15cac9 3
+apps/search/src/lib/algolia/algoliaSearchProvider.ts
+  4a2f24669e15cac9 168,224
+apps/search/src/webhooks/definitions/product-updated.ts
+  4a2f24669e15cac9 3
+apps/smtp/graphql.config.ts
+  4a2f24669e15cac9 18-19,47
+apps/search/graphql.config.ts
+  4a2f24669e15cac9 18-19,47
+apps/avatax/src/modules/app/get-app-config.ts
+  4a2f24669e15cac9 5
+apps/search/src/webhooks/definitions/product-variant-created.ts
+  4a2f24669e15cac9 3
+apps/search/src/lib/algolia/algoliaUtils.ts
+  4a2f24669e15cac9 261
+apps/avatax/src/modules/app/get-app-config.test.ts
+  4a2f24669e15cac9 4
+apps/cms/graphql.config.ts
+  4a2f24669e15cac9 18-19,47
+apps/search/src/webhooks/definitions/product-variant-deleted.ts
+  4a2f24669e15cac9 3
+apps/search/src/webhooks/definitions/product-variant-out-of-stock.ts
+  4a2f24669e15cac9 3
+apps/search/src/webhooks/definitions/product-deleted.ts
+  4a2f24669e15cac9 3
+apps/search/src/lib/searchProvider.ts
+  4a2f24669e15cac9 9,12
+apps/search/src/lib/webhook-event-types.ts
+  4a2f24669e15cac9 1-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "3fcbf448ddd4a51d916c11fc857a1f19552ad7f1",
+  "prompts": {
+    "4a2f24669e15cac9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "83f84608-6f91-4b15-858c-1d441f82a677",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 137,
+      "total_deletions": 80,
+      "accepted_lines": 114,
+      "overriden_lines": 0
+    }
+  }
+}
