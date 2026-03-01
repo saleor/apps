@@ -6,8 +6,7 @@ mutation UpdatePublicMetadata($id: ID!, $input: [MetadataInput!]!) {
     }
     item {
       metadata {
-        key
-        value
+        ...MetadataItem
       }
     }
   }

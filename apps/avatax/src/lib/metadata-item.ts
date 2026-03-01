@@ -1,1 +1,1 @@
-export type MetadataItem = { key: string; value: string };
+export type { MetadataItemFragment as MetadataItem } from "../../generated/graphql";

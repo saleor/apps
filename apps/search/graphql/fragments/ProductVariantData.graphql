@@ -1,7 +1,6 @@
 fragment ProductVariantData on ProductVariant {
   metadata {
-    key
-    value
+    ...MetadataItem
   }
   id
   name
@@ -33,7 +32,7 @@ fragment ProductVariantData on ProductVariant {
       }
     }
   }
-  quantityAvailable 
+  quantityAvailable
   channelListings {
     id
     channel {
