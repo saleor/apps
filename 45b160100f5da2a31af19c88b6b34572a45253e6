@@ -1,0 +1,33 @@
+pnpm-workspace.yaml
+  57e2f89ba01889a6 87
+apps/stripe/package.json
+  57e2f89ba01889a6 84
+apps/products-feed/graphql/fragments/Weight.graphql
+  57e2f89ba01889a6 1
+apps/avatax/package.json
+  57e2f89ba01889a6 83
+apps/products-feed/graphql.config.ts
+  57e2f89ba01889a6 18-19,47
+apps/products-feed/src/modules/google-feed/get-weight-attribute-value.ts
+  57e2f89ba01889a6 1,4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "45b160100f5da2a31af19c88b6b34572a45253e6",
+  "prompts": {
+    "57e2f89ba01889a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a383ea92-e1c4-4d4e-9569-47a99e2e8a64",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 18,
+      "total_deletions": 11,
+      "accepted_lines": 14,
+      "overriden_lines": 0
+    }
+  }
+}
