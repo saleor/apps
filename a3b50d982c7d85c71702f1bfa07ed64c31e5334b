@@ -1,0 +1,43 @@
+packages/app-problems/package.json
+  57e2f89ba01889a6 39
+packages/webhook-utils/package.json
+  57e2f89ba01889a6 33
+apps/products-feed/package.json
+  57e2f89ba01889a6 74
+pnpm-workspace.yaml
+  57e2f89ba01889a6 88
+apps/klaviyo/package.json
+  57e2f89ba01889a6 70
+apps/stripe/package.json
+  57e2f89ba01889a6 84,105
+apps/segment/package.json
+  57e2f89ba01889a6 87
+apps/avatax/package.json
+  57e2f89ba01889a6 83,101
+apps/smtp/package.json
+  57e2f89ba01889a6 93
+apps/search/package.json
+  57e2f89ba01889a6 84
+apps/cms/package.json
+  57e2f89ba01889a6 87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "a3b50d982c7d85c71702f1bfa07ed64c31e5334b",
+  "prompts": {
+    "57e2f89ba01889a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a383ea92-e1c4-4d4e-9569-47a99e2e8a64",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 13,
+      "total_deletions": 14,
+      "accepted_lines": 13,
+      "overriden_lines": 0
+    }
+  }
+}
