@@ -3,6 +3,7 @@ import { type Client } from "urql";
 
 import { createLogger } from "@/logger";
 import {
+  AvataxEntityNotFoundError,
   AvataxForbiddenAccessError,
   AvataxGetTaxSystemError,
   AvataxInvalidCredentialsError,
@@ -15,8 +16,10 @@ export const PROBLEM_KEYS = {
   forbiddenAccess: (configId: string) => `avatax-forbidden-access:${configId}`,
   companyInactive: (configId: string) => `avatax-company-inactive:${configId}`,
   companyNotFound: (configId: string) => `avatax-company-not-found:${configId}`,
+  entityNotFound: (configId: string) => `avatax-entity-not-found:${configId}`,
   suspiciousZeroTax: (configId: string) => `avatax-suspicious-zero-tax:${configId}`,
   taxCodePermission: (configId: string) => `avatax-tax-code-permission:${configId}`,
+  channelConfigMissing: (channelSlug: string) => `avatax-channel-config-missing:${channelSlug}`,
 } as const;
 
 export class AvataxProblemReporter {
@@ -82,6 +85,22 @@ export class AvataxProblemReporter {
     }
   }
 
+  async reportEntityNotFound(
+    configId: string,
+    configName: string,
+    description: string,
+  ): Promise<void> {
+    const result = await this.reporter.reportProblem({
+      key: PROBLEM_KEYS.entityNotFound(configId),
+      criticalThreshold: 1,
+      message: `AvaTax returned "Entity not found" error for configuration "${configName}": ${description}. Tax calculations for channels using this configuration will fail until the issue is resolved.`,
+    });
+
+    if (result.isErr()) {
+      logger.error("Failed to report entity not found problem", { error: result.error });
+    }
+  }
+
   async reportSuspiciousZeroTax(configId: string, configName: string): Promise<void> {
     const result = await this.reporter.reportProblem({
       key: PROBLEM_KEYS.suspiciousZeroTax(configId),
@@ -104,6 +123,28 @@ export class AvataxProblemReporter {
     }
   }
 
+  async reportChannelConfigMissing(channelSlug: string, reason: string): Promise<void> {
+    const result = await this.reporter.reportProblem({
+      key: PROBLEM_KEYS.channelConfigMissing(channelSlug),
+      criticalThreshold: 1,
+      message: `Tax calculations are failing for channel "${channelSlug}": ${reason}. Please update the channel configuration.`,
+    });
+
+    if (result.isErr()) {
+      logger.error("Failed to report channel config missing problem", { error: result.error });
+    }
+  }
+
+  async clearChannelConfigProblem(channelSlug: string): Promise<void> {
+    const result = await this.reporter.clearProblems([
+      PROBLEM_KEYS.channelConfigMissing(channelSlug),
+    ]);
+
+    if (result.isErr()) {
+      logger.error("Failed to clear channel config problem", { error: result.error, channelSlug });
+    }
+  }
+
   async reportApiProblem(
     error: unknown,
     config: { id: string; name: string; companyCode?: string },
@@ -112,6 +153,8 @@ export class AvataxProblemReporter {
       await this.reportInvalidCredentials(config.id, config.name);
     } else if (error instanceof AvataxForbiddenAccessError) {
       await this.reportForbiddenAccess(config.id, config.name);
+    } else if (error instanceof AvataxEntityNotFoundError) {
+      await this.reportEntityNotFound(config.id, config.name, error.description);
     } else if (error instanceof AvataxGetTaxSystemError) {
       if (error.faultSubCode === "InactiveCompanyError") {
         await this.reportCompanyInactive(config.id, config.name, config.companyCode ?? "unknown");
@@ -127,6 +170,7 @@ export class AvataxProblemReporter {
       PROBLEM_KEYS.forbiddenAccess(configId),
       PROBLEM_KEYS.companyInactive(configId),
       PROBLEM_KEYS.companyNotFound(configId),
+      PROBLEM_KEYS.entityNotFound(configId),
       PROBLEM_KEYS.suspiciousZeroTax(configId),
       PROBLEM_KEYS.taxCodePermission(configId),
     ];

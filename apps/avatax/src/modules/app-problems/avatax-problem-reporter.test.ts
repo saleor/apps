@@ -3,6 +3,7 @@ import { err, ok } from "neverthrow";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
+  AvataxEntityNotFoundError,
   AvataxForbiddenAccessError,
   AvataxGetTaxSystemError,
   AvataxGetTaxWrongUserInputError,
@@ -134,6 +135,69 @@ describe("AvataxProblemReporter", () => {
     });
   });
 
+  describe("reportEntityNotFound", () => {
+    it("calls reportProblem with correct key, threshold, and message", async () => {
+      mockReportProblem.mockResolvedValue(ok(undefined));
+      const reporter = new AvataxProblemReporter(mockClient);
+
+      await reporter.reportEntityNotFound("config-111", "My Config", "CompanyCode not found");
+
+      expect(mockReportProblem).toHaveBeenCalledWith({
+        key: "avatax-entity-not-found:config-111",
+        criticalThreshold: 1,
+        message: expect.stringContaining("Entity not found"),
+      });
+      expect(mockReportProblem).toHaveBeenCalledWith({
+        key: "avatax-entity-not-found:config-111",
+        criticalThreshold: 1,
+        message: expect.stringContaining('"My Config"'),
+      });
+    });
+  });
+
+  describe("reportChannelConfigMissing", () => {
+    it("calls reportProblem with correct key, threshold, and message", async () => {
+      mockReportProblem.mockResolvedValue(ok(undefined));
+      const reporter = new AvataxProblemReporter(mockClient);
+
+      await reporter.reportChannelConfigMissing(
+        "default-channel",
+        "Channel references a provider configuration that no longer exists",
+      );
+
+      expect(mockReportProblem).toHaveBeenCalledWith({
+        key: "avatax-channel-config-missing:default-channel",
+        criticalThreshold: 1,
+        message: expect.stringContaining('"default-channel"'),
+      });
+      expect(mockReportProblem).toHaveBeenCalledWith({
+        key: "avatax-channel-config-missing:default-channel",
+        criticalThreshold: 1,
+        message: expect.stringContaining("no longer exists"),
+      });
+    });
+  });
+
+  describe("clearChannelConfigProblem", () => {
+    it("clears the channel config missing problem key", async () => {
+      mockClearProblems.mockResolvedValue(ok(undefined));
+      const reporter = new AvataxProblemReporter(mockClient);
+
+      await reporter.clearChannelConfigProblem("default-channel");
+
+      expect(mockClearProblems).toHaveBeenCalledWith([
+        "avatax-channel-config-missing:default-channel",
+      ]);
+    });
+
+    it("does not throw when clearProblems fails", async () => {
+      mockClearProblems.mockResolvedValue(err(new Error("network error")));
+      const reporter = new AvataxProblemReporter(mockClient);
+
+      await expect(reporter.clearChannelConfigProblem("default-channel")).resolves.toBeUndefined();
+    });
+  });
+
   describe("reportSuspiciousZeroTax", () => {
     it("calls reportProblem without criticalThreshold", async () => {
       mockReportProblem.mockResolvedValue(ok(undefined));
@@ -166,7 +230,7 @@ describe("AvataxProblemReporter", () => {
   });
 
   describe("clearProblemsForConfig", () => {
-    it("clears all 6 problem keys for the given configId", async () => {
+    it("clears all 7 problem keys for the given configId", async () => {
       mockClearProblems.mockResolvedValue(ok(undefined));
       const reporter = new AvataxProblemReporter(mockClient);
 
@@ -177,6 +241,7 @@ describe("AvataxProblemReporter", () => {
         "avatax-forbidden-access:config-abc",
         "avatax-company-inactive:config-abc",
         "avatax-company-not-found:config-abc",
+        "avatax-entity-not-found:config-abc",
         "avatax-suspicious-zero-tax:config-abc",
         "avatax-tax-code-permission:config-abc",
       ]);
@@ -261,6 +326,23 @@ describe("AvataxProblemReporter", () => {
       expect(spy).toHaveBeenCalledWith("config-4", "Config", "MISSING_CO");
     });
 
+    it("calls reportEntityNotFound for AvataxEntityNotFoundError", async () => {
+      mockReportProblem.mockResolvedValue(ok(undefined));
+      const reporter = new AvataxProblemReporter(mockClient);
+      const spy = vi.spyOn(reporter, "reportEntityNotFound");
+
+      const error = new AvataxEntityNotFoundError("entity not found", {
+        props: { description: "CompanyCode not found" },
+      });
+
+      await reporter.reportApiProblem(error, {
+        id: "config-7",
+        name: "My Config",
+      });
+
+      expect(spy).toHaveBeenCalledWith("config-7", "My Config", "CompanyCode not found");
+    });
+
     it("does not report for AvataxGetTaxWrongUserInputError", async () => {
       mockReportProblem.mockResolvedValue(ok(undefined));
       const reporter = new AvataxProblemReporter(mockClient);
@@ -301,7 +383,11 @@ describe("PROBLEM_KEYS", () => {
     expect(PROBLEM_KEYS.forbiddenAccess("id1")).toBe("avatax-forbidden-access:id1");
     expect(PROBLEM_KEYS.companyInactive("id1")).toBe("avatax-company-inactive:id1");
     expect(PROBLEM_KEYS.companyNotFound("id1")).toBe("avatax-company-not-found:id1");
+    expect(PROBLEM_KEYS.entityNotFound("id1")).toBe("avatax-entity-not-found:id1");
     expect(PROBLEM_KEYS.suspiciousZeroTax("id1")).toBe("avatax-suspicious-zero-tax:id1");
     expect(PROBLEM_KEYS.taxCodePermission("id1")).toBe("avatax-tax-code-permission:id1");
+    expect(PROBLEM_KEYS.channelConfigMissing("default-channel")).toBe(
+      "avatax-channel-config-missing:default-channel",
+    );
   });
 });

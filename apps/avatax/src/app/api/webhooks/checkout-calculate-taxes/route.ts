@@ -7,6 +7,7 @@ import { captureException, setTag } from "@sentry/nextjs";
 import Decimal from "decimal.js-light";
 import { after } from "next/server";
 
+import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
@@ -241,6 +242,23 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: invalid configuration",
                   });
+
+                  {
+                    const innerError = error.errors?.[0];
+
+                    if (
+                      innerError instanceof AppConfig.MissingConfigurationError ||
+                      innerError instanceof AppConfig.InvalidChannelSlugError
+                    ) {
+                      const problemReporter = createAvataxProblemReporter(authData);
+                      const reason =
+                        innerError instanceof AppConfig.MissingConfigurationError
+                          ? "Channel references a provider configuration that no longer exists"
+                          : "Channel is not configured in the AvaTax app";
+
+                      after(() => problemReporter.reportChannelConfigMissing(channelSlug, reason));
+                    }
+                  }
 
                   return Response.json(
                     {
