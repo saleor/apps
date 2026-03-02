@@ -8,6 +8,7 @@ import { captureException, setTag } from "@sentry/nextjs";
 import Decimal from "decimal.js-light";
 import { after } from "next/server";
 
+import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
@@ -235,6 +236,16 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
+
+          {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const reason =
+              providerConfig.error instanceof AppConfig.MissingConfigurationError
+                ? "Channel references a provider configuration that no longer exists"
+                : "Channel is not configured in the AvaTax app";
+
+            after(() => problemReporter.reportChannelConfigMissing(channelSlug, reason));
+          }
 
           span.recordException(providerConfig.error);
           span.setStatus({
@@ -493,6 +504,13 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
+
+          if (avataxConfigRef) {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const configRef = avataxConfigRef;
+
+            after(() => problemReporter.reportApiProblem(error, configRef));
+          }
 
           logger.warn(
             "AvataxEntityNotFoundError: App returns status 202 and error due to entity not found. See https://developer.avalara.com/avatax/errors/EntityNotFoundError/ for more details",

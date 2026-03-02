@@ -6,6 +6,7 @@ import { compose } from "@saleor/apps-shared/compose";
 import { captureException, setTag } from "@sentry/nextjs";
 import { after } from "next/server";
 
+import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
@@ -243,6 +244,21 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
+          {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const reason =
+              providerConfig.error instanceof AppConfig.MissingConfigurationError
+                ? "Channel references a provider configuration that no longer exists"
+                : "Channel is not configured in the AvaTax app";
+
+            after(() =>
+              problemReporter.reportChannelConfigMissing(
+                confirmedOrderEvent.getChannelSlug(),
+                reason,
+              ),
+            );
+          }
+
           span.recordException(providerConfig.error);
           span.setStatus({
             code: SpanStatusCode.ERROR,
@@ -381,6 +397,19 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
+
+              {
+                const problemReporter = createAvataxProblemReporter(ctx.authData);
+                const avataxConfig = providerConfig.value.avataxConfig;
+
+                after(() =>
+                  problemReporter.reportApiProblem(error, {
+                    id: avataxConfig.id,
+                    name: avataxConfig.config.name,
+                    companyCode: avataxConfig.config.companyCode,
+                  }),
+                );
+              }
 
               span.setStatus({
                 code: SpanStatusCode.ERROR,

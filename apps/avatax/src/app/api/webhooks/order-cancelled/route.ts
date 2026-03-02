@@ -6,6 +6,7 @@ import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { captureException, setTag } from "@sentry/nextjs";
 import { after } from "next/server";
 
+import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
@@ -233,6 +234,16 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
+
+        {
+          const problemReporter = createAvataxProblemReporter(ctx.authData);
+          const reason =
+            providerConfig.error instanceof AppConfig.MissingConfigurationError
+              ? "Channel references a provider configuration that no longer exists"
+              : "Channel is not configured in the AvaTax app";
+
+          after(() => problemReporter.reportChannelConfigMissing(channelSlug, reason));
+        }
 
         span.recordException(providerConfig.error);
         span.setStatus({
