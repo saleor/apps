@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createLogger } from "../../logger";
+import { CmsProblemReporter } from "../app-problems/cms-problem-reporter";
 import { ProvidersConfig } from "../configuration";
 import { AppConfigMetadataManager } from "../configuration/app-config-metadata-manager";
 import { createSettingsManager } from "../configuration/metadata-manager";
@@ -90,7 +91,7 @@ export const providersListRouter = router({
     }),
   deleteOne: procedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ input, ctx: { appConfigService } }) => {
+    .mutation(async ({ input, ctx: { appConfigService, apiClient } }) => {
       const logger = createLogger("providersListRouter.deleteOne", {
         providerId: input.id,
       });
@@ -102,6 +103,10 @@ export const providersListRouter = router({
       config.providers.deleteProvider(input.id);
 
       const result = await appConfigService.set(config);
+
+      const problemReporter = new CmsProblemReporter(apiClient);
+
+      await problemReporter.clearProblemsForProvider(input.id);
 
       logger.info("Provider deleted");
 

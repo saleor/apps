@@ -5,6 +5,7 @@ import { captureException } from "@sentry/nextjs";
 import { gql } from "urql";
 
 import { createLogger } from "@/logger";
+import { createCmsProblemReporter } from "@/modules/app-problems";
 import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 import { saleorApp } from "@/saleor-app";
@@ -80,9 +81,11 @@ const handler: NextJsWebhookHandler<ProductVariantUpdatedWebhookPayloadFragment>
   });
 
   const configContext = await createWebhookConfigContext({ authData });
+  const problemReporter = createCmsProblemReporter(authData);
 
   await new WebhooksProcessorsDelegator({
     context: configContext,
+    problemReporter,
   }).delegateVariantUpdatedOperations(payload.productVariant);
 
   logger.info("Webhook processed successfully");

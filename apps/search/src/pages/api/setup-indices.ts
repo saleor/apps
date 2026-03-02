@@ -9,12 +9,14 @@ import { type Client } from "urql";
 
 import { ChannelsDocument } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";
+import { AlgoliaErrorParser } from "../../lib/algolia/algolia-error-parser";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
 import { createSettingsManager } from "../../lib/metadata";
 import { createTraceEffect } from "../../lib/trace-effect";
+import { SearchProblemReporter } from "../../modules/app-problems";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 
 const logger = createLogger("setupIndicesHandler");
@@ -82,6 +84,14 @@ export const setupIndicesHandlerFactory =
       return res.status(200).end();
     } catch (e) {
       logger.error("Failed to update Algolia indices", { error: e });
+
+      const problemReporter = new SearchProblemReporter(client);
+
+      if (AlgoliaErrorParser.isAuthError(e)) {
+        await problemReporter.reportAuthError();
+      } else {
+        await problemReporter.reportIndexSetupFailed();
+      }
 
       return res.status(500).end();
     }
