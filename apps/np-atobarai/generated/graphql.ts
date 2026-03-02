@@ -6846,6 +6846,60 @@ export type CustomerMetadataUpdated = Event & {
   readonly version?: Maybe<Scalars['String']['output']>;
 };
 
+export type CustomerOrderWhereInput = {
+  /** List of conditions that must be met. */
+  readonly AND?: InputMaybe<ReadonlyArray<CustomerOrderWhereInput>>;
+  /** A list of conditions of which at least one must be met. */
+  readonly OR?: InputMaybe<ReadonlyArray<CustomerOrderWhereInput>>;
+  /** Filter by authorize status. */
+  readonly authorizeStatus?: InputMaybe<OrderAuthorizeStatusEnumFilterInput>;
+  /** Filter by billing address of the order. */
+  readonly billingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by channel. */
+  readonly channelId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by charge status. */
+  readonly chargeStatus?: InputMaybe<OrderChargeStatusEnumFilterInput>;
+  /** Filter by checkout id. */
+  readonly checkoutId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by checkout token. */
+  readonly checkoutToken?: InputMaybe<UuidFilterInput>;
+  /** Filter order by created at date. */
+  readonly createdAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by whether the order has any fulfillments. */
+  readonly hasFulfillments?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by whether the order has any invoices. */
+  readonly hasInvoices?: InputMaybe<Scalars['Boolean']['input']>;
+  readonly ids?: InputMaybe<ReadonlyArray<Scalars['ID']['input']>>;
+  /** Filter by invoice data associated with the order. Each list item represents conditions that must be satisfied by a single object. The filter matches orders that have related objects meeting all specified groups of conditions. */
+  readonly invoices?: InputMaybe<ReadonlyArray<InvoiceFilterInput>>;
+  /** Filter by whether the order uses the click and collect delivery method. */
+  readonly isClickAndCollect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether the order includes a gift card purchase. */
+  readonly isGiftCardBought?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter based on whether a gift card was used in the order. */
+  readonly isGiftCardUsed?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Filter by number of lines in the order. */
+  readonly linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by order number. */
+  readonly number?: InputMaybe<IntFilterInput>;
+  /** Filter by the product type of related order lines. */
+  readonly productTypeId?: InputMaybe<GlobalIdFilterInput>;
+  /** Filter by shipping address of the order. */
+  readonly shippingAddress?: InputMaybe<AddressFilterInput>;
+  /** Filter by order status. */
+  readonly status?: InputMaybe<OrderStatusEnumFilterInput>;
+  /** Filter by total gross amount of the order. */
+  readonly totalGross?: InputMaybe<PriceFilterInput>;
+  /** Filter by total net amount of the order. */
+  readonly totalNet?: InputMaybe<PriceFilterInput>;
+  /** Filter order by updated at date. */
+  readonly updatedAt?: InputMaybe<DateTimeRangeInput>;
+  /** Filter by user email. */
+  readonly userEmail?: InputMaybe<StringFilterInput>;
+  /** Filter by voucher code used in the order. */
+  readonly voucherCode?: InputMaybe<StringFilterInput>;
+};
+
 /**
  * Updates an existing customer.
  *
@@ -8346,9 +8400,9 @@ export type GiftCard = Node & ObjectWithMetadata & {
    */
   readonly endDate?: Maybe<Scalars['DateTime']['output']>;
   /**
-   * List of events associated with the gift card.
+   * List of events associated with the gift card. Requires MANAGE_GIFT_CARD permission to access all events. Users with MANAGE_ORDERS permission can access only USED_IN_ORDER events.
    *
-   * Requires one of the following permissions: MANAGE_GIFT_CARD.
+   * Requires one of the following permissions: MANAGE_GIFT_CARD, MANAGE_ORDERS.
    */
   readonly events: ReadonlyArray<GiftCardEvent>;
   /** Expiry date of the gift card. */
@@ -29553,6 +29607,7 @@ export type UserOrdersArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<CustomerOrderWhereInput>;
 };
 
 
