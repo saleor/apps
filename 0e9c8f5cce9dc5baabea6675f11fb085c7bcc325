@@ -1,0 +1,23 @@
+apps/products-feed/src/pages/api/feed/[url]/[channel]/google.xml.ts
+  416d07d8b35525c2 147-148,167-168,262-268,340-341,351-355
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "0e9c8f5cce9dc5baabea6675f11fb085c7bcc325",
+  "prompts": {
+    "416d07d8b35525c2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8717ef05-391d-4f40-88e3-ebaf7a34ce7b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 19,
+      "total_deletions": 0,
+      "accepted_lines": 19,
+      "overriden_lines": 0
+    }
+  }
+}
