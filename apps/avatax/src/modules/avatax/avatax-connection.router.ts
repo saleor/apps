@@ -1,8 +1,10 @@
+import { after } from "next/server";
 import { z } from "zod";
 
 import { metadataCache } from "@/lib/app-metadata-cache";
 import { Obfuscator } from "@/lib/obfuscator";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
+import { AvataxProblemReporter } from "@/modules/app-problems";
 import { AvataxObfuscator } from "@/modules/avatax/avatax-obfuscator";
 import { AvataxConnectionService } from "@/modules/avatax/configuration/avatax-connection.service";
 import { AvataxConnectionRepository } from "@/modules/avatax/configuration/avatax-connection-repository";
@@ -108,6 +110,8 @@ export const avataxConnectionRouter = router({
 
       const result = await ctx.connectionService.delete(input.id);
 
+      after(() => new AvataxProblemReporter(ctx.apiClient).clearProblemsForConfig(input.id));
+
       logger.info(`AvaTax configuration with an id: ${input.id} was deleted`);
 
       return result;
@@ -122,6 +126,8 @@ export const avataxConnectionRouter = router({
       logger.debug("Route patch called");
 
       const result = await ctx.connectionService.update(input.id, input.value);
+
+      after(() => new AvataxProblemReporter(ctx.apiClient).clearProblemsForConfig(input.id));
 
       logger.info(`AvaTax configuration with an id: ${input.id} was successfully updated`);
 
