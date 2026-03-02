@@ -1,0 +1,35 @@
+apps/avatax/src/modules/app-problems/avatax-problem-reporter.test.ts
+  fbdee5a1a531f94d 6,138-200,331-345,391
+apps/avatax/src/app/api/webhooks/order-confirmed/route.ts
+  fbdee5a1a531f94d 9,247-261,401-413
+apps/avatax/src/app/api/webhooks/order-cancelled/route.ts
+  fbdee5a1a531f94d 9,238-247
+apps/avatax/src/modules/channel-configuration/channel-configuration.router.ts
+  fbdee5a1a531f94d 1-2,4,48-49
+apps/avatax/src/app/api/webhooks/order-calculate-taxes/route.ts
+  fbdee5a1a531f94d 240-249,508-514
+apps/avatax/src/app/api/webhooks/checkout-calculate-taxes/route.ts
+  fbdee5a1a531f94d 10,246-262
+apps/avatax/src/modules/app-problems/avatax-problem-reporter.ts
+  fbdee5a1a531f94d 6,19,22,88-103,126-147,156-157,173
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "4a944dbb99850f8eef0dd0a3696e4a4aa57633b2",
+  "prompts": {
+    "fbdee5a1a531f94d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f3ebfd16-6ce3-43ee-ac63-b8710f062e3f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 219,
+      "total_deletions": 2,
+      "accepted_lines": 217,
+      "overriden_lines": 0
+    }
+  }
+}
