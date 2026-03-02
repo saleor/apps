@@ -102,6 +102,7 @@
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
     "graphql": "catalog:",
+    "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
     "graphql-tag": "catalog:",
     "json-schema-to-typescript": "catalog:",

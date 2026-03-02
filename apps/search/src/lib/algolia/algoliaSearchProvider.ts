@@ -165,7 +165,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await Promise.all(product.variants.map((variant) => this.updateProductVariant(variant)));
   }
 
-  async deleteProduct(product: ProductWebhookPayloadFragment) {
+  async deleteProduct(product: Pick<ProductWebhookPayloadFragment, "id">) {
     logger.debug(`deleteProduct`);
 
     await Promise.all(
@@ -221,7 +221,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     }
   }
 
-  async deleteProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
+  async deleteProductVariant(productVariant: { id: string; product: { id: string } }) {
     logger.debug(`deleteProductVariant called`);
 
     await this.deleteGroupedByIndex(

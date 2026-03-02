@@ -1,0 +1,4 @@
+fragment Weight on Weight {
+  unit
+  value
+}

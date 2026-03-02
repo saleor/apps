@@ -2,13 +2,13 @@ import { type NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
-import { type ProductCreated } from "../../../../../generated/graphql";
 import {
   AlgoliaErrorParser,
   createRecordSizeErrorMessage,
 } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
+import { type ProductCreated } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductCreated } from "../../../../webhooks/definitions/product-created";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";

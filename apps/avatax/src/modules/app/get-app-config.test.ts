@@ -1,7 +1,7 @@
 import { encrypt } from "@saleor/app-sdk/settings-manager";
 import { describe, expect, it } from "vitest";
 
-import { type MetadataItem } from "../../../generated/graphql";
+import { type MetadataItem } from "../../lib/metadata-item";
 import { type ChannelsConfig } from "../channel-configuration/channel-config";
 import { type ProviderConnections } from "../provider-connections/provider-connections";
 import { getAppConfig } from "./get-app-config";

@@ -1,6 +1,5 @@
 import { err, fromThrowable, ok, type Result } from "neverthrow";
 
-import { type MetadataItem } from "../../generated/graphql";
 import { BaseError } from "../error";
 import { getAppConfig } from "../modules/app/get-app-config";
 import { type ChannelsConfig } from "../modules/channel-configuration/channel-config";
@@ -8,6 +7,7 @@ import {
   type ProviderConnection,
   type ProviderConnections,
 } from "../modules/provider-connections/provider-connections";
+import { type MetadataItem } from "./metadata-item";
 
 type ConfigPerChannelErrors =
   | typeof AppConfig.InvalidChannelSlugError

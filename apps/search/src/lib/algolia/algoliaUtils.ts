@@ -258,6 +258,9 @@ export function productAndVariantToAlgolia({
 export function productAndVariantToObjectID({
   product,
   ...variant
-}: ProductVariantWebhookPayloadFragment) {
+}: {
+  id: string;
+  product: { id: string };
+}) {
   return `${product.id}_${variant.id}`;
 }
