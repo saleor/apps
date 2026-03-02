@@ -1,0 +1,23 @@
+apps/products-feed/src/modules/app-configuration/app-configuration.router.ts
+  416d07d8b35525c2 5,71,109-111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "5082955a2c1aa934a7e66d7264ecbe1958285ca4",
+  "prompts": {
+    "416d07d8b35525c2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8717ef05-391d-4f40-88e3-ebaf7a34ce7b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 1,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
