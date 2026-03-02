@@ -1,0 +1,23 @@
+apps/products-feed/src/modules/app-problems/create-product-feed-problem-reporter.ts
+  416d07d8b35525c2 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "a47243f816113f5f36f4fdc8e001f63c0b283e88",
+  "prompts": {
+    "416d07d8b35525c2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8717ef05-391d-4f40-88e3-ebaf7a34ce7b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 14,
+      "total_deletions": 0,
+      "accepted_lines": 14,
+      "overriden_lines": 0
+    }
+  }
+}
