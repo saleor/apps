@@ -1,5 +1,4 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -59,26 +58,24 @@ const ImportJobsPage: NextPage = () => {
         <Button onClick={() => router.push("/import/new")}>New Import</Button>
       </Box>
 
-      <Layout.AppSection
-        heading="Job Queue"
-        sideContent={
-          <Text>
-            Import jobs process in priority order. Cancel running jobs or retry failed ones.
-            List auto-refreshes every 5 seconds.
-          </Text>
-        }
+      <Box
+        padding={4}
+        borderRadius={4}
+        borderWidth={1}
+        borderStyle="solid"
+        borderColor="default1"
       >
+        <Text size={5} fontWeight="bold" marginBottom={4}>
+          Job Queue
+        </Text>
         {isLoading ? (
           <TableSkeleton rows={5} />
         ) : jobs.length === 0 ? (
-          <Layout.AppSectionCard>
             <Box padding={6} display="flex" flexDirection="column" alignItems="center" gap={4}>
               <Text color="default2">No import jobs yet.</Text>
               <Button onClick={() => router.push("/import/new")}>Start your first import</Button>
             </Box>
-          </Layout.AppSectionCard>
         ) : (
-          <Layout.AppSectionCard>
             <DataTable
               columns={[
                 {
@@ -171,9 +168,8 @@ const ImportJobsPage: NextPage = () => {
               rowKey={(job) => job.id}
               onRowClick={(job) => router.push(`/import/${job.id}`)}
             />
-          </Layout.AppSectionCard>
         )}
-      </Layout.AppSection>
+      </Box>
     </Box>
   );
 };

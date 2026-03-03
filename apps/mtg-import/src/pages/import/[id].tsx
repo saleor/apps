@@ -1,6 +1,5 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Breadcrumbs } from "@saleor/apps-ui";
-import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -114,9 +113,17 @@ const JobDetailPage: NextPage = () => {
       </Box>
 
       {/* Stats */}
-      <Layout.AppSection heading="Job Status">
-        <Layout.AppSectionCard>
-          <Box display="flex" gap={6} padding={4} flexWrap="wrap" alignItems="center">
+      <Box
+        padding={4}
+        borderRadius={4}
+        borderWidth={1}
+        borderStyle="solid"
+        borderColor="default1"
+      >
+        <Text size={5} fontWeight="bold" marginBottom={4}>
+          Job Status
+        </Text>
+          <Box display="flex" gap={6} flexWrap="wrap" alignItems="center">
             <Box>
               <Text size={1} color="default2">Status</Text>
               <Box marginTop={1}>
@@ -148,15 +155,21 @@ const JobDetailPage: NextPage = () => {
             {j.startedAt && <StatBox label="Started" value={formatDate(j.startedAt)} />}
             {j.completedAt && <StatBox label="Completed" value={formatDate(j.completedAt)} />}
           </Box>
-        </Layout.AppSectionCard>
-      </Layout.AppSection>
+      </Box>
 
       {/* Error Log */}
       {(j.errorMessage || errorLog.length > 0) && (
         <Box marginTop={6}>
-          <Layout.AppSection heading="Errors">
-            <Layout.AppSectionCard>
-              <Box padding={4}>
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderStyle="solid"
+            borderColor="default1"
+          >
+            <Text size={5} fontWeight="bold" marginBottom={4}>
+              Errors
+            </Text>
                 {j.errorMessage && (
                   <Box marginBottom={4} padding={3} backgroundColor="critical1" borderRadius={2}>
                     <Text>{j.errorMessage}</Text>
@@ -177,17 +190,23 @@ const JobDetailPage: NextPage = () => {
                     ))}
                   </Box>
                 )}
-              </Box>
-            </Layout.AppSectionCard>
-          </Layout.AppSection>
+          </Box>
         </Box>
       )}
 
       {/* Recent Imports */}
       {j.importedProducts && j.importedProducts.length > 0 && (
         <Box marginTop={6}>
-          <Layout.AppSection heading={`Recent Imports (${j._count?.importedProducts ?? 0} total)`}>
-            <Layout.AppSectionCard>
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderStyle="solid"
+            borderColor="default1"
+          >
+            <Text size={5} fontWeight="bold" marginBottom={4}>
+              {`Recent Imports (${j._count?.importedProducts ?? 0} total)`}
+            </Text>
               <DataTable
                 columns={[
                   {
@@ -223,8 +242,7 @@ const JobDetailPage: NextPage = () => {
                 data={j.importedProducts}
                 rowKey={(p) => p.id}
               />
-            </Layout.AppSectionCard>
-          </Layout.AppSection>
+          </Box>
         </Box>
       )}
     </Box>
