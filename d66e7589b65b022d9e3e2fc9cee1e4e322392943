@@ -1,0 +1,25 @@
+apps/products-feed/src/pages/api/feed/[url]/[channel]/google.xml.ts
+  9be94cd3e0681142 167-171,346-352
+apps/products-feed/src/pages/api/feed/[url]/[channel]/[cursor]/generate-chunk.ts
+  9be94cd3e0681142 81-85,109-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "d66e7589b65b022d9e3e2fc9cee1e4e322392943",
+  "prompts": {
+    "9be94cd3e0681142": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b400d23d-1b33-428d-9d16-daf6d11617c3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 24,
+      "total_deletions": 10,
+      "accepted_lines": 24,
+      "overriden_lines": 0
+    }
+  }
+}
