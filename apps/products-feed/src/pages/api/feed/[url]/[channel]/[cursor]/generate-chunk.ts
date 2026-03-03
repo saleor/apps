@@ -7,6 +7,7 @@ import { env } from "@/env";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
+import { createProductsFeedProblemReporter } from "@/modules/app-problems";
 import { chunkFeedUrlParams } from "@/modules/feed-dto";
 import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
 import { getChunkFileName } from "@/modules/file-storage/s3/file-names";
@@ -55,11 +56,14 @@ const handler: NextApiHandler = async (req, res) => {
     token: authData.token,
   });
 
+  const problemReporter = createProductsFeedProblemReporter(authData);
+
   const productVariants = await fetchVariants({
     client,
     channel: channel,
     imageSize: channelSettings.imageSize,
     after: decodedCursor,
+    problemReporter,
   });
 
   const productProxies = productVariants.map((v) =>
@@ -74,6 +78,8 @@ const handler: NextApiHandler = async (req, res) => {
   const xmlChunk = xmlBuilder.buildItemsChunk(productProxies);
 
   if (!channelSettings.s3BucketConfiguration) {
+    await problemReporter.reportS3NotConfigured(channel);
+
     return res.status(400).send({ message: "Bucket not configured" });
   }
 
@@ -84,12 +90,25 @@ const handler: NextApiHandler = async (req, res) => {
     cursor: decodedCursor,
   });
 
-  await uploadFile({
-    s3Client,
-    bucketName: channelSettings.s3BucketConfiguration.bucketName,
-    buffer: Buffer.from(xmlChunk),
-    fileName,
-  });
+  try {
+    await uploadFile({
+      s3Client,
+      bucketName: channelSettings.s3BucketConfiguration.bucketName,
+      buffer: Buffer.from(xmlChunk),
+      fileName,
+    });
+  } catch (error) {
+    logger.error("Could not upload the chunk to S3", {
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+
+    await problemReporter.reportS3UploadFailed(
+      channel,
+      error instanceof Error ? error.message : "Unknown error",
+    );
+
+    return res.status(500).json({ error: "Could not upload the chunk to S3" });
+  }
 
   const downloadUrl = await new SignedUrls(s3Client).generateSignedGetObjectUrl({
     expiresSeconds: 30,

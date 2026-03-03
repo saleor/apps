@@ -14,6 +14,7 @@ import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graph
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
 import { type RootConfig } from "@/modules/app-configuration/app-config";
+import { createProductsFeedProblemReporter } from "@/modules/app-problems";
 import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
 import { getFileName } from "@/modules/file-storage/s3/file-names";
 import { FileRemover } from "@/modules/file-storage/s3/file-remover";
@@ -127,6 +128,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "The given instance has not been registered" });
   }
 
+  const problemReporter = createProductsFeedProblemReporter(authData);
+
   logger.debug("The app is registered for the given URL, checking the configuration", {
     appId: authData.appId,
   });
@@ -161,6 +164,8 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     channelSettings = settings;
 
     if (!settings.s3BucketConfiguration) {
+      await problemReporter.reportS3NotConfigured(channel);
+
       return res.status(400).send("App not configured");
     }
 
@@ -333,6 +338,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } catch (error) {
       logger.error("Could not upload the feed to S3", { error: error });
       span.setStatus({ code: SpanStatusCode.ERROR });
+
+      await problemReporter.reportS3UploadFailed(
+        channel,
+        error instanceof Error ? error.message : "Unknown error",
+      );
 
       return res.status(500).json({ error: "Could not upload the feed to S3" });
     } finally {
