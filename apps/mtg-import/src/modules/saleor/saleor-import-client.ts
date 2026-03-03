@@ -19,7 +19,7 @@ import {
   CHANNELS_QUERY,
   PRODUCT_ATTRIBUTE_ASSIGN_MUTATION,
   PRODUCT_BULK_CREATE_MUTATION,
-  PRODUCT_BULK_UPDATE_MUTATION,
+  PRODUCT_UPDATE_MUTATION,
   PRODUCT_BY_SLUG_QUERY,
   PRODUCT_MEDIA_CREATE_MUTATION,
   PRODUCT_METADATA_QUERY,
@@ -29,7 +29,7 @@ import {
   PRODUCTS_WITH_VARIANTS_QUERY,
   type ProductAttributeAssignResult,
   type ProductBulkCreateResult,
-  type ProductBulkUpdateResult,
+  type ProductUpdateResult,
   type ProductMediaCreateResult,
   type SaleorCategory,
   type SaleorChannel,
@@ -237,33 +237,64 @@ export class SaleorImportClient {
     return data;
   }
 
-  /** Execute productBulkUpdate mutation */
-  async bulkUpdateProducts(
-    products: Array<{ id: string; input: Record<string, unknown> }>
-  ): Promise<ProductBulkUpdateResult> {
+  /** Execute productUpdate mutation for a single product */
+  async updateProduct(
+    id: string,
+    input: Record<string, unknown>
+  ): Promise<ProductUpdateResult> {
     const result = await this.client
-      .mutation(PRODUCT_BULK_UPDATE_MUTATION, { products })
+      .mutation(PRODUCT_UPDATE_MUTATION, { id, input })
       .toPromise();
 
     if (result.error) {
-      throw new SaleorApiError(`productBulkUpdate failed: ${result.error.message}`);
+      throw new SaleorApiError(`productUpdate failed for ${id}: ${result.error.message}`);
     }
 
-    const data = result.data?.productBulkUpdate as ProductBulkUpdateResult | undefined;
+    const data = result.data?.productUpdate as ProductUpdateResult | undefined;
     if (!data) {
-      throw new SaleorApiError("productBulkUpdate returned no data");
+      throw new SaleorApiError(`productUpdate returned no data for ${id}`);
     }
 
-    for (const row of data.results) {
-      if (row.errors.length > 0) {
-        logger.warn("Product update error", {
-          product: row.product?.name ?? "unknown",
-          errors: row.errors,
-        });
-      }
+    if (data.errors.length > 0) {
+      logger.warn("Product update error", {
+        productId: id,
+        product: data.product?.name ?? "unknown",
+        errors: data.errors,
+      });
     }
 
     return data;
+  }
+
+  /** Update multiple products concurrently with throttling */
+  async updateProductsBatch(
+    products: Array<{ id: string; input: Record<string, unknown> }>,
+    concurrency: number = 10
+  ): Promise<{ updated: number; failed: number; errors: string[] }> {
+    let updated = 0;
+    let failed = 0;
+    const errors: string[] = [];
+
+    for (let i = 0; i < products.length; i += concurrency) {
+      const chunk = products.slice(i, i + concurrency);
+      const results = await Promise.allSettled(
+        chunk.map((p) => this.updateProduct(p.id, p.input))
+      );
+
+      for (const result of results) {
+        if (result.status === "fulfilled" && result.value.errors.length === 0) {
+          updated++;
+        } else if (result.status === "rejected") {
+          failed++;
+          errors.push(result.reason instanceof Error ? result.reason.message : String(result.reason));
+        } else if (result.status === "fulfilled" && result.value.errors.length > 0) {
+          failed++;
+          errors.push(result.value.errors.map((e) => e.message).join("; "));
+        }
+      }
+    }
+
+    return { updated, failed, errors };
   }
 
   /** Fetch products by set_code metadata with full attributes */

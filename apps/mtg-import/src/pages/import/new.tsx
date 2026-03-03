@@ -1,6 +1,5 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Breadcrumbs } from "@saleor/apps-ui";
-import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Input, Select, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -110,24 +109,17 @@ const NewImportPage: NextPage = () => {
         </Text>
       </Box>
 
-      <Layout.AppSection
-        heading="Import Configuration"
-        sideContent={
-          <Box display="flex" flexDirection="column" gap={2}>
-            <Text>
-              <strong>SET:</strong> Import a specific set by code (e.g., &quot;mkm&quot;).
-            </Text>
-            <Text>
-              <strong>BULK:</strong> Import all cards from the Scryfall bulk data file.
-            </Text>
-            <Text>
-              <strong>BACKFILL:</strong> Re-import missing or updated cards.
-            </Text>
-          </Box>
-        }
+      <Box
+        padding={4}
+        borderRadius={4}
+        borderWidth={1}
+        borderStyle="solid"
+        borderColor="default1"
       >
-        <Layout.AppSectionCard>
-          <Box display="flex" flexDirection="column" gap={4} padding={4}>
+        <Text size={5} fontWeight="bold" marginBottom={4}>
+          Import Configuration
+        </Text>
+          <Box display="flex" flexDirection="column" gap={4}>
             <Box>
               <Text as="p" fontWeight="bold" marginBottom={2}>
                 Import Type
@@ -276,8 +268,7 @@ const NewImportPage: NextPage = () => {
               </Button>
             </Box>
           </Box>
-        </Layout.AppSectionCard>
-      </Layout.AppSection>
+      </Box>
     </Box>
   );
 };

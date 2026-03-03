@@ -1,5 +1,4 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Input, Select, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -253,13 +252,19 @@ const SetsPage: NextPage = () => {
       {/* Scan Results Panel */}
       {scanningSet && (
         <Box marginBottom={6}>
-          <Layout.AppSection
-            heading={
-              scanQuery.data
-                ? `Scan: ${scanQuery.data.setName}`
-                : `Scanning ${scanningSet.toUpperCase()}...`
-            }
-            sideContent={
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderStyle="solid"
+            borderColor="default1"
+          >
+            <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={4}>
+              <Text size={5} fontWeight="bold">
+                {scanQuery.data
+                  ? `Scan: ${scanQuery.data.setName}`
+                  : `Scanning ${scanningSet.toUpperCase()}...`}
+              </Text>
               <Box display="flex" gap={2}>
                 {scanQuery.data &&
                   (scanQuery.data.missingCount > 0 || scanQuery.data.failedCount > 0) && (
@@ -276,9 +281,7 @@ const SetsPage: NextPage = () => {
                   Close
                 </Button>
               </Box>
-            }
-          >
-            <Layout.AppSectionCard>
+            </Box>
               {scanQuery.isLoading && (
                 <InlineSpinner label="Scanning Scryfall data... this may take a moment." />
               )}
@@ -327,27 +330,30 @@ const SetsPage: NextPage = () => {
                   )}
                 </>
               )}
-            </Layout.AppSectionCard>
-          </Layout.AppSection>
+          </Box>
         </Box>
       )}
 
       {/* Verification Detail Panel */}
       {verifyingSet && (
         <Box marginBottom={6}>
-          <Layout.AppSection
-            heading={
-              verifyQuery.data
-                ? `Verification: ${verifyQuery.data.setName}`
-                : `Verifying ${verifyingSet.toUpperCase()}...`
-            }
-            sideContent={
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderStyle="solid"
+            borderColor="default1"
+          >
+            <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={4}>
+              <Text size={5} fontWeight="bold">
+                {verifyQuery.data
+                  ? `Verification: ${verifyQuery.data.setName}`
+                  : `Verifying ${verifyingSet.toUpperCase()}...`}
+              </Text>
               <Button variant="secondary" size="small" onClick={() => setVerifyingSet(null)}>
                 Close
               </Button>
-            }
-          >
-            <Layout.AppSectionCard>
+            </Box>
               {verifyQuery.isLoading && (
                 <InlineSpinner label="Loading verification data..." />
               )}
@@ -386,21 +392,26 @@ const SetsPage: NextPage = () => {
                   )}
                 </>
               )}
-            </Layout.AppSectionCard>
-          </Layout.AppSection>
+          </Box>
         </Box>
       )}
 
       {/* Attribute Audit Panel */}
       {auditingSet && (
         <Box marginBottom={6}>
-          <Layout.AppSection
-            heading={
-              auditQuery.data
-                ? `Attribute Audit: ${auditingSet.toUpperCase()}`
-                : `Auditing ${auditingSet.toUpperCase()}...`
-            }
-            sideContent={
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderStyle="solid"
+            borderColor="default1"
+          >
+            <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={4}>
+              <Text size={5} fontWeight="bold">
+                {auditQuery.data
+                  ? `Attribute Audit: ${auditingSet.toUpperCase()}`
+                  : `Auditing ${auditingSet.toUpperCase()}...`}
+              </Text>
               <Box display="flex" gap={2}>
                 {auditQuery.data && auditQuery.data.summary.totalIssues > 0 && (
                   <Button
@@ -416,9 +427,7 @@ const SetsPage: NextPage = () => {
                   Close
                 </Button>
               </Box>
-            }
-          >
-            <Layout.AppSectionCard>
+            </Box>
               {auditQuery.isLoading && (
                 <InlineSpinner label="Auditing product attributes... this may take a moment." />
               )}
@@ -496,20 +505,21 @@ const SetsPage: NextPage = () => {
                   )}
                 </>
               )}
-            </Layout.AppSectionCard>
-          </Layout.AppSection>
+          </Box>
         </Box>
       )}
 
       {/* Search and Filter Controls */}
-      <Layout.AppSection
-        heading="Available Sets"
-        sideContent={
-          <Text>
-            Browse MTG sets from Scryfall. Import, Verify, Scan for missing cards, or Audit attributes.
-          </Text>
-        }
+      <Box
+        padding={4}
+        borderRadius={4}
+        borderWidth={1}
+        borderStyle="solid"
+        borderColor="default1"
       >
+        <Text size={5} fontWeight="bold" marginBottom={4}>
+          Available Sets
+        </Text>
         <Box display="flex" gap={4} marginBottom={4}>
           <Box __flex="1">
             <Input
@@ -538,17 +548,13 @@ const SetsPage: NextPage = () => {
         {isLoading ? (
           <TableSkeleton rows={8} />
         ) : !sets || sets.length === 0 ? (
-          <Layout.AppSectionCard>
             <Box padding={6} display="flex" justifyContent="center">
               <Text color="default2">No importable sets found. Check your connection to Scryfall.</Text>
             </Box>
-          </Layout.AppSectionCard>
         ) : filteredSets.length === 0 ? (
-          <Layout.AppSectionCard>
             <Box padding={6} display="flex" justifyContent="center">
               <Text color="default2">No sets match your search.</Text>
             </Box>
-          </Layout.AppSectionCard>
         ) : (
           <>
             <Box marginBottom={2}>
@@ -557,7 +563,6 @@ const SetsPage: NextPage = () => {
                 {filteredSets.length !== totalSetsCount && ` (${totalSetsCount} total)`}
               </Text>
             </Box>
-            <Layout.AppSectionCard>
               <Box as="table" width="100%">
                 <Box as="thead">
                   <Box as="tr">
@@ -690,7 +695,6 @@ const SetsPage: NextPage = () => {
                   })}
                 </Box>
               </Box>
-            </Layout.AppSectionCard>
 
             {displayedSets.length < filteredSets.length && (
               <Box display="flex" justifyContent="center" marginTop={4}>
@@ -704,7 +708,7 @@ const SetsPage: NextPage = () => {
             )}
           </>
         )}
-      </Layout.AppSection>
+      </Box>
     </Box>
   );
 };

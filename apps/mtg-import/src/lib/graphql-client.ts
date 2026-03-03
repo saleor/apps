@@ -9,7 +9,7 @@ export interface GraphQLClientConfig {
   token: string;
 }
 
-export function createGraphQLClient(config: GraphQLClientConfig): Client {
+function createGraphQLClient(config: GraphQLClientConfig): Client {
   return new Client({
     url: config.saleorApiUrl,
     exchanges: [cacheExchange, fetchExchange],

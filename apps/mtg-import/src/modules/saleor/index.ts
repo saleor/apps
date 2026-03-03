@@ -7,7 +7,7 @@ export {
   CATEGORIES_QUERY,
   WAREHOUSES_QUERY,
   PRODUCT_BULK_CREATE_MUTATION,
-  PRODUCT_BULK_UPDATE_MUTATION,
+  PRODUCT_UPDATE_MUTATION,
   PRODUCT_BY_SLUG_QUERY,
   PRODUCTS_BY_METADATA_QUERY,
 } from "./graphql-operations";
@@ -19,6 +19,6 @@ export type {
   SaleorCategory,
   SaleorWarehouse,
   ProductBulkCreateResult,
-  ProductBulkUpdateResult,
+  ProductUpdateResult,
   SaleorProductWithAttributes,
 } from "./graphql-operations";

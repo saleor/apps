@@ -1,4 +1,3 @@
-import { Layout } from "@saleor/apps-ui";
 import { Box, Skeleton, Spinner, Text } from "@saleor/macaw-ui";
 
 export const PageSkeleton = () => (
@@ -18,7 +17,13 @@ export const PageSkeleton = () => (
 );
 
 export const TableSkeleton = ({ rows = 5 }: { rows?: number }) => (
-  <Layout.AppSectionCard>
+  <Box
+    padding={4}
+    borderRadius={4}
+    borderWidth={1}
+    borderStyle="solid"
+    borderColor="default1"
+  >
     <Box padding={4} display="flex" flexDirection="column" gap={3}>
       {Array.from({ length: rows }).map((_, i) => (
         <Box key={i} display="flex" gap={4} alignItems="center">
@@ -29,7 +34,7 @@ export const TableSkeleton = ({ rows = 5 }: { rows?: number }) => (
         </Box>
       ))}
     </Box>
-  </Layout.AppSectionCard>
+  </Box>
 );
 
 export const InlineSpinner = ({ label }: { label?: string }) => (

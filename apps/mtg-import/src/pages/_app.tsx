@@ -28,6 +28,14 @@ if (typeof window !== "undefined" && typeof crypto !== "undefined" && !crypto.ra
   };
 }
 
+/**
+ * AppBridge singleton for React 18 StrictMode compatibility.
+ *
+ * React 18 StrictMode double-mounts components in development, which would
+ * create multiple AppBridge instances and break the Saleor Dashboard ↔ App
+ * communication channel. Hoisting the instance to module scope ensures only
+ * one AppBridge exists regardless of re-renders.
+ */
 export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge() : undefined;
 
 function NextApp({ Component, pageProps }: AppProps) {

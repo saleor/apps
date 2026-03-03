@@ -1,6 +1,5 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Input, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useCallback, useEffect, useState } from "react";
@@ -316,12 +315,17 @@ const SettingsPage: NextPage = () => {
       {settingsQuery.data && (
         <Box display="flex" flexDirection="column" gap={6}>
           {/* Section 1: Saleor Targets */}
-          <Layout.AppSection
-            heading="Saleor Targets"
-            sideContent={<Text>Configure which Saleor entities are used during import.</Text>}
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderStyle="solid"
+            borderColor="default1"
           >
-            <Layout.AppSectionCard>
-              <Box padding={4} display="flex" flexDirection="column" gap={4}>
+            <Text size={5} fontWeight="bold" marginBottom={4}>
+              Saleor Targets
+            </Text>
+              <Box display="flex" flexDirection="column" gap={4}>
                 {/* Channels */}
                 <Box>
                   <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
@@ -422,16 +426,20 @@ const SettingsPage: NextPage = () => {
                   )}
                 </Box>
               </Box>
-            </Layout.AppSectionCard>
-          </Layout.AppSection>
+          </Box>
 
           {/* Section 2: Pricing Policy */}
-          <Layout.AppSection
-            heading="Pricing Policy"
-            sideContent={<Text>Condition multipliers applied to Scryfall market prices. NM = base price.</Text>}
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderStyle="solid"
+            borderColor="default1"
           >
-            <Layout.AppSectionCard>
-              <Box padding={4} display="flex" flexDirection="column" gap={3}>
+            <Text size={5} fontWeight="bold" marginBottom={4}>
+              Pricing Policy
+            </Text>
+              <Box display="flex" flexDirection="column" gap={3}>
                 <Box display="flex" gap={3} flexWrap="wrap">
                   <Box __width="130px">
                     <Input label="NM" type="number" value={String(conditionNm)} onChange={(e) => { setConditionNm(Number(e.target.value)); markDirty(); }} size="small" step="0.01" min="0" max="2" />
@@ -458,31 +466,39 @@ const SettingsPage: NextPage = () => {
                   </Box>
                 </Box>
               </Box>
-            </Layout.AppSectionCard>
-          </Layout.AppSection>
+          </Box>
 
           {/* Section 3: Product Defaults */}
-          <Layout.AppSection
-            heading="Product Defaults"
-            sideContent={<Text>Default product settings applied to all imported cards.</Text>}
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderStyle="solid"
+            borderColor="default1"
           >
-            <Layout.AppSectionCard>
-              <Box padding={4} display="flex" flexDirection="column" gap={2}>
+            <Text size={5} fontWeight="bold" marginBottom={4}>
+              Product Defaults
+            </Text>
+              <Box display="flex" flexDirection="column" gap={2}>
                 <CheckboxItem label="Published" checked={isPublished} onChange={(v) => { setIsPublished(v); markDirty(); }} />
                 <CheckboxItem label="Visible in Listings" checked={visibleInListings} onChange={(v) => { setVisibleInListings(v); markDirty(); }} />
                 <CheckboxItem label="Available for Purchase" checked={isAvailableForPurchase} onChange={(v) => { setIsAvailableForPurchase(v); markDirty(); }} />
                 <CheckboxItem label="Track Inventory" checked={trackInventory} onChange={(v) => { setTrackInventory(v); markDirty(); }} />
               </Box>
-            </Layout.AppSectionCard>
-          </Layout.AppSection>
+          </Box>
 
           {/* Section 4: Import Behavior */}
-          <Layout.AppSection
-            heading="Import Behavior"
-            sideContent={<Text>Which set types and card types to include during import.</Text>}
+          <Box
+            padding={4}
+            borderRadius={4}
+            borderWidth={1}
+            borderStyle="solid"
+            borderColor="default1"
           >
-            <Layout.AppSectionCard>
-              <Box padding={4} display="flex" flexDirection="column" gap={4}>
+            <Text size={5} fontWeight="bold" marginBottom={4}>
+              Import Behavior
+            </Text>
+              <Box display="flex" flexDirection="column" gap={4}>
                 {/* Card Filters */}
                 <Box>
                   <Text fontWeight="bold" marginBottom={2}>Card Filters</Text>
@@ -508,8 +524,7 @@ const SettingsPage: NextPage = () => {
                   </Box>
                 </Box>
               </Box>
-            </Layout.AppSectionCard>
-          </Layout.AppSection>
+          </Box>
         </Box>
       )}
     </Box>

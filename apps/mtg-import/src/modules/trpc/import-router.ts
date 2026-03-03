@@ -1043,7 +1043,7 @@ const setsRouter = router({
   /**
    * Backfill the 7 new product-level attributes on existing imported products.
    * Uses ImportedProduct table for scryfallId→saleorProductId mapping,
-   * streams Scryfall bulk data, and calls productBulkUpdate in batches.
+   * streams Scryfall bulk data, and calls productUpdate concurrently in batches.
    * Fire-and-forget: returns immediately, processes in background.
    */
   backfillProductAttributes: protectedClientProcedure
@@ -1072,6 +1072,7 @@ const setsRouter = router({
       const imported = await ctx.prisma.importedProduct.findMany({
         where: {
           success: true,
+          saleorProductId: { not: "existing" },
           importJob: { installationId: ctx.installationId },
           ...setFilter,
         },
@@ -1099,23 +1100,27 @@ const setsRouter = router({
       // Fire-and-forget background processing
       const processInBackground = async () => {
         const BATCH_SIZE = 25;
+        const CONCURRENCY = 10;
         let batch: Array<{ id: string; input: Record<string, unknown> }> = [];
         let batchesSent = 0;
         let productsMatched = 0;
         let productsSkipped = 0;
+        let totalUpdated = 0;
         let totalErrors = 0;
 
         const flushBatch = async () => {
           if (batch.length === 0) return;
           try {
-            await saleor.bulkUpdateProducts(batch);
+            const result = await saleor.updateProductsBatch(batch, CONCURRENCY);
+            totalUpdated += result.updated;
+            totalErrors += result.failed;
             batchesSent++;
 
             if (batchesSent % 100 === 0) {
               logger.info("Backfill product attrs progress", {
                 batchesSent,
                 productsMatched,
-                productsSkipped,
+                totalUpdated,
                 totalErrors,
               });
             }
@@ -1162,6 +1167,7 @@ const setsRouter = router({
           productsMatched,
           productsSkipped,
           batchesSent,
+          totalUpdated,
           totalErrors,
         });
       };

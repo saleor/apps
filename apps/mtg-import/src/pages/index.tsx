@@ -1,6 +1,5 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
-import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
@@ -63,16 +62,16 @@ const IndexPage: NextPage = () => {
       </Box>
 
       {/* System Readiness */}
-      <Layout.AppSection
-        heading="System Readiness"
-        sideContent={
-          <Text>
-            Checks that Saleor is properly configured for MTG card imports.
-            All checks must pass before importing.
-          </Text>
-        }
+      <Box
+        padding={4}
+        borderRadius={4}
+        borderWidth={1}
+        borderStyle="solid"
+        borderColor="default1"
       >
-        <Layout.AppSectionCard>
+        <Text size={5} fontWeight="bold" marginBottom={4}>
+          System Readiness
+        </Text>
           {readiness.isLoading && <InlineSpinner label="Checking system readiness..." />}
           {readiness.error && (
             <Box padding={4}>
@@ -80,7 +79,7 @@ const IndexPage: NextPage = () => {
             </Box>
           )}
           {readiness.data && (
-            <Box padding={4}>
+            <Box>
               <Box
                 display="flex"
                 alignItems="center"
@@ -146,20 +145,20 @@ const IndexPage: NextPage = () => {
               )}
             </Box>
           )}
-        </Layout.AppSectionCard>
-      </Layout.AppSection>
+      </Box>
 
       {/* Catalog Health */}
       <Box marginTop={6}>
-        <Layout.AppSection
-          heading="Catalog Health"
-          sideContent={
-            <Text>
-              Overview of imported MTG card data across all sets.
-            </Text>
-          }
+        <Box
+          padding={4}
+          borderRadius={4}
+          borderWidth={1}
+          borderStyle="solid"
+          borderColor="default1"
         >
-          <Layout.AppSectionCard>
+          <Text size={5} fontWeight="bold" marginBottom={4}>
+            Catalog Health
+          </Text>
             {catalog.isLoading && <InlineSpinner label="Loading catalog data..." />}
             {catalog.error && (
               <Box padding={4}>
@@ -167,7 +166,7 @@ const IndexPage: NextPage = () => {
               </Box>
             )}
             {catalog.data && (
-              <Box padding={4}>
+              <Box>
                 <Box display="flex" gap={6} flexWrap="wrap" marginBottom={4}>
                   <StatBox label="Sets Imported" value={String(catalog.data.totalSets)} />
                   <StatBox label="Complete Sets" value={String(catalog.data.completeSets)} />
@@ -259,8 +258,7 @@ const IndexPage: NextPage = () => {
                 </Box>
               </Box>
             )}
-          </Layout.AppSectionCard>
-        </Layout.AppSection>
+        </Box>
       </Box>
     </Box>
   );

@@ -225,21 +225,18 @@ export const PRODUCT_BULK_CREATE_MUTATION = gql`
   }
 `;
 
-export const PRODUCT_BULK_UPDATE_MUTATION = gql`
-  mutation ProductBulkUpdate($products: [ProductBulkUpdateInput!]!) {
-    productBulkUpdate(products: $products, errorPolicy: REJECT_FAILED_ROWS) {
-      count
-      results {
-        product {
-          id
-          name
-          slug
-        }
-        errors {
-          message
-          code
-          path
-        }
+export const PRODUCT_UPDATE_MUTATION = gql`
+  mutation ProductUpdate($id: ID!, $input: ProductInput!) {
+    productUpdate(id: $id, input: $input) {
+      product {
+        id
+        name
+        slug
+      }
+      errors {
+        message
+        code
+        field
       }
     }
   }
@@ -456,19 +453,16 @@ export interface ProductBulkCreateResult {
   }>;
 }
 
-export interface ProductBulkUpdateResult {
-  count: number;
-  results: Array<{
-    product: {
-      id: string;
-      name: string;
-      slug: string;
-    } | null;
-    errors: Array<{
-      message: string | null;
-      code: string;
-      path: string | null;
-    }>;
+export interface ProductUpdateResult {
+  product: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
+  errors: Array<{
+    message: string | null;
+    code: string;
+    field: string | null;
   }>;
 }
 
