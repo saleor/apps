@@ -1,7 +1,7 @@
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { Table } from "dynamodb-toolbox";
 
-import { env } from "../env";
+import { type DynamoEnv } from "../env-dynamodb";
 import { createDynamoDBClient, createDynamoDBDocumentClient } from "./dynamodb-client";
 
 type PartitionKey = { name: "PK"; type: "string" };
@@ -57,13 +57,18 @@ export class DynamoMainTable extends Table<PartitionKey, SortKey> {
   }
 }
 
-const client = createDynamoDBClient({
-  connectionTimeout: env.DYNAMODB_CONNECTION_TIMEOUT_MS,
-  requestTimeout: env.DYNAMODB_REQUEST_TIMEOUT_MS,
-});
-const documentClient = createDynamoDBDocumentClient(client);
+export function createDynamoMainTable(dynamoEnv: DynamoEnv): DynamoMainTable {
+  const client = createDynamoDBClient({
+    connectionTimeout: dynamoEnv.DYNAMODB_CONNECTION_TIMEOUT_MS,
+    requestTimeout: dynamoEnv.DYNAMODB_REQUEST_TIMEOUT_MS,
+    region: dynamoEnv.AWS_REGION,
+    accessKeyId: dynamoEnv.AWS_ACCESS_KEY_ID,
+    secretAccessKey: dynamoEnv.AWS_SECRET_ACCESS_KEY,
+  });
+  const documentClient = createDynamoDBDocumentClient(client);
 
-export const dynamoMainTable = DynamoMainTable.create({
-  documentClient: documentClient,
-  tableName: env.DYNAMODB_MAIN_TABLE_NAME,
-});
+  return DynamoMainTable.create({
+    documentClient,
+    tableName: dynamoEnv.DYNAMODB_MAIN_TABLE_NAME,
+  });
+}

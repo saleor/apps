@@ -5,8 +5,9 @@ import { UpstashAPL } from "@saleor/app-sdk/APL/upstash";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 
 import { env } from "./env";
+import { getDynamoEnv } from "./env-dynamodb";
 import { createLogger } from "./logger";
-import { dynamoMainTable } from "./modules/dynamodb/dynamo-main-table";
+import { createDynamoMainTable } from "./modules/dynamodb/dynamo-main-table";
 
 const logger = createLogger("saleor-app");
 
@@ -16,6 +17,9 @@ export let apl: APL;
 
 switch (aplType) {
   case "dynamodb": {
+    const dynamoEnv = getDynamoEnv();
+    const dynamoMainTable = createDynamoMainTable(dynamoEnv);
+
     apl = DynamoAPL.create({
       table: dynamoMainTable,
       externalLogger: (message, level) => {
