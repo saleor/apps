@@ -2,6 +2,7 @@
 
 import { type Client } from "urql";
 
+import { type ProductsFeedProblemReporter } from "@/modules/app-problems";
 import { VARIANTS_PER_PAGE } from "@/settings";
 
 import {
@@ -78,11 +79,13 @@ export const fetchVariants = async ({
   after,
   channel,
   imageSize,
+  problemReporter,
 }: {
   client: Client;
   after?: string;
   channel: string;
   imageSize?: number;
+  problemReporter?: ProductsFeedProblemReporter;
 }): Promise<ProductVariant[]> => {
   const logger = createLogger("fetchVariants");
 
@@ -103,6 +106,8 @@ export const fetchVariants = async ({
         error: productVariantsData.error,
       },
     );
+
+    await problemReporter?.reportEmptyProducts(channel, productVariantsData.error.message);
 
     return [];
   }
@@ -126,6 +131,8 @@ export const fetchVariants = async ({
         error: relatedProductsData.error,
       },
     );
+
+    await problemReporter?.reportEmptyProducts(channel, relatedProductsData.error.message);
 
     return [];
   }
