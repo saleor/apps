@@ -164,7 +164,11 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     channelSettings = settings;
 
     if (!settings.s3BucketConfiguration) {
-      await problemReporter.reportS3NotConfigured(channel);
+      void problemReporter.reportS3NotConfigured(channel).catch((error) => {
+        logger.warn("Failed to report S3 not configured problem", {
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
+      });
 
       return res.status(400).send("App not configured");
     }
@@ -339,10 +343,13 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       logger.error("Could not upload the feed to S3", { error: error });
       span.setStatus({ code: SpanStatusCode.ERROR });
 
-      await problemReporter.reportS3UploadFailed(
-        channel,
-        error instanceof Error ? error.message : "Unknown error",
-      );
+      void problemReporter
+        .reportS3UploadFailed(channel, error instanceof Error ? error.message : "Unknown error")
+        .catch((reportError) => {
+          logger.warn("Failed to report S3 upload failure problem", {
+            error: reportError instanceof Error ? reportError.message : "Unknown error",
+          });
+        });
 
       return res.status(500).json({ error: "Could not upload the feed to S3" });
     } finally {

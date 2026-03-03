@@ -78,7 +78,11 @@ const handler: NextApiHandler = async (req, res) => {
   const xmlChunk = xmlBuilder.buildItemsChunk(productProxies);
 
   if (!channelSettings.s3BucketConfiguration) {
-    await problemReporter.reportS3NotConfigured(channel);
+    void problemReporter.reportS3NotConfigured(channel).catch((error) => {
+      logger.warn("Failed to report S3 not configured problem", {
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    });
 
     return res.status(400).send({ message: "Bucket not configured" });
   }
@@ -102,10 +106,13 @@ const handler: NextApiHandler = async (req, res) => {
       error: error instanceof Error ? error.message : "Unknown error",
     });
 
-    await problemReporter.reportS3UploadFailed(
-      channel,
-      error instanceof Error ? error.message : "Unknown error",
-    );
+    void problemReporter
+      .reportS3UploadFailed(channel, error instanceof Error ? error.message : "Unknown error")
+      .catch((reportError) => {
+        logger.warn("Failed to report S3 upload failure problem", {
+          error: reportError instanceof Error ? reportError.message : "Unknown error",
+        });
+      });
 
     return res.status(500).json({ error: "Could not upload the chunk to S3" });
   }
