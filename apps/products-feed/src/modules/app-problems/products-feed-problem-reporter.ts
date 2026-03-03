@@ -25,7 +25,7 @@ export class ProductsFeedProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report S3 upload failure problem", { error: result.error });
+      logger.warn("Failed to report S3 upload failure problem", { error: result.error });
     }
   }
 
@@ -37,7 +37,7 @@ export class ProductsFeedProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report empty products problem", { error: result.error });
+      logger.warn("Failed to report empty products problem", { error: result.error });
     }
   }
 
@@ -48,7 +48,7 @@ export class ProductsFeedProblemReporter {
     });
 
     if (result.isErr()) {
-      logger.error("Failed to report S3 not configured problem", { error: result.error });
+      logger.warn("Failed to report S3 not configured problem", { error: result.error });
     }
   }
 
@@ -61,7 +61,7 @@ export class ProductsFeedProblemReporter {
     const result = await this.reporter.clearProblems(keys);
 
     if (result.isErr()) {
-      logger.error("Failed to clear problems for channel", { error: result.error, channel });
+      logger.warn("Failed to clear problems for channel", { error: result.error, channel });
     }
   }
 }
