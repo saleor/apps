@@ -1,0 +1,37 @@
+apps/products-feed/src/modules/app-problems/products-feed-problem-reporter.test.ts
+  9be94cd3e0681142 1-152
+apps/products-feed/src/modules/app-problems/create-products-feed-problem-reporter.ts
+  9be94cd3e0681142 1-14
+apps/products-feed/src/modules/google-feed/fetch-product-data.ts
+  9be94cd3e0681142 5,82,88,110-111,135-136
+apps/products-feed/src/pages/api/feed/[url]/[channel]/[cursor]/generate-chunk.ts
+  9be94cd3e0681142 10,59-60,66,81-82,93,98-111
+apps/products-feed/src/modules/app-problems/products-feed-problem-reporter.ts
+  9be94cd3e0681142 1-67
+apps/products-feed/package.json
+  9be94cd3e0681142 32,59
+apps/products-feed/src/modules/app-problems/index.ts
+  9be94cd3e0681142 1
+apps/products-feed/src/pages/api/feed/[url]/[channel]/google.xml.ts
+  9be94cd3e0681142 131-132,167-168,342-346
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "27e1428e3a1f693e91f1f8b0dddec85179062f81",
+  "prompts": {
+    "9be94cd3e0681142": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b400d23d-1b33-428d-9d16-daf6d11617c3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 286,
+      "total_deletions": 7,
+      "accepted_lines": 279,
+      "overriden_lines": 0
+    }
+  }
+}
