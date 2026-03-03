@@ -1,0 +1,23 @@
+apps/products-feed/src/modules/app-problems/products-feed-problem-reporter.ts
+  9be94cd3e0681142 28,40,51,64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.7",
+  "base_commit_sha": "303441ac501fd8327f12c3295cdf1330452b2a5f",
+  "prompts": {
+    "9be94cd3e0681142": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b400d23d-1b33-428d-9d16-daf6d11617c3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 4,
+      "total_deletions": 4,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    }
+  }
+}
