@@ -1,0 +1,25 @@
+apps/search/src/pages/api/webhooks/saleor/product_variant_updated.test.ts
+  100a6ca3d061e968 150
+apps/search/src/pages/api/webhooks/saleor/product_updated.test.ts
+  100a6ca3d061e968 145
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "20f8d61125213e5c7b795e3a88c156cae597d313",
+  "prompts": {
+    "100a6ca3d061e968": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3d7386a7-a06b-49fa-9b93-ca6c843ca092",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
