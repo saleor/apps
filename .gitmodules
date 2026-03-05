@@ -7,6 +7,3 @@
 [submodule "apps/pos"]
 	path = apps/pos
 	url = https://github.com/michael-a-bean/saleor-app-pos.git
-[submodule "apps/price-sync"]
-	path = apps/price-sync
-	url = https://github.com/michael-a-bean/saleor-app-price-sync.git
