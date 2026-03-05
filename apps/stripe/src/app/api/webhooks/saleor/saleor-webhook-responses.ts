@@ -29,12 +29,9 @@ export class BrokenAppResponse extends ErrorWebhookResponse {
   readonly message = "App is not working";
 
   getResponse() {
-    return Response.json(
-      {
-        message: this.messageFormatter.formatMessage(this.message, this.error),
-      },
-      { status: this.statusCode },
-    );
+    return new Response(this.messageFormatter.formatMessage(this.message, this.error), {
+      status: this.statusCode,
+    });
   }
 }
 
@@ -43,12 +40,9 @@ export class AppIsNotConfiguredResponse extends ErrorWebhookResponse {
   readonly statusCode = 400;
 
   getResponse() {
-    return Response.json(
-      {
-        message: this.messageFormatter.formatMessage(this.message, this.error),
-      },
-      { status: this.statusCode },
-    );
+    return new Response(this.messageFormatter.formatMessage(this.message, this.error), {
+      status: this.statusCode,
+    });
   }
 }
 
@@ -56,12 +50,9 @@ export class UnhandledErrorResponse extends ErrorWebhookResponse {
   readonly message = "Unhandled error";
 
   getResponse() {
-    return Response.json(
-      {
-        message: this.messageFormatter.formatMessage(this.message, this.error),
-      },
-      { status: this.statusCode },
-    );
+    return new Response(this.messageFormatter.formatMessage(this.message, this.error), {
+      status: this.statusCode,
+    });
   }
 }
 
@@ -69,11 +60,8 @@ export class MalformedRequestResponse extends ErrorWebhookResponse {
   readonly message = "Malformed request";
 
   getResponse() {
-    return Response.json(
-      {
-        message: this.messageFormatter.formatMessage(this.message, this.error),
-      },
-      { status: this.statusCode },
-    );
+    return new Response(this.messageFormatter.formatMessage(this.message, this.error), {
+      status: this.statusCode,
+    });
   }
 }

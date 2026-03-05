@@ -89,9 +89,7 @@ const handler: NextJsWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = a
                 error: error,
               });
 
-              return res
-                .status(500)
-                .json({ message: "Error while sending order updated event to Segment" });
+              return res.status(500).send("Error while sending order updated event to Segment");
             }
           }
         },
@@ -100,7 +98,7 @@ const handler: NextJsWebhookHandler<OrderUpdatedSubscriptionPayloadFragment> = a
   } catch (e) {
     logger.error("Unhandled error while sending order updated event to Segment", { error: e });
 
-    return res.status(500).json({ message: "Error while sending order updated event to Segment" });
+    return res.status(500).send("Error while sending order updated event to Segment");
   }
 };
 

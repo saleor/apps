@@ -69,7 +69,7 @@ const handler: NextJsWebhookHandler<ProductVariantDeletedWebhookPayloadFragment>
     logger.warn("Product variant not found in payload");
     captureException("Product variant not found in payload");
 
-    return res.status(500).end();
+    return res.status(500).send("Product variant not found in payload");
   }
 
   logger.info("Webhook called", {

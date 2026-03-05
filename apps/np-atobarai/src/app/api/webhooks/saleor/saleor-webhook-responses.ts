@@ -15,12 +15,7 @@ export class BrokenAppResponse extends ErrorWebhookResponse {
   readonly message = "App is not working";
 
   getResponse() {
-    return Response.json(
-      {
-        message: this.message,
-      },
-      { status: this.statusCode },
-    );
+    return new Response(this.message, { status: this.statusCode });
   }
 }
 
@@ -29,12 +24,7 @@ export class AppIsNotConfiguredResponse extends ErrorWebhookResponse {
   readonly statusCode = 400;
 
   getResponse() {
-    return Response.json(
-      {
-        message: this.message,
-      },
-      { status: this.statusCode },
-    );
+    return new Response(this.message, { status: this.statusCode });
   }
 }
 
@@ -42,11 +32,6 @@ export class UnhandledErrorResponse extends ErrorWebhookResponse {
   readonly message = "Unhandled error";
 
   getResponse() {
-    return Response.json(
-      {
-        message: this.message,
-      },
-      { status: this.statusCode },
-    );
+    return new Response(this.message, { status: this.statusCode });
   }
 }

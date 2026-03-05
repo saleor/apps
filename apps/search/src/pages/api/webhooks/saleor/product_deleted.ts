@@ -62,9 +62,7 @@ export const handler: NextJsWebhookHandler<ProductDeleted> = async (req, res, co
   } catch (e) {
     logger.error("Failed to execute product_deleted webhook (createWebhookContext)", { error: e });
 
-    return res.status(400).json({
-      message: (e as Error).message,
-    });
+    return res.status(400).send((e as Error).message);
   }
 };
 

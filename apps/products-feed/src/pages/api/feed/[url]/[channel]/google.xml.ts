@@ -59,7 +59,7 @@ const withErrorHandler = (
       logger.error("Unhandled error in feed handler", { error: error });
 
       if (!res.headersSent) {
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).send("Internal server error");
       }
     }
   };
@@ -116,7 +116,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     logger.warn("Invalid request params", { error: fieldErrors });
 
-    return res.status(400).json({ error: fieldErrors });
+    return res.status(400).send("Invalid request params");
   }
 
   logger.debug("Checking if app is installed in the given env");
@@ -125,7 +125,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!authData) {
     logger.warn(`The app has not been configured with the ${url}`);
 
-    return res.status(400).json({ error: "The given instance has not been registered" });
+    return res.status(400).send("The given instance has not been registered");
   }
 
   const problemReporter = createProductsFeedProblemReporter(authData);
@@ -187,9 +187,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error) {
     logger.warn("The application has not been configured", { error: error });
 
-    return res
-      .status(400)
-      .json({ error: "Please configure the Google Feed settings at the dashboard" });
+    return res.status(400).send("Please configure the Google Feed settings at the dashboard");
   }
 
   let shopName: string;
@@ -208,7 +206,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error) {
     logger.error("Could not fetch the shop details");
 
-    return res.status(500).json({ error: "Could not fetch the shop details" });
+    return res.status(500).send("Could not fetch the shop details");
   }
 
   if (bucketConfiguration) {
@@ -351,7 +349,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           });
         });
 
-      return res.status(500).json({ error: "Could not upload the feed to S3" });
+      return res.status(500).send("Could not upload the feed to S3");
     } finally {
       span.end();
     }

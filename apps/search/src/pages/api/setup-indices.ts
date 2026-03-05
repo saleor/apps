@@ -38,7 +38,7 @@ export const setupIndicesHandlerFactory =
     if (req.method !== "POST") {
       logger.debug("Request method is different than POST, returning 405");
 
-      return res.status(405).end();
+      return res.status(405).send("Method not allowed");
     }
 
     logger.info("Fetching settings");
@@ -61,7 +61,7 @@ export const setupIndicesHandlerFactory =
     if (!configData.appConfig) {
       logger.info("Missing config, returning 400");
 
-      return res.status(400).end();
+      return res.status(400).send("Bad request");
     }
 
     const channels = channelsRequest.data?.channels || [];
@@ -93,7 +93,7 @@ export const setupIndicesHandlerFactory =
         await problemReporter.reportIndexSetupFailed();
       }
 
-      return res.status(500).end();
+      return res.status(500).send("Internal server error");
     }
   };
 
