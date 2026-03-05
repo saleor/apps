@@ -1,5 +1,4 @@
 ---
-"@saleor/app-problems": minor
 "saleor-app-products-feed": minor
 "saleor-app-payment-np-atobarai": minor
 "saleor-app-klaviyo": minor
