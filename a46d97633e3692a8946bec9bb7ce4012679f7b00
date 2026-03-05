@@ -1,0 +1,87 @@
+apps/search/src/pages/api/webhooks/saleor/product_variant_back_in_stock.ts
+  100a6ca3d061e968 70
+apps/smtp/src/pages/api/webhooks/order-created.ts
+  100a6ca3d061e968 106
+apps/cms/src/pages/api/webhooks/product-variant-deleted.ts
+  100a6ca3d061e968 72
+apps/smtp/src/pages/api/webhooks/order-fully-paid.ts
+  100a6ca3d061e968 107
+apps/search/src/pages/api/webhooks/saleor/product_variant_deleted.ts
+  100a6ca3d061e968 66
+apps/klaviyo/src/pages/api/webhooks/customer-created.ts
+  100a6ca3d061e968 94,102,118
+apps/search/src/pages/api/webhooks/saleor/product_variant_out_of_stock.ts
+  100a6ca3d061e968 70
+apps/search/src/pages/api/webhooks/saleor/product_updated.ts
+  100a6ca3d061e968 84
+apps/smtp/src/pages/api/webhooks/order-cancelled.ts
+  100a6ca3d061e968 106
+apps/np-atobarai/src/app/api/webhooks/saleor/saleor-webhook-responses.ts
+  100a6ca3d061e968 18,27,35
+apps/search/src/pages/api/webhooks-status.ts
+  100a6ca3d061e968 32
+apps/cms/src/pages/api/webhooks/product-variant-updated.ts
+  100a6ca3d061e968 73
+apps/search/src/pages/api/setup-indices.ts
+  100a6ca3d061e968 41,64,96
+apps/smtp/src/pages/api/webhooks/order-confirmed.ts
+  100a6ca3d061e968 107
+apps/klaviyo/src/pages/api/webhooks/order-created.ts
+  100a6ca3d061e968 69,77,93
+apps/smtp/src/pages/api/webhooks/gift-card-sent.ts
+  100a6ca3d061e968 145
+apps/stripe/src/app/api/webhooks/saleor/saleor-webhook-responses.test.ts
+  100a6ca3d061e968 20,33,46,59,85,88,90,96-97
+apps/klaviyo/src/pages/api/webhooks/fulfillment-created.ts
+  100a6ca3d061e968 99,107,123
+apps/np-atobarai/src/app/api/webhooks/saleor/saleor-webhook-responses.test.ts
+  100a6ca3d061e968 15,25,35
+apps/klaviyo/src/pages/api/webhooks/order-fully-paid.ts
+  100a6ca3d061e968 70,94
+apps/products-feed/src/pages/api/feed/[url]/[channel]/[cursor]/generate-chunk.ts
+  100a6ca3d061e968 117
+apps/search/src/pages/api/webhooks/saleor/product_deleted.ts
+  100a6ca3d061e968 65
+apps/products-feed/src/pages/api/feed/[url]/[channel]/google.xml.ts
+  100a6ca3d061e968 62,119,128
+apps/search/src/pages/api/webhooks/saleor/product_variant_created.ts
+  100a6ca3d061e968 94
+apps/smtp/src/pages/api/webhooks/notify.ts
+  100a6ca3d061e968 92
+apps/search/src/pages/api/webhooks/saleor/product_variant_updated.ts
+  100a6ca3d061e968 92
+apps/search/src/pages/api/webhooks/saleor/product_created.ts
+  100a6ca3d061e968 86
+apps/stripe/src/app/api/webhooks/saleor/saleor-webhook-responses.ts
+  100a6ca3d061e968 32-34,43-45,53-55,63-65
+apps/cms/src/pages/api/webhooks/product-updated.ts
+  100a6ca3d061e968 67
+apps/smtp/src/pages/api/webhooks/order-refunded.ts
+  100a6ca3d061e968 106
+apps/smtp/src/pages/api/webhooks/order-fulfilled.ts
+  100a6ca3d061e968 107
+apps/smtp/src/pages/api/webhooks/invoice-sent.ts
+  100a6ca3d061e968 123
+apps/cms/src/pages/api/webhooks/product-variant-created.ts
+  100a6ca3d061e968 73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "a46d97633e3692a8946bec9bb7ce4012679f7b00",
+  "prompts": {
+    "100a6ca3d061e968": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3d7386a7-a06b-49fa-9b93-ca6c843ca092",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 99,
+      "total_deletions": 175,
+      "accepted_lines": 85,
+      "overriden_lines": 0
+    }
+  }
+}
