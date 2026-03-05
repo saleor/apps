@@ -1,0 +1,23 @@
+apps/products-feed/src/tests/google-route.test.ts
+  c29e2df138b2317c 187,189,191
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "1fd25456ec8defbb65fa5ce90b105f660c042747",
+  "prompts": {
+    "c29e2df138b2317c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6cea0ab9-5a28-45c6-85cb-2ef62ce58672",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 3,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
