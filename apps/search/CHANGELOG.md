@@ -1,5 +1,17 @@
 # saleor-app-search
 
+## 1.25.0
+
+### Minor Changes
+
+- 5b055b15: Added support for App Problems API. Now App will report problems that occur during its operations. These problems will be visible on the Dashboard.
+
+### Patch Changes
+
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+- Updated dependencies [ddfa9593]
+  - @saleor/webhook-utils@0.2.8
+
 ## 1.24.13
 
 ### Patch Changes
