@@ -1,0 +1,41 @@
+apps/segment/src/modules/app-problems/index.ts
+  72b8a5dad534d9bb 1-2
+apps/segment/package.json
+  72b8a5dad534d9bb 33
+apps/segment/src/modules/app-problems/segment-problem-reporter.test.ts
+  72b8a5dad534d9bb 1-135
+apps/segment/src/pages/api/webhooks/order-confirmed.ts
+  72b8a5dad534d9bb 9,37,47,85-86,98
+apps/segment/src/pages/api/webhooks/order-refunded.ts
+  72b8a5dad534d9bb 9,37,47,85-86,98
+apps/segment/src/modules/app-problems/create-segment-problem-reporter.ts
+  72b8a5dad534d9bb 1-14
+apps/segment/src/pages/api/webhooks/order-cancelled.ts
+  72b8a5dad534d9bb 9,37,47,85-86,98
+apps/segment/src/modules/configuration/configuration.router.ts
+  72b8a5dad534d9bb 5,97-100,106-107
+apps/segment/src/modules/app-problems/segment-problem-reporter.ts
+  72b8a5dad534d9bb 1-68
+apps/segment/src/pages/api/webhooks/order-updated.ts
+  72b8a5dad534d9bb 9,37,47,85-86,98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "37811304049fcb63b4a03754045ef90dd437f07c",
+  "prompts": {
+    "72b8a5dad534d9bb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9eb92047-db96-4764-9d7f-e0b4256deaf7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 259,
+      "total_deletions": 0,
+      "accepted_lines": 259,
+      "overriden_lines": 0
+    }
+  }
+}
