@@ -1,0 +1,23 @@
+.changeset/warm-limes-kneel.md
+  72b8a5dad534d9bb 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.8",
+  "base_commit_sha": "2c0a885992289cc0aaf2a31612ee96b4c3587f1e",
+  "prompts": {
+    "72b8a5dad534d9bb": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9eb92047-db96-4764-9d7f-e0b4256deaf7",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 0,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
