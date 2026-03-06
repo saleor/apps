@@ -29,7 +29,9 @@ export type WebhooksStatusResponse = {
 };
 
 export const webhooksStatusHandlerFactory =
-  ({ graphqlClientFactory }: FactoryProps): NextJsProtectedApiHandler<WebhooksStatusResponse> =>
+  ({
+    graphqlClientFactory,
+  }: FactoryProps): NextJsProtectedApiHandler<WebhooksStatusResponse | string> =>
   async (req, res, { authData }) => {
     /**
      * Initialize services
@@ -49,7 +51,7 @@ export const webhooksStatusHandlerFactory =
       if (!webhooks) {
         logger.error("Failed to fetch webhooks from Saleor - webhooks missing");
 
-        return res.status(500).end();
+        return res.status(500).send("Internal server error");
       }
 
       return res.status(200).json({
@@ -58,7 +60,7 @@ export const webhooksStatusHandlerFactory =
     } catch (e) {
       logger.error("Failed to fetch webhooks from Saleor - unhandled", { error: e });
 
-      return res.status(500).end();
+      return res.status(500).send("Internal server error");
     }
   };
 
