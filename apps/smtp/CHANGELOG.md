@@ -1,5 +1,12 @@
 # saleor-app-smtp
 
+## 1.6.2
+
+### Patch Changes
+
+- a8b4d896: Add better response errors to webhook responses
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+
 ## 1.6.1
 
 ### Patch Changes
