@@ -26,6 +26,7 @@
     "SMTP_USER",
     "SMTP_PASS",
     "SMTP_FROM",
+    "STOREFRONT_URL",
     "VERCEL_ENV",
     "VERCEL_GIT_COMMIT_SHA",
     "VERCEL_URL",
