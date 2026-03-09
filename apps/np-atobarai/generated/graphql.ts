@@ -6880,6 +6880,8 @@ export type CustomerOrderWhereInput = {
   readonly isGiftCardUsed?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by number of lines in the order. */
   readonly linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  readonly metadata?: InputMaybe<MetadataFilterInput>;
   /** Filter by order number. */
   readonly number?: InputMaybe<IntFilterInput>;
   /** Filter by the product type of related order lines. */
