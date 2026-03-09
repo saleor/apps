@@ -65,7 +65,8 @@ FROM base AS runner
 WORKDIR /app
 
 # Install curl for health checks
-RUN apk add --no-cache curl
+# Upgrade base packages to pick up security fixes (e.g., zlib CVE-2026-22184)
+RUN apk upgrade --no-cache && apk add --no-cache curl
 
 ENV NODE_ENV=production
 ENV PNPM_HOME="/pnpm"

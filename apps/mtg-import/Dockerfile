@@ -49,7 +49,8 @@ RUN pnpm turbo run build --filter=saleor-app-mtg-import
 FROM base AS runner
 WORKDIR /app
 
-RUN apk add --no-cache curl openssl
+# Upgrade base packages to pick up security fixes (e.g., zlib CVE-2026-22184)
+RUN apk upgrade --no-cache && apk add --no-cache curl openssl
 
 ENV NODE_ENV=production
 ENV PNPM_HOME="/pnpm"

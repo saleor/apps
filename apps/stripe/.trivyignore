@@ -1,0 +1,5 @@
+# esbuild ships a Go binary compiled with Go 1.23.x which has CVE-2025-68121
+# (crypto/tls session resumption). This is a false positive — esbuild is a
+# JavaScript bundler, not a TLS server. The fix requires esbuild upstream to
+# rebuild with Go >= 1.24.13.
+CVE-2025-68121
