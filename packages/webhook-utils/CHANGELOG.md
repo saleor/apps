@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.2.8
+
+### Patch Changes
+
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+
 ## 0.2.7
 
 ### Patch Changes
