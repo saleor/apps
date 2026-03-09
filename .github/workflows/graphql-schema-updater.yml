@@ -67,7 +67,9 @@ jobs:
             gh pr create \
               --title "Update GraphQL schema" \
               --body "Automated GraphQL schema update and type regeneration." \
-              --base main
+              --base main \
+              --label "skip changeset"
           else
             echo "PR #$EXISTING_PR already exists, force-pushed updated changes"
+            gh pr edit "$EXISTING_PR" --add-label "skip changeset"
           fi
