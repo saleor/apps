@@ -1,5 +1,14 @@
 # saleor-app-segment
 
+## 2.2.10
+
+### Patch Changes
+
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+- ea4e0e27: Added Problems API integration to report configuration and tracking issues to the Saleor Dashboard. Previously, when the Segment app was misconfigured (missing write key, invalid credentials, or failed webhook activation), events were silently dropped with no visible indication. Now these issues are surfaced as problems in the Dashboard so they can be identified and resolved quickly.
+- Updated dependencies [ddfa9593]
+  - @saleor/webhook-utils@0.2.8
+
 ## 2.2.9
 
 ### Patch Changes
