@@ -1,0 +1,23 @@
+pnpm-workspace.yaml
+  e0518da7d6f8e789 58-61
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "8f0aa10a691bb991ddce6c9c8c36f1d4126cb1ed",
+  "prompts": {
+    "e0518da7d6f8e789": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4e66bb07-164f-4c8c-9d9f-106d8a42c831",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 6,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    }
+  }
+}
