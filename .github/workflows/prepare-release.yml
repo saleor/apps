@@ -40,7 +40,7 @@ jobs:
         run: pnpm install
 
       - name: Create Release Pull Request
-        uses: changesets/action@e2f8e964d080ae97c874b19e27b12e0a8620fb6c # v1.4.6
+        uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1.7.0
         id: changesets
         with:
           title: 🚀 Release apps
