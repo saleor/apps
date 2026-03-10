@@ -1,5 +1,17 @@
 # saleor-app-products-feed
 
+## 2.2.0
+
+### Minor Changes
+
+- 70e2bc3f: Added Problems API support. For new Saleor versions app will report issues to Saleor directly, which are visible in the Dashboard
+
+### Patch Changes
+
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+- Updated dependencies [ddfa9593]
+  - @saleor/webhook-utils@0.2.8
+
 ## 2.1.13
 
 ### Patch Changes
