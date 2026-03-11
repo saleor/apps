@@ -1,0 +1,27 @@
+apps/smtp/src/pages/api/trpc/[trpc].ts
+  11a860644e4dc4b6 18-25,27,31
+apps/smtp/src/modules/trpc/protected-client-procedure.ts
+  11a860644e4dc4b6 89,93
+apps/smtp/src/modules/smtp/configuration/smtp-configuration.router.ts
+  11a860644e4dc4b6 52,59,66,73,80,88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "a9c45a8bed57e6842d63d3ca26eae2656868c661",
+  "prompts": {
+    "11a860644e4dc4b6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e681473c-b178-47aa-aa98-bde865e2de99",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 18,
+      "total_deletions": 3,
+      "accepted_lines": 18,
+      "overriden_lines": 0
+    }
+  }
+}
