@@ -15,12 +15,20 @@ export default wrapWithLoggerContext(
       router: appRouter,
       createContext: createTrpcContext,
       onError: ({ path, error }) => {
+        const errorDetails = {
+          error: {
+            code: error.code,
+            message: error.message,
+            cause: error.cause,
+          },
+        };
+
         if (error.code === "INTERNAL_SERVER_ERROR") {
-          logger.error(`${path} returned error:`, { error: error });
+          logger.error(`${path} returned error:`, errorDetails);
 
           return;
         }
-        logger.debug(`${path} returned error:`, { error: error });
+        logger.debug(`${path} returned error:`, errorDetails);
       },
     }),
   ),
