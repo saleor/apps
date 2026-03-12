@@ -84,7 +84,7 @@ const handler: NextApiHandler = async (req, res) => {
       });
     });
 
-    return res.status(400).send({ message: "Bucket not configured" });
+    return res.status(400).send("Bucket not configured");
   }
 
   const s3Client = createS3ClientFromConfiguration(channelSettings.s3BucketConfiguration);
@@ -114,7 +114,7 @@ const handler: NextApiHandler = async (req, res) => {
         });
       });
 
-    return res.status(500).json({ error: "Could not upload the chunk to S3" });
+    return res.status(500).send("Could not upload the chunk to S3");
   }
 
   const downloadUrl = await new SignedUrls(s3Client).generateSignedGetObjectUrl({

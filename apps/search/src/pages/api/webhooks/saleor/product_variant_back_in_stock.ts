@@ -67,9 +67,7 @@ export const handler: NextJsWebhookHandler<ProductVariantBackInStock> = async (
       error: e,
     });
 
-    return res.status(400).json({
-      message: (e as Error).message,
-    });
+    return res.status(400).send((e as Error).message);
   }
 };
 

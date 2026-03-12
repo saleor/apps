@@ -64,7 +64,7 @@ const handler: NextJsWebhookHandler<ProductUpdatedWebhookPayloadFragment> = asyn
     logger.warn("Product not found in payload");
     captureException("Product not found in payload");
 
-    return res.status(500).end();
+    return res.status(500).send("Product not found in payload");
   }
 
   logger.info("Webhook called", {
