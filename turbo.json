@@ -32,7 +32,8 @@
     "VERCEL_URL",
     "VERCEL",
     "MEILISEARCH_URL",
-    "MEILISEARCH_API_KEY"
+    "MEILISEARCH_API_KEY",
+    "MEILISEARCH_CHANNELS"
   ],
   "tasks": {
     "topo": {
