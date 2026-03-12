@@ -33,6 +33,22 @@ The development container will have two ports opened:
 1. `3000` - where the AvaTax app dev server will listen for requests
 2. `8000` - where the local DynamoDB will listen for requests and allow [NoSQL Workbench for DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.html) to connect
 
+### Running with local Saleor instance
+
+> [!NOTE]
+> This section assumes that your Docker engine supports `host-gateway` to resolve IP address of host machine.
+> Read more in [Docker documentation](https://docs.docker.com/reference/cli/docker/container/run/#add-host)
+
+To install the app in local Saleor instance make sure that you:
+- Set `HTTP_IP_FILTER_ALLOW_LOOPBACK_IPS=True` env variable in your Saleor
+- Set these values in app `.env` file:
+```bash
+APP_IFRAME_BASE_URL=http://localhost:3000
+APP_API_BASE_URL=http://localhost:3000
+```
+
+After this you can install app in Saleor using `http://localhost:3000/api/manifest` as the app manifest URL.
+
 ### Common commands
 
 Running the app in development server:
