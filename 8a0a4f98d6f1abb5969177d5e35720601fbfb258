@@ -1,0 +1,25 @@
+apps/search/src/lib/algolia/algoliaUtils.ts
+  a73cdc521e0ad424 180
+apps/search/src/lib/algolia/algoliaSearchProvider.ts
+  a73cdc521e0ad424 117,135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "8a0a4f98d6f1abb5969177d5e35720601fbfb258",
+  "prompts": {
+    "a73cdc521e0ad424": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "27ec894e-4358-4a6e-8683-b1fc3edf235c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 3,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
