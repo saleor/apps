@@ -2,13 +2,7 @@ fragment CategoryData on Category {
   id
   name
   slug
-  description
-  seoTitle
-  seoDescription
   level
-  parent {
-    id
-  }
   ancestors(first: 100) {
     edges {
       node {

@@ -144,14 +144,8 @@ export class AlgoliaSearchProvider implements SearchProvider {
       this.#traceSetSettings(
         () =>
           this.#algolia.initIndex(this.#categoryIndexName).setSettings({
-            attributesForFaceting: ["level", "parentId", "hierarchy", "metadata"],
-            searchableAttributes: [
-              "name",
-              "slug",
-              "descriptionPlaintext",
-              "hierarchy",
-              "seoTitle",
-            ],
+            attributesForFaceting: ["level", "ancestors", "metadata"],
+            searchableAttributes: ["name", "slug", "ancestors"],
           }),
         { indexName: this.#categoryIndexName },
       ),
