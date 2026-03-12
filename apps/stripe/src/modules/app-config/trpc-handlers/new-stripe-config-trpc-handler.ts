@@ -8,7 +8,7 @@ import { newStripeConfigInputSchema } from "@/modules/app-config/trpc-handlers/n
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeAuthValidator } from "@/modules/stripe/stripe-auth-validator";
 import { StripeClient } from "@/modules/stripe/stripe-client";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { type StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { createStripeWebhookSecret } from "@/modules/stripe/stripe-webhook-secret";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";

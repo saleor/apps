@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-klaviyo",
-  "version": "1.14.8",
+  "version": "1.14.10",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,16 +8,10 @@
     "check-types": "tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "next start"
-  },
-  "config": {
-    "saleor": {
-      "schemaVersion": "3.20"
-    }
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
@@ -61,7 +55,6 @@
     "@graphql-codegen/introspection": "catalog:",
     "@graphql-codegen/schema-ast": "4.0.2",
     "@graphql-codegen/typed-document-node": "catalog:",
-    "@graphql-codegen/typescript": "catalog:",
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-codegen/typescript-urql": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
@@ -74,6 +67,7 @@
     "clean-publish": "^4.0.1",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
+    "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
     "jsdom": "catalog:",
     "postcss": "^8.4.14",

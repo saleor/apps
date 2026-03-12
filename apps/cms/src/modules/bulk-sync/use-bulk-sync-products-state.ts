@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { BulkImportProductFragment } from "../../../generated/graphql";
-import { VariantsSyncStatusListItem } from "./variants-sync-status-list";
+import { type BulkImportProductFragment } from "../../../generated/graphql";
+import { type VariantsSyncStatusListItem } from "./variants-sync-status-list";
 
 export const useBulkSyncProductsState = () => {
   const [finished, setFinished] = useState(false);

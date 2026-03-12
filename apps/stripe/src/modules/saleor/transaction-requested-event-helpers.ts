@@ -1,7 +1,7 @@
 import {
-  TransactionCancelationRequestedEventFragment,
-  TransactionChargeRequestedEventFragment,
-  TransactionRefundRequestedEventFragment,
+  type TransactionCancelationRequestedEventFragment,
+  type TransactionChargeRequestedEventFragment,
+  type TransactionRefundRequestedEventFragment,
 } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
 

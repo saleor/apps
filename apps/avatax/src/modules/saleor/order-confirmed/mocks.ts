@@ -1,4 +1,4 @@
-import { OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-payload";
+import { type OrderConfirmedPayload } from "../../webhooks/payloads/order-confirmed-payload";
 import { SaleorOrderLineMockFactory } from "../order-line-mocks";
 import { SaleorOrderConfirmedEvent } from "./event";
 

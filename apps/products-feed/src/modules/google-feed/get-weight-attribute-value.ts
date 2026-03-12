@@ -1,7 +1,7 @@
-import { Weight } from "../../../generated/graphql";
+import { type WeightFragment } from "../../../generated/graphql";
 
 interface getWeightAttributeValueArgs {
-  weight?: Weight;
+  weight?: WeightFragment;
   isShippingRequired: boolean;
 }
 

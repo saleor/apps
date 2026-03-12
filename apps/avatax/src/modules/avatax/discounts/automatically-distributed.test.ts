@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { TaxBaseFragment } from "../../../../generated/graphql";
+import { type TaxBaseFragment } from "../../../../generated/graphql";
 import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "./automatically-distributed";
 
 describe("AutomaticallyDistributedDiscountsStrategy", () => {

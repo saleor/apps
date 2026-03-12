@@ -1,5 +1,5 @@
 import { err, ok } from "neverthrow";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
@@ -7,6 +7,7 @@ import {
   mockedSaleorAppId,
   mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
 } from "@/__tests__/mocks/constants";
+import { mockStripeProblemReporter } from "@/__tests__/mocks/mock-stripe-problem-reporter";
 import { mockedStripePaymentIntentsApi } from "@/__tests__/mocks/mocked-stripe-payment-intents-api";
 import { MockedTransactionRecorder } from "@/__tests__/mocks/mocked-transaction-recorder";
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
@@ -18,7 +19,7 @@ import {
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
-import { IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
+import { type IStripePaymentIntentsApiFactory } from "@/modules/stripe/types";
 import {
   AuthorizationActionRequiredResult,
   ChargeActionRequiredResult,
@@ -31,6 +32,26 @@ import { TransactionRecorderError } from "@/modules/transactions-recording/repos
 
 import { TransactionInitializeSessionUseCase } from "./use-case";
 import { TransactionInitializeSessionUseCaseResponses } from "./use-case-response";
+
+vi.mock("@saleor/app-problems", () => ({
+  AppProblemsReporter: class {
+    reportProblem() {
+      return Promise.resolve({ isErr: () => false });
+    }
+    clearProblems() {
+      return Promise.resolve({ isErr: () => false });
+    }
+  },
+}));
+
+vi.mock("@/lib/logger", () => ({
+  createLogger: () => ({
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  }),
+}));
 
 describe("TransactionInitializeSessionUseCase", () => {
   const stripePaymentIntentsApiFactory = {
@@ -74,6 +95,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
         saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+        problemReporter: mockStripeProblemReporter,
       });
 
       expect(spy).toHaveBeenCalledWith({
@@ -93,6 +115,8 @@ describe("TransactionInitializeSessionUseCase", () => {
           saleor_source_id: saleorEvent.sourceObject.id,
           saleor_source_type: saleorEvent.sourceObject.__typename,
           saleor_transaction_id: saleorEvent.transaction.id,
+          saleor_api_url: mockedSaleorApiUrl,
+          saleor_app_id: mockedSaleorAppId,
         },
       });
 
@@ -138,6 +162,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
         saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+        problemReporter: mockStripeProblemReporter,
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedSuccessResponse);
@@ -161,6 +186,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       appId: mockedSaleorAppId,
       event: getMockedTransactionInitializeSessionEvent(),
       saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
     });
 
     const err = responsePayload._unsafeUnwrapErr();
@@ -201,6 +227,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
         saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+        problemReporter: mockStripeProblemReporter,
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
@@ -242,6 +269,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: eventWithNotSupportedPaymentMethod,
         saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+        problemReporter: mockStripeProblemReporter,
       });
 
       const failure = responsePayload._unsafeUnwrap() as InstanceType<
@@ -291,6 +319,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: eventWithAdditionalFieldinData,
         saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+        problemReporter: mockStripeProblemReporter,
       });
 
       expect(responsePayload._unsafeUnwrap()).toBeInstanceOf(expectedFailureResponse);
@@ -319,6 +348,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       appId: mockedSaleorAppId,
       event: saleorEvent,
       saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -347,6 +377,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       appId: mockedSaleorAppId,
       event: saleorEvent,
       saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -380,6 +411,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       appId: mockedSaleorAppId,
       event: saleorEvent,
       saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -409,6 +441,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       appId: mockedSaleorAppId,
       event: saleorEvent,
       saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -443,6 +476,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       appId: mockedSaleorAppId,
       event: saleorEvent,
       saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -476,6 +510,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       appId: mockedSaleorAppId,
       event: saleorEvent,
       saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -516,6 +551,7 @@ describe("TransactionInitializeSessionUseCase", () => {
       appId: mockedSaleorAppId,
       event: saleorEvent,
       saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -558,6 +594,7 @@ describe("TransactionInitializeSessionUseCase", () => {
         appId: mockedSaleorAppId,
         event: saleorEvent,
         saleorSchemaVersion: mockedSaleorSchemaVersionSupportingPaymentMethodDetails,
+        problemReporter: mockStripeProblemReporter,
       });
 
       expect(transactionRecorder.recordTransaction).toHaveBeenCalledWith(

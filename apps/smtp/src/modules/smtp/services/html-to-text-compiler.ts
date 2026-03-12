@@ -1,5 +1,5 @@
 import { convert } from "html-to-text";
-import { fromThrowable, Result } from "neverthrow";
+import { fromThrowable, type Result } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { createLogger } from "../../../logger";

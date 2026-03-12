@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-smtp",
-  "version": "1.5.3",
+  "version": "1.6.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,6 @@
     "check-types": "tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -16,11 +15,6 @@
     "test": "vitest",
     "test-email-build": "tsx ./scripts/build-email-previews.ts",
     "test:ci": "vitest run --coverage"
-  },
-  "config": {
-    "saleor": {
-      "schemaVersion": "3.20"
-    }
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
@@ -82,7 +76,6 @@
     "@graphql-codegen/introspection": "catalog:",
     "@graphql-codegen/schema-ast": "4.0.2",
     "@graphql-codegen/typed-document-node": "catalog:",
-    "@graphql-codegen/typescript": "catalog:",
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-codegen/typescript-urql": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
@@ -97,6 +90,7 @@
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
+    "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
     "null-loader": "4.0.1",
     "tsx": "catalog:",

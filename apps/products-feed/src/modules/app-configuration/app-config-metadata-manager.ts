@@ -1,4 +1,4 @@
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 
 export class AppConfigMetadataManager {
   private readonly metadataKey = "app-config-v1";

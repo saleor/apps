@@ -7,6 +7,7 @@ import { captureException, setTag } from "@sentry/nextjs";
 import Decimal from "decimal.js-light";
 import { after } from "next/server";
 
+import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
@@ -17,6 +18,8 @@ import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { updateExemptionStatusPublicMetadata } from "@/modules/app/exemption-status-public-metadata-updater";
+import { createAvataxProblemReporter } from "@/modules/app-problems";
+import { suspiciousLineCalculationCheck } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-response-transformer";
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
@@ -182,6 +185,22 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                 }
               }
 
+              if (providerConfig.isOk()) {
+                const hasSuspiciousLine = value.response.lines.some(suspiciousLineCalculationCheck);
+
+                if (hasSuspiciousLine) {
+                  const problemReporter = createAvataxProblemReporter(authData);
+                  const avataxConfig = providerConfig.value.avataxConfig;
+
+                  after(() =>
+                    problemReporter.reportSuspiciousZeroTax(
+                      avataxConfig.id,
+                      avataxConfig.config.name,
+                    ),
+                  );
+                }
+              }
+
               return Response.json(checkoutCalculateTaxesSyncWebhookReponse(value.response), {
                 status: 200,
               });
@@ -197,6 +216,19 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     message: "Failed to calculate taxes: error from AvaTax API",
                   });
 
+                  if (providerConfig.isOk()) {
+                    const problemReporter = createAvataxProblemReporter(authData);
+                    const avataxConfig = providerConfig.value.avataxConfig;
+
+                    after(() =>
+                      problemReporter.reportApiProblem(error.cause, {
+                        id: avataxConfig.id,
+                        name: avataxConfig.config.name,
+                        companyCode: avataxConfig.config.companyCode,
+                      }),
+                    );
+                  }
+
                   return Response.json(
                     {
                       message: `Failed to calculate taxes for checkout: ${payload.taxBase.sourceObject.id}`,
@@ -210,6 +242,23 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
                     code: SpanStatusCode.ERROR,
                     message: "Failed to calculate taxes: invalid configuration",
                   });
+
+                  {
+                    const innerError = error.errors?.[0];
+
+                    if (
+                      innerError instanceof AppConfig.MissingConfigurationError ||
+                      innerError instanceof AppConfig.InvalidChannelSlugError
+                    ) {
+                      const problemReporter = createAvataxProblemReporter(authData);
+                      const reason =
+                        innerError instanceof AppConfig.MissingConfigurationError
+                          ? "Channel references a provider configuration that no longer exists"
+                          : "Channel is not configured in the AvaTax app";
+
+                      after(() => problemReporter.reportChannelConfigMissing(channelSlug, reason));
+                    }
+                  }
 
                   return Response.json(
                     {

@@ -1,10 +1,12 @@
-import { NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
+import { type NextJsWebhookHandler } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 
-import { ProductVariantDeleted } from "../../../../../generated/graphql";
+import { AlgoliaErrorParser } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
+import { type ProductVariantDeleted } from "../../../../lib/webhook-event-types";
+import { createSearchProblemReporter } from "../../../../modules/app-problems";
 import { webhookProductVariantDeleted } from "../../../../webhooks/definitions/product-variant-deleted";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
@@ -41,6 +43,14 @@ export const handler: NextJsWebhookHandler<ProductVariantDeleted> = async (req, 
 
       return;
     } catch (e) {
+      if (AlgoliaErrorParser.isAuthError(e)) {
+        const problemReporter = createSearchProblemReporter(authData);
+
+        await problemReporter.reportAuthError();
+
+        return res.status(401).send("Algolia rejected due to invalid credentials");
+      }
+
       logger.error(
         "Failed to execute product_variant_deleted webhook (algoliaClient.deleteProductVariant)",
         { error: e },
@@ -53,9 +63,7 @@ export const handler: NextJsWebhookHandler<ProductVariantDeleted> = async (req, 
       error: e,
     });
 
-    return res.status(400).json({
-      message: (e as Error).message,
-    });
+    return res.status(400).send((e as Error).message);
   }
 };
 

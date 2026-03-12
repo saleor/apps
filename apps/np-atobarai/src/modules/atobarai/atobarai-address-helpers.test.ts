@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AddressFragment, SourceObjectFragment } from "@/generated/graphql";
+import { type AddressFragment, type SourceObjectFragment } from "@/generated/graphql";
 
 import {
   formatCustomerName,

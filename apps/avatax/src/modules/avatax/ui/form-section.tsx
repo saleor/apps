@@ -1,5 +1,5 @@
 import { Box, Text } from "@saleor/macaw-ui";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 
 import styles from "./form-section.module.css";
 

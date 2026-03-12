@@ -1,6 +1,6 @@
 import { AppBridge, AppBridgeProvider } from "@saleor/app-sdk/app-bridge";
 import { renderHook } from "@testing-library/react";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import { describe, expect, it } from "vitest";
 
 import { useGetFeedApiUrl } from "./use-get-feed-api-url";

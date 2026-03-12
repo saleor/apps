@@ -1,8 +1,8 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 
 import { createLogger } from "@/logger";
 
-import { AppConfigMetadataManager, RootConfig } from "../configuration";
+import { AppConfigMetadataManager, type RootConfig } from "../configuration";
 
 export type WebhookContext = Pick<RootConfig.Shape, "connections" | "providers">;
 

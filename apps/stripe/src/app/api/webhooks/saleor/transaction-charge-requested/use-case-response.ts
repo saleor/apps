@@ -1,16 +1,16 @@
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import {
-  TransactionChargeRequestedSyncFailure,
-  TransactionChargeRequestedSyncSuccess,
+  type TransactionChargeRequestedSyncFailure,
+  type TransactionChargeRequestedSyncSuccess,
 } from "@/generated/app-webhooks-types/transaction-charge-requested";
-import { AppContext } from "@/lib/app-context";
+import { type AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { type SaleorMoney } from "@/modules/saleor/saleor-money";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
-import { StripeApiError } from "@/modules/stripe/stripe-api-error";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { ChargeFailureResult } from "@/modules/transaction-result/failure-result";
-import { ChargeSuccessResult } from "@/modules/transaction-result/success-result";
+import { type StripeApiError } from "@/modules/stripe/stripe-api-error";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type ChargeFailureResult } from "@/modules/transaction-result/failure-result";
+import { type ChargeSuccessResult } from "@/modules/transaction-result/success-result";
 
 class Success extends SuccessWebhookResponse {
   readonly transactionResult: ChargeSuccessResult;

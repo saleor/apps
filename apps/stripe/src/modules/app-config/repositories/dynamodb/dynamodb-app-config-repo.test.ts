@@ -258,6 +258,30 @@ describe("DynamodbAppConfigRepo", () => {
       expect(result._unsafeUnwrap()).toBeNull();
     });
 
+    it("Returns null when channelId mapping exists but has no configId", async () => {
+      mockDocumentClient
+        .on(GetCommand, {
+          Key: {
+            PK: `${mockedSaleorApiUrl}#${mockedSaleorAppId}`,
+            SK: `CHANNEL_ID#${mockedSaleorChannelId}`,
+          },
+        })
+        .resolvesOnce({
+          Item: {
+            ...mockedDynamoConfigItems.mockedMapping,
+            configId: undefined,
+          },
+        });
+
+      const result = await repo.getStripeConfig({
+        saleorApiUrl: mockedSaleorApiUrl,
+        appId: mockedSaleorAppId,
+        channelId: mockedSaleorChannelId,
+      });
+
+      expect(result._unsafeUnwrap()).toBeNull();
+    });
+
     it("Returns FailureFetchingConfig if DB connection fails", async () => {
       mockDocumentClient
         .on(GetCommand, {

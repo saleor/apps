@@ -1,4 +1,4 @@
-import { ChannelConfig } from "./channel-config";
+import { type ChannelConfig } from "./channel-config";
 
 const defaultChannelConfig: ChannelConfig = {
   id: "1",

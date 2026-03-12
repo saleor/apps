@@ -1,5 +1,5 @@
-import { InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
-import { AtobaraiApiClientFulfillmentReportError } from "@/modules/atobarai/api/types";
+import { type InvalidEventValidationError } from "@/app/api/webhooks/saleor/use-case-errors";
+import { type AtobaraiApiClientFulfillmentReportError } from "@/modules/atobarai/api/types";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";
 

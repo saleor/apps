@@ -1,11 +1,11 @@
 import {
-  TransactionRefundRequestedSyncFailure,
-  TransactionRefundRequestedSyncSuccess,
+  type TransactionRefundRequestedSyncFailure,
+  type TransactionRefundRequestedSyncSuccess,
 } from "@/generated/app-webhooks-types/transaction-refund-requested";
-import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { type AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
 import {
-  RefundFailureResult,
-  RefundSuccessResult,
+  type RefundFailureResult,
+  type RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 
 import { SuccessWebhookResponse } from "../saleor-webhook-responses";

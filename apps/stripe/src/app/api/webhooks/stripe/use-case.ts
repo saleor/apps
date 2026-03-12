@@ -1,46 +1,48 @@
-import { APL, AuthData } from "@saleor/app-sdk/APL";
+import { type APL, type AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { captureException } from "@sentry/nextjs";
-import { err, ok, Result } from "neverthrow";
-import Stripe from "stripe";
+import { err, ok, type Result } from "neverthrow";
+import { after } from "next/server";
+import type Stripe from "stripe";
 
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
 import { createLogger } from "@/lib/logger";
 import { loggerContext } from "@/lib/logger-context";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { type StripeProblemReporter } from "@/modules/app-problems";
+import { type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import {
-  ITransactionEventReporter,
+  type ITransactionEventReporter,
   TransactionEventReporterErrors,
 } from "@/modules/saleor/transaction-event-reporter";
 import { StripeClient } from "@/modules/stripe/stripe-client";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
-import { StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
-import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
+import { type StripeEnv } from "@/modules/stripe/stripe-env";
+import { type StripeRestrictedKey } from "@/modules/stripe/stripe-restricted-key";
+import { type StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import {
-  AllowedStripeObjectMetadata,
-  IStripeEventVerify,
-  IStripePaymentIntentsApiFactory,
+  type AllowedStripeObjectMetadata,
+  type IStripeEventVerify,
+  type IStripePaymentIntentsApiFactory,
 } from "@/modules/stripe/types";
 import {
   TransactionRecorderError,
-  TransactionRecorderRepo,
+  type TransactionRecorderRepo,
 } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 import { StripePaymentIntentHandler } from "./stripe-object-handlers/stripe-payment-intent-handler";
 import { StripeRefundHandler } from "./stripe-object-handlers/stripe-refund-handler";
 import {
   ObjectCreatedOutsideOfSaleorResponse,
-  PossibleStripeWebhookErrorResponses,
-  PossibleStripeWebhookSuccessResponses,
+  type PossibleStripeWebhookErrorResponses,
+  type PossibleStripeWebhookSuccessResponses,
   StripeWebhookAppIsNotConfiguredResponse,
   StripeWebhookMalformedRequestResponse,
   StripeWebhookSeverErrorResponse,
   StripeWebhookSuccessResponse,
   StripeWebhookTransactionMissingResponse,
 } from "./stripe-webhook-responses";
-import { WebhookParams } from "./webhook-params";
+import { type WebhookParams } from "./webhook-params";
 
 type R = Promise<
   Result<PossibleStripeWebhookSuccessResponses, PossibleStripeWebhookErrorResponses>
@@ -48,6 +50,7 @@ type R = Promise<
 
 type StripeVerifyEventFactory = (stripeClient: StripeClient) => IStripeEventVerify;
 type SaleorTransactionEventReporterFactory = (authData: AuthData) => ITransactionEventReporter;
+type ProblemReporterFactory = (authData: AuthData) => StripeProblemReporter;
 
 const ObjectMetadataMissingError = BaseError.subclass("ObjectMetadataMissingError");
 
@@ -58,6 +61,7 @@ export class StripeWebhookUseCase {
   private logger = createLogger("StripeWebhookUseCase");
   private transactionRecorder: TransactionRecorderRepo;
   private transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
+  private problemReporterFactory: ProblemReporterFactory;
   private webhookManager: StripeWebhookManager;
   private stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
 
@@ -67,6 +71,7 @@ export class StripeWebhookUseCase {
     apl: APL;
     transactionRecorder: TransactionRecorderRepo;
     transactionEventReporterFactory: SaleorTransactionEventReporterFactory;
+    problemReporterFactory: ProblemReporterFactory;
     webhookManager: StripeWebhookManager;
     stripePaymentIntentsApiFactory: IStripePaymentIntentsApiFactory;
   }) {
@@ -75,6 +80,7 @@ export class StripeWebhookUseCase {
     this.apl = deps.apl;
     this.transactionRecorder = deps.transactionRecorder;
     this.transactionEventReporterFactory = deps.transactionEventReporterFactory;
+    this.problemReporterFactory = deps.problemReporterFactory;
     this.webhookManager = deps.webhookManager;
     this.stripePaymentIntentsApiFactory = deps.stripePaymentIntentsApiFactory;
   }
@@ -131,6 +137,20 @@ export class StripeWebhookUseCase {
           );
         }
 
+        if (meta.saleor_app_id && meta.saleor_app_id !== appId) {
+          return err(
+            new ObjectMetadataMissingError(
+              "PaymentIntent belongs to a different Saleor installation",
+              {
+                props: {
+                  meta,
+                  expectedAppId: appId,
+                },
+              },
+            ),
+          );
+        }
+
         const handler = new StripePaymentIntentHandler();
 
         const stripePaymentIntentsApi = this.stripePaymentIntentsApiFactory.create({
@@ -162,6 +182,17 @@ export class StripeWebhookUseCase {
                 },
               },
             ),
+          );
+        }
+
+        if (meta.saleor_app_id && meta.saleor_app_id !== appId) {
+          return err(
+            new ObjectMetadataMissingError("Refund belongs to a different Saleor installation", {
+              props: {
+                meta,
+                expectedAppId: appId,
+              },
+            }),
           );
         }
 
@@ -284,6 +315,7 @@ export class StripeWebhookUseCase {
     }
 
     const transactionEventReporter = this.transactionEventReporterFactory(authData);
+    const problemReporter = this.problemReporterFactory(authData);
 
     const config = await this.appConfigRepo.getStripeConfig({
       configId: webhookParams.configurationId,
@@ -305,6 +337,8 @@ export class StripeWebhookUseCase {
 
     if (!config.value) {
       this.logger.error("Config for given webhook is missing");
+
+      after(() => problemReporter.reportConfigMissing(webhookParams.configurationId));
 
       return err(new StripeWebhookAppIsNotConfiguredResponse());
     }
@@ -328,6 +362,12 @@ export class StripeWebhookUseCase {
       this.logger.error("Failed to verify event", {
         error: event.error,
       });
+
+      const configName = config.value.name;
+
+      after(() =>
+        problemReporter.reportWebhookSecretMismatch(webhookParams.configurationId, configName),
+      );
 
       return err(new StripeWebhookMalformedRequestResponse());
     }

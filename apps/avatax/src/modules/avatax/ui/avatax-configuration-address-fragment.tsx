@@ -1,13 +1,13 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
-import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
+import { type AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
 import { resolveTrpcClientError } from "../../../lib/error-utils";
 import { CountryCombobox } from "../../ui/country-combobox";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { type AvataxConfig } from "../avatax-connection-schema";
 import { AvataxAddressResolutionProcessor } from "./avatax-address-resolution-processor";
 import { useAvataxConfigurationStatus } from "./configuration-status";
 import { FormSection } from "./form-section";

@@ -1,4 +1,4 @@
-import { Actions } from "@/generated/app-webhooks-types/transaction-refund-requested";
+import { type Actions } from "@/generated/app-webhooks-types/transaction-refund-requested";
 
 export class RefundSuccessResult {
   readonly result = "REFUND_SUCCESS" as const;

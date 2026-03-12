@@ -1,12 +1,13 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
-import { NextApiHandler } from "next";
+import { type NextApiHandler } from "next";
 
 import { env } from "@/env";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
+import { createProductsFeedProblemReporter } from "@/modules/app-problems";
 import { chunkFeedUrlParams } from "@/modules/feed-dto";
 import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
 import { getChunkFileName } from "@/modules/file-storage/s3/file-names";
@@ -14,7 +15,7 @@ import { SignedUrls } from "@/modules/file-storage/s3/signed-urls";
 import { uploadFile } from "@/modules/file-storage/s3/upload-file";
 import { FeedXmlBuilder } from "@/modules/google-feed/feed-xml-builder";
 import { fetchVariants } from "@/modules/google-feed/fetch-product-data";
-import { GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
+import { type GoogleFeedSettingsFetcher } from "@/modules/google-feed/get-google-feed-settings";
 import { productVariantToProxy } from "@/modules/google-feed/product-variant-to-proxy";
 
 type ConfiguredChannelSettings = Awaited<
@@ -55,11 +56,14 @@ const handler: NextApiHandler = async (req, res) => {
     token: authData.token,
   });
 
+  const problemReporter = createProductsFeedProblemReporter(authData);
+
   const productVariants = await fetchVariants({
     client,
     channel: channel,
     imageSize: channelSettings.imageSize,
     after: decodedCursor,
+    problemReporter,
   });
 
   const productProxies = productVariants.map((v) =>
@@ -74,7 +78,13 @@ const handler: NextApiHandler = async (req, res) => {
   const xmlChunk = xmlBuilder.buildItemsChunk(productProxies);
 
   if (!channelSettings.s3BucketConfiguration) {
-    return res.status(400).send({ message: "Bucket not configured" });
+    void problemReporter.reportS3NotConfigured(channel).catch((error) => {
+      logger.warn("Failed to report S3 not configured problem", {
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    });
+
+    return res.status(400).send("Bucket not configured");
   }
 
   const s3Client = createS3ClientFromConfiguration(channelSettings.s3BucketConfiguration);
@@ -84,12 +94,28 @@ const handler: NextApiHandler = async (req, res) => {
     cursor: decodedCursor,
   });
 
-  await uploadFile({
-    s3Client,
-    bucketName: channelSettings.s3BucketConfiguration.bucketName,
-    buffer: Buffer.from(xmlChunk),
-    fileName,
-  });
+  try {
+    await uploadFile({
+      s3Client,
+      bucketName: channelSettings.s3BucketConfiguration.bucketName,
+      buffer: Buffer.from(xmlChunk),
+      fileName,
+    });
+  } catch (error) {
+    logger.error("Could not upload the chunk to S3", {
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+
+    void problemReporter
+      .reportS3UploadFailed(channel, error instanceof Error ? error.message : "Unknown error")
+      .catch((reportError) => {
+        logger.warn("Failed to report S3 upload failure problem", {
+          error: reportError instanceof Error ? reportError.message : "Unknown error",
+        });
+      });
+
+    return res.status(500).send("Could not upload the chunk to S3");
+  }
 
   const downloadUrl = await new SignedUrls(s3Client).generateSignedGetObjectUrl({
     expiresSeconds: 30,

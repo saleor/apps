@@ -1,8 +1,8 @@
 import { decrypt, encrypt } from "@saleor/app-sdk/settings-manager";
-import { FormattedItem, PutItemInput } from "dynamodb-toolbox";
+import { type FormattedItem, type PutItemInput } from "dynamodb-toolbox";
 
 import { AppConfig } from "../configuration/app-config";
-import { SegmentConfigEntityType, SegmentMainTable } from "./segment-main-table";
+import { type SegmentConfigEntityType, SegmentMainTable } from "./segment-main-table";
 
 export class DynamoConfigMapper {
   constructor(

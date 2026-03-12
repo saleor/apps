@@ -1,4 +1,4 @@
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 
 import { CrudSettingsManager } from "@/modules/crud-settings/crud-settings.service";
 
@@ -6,8 +6,8 @@ import { metadataCache } from "../../../lib/app-metadata-cache";
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { createSettingsManager } from "../../app/metadata-manager";
 import {
-  AvataxTaxCodeMatch,
-  AvataxTaxCodeMatches,
+  type AvataxTaxCodeMatch,
+  type AvataxTaxCodeMatches,
   AvataxTaxCodeMatchRepository,
 } from "./avatax-tax-code-match-repository";
 

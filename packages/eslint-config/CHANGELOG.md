@@ -1,5 +1,11 @@
 # @saleor/eslint-config-apps
 
+## 0.5.0
+
+### Minor Changes
+
+- 69d68745: Add new rule `@typescript-eslint/consistent-type-imports`. Warning during migration phase, error later. Once enabled, bundlers should be able to tree-shake more easily, without evaluating runtime code.
+
 ## 0.4.15
 
 ### Patch Changes

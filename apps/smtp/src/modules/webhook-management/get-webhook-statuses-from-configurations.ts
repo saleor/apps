@@ -1,5 +1,5 @@
-import { SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
-import { AppWebhook, eventToWebhookMapping } from "./webhook-management-service";
+import { type SmtpConfiguration } from "../smtp/configuration/smtp-config-schema";
+import { type AppWebhook, eventToWebhookMapping } from "./webhook-management-service";
 import { webhookStatusesFactory } from "./webhook-status-dict";
 
 /*

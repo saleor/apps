@@ -1,16 +1,17 @@
 // TODO: Refactor this file to fetcher-like class
 
-import { Client } from "urql";
+import { type Client } from "urql";
 
+import { type ProductsFeedProblemReporter } from "@/modules/app-problems";
 import { VARIANTS_PER_PAGE } from "@/settings";
 
 import {
-  BasicProductDataFragment,
+  type BasicProductDataFragment,
   FetchProductCursorsDocument,
   FetchProductVariantsDataDocument,
   FetchRelatedProductsDataDocument,
-  ProductAttributesFragment,
-  RelatedProductsFragment,
+  type ProductAttributesFragment,
+  type RelatedProductsFragment,
 } from "../../../generated/graphql";
 import { createLogger } from "../../logger";
 
@@ -78,11 +79,13 @@ export const fetchVariants = async ({
   after,
   channel,
   imageSize,
+  problemReporter,
 }: {
   client: Client;
   after?: string;
   channel: string;
   imageSize?: number;
+  problemReporter?: ProductsFeedProblemReporter;
 }): Promise<ProductVariant[]> => {
   const logger = createLogger("fetchVariants");
 
@@ -103,6 +106,8 @@ export const fetchVariants = async ({
         error: productVariantsData.error,
       },
     );
+
+    await problemReporter?.reportEmptyProducts(channel, productVariantsData.error.message);
 
     return [];
   }
@@ -126,6 +131,8 @@ export const fetchVariants = async ({
         error: relatedProductsData.error,
       },
     );
+
+    await problemReporter?.reportEmptyProducts(channel, relatedProductsData.error.message);
 
     return [];
   }

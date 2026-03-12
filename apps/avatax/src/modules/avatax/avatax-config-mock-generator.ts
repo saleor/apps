@@ -1,4 +1,4 @@
-import { AvataxConfig } from "./avatax-connection-schema";
+import { type AvataxConfig } from "./avatax-connection-schema";
 
 const defaultAvataxConfig: AvataxConfig = {
   companyCode: "DEFAULT",

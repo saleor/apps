@@ -10,8 +10,11 @@ import { SectionWithDescription } from "../../../components/section-with-descrip
 import { defaultPadding } from "../../../components/ui-defaults";
 import { setBackendErrors } from "../../../lib/set-backend-errors";
 import { trpcClient } from "../../trpc/trpc-client";
-import { SmtpUpdateSmtp, smtpUpdateSmtpSchema } from "../configuration/smtp-config-input-schema";
-import { SmtpConfiguration } from "../configuration/smtp-config-schema";
+import {
+  type SmtpUpdateSmtp,
+  smtpUpdateSmtpSchema,
+} from "../configuration/smtp-config-input-schema";
+import { type SmtpConfiguration } from "../configuration/smtp-config-schema";
 import { SaleorThrobber } from "./saleor-throbber";
 
 interface SmtpSectionProps {

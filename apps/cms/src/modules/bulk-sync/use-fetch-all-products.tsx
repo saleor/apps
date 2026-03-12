@@ -3,7 +3,7 @@ import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { useEffect, useState } from "react";
 
 import {
-  BulkImportProductFragment,
+  type BulkImportProductFragment,
   FetchProductsPaginatedDocument,
 } from "../../../generated/graphql";
 

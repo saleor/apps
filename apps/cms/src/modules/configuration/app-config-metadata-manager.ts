@@ -1,5 +1,5 @@
-import { AuthData } from "@saleor/app-sdk/APL";
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type AuthData } from "@saleor/app-sdk/APL";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 
 import { AppConfig } from "./app-config";

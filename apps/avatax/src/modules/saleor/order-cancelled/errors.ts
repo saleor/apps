@@ -1,4 +1,4 @@
-import { CommonErrorProps, CriticalError, ExpectedError } from "../../../error";
+import { type CommonErrorProps, CriticalError, ExpectedError } from "../../../error";
 
 export const OrderCancelPayloadOrderError = CriticalError.subclass("OrderCancelPayloadError", {
   props: {

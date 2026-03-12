@@ -1,6 +1,6 @@
 import { BaseError } from "@saleor/errors";
 
-import { SourceObjectFragment } from "@/generated/graphql";
+import { type SourceObjectFragment } from "@/generated/graphql";
 
 export const AtobaraiLineCalculationError = BaseError.subclass("AtobaraiLineCalculationError", {
   props: {

@@ -1,9 +1,12 @@
+import { after } from "next/server";
+
 import { metadataCache } from "@/lib/app-metadata-cache";
+import { createLogger } from "@/logger";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
+import { AvataxProblemReporter } from "@/modules/app-problems";
 import { ChannelConfigurationRepository } from "@/modules/channel-configuration/channel-configuration-repository";
 import { ChannelsFetcher } from "@/modules/channel-configuration/channel-fetcher";
 
-import { createLogger } from "../../logger";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
 import { router } from "../trpc/trpc-server";
 import { channelConfigPropertiesSchema } from "./channel-config";
@@ -41,6 +44,8 @@ export const channelsConfigurationRouter = router({
       });
 
       const result = await ctx.connectionService.upsert(input);
+
+      after(() => new AvataxProblemReporter(ctx.apiClient).clearChannelConfigProblem(input.slug));
 
       logger.info("Channel configuration upserted");
 

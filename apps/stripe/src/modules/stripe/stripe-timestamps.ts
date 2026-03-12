@@ -1,4 +1,4 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 import { createStripePaymentIntentStatus } from "./stripe-payment-intent-status";
 

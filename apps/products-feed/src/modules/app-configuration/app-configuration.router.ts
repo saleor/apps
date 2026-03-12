@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createLogger } from "../../logger";
+import { ProductsFeedProblemReporter } from "../app-problems";
 import { checkBucketAccess } from "../file-storage/s3/check-bucket-access";
 import { createS3ClientFromConfiguration } from "../file-storage/s3/create-s3-client-from-configuration";
 import { renderHandlebarsTemplate } from "../handlebarsTemplates/render-handlebars-template";
@@ -67,45 +68,54 @@ export const appConfigurationRouter = router({
 
   setS3BucketConfiguration: protectedClientProcedure
     .input(AppConfigSchema.s3Bucket)
-    .mutation(async ({ ctx: { saleorApiUrl, getConfig, appConfigMetadataManager }, input }) => {
-      const logger = createLogger("appConfigurationRouter.setS3BucketConfiguration", {
-        saleorApiUrl: saleorApiUrl,
-        buckeName: input.bucketName,
-        bucketRegion: input.region,
-      });
-
-      logger.debug("Validate credentials");
-
-      const s3Client = createS3ClientFromConfiguration(input);
-
-      try {
-        await checkBucketAccess({
-          bucketName: input.bucketName,
-          s3Client,
+    .mutation(
+      async ({ ctx: { saleorApiUrl, getConfig, appConfigMetadataManager, apiClient }, input }) => {
+        const logger = createLogger("appConfigurationRouter.setS3BucketConfiguration", {
+          saleorApiUrl: saleorApiUrl,
+          buckeName: input.bucketName,
+          bucketRegion: input.region,
         });
 
-        logger.info("Bucket access check succeeded");
-      } catch (e) {
-        logger.warn("Bucket access check failed", { error: e });
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message:
-            "Could not access the S3 bucket using the provided credentials. Check permissions",
-        });
-      }
+        logger.debug("Validate credentials");
 
-      logger.debug("Credentials validated, saving");
+        const s3Client = createS3ClientFromConfiguration(input);
 
-      const config = await getConfig();
+        try {
+          await checkBucketAccess({
+            bucketName: input.bucketName,
+            s3Client,
+          });
 
-      config.setS3(input);
+          logger.info("Bucket access check succeeded");
+        } catch (e) {
+          logger.warn("Bucket access check failed", { error: e });
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              "Could not access the S3 bucket using the provided credentials. Check permissions",
+          });
+        }
 
-      await appConfigMetadataManager.set(config.serialize());
+        logger.debug("Credentials validated, saving");
 
-      logger.info("Config saved");
+        const config = await getConfig();
 
-      return null;
-    }),
+        config.setS3(input);
+
+        await appConfigMetadataManager.set(config.serialize());
+
+        logger.info("Config saved");
+
+        const problemReporter = new ProductsFeedProblemReporter(apiClient);
+        const configuredChannels = Object.keys(config.getRootConfig().channelConfig);
+
+        await Promise.all(
+          configuredChannels.map((channel) => problemReporter.clearProblemsForChannel(channel)),
+        );
+
+        return null;
+      },
+    ),
   setChannelsUrls: protectedClientProcedure
     .input(
       z.object({

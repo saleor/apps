@@ -1,5 +1,11 @@
 # @saleor/apps-shared
 
+## 1.14.2
+
+### Patch Changes
+
+- f0d36e14: Updated `semver` package version
+
 ## 1.14.1
 
 ### Patch Changes

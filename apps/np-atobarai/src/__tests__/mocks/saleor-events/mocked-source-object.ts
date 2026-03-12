@@ -1,4 +1,4 @@
-import { SourceObjectFragment } from "@/generated/graphql";
+import { type SourceObjectFragment } from "@/generated/graphql";
 
 import { mockedSaleorChannelId } from "../saleor/mocked-saleor-channel-id";
 

@@ -1,4 +1,4 @@
-import { GetObjectAttributesCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectAttributesCommand, type S3Client } from "@aws-sdk/client-s3";
 
 export interface GetFileDetailsArgs {
   s3Client: S3Client;

@@ -1,10 +1,10 @@
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { fromPromise, fromThrowable, ok, ResultAsync } from "neverthrow";
 
 import { BaseError } from "../../../errors";
 import { racePromise } from "../../../lib/race-promise";
 import { createLogger } from "../../../logger";
-import { SmtpConfig } from "./smtp-config-schema";
+import { type SmtpConfig } from "./smtp-config-schema";
 
 /*
  *In case that pulling metadata takes too long, the app will stuck and we won't know what is happening, since

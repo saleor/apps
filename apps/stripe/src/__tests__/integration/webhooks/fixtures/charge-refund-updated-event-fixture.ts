@@ -1,8 +1,8 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 import { mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { StripeRefundId } from "@/modules/stripe/stripe-refund-id";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type StripeRefundId } from "@/modules/stripe/stripe-refund-id";
 
 export const chargeRefundUpdatedEventFixture = (
   mockedStripeRefundId: StripeRefundId,

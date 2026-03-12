@@ -1,5 +1,5 @@
 import { createManifestHandler } from "@saleor/app-sdk/handlers/next-app-router";
-import { AppExtension, AppManifest } from "@saleor/app-sdk/types";
+import { type AppExtension, type AppManifest } from "@saleor/app-sdk/types";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 

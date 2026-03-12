@@ -3,8 +3,8 @@ import { describe, expect, test } from "vitest";
 import {
   ClientLog,
   ClientLogStoreRequest,
-  ClientLogStoreRequestValue,
-  ClientLogValue,
+  type ClientLogStoreRequestValue,
+  type ClientLogValue,
 } from "./client-log";
 
 describe("ClientLog", () => {

@@ -1,6 +1,6 @@
 import { StripeRefundsApi } from "./stripe-refunds-api";
-import { StripeRestrictedKey } from "./stripe-restricted-key";
-import { IStripeRefundsApi, IStripeRefundsApiFactory } from "./types";
+import { type StripeRestrictedKey } from "./stripe-restricted-key";
+import { type IStripeRefundsApi, type IStripeRefundsApiFactory } from "./types";
 
 export class StripeRefundsApiFactory implements IStripeRefundsApiFactory {
   create(args: { key: StripeRestrictedKey }): IStripeRefundsApi {

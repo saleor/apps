@@ -1,10 +1,10 @@
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
-import { AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
-import { TransactionRecord } from "@/modules/transactions-recording/transaction-record";
+import { type AtobaraiTransactionId } from "@/modules/atobarai/atobarai-transaction-id";
+import { type TransactionRecord } from "@/modules/transactions-recording/transaction-record";
 import {
-  TransactionRecordRepo,
-  TransactionRecordRepoAccess,
+  type TransactionRecordRepo,
+  type TransactionRecordRepoAccess,
   TransactionRecordRepoError,
 } from "@/modules/transactions-recording/types";
 

@@ -1,9 +1,10 @@
 import { err, ok } from "neverthrow";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { describe, expect, it, vi } from "vitest";
 
 import { mockedAppConfigRepo } from "@/__tests__/mocks/app-config-repo";
 import { mockedSaleorAppId, mockedSaleorTransactionId } from "@/__tests__/mocks/constants";
+import { mockStripeProblemReporter } from "@/__tests__/mocks/mock-stripe-problem-reporter";
 import { mockedStripePaymentIntentId } from "@/__tests__/mocks/mocked-stripe-payment-intent-id";
 import { mockedStripeRefundId } from "@/__tests__/mocks/mocked-stripe-refund-id";
 import { mockedStripeRefundsApi } from "@/__tests__/mocks/mocked-stripe-refunds-api";
@@ -16,10 +17,30 @@ import {
 } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import { StripeAPIError } from "@/modules/stripe/stripe-api-error";
 import { StripeMoney } from "@/modules/stripe/stripe-money";
-import { IStripeRefundsApiFactory } from "@/modules/stripe/types";
+import { type IStripeRefundsApiFactory } from "@/modules/stripe/types";
 
 import { TransactionRefundRequestedUseCase } from "./use-case";
 import { TransactionRefundRequestedUseCaseResponses } from "./use-case-response";
+
+vi.mock("@saleor/app-problems", () => ({
+  AppProblemsReporter: class {
+    reportProblem() {
+      return Promise.resolve({ isErr: () => false });
+    }
+    clearProblems() {
+      return Promise.resolve({ isErr: () => false });
+    }
+  },
+}));
+
+vi.mock("@/lib/logger", () => ({
+  createLogger: () => ({
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  }),
+}));
 
 describe("TransactionRefundRequestedUseCase", () => {
   const stripeRefundsApiFactory = {
@@ -45,6 +66,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionRefundRequestedEvent(),
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -58,6 +80,8 @@ describe("TransactionRefundRequestedUseCase", () => {
         saleor_source_id: "mock-channel-1",
         saleor_source_type: "Checkout",
         saleor_transaction_id: "mocked-transaction-id",
+        saleor_api_url: mockedSaleorApiUrl,
+        saleor_app_id: mockedSaleorAppId,
       },
     });
   });
@@ -76,6 +100,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionRefundRequestedEvent(),
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(result._unsafeUnwrap()).toBeInstanceOf(
@@ -89,6 +114,8 @@ describe("TransactionRefundRequestedUseCase", () => {
         saleor_source_id: "mock-channel-1",
         saleor_source_type: "Checkout",
         saleor_transaction_id: "mocked-transaction-id",
+        saleor_api_url: mockedSaleorApiUrl,
+        saleor_app_id: mockedSaleorAppId,
       },
     });
   });
@@ -107,6 +134,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionRefundRequestedEvent(),
+      problemReporter: mockStripeProblemReporter,
     });
 
     const err = responsePayload._unsafeUnwrapErr();
@@ -133,6 +161,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: saleorEvent,
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(response._unsafeUnwrapErr()).toBeInstanceOf(MalformedRequestResponse);
@@ -154,6 +183,7 @@ describe("TransactionRefundRequestedUseCase", () => {
       saleorApiUrl: mockedSaleorApiUrl,
       appId: mockedSaleorAppId,
       event: getMockedTransactionRefundRequestedEvent(),
+      problemReporter: mockStripeProblemReporter,
     });
 
     expect(response._unsafeUnwrapErr()).toBeInstanceOf(BrokenAppResponse);
@@ -172,6 +202,7 @@ describe("TransactionRefundRequestedUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
+        problemReporter: mockStripeProblemReporter,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `[MissingTransactionError: Transaction not found in event]`,
@@ -199,6 +230,7 @@ describe("TransactionRefundRequestedUseCase", () => {
         saleorApiUrl: mockedSaleorApiUrl,
         appId: mockedSaleorAppId,
         event: saleorEvent,
+        problemReporter: mockStripeProblemReporter,
       }),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `[MissingChannelIdError: Channel ID not found in event Checkout or Order]`,

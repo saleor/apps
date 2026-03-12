@@ -1,17 +1,17 @@
 import { SuccessWebhookResponse } from "@/app/api/webhooks/saleor/saleor-webhook-responses";
 import {
-  TransactionCancelationRequestedSyncFailure,
-  TransactionCancelationRequestedSyncSuccess,
+  type TransactionCancelationRequestedSyncFailure,
+  type TransactionCancelationRequestedSyncSuccess,
 } from "@/generated/app-webhooks-types/transaction-cancelation-requested";
-import { AppContext } from "@/lib/app-context";
+import { type AppContext } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
+import { type SaleorMoney } from "@/modules/saleor/saleor-money";
 import { generatePaymentIntentStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
-import { StripeApiError } from "@/modules/stripe/stripe-api-error";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type StripeApiError } from "@/modules/stripe/stripe-api-error";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
 import {
-  CancelFailureResult,
-  CancelSuccessResult,
+  type CancelFailureResult,
+  type CancelSuccessResult,
 } from "@/modules/transaction-result/cancel-result";
 
 class Success extends SuccessWebhookResponse {

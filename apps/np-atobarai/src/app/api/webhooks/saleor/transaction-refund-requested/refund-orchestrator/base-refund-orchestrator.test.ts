@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { mockedSourceObject } from "@/__tests__/mocks/saleor-events/mocked-source-object";
 
-import { ParsedRefundEvent } from "../refund-event-parser";
+import { type ParsedRefundEvent } from "../refund-event-parser";
 import { BaseRefundOrchestrator } from "./base-refund-orchestrator";
 
 // Concrete implementation for testing the abstract class

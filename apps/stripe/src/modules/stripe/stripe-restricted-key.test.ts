@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   createStripeRestrictedKey,
-  StripeRestrictedKey,
+  type StripeRestrictedKey,
   StripeRestrictedKeyValidationError,
 } from "./stripe-restricted-key";
 

@@ -8,7 +8,7 @@ import { PayPalPaymentMethod } from "@/modules/stripe/payment-methods/paypal";
 import { SepaDebitPaymentMethod } from "@/modules/stripe/payment-methods/sepa-debit";
 import { USBankAccountPaymentMethod } from "@/modules/stripe/payment-methods/us-bank-account";
 
-import { TransactionInitializeSessionEventData } from "./event-data-parser";
+import { type TransactionInitializeSessionEventData } from "./event-data-parser";
 
 export const resolvePaymentMethodFromEventData = (
   eventData: TransactionInitializeSessionEventData,

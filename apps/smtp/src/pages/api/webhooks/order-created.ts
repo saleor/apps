@@ -1,4 +1,4 @@
-import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { type NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -6,14 +6,14 @@ import { captureException } from "@sentry/nextjs";
 import { gql } from "urql";
 
 import {
-  OrderCreatedWebhookPayloadFragment,
+  type OrderCreatedWebhookPayloadFragment,
   OrderDetailsFragmentDoc,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import { loggerContext } from "../../../logger-context";
-import { SendEventMessagesUseCase } from "../../../modules/event-handlers/use-case/send-event-messages.use-case";
 import { SendEventMessagesUseCaseFactory } from "../../../modules/event-handlers/use-case/send-event-messages.use-case.factory";
 import { saleorApp } from "../../../saleor-app";
+import { handleUseCaseErrors } from "./send-event-messages-response-handler";
 
 const OrderCreatedWebhookPayload = gql`
   ${OrderDetailsFragmentDoc}
@@ -93,28 +93,7 @@ const handler: NextJsWebhookHandler<OrderCreatedWebhookPayloadFragment> = async 
 
             return res.status(200).json({ message: "The event has been handled" });
           },
-          (err) => {
-            const errorInstance = err[0];
-
-            if (errorInstance instanceof SendEventMessagesUseCase.ServerError) {
-              logger.info("Failed to send email(s) [server error]", { error: err });
-
-              return res.status(400).json({ message: "Failed to send email" });
-            } else if (errorInstance instanceof SendEventMessagesUseCase.ClientError) {
-              logger.info("Failed to send email(s) [client error]", { error: err });
-
-              return res.status(400).json({ message: "Failed to send email" });
-            } else if (errorInstance instanceof SendEventMessagesUseCase.NoOpError) {
-              logger.info("Sending emails aborted [no op]", { error: err });
-
-              return res.status(200).json({ message: "The event has been handled [no op]" });
-            }
-
-            logger.error("Failed to send email(s) [unhandled error]", { error: err });
-            captureException(new Error("Unhandled useCase error", { cause: err }));
-
-            return res.status(500).json({ message: "Failed to send email [unhandled]" });
-          },
+          (errors) => handleUseCaseErrors({ errors, logger, res }),
         ),
       );
   } catch (e) {
@@ -124,7 +103,7 @@ const handler: NextJsWebhookHandler<OrderCreatedWebhookPayloadFragment> = async 
 
     captureException(e);
 
-    return res.status(500).json({ message: "Failed to execute webhook" });
+    return res.status(500).send("Failed to execute webhook");
   }
 };
 

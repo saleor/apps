@@ -1,4 +1,4 @@
-import { GoogleProxyItem, ProductEntry } from "./types";
+import { type GoogleProxyItem, type ProductEntry } from "./types";
 
 export const productToProxy = (p: ProductEntry) => {
   const item: GoogleProxyItem[] = [

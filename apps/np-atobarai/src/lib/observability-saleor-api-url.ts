@@ -1,4 +1,4 @@
-import { SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
+import { type SaleorApiUrl } from "@saleor/apps-domain/saleor-api-url";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { setTag } from "@sentry/nextjs";
 

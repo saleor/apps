@@ -1,4 +1,4 @@
-import { IGraphQLConfig } from "graphql-config";
+import { type IGraphQLConfig } from "graphql-config";
 
 const config: IGraphQLConfig = {
   projects: {
@@ -15,6 +15,8 @@ const config: IGraphQLConfig = {
                 immutableTypes: false, // TODO: enable this when we fix mutating fragments
                 strictScalars: true,
                 skipTypename: false, // TODO: enable this when we remove __typename from codebase
+                omitObjectTypes: true,
+                preResolveTypes: true,
                 scalars: {
                   _Any: "unknown",
                   Date: "string",
@@ -31,6 +33,7 @@ const config: IGraphQLConfig = {
                   WeightScalar: "number",
                   Day: "string",
                   Hour: "number",
+                  PositiveInt: "number",
                 },
               },
               plugins: [
@@ -41,7 +44,7 @@ const config: IGraphQLConfig = {
                   },
                 },
                 {
-                  typescript: {
+                  "graphql-codegen-typescript-operation-types": {
                     enumsAsTypes: true,
                   },
                 },

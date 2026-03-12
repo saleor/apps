@@ -1,10 +1,10 @@
 import { SALEOR_API_URL_HEADER, SALEOR_AUTHORIZATION_BEARER_HEADER } from "@saleor/app-sdk/headers";
-import { GenericRepo } from "@saleor/dynamo-config-repository";
-import { inferAsyncReturnType } from "@trpc/server";
-import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
-import { Client } from "urql";
+import { type GenericRepo } from "@saleor/dynamo-config-repository";
+import { type inferAsyncReturnType } from "@trpc/server";
+import { type FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { type Client } from "urql";
 
-import { AppChannelConfig } from "@/modules/app-config/app-config";
+import { type AppChannelConfig } from "@/modules/app-config/app-config";
 import { appConfigRepo } from "@/modules/app-config/repo/app-config-repo";
 
 export const createTrpcContextAppRouter = async ({ req }: FetchCreateContextFnOptions) => {

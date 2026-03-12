@@ -1,8 +1,8 @@
-import { err, ok, Result } from "neverthrow";
-import Stripe from "stripe";
+import { err, ok, type Result } from "neverthrow";
+import type Stripe from "stripe";
 
 import { BaseError } from "@/lib/errors";
-import { StripeClient } from "@/modules/stripe/stripe-client";
+import { type StripeClient } from "@/modules/stripe/stripe-client";
 
 export class StripeAuthValidator {
   stripe: Stripe;

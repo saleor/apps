@@ -1,7 +1,7 @@
 import { err, ok } from "neverthrow";
 import { describe, expect, it, vi } from "vitest";
 
-import { IWebhooksActivityClient } from "./webhook-activity-client";
+import { type IWebhooksActivityClient } from "./webhook-activity-client";
 import { WebhookActivityService } from "./webhook-activity-service";
 
 describe("WebhookActivityService", () => {

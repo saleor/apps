@@ -1,8 +1,8 @@
-import { Client, OperationResult } from "urql";
+import { type Client, type OperationResult } from "urql";
 
 import {
   CreateWebhookDocument,
-  CreateWebhookMutationVariables,
+  type CreateWebhookMutationVariables,
   DisableWebhookDocument,
   EnableWebhookDocument,
   FetchOwnWebhooksDocument,

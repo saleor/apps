@@ -3,7 +3,7 @@ import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next-app-router";
 import { verifyWebhookSignature } from "@/app/api/webhooks/saleor/verify-signature";
 import {
   TransactionInitializeSessionDocument,
-  TransactionInitializeSessionEventFragment,
+  type TransactionInitializeSessionEventFragment,
 } from "@/generated/graphql";
 import { saleorApp } from "@/lib/saleor-app";
 

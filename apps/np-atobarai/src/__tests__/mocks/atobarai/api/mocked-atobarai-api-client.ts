@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-import { IAtobaraiApiClient } from "@/modules/atobarai/api/types";
+import { type IAtobaraiApiClient } from "@/modules/atobarai/api/types";
 
 export const mockedAtobaraiApiClient = {
   registerTransaction: vi.fn(),

@@ -1,14 +1,14 @@
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { encrypt } from "@saleor/app-sdk/settings-manager";
 import { mockClient } from "aws-sdk-client-mock";
-import { SavedItem } from "dynamodb-toolbox";
+import { type SavedItem } from "dynamodb-toolbox";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { env } from "@/env";
 
 import { AppConfig } from "../configuration/app-config";
 import { DynamoConfigRepository } from "./dynamo-config-repository";
-import { SegmentConfigEntityType } from "./segment-main-table";
+import { type SegmentConfigEntityType } from "./segment-main-table";
 
 describe("DynamoConfigRepository", () => {
   const mockDocumentClient = mockClient(DynamoDBDocumentClient);

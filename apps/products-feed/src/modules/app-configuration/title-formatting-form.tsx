@@ -6,7 +6,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { trpcClient } from "../trpc/trpc-client";
-import { TitleTemplateInput, titleTemplateInputSchema } from "./app-config";
+import { type TitleTemplateInput, titleTemplateInputSchema } from "./app-config";
 
 type Props = {
   initialData: TitleTemplateInput;

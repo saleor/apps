@@ -24,7 +24,7 @@ import { createSaleorTransactionFlow } from "@/modules/saleor/saleor-transaction
 import { StripeMoney } from "@/modules/stripe/stripe-money";
 import {
   createStripePaymentIntentId,
-  StripePaymentIntentId,
+  type StripePaymentIntentId,
 } from "@/modules/stripe/stripe-payment-intent-id";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 import { createStripePublishableKey } from "@/modules/stripe/stripe-publishable-key";

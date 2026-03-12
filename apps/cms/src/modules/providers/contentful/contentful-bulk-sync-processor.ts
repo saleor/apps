@@ -1,8 +1,11 @@
 import { createLogger } from "@/logger";
 
-import { BulkImportProductFragment } from "../../../../generated/graphql";
-import { BulkSyncProcessor, BulkSyncProcessorHooks } from "../../bulk-sync/bulk-sync-processor";
-import { ContentfulProviderConfig } from "../../configuration";
+import { type BulkImportProductFragment } from "../../../../generated/graphql";
+import {
+  type BulkSyncProcessor,
+  type BulkSyncProcessorHooks,
+} from "../../bulk-sync/bulk-sync-processor";
+import { type ContentfulProviderConfig } from "../../configuration";
 import { ContentfulClient } from "./contentful-client";
 import { contentfulRateLimiter } from "./contentful-rate-limiter";
 

@@ -1,7 +1,8 @@
 import { SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 
-import { ProductCreated, ProductCreatedDocument } from "../../../generated/graphql";
+import { ProductCreatedDocument } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";
+import { type ProductCreated } from "../../lib/webhook-event-types";
 
 export const webhookProductCreated = new SaleorAsyncWebhook<ProductCreated>({
   webhookPath: "api/webhooks/saleor/product_created",

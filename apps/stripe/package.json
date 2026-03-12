@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "saleor-app-payment-stripe",
-  "version": "2.4.3",
+  "version": "2.5.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,6 @@
     "check-types": "tsc",
     "deploy": "tsx --env-file-if-exists=.env ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run /generate:.*/",
     "generate:app-graphql-types": "graphql-codegen",
     "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=${npm_package_config_saleor_schemaVersion}",
@@ -29,6 +28,7 @@
   },
   "config": {
     "saleor": {
+      "//": "Preserved to make json-schema working. TODO Move it to monorepo root.",
       "schemaVersion": "3.22"
     }
   },
@@ -44,6 +44,7 @@
     "@opentelemetry/sdk-logs": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
+    "@saleor/app-problems": "workspace:*",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
@@ -101,6 +102,7 @@
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
     "graphql": "catalog:",
+    "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
     "graphql-tag": "catalog:",
     "json-schema-to-typescript": "catalog:",

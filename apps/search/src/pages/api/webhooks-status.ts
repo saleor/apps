@@ -1,9 +1,12 @@
-import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
+import {
+  createProtectedHandler,
+  type NextJsProtectedApiHandler,
+} from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { Client } from "urql";
+import { type Client } from "urql";
 
-import { FetchOwnWebhooksDocument, OwnWebhookFragment } from "../../../generated/graphql";
+import { FetchOwnWebhooksDocument, type OwnWebhookFragment } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
@@ -26,7 +29,9 @@ export type WebhooksStatusResponse = {
 };
 
 export const webhooksStatusHandlerFactory =
-  ({ graphqlClientFactory }: FactoryProps): NextJsProtectedApiHandler<WebhooksStatusResponse> =>
+  ({
+    graphqlClientFactory,
+  }: FactoryProps): NextJsProtectedApiHandler<WebhooksStatusResponse | string> =>
   async (req, res, { authData }) => {
     /**
      * Initialize services
@@ -46,7 +51,7 @@ export const webhooksStatusHandlerFactory =
       if (!webhooks) {
         logger.error("Failed to fetch webhooks from Saleor - webhooks missing");
 
-        return res.status(500).end();
+        return res.status(500).send("Internal server error");
       }
 
       return res.status(200).json({
@@ -55,7 +60,7 @@ export const webhooksStatusHandlerFactory =
     } catch (e) {
       logger.error("Failed to fetch webhooks from Saleor - unhandled", { error: e });
 
-      return res.status(500).end();
+      return res.status(500).send("Internal server error");
     }
   };
 

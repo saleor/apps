@@ -1,4 +1,4 @@
-import { CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
+import { type CreateTransactionModel } from "avatax/lib/models/CreateTransactionModel";
 
 export const extractTransactionRedactedLogProperties = (model: CreateTransactionModel) => ({
   code: model.code,

@@ -1,7 +1,7 @@
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Layout } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 
 import { SegmentConfigForm } from "@/modules/configuration/segment-config-form/segment-config-form";
 import { WebhookStatus } from "@/modules/configuration/webhooks-status/webhooks-status";

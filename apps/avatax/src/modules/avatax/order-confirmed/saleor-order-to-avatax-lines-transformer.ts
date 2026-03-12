@@ -1,10 +1,10 @@
-import { LineItemModel } from "avatax/lib/models/LineItemModel";
+import { type LineItemModel } from "avatax/lib/models/LineItemModel";
 
-import { SaleorOrderConfirmedEvent } from "../../saleor";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { type SaleorOrderConfirmedEvent } from "../../saleor";
+import { type AvataxConfig } from "../avatax-connection-schema";
 import { SHIPPING_ITEM_CODE } from "../calculate-taxes/avatax-shipping-line";
-import { PriceReductionDiscountsStrategy } from "../discounts";
-import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { type PriceReductionDiscountsStrategy } from "../discounts";
+import { type AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
 
 export class SaleorOrderToAvataxLinesTransformer {
   transform({

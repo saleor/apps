@@ -1,6 +1,9 @@
-import { Client, gql } from "urql";
+import { type Client, gql } from "urql";
 
-import { FetchSaleorVersionDocument, FetchSaleorVersionQuery } from "../../../generated/graphql";
+import {
+  FetchSaleorVersionDocument,
+  type FetchSaleorVersionQuery,
+} from "../../../generated/graphql";
 
 gql`
   query FetchSaleorVersion {

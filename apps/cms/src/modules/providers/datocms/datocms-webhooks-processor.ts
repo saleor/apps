@@ -1,11 +1,11 @@
 import { createLogger } from "@/logger";
-import { DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
+import { type DatocmsProviderConfig } from "@/modules/configuration/schemas/datocms-provider.schema";
 
 import {
-  WebhookProductFragment,
-  WebhookProductVariantFragment,
+  type WebhookProductFragment,
+  type WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
+import { type ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { DatoCMSClient } from "./datocms-client";
 
 /*

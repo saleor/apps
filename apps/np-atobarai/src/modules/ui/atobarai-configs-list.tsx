@@ -2,7 +2,7 @@ import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-noti
 import { ConfigsList } from "@saleor/apps-ui";
 import { useRouter } from "next/router";
 
-import { AppChannelConfigFields } from "@/modules/app-config/app-config";
+import { type AppChannelConfigFields } from "@/modules/app-config/app-config";
 import { trpcClient } from "@/modules/trpc/trpc-client";
 
 type Props = {

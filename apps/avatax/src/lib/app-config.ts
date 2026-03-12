@@ -1,13 +1,13 @@
-import { err, fromThrowable, ok, Result } from "neverthrow";
+import { err, fromThrowable, ok, type Result } from "neverthrow";
 
-import { MetadataItem } from "../../generated/graphql";
 import { BaseError } from "../error";
 import { getAppConfig } from "../modules/app/get-app-config";
-import { ChannelsConfig } from "../modules/channel-configuration/channel-config";
+import { type ChannelsConfig } from "../modules/channel-configuration/channel-config";
 import {
-  ProviderConnection,
-  ProviderConnections,
+  type ProviderConnection,
+  type ProviderConnections,
 } from "../modules/provider-connections/provider-connections";
+import { type MetadataItem } from "./metadata-item";
 
 type ConfigPerChannelErrors =
   | typeof AppConfig.InvalidChannelSlugError

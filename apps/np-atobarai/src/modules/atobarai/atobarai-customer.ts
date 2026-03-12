@@ -1,7 +1,7 @@
 import { BaseError } from "@saleor/errors";
 import { z } from "zod";
 
-import { SourceObjectFragment } from "@/generated/graphql";
+import { type SourceObjectFragment } from "@/generated/graphql";
 import { zodReadableError } from "@/lib/zod-readable-error";
 import { AtobaraiAddressFormatter } from "@/modules/atobarai/atobarai-address-formatter";
 

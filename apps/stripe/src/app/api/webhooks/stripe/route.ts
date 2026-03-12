@@ -3,7 +3,7 @@ import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-att
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException } from "@sentry/nextjs";
 import { Result } from "neverthrow";
-import { NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
 import { appContextContainer } from "@/lib/app-context";
 import { BaseError } from "@/lib/errors";
@@ -13,6 +13,7 @@ import { loggerContext, withLoggerContext } from "@/lib/logger-context";
 import { setObservabilitySaleorApiUrl } from "@/lib/observability-saleor-api-url";
 import { saleorApp } from "@/lib/saleor-app";
 import { appConfigRepoImpl } from "@/modules/app-config/repositories/app-config-repo-impl";
+import { createStripeProblemReporter } from "@/modules/app-problems";
 import { TransactionEventReporter } from "@/modules/saleor/transaction-event-reporter";
 import { StripePaymentIntentsApiFactory } from "@/modules/stripe/stripe-payment-intents-api-factory";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
@@ -38,6 +39,7 @@ const useCase = new StripeWebhookUseCase({
       graphqlClient: createInstrumentedGraphqlClient(authData),
     });
   },
+  problemReporterFactory: (authData) => createStripeProblemReporter(authData),
   webhookManager: new StripeWebhookManager(),
   stripePaymentIntentsApiFactory: new StripePaymentIntentsApiFactory(),
 });

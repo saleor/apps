@@ -1,17 +1,22 @@
-import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import {
+  createProtectedHandler,
+  type NextJsProtectedApiHandler,
+} from "@saleor/app-sdk/handlers/next";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
-import { Client } from "urql";
+import { type Client } from "urql";
 
 import { ChannelsDocument } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";
+import { AlgoliaErrorParser } from "../../lib/algolia/algolia-error-parser";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
 import { createSettingsManager } from "../../lib/metadata";
 import { createTraceEffect } from "../../lib/trace-effect";
+import { SearchProblemReporter } from "../../modules/app-problems";
 import { AppConfigMetadataManager } from "../../modules/configuration/app-config-metadata-manager";
 
 const logger = createLogger("setupIndicesHandler");
@@ -33,7 +38,7 @@ export const setupIndicesHandlerFactory =
     if (req.method !== "POST") {
       logger.debug("Request method is different than POST, returning 405");
 
-      return res.status(405).end();
+      return res.status(405).send("Method not allowed");
     }
 
     logger.info("Fetching settings");
@@ -56,7 +61,7 @@ export const setupIndicesHandlerFactory =
     if (!configData.appConfig) {
       logger.info("Missing config, returning 400");
 
-      return res.status(400).end();
+      return res.status(400).send("Bad request");
     }
 
     const channels = channelsRequest.data?.channels || [];
@@ -80,7 +85,15 @@ export const setupIndicesHandlerFactory =
     } catch (e) {
       logger.error("Failed to update Algolia indices", { error: e });
 
-      return res.status(500).end();
+      const problemReporter = new SearchProblemReporter(client);
+
+      if (AlgoliaErrorParser.isAuthError(e)) {
+        await problemReporter.reportAuthError();
+      } else {
+        await problemReporter.reportIndexSetupFailed();
+      }
+
+      return res.status(500).send("Internal server error");
     }
   };
 

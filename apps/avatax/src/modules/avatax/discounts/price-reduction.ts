@@ -1,4 +1,4 @@
-import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
+import { type SaleorOrderConfirmedEvent } from "@/modules/saleor";
 
 /*
  * Used for order confirmed tax calculation. We don't calculate discounts here but we send totalPrices from Saleor with or without discounts and let AvaTax calculate the tax.

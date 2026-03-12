@@ -1,12 +1,12 @@
 import { TRPCClientError } from "@trpc/client";
-import { GraphQLError } from "graphql";
+import { type GraphQLError } from "graphql";
 
-import { createLogger } from "@/logger";
+import { type createLogger } from "@/logger";
 
 import { BaseError } from "../error";
-import { CalculateTaxesPayload } from "../modules/webhooks/payloads/calculate-taxes-payload";
-import { OrderCancelledPayload } from "../modules/webhooks/payloads/order-cancelled-payload";
-import { OrderConfirmedPayload } from "../modules/webhooks/payloads/order-confirmed-payload";
+import { type CalculateTaxesPayload } from "../modules/webhooks/payloads/calculate-taxes-payload";
+import { type OrderCancelledPayload } from "../modules/webhooks/payloads/order-cancelled-payload";
+import { type OrderConfirmedPayload } from "../modules/webhooks/payloads/order-confirmed-payload";
 
 export function resolveTrpcClientError(error: unknown) {
   if (error instanceof TRPCClientError) {

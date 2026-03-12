@@ -1,4 +1,4 @@
-import { SaleorSchemaVersion } from "@saleor/app-sdk/types";
+import { type SaleorSchemaVersion } from "@saleor/app-sdk/types";
 
 import { mockedSaleorApiUrl } from "@/__tests__/mocks/saleor-api-url";
 import { WebhookParams } from "@/app/api/webhooks/stripe/webhook-params";

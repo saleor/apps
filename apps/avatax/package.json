@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-avatax",
-  "version": "1.21.13",
+  "version": "1.22.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,6 @@
     "dev:debug": "APP_LOG_LEVEL=debug pnpm dev",
     "e2e": "vitest --project e2e --watch=false --sequence.sequential",
     "e2e:watch": "vitest --project e2e --watch --sequence.sequential",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "pnpm run generate:app && pnpm run generate:e2e",
     "generate:app": "graphql-codegen",
     "generate:e2e": "graphql-codegen --project e2e",
@@ -23,11 +22,6 @@
     "start": "next start",
     "test": "vitest --project units --sequence.shuffle",
     "test:ci": "vitest run --coverage --project units --sequence.shuffle"
-  },
-  "config": {
-    "saleor": {
-      "schemaVersion": "3.20"
-    }
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
@@ -42,6 +36,7 @@
     "@opentelemetry/sdk-metrics": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
+    "@saleor/app-problems": "workspace:*",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
@@ -104,6 +99,7 @@
     "aws-sdk-client-mock": "4.0.1",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
+    "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
     "pactum": "^3.6.0",
     "pactum-matchers": "^1.1.6",

@@ -1,6 +1,6 @@
 {
   "name": "saleor-app-products-feed",
-  "version": "2.1.12",
+  "version": "2.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,18 +8,12 @@
     "check-types": "tsc",
     "deploy": "tsx --require dotenv/config ./scripts/deploy.ts",
     "dev": "NODE_OPTIONS='--inspect' next dev",
-    "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_config_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "start": "next start",
     "test": "vitest",
     "test:ci": "vitest run --coverage"
-  },
-  "config": {
-    "saleor": {
-      "schemaVersion": "3.21"
-    }
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "catalog:",
@@ -35,6 +29,7 @@
     "@opentelemetry/sdk-logs": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
+    "@saleor/app-problems": "workspace:*",
     "@saleor/app-sdk": "link:../../node_modules/@saleor/app-sdk",
     "@saleor/apps-logger": "workspace:*",
     "@saleor/apps-otel": "workspace:*",
@@ -61,6 +56,7 @@
     "handlebars": "^4.7.7",
     "handlebars-helpers": "0.10.0",
     "jsdom": "catalog:",
+    "neverthrow": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -77,7 +73,6 @@
     "@graphql-codegen/introspection": "catalog:",
     "@graphql-codegen/schema-ast": "4.0.2",
     "@graphql-codegen/typed-document-node": "catalog:",
-    "@graphql-codegen/typescript": "catalog:",
     "@graphql-codegen/typescript-operations": "catalog:",
     "@graphql-codegen/typescript-urql": "catalog:",
     "@graphql-typed-document-node/core": "catalog:",
@@ -91,6 +86,7 @@
     "@vitest/coverage-v8": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-n": "catalog:",
+    "graphql-codegen-typescript-operation-types": "catalog:",
     "graphql-config": "5.0.3",
     "node-mocks-http": "catalog:",
     "tsx": "catalog:",

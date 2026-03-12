@@ -1,11 +1,11 @@
 import { SpanStatusCode } from "@opentelemetry/api";
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { getBaseUrl } from "@saleor/app-sdk/headers";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { z, ZodError } from "zod";
+import { z, type ZodError } from "zod";
 
 import { env } from "@/env";
 import { appRootTracer } from "@/lib/app-root-tracer";
@@ -13,7 +13,8 @@ import { ChunkCaller } from "@/lib/chunk-caller";
 import { createInstrumentedGraphqlClient } from "@/lib/create-instrumented-graphql-client";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
-import { RootConfig } from "@/modules/app-configuration/app-config";
+import { type RootConfig } from "@/modules/app-configuration/app-config";
+import { createProductsFeedProblemReporter } from "@/modules/app-problems";
 import { createS3ClientFromConfiguration } from "@/modules/file-storage/s3/create-s3-client-from-configuration";
 import { getFileName } from "@/modules/file-storage/s3/file-names";
 import { FileRemover } from "@/modules/file-storage/s3/file-remover";
@@ -58,7 +59,7 @@ const withErrorHandler = (
       logger.error("Unhandled error in feed handler", { error: error });
 
       if (!res.headersSent) {
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).send("Internal server error");
       }
     }
   };
@@ -115,7 +116,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     logger.warn("Invalid request params", { error: fieldErrors });
 
-    return res.status(400).json({ error: fieldErrors });
+    return res.status(400).send("Invalid request params");
   }
 
   logger.debug("Checking if app is installed in the given env");
@@ -124,8 +125,10 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (!authData) {
     logger.warn(`The app has not been configured with the ${url}`);
 
-    return res.status(400).json({ error: "The given instance has not been registered" });
+    return res.status(400).send("The given instance has not been registered");
   }
+
+  const problemReporter = createProductsFeedProblemReporter(authData);
 
   logger.debug("The app is registered for the given URL, checking the configuration", {
     appId: authData.appId,
@@ -161,6 +164,12 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     channelSettings = settings;
 
     if (!settings.s3BucketConfiguration) {
+      void problemReporter.reportS3NotConfigured(channel).catch((error) => {
+        logger.warn("Failed to report S3 not configured problem", {
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
+      });
+
       return res.status(400).send("App not configured");
     }
 
@@ -178,9 +187,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error) {
     logger.warn("The application has not been configured", { error: error });
 
-    return res
-      .status(400)
-      .json({ error: "Please configure the Google Feed settings at the dashboard" });
+    return res.status(400).send("Please configure the Google Feed settings at the dashboard");
   }
 
   let shopName: string;
@@ -199,7 +206,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error) {
     logger.error("Could not fetch the shop details");
 
-    return res.status(500).json({ error: "Could not fetch the shop details" });
+    return res.status(500).send("Could not fetch the shop details");
   }
 
   if (bucketConfiguration) {
@@ -334,7 +341,15 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       logger.error("Could not upload the feed to S3", { error: error });
       span.setStatus({ code: SpanStatusCode.ERROR });
 
-      return res.status(500).json({ error: "Could not upload the feed to S3" });
+      void problemReporter
+        .reportS3UploadFailed(channel, error instanceof Error ? error.message : "Unknown error")
+        .catch((reportError) => {
+          logger.warn("Failed to report S3 upload failure problem", {
+            error: reportError instanceof Error ? reportError.message : "Unknown error",
+          });
+        });
+
+      return res.status(500).send("Could not upload the feed to S3");
     } finally {
       span.end();
     }

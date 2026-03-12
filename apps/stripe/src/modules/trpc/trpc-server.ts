@@ -1,8 +1,8 @@
-import { Permission } from "@saleor/app-sdk/types";
+import { type Permission } from "@saleor/app-sdk/types";
 import { initTRPC } from "@trpc/server";
 
 import { REQUIRED_CLIENT_PERMISSIONS } from "@/lib/required-client-permissions";
-import { TrpcContextAppRouter } from "@/modules/trpc/context-app-router";
+import { type TrpcContextAppRouter } from "@/modules/trpc/context-app-router";
 
 interface Meta {
   requiredClientPermissions: Permission[];

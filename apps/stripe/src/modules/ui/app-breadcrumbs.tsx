@@ -1,5 +1,5 @@
 import { Breadcrumbs } from "@saleor/apps-ui";
-import { PropsWithBox } from "@saleor/macaw-ui";
+import { type PropsWithBox } from "@saleor/macaw-ui";
 
 export type Breadcrumb = {
   label: string;

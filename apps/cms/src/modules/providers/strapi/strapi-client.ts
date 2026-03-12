@@ -2,9 +2,9 @@ import Strapi from "strapi-sdk-js";
 import { z } from "zod";
 
 import { createLogger } from "@/logger";
-import { StrapiProviderConfig } from "@/modules/configuration";
+import { type StrapiProviderConfig } from "@/modules/configuration";
 
-import { WebhookProductVariantFragment } from "../../../../generated/graphql";
+import { type WebhookProductVariantFragment } from "../../../../generated/graphql";
 import { FieldsMapper } from "../fields-mapper";
 
 // partial response

@@ -1,4 +1,4 @@
-import { MoneyFragment } from "../generated/graphql";
+import { type MoneyFragment } from "../generated/graphql";
 
 export const getMoney = (amount: number, currency: string): MoneyFragment => {
   return {

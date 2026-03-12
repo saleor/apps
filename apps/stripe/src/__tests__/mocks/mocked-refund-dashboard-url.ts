@@ -1,6 +1,6 @@
 import { generateRefundStripeDashboardUrl } from "@/modules/stripe/generate-stripe-dashboard-urls";
-import { StripeEnv } from "@/modules/stripe/stripe-env";
-import { StripeRefundId } from "@/modules/stripe/stripe-refund-id";
+import { type StripeEnv } from "@/modules/stripe/stripe-env";
+import { type StripeRefundId } from "@/modules/stripe/stripe-refund-id";
 
 import { mockedStripeRefundId } from "./mocked-stripe-refund-id";
 

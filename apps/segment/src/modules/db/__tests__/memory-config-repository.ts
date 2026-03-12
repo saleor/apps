@@ -1,9 +1,9 @@
-import { ok, Result } from "neverthrow";
+import { ok, type Result } from "neverthrow";
 
-import { BaseError } from "@/errors";
-import { AppConfig } from "@/modules/configuration/app-config";
+import { type BaseError } from "@/errors";
+import { type AppConfig } from "@/modules/configuration/app-config";
 
-import { ConfigRepository } from "../types";
+import { type ConfigRepository } from "../types";
 
 export class MemoryConfigRepository implements ConfigRepository {
   public entries: Record<string, AppConfig> = {};

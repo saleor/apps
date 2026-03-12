@@ -1,5 +1,5 @@
 import { createLogger } from "../../logger";
-import { AvataxClient } from "./avatax-client";
+import { type AvataxClient } from "./avatax-client";
 
 export class AvataxEntityTypeMatcher {
   private logger = createLogger("AvataxEntityTypeMatcher");

@@ -2,11 +2,11 @@ import { z } from "zod";
 
 import {
   createStripePublishableKey,
-  StripePublishableKey,
+  type StripePublishableKey,
 } from "@/modules/stripe/stripe-publishable-key";
 import {
   createStripeRestrictedKey,
-  StripeRestrictedKey,
+  type StripeRestrictedKey,
 } from "@/modules/stripe/stripe-restricted-key";
 
 export const newStripeConfigInputSchema = z

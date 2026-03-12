@@ -1,12 +1,12 @@
 import { captureException } from "@sentry/nextjs";
-import { LineItemModel } from "avatax/lib/models/LineItemModel";
+import { type LineItemModel } from "avatax/lib/models/LineItemModel";
 import Decimal from "decimal.js-light";
 
-import { TaxBaseFragment } from "../../../../generated/graphql";
-import { AvataxConfig } from "../avatax-connection-schema";
-import { AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
-import { AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
-import { AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
+import { type TaxBaseFragment } from "../../../../generated/graphql";
+import { type AvataxConfig } from "../avatax-connection-schema";
+import { type AutomaticallyDistributedProductLinesDiscountsStrategy } from "../discounts";
+import { type AvataxTaxCodeMatches } from "../tax-code/avatax-tax-code-match-repository";
+import { type AvataxCalculateTaxesTaxCodeMatcher } from "./avatax-calculate-taxes-tax-code-matcher";
 import { AvataxProductLineCalculateTaxesFactory } from "./avatax-product-line-calculate-taxes-factory";
 import { avataxShippingLine } from "./avatax-shipping-line";
 

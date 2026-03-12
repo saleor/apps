@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import {
   StripeFrontendConfig,
-  StripeFrontendConfigSerializedFields,
+  type StripeFrontendConfigSerializedFields,
 } from "@/modules/app-config/domain/stripe-config";
 import { createSaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";

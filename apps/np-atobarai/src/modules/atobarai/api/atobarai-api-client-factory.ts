@@ -1,8 +1,12 @@
-import { AtobaraiMerchantCode } from "../atobarai-merchant-code";
-import { AtobaraiSecretSpCode } from "../atobarai-secret-sp-code";
-import { AtobaraiTerminalId } from "../atobarai-terminal-id";
+import { type AtobaraiMerchantCode } from "../atobarai-merchant-code";
+import { type AtobaraiSecretSpCode } from "../atobarai-secret-sp-code";
+import { type AtobaraiTerminalId } from "../atobarai-terminal-id";
 import { AtobaraiApiClient } from "./atobarai-api-client";
-import { AtobaraiEnvironment, IAtobaraiApiClient, IAtobaraiApiClientFactory } from "./types";
+import {
+  type AtobaraiEnvironment,
+  type IAtobaraiApiClient,
+  type IAtobaraiApiClientFactory,
+} from "./types";
 
 export class AtobaraiApiClientFactory implements IAtobaraiApiClientFactory {
   create(args: {

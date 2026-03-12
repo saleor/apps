@@ -1,5 +1,5 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { buildSyncWebhookResponsePayload } from "@saleor/app-sdk/handlers/shared";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
@@ -8,6 +8,7 @@ import { captureException, setTag } from "@sentry/nextjs";
 import Decimal from "decimal.js-light";
 import { after } from "next/server";
 
+import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
@@ -18,11 +19,15 @@ import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { updateExemptionStatusPublicMetadata } from "@/modules/app/exemption-status-public-metadata-updater";
+import { createAvataxProblemReporter } from "@/modules/app-problems";
 import { AvataxClient } from "@/modules/avatax/avatax-client";
-import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { type AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { AvataxEntityTypeMatcher } from "@/modules/avatax/avatax-entity-type-matcher";
 import { AvataxSdkClientFactory } from "@/modules/avatax/avatax-sdk-client-factory";
-import { AvataxCalculateTaxesAdapter } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
+import {
+  AvataxCalculateTaxesAdapter,
+  suspiciousLineCalculationCheck,
+} from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-adapter";
 import { AvataxCalculateTaxesPayloadService } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload.service";
 import { AvataxCalculateTaxesPayloadLinesTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-lines-transformer";
 import { AvataxCalculateTaxesPayloadTransformer } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-payload-transformer";
@@ -34,13 +39,15 @@ import { CalculateTaxesLogRequest } from "@/modules/client-logs/calculate-taxes-
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
 import {
   AvataxEntityNotFoundError,
+  AvataxForbiddenAccessError,
   AvataxGetTaxSystemError,
   AvataxGetTaxWrongUserInputError,
   AvataxInvalidAddressError,
+  AvataxInvalidCredentialsError,
   AvataxStringLengthError,
 } from "@/modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/order-calculate-taxes";
-import { CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
+import { type CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "@/modules/webhooks/validate-webhook-payload";
 
 const orderCalculateTaxesSyncWebhookReponse =
@@ -121,6 +128,8 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
 
       metadataCache.setMetadata(appMetadata);
       const { payload } = ctx;
+
+      let avataxConfigRef: { id: string; name: string; companyCode: string } | undefined;
 
       try {
         subscriptionErrorChecker.checkPayload(payload);
@@ -228,6 +237,16 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
+          {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const reason =
+              providerConfig.error instanceof AppConfig.MissingConfigurationError
+                ? "Channel references a provider configuration that no longer exists"
+                : "Channel is not configured in the AvaTax app";
+
+            after(() => problemReporter.reportChannelConfigMissing(channelSlug, reason));
+          }
+
           span.recordException(providerConfig.error);
           span.setStatus({
             code: SpanStatusCode.ERROR,
@@ -241,6 +260,12 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             { status: 400 },
           );
         }
+
+        avataxConfigRef = {
+          id: providerConfig.value.avataxConfig.id,
+          name: providerConfig.value.avataxConfig.config.name,
+          companyCode: providerConfig.value.avataxConfig.config.companyCode,
+        };
 
         const calculatedTaxesResult = await calculateTaxes({
           payload,
@@ -302,6 +327,19 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
           }
         }
 
+        {
+          const hasSuspiciousLine = calculatedTaxesResult.response.lines.some(
+            suspiciousLineCalculationCheck,
+          );
+
+          if (hasSuspiciousLine && avataxConfigRef) {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const configRef = avataxConfigRef;
+
+            after(() => problemReporter.reportSuspiciousZeroTax(configRef.id, configRef.name));
+          }
+        }
+
         logger.info("Taxes calculated - returning response do Saleor");
 
         CalculateTaxesLogRequest.createSuccessLog({
@@ -326,6 +364,17 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
         );
       } catch (error) {
         span.recordException(error as Error); // todo: remove casting when error handling is refactored
+
+        if (
+          avataxConfigRef &&
+          (error instanceof AvataxInvalidCredentialsError ||
+            error instanceof AvataxForbiddenAccessError)
+        ) {
+          const problemReporter = createAvataxProblemReporter(ctx.authData);
+          const configRef = avataxConfigRef;
+
+          after(() => problemReporter.reportApiProblem(error, configRef));
+        }
 
         if (error instanceof AvataxGetTaxWrongUserInputError) {
           logger.warn(
@@ -367,6 +416,13 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
+
+          if (avataxConfigRef) {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const configRef = avataxConfigRef;
+
+            after(() => problemReporter.reportApiProblem(error, configRef));
+          }
 
           span.setStatus({
             code: SpanStatusCode.ERROR,
@@ -448,6 +504,13 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
           })
             .mapErr(captureException)
             .map(logWriter.writeLog);
+
+          if (avataxConfigRef) {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const configRef = avataxConfigRef;
+
+            after(() => problemReporter.reportApiProblem(error, configRef));
+          }
 
           logger.warn(
             "AvataxEntityNotFoundError: App returns status 202 and error due to entity not found. See https://developer.avalara.com/avatax/errors/EntityNotFoundError/ for more details",

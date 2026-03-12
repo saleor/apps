@@ -1,4 +1,4 @@
-import { Client } from "urql";
+import { type Client } from "urql";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { invoiceSentWebhook } from "../../pages/api/webhooks/invoice-sent";

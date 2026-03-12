@@ -1,11 +1,14 @@
 import { captureException } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 import { Result } from "neverthrow";
+import { after } from "next/server";
 import { z } from "zod";
 
 import { BaseError } from "@/lib/errors";
-import { AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
-import { createSaleorApiUrl, SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
+import { createInstrumentedGraphqlClient } from "@/lib/graphql-client";
+import { type AppConfigRepo } from "@/modules/app-config/repositories/app-config-repo";
+import { StripeProblemReporter } from "@/modules/app-problems/stripe-problem-reporter";
+import { createSaleorApiUrl, type SaleorApiUrl } from "@/modules/saleor/saleor-api-url";
 import { StripeWebhookManager } from "@/modules/stripe/stripe-webhook-manager";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 
@@ -153,6 +156,15 @@ export class RemoveStripeConfigTrpcHandler {
             message: "Failed to remove Stripe configuration. Please try again.",
           });
         }
+
+        const reporter = new StripeProblemReporter(
+          createInstrumentedGraphqlClient({
+            saleorApiUrl: ctx.saleorApiUrl,
+            token: ctx.appToken,
+          }),
+        );
+
+        after(() => reporter.clearProblemsForConfig(input.configId));
       });
   }
 }

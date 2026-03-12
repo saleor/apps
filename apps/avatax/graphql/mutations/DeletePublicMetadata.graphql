@@ -6,8 +6,7 @@ mutation DeletePublicMetadata($id: ID!, $keys: [String!]!) {
     }
     item {
       metadata {
-        key
-        value
+        ...MetadataItem
       }
     }
   }

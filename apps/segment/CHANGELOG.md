@@ -1,5 +1,31 @@
 # saleor-app-segment
 
+## 2.2.10
+
+### Patch Changes
+
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+- ea4e0e27: Added Problems API integration to report configuration and tracking issues to the Saleor Dashboard. Previously, when the Segment app was misconfigured (missing write key, invalid credentials, or failed webhook activation), events were silently dropped with no visible indication. Now these issues are surfaced as problems in the Dashboard so they can be identified and resolved quickly.
+- Updated dependencies [ddfa9593]
+  - @saleor/webhook-utils@0.2.8
+
+## 2.2.9
+
+### Patch Changes
+
+- d9bb00f5: GraphQL schema has been refreshed to use latest 3.22 (this updates schema but does not change which APIs are executed)
+- c1cbffb4: Applied "consistent imports" rule from ESLint to ensure type-only imports are marked with `import type` clause. This should improve tree shaking and reduce side effects
+- dec95470: Removed nested graphql.schema files for each app/package and added root schema. Now all packages have symlink pointing to the same file.
+- Updated dependencies [f0d36e14]
+- Updated dependencies [dec95470]
+  - @saleor/webhook-utils@0.2.7
+  - @saleor/apps-shared@1.14.2
+  - @saleor/apps-logger@1.6.3
+  - @saleor/apps-otel@2.4.0
+  - @saleor/react-hook-form-macaw@0.2.16
+  - @saleor/sentry-utils@0.2.5
+  - @saleor/apps-ui@1.3.2
+
 ## 2.2.8
 
 ### Patch Changes

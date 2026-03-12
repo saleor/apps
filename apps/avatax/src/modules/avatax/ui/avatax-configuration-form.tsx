@@ -1,16 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Divider } from "@saleor/macaw-ui";
 import { Input } from "@saleor/react-hook-form-macaw";
-import { AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
+import { type AddressResolutionModel } from "avatax/lib/models/AddressResolutionModel";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { AppCard } from "../../ui/app-card";
 import { ProviderLabel } from "../../ui/provider-label";
 import {
-  AvataxConfig,
+  type AvataxConfig,
   avataxConfigSchema,
-  BaseAvataxConfig,
+  type BaseAvataxConfig,
   defaultAvataxConfig,
 } from "../avatax-connection-schema";
 import { AvataxConfigurationAddressFragment } from "./avatax-configuration-address-fragment";

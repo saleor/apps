@@ -1,9 +1,9 @@
-import { NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
+import { type NextAppRouterHandler } from "@saleor/app-sdk/handlers/next-app-router";
 import { AsyncLocalStorage } from "async_hooks";
-import { NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
-import { MetadataItem } from "../../generated/graphql";
 import { createLogger } from "../logger";
+import { type MetadataItem } from "./metadata-item";
 
 /**
  * Set global context that stores metadata from webhook payload.

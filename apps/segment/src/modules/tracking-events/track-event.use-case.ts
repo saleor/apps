@@ -2,9 +2,9 @@ import { err, ResultAsync } from "neverthrow";
 
 import { BaseError } from "@/errors";
 
-import { AppConfig } from "../configuration/app-config";
-import { ISegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
-import { TrackingBaseEvent } from "./tracking-events";
+import { type AppConfig } from "../configuration/app-config";
+import { type ISegmentEventTrackerFactory } from "../segment/segment-event-tracker-factory";
+import { type TrackingBaseEvent } from "./tracking-events";
 
 export class TrackEventUseCase {
   static TrackEventUseCaseUnknownError = BaseError.subclass("TrackEventUseCaseUnknowError");

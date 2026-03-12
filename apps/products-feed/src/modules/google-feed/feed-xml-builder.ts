@@ -1,6 +1,6 @@
 import { XMLBuilder } from "fast-xml-parser";
 
-import { GoogleProxyItem } from "./types";
+import { type GoogleProxyItem } from "./types";
 
 export class FeedXmlBuilder {
   private builder = new XMLBuilder({

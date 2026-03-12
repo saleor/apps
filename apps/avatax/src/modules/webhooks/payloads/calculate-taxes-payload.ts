@@ -1,4 +1,4 @@
-import { CalculateTaxesEventFragment } from "../../../../generated/graphql";
+import { type CalculateTaxesEventFragment } from "../../../../generated/graphql";
 
 /**
  * Common subset for ORDER and CHECKOUT events

@@ -1,4 +1,4 @@
-import { BulkImportProductFragment } from "../../../generated/graphql";
+import { type BulkImportProductFragment } from "../../../generated/graphql";
 
 export type BulkSyncProcessorHooks = {
   onUploadStart?: (context: { variantId: string }) => void;

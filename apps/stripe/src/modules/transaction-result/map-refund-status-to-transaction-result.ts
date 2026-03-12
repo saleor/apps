@@ -1,6 +1,6 @@
 import { assertUnreachable } from "@/lib/assert-unreachable";
 
-import { StripeRefundStatus } from "../stripe/stripe-refund-status";
+import { type StripeRefundStatus } from "../stripe/stripe-refund-status";
 import { RefundFailureResult, RefundRequestResult, RefundSuccessResult } from "./refund-result";
 
 export const mapRefundStatusToTransactionResult = (stripeRefundStatus: StripeRefundStatus) => {

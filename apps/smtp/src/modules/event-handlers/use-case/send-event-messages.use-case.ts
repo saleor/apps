@@ -7,16 +7,16 @@ import { FallbackSenderEmail } from "../../saleor-fallback-behavior/fallback-sen
 import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
   getFallbackSmtpConfigSchema,
-  SmtpConfiguration,
+  type SmtpConfiguration,
 } from "../../smtp/configuration/smtp-config-schema";
 import {
-  IGetFallbackSmtpEnabled,
-  IGetSmtpConfiguration,
+  type IGetFallbackSmtpEnabled,
+  type IGetSmtpConfiguration,
 } from "../../smtp/configuration/smtp-configuration.service";
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../../smtp/default-templates";
-import { IEmailCompiler } from "../../smtp/services/email-compiler";
-import { ISMTPEmailSender, SendMailArgs } from "../../smtp/services/smtp-email-sender";
-import { MessageEventTypes, messageEventTypes } from "../message-event-types";
+import { type IEmailCompiler } from "../../smtp/services/email-compiler";
+import { type ISMTPEmailSender, type SendMailArgs } from "../../smtp/services/smtp-email-sender";
+import { type MessageEventTypes, messageEventTypes } from "../message-event-types";
 
 export class SendEventMessagesUseCase {
   static BaseError = BaseError.subclass("SendEventMessagesUseCaseError");
@@ -50,6 +50,10 @@ export class SendEventMessagesUseCase {
   static EventSettingsMissingError = this.NoOpError.subclass("EventSettingsMissingError");
 
   static FallbackNotConfiguredError = this.NoOpError.subclass("FallbackNotConfiguredError");
+
+  static InvalidEmailAddressError = this.NoOpError.subclass("InvalidEmailAddressError");
+
+  static RejectedTestDomainError = this.NoOpError.subclass("RejectedTestDomainError");
 
   private logger = createLogger("SendEventMessagesUseCase");
 
@@ -232,6 +236,21 @@ export class SendEventMessagesUseCase {
 
     const fallbackEnabledResult = await this.deps.configService.getIsFallbackSmtpEnabled();
 
+    const recipientDomain = recipientEmail.split("@")[1]?.toLowerCase();
+
+    if (!recipientDomain) {
+      this.logger.error("Received invalid input: missing domain in the email address");
+
+      return err([
+        new SendEventMessagesUseCase.InvalidEmailAddressError(
+          "Received an invalid email address: couldn't determine the domain",
+          {
+            props: { channelSlug, event, recipientEmail },
+          },
+        ),
+      ]);
+    }
+
     if (fallbackEnabledResult.isErr() || !fallbackEnabledResult.value) {
       this.logger.info("Fallback SMTP is not enabled");
 
@@ -255,6 +274,22 @@ export class SendEventMessagesUseCase {
           "Fallback enabled but env vars are not configured",
           {
             props: { channelSlug, event },
+          },
+        ),
+      ]);
+    }
+
+    // Block sending to test/invalid domains when using fallback SMTP
+    if (fallbackSmtpConfig.blockedDomains.includes(recipientDomain)) {
+      this.logger.info("Rejected sending email: test domain detected", {
+        recipientDomain,
+      });
+
+      return err([
+        new SendEventMessagesUseCase.RejectedTestDomainError(
+          "This recipient domain is blocked for fallback SMTP",
+          {
+            props: { channelSlug, event, recipientEmail },
           },
         ),
       ]);

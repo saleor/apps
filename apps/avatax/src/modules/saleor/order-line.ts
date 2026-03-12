@@ -1,10 +1,10 @@
 import { err, ok, Result } from "neverthrow";
 import { z } from "zod";
 
-import { OrderLineFragment } from "../../../generated/graphql";
+import { type OrderLineFragment } from "../../../generated/graphql";
 import { BaseError } from "../../error";
 import { AvataxOrderConfirmedTaxCodeMatcher } from "../avatax/order-confirmed/avatax-order-confirmed-tax-code-matcher";
-import { AvataxTaxCodeMatches } from "../avatax/tax-code/avatax-tax-code-match-repository";
+import { type AvataxTaxCodeMatches } from "../avatax/tax-code/avatax-tax-code-match-repository";
 
 export class SaleorOrderLine {
   private static schema = z.object({

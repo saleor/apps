@@ -5,7 +5,7 @@ import React from "react";
 import { z } from "zod";
 
 import { trpcClient } from "../../trpc/trpc-client";
-import { AvataxConfig, BaseAvataxConfig } from "../avatax-connection-schema";
+import { type AvataxConfig, type BaseAvataxConfig } from "../avatax-connection-schema";
 import { AvataxObfuscator } from "../avatax-obfuscator";
 import { AvataxConfigurationForm } from "./avatax-configuration-form";
 import { useAvataxConfigurationStatus } from "./configuration-status";

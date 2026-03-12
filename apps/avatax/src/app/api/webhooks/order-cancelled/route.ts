@@ -6,6 +6,7 @@ import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { captureException, setTag } from "@sentry/nextjs";
 import { after } from "next/server";
 
+import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
@@ -14,6 +15,7 @@ import { appExternalTracer } from "@/lib/otel/tracing";
 import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
+import { createAvataxProblemReporter } from "@/modules/app-problems";
 import { AvataxOrderCancelledAdapter } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter";
 import { createAvaTaxOrderCancelledAdapterFromConfig } from "@/modules/avatax/order-cancelled/avatax-order-cancelled-adapter-factory";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
@@ -24,7 +26,12 @@ import {
   OrderCancelPayloadOrderError,
 } from "@/modules/saleor/order-cancelled/errors";
 import { OrderNoteReporter } from "@/modules/saleor/order-note-reporter";
-import { AvataxTransactionAlreadyCancelledError } from "@/modules/taxes/tax-error";
+import {
+  AvataxForbiddenAccessError,
+  AvataxGetTaxSystemError,
+  AvataxInvalidCredentialsError,
+  AvataxTransactionAlreadyCancelledError,
+} from "@/modules/taxes/tax-error";
 import { orderCancelledAsyncWebhook } from "@/modules/webhooks/definitions/order-cancelled";
 
 const logger = createLogger("orderCancelledAsyncWebhook");
@@ -228,6 +235,16 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
           .mapErr(captureException)
           .map(logWriter.writeLog);
 
+        {
+          const problemReporter = createAvataxProblemReporter(ctx.authData);
+          const reason =
+            providerConfig.error instanceof AppConfig.MissingConfigurationError
+              ? "Channel references a provider configuration that no longer exists"
+              : "Channel is not configured in the AvaTax app";
+
+          after(() => problemReporter.reportChannelConfigMissing(channelSlug, reason));
+        }
+
         span.recordException(providerConfig.error);
         span.setStatus({
           code: SpanStatusCode.ERROR,
@@ -262,6 +279,23 @@ const handler = orderCancelledAsyncWebhook.createHandler(async (_req, ctx) => {
         });
       } catch (e) {
         span.recordException(e as Error); // todo: remove casting when error handling is refactored
+
+        if (
+          e instanceof AvataxInvalidCredentialsError ||
+          e instanceof AvataxForbiddenAccessError ||
+          e instanceof AvataxGetTaxSystemError
+        ) {
+          const problemReporter = createAvataxProblemReporter(ctx.authData);
+          const avataxConfig = providerConfig.value.avataxConfig;
+
+          after(() =>
+            problemReporter.reportApiProblem(e, {
+              id: avataxConfig.id,
+              name: avataxConfig.config.name,
+              companyCode: avataxConfig.config.companyCode,
+            }),
+          );
+        }
 
         // TODO Test once it becomes testable
         if (e instanceof AvataxOrderCancelledAdapter.DocumentNotFoundError) {

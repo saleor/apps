@@ -1,5 +1,8 @@
-import { createProtectedHandler, NextJsProtectedApiHandler } from "@saleor/app-sdk/handlers/next";
-import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+import {
+  createProtectedHandler,
+  type NextJsProtectedApiHandler,
+} from "@saleor/app-sdk/handlers/next";
+import { type EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
@@ -90,7 +93,7 @@ const handler: NextJsProtectedApiHandler = async (request, res, ctx) => {
     }
 
     default:
-      return res.status(405).end();
+      return res.status(405).send("Method not allowed");
   }
 };
 

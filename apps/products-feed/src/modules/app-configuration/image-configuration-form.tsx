@@ -6,7 +6,7 @@ import { useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { trpcClient } from "../trpc/trpc-client";
-import { ImageSizeInput, imageSizeInputSchema } from "./app-config";
+import { type ImageSizeInput, imageSizeInputSchema } from "./app-config";
 
 type Props = {
   initialData: ImageSizeInput;

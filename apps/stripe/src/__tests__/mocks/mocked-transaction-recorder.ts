@@ -1,11 +1,11 @@
-import { err, ok, Result } from "neverthrow";
+import { err, ok, type Result } from "neverthrow";
 
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type RecordedTransaction } from "@/modules/transactions-recording/domain/recorded-transaction";
 import {
   TransactionRecorderError,
-  TransactionRecorderRepo,
-  TransactionRecorderRepoAccess,
+  type TransactionRecorderRepo,
+  type TransactionRecorderRepoAccess,
 } from "@/modules/transactions-recording/repositories/transaction-recorder-repo";
 
 export class MockedTransactionRecorder implements TransactionRecorderRepo {

@@ -1,17 +1,17 @@
-import Algoliasearch, { SearchClient } from "algoliasearch";
+import Algoliasearch, { type SearchClient } from "algoliasearch";
 
 import {
-  ProductVariantWebhookPayloadFragment,
-  ProductWebhookPayloadFragment,
+  type ProductVariantWebhookPayloadFragment,
+  type ProductWebhookPayloadFragment,
 } from "../../../generated/graphql";
 import { env } from "../../env";
 import { isNotNil } from "../isNotNil";
 import { createLogger } from "../logger";
-import { SearchProvider } from "../searchProvider";
+import { type SearchProvider } from "../searchProvider";
 import { createTraceEffect } from "../trace-effect";
 import { ALGOLIA_SLOW_THRESHOLD_MS } from "../trace-effect-thresholds";
 import {
-  AlgoliaObject,
+  type AlgoliaObject,
   channelListingToAlgoliaIndexId,
   productAndVariantToAlgolia,
   productAndVariantToObjectID,
@@ -165,7 +165,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await Promise.all(product.variants.map((variant) => this.updateProductVariant(variant)));
   }
 
-  async deleteProduct(product: ProductWebhookPayloadFragment) {
+  async deleteProduct(product: Pick<ProductWebhookPayloadFragment, "id">) {
     logger.debug(`deleteProduct`);
 
     await Promise.all(
@@ -221,7 +221,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     }
   }
 
-  async deleteProductVariant(productVariant: ProductVariantWebhookPayloadFragment) {
+  async deleteProductVariant(productVariant: { id: string; product: { id: string } }) {
     logger.debug(`deleteProductVariant called`);
 
     await this.deleteGroupedByIndex(

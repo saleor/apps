@@ -1,9 +1,9 @@
-import { AuthData } from "@saleor/app-sdk/APL";
-import { Result } from "neverthrow";
+import { type AuthData } from "@saleor/app-sdk/APL";
+import { type Result } from "neverthrow";
 
-import { BaseError } from "@/errors";
+import { type BaseError } from "@/errors";
 
-import { AppConfig } from "../configuration/app-config";
+import { type AppConfig } from "../configuration/app-config";
 
 export interface APLRepository {
   getEntry(args: {

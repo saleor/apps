@@ -1,11 +1,11 @@
 import { createLogger } from "@/logger";
-import { PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
+import { type PayloadCmsProviderConfig } from "@/modules/configuration/schemas/payloadcms-provider.schema";
 
 import {
-  WebhookProductFragment,
-  WebhookProductVariantFragment,
+  type WebhookProductFragment,
+  type WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
+import { type ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { PayloadCMSClient } from "./payloadcms-client";
 
 /*

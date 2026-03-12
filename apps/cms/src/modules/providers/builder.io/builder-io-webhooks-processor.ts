@@ -1,11 +1,11 @@
 import { createLogger } from "@/logger";
 
 import {
-  WebhookProductFragment,
-  WebhookProductVariantFragment,
+  type WebhookProductFragment,
+  type WebhookProductVariantFragment,
 } from "../../../../generated/graphql";
-import { BuilderIoProviderConfig } from "../../configuration";
-import { ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
+import { type BuilderIoProviderConfig } from "../../configuration";
+import { type ProductWebhooksProcessor } from "../../webhooks-operations/product-webhooks-processor";
 import { BuilderIoClient } from "./builder-io.client";
 
 export type BuilderioClientStrip = Pick<

@@ -1,4 +1,4 @@
-import { StripeConfig } from "@/modules/app-config/domain/stripe-config";
+import { type StripeConfig } from "@/modules/app-config/domain/stripe-config";
 
 export class AppRootConfig {
   readonly chanelConfigMapping: Record<string, string>;

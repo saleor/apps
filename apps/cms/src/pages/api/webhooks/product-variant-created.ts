@@ -1,16 +1,17 @@
-import { NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
+import { type NextJsWebhookHandler, SaleorAsyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { wrapWithLoggerContext } from "@saleor/apps-logger/node";
 import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { captureException } from "@sentry/nextjs";
 import { gql } from "urql";
 
 import { createLogger } from "@/logger";
+import { createCmsProblemReporter } from "@/modules/app-problems";
 import { createWebhookConfigContext } from "@/modules/webhooks-operations/create-webhook-config-context";
 import { WebhooksProcessorsDelegator } from "@/modules/webhooks-operations/webhooks-processors-delegator";
 import { saleorApp } from "@/saleor-app";
 
 import {
-  ProductVariantCreatedWebhookPayloadFragment,
+  type ProductVariantCreatedWebhookPayloadFragment,
   ProductVariantCreatedWebhookPayloadFragmentDoc,
   WebhookProductVariantFragmentDoc,
 } from "../../../../generated/graphql";
@@ -69,7 +70,7 @@ const handler: NextJsWebhookHandler<ProductVariantCreatedWebhookPayloadFragment>
     logger.warn("Product variant not found in payload");
     captureException("ProductVariant not found in payload");
 
-    return res.status(500).end();
+    return res.status(500).send("Product variant not found in payload");
   }
 
   logger.info("Webhook called", {
@@ -80,9 +81,11 @@ const handler: NextJsWebhookHandler<ProductVariantCreatedWebhookPayloadFragment>
   });
 
   const configContext = await createWebhookConfigContext({ authData });
+  const problemReporter = createCmsProblemReporter(authData);
 
   await new WebhooksProcessorsDelegator({
     context: configContext,
+    problemReporter,
   }).delegateVariantCreatedOperations(payload.productVariant);
 
   logger.info("Webhook processed successfully");

@@ -1,16 +1,16 @@
 import { BaseError } from "@saleor/errors";
-import { Result } from "neverthrow";
+import { type Result } from "neverthrow";
 
-import { AtobaraiMerchantCode } from "../atobarai-merchant-code";
-import { AtobaraiSecretSpCode } from "../atobarai-secret-sp-code";
-import { AtobaraiTerminalId } from "../atobarai-terminal-id";
-import { AtobaraiCancelTransactionPayload } from "./atobarai-cancel-transaction-payload";
-import { AtobaraiCancelTransactionSuccessResponse } from "./atobarai-cancel-transaction-success-response";
-import { AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
-import { AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
-import { AtobaraiFulfillmentReportSuccessResponse } from "./atobarai-fulfillment-report-success-response";
-import { AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
-import { AtobaraiTransactionSuccessResponse } from "./atobarai-transaction-success-response";
+import { type AtobaraiMerchantCode } from "../atobarai-merchant-code";
+import { type AtobaraiSecretSpCode } from "../atobarai-secret-sp-code";
+import { type AtobaraiTerminalId } from "../atobarai-terminal-id";
+import { type AtobaraiCancelTransactionPayload } from "./atobarai-cancel-transaction-payload";
+import { type AtobaraiCancelTransactionSuccessResponse } from "./atobarai-cancel-transaction-success-response";
+import { type AtobaraiChangeTransactionPayload } from "./atobarai-change-transaction-payload";
+import { type AtobaraiFulfillmentReportPayload } from "./atobarai-fulfillment-report-payload";
+import { type AtobaraiFulfillmentReportSuccessResponse } from "./atobarai-fulfillment-report-success-response";
+import { type AtobaraiRegisterTransactionPayload } from "./atobarai-register-transaction-payload";
+import { type AtobaraiTransactionSuccessResponse } from "./atobarai-transaction-success-response";
 
 export type AtobaraiApiRegisterTransactionErrors = InstanceType<
   typeof AtobaraiApiClientRegisterTransactionError | typeof AtobaraiMultipleResultsError

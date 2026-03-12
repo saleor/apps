@@ -1,0 +1,75 @@
+name: Update GraphQL Schema
+
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Weekly on Monday at 07:00 UTC
+  workflow_dispatch: # Manual trigger
+
+permissions:
+  contents: read
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  update-schema:
+    name: Update GraphQL Schema
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Token
+        id: get-token
+        uses: saleor/saleor-internal-actions/request-vault-token@v1.4.0
+        with:
+          vault-url: ${{ secrets.VAULT_URL }}
+          vault-jwt: ${{ secrets.VAULT_JWT }}
+
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.get-token.outputs.token }}
+
+      - uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Fetch GraphQL schema
+        run: pnpm run fetch-schema
+
+      - name: Generate GraphQL types
+        run: pnpm run generate
+
+      - name: Create PR with schema changes
+        env:
+          GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}
+        run: |
+          if git diff --quiet; then
+            echo "No schema changes detected"
+            exit 0
+          fi
+
+          BRANCH="update-schema"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "Update GraphQL schema"
+          git push --force origin "$BRANCH"
+
+          # Only create PR if one doesn't already exist for this branch
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number')
+          if [ -z "$EXISTING_PR" ]; then
+            gh pr create \
+              --title "Update GraphQL schema" \
+              --body "Automated GraphQL schema update and type regeneration." \
+              --base main \
+              --label "skip changeset"
+          else
+            echo "PR #$EXISTING_PR already exists, force-pushed updated changes"
+            gh pr edit "$EXISTING_PR" --add-label "skip changeset"
+          fi

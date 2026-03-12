@@ -1,8 +1,8 @@
-import { err, ok, Result } from "neverthrow";
-import Stripe from "stripe";
+import { err, ok, type Result } from "neverthrow";
+import type Stripe from "stripe";
 
-import { Paymentmethoddetails } from "@/generated/app-webhooks-types/transaction-process-session";
-import { PaymentMethodDetailsInput } from "@/generated/graphql";
+import { type Paymentmethoddetails } from "@/generated/app-webhooks-types/transaction-process-session";
+import { type PaymentMethodDetailsInput } from "@/generated/graphql";
 import { BaseError } from "@/lib/errors";
 
 export type SaleorPaymentMethodDetailsErrorType = InstanceType<

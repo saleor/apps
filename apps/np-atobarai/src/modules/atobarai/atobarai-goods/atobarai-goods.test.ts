@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AtobaraiGoods } from "./atobarai-goods";
+import { type AtobaraiGoods } from "./atobarai-goods";
 
 describe("AtobaraiGoods", () => {
   it("shouldn't be assignable without good builder", () => {

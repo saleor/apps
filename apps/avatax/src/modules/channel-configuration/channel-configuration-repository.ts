@@ -1,4 +1,4 @@
-import { EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
+import { type EncryptedMetadataManager } from "@saleor/app-sdk/settings-manager";
 
 import { metadataCache } from "@/lib/app-metadata-cache";
 import { createSettingsManager } from "@/modules/app/metadata-manager";
@@ -6,7 +6,7 @@ import { TAX_PROVIDER_KEY } from "@/modules/provider-connections/public-provider
 
 import { createLogger } from "../../logger";
 import { CrudSettingsManager } from "../crud-settings/crud-settings.service";
-import { ChannelConfig, channelsSchema } from "./channel-config";
+import { type ChannelConfig, channelsSchema } from "./channel-config";
 
 export class ChannelConfigurationRepository {
   private crudSettingsManager: CrudSettingsManager;

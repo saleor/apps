@@ -1,7 +1,7 @@
 import { Box, Button, EditIcon } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 
-import { ProviderConnection } from "../provider-connections/provider-connections";
+import { type ProviderConnection } from "../provider-connections/provider-connections";
 import { trpcClient } from "../trpc/trpc-client";
 import { Table } from "./table";
 

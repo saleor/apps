@@ -3,7 +3,10 @@ import { z } from "zod";
 
 import { env } from "@/env";
 import { type ClientLogValue } from "@/modules/client-logs/client-log";
-import { LastEvaluatedKey, LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
+import {
+  type LastEvaluatedKey,
+  LogsRepositoryDynamodb,
+} from "@/modules/client-logs/logs-repository";
 import { createDocumentClient, createDynamoClient } from "@/modules/dynamodb/dynamo-client";
 import { protectedClientProcedure } from "@/modules/trpc/protected-client-procedure";
 import { router } from "@/modules/trpc/trpc-server";

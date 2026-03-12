@@ -1,30 +1,30 @@
-import { SaleorMoney } from "@/modules/saleor/saleor-money";
-import { SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
-import { SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
-import { TransactionEventReportInput } from "@/modules/saleor/transaction-event-reporter";
-import { StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
-import { StripeRefundId } from "@/modules/stripe/stripe-refund-id";
+import { type SaleorMoney } from "@/modules/saleor/saleor-money";
+import { type SaleorPaymentMethodDetails } from "@/modules/saleor/saleor-payment-method-details";
+import { type SaleorTransationId } from "@/modules/saleor/saleor-transaction-id";
+import { type TransactionEventReportInput } from "@/modules/saleor/transaction-event-reporter";
+import { type StripePaymentIntentId } from "@/modules/stripe/stripe-payment-intent-id";
+import { type StripeRefundId } from "@/modules/stripe/stripe-refund-id";
 import {
-  AuthorizationActionRequiredResult,
-  ChargeActionRequiredResult,
+  type AuthorizationActionRequiredResult,
+  type ChargeActionRequiredResult,
 } from "@/modules/transaction-result/action-required-result";
-import { CancelSuccessResult } from "@/modules/transaction-result/cancel-result";
+import { type CancelSuccessResult } from "@/modules/transaction-result/cancel-result";
 import {
-  AuthorizationFailureResult,
-  ChargeFailureResult,
+  type AuthorizationFailureResult,
+  type ChargeFailureResult,
 } from "@/modules/transaction-result/failure-result";
 import {
-  RefundFailureResult,
-  RefundRequestResult,
-  RefundSuccessResult,
+  type RefundFailureResult,
+  type RefundRequestResult,
+  type RefundSuccessResult,
 } from "@/modules/transaction-result/refund-result";
 import {
-  AuthorizationRequestResult,
-  ChargeRequestResult,
+  type AuthorizationRequestResult,
+  type ChargeRequestResult,
 } from "@/modules/transaction-result/request-result";
 import {
-  AuthorizationSuccessResult,
-  ChargeSuccessResult,
+  type AuthorizationSuccessResult,
+  type ChargeSuccessResult,
 } from "@/modules/transaction-result/success-result";
 
 type WebhookTransactionResult =

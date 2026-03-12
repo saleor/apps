@@ -1,4 +1,4 @@
-import { Option } from "@saleor/macaw-ui";
+import { type Option } from "@saleor/macaw-ui";
 
 import { trpcClient } from "../../trpc/trpc-client";
 

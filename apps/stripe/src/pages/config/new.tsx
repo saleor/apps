@@ -1,6 +1,6 @@
 import { Layout, TextLink } from "@saleor/apps-ui";
 import { Box, Text } from "@saleor/macaw-ui";
-import { NextPage } from "next";
+import { type NextPage } from "next";
 
 import { AppBreadcrumbs } from "@/modules/ui/app-breadcrumbs";
 import { NewStripeConfigForm } from "@/modules/ui/stripe-configs/new-stripe-config-form";

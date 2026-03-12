@@ -1,7 +1,11 @@
 import { env } from "@/env";
 import { BaseError } from "@/error";
 import { ClientLogDynamoEntityFactory, LogsTable } from "@/modules/client-logs/dynamo-logs-table";
-import { DynamoDbLogWriter, ILogWriter, LogWriterContext } from "@/modules/client-logs/log-writer";
+import {
+  DynamoDbLogWriter,
+  type ILogWriter,
+  type LogWriterContext,
+} from "@/modules/client-logs/log-writer";
 import { LogsRepositoryDynamodb } from "@/modules/client-logs/logs-repository";
 import { createDocumentClient, createDynamoClient } from "@/modules/dynamodb/dynamo-client";
 

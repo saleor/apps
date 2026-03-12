@@ -1,11 +1,12 @@
 import { SpanKind, SpanStatusCode } from "@opentelemetry/api";
-import { AuthData } from "@saleor/app-sdk/APL";
+import { type AuthData } from "@saleor/app-sdk/APL";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
 import { withSpanAttributesAppRouter } from "@saleor/apps-otel/src/with-span-attributes";
 import { compose } from "@saleor/apps-shared/compose";
 import { captureException, setTag } from "@sentry/nextjs";
 import { after } from "next/server";
 
+import { AppConfig } from "@/lib/app-config";
 import { AppConfigExtractor } from "@/lib/app-config-extractor";
 import { AppConfigurationLogger } from "@/lib/app-configuration-logger";
 import { metadataCache, wrapWithMetadataCache } from "@/lib/app-metadata-cache";
@@ -16,7 +17,8 @@ import { withFlushOtelMetrics } from "@/lib/otel/with-flush-otel-metrics";
 import { createLogger } from "@/logger";
 import { loggerContext, withLoggerContext } from "@/logger-context";
 import { OrderMetadataManager } from "@/modules/app/order-metadata-manager";
-import { AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
+import { createAvataxProblemReporter } from "@/modules/app-problems";
+import { type AvataxConfig } from "@/modules/avatax/avatax-connection-schema";
 import { PriceReductionDiscountsStrategy } from "@/modules/avatax/discounts";
 import { createAvaTaxOrderConfirmedAdapterFromAvaTaxConfig } from "@/modules/avatax/order-confirmed/avatax-order-confirmed-adapter-factory";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
@@ -25,8 +27,10 @@ import { SaleorOrderConfirmedEvent } from "@/modules/saleor";
 import { OrderNoteReporter } from "@/modules/saleor/order-note-reporter";
 import {
   AvataxEntityNotFoundError,
+  AvataxForbiddenAccessError,
   AvataxGetTaxSystemError,
   AvataxGetTaxWrongUserInputError,
+  AvataxInvalidCredentialsError,
   AvataxStringLengthError,
   TaxBadPayloadError,
 } from "@/modules/taxes/tax-error";
@@ -240,6 +244,21 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
             .mapErr(captureException)
             .map(logWriter.writeLog);
 
+          {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const reason =
+              providerConfig.error instanceof AppConfig.MissingConfigurationError
+                ? "Channel references a provider configuration that no longer exists"
+                : "Channel is not configured in the AvaTax app";
+
+            after(() =>
+              problemReporter.reportChannelConfigMissing(
+                confirmedOrderEvent.getChannelSlug(),
+                reason,
+              ),
+            );
+          }
+
           span.recordException(providerConfig.error);
           span.setStatus({
             code: SpanStatusCode.ERROR,
@@ -309,6 +328,22 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
           logger.debug("Error confirming order in AvaTax", { error: error });
           span.recordException(error as Error); // todo: remove casting when error handling is refactored
 
+          if (
+            error instanceof AvataxInvalidCredentialsError ||
+            error instanceof AvataxForbiddenAccessError
+          ) {
+            const problemReporter = createAvataxProblemReporter(ctx.authData);
+            const avataxConfig = providerConfig.value.avataxConfig;
+
+            after(() =>
+              problemReporter.reportApiProblem(error, {
+                id: avataxConfig.id,
+                name: avataxConfig.config.name,
+                companyCode: avataxConfig.config.companyCode,
+              }),
+            );
+          }
+
           switch (true) {
             case error instanceof TaxBadPayloadError: {
               OrderConfirmedLogRequest.createErrorLog({
@@ -363,6 +398,19 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
 
+              {
+                const problemReporter = createAvataxProblemReporter(ctx.authData);
+                const avataxConfig = providerConfig.value.avataxConfig;
+
+                after(() =>
+                  problemReporter.reportApiProblem(error, {
+                    id: avataxConfig.id,
+                    name: avataxConfig.config.name,
+                    companyCode: avataxConfig.config.companyCode,
+                  }),
+                );
+              }
+
               span.setStatus({
                 code: SpanStatusCode.ERROR,
                 message: "Failed to commit AvaTax transaction: error from AvaTax API",
@@ -406,6 +454,19 @@ const handler = orderConfirmedAsyncWebhook.createHandler(async (_req, ctx) => {
               })
                 .mapErr(captureException)
                 .map(logWriter.writeLog);
+
+              {
+                const problemReporter = createAvataxProblemReporter(ctx.authData);
+                const avataxConfig = providerConfig.value.avataxConfig;
+
+                after(() =>
+                  problemReporter.reportApiProblem(error, {
+                    id: avataxConfig.id,
+                    name: avataxConfig.config.name,
+                    companyCode: avataxConfig.config.companyCode,
+                  }),
+                );
+              }
 
               span.setStatus({
                 code: SpanStatusCode.ERROR,

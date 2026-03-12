@@ -1,6 +1,6 @@
 import { avataxAddressFactory } from "../address-factory";
-import { AvataxClient } from "../avatax-client";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { type AvataxClient } from "../avatax-client";
+import { type AvataxConfig } from "../avatax-connection-schema";
 
 export class AvataxAddressValidationService {
   constructor(private avataxClient: AvataxClient) {}

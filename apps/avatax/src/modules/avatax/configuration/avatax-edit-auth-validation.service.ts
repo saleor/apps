@@ -3,10 +3,10 @@ import { Client } from "urql";
 
 import { AvataxInvalidCredentialsError } from "../../taxes/tax-error";
 import { AvataxClient } from "../avatax-client";
-import { AvataxConfig } from "../avatax-connection-schema";
+import { type AvataxConfig } from "../avatax-connection-schema";
 import { AvataxSdkClientFactory } from "../avatax-sdk-client-factory";
 import { AvataxAuthValidationService } from "./avatax-auth-validation.service";
-import { AvataxPatchInputTransformer } from "./avatax-patch-input-transformer";
+import { type AvataxPatchInputTransformer } from "./avatax-patch-input-transformer";
 
 export class AvataxEditAuthValidationService {
   constructor(private avataxPatchInputTransformer: AvataxPatchInputTransformer) {}

@@ -1,4 +1,4 @@
-import { TransactionRefundRequestedEventFragment } from "@/generated/graphql";
+import { type TransactionRefundRequestedEventFragment } from "@/generated/graphql";
 
 import { mockedSaleorChannelId, mockedSaleorTransactionId } from "../constants";
 import { mockedStripePaymentIntentId } from "../mocked-stripe-payment-intent-id";

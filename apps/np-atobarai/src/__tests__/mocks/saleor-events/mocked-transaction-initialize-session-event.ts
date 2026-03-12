@@ -1,4 +1,4 @@
-import { TransactionInitializeSessionEventFragment } from "@/generated/graphql";
+import { type TransactionInitializeSessionEventFragment } from "@/generated/graphql";
 
 import { mockedSaleorAppId } from "../saleor/mocked-saleor-app-id";
 import { mockedSaleorTransactionToken } from "../saleor/mocked-saleor-transaction-token";

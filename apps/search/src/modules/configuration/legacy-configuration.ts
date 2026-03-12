@@ -1,6 +1,6 @@
-import { SettingsManager } from "@saleor/app-sdk/settings-manager";
+import { type SettingsManager } from "@saleor/app-sdk/settings-manager";
 
-import { AppConfigurationFields } from "./configuration";
+import { type AppConfigurationFields } from "./configuration";
 
 /**
  * Before single-key configuration was introduced, this was a shape of settings.

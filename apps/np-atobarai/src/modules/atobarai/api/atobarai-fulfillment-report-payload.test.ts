@@ -4,7 +4,7 @@ import { mockedAtobaraiShippingCompanyCode } from "@/__tests__/mocks/atobarai/mo
 import { mockedAtobaraiTransactionId } from "@/__tests__/mocks/atobarai/mocked-atobarai-transaction-id";
 
 import {
-  AtobaraiFulfillmentReportPayload,
+  type AtobaraiFulfillmentReportPayload,
   createAtobaraiFulfillmentReportPayload,
 } from "./atobarai-fulfillment-report-payload";
 
