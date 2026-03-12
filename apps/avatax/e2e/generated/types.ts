@@ -7150,6 +7150,8 @@ export type CustomerOrderWhereInput = {
   isGiftCardUsed?: InputMaybe<Scalars['Boolean']['input']>;
   /** Filter by number of lines in the order. */
   linesCount?: InputMaybe<IntFilterInput>;
+  /** Filter by metadata fields. */
+  metadata?: InputMaybe<MetadataFilterInput>;
   /** Filter by order number. */
   number?: InputMaybe<IntFilterInput>;
   /** Filter by the product type of related order lines. */

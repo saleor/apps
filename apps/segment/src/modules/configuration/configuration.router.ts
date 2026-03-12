@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createLogger } from "@/logger";
+import { SegmentProblemReporter } from "@/modules/app-problems";
 
 import { DynamoConfigRepositoryFactory } from "../db/dynamo-config-factory";
 import { protectedClientProcedure } from "../trpc/protected-client-procedure";
@@ -93,10 +94,16 @@ export const configurationRouter = router({
           error: enableAppWebhooksResult.error,
         });
 
+        void new SegmentProblemReporter(ctx.apiClient).reportWebhooksDisabled(
+          enableAppWebhooksResult.error.message,
+        );
+
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "There is a problem with enabling app webhooks. Contact Saleor support.",
         });
       }
+
+      void new SegmentProblemReporter(ctx.apiClient).clearAllProblems();
     }),
 });

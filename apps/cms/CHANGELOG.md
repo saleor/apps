@@ -1,5 +1,15 @@
 # saleor-app-cms
 
+## 2.14.0
+
+### Minor Changes
+
+- a1e76fba: Added support for Problems API. Now app tries to detected errors from connected platform and set Problem on Saleor instance, available for staff users.
+
+### Patch Changes
+
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+
 ## 2.13.9
 
 ### Patch Changes

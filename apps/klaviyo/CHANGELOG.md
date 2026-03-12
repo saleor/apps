@@ -1,5 +1,11 @@
 # saleor-app-klaviyo
 
+## 1.14.10
+
+### Patch Changes
+
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+
 ## 1.14.9
 
 ### Patch Changes

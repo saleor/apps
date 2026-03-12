@@ -6,6 +6,7 @@ import { withSpanAttributes } from "@saleor/apps-otel/src/with-span-attributes";
 import { type OrderConfirmedSubscriptionPayloadFragment } from "@/generated/graphql";
 import { createLogger } from "@/logger";
 import { loggerContext } from "@/logger-context";
+import { createSegmentProblemReporter } from "@/modules/app-problems";
 import { DynamoAppConfigManager } from "@/modules/configuration/dynamo-app-config-manager";
 import { DynamoConfigRepositoryFactory } from "@/modules/db/dynamo-config-factory";
 import { SegmentEventTrackerFactory } from "@/modules/segment/segment-event-tracker-factory";
@@ -33,6 +34,7 @@ const handler: NextJsWebhookHandler<OrderConfirmedSubscriptionPayloadFragment> =
 ) => {
   try {
     const { authData, payload } = context;
+    const reporter = createSegmentProblemReporter(authData);
 
     const config = await configManager.get({
       saleorApiUrl: authData.saleorApiUrl,
@@ -41,6 +43,8 @@ const handler: NextJsWebhookHandler<OrderConfirmedSubscriptionPayloadFragment> =
 
     if (!config) {
       logger.warn("App config not found. Event won't be send to Segment");
+
+      void reporter.reportConfigMissing();
 
       return res.status(200).json({
         message: "App config not found. Event won't be send to Segment",
@@ -78,6 +82,8 @@ const handler: NextJsWebhookHandler<OrderConfirmedSubscriptionPayloadFragment> =
                 error: error,
               });
 
+              void reporter.reportTrackingFailed(error.message);
+
               return res.status(200).json({
                 message:
                   "Error during creating connection with Segment. Event won't be send to Segment",
@@ -88,6 +94,8 @@ const handler: NextJsWebhookHandler<OrderConfirmedSubscriptionPayloadFragment> =
               logger.error("Unknown error while sending order completed event to Segment", {
                 error: error,
               });
+
+              void reporter.reportTrackingFailed(error.message);
 
               return res.status(500).send("Error while sending order completed event to Segment");
             }

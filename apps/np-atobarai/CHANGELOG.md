@@ -1,5 +1,11 @@
 # saleor-app-payment-np-atobarai
 
+## 1.3.7
+
+### Patch Changes
+
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+
 ## 1.3.6
 
 ### Patch Changes

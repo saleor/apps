@@ -1,5 +1,11 @@
 # saleor-app-payment-stripe
 
+## 2.5.1
+
+### Patch Changes
+
+- ddfa9593: Changed how generated graphql->typescript types work. Now only types that are directly or indirectly connected to written documents (mutations, queries) are generated
+
 ## 2.5.0
 
 ### Minor Changes
