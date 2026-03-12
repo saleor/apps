@@ -40,5 +40,6 @@ jobs:
     with:
       VERSION: ${{ inputs.VERSION }}
       APP_IDENTIFIERS: ${{ inputs.APP_IDENTIFIERS }}
+      ARTIFACT_PREFIX: ${{ inputs.VERSION }}
     secrets:
       OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
