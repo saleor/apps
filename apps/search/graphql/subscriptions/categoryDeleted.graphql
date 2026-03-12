@@ -1,0 +1,16 @@
+subscription CategoryDeleted {
+  event {
+    __typename
+    ... on CategoryDeleted {
+      __typename
+      category {
+        ...CategoryData
+      }
+    }
+    recipient {
+      webhooks {
+        id
+      }
+    }
+  }
+}

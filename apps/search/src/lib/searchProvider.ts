@@ -1,4 +1,5 @@
 import {
+  type CategoryDataFragment,
   type ProductVariantWebhookPayloadFragment,
   type ProductWebhookPayloadFragment,
 } from "../../generated/graphql";
@@ -10,4 +11,7 @@ export interface SearchProvider {
   createProductVariant(productVariant: ProductVariantWebhookPayloadFragment): Promise<void>;
   updateProductVariant(productVariant: ProductVariantWebhookPayloadFragment): Promise<void>;
   deleteProductVariant(productId: { id: string; product: { id: string } }): Promise<void>;
+  createCategory(category: CategoryDataFragment): Promise<void>;
+  updateCategory(category: CategoryDataFragment): Promise<void>;
+  deleteCategory(categoryId: string): Promise<void>;
 }

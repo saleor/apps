@@ -13,7 +13,14 @@ fragment ProductData on Product {
   name
   description
   slug
+  productType {
+    id
+    name
+    slug
+  }
   category {
+    id
+    slug
     name
     parent {
       name

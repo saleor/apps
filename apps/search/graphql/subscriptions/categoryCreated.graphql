@@ -1,0 +1,16 @@
+subscription CategoryCreated {
+  event {
+    __typename
+    ... on CategoryCreated {
+      __typename
+      category {
+        ...CategoryData
+      }
+    }
+    recipient {
+      webhooks {
+        id
+      }
+    }
+  }
+}

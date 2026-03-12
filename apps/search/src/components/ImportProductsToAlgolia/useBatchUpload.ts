@@ -3,6 +3,8 @@ import { createGraphQLClient } from "@saleor/apps-shared/create-graphql-client";
 import { useState } from "react";
 
 import {
+  CategoriesDataForImportDocument,
+  type CategoriesDataForImportQuery,
   ChannelsDocument,
   ProductsDataForImportDocument,
   type ProductsDataForImportQuery,
@@ -14,6 +16,10 @@ const PENDING_UPLOADS_BATCH_SIZE = 10;
 
 export type Products = NonNullable<
   ProductsDataForImportQuery["products"]
+>["edges"][number]["node"][];
+
+export type Categories = NonNullable<
+  CategoriesDataForImportQuery["categories"]
 >["edges"][number]["node"][];
 
 type UploadState =
@@ -120,11 +126,32 @@ const useGraphQLClient = () => {
     }
   }
 
-  return { getChannels, getProductsByChannel };
+  async function* getCategories(cursor: string = ""): AsyncGenerator<Categories> {
+    const response = await client
+      .query(CategoriesDataForImportDocument, {
+        after: cursor,
+        first: PER_PAGE,
+      })
+      .toPromise();
+
+    const newCategories = response?.data?.categories?.edges.map((e) => e.node) ?? [];
+
+    if (newCategories.length > 0) {
+      yield newCategories;
+    }
+    if (
+      response?.data?.categories?.pageInfo.hasNextPage &&
+      response?.data?.categories?.pageInfo.endCursor
+    ) {
+      yield* getCategories(response.data.categories?.pageInfo.endCursor);
+    }
+  }
+
+  return { getChannels, getProductsByChannel, getCategories };
 };
 
-const useProductFetcher = () => {
-  const { getChannels, getProductsByChannel } = useGraphQLClient();
+const useDataFetcher = () => {
+  const { getChannels, getProductsByChannel, getCategories } = useGraphQLClient();
 
   async function* getProducts() {
     const channelsResponse = await getChannels();
@@ -137,20 +164,28 @@ const useProductFetcher = () => {
     }
   }
 
-  return { getProducts };
+  return { getProducts, getCategories };
 };
 
 export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => {
   const { uploadState, incrementTotal, incrementCurrent, finishingUpload, startUploading } =
     useUploadState();
-  const { getProducts } = useProductFetcher();
+  const { getProducts, getCategories } = useDataFetcher();
 
-  const uploadToAlgolia = async (products: Products) => {
+  const uploadProductsToAlgolia = async (products: Products) => {
     if (!searchProvider) return;
 
     await searchProvider.updatedBatchProducts(products);
 
     incrementCurrent(products.length);
+  };
+
+  const uploadCategoriesToAlgolia = async (categories: Categories) => {
+    if (!searchProvider) return;
+
+    await searchProvider.updatedBatchCategories(categories);
+
+    incrementCurrent(categories.length);
   };
 
   const startUpload = async () => {
@@ -161,7 +196,21 @@ export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => 
 
     for await (const products of getProducts()) {
       incrementTotal(products.length);
-      pendingUploads.push(uploadToAlgolia(products));
+      pendingUploads.push(uploadProductsToAlgolia(products));
+
+      if (pendingUploads.length >= PENDING_UPLOADS_BATCH_SIZE) {
+        await Promise.all(pendingUploads);
+        pendingUploads = [];
+      }
+    }
+
+    if (pendingUploads.length > 0) {
+      await Promise.all(pendingUploads);
+    }
+
+    for await (const categories of getCategories()) {
+      incrementTotal(categories.length);
+      pendingUploads.push(uploadCategoriesToAlgolia(categories));
 
       if (pendingUploads.length >= PENDING_UPLOADS_BATCH_SIZE) {
         await Promise.all(pendingUploads);

@@ -177,6 +177,9 @@ export function productAndVariantToAlgolia({
     description: safeParseJson(product.description),
     descriptionPlaintext: EditorJsPlaintextRenderer({ stringData: product.description ?? "" }),
     slug: product.slug,
+    productType: product.productType?.name ?? null,
+    categoryId: product.category?.id ?? null,
+    categorySlug: product.category?.slug ?? null,
     thumbnail: product.thumbnail?.url,
     /**
      * Deprecated

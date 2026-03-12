@@ -1,0 +1,13 @@
+query CategoriesDataForImport($first: Int, $after: String) {
+  categories(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        ...CategoryData
+      }
+    }
+  }
+}
