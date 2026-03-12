@@ -1,0 +1,27 @@
+apps/search/src/lib/algolia/categoryAlgoliaUtils.test.ts
+  c8eab9bf1dc4507a 52-53,58,60-62,65-66,71-81
+apps/search/src/lib/algolia/categoryAlgoliaUtils.ts
+  c8eab9bf1dc4507a 8,14-20,26
+apps/search/src/lib/algolia/algoliaSearchProvider.ts
+  c8eab9bf1dc4507a 147-148
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.10",
+  "base_commit_sha": "bb3606750307b86bdcfbf62b0d1765c89976d7ec",
+  "prompts": {
+    "c8eab9bf1dc4507a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "25378a85-b0a5-464e-a875-6b526d42cf10",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 42,
+      "total_deletions": 147,
+      "accepted_lines": 36,
+      "overriden_lines": 0
+    }
+  }
+}
