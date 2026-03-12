@@ -1,5 +1,14 @@
 # saleor-app-avatax
 
+## 1.22.1
+
+### Patch Changes
+
+- 0484f64: Add error cause for verifyJwt failures on tRPC
+- 8cc005b: Updated aws-sdk packages and dynamodb-toolbox to latest versions
+- Updated dependencies [8cc005b]
+  - @saleor/app-problems@1.0.1
+
 ## 1.22.0
 
 ### Minor Changes
