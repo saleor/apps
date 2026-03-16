@@ -25,7 +25,7 @@ import { AvataxCalculateTaxesResponseTransformer } from "@/modules/avatax/calcul
 import { AvataxCalculateTaxesTaxCodeMatcher } from "@/modules/avatax/calculate-taxes/avatax-calculate-taxes-tax-code-matcher";
 import { CalculateTaxesUseCase } from "@/modules/calculate-taxes/use-case/calculate-taxes.use-case";
 import { LogWriterFactory } from "@/modules/client-logs/log-writer-factory";
-import { AvataxInvalidAddressError } from "@/modules/taxes/tax-error";
+import { AvataxInvalidAddressError, AvataxTimeoutError } from "@/modules/taxes/tax-error";
 import { checkoutCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/checkout-calculate-taxes";
 
 const logger = createLogger("checkoutCalculateTaxesSyncWebhook");
@@ -210,6 +210,22 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
               span.recordException(error);
 
               switch (error.constructor) {
+                case CalculateTaxesUseCase.TimeoutError: {
+                  logger.warn("AvaTax API request timed out", { error });
+
+                  span.setStatus({
+                    code: SpanStatusCode.ERROR,
+                    message: "AvaTax API request timed out",
+                  });
+
+                  return Response.json(
+                    {
+                      message: "AvaTax API request timed out",
+                    },
+                    { status: 504 },
+                  );
+                }
+
                 case CalculateTaxesUseCase.FailedCalculatingTaxesError: {
                   span.setStatus({
                     code: SpanStatusCode.ERROR,
@@ -303,6 +319,18 @@ const handler = checkoutCalculateTaxesSyncWebhook.createHandler(async (_req, ctx
         });
       } catch (error) {
         span.recordException(error as Error);
+
+        if (error instanceof AvataxTimeoutError) {
+          logger.warn("AvaTax API request timed out", { error });
+
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: "AvaTax API request timed out",
+          });
+
+          return Response.json({ message: "AvaTax API request timed out" }, { status: 504 });
+        }
+
         // todo this should be now available in usecase. Catch it from FailedCalculatingTaxesError
         if (error instanceof AvataxInvalidAddressError) {
           logger.warn(

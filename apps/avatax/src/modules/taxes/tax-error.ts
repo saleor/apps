@@ -80,3 +80,5 @@ export const AvataxForbiddenAccessError = ExpectedError.subclass("AvataxForbidde
     description: "",
   },
 });
+
+export const AvataxTimeoutError = ExpectedError.subclass("AvataxTimeoutError");
