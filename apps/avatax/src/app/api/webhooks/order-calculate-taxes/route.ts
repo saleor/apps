@@ -45,6 +45,7 @@ import {
   AvataxInvalidAddressError,
   AvataxInvalidCredentialsError,
   AvataxStringLengthError,
+  AvataxTimeoutError,
 } from "@/modules/taxes/tax-error";
 import { orderCalculateTaxesSyncWebhook } from "@/modules/webhooks/definitions/order-calculate-taxes";
 import { type CalculateTaxesPayload } from "@/modules/webhooks/payloads/calculate-taxes-payload";
@@ -528,6 +529,17 @@ const handler = orderCalculateTaxesSyncWebhook.createHandler(async (_req, ctx) =
             },
             { status: 202 },
           );
+        }
+
+        if (error instanceof AvataxTimeoutError) {
+          logger.warn("AvaTax API request timed out", { error });
+
+          span.setStatus({
+            code: SpanStatusCode.ERROR,
+            message: "AvaTax API request timed out",
+          });
+
+          return Response.json({ message: "AvaTax API request timed out" }, { status: 504 });
         }
 
         captureException(error);

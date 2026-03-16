@@ -24,7 +24,11 @@ import {
   AvataxCalculateTaxesAdapter,
   type AvataxCalculateTaxesResult,
 } from "../../avatax/calculate-taxes/avatax-calculate-taxes-adapter";
-import { AvataxGetTaxWrongUserInputError, TaxIncompletePayloadErrors } from "../../taxes/tax-error";
+import {
+  AvataxGetTaxWrongUserInputError,
+  AvataxTimeoutError,
+  TaxIncompletePayloadErrors,
+} from "../../taxes/tax-error";
 import { type CalculateTaxesPayload } from "../../webhooks/payloads/calculate-taxes-payload";
 import { verifyCalculateTaxesPayload } from "../../webhooks/validate-webhook-payload";
 
@@ -42,6 +46,7 @@ export class CalculateTaxesUseCase {
   static FailedCalculatingTaxesError = this.CalculateTaxesUseCaseError.subclass(
     "FailedCalculatingTaxesError",
   );
+  static TimeoutError = this.CalculateTaxesUseCaseError.subclass("TimeoutError");
 
   constructor(
     private deps: {
@@ -218,6 +223,12 @@ export class CalculateTaxesUseCase {
         })
           .mapErr(captureException)
           .map(logWriter.writeLog);
+
+        if (err instanceof AvataxTimeoutError) {
+          return new CalculateTaxesUseCase.TimeoutError("AvaTax API request timed out", {
+            cause: err,
+          });
+        }
 
         // Check if this is a user input error (should return HTTP 400)
         if (err instanceof AvataxGetTaxWrongUserInputError) {

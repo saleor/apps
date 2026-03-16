@@ -1,5 +1,11 @@
 # @saleor/app-problems
 
+## 1.0.1
+
+### Patch Changes
+
+- 8cc005b: Updated aws-sdk packages and dynamodb-toolbox to latest versions
+
 ## 1.0.0
 
 ### Major Changes
