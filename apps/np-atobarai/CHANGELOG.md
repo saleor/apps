@@ -1,5 +1,16 @@
 # saleor-app-payment-np-atobarai
 
+## 1.4.0
+
+### Minor Changes
+
+- fab1f78: Webhook responses now return plain text response to Saleor, so it should be properly displayed in dashboard "webhook errors". Previously app was returning `{"message": "..."}` which is not recognized shape officially by Saleor nor Dashboard - it was rendered like text anyway.
+
+### Patch Changes
+
+- 0484f64: Add error cause for verifyJwt failures on tRPC
+- 8cc005b: Updated aws-sdk packages and dynamodb-toolbox to latest versions
+
 ## 1.3.7
 
 ### Patch Changes
