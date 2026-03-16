@@ -168,7 +168,7 @@ describe("category_updated webhook handler", () => {
     await handler(req, res, mockContext);
 
     expect(res._getStatusCode()).toBe(400);
-    expect(res._getJSONData()).toStrictEqual({ message: "Config error" });
+    expect(res._getData()).toBe("Config error");
   });
 
   it("Reports auth error problem when Algolia returns 403", async () => {
