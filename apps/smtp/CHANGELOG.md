@@ -1,5 +1,17 @@
 # saleor-app-smtp
 
+## 1.7.0
+
+### Minor Changes
+
+- fab1f78: Webhook responses now return plain text response to Saleor, so it should be properly displayed in dashboard "webhook errors". Previously app was returning `{"message": "..."}` which is not recognized shape officially by Saleor nor Dashboard - it was rendered like text anyway.
+
+### Patch Changes
+
+- 0484f64: Add error cause for verifyJwt failures on tRPC
+- 8cc005b: Updated aws-sdk packages and dynamodb-toolbox to latest versions
+- 3cf78c1: Improved error logs (passing causes to logs)
+
 ## 1.6.2
 
 ### Patch Changes
