@@ -19411,7 +19411,10 @@ export type Payment = Node & ObjectWithMetadata & {
   readonly modified: Scalars['DateTime']['output'];
   /** Order associated with a payment. */
   readonly order?: Maybe<Order>;
-  /** Informs whether this is a partial payment. */
+  /**
+   * Informs whether this is a partial payment.
+   * @deprecated This field is reserved for the Adyen Gateway plugin. For other gateways, its value is always `false`. This field will be removed in 3.23 along with the plugin.
+   */
   readonly partial: Scalars['Boolean']['output'];
   /** Type of method used for payment. */
   readonly paymentMethodType: Scalars['String']['output'];

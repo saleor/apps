@@ -90,9 +90,7 @@ export const handler: NextJsWebhookHandler<ProductVariantCreated> = async (req, 
       error: e,
     });
 
-    return res.status(400).json({
-      message: (e as Error).message,
-    });
+    return res.status(400).send((e as Error).message);
   }
 };
 

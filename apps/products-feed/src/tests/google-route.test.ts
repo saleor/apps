@@ -184,11 +184,11 @@ describe("Google Feed Handler - Error Handling", () => {
       expect(res._getStatusCode()).toBe(500);
 
       /**
-       * Assert - Should return error JSON
+       * Assert - Should return error text
        */
-      const jsonData = res._getJSONData();
+      const data = res._getData();
 
-      expect(jsonData).toStrictEqual({ error: "Internal server error" });
+      expect(data).toBe("Internal server error");
 
       /**
        * Assert - Error should be logged with proper error chain

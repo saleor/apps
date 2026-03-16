@@ -17,11 +17,7 @@ describe("BrokenAppResponse", () => {
     const fetchResponse = getConfigResponse.getResponse();
 
     expect(fetchResponse.status).toBe(500);
-    expect(await fetchResponse.json()).toMatchInlineSnapshot(`
-      {
-        "message": "App is not working",
-      }
-    `);
+    expect(await fetchResponse.text()).toBe("App is not working");
   });
 });
 
@@ -34,11 +30,7 @@ describe("AppIsNotConfiguredResponse", () => {
     const fetchResponse = missingConfigResponse.getResponse();
 
     expect(fetchResponse.status).toBe(400);
-    expect(await fetchResponse.json()).toMatchInlineSnapshot(`
-      {
-        "message": "App is not configured",
-      }
-    `);
+    expect(await fetchResponse.text()).toBe("App is not configured");
   });
 });
 
@@ -51,11 +43,7 @@ describe("UnhandledErrorResponse", () => {
     const fetchResponse = unhandledResponse.getResponse();
 
     expect(fetchResponse.status).toBe(500);
-    expect(await fetchResponse.json()).toMatchInlineSnapshot(`
-      {
-        "message": "Unhandled error",
-      }
-    `);
+    expect(await fetchResponse.text()).toBe("Unhandled error");
   });
 });
 
@@ -68,11 +56,7 @@ describe("MalformedRequestResponse", () => {
     const fetchResponse = saleorApiUrlResponse.getResponse();
 
     expect(fetchResponse.status).toBe(500);
-    expect(await fetchResponse.json()).toMatchInlineSnapshot(`
-      {
-        "message": "Malformed request",
-      }
-    `);
+    expect(await fetchResponse.text()).toBe("Malformed request");
   });
 });
 
@@ -98,18 +82,18 @@ describe("Passing error details to the response when Stripe env is TEST", () => 
     });
 
     const response = new ErrorResponse({ stripeEnv: "TEST" }, error);
-    const body = (await response.getResponse().json()) as { message: string };
+    const body = await response.getResponse().text();
 
     // check if root message exists
-    expect(body.message).toStrictEqual(expect.stringContaining(response.message));
+    expect(body).toStrictEqual(expect.stringContaining(response.message));
     // check if merged errors exist
-    expect(body.message).toStrictEqual(
+    expect(body).toStrictEqual(
       expect.stringContaining(`InnerError: DeepestError: Deepest
 Inner
 Root`),
     );
     // Ensure props on error are not attached
-    expect(body.message).not.toStrictEqual(expect.stringContaining("someSecretValue"));
-    expect(body.message).not.toStrictEqual(expect.stringContaining("123"));
+    expect(body).not.toStrictEqual(expect.stringContaining("someSecretValue"));
+    expect(body).not.toStrictEqual(expect.stringContaining("123"));
   });
 });

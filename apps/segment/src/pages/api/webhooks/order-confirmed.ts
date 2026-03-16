@@ -97,9 +97,7 @@ const handler: NextJsWebhookHandler<OrderConfirmedSubscriptionPayloadFragment> =
 
               void reporter.reportTrackingFailed(error.message);
 
-              return res
-                .status(500)
-                .json({ message: "Error while sending order completed event to Segment" });
+              return res.status(500).send("Error while sending order completed event to Segment");
             }
           }
         },
@@ -108,9 +106,7 @@ const handler: NextJsWebhookHandler<OrderConfirmedSubscriptionPayloadFragment> =
   } catch (e) {
     logger.error("Unhandled error while sending order completed event to Segment", { error: e });
 
-    return res
-      .status(500)
-      .json({ message: "Error while sending order completed event to Segment" });
+    return res.status(500).send("Error while sending order completed event to Segment");
   }
 };
 

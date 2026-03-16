@@ -104,7 +104,7 @@ const handler: NextJsWebhookHandler<OrderConfirmedWebhookPayloadFragment> = asyn
 
     captureException(e);
 
-    return res.status(500).json({ message: "Failed to execute webhook" });
+    return res.status(500).send("Failed to execute webhook");
   }
 };
 
