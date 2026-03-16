@@ -10,6 +10,7 @@ import { type ILogWriter, NoopLogWriter } from "@/modules/client-logs/log-writer
 import {
   AvataxGetTaxSystemError,
   AvataxGetTaxWrongUserInputError,
+  AvataxTimeoutError,
 } from "@/modules/taxes/tax-error";
 
 import { BaseError } from "../../../error";
@@ -400,6 +401,46 @@ describe("CalculateTaxesUseCase", () => {
 
       expect(loggerErrorSpy).not.toHaveBeenCalled();
       expect(loggerWarnSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("Timeout error handling", () => {
+    it("Returns TimeoutError when AvaTax API times out", async () => {
+      mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+      const timeoutError = new AvataxTimeoutError("AvaTax API request timed out", {
+        cause: new Error("timeout"),
+      });
+
+      mockedAvataxClient.createTransaction.mockRejectedValueOnce(timeoutError);
+
+      const result = await instance.calculateTaxes(getBasePayload(), getMockAuthData());
+
+      const error = result._unsafeUnwrapErr();
+
+      expect(error).toBeInstanceOf(CalculateTaxesUseCase.TimeoutError);
+
+      expect(error).toMatchInlineSnapshot(`
+        [TimeoutError: AvataxTimeoutError: timeout
+        AvaTax API request timed out
+        AvaTax API request timed out]
+      `);
+    });
+
+    it("Does not return FailedCalculatingTaxesError for timeout errors", async () => {
+      mockGetAppConfig.mockImplementationOnce(() => ok(getMockedAppConfig()));
+
+      const timeoutError = new AvataxTimeoutError("AvaTax API request timed out", {
+        cause: new Error("timeout"),
+      });
+
+      mockedAvataxClient.createTransaction.mockRejectedValueOnce(timeoutError);
+
+      const result = await instance.calculateTaxes(getBasePayload(), getMockAuthData());
+
+      const error = result._unsafeUnwrapErr();
+
+      expect(error).not.toBeInstanceOf(CalculateTaxesUseCase.FailedCalculatingTaxesError);
     });
   });
 });
