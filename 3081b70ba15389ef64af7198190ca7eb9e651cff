@@ -1,0 +1,31 @@
+apps/avatax/src/modules/avatax/avatax-client.ts
+  9564ce406d559e62 18,54,56-62,89,151
+apps/avatax/src/modules/calculate-taxes/use-case/calculate-taxes.use-case.ts
+  9564ce406d559e62 29-30,49,227-232
+apps/avatax/src/app/api/webhooks/checkout-calculate-taxes/route.ts
+  9564ce406d559e62 28,213-228,322-333
+apps/avatax/src/modules/taxes/tax-error.ts
+  9564ce406d559e62 83-84
+apps/avatax/src/app/api/webhooks/order-calculate-taxes/route.ts
+  9564ce406d559e62 48,534-544
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "3081b70ba15389ef64af7198190ca7eb9e651cff",
+  "prompts": {
+    "9564ce406d559e62": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ee419608-999c-4acf-8206-42942b48ef4c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 82,
+      "total_deletions": 8,
+      "accepted_lines": 73,
+      "overriden_lines": 0
+    }
+  }
+}
