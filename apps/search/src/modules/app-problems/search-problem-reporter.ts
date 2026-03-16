@@ -1,6 +1,7 @@
 import { AppProblemsReporter } from "@saleor/app-problems";
 import { type Client } from "urql";
 
+import { type RecordTooLargeEntity } from "../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../lib/logger";
 
 const logger = createLogger("SearchProblemReporter");
@@ -35,12 +36,13 @@ export class SearchProblemReporter {
     }
   }
 
-  async reportRecordTooLarge(context: { productId?: string; variantId?: string }): Promise<void> {
-    const entityInfo = context.variantId
-      ? `Product variant ${context.variantId}`
-      : context.productId
-      ? `Product ${context.productId}`
-      : "A product";
+  async reportRecordTooLarge(entity: RecordTooLargeEntity): Promise<void> {
+    const entityInfo =
+      entity.type === "product_variant"
+        ? `Product variant ${entity.variantId}`
+        : entity.type === "category"
+        ? `Category ${entity.categoryId}`
+        : `Page ${entity.pageId}`;
 
     try {
       const result = await this.reporter.reportProblem({

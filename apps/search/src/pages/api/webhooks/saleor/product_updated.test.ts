@@ -186,7 +186,11 @@ describe("product_updated webhook handler", () => {
     await handler(req, res, mockContext);
 
     expect(res._getStatusCode()).toBe(413);
-    expect(mockReportRecordTooLarge).toHaveBeenCalledWith({ productId: "prod123" });
+    expect(mockReportRecordTooLarge).toHaveBeenCalledWith({
+      type: "product_variant",
+      productId: "prod123",
+      variantId: "var456",
+    });
     expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
   });
 });

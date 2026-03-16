@@ -132,7 +132,10 @@ describe("category_updated webhook handler", () => {
     await handler(req, res, mockContext);
 
     expect(res._getStatusCode()).toBe(413);
-    expect(mockReportRecordTooLarge).toHaveBeenCalledWith({ productId: "cat123" });
+    expect(mockReportRecordTooLarge).toHaveBeenCalledWith({
+      type: "category",
+      categoryId: "cat123",
+    });
     expect(vi.mocked(createSearchProblemReporter)).toHaveBeenCalledWith(mockContext.authData);
   });
 

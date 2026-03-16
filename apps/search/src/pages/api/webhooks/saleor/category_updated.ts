@@ -52,15 +52,14 @@ export const handler: NextJsWebhookHandler<CategoryUpdated> = async (req, res, c
 
       if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {
         const errorDetails = AlgoliaErrorParser.parseRecordSizeError(e);
-        const errorMessage = createRecordSizeErrorMessage(errorDetails, {
-          productId: category.id,
-        });
+        const entity = { type: "category" as const, categoryId: category.id };
+        const errorMessage = createRecordSizeErrorMessage(errorDetails, entity);
 
         logger.warn("Category exceeds Algolia record size limit", {
           categoryId: category.id,
         });
 
-        await problemReporter.reportRecordTooLarge({ productId: category.id });
+        await problemReporter.reportRecordTooLarge(entity);
 
         return res.status(413).send(errorMessage);
       }
