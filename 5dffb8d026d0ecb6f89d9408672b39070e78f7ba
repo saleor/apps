@@ -1,0 +1,49 @@
+apps/search/src/pages/api/webhooks/saleor/product_variant_updated.test.ts
+  1f83b7855e32fc5a 195
+apps/search/src/pages/api/webhooks/saleor/category_created.test.ts
+  1f83b7855e32fc5a 136-137
+apps/search/src/pages/api/webhooks/saleor/product_created.ts
+  1f83b7855e32fc5a 55-59,61-63,66,68,73
+apps/search/src/pages/api/webhooks/saleor/category_updated.ts
+  1f83b7855e32fc5a 55-56,62
+apps/search/src/pages/api/webhooks/saleor/category_updated.test.ts
+  1f83b7855e32fc5a 136-137
+apps/search/src/pages/api/webhooks/saleor/product_variant_updated.ts
+  1f83b7855e32fc5a 53-54,57-58,68
+apps/search/src/pages/api/webhooks/saleor/product_variant_created.ts
+  1f83b7855e32fc5a 51-52,55-56,68
+apps/search/src/pages/api/webhooks/saleor/category_created.ts
+  1f83b7855e32fc5a 55-56,62
+apps/search/src/modules/app-problems/search-problem-reporter.test.ts
+  1f83b7855e32fc5a 73,78-80,85,89,93,97,107-109,120-122
+apps/search/src/modules/app-problems/search-problem-reporter.ts
+  1f83b7855e32fc5a 4,39,41-45
+apps/search/src/lib/algolia/algolia-error-parser.test.ts
+  1f83b7855e32fc5a 125,133,144-146,149,153-157,159,162,164-165,168,173-175,183-185,194-207
+apps/search/src/lib/algolia/algolia-error-parser.ts
+  1f83b7855e32fc5a 15-19,27-37,40,46,49,114-122
+apps/search/src/pages/api/webhooks/saleor/product_updated.ts
+  1f83b7855e32fc5a 53-57,59-61,64,66,71
+apps/search/src/pages/api/webhooks/saleor/product_updated.test.ts
+  1f83b7855e32fc5a 190-192
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "5dffb8d026d0ecb6f89d9408672b39070e78f7ba",
+  "prompts": {
+    "1f83b7855e32fc5a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "fc9fbd59-2741-4852-a587-8226139e7736",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 157,
+      "total_deletions": 61,
+      "accepted_lines": 136,
+      "overriden_lines": 0
+    }
+  }
+}
