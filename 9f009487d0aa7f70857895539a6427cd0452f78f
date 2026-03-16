@@ -1,0 +1,25 @@
+apps/avatax/src/modules/calculate-taxes/use-case/calculate-taxes.use-case.test.ts
+  6252b693537f6b6b 13,406-445
+apps/avatax/src/modules/avatax/avatax-client.test.ts
+  6252b693537f6b6b 1-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "9f009487d0aa7f70857895539a6427cd0452f78f",
+  "prompts": {
+    "6252b693537f6b6b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "af65c796-6b56-4169-bd33-cc3428019b2c",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 140,
+      "total_deletions": 4,
+      "accepted_lines": 136,
+      "overriden_lines": 0
+    }
+  }
+}
