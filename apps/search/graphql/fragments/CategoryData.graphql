@@ -1,0 +1,18 @@
+fragment CategoryData on Category {
+  id
+  name
+  slug
+  level
+  ancestors(first: 100) {
+    edges {
+      node {
+        id
+        name
+        slug
+      }
+    }
+  }
+  metadata {
+    ...MetadataItem
+  }
+}

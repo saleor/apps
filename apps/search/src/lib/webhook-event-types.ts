@@ -1,4 +1,7 @@
 import type {
+  CategoryCreatedSubscription,
+  CategoryDeletedSubscription,
+  CategoryUpdatedSubscription,
   ProductCreatedSubscription,
   ProductDeletedSubscription,
   ProductUpdatedSubscription,
@@ -9,6 +12,18 @@ import type {
   ProductVariantUpdatedSubscription,
 } from "../../generated/graphql";
 
+export type CategoryCreated = Extract<
+  NonNullable<CategoryCreatedSubscription["event"]>,
+  { __typename: "CategoryCreated" }
+>;
+export type CategoryDeleted = Extract<
+  NonNullable<CategoryDeletedSubscription["event"]>,
+  { __typename: "CategoryDeleted" }
+>;
+export type CategoryUpdated = Extract<
+  NonNullable<CategoryUpdatedSubscription["event"]>,
+  { __typename: "CategoryUpdated" }
+>;
 export type ProductCreated = Extract<
   NonNullable<ProductCreatedSubscription["event"]>,
   { __typename: "ProductCreated" }

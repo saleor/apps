@@ -8,9 +8,9 @@ import {
 } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
-import { type ProductVariantCreated } from "../../../../lib/webhook-event-types";
+import { type CategoryUpdated } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
-import { webhookProductVariantCreated } from "../../../../webhooks/definitions/product-variant-created";
+import { webhookCategoryUpdated } from "../../../../webhooks/definitions/category-updated";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -19,19 +19,19 @@ export const config = {
   },
 };
 
-const logger = createLogger("webhookProductVariantCreatedWebhookHandler");
+const logger = createLogger("webhookCategoryUpdatedHandler");
 
-export const handler: NextJsWebhookHandler<ProductVariantCreated> = async (req, res, context) => {
+export const handler: NextJsWebhookHandler<CategoryUpdated> = async (req, res, context) => {
   const { event, authData } = context;
 
   logger.info(`New event received: ${event} (${context.payload?.__typename})`, {
     saleorApiUrl: authData.saleorApiUrl,
   });
 
-  const { productVariant } = context.payload;
+  const { category } = context.payload;
 
-  if (!productVariant) {
-    logger.warn("Webhook did not receive expected product data in the payload.");
+  if (!category) {
+    logger.warn("Webhook did not receive expected category data in the payload.");
 
     return res.status(200).end();
   }
@@ -40,30 +40,24 @@ export const handler: NextJsWebhookHandler<ProductVariantCreated> = async (req, 
     const { algoliaClient } = await createWebhookContext({ authData });
 
     try {
-      await algoliaClient.createProductVariant(productVariant);
+      await algoliaClient.updateCategory(category);
+
+      logger.info("Algolia updateCategory success");
 
       res.status(200).end();
 
       return;
     } catch (e) {
+      const problemReporter = createSearchProblemReporter(authData);
+
       if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {
         const errorDetails = AlgoliaErrorParser.parseRecordSizeError(e);
-        const entity = {
-          type: "product_variant" as const,
-          productId: productVariant.product.id,
-          variantId: productVariant.id,
-        };
+        const entity = { type: "category" as const, categoryId: category.id };
         const errorMessage = createRecordSizeErrorMessage(errorDetails, entity);
 
-        // Use warn instead of error - this is an expected error that shouldn't trigger Sentry alerts
-        logger.warn("Product variant exceeds Algolia record size limit", {
-          productId: productVariant.product.id,
-          variantId: productVariant.id,
-          actualSize: errorDetails?.actualSize,
-          maxSize: errorDetails?.maxSize,
+        logger.warn("Category exceeds Algolia record size limit", {
+          categoryId: category.id,
         });
-
-        const problemReporter = createSearchProblemReporter(authData);
 
         await problemReporter.reportRecordTooLarge(entity);
 
@@ -71,30 +65,25 @@ export const handler: NextJsWebhookHandler<ProductVariantCreated> = async (req, 
       }
 
       if (AlgoliaErrorParser.isAuthError(e)) {
-        const problemReporter = createSearchProblemReporter(authData);
-
         await problemReporter.reportAuthError();
 
         return res.status(401).send("Algolia rejected due to invalid credentials");
       }
 
-      logger.error(
-        "Failed to execute product_variant_created webhook (algoliaClient.createProductVariant)",
-        { error: e },
-      );
+      logger.error("Failed to execute category_updated webhook (algoliaClient.updateCategory)", {
+        error: e,
+      });
 
       return res.status(500).send("Operation failed due to error");
     }
   } catch (e) {
-    logger.error("Failed to execute product_variant_created webhook (createWebhookContext)", {
-      error: e,
-    });
+    logger.error("Failed to execute category_updated webhook (createWebhookContext)", { error: e });
 
     return res.status(400).send((e as Error).message);
   }
 };
 
 export default wrapWithLoggerContext(
-  withSpanAttributes(webhookProductVariantCreated.createHandler(handler)),
+  withSpanAttributes(webhookCategoryUpdated.createHandler(handler)),
   loggerContext,
 );

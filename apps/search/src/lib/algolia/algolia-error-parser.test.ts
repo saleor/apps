@@ -122,7 +122,7 @@ describe("AlgoliaErrorParser", () => {
 });
 
 describe("createRecordSizeErrorMessage", () => {
-  it("Creates message with size details when provided", () => {
+  it("Creates message with size details for product variant", () => {
     const message = createRecordSizeErrorMessage(
       {
         objectId: "ProductId_VariantId",
@@ -130,7 +130,7 @@ describe("createRecordSizeErrorMessage", () => {
         maxSize: 10000,
         rawMessage: "raw",
       },
-      { productId: "prod123", variantId: "var456" },
+      { type: "product_variant", productId: "prod123", variantId: "var456" },
     );
 
     expect(message).toContain("Product variant var456 exceeds Algolia's record size limit");
@@ -140,30 +140,70 @@ describe("createRecordSizeErrorMessage", () => {
   });
 
   it("Creates message without size details when not provided", () => {
-    const message = createRecordSizeErrorMessage(null, { productId: "prod123" });
+    const message = createRecordSizeErrorMessage(null, {
+      type: "product_variant",
+      productId: "prod123",
+      variantId: "var456",
+    });
 
-    expect(message).toContain("Product prod123 exceeds Algolia's record size limit");
+    expect(message).toContain("Product variant var456 exceeds Algolia's record size limit");
     expect(message).toContain("Record exceeds Algolia size limit");
   });
 
-  it("Uses generic product info when no IDs provided", () => {
-    const message = createRecordSizeErrorMessage(null, {});
+  it("Creates message for category entity", () => {
+    const message = createRecordSizeErrorMessage(null, {
+      type: "category",
+      categoryId: "cat123",
+    });
 
-    expect(message).toContain("Product exceeds Algolia's record size limit");
+    expect(message).toContain("Category cat123 exceeds Algolia's record size limit");
+  });
+
+  it("Creates message for page entity", () => {
+    const message = createRecordSizeErrorMessage(null, {
+      type: "page",
+      pageId: "page123",
+    });
+
+    expect(message).toContain("Page page123 exceeds Algolia's record size limit");
   });
 
   it("Includes documentation link", () => {
-    const message = createRecordSizeErrorMessage(null, {});
+    const message = createRecordSizeErrorMessage(null, {
+      type: "product_variant",
+      productId: "prod123",
+      variantId: "var456",
+    });
 
     expect(message).toContain("https://docs.saleor.io/developer/app-store/apps/search");
   });
 
   it("Includes actionable steps", () => {
-    const message = createRecordSizeErrorMessage(null, {});
+    const message = createRecordSizeErrorMessage(null, {
+      type: "product_variant",
+      productId: "prod123",
+      variantId: "var456",
+    });
 
     expect(message).toContain("To fix this issue:");
     expect(message).toContain("description");
     expect(message).toContain("metadata");
     expect(message).toContain("media");
+  });
+});
+
+describe("AlgoliaErrorParser.extractVariantIdFromCompoundId", () => {
+  it("Extracts variant ID from compound objectId", () => {
+    expect(AlgoliaErrorParser.extractVariantIdFromCompoundId("ProductId_VariantId")).toBe(
+      "VariantId",
+    );
+  });
+
+  it("Returns null when objectId has no underscore", () => {
+    expect(AlgoliaErrorParser.extractVariantIdFromCompoundId("SingleId")).toBeNull();
+  });
+
+  it("Returns second part when multiple underscores exist", () => {
+    expect(AlgoliaErrorParser.extractVariantIdFromCompoundId("A_B_C")).toBe("B");
   });
 });

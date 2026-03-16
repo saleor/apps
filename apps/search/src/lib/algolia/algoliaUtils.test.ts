@@ -82,6 +82,7 @@ describe("algoliaUtils", function () {
             name: "",
             description: undefined,
             slug: "",
+            productType: { id: "pt-1", name: "Default", slug: "default" },
             variants: undefined,
             category: undefined,
             thumbnail: undefined,
@@ -156,6 +157,7 @@ describe("algoliaUtils", function () {
             name: "",
             description: undefined,
             slug: "",
+            productType: { id: "pt-1", name: "Default", slug: "default" },
             variants: undefined,
             category: undefined,
             thumbnail: undefined,
@@ -210,6 +212,7 @@ describe("algoliaUtils", function () {
             name: "",
             description: undefined,
             slug: "",
+            productType: { id: "pt-1", name: "Default", slug: "default" },
             variants: undefined,
             category: undefined,
             thumbnail: undefined,
@@ -244,6 +247,7 @@ describe("algoliaUtils", function () {
             name: "Product 1",
             description: undefined,
             slug: "product-1",
+            productType: { id: "pt-1", name: "Default", slug: "default" },
             variants: [
               // Current variant - should be excluded
               {

@@ -12,6 +12,11 @@ export interface RecordSizeErrorDetails {
   rawMessage: string;
 }
 
+export type RecordTooLargeEntity =
+  | { type: "product_variant"; productId: string; variantId: string }
+  | { type: "category"; categoryId: string }
+  | { type: "page"; pageId: string };
+
 const RECORD_SIZE_DOCS_URL =
   "https://docs.saleor.io/developer/app-store/apps/search#assumptions--limitations";
 
@@ -19,22 +24,29 @@ const RECORD_SIZE_DOCS_URL =
  * Creates a user-friendly error message for Algolia record size errors.
  * This error is expected when product data exceeds Algolia's 10KB limit.
  */
+const getEntityLabel = (entity: RecordTooLargeEntity): string => {
+  switch (entity.type) {
+    case "product_variant":
+      return `Product variant ${entity.variantId}`;
+    case "category":
+      return `Category ${entity.categoryId}`;
+    case "page":
+      return `Page ${entity.pageId}`;
+  }
+};
+
 export const createRecordSizeErrorMessage = (
   details: RecordSizeErrorDetails | null,
-  context: { productId?: string; variantId?: string },
+  entity: RecordTooLargeEntity,
 ): string => {
   const sizeInfo = details
     ? `Current size: ${details.actualSize} bytes, limit: ${details.maxSize} bytes.`
     : "Record exceeds Algolia size limit.";
 
-  const productInfo = context.variantId
-    ? `Product variant ${context.variantId}`
-    : context.productId
-    ? `Product ${context.productId}`
-    : "Product";
+  const entityLabel = getEntityLabel(entity);
 
   return [
-    `${productInfo} exceeds Algolia's record size limit (10KB).`,
+    `${entityLabel} exceeds Algolia's record size limit (10KB).`,
     sizeInfo,
     "",
     "To fix this issue:",
@@ -98,6 +110,15 @@ export const AlgoliaErrorParser = {
       maxSize: parseInt(sizeMatch[2], 10),
       rawMessage: message,
     };
+  },
+  /**
+   * Algolia objectID for variants has format "ProductId_VariantId".
+   * Extracts the variant ID portion, or returns null if format doesn't match.
+   */
+  extractVariantIdFromCompoundId: (objectId: string): string | null => {
+    const parts = objectId.split("_");
+
+    return parts.length >= 2 ? parts[1] : null;
   },
   getErrorMessage: (error: unknown): string => {
     const parsed = shape.safeParse(error);

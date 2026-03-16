@@ -50,10 +50,12 @@ export const handler: NextJsWebhookHandler<ProductVariantUpdated> = async (req, 
 
       if (AlgoliaErrorParser.isRecordSizeTooBigError(e)) {
         const errorDetails = AlgoliaErrorParser.parseRecordSizeError(e);
-        const errorMessage = createRecordSizeErrorMessage(errorDetails, {
+        const entity = {
+          type: "product_variant" as const,
           productId: productVariant.product.id,
           variantId: productVariant.id,
-        });
+        };
+        const errorMessage = createRecordSizeErrorMessage(errorDetails, entity);
 
         // Use warn instead of error - this is an expected error that shouldn't trigger Sentry alerts
         logger.warn("Product variant exceeds Algolia record size limit", {
@@ -63,10 +65,7 @@ export const handler: NextJsWebhookHandler<ProductVariantUpdated> = async (req, 
           maxSize: errorDetails?.maxSize,
         });
 
-        await problemReporter.reportRecordTooLarge({
-          productId: productVariant.product.id,
-          variantId: productVariant.id,
-        });
+        await problemReporter.reportRecordTooLarge(entity);
 
         return res.status(413).send(errorMessage);
       }

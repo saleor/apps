@@ -70,27 +70,31 @@ describe("SearchProblemReporter", () => {
   });
 
   describe("reportRecordTooLarge", () => {
-    it("calls reportProblem with product context", async () => {
+    it("calls reportProblem with product variant context", async () => {
       mockReportProblem.mockResolvedValue(ok(undefined));
       const reporter = new SearchProblemReporter(mockClient);
 
-      await reporter.reportRecordTooLarge({ productId: "prod-123" });
-
-      expect(mockReportProblem).toHaveBeenCalledWith({
-        key: "algolia-record-too-large",
-        message: expect.stringContaining("Product prod-123"),
+      await reporter.reportRecordTooLarge({
+        type: "product_variant",
+        productId: "prod-123",
+        variantId: "var-456",
       });
-    });
-
-    it("calls reportProblem with variant context", async () => {
-      mockReportProblem.mockResolvedValue(ok(undefined));
-      const reporter = new SearchProblemReporter(mockClient);
-
-      await reporter.reportRecordTooLarge({ productId: "prod-123", variantId: "var-456" });
 
       expect(mockReportProblem).toHaveBeenCalledWith({
         key: "algolia-record-too-large",
         message: expect.stringContaining("Product variant var-456"),
+      });
+    });
+
+    it("calls reportProblem with category context", async () => {
+      mockReportProblem.mockResolvedValue(ok(undefined));
+      const reporter = new SearchProblemReporter(mockClient);
+
+      await reporter.reportRecordTooLarge({ type: "category", categoryId: "cat-789" });
+
+      expect(mockReportProblem).toHaveBeenCalledWith({
+        key: "algolia-record-too-large",
+        message: expect.stringContaining("Category cat-789"),
       });
     });
 
@@ -99,7 +103,11 @@ describe("SearchProblemReporter", () => {
       const reporter = new SearchProblemReporter(mockClient);
 
       await expect(
-        reporter.reportRecordTooLarge({ productId: "prod-123" }),
+        reporter.reportRecordTooLarge({
+          type: "product_variant",
+          productId: "prod-123",
+          variantId: "var-456",
+        }),
       ).resolves.toBeUndefined();
     });
 
@@ -108,7 +116,11 @@ describe("SearchProblemReporter", () => {
       const reporter = new SearchProblemReporter(mockClient);
 
       await expect(
-        reporter.reportRecordTooLarge({ productId: "prod-123" }),
+        reporter.reportRecordTooLarge({
+          type: "product_variant",
+          productId: "prod-123",
+          variantId: "var-456",
+        }),
       ).resolves.toBeUndefined();
     });
   });

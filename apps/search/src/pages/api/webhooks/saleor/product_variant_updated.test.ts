@@ -192,6 +192,7 @@ describe("product_variant_updated webhook handler", () => {
 
     expect(res._getStatusCode()).toBe(413);
     expect(mockReportRecordTooLarge).toHaveBeenCalledWith({
+      type: "product_variant",
       productId: "prod123",
       variantId: "var456",
     });

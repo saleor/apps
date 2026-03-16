@@ -1,3 +1,6 @@
+import { webhookCategoryCreated } from "./src/webhooks/definitions/category-created";
+import { webhookCategoryDeleted } from "./src/webhooks/definitions/category-deleted";
+import { webhookCategoryUpdated } from "./src/webhooks/definitions/category-updated";
 import { webhookProductCreated } from "./src/webhooks/definitions/product-created";
 import { webhookProductDeleted } from "./src/webhooks/definitions/product-deleted";
 import { webhookProductUpdated } from "./src/webhooks/definitions/product-updated";
@@ -16,4 +19,7 @@ export const appWebhooks = [
   webhookProductVariantUpdated,
   webhookProductVariantOutOfStock,
   webhookProductVariantBackInStock,
+  webhookCategoryCreated,
+  webhookCategoryUpdated,
+  webhookCategoryDeleted,
 ];
