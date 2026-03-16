@@ -102,54 +102,61 @@ export class AlgoliaSearchProvider implements SearchProvider {
   async updateIndicesSettings() {
     logger.debug(`updateIndicesSettings called`);
     await Promise.all([
-      ...this.#indexNames.map(async (indexName) => {
-        const index = this.#algolia.initIndex(indexName);
-
-        return this.#traceSetSettings(
-          () =>
-            index.setSettings({
-              attributesForFaceting: [
-                "productId",
-                "inStock",
-                "categories",
-                "categoryId",
-                "categorySlug",
-                "productTypeId",
-                "attributes",
-                "collections",
-                "pricing.price.net",
-                "pricing.price.gross",
-                "pricing.discount.net",
-                "pricing.discount.gross",
-                "pricing.priceUndiscounted.net",
-                "pricing.priceUndiscounted.gross",
-                "pricing.onSale",
-              ],
-              attributeForDistinct: "productId",
-              numericAttributesForFiltering: ["grossPrice"],
-              distinct: true,
-              searchableAttributes: [
-                "name",
-                "productName",
-                "variantName",
-                "productTypeId",
-                "category",
-                "descriptionPlaintext",
-                "collections",
-              ],
-            }),
-          { indexName },
-        );
-      }),
-      this.#traceSetSettings(
-        () =>
-          this.#algolia.initIndex(this.#categoryIndexName).setSettings({
-            attributesForFaceting: ["level", "ancestors", "metadata"],
-            searchableAttributes: ["name", "slug", "ancestors"],
-          }),
-        { indexName: this.#categoryIndexName },
-      ),
+      ...this.#indexNames.map((indexName) => this.#updateProductIndexSettings(indexName)),
+      this.#updateCategoryIndexSettings(),
     ]);
+  }
+
+  async #updateProductIndexSettings(indexName: string) {
+    const index = this.#algolia.initIndex(indexName);
+
+    return this.#traceSetSettings(
+      () =>
+        index.setSettings({
+          attributesForFaceting: [
+            "productId",
+            "inStock",
+            "categories",
+            "categoryId",
+            "categorySlug",
+            "productTypeId",
+            "attributes",
+            "collections",
+            "pricing.price.net",
+            "pricing.price.gross",
+            "pricing.discount.net",
+            "pricing.discount.gross",
+            "pricing.priceUndiscounted.net",
+            "pricing.priceUndiscounted.gross",
+            "pricing.onSale",
+          ],
+          attributeForDistinct: "productId",
+          numericAttributesForFiltering: ["grossPrice"],
+          distinct: true,
+          searchableAttributes: [
+            "name",
+            "productName",
+            "variantName",
+            "productType",
+            "productTypeId",
+            "category",
+            "descriptionPlaintext",
+            "collections",
+          ],
+        }),
+      { indexName },
+    );
+  }
+
+  async #updateCategoryIndexSettings() {
+    return this.#traceSetSettings(
+      () =>
+        this.#algolia.initIndex(this.#categoryIndexName).setSettings({
+          attributesForFaceting: ["level", "ancestors", "metadata"],
+          searchableAttributes: ["name", "slug", "ancestors"],
+        }),
+      { indexName: this.#categoryIndexName },
+    );
   }
 
   async updatedBatchProducts(productsBatch: ProductWebhookPayloadFragment[]) {
