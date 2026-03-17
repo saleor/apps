@@ -41,7 +41,13 @@ export const handler: NextJsWebhookHandler<PageCreated> = async (req, res, conte
 
     const allowedPageTypeIds = settings.pageTypesFilter?.pageTypeIds ?? [];
 
-    if (allowedPageTypeIds.length > 0 && !allowedPageTypeIds.includes(page.pageType.id)) {
+    if (allowedPageTypeIds.length === 0) {
+      logger.info("No page types configured for indexing, skipping");
+
+      return res.status(200).end();
+    }
+
+    if (!allowedPageTypeIds.includes(page.pageType.id)) {
       logger.info("Page type not in allowed list, skipping", {
         pageTypeId: page.pageType.id,
       });

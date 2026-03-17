@@ -153,8 +153,11 @@ const useGraphQLClient = () => {
   }
 
   async function* getPages(pageTypeIds: string[] = [], cursor: string = ""): AsyncGenerator<Pages> {
-    const filter: PageFilterInput | undefined =
-      pageTypeIds.length > 0 ? { pageTypes: pageTypeIds } : undefined;
+    if (pageTypeIds.length === 0) {
+      return;
+    }
+
+    const filter: PageFilterInput = { pageTypes: pageTypeIds };
 
     const response = await client
       .query(PagesDataForImportDocument, {

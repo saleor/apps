@@ -64,8 +64,7 @@ export const PageTypesFilterForm = () => {
     >
       <Box>
         <Text as="p" marginBottom={3}>
-          Select which page types should be indexed. If none are selected, all pages will be
-          indexed.
+          Select which page types should be indexed. If none are selected, no pages will be indexed.
         </Text>
         <Multiselect
           label="Page types"
