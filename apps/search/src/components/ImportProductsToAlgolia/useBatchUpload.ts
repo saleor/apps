@@ -257,10 +257,7 @@ export const useCategoriesBatchUpload = (searchProvider: AlgoliaSearchProvider |
   return { startUpload, uploadState };
 };
 
-export const usePagesBatchUpload = (
-  searchProvider: AlgoliaSearchProvider | null,
-  pageTypeIds: string[] = [],
-) => {
+export const usePagesBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => {
   const { uploadState, incrementTotal, incrementCurrent, finishingUpload, startUploading } =
     useUploadState();
   const { getPages } = useGraphQLClient();
@@ -272,7 +269,7 @@ export const usePagesBatchUpload = (
     incrementCurrent(pages.length);
   };
 
-  const startUpload = async () => {
+  const startUpload = async (pageTypeIds: string[]) => {
     if (!searchProvider) return;
 
     startUploading();

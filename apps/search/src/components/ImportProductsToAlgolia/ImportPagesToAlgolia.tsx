@@ -7,9 +7,15 @@ export const ImportPagesToAlgolia = () => {
   const configuration = useAlgoliaConfiguration();
   const isConfigured = configuration.type === "configured";
   const searchProvider = isConfigured ? configuration.provider : null;
-  const { data: config } = trpcClient.configuration.getConfig.useQuery();
-  const pageTypeIds = config?.pageTypesFilter?.pageTypeIds ?? [];
-  const { startUpload, uploadState } = usePagesBatchUpload(searchProvider, pageTypeIds);
+  const { refetch: refetchConfig } = trpcClient.configuration.getConfig.useQuery();
+  const { startUpload, uploadState } = usePagesBatchUpload(searchProvider);
+
+  const handleStartImport = async () => {
+    const { data: freshConfig } = await refetchConfig();
+    const pageTypeIds = freshConfig?.pageTypesFilter?.pageTypeIds ?? [];
+
+    startUpload(pageTypeIds);
+  };
 
   return (
     <ImportToAlgoliaCard
@@ -18,7 +24,7 @@ export const ImportPagesToAlgolia = () => {
       uploadState={uploadState}
       isConfigured={isConfigured}
       isLoading={configuration.type === "loading"}
-      onStartImport={startUpload}
+      onStartImport={handleStartImport}
     />
   );
 };
