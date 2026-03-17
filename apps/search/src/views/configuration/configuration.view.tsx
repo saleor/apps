@@ -7,6 +7,7 @@ import { AlgoliaPageFieldsSelectionForm } from "../../components/AlgoliaPageFiel
 import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";
 import { IndicesSettings } from "../../components/IndicesSettings";
 import { MainInstructions } from "../../components/MainInstructions";
+import { PageTypesFilterForm } from "../../components/PageTypesFilterForm";
 import { WebhooksStatus } from "../../components/WebhooksStatus";
 import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
 
@@ -63,6 +64,23 @@ export const ConfigurationView = () => {
         }
       >
         <AlgoliaFieldsSelectionForm />
+      </Layout.AppSection>
+
+      <Layout.AppSection
+        marginTop={14}
+        heading="Page types filter"
+        sideContent={
+          <Box>
+            <Text as="p" marginBottom={1.5}>
+              Choose which page types should be indexed in Algolia.
+            </Text>
+            <Text as="p" marginBottom={1.5}>
+              If no page types are selected, all pages will be indexed.
+            </Text>
+          </Box>
+        }
+      >
+        <PageTypesFilterForm />
       </Layout.AppSection>
 
       <Layout.AppSection

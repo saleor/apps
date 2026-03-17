@@ -34,7 +34,17 @@ export const handler: NextJsWebhookHandler<PageDeleted> = async (req, res, conte
   }
 
   try {
-    const { algoliaClient } = await createWebhookContext({ authData });
+    const { algoliaClient, settings } = await createWebhookContext({ authData });
+
+    const allowedPageTypeIds = settings.pageTypesFilter?.pageTypeIds ?? [];
+
+    if (allowedPageTypeIds.length > 0 && !allowedPageTypeIds.includes(page.pageType.id)) {
+      logger.info("Page type not in allowed list, skipping", {
+        pageTypeId: page.pageType.id,
+      });
+
+      return res.status(200).end();
+    }
 
     try {
       await algoliaClient.deletePage(page.id);

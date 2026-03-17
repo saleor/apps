@@ -5,7 +5,7 @@ import { saleorApp } from "../../../saleor-app";
 import { type PageCreated } from "../../lib/webhook-event-types";
 
 export const webhookPageCreated = new SaleorAsyncWebhook<PageCreated>({
-  webhookPath: "api/webhooks/saleor/page_created",
+  webhookPath: "api/webhooks/saleor/page-created",
   event: "PAGE_CREATED",
   apl: saleorApp.apl,
   query: PageCreatedDocument,

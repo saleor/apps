@@ -8,9 +8,9 @@ import {
 } from "../../../../lib/algolia/algolia-error-parser";
 import { createLogger } from "../../../../lib/logger";
 import { loggerContext } from "../../../../lib/logger-context";
-import { type PageCreated } from "../../../../lib/webhook-event-types";
+import { type PageUpdated } from "../../../../lib/webhook-event-types";
 import { createSearchProblemReporter } from "../../../../modules/app-problems";
-import { webhookPageCreated } from "../../../../webhooks/definitions/page-created";
+import { webhookPageUpdated } from "../../../../webhooks/definitions/page-updated";
 import { createWebhookContext } from "../../../../webhooks/webhook-context";
 
 export const config = {
@@ -19,9 +19,9 @@ export const config = {
   },
 };
 
-const logger = createLogger("webhookPageCreatedHandler");
+const logger = createLogger("webhookPageUpdatedHandler");
 
-export const handler: NextJsWebhookHandler<PageCreated> = async (req, res, context) => {
+export const handler: NextJsWebhookHandler<PageUpdated> = async (req, res, context) => {
   const { event, authData } = context;
 
   logger.info(`New event received: ${event} (${context.payload?.__typename})`, {
@@ -37,12 +37,22 @@ export const handler: NextJsWebhookHandler<PageCreated> = async (req, res, conte
   }
 
   try {
-    const { algoliaClient } = await createWebhookContext({ authData });
+    const { algoliaClient, settings } = await createWebhookContext({ authData });
+
+    const allowedPageTypeIds = settings.pageTypesFilter?.pageTypeIds ?? [];
+
+    if (allowedPageTypeIds.length > 0 && !allowedPageTypeIds.includes(page.pageType.id)) {
+      logger.info("Page type not in allowed list, skipping", {
+        pageTypeId: page.pageType.id,
+      });
+
+      return res.status(200).end();
+    }
 
     try {
-      await algoliaClient.createPage(page);
+      await algoliaClient.updatePage(page);
 
-      logger.info("Algolia createPage success");
+      logger.info("Algolia updatePage success");
 
       res.status(200).end();
 
@@ -70,20 +80,20 @@ export const handler: NextJsWebhookHandler<PageCreated> = async (req, res, conte
         return res.status(401).send("Algolia rejected due to invalid credentials");
       }
 
-      logger.error("Failed to execute page_created webhook (algoliaClient.createPage)", {
+      logger.error("Failed to execute page_updated webhook (algoliaClient.updatePage)", {
         error: e,
       });
 
       return res.status(500).send("Operation failed due to error");
     }
   } catch (e) {
-    logger.error("Failed to execute page_created webhook (createWebhookContext)", { error: e });
+    logger.error("Failed to execute page_updated webhook (createWebhookContext)", { error: e });
 
     return res.status(400).send((e as Error).message);
   }
 };
 
 export default wrapWithLoggerContext(
-  withSpanAttributes(webhookPageCreated.createHandler(handler)),
+  withSpanAttributes(webhookPageUpdated.createHandler(handler)),
   loggerContext,
 );

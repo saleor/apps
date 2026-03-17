@@ -1,6 +1,7 @@
 import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 
+import { trpcClient } from "../../modules/trpc/trpc-client";
 import { useAlgoliaConfiguration } from "./useAlgoliaConfiguration";
 import { useBatchUpload } from "./useBatchUpload";
 
@@ -8,7 +9,9 @@ export const ImportProductsToAlgolia = () => {
   const configuration = useAlgoliaConfiguration();
   const isConfigured = configuration.type === "configured";
   const searchProvider = isConfigured ? configuration.provider : null;
-  const { startUpload, uploadState } = useBatchUpload(searchProvider);
+  const { data: config } = trpcClient.configuration.getConfig.useQuery();
+  const pageTypeIds = config?.pageTypesFilter?.pageTypeIds ?? [];
+  const { startUpload, uploadState } = useBatchUpload(searchProvider, pageTypeIds);
 
   return (
     <Layout.AppSectionCard

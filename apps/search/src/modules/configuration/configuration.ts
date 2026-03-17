@@ -12,6 +12,10 @@ export const FieldsConfigSchema = z.object({
   enabledAlgoliaFields: z.array(z.string()),
 });
 
+export const PageTypesFilterSchema = z.object({
+  pageTypeIds: z.array(z.string()),
+});
+
 const AppConfigRootSchema = z.object({
   appConfig: AppConfigurationSchema.nullable(),
   fieldsMapping: FieldsConfigSchema,
@@ -20,6 +24,7 @@ const AppConfigRootSchema = z.object({
       enabledAlgoliaFields: z.array(z.string()),
     })
     .optional(),
+  pageTypesFilter: PageTypesFilterSchema.optional(),
 });
 
 export type AppConfigurationFields = z.infer<typeof AppConfigurationSchema>;
@@ -78,6 +83,18 @@ export class AppConfig {
         enabledAlgoliaFields: [...AlgoliaPageFieldsKeys],
       }
     );
+  }
+
+  setPageTypesFilter(pageTypeIds: string[]) {
+    this.rootData.pageTypesFilter = {
+      pageTypeIds: z.array(z.string()).parse(pageTypeIds),
+    };
+
+    return this;
+  }
+
+  getPageTypesFilter() {
+    return this.rootData.pageTypesFilter ?? { pageTypeIds: [] };
   }
 
   getConfig() {

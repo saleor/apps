@@ -1,5 +1,5 @@
-query PagesDataForImport($first: Int, $after: String) {
-  pages(first: $first, after: $after) {
+query PagesDataForImport($first: Int, $after: String, $filter: PageFilterInput) {
+  pages(first: $first, after: $after, filter: $filter) {
     pageInfo {
       hasNextPage
       endCursor
