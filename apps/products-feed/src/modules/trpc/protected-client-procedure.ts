@@ -1,5 +1,6 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
+import { setSentrySaleorUser } from "@saleor/sentry-utils";
 import { TRPCError } from "@trpc/server";
 
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
@@ -35,6 +36,8 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
     });
   }
   logger.debug("Auth data found, attaching it to the context");
+
+  setSentrySaleorUser(authData.saleorApiUrl);
 
   return next({
     ctx: {
