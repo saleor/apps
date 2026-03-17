@@ -1,0 +1,57 @@
+apps/search/graphql/queries/PageTypesData.graphql
+  8742346a0776f0d2 1-15
+apps/search/src/views/configuration/configuration.view.tsx
+  8742346a0776f0d2 10,71-85
+apps/search/src/components/ImportProductsToAlgolia/index.tsx
+  8742346a0776f0d2 4,12-14
+apps/search/src/webhooks/definitions/page-updated.ts
+  c90bc329b37035d5 8
+apps/search/src/modules/configuration/configuration.router.ts
+  8742346a0776f0d2 13,140-177
+apps/search/graphql/queries/PagesData.graphql
+  8742346a0776f0d2 1-2
+apps/search/src/components/PageTypesFilterForm.tsx
+  8742346a0776f0d2 1-78
+apps/search/src/components/ImportProductsToAlgolia/useBatchUpload.ts
+  c90bc329b37035d5 9
+  8742346a0776f0d2 156-158,200
+apps/search/src/webhooks/definitions/page-created.ts
+  c90bc329b37035d5 8
+apps/search/src/modules/configuration/configuration.ts
+  8742346a0776f0d2 15-18,27,88-99
+apps/search/src/webhooks/definitions/page-deleted.ts
+  c90bc329b37035d5 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "98ad79eede1cafd6205c901f632e3a32fe8961e5",
+  "prompts": {
+    "8742346a0776f0d2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6424c554-17b0-4425-b2a1-c2b6ad762511",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 225,
+      "total_deletions": 11,
+      "accepted_lines": 219,
+      "overriden_lines": 0
+    },
+    "c90bc329b37035d5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0a3f699d-b5ed-4d9d-b8dd-716750aea33e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 6,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
