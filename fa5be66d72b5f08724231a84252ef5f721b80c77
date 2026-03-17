@@ -1,0 +1,31 @@
+apps/search/src/components/ImportProductsToAlgolia/useBatchUpload.ts
+  ac330777aeb983e4 156-160
+apps/search/src/pages/api/webhooks/saleor/page-updated.ts
+  ac330777aeb983e4 44-50
+apps/search/src/pages/api/webhooks/saleor/page-deleted.ts
+  ac330777aeb983e4 41-47
+apps/search/src/components/PageTypesFilterForm.tsx
+  ac330777aeb983e4 67
+apps/search/src/pages/api/webhooks/saleor/page-created.ts
+  ac330777aeb983e4 44-50
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "fa5be66d72b5f08724231a84252ef5f721b80c77",
+  "prompts": {
+    "ac330777aeb983e4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "849a0311-1bac-46f6-ac8e-9190e343f42f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 27,
+      "total_deletions": 6,
+      "accepted_lines": 27,
+      "overriden_lines": 0
+    }
+  }
+}
