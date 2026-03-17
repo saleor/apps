@@ -1,0 +1,73 @@
+apps/search/graphql/subscriptions/pageDeleted.graphql
+  6d5b9a08d0fcdc57 1-16
+apps/search/graphql/subscriptions/pageCreated.graphql
+  6d5b9a08d0fcdc57 1-16
+apps/search/src/webhooks/definitions/page-deleted.ts
+  6d5b9a08d0fcdc57 1-16
+apps/search/src/lib/webhook-event-types.ts
+  6d5b9a08d0fcdc57 5-7,63-75
+apps/search/src/pages/api/webhooks/saleor/page_created.ts
+  6d5b9a08d0fcdc57 1-89
+apps/search/src/lib/searchProvider.ts
+  6d5b9a08d0fcdc57 3,18-20
+apps/search/src/modules/configuration/configuration.ts
+  6d5b9a08d0fcdc57 3,18-22,34-36,67-68,73-80
+apps/search/src/views/configuration/configuration.view.tsx
+  6d5b9a08d0fcdc57 6,70-85
+apps/search/src/components/ImportProductsToAlgolia/useSearchProvider.ts
+  6d5b9a08d0fcdc57 21-23,30
+apps/search/graphql/fragments/PageData.graphql
+  6d5b9a08d0fcdc57 1-17
+apps/search/src/lib/algolia/pageAlgoliaUtils.ts
+  6d5b9a08d0fcdc57 1-58
+apps/search/src/webhooks/webhook-context.ts
+  6d5b9a08d0fcdc57 47
+apps/search/src/pages/api/webhooks/saleor/page_deleted.ts
+  6d5b9a08d0fcdc57 1-72
+apps/search/graphql/subscriptions/pageUpdated.graphql
+  6d5b9a08d0fcdc57 1-16
+apps/search/src/lib/algolia/algoliaUtils.ts
+  6d5b9a08d0fcdc57 85
+apps/search/graphql/queries/PagesData.graphql
+  6d5b9a08d0fcdc57 1-13
+apps/search/src/webhooks/definitions/page-created.ts
+  6d5b9a08d0fcdc57 1-16
+apps/search/src/webhooks/definitions/page-updated.ts
+  6d5b9a08d0fcdc57 1-16
+apps/search/src/lib/algolia/algoliaSearchProvider.ts
+  6d5b9a08d0fcdc57 5,22,30,40,42,67,75,77,115,304-354
+apps/search/src/modules/configuration/configuration.router.ts
+  6d5b9a08d0fcdc57 123-134
+apps/search/src/pages/api/webhooks/saleor/page_updated.ts
+  6d5b9a08d0fcdc57 1-89
+apps/search/src/components/ImportProductsToAlgolia/useBatchUpload.ts
+  6d5b9a08d0fcdc57 9-10,27-28,156-172,176,218-220,258-265
+apps/search/src/pages/api/setup-indices.ts
+  6d5b9a08d0fcdc57 76-78
+apps/search/src/components/AlgoliaPageFieldsSelectionForm.tsx
+  6d5b9a08d0fcdc57 1-85
+apps/search/src/lib/algolia-fields.ts
+  6d5b9a08d0fcdc57 35-50
+apps/search/webhooks.ts
+  6d5b9a08d0fcdc57 4-6,28-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "4da63607a8bc1ea5b64ed4ef35e42d624ad0b628",
+  "prompts": {
+    "6d5b9a08d0fcdc57": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "39826437-c309-47ce-bf9f-af0f77436c7e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 749,
+      "total_deletions": 6,
+      "accepted_lines": 746,
+      "overriden_lines": 0
+    }
+  }
+}
