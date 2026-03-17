@@ -1,0 +1,25 @@
+apps/search/src/components/ImportProductsToAlgolia/ImportPagesToAlgolia.tsx
+  ac330777aeb983e4 10-11,13-18,27
+apps/search/src/components/ImportProductsToAlgolia/useBatchUpload.ts
+  ac330777aeb983e4 260,272
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "1c11668f39ecb544f78c20def4eb5506a5c7d924",
+  "prompts": {
+    "ac330777aeb983e4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "849a0311-1bac-46f6-ac8e-9190e343f42f",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 12,
+      "total_deletions": 9,
+      "accepted_lines": 12,
+      "overriden_lines": 0
+    }
+  }
+}
