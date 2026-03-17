@@ -4,7 +4,11 @@ import { Box, Text } from "@saleor/macaw-ui";
 import { AlgoliaConfigurationForm } from "../../components/AlgoliaConfigurationForm";
 import { AlgoliaFieldsSelectionForm } from "../../components/AlgoliaFieldsSelectionForm";
 import { AlgoliaPageFieldsSelectionForm } from "../../components/AlgoliaPageFieldsSelectionForm";
-import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";
+import {
+  ImportCategoriesToAlgolia,
+  ImportPagesToAlgolia,
+  ImportProductsToAlgolia,
+} from "../../components/ImportProductsToAlgolia";
 import { IndicesSettings } from "../../components/IndicesSettings";
 import { MainInstructions } from "../../components/MainInstructions";
 import { PageTypesFilterForm } from "../../components/PageTypesFilterForm";
@@ -106,11 +110,35 @@ export const ConfigurationView = () => {
         heading="Index products"
         sideContent={
           <Box>
-            <Text>Perform initial index of all products in your Saleor database</Text>
+            <Text>Perform initial index of all products and their variants</Text>
           </Box>
         }
       >
         <ImportProductsToAlgolia />
+      </Layout.AppSection>
+
+      <Layout.AppSection
+        marginTop={14}
+        heading="Index categories"
+        sideContent={
+          <Box>
+            <Text>Perform initial index of all categories</Text>
+          </Box>
+        }
+      >
+        <ImportCategoriesToAlgolia />
+      </Layout.AppSection>
+
+      <Layout.AppSection
+        marginTop={14}
+        heading="Index pages"
+        sideContent={
+          <Box>
+            <Text>Perform initial index of all pages</Text>
+          </Box>
+        }
+      >
+        <ImportPagesToAlgolia />
       </Layout.AppSection>
 
       <Layout.AppSection

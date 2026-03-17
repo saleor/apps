@@ -27,7 +27,7 @@ export type Categories = NonNullable<
 
 export type Pages = NonNullable<PagesDataForImportQuery["pages"]>["edges"][number]["node"][];
 
-type UploadState =
+export type UploadState =
   | { type: "idle" }
   | { type: "uploading"; progress: { current: number; total: number }; isFinishing: boolean }
   | { type: "error"; error: Error }
@@ -177,52 +177,95 @@ const useGraphQLClient = () => {
   return { getChannels, getProductsByChannel, getCategories, getPages };
 };
 
-const useDataFetcher = () => {
-  const { getChannels, getProductsByChannel, getCategories, getPages } = useGraphQLClient();
+const runBatchedUpload = async <T>(
+  generator: AsyncGenerator<T[]>,
+  upload: (batch: T[]) => Promise<void>,
+  incrementTotal: (total: number) => void,
+) => {
+  let pendingUploads: Promise<void>[] = [];
 
-  async function* getProducts() {
-    const channelsResponse = await getChannels();
-    const channels = channelsResponse.data?.channels;
+  for await (const batch of generator) {
+    incrementTotal(batch.length);
+    pendingUploads.push(upload(batch));
 
-    if (!channels) return;
-
-    for (const channel of channels) {
-      yield* getProductsByChannel(channel.slug);
+    if (pendingUploads.length >= PENDING_UPLOADS_BATCH_SIZE) {
+      await Promise.all(pendingUploads);
+      pendingUploads = [];
     }
   }
 
-  return { getProducts, getCategories, getPages };
+  if (pendingUploads.length > 0) {
+    await Promise.all(pendingUploads);
+  }
 };
 
-export const useBatchUpload = (
+export const useProductsBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => {
+  const { uploadState, incrementTotal, incrementCurrent, finishingUpload, startUploading } =
+    useUploadState();
+  const { getChannels, getProductsByChannel } = useGraphQLClient();
+
+  const uploadBatch = async (products: Products) => {
+    if (!searchProvider) return;
+
+    await searchProvider.updatedBatchProducts(products);
+    incrementCurrent(products.length);
+  };
+
+  const startUpload = async () => {
+    if (!searchProvider) return;
+
+    startUploading();
+
+    const channelsResponse = await getChannels();
+    const channels = channelsResponse.data?.channels;
+
+    if (channels) {
+      for (const channel of channels) {
+        await runBatchedUpload(getProductsByChannel(channel.slug), uploadBatch, incrementTotal);
+      }
+    }
+
+    finishingUpload();
+  };
+
+  return { startUpload, uploadState };
+};
+
+export const useCategoriesBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => {
+  const { uploadState, incrementTotal, incrementCurrent, finishingUpload, startUploading } =
+    useUploadState();
+  const { getCategories } = useGraphQLClient();
+
+  const uploadBatch = async (categories: Categories) => {
+    if (!searchProvider) return;
+
+    await searchProvider.updatedBatchCategories(categories);
+    incrementCurrent(categories.length);
+  };
+
+  const startUpload = async () => {
+    if (!searchProvider) return;
+
+    startUploading();
+    await runBatchedUpload(getCategories(), uploadBatch, incrementTotal);
+    finishingUpload();
+  };
+
+  return { startUpload, uploadState };
+};
+
+export const usePagesBatchUpload = (
   searchProvider: AlgoliaSearchProvider | null,
   pageTypeIds: string[] = [],
 ) => {
   const { uploadState, incrementTotal, incrementCurrent, finishingUpload, startUploading } =
     useUploadState();
-  const { getProducts, getCategories, getPages } = useDataFetcher();
+  const { getPages } = useGraphQLClient();
 
-  const uploadProductsToAlgolia = async (products: Products) => {
-    if (!searchProvider) return;
-
-    await searchProvider.updatedBatchProducts(products);
-
-    incrementCurrent(products.length);
-  };
-
-  const uploadCategoriesToAlgolia = async (categories: Categories) => {
-    if (!searchProvider) return;
-
-    await searchProvider.updatedBatchCategories(categories);
-
-    incrementCurrent(categories.length);
-  };
-
-  const uploadPagesToAlgolia = async (pages: Pages) => {
+  const uploadBatch = async (pages: Pages) => {
     if (!searchProvider) return;
 
     await searchProvider.updatedBatchPages(pages);
-
     incrementCurrent(pages.length);
   };
 
@@ -230,51 +273,7 @@ export const useBatchUpload = (
     if (!searchProvider) return;
 
     startUploading();
-    let pendingUploads = [];
-
-    for await (const products of getProducts()) {
-      incrementTotal(products.length);
-      pendingUploads.push(uploadProductsToAlgolia(products));
-
-      if (pendingUploads.length >= PENDING_UPLOADS_BATCH_SIZE) {
-        await Promise.all(pendingUploads);
-        pendingUploads = [];
-      }
-    }
-
-    if (pendingUploads.length > 0) {
-      await Promise.all(pendingUploads);
-    }
-
-    for await (const categories of getCategories()) {
-      incrementTotal(categories.length);
-      pendingUploads.push(uploadCategoriesToAlgolia(categories));
-
-      if (pendingUploads.length >= PENDING_UPLOADS_BATCH_SIZE) {
-        await Promise.all(pendingUploads);
-        pendingUploads = [];
-      }
-    }
-
-    if (pendingUploads.length > 0) {
-      await Promise.all(pendingUploads);
-      pendingUploads = [];
-    }
-
-    for await (const pages of getPages(pageTypeIds)) {
-      incrementTotal(pages.length);
-      pendingUploads.push(uploadPagesToAlgolia(pages));
-
-      if (pendingUploads.length >= PENDING_UPLOADS_BATCH_SIZE) {
-        await Promise.all(pendingUploads);
-        pendingUploads = [];
-      }
-    }
-
-    if (pendingUploads.length > 0) {
-      await Promise.all(pendingUploads);
-    }
-
+    await runBatchedUpload(getPages(pageTypeIds), uploadBatch, incrementTotal);
     finishingUpload();
   };
 

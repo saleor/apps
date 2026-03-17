@@ -4,12 +4,12 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { type AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
-import { useBatchUpload } from "./useBatchUpload";
+import { useProductsBatchUpload } from "./useBatchUpload";
 
 vi.mock("@saleor/app-sdk/app-bridge");
 vi.mock("@saleor/apps-shared/create-graphql-client");
 
-describe("useBatchUpload", () => {
+describe("useProductsBatchUpload", () => {
   const mockSearchProvider = {
     updatedBatchProducts: vi.fn().mockResolvedValue(undefined),
   } as unknown as AlgoliaSearchProvider;
@@ -35,7 +35,7 @@ describe("useBatchUpload", () => {
   });
 
   it("should start import and update upload state", async () => {
-    const { result } = renderHook(() => useBatchUpload(mockSearchProvider));
+    const { result } = renderHook(() => useProductsBatchUpload(mockSearchProvider));
 
     act(() => {
       result.current.startUpload();
@@ -61,7 +61,7 @@ describe("useBatchUpload", () => {
   });
 
   it("should not start import if searchProvider is null", async () => {
-    const { result } = renderHook(() => useBatchUpload(null));
+    const { result } = renderHook(() => useProductsBatchUpload(null));
 
     act(() => {
       result.current.startUpload();
@@ -99,7 +99,7 @@ describe("useBatchUpload", () => {
       }),
     } as any);
 
-    const { result } = renderHook(() => useBatchUpload(mockSearchProvider));
+    const { result } = renderHook(() => useProductsBatchUpload(mockSearchProvider));
 
     act(() => {
       result.current.startUpload();
