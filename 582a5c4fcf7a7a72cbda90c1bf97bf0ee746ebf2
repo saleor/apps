@@ -1,0 +1,43 @@
+apps/smtp/src/modules/trpc/protected-client-procedure.ts
+  71a69123e0d0252b 3,36-37
+apps/segment/src/modules/trpc/protected-client-procedure.ts
+  71a69123e0d0252b 4,37-38
+packages/sentry-utils/index.ts
+  71a69123e0d0252b 2
+apps/avatax/src/modules/trpc/protected-client-procedure.ts
+  71a69123e0d0252b 3,37-38
+packages/otel/src/with-span-attributes.ts
+  71a69123e0d0252b 4,12-18,37-43
+packages/sentry-utils/src/set-sentry-saleor-user.ts
+  71a69123e0d0252b 1-7
+apps/cms/src/modules/trpc/protected-client-procedure.ts
+  71a69123e0d0252b 3,37-38
+apps/np-atobarai/src/modules/trpc/protected-client-procedure.ts
+  71a69123e0d0252b 3,36-37
+apps/search/src/modules/trpc/protected-client-procedure.ts
+  71a69123e0d0252b 3,45-46
+apps/stripe/src/modules/trpc/protected-client-procedure.ts
+  71a69123e0d0252b 3,36-37
+apps/products-feed/src/modules/trpc/protected-client-procedure.ts
+  71a69123e0d0252b 3,40-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "582a5c4fcf7a7a72cbda90c1bf97bf0ee746ebf2",
+  "prompts": {
+    "71a69123e0d0252b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5992d924-6cb9-4307-8b2b-0382972f41df",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 52,
+      "total_deletions": 6,
+      "accepted_lines": 52,
+      "overriden_lines": 0
+    }
+  }
+}
