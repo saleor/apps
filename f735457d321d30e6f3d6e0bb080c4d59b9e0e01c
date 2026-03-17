@@ -1,0 +1,37 @@
+apps/search/src/components/ImportProductsToAlgolia/ImportToAlgoliaCard.tsx
+  010c873b112990f4 1-108
+apps/search/src/components/ImportProductsToAlgolia/index.tsx
+  010c873b112990f4 1-3
+apps/search/src/components/ImportProductsToAlgolia/ImportCategoriesToAlgolia.tsx
+  010c873b112990f4 1-21
+apps/search/src/components/ImportProductsToAlgolia/useBatchUpload.ts
+  010c873b112990f4 30,180-185,187-189,191-193,197-199,202,205,207,214,217,219-228,231-232,234-237,239-243,250-252,254-255,257-263,265-266,268-270,272-273,275-276
+apps/search/src/components/ImportProductsToAlgolia/ImportPagesToAlgolia.tsx
+  010c873b112990f4 1-24
+apps/search/src/components/ImportProductsToAlgolia/useBatchUpload.test.ts
+  010c873b112990f4 7,12,38,64,102
+apps/search/src/components/ImportProductsToAlgolia/ImportProductsToAlgolia.tsx
+  010c873b112990f4 1-21
+apps/search/src/views/configuration/configuration.view.tsx
+  010c873b112990f4 8-10,113,120-141
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "f735457d321d30e6f3d6e0bb080c4d59b9e0e01c",
+  "prompts": {
+    "010c873b112990f4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7171dea6-c3be-45f7-8408-bff5c8deb87e",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 277,
+      "total_deletions": 176,
+      "accepted_lines": 273,
+      "overriden_lines": 0
+    }
+  }
+}
