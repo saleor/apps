@@ -11,6 +11,7 @@ import { ChannelsDocument } from "../../../generated/graphql";
 import { saleorApp } from "../../../saleor-app";
 import { AlgoliaErrorParser } from "../../lib/algolia/algolia-error-parser";
 import { AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
+import { AlgoliaPageFieldsKeys } from "../../lib/algolia-fields";
 import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-graphql-client";
 import { createLogger } from "../../lib/logger";
 import { loggerContext } from "../../lib/logger-context";
@@ -72,6 +73,9 @@ export const setupIndicesHandlerFactory =
       indexNamePrefix: configData.appConfig.indexNamePrefix,
       channels,
       enabledKeys: configData.fieldsMapping.enabledAlgoliaFields,
+      pageEnabledKeys: configData.pageFieldsMapping?.enabledAlgoliaFields ?? [
+        ...AlgoliaPageFieldsKeys,
+      ],
     });
 
     try {

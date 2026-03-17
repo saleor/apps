@@ -120,4 +120,20 @@ export const configurationRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
       });
     }),
+  setPageFieldsMappingConfig: protectedClientProcedure
+    .input(FieldsConfigSchema)
+    .mutation(async ({ ctx, input }) => {
+      const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
+      const configManager = new AppConfigMetadataManager(settingsManager);
+
+      const config = await traceGetMetadata(() => configManager.get(ctx.saleorApiUrl), {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
+
+      config.setPageFieldsMapping(input.enabledAlgoliaFields);
+
+      await traceSetMetadata(() => configManager.set(config, ctx.saleorApiUrl), {
+        saleorApiUrl: ctx.saleorApiUrl,
+      });
+    }),
 });

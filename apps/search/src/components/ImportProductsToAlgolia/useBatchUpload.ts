@@ -6,6 +6,8 @@ import {
   CategoriesDataForImportDocument,
   type CategoriesDataForImportQuery,
   ChannelsDocument,
+  PagesDataForImportDocument,
+  type PagesDataForImportQuery,
   ProductsDataForImportDocument,
   type ProductsDataForImportQuery,
 } from "../../../generated/graphql";
@@ -21,6 +23,8 @@ export type Products = NonNullable<
 export type Categories = NonNullable<
   CategoriesDataForImportQuery["categories"]
 >["edges"][number]["node"][];
+
+export type Pages = NonNullable<PagesDataForImportQuery["pages"]>["edges"][number]["node"][];
 
 type UploadState =
   | { type: "idle" }
@@ -147,11 +151,29 @@ const useGraphQLClient = () => {
     }
   }
 
-  return { getChannels, getProductsByChannel, getCategories };
+  async function* getPages(cursor: string = ""): AsyncGenerator<Pages> {
+    const response = await client
+      .query(PagesDataForImportDocument, {
+        after: cursor,
+        first: PER_PAGE,
+      })
+      .toPromise();
+
+    const newPages = response?.data?.pages?.edges.map((e) => e.node) ?? [];
+
+    if (newPages.length > 0) {
+      yield newPages;
+    }
+    if (response?.data?.pages?.pageInfo.hasNextPage && response?.data?.pages?.pageInfo.endCursor) {
+      yield* getPages(response.data.pages?.pageInfo.endCursor);
+    }
+  }
+
+  return { getChannels, getProductsByChannel, getCategories, getPages };
 };
 
 const useDataFetcher = () => {
-  const { getChannels, getProductsByChannel, getCategories } = useGraphQLClient();
+  const { getChannels, getProductsByChannel, getCategories, getPages } = useGraphQLClient();
 
   async function* getProducts() {
     const channelsResponse = await getChannels();
@@ -164,13 +186,13 @@ const useDataFetcher = () => {
     }
   }
 
-  return { getProducts, getCategories };
+  return { getProducts, getCategories, getPages };
 };
 
 export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => {
   const { uploadState, incrementTotal, incrementCurrent, finishingUpload, startUploading } =
     useUploadState();
-  const { getProducts, getCategories } = useDataFetcher();
+  const { getProducts, getCategories, getPages } = useDataFetcher();
 
   const uploadProductsToAlgolia = async (products: Products) => {
     if (!searchProvider) return;
@@ -186,6 +208,14 @@ export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => 
     await searchProvider.updatedBatchCategories(categories);
 
     incrementCurrent(categories.length);
+  };
+
+  const uploadPagesToAlgolia = async (pages: Pages) => {
+    if (!searchProvider) return;
+
+    await searchProvider.updatedBatchPages(pages);
+
+    incrementCurrent(pages.length);
   };
 
   const startUpload = async () => {
@@ -211,6 +241,21 @@ export const useBatchUpload = (searchProvider: AlgoliaSearchProvider | null) => 
     for await (const categories of getCategories()) {
       incrementTotal(categories.length);
       pendingUploads.push(uploadCategoriesToAlgolia(categories));
+
+      if (pendingUploads.length >= PENDING_UPLOADS_BATCH_SIZE) {
+        await Promise.all(pendingUploads);
+        pendingUploads = [];
+      }
+    }
+
+    if (pendingUploads.length > 0) {
+      await Promise.all(pendingUploads);
+      pendingUploads = [];
+    }
+
+    for await (const pages of getPages()) {
+      incrementTotal(pages.length);
+      pendingUploads.push(uploadPagesToAlgolia(pages));
 
       if (pendingUploads.length >= PENDING_UPLOADS_BATCH_SIZE) {
         await Promise.all(pendingUploads);

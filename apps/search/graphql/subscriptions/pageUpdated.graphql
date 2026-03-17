@@ -1,0 +1,16 @@
+subscription PageUpdated {
+  event {
+    __typename
+    ... on PageUpdated {
+      __typename
+      page {
+        ...PageData
+      }
+    }
+    recipient {
+      webhooks {
+        id
+      }
+    }
+  }
+}

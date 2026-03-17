@@ -3,6 +3,7 @@ import { Box, Text } from "@saleor/macaw-ui";
 
 import { AlgoliaConfigurationForm } from "../../components/AlgoliaConfigurationForm";
 import { AlgoliaFieldsSelectionForm } from "../../components/AlgoliaFieldsSelectionForm";
+import { AlgoliaPageFieldsSelectionForm } from "../../components/AlgoliaPageFieldsSelectionForm";
 import { ImportProductsToAlgolia } from "../../components/ImportProductsToAlgolia";
 import { IndicesSettings } from "../../components/IndicesSettings";
 import { MainInstructions } from "../../components/MainInstructions";
@@ -62,6 +63,24 @@ export const ConfigurationView = () => {
         }
       >
         <AlgoliaFieldsSelectionForm />
+      </Layout.AppSection>
+
+      <Layout.AppSection
+        marginTop={14}
+        heading="Page fields filtering"
+        sideContent={
+          <Box>
+            <Text as="p" marginBottom={1.5}>
+              Decide which fields app should send with each page.
+            </Text>
+            <Text as="p" marginBottom={1.5}>
+              You should remove fields you do not need, to ensure Algolia limits will not be
+              exceeded.
+            </Text>
+          </Box>
+        }
+      >
+        <AlgoliaPageFieldsSelectionForm />
       </Layout.AppSection>
 
       <Layout.AppSection
