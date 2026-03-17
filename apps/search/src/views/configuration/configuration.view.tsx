@@ -50,7 +50,7 @@ export const ConfigurationView = () => {
 
       <Layout.AppSection
         marginTop={14}
-        heading="Algolia fields filtering"
+        heading="Product Variant fields filtering"
         sideContent={
           <Box>
             <Text as="p" marginBottom={1.5}>

@@ -38,7 +38,7 @@ export const ImportProductsToAlgolia = () => {
             Importing products & variants
           </Text>
           <Text as={"p"}>
-            Trigger initial indexing for products catalogue. It can take few minutes.{" "}
+            Trigger initial indexing for the catalogue. It can take few minutes.{" "}
           </Text>
           <Text marginBottom={5} size={4} fontWeight="bold">
             Do not close the app - its running client-side
@@ -71,7 +71,7 @@ export const ImportProductsToAlgolia = () => {
           }}
         >
           <Text as="p" marginBottom={2}>
-            {uploadState.progress.current} / {uploadState.progress.total} products imported
+            {uploadState.progress.current} / {uploadState.progress.total} entities imported
           </Text>
           <progress
             value={uploadState.progress.current}
