@@ -1,0 +1,23 @@
+packages/sentry-utils/src/set-sentry-saleor-user.ts
+  4c5d7a8966000584 1,11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "5dacb0c1a0aa1e6b99e1b4afe66bf350704e3961",
+  "prompts": {
+    "4c5d7a8966000584": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "718ea280-5c3a-4ba9-be2f-df2dfaaf1593",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 3,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
