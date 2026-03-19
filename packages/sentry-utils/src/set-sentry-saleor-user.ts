@@ -1,4 +1,4 @@
-import { setUser } from "@sentry/nextjs";
+import * as Sentry from "@sentry/nextjs";
 
 export const setSentrySaleorUser = (saleorApiUrl: string) => {
   try {
@@ -8,7 +8,7 @@ export const setSentrySaleorUser = (saleorApiUrl: string) => {
       return;
     }
 
-    setUser({ id: host });
+    Sentry.setUser({ id: host });
   } catch {
     // Invalid or non-absolute URL; do not set Sentry user
   }
