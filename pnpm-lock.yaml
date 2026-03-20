@@ -959,6 +959,9 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
       '@sentry/cli':
         specifier: 'catalog:'
         version: 1.77.3
@@ -1044,9 +1047,6 @@ importers:
       '@saleor/eslint-config-apps':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@saleor/sentry-utils':
-        specifier: workspace:*
-        version: link:../../packages/sentry-utils
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -2068,6 +2068,9 @@ importers:
       '@saleor/react-hook-form-macaw':
         specifier: workspace:*
         version: link:../../packages/react-hook-form-macaw
+      '@saleor/sentry-utils':
+        specifier: workspace:*
+        version: link:../../packages/sentry-utils
       '@sentry/cli':
         specifier: 'catalog:'
         version: 1.77.3
@@ -2165,9 +2168,6 @@ importers:
       '@saleor/eslint-config-apps':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@saleor/sentry-utils':
-        specifier: workspace:*
-        version: link:../../packages/sentry-utils
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../../packages/typescript-config
