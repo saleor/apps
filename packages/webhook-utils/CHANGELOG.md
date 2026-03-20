@@ -1,5 +1,11 @@
 # @saleor/webhook-utils
 
+## 0.2.9
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+
 ## 0.2.8
 
 ### Patch Changes
