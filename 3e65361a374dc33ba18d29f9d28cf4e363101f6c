@@ -1,0 +1,25 @@
+apps/stripe/package.json
+  4c5d7a8966000584 56
+apps/np-atobarai/package.json
+  4c5d7a8966000584 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "3e65361a374dc33ba18d29f9d28cf4e363101f6c",
+  "prompts": {
+    "4c5d7a8966000584": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "718ea280-5c3a-4ba9-be2f-df2dfaaf1593",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
