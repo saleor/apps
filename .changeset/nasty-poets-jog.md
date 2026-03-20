@@ -9,4 +9,4 @@
 "saleor-app-cms": patch
 ---
 
-Attach Saleor domain for Sentry events for better aggregations
+Attach Saleor domain to Sentry events for better aggregation
