@@ -1,5 +1,6 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
 import { ObservabilityAttributes } from "@saleor/apps-otel/src/observability-attributes";
+import { setSentrySaleorUser } from "@saleor/sentry-utils";
 import { setTag } from "@sentry/nextjs";
 import { TRPCError } from "@trpc/server";
 
@@ -31,6 +32,8 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
       message: "Missing auth data",
     });
   }
+
+  setSentrySaleorUser(authData.saleorApiUrl);
 
   return next({
     ctx: {

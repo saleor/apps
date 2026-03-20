@@ -1,5 +1,6 @@
 import { verifyJWT } from "@saleor/app-sdk/auth";
 import { REQUIRED_SALEOR_PERMISSIONS } from "@saleor/apps-shared/permissions";
+import { setSentrySaleorUser } from "@saleor/sentry-utils";
 import { TRPCError } from "@trpc/server";
 
 import { saleorApp } from "../../../saleor-app";
@@ -40,6 +41,8 @@ const attachAppToken = middleware(async ({ ctx, next }) => {
       message: "Missing auth data",
     });
   }
+
+  setSentrySaleorUser(authData.saleorApiUrl);
 
   return next({
     ctx: {
