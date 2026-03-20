@@ -41,6 +41,7 @@
     "@opentelemetry/sdk-trace-node": "catalog:",
     "@opentelemetry/semantic-conventions": "catalog:",
     "@saleor/app-sdk": "catalog:",
+    "@sentry/nextjs": "catalog:",
     "next": "catalog:",
     "urql": "catalog:"
   }
