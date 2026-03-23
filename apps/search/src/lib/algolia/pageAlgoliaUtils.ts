@@ -1,3 +1,5 @@
+import { EditorJsPlaintextRenderer } from "@saleor/apps-shared/editor-js-plaintext-renderer";
+
 import { type PageDataFragment } from "../../../generated/graphql";
 import { safeParseJson } from "../safe-parse-json";
 import { mapSelectedAttributesToRecord } from "./algoliaUtils";
@@ -40,6 +42,10 @@ export function pageToAlgolia(page: PageDataFragment, enabledKeys: string[]) {
 
   if (enabledKeys.includes("content")) {
     document.content = safeParseJson(page.content);
+  }
+
+  if (enabledKeys.includes("contentPlaintext")) {
+    document.contentPlaintext = EditorJsPlaintextRenderer({ stringData: page.content ?? "" });
   }
 
   if (enabledKeys.includes("seoDescription")) {

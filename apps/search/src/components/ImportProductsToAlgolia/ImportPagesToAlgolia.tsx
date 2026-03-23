@@ -1,21 +1,41 @@
-import { trpcClient } from "../../modules/trpc/trpc-client";
+import { Layout } from "@saleor/apps-ui";
+import { Box, Text } from "@saleor/macaw-ui";
+
 import { ImportToAlgoliaCard } from "./ImportToAlgoliaCard";
 import { useAlgoliaConfiguration } from "./useAlgoliaConfiguration";
 import { usePagesBatchUpload } from "./useBatchUpload";
 
-export const ImportPagesToAlgolia = () => {
+interface ImportPagesToAlgoliaProps {
+  pageTypeIds: string[];
+}
+
+export const ImportPagesToAlgolia = ({ pageTypeIds }: ImportPagesToAlgoliaProps) => {
   const configuration = useAlgoliaConfiguration();
   const isConfigured = configuration.type === "configured";
   const searchProvider = isConfigured ? configuration.provider : null;
-  const { refetch: refetchConfig } = trpcClient.configuration.getConfig.useQuery();
   const { startUpload, uploadState } = usePagesBatchUpload(searchProvider);
 
-  const handleStartImport = async () => {
-    const { data: freshConfig } = await refetchConfig();
-    const pageTypeIds = freshConfig?.pageTypesFilter?.pageTypeIds ?? [];
+  const hasPageTypes = pageTypeIds.length > 0;
 
+  const handleStartImport = () => {
     startUpload(pageTypeIds);
   };
+
+  if (isConfigured && !hasPageTypes) {
+    return (
+      <Layout.AppSectionCard>
+        <Box>
+          <Text size={5} fontWeight="bold" as="p" marginBottom={1.5}>
+            Importing pages
+          </Text>
+          <Text as="p">
+            Select at least one page type in the &quot;Page types filter&quot; section above to
+            enable page indexing.
+          </Text>
+        </Box>
+      </Layout.AppSectionCard>
+    );
+  }
 
   return (
     <ImportToAlgoliaCard

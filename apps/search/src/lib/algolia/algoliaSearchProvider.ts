@@ -347,7 +347,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
       () =>
         this.#algolia.initIndex(this.#pageIndexName).setSettings({
           attributesForFaceting: ["pageTypeId", "metadata", "attributes"],
-          searchableAttributes: ["title", "slug", "seoTitle"],
+          searchableAttributes: ["title", "slug", "seoTitle", "contentPlaintext"],
         }),
       { indexName: this.#pageIndexName },
     );

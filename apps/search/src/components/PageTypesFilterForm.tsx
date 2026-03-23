@@ -7,7 +7,11 @@ import { trpcClient } from "../modules/trpc/trpc-client";
 
 type PageTypeOption = { label: string; value: string };
 
-export const PageTypesFilterForm = () => {
+interface PageTypesFilterFormProps {
+  onSaved?: () => void;
+}
+
+export const PageTypesFilterForm = ({ onSaved }: PageTypesFilterFormProps) => {
   const { notifySuccess } = useDashboardNotification();
 
   const { data: config, isLoading: isConfigLoading } =
@@ -17,6 +21,7 @@ export const PageTypesFilterForm = () => {
 
   const { mutate } = trpcClient.configuration.setPageTypesFilter.useMutation({
     onSuccess() {
+      onSaved?.();
       notifySuccess("Success", "Only selected page types will be indexed");
     },
   });

@@ -14,10 +14,15 @@ import { MainInstructions } from "../../components/MainInstructions";
 import { PageTypesFilterForm } from "../../components/PageTypesFilterForm";
 import { WebhooksStatus } from "../../components/WebhooksStatus";
 import { WebhooksStatusInstructions } from "../../components/WebhooksStatusInstructions";
+import { trpcClient } from "../../modules/trpc/trpc-client";
 
 const ALGOLIA_DASHBOARD_TOKENS_URL = "https://www.algolia.com/account/api-keys/all";
 
 export const ConfigurationView = () => {
+  const { data: config, refetch: refetchConfig } = trpcClient.configuration.getConfig.useQuery();
+
+  const pageTypeIds = config?.pageTypesFilter?.pageTypeIds ?? [];
+
   return (
     <Box display="flex" flexDirection="column" gap={10}>
       <Box>
@@ -84,7 +89,7 @@ export const ConfigurationView = () => {
           </Box>
         }
       >
-        <PageTypesFilterForm />
+        <PageTypesFilterForm onSaved={() => refetchConfig()} />
       </Layout.AppSection>
 
       <Layout.AppSection
@@ -138,7 +143,7 @@ export const ConfigurationView = () => {
           </Box>
         }
       >
-        <ImportPagesToAlgolia />
+        <ImportPagesToAlgolia pageTypeIds={pageTypeIds} />
       </Layout.AppSection>
 
       <Layout.AppSection
