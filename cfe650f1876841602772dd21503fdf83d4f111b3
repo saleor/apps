@@ -1,0 +1,35 @@
+apps/search/src/components/BatchImportCard.tsx
+  691e48f461cff1e7 1-110
+apps/search/src/components/ImportCategoriesToAlgolia/index.tsx
+  691e48f461cff1e7 1-22
+apps/search/src/components/ImportCategoriesToAlgolia/useCategoriesBatchUpload.ts
+  691e48f461cff1e7 1-85
+apps/search/src/components/ImportProductsToAlgolia/useBatchUpload.ts
+  691e48f461cff1e7 10,52,56,69,75
+apps/search/src/components/ImportProductsToAlgolia/index.tsx
+  691e48f461cff1e7 1,12-20
+apps/search/src/views/configuration/configuration.view.tsx
+  691e48f461cff1e7 6,82-91
+apps/search/src/components/useUploadState.ts
+  691e48f461cff1e7 1-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "cfe650f1876841602772dd21503fdf83d4f111b3",
+  "prompts": {
+    "691e48f461cff1e7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6f0cf928-8f08-4c55-9190-c51e3a406c88",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 317,
+      "total_deletions": 213,
+      "accepted_lines": 317,
+      "overriden_lines": 0
+    }
+  }
+}
