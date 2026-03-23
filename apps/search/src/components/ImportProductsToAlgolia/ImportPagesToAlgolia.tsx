@@ -3,7 +3,7 @@ import { Box, Text } from "@saleor/macaw-ui";
 
 import { ImportToAlgoliaCard } from "./ImportToAlgoliaCard";
 import { useAlgoliaConfiguration } from "./useAlgoliaConfiguration";
-import { usePagesBatchUpload } from "./useBatchUpload";
+import { usePagesBatchUpload } from "./usePagesBatchUpload";
 
 interface ImportPagesToAlgoliaProps {
   pageTypeIds: string[];

@@ -1,7 +1,7 @@
 import { Layout } from "@saleor/apps-ui";
 import { Box, Button, Text } from "@saleor/macaw-ui";
 
-import { type UploadState } from "./useBatchUpload";
+import { type UploadState } from "./useUploadState";
 
 interface ImportToAlgoliaCardProps {
   title: string;

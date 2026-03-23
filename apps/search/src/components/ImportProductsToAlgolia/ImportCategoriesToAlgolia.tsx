@@ -1,6 +1,6 @@
 import { ImportToAlgoliaCard } from "./ImportToAlgoliaCard";
 import { useAlgoliaConfiguration } from "./useAlgoliaConfiguration";
-import { useCategoriesBatchUpload } from "./useBatchUpload";
+import { useCategoriesBatchUpload } from "./useCategoriesBatchUpload";
 
 export const ImportCategoriesToAlgolia = () => {
   const configuration = useAlgoliaConfiguration();

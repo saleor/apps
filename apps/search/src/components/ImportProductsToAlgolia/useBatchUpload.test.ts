@@ -4,7 +4,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { type AlgoliaSearchProvider } from "../../lib/algolia/algoliaSearchProvider";
-import { useProductsBatchUpload } from "./useBatchUpload";
+import { useProductsBatchUpload } from "./useProductsBatchUpload";
 
 vi.mock("@saleor/app-sdk/app-bridge");
 vi.mock("@saleor/apps-shared/create-graphql-client");
