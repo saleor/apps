@@ -1,0 +1,46 @@
+apps/search/src/components/PageTypesFilterForm.tsx
+  8a7af4891fd5d245 10-14,24
+apps/search/src/views/configuration/configuration.view.tsx
+  8a7af4891fd5d245 17,22-25
+apps/search/src/lib/algolia/pageAlgoliaUtils.ts
+  6eb6618014ce4fb9 1-2,47-50
+apps/search/src/lib/algolia-fields.ts
+  6eb6618014ce4fb9 37-38,45,53
+apps/search/src/lib/algolia/algoliaSearchProvider.ts
+  6eb6618014ce4fb9 350
+apps/search/src/components/ImportProductsToAlgolia/ImportPagesToAlgolia.tsx
+  8a7af4891fd5d245 1-3,8-12,18,20,24-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "9c39e3741896b2ebee9403cd93079a268c2f838c",
+  "prompts": {
+    "6eb6618014ce4fb9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7b5e59b2-36fd-4bbe-848f-1c84a820bfde",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 15,
+      "total_deletions": 2,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    },
+    "8a7af4891fd5d245": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "987fa2ad-1cf9-45fe-9d83-93d522a90cd3",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 60,
+      "total_deletions": 29,
+      "accepted_lines": 42,
+      "overriden_lines": 0
+    }
+  }
+}
