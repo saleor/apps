@@ -1,5 +1,13 @@
 # @saleor/apps-otel
 
+## 2.4.1
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+- Updated dependencies [3ecde04]
+  - @saleor/sentry-utils@0.2.6
+
 ## 2.4.0
 
 ### Minor Changes

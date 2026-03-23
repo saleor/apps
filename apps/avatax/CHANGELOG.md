@@ -1,5 +1,22 @@
 # saleor-app-avatax
 
+## 1.22.2
+
+### Patch Changes
+
+- 0829f44: Internal "timeout" error from AvaTax client is now handled. Returns 504 to Saleor and does not send this error to Sentry
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+- b57266c: Attach Saleor domain to Sentry events for better aggregation
+- Updated dependencies [3ecde04]
+  - @saleor/app-problems@1.0.2
+  - @saleor/apps-logger@1.6.4
+  - @saleor/apps-otel@2.4.1
+  - @saleor/react-hook-form-macaw@0.2.17
+  - @saleor/sentry-utils@0.2.6
+  - @saleor/apps-shared@1.14.3
+  - @saleor/apps-ui@1.3.3
+  - @saleor/webhook-utils@0.2.9
+
 ## 1.22.1
 
 ### Patch Changes

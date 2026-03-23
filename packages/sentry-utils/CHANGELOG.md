@@ -1,5 +1,11 @@
 # @saleor/sentry-utils
 
+## 0.2.6
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+
 ## 0.2.5
 
 ### Patch Changes

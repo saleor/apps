@@ -1,6 +1,6 @@
 {
   "name": "@saleor/sentry-utils",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "type": "module",
   "exports": {
     ".": {
@@ -16,8 +16,12 @@
   "devDependencies": {
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
+    "@sentry/nextjs": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "typescript": "5.8.2"
+  },
+  "peerDependencies": {
+    "@sentry/nextjs": "catalog:"
   }
 }

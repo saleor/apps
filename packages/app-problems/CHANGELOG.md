@@ -1,5 +1,13 @@
 # @saleor/app-problems
 
+## 1.0.2
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+- Updated dependencies [3ecde04]
+  - @saleor/errors@1.0.2
+
 ## 1.0.1
 
 ### Patch Changes

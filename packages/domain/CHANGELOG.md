@@ -1,5 +1,13 @@
 # @saleor/apps-domain
 
+## 1.0.3
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+- Updated dependencies [3ecde04]
+  - @saleor/errors@1.0.2
+
 ## 1.0.2
 
 ### Patch Changes
