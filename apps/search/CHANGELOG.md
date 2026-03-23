@@ -1,5 +1,29 @@
 # saleor-app-search
 
+## 1.27.0
+
+### Minor Changes
+
+- 9e703e6: Added category indexing to Algolia. Categories are now synced via `CATEGORY_CREATED`, `CATEGORY_UPDATED`, and `CATEGORY_DELETED` webhooks, and included in the bulk import flow.
+
+  Each category object in Algolia contains: `name`, `slug`, `level`, `ancestors` (flat array of `{id, name, slug}`), `metadata`, and `_type: "category"`. Categories are stored in a dedicated `<prefix>.categories` index with faceting on `level`, `ancestors`, and `metadata`.
+
+  Also enriched product objects with `productTypeId`, `categoryId`, and `categorySlug` fields, and added corresponding faceting/search attributes to product indices.
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+- b57266c: Attach Saleor domain to Sentry events for better aggregation
+- Updated dependencies [3ecde04]
+  - @saleor/app-problems@1.0.2
+  - @saleor/apps-logger@1.6.4
+  - @saleor/apps-otel@2.4.1
+  - @saleor/react-hook-form-macaw@0.2.17
+  - @saleor/sentry-utils@0.2.6
+  - @saleor/apps-shared@1.14.3
+  - @saleor/apps-ui@1.3.3
+  - @saleor/webhook-utils@0.2.9
+
 ## 1.26.0
 
 ### Minor Changes

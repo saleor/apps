@@ -1,5 +1,11 @@
 # @saleor/eslint-config-apps
 
+## 0.5.1
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+
 ## 0.5.0
 
 ### Minor Changes

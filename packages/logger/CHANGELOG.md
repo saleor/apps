@@ -1,5 +1,14 @@
 # @saleor/apps-logger
 
+## 1.6.4
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+- Updated dependencies [3ecde04]
+  - @saleor/errors@1.0.2
+  - @saleor/apps-otel@2.4.1
+
 ## 1.6.3
 
 ### Patch Changes

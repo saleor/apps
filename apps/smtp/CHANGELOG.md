@@ -1,5 +1,20 @@
 # saleor-app-smtp
 
+## 1.7.1
+
+### Patch Changes
+
+- ec38e0b: Add extra Sentry error on JWT validation failure, for debugging
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+- b57266c: Attach Saleor domain to Sentry events for better aggregation
+- Updated dependencies [3ecde04]
+  - @saleor/apps-logger@1.6.4
+  - @saleor/apps-otel@2.4.1
+  - @saleor/react-hook-form-macaw@0.2.17
+  - @saleor/sentry-utils@0.2.6
+  - @saleor/apps-shared@1.14.3
+  - @saleor/apps-ui@1.3.3
+
 ## 1.7.0
 
 ### Minor Changes

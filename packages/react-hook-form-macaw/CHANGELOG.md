@@ -1,5 +1,11 @@
 # @saleor/react-hook-form-macaw
 
+## 0.2.17
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+
 ## 0.2.16
 
 ### Patch Changes

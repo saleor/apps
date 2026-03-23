@@ -1,5 +1,17 @@
 # saleor-app-klaviyo
 
+## 1.15.1
+
+### Patch Changes
+
+- 3ecde04: Updated @saleor/app-sdk to v1.7.1
+- Updated dependencies [3ecde04]
+  - @saleor/apps-logger@1.6.4
+  - @saleor/apps-otel@2.4.1
+  - @saleor/sentry-utils@0.2.6
+  - @saleor/apps-shared@1.14.3
+  - @saleor/apps-ui@1.3.3
+
 ## 1.15.0
 
 ### Minor Changes
