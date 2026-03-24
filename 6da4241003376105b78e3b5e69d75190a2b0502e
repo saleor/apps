@@ -1,0 +1,23 @@
+apps/search/src/components/AlgoliaPageFieldsSelectionForm.tsx
+  9ea421109dfe28fd 4,14-20,23-25,38,57-67,75-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "6da4241003376105b78e3b5e69d75190a2b0502e",
+  "prompts": {
+    "9ea421109dfe28fd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "90c103c7-86c6-4cc5-9c81-72b55fe10001",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 47,
+      "total_deletions": 34,
+      "accepted_lines": 47,
+      "overriden_lines": 0
+    }
+  }
+}
