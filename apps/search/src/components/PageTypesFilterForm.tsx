@@ -1,23 +1,33 @@
 import { useDashboardNotification } from "@saleor/apps-shared/use-dashboard-notification";
 import { ButtonsBox, Layout } from "@saleor/apps-ui";
 import { Box, Button, Multiselect, Skeleton, Text } from "@saleor/macaw-ui";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 import { trpcClient } from "../modules/trpc/trpc-client";
 
 type PageTypeOption = { label: string; value: string };
 
-interface PageTypesFilterFormProps {
+interface PageTypesFilterFormValues {
+  selectedPageTypes: PageTypeOption[];
+}
+
+interface PageTypesFilterFormInnerProps {
+  options: PageTypeOption[];
+  defaultValues: PageTypesFilterFormValues;
   onSaved?: () => void;
 }
 
-export const PageTypesFilterForm = ({ onSaved }: PageTypesFilterFormProps) => {
+const PageTypesFilterFormInner = ({
+  options,
+  defaultValues,
+  onSaved,
+}: PageTypesFilterFormInnerProps) => {
   const { notifySuccess } = useDashboardNotification();
 
-  const { data: config, isLoading: isConfigLoading } =
-    trpcClient.configuration.getConfig.useQuery();
-  const { data: pageTypes, isLoading: isPageTypesLoading } =
-    trpcClient.configuration.getPageTypes.useQuery();
+  const { control, handleSubmit } = useForm<PageTypesFilterFormValues>({
+    defaultValues,
+  });
 
   const { mutate } = trpcClient.configuration.setPageTypesFilter.useMutation({
     onSuccess() {
@@ -26,44 +36,17 @@ export const PageTypesFilterForm = ({ onSaved }: PageTypesFilterFormProps) => {
     },
   });
 
-  const [selectedValues, setSelectedValues] = useState<PageTypeOption[]>([]);
-
-  const options: PageTypeOption[] = (pageTypes ?? []).map((pt) => ({
-    label: pt.name,
-    value: pt.id,
-  }));
-
-  useEffect(() => {
-    if (config && pageTypes) {
-      const savedIds = config.pageTypesFilter?.pageTypeIds ?? [];
-
-      if (savedIds.length > 0) {
-        setSelectedValues(
-          savedIds
-            .map((id) => options.find((o) => o.value === id))
-            .filter((o): o is PageTypeOption => o !== undefined),
-        );
-      }
-    }
-  }, [config, pageTypes]);
-
-  if (isConfigLoading || isPageTypesLoading) {
-    return <Skeleton height={5} />;
-  }
-
-  const handleSubmit = () => {
-    mutate({
-      pageTypeIds: selectedValues.map((v) => v.value),
-    });
-  };
-
   return (
     <Layout.AppSectionCard
+      as="form"
+      onSubmit={handleSubmit((values) => {
+        mutate({
+          pageTypeIds: values.selectedPageTypes.map((v) => v.value),
+        });
+      })}
       footer={
         <ButtonsBox>
-          <Button type="button" onClick={handleSubmit}>
-            Save
-          </Button>
+          <Button type="submit">Save</Button>
         </ButtonsBox>
       }
     >
@@ -71,13 +54,50 @@ export const PageTypesFilterForm = ({ onSaved }: PageTypesFilterFormProps) => {
         <Text as="p" marginBottom={3}>
           Select which page types should be indexed. If none are selected, no pages will be indexed.
         </Text>
-        <Multiselect
-          label="Page types"
-          options={options}
-          value={selectedValues}
-          onChange={(values) => setSelectedValues(values)}
+        <Controller
+          name="selectedPageTypes"
+          control={control}
+          render={({ field: { value, onChange } }) => (
+            <Multiselect label="Page types" options={options} value={value} onChange={onChange} />
+          )}
         />
       </Box>
     </Layout.AppSectionCard>
+  );
+};
+
+interface PageTypesFilterFormProps {
+  onSaved?: () => void;
+}
+
+export const PageTypesFilterForm = ({ onSaved }: PageTypesFilterFormProps) => {
+  const { data: config, isLoading: isConfigLoading } =
+    trpcClient.configuration.getConfig.useQuery();
+  const { data: pageTypes, isLoading: isPageTypesLoading } =
+    trpcClient.configuration.getPageTypes.useQuery();
+
+  if (isConfigLoading || isPageTypesLoading || !config || !pageTypes) {
+    return <Skeleton height={5} />;
+  }
+
+  const options: PageTypeOption[] = useMemo(
+    () => pageTypes.map((pt) => ({ label: pt.name, value: pt.id })),
+    [pageTypes],
+  );
+
+  const initialSelection = useMemo(() => {
+    const savedIds = config.pageTypesFilter?.pageTypeIds ?? [];
+
+    return savedIds
+      .map((id) => options.find((o) => o.value === id))
+      .filter((o): o is PageTypeOption => o !== undefined);
+  }, [config, options]);
+
+  return (
+    <PageTypesFilterFormInner
+      options={options}
+      defaultValues={{ selectedPageTypes: initialSelection }}
+      onSaved={onSaved}
+    />
   );
 };
