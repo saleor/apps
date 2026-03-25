@@ -1,0 +1,17 @@
+fragment PageData on Page {
+  id
+  title
+  slug
+  content
+  seoTitle
+  seoDescription
+  pageType {
+    id
+  }
+  metadata {
+    ...MetadataItem
+  }
+  attributes {
+    ...ProductAttributesData
+  }
+}

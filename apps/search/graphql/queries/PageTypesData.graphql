@@ -1,0 +1,15 @@
+query PageTypesData($first: Int, $after: String) {
+  pageTypes(first: $first, after: $after) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    edges {
+      node {
+        id
+        name
+        slug
+      }
+    }
+  }
+}

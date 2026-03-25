@@ -2,6 +2,9 @@ import type {
   CategoryCreatedSubscription,
   CategoryDeletedSubscription,
   CategoryUpdatedSubscription,
+  PageCreatedSubscription,
+  PageDeletedSubscription,
+  PageUpdatedSubscription,
   ProductCreatedSubscription,
   ProductDeletedSubscription,
   ProductUpdatedSubscription,
@@ -55,6 +58,19 @@ export type ProductVariantOutOfStock = Extract<
 export type ProductVariantUpdated = Extract<
   NonNullable<ProductVariantUpdatedSubscription["event"]>,
   { __typename: "ProductVariantUpdated" }
+>;
+
+export type PageCreated = Extract<
+  NonNullable<PageCreatedSubscription["event"]>,
+  { __typename: "PageCreated" }
+>;
+export type PageDeleted = Extract<
+  NonNullable<PageDeletedSubscription["event"]>,
+  { __typename: "PageDeleted" }
+>;
+export type PageUpdated = Extract<
+  NonNullable<PageUpdatedSubscription["event"]>,
+  { __typename: "PageUpdated" }
 >;
 
 export type { MetadataItemFragment as MetadataItem } from "../../generated/graphql";

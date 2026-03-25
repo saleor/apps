@@ -2,6 +2,7 @@ import Algoliasearch, { type SearchClient } from "algoliasearch";
 
 import {
   type CategoryDataFragment,
+  type PageDataFragment,
   type ProductVariantWebhookPayloadFragment,
   type ProductWebhookPayloadFragment,
 } from "../../../generated/graphql";
@@ -18,6 +19,7 @@ import {
   productAndVariantToObjectID,
 } from "./algoliaUtils";
 import { categoryToAlgolia, categoryToAlgoliaIndexId } from "./categoryAlgoliaUtils";
+import { pageToAlgolia, pageToAlgoliaIndexId } from "./pageAlgoliaUtils";
 
 export interface AlgoliaSearchProviderOptions {
   appId: string;
@@ -25,6 +27,7 @@ export interface AlgoliaSearchProviderOptions {
   indexNamePrefix?: string;
   channels?: Array<{ slug: string; currencyCode: string }>;
   enabledKeys: string[];
+  pageEnabledKeys: string[];
 }
 
 const logger = createLogger("AlgoliaSearchProvider");
@@ -34,7 +37,9 @@ export class AlgoliaSearchProvider implements SearchProvider {
   #indexNamePrefix?: string | undefined;
   #indexNames: Array<string>;
   #categoryIndexName: string;
+  #pageIndexName: string;
   #enabledKeys: string[];
+  #pageEnabledKeys: string[];
 
   #traceSaveObjects = createTraceEffect({
     name: "Algolia saveObjects",
@@ -59,6 +64,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     indexNamePrefix,
     channels,
     enabledKeys,
+    pageEnabledKeys,
   }: AlgoliaSearchProviderOptions) {
     this.#algolia = Algoliasearch(appId, apiKey); // cspell:disable-line
     this.#indexNamePrefix = indexNamePrefix;
@@ -66,7 +72,9 @@ export class AlgoliaSearchProvider implements SearchProvider {
       channels?.map((c) => channelListingToAlgoliaIndexId({ channel: c }, this.#indexNamePrefix)) ||
       [];
     this.#categoryIndexName = categoryToAlgoliaIndexId(this.#indexNamePrefix);
+    this.#pageIndexName = pageToAlgoliaIndexId(this.#indexNamePrefix);
     this.#enabledKeys = enabledKeys;
+    this.#pageEnabledKeys = pageEnabledKeys;
   }
 
   private async saveGroupedByIndex(groupedByIndex: GroupedByIndex) {
@@ -104,6 +112,7 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await Promise.all([
       ...this.#indexNames.map((indexName) => this.#updateProductIndexSettings(indexName)),
       this.#updateCategoryIndexSettings(),
+      this.#updatePageIndexSettings(),
     ]);
   }
 
@@ -290,6 +299,57 @@ export class AlgoliaSearchProvider implements SearchProvider {
     await this.#traceSaveObjects(
       () => index.saveObjects(algoliaObjects, { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
       { indexName: this.#categoryIndexName, objectsCount: algoliaObjects.length },
+    );
+  }
+
+  async createPage(page: PageDataFragment) {
+    logger.debug(`createPage called`);
+    await this.updatePage(page);
+  }
+
+  async updatePage(page: PageDataFragment) {
+    logger.debug(`updatePage called`);
+
+    const algoliaObject = pageToAlgolia(page, this.#pageEnabledKeys);
+    const index = this.#algolia.initIndex(this.#pageIndexName);
+
+    await this.#traceSaveObjects(
+      () => index.saveObjects([algoliaObject], { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
+      { indexName: this.#pageIndexName, objectsCount: 1 },
+    );
+  }
+
+  async deletePage(pageId: string) {
+    logger.debug(`deletePage called`);
+
+    const index = this.#algolia.initIndex(this.#pageIndexName);
+
+    await this.#traceDeleteObjects(
+      () => index.deleteObjects([pageId], { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
+      { indexName: this.#pageIndexName, objectIdsCount: 1 },
+    );
+  }
+
+  async updatedBatchPages(pagesBatch: PageDataFragment[]) {
+    logger.debug(`updatedBatchPages called`);
+
+    const algoliaObjects = pagesBatch.map((page) => pageToAlgolia(page, this.#pageEnabledKeys));
+    const index = this.#algolia.initIndex(this.#pageIndexName);
+
+    await this.#traceSaveObjects(
+      () => index.saveObjects(algoliaObjects, { timeout: env.NEXT_PUBLIC_ALGOLIA_TIMEOUT_MS }),
+      { indexName: this.#pageIndexName, objectsCount: algoliaObjects.length },
+    );
+  }
+
+  async #updatePageIndexSettings() {
+    return this.#traceSetSettings(
+      () =>
+        this.#algolia.initIndex(this.#pageIndexName).setSettings({
+          attributesForFaceting: ["pageTypeId", "metadata", "attributes"],
+          searchableAttributes: ["title", "slug", "seoTitle", "contentPlaintext"],
+        }),
+      { indexName: this.#pageIndexName },
     );
   }
 }

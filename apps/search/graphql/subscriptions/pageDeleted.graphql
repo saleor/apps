@@ -1,0 +1,16 @@
+subscription PageDeleted {
+  event {
+    __typename
+    ... on PageDeleted {
+      __typename
+      page {
+        ...PageData
+      }
+    }
+    recipient {
+      webhooks {
+        id
+      }
+    }
+  }
+}
