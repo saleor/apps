@@ -5,7 +5,7 @@ import { saleorApp } from "../../../saleor-app";
 import { type PageUpdated } from "../../lib/webhook-event-types";
 
 export const webhookPageUpdated = new SaleorAsyncWebhook<PageUpdated>({
-  webhookPath: "api/webhooks/saleor/page-updated",
+  webhookPath: "api/webhooks/saleor/page_updated",
   event: "PAGE_UPDATED",
   apl: saleorApp.apl,
   query: PageUpdatedDocument,

@@ -5,7 +5,7 @@ import { saleorApp } from "../../../saleor-app";
 import { type PageDeleted } from "../../lib/webhook-event-types";
 
 export const webhookPageDeleted = new SaleorAsyncWebhook<PageDeleted>({
-  webhookPath: "api/webhooks/saleor/page-deleted",
+  webhookPath: "api/webhooks/saleor/page_deleted",
   event: "PAGE_DELETED",
   apl: saleorApp.apl,
   query: PageDeletedDocument,
