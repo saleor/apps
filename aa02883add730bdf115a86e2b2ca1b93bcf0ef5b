@@ -1,0 +1,27 @@
+apps/avatax/src/modules/client-logs/client-logs.router.ts
+  eb47eb18dcbf5eb5 5,17-26,88-96,129-137
+apps/avatax/src/modules/client-logs/client-logs.router.test.ts
+  eb47eb18dcbf5eb5 1-47
+apps/avatax/src/modules/client-logs/ui/logs-browser.tsx
+  eb47eb18dcbf5eb5 149-150,152,154-157,160-161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "aa02883add730bdf115a86e2b2ca1b93bcf0ef5b",
+  "prompts": {
+    "eb47eb18dcbf5eb5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "944f5b10-f274-469c-8712-f20a48c8c706",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 103,
+      "total_deletions": 19,
+      "accepted_lines": 94,
+      "overriden_lines": 0
+    }
+  }
+}
