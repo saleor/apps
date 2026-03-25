@@ -1,0 +1,23 @@
+apps/search/src/views/configuration/configuration.view.tsx
+  0b6d86ef756c571a 87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "def3de88f9fc0571a640d15b9b1da27cc8d97e31",
+  "prompts": {
+    "0b6d86ef756c571a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7a6abf9e-ec69-450e-97ed-d36135a30d37",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
