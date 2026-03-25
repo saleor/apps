@@ -1,0 +1,27 @@
+apps/search/src/webhooks/definitions/page-created.ts
+  9ea421109dfe28fd 8
+apps/search/src/webhooks/definitions/page-deleted.ts
+  9ea421109dfe28fd 8
+apps/search/src/webhooks/definitions/page-updated.ts
+  9ea421109dfe28fd 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "f949778ec1947a5b9d008e1bccc9b3e5b33336ca",
+  "prompts": {
+    "9ea421109dfe28fd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "90c103c7-86c6-4cc5-9c81-72b55fe10001",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 3,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
