@@ -84,7 +84,7 @@ export const ConfigurationView = () => {
               Choose which page types should be indexed in Algolia.
             </Text>
             <Text as="p" marginBottom={1.5}>
-              If no page types are selected, all pages will be indexed.
+              If no page types are selected, no pages will be indexed.
             </Text>
           </Box>
         }
