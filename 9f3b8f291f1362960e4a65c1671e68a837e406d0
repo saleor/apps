@@ -1,0 +1,23 @@
+apps/search/src/components/ImportProductsToAlgolia/useBatchUpload.test.ts
+  0b6d86ef756c571a 7-8,127-266
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "9f3b8f291f1362960e4a65c1671e68a837e406d0",
+  "prompts": {
+    "0b6d86ef756c571a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7a6abf9e-ec69-450e-97ed-d36135a30d37",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 142,
+      "total_deletions": 0,
+      "accepted_lines": 142,
+      "overriden_lines": 0
+    }
+  }
+}
