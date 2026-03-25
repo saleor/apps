@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { env } from "@/env";
+import { createLogger } from "@/logger";
 import { type ClientLogValue } from "@/modules/client-logs/client-log";
 import {
   type LastEvaluatedKey,
@@ -12,6 +13,16 @@ import { protectedClientProcedure } from "@/modules/trpc/protected-client-proced
 import { router } from "@/modules/trpc/trpc-server";
 
 import { ClientLogDynamoEntityFactory, LogsTable } from "./dynamo-logs-table";
+
+const logger = createLogger("clientLogsRouter");
+
+export function isDynamoValidationError(error: unknown): boolean {
+  if (error instanceof Error && error.cause instanceof Error) {
+    return error.cause.name === "ValidationException";
+  }
+
+  return false;
+}
 
 const procedureWithLogsRepository = protectedClientProcedure.use(({ ctx, next }) => {
   try {
@@ -74,6 +85,15 @@ export const clientLogsRouter = router({
         });
 
         if (logsResult.isErr()) {
+          logger.error("Failed to fetch logs by date", { error: logsResult.error });
+
+          if (isDynamoValidationError(logsResult.error)) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Invalid date range provided",
+            });
+          }
+
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to fetch logs",
@@ -106,6 +126,15 @@ export const clientLogsRouter = router({
         });
 
         if (logsResult.isErr()) {
+          logger.error("Failed to fetch logs by checkout/order ID", { error: logsResult.error });
+
+          if (isDynamoValidationError(logsResult.error)) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Invalid query parameters provided",
+            });
+          }
+
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Failed to fetch logs",
