@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { AlgoliaRootFieldsKeys } from "../../lib/algolia-fields";
+import { AlgoliaPageFieldsKeys, AlgoliaRootFieldsKeys } from "../../lib/algolia-fields";
 
 export const AppConfigurationSchema = z.object({
   appId: z.string().min(3),
@@ -12,9 +12,19 @@ export const FieldsConfigSchema = z.object({
   enabledAlgoliaFields: z.array(z.string()),
 });
 
+export const PageTypesFilterSchema = z.object({
+  pageTypeIds: z.array(z.string()),
+});
+
 const AppConfigRootSchema = z.object({
   appConfig: AppConfigurationSchema.nullable(),
   fieldsMapping: FieldsConfigSchema,
+  pageFieldsMapping: z
+    .object({
+      enabledAlgoliaFields: z.array(z.string()),
+    })
+    .optional(),
+  pageTypesFilter: PageTypesFilterSchema.optional(),
 });
 
 export type AppConfigurationFields = z.infer<typeof AppConfigurationSchema>;
@@ -25,6 +35,9 @@ export class AppConfig {
     appConfig: null,
     fieldsMapping: {
       enabledAlgoliaFields: [...AlgoliaRootFieldsKeys],
+    },
+    pageFieldsMapping: {
+      enabledAlgoliaFields: [...AlgoliaPageFieldsKeys],
     },
   };
 
@@ -54,6 +67,34 @@ export class AppConfig {
     };
 
     return this;
+  }
+
+  setPageFieldsMapping(fieldsMapping: string[]) {
+    this.rootData.pageFieldsMapping = {
+      enabledAlgoliaFields: z.array(z.string()).parse(fieldsMapping),
+    };
+
+    return this;
+  }
+
+  getPageFieldsMapping() {
+    return (
+      this.rootData.pageFieldsMapping ?? {
+        enabledAlgoliaFields: [...AlgoliaPageFieldsKeys],
+      }
+    );
+  }
+
+  setPageTypesFilter(pageTypeIds: string[]) {
+    this.rootData.pageTypesFilter = {
+      pageTypeIds: z.array(z.string()).parse(pageTypeIds),
+    };
+
+    return this;
+  }
+
+  getPageTypesFilter() {
+    return this.rootData.pageTypesFilter ?? { pageTypeIds: [] };
   }
 
   getConfig() {

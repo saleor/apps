@@ -82,7 +82,7 @@ const isAttributeValueBooleanType = (
  *  Returns object with a key being attribute name and value of all attribute values
  *  separated by comma. If no value is selected, an empty string will be used instead.
  */
-const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
+export const mapSelectedAttributesToRecord = (attr: ProductAttributesDataFragment) => {
   if (!attr.attribute.name?.length) {
     return undefined;
   }

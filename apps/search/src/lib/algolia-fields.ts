@@ -32,3 +32,19 @@ export const AlgoliaRootFieldsKeys = [
   "variantMetadata",
   "otherVariants",
 ] as const;
+
+export type AlgoliaPageFields = "contentPlaintext" | "seoDescription" | "metadata" | "attributes";
+
+export const AlgoliaPageFieldsLabelsMap = {
+  contentPlaintext: "Page content - plain text",
+  seoDescription: "SEO description",
+  metadata: "Public metadata",
+  attributes: "Page attributes",
+} satisfies Record<AlgoliaPageFields, string>;
+
+export const AlgoliaPageFieldsKeys = [
+  "contentPlaintext",
+  "seoDescription",
+  "metadata",
+  "attributes",
+] as const;
