@@ -146,10 +146,19 @@ const LogsByDate = () => {
         <RangeInput
           onChange={(values) => {
             const [start, end] = values;
+            const startDate = new Date(start);
+            const endDate = new Date(end);
+
+            if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+              // To restore originakl values into input, set state to the previous value
+              setRangeDates((prev) => ({ ...prev }));
+
+              return;
+            }
 
             setRangeDates({
-              start: new Date(start),
-              end: new Date(end),
+              start: startDate,
+              end: endDate,
             });
           }}
           size="large"
