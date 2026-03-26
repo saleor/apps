@@ -1,0 +1,25 @@
+apps/search/src/pages/api/manifest.ts
+  c906a4fd68371d79 44
+apps/search/src/views/configuration/configuration.view.tsx
+  c906a4fd68371d79 15,18,25,95-101,119-125,161-167
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "2441164c258ba755018f69afdb2e1eaf2a16398a",
+  "prompts": {
+    "c906a4fd68371d79": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1b0d9d17-98ef-4990-b5fb-fcfc1f1edbcf",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 74,
+      "total_deletions": 16,
+      "accepted_lines": 62,
+      "overriden_lines": 0
+    }
+  }
+}
