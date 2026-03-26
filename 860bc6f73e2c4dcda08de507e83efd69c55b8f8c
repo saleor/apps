@@ -1,0 +1,29 @@
+.github/workflows/run-e2e-dispatch.yml
+  1fca7f967752d7cf 17
+.github/workflows/run-dashboard-smoke-tests.yml
+  1fca7f967752d7cf 14
+.github/workflows/run-e2e-cron.yml
+  1fca7f967752d7cf 24
+.github/workflows/e2e.yml
+  1fca7f967752d7cf 28,57,105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "860bc6f73e2c4dcda08de507e83efd69c55b8f8c",
+  "prompts": {
+    "1fca7f967752d7cf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9898e8f6-64e8-4bbf-9d20-fba089ffca00",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 5,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
