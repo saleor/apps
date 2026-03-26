@@ -15,8 +15,6 @@
         "MANIFEST_APP_ID",
         "NEXT_PUBLIC_SENTRY_DSN",
         "SECRET_KEY",
-        "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT",
         "APP_NAME",
         "DYNAMODB_MAIN_TABLE_NAME",
         "DYNAMODB_REQUEST_TIMEOUT_MS",

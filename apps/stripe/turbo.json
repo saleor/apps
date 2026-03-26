@@ -12,8 +12,6 @@
         "MANIFEST_APP_ID",
         "NEXT_PUBLIC_SENTRY_DSN",
         "SECRET_KEY",
-        "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT",
         "STRIPE_PARTNER_ID",
         "DYNAMODB_MAIN_TABLE_NAME",
         "AWS_SECRET_ACCESS_KEY",

@@ -13,8 +13,6 @@
         "REST_APL_ENDPOINT",
         "REST_APL_TOKEN",
         "SECRET_KEY",
-        "SENTRY_AUTH_TOKEN",
-        "SENTRY_PROJECT",
         "REQUEST_SECRET",
         "AWS_ACCESS_KEY_ID",
         "AWS_REGION",

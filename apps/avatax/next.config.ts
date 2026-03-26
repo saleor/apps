@@ -83,7 +83,7 @@ const configWithBundleAnalyzer = withBundleAnalyzerConfig({
 export default withSentryConfig(configWithBundleAnalyzer, {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
-  silent: true,
+  silent: false,
   disableLogger: true,
   widenClientFileUpload: true,
   tunnelRoute: "/monitoring",
