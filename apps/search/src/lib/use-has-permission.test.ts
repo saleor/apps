@@ -7,12 +7,10 @@ import { useHasPermission } from "./use-has-permission";
 vi.mock("@saleor/app-sdk/app-bridge");
 
 describe("useHasPermission", () => {
-  it("returns true when user has the permission", () => {
+  it("returns true when app has the permission", () => {
     vi.mocked(useAppBridge).mockReturnValue({
       appBridgeState: {
-        user: {
-          permissions: ["MANAGE_PAGES", "MANAGE_PRODUCTS"],
-        },
+        appPermissions: ["MANAGE_PAGES", "MANAGE_PRODUCTS"],
       },
     } as any);
 
@@ -21,12 +19,10 @@ describe("useHasPermission", () => {
     expect(result.current).toBe(true);
   });
 
-  it("returns false when user does not have the permission", () => {
+  it("returns false when app does not have the permission", () => {
     vi.mocked(useAppBridge).mockReturnValue({
       appBridgeState: {
-        user: {
-          permissions: ["MANAGE_PRODUCTS"],
-        },
+        appPermissions: ["MANAGE_PRODUCTS"],
       },
     } as any);
 
@@ -45,10 +41,10 @@ describe("useHasPermission", () => {
     expect(result.current).toBe(false);
   });
 
-  it("returns false when user is undefined", () => {
+  it("returns false when appPermissions is undefined", () => {
     vi.mocked(useAppBridge).mockReturnValue({
       appBridgeState: {
-        user: undefined,
+        appPermissions: undefined,
       },
     } as any);
 

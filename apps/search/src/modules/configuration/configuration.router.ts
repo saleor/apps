@@ -122,6 +122,7 @@ export const configurationRouter = router({
       });
     }),
   setPageFieldsMappingConfig: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_PAGES"] })
     .input(FieldsConfigSchema)
     .mutation(async ({ ctx, input }) => {
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
@@ -137,33 +138,36 @@ export const configurationRouter = router({
         saleorApiUrl: ctx.saleorApiUrl,
       });
     }),
-  getPageTypes: protectedClientProcedure.query(async ({ ctx }) => {
-    const pageTypes: Array<{ id: string; name: string; slug: string }> = [];
-    let hasNextPage = true;
-    let after: string | undefined;
+  getPageTypes: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_PAGES"] })
+    .query(async ({ ctx }) => {
+      const pageTypes: Array<{ id: string; name: string; slug: string }> = [];
+      let hasNextPage = true;
+      let after: string | undefined;
 
-    while (hasNextPage) {
-      const { data } = await ctx.apiClient
-        .query(PageTypesDataDocument, { first: 100, after })
-        .toPromise();
+      while (hasNextPage) {
+        const { data } = await ctx.apiClient
+          .query(PageTypesDataDocument, { first: 100, after })
+          .toPromise();
 
-      const edges = data?.pageTypes?.edges ?? [];
+        const edges = data?.pageTypes?.edges ?? [];
 
-      for (const edge of edges) {
-        pageTypes.push({
-          id: edge.node.id,
-          name: edge.node.name,
-          slug: edge.node.slug,
-        });
+        for (const edge of edges) {
+          pageTypes.push({
+            id: edge.node.id,
+            name: edge.node.name,
+            slug: edge.node.slug,
+          });
+        }
+
+        hasNextPage = data?.pageTypes?.pageInfo.hasNextPage ?? false;
+        after = data?.pageTypes?.pageInfo.endCursor ?? undefined;
       }
 
-      hasNextPage = data?.pageTypes?.pageInfo.hasNextPage ?? false;
-      after = data?.pageTypes?.pageInfo.endCursor ?? undefined;
-    }
-
-    return pageTypes;
-  }),
+      return pageTypes;
+    }),
   setPageTypesFilter: protectedClientProcedure
+    .meta({ requiredClientPermissions: ["MANAGE_PAGES"] })
     .input(PageTypesFilterSchema)
     .mutation(async ({ ctx, input }) => {
       const settingsManager = createSettingsManager(ctx.apiClient, ctx.appId);
