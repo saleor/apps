@@ -1,0 +1,23 @@
+apps/search/src/components/PageTypesFilterForm.tsx
+  b27992bc88e62a6a 80,85,92-94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "dc1c0d6fd7c9a8fd03965689ceee1ede1539a211",
+  "prompts": {
+    "b27992bc88e62a6a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ed3884b7-a411-4110-a6c6-0344e85cff16",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 6,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
