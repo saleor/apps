@@ -1,0 +1,23 @@
+apps/search/src/lib/use-has-permission.test.ts
+  c906a4fd68371d79 1-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "9eb896b4466f8d96c4dd606e5978b3d8285dab1d",
+  "prompts": {
+    "c906a4fd68371d79": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1b0d9d17-98ef-4990-b5fb-fcfc1f1edbcf",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 59,
+      "total_deletions": 0,
+      "accepted_lines": 59,
+      "overriden_lines": 0
+    }
+  }
+}
