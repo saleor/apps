@@ -1,0 +1,23 @@
+packages/eslint-config/index.js
+  b27992bc88e62a6a 137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "1da8f540f491bf3ca8ef90ccfedcdee842d09723",
+  "prompts": {
+    "b27992bc88e62a6a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ed3884b7-a411-4110-a6c6-0344e85cff16",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
