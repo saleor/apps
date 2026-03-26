@@ -1,0 +1,41 @@
+turbo.json
+  f0e1c4e7c3458c22 22,24
+apps/cms/next.config.ts
+  f0e1c4e7c3458c22 39
+apps/search/next.config.ts
+  f0e1c4e7c3458c22 46
+apps/klaviyo/next.config.ts
+  f0e1c4e7c3458c22 37
+apps/smtp/next.config.ts
+  f0e1c4e7c3458c22 59
+apps/avatax/next.config.ts
+  f0e1c4e7c3458c22 86
+apps/stripe/next.config.ts
+  f0e1c4e7c3458c22 36
+apps/segment/next.config.ts
+  f0e1c4e7c3458c22 45
+apps/products-feed/next.config.ts
+  f0e1c4e7c3458c22 45
+apps/np-atobarai/next.config.ts
+  f0e1c4e7c3458c22 36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "dc1a7ad3b61bfb52bf4d0920d4975c94e9966078",
+  "prompts": {
+    "f0e1c4e7c3458c22": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b17d65ee-b68f-4ddf-9dac-58d256aa40bb",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 11,
+      "total_deletions": 27,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    }
+  }
+}
