@@ -134,6 +134,7 @@ export const config = [
     },
     rules: {
       ...reactPlugin.configs.recommended.rules,
+      ...reactHooksPlugin.configs.recommended.rules,
       "react/react-in-jsx-scope": "off",
       "react/jsx-key": "off",
     },

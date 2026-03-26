@@ -76,22 +76,22 @@ export const PageTypesFilterForm = ({ onSaved }: PageTypesFilterFormProps) => {
   const { data: pageTypes, isLoading: isPageTypesLoading } =
     trpcClient.configuration.getPageTypes.useQuery();
 
-  if (isConfigLoading || isPageTypesLoading || !config || !pageTypes) {
-    return <Skeleton height={5} />;
-  }
-
   const options: PageTypeOption[] = useMemo(
-    () => pageTypes.map((pt) => ({ label: pt.name, value: pt.id })),
+    () => (pageTypes ?? []).map((pt) => ({ label: pt.name, value: pt.id })),
     [pageTypes],
   );
 
   const initialSelection = useMemo(() => {
-    const savedIds = config.pageTypesFilter?.pageTypeIds ?? [];
+    const savedIds = config?.pageTypesFilter?.pageTypeIds ?? [];
 
     return savedIds
       .map((id) => options.find((o) => o.value === id))
       .filter((o): o is PageTypeOption => o !== undefined);
   }, [config, options]);
+
+  if (isConfigLoading || isPageTypesLoading || !config || !pageTypes) {
+    return <Skeleton height={5} />;
+  }
 
   return (
     <PageTypesFilterFormInner
