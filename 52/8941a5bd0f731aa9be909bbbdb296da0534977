@@ -1,0 +1,27 @@
+apps/search/src/lib/use-has-permission.ts
+  c906a4fd68371d79 2,4,7
+apps/search/src/modules/configuration/configuration.router.ts
+  c906a4fd68371d79 125,141,168
+apps/search/src/lib/use-has-permission.test.ts
+  c906a4fd68371d79 10,13,22,25,44,47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "528941a5bd0f731aa9be909bbbdb296da0534977",
+  "prompts": {
+    "c906a4fd68371d79": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1b0d9d17-98ef-4990-b5fb-fcfc1f1edbcf",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski <lukasz.ostrowski@saleor.io>",
+      "messages": [],
+      "total_additions": 12,
+      "total_deletions": 14,
+      "accepted_lines": 12,
+      "overriden_lines": 0
+    }
+  }
+}
