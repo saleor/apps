@@ -3,16 +3,14 @@ import { err, errAsync, fromThrowable, ok, Result, ResultAsync } from "neverthro
 import { BaseError } from "../../../errors";
 import { bytesToKb } from "../../../lib/bytes-to-kb";
 import { createLogger } from "../../../logger";
+import { type IGetFallbackSmtpConfig } from "../../fallback-smtp/fallback-smtp-config-repository";
 import { FallbackSenderEmail } from "../../saleor-fallback-behavior/fallback-sender-email";
 import { TenantName } from "../../saleor-fallback-behavior/tenant-name";
 import {
   getFallbackSmtpConfigSchema,
   type SmtpConfiguration,
 } from "../../smtp/configuration/smtp-config-schema";
-import {
-  type IGetFallbackSmtpEnabled,
-  type IGetSmtpConfiguration,
-} from "../../smtp/configuration/smtp-configuration.service";
+import { type IGetSmtpConfiguration } from "../../smtp/configuration/smtp-configuration.service";
 import { defaultMjmlSubjectTemplates, defaultMjmlTemplates } from "../../smtp/default-templates";
 import { type IEmailCompiler } from "../../smtp/services/email-compiler";
 import { type ISMTPEmailSender, type SendMailArgs } from "../../smtp/services/smtp-email-sender";
@@ -59,11 +57,12 @@ export class SendEventMessagesUseCase {
 
   constructor(
     private deps: {
-      configService: IGetSmtpConfiguration & IGetFallbackSmtpEnabled;
+      configService: IGetSmtpConfiguration;
+      fallbackConfigService: IGetFallbackSmtpConfig;
       emailCompiler: IEmailCompiler;
       emailSender: ISMTPEmailSender;
     },
-  ) {}
+  ) { }
 
   /**
    * Enriches the payload with branding info from the SMTP configuration.
@@ -234,36 +233,6 @@ export class SendEventMessagesUseCase {
   }): Promise<Result<unknown, Array<InstanceType<typeof SendEventMessagesUseCase.BaseError>>>> {
     this.logger.info("No custom configurations found, checking fallback SMTP");
 
-    const fallbackEnabledResult = await this.deps.configService.getIsFallbackSmtpEnabled();
-
-    const recipientDomain = recipientEmail.split("@")[1]?.toLowerCase();
-
-    if (!recipientDomain) {
-      this.logger.error("Received invalid input: missing domain in the email address");
-
-      return err([
-        new SendEventMessagesUseCase.InvalidEmailAddressError(
-          "Received an invalid email address: couldn't determine the domain",
-          {
-            props: { channelSlug, event, recipientEmail },
-          },
-        ),
-      ]);
-    }
-
-    if (fallbackEnabledResult.isErr() || !fallbackEnabledResult.value) {
-      this.logger.info("Fallback SMTP is not enabled");
-
-      return err([
-        new SendEventMessagesUseCase.FallbackNotConfiguredError(
-          "No custom configuration and fallback is not enabled",
-          {
-            props: { channelSlug, event },
-          },
-        ),
-      ]);
-    }
-
     const fallbackSmtpConfig = getFallbackSmtpConfigSchema();
 
     if (!fallbackSmtpConfig) {
@@ -279,17 +248,52 @@ export class SendEventMessagesUseCase {
       ]);
     }
 
+    const fallbackConfigResult = await this.deps.fallbackConfigService.getFallbackConfig();
+
+    if (fallbackConfigResult.isErr() || !fallbackConfigResult.value.fallbackEnabled) {
+      this.logger.info("Fallback SMTP is not enabled");
+
+      return err([
+        new SendEventMessagesUseCase.FallbackNotConfiguredError(
+          "No custom configuration and fallback is not enabled",
+          {
+            props: { channelSlug, event },
+          },
+        ),
+      ]);
+    }
+
+    const { fallbackRedirectEmail } = fallbackConfigResult.value;
+
+    // When redirect email is configured, override the recipient
+    const effectiveRecipientEmail = fallbackRedirectEmail ?? recipientEmail;
+
+    const effectiveRecipientDomain = effectiveRecipientEmail.split("@")[1]?.toLowerCase();
+
+    if (!effectiveRecipientDomain) {
+      this.logger.error("Received invalid input: missing domain in the email address");
+
+      return err([
+        new SendEventMessagesUseCase.InvalidEmailAddressError(
+          "Received an invalid email address: couldn't determine the domain",
+          {
+            props: { channelSlug, event, recipientEmail: effectiveRecipientEmail },
+          },
+        ),
+      ]);
+    }
+
     // Block sending to test/invalid domains when using fallback SMTP
-    if (fallbackSmtpConfig.blockedDomains.includes(recipientDomain)) {
+    if (fallbackSmtpConfig.blockedDomains.includes(effectiveRecipientDomain)) {
       this.logger.info("Rejected sending email: test domain detected", {
-        recipientDomain,
+        recipientDomain: effectiveRecipientDomain,
       });
 
       return err([
         new SendEventMessagesUseCase.RejectedTestDomainError(
           "This recipient domain is blocked for fallback SMTP",
           {
-            props: { channelSlug, event, recipientEmail },
+            props: { channelSlug, event, recipientEmail: effectiveRecipientEmail },
           },
         ),
       ]);
@@ -339,11 +343,17 @@ export class SendEventMessagesUseCase {
 
     const tenantName = new TenantName(saleorApiUrl).getTenantName();
 
+    if (fallbackRedirectEmail) {
+      this.logger.info("Using redirect email for fallback", {
+        redirectEmail: fallbackRedirectEmail,
+      });
+    }
+
     const fallbackResult = await this.processSingleConfiguration({
       config: fallbackConfig,
       event,
       payload,
-      recipientEmail,
+      recipientEmail: effectiveRecipientEmail,
       channelSlug,
       headers: { "X-SES-TENANT": tenantName },
     });

@@ -6,9 +6,9 @@ import {
   getFallbackSmtpConfigSchema,
   type SmtpConfiguration,
 } from "../../smtp/configuration/smtp-config-schema";
+import { type IGetFallbackSmtpConfig } from "../../fallback-smtp/fallback-smtp-config-repository";
 import {
   type FilterConfigurationsArgs,
-  type IGetFallbackSmtpEnabled,
   type IGetSmtpConfiguration,
 } from "../../smtp/configuration/smtp-configuration.service";
 import { type CompileArgs, type IEmailCompiler } from "../../smtp/services/email-compiler";
@@ -63,7 +63,7 @@ class MockSmtpSender implements ISMTPEmailSender {
   sendEmailWithSmtp = this.mockSendEmailMethod;
 }
 
-class MockConfigService implements IGetSmtpConfiguration, IGetFallbackSmtpEnabled {
+class MockConfigService implements IGetSmtpConfiguration {
   static getSimpleConfigurationValue = (): SmtpConfiguration => {
     return {
       id: "1",
@@ -109,34 +109,44 @@ class MockConfigService implements IGetSmtpConfiguration, IGetFallbackSmtpEnable
     return okAsync([c1, c2]);
   };
 
-  static returnFallbackEnabled: IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"] = () => {
-    return okAsync(true);
-  };
-
-  static returnFallbackDisabled: IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"] = () => {
-    return okAsync(false);
-  };
-
-  static returnFallbackError: IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"] = () => {
-    return errAsync(new BaseError("Mock error fetching fallback config"));
-  };
-
   mockGetConfigurationsMethod =
     vi.fn<
       (args?: FilterConfigurationsArgs) => ReturnType<IGetSmtpConfiguration["getConfigurations"]>
     >();
 
-  mockGetIsFallbackSmtpEnabledMethod =
-    vi.fn<() => ReturnType<IGetFallbackSmtpEnabled["getIsFallbackSmtpEnabled"]>>();
-
   getConfigurations = this.mockGetConfigurationsMethod;
-  getIsFallbackSmtpEnabled = this.mockGetIsFallbackSmtpEnabledMethod;
+}
+
+class MockFallbackConfigService implements IGetFallbackSmtpConfig {
+  static returnFallbackEnabled: IGetFallbackSmtpConfig["getFallbackConfig"] = () => {
+    return okAsync({ fallbackEnabled: true, fallbackRedirectEmail: null });
+  };
+
+  static returnFallbackDisabled: IGetFallbackSmtpConfig["getFallbackConfig"] = () => {
+    return okAsync({ fallbackEnabled: false, fallbackRedirectEmail: null });
+  };
+
+  static returnFallbackError: IGetFallbackSmtpConfig["getFallbackConfig"] = () => {
+    return errAsync(new BaseError("Mock error fetching fallback config"));
+  };
+
+  static returnFallbackWithRedirect = (
+    email: string,
+  ): IGetFallbackSmtpConfig["getFallbackConfig"] => {
+    return () => okAsync({ fallbackEnabled: true, fallbackRedirectEmail: email });
+  };
+
+  mockGetFallbackConfigMethod =
+    vi.fn<() => ReturnType<IGetFallbackSmtpConfig["getFallbackConfig"]>>();
+
+  getFallbackConfig = this.mockGetFallbackConfigMethod;
 }
 
 describe("SendEventMessagesUseCase", () => {
   let emailCompiler: MockEmailCompiler;
   let emailSender: MockSmtpSender;
   let configService: MockConfigService;
+  let fallbackConfigService: MockFallbackConfigService;
 
   let useCaseInstance: SendEventMessagesUseCase;
 
@@ -146,6 +156,7 @@ describe("SendEventMessagesUseCase", () => {
     emailCompiler = new MockEmailCompiler();
     emailSender = new MockSmtpSender();
     configService = new MockConfigService();
+    fallbackConfigService = new MockFallbackConfigService();
 
     emailCompiler.mockEmailCompileMethod.mockImplementation(
       MockEmailCompiler.returnSuccessCompiledEmail,
@@ -154,14 +165,15 @@ describe("SendEventMessagesUseCase", () => {
     configService.mockGetConfigurationsMethod.mockImplementation(
       MockConfigService.returnValidSingleConfiguration,
     );
-    configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-      MockConfigService.returnFallbackDisabled,
+    fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+      MockFallbackConfigService.returnFallbackDisabled,
     );
 
     useCaseInstance = new SendEventMessagesUseCase({
       emailCompiler,
       emailSender,
       configService,
+      fallbackConfigService,
     });
   });
 
@@ -182,8 +194,8 @@ describe("SendEventMessagesUseCase", () => {
       configService.mockGetConfigurationsMethod.mockImplementation(
         MockConfigService.returnEmptyConfigurationsList,
       );
-      configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-        MockConfigService.returnFallbackDisabled,
+      fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+        MockFallbackConfigService.returnFallbackDisabled,
       );
 
       const result = await useCaseInstance.sendEventMessages({
@@ -232,8 +244,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Sends email with fallback config when enabled and env is configured", async () => {
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackEnabled,
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
@@ -260,8 +272,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Blocks sending email to default test domains with fallback SMTP", async () => {
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackEnabled,
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
@@ -290,8 +302,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Email addresses without domain are rejected", async () => {
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackEnabled,
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
@@ -320,8 +332,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Passes X-SES-TENANT header derived from saleorApiUrl when sending via fallback", async () => {
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackEnabled,
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
@@ -354,8 +366,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Returns NoOp error when fallback is enabled but env is not configured", async () => {
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackEnabled,
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue(null);
@@ -374,8 +386,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Returns NoOp error when fallback check returns an error", async () => {
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackError,
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackError,
         );
 
         const result = await useCaseInstance.sendEventMessages({
@@ -392,8 +404,8 @@ describe("SendEventMessagesUseCase", () => {
       });
 
       it("Returns FallbackNotConfiguredError when saleorApiUrl is invalid and FallbackSenderEmail throws", async () => {
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackEnabled,
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
@@ -421,12 +433,134 @@ describe("SendEventMessagesUseCase", () => {
         );
       });
 
+      it("Sends email to redirect address when fallbackRedirectEmail is configured", async () => {
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackWithRedirect("redirect@company.com"),
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          blockedDomains: [],
+        });
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "original-customer@shop.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result.isOk()).toBe(true);
+
+        expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            recipientEmail: "redirect@company.com",
+          }),
+        );
+      });
+
+      it("Blocks redirect email domain when it matches blocked domains", async () => {
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackWithRedirect("redirect@blocked.com"),
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          blockedDomains: ["blocked.com"],
+        });
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "customer@allowed.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result?._unsafeUnwrapErr()[0]).toBeInstanceOf(
+          SendEventMessagesUseCase.RejectedTestDomainError,
+        );
+        expect(emailSender.mockSendEmailMethod).not.toHaveBeenCalled();
+      });
+
+      it("Allows sending when original recipient domain is blocked but redirect domain is not", async () => {
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackWithRedirect("redirect@allowed.com"),
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          blockedDomains: ["blocked.com"],
+        });
+
+        const result = await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "customer@blocked.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(result.isOk()).toBe(true);
+        expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
+      });
+
+      it("Sends to original recipient when fallback is enabled but redirect email is null", async () => {
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackEnabled,
+        );
+
+        vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({
+          smtpHost: "fallback.smtp.host",
+          smtpPort: "587",
+          smtpUser: "fallback-user",
+          smtpPassword: "fallback-pass",
+          encryption: "TLS",
+          senderName: "Fallback Sender",
+          senderDomain: "example.com",
+          blockedDomains: [],
+        });
+
+        await useCaseInstance.sendEventMessages({
+          event: EVENT_TYPE,
+          payload: {},
+          channelSlug: "channel-slug",
+          recipientEmail: "original@customer.com",
+          saleorApiUrl: "https://demo.saleor.cloud/graphql/",
+        });
+
+        expect(emailCompiler.mockEmailCompileMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            recipientEmail: "original@customer.com",
+          }),
+        );
+      });
+
       it("Uses custom configurations when available, regardless of fallback setting", async () => {
         configService.mockGetConfigurationsMethod.mockImplementation(
           MockConfigService.returnValidSingleConfiguration,
         );
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackEnabled,
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackEnabled,
         );
 
         const result = await useCaseInstance.sendEventMessages({
@@ -440,12 +574,12 @@ describe("SendEventMessagesUseCase", () => {
         expect(result.isOk()).toBe(true);
         expect(emailSender.mockSendEmailMethod).toHaveBeenCalledOnce();
         // Fallback should not be checked when custom configs exist
-        expect(configService.mockGetIsFallbackSmtpEnabledMethod).not.toHaveBeenCalled();
+        expect(fallbackConfigService.mockGetFallbackConfigMethod).not.toHaveBeenCalled();
       });
 
       it("Uses default templates when sending via fallback", async () => {
-        configService.mockGetIsFallbackSmtpEnabledMethod.mockImplementation(
-          MockConfigService.returnFallbackEnabled,
+        fallbackConfigService.mockGetFallbackConfigMethod.mockImplementation(
+          MockFallbackConfigService.returnFallbackEnabled,
         );
 
         vi.mocked(getFallbackSmtpConfigSchema).mockReturnValue({

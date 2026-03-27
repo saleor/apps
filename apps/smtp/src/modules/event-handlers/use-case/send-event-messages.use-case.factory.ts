@@ -2,6 +2,7 @@ import { type AuthData } from "@saleor/app-sdk/APL";
 
 import { createInstrumentedGraphqlClient } from "../../../lib/create-instrumented-graphql-client";
 import { createSettingsManager } from "../../../lib/metadata-manager";
+import { FallbackSmtpService } from "../../fallback-smtp/fallback-smtp-service";
 import { FeatureFlagService } from "../../feature-flag-service/feature-flag-service";
 import { SmtpConfigurationService } from "../../smtp/configuration/smtp-configuration.service";
 import { SmtpMetadataManager } from "../../smtp/configuration/smtp-metadata-manager";
@@ -32,6 +33,9 @@ export class SendEventMessagesUseCaseFactory {
           createSettingsManager(client, authData.appId),
           authData.saleorApiUrl,
         ),
+      }),
+      fallbackConfigService: new FallbackSmtpService({
+        saleorApiUrl: authData.saleorApiUrl,
       }),
     });
   }
