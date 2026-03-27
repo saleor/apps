@@ -8,8 +8,8 @@ import { createInstrumentedGraphqlClient } from "../../lib/create-instrumented-g
 import { getBaseUrl } from "../../lib/get-base-url";
 import { createLogger } from "../../logger";
 import { loggerContext } from "../../logger-context";
-import { parseFallbackRegisterData } from "../../modules/fallback-smtp/fallback-register-data";
 import { FallbackSmtpService } from "../../modules/fallback-smtp/fallback-smtp-service";
+import { saveFallbackConfigOnRegister } from "../../modules/fallback-smtp/on-auth-apl-saved";
 import { FeatureFlagService } from "../../modules/feature-flag-service/feature-flag-service";
 import { fetchSaleorVersion } from "../../modules/feature-flag-service/fetch-saleor-version";
 import { getFallbackSmtpConfigSchema } from "../../modules/smtp/configuration/smtp-config-schema";
@@ -53,10 +53,7 @@ export default wrapWithLoggerContext(
           return true;
         },
       ],
-      async onRequestVerified(
-        req,
-        { authData: { token, saleorApiUrl }, rawBody, respondWithError },
-      ) {
+      async onRequestVerified(_req, { authData: { token, saleorApiUrl }, respondWithError }) {
         const logger = createLogger("onRequestVerified");
 
         let saleorVersion: string;
@@ -111,66 +108,42 @@ export default wrapWithLoggerContext(
         const logger = createLogger("onAuthAplSaved");
         const { authData } = context;
 
-        try {
-          const fallbackConfig = getFallbackSmtpConfigSchema();
+        const fallbackConfig = getFallbackSmtpConfigSchema();
 
-          /**
-           * If config not provided, do not enable webhooks.
-           */
-          if (!fallbackConfig) {
-            return;
-          }
+        /**
+         * If config not provided, do not enable webhooks.
+         */
+        if (!fallbackConfig) {
+          return;
+        }
 
-          const client = createInstrumentedGraphqlClient({
+        // Must throw to abort installation if saving fails — missing entry = allow everything
+        await saveFallbackConfigOnRegister({
+          rawBody: context.rawBody,
+          fallbackService: new FallbackSmtpService({
             saleorApiUrl: authData.saleorApiUrl,
-            token: authData.token,
-          });
+          }),
+        });
 
-          const registerData = parseFallbackRegisterData(context.rawBody);
+        const client = createInstrumentedGraphqlClient({
+          saleorApiUrl: authData.saleorApiUrl,
+          token: authData.token,
+        });
 
-          if (registerData) {
-            logger.info("Saving fallback config from register data", {
-              fallbackEnabled: registerData.fallbackEnabled,
-              fallbackRedirectEmail: registerData.fallbackRedirectEmail ? "Provided" : "Not provided",
-            });
+        const featureFlagService = new FeatureFlagService({ client });
+        const baseUrl = getBaseUrl(request.headers);
+        const webhookManagementService = new WebhookManagementService({
+          appBaseUrl: baseUrl,
+          client,
+          featureFlagService,
+        });
 
-            const fallbackService = new FallbackSmtpService({
-              saleorApiUrl: authData.saleorApiUrl,
-            });
-
-            const fallbackResult = await fallbackService.setFallbackConfig({
-              fallbackEnabled: registerData.fallbackEnabled,
-              fallbackRedirectEmail: registerData.fallbackRedirectEmail ?? null,
-            });
-
-            if (fallbackResult.isErr()) {
-              logger.error("Failed to save fallback SMTP config, aborting installation", {
-                error: fallbackResult.error,
-              });
-
-              throw new Error("Failed to save fallback SMTP config to DynamoDB", {
-                cause: fallbackResult.error,
-              });
-            }
+        for (const webhook of Object.keys(AppWebhooks) as AppWebhook[]) {
+          try {
+            await webhookManagementService.createWebhook({ webhook });
+          } catch (e) {
+            logger.warn(`Failed to create webhook ${webhook}`, { error: e });
           }
-
-          const featureFlagService = new FeatureFlagService({ client });
-          const baseUrl = getBaseUrl(request.headers);
-          const webhookManagementService = new WebhookManagementService({
-            appBaseUrl: baseUrl,
-            client,
-            featureFlagService,
-          });
-
-          for (const webhook of Object.keys(AppWebhooks) as AppWebhook[]) {
-            try {
-              await webhookManagementService.createWebhook({ webhook });
-            } catch (e) {
-              logger.warn(`Failed to create webhook ${webhook}`, { error: e });
-            }
-          }
-        } catch (e) {
-          logger.error("Failed to setup fallback SMTP on registration", { error: e });
         }
       },
     }),
