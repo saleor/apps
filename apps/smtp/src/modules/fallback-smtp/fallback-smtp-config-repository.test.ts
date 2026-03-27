@@ -54,7 +54,7 @@ describe("FallbackSmtpConfigRepository", () => {
       const repo = createRepo();
       const result = await repo.getFallbackConfig();
 
-      expect(result._unsafeUnwrap()).toEqual({
+      expect(result._unsafeUnwrap()).toStrictEqual({
         fallbackEnabled: true,
         fallbackRedirectEmail: null,
       });
@@ -72,7 +72,7 @@ describe("FallbackSmtpConfigRepository", () => {
       const repo = createRepo();
       const result = await repo.getFallbackConfig();
 
-      expect(result._unsafeUnwrap()).toEqual({
+      expect(result._unsafeUnwrap()).toStrictEqual({
         fallbackEnabled: false,
         fallbackRedirectEmail: "redirect@example.com",
       });
@@ -90,7 +90,7 @@ describe("FallbackSmtpConfigRepository", () => {
       const repo = createRepo();
       const result = await repo.getFallbackConfig();
 
-      expect(result._unsafeUnwrap()).toEqual({
+      expect(result._unsafeUnwrap()).toStrictEqual({
         fallbackEnabled: true,
         fallbackRedirectEmail: null,
       });

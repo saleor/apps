@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { errAsync, ResultAsync } from "neverthrow";
 
 import { getDynamoEnv } from "../../env-dynamodb";
@@ -24,24 +25,18 @@ export class FallbackSmtpService implements IGetFallbackSmtpConfig {
   constructor(
     private args: {
       saleorApiUrl: string;
-      appId: string;
     },
-  ) {}
+  ) { }
 
   getFallbackConfig(): ResultAsync<FallbackSmtpConfig, InstanceType<typeof BaseError>> {
     return this.getRepo().andThen((repo) => repo.getFallbackConfig());
   }
 
-  setFallbackConfig(
-    config: FallbackSmtpConfig,
-  ): ResultAsync<void, InstanceType<typeof BaseError>> {
+  setFallbackConfig(config: FallbackSmtpConfig): ResultAsync<void, InstanceType<typeof BaseError>> {
     return this.getRepo().andThen((repo) => repo.setFallbackConfig(config));
   }
 
-  private getRepo(): ResultAsync<
-    FallbackSmtpConfigRepository,
-    InstanceType<typeof BaseError>
-  > {
+  private getRepo(): ResultAsync<FallbackSmtpConfigRepository, InstanceType<typeof BaseError>> {
     if (!getFallbackSmtpConfigSchema()) {
       return errAsync(
         new FallbackSmtpService.FallbackSmtpNotAvailableError(
@@ -61,12 +56,17 @@ export class FallbackSmtpService implements IGetFallbackSmtpConfig {
       this.repo = new FallbackSmtpConfigRepository({
         table,
         saleorApiUrl: this.args.saleorApiUrl,
-        appId: this.args.appId,
       });
 
       return ResultAsync.fromSafePromise(Promise.resolve(this.repo));
     } catch (error) {
       logger.error("DynamoDB env vars are not configured for fallback SMTP", { error });
+
+      Sentry.captureException(error, {
+        tags: {
+          module: "FallbackSmtpService",
+        },
+      });
 
       return errAsync(
         new FallbackSmtpService.FallbackSmtpNotAvailableError(

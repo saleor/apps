@@ -30,9 +30,8 @@ describe("parseFallbackRegisterData", () => {
       additional_data: { fallbackEnabled: true },
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       fallbackEnabled: true,
-      fallbackRedirectEmail: undefined,
     });
   });
 
@@ -41,9 +40,8 @@ describe("parseFallbackRegisterData", () => {
       additional_data: { fallbackEnabled: false },
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       fallbackEnabled: false,
-      fallbackRedirectEmail: undefined,
     });
   });
 
@@ -55,7 +53,7 @@ describe("parseFallbackRegisterData", () => {
       },
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       fallbackEnabled: true,
       fallbackRedirectEmail: "redirect@example.com",
     });
@@ -69,7 +67,7 @@ describe("parseFallbackRegisterData", () => {
       },
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       fallbackEnabled: true,
       fallbackRedirectEmail: null,
     });
@@ -80,7 +78,7 @@ describe("parseFallbackRegisterData", () => {
       additional_data: { fallbackRedirectEmail: "test@example.com" },
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       fallbackEnabled: false,
       fallbackRedirectEmail: null,
     });
@@ -91,7 +89,7 @@ describe("parseFallbackRegisterData", () => {
       additional_data: { fallbackEnabled: "yes" },
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       fallbackEnabled: false,
       fallbackRedirectEmail: null,
     });
@@ -105,7 +103,7 @@ describe("parseFallbackRegisterData", () => {
       },
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       fallbackEnabled: false,
       fallbackRedirectEmail: null,
     });
@@ -119,7 +117,7 @@ describe("parseFallbackRegisterData", () => {
       },
     });
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       fallbackEnabled: false,
       fallbackRedirectEmail: "redirect@example.com",
     });

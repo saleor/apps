@@ -91,7 +91,7 @@ describe("FallbackSmtpService", () => {
       });
       const result = await service.getFallbackConfig();
 
-      expect(result._unsafeUnwrap()).toEqual({
+      expect(result._unsafeUnwrap()).toStrictEqual({
         fallbackEnabled: true,
         fallbackRedirectEmail: null,
       });

@@ -58,17 +58,9 @@ export class FallbackSmtpConfigRepository implements IGetFallbackSmtpConfig {
   private pk: string;
   private logger = createLogger("FallbackSmtpConfigRepository");
 
-  constructor({
-    table,
-    saleorApiUrl,
-    appId,
-  }: {
-    table: DynamoMainTable;
-    saleorApiUrl: string;
-    appId: string;
-  }) {
+  constructor({ table, saleorApiUrl }: { table: DynamoMainTable; saleorApiUrl: string }) {
     this.entity = createFallbackConfigEntity(table);
-    this.pk = DynamoMainTable.getPrimaryKeyScopedToInstallation({ saleorApiUrl, appId });
+    this.pk = DynamoMainTable.getPrimaryKeyScopedToSaleorApiUrl({ saleorApiUrl });
   }
 
   getFallbackConfig(): ResultAsync<FallbackSmtpConfig, InstanceType<typeof BaseError>> {
@@ -82,9 +74,7 @@ export class FallbackSmtpConfigRepository implements IGetFallbackSmtpConfig {
     });
   }
 
-  setFallbackConfig(
-    config: FallbackSmtpConfig,
-  ): ResultAsync<void, InstanceType<typeof BaseError>> {
+  setFallbackConfig(config: FallbackSmtpConfig): ResultAsync<void, InstanceType<typeof BaseError>> {
     return ResultAsync.fromPromise(this.writeConfig(config), (error) => {
       this.logger.error("Failed to save fallback config to DynamoDB", { error });
 
@@ -109,8 +99,12 @@ export class FallbackSmtpConfigRepository implements IGetFallbackSmtpConfig {
       );
     }
 
+    /*
+     * For existing installations before this check was introduced,
+     * we allow using SMTP fallback without redirect email restrictions
+     */
     if (!result.Item) {
-      return { fallbackEnabled: false, fallbackRedirectEmail: null };
+      return { fallbackEnabled: true, fallbackRedirectEmail: null };
     }
 
     return {
