@@ -113,6 +113,46 @@ If you want to use your own database, you can implement your own APL. [Check the
 
 [Apps guide](https://docs.saleor.io/developer/extending/apps/overview)
 
+## Fallback SMTP (Saleor Cloud)
+
+The app supports a fallback SMTP mode used by Saleor Cloud to send transactional emails out of the box, before the merchant configures their own SMTP server.
+
+This feature is controlled by:
+
+1. **Fallback SMTP env vars** (`FALLBACK_SMTP_HOST`, etc.) - set by Saleor Cloud on the deployment, defining the actual SMTP server credentials
+2. **Per-tenant config in DynamoDB** - stores `fallbackEnabled` (boolean) and optional `fallbackRedirectEmail` (string) per installation
+
+When a store installs the app, Saleor can pass `additional_data` with `fallbackEnabled` and `fallbackRedirectEmail`. The app validates and stores this in DynamoDB. If no `additional_data` is provided or `fallbackEnabled` is missing, fallback is not configured.
+
+Three states are supported:
+- **Disabled** (`fallbackEnabled: false`) - no fallback emails sent
+- **Enabled with redirect** (`fallbackEnabled: true, fallbackRedirectEmail: "x@y.com"`) - all fallback emails go to the redirect address instead of the original recipient
+- **Enabled without redirect** (`fallbackEnabled: true, fallbackRedirectEmail: null`) - fallback emails go to the original recipient
+
+Both fallback SMTP env vars and DynamoDB must be configured for the fallback to work. If either is missing, the fallback is silently unavailable.
+
+## DynamoDB
+
+DynamoDB is used to store per-tenant fallback SMTP configuration. It is optional - only required when fallback SMTP is enabled (Saleor Cloud deployments).
+
+### Local development
+
+Use [docker-compose](../../.devcontainer/smtp/docker-compose.yml) from `.devcontainer`:
+
+1. Run `docker compose up dynamodb` for a local DynamoDB instance
+2. Run `pnpm run setup-dynamodb` to create the DynamoDB table
+
+Ensure the following env variables are set:
+
+```dotenv
+DYNAMODB_MAIN_TABLE_NAME=smtp-main-table
+AWS_REGION=localhost
+AWS_ENDPOINT_URL=http://localhost:8000
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+```
+
+
 ## OTEL
 
 Visit `@saleor/apps-otel` [README](../../packages/otel/README.md) to learn how to run app with OTEL locally.
