@@ -14,6 +14,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
+import { registerAllowedHelpers } from "@saleor/handlebars";
 import Handlebars from "handlebars";
 import handlebarsHelpers from "handlebars-helpers";
 import mjml2html from "mjml";
@@ -28,7 +29,7 @@ import {
   defaultMjmlTemplates,
 } from "../src/modules/smtp/default-templates";
 
-handlebarsHelpers({ handlebars: Handlebars });
+registerAllowedHelpers(Handlebars, handlebarsHelpers);
 
 const OUT_DIR = join(process.cwd(), "email-previews");
 const RAW_DIR = join(OUT_DIR, "raw");
