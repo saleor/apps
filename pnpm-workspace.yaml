@@ -21,6 +21,8 @@ onlyBuiltDependencies:
 overrides:
   # form-data has vulnerability, fixed on 3.0.4
   form-data@3.0.1: 3.0.4
+  # handlebars-helpers uses old version, fixed in 4.7.9: CVE-2026-33938
+  handlebars: 4.7.9
 
 minimumReleaseAgeExclude:
   - "@saleor/app-sdk"
@@ -94,4 +96,3 @@ catalog:
   "@vitejs/plugin-react": 4.7.0
   semver: 7.7.4
   "@types/semver": 7.7.1
-
