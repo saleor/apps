@@ -20,7 +20,7 @@ export const fetchRedirectEmail = async (
   try {
     response = await fetch(endpointUrl, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Token ${token}`,
       },
     });
   } catch (error) {

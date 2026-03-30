@@ -23,19 +23,17 @@ describe("fetchRedirectEmail", () => {
     expect(result._unsafeUnwrap()).toBe("owner@example.com");
   });
 
-  it("sends Authorization Bearer header", async () => {
-    const fetchSpy = vi
-      .spyOn(global, "fetch")
-      .mockResolvedValueOnce(
-        new Response(JSON.stringify({ organization: { owner_email: "owner@example.com" } }), {
-          status: 200,
-        }),
-      );
+  it("sends Authorization Token header", async () => {
+    const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValueOnce(
+      new Response(JSON.stringify({ organization: { owner_email: "owner@example.com" } }), {
+        status: 200,
+      }),
+    );
 
     await fetchRedirectEmail("https://example.com/api", "my-token");
 
     expect(fetchSpy).toHaveBeenCalledWith("https://example.com/api", {
-      headers: { Authorization: "Bearer my-token" },
+      headers: { Authorization: "Token my-token" },
     });
   });
 
