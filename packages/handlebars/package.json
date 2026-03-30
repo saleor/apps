@@ -13,21 +13,20 @@
     "test": "vitest",
     "test:ci": "vitest run --coverage"
   },
-  "dependencies": {
-    "handlebars-helpers": "0.10.0"
-  },
   "devDependencies": {
     "@saleor/eslint-config-apps": "workspace:*",
     "@saleor/typescript-config-apps": "workspace:*",
     "@types/handlebars-helpers": "^0.5.6",
     "@vitest/coverage-v8": "catalog:",
     "handlebars": "4.7.9",
+    "handlebars-helpers": "0.10.0",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:",
     "eslint": "catalog:"
   },
   "peerDependencies": {
-    "handlebars": ">=4.7.0"
+    "handlebars": ">=4.7.0",
+    "handlebars-helpers": ">=0.10.0"
   }
 }

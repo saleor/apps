@@ -1,5 +1,6 @@
 import Handlebars from "handlebars";
-import { beforeEach,describe, expect, it } from "vitest";
+import handlebarsHelpers from "handlebars-helpers";
+import { beforeEach, describe, expect, it } from "vitest";
 
 import { ALLOWED_HELPERS } from "./allowed-helpers";
 import { registerAllowedHelpers } from "./register-allowed-helpers";
@@ -19,7 +20,7 @@ describe("registerAllowedHelpers", () => {
     it.each(allAllowedHelpers)(
       "registers $group helper: $name",
       ({ name }) => {
-        registerAllowedHelpers(hbs);
+        registerAllowedHelpers(hbs, handlebarsHelpers);
 
         expect(hbs.helpers[name], `Expected helper "${name}" to be registered`).toBeDefined();
       },
@@ -27,7 +28,7 @@ describe("registerAllowedHelpers", () => {
   });
 
   it("does not register helpers beyond the allow list", () => {
-    registerAllowedHelpers(hbs);
+    registerAllowedHelpers(hbs, handlebarsHelpers);
 
     const builtInHelpers = new Set(Object.keys(Handlebars.create().helpers));
     const allowedNames = new Set(Object.values(ALLOWED_HELPERS).flat());
@@ -60,7 +61,7 @@ describe("registerAllowedHelpers", () => {
     it.each(["embed", "resolve"])(
       "does not register removed helper: %s",
       (name) => {
-        registerAllowedHelpers(hbs);
+        registerAllowedHelpers(hbs, handlebarsHelpers);
 
         expect(hbs.helpers[name], `Helper "${name}" should NOT be registered`).toBeUndefined();
       },
@@ -68,7 +69,7 @@ describe("registerAllowedHelpers", () => {
   });
 
   it("allows using comparison helpers in templates", () => {
-    registerAllowedHelpers(hbs);
+    registerAllowedHelpers(hbs, handlebarsHelpers);
 
     const template = hbs.compile('{{#eq foo "bar"}}yes{{else}}no{{/eq}}');
 
@@ -77,7 +78,7 @@ describe("registerAllowedHelpers", () => {
   });
 
   it("allows using string helpers in templates", () => {
-    registerAllowedHelpers(hbs);
+    registerAllowedHelpers(hbs, handlebarsHelpers);
 
     const template = hbs.compile("{{uppercase name}}");
 
@@ -85,7 +86,7 @@ describe("registerAllowedHelpers", () => {
   });
 
   it("allows using math helpers in templates", () => {
-    registerAllowedHelpers(hbs);
+    registerAllowedHelpers(hbs, handlebarsHelpers);
 
     const template = hbs.compile("{{add a b}}");
 

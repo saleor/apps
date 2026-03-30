@@ -16,6 +16,7 @@ import { join } from "node:path";
 
 import { registerAllowedHelpers } from "@saleor/handlebars";
 import Handlebars from "handlebars";
+import handlebarsHelpers from "handlebars-helpers";
 import mjml2html from "mjml";
 
 import { examplePayloads } from "../src/modules/event-handlers/default-payloads";
@@ -28,7 +29,7 @@ import {
   defaultMjmlTemplates,
 } from "../src/modules/smtp/default-templates";
 
-registerAllowedHelpers(Handlebars);
+registerAllowedHelpers(Handlebars, handlebarsHelpers);
 
 const OUT_DIR = join(process.cwd(), "email-previews");
 const RAW_DIR = join(OUT_DIR, "raw");

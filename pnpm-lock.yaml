@@ -1240,6 +1240,9 @@ importers:
       handlebars:
         specifier: 4.7.9
         version: 4.7.9
+      handlebars-helpers:
+        specifier: 0.10.0
+        version: 0.10.0
       jsdom:
         specifier: 'catalog:'
         version: 20.0.3
@@ -1310,6 +1313,9 @@ importers:
       '@testing-library/react':
         specifier: 16.2.0
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.5)(@types/react@18.2.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@types/handlebars-helpers':
+        specifier: ^0.5.6
+        version: 0.5.6
       '@types/react':
         specifier: 18.2.5
         version: 18.2.5
@@ -1882,6 +1888,9 @@ importers:
       handlebars:
         specifier: 4.7.9
         version: 4.7.9
+      handlebars-helpers:
+        specifier: 0.10.0
+        version: 0.10.0
       html-to-text:
         specifier: ^9.0.3
         version: 9.0.3
@@ -1961,6 +1970,9 @@ importers:
       '@saleor/typescript-config-apps':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/handlebars-helpers':
+        specifier: ^0.5.6
+        version: 0.5.6
       '@types/html-to-text':
         specifier: ^9.0.0
         version: 9.0.0
@@ -2490,10 +2502,6 @@ importers:
         version: 8.53.1(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
 
   packages/handlebars:
-    dependencies:
-      handlebars-helpers:
-        specifier: 0.10.0
-        version: 0.10.0
     devDependencies:
       '@saleor/eslint-config-apps':
         specifier: workspace:*
@@ -2513,6 +2521,9 @@ importers:
       handlebars:
         specifier: 4.7.9
         version: 4.7.9
+      handlebars-helpers:
+        specifier: 0.10.0
+        version: 0.10.0
       typescript:
         specifier: 'catalog:'
         version: 5.8.2
@@ -19682,7 +19693,7 @@ snapshots:
       '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.5
+      micromatch: 4.0.8
 
   fast-glob@3.3.1:
     dependencies:

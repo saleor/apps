@@ -1,4 +1,5 @@
 import type Handlebars from "handlebars";
+import type handlebarsHelpersType from "handlebars-helpers";
 
 import { ALLOWED_HELPERS } from "./allowed-helpers";
 
@@ -6,30 +7,28 @@ import { ALLOWED_HELPERS } from "./allowed-helpers";
  * Registers only the explicitly allowed helpers from `handlebars-helpers`
  * onto the given Handlebars instance.
  *
- * Each group listed in ALLOWED_HELPERS is loaded via `require()`,
- * and only the helpers named in that group's array are registered.
- * Groups not listed are never loaded.
+ * The caller must pass the `handlebars-helpers` default export because
+ * this package cannot import it directly — webpack follows imports from
+ * workspace packages and fails on `handlebars-helpers` internal dynamic requires.
+ *
+ * Usage:
+ *   import handlebarsHelpers from "handlebars-helpers";
+ *   registerAllowedHelpers(Handlebars, handlebarsHelpers);
  *
  * To change what's available, edit `allowed-helpers.ts`.
  */
-export function registerAllowedHelpers(handlebars: typeof Handlebars): void {
-  for (const [group, helperNames] of Object.entries(ALLOWED_HELPERS)) {
-    /*
-     * We need require for backwards-compatibility: it must be imported synchronously
-     * same as previous hanlebars-helpers usage
-     */
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const groupHelpers = require(`handlebars-helpers/lib/${group}`) as Record<
-      string,
-      Handlebars.HelperDelegate
-    >;
+export function registerAllowedHelpers(
+  handlebars: typeof Handlebars,
+  handlebarsHelpers: typeof handlebarsHelpersType,
+): void {
+  const allowedGroupNames = Object.keys(ALLOWED_HELPERS);
+  const allowedHelperNames = new Set(Object.values(ALLOWED_HELPERS).flat());
 
-    for (const name of helperNames) {
-      const helper = groupHelpers[name];
+  handlebarsHelpers(allowedGroupNames, { handlebars });
 
-      if (typeof helper === "function") {
-        handlebars.registerHelper(name, helper);
-      }
+  for (const name of Object.keys(handlebars.helpers)) {
+    if (!allowedHelperNames.has(name)) {
+      handlebars.unregisterHelper(name);
     }
   }
 }

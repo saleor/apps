@@ -2,12 +2,13 @@
 
 import { registerAllowedHelpers } from "@saleor/handlebars";
 import Handlebars from "handlebars";
+import handlebarsHelpers from "handlebars-helpers";
 
 import { createLogger } from "../../logger";
 
 const logger = createLogger("renderHandlebarsTemplate");
 
-registerAllowedHelpers(Handlebars);
+registerAllowedHelpers(Handlebars, handlebarsHelpers);
 
 interface RenderHandlebarsTemplateArgs {
   template: string;
