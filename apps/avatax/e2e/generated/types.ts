@@ -23464,6 +23464,31 @@ export type ProductVariantDeletedProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']['input']>;
 };
 
+/**
+ * Event sent when product variant discounted price is recalculated.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ProductVariantDiscountedPriceUpdated = Event & {
+  __typename?: 'ProductVariantDiscountedPriceUpdated';
+  /** The channel where the price changed. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The new discounted price. */
+  newPrice: Money;
+  /** The previous discounted price. */
+  previousPrice: Money;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']['output']>;
+};
+
 export type ProductVariantFilterInput = {
   isPreorder?: InputMaybe<Scalars['Boolean']['input']>;
   metadata?: InputMaybe<Array<MetadataFilter>>;
@@ -28776,6 +28801,14 @@ export type Subscription = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   orderUpdated?: Maybe<OrderUpdated>;
+  /**
+   * Event sent when product variant discounted price is recalculated.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantDiscountedPriceUpdated?: Maybe<ProductVariantDiscountedPriceUpdated>;
 };
 
 
@@ -28875,6 +28908,11 @@ export type SubscriptionOrderRefundedArgs = {
 
 
 export type SubscriptionOrderUpdatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type SubscriptionProductVariantDiscountedPriceUpdatedArgs = {
   channels?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
@@ -32356,6 +32394,7 @@ export enum WebhookEventTypeAsyncEnum {
   ProductVariantCreated = 'PRODUCT_VARIANT_CREATED',
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   ProductVariantDeleted = 'PRODUCT_VARIANT_DELETED',
+  ProductVariantDiscountedPriceUpdated = 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED',
   /** A product variant metadata is updated. */
   ProductVariantMetadataUpdated = 'PRODUCT_VARIANT_METADATA_UPDATED',
   /** A product variant is out of stock. */
@@ -32688,6 +32727,7 @@ export enum WebhookEventTypeEnum {
   ProductVariantCreated = 'PRODUCT_VARIANT_CREATED',
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   ProductVariantDeleted = 'PRODUCT_VARIANT_DELETED',
+  ProductVariantDiscountedPriceUpdated = 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED',
   /** A product variant metadata is updated. */
   ProductVariantMetadataUpdated = 'PRODUCT_VARIANT_METADATA_UPDATED',
   /** A product variant is out of stock. */
@@ -32931,6 +32971,7 @@ export enum WebhookSampleEventTypeEnum {
   ProductVariantBackInStock = 'PRODUCT_VARIANT_BACK_IN_STOCK',
   ProductVariantCreated = 'PRODUCT_VARIANT_CREATED',
   ProductVariantDeleted = 'PRODUCT_VARIANT_DELETED',
+  ProductVariantDiscountedPriceUpdated = 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED',
   ProductVariantMetadataUpdated = 'PRODUCT_VARIANT_METADATA_UPDATED',
   ProductVariantOutOfStock = 'PRODUCT_VARIANT_OUT_OF_STOCK',
   ProductVariantStockUpdated = 'PRODUCT_VARIANT_STOCK_UPDATED',

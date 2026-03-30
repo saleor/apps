@@ -1928,6 +1928,7 @@ export type WebhookEventTypeAsyncEnum =
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   | 'PRODUCT_VARIANT_DELETED'
+  | 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED'
   /** A product variant metadata is updated. */
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
@@ -2253,6 +2254,7 @@ export type WebhookEventTypeEnum =
   | 'PRODUCT_VARIANT_CREATED'
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   | 'PRODUCT_VARIANT_DELETED'
+  | 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED'
   /** A product variant metadata is updated. */
   | 'PRODUCT_VARIANT_METADATA_UPDATED'
   /** A product variant is out of stock. */
